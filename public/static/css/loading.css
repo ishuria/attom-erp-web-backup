@@ -1,96 +1,103 @@
-.first-loading-wrp {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 90vh;
-  min-height: 90vh;
-}
-
-.first-loading-wrp > h1 {
-  font-size: 28px;
-  font-weight: bolder;
-}
-
-.first-loading-wrp .loading-wrp {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 98px;
-}
-
-.dot {
-  position: relative;
-  box-sizing: border-box;
-  display: inline-block;
-  width: 64px;
-  height: 64px;
-  font-size: 64px;
-  transform: rotate(45deg);
-  animation: antRotate 1.2s infinite linear;
-}
-
-.dot i {
+figure {
   position: absolute;
-  display: block;
-  width: 28px;
-  height: 28px;
-  background-color: #1890ff;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 6.25em;
+  height: 6.25em;
+  animation: rotate 2.4s linear infinite;
+}
+.white {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  animation: flash 2.4s linear infinite;
+  opacity: 0;
+}
+.dot {
+  position: absolute;
+  margin: auto;
+  width: 1.8em;
+  height: 1.8em;
   border-radius: 100%;
-  opacity: 0.3;
-  transform: scale(0.75);
-  transform-origin: 50% 50%;
-  animation: antSpinMove 1s infinite linear alternate;
+  transition: all 1s ease;
 }
-
-.dot i:nth-child(1) {
+.dot:nth-child(2) {
   top: 0;
-  left: 0;
-}
-
-.dot i:nth-child(2) {
-  top: 0;
-  right: 0;
-  -webkit-animation-delay: 0.4s;
-  animation-delay: 0.4s;
-}
-
-.dot i:nth-child(3) {
-  right: 0;
-  bottom: 0;
-  -webkit-animation-delay: 0.8s;
-  animation-delay: 0.8s;
-}
-
-.dot i:nth-child(4) {
   bottom: 0;
   left: 0;
-  -webkit-animation-delay: 1.2s;
-  animation-delay: 1.2s;
+  background: #f56c6c;
+  animation: dotsY 2.4s linear infinite;
+}
+.dot:nth-child(3) {
+  left: 0;
+  right: 0;
+  top: 0;
+  background: #e6a23c;
+  animation: dotsX 2.4s linear infinite;
+}
+.dot:nth-child(4) {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: #67c23a;
+  animation: dotsY 2.4s linear infinite;
+}
+.dot:nth-child(5) {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #409eff;
+  animation: dotsX 2.4s linear infinite;
 }
 
-@keyframes antRotate {
-  to {
-    -webkit-transform: rotate(405deg);
-    transform: rotate(405deg);
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  10% {
+    width: 6.25em;
+    height: 6.25em;
+  }
+  66% {
+    width: 1.8em;
+    height: 1.8em;
+  }
+  100% {
+    transform: rotate(360deg);
+    width: 6.25em;
+    height: 6.25em;
   }
 }
 
-@-webkit-keyframes antRotate {
-  to {
-    -webkit-transform: rotate(405deg);
-    transform: rotate(405deg);
+@keyframes dotsY {
+  66% {
+    width: 1.8em;
+  }
+  77% {
+    width: 0;
+  }
+}
+@keyframes dotsX {
+  66% {
+    height: 1.8em;
+  }
+  77% {
+    height: 0;
   }
 }
 
-@keyframes antSpinMove {
-  to {
-    opacity: 1;
+@keyframes flash {
+  33% {
+    border-radius: 0%;
   }
-}
-
-@-webkit-keyframes antSpinMove {
-  to {
-    opacity: 1;
+  55% {
+    border-radius: 100%;
+  }
+  66% {
   }
 }
