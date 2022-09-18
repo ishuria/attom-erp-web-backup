@@ -1,13 +1,20 @@
-import Icons from 'unplugin-icons/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export function createUnPlugin() {
   return [
-    Icons(),
     AutoImport({
-      imports: ['vue', 'pinia', 'vue-i18n', 'vue-router', '@vueuse/core'],
+      imports: [
+        'vue',
+        'pinia',
+        'vue-i18n',
+        'vue-router',
+        '@vueuse/core',
+        {
+          axios: [['default', 'axios']],
+        },
+      ],
       resolvers: [ElementPlusResolver()],
       dts: 'library/build/unplugin/auto-imports.d.ts',
     }),

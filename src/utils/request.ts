@@ -1,5 +1,4 @@
 import { useUserStore } from '/@/store/modules/user'
-import axios from 'axios'
 import setting from '/@/config'
 const {
   baseURL,
