@@ -1,0 +1,138 @@
+/**
+ * @description router全局配置，如有必要可分文件抽离，其中asyncRoutes只有在intelligence模式下才会用到，pro版只支持remixIcon图标，具体配置请查看vip群文档
+ */
+import type { VabRouteRecordRaw } from './types'
+import type { RouteRecordRaw } from 'vue-router'
+import type { App } from 'vue'
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+  RouteRecordName,
+} from 'vue-router'
+import Layout from '/@vab/layouts/index.vue'
+import setting from '/@/config'
+import { setupPermissions } from '/@/router/permissions'
+const { authentication, isHashRouterMode, publicPath } = setting
+
+export const constantRoutes: VabRouteRecordRaw[] = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('/@/views/login/index.vue'),
+    meta: {
+      hidden: true,
+    },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('/@/views/register/index.vue'),
+    meta: {
+      hidden: true,
+    },
+  },
+  {
+    path: '/403',
+    name: '403',
+    component: () => import('/@/views/403.vue'),
+    meta: {
+      hidden: true,
+    },
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('/@/views/404.vue'),
+    meta: {
+      hidden: true,
+    },
+  },
+]
+
+export const asyncRoutes: VabRouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Root',
+    component: Layout,
+    meta: {
+      title: '首页',
+      icon: 'home-2-line',
+      breadcrumbHidden: true,
+    },
+    children: [
+      {
+        path: 'index',
+        name: 'Index',
+        component: () => import('/@/views/index/index.vue'),
+        meta: {
+          title: '首页',
+          icon: 'home-2-line',
+          noClosable: true,
+        },
+      },
+      {
+        path: 'index2',
+        name: 'Index2',
+        component: () => import('/@/views/index/index.vue'),
+        meta: {
+          title: '首页',
+          icon: 'home-2-line',
+          noClosable: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404',
+    name: 'NotFound',
+    meta: {
+      hidden: true,
+    },
+  },
+]
+
+const router = createRouter({
+  history: isHashRouterMode
+    ? createWebHashHistory(publicPath)
+    : createWebHistory(publicPath),
+  routes: constantRoutes as RouteRecordRaw[],
+})
+
+function fatteningRoutes(routes: VabRouteRecordRaw[]): VabRouteRecordRaw[] {
+  return routes.flatMap((route) => {
+    return route.children ? fatteningRoutes(route.children) : route
+  })
+}
+
+function addRouter(routes: VabRouteRecordRaw[]) {
+  routes.forEach((route: VabRouteRecordRaw) => {
+    if (!router.hasRoute(route.name)) router.addRoute(route as RouteRecordRaw)
+    if (route.children) addRouter(route.children)
+  })
+}
+
+export function resetRouter(routes: VabRouteRecordRaw[] = constantRoutes) {
+  routes.map((route: VabRouteRecordRaw) => {
+    if (route.children) {
+      route.children = fatteningRoutes(route.children)
+    }
+  })
+  router.getRoutes().forEach((route) => {
+    if (route.name) {
+      const routeName: RouteRecordName = route.name
+      router.hasRoute(routeName) && router.removeRoute(routeName)
+    }
+  })
+  addRouter(routes)
+}
+
+export function setupRouter(app: App<Element>) {
+  if (authentication === 'intelligence') addRouter(asyncRoutes)
+  setupPermissions(router)
+  app.use(router)
+  return router
+}
+
+export default router

@@ -1,0 +1,99 @@
+{
+  "name": "admin-vite",
+  "version": "3.0.2",
+  "private": true,
+  "author": "chuzhixin",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint {src,mock}/**/*.{vue,js,ts} --fix",
+    "lint:prettier": "prettier {src,mock}/**/*.{html,vue,css,sass,scss,js,ts,md} --write",
+    "lint:stylelint": "stylelint {src,mock}/**/*.{html,vue,css,sass,scss} --fix --cache --cache-location node_modules/.cache/stylelint/",
+    "build:deploy": "start ./deploy.sh",
+    "build:docker": "npm run build&&docker build --pull --rm -f \"dockerfile\" -t vueadminbeautifulvite:latest \".\"&&docker run --rm -d  -p 80:80/tcp vueadminbeautifulvite:latest",
+    "global:install": "npm install -g nrm,cnpm,npm-check-updates",
+    "globle:update": "ncu -g",
+    "module:install": "cnpm i",
+    "module:update": "ncu -u --registry https://registry.npm.taobao.org&&npm run module:install",
+    "module:reinstall": "rimraf node_modules&&npm run module:install",
+    "nrm:npm": "nrm use npm",
+    "nrm:taobao": "nrm use taobao"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.9",
+    "@vueuse/core": "^9.2.0",
+    "@vueuse/head": "^0.7.11",
+    "axios": "^0.27.2",
+    "dayjs": "^1.11.5",
+    "element-plus": "^2.2.17",
+    "js-cookie": "^3.0.1",
+    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
+    "mockjs": "^1.1.0",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.0.22",
+    "qs": "^6.11.0",
+    "remixicon": "^2.5.0",
+    "vue": "^3.2.39",
+    "vue-i18n": "^9.2.2",
+    "vue-router": "^4.1.5"
+  },
+  "devDependencies": {
+    "@stylelint/postcss-css-in-js": "^0.38.0",
+    "@types/js-cookie": "^3.0.2",
+    "@types/lodash-es": "^4.17.6",
+    "@types/nprogress": "^0.2.0",
+    "@types/qs": "^6.9.7",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
+    "@vitejs/plugin-vue": "^3.1.0",
+    "@vue/compiler-sfc": "^3.2.39",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^11.0.1",
+    "eslint": "^8.23.1",
+    "eslint-plugin-vue": "^9.5.1",
+    "lint-staged": "^13.0.3",
+    "mitt": "^3.0.0",
+    "plop": "^3.1.1",
+    "postcss": "^8.4.16",
+    "postcss-html": "^1.5.0",
+    "postcss-markdown": "^1.2.0",
+    "postcss-scss": "^4.0.5",
+    "postcss-syntax": "^0.36.2",
+    "prettier": "^2.7.1",
+    "sass": "^1.54.9",
+    "stylelint": "^14.11.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recess-order": "^3.0.0",
+    "typescript": "^4.8.3",
+    "unplugin-auto-import": "^0.11.2",
+    "unplugin-icons": "^0.14.10",
+    "unplugin-vue-components": "^0.22.7",
+    "vite": "^3.1.2",
+    "vite-plugin-mock": "^2.9.6",
+    "vite-plugin-pwa": "^0.12.8",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vue-global-api": "^0.4.1",
+    "vue-tsc": "^0.40.13"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "homepage": "https://chu1204505056.gitee.io/shop-vite",
+  "license": "Mozilla Public License Version 2.0",
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "npm run lint",
+      "npm run lint:prettier",
+      "git add"
+    ]
+  },
+  "participants": [
+    "FlowPeakFish"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vue-admin-beautiful/shop-vite.git"
+  }
+}
