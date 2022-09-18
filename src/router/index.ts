@@ -71,14 +71,71 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           noClosable: true,
         },
       },
+    ],
+  },
+  {
+    path: '/shop',
+    name: 'Shop',
+    component: Layout,
+    meta: {
+      title: '店铺',
+      icon: 'shopping-bag-3-line',
+    },
+    children: [
       {
-        path: 'index2',
-        name: 'Index2',
+        path: 'shop',
+        name: 'Shop',
         component: () => import('/@/views/index/index.vue'),
         meta: {
           title: '首页',
           icon: 'home-2-line',
-          noClosable: true,
+        },
+      },
+    ],
+  },
+  {
+    path: '/goods',
+    name: 'Goods',
+    component: Layout,
+    meta: {
+      title: '商品',
+      icon: 'shopping-bag-3-line',
+    },
+    children: [
+      {
+        path: 'goodsManagement',
+        name: 'GoodsManagement',
+        component: () => import('/@/views/goods/GoodsManagement.vue'),
+        meta: {
+          title: '商品管理',
+          icon: 'home-2-line',
+        },
+      },
+      {
+        path: 'goodsTag',
+        name: 'GoodsTag',
+        component: () => import('/@/views/goods/GoodsTag.vue'),
+        meta: {
+          title: '商品分组',
+          icon: 'home-2-line',
+        },
+      },
+      {
+        path: 'goodsTemplate',
+        name: 'GoodsTemplate',
+        component: () => import('/@/views/goods/GoodsTemplate.vue'),
+        meta: {
+          title: '商品分组',
+          icon: 'home-2-line',
+        },
+      },
+      {
+        path: 'parameterDictionary',
+        name: 'ParameterDictionary',
+        component: () => import('/@/views/goods/ParameterDictionary.vue'),
+        meta: {
+          title: '参数字典',
+          icon: 'home-2-line',
         },
       },
     ],

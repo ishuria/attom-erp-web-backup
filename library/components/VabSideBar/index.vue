@@ -34,23 +34,16 @@
     class="vab-side-bar"
     :class="{ 'is-collapse': collapse, 'side-bar-common': layout === 'common' }"
   >
-    <vab-logo
-      v-if="
-        layout === 'vertical' ||
-        layout === 'comprehensive' ||
-        layout === 'float'
-      "
-    />
+    <vab-logo v-if="layout === 'vertical'" />
     <el-menu
-      :active-text-color="variables['menu-color-active']"
-      :background-color="variables['menu-background']"
+      background-color="var(--el-color-menu)"
       :collapse="collapse"
       :collapse-transition="false"
       :default-active="activeMenu.data"
       :default-openeds="defaultOpeneds"
       menu-trigger="click"
       mode="vertical"
-      :text-color="variables['menu-color']"
+      text-color="var(--el-color-menu-text)"
       :unique-opened="uniqueOpened"
     >
       <template v-for="(item, index) in handleRoutes" :key="index + item.name">

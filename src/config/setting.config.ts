@@ -19,7 +19,7 @@ export const settingConfig: { [key: string]: any } = {
   // 路由模式，是否为hash模式
   isHashRouterMode: true,
   // 不经过token校验的路由，白名单路由建议配置到与login页面同级，如果需要放行带传参的页面，请使用query传参，配置时只配置path即可
-  routesWhiteList: ['/login', '/register', '/callback', '/404', '/403'],
+  routesWhiteList: ['/login', '/register', '/404', '/403'],
   // 加载时显示文字
   loadingText: '正在加载中...',
   // token名称
@@ -32,7 +32,7 @@ export const settingConfig: { [key: string]: any } = {
   recordRoute: true,
   // 是否开启logo，不显示时设置false，请填写src/icon路径下的图标名称
   // 如需使用内置RemixIcon图标，请自行去logo组件切换注释代码(内置svg雪碧图较大，对性能有一定影响)
-  logo: 'vuejs-fill',
+  logo: 'mall-fill',
   // 语言类型zh、en
   i18n: 'zh',
   // 消息框消失时间
@@ -52,13 +52,7 @@ export const settingConfig: { [key: string]: any } = {
   // vertical column comprehensive common布局时是否只保持一个子菜单的展开
   uniqueOpened: false,
   // vertical column comprehensive common布局时默认展开的菜单path，使用逗号隔开建议只展开一个
-  defaultOpeneds: [
-    '/vab',
-    '/vab/table',
-    '/vab/icon',
-    '/vab/form',
-    '/other/drag',
-  ],
+  defaultOpeneds: [],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],
   // 分栏布局和综合布局时，是否点击一级菜单默认开启二级菜单(默认第一个，可通过redirect自定义)
