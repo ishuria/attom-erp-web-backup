@@ -1,7 +1,7 @@
 :root {
   --el-border-radius-base: #{$base-border-radius};
   --el-left-menu-width: #{$base-left-menu-width};
-  --el-color-menu: #282c34;
+  --el-color-menu: #202033;
   --el-color-menu-second: #fff;
   --el-color-menu-text: #fff;
 
@@ -18,21 +18,30 @@
   --el-color-primary-light-7: #{$vab-color-primary-light-7};
   --el-color-primary-light-8: #{$vab-color-primary-light-8};
   --el-color-primary-light-9: #{$vab-color-primary-light-9};
+  --el-color-primary-dark-2: #{$vab-color-primary};
 
   --el-color-success: #{$vab-color-success};
   --el-color-success-light: #{$vab-color-success-light};
   --el-color-success-lighter: #{$vab-color-success-lighter};
+  --el-color-success-dark-2: #{$vab-color-success};
 
   --el-color-warning: #{$vab-color-warning};
   --el-color-warning-light: #{$vab-color-warning-light};
   --el-color-warning-lighter: #{$vab-color-warning-lighter};
+  --el-color-warning-dark-2: #{$vab-color-warning};
+
   --el-color-danger: #{$vab-color-danger};
   --el-color-danger-light: #{$vab-color-danger-light};
   --el-color-danger-lighter: #{$vab-color-danger-lighter};
+  --el-color-danger-dark-2: #{$vab-color-danger};
+
   --el-color-error: #{$vab-color-error};
   --el-color-error-light: #{$vab-color-error-light};
   --el-color-error-lighter: #{$vab-color-error-lighter};
+  --el-color-error-dark-2: #{$vab-color-error};
+
   --el-color-info: #{$vab-color-info};
   --el-color-info-light: #{$vab-color-info-light};
   --el-color-info-lighter: #{$vab-color-info-lighter};
+  --el-color-info-dark-2: #{$vab-color-info};
 }
