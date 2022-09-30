@@ -81,7 +81,12 @@
             {{ translateTitle('登录') }}
           </el-button>
           <router-link to="/register">
-            <div style="margin-top: 20px">{{ translateTitle('注册') }}</div>
+            <el-button
+              style="margin-top: 20px; margin-left: -10px"
+              type="primary"
+            >
+              {{ translateTitle('注册') }}
+            </el-button>
           </router-link>
         </el-form>
       </el-col>
@@ -243,10 +248,11 @@
     position: relative;
     max-width: 100%;
     padding: 4.5vh;
-    margin: calc((100vh - 475px) / 2) 5vw 5vw;
+    margin: calc((100vh - 590px) / 2) 5vw 5vw;
     overflow: hidden;
-    background: url('/@/assets/login_images/login_form.png');
+    background: rgba(#0184b4, 0.7);
     background-size: 100% 100%;
+    border-radius: 15px;
 
     .title {
       font-size: 54px;
@@ -364,7 +370,7 @@
           padding-left: 35px;
           font-size: $base-font-size-default;
           line-height: 58px;
-          background: #f6f4fc;
+          background: #fff;
           border: 0;
         }
       }

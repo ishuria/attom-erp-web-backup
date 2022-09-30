@@ -1,7 +1,7 @@
 :root {
   --el-border-radius-base: #{$base-border-radius};
   --el-left-menu-width: #{$base-left-menu-width};
-  --el-color-menu: #202033;
+  --el-color-menu: #{$base-menu-background};
   --el-color-menu-second: #fff;
   --el-color-menu-text: #fff;
 

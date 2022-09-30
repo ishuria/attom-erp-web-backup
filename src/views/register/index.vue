@@ -69,20 +69,21 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item>
+          <el-button
+            class="register-btn"
+            type="primary"
+            @click.prevent="handleRegister"
+          >
+            {{ translateTitle('注册') }}
+          </el-button>
+          <router-link to="/login">
             <el-button
-              class="register-btn"
+              style="margin-top: 20px; margin-left: -10px"
               type="primary"
-              @click.prevent="handleRegister"
             >
-              {{ translateTitle('注册') }}
+              {{ translateTitle('登录') }}
             </el-button>
-            <router-link to="/login">
-              <div style="margin-top: 20px">
-                {{ translateTitle('登录') }}
-              </div>
-            </router-link>
-          </el-form-item>
+          </router-link>
         </el-form>
       </el-col>
       <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">
@@ -342,7 +343,7 @@
           padding-left: 35px;
           font-size: $base-font-size-default;
           line-height: 58px;
-          background: #f6f4fc;
+          background: #fff;
           border: 0;
         }
       }
