@@ -5,6 +5,7 @@
 
 ## 🔈 关于 shop-vite
 
+- shop-vite 与 admin plus 定位不同，shop-vite 定位小而精，admin-plus 定位大而全。
 - shop-vite 接口及使用规范继承 admin plus，有过 admin-plus 开发经验的用户可快速上手。
 - shop-vite 目前仅对已购买 admin-plus 及 admin-max 用户开放购买渠道，其他用户无法购买，admin-plus 用户购买 shop-vite 定价为 599，admin-max 用户购买 shop-vite 定价为 499。
 - shop-vite 秉承早买早享受的原则，并在此承诺，无论今后 shop-vite 如何定价，已购买 shop-vite 的老用户均享受最新代码更新权益。
