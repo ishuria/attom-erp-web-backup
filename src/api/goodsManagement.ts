@@ -1,0 +1,24 @@
+import request from '/@/utils/request'
+
+export function getList() {
+  return request({
+    url: '/goodsManagement/getList',
+    method: 'get',
+  })
+}
+
+export function doEdit(data: any) {
+  return request({
+    url: '/table/doEdit',
+    method: 'post',
+    data,
+  })
+}
+
+export function doDelete(data: any) {
+  return request({
+    url: '/table/doDelete',
+    method: 'post',
+    data,
+  })
+}

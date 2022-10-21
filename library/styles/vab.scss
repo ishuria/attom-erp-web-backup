@@ -1,9 +1,11 @@
 /**
  * @description 全局样式
  */
+
 @import './var.scss';
 @import './normalize.scss';
 @import './transition.scss';
+@import 'element-plus/theme-chalk/display.css';
 
 @mixin base-scrollbar {
   &::-webkit-scrollbar {
@@ -432,17 +434,10 @@ html {
 
     /* el-pagination分页 */
     .el-pagination {
-      display: block;
+      justify-content: center;
       margin: $base-margin 0 0 0;
-      margin-right: auto;
-      margin-left: auto;
       font-weight: normal;
       color: var(--el-color-black);
-      text-align: center;
-
-      i {
-        margin: auto !important;
-      }
     }
 
     /* el-menu菜单开始 */
