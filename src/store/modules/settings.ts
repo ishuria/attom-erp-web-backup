@@ -4,7 +4,6 @@
 import { isJson } from '/@/utils/validate'
 import setting from '/@/config'
 const {
-  background,
   columnStyle,
   fixedHeader,
   foldSidebar,
