@@ -1,7 +1,14 @@
 <div align="center">
 <img width="200" src="https://gitee.com/chu1204505056/image/raw/master/logo/vab.svg" alt="VAB"/>
-<h1>admin-vite</h1>
+<h1>shop-vite</h1>
 </div>
+
+## 🔈 关于 shop-vite
+
+- 当前版本接口及使用规范继承 admin plus，有过 admin-plus 开发经验的用户可快速上手。
+- 当前版本目前仅对已购买 admin-plus 及 admin-max 用户开放购买渠道，其他用户无法购买，admin-plus 用户购买 shop-vite 定价为 599，admin-max 用户购买 shop-vite 定价为 499。
+- shop-vite 秉承早买早享受的原则，并在此承诺，无论今后 shop-vite 如何定价，已购买 shop-vite 的老用户均享受最新代码更新权益。
+- 当前版本发布时间较短，不代表最终品质，后续会持续进行更新，敬请期待。
 
 ## 🔈 框架使用建议
 
@@ -38,30 +45,11 @@
 - 🗃 更新日志：[Releases](https://github.com/vue-admin-beautiful/admin-vite/releases)
 - 📌 付费版及 vip 群购买地址：[购买地址](https://vue-admin-beautiful.com/authorization/)
 
-## 🌱 版本
-
-- `main`分支更新频率较快，较为激进，不推荐直接使用
-
-- 对于感兴趣的提交(commit)，可使用精选(Cherry-Pick)复制到自己的项目中
-
-| 分支名                                                                      | 是否精简 commit | 是否精简功能 | 是否支持 i18n | 更新时间 |                                                                                                    维护人                                                                                                    |
-| --------------------------------------------------------------------------- | :-------------: | :----------: | :-----------: | :------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| [main](https://github.com/vue-admin-beautiful/admin-vite/)                  |       ❌        |      ❌      |       ✔       |   即时   |  <a href="https://github.com/chuzhixin" target="_blank"><img style="border-radius:999px" src="https://avatars3.githubusercontent.com/u/26647258?s=50&u=753921fb23f418996dffd6196e89729fcb2329ed&v=4"/></a>   |
-| [template](https://github.com/vue-admin-beautiful/admin-vite/tree/template) |        ✔        |      ✔       |       ✔       | 10-30 天 | <a href="https://github.com/FlowPeakFish" target="_blank"><img style="border-radius:999px" src="https://avatars3.githubusercontent.com/u/29328241?s=50&u=bb0977b405ccf1a101ce4e18e4fb8d958854ca60&v=4"/></a> |
-| [seed](https://github.com/vue-admin-beautiful/admin-vite/tree/seed)         |        ✔        |      ✔       |      ❌       | 10-30 天 | <a href="https://github.com/FlowPeakFish" target="_blank"><img style="border-radius:999px" src="https://avatars3.githubusercontent.com/u/29328241?s=50&u=bb0977b405ccf1a101ce4e18e4fb8d958854ca60&v=4"/></a> |
-
 ## ✅ 版权须知
 
 Vab Admin 系列产品受国家计算机软件著作权保护（证书号：软著登字第 7051316 号），
 禁止公开及传播产品源文件、二次出售等，
 违者将承担相应的法律责任，并影响自身使用。
-
-## 📌 TODO
-
-目前暂时没有好的解决方案的几项待办事项，如果您有好的解决方案可以对仓库 【dev】 分支进行 pull request
-
-- [ ] 由于 element 的菜单组件不支持设置超出自适应，所以导致横向布局时，菜单过多时处理不理想
-- [ ] 头像上传组件浏览器 blob 转化异常
 
 ## 🧑‍💻 增值服务
 
@@ -69,7 +57,7 @@ Vab Admin 系列产品受国家计算机软件著作权保护（证书号：软�
 
 - 每位购买 Admin 的用户均可获得 1 个免费的 vip 互助群免费入群资格，可反馈 bug、协助框架问题解答，无需额外购买
 
-- 免费名额之外，额外加入 vip 群 （100/人 仅限已购买框架的的公司员工加入，购买后联系 微信 zxwk-hxq 即可）
+- 免费名额之外，额外加入 vip 群 （100/人 仅限已购买框架的的公司员工加入，购买后联系 微信 zxwk-bfq 即可）
 
 - [购买地址，网页右下角切换付款码即可](https://vue-admin-beautiful.com/authorization/)
 
