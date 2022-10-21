@@ -12,7 +12,7 @@ export const settingConfig: { [key: string]: any } = {
   titleReverse: false,
   // 简写
   abbreviation: 'vab-admin-vite',
-  // pro版本copyright可随意修改
+  // 付费版本copyright可随意修改
   copyright: 'chuzhixin 1204505056@qq.com',
   // 缓存路由的最大数量
   keepAliveMaxNum: 20,
