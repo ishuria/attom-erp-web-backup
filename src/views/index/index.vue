@@ -7,7 +7,7 @@
   <div class="index-container">
     <el-row :gutter="20">
       <page-header />
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
         <version-information />
       </el-col>
     </el-row>

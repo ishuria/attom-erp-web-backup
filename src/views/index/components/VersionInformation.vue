@@ -62,7 +62,13 @@
               href="https://vue-admin-beautiful.com/authorization"
               target="_blank"
             >
-              <el-button type="primary">购买源码 ￥799</el-button>
+              <el-button type="primary">shop-vite ￥599</el-button>
+            </a>
+            <a
+              href="https://vue-admin-beautiful.com/admin-plus"
+              target="_blank"
+            >
+              <el-button type="primary">admin-plus ￥799</el-button>
             </a>
             <a
               href="https://github.com/chuzhixin/vue-admin-beautiful/"
@@ -70,6 +76,12 @@
             >
               <el-button type="warning">开源免费版</el-button>
             </a>
+          </td>
+        </tr>
+        <tr>
+          <td>注意事项</td>
+          <td colspan="3">
+            shop-vite目前仅对已购买admin-plus的用户开放购买渠道，未购买admin-plus系列产品的用户请勿下单，后期具体开放时间待定。
           </td>
         </tr>
       </table>
