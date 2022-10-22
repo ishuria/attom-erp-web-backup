@@ -1,6 +1,8 @@
 <script setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { onBeforeRouteLeave } from 'vue-router'
+  import png403 from '/@/assets/error_images/403.png'
+  import pngCloud from '/@/assets/error_images/cloud.png'
 
   const route = useRoute()
   const router = useRouter()
@@ -46,14 +48,8 @@
       <el-row :gutter="20">
         <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
           <div class="pic-error">
-            <el-image
-              class="pic-error-parent"
-              :src="require('@/assets/error_images/403.png')"
-            />
-            <el-image
-              class="pic-error-child left"
-              :src="require('@/assets/error_images/cloud.png')"
-            />
+            <el-image class="pic-error-parent" :src="png403" />
+            <el-image class="pic-error-child left" :src="pngCloud" />
           </div>
         </el-col>
 

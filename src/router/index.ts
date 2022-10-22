@@ -112,6 +112,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'detail',
+        name: 'Detail',
+        component: () => import('@/views/goods/Detail.vue'),
+        meta: {
+          hidden: true,
+          title: '详情页',
+          activeMenu: '/goods/goodsManagement',
+          dynamicNewTab: true, //详情页根据id传参不同可打开多个
+        },
+      },
+      {
         path: 'goodsTag',
         name: 'GoodsTag',
         component: () => import('/@/views/goods/GoodsTag.vue'),

@@ -27,6 +27,15 @@
           $baseConfirm
         </el-button>
         <el-button type="primary" @click="handleNotify">$baseNotify</el-button>
+        <el-badge class="item" value="New">
+          <el-button
+            style="margin: 0 0 10px 0 !important"
+            type="primary"
+            @click="handleDetail"
+          >
+            详情页支持tab多开并高亮左侧菜单
+          </el-button>
+        </el-badge>
       </vab-query-form-left-panel>
     </vab-query-form>
 
@@ -131,6 +140,15 @@
           <el-button text type="primary" @click="handleDelete(row)">
             删除
           </el-button>
+          <el-badge class="item" value="New">
+            <el-button
+              style="margin: 0 0 10px 0 !important"
+              type="primary"
+              @click="handleDetail"
+            >
+              详情页支持tab多开并高亮左侧菜单
+            </el-button>
+          </el-badge>
         </template>
       </el-table-column>
       <template #empty>
@@ -146,6 +164,7 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -154,8 +173,13 @@
 
   export default defineComponent({
     name: 'GoodsManagement',
-    components: {},
+    components: {
+      Edit: defineAsyncComponent(() =>
+        import('./components/GoodsManagementEdit.vue')
+      ),
+    },
     setup() {
+      const router = useRouter()
       const $baseConfirm = inject('$baseConfirm')
       const $baseMessage = inject('$baseMessage')
       const $baseAlert = inject('$baseAlert')
@@ -243,6 +267,33 @@
           }
         }
       }
+      const handleDetail = (row) => {
+        if (row.id)
+          router.push({
+            path: '/goods/detail',
+            query: {
+              ...row,
+              timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+            },
+          })
+        else {
+          if (state.selectRows.length === 1) {
+            router.push({
+              path: '/goods/detail',
+              query: {
+                ...state.selectRows[0],
+                timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+              },
+            })
+          } else {
+            $baseMessage(
+              '请选择一行进行详情页跳转',
+              'error',
+              'vab-hey-message-error'
+            )
+          }
+        }
+      }
       const handleMessage = () => {
         $baseMessage('test1', 'success', false, 'vab-hey-message-success')
       }
@@ -288,6 +339,7 @@
         handleAdd,
         handleEdit,
         handleDelete,
+        handleDetail,
         handleMessage,
         handleAlert,
         handleConfirm,
