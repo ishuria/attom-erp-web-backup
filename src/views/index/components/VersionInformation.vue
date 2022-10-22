@@ -81,7 +81,7 @@
         <tr>
           <td>注意事项</td>
           <td colspan="3">
-            shop-vite目前仅对已购买admin-plus的用户开放购买渠道，未购买admin-plus系列产品的用户请勿下单，后期具体开放时间待定。
+            shop-vite目前仅对已购买admin-plus的用户开放购买渠道，未购买admin-plus系列产品的用户请勿下单，后期具体开放时间待定，当前演示地址不代表最终品质，后续将逐步完善，我们有信心做国内最好的shop-vite商城模版。
           </td>
         </tr>
       </table>

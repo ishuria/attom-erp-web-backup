@@ -83,6 +83,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     },
     children: [
       {
+        path: 'permission',
+        name: 'Permission',
+        component: () => import('@/views/vab/permission/index.vue'),
+        meta: {
+          title: '角色权限',
+          icon: 'user-3-line',
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
