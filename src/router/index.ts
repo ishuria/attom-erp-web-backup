@@ -74,6 +74,149 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
+    path: '/vab',
+    name: 'Vab',
+    component: Layout,
+    meta: {
+      title: '组件',
+      icon: 'code-box-line',
+    },
+    children: [
+      {
+        path: 'form',
+        name: 'Form',
+        meta: {
+          title: '表单',
+          guard: ['Admin'],
+          icon: 'file-list-2-line',
+        },
+        children: [
+          {
+            path: 'comprehensiveForm',
+            name: 'ComprehensiveForm',
+            component: () => import('@/views/vab/form/comprehensiveForm.vue'),
+            meta: {
+              title: '综合表单',
+            },
+          },
+          {
+            path: 'stepForm',
+            name: 'StepForm',
+            component: () => import('@/views/vab/form/stepForm.vue'),
+            meta: {
+              title: '分步表单',
+            },
+          },
+          {
+            path: 'button',
+            name: 'Button',
+            component: () => import('@/views/vab/form/button.vue'),
+            meta: {
+              title: '按钮',
+            },
+          },
+          {
+            path: 'link',
+            name: 'Link',
+            component: () => import('@/views/vab/form/link.vue'),
+            meta: {
+              title: '文字链接',
+            },
+          },
+          {
+            path: 'radio',
+            name: 'Radio',
+            component: () => import('@/views/vab/form/radio.vue'),
+            meta: {
+              title: '单选框',
+            },
+          },
+          {
+            path: 'checkbox',
+            name: 'Checkbox',
+            component: () => import('@/views/vab/form/checkbox.vue'),
+            meta: {
+              title: '多选框',
+            },
+          },
+          {
+            path: 'input',
+            name: 'Input',
+            component: () => import('@/views/vab/form/input.vue'),
+            meta: {
+              title: '输入框',
+            },
+          },
+          {
+            path: 'inputNumber',
+            name: 'InputNumber',
+            component: () => import('@/views/vab/form/inputNumber.vue'),
+            meta: {
+              title: '计数器',
+            },
+          },
+          {
+            path: 'select',
+            name: 'Select',
+            component: () => import('@/views/vab/form/select.vue'),
+            meta: {
+              title: '选择器',
+              dot: true,
+            },
+          },
+          {
+            path: 'switch',
+            name: 'Switch',
+            component: () => import('@/views/vab/form/switch.vue'),
+            meta: {
+              title: '开关',
+            },
+          },
+          {
+            path: 'slider',
+            name: 'Slider',
+            component: () => import('@/views/vab/form/slider.vue'),
+            meta: {
+              title: '滑块',
+            },
+          },
+          {
+            path: 'timePicker',
+            name: 'TimePicker',
+            component: () => import('@/views/vab/form/timePicker.vue'),
+            meta: {
+              title: '时间选择器',
+            },
+          },
+          {
+            path: 'datePicker',
+            name: 'DatePicker',
+            component: () => import('@/views/vab/form/datePicker.vue'),
+            meta: {
+              title: '日期选择器',
+            },
+          },
+          {
+            path: 'dateTimePicker',
+            name: 'DateTimePicker',
+            component: () => import('@/views/vab/form/dateTimePicker.vue'),
+            meta: {
+              title: '日期时间选择器',
+            },
+          },
+          {
+            path: 'rate',
+            name: 'Rate',
+            component: () => import('@/views/vab/form/rate.vue'),
+            meta: {
+              title: '评分',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
     path: '/shop',
     name: 'Shop',
     component: Layout,

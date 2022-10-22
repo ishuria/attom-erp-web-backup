@@ -213,10 +213,6 @@
         state.list = list
         state.total = total
         state.listLoading = false
-
-        setTimeout(() => {
-          toggleSelection([state.list[0]])
-        }, 0)
       }
       const handleSizeChange = (val) => {
         state.queryForm.pageSize = val
@@ -314,15 +310,6 @@
       }
       const handleNotify = () => {
         $baseNotify('测试消息提示', 'test', 'success', 'bottom-right')
-      }
-      const toggleSelection = (rows) => {
-        if (rows) {
-          rows.forEach((row) => {
-            state['tableSortRef'].toggleRowSelection(row)
-          })
-        } else {
-          state['tableSortRef'].clearSelection()
-        }
       }
 
       onMounted(() => {
