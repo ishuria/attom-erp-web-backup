@@ -11,15 +11,14 @@ import qs from 'qs'
  * @returns {*}
  */
 export function convertRouter(asyncRoutes: VabRouteRecordRaw[]) {
+  const routeAllPathToCompMap = import.meta.glob(`../**/*.vue`)
   return asyncRoutes.map((route: VabRouteRecordRaw) => {
     if (route.component) {
       if (route.component === 'Layout') {
         route.component = () => import('/@vab/layouts/index.vue')
       } else {
-        const index = route.component.indexOf('views')
-        const path =
-          index > 0 ? route.component.slice(index) : `views/${route.component}`
-        route.component = () => import(`../views/${path}.vue`)
+        console.log(`../${route.component}`)
+        route.component = routeAllPathToCompMap[`../${route.component}`]
       }
     }
     if (route.children && route.children.length)

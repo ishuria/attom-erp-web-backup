@@ -14,7 +14,7 @@ const list = [
       {
         path: 'index',
         name: 'Index',
-        component: '/@/views/index/index.vue',
+        component: 'views/index/index.vue',
         meta: {
           title: '首页',
           icon: 'home-2-line',
@@ -35,7 +35,7 @@ const list = [
       {
         path: 'permission',
         name: 'Permission',
-        component: '@/views/vab/permission/index.vue',
+        component: 'views/vab/permission/index.vue',
         meta: {
           title: '角色权限',
           icon: 'user-3-line',
@@ -53,7 +53,7 @@ const list = [
           {
             path: 'comprehensiveForm',
             name: 'ComprehensiveForm',
-            component: '@/views/vab/form/comprehensiveForm.vue',
+            component: 'views/vab/form/comprehensiveForm.vue',
             meta: {
               title: '综合表单',
             },
@@ -61,7 +61,7 @@ const list = [
           {
             path: 'stepForm',
             name: 'StepForm',
-            component: '@/views/vab/form/stepForm.vue',
+            component: 'views/vab/form/stepForm.vue',
             meta: {
               title: '分步表单',
             },
@@ -69,7 +69,7 @@ const list = [
           {
             path: 'button',
             name: 'Button',
-            component: '@/views/vab/form/button.vue',
+            component: 'views/vab/form/button.vue',
             meta: {
               title: '按钮',
             },
@@ -77,7 +77,7 @@ const list = [
           {
             path: 'link',
             name: 'Link',
-            component: '@/views/vab/form/link.vue',
+            component: 'views/vab/form/link.vue',
             meta: {
               title: '文字链接',
             },
@@ -85,7 +85,7 @@ const list = [
           {
             path: 'radio',
             name: 'Radio',
-            component: '@/views/vab/form/radio.vue',
+            component: 'views/vab/form/radio.vue',
             meta: {
               title: '单选框',
             },
@@ -93,7 +93,7 @@ const list = [
           {
             path: 'checkbox',
             name: 'Checkbox',
-            component: '@/views/vab/form/checkbox.vue',
+            component: 'views/vab/form/checkbox.vue',
             meta: {
               title: '多选框',
             },
@@ -101,7 +101,7 @@ const list = [
           {
             path: 'input',
             name: 'Input',
-            component: '@/views/vab/form/input.vue',
+            component: 'views/vab/form/input.vue',
             meta: {
               title: '输入框',
             },
@@ -109,7 +109,7 @@ const list = [
           {
             path: 'inputNumber',
             name: 'InputNumber',
-            component: '@/views/vab/form/inputNumber.vue',
+            component: 'views/vab/form/inputNumber.vue',
             meta: {
               title: '计数器',
             },
@@ -117,7 +117,7 @@ const list = [
           {
             path: 'select',
             name: 'Select',
-            component: '@/views/vab/form/select.vue',
+            component: 'views/vab/form/select.vue',
             meta: {
               title: '选择器',
               dot: true,
@@ -126,7 +126,7 @@ const list = [
           {
             path: 'switch',
             name: 'Switch',
-            component: '@/views/vab/form/switch.vue',
+            component: 'views/vab/form/switch.vue',
             meta: {
               title: '开关',
             },
@@ -134,7 +134,7 @@ const list = [
           {
             path: 'slider',
             name: 'Slider',
-            component: '@/views/vab/form/slider.vue',
+            component: 'views/vab/form/slider.vue',
             meta: {
               title: '滑块',
             },
@@ -142,7 +142,7 @@ const list = [
           {
             path: 'timePicker',
             name: 'TimePicker',
-            component: '@/views/vab/form/timePicker.vue',
+            component: 'views/vab/form/timePicker.vue',
             meta: {
               title: '时间选择器',
             },
@@ -150,7 +150,7 @@ const list = [
           {
             path: 'datePicker',
             name: 'DatePicker',
-            component: '@/views/vab/form/datePicker.vue',
+            component: 'views/vab/form/datePicker.vue',
             meta: {
               title: '日期选择器',
             },
@@ -158,7 +158,7 @@ const list = [
           {
             path: 'dateTimePicker',
             name: 'DateTimePicker',
-            component: '@/views/vab/form/dateTimePicker.vue',
+            component: 'views/vab/form/dateTimePicker.vue',
             meta: {
               title: '日期时间选择器',
             },
@@ -166,7 +166,7 @@ const list = [
           {
             path: 'rate',
             name: 'Rate',
-            component: '@/views/vab/form/rate.vue',
+            component: 'views/vab/form/rate.vue',
             meta: {
               title: '评分',
             },
@@ -187,7 +187,7 @@ const list = [
       {
         path: 'shop',
         name: 'Shop',
-        component: '/@/views/index/index.vue',
+        component: 'views/index/index.vue',
         meta: {
           title: '首页',
           icon: 'home-2-line',
@@ -207,7 +207,7 @@ const list = [
       {
         path: 'goodsManagement',
         name: 'GoodsManagement',
-        component: '/@/views/goods/GoodsManagement.vue',
+        component: 'views/goods/GoodsManagement.vue',
         meta: {
           title: '商品管理',
           icon: 'home-2-line',
@@ -216,7 +216,7 @@ const list = [
       {
         path: 'detail',
         name: 'Detail',
-        component: '@/views/goods/Detail.vue',
+        component: 'views/goods/Detail.vue',
         meta: {
           hidden: true,
           title: '详情页',
@@ -227,7 +227,7 @@ const list = [
       {
         path: 'goodsTag',
         name: 'GoodsTag',
-        component: '/@/views/goods/GoodsTag.vue',
+        component: 'views/goods/GoodsTag.vue',
         meta: {
           title: '商品分组',
           icon: 'home-2-line',
@@ -236,7 +236,7 @@ const list = [
       {
         path: 'goodsTemplate',
         name: 'GoodsTemplate',
-        component: '/@/views/goods/GoodsTemplate.vue',
+        component: 'views/goods/GoodsTemplate.vue',
         meta: {
           title: '商品分组',
           icon: 'home-2-line',
@@ -245,7 +245,7 @@ const list = [
       {
         path: 'parameterDictionary',
         name: 'ParameterDictionary',
-        component: '/@/views/goods/ParameterDictionary.vue',
+        component: 'views/goods/ParameterDictionary.vue',
         meta: {
           title: '参数字典',
           icon: 'home-2-line',
