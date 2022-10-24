@@ -226,6 +226,26 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
+    path: '/statcenter',
+    name: 'Statcenter',
+    component: Layout,
+    meta: {
+      title: '数据',
+      icon: 'line-chart-line',
+    },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('/@/views/statcenter/Dashboard.vue'),
+        meta: {
+          title: '数据概况',
+          icon: 'pie-chart-line',
+        },
+      },
+    ],
+  },
+  {
     path: '/shop',
     name: 'Shop',
     component: Layout,

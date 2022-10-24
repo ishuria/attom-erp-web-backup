@@ -13,7 +13,7 @@ export const settingConfig: { [key: string]: any } = {
   // 简写
   abbreviation: 'vab-admin-vite',
   // 付费版本copyright可随意修改
-  copyright: 'chuzhixin 1204505056@qq.com',
+  copyright: 'vue-admin-beautiful.com',
   // 缓存路由的最大数量
   keepAliveMaxNum: 20,
   // 路由模式，是否为hash模式
@@ -25,7 +25,7 @@ export const settingConfig: { [key: string]: any } = {
   // token名称
   tokenName: 'token',
   // token在localStorage、sessionStorage、cookie存储的key的名称
-  tokenTableName: 'admin-vite-token',
+  tokenTableName: 'shop-vite-token',
   // token存储位置localStorage sessionStorage cookie
   storage: 'localStorage',
   // token失效回退到登录页时是否记录本次的路由（是否记录当前tab页）
@@ -44,7 +44,7 @@ export const settingConfig: { [key: string]: any } = {
   // 是否开启登录RSA加密
   loginRSA: false,
   // intelligence(前端导出路由)和all(后端导出路由)两种方式
-  authentication: 'all',
+  authentication: 'intelligence',
   // 是否支持游客模式，支持情况下，访问白名单，可查看所有asyncRoutes
   supportVisit: false,
   // 是否开启roles字段进行角色权限控制(如果是all模式后端完全处理角色并进行json组装，可设置false不处理路由中的roles字段)
@@ -52,7 +52,7 @@ export const settingConfig: { [key: string]: any } = {
   // vertical column comprehensive common布局时是否只保持一个子菜单的展开
   uniqueOpened: false,
   // vertical column comprehensive common布局时默认展开的菜单path，使用逗号隔开建议只展开一个
-  defaultOpeneds: [],
+  defaultOpeneds: ['/vab/form'],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],
   // 分栏布局和综合布局时，是否点击一级菜单默认开启二级菜单(默认第一个，可通过redirect自定义)
