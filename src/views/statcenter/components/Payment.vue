@@ -34,7 +34,7 @@
     ],
     series: [
       {
-        name: '访问量',
+        name: '金额',
         type: 'line',
         data: [],
         smooth: true,

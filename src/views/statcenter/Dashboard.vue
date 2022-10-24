@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   const Payment = defineAsyncComponent(() => import('./components/Payment.vue'))
+  const Flow = defineAsyncComponent(() => import('./components/Flow.vue'))
 </script>
 
 <template>
@@ -17,6 +18,7 @@
       </el-col>
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <!-- 流量概况 -->
+        <flow />
       </el-col>
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <!-- 经营报表 -->
@@ -51,7 +53,7 @@
           line-height: 42px;
         }
         .extra-text {
-          margin-top: 10x;
+          margin: 10px 0 10px 0;
           color: #999;
         }
       }
