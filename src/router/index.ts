@@ -83,6 +83,40 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     },
     children: [
       {
+        path: 'icon',
+        name: 'Icon',
+        meta: {
+          title: '图标',
+          icon: 'remixicon-line',
+        },
+        children: [
+          {
+            path: 'remixIcon',
+            name: 'RemixIcon',
+            component: () => import('/@/views/vab/icon/remixIcon.vue'),
+            meta: {
+              title: '小清新图标',
+            },
+          },
+          {
+            path: 'iconSelector',
+            name: 'IconSelector',
+            component: () => import('/@/views/vab/icon/iconSelector.vue'),
+            meta: {
+              title: '图标选择器',
+            },
+          },
+          {
+            path: 'customSvg',
+            name: 'CustomSvg',
+            component: () => import('/@/views/vab/icon/customSvg.vue'),
+            meta: {
+              title: '自定义图标',
+            },
+          },
+        ],
+      },
+      {
         path: 'permission',
         name: 'Permission',
         component: () => import('/@/views/vab/permission/index.vue'),
