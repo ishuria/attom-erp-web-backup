@@ -17,8 +17,10 @@ export function convertRouter(asyncRoutes: VabRouteRecordRaw[]) {
       if (route.component === 'Layout') {
         route.component = () => import('/@vab/layouts/index.vue')
       } else {
-        console.log(`../${route.component}`)
-        route.component = routeAllPathToCompMap[`../${route.component}`]
+        const index = route.component.indexOf('views')
+        const path =
+          index > 0 ? route.component.slice(index) : `${route.component}`
+        route.component = routeAllPathToCompMap[`../${path}`]
       }
     }
     if (route.children && route.children.length)
