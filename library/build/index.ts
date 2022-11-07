@@ -1,5 +1,7 @@
 import type { Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import OptimizationPersist from 'vite-plugin-optimize-persist'
+import PkgConfig from 'vite-plugin-package-config'
 
 import { createPwa } from './pwa/'
 import { createMock } from './mock/'
@@ -10,6 +12,8 @@ import { createElementPlus } from './elementPlus/'
 export function createVitePlugin() {
   const vitePlugins: (Plugin | Plugin[])[] = [vue()]
 
+  vitePlugins.push(OptimizationPersist())
+  vitePlugins.push(PkgConfig())
   vitePlugins.push(createPwa())
   vitePlugins.push(createMock())
   vitePlugins.push(createUnPlugin())

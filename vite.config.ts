@@ -27,7 +27,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
       open: true,
       port: setting['port'],
       hmr: {
-        overlay: false,
+        overlay: true,
       },
     },
     resolve: {
