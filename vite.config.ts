@@ -69,6 +69,6 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
         },
       },
     },
-    plugins: createVitePlugin(),
+    plugins: createVitePlugin(env),
   }
 })

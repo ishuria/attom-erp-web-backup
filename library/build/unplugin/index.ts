@@ -2,7 +2,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-export function createUnPlugin() {
+export function createUnPlugin(env: Record<string, string>) {
   return [
     AutoImport({
       imports: [
@@ -15,7 +15,12 @@ export function createUnPlugin() {
           axios: [['default', 'axios']],
         },
       ],
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver({
+          importStyle:
+            env.VITE_USER_NODE_ENV === 'development' ? false : 'sass',
+        }),
+      ],
       dts: 'library/build/unplugin/auto-imports.d.ts',
     }),
     Components({
