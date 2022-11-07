@@ -13679,7 +13679,7 @@ const list = [
   },
 ]
 
-module.exports = [
+export default [
   {
     url: '/area/getList',
     method: 'get',

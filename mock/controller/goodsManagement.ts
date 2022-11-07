@@ -37,7 +37,7 @@ for (let i = 0; i < count; i++) {
   )
 }
 
-module.exports = [
+export default [
   {
     url: '/goodsManagement/getList',
     method: 'get',

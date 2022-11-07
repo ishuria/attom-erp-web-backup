@@ -14,6 +14,7 @@ export function setupVab(app: App<Element>) {
   // 加载插件
   const Plugins = import.meta.globEager('./plugins/*.ts')
   Object.getOwnPropertyNames(Plugins).forEach((key) => {
-    app.use(Plugins[key].default)
+    const plugin: any = Plugins[key]
+    app.use(plugin.default)
   })
 }

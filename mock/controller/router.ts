@@ -262,7 +262,7 @@ const list = [
     },
   },
 ]
-module.exports = [
+export default [
   {
     url: '/router/getList',
     method: 'get',

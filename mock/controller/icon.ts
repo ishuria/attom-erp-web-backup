@@ -2274,7 +2274,7 @@ const List = [
   'zzz-line',
 ]
 
-module.exports = [
+export default [
   {
     url: '/icon/getList',
     method: 'get',
