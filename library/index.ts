@@ -7,12 +7,9 @@ import { createHead } from '@vueuse/head'
 
 export function setupVab(app: App<Element>) {
   app.use(createHead())
-  // 加载背景
-  const Themes = import.meta.globEager('./styles/background/*.scss')
-  Object.values(Themes)
 
   // 加载插件
-  const Plugins = import.meta.globEager('./plugins/*.ts')
+  const Plugins = import.meta.glob('./plugins/*.ts', { eager: true })
   Object.getOwnPropertyNames(Plugins).forEach((key) => {
     const plugin: any = Plugins[key]
     app.use(plugin.default)
