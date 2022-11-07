@@ -7,7 +7,7 @@ import { createPwa } from './pwa/'
 import { createMock } from './mock/'
 import { createUnPlugin } from './unplugin/'
 import { createSvgIcons } from './svgSprite/'
-//import { createElementPlus } from './elementPlus/'
+import { createElementPlus } from './elementPlus/'
 
 export function createVitePlugin(env: Record<string, string>) {
   const vitePlugins: (Plugin | Plugin[])[] = [vue()]
@@ -18,7 +18,7 @@ export function createVitePlugin(env: Record<string, string>) {
   vitePlugins.push(createMock())
   vitePlugins.push(createUnPlugin(env))
   vitePlugins.push(createSvgIcons())
-  // vitePlugins.push(createElementPlus())
+  vitePlugins.push(createElementPlus())
 
   return vitePlugins
 }
