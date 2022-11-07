@@ -2,8 +2,8 @@
  * @description 导出网络配置
  **/
 export const netConfig: { [key: string]: any } = {
-  // 开发环境去.env.development改，生产环境去.env.production改，测试环境去.env.test改
-  baseURL: `${process.env.VITE_APP_BASE_URL}`,
+  // vite版本无法在net.config.js配置全局api，开发环境去.env.development改，生产环境去.env.production改，测试环境去.env.test改
+  //baseURL: '',
   // 配后端数据的接收方式application/json;charset=UTF-8 或 application/x-www-form-urlencoded;charset=UTF-8
   contentType: 'application/json;charset=UTF-8',
   // 最长请求时间

@@ -1,7 +1,6 @@
 import { useUserStore } from '/@/store/modules/user'
 import setting from '/@/config'
 const {
-  baseURL,
   contentType,
   debounce,
   messageName,
@@ -165,12 +164,11 @@ const handleData = async ({
     addErrorLog({ message: errMsg, stack: data, isRequest: true })
   return Promise.reject(data)
 }
-
 /**
  * @description axios初始化
  */
 const instance = axios.create({
-  baseURL,
+  baseURL: `${import.meta.env.VITE_APP_BASE_URL}`,
   timeout: requestTimeout,
   headers: {
     'Content-Type': contentType,
