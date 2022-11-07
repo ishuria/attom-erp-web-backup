@@ -76,7 +76,6 @@
     height: 16px;
     padding-right: 4px;
     padding-left: 4px;
-    // margin-top: #{math.div($base-menu-item-height - 16, 2)};
     line-height: 16px;
     border: 0;
   }
@@ -84,6 +83,5 @@
   .vab-dot {
     position: absolute !important;
     right: 20px;
-    // margin-top: #{math.div($base-menu-item-height - 6, 2)};
   }
 </style>

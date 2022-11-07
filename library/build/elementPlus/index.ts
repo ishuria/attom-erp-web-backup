@@ -1,5 +1,5 @@
 import ElementPlus from 'unplugin-element-plus/vite'
 
 export function createElementPlus() {
-  return ElementPlus()
+  return ElementPlus({ useSource: true })
 }

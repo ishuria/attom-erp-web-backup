@@ -15,7 +15,7 @@ export const themeConfig: ThemeType = {
   //是否开启标签页
   showTabs: true,
   //显示标签页时标签页样式：卡片风格card、灵动风格smart、圆滑风格smooth
-  tabsBarStyle: 'card',
+  tabsBarStyle: 'smooth',
   //是否显示标签页图标
   showTabsIcon: true,
   //是否开启语言选择组件

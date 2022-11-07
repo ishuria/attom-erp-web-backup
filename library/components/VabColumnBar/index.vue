@@ -286,8 +286,8 @@
       &-horizontal {
         justify-content: left;
         width: $base-left-menu-width-min * 1.3;
-        height: #{math.div($base-left-menu-width-min, 1.3)};
-        padding-left: #{math.div($base-padding, 2)};
+        height: #{calc($base-left-menu-width-min / 1.3)};
+        padding-left: #{calc($base-padding / 2)};
       }
     }
 

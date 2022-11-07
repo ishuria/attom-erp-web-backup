@@ -46,6 +46,18 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
       // https://github.com/vitejs/vite/issues/6333
       postcss: {
         plugins: [
+          require('autoprefixer')({
+            overrideBrowserslist: [
+              'Android 4.1',
+              'iOS 7.1',
+              'Chrome > 31',
+              'ff > 31',
+              'ie >= 8',
+              '> 1%',
+            ],
+            grid: true,
+          }),
+          require('postcss-flexbugs-fixes'),
           {
             postcssPlugin: 'internal:charset-removal',
             AtRule: {
@@ -63,8 +75,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
           additionalData(content: string, loaderContext: string) {
             return ['variables.scss'].includes(basename(loaderContext))
               ? content
-              : '@use "sass:math";@import "~/library/styles/variables.scss";' +
-                  content
+              : '@use "~/library/styles/variables.scss" as *;' + content
           },
         },
       },
