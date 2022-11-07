@@ -343,7 +343,7 @@
         border: 0;
 
         .el-divider {
-          margin: 0 0 $base-margin/2 0;
+          margin: 0 0 $base-margin 0;
           background-color: #f6f6f6;
 
           &__text {

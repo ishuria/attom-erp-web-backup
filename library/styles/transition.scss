@@ -8,9 +8,14 @@
     transition: $base-transition;
   }
 
-  &-enter,
+  &-enter {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
   &-leave-to {
     opacity: 0;
+    transform: translateX(30px);
   }
 }
 
