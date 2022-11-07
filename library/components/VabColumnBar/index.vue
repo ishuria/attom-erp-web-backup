@@ -92,7 +92,7 @@
       :unique-opened="uniqueOpened"
     >
       <el-divider>
-        {{ translateTitle(tabMenu ? tabMenu.meta.title : tabMenu) }}
+        <!-- {{ translateTitle(tabMenu ? tabMenu.meta.title : tabMenu) }} -->
       </el-divider>
       <template v-for="item in partialRoutes" :key="item.path">
         <vab-menu v-if="!item.meta.hidden" :item="item" />
@@ -343,7 +343,7 @@
         border: 0;
 
         .el-divider {
-          margin: 0 0 $base-margin 0;
+          margin: 0 0 $base-margin/2 0;
           background-color: #f6f6f6;
 
           &__text {
