@@ -91,13 +91,14 @@
       mode="vertical"
       :unique-opened="uniqueOpened"
     >
-      <el-divider>
-        <!-- {{ translateTitle(tabMenu ? tabMenu.meta.title : tabMenu) }} -->
-      </el-divider>
+      <el-divider />
       <template v-for="item in partialRoutes" :key="item.path">
         <vab-menu v-if="!item.meta.hidden" :item="item" />
       </template>
     </el-menu>
+    <div class="float-fold">
+      <vab-fold fold="layout-left-2-line" unfold="layout-left-line" />
+    </div>
   </el-scrollbar>
 </template>
 
@@ -369,6 +370,24 @@
     &.is-collapse {
       :deep() {
         width: 0;
+      }
+    }
+  }
+
+  .float-fold {
+    position: fixed;
+    bottom: 5px;
+    left: 4px;
+    z-index: 99999;
+    width: 54px;
+    height: 54px;
+    line-height: 54px;
+    text-align: center;
+    background: var(--el-color-primary);
+    border-radius: 5px;
+    :deep() {
+      .fold-unfold {
+        color: var(--el-color-white);
       }
     }
   }

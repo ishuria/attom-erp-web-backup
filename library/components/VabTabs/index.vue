@@ -172,7 +172,11 @@
 
 <template>
   <div class="vab-tabs">
-    <vab-fold v-if="layout === 'common'" />
+    <vab-fold
+      v-if="layout === 'common'"
+      fold="layout-left-2-line"
+      unfold="layout-left-line"
+    />
     <el-tabs
       v-model="tabActive"
       class="vab-tabs-content"

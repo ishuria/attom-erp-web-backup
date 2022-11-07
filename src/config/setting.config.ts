@@ -11,7 +11,7 @@ export const settingConfig: { [key: string]: any } = {
   // 如果为ture : "title - page"
   titleReverse: false,
   // 简写
-  abbreviation: 'vab-admin-vite',
+  abbreviation: 'vab-shop-vite',
   // 付费版本copyright可随意修改
   copyright: 'vue-admin-beautiful.com',
   // 缓存路由的最大数量
