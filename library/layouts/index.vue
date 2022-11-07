@@ -76,7 +76,7 @@
     [class*='vab-layout-'] {
       :deep() {
         .vab-layout-header {
-          box-shadow: $base-box-shadow;
+          border-bottom: 1px solid #e4e7ed;
         }
       }
 

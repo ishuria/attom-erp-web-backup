@@ -85,8 +85,7 @@
     overflow: hidden;
     user-select: none;
     background: var(--el-color-white);
-    box-shadow: $base-box-shadow;
-
+    border-bottom: 1px solid #e4e7ed;
     .left-panel {
       display: flex;
       align-items: center;

@@ -316,7 +316,6 @@
     padding-left: $base-padding;
     user-select: none;
     background: var(--el-color-white);
-    border-top: 1px solid #f6f6f6;
 
     :deep() {
       .fold-unfold {

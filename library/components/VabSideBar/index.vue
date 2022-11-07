@@ -76,7 +76,6 @@
     height: 100vh;
     overflow: hidden;
     background: $base-menu-background;
-    box-shadow: $base-box-shadow;
     transition: $base-transition;
 
     &.side-bar-common {

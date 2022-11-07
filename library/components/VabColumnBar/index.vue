@@ -128,15 +128,11 @@
     height: 100vh;
     overflow: hidden;
     background: $base-column-second-menu-background;
-    box-shadow: $base-box-shadow;
+    border-right: 1px solid #e4e7ed;
 
     :deep() {
       * {
         transition: $base-transition;
-      }
-
-      .el-tabs {
-        box-shadow: $base-box-shadow;
       }
     }
 
