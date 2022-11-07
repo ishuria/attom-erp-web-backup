@@ -6,7 +6,6 @@ import { createMock } from './mock/'
 import { createUnPlugin } from './unplugin/'
 import { createSvgIcons } from './svgSprite/'
 import { createElementPlus } from './elementPlus/'
-import { createVueAdvanced } from './vueAdvanced/'
 
 export function createVitePlugin() {
   const vitePlugins: (Plugin | Plugin[])[] = [vue()]
@@ -16,7 +15,6 @@ export function createVitePlugin() {
   vitePlugins.push(createUnPlugin())
   vitePlugins.push(createSvgIcons())
   vitePlugins.push(createElementPlus())
-  vitePlugins.push(createVueAdvanced())
 
   return vitePlugins
 }
