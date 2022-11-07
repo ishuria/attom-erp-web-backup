@@ -53,8 +53,8 @@
 </template>
 
 <script>
-  import { useTabsStore } from '@/store/modules/tabs'
-  import { handleActivePath } from '@/utils/routes'
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { handleActivePath } from '/@/utils/routes'
   import { Refresh } from '@element-plus/icons-vue'
 
   export default defineComponent({

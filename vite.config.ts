@@ -34,11 +34,8 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
       alias: {
         '~/': `${resolve(__dirname, '.')}/`,
         '/@/': `/${resolve(__dirname, 'src')}/`,
-        '@/': `/${resolve(__dirname, 'src')}/`,
         '/@vab/': `/${resolve(__dirname, 'library')}/`,
-        '@vab/': `/${resolve(__dirname, 'library')}/`,
         '/@types/': `/${resolve(__dirname, 'src/types')}/`,
-        '@types/': `/${resolve(__dirname, 'src/types')}/`,
         'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
       },
     },

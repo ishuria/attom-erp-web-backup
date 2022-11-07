@@ -108,7 +108,7 @@
 </template>
 
 <script>
-  import { getList } from '@/api/area'
+  import { getList } from '/@/api/area'
 
   export default defineComponent({
     // eslint-disable-next-line vue/no-reserved-component-names

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import { doEdit } from '@/api/GoodsManagement'
+  import { doEdit } from '/@/api/GoodsManagement'
 
   export default defineComponent({
     name: 'GoodsManagementEdit',
