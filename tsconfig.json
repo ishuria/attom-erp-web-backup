@@ -20,7 +20,8 @@
       "/@vab/*": ["./library/*"]
     },
     "lib": ["dom", "esnext", "scripthost", "dom.iterable"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["element-plus/global"]
   },
   "include": [
     "vite.config.ts",
