@@ -28,6 +28,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    'vue/no-reserved-component-names': 'off',
     'vue/no-v-html': 'off',
     'vue/html-self-closing': [
       'error',

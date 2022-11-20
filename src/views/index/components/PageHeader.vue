@@ -1,28 +1,12 @@
 <script setup lang="ts">
   import { useUserStore } from '/@/store/modules/user'
   import { getList } from '/@/api/description'
-  import VabAvatarList from '/@/plugins/VabAvatarList/index.vue'
 
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
 
   const state = reactive({
     description: '',
-    avatarList: [
-      {
-        avatar: 'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif',
-        username: 'good luck',
-      },
-      {
-        avatar:
-          'https://raw.githubusercontent.com/chuzhixin/image/master/user/fwfmiao.gif',
-        username: 'FlowPeakFish',
-      },
-      {
-        avatar: 'https://i.gtimg.cn/club/item/face/img/3/15643_100.gif',
-        username: '嘻嘻',
-      },
-    ],
   })
 
   const handleTips = () => {
@@ -58,10 +42,6 @@
           {{ handleTips() }}
         </p>
         <p class="page-header-tip-description" v-html="state.description"></p>
-      </div>
-      <div class="page-header-avatar-list">
-        <vab-avatar-list :avatar-list="state.avatarList" />
-        <p>participants</p>
       </div>
     </vab-card>
   </el-col>

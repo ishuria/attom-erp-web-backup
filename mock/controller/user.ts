@@ -87,7 +87,7 @@ export default [
           username,
           roles,
           permissions,
-          avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+          avatar: './static/img/avatar.png',
         },
       }
     },
