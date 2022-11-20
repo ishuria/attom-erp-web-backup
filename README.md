@@ -3,6 +3,10 @@
 <h1>shop-vite</h1>
 </div>
 
+## 🔈 注意事项
+
+- shop vite 首次运行，需执行自动化组件导入操作，故网页打开较慢，预计耗时五分钟，请耐心等待。。。
+
 ## 🔈 关于 shop-vite
 
 - shop-vite 与 admin plus 定位不同，shop-vite 定位小而精，admin-plus 定位大而全。
