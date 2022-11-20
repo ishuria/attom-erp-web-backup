@@ -387,6 +387,7 @@
     border-radius: 5px;
     :deep() {
       .fold-unfold {
+        font-size: 30px;
         color: var(--el-color-white);
       }
     }
