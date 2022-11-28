@@ -1,4 +1,4 @@
-import { MockMethod } from 'vite-plugin-mock'
+import { VabMockMethod } from '../utils'
 import { mock, Random } from 'mockjs'
 
 /**
@@ -80,4 +80,4 @@ export default [
       }
     },
   },
-] as MockMethod[]
+] as VabMockMethod[]

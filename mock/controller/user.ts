@@ -1,4 +1,4 @@
-import { MockMethod } from 'vite-plugin-mock'
+import { VabMockMethod } from '../utils'
 import { Random } from 'mockjs'
 
 const tokens: { [key: string]: string } = {
@@ -102,4 +102,4 @@ export default [
       }
     },
   },
-] as MockMethod[]
+] as VabMockMethod[]

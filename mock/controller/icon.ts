@@ -1,4 +1,4 @@
-import { MockMethod } from 'vite-plugin-mock'
+import { VabMockMethod } from '../utils'
 
 const List = [
   '24-hours-fill',
@@ -2296,4 +2296,4 @@ export default [
       }
     },
   },
-] as MockMethod[]
+] as VabMockMethod[]
