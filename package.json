@@ -13,8 +13,8 @@
     "build:deploy": "start ./deploy.sh",
     "global:install": "npm install -g nrm,cnpm,npm-check-updates",
     "globle:update": "ncu -g",
-    "module:install": "npm i --registry https://mirrors.huaweicloud.com/repository/npm/",
-    "module:update": "ncu -u --registry https://mirrors.huaweicloud.com/repository/npm/&&npm run module:install",
+    "module:install": "npm i --registry http://mirrors.cloud.tencent.com/npm/",
+    "module:update": "ncu -u --registry http://mirrors.cloud.tencent.com/npm/&&npm run module:install",
     "module:reinstall": "rimraf node_modules&&npm run module:install",
     "nrm:npm": "nrm use npm",
     "nrm:taobao": "nrm use taobao"
