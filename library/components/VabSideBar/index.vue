@@ -88,6 +88,9 @@
       border-right: 0;
 
       :deep() {
+        .el-menu {
+          border-right: 0 !important ;
+        }
         .el-menu--collapse.el-menu {
           > .el-menu-item,
           > .el-sub-menu {
