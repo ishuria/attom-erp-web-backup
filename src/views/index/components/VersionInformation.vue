@@ -65,16 +65,10 @@
               <el-button type="primary">shop-vite ￥XXXX</el-button>
             </a>
             <a
-              href="https://vue-admin-beautiful.com/authorization"
+              href="https://vue-admin-beautiful.com/admin-plus"
               target="_blank"
             >
               <el-button type="warning">admin-plus</el-button>
-            </a>
-            <a
-              href="https://github.com/chuzhixin/vue-admin-beautiful/"
-              target="_blank"
-            >
-              <el-button type="primary">开源免费版</el-button>
             </a>
           </td>
         </tr>

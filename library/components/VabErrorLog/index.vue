@@ -40,7 +40,7 @@
     <el-dialog
       v-model="state.dialogVisible"
       append-to-body
-      title="admin-plus 异常捕获(温馨提示：错误必须解决)"
+      title="shop-vite 异常捕获(温馨提示：错误必须解决)"
       width="70%"
     >
       <el-table border :data="errorLogs">
