@@ -143,9 +143,9 @@ export const useUserStore = defineStore('user', {
      * @description 退出登录
      */
     async logout() {
+      await location.reload()
       await logout()
       await this.resetAll()
-      await location.reload()
     },
     /**
      * @description 重置token、roles、permission、router、tabsBar等
