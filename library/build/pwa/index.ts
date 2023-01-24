@@ -10,8 +10,8 @@ const pwaOptions: Partial<VitePWAOptions> = {
   },
   manifest: {
     lang: 'zh',
-    name: 'Vue Admin Beautiful - Admin Vite',
-    short_name: 'Admin Vite',
+    name: 'Shop Vite',
+    short_name: 'Shop Vite',
     background_color: '#ffffff',
     icons: [
       {

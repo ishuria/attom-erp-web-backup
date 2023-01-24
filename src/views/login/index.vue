@@ -39,23 +39,23 @@
               :type="passwordType"
               @keyup.enter="handleLogin"
             >
-              <!-- <template #prefix>
-                              <vab-icon icon="lock-line" />
-                            </template>
-                            <template v-if="passwordType === 'password'" #suffix>
-                              <vab-icon
-                                class="show-password"
-                                icon="eye-off-line"
-                                @click="handlePassword"
-                              />
-                            </template>
-                            <template v-else #suffix>
-                              <vab-icon
-                                class="show-password"
-                                icon="eye-line"
-                                @click="handlePassword"
-                              />
-                            </template> -->
+              <template #prefix>
+                <vab-icon icon="lock-line" />
+              </template>
+              <!--  <template v-if="passwordType === 'password'" #suffix>
+                <vab-icon
+                  class="show-password"
+                  icon="eye-off-line"
+                  @click="handlePassword"
+                />
+              </template>
+              <template v-else #suffix>
+                <vab-icon
+                  class="show-password"
+                  icon="eye-line"
+                  @click="handlePassword"
+                />
+              </template> -->
             </el-input>
           </el-form-item>
           <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
