@@ -2,7 +2,7 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 //import setting from '/@/config'
 
 const pwaOptions: Partial<VitePWAOptions> = {
-  base: '/shop-vite',
+  base: '/shop-vite/',
   registerType: 'prompt',
   includeAssets: ['favicon.icon', 'static/img/*'],
   workbox: {
