@@ -93,9 +93,9 @@
   .version-information {
     .table {
       width: 100%;
-      color: #666;
+      color: var(--el-color-black);
       border-collapse: collapse;
-      background-color: #fff;
+      background-color: var(--el-color-white);
 
       td {
         position: relative;
@@ -115,7 +115,7 @@
         &:nth-child(odd) {
           width: 20%;
           text-align: right;
-          background-color: #f7f7f7;
+          background-color: var(--el-color-white);
         }
       }
     }

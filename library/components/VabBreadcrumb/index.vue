@@ -41,15 +41,6 @@
       .el-breadcrumb__item {
         .el-breadcrumb__inner {
           font-weight: normal;
-          color: #515a6e;
-        }
-
-        &:last-child {
-          .el-breadcrumb__inner {
-            a {
-              color: #999;
-            }
-          }
         }
       }
     }

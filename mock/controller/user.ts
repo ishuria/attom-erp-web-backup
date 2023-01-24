@@ -87,7 +87,7 @@ export default [
           username,
           roles,
           permissions,
-          avatar: './static/img/avatar.png',
+          avatar: './static/img/avatar.svg',
         },
       }
     },

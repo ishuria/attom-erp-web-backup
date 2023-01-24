@@ -98,7 +98,7 @@
     }
 
     &-column {
-      background: $base-column-second-menu-background !important;
+      background: var(--el-color-white) !important;
 
       .logo {
         position: fixed;
@@ -115,7 +115,7 @@
         padding-left: 15px;
         margin-left: $base-left-menu-width-min !important;
         color: var(--el-color-black) !important;
-        background: $base-column-second-menu-background !important;
+        background: var(--el-color-white) !important;
         @include title;
       }
     }

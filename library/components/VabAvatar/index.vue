@@ -43,10 +43,6 @@
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="personalCenter">
-          <vab-icon icon="user-line" />
-          <span>{{ translateTitle('个人中心') }}</span>
-        </el-dropdown-item>
         <el-dropdown-item command="logout">
           <vab-icon icon="logout-circle-r-line" />
           <span>{{ translateTitle('退出登录') }}</span>
@@ -65,8 +61,10 @@
     justify-items: center;
 
     .user-avatar {
+      box-sizing: border-box;
       width: 40px;
       height: 40px;
+      padding: 8px;
       margin-left: 15px;
       cursor: pointer;
       border-radius: 50%;

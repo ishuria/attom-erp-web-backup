@@ -67,6 +67,7 @@
     &-avatar {
       width: 60px;
       height: 60px;
+      padding: 12px;
       margin-right: 20px;
       border-radius: 50%;
     }

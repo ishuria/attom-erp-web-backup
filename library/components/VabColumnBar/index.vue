@@ -128,7 +128,7 @@
     width: var(--el-left-menu-width);
     height: 100vh;
     overflow: hidden;
-    background: $base-column-second-menu-background;
+    background: var(--el-color-white);
     border-right: 1px solid #e4e7ed;
 
     :deep() {
