@@ -4,8 +4,8 @@ import { defineConfig, loadEnv } from 'vite'
 import { createVitePlugin } from '/@vab/build'
 import setting from './src/config'
 import dayjs from 'dayjs'
-
 import { name, version, dependencies, devDependencies } from './package.json'
+
 const info = {
   name,
   version,

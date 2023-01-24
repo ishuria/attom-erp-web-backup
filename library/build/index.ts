@@ -5,6 +5,8 @@ import { createPwa } from './pwa/'
 import { createMock } from './mock/'
 import { createUnPlugin } from './unplugin/'
 import { createSvgIcons } from './svgSprite/'
+import { createProgress } from './progress/'
+import { createDefineOptions } from './defineOptions/'
 
 export function createVitePlugin(env: Record<string, string>) {
   const vitePlugins: (Plugin | Plugin[])[] = [vue()]
@@ -19,9 +21,11 @@ export function createVitePlugin(env: Record<string, string>) {
   if (isEmpty(userName) || isEmpty(secretKey)) return
   if (nodeEnv !== 'development')
     if (isEmpty(userName) || isEmpty(secretKey)) return
+  vitePlugins.push(createProgress() as any)
   vitePlugins.push(createUnPlugin(env))
   vitePlugins.push(createPwa())
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
+  vitePlugins.push(createDefineOptions())
   return vitePlugins
 }

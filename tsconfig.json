@@ -21,7 +21,10 @@
     },
     "lib": ["dom", "esnext", "scripthost", "dom.iterable"],
     "skipLibCheck": true,
-    "types": ["element-plus/global"]
+    "types": [
+      "element-plus/global",
+      "unplugin-vue-define-options/macros-global"
+    ]
   },
   "include": [
     "vite.config.ts",
