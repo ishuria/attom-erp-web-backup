@@ -29,6 +29,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
       hmr: {
         overlay: true,
       },
+      host: '0.0.0.0',
     },
     resolve: {
       alias: {
