@@ -62,7 +62,7 @@
               href="https://vue-admin-beautiful.com/authorization"
               target="_blank"
             >
-              <el-button type="primary">shop-vite ￥599</el-button>
+              <el-button type="primary">shop-vite ￥XXXX</el-button>
             </a>
             <a
               href="https://vue-admin-beautiful.com/authorization"
