@@ -58,12 +58,12 @@
         <tr>
           <td>授权渠道</td>
           <td colspan="3">
-            <a
+            <!--  <a
               href="https://vue-admin-beautiful.com/authorization"
               target="_blank"
-            >
-              <el-button type="primary">shop-vite ￥XXXX</el-button>
-            </a>
+            > -->
+            <el-button type="primary">shop-vite ￥XXXX</el-button>
+            <!--  </a> -->
             <a
               href="https://vue-admin-beautiful.com/admin-plus"
               target="_blank"
