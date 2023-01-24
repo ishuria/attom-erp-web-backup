@@ -1,4 +1,4 @@
-import { VabMockMethod } from '../utils'
+import { MockMethod } from 'vite-plugin-mock'
 
 const list = [
   {
@@ -274,4 +274,4 @@ export default [
       }
     },
   },
-] as VabMockMethod[]
+] as MockMethod[]
