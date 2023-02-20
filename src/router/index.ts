@@ -84,7 +84,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
   {
     path: '/portal',
     name: 'Portal',
-    component: () => import('/@/views/Portal/Portal.vue'),
+    component: () => import('/@/views/portal/Portal.vue'),
     meta: {
       title: '门户',
       icon: 'home-2-line',
