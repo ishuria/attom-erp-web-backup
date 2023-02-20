@@ -29,9 +29,7 @@
     if (target === '_blank') {
       if (isExternal(routePath)) window.open(routePath)
       else if (route.path !== routePath)
-        isHashRouterMode
-          ? window.open('/#' + routePath)
-          : window.open(routePath)
+        isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
     } else {
       if (isExternal(routePath)) window.location.href = routePath
       else if (route.path !== routePath) {

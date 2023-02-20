@@ -29,7 +29,7 @@
       if (tabMenu.value.meta.target === '_blank') {
         if (route.path !== tabMenu.value.path) {
           isHashRouterMode
-            ? window.open('/#' + tabMenu.value.path)
+            ? window.open(`#${tabMenu.value.path}`)
             : window.open(tabMenu.value.path)
           router.push('/redirect')
           setTimeout(() => {

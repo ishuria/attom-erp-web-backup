@@ -39,17 +39,29 @@
         <el-carousel-item v-for="item in 2" :key="item" />
       </el-carousel>
     </main>
+    <div style="background-color: #f5f7fa">
+      <main>
+        <div class="description-box">
+          <h1>
+            <span class="clip">Vite</span>
+          </h1>
+          <p class="text">下一代的前端工具链</p>
+        </div>
+      </main>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
   .portal-main {
-    margin-top: -12px;
+    margin-top: -15px;
     header {
+      position: relative;
+      z-index: 999;
       height: 71px;
       margin: 0;
-      background: #fff;
-      border-bottom: 1px solid #f3f5f6;
+      background: rgba(#fff, 0.5);
+
       .index-nav {
         min-width: 1152px;
         max-width: 1366px;
@@ -96,9 +108,14 @@
     }
     main {
       width: 1152px;
-      padding: 32px 0;
+      padding: 32px 0 0 0;
       margin-right: auto;
       margin-left: auto;
+      border-top: 1px solid #f3f5f6;
+
+      .el-carousel--horizontal {
+        border-radius: 15px;
+      }
 
       .el-carousel__item:nth-of-type(1) {
         background: url('/@/assets/portal_images/carousel_1.jpg');
@@ -108,6 +125,22 @@
       .el-carousel__item:nth-of-type(2) {
         background: url('/@/assets/portal_images/carousel_2.jpg');
         background-size: cover;
+      }
+
+      .description-box {
+        h1 {
+          .clip {
+            font-size: 46px;
+            background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+        }
+        .text {
+          margin-top: -10px;
+          font-size: 46px;
+          font-weight: bold;
+        }
       }
     }
   }
