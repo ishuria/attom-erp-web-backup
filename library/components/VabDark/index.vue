@@ -2,7 +2,10 @@
   import { Sunny, Moon } from '@element-plus/icons-vue'
   import { useDark, useToggle } from '@vueuse/core'
   import { ElLoading } from 'element-plus'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
+  const settingsStore = useSettingsStore()
+  const { theme } = storeToRefs(settingsStore)
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
   const value = ref(true)
@@ -23,6 +26,7 @@
 
 <template>
   <el-switch
+    v-if="theme.showDark"
     v-model="value"
     :active-icon="Sunny"
     class="mt-2"

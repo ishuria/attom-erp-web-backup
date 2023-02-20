@@ -10,6 +10,7 @@ const {
   i18n,
   layout,
   logo: _logo,
+  showDark,
   showFullScreen,
   showLanguage,
   showNotice,
@@ -29,6 +30,7 @@ const defaultTheme: ThemeType = {
   themeName,
   columnStyle,
   fixedHeader,
+  showDark,
   showProgressBar,
   showTabs,
   tabsBarStyle,
@@ -89,6 +91,9 @@ export const useSettingsStore = defineStore('settings', {
             : `{"${key}":${obj[key]}}`
         )
       })
+    },
+    updateTheme() {
+      //预置主题修改，需自行开发，与vite快的设计理念不符，故移除
     },
     toggleCollapse() {
       this.collapse = !this.collapse

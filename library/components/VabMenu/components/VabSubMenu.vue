@@ -17,7 +17,7 @@
       <vab-menu :item="route" />
     </template>
   </template>
-  <el-sub-menu v-else :index="itemOrMenu.path" popper-append-to-body>
+  <el-sub-menu v-else :index="itemOrMenu.path">
     <template #title>
       <vab-icon
         v-if="itemOrMenu.meta && itemOrMenu.meta.icon"

@@ -144,58 +144,8 @@
   }
 </style>
 
-<!--由于element-plus
-bug使用popper-append-to-body=false会导致多级路由无法显示，故所有菜单必须生成至body下，样式必须放到body下-->
 <style lang="scss">
-  @mixin menuActiveHover {
-    &:hover,
-    &.is-active {
-      i {
-        color: var(--el-color-white);
-      }
-
-      color: var(--el-color-white);
-      background: var(--el-color-primary);
-
-      .el-sub-menu__title {
-        i {
-          color: var(--el-color-white);
-        }
-
-        color: var(--el-color-white);
-        background: var(--el-color-primary);
-      }
-    }
-  }
-
   .el-menu {
     border-right: 0;
-  }
-
-  .el-popper {
-    .el-menu--vertical {
-      .el-menu-item,
-      .el-sub-menu {
-        height: $base-menu-item-height;
-        line-height: $base-menu-item-height;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        vertical-align: middle;
-        @include menuActiveHover;
-
-        i {
-          color: inherit;
-        }
-
-        .el-sub-menu__title {
-          height: $base-menu-item-height;
-          line-height: $base-menu-item-height;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          vertical-align: middle;
-          @include menuActiveHover;
-        }
-      }
-    }
   }
 </style>

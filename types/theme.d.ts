@@ -109,6 +109,8 @@ declare interface ThemeType {
   showNotice: boolean
   // 是否开启全屏组件
   showFullScreen: boolean
+  // 是否开启暗黑组件
+  showDark: boolean
   // 是否开启页面动画
   showPageTransition: boolean
 }
