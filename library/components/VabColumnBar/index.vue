@@ -22,15 +22,29 @@
     getPartialRoutes: partialRoutes,
   }: any = storeToRefs(routesStore)
 
+  const { isHashRouterMode } = setting
+
   const handleTabClick = () => {
     nextTick(() => {
-      if (isExternal(tabMenu.value.path)) {
+      if (tabMenu.value.meta.target === '_blank') {
+        if (route.path !== tabMenu.value.path) {
+          isHashRouterMode
+            ? window.open('/#' + tabMenu.value.path)
+            : window.open(tabMenu.value.path)
+          router.push('/redirect')
+          setTimeout(() => {
+            router.push('/')
+          }, 500)
+        }
+      } else if (isExternal(tabMenu.value.path)) {
         window.open(tabMenu.value.path)
         setTimeout(() => {
           router.push('/')
-        }, 1000)
-      } else if (openFirstMenu)
+        }, 500)
+      } else if (openFirstMenu) {
+        debugger
         router.push(tabMenu.value.redirect || tabMenu.value)
+      }
     })
   }
 
@@ -385,6 +399,7 @@
     text-align: center;
     background: var(--el-color-primary);
     border-radius: 5px;
+
     :deep() {
       .fold-unfold {
         font-size: 30px;

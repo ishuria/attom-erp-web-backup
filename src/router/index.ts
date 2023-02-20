@@ -33,6 +33,14 @@ export const constantRoutes: VabRouteRecordRaw[] = [
     },
   },
   {
+    path: '/redirect',
+    name: 'Redirect',
+    component: () => import('/@/views/redirect/Redirect.vue'),
+    meta: {
+      hidden: true,
+    },
+  },
+  {
     path: '/403',
     name: '403',
     component: () => import('/@/views/403.vue'),
@@ -72,6 +80,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
     ],
+  },
+  {
+    path: '/portal',
+    name: 'Portal',
+    component: () => import('/@/views/Portal/Portal.vue'),
+    meta: {
+      title: '门户',
+      icon: 'home-2-line',
+      target: '_blank',
+    },
   },
   {
     path: '/vab',
