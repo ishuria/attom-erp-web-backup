@@ -56,7 +56,7 @@ export function filterRoutes(
             baseUrl + (route.path[0] === '/' ? route.path.slice(1) : route.path)
         else
           route.path =
-            baseUrl + (route.path[0] === '/' ? route.path : '/' + route.path)
+            baseUrl + (route.path[0] === '/' ? route.path : `/${route.path}`)
       }
       if (route.children && route.children.length > 0) {
         route.children = filterRoutes(route.children, rolesControl, route.path)

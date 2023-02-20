@@ -192,7 +192,7 @@
         state.getPhoneInterval = setInterval(() => {
           if (n > 0) {
             n--
-            state.phoneCode = translateTitle('获取验证码 ') + n + 's'
+            state.phoneCode = `${translateTitle('获取验证码 ') + n}s`
           } else {
             clearInterval(state.getPhoneInterval)
             state.phoneCode = translateTitle('获取验证码')

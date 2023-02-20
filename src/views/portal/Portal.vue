@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+  import { getImageUrl } from '/@/utils/imageUrl'
+
+  const background = ref('')
+
+  const handleChange = (value: any) => {
+    const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
+    background.value = `url('${img}')`
+  }
+</script>
 <template>
   <div class="portal-main">
     <header>
@@ -18,6 +28,17 @@
         </ul>
       </div>
     </header>
+    <div class="carousel-background" :style="{ background: background }"></div>
+    <main>
+      <el-carousel
+        arrow="always"
+        height="500px"
+        :interval="3000"
+        @change="handleChange"
+      >
+        <el-carousel-item v-for="item in 2" :key="item" />
+      </el-carousel>
+    </main>
   </div>
 </template>
 
@@ -62,6 +83,31 @@
             transition: background-color 0.3s;
           }
         }
+      }
+    }
+
+    .carousel-background {
+      position: absolute;
+      width: 100%;
+      height: 180px;
+      background: url('/@/assets/portal_images/carousel_1.jpg');
+      filter: blur(100px);
+      opacity: 0.5;
+    }
+    main {
+      width: 1152px;
+      padding: 32px 0;
+      margin-right: auto;
+      margin-left: auto;
+
+      .el-carousel__item:nth-of-type(1) {
+        background: url('/@/assets/portal_images/carousel_1.jpg');
+        background-size: cover;
+      }
+
+      .el-carousel__item:nth-of-type(2) {
+        background: url('/@/assets/portal_images/carousel_2.jpg');
+        background-size: cover;
       }
     }
   }

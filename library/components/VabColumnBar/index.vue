@@ -41,10 +41,8 @@
         setTimeout(() => {
           router.push('/')
         }, 500)
-      } else if (openFirstMenu) {
-        debugger
+      } else if (openFirstMenu)
         router.push(tabMenu.value.redirect || tabMenu.value)
-      }
     })
   }
 
