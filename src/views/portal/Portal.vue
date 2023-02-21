@@ -7,6 +7,9 @@
     const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
     background.value = `url('${img}')`
   }
+  const openWindow = (url: string) => {
+    window.open(url)
+  }
 </script>
 <template>
   <div class="portal-main">
@@ -38,13 +41,28 @@
               background-color="#39364d"
               text-color="#fff"
             >
-              <el-menu-item index="1">
+              <el-menu-item
+                index="1"
+                @click="
+                  openWindow('https://vue-admin-beautiful.com/admin-pro>')
+                "
+              >
                 <template #title>Vue Admin Pro：企业级中后台前端框架</template>
               </el-menu-item>
-              <el-menu-item index="2">
+              <el-menu-item
+                index="2"
+                @click="
+                  openWindow('https://vue-admin-beautiful.com/admin-plus>')
+                "
+              >
                 <template #title>Vue Admin Plus：企业级中后台前端框架</template>
               </el-menu-item>
-              <el-menu-item index="3">
+              <el-menu-item
+                index="3"
+                @click="
+                  openWindow('https://vue-admin-beautiful.com/shop-vite>')
+                "
+              >
                 <template #title>Vue Shop Vite：全新一代前端模板</template>
               </el-menu-item>
             </el-menu>
@@ -57,7 +75,12 @@
             :interval="3000"
             @change="handleChange"
           >
-            <el-carousel-item v-for="item in 2" :key="item" />
+            <el-carousel-item
+              @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')"
+            />
+            <el-carousel-item
+              @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')"
+            />
           </el-carousel>
         </el-col>
         <el-col :span="24">
