@@ -30,25 +30,64 @@
     </header>
     <div class="carousel-background" :style="{ background: background }"></div>
     <main>
-      <el-carousel
-        arrow="always"
-        height="500px"
-        :interval="3000"
-        @change="handleChange"
-      >
-        <el-carousel-item v-for="item in 2" :key="item" />
-      </el-carousel>
+      <el-row :gutter="0">
+        <el-col :span="6">
+          <div class="left-tab">
+            <el-menu
+              active-text-color="#fff"
+              background-color="#39364d"
+              text-color="#fff"
+            >
+              <el-menu-item index="1">
+                <template #title>Vue Admin Pro：企业级中后台前端框架</template>
+              </el-menu-item>
+              <el-menu-item index="2">
+                <template #title>Vue Admin Plus：企业级中后台前端框架</template>
+              </el-menu-item>
+              <el-menu-item index="3">
+                <template #title>Vue Shop Vite：全新一代前端模板</template>
+              </el-menu-item>
+            </el-menu>
+          </div>
+        </el-col>
+        <el-col :span="18">
+          <el-carousel
+            arrow="always"
+            height="400px"
+            :interval="3000"
+            @change="handleChange"
+          >
+            <el-carousel-item v-for="item in 2" :key="item" />
+          </el-carousel>
+        </el-col>
+        <el-col :span="24">
+          <div style="background-color: #f5f7fa">
+            <div class="description-box">
+              <el-row>
+                <el-col :span="6">
+                  <div style="float: left">
+                    <h1>
+                      <span class="clip">Vue Shop Vite</span>
+                    </h1>
+                    <p class="text">全新一代的前端模板</p>
+                  </div>
+                  <el-divider direction="vertical" />
+                </el-col>
+                <el-col :span="6">
+                  2
+                  <el-divider direction="vertical" />
+                </el-col>
+                <el-col :span="6">
+                  3
+                  <el-divider direction="vertical" />
+                </el-col>
+                <el-col :span="6">4</el-col>
+              </el-row>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
     </main>
-    <div style="background-color: #f5f7fa">
-      <main>
-        <div class="description-box">
-          <h1>
-            <span class="clip">Vite</span>
-          </h1>
-          <p class="text">下一代的前端工具链</p>
-        </div>
-      </main>
-    </div>
   </div>
 </template>
 
@@ -112,9 +151,22 @@
       margin-right: auto;
       margin-left: auto;
       border-top: 1px solid #f3f5f6;
+      .left-tab {
+        width: 100%;
+        height: 400px;
+        padding-top: 15px;
+        background: #39364d;
+        border-top-left-radius: 15px;
+
+        :deep() {
+          .el-menu-item.is-active {
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
 
       .el-carousel--horizontal {
-        border-radius: 15px;
+        border-top-right-radius: 15px;
       }
 
       .el-carousel__item:nth-of-type(1) {
@@ -128,9 +180,24 @@
       }
 
       .description-box {
+        width: 100%;
+        height: 120px;
+        padding: 10px 20px 20px 20px;
+        border-bottom-right-radius: 15px;
+        border-bottom-left-radius: 15px;
+        box-shadow: 0 5px 20px 0 rgb(0 0 0 / 30%);
+
+        :deep() {
+          .el-divider--vertical {
+            float: right;
+            height: 7em;
+          }
+        }
+
         h1 {
           .clip {
-            font-size: 46px;
+            font-size: 32px;
+            line-height: 0;
             background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -138,7 +205,7 @@
         }
         .text {
           margin-top: -10px;
-          font-size: 46px;
+          font-size: 24px;
           font-weight: bold;
         }
       }
