@@ -74,14 +74,31 @@
                   <el-divider direction="vertical" />
                 </el-col>
                 <el-col :span="6">
-                  2
+                  <div class="show-box">
+                    <div class="system-class-icon" style="background: #20c2dc">
+                      <vab-icon icon="bubble-chart-line" />
+                    </div>
+                    <div class="describe">高效 Efficient</div>
+                  </div>
                   <el-divider direction="vertical" />
                 </el-col>
                 <el-col :span="6">
-                  3
+                  <div class="show-box">
+                    <div class="system-class-icon" style="background: #f7753f">
+                      <vab-icon icon="medal-fill" />
+                    </div>
+                    <div class="describe">专业 Major</div>
+                  </div>
                   <el-divider direction="vertical" />
                 </el-col>
-                <el-col :span="6">4</el-col>
+                <el-col :span="6">
+                  <div class="show-box">
+                    <div class="system-class-icon" style="background: #6a59f4">
+                      <vab-icon icon="seedling-fill" />
+                    </div>
+                    <div class="describe">美观 Beautiful</div>
+                  </div>
+                </el-col>
               </el-row>
             </div>
           </div>
@@ -207,6 +224,33 @@
           margin-top: -10px;
           font-size: 24px;
           font-weight: bold;
+        }
+        .show-box {
+          padding-top: 25px;
+          padding-left: 20px;
+          .system-class-icon {
+            float: left;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            color: #fff;
+            text-align: center;
+            border-radius: 100%;
+            [class*='ri'] {
+              font-size: 24px;
+            }
+          }
+          .describe {
+            float: left;
+            margin-top: 15px;
+            margin-left: 20px;
+            font-family: PingFangSC-Medium;
+            font-size: 16px;
+            line-height: 22px;
+            color: #1c1f21;
+            letter-spacing: 0.76px;
+            white-space: nowrap;
+          }
         }
       }
     }
