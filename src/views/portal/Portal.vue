@@ -88,11 +88,13 @@
             <div class="description-box">
               <el-row>
                 <el-col :span="6">
-                  <div style="float: left">
-                    <h1>
-                      <span class="clip">Vue Shop Vite</span>
-                    </h1>
-                    <p class="text">全新一代的前端模板</p>
+                  <div class="show-box">
+                    <div style="float: left">
+                      <h1>
+                        <span class="clip">Vue Shop Vite</span>
+                      </h1>
+                      <p class="text">全新一代的前端模板</p>
+                    </div>
                   </div>
                   <el-divider direction="vertical" />
                 </el-col>
@@ -127,6 +129,19 @@
           </div>
         </el-col>
       </el-row>
+    </main>
+
+    <div
+      style="
+        width: 100%;
+        height: 40px;
+        margin-bottom: 10px;
+        box-shadow: rgb(7 17 27 / 6%) 6px 5px 8px 0px;
+      "
+    ></div>
+
+    <main style="background: #f5f7fa">
+      <div class="news-tit"><h2 class="fl">今日要闻</h2></div>
     </main>
   </div>
 </template>
@@ -231,10 +246,12 @@
           .el-divider--vertical {
             float: right;
             height: 7em;
+            margin-top: -20px;
           }
         }
 
         h1 {
+          margin-top: -10px;
           .clip {
             font-size: 32px;
             line-height: 0;
@@ -274,6 +291,21 @@
             letter-spacing: 0.76px;
             white-space: nowrap;
           }
+        }
+      }
+      .news-tit {
+        position: relative;
+        width: 100%;
+        height: 38px;
+        margin-top: -30px;
+        line-height: 36px;
+
+        h2 {
+          float: left;
+          font-size: 20px;
+          line-height: 36px;
+          color: #5184eb;
+          border-bottom: 4px solid #5184eb;
         }
       }
     }
