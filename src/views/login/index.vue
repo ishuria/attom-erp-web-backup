@@ -1,48 +1,39 @@
 <template>
   <div class="login-container">
-    <el-row>
-      <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
-        <div style="color: transparent">占位符</div>
-      </el-col>
-      <el-col :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
-        <el-form
-          ref="formRef"
-          class="login-form"
-          label-position="left"
-          :model="form"
-          :rules="rules"
-        >
-          <div class="title">hello !</div>
-          <div class="title-tips">
-            {{ translateTitle('欢迎来到') }}{{ title }}！
-          </div>
-          <el-form-item prop="username" style="margin-top: 40px">
-            <el-input
-              v-model.trim="form.username"
-              v-focus
-              :placeholder="translateTitle('请输入用户名')"
-              tabindex="1"
-              type="text"
-            >
-              <template #prefix>
-                <vab-icon icon="user-line" />
-              </template>
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-input
-              :key="passwordType"
-              ref="passwordRef"
-              v-model.trim="form.password"
-              :placeholder="translateTitle('请输入密码')"
-              tabindex="2"
-              :type="passwordType"
-              @keyup.enter="handleLogin"
-            >
-              <template #prefix>
-                <vab-icon icon="lock-line" />
-              </template>
-              <!--  <template v-if="passwordType === 'password'" #suffix>
+    <div class="login-form">
+      <img class="left-img" :src="leftImg" />
+      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
+        <div class="title">hello !</div>
+        <div class="title-tips">
+          {{ translateTitle('欢迎来到') }}{{ title }}！
+        </div>
+        <el-form-item prop="username" style="margin-top: 40px">
+          <el-input
+            v-model.trim="form.username"
+            v-focus
+            :placeholder="translateTitle('请输入用户名')"
+            tabindex="1"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="user-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            :key="passwordType"
+            ref="passwordRef"
+            v-model.trim="form.password"
+            :placeholder="translateTitle('请输入密码')"
+            tabindex="2"
+            :type="passwordType"
+            @keyup.enter="handleLogin"
+          >
+            <template #prefix>
+              <vab-icon icon="lock-line" />
+            </template>
+            <!--  <template v-if="passwordType === 'password'" #suffix>
                 <vab-icon
                   class="show-password"
                   icon="eye-off-line"
@@ -56,44 +47,40 @@
                   @click="handlePassword"
                 />
               </template> -->
-            </el-input>
-          </el-form-item>
-          <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
-          <el-form-item prop="verificationCode">
-            <el-input
-              v-model.trim="form.verificationCode"
-              :placeholder="translateTitle('验证码') + previewText"
-              tabindex="3"
-              type="text"
-            >
-              <template #prefix>
-                <vab-icon icon="barcode-box-line" />
-              </template>
-            </el-input>
-            <el-image class="code" :src="codeUrl" @click="changeCode" />
-          </el-form-item>
-          <el-button
-            class="login-btn"
-            :loading="loading"
-            type="primary"
-            @click="handleLogin"
+          </el-input>
+        </el-form-item>
+        <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
+        <el-form-item prop="verificationCode">
+          <el-input
+            v-model.trim="form.verificationCode"
+            :placeholder="translateTitle('验证码') + previewText"
+            tabindex="3"
+            type="text"
           >
-            {{ translateTitle('登录') }}
+            <template #prefix>
+              <vab-icon icon="barcode-box-line" />
+            </template>
+          </el-input>
+          <el-image class="code" :src="codeUrl" @click="changeCode" />
+        </el-form-item>
+        <el-button
+          class="login-btn"
+          :loading="loading"
+          type="primary"
+          @click="handleLogin"
+        >
+          {{ translateTitle('登录') }}
+        </el-button>
+        <router-link to="/register">
+          <el-button
+            style="margin-top: 20px; margin-left: -10px"
+            type="primary"
+          >
+            {{ translateTitle('注册') }}
           </el-button>
-          <router-link to="/register">
-            <el-button
-              style="margin-top: 20px; margin-left: -10px"
-              type="primary"
-            >
-              {{ translateTitle('注册') }}
-            </el-button>
-          </router-link>
-        </el-form>
-      </el-col>
-      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">
-        <div style="color: transparent">占位符</div>
-      </el-col>
-    </el-row>
+        </router-link>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -103,6 +90,8 @@
   import { translateTitle } from '/@/utils/i18n'
   import { isPassword } from '/@/utils/validate'
   import { onBeforeRouteLeave } from 'vue-router'
+
+  import { getImageUrl } from '/@/utils/imageUrl'
 
   export default defineComponent({
     name: 'Login',
@@ -119,6 +108,10 @@
 
       const userStore = useUserStore()
       const settingsStore = useSettingsStore()
+
+      const leftImg = ref('')
+      const img = getImageUrl(`assets/login_images/left_img.png`)
+      leftImg.value = img
 
       const login = (form) => userStore.login(form)
 
@@ -231,6 +224,7 @@
         handlePassword,
         handleLogin,
         changeCode,
+        leftImg,
       }
     },
   })
@@ -239,106 +233,121 @@
 <style lang="scss" scoped>
   .login-container {
     height: 100vh;
+    padding-top: 20vh;
     background: url('/@/assets/login_images/background.jpg') center center fixed
       no-repeat;
     background-size: cover;
   }
 
+  @media (max-width: 576px) {
+    .login-form {
+      width: auto !important;
+      margin: 0 5vw 0 5vw !important;
+    }
+  }
   .login-form {
-    position: relative;
-    max-width: 100%;
+    width: 1000px;
     padding: 4.5vh;
-    margin: calc((100vh - 590px) / 2) 5vw 5vw;
+    margin: 0 auto 0 auto;
     overflow: hidden;
-    background: rgba(#0184b4, 0.7);
+    background: var(--el-color-white);
     background-size: 100% 100%;
     border-radius: 15px;
 
-    .title {
-      font-size: 54px;
-      font-weight: 500;
-      color: var(--el-color-white);
+    .left-img {
+      float: left;
+      width: 50%;
     }
-
-    .title-tips {
-      margin-top: 29px;
-      font-size: 26px;
-      font-weight: 400;
-      color: var(--el-color-white);
-    }
-
-    .login-btn {
-      display: inherit;
-      width: 220px;
-      height: 50px;
-      margin-top: 5px;
-      border: 0;
-
-      &:hover {
-        opacity: 0.9;
-      }
-
-      .forget-passwordword {
-        width: 100%;
-        margin-top: 40px;
-        text-align: left;
-
-        .forget-password {
-          width: 129px;
-          height: 19px;
-          font-size: 20px;
-          font-weight: 400;
-          color: rgba(92, 102, 240, 1);
-        }
-      }
-    }
-
-    .tips {
-      margin-bottom: 10px;
-      font-size: $base-font-size-default;
-      color: var(--el-color-white);
-
-      span {
-        &:first-of-type {
-          margin-right: 16px;
-        }
-      }
-    }
-
-    .title-container {
-      position: relative;
-
-      .title {
-        margin: 0 auto 40px auto;
-        font-size: 34px;
-        font-weight: bold;
-        color: var(--el-color-primary);
-        text-align: center;
-      }
-    }
-
-    i {
-      position: absolute;
-      top: 8px;
-      left: 5px;
-      z-index: $base-z-index;
-      font-size: 16px;
-      color: #d7dee3;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .show-password {
-      position: absolute;
-      right: 25px;
-      left: -35px;
-      font-size: 16px;
-      color: #d7dee3;
-      cursor: pointer;
-      user-select: none;
-    }
-
     :deep() {
+      .el-form--default {
+        float: left;
+        width: 44%;
+        margin-left: 5.8%;
+      }
+      .title {
+        font-size: 54px;
+        font-weight: 500;
+        color: var(--el-color-black);
+      }
+
+      .title-tips {
+        margin-top: 29px;
+        font-size: 26px;
+        font-weight: 400;
+        color: var(--el-color-black);
+      }
+
+      .login-btn {
+        display: inherit;
+        width: 220px;
+        height: 50px;
+        margin-top: 5px;
+        border: 0;
+
+        &:hover {
+          opacity: 0.9;
+        }
+
+        .forget-passwordword {
+          width: 100%;
+          margin-top: 40px;
+          text-align: left;
+
+          .forget-password {
+            width: 129px;
+            height: 19px;
+            font-size: 20px;
+            font-weight: 400;
+            color: rgba(92, 102, 240, 1);
+          }
+        }
+      }
+
+      .tips {
+        margin-bottom: 10px;
+        font-size: $base-font-size-default;
+        color: var(--el-color-white);
+
+        span {
+          &:first-of-type {
+            margin-right: 16px;
+          }
+        }
+      }
+
+      .title-container {
+        position: relative;
+
+        .title {
+          margin: 0 auto 40px auto;
+          font-size: 34px;
+          font-weight: bold;
+          color: var(--el-color-primary);
+          text-align: center;
+        }
+      }
+
+      i {
+        position: absolute;
+        top: 9px;
+        left: 15px;
+        z-index: $base-z-index;
+        font-size: 16px;
+        color: var(--el-color-black);
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .show-password {
+        position: absolute;
+        right: 25px;
+        left: -35px;
+        font-size: 16px;
+        color: var(--el-color-black);
+        cursor: pointer;
+        user-select: none;
+      }
+
       .el-form-item {
         padding-right: 0;
         margin: 20px 0;
@@ -370,7 +379,7 @@
           padding-left: 35px;
           font-size: $base-font-size-default;
           line-height: 58px;
-          background: #fff;
+          background: var(--el-color-white);
           border: 0;
         }
       }
