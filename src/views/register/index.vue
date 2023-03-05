@@ -250,7 +250,7 @@
       padding: 4.5vh;
       margin: calc((100vh - 590px) / 2) 5vw 5vw;
       overflow: hidden;
-      background: url('/@/assets/login_images/login_form.png');
+      background: #4c50ef;
       background-size: 100% 100%;
 
       .title-tips {
