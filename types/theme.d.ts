@@ -87,6 +87,8 @@ declare interface ThemeType {
   themeName: ThemeName
   // 分栏风格(仅针对分栏布局column时生效)
   columnStyle: ColumnStyle
+  // 颜色
+  color: string
   // 是否固定头部固定
   fixedHeader: boolean
   // 纵向布局时是否默认收起左侧菜单（不支持分栏布局）

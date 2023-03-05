@@ -8,6 +8,8 @@ export const themeConfig: ThemeType = {
   themeName: 'blue-black',
   // 分栏风格：横向风格horizontal、纵向风格vertical、卡片风格card、箭头风格arrow
   columnStyle: 'card',
+  //颜色
+  color: '#4e88f3',
   //是否固定头部固定
   fixedHeader: true,
   //是否开启顶部进度条

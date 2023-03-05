@@ -29,11 +29,9 @@ declare interface SettingsModuleType {
   device: DeviceType
   collapse: boolean
   language: LanguageType
-  lock: boolean
   logo: string
   title: string
-  echartsGraphic1: string[]
-  echartsGraphic2: string[]
+  color: string
 }
 
 declare interface TabsModuleType {

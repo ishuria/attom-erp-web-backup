@@ -44,7 +44,9 @@ declare interface ThemeType {
   // 主题名称
   themeName: ThemeName
   // 分栏风格(仅针对分栏布局column时生效)
-  columnStyle: ColumnStyle
+  columnStyle: ColumnStyleg
+  // 颜色
+  color: string
   // 是否固定头部固定
   fixedHeader: boolean
   // 是否开启顶部进度条

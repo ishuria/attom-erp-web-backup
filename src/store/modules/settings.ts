@@ -5,6 +5,7 @@ import { isJson } from '/@/utils/validate'
 import setting from '/@/config'
 const {
   columnStyle,
+  color,
   fixedHeader,
   foldSidebar,
   i18n,
@@ -29,6 +30,7 @@ const defaultTheme: ThemeType = {
   layout,
   themeName,
   columnStyle,
+  color,
   fixedHeader,
   showDark,
   showProgressBar,
@@ -55,7 +57,6 @@ const getLocalStorage = (key: string) => {
 const theme = getLocalStorage('theme') || { ...defaultTheme }
 const { collapse = foldSidebar } = getLocalStorage('collapse')
 const { language = i18n } = getLocalStorage('language')
-const { lock = false } = getLocalStorage('lock')
 const { logo = _logo } = getLocalStorage('logo')
 const { title = _title } = getLocalStorage('title')
 
@@ -64,8 +65,8 @@ export const useSettingsStore = defineStore('settings', {
     theme,
     device: 'desktop',
     collapse,
+    color: getLocalStorage('color').color || color,
     language,
-    lock,
     logo,
     title,
   }),
@@ -73,8 +74,8 @@ export const useSettingsStore = defineStore('settings', {
     getTheme: (state) => state.theme,
     getDevice: (state) => state.device,
     getCollapse: (state) => state.collapse,
+    getColor: (state) => state.color,
     getLanguage: (state) => state.language,
-    getLock: (state) => state.lock,
     getLogo: (state) => state.logo,
     getTitle: (state) => state.title,
   },
@@ -111,17 +112,14 @@ export const useSettingsStore = defineStore('settings', {
     changeLanguage(language: string) {
       this.updateState({ language })
     },
-    handleLock() {
-      this.updateState({ lock: true })
-    },
-    handleUnLock() {
-      this.updateState({ lock: false })
-    },
     changeLogo(logo: string) {
       this.updateState({ logo })
     },
     changeTitle(title: string) {
       this.updateState({ title })
+    },
+    changeColor(color: string) {
+      this.updateState({ color })
     },
   },
 })
