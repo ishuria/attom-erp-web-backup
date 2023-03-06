@@ -243,6 +243,14 @@
     .login-form {
       width: auto !important;
       margin: 0 5vw 0 5vw !important;
+      .left-img {
+        display: none !important;
+      }
+      :deep() {
+        .el-form--default {
+          width: 94% !important;
+        }
+      }
     }
   }
   .login-form {

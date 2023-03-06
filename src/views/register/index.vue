@@ -250,14 +250,15 @@
       padding: 4.5vh;
       margin: calc((100vh - 590px) / 2) 5vw 5vw;
       overflow: hidden;
-      background: #4c50ef;
+      background: var(--el-color-white);
       background-size: 100% 100%;
+      border-radius: 15px;
 
       .title-tips {
         margin-top: 29px;
         font-size: 26px;
         font-weight: 400;
-        color: var(--el-color-white);
+        color: var(--el-color-black);
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -311,8 +312,8 @@
 
         i {
           position: absolute;
-          top: 8px;
-          left: 5px;
+          top: 9px;
+          left: 15px;
           z-index: $base-z-index;
           font-size: 16px;
           color: #d7dee3;
