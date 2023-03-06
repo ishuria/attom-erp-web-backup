@@ -81,6 +81,9 @@
             <el-carousel-item
               @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')"
             />
+            <el-carousel-item
+              @click="openWindow('https://vue-admin-beautiful.com/shop-pro>')"
+            />
           </el-carousel>
         </el-col>
         <el-col :span="24">
@@ -231,6 +234,10 @@
 
       .el-carousel__item:nth-of-type(2) {
         background: url('/@/assets/portal_images/carousel_2.jpg');
+        background-size: cover;
+      }
+      .el-carousel__item:nth-of-type(3) {
+        background: url('/@/assets/portal_images/carousel_3.jpg');
         background-size: cover;
       }
 

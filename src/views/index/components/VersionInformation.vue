@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import pkg from '~/package.json'
   const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
-  const { dependencies, devDependencies } = pkg
+  const { dependencies, devDependencies, version } = pkg
 </script>
 
 <template>
@@ -9,7 +9,10 @@
     <template #header>
       <vab-icon icon="information-line" />
       信息
-      <el-tag class="card-header-tag">部署时间:{{ updateTime }}</el-tag>
+
+      <el-tag class="card-header-tag">
+        当前版本：V{{ version }} &nbsp; 部署时间:{{ updateTime }}
+      </el-tag>
     </template>
     <el-scrollbar>
       <table class="table">
