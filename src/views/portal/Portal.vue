@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+  import IconList from './components/IconList.vue'
   import { getImageUrl } from '/@/utils/imageUrl'
+  const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
 
   const background = ref('')
 
@@ -7,6 +9,7 @@
     const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
     background.value = `url('${img}')`
   }
+
   const openWindow = (url: string) => {
     window.open(url)
   }
@@ -20,10 +23,10 @@
         </div>
         <ul class="nav-item">
           <li>
-            <a href="#/portal">页面1</a>
+            <a href="#/portal">门户页</a>
           </li>
           <li>
-            <a href="#/portal">页面2</a>
+            <a href="#/index">管理页</a>
           </li>
           <li><a href="#/portal">页面3</a></li>
           <li><a href="#/portal">页面4</a></li>
@@ -144,7 +147,29 @@
     ></div>
 
     <main style="background: #f5f7fa">
-      <div class="news-tit"><h2 class="fl">今日要闻</h2></div>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div class="news-tit"><h2>今日要闻</h2></div>
+          <el-image class="news-img" :src="banner_1" />
+        </el-col>
+        <el-col :span="16">
+          <div class="news-tit"><h2>动态资讯</h2></div>
+          <icon-list />
+        </el-col>
+      </el-row>
+    </main>
+
+    <main style="background: #f5f7fa">
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div class="news-tit"><h2>占位符</h2></div>
+          <el-image class="news-img" :src="banner_1" />
+        </el-col>
+        <el-col :span="16">
+          <div class="news-tit"><h2>占位符</h2></div>
+          <icon-list />
+        </el-col>
+      </el-row>
     </main>
   </div>
 </template>
@@ -303,7 +328,7 @@
       .news-tit {
         position: relative;
         width: 100%;
-        height: 38px;
+        height: 78px;
         margin-top: -30px;
         line-height: 36px;
 
@@ -314,6 +339,10 @@
           color: #5184eb;
           border-bottom: 4px solid #5184eb;
         }
+      }
+
+      .news-img {
+        border-radius: 15px;
       }
     }
   }
