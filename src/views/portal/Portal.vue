@@ -13,6 +13,50 @@
   const openWindow = (url: string) => {
     window.open(url)
   }
+
+  const date = ref(new Date())
+  const tableData = [
+    {
+      date: '2016-05-03',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-02',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-04',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+  ]
 </script>
 <template>
   <div class="portal-main">
@@ -162,15 +206,21 @@
     <main style="background: #f5f7fa">
       <el-row :gutter="20">
         <el-col :span="8">
-          <div class="news-tit"><h2>占位符</h2></div>
-          <el-image class="news-img" :src="banner_1" />
+          <div class="news-tit"><h2>工作日程</h2></div>
+          <el-calendar v-model="date" />
         </el-col>
         <el-col :span="16">
-          <div class="news-tit"><h2>占位符</h2></div>
-          <icon-list />
+          <div class="news-tit"><h2>互动留言</h2></div>
+          <el-table :data="tableData" max-height="355">
+            <el-table-column label="Date" prop="date" />
+            <el-table-column label="Name" prop="name" />
+            <el-table-column label="Address" prop="address" />
+          </el-table>
         </el-col>
       </el-row>
     </main>
+
+    <vab-footer />
   </div>
 </template>
 
@@ -343,6 +393,26 @@
 
       .news-img {
         border-radius: 15px;
+      }
+
+      :deep() {
+        .el-calendar {
+          padding: 0px;
+          margin-bottom: 20px;
+          border-radius: 15px;
+
+          &-table {
+            padding: 0px;
+          }
+          &-day {
+            height: 42px;
+            line-height: 42px;
+            text-align: center;
+          }
+        }
+        .el-table {
+          border-radius: 15px;
+        }
       }
     }
   }

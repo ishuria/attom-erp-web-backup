@@ -68,7 +68,7 @@
       ['vab-column-bar-container-' + theme.columnStyle]: true,
     }"
   >
-    <vab-logo />
+    <vab-logo style="z-index: 999" />
     <el-tabs v-model="tab.data" tab-position="left" @tab-click="handleTabClick">
       <template v-for="(item, index) in routes" :key="index + item.name">
         <el-tab-pane :name="item.name">
@@ -108,6 +108,11 @@
         <vab-menu v-if="!item.meta.hidden" :item="item" />
       </template>
     </el-menu>
+    <div class="float-portal">
+      <vab-link target="_blank" to="/portal">
+        <vab-icon icon="user-heart-line" />
+      </vab-link>
+    </div>
     <div class="float-fold">
       <vab-fold fold="layout-left-2-line" unfold="layout-left-line" />
     </div>
@@ -311,6 +316,7 @@
 
       .el-tabs {
         position: fixed;
+        z-index: 9999;
 
         .el-tabs__header.is-left {
           margin-right: 0 !important;
@@ -386,23 +392,29 @@
     }
   }
 
-  .float-fold {
+  .float-fold,
+  .float-portal {
     position: fixed;
-    bottom: 5px;
-    left: 4px;
+    bottom: 12px;
+    left: 12px;
     z-index: 99999;
-    width: 54px;
-    height: 54px;
-    line-height: 54px;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
     text-align: center;
-    background: var(--el-color-primary);
+    background: var(--el-color-primary-light-7);
     border-radius: 5px;
 
     :deep() {
-      .fold-unfold {
-        font-size: 30px;
-        color: var(--el-color-white);
+      .fold-unfold,
+      .ri-user-heart-line {
+        font-size: 20px;
+        color: var(--el-color-primary);
+        cursor: pointer;
       }
     }
+  }
+  .float-portal {
+    bottom: 56px !important;
   }
 </style>

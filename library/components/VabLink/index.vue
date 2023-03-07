@@ -6,6 +6,10 @@
       type: String,
       required: true,
     },
+    target: {
+      type: String,
+      default: '',
+    },
   })
 
   const type = computed(() => (isExternal(props.to) ? 'a' : 'router-link'))
@@ -17,7 +21,7 @@
           target: '_blank',
           rel: 'noopener',
         }
-      : { to: props.to }
+      : { to: props.to, target: props.target }
 </script>
 
 <template>
