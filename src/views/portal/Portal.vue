@@ -74,7 +74,7 @@
         <el-col :span="18">
           <el-carousel
             arrow="always"
-            height="400px"
+            height="420px"
             :interval="3000"
             @change="handleChange"
           >
@@ -236,7 +236,7 @@
       border-top: 1px solid #f3f5f6;
       .left-tab {
         width: 100%;
-        height: 400px;
+        height: 420px;
         padding-top: 15px;
         background: #39364d;
         border-top-left-radius: 15px;
