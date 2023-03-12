@@ -402,14 +402,14 @@
     height: 34px;
     line-height: 34px;
     text-align: center;
-    background: var(--el-color-primary-light-7);
+    background: var(--el-color-primary-light-5);
     border-radius: 5px;
 
     :deep() {
       .fold-unfold,
       .ri-user-heart-line {
         font-size: 20px;
-        color: var(--el-color-primary);
+        color: var(--el-color-white);
         cursor: pointer;
       }
     }
