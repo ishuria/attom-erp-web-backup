@@ -397,7 +397,7 @@
         top: 4px;
         right: 4px;
         cursor: pointer;
-        border-radius: $base-border-radius;
+        border-radius: var(--el-border-radius-base);
       }
     }
   }

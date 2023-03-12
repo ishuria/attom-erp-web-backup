@@ -1,12 +1,18 @@
 <script setup lang="ts">
   import PageHeader from './components/PageHeader.vue'
+  import PageBanner from './components/PageBanner.vue'
   import VersionInformation from './components/VersionInformation.vue'
 </script>
 
 <template>
   <div class="index-container">
     <el-row :gutter="20">
-      <page-header />
+      <el-col :lg="18" :md="24" :sm="24" :xl="18" :xs="24">
+        <page-header />
+      </el-col>
+      <el-col :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
+        <page-banner />
+      </el-col>
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
         <version-information />
       </el-col>

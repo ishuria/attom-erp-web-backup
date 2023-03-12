@@ -34,17 +34,15 @@
 </script>
 
 <template>
-  <el-col :span="24">
-    <vab-card class="page-header" shadow="never">
-      <el-avatar class="page-header-avatar" :src="avatar" />
-      <div class="page-header-tip">
-        <p class="page-header-tip-title">
-          {{ handleTips() }}
-        </p>
-        <p class="page-header-tip-description" v-html="state.description"></p>
-      </div>
-    </vab-card>
-  </el-col>
+  <vab-card class="page-header" shadow="never">
+    <el-avatar class="page-header-avatar" :src="avatar" />
+    <div class="page-header-tip">
+      <p class="page-header-tip-title">
+        {{ handleTips() }}
+      </p>
+      <p class="page-header-tip-description" v-html="state.description"></p>
+    </div>
+  </vab-card>
 </template>
 
 <style lang="scss" scoped>

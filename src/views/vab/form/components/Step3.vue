@@ -99,7 +99,7 @@
     margin-top: $base-margin;
     background: #f5f7f8;
     border: 1px dashed $base-border-color;
-    border-radius: $base-border-radius;
+    border-radius: var(--el-border-radius-base);
   }
 
   .pay-button-group {
