@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
-  const color = ref('#4E88F3')
+  const color = ref('#4e88f3')
   const predefineColors = ref([
     '#4e88f3',
     '#f01414',
@@ -14,10 +14,45 @@
   const settingsStore = useSettingsStore()
   const { changeColor, getColor } = settingsStore
 
+  const getRgbNum = (sColor: string) => {
+    if (sColor.length === 4) {
+      let sColorNew = '#'
+      for (let i = 1; i < 4; i += 1) {
+        sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1))
+      }
+      sColor = sColorNew
+    }
+    const sColorChange = []
+    for (let i = 1; i < 7; i += 2) {
+      sColorChange.push(parseInt(`0x${sColor.slice(i, i + 2)}`))
+    }
+    return sColorChange
+  }
+
+  const colorRgba = (str: any, n: number) => {
+    const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
+    const sColor = str.toLowerCase()
+    n = n || 1
+    if (sColor && reg.test(sColor)) {
+      const sColorChange = getRgbNum(sColor)
+      return `rgba(${sColorChange.join(',')},${n})`
+    } else {
+      return sColor
+    }
+  }
+
   const handleChange = (val: any) => {
     const el = ref(null)
     const _color = useCssVar('--el-color-primary', el)
     _color.value = val
+
+    for (let index = 1; index < 10; index++) {
+      useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(
+        val,
+        1 - index * 0.1
+      )
+    }
+
     changeColor(val)
     color.value = val
   }
