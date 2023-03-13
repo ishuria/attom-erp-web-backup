@@ -34,15 +34,14 @@
 
   const colorFrom = ref('var(--el-color-primary-light-9)')
   const colorTo = ref('var(--el-color-white)')
+  const style = {
+    background: `${colorTo.value} linear-gradient(120deg, ${colorFrom.value} 10%, ${colorTo.value}) no-repeat`,
+    backgroundSize: '30% 100%',
+  }
 </script>
 
 <template>
-  <vab-colorful-card
-    class="page-header"
-    :color-from="colorFrom"
-    :color-to="colorTo"
-    shadow="never"
-  >
+  <vab-colorful-card class="page-header" shadow="never" :style="style">
     <el-avatar class="page-header-avatar" :src="avatar" />
     <div class="page-header-tip">
       <p class="page-header-tip-title">

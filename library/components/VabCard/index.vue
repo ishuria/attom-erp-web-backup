@@ -61,5 +61,19 @@
     &-transition {
       transition: $base-transition;
     }
+    :deep() {
+      .el-card__header {
+        font-weight: 500;
+        [class*='ri-'] {
+          background: linear-gradient(
+            120deg,
+            #bd34fe 30%,
+            var(--el-color-primary)
+          );
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+      }
+    }
   }
 </style>

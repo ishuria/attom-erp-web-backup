@@ -20,6 +20,10 @@
       type: String,
       default: '',
     },
+    style: {
+      type: Object,
+      default: () => {},
+    },
   })
 </script>
 
@@ -27,9 +31,13 @@
   <el-card
     class="vab-colorful-card"
     :shadow="shadow"
-    :style="{
-      background: `linear-gradient(120deg, ${colorFrom} 10%, ${colorTo})`,
-    }"
+    :style="
+      style
+        ? style
+        : {
+            background: `linear-gradient(120deg, ${colorFrom} 10%, ${colorTo})`,
+          }
+    "
   >
     <template #header>{{ title }}</template>
     <vab-icon v-if="icon" :icon="icon" />

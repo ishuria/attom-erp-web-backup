@@ -1,18 +1,95 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const colorFrom1 = ref('rgba(240,2,20,0.098)')
+  const colorTo1 = ref('var(--el-color-white)')
+  const colorFrom2 = ref('var(--el-color-primary-light-9)')
+  const colorTo2 = ref('var(--el-color-white)')
+  const style1 = {
+    background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
+    backgroundSize: '70% 100%',
+  }
+  const style2 = {
+    background: `linear-gradient(to right,${colorFrom2.value}, ${colorTo2.value}) no-repeat`,
+    backgroundSize: '70% 100%',
+  }
+</script>
 
 <template>
   <vab-card class="pending" shadow="hover">
     <template #header>
-      <vab-icon icon="information-line" />
+      <vab-icon icon="checkbox-circle-line" />
       待处理
-      <el-badge class="item" :value="12">
-        <el-button>comments</el-button>
-      </el-badge>
+      <el-badge class="item" :value="6" />
     </template>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <vab-colorful-card shadow="never" :style="style1">
+          <div class="parting-line parting-line-danger"></div>
+          <span class="pending-title pending-title-danger">
+            订单预警
+            <span>产品爆单，请及时处理</span>
+          </span>
+          <span class="pending-tips">预警原因：用户投诉发货不及时</span>
+        </vab-colorful-card>
+      </el-col>
+      <el-col :span="12">
+        <vab-colorful-card shadow="never" :style="style2">
+          <div class="parting-line parting-line-primary"></div>
+          <span class="pending-title pending-title-primary">
+            售后工单
+            <span>用户张*给予五星好评</span>
+          </span>
+          <span class="pending-tips">订单号：12345689654321</span>
+        </vab-colorful-card>
+      </el-col>
+    </el-row>
   </vab-card>
 </template>
 
 <style lang="scss" scoped>
   .pending {
+    :deep() {
+      sup {
+        top: -2px;
+      }
+      .parting-line {
+        float: left;
+        width: 10px;
+        height: 50px;
+        margin-right: 20px;
+        border-radius: 10px;
+
+        &-danger {
+          background: var(--el-color-danger);
+        }
+
+        &-primary {
+          background: var(--el-color-primary);
+        }
+      }
+
+      .pending-title {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 28px;
+        span {
+          font-size: 12px;
+          font-weight: normal;
+        }
+
+        &-danger {
+          color: var(--el-color-danger);
+        }
+
+        &-primary {
+          color: var(--el-color-primary);
+        }
+      }
+
+      .pending-tips {
+        font-size: 12px;
+        color: var(--el-color-grey);
+      }
+    }
   }
 </style>
