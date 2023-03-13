@@ -17,7 +17,13 @@ const List = [
     email: '@email',
     image: 'https://i.gtimg.cn/club/item/face/img/9/15919_100.gif',
     notice:
-      'Admin Plus：<a target="_blank" href="https://vue-admin-beautiful.com/admin-vite">点我</a>',
+      'Admin Plus：<a target="_blank" href="https://vue-admin-beautiful.com/admin-plus">点我</a>',
+  },
+  {
+    email: '@email',
+    image: 'https://i.gtimg.cn/club/item/face/img/9/15918_100.gif',
+    notice:
+      'Shop Vite：<a target="_blank" href="https://vue-admin-beautiful.com/shop-vite">点我</a>',
   },
 ]
 
@@ -29,7 +35,7 @@ export default [
       return {
         code: 200,
         msg: 'success',
-        data: { list: List },
+        data: { list: List, total: List.length },
       }
     },
   },
