@@ -12,6 +12,9 @@
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <pending />
       </el-col>
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <develop />
+      </el-col>
     </el-row>
   </div>
 </template>

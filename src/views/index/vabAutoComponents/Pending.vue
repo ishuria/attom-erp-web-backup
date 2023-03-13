@@ -5,16 +5,16 @@
   const colorTo2 = ref('var(--el-color-white)')
   const style1 = {
     background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
-    backgroundSize: '70% 100%',
+    border: 0,
   }
   const style2 = {
     background: `linear-gradient(to right,${colorFrom2.value}, ${colorTo2.value}) no-repeat`,
-    backgroundSize: '70% 100%',
+    border: 0,
   }
 </script>
 
 <template>
-  <vab-card class="pending" shadow="hover">
+  <vab-card class="pending" shadow="never">
     <template #header>
       <vab-icon icon="checkbox-circle-line" />
       待处理
