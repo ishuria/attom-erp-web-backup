@@ -21,7 +21,7 @@ const List = [
   },
   {
     email: '@email',
-    image: 'https://i.gtimg.cn/club/item/face/img/9/15918_100.gif',
+    image: 'https://i.gtimg.cn/club/item/face/img/8/15918_100.gif',
     notice:
       'Shop Vite：<a target="_blank" href="https://vue-admin-beautiful.com/shop-vite">点我</a>',
   },

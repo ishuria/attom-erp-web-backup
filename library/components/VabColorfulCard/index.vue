@@ -28,7 +28,7 @@
     class="vab-colorful-card"
     :shadow="shadow"
     :style="{
-      background: `linear-gradient(50deg, ${colorFrom}, ${colorTo})`,
+      background: `linear-gradient(120deg, ${colorFrom} 10%, ${colorTo})`,
     }"
   >
     <template #header>{{ title }}</template>
@@ -60,7 +60,6 @@
 
     i {
       position: absolute;
-      top: -30px;
       right: 20px;
       font-size: 60px;
       transform: rotate(15deg);

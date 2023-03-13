@@ -31,10 +31,18 @@
   onMounted(() => {
     fetchData()
   })
+
+  const colorFrom = ref('var(--el-color-primary-light-9)')
+  const colorTo = ref('var(--el-color-white)')
 </script>
 
 <template>
-  <vab-card class="page-header" shadow="never">
+  <vab-colorful-card
+    class="page-header"
+    :color-from="colorFrom"
+    :color-to="colorTo"
+    shadow="never"
+  >
     <el-avatar class="page-header-avatar" :src="avatar" />
     <div class="page-header-tip">
       <p class="page-header-tip-title">
@@ -42,12 +50,11 @@
       </p>
       <p class="page-header-tip-description" v-html="state.description"></p>
     </div>
-  </vab-card>
+  </vab-colorful-card>
 </template>
 
 <style lang="scss" scoped>
   .page-header {
-    min-height: 145px;
     transition: none;
 
     :deep() {
@@ -55,10 +62,15 @@
         transition: none;
       }
 
+      .el-card__header {
+        display: none;
+      }
       .el-card__body {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
       }
     }
 
@@ -86,18 +98,6 @@
         min-height: 20px;
         font-size: $base-font-size-default;
         color: #808695;
-      }
-    }
-
-    &-avatar-list {
-      flex: 1;
-      min-width: 100px;
-      margin-left: 20px;
-      text-align: right;
-
-      p {
-        margin-right: 9px;
-        line-height: 0;
       }
     }
   }

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import IconList from './components/IconList.vue'
   import { getImageUrl } from '/@/utils/imageUrl'
   const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
 
@@ -337,7 +336,7 @@
           .clip {
             font-size: 32px;
             line-height: 0;
-            background: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+            background: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
             background-clip: text;
             -webkit-text-fill-color: transparent;
           }

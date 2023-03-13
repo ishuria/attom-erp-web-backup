@@ -1,7 +1,4 @@
-<script lang="ts" setup>
-  const Payment = defineAsyncComponent(() => import('./components/Payment.vue'))
-  const Flow = defineAsyncComponent(() => import('./components/Flow.vue'))
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <div class="dashboard-container">
