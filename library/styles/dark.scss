@@ -3,10 +3,11 @@ html.dark {
   --el-color-white: #1d1e1f;
   --el-color-grey: #cfd3dc;
   --el-color-menu-second: #1d1e1f;
+  --el-border-color-light: #414243;
 
   body {
     color: #cfd3dc !important;
-    background-color: #1d1e1f !important;
+    background-color: var(--el-color-white) !important;
 
     .vab-nav {
       background: var(--el-color-white) !important;
@@ -16,7 +17,7 @@ html.dark {
     }
     .table {
       td {
-        border: 1px solid #414243 !important;
+        border: 1px solid var(--el-border-color-light) !important;
       }
     }
     .vab-column-bar-container .el-tabs .el-tabs__item {
@@ -27,23 +28,27 @@ html.dark {
     }
     .vab-layout-header,
     .vab-nav {
-      border-bottom: 1px solid #414243 !important;
+      border-bottom: 1px solid var(--el-border-color-light) !important;
     }
     .vab-column-bar-container {
-      border-right: 1px solid #414243 !important;
+      border-right: 1px solid var(--el-border-color-light) !important;
     }
     .vab-tabs-content-card .el-tabs__header .el-tabs__item {
-      border: 1px solid #414243 !important;
+      border: 1px solid var(--el-border-color-light) !important;
     }
     .vab-column-bar-container .el-tabs .el-tabs__nav {
       width: 63px;
       background: var(--el-color-white) !important;
-      border-right: 1px solid #414243 !important;
+      border-right: 1px solid var(--el-border-color-light) !important;
     }
     .logo-container-column .logo {
       width: 63px !important;
       background: var(--el-color-white) !important;
-      border-right: 1px solid #414243 !important;
+      border-right: 1px solid var(--el-border-color-light) !important;
+    }
+
+    .vab-footer {
+      border-top: 1px dashed var(--el-border-color-light) !important;
     }
   }
 }

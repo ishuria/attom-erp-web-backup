@@ -395,8 +395,8 @@
   .float-fold,
   .float-portal {
     position: fixed;
-    bottom: 12px;
-    left: 12px;
+    bottom: 13px;
+    left: 13px;
     z-index: 99999;
     width: 34px;
     height: 34px;
