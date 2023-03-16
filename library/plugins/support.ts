@@ -25,7 +25,7 @@ export default {
     if (import.meta.env.MODE !== 'development') {
       // eslint-disable-next-line no-console
       console.log(
-        ` %c ${title}  %c 基于admin-vite ${version} 构建 `,
+        ` %c ${title}  %c 基于shop-vite ${version} 构建 `,
         'color: #fadfa3; background: #030307; padding:5px 0;',
         'background: #fadfa3; padding:5px 0;'
       )
