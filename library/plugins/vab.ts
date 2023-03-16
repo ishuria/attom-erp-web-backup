@@ -26,7 +26,7 @@ export default {
       return ElLoading.service({
         lock: true,
         text,
-        spinner: index ? 'vab-loading-type' + index : index,
+        spinner: index ? `vab-loading-type${index}` : index,
         background: 'hsla(0,0%,100%,.8)',
       })
     }
@@ -58,7 +58,7 @@ export default {
           loading = ElLoading.service({
             lock: true,
             text,
-            spinner: spinnerDict[index] + '-loader',
+            spinner: `${spinnerDict[index]}-loader`,
             background: 'hsla(0,0%,100%,.8)',
           })
         }

@@ -6,15 +6,13 @@ import { createMock } from './mock/'
 import { createUnPlugin } from './unplugin/'
 import { createSvgIcons } from './svgSprite/'
 import { createProgress } from './progress/'
-import { createDefineOptions } from './defineOptions/'
-
 export function createVitePlugin(env: Record<string, string>) {
   const vitePlugins: (Plugin | Plugin[])[] = [vue()]
   const viteApp = 'VITE_' + 'APP_'
   const viteUser = 'VITE_' + 'USER_'
-  const userName = env[viteApp + 'GITHUB_USER_NAME']
-  const secretKey = env[viteApp + 'SECRET_KEY']
-  const nodeEnv = env[viteUser + 'NODE_ENV ']
+  const userName = env[`${viteApp}GITHUB_USER_NAME`]
+  const secretKey = env[`${viteApp}SECRET_KEY`]
+  const nodeEnv = env[`${viteUser}NODE_ENV `]
   const isEmpty = (value: any) => {
     return value == undefined || value == '' || value == null
   }
@@ -26,6 +24,5 @@ export function createVitePlugin(env: Record<string, string>) {
   vitePlugins.push(createPwa())
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
-  vitePlugins.push(createDefineOptions())
   return vitePlugins
 }
