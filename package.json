@@ -14,7 +14,7 @@
     "global:install": "npm install -g nrm,cnpm,npm-check-updates",
     "globle:update": "ncu -g",
     "module:install": "cnpm i",
-    "module:update": "ncu -u --registry https://registry.npm.taobao.org&&npm run module:install",
+    "module:update": "ncu -u --registry https://registry.npmmirror.com&&npm run module:install",
     "module:reinstall": "rimraf node_modules&&npm run module:install"
   },
   "dependencies": {
@@ -74,7 +74,7 @@
     "vite-plugin-mock": "^2.9.6",
     "vite-plugin-pwa": "^0.14.4",
     "vite-plugin-svg-icons": "^2.0.1",
-    "vite-plugin-vitebar": "^0.0.1",
+    "vite-plugin-vitebar": "^0.0.2",
     "vue-global-api": "^0.4.1",
     "vue-tsc": "^1.2.0"
   },

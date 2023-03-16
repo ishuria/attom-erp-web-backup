@@ -19,7 +19,6 @@ process.env.VITE_APP_UPDATE_TIME = info.lastBuildTime
 export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
   const root = process.cwd()
   const env = loadEnv(mode, root)
-  console.log(mode, command, env)
   return {
     base: setting['publicPath'],
     root,
@@ -41,7 +40,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
       },
     },
     build: {
-      chunkSizeWarningLimit: 2048,
+      chunkSizeWarningLimit: 20480,
     },
     css: {
       // https://github.com/vitejs/vite/issues/6333
@@ -76,7 +75,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
           additionalData(content: string, loaderContext: string) {
             return ['variables.scss'].includes(basename(loaderContext))
               ? content
-              : '@use "~/library/styles/variables.scss" as *;' + content
+              : `@use "~/library/styles/variables.scss" as *;${content}`
           },
         },
       },
