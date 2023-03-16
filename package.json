@@ -74,7 +74,7 @@
     "vite-plugin-mock": "^2.9.6",
     "vite-plugin-pwa": "^0.14.4",
     "vite-plugin-svg-icons": "^2.0.1",
-    "vite-plugin-vitebar": "^0.0.2",
+    "vite-plugin-vitebar": "^0.0.3",
     "vue-global-api": "^0.4.1",
     "vue-tsc": "^1.2.0"
   },
