@@ -3,7 +3,7 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 
 const pwaOptions: Partial<VitePWAOptions> = {
   base: '/shop-vite/',
-  registerType: 'prompt',
+  registerType: 'autoUpdate',
   includeAssets: ['favicon.icon', 'static/img/*'],
   workbox: {
     cleanupOutdatedCaches: true,
