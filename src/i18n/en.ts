@@ -13,6 +13,8 @@ export default {
     菜单管理: 'Menu management',
     任务管理: 'Task management',
     系统日志: 'System log',
+    模板: 'Template',
+    二维码登录: 'QR Login',
     组件: 'Part',
     其他: 'Other',
     角色权限: 'Roles',

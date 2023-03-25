@@ -92,6 +92,26 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     },
   },
   {
+    path: '/template',
+    name: 'Template',
+    component: Layout,
+    meta: {
+      title: '模板',
+      icon: 'clipboard-line',
+    },
+    children: [
+      {
+        path: 'qRLogin',
+        name: 'QRLogin',
+        component: () => import('../views/template/QRLogin.vue'),
+        meta: {
+          title: '二维码登录',
+          icon: 'qr-scan-2-line',
+        },
+      },
+    ],
+  },
+  {
     path: '/vab',
     name: 'Vab',
     component: Layout,
