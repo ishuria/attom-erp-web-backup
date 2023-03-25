@@ -109,6 +109,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'qr-scan-2-line',
         },
       },
+      {
+        path: 'award',
+        name: 'Award',
+        component: () => import('../views/template/Award.vue'),
+        meta: {
+          title: '抽奖',
+          icon: 'award-line',
+        },
+      },
     ],
   },
   {

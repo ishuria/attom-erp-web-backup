@@ -48,6 +48,8 @@
     .qr-box {
       position: relative;
       padding: 0px 50px 0px 50px;
+      text-align: center;
+
       .qr-image {
         width: 210px;
         height: 210px;
