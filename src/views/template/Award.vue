@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-  import { importAsRE } from '_unimport@3.0.4@unimport'
-
   import _ from 'lodash'
   import { VabAwardWheel } from '/@/plugins/VabAward'
 
@@ -116,14 +114,14 @@
     },
   ]
 
-  const currentInstance: any = getCurrentInstance()
+  const { proxy } = getCurrentInstance() as any
   const startCallback = () => {
-    currentInstance.ctx.$refs.awardWheelRef.play()
+    proxy.$refs.awardWheelRef.play()
 
     setTimeout(() => {
       //中奖的数组下标
       const index = _.random(0, 5)
-      currentInstance.ctx.$refs.awardWheelRef.stop(index)
+      proxy.$refs.awardWheelRef.stop(index)
     }, 3000)
   }
   const endCallback = (prize: any) => {

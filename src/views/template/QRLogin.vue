@@ -2,7 +2,7 @@
   import { getImageUrl } from '/@/utils/imageUrl'
   const QR = getImageUrl('assets/qr_images/QR.png')
   const scan = ref('')
-  const dialogVisible = ref(true)
+  const dialogVisible = ref(false)
 
   scan.value = getImageUrl('assets/qr_images/scan.png')
   const timer = setInterval(() => {
@@ -13,8 +13,12 @@
     })
   }, 10000)
 
+  const timer2 = setTimeout(() => {
+    dialogVisible.value = true
+  }, 3000)
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)
+    clearInterval(timer2)
     next()
   })
 </script>

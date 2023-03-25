@@ -31,12 +31,10 @@
   import { version } from '../../../package.json'
   import { useRegisterSW } from 'virtual:pwa-register/vue'
   import { useSettingsStore } from '/@/store/modules/settings'
-  const $baseMessage: any = inject('$baseMessage')
 
   const { getTitle: title } = useSettingsStore()
 
   const { needRefresh, updateServiceWorker } = useRegisterSW({})
-  console.log(needRefresh)
 
   const button = ref('立即升级')
   const loading = ref(false)
@@ -44,17 +42,10 @@
   const save = () => {
     button.value = '正在更新'
     loading.value = true
-    updateServiceWorker()
+    setTimeout(() => {
+      updateServiceWorker()
+    }, 1000 * 3)
   }
-
-  setTimeout(() => {
-    $baseMessage(
-      '正在更新，预计10S后更新完成',
-      'success',
-      'vab-hey-message-success'
-    )
-    save
-  }, 3000)
 
   const close = async () => {
     needRefresh.value = false
