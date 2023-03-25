@@ -19,6 +19,6 @@
     :locale="messages[locale]"
   >
     <router-view />
-    <vab-update v-if="pwa" ref="vabUpdateRef" />
+    <vab-update v-if="pwa" />
   </el-config-provider>
 </template>
