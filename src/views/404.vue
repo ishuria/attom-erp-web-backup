@@ -1,8 +1,6 @@
 <script setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { onBeforeRouteLeave } from 'vue-router'
-  import png404 from '/@/assets/error_images/404.png'
-  import pngCloud from '/@/assets/error_images/cloud.png'
 
   const route = useRoute()
   const router = useRouter()
