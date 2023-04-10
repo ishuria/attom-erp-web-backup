@@ -82,16 +82,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
-    path: '/portal',
-    name: 'Portal',
-    component: () => import('/@/views/portal/Portal.vue'),
-    meta: {
-      title: '门户',
-      icon: 'user-heart-line',
-      target: '_blank',
-    },
-  },
-  {
     path: '/template',
     name: 'Template',
     component: Layout,
@@ -118,7 +108,44 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'award-line',
         },
       },
+      {
+        path: 'lllustration',
+        name: 'Lllustration',
+        component: () => import('../views/template/Lllustration.vue'),
+        meta: {
+          title: '插画',
+          icon: 'brush-3-line',
+        },
+      },
+      {
+        path: '403',
+        name: 'Error403',
+        component: () => import('../views/403.vue'),
+        meta: {
+          title: '403',
+          icon: 'error-warning-line',
+        },
+      },
+      {
+        path: '404',
+        name: 'Error404',
+        component: () => import('../views/404.vue'),
+        meta: {
+          title: '404',
+          icon: 'error-warning-line',
+        },
+      },
     ],
+  },
+  {
+    path: '/portal',
+    name: 'Portal',
+    component: () => import('/@/views/portal/Portal.vue'),
+    meta: {
+      title: '门户',
+      icon: 'user-heart-line',
+      target: '_blank',
+    },
   },
   {
     path: '/vab',

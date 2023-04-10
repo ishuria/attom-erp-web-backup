@@ -544,4 +544,8 @@ html {
       }
     }
   }
+  /* svg */
+  [fill='#6c63ff'] {
+    fill: var(--el-color-primary) !important;
+  }
 }

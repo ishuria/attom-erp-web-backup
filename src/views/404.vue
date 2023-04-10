@@ -48,8 +48,7 @@
       <el-row :gutter="20">
         <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
           <div class="pic-error">
-            <el-image class="pic-error-parent" :src="png404" />
-            <el-image class="pic-error-child left" :src="pngCloud" />
+            <vab-icon class="error-svg-404" icon="404" is-custom-svg />
           </div>
         </el-col>
 
@@ -77,7 +76,7 @@
 
     .error-content {
       position: absolute;
-      top: 55%;
+      top: 50%;
       left: 50%;
       width: 40vw;
       height: 400px;
@@ -88,64 +87,32 @@
         float: left;
         width: 100%;
         overflow: hidden;
-
-        &-parent {
+        .error-svg-404 {
           width: 100%;
-        }
-
-        &-child {
-          position: absolute;
-
-          &.left {
-            top: 17px;
-            left: 220px;
-            width: 80px;
-            opacity: 0;
-            animation-name: cloudLeft;
-            animation-duration: 2s;
-            animation-timing-function: linear;
-            animation-delay: 1s;
-            animation-fill-mode: forwards;
-          }
-
-          @keyframes cloudLeft {
-            0% {
-              top: 17px;
-              left: 220px;
-              opacity: 0;
-            }
-
-            20% {
-              top: 33px;
-              left: 188px;
-              opacity: 1;
-            }
-
-            80% {
-              top: 81px;
-              left: 92px;
-              opacity: 1;
-            }
-
-            100% {
-              top: 97px;
-              left: 60px;
-              opacity: 0;
-            }
-          }
+          height: 30vh;
         }
       }
 
+      @media only screen and (max-width: 768px) {
+        .pic-error {
+          margin-top: -100px;
+        }
+        .bullshit {
+          padding: 0 !important;
+          margin-left: 0 !important;
+        }
+      }
       .bullshit {
         position: relative;
         float: left;
-        width: 300px;
-        padding: 30px 0;
+        width: 35vh;
+        padding: 8vh 0;
+        margin-left: 50px;
         overflow: hidden;
 
         &-oops {
           margin-bottom: 20px;
-          font-size: 32px;
+          font-size: 24px;
           font-weight: bold;
           line-height: 40px;
           color: var(--el-color-primary);

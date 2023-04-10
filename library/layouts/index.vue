@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-admin-beautiful-wrapper" :class="{ mobile }">
+  <div class="vue-shop-vite-box" :class="{ mobile }">
     <component
       :is="'vab-layout-' + theme.layout"
       :collapse="collapse"
@@ -72,7 +72,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .vue-admin-beautiful-wrapper {
+  .vue-shop-vite-box {
     position: relative;
     width: 100%;
     height: 100%;
