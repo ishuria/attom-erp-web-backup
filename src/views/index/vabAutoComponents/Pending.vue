@@ -21,7 +21,7 @@
       <el-badge class="item" :value="6" />
     </template>
     <el-row :gutter="20">
-      <el-col :span="12">
+      <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <vab-colorful-card shadow="never" :style="style1">
           <div class="parting-line parting-line-danger"></div>
           <span class="pending-title pending-title-danger">

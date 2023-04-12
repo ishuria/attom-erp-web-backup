@@ -42,7 +42,7 @@
         :xl="2"
         :xs="6"
       >
-        <vab-card shadow="hover" @click="handleCopyIcon(item.icon, $event)">
+        <vab-card shadow="hover" @click="handleCopyIcon(item.icon)">
           <vab-icon
             :icon="item.icon"
             :style="{
@@ -51,7 +51,7 @@
             }"
           />
         </vab-card>
-        <div class="icon-text" @click="handleCopyText(item.icon, $event)">
+        <div class="icon-text" @click="handleCopyText(item.icon)">
           {{ item.icon }}
         </div>
       </el-col>
@@ -116,11 +116,11 @@
         state.queryForm.pageNo = 1
         fetchData()
       }
-      const handleCopyText = (item, event) => {
-        clip(item, event)
+      const handleCopyText = (item) => {
+        clip(item)
       }
-      const handleCopyIcon = (item, event) => {
-        clip(`<vab-icon icon="${item}" />`, event)
+      const handleCopyIcon = (item) => {
+        clip(`<vab-icon icon="${item}" />`)
       }
       const randomHexColor = () => {
         return _.shuffle([

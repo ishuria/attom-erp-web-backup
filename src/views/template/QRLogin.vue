@@ -15,7 +15,7 @@
 
   const timer2 = setTimeout(() => {
     dialogVisible.value = true
-  }, 3000)
+  }, 1000)
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)
     clearInterval(timer2)
@@ -60,13 +60,12 @@
       }
       .scan-image {
         position: absolute;
-        top: 0;
-        right: 20px;
-        bottom: 0;
-        left: 20px;
+        top: 50%;
+        left: 50%;
         z-index: 999;
-        width: 270px;
-        height: 210px;
+        width: 250px;
+        height: 180px;
+        transform: translate(-50%, -80%);
       }
       .wechat-title {
         text-align: center;

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   const color = ref('#4e88f3')
+  const $sub: any = inject('$sub')
+  const $pub: any = inject('$pub')
   const predefineColors = ref([
     '#4e88f3',
     '#f01414',
@@ -59,6 +61,14 @@
 
   onMounted(() => {
     handleChange(getColor)
+  })
+
+  $sub('reload-color', (color: any) => {
+    handleChange(color)
+  })
+
+  watch(color, (newVal) => {
+    $pub('reload-color', newVal)
   })
 </script>
 

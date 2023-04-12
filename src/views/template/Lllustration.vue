@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import clip from '/@/utils/clipboard'
   const lllustrationsArray: string[] = []
 
   const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
@@ -9,7 +10,10 @@
     const _key = key.slice(11)
     lllustrationsArray.push(_key.substring(0, _key.length - 4))
   }
-  console.log(lllustrationsArray)
+
+  const handleCopyIcon = (item: any) => {
+    clip(`<vab-icon icon="${item}" is-custom-svg/>`)
+  }
 </script>
 
 <template>
@@ -33,7 +37,7 @@
         :xl="4"
         :xs="12"
       >
-        <vab-card shadow="hover">
+        <vab-card shadow="hover" @click="handleCopyIcon(item)">
           <vab-icon class="vab-lllustration" :icon="item" is-custom-svg />
         </vab-card>
       </el-col>
@@ -48,6 +52,7 @@
     .vab-lllustration {
       width: 100%;
       height: 100%;
+      cursor: pointer;
     }
     :deep() {
       .el-form-item {
