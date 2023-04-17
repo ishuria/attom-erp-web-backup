@@ -36,5 +36,6 @@
     "library/**/*.d.ts",
     "library/**/*.tsx",
     "library/**/*.vue"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }
