@@ -1,42 +1,22 @@
 <script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
-  import { onBeforeRouteLeave } from 'vue-router'
 
   const route = useRoute()
-  const router = useRouter()
 
   const tabsStore = useTabsStore()
   const { delVisitedRoute } = tabsStore
 
-  let timer: any
   const state = reactive({
-    jumpTime: 5,
+    jumpTime: 8,
     oops: '抱歉!',
     headline: '您没有操作角色...',
-    info: '当前帐号没有操作角色,请联系管理员。',
+    info: '当前帐号没有操作角色，请联系管理员。',
     btn: '返回首页',
   })
 
-  const timeChange = () => {
-    timer = setInterval(() => {
-      if (state.jumpTime) {
-        state.jumpTime--
-      } else {
-        delVisitedRoute(route.path)
-        router.push('/')
-        clearInterval(timer)
-      }
-    }, 1000)
-  }
-
   onBeforeRouteLeave((to, from, next) => {
     delVisitedRoute(route.path)
-    clearInterval(timer)
     next()
-  })
-
-  onBeforeMount(() => {
-    timeChange()
   })
 </script>
 
@@ -57,7 +37,7 @@
             <div class="bullshit-info">{{ state.info }}</div>
             <router-link v-slot="{ navigate }" custom to="/">
               <a class="bullshit-return-home" @click="navigate">
-                {{ state.jumpTime }}s&nbsp;{{ state.btn }}
+                {{ state.btn }}
               </a>
             </router-link>
           </div>

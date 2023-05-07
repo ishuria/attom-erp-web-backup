@@ -7,10 +7,9 @@
   const { delVisitedRoute } = tabsStore
 
   const state = reactive({
-    jumpTime: 9,
     oops: '抱歉!',
-    headline: '当前页面不存在...',
-    info: '请检查您输入的网址是否正确，或点击下面的按钮返回首页。',
+    headline: '服务器发生错误...',
+    info: '请稍后重试，或点击下面的按钮返回首页。',
     btn: '返回首页',
   })
 
@@ -26,7 +25,7 @@
       <el-row :gutter="20">
         <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
           <div class="pic-error">
-            <vab-icon class="error-svg-404" icon="404" is-custom-svg />
+            <vab-icon class="error-svg-500" icon="500" is-custom-svg />
           </div>
         </el-col>
 
@@ -65,9 +64,9 @@
         float: left;
         width: 100%;
         overflow: hidden;
-        .error-svg-404 {
+        .error-svg-500 {
           width: 100%;
-          height: 30vh;
+          height: 36vh;
         }
       }
 

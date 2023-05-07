@@ -135,17 +135,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'error-warning-line',
         },
       },
+      {
+        path: '500',
+        name: 'Error500',
+        component: () => import('../views/500.vue'),
+        meta: {
+          title: '500',
+          icon: 'error-warning-line',
+        },
+      },
     ],
-  },
-  {
-    path: '/portal',
-    name: 'Portal',
-    component: () => import('/@/views/portal/Portal.vue'),
-    meta: {
-      title: '门户',
-      icon: 'user-heart-line',
-      target: '_blank',
-    },
   },
   {
     path: '/vab',
@@ -430,6 +429,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
     ],
+  },
+  {
+    path: '/portal',
+    name: 'Portal',
+    component: () => import('/@/views/portal/Portal.vue'),
+    meta: {
+      title: '门户',
+      icon: 'user-heart-line',
+      target: '_blank',
+    },
   },
   {
     path: '/:pathMatch(.*)*',
