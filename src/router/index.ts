@@ -199,6 +199,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'wangEditor',
+        name: 'WangEditor',
+        component: () => import('/@/views/vab/editor/wangEditor.vue'),
+        meta: {
+          title: '富文本编辑器',
+          guard: ['Admin'],
+          dot: true,
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {

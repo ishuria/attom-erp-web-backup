@@ -22,6 +22,8 @@
     "@lucky-canvas/vue": "latest",
     "@vueuse/core": "^10.1.2",
     "@vueuse/head": "^1.1.26",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.9",
     "axios": "^1.4.0",
     "dayjs": "^1.11.7",
     "echarts": "^5.4.2",
