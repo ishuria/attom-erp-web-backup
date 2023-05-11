@@ -199,6 +199,26 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'list',
+        name: 'List',
+        component: () => import('/@/views/vab/list/index.vue'),
+        meta: {
+          title: '列表',
+          guard: ['Admin'],
+          icon: 'list-check-2',
+        },
+      },
+      {
+        path: 'description',
+        name: 'Description',
+        component: () => import('/@/views/vab/description/index.vue'),
+        meta: {
+          title: '描述',
+          guard: ['Admin'],
+          icon: 'slideshow-line',
+        },
+      },
+      {
         path: 'wangEditor',
         name: 'WangEditor',
         component: () => import('/@/views/vab/editor/wangEditor.vue'),
