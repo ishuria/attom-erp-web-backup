@@ -2,12 +2,12 @@
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
 import { useAclStore } from './acl'
-import { useTabsStore } from './tabs'
-import { useRoutesStore } from './routes'
+// import { useTabsStore } from './tabs'
+// import { useRoutesStore } from './routes'
 import { useSettingsStore } from './settings'
 import { getUserInfo, login, logout, socialLogin } from '/@/api/user'
 import { getToken, removeToken, setToken } from '/@/utils/token'
-import { resetRouter } from '/@/router'
+// import { resetRouter } from '/@/router'
 import { isArray, isString } from '/@/utils/validate'
 import setting from '/@/config'
 const { tokenName } = setting
