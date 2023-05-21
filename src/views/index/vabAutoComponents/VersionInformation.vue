@@ -61,17 +61,17 @@
         <tr>
           <td>授权渠道</td>
           <td colspan="3">
-            <!--  <a
-              href="https://vue-admin-beautiful.com/authorization"
-              target="_blank"
-            > -->
-            <el-button type="primary">shop-vite ￥1399</el-button>
-            <!--  </a> -->
             <a
               href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
               target="_blank"
             >
-              <el-button type="warning">admin-plus</el-button>
+              <el-button type="primary">shop-vite ￥1399</el-button>
+            </a>
+            <a
+              href="https://vue-admin-beautiful.com/admin-plus"
+              target="_blank"
+            >
+              <el-button type="warning">admin-plus ￥799</el-button>
             </a>
           </td>
         </tr>

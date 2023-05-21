@@ -143,27 +143,27 @@ export const useUserStore = defineStore('user', {
      * @description 退出登录
      */
     async logout() {
-      await location.reload()
-      await logout()
       await this.resetAll()
+      await logout()
+      await location.reload()
     },
     /**
      * @description 重置token、roles、permission、router、tabsBar等
      */
     async resetAll() {
-      this.setToken('')
-      this.setUsername('游客')
-      this.setAvatar('https://i.gtimg.cn/club/item/face/img/2/15922_100.gif')
+      // this.setToken('')
+      // this.setUsername('游客')
+      // this.setAvatar('https://i.gtimg.cn/club/item/face/img/2/15922_100.gif')
 
-      const aclStore = useAclStore()
-      const routesStore = useRoutesStore()
-      const tabsStore = useTabsStore()
-      aclStore.setFull(false)
-      aclStore.setRole([])
-      aclStore.setPermission([])
-      routesStore.clearRoutes()
-      tabsStore.delAllVisitedRoutes()
-      await resetRouter()
+      // const aclStore = useAclStore()
+      // const routesStore = useRoutesStore()
+      // const tabsStore = useTabsStore()
+      // aclStore.setFull(false)
+      // aclStore.setRole([])
+      // aclStore.setPermission([])
+      // routesStore.clearRoutes()
+      // tabsStore.delAllVisitedRoutes()
+      // await resetRouter()
       removeToken()
     },
   },
