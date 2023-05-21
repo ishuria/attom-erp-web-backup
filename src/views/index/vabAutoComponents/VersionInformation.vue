@@ -65,10 +65,10 @@
               href="https://vue-admin-beautiful.com/authorization"
               target="_blank"
             > -->
-            <el-button type="primary">shop-vite ￥XXXX</el-button>
+            <el-button type="primary">shop-vite ￥1399</el-button>
             <!--  </a> -->
             <a
-              href="https://vue-admin-beautiful.com/admin-plus"
+              href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
               target="_blank"
             >
               <el-button type="warning">admin-plus</el-button>
@@ -78,7 +78,7 @@
         <tr>
           <td>注意事项</td>
           <td colspan="3">
-            vite-shop目前正交付第三方开发，售价未知，暂不对外出售，当前演示地址不代表最终品质，后续将逐步完善，我们有信心做国内最好的shop-vite商城模版，感谢您的耐心等待。
+            vite-shop目前正在开发中，当前演示效果不代表最终品质，后续将逐步完善，我们有信心做国内最好的shop-vite商城模版，目前已开放尝鲜版购买渠道。
           </td>
         </tr>
       </table>
