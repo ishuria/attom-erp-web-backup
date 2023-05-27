@@ -75,12 +75,7 @@
             </a>
           </td>
         </tr>
-        <tr>
-          <td>注意事项</td>
-          <td colspan="3">
-            vite-shop目前正在开发中，当前演示效果不代表最终品质，后续将逐步完善，我们有信心做国内最好的shop-vite商城模版，目前已开放尝鲜版购买渠道。
-          </td>
-        </tr>
+        <tr></tr>
       </table>
     </el-scrollbar>
   </vab-card>
@@ -97,7 +92,10 @@
       td {
         position: relative;
         padding: 9px 15px !important;
+        overflow: hidden;
         font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         border: 1px solid #e6e6e6;
 
         i {

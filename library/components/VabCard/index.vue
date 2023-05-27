@@ -40,7 +40,9 @@
 <template>
   <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow">
     <template v-if="$slots.header || header" #header>
-      <slot name="header">{{ header }}</slot>
+      <slot name="header">
+        {{ header }}
+      </slot>
     </template>
     <el-skeleton
       v-if="skeleton"
@@ -65,6 +67,7 @@
       .el-card__header {
         font-weight: 500;
         [class*='ri-'] {
+          vertical-align: -1px !important;
           background: linear-gradient(
             120deg,
             #bd34fe 30%,

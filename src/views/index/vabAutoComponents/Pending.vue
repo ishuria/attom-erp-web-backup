@@ -28,6 +28,7 @@
             订单预警
             <span>产品爆单，请及时处理</span>
           </span>
+          <el-tag size="small">完成中</el-tag>
           <span class="pending-tips">预警原因：用户投诉发货不及时</span>
         </vab-colorful-card>
       </el-col>
@@ -38,6 +39,7 @@
             售后工单
             <span>用户张*给予五星好评</span>
           </span>
+          <el-tag size="small" type="danger">未完成</el-tag>
           <span class="pending-tips">订单号：12345689654321</span>
         </vab-colorful-card>
       </el-col>
@@ -89,6 +91,12 @@
       .pending-tips {
         font-size: 12px;
         color: var(--el-color-grey);
+      }
+    }
+
+    :deep() {
+      .el-tag {
+        margin-right: 5px;
       }
     }
   }

@@ -1,4 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import _ from 'lodash'
+  const countConfig1 = ref({
+    startVal: 0,
+    endVal: _.random(1000, 20000),
+    decimals: 2,
+    prefix: '￥',
+    suffix: '',
+    separator: ',',
+    duration: 8000,
+  })
+</script>
 
 <template>
   <div class="index-container">
@@ -6,11 +17,44 @@
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
         <page-header />
       </el-col>
-      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-        <version-information />
+      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
+        <top-card
+          background="blue"
+          :count-config="countConfig1"
+          icon="money-cny-circle-line"
+          percentage="10%"
+          title="总销量"
+        />
+      </el-col>
+      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
+        <top-card
+          background="white"
+          icon="money-cny-box-line"
+          percentage="44%"
+          title="总成交"
+        />
+      </el-col>
+      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
+        <top-card
+          background="white"
+          icon="user-search-line"
+          percentage="30%"
+          title="活跃用户"
+        />
+      </el-col>
+      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
+        <top-card
+          background="white"
+          icon="passport-line"
+          percentage="10%"
+          title="订单"
+        />
       </el-col>
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <pending />
+      </el-col>
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <version-information />
       </el-col>
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <develop />
@@ -70,14 +114,6 @@
             bottom: 15px;
           }
         }
-      }
-
-      .bottom {
-        padding-top: 20px;
-        margin-top: 5px;
-        color: #595959;
-        text-align: left;
-        border-top: 1px solid $base-border-color;
       }
     }
   }
