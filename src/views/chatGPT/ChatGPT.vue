@@ -54,13 +54,22 @@
       finish.value = false
       const newList = list.value
 
-      newList.push({
-        type: 'mine',
-        result: value.value,
-        avatar: avatar,
-        username: username,
-        time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      })
+      newList.push(
+        {
+          type: 'mine',
+          result: value.value,
+          avatar: avatar,
+          username: username,
+          time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        },
+        {
+          type: 'tips',
+          result: 'chatGPT AI 内' + '容生成中，请稍后。。。',
+          avatar: 'static/img/chatGPT.png',
+          username: 'chatGPT',
+          time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        }
+      )
 
       setTimeout(() => {
         value.value = ''
@@ -72,6 +81,8 @@
       axios
         .get(`https://api.pearktrue.cn/api/gpt/?message=${value.value}`)
         .then(({ data: { answer } }) => {
+          newList.pop()
+
           newList.push({
             id,
             type: 'he',
@@ -94,7 +105,7 @@
       new (TypeIt as any)(`#${id}`, {
         strings: [answer],
         cursorChar: "<span class='cursorChar'>|<span>", //用于光标的字符。HTML也可以
-        speed: 10,
+        speed: 50,
         lifeLike: true, // 使打字速度不规则
         cursor: false, //在字符串末尾显示闪烁的光标
         breakLines: false, // 控制是将多个字符串打印在彼此之上，还是删除这些字符串并相互替换
@@ -122,7 +133,7 @@
                       </cite>
                     </div>
                     <div class="vab-chat-text">
-                      <span v-if="item.type == 'mine'">
+                      <span v-if="item.type == 'mine' || item.type == 'tips'">
                         {{ item.result }}
                       </span>
                       <span v-if="item.type == 'he'" :id="item.id"></span>
