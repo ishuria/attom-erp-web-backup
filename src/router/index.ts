@@ -88,7 +88,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     meta: {
       title: 'GPT',
       icon: 'chat-1-line',
-      breadcrumbHidden: true,
     },
     children: [
       {
@@ -98,7 +97,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: 'chatGPT',
           icon: 'chat-3-line',
-          noClosable: true,
         },
       },
     ],
