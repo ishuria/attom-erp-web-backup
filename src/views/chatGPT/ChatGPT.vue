@@ -61,12 +61,12 @@
     }, 0)
 
     axios
-      .get(`https://api.oioweb.cn/api/ai/chat?text=${value.value}`)
-      .then(({ data: { result } }) => {
+      .get(`https://api.pearktrue.cn/api/gpt/?message=${value.value}`)
+      .then(({ data: { answer } }) => {
         newList.pop()
         newList.push({
           type: 'he',
-          result: result,
+          result: answer,
           avatar: 'static/img/chatGPT.png',
           username: 'chatGPT',
           time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -143,7 +143,7 @@
     .vab-chat-main {
       height: calc($base-keep-alive-height - 230px);
       ul {
-        padding: 25px 25px 15px 25px;
+        padding: 5px 25px 15px 5px;
         li {
           position: relative;
           min-height: 68px;
