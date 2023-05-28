@@ -3,6 +3,8 @@
   import { useUserStore } from '/@/store/modules/user'
   import { ElScrollbar } from 'element-plus'
   import dayjs from 'dayjs'
+  import TypeIt from 'typeit'
+  import _ from 'lodash'
 
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
@@ -14,14 +16,17 @@
 
   const $baseMessage: any = inject('$baseMessage')
 
+  const result =
+    'Shop Vite \u6f14\u793a\u5730\u5740\u4ec5\u63d0\u4f9b ' +
+    'chatGPT \u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6 ' +
+    'chatGPT \u5b8c\u6574\u529f\u80fd\u8bf7\u8bbf\u95ee ' +
+    'open AI \u5b98\u7f51\u81ea\u884c\u8d2d\u4e70\u5bf9\u63a5\uff0c\u60a8\u73b0\u5728\u53ef\u4ee5\u8ddf\u6211\u5bf9\u8bdd\u4e86\u3002'
+
   const list: any = ref([
     {
+      id: 'uuid_9999',
       type: 'he',
-      result:
-        'Shop Vite \u6f14\u793a\u5730\u5740\u4ec5\u63d0\u4f9b ' +
-        'chatGPT \u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6 ' +
-        'chatGPT \u5b8c\u6574\u529f\u80fd\u8bf7\u8bbf\u95ee ' +
-        'open AI \u5b98\u7f51\u81ea\u884c\u8d2d\u4e70\u5bf9\u63a5\uff0c\u60a8\u73b0\u5728\u53ef\u4ee5\u8ddf\u6211\u5bf9\u8bdd\u4e86\u3002',
+      result,
       avatar: 'static/img/chatGPT.png',
       username: 'chatGPT',
       time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -30,6 +35,7 @@
 
   onMounted(() => {
     textareaRef.value.focus()
+    typeWriting('uuid_9999', result)
   })
   const send = () => {
     if (!value.value) {
@@ -48,43 +54,53 @@
       finish.value = false
       const newList = list.value
 
-      newList.push(
-        {
-          type: 'mine',
-          result: value.value,
-          avatar: avatar,
-          username: username,
-          time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        },
-        {
-          type: 'he',
-          result: 'chatGPT AI 内' + '容生成中，请稍后。。。',
-          avatar: 'static/img/chatGPT.png',
-          username: 'chatGPT',
-          time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        }
-      )
+      newList.push({
+        type: 'mine',
+        result: value.value,
+        avatar: avatar,
+        username: username,
+        time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      })
 
       setTimeout(() => {
         value.value = ''
         scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
       }, 0)
 
+      const id = _.uniqueId('uuid_')
+
       axios
         .get(`https://api.pearktrue.cn/api/gpt/?message=${value.value}`)
         .then(({ data: { answer } }) => {
-          newList.pop()
           newList.push({
+            id,
             type: 'he',
             result: answer,
             avatar: 'static/img/chatGPT.png',
             username: 'chatGPT',
             time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           })
+
+          typeWriting(id, answer)
+
           finish.value = true
           scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
         })
     }
+  }
+
+  const typeWriting = (id: string, answer: string) => {
+    setTimeout(() => {
+      new (TypeIt as any)(`#${id}`, {
+        strings: [answer],
+        cursorChar: "<span class='cursorChar'>|<span>", //用于光标的字符。HTML也可以
+        speed: 10,
+        lifeLike: true, // 使打字速度不规则
+        cursor: false, //在字符串末尾显示闪烁的光标
+        breakLines: false, // 控制是将多个字符串打印在彼此之上，还是删除这些字符串并相互替换
+        loop: false, //是否循环
+      }).go()
+    }, 0)
   }
 </script>
 
@@ -105,7 +121,12 @@
                         <i>{{ item.time }}</i>
                       </cite>
                     </div>
-                    <div class="vab-chat-text">{{ item.result }}</div>
+                    <div class="vab-chat-text">
+                      <span v-if="item.type == 'mine'">
+                        {{ item.result }}
+                      </span>
+                      <span v-if="item.type == 'he'" :id="item.id"></span>
+                    </div>
                   </li>
                 </template>
               </ul>
@@ -167,8 +188,8 @@
         .vab-chat-text {
           position: relative;
           display: inline-block;
-          *display: inline;
           max-width: 462px\9;
+          min-height: 38px;
           padding: 8px 15px;
           margin-top: 20px;
           font-size: 14px;
@@ -176,7 +197,6 @@
           color: $color_2;
           word-break: break-all;
           vertical-align: top;
-          *zoom: 1;
           background-color: $background-color_1;
           border-radius: 5px;
           &:after {
