@@ -281,7 +281,7 @@
         right: 10px;
         width: 120px;
         height: 32px;
-        font-size: 14px;
+        font-size: var(--el-font-size-default);
         color: #fff;
         cursor: pointer;
         user-select: none;
@@ -291,7 +291,7 @@
 
     .tips {
       margin-bottom: 10px;
-      font-size: $base-font-size-default;
+      font-size: var(--el-font-size-default);
       color: var(--el-color-white);
 
       span {
@@ -342,7 +342,7 @@
         input {
           height: 48px;
           padding-left: 35px;
-          font-size: $base-font-size-default;
+          font-size: var(--el-font-size-default);
           line-height: 58px;
           background: #fff;
           border: 0;

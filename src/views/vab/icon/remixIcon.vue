@@ -206,7 +206,7 @@
       height: 30px;
       margin-top: -15px;
       overflow: hidden;
-      font-size: 12px;
+      font-size: var(--el-font-size-small);
       line-height: 30px;
       text-align: center;
       text-overflow: ellipsis;

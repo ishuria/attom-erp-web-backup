@@ -1,0 +1,128 @@
+<script lang="ts" setup>
+  const iconList = [
+    {
+      icon: 'bank-line',
+      title: '工商建议',
+      tips: '工商建议快捷入口',
+      value: 1,
+      link: '',
+    },
+    {
+      icon: 'brush-line',
+      title: '商标管理',
+      tips: '工商管理快捷入口',
+      link: '',
+    },
+    {
+      icon: 'book-3-line',
+      title: '专利查询',
+      tips: '专利查询快捷入口',
+      link: '',
+    },
+    {
+      icon: 'check-double-line',
+      title: '著作权查询',
+      tips: '著作权查询快捷入口',
+      link: '',
+    },
+    {
+      icon: 'codepen-line',
+      title: '证照管理',
+      tips: '证照管理快捷入口',
+      link: '',
+    },
+    {
+      icon: 'discuss-line',
+      title: '纳税提醒',
+      tips: '纳税提醒快捷入口',
+      link: '',
+    },
+    {
+      icon: 'emotion-unhappy-line',
+      title: '违规查询',
+      tips: '违规查询快捷入口',
+      link: '',
+    },
+    {
+      icon: 'apps-2-line',
+      title: '全部应用',
+      tips: '全部原因快捷入口',
+      link: '',
+    },
+  ]
+</script>
+
+<template>
+  <vab-card shadow="hover">
+    <template #header>
+      <vab-icon icon="reserved-line" />
+      经营建议
+    </template>
+
+    <el-row :gutter="20">
+      <el-col
+        v-for="(item, index) in iconList"
+        :key="index"
+        :lg="4"
+        :md="4"
+        :sm="6"
+        :xl="4"
+        :xs="12"
+      >
+        <vab-link :to="item.link">
+          <vab-card class="icon-panel" shadow="hover">
+            <el-badge class="item" :value="item.value">
+              <vab-icon :icon="item.icon" />
+            </el-badge>
+            <div class="icon-panel-title">
+              {{ item.title }}
+              <div class="icon-panel-tips">{{ item.tips }}</div>
+            </div>
+          </vab-card>
+        </vab-link>
+      </el-col>
+    </el-row>
+  </vab-card>
+</template>
+
+<style lang="scss" scoped>
+  .icon-panel {
+    margin-bottom: 8px;
+    cursor: pointer;
+    border: 0;
+
+    .el-card__body {
+      height: 120px;
+
+      &:hover {
+        i {
+          transform: scale(1.15);
+        }
+      }
+
+      i {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        font-size: 30px;
+        line-height: 50px;
+        color: var(--el-color-primary);
+        background: var(--el-color-primary-light-9);
+        border-radius: var(--el-border-radius-base);
+        transition: all ease-in-out 0.3s;
+      }
+
+      .icon-panel-title {
+        display: inline-block;
+        padding-top: 10px;
+        margin-left: 10px;
+        vertical-align: -12px;
+        .icon-panel-tips {
+          margin-top: 5px;
+          font-size: var(--el-font-size-small);
+          color: var(--el-color-grey);
+        }
+      }
+    }
+  }
+</style>

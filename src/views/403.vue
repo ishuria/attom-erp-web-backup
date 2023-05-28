@@ -130,7 +130,7 @@
           float: left;
           width: 110px;
           height: 36px;
-          font-size: 14px;
+          font-size: var(--el-font-size-default);
           line-height: 36px;
           color: #fff;
           text-align: center;

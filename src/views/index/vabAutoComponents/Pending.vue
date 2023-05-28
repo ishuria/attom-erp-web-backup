@@ -16,7 +16,7 @@
 <template>
   <vab-card class="pending" shadow="never">
     <template #header>
-      <vab-icon icon="checkbox-circle-line" />
+      <vab-icon icon="ball-pen-line" />
       待处理
       <el-badge class="item" :value="6" />
     </template>
@@ -51,7 +51,7 @@
   .pending {
     :deep() {
       sup {
-        top: -2px;
+        top: -1px;
       }
       .parting-line {
         float: left;
@@ -75,7 +75,7 @@
         font-weight: bold;
         line-height: 28px;
         span {
-          font-size: 12px;
+          font-size: var(--el-font-size-small);
           font-weight: normal;
         }
 
@@ -89,7 +89,7 @@
       }
 
       .pending-tips {
-        font-size: 12px;
+        font-size: var(--el-font-size-small);
         color: var(--el-color-grey);
       }
     }

@@ -95,7 +95,7 @@
 
       &-description {
         min-height: 20px;
-        font-size: $base-font-size-default;
+        font-size: var(--el-font-size-default);
         color: #808695;
       }
     }

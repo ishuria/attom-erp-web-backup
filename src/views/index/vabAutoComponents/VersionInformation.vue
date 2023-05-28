@@ -37,12 +37,6 @@
         <tr>
           <td>pinia</td>
           <td>{{ dependencies['pinia'] }}</td>
-          <td>vue-router</td>
-          <td>{{ dependencies['vue-router'] }}</td>
-        </tr>
-        <tr>
-          <td>vue-i18n</td>
-          <td>{{ dependencies['vue-i18n'] }}</td>
           <td>element-plus</td>
           <td>
             {{ dependencies['element-plus'] }}
@@ -93,7 +87,7 @@
         position: relative;
         padding: 9px 15px !important;
         overflow: hidden;
-        font-size: 14px;
+        font-size: var(--el-font-size-default);
         text-overflow: ellipsis;
         white-space: nowrap;
         border: 1px solid #e6e6e6;

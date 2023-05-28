@@ -41,7 +41,7 @@ html {
     padding: 0;
     overflow: hidden;
     font-family: 'PingFang SC', Arial, 'Microsoft YaHei', sans-serif;
-    font-size: $base-font-size-default;
+    font-size: var(--el-font-size-default);
     color: $base-color-black;
     background: $base-color-background;
     -webkit-font-smoothing: antialiased;
@@ -83,7 +83,7 @@ html {
     }
 
     [class*='ri-'] {
-      vertical-align: -3px !important;
+      vertical-align: 0px !important;
     }
 
     /*a标签 */
@@ -199,12 +199,12 @@ html {
 
       [class*='ri-'] {
         margin-right: 3px;
-        font-size: 12px;
+        font-size: var(--el-font-size-small);
         vertical-align: -1.8px;
       }
 
       .el-icon {
-        font-size: 12px;
+        font-size: var(--el-font-size-small);
       }
 
       [class*='el-icon-'] + span {
@@ -421,7 +421,7 @@ html {
         box-sizing: border-box;
 
         .cell {
-          font-size: $base-font-size-default;
+          font-size: var(--el-font-size-default);
           font-weight: normal;
           color: #606266;
 

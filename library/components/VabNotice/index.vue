@@ -117,7 +117,7 @@
     align-items: center;
     justify-content: center;
     padding: 10px 0 0 0;
-    font-size: 14px;
+    font-size: var(--el-font-size-default);
     text-align: center;
     cursor: pointer;
     border-top: 1px solid #e8eaec;

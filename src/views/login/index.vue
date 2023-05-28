@@ -308,7 +308,7 @@
 
       .tips {
         margin-bottom: 10px;
-        font-size: $base-font-size-default;
+        font-size: var(--el-font-size-default);
         color: var(--el-color-white);
 
         span {
@@ -380,7 +380,7 @@
         input {
           height: 48px;
           padding-left: 35px;
-          font-size: $base-font-size-default;
+          font-size: var(--el-font-size-default);
           line-height: 58px;
           background: var(--el-color-white);
           border: 0;

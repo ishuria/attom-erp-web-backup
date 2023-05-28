@@ -34,7 +34,7 @@
 <style lang="scss" scoped>
   .vab-breadcrumb {
     height: $base-nav-height;
-    font-size: $base-font-size-default;
+    font-size: var(--el-font-size-default);
     line-height: $base-nav-height;
 
     :deep() {

@@ -155,12 +155,12 @@
           &-title {
             margin-top: 11px;
             margin-bottom: 4px;
-            font-size: 14px;
+            font-size: var(--el-font-size-default);
             color: rgba(0, 0, 0, 0.85);
           }
 
           &-description {
-            font-size: 14px;
+            font-size: var(--el-font-size-default);
             color: rgba(0, 0, 0, 0.45);
           }
 
@@ -168,7 +168,7 @@
             display: inline-block;
             height: 61px;
             margin-left: 40px;
-            font-size: 14px;
+            font-size: var(--el-font-size-default);
             color: rgba(0, 0, 0, 0.45);
             vertical-align: middle;
 
