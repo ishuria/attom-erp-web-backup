@@ -10,6 +10,7 @@
   const textareaRef = ref()
   const innerRef = ref<HTMLDivElement>()
   const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
+  const finish = ref(true)
 
   const $baseMessage: any = inject('$baseMessage')
 
@@ -35,44 +36,55 @@
       $baseMessage('提交内容不能为空', 'error', 'vab-hey-message-error')
       return
     }
+    if (!finish.value) {
+      $baseMessage(
+        'chatGPT还未回答' + '完您的上个问题，请稍' + '后再进行提问',
+        'error',
+        'vab-hey-message-error'
+      )
+      return
+    }
+    if (finish.value) {
+      finish.value = false
+      const newList = list.value
 
-    const newList = list.value
-
-    newList.push(
-      {
-        type: 'mine',
-        result: value.value,
-        avatar: avatar,
-        username: username,
-        time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      },
-      {
-        type: 'he',
-        result: 'chatGPT AI 内' + '容生成中，请稍后。。。',
-        avatar: 'static/img/chatGPT.png',
-        username: 'chatGPT',
-        time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      }
-    )
-
-    setTimeout(() => {
-      value.value = ''
-      scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
-    }, 0)
-
-    axios
-      .get(`https://api.pearktrue.cn/api/gpt/?message=${value.value}`)
-      .then(({ data: { answer } }) => {
-        newList.pop()
-        newList.push({
+      newList.push(
+        {
+          type: 'mine',
+          result: value.value,
+          avatar: avatar,
+          username: username,
+          time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        },
+        {
           type: 'he',
-          result: answer,
+          result: 'chatGPT AI 内' + '容生成中，请稍后。。。',
           avatar: 'static/img/chatGPT.png',
           username: 'chatGPT',
           time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        })
+        }
+      )
+
+      setTimeout(() => {
+        value.value = ''
         scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
-      })
+      }, 0)
+
+      axios
+        .get(`https://api.pearktrue.cn/api/gpt/?message=${value.value}`)
+        .then(({ data: { answer } }) => {
+          newList.pop()
+          newList.push({
+            type: 'he',
+            result: answer,
+            avatar: 'static/img/chatGPT.png',
+            username: 'chatGPT',
+            time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          })
+          finish.value = true
+          scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
+        })
+    }
   }
 </script>
 
