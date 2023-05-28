@@ -82,6 +82,28 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
+    path: '/chat',
+    name: 'Chat',
+    component: Layout,
+    meta: {
+      title: 'GPT',
+      icon: 'chat-1-line',
+      breadcrumbHidden: true,
+    },
+    children: [
+      {
+        path: 'chatGPT',
+        name: 'ChatGPT',
+        component: () => import('/@/views/chatGPT/ChatGPT.vue'),
+        meta: {
+          title: 'chatGPT',
+          icon: 'chat-3-line',
+          noClosable: true,
+        },
+      },
+    ],
+  },
+  {
     path: '/template',
     name: 'Template',
     component: Layout,
