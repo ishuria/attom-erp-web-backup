@@ -53,7 +53,7 @@
 </script>
 
 <template>
-  <vab-card shadow="hover">
+  <vab-card shadow="never">
     <template #header>
       <vab-icon icon="reserved-line" />
       经营建议
@@ -63,11 +63,11 @@
       <el-col
         v-for="(item, index) in iconList"
         :key="index"
-        :lg="4"
-        :md="4"
-        :sm="6"
-        :xl="4"
-        :xs="12"
+        :lg="6"
+        :md="8"
+        :sm="8"
+        :xl="6"
+        :xs="24"
       >
         <vab-link :to="item.link">
           <vab-card class="icon-panel" shadow="hover">
