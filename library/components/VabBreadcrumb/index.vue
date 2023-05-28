@@ -19,7 +19,7 @@
 </script>
 
 <template>
-  <el-breadcrumb class="vab-breadcrumb" separator=">">
+  <el-breadcrumb class="vab-breadcrumb" separator="/">
     <el-breadcrumb-item
       v-for="(item, index) in breadcrumbList"
       :key="index"

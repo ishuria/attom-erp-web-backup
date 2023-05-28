@@ -29,10 +29,9 @@
     v-if="theme.showDark"
     v-model="value"
     :active-icon="Sunny"
-    class="mt-2"
     :inactive-icon="Moon"
     inline-prompt
-    style="margin-left: 24px"
+    style="margin-right: 20px"
     @change="_toggleDark"
   />
 </template>

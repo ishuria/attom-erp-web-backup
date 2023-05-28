@@ -96,7 +96,8 @@
 
       &:hover {
         i {
-          transform: scale(1.15);
+          color: var(--el-color-white);
+          background: var(--el-color-primary);
         }
       }
 
@@ -116,7 +117,7 @@
         display: inline-block;
         padding-top: 10px;
         margin-left: 10px;
-        vertical-align: -12px;
+        vertical-align: -10px;
         .icon-panel-tips {
           margin-top: 5px;
           font-size: var(--el-font-size-small);
