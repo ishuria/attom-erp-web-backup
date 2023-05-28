@@ -5,10 +5,8 @@
   const settingsStore: any = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
 
-  alert(theme)
-
   const buy = () => {
-    window.open('https://vue-admin-beautiful.com/authorization')
+    window.open('https://vue-admin-beautiful.com/authorization/shop-vite.html')
   }
 
   const removeLocalStorage = () => {
