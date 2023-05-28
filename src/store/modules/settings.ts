@@ -13,6 +13,7 @@ const {
   logo: _logo,
   showDark,
   showFullScreen,
+  showThemeSetting,
   showLanguage,
   showNotice,
   showPageTransition,
@@ -42,6 +43,7 @@ const defaultTheme: ThemeType = {
   showSearch,
   showNotice,
   showFullScreen,
+  showThemeSetting,
   foldSidebar,
   showPageTransition,
 }

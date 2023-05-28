@@ -143,7 +143,7 @@
     .vab-chat-main {
       height: calc($base-keep-alive-height - 230px);
       ul {
-        padding: 25px;
+        padding: 25px 25px 15px 25px;
         li {
           position: relative;
           min-height: 68px;

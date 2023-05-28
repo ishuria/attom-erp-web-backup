@@ -111,6 +111,8 @@ declare interface ThemeType {
   showNotice: boolean
   // 是否开启全屏组件
   showFullScreen: boolean
+  // 是否开启右侧悬浮窗
+  showThemeSetting: boolean
   // 是否开启暗黑组件
   showDark: boolean
   // 是否开启页面动画

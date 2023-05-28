@@ -8,6 +8,7 @@
       :show-tabs="theme.showTabs"
     />
     <el-backtop target="#app" />
+    <vab-theme-setting />
   </div>
 </template>
 
