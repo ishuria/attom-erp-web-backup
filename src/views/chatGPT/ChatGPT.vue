@@ -79,7 +79,7 @@
 <template>
   <div class="chat-GPT-container">
     <el-row :gutter="20">
-      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
+      <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <vab-card shadow="never">
           <div class="vab-chat-main">
             <el-scrollbar ref="scrollbarRef">
