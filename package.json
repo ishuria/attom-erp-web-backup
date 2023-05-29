@@ -15,7 +15,8 @@
     "globle:update": "ncu -g",
     "module:install": "cnpm i",
     "module:update": "ncu -u --reject vite-plugin-mock --registry https://registry.npmmirror.com&&npm run module:install",
-    "module:reinstall": "rimraf node_modules&&npm run module:install"
+    "module:reinstall": "rimraf node_modules&&npm run module:install",
+    "git": "start ./git.sh"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
