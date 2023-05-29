@@ -50,10 +50,10 @@
           title="订单"
         />
       </el-col>
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <pending />
       </el-col>
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
         <version-information />
       </el-col>
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
