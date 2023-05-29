@@ -73,8 +73,8 @@
       @each $key, $color in $colors {
         &:nth-child(#{$key}) {
           a {
-            color: var(--el-color-white);
-            background: mix($base-color-white, $color, 10%);
+            color: $color;
+            background: mix($base-color-white, $color, 90%);
             transition: color 0.15s ease, background-color 0.15s ease,
               border-color 0.15s ease, box-shadow 0.15s ease,
               -webkit-box-shadow 0.15s ease;

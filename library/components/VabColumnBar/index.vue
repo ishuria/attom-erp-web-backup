@@ -86,7 +86,10 @@
                   :icon="item.meta.icon"
                   :is-custom-svg="item.meta.isCustomSvg"
                 />
-                <span>
+                <span v-if="translateTitle(item.meta.title).length < 4">
+                  {{ translateTitle(item.meta.title) }}
+                </span>
+                <span v-else style="font-size: 12px; zoom: 0.88">
                   {{ translateTitle(item.meta.title) }}
                 </span>
               </div>
@@ -396,7 +399,7 @@
   .float-portal {
     position: fixed;
     bottom: 13px;
-    left: 13px;
+    left: 14px;
     z-index: 99999;
     width: 34px;
     height: 34px;
