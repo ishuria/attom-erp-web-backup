@@ -249,6 +249,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'notice',
+        name: 'Notice',
+        component: () => import('/@/views/vab/notice/index.vue'),
+        meta: {
+          title: '通知',
+          guard: ['Admin'],
+          icon: 'message-2-line',
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
