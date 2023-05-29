@@ -259,6 +259,27 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'timeline',
+        name: 'Timeline',
+        component: () => import('/@/views/vab/timeline/index.vue'),
+        meta: {
+          title: '时间线',
+          guard: ['Admin'],
+          icon: 'time-line',
+        },
+      },
+      {
+        path: 'watermark',
+        name: 'Watermark',
+        component: () => import('/@/views/vab/watermark/index.vue'),
+        meta: {
+          title: '水印',
+          guard: ['Admin'],
+          icon: 'water-flash-line',
+          dot: true,
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
