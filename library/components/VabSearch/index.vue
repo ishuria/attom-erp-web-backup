@@ -1,115 +1,111 @@
-<script setup>
+<script setup lang="ts">
+  defineOptions({
+    name: 'VabSearch',
+  })
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { getList } from '/@/api/search'
-
-  const vFocus = {
-    mounted(el) {
-      el.querySelector('input').focus()
-    },
-  }
+  import { useRoutesStore } from '/@/store/modules/routes'
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
+  const state = ref('')
+  const router = useRouter()
 
-  let timeout = null
-  const state = reactive({
-    dialogVisible: false,
-    queryForm: {
-      searchWord: '',
-    },
-    restaurants: [],
-  })
-
-  const loadAll = async () => {
-    const {
-      data: { list },
-    } = await getList()
-    state.restaurants = list
+  interface LinkItem {
+    value: string
+    link: string
   }
 
-  onMounted(() => {
-    if (theme.value.showSearch) loadAll()
+  const links = ref<LinkItem[]>([])
+
+  const routesStore = useRoutesStore()
+  const { getRoutes: routes } = storeToRefs(routesStore)
+
+  const handleRoutes = computed(() => {
+    return routes.value.flatMap((route: any) =>
+      route.meta.levelHidden && route.children ? [...route.children] : route
+    )
   })
 
-  const openDialog = () => {
-    state.queryForm.searchWord = ''
-    state.dialogVisible = true
+  const loadAll = () => {
+    const values = JSON.parse(JSON.stringify(handleRoutes.value))
+
+    const result: any = []
+
+    const flat = (nodes: any, parentId: any) => {
+      if (!nodes || nodes.length === 0) return []
+      nodes.forEach((node: any) => {
+        result.push({
+          title: node.meta.title,
+          value: node.meta.title,
+          link: node.path,
+          path: node.path,
+          name: node.name,
+          parentId: parentId,
+          icon: node.meta.icon,
+        })
+        return flat(node.children, node.path)
+      })
+    }
+    flat(values, 0)
+
+    console.log(result)
+    return result
   }
 
-  const querySearchAsync = (queryString, cb) => {
-    const restaurants = state.restaurants
+  let timeout: NodeJS.Timeout
+  const querySearchAsync = (queryString: string, cb: (arg: any) => void) => {
     const results = queryString
-      ? restaurants.filter(createFilter(queryString))
-      : restaurants
+      ? links.value.filter(createFilter(queryString))
+      : links.value
+
     clearTimeout(timeout)
     timeout = setTimeout(() => {
       cb(results)
-    }, 500)
+    }, 0)
   }
-
-  const createFilter = (queryString) => (state) =>
-    state.value.includes(queryString.toLowerCase())
-  const handleSelect = (item) => {
-    if (item.url) {
-      window.open(item.url)
-    } else {
-      window.open(`https://www.baidu.com/s?wd=${item.value}`)
+  const createFilter = (queryString: string) => {
+    return (restaurant: LinkItem) => {
+      return (
+        restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+      )
     }
   }
+
+  const handleSelect: any = (item: any) => {
+    router.push(item)
+  }
+
+  onMounted(() => {
+    links.value = loadAll()
+  })
 </script>
 
 <template>
-  <span v-if="theme.showSearch">
-    <vab-icon icon="search-line" @click="openDialog" />
-    <el-dialog v-model="state.dialogVisible" :width="'40%'">
-      <el-form :model="state.queryForm" @submit.prevent>
-        <el-form-item label-width="0">
-          <el-autocomplete
-            v-model="state.queryForm.searchWord"
-            v-focus
-            :fetch-suggestions="querySearchAsync"
-            select-when-unmatched
-            @select="handleSelect"
-          >
-            <template #prefix><vab-icon icon="search-line" /></template>
-          </el-autocomplete>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-  </span>
+  <el-autocomplete
+    v-if="theme.showSearch"
+    v-model="state"
+    class="vab-search-autocomplete"
+    clearable
+    :fetch-suggestions="querySearchAsync"
+    @select="handleSelect"
+  >
+    <template #default="{ item }">
+      <div v-if="item.parentId != 0">
+        <vab-icon :icon="item.icon || 'donut-chart-line'" />
+        {{ item.value }}
+      </div>
+    </template>
+  </el-autocomplete>
 </template>
 
-<style lang="scss" scoped>
-  :deep(.el-dialog) {
-    .el-dialog__header {
-      display: none;
-      border: 0 !important;
+<style lang="scss">
+  .vab-search-autocomplete {
+    margin-right: 20px;
+    .el-input {
+      width: 150px !important;
     }
-
-    .el-dialog__body {
-      padding: 0;
-      border: 0 !important;
-    }
-
-    .el-form-item__content {
-      position: relative;
-
-      i {
-        position: absolute;
-        top: 14px;
-        left: -10px;
-      }
-
-      .el-autocomplete {
-        width: 100%;
-
-        .el-input__inner {
-          width: 100%;
-          height: 60px;
-          padding-left: $base-padding * 2.5;
-          border: 0 !important;
-        }
-      }
+    &-sub-menu {
+      color: var(--el-color-grey);
     }
   }
 </style>

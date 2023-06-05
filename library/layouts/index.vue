@@ -15,7 +15,7 @@
 <script>
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const imports = import.meta.globEager('./**/*.vue')
+  const imports = import.meta.glob('./**/*.vue', { eager: true })
   const Components = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
     Components[key.replace(/(\/|\.|index.vue)/g, '')] = imports[key].default

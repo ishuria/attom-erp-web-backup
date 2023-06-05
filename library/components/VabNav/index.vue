@@ -67,10 +67,10 @@
       </el-col>
       <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="20">
         <div class="right-panel">
+          <vab-search class="hidden-xs-only" />
           <vab-dark />
           <vab-color-picker />
           <vab-error-log />
-          <vab-search />
           <vab-notice />
           <vab-full-screen class="hidden-xs-only" />
           <vab-language />

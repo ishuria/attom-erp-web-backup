@@ -5,26 +5,11 @@
     :item-or-menu="item"
   >
     <template v-if="item.children && item.children.length">
-      <el-scrollbar
-        v-if="
-          (layout === 'horizontal' && item.children.length > 18) ||
-          (layout !== 'horizontal' && collapse && item.children.length > 18)
-        "
-        class="vab-menu-children-height"
-      >
-        <vab-menu
-          v-for="route in item.children"
-          :key="route.path"
-          :item="route"
-        />
-      </el-scrollbar>
-      <template v-else>
-        <vab-menu
-          v-for="route in item.children"
-          :key="route.path"
-          :item="route"
-        />
-      </template>
+      <vab-menu
+        v-for="route in item.children"
+        :key="route.path"
+        :item="route"
+      />
     </template>
   </component>
 </template>
@@ -32,7 +17,7 @@
 <script>
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const imports = import.meta.globEager('./**/*.vue')
+  const imports = import.meta.glob('./**/*.vue', { eager: true })
   const Components = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
     Components[key.replace(/(\/|components|\.|vue)/g, '')] =
