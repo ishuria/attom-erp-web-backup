@@ -128,7 +128,7 @@
 
       .list-item {
         padding: $base-padding;
-        border-bottom: 1px solid $base-border-color;
+        border-bottom: 1px solid var(--el-border-color-light);
 
         &-meta {
           display: flex;

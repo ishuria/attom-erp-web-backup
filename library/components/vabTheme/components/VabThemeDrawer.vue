@@ -56,7 +56,7 @@
   >
     <el-scrollbar height="88vh">
       <el-form ref="form" label-position="left" :model="theme">
-        <el-form-item>
+        <el-form-item class="vab-shop-item1">
           <template #label>
             {{ translateTitle('布局') }}
             <el-tooltip
@@ -73,27 +73,27 @@
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
-          <el-select
+          <el-radio-group
             v-model="theme.layout"
+            class="vab-shop-layout"
             :disabled="device === 'mobile'"
-            placeholder="请选择"
           >
-            <el-option
-              key="column"
-              :label="translateTitle('分栏')"
-              value="column"
-            />
-            <el-option
-              key="vertical"
-              :label="translateTitle('纵向')"
-              value="vertical"
-            />
-            <el-option
-              key="horizontal"
-              :label="translateTitle('横向')"
-              value="horizontal"
-            />
-          </el-select>
+            <el-radio-button label="column">
+              <template #default>
+                <vab-icon icon="column" is-custom-svg />
+              </template>
+            </el-radio-button>
+            <el-radio-button label="vertical">
+              <template #default>
+                <vab-icon icon="vertical" is-custom-svg />
+              </template>
+            </el-radio-button>
+            <el-radio-button label="horizontal">
+              <template #default>
+                <vab-icon icon="horizontal" is-custom-svg />
+              </template>
+            </el-radio-button>
+          </el-radio-group>
         </el-form-item>
 
         <el-form-item :label="translateTitle('菜单宽度')">
@@ -270,46 +270,63 @@
             height: 130px;
           }
 
-          .el-radio-button {
-            display: block;
-            float: left;
-            width: 80px;
-            height: 80px;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 5px;
+          &.vab-shop-item1 {
+            display: block !important;
+            .el-form-item__content {
+              margin-top: 10px;
 
-            &.is-disabled {
-              cursor: not-allowed;
-              opacity: 0.6;
-            }
+              .vab-shop-layout {
+                .el-radio-button {
+                  position: relative;
+                  display: block;
+                  float: left;
+                  width: 60px;
+                  height: 60px;
+                  padding: 0;
+                  margin: 10px;
+                  cursor: pointer;
+                  background: transparent;
+                  border: 0;
+                  box-shadow: none;
 
-            &.is-active {
-              box-shadow: 0 0 2px 2px #1890ff;
-            }
+                  &.is-disabled {
+                    cursor: not-allowed;
+                    opacity: 0.6;
+                  }
 
-            .el-radio-button__orig-radio,
-            .el-radio-button__inner {
-              display: none;
-            }
+                  .el-radio-button__orig-radio {
+                    display: none;
+                  }
 
-            &.none {
-              font-family: 'remixicon', sans-serif !important;
-              font-size: 16px;
-              font-weight: 580;
-              line-height: 80px;
-              text-align: center;
-              background: #f7f7f7 none;
-              background-size: cover;
+                  .el-radio-button__original-radio:checked
+                    + .el-radio-button__inner {
+                    .vab-icon {
+                      box-shadow: 0 0 2px 2px var(--el-color-primary);
+                    }
+                  }
 
-              &:before {
-                content: '\eace';
+                  .el-radio-button__inner {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: block;
+                    width: 60px;
+                    height: 60px;
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
+                    box-shadow: none;
+                    .vab-icon {
+                      width: 60px;
+                      height: 60px;
+                      padding: 0;
+                      margin: 0;
+                      border: 1px solid var(--el-border-color-light);
+                      border-radius: 5px;
+                    }
+                  }
+                }
               }
-            }
-
-            &.vab-background {
-              background: url(~@/assets/theme_images/background-1.png);
-              background-size: cover;
             }
           }
 
@@ -328,7 +345,7 @@
       z-index: $base-z-index + 1;
       padding: math.div($base-padding, 2);
       background: var(--el-color-white);
-      border-top: 1px solid $base-border-color;
+      border-top: 1px solid var(--el-border-color-light);
     }
   }
 </style>

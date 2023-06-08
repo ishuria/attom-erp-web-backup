@@ -57,12 +57,12 @@
   @mixin active {
     &:hover {
       color: var(--el-color-white);
-      background-color: $base-menu-active;
+      background-color: var(--el-color-primary);
     }
 
     &.is-active {
       color: var(--el-color-white);
-      background-color: $base-menu-active;
+      background-color: var(--el-color-primary);
     }
   }
 

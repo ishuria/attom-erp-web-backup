@@ -45,7 +45,7 @@
     text-align: center;
     cursor: pointer;
     background: var(--el-color-white);
-    border: 1px solid $base-border-color;
+    border: 1px solid var(--el-border-color-light);
     border-top-left-radius: $base-border-radius + 3;
     border-bottom-left-radius: $base-border-radius + 3;
     box-shadow: 0 0 50px 0 rgb(82 63 105 / 15%);

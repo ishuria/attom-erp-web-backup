@@ -98,7 +98,7 @@
     padding: $base-padding;
     margin-top: $base-margin;
     background: #f5f7f8;
-    border: 1px dashed $base-border-color;
+    border: 1px dashed var(--el-border-color-light);
     border-radius: var(--el-border-radius-base);
   }
 
