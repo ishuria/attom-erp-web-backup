@@ -6,7 +6,8 @@ export function createBanner() {
       ` build: Vue Shop` +
         ` Vite \n     copyright: vue-admin-` +
         `bea` +
-        `utiful.com  \n     time: ${process.env.VITE_APP_UPDATE_TIME} \n`
+        `utiful.com/sh` +
+        `op-vite  \n     time: ${process.env.VITE_APP_UPDATE_TIME} \n`
     ),
   ]
 }
