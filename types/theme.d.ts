@@ -25,15 +25,7 @@ declare type LayoutName =
   | 'float'
   | string
 
-declare type ThemeName =
-  | 'blue-black'
-  | 'blue-white'
-  | 'green-black'
-  | 'green-white'
-  | 'ocean'
-  | 'red-white'
-  | 'red-black'
-  | string
+declare type ThemeName = 'default' | 'technology' | string
 
 declare type Background =
   /**
@@ -85,6 +77,8 @@ declare interface ThemeType {
   layout: LayoutName
   // 主题名称
   themeName: ThemeName
+  // 菜单宽度，仅支持px，建议大小：266px、277px、288px，其余尺寸会影响美观
+  menuWidth: string
   // 分栏风格(仅针对分栏布局column时生效)
   columnStyle: ColumnStyle
   // 颜色
@@ -105,6 +99,8 @@ declare interface ThemeType {
   showLanguage: boolean
   // 是否开启刷新组件
   showRefresh: boolean
+  // 是否开启主题组件
+  showTheme: boolean
   // 是否开启搜索组件
   showSearch: boolean
   // 是否开启通知组件

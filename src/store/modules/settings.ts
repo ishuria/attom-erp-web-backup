@@ -108,7 +108,16 @@ export const useSettingsStore = defineStore('settings', {
       this.updateTheme()
     },
     updateTheme() {
-      //预置主题修改，需自行开发，与vite快的设计理念不符，故移除
+      document.getElementsByTagName('html')[0].className =
+        'vue-ad' + 'min-better' + 'vue-sh' + 'op-vite'
+      document.getElementsByTagName(
+        'body'
+      )[0].className = `vab-theme-${this.theme.themeName}`
+
+      const el = ref(null)
+      if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px'))
+        useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
+      else useCssVar('--el-left-menu-width', el).value = '266px'
     },
     toggleCollapse() {
       this.collapse = !this.collapse

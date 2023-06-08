@@ -1,5 +1,3 @@
-import { VabRouteMeta, VabRouteRecord } from '/#/router'
-
 declare interface AclModuleType {
   admin: boolean
   role: string[]
@@ -18,7 +16,7 @@ declare interface RoutesModuleType {
   activeMenu: {
     data: string | undefined
   }
-  routes: VabRouteRecord[]
+  routes: any[]
 }
 
 declare type DeviceType = 'mobile' | 'desktop'
@@ -35,13 +33,7 @@ declare interface SettingsModuleType {
 }
 
 declare interface TabsModuleType {
-  visitedRoutes: VabRouteRecord[]
-}
-
-declare interface OptionType {
-  name?: string
-  title?: string
-  meta: VabRouteMeta
+  visitedRoutes: any[]
 }
 
 declare interface UserModuleType {

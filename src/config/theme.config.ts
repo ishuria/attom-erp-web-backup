@@ -2,10 +2,10 @@
  * @description 导出主题配置，注意事项：此配置下的项修改后需清理浏览器缓存！！！
  */
 export const themeConfig: ThemeType = {
-  // vite版本仅支持分栏布局column、纵向布局vertical
+  // vite版本仅支持分栏布局column、纵向布局vertical、横向布局horizontal
   layout: 'column',
-  //blue-black
-  themeName: 'blue-black',
+  // 主题分两种：default、technology
+  themeName: 'default',
   // 菜单宽度，仅支持px，建议大小：266px、277px、288px，其余尺寸会影响美观
   menuWidth: '266px',
   // 分栏风格：横向风格horizontal、纵向风格vertical、卡片风格card、箭头风格arrow

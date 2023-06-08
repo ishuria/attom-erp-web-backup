@@ -95,6 +95,17 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
+        <!-- 没写完 TODO -->
+        <!-- <el-form-item :label="translateTitle('主题')">
+          <el-radio-group v-model="theme.themeName" @change="updateTheme">
+            <el-radio-button label="default">
+              <template #default>默认</template>
+            </el-radio-button>
+            <el-radio-button label="technology">
+              <template #default>科技</template>
+            </el-radio-button>
+          </el-radio-group>
+        </el-form-item> -->
 
         <el-form-item :label="translateTitle('菜单宽度')">
           <el-select
