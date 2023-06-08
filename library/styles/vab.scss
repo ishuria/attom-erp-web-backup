@@ -27,9 +27,9 @@
 
 .vab-layout-header,
 [class*='-bar-container'] {
-  transition: $base-transition;
+  transition: var(--el-transition);
   * {
-    transition: $base-transition;
+    transition: var(--el-transition);
   }
 }
 
@@ -54,23 +54,23 @@ html {
       @include base-scrollbar;
 
       .vab-main {
-        transition: $base-transition;
+        transition: var(--el-transition);
 
         .vab-app-main {
           width: 100%;
           padding: $base-padding;
           overflow: hidden;
-          transition: $base-transition;
+          transition: var(--el-transition);
 
           > section {
             background: var(--el-color-white);
-            transition: $base-transition;
+            transition: var(--el-transition);
 
             > [class*='-container'] {
               min-height: $base-keep-alive-height;
               padding: $base-padding;
               background: var(--el-color-white);
-              transition: $base-transition;
+              transition: var(--el-transition);
             }
           }
         }
@@ -114,7 +114,7 @@ html {
 
     /* vab-dropdown下拉动画 */
     .vab-dropdown {
-      transition: $base-transition;
+      transition: var(--el-transition);
 
       &-active {
         transform: rotateZ(180deg);
@@ -461,7 +461,7 @@ html {
     .el-card {
       margin-bottom: $base-margin;
       border-radius: var(--el-border-radius-base);
-      transition: $base-transition;
+      transition: var(--el-transition);
 
       &__header {
         position: relative;

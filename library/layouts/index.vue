@@ -111,7 +111,7 @@
         margin-left: var(--el-left-menu-width);
 
         &.is-collapse-main {
-          margin-left: $base-left-menu-width-min;
+          margin-left: var(--el-left-menu-width-min);
 
           .fixed-header {
             width: $base-right-content-width-min;

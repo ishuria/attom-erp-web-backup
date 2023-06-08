@@ -3,6 +3,7 @@ html .vab-theme-technology {
   --el-color-black: #cfd3dc;
   --el-color-white: #040d32;
   --el-color-grey: #cfd3dc;
+  --el-color-menu: #040d32;
   --el-color-menu-second: #040d32;
   --el-border-color-light: #040d32;
   --el-background-technology: #040d32;
@@ -248,10 +249,26 @@ html .vab-theme-technology {
 
   .el-radio-button {
     &__inner {
-      border: var(--el-border-color) !important;
+      border: 1px solid var(--el-border-color) !important;
     }
   }
   .el-input.is-disabled .el-input__wrapper {
     background: #214e85 !important;
+  }
+
+  .vab-side-bar {
+    border-right: 1px solid var(--el-border-color) !important;
+  }
+  .vab-header {
+    border-bottom: 1px solid var(--el-border-color) !important;
+    .logo-container-horizontal {
+      height: calc($base-header-height - 1px);
+    }
+    .vab-main .right-panel {
+      [class*='ri-'],
+      .username {
+        color: var(--el-color-black) !important;
+      }
+    }
   }
 }

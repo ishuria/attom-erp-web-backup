@@ -51,7 +51,7 @@
           text-align: center;
           pointer-events: none;
           cursor: pointer;
-          transition: $base-transition;
+          transition: var(--el-transition);
         }
       }
     }

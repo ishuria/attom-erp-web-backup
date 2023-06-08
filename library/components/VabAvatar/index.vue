@@ -32,7 +32,7 @@
   <el-dropdown @command="handleCommand" @visible-change="handleVisibleChange">
     <span class="avatar-dropdown">
       <el-avatar class="user-avatar" :src="avatar" />
-      <div class="user-name">
+      <div class="username">
         <span class="hidden-xs-only">{{ username }}</span>
         <vab-icon
           class="vab-dropdown"
@@ -70,7 +70,7 @@
       border-radius: 50%;
     }
 
-    .user-name {
+    .username {
       position: relative;
       display: flex;
       align-content: center;

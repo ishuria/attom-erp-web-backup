@@ -368,7 +368,7 @@
           position: absolute;
           top: 100%;
           left: 18px;
-          font-size: $base-font-size-small;
+          font-size: var(--el-font-size-small);
           line-height: 18px;
           color: var(--el-color-error);
         }

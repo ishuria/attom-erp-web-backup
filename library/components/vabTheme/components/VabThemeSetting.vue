@@ -113,7 +113,7 @@
           padding: 0;
           margin: 0;
           overflow: hidden;
-          font-size: $base-font-size-small;
+          font-size: var(--el-font-size-small);
           line-height: 25px;
           text-overflow: ellipsis;
           white-space: nowrap;

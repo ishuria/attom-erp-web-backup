@@ -75,8 +75,8 @@
     width: var(--el-left-menu-width);
     height: 100vh;
     overflow: hidden;
-    background: $base-menu-background;
-    transition: $base-transition;
+    background: var(--el-color-menu);
+    transition: var(--el-transition);
 
     &.side-bar-common {
       top: $base-header-height;
@@ -84,7 +84,7 @@
     }
 
     &.is-collapse {
-      width: $base-left-menu-width-min;
+      width: var(--el-left-menu-width-min);
       border-right: 0;
 
       :deep() {

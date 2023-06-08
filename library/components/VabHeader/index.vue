@@ -66,7 +66,7 @@
     align-items: center;
     justify-items: flex-end;
     height: $base-header-height;
-    background: $base-menu-background;
+    background: var(--el-color-menu);
 
     .vab-main {
       padding: 0 $base-padding 0 $base-padding;
@@ -190,11 +190,11 @@
             }
           }
 
-          .user-name {
+          .username {
             color: var(--el-color-white);
           }
 
-          .user-name + i {
+          .username + i {
             color: var(--el-color-white);
           }
 

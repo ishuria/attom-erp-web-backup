@@ -153,7 +153,7 @@
 
     :deep() {
       * {
-        transition: $base-transition;
+        transition: var(--el-transition);
       }
     }
 
@@ -162,7 +162,7 @@
     &-arrow {
       :deep() {
         .el-tabs + .el-menu {
-          left: $base-left-menu-width-min;
+          left: var(--el-left-menu-width-min);
           width: calc(var(--el-left-menu-width) - #{$base-left-menu-width-min});
           border: 0;
         }
@@ -275,7 +275,7 @@
     .vab-column-grid {
       display: flex;
       align-items: center;
-      width: $base-left-menu-width-min;
+      width: var(--el-left-menu-width-min);
       overflow: hidden;
       text-align: center;
       text-overflow: ellipsis;
@@ -286,15 +286,15 @@
       &-card,
       &-arrow {
         justify-content: center;
-        height: $base-left-menu-width-min;
+        height: var(--el-left-menu-width-min);
 
         > div {
           svg {
             position: relative;
             top: 8px;
             display: block;
-            width: $base-font-size-default + 4;
-            height: $base-font-size-default + 4;
+            width: var(--el-font-size-bigger);
+            height: var(--el-font-size-bigger);
           }
 
           [class*='ri-'] {
@@ -326,7 +326,7 @@
 
           .el-tabs__nav-wrap.is-left {
             margin-right: 0 !important;
-            background: $base-column-first-menu-background;
+            background: var(--el-color-menu);
 
             .el-tabs__nav-scroll {
               height: 100%;
@@ -342,7 +342,7 @@
 
         .el-tabs__nav {
           height: calc(100vh - #{$base-logo-height});
-          background: $base-column-first-menu-background;
+          background: var(--el-color-menu);
         }
 
         .el-tabs__item {

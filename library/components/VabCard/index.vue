@@ -61,7 +61,7 @@
 <style lang="scss" scoped>
   .vab-card {
     &-transition {
-      transition: $base-transition;
+      transition: var(--el-transition);
     }
     :deep() {
       .el-card__header {

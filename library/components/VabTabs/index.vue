@@ -406,7 +406,7 @@
 
                 &:after {
                   width: 100%;
-                  transition: $base-transition;
+                  transition: var(--el-transition);
                 }
               }
 
@@ -418,7 +418,7 @@
                 height: 2px;
                 content: '';
                 background-color: var(--el-color-primary);
-                transition: $base-transition;
+                transition: var(--el-transition);
               }
 
               &:hover {
@@ -426,7 +426,7 @@
 
                 &:after {
                   width: 100%;
-                  transition: $base-transition;
+                  transition: var(--el-transition);
                 }
               }
             }

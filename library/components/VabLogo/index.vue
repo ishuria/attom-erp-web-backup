@@ -104,10 +104,10 @@
         position: fixed;
         top: 0;
         display: block;
-        width: $base-left-menu-width-min;
+        width: var(--el-left-menu-width-min);
         height: $base-logo-height;
         margin: 0;
-        background: $base-column-first-menu-background;
+        background: var(--el-color-menu);
       }
 
       .title {

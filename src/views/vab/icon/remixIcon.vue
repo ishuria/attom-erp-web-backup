@@ -174,7 +174,7 @@
           text-align: center;
           pointer-events: none;
           cursor: pointer;
-          transition: $base-transition;
+          transition: var(--el-transition);
         }
 
         &::after {
@@ -182,12 +182,12 @@
           bottom: -30px;
           width: 100%;
           padding: 4px 0;
-          font-size: $base-font-size-small;
+          font-size: var(--el-font-size-small);
           color: rgb(255, 255, 255);
           text-align: center;
           content: '点击复制';
           background-color: var(--el-color-primary);
-          transition: $base-transition;
+          transition: var(--el-transition);
         }
 
         &:hover {
