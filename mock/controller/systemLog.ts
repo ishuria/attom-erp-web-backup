@@ -1,6 +1,6 @@
 import { MockMethod } from 'vite-plugin-mock'
 
-const { mock } = require('mockjs')
+import { mock } from 'mockjs'
 const List: any = []
 const count = 50
 for (let i = 0; i < count; i++) {
