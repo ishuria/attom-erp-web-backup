@@ -6,6 +6,8 @@ import { createMock } from './mock/'
 import { createUnPlugin } from './unplugin/'
 import { createSvgIcons } from './svgSprite/'
 import { createProgress } from './progress/'
+import { createBanner } from './banner/'
+
 export function createVitePlugin(env: Record<string, string>) {
   const vitePlugins: (Plugin | Plugin[])[] = [vue()]
   const viteApp = 'VITE_' + 'APP_'
@@ -24,5 +26,6 @@ export function createVitePlugin(env: Record<string, string>) {
   vitePlugins.push(createPwa())
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
+  vitePlugins.push(createBanner())
   return vitePlugins
 }

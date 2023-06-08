@@ -76,6 +76,7 @@
     "unplugin-auto-import": "^0.16.4",
     "unplugin-vue-components": "^0.25.1",
     "vite": "^4.3.9",
+    "vite-plugin-banner": "^0.7.0",
     "vite-plugin-mock": "2.9.6",
     "vite-plugin-pwa": "^0.16.3",
     "vite-plugin-svg-icons": "^2.0.1",
@@ -86,7 +87,7 @@
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
-  "homepage": "https://chu1204505056.gitee.io/shop-vite",
+  "homepage": "https://vue-admin-beautiful.com/shop-vite",
   "license": "Mozilla Public License Version 2.0",
   "lint-staged": {
     "*.{js,ts,vue}": [
