@@ -200,8 +200,10 @@
 
           [class*='ri-'] {
             margin-left: $base-margin;
+            font-size: lighter;
             color: var(--el-color-white);
             cursor: pointer;
+            -webkit-font-smoothing: antialiased;
           }
 
           button {
@@ -210,6 +212,21 @@
               color: var(--el-color-white);
               cursor: pointer;
               fill: var(--el-color-white);
+            }
+          }
+
+          .el-color-picker {
+            &__trigger {
+              margin: -5px;
+              border: 0;
+            }
+          }
+
+          .vab-search-autocomplete {
+            margin-left: 20px;
+            .el-input__wrapper {
+              background-color: transparent;
+              border-radius: 15px;
             }
           }
         }
