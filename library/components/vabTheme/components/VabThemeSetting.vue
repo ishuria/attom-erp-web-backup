@@ -71,11 +71,11 @@
       margin: 0;
       list-style: none;
 
-      &:nth-child(2) {
-        [class*='ri-'] {
-          animation: rotate 6s linear infinite;
-        }
-      }
+      // &:nth-child(2) {
+      //   [class*='ri-'] {
+      //     animation: rotate 6s linear infinite;
+      //   }
+      // }
 
       $colors: (
         1: #3698fd,

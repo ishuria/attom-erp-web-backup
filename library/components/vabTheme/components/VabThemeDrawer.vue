@@ -72,7 +72,7 @@
   >
     <el-scrollbar height="88vh">
       <el-form ref="form" label-position="left" :model="theme">
-        <el-form-item class="vab-shop-item1">
+        <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
           <template #label>
             {{ translateTitle('布局') }}
             <el-tooltip
