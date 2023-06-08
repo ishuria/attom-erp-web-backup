@@ -2,8 +2,14 @@
   import { useSettingsStore } from '/@/store/modules/settings'
   import { translateTitle } from '/@/utils/i18n'
 
+  const $pub: any = inject('$pub')
+
   const settingsStore: any = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
+
+  const handleOpenTheme = () => {
+    $pub('theme')
+  }
 
   const buy = () => {
     window.open('https://vue-admin-beautiful.com/authorization/shop-vite.html')
@@ -17,6 +23,12 @@
 
 <template>
   <ul v-if="theme.showThemeSetting" class="vab-theme-setting">
+    <li @click="handleOpenTheme">
+      <a>
+        <vab-icon icon="brush-2-line" />
+        <p>{{ translateTitle('主题配置') }}</p>
+      </a>
+    </li>
     <li @click="buy">
       <a>
         <vab-icon icon="shopping-cart-2-line" />
@@ -67,7 +79,8 @@
 
       $colors: (
         1: #3698fd,
-        2: #ef4c5d,
+        2: #faa500,
+        3: #ef4c5d,
       );
 
       @each $key, $color in $colors {
