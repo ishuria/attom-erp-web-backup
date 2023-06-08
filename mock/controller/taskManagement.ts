@@ -1,7 +1,7 @@
 import { MockMethod } from 'vite-plugin-mock'
 
 const { mock } = require('mockjs')
-const List = []
+const List: any = []
 const count = 50
 for (let i = 0; i < count; i++) {
   List.push(
@@ -31,10 +31,10 @@ export default [
     response: (config: any) => {
       const { account, pageNo = 1, pageSize = 20 } = config.query
       const mockList = List.filter(
-        (item) => !(account && item.account.indexOf(account) < 0)
+        (item: any) => !(account && item.account.indexOf(account) < 0)
       )
       const list = mockList.filter(
-        (item, index) =>
+        (item: any, index: any) =>
           index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
       )
       return {

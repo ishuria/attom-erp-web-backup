@@ -21,7 +21,7 @@
     },
     "lib": ["dom", "esnext", "scripthost", "dom.iterable"],
     "skipLibCheck": true,
-    "types": ["element-plus/global"]
+    "types": ["element-plus/global", "vite/client"]
   },
   "include": [
     "vite.config.ts",
