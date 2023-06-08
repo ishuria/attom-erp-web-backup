@@ -461,6 +461,7 @@ html {
     .el-card {
       margin-bottom: $base-margin;
       border-radius: var(--el-border-radius-base);
+      transition: $base-transition;
 
       &__header {
         position: relative;

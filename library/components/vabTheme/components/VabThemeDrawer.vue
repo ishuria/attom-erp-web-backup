@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { translateTitle } from '/@/utils/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { ElLoading } from 'element-plus'
 
   const $sub: any = inject('$sub')
   const $unsub: any = inject('$unsub')
@@ -19,6 +20,21 @@
 
   const updateMenuWidth = () => {
     useCssVar('--el-left-menu-width', ref(null)).value = theme.value.menuWidth
+  }
+
+  const _updateTheme = () => {
+    const loading = ElLoading.service({
+      lock: true,
+      text: 'Loading',
+      background: 'rgba(0, 0, 0, 0.7)',
+    })
+    setTimeout(() => {
+      updateTheme()
+    }, 200)
+
+    setTimeout(() => {
+      loading.close()
+    }, 1000)
   }
 
   const setDefaultTheme = async () => {
@@ -97,7 +113,7 @@
         </el-form-item>
         <!-- 没写完 TODO -->
         <el-form-item :label="translateTitle('主题')">
-          <el-radio-group v-model="theme.themeName" @change="updateTheme">
+          <el-radio-group v-model="theme.themeName" @change="_updateTheme">
             <el-radio-button label="default">
               <template #default>默认</template>
             </el-radio-button>
