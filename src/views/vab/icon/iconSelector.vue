@@ -24,11 +24,8 @@
 </template>
 
 <script>
-  import VabIconSelector from '/@/plugins/VabIconSelector/index.vue'
-
   export default defineComponent({
     name: 'IconSelector',
-    components: { VabIconSelector },
     setup() {
       const state = reactive({
         icon: '24-hours-fill',
