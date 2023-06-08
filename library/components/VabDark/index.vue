@@ -8,7 +8,10 @@
   const { theme } = storeToRefs(settingsStore)
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
+  const scheme = localStorage.getItem('vueuse-color-scheme')
   const value = ref(true)
+  if (scheme == 'auto') value.value = true
+  else value.value = false
   const _toggleDark = () => {
     const loading = ElLoading.service({
       lock: true,
@@ -26,7 +29,7 @@
 
 <template>
   <el-switch
-    v-if="theme.showDark"
+    v-if="theme.showDark && 'default' == theme.themeName"
     v-model="value"
     :active-icon="Sunny"
     :inactive-icon="Moon"

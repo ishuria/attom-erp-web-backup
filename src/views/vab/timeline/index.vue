@@ -158,6 +158,7 @@
       position: relative;
       width: 80%;
       padding: $base-padding;
+      color: black;
       background: #e2e2e2;
       border-radius: $base-border-radius + 2;
 

@@ -86,7 +86,7 @@
       height: 500px !important;
       padding: 0px 40px 0 40px;
       margin: 20px auto 20px auto;
-      background-color: #fff;
+      background-color: var(--el-color-white);
       border: 0;
     }
 

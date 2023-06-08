@@ -108,11 +108,14 @@ export const useSettingsStore = defineStore('settings', {
       this.updateTheme()
     },
     updateTheme() {
-      document.getElementsByTagName('html')[0].className =
-        'vue-ad' + 'min-better' + 'vue-sh' + 'op-vite'
       document.getElementsByTagName(
         'body'
       )[0].className = `vab-theme-${this.theme.themeName}`
+
+      if (this.theme.themeName !== 'default') {
+        document.getElementsByTagName('html')[0].className = ''
+        localStorage.setItem('vueuse-color-scheme', 'auto')
+      }
 
       const el = ref(null)
       if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px'))

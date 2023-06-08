@@ -156,12 +156,12 @@
             margin-top: 11px;
             margin-bottom: 4px;
             font-size: var(--el-font-size-default);
-            color: rgba(0, 0, 0, 0.85);
+            color: var(--el-color-black);
           }
 
           &-description {
             font-size: var(--el-font-size-default);
-            color: rgba(0, 0, 0, 0.45);
+            color: var(--el-color-grey);
           }
 
           &-item {
@@ -169,7 +169,7 @@
             height: 61px;
             margin-left: 40px;
             font-size: var(--el-font-size-default);
-            color: rgba(0, 0, 0, 0.45);
+            color: var(--el-color-grey);
             vertical-align: middle;
 
             > span {

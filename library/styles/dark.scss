@@ -5,6 +5,23 @@ html.dark {
   --el-color-menu-second: #1d1e1f;
   --el-border-color-light: #414243;
 
+  --w-e-textarea-bg-color: #2c6191;
+  --w-e-textarea-color: #fff;
+  --w-e-textarea-border-color: #2c6191;
+  --w-e-textarea-slight-border-color: #2c6191;
+  --w-e-textarea-slight-color: #2c6191;
+  --w-e-textarea-slight-bg-color: #2c6191;
+  --w-e-textarea-selected-border-color: #b4d5ff;
+  --w-e-textarea-handler-bg-color: #4290f7;
+  --w-e-toolbar-color: #fff;
+  --w-e-toolbar-bg-color: #103171;
+  --w-e-toolbar-active-color: #fff;
+  --w-e-toolbar-active-bg-color: #2c6191;
+  --w-e-toolbar-disabled-color: #fff;
+  --w-e-toolbar-border-color: #2c6191;
+  --w-e-modal-button-bg-color: #2c6191;
+  --w-e-modal-button-border-color: #2c6191;
+
   body {
     color: #cfd3dc !important;
     background-color: var(--el-color-white) !important;

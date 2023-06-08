@@ -425,7 +425,6 @@ html {
         .cell {
           font-size: var(--el-font-size-default);
           font-weight: normal;
-          color: #606266;
 
           .el-image {
             width: 50px;
@@ -489,11 +488,11 @@ html {
 
         .el-message__content {
           padding-right: $base-padding;
-          color: #34495e;
+          color: var(--el-color-grey);
         }
 
         .el-icon-close {
-          color: #34495e;
+          color: var(--el-color-grey);
 
           &:hover {
             opacity: 0.8;
@@ -505,7 +504,7 @@ html {
         @include vab-hey-message;
 
         i {
-          color: $base-color-grey;
+          color: var(--el-color-grey);
         }
       }
 
