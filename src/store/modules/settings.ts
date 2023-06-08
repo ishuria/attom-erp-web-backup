@@ -11,6 +11,7 @@ const {
   i18n,
   layout,
   logo: _logo,
+  menuWidth,
   showDark,
   showFullScreen,
   showThemeSetting,
@@ -20,6 +21,7 @@ const {
   showProgressBar,
   showRefresh,
   showSearch,
+  showTheme,
   showTabs,
   showTabsIcon,
   tabsBarStyle,
@@ -33,6 +35,7 @@ const defaultTheme: ThemeType = {
   columnStyle,
   color,
   fixedHeader,
+  menuWidth,
   showDark,
   showProgressBar,
   showTabs,
@@ -41,6 +44,7 @@ const defaultTheme: ThemeType = {
   showLanguage,
   showRefresh,
   showSearch,
+  showTheme,
   showNotice,
   showFullScreen,
   showThemeSetting,
@@ -94,6 +98,14 @@ export const useSettingsStore = defineStore('settings', {
             : `{"${key}":${obj[key]}}`
         )
       })
+    },
+    saveTheme() {
+      localStorage.setItem('theme', JSON.stringify(this.theme))
+    },
+    resetTheme() {
+      this.theme = { ...defaultTheme }
+      localStorage.removeItem('theme')
+      this.updateTheme()
     },
     updateTheme() {
       //预置主题修改，需自行开发，与vite快的设计理念不符，故移除

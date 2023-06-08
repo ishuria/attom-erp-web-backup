@@ -43,6 +43,8 @@ declare interface ThemeType {
   layout: string
   // 主题名称
   themeName: ThemeName
+  // 菜单宽度，仅支持px，建议大小：266px、277px、288px，其余尺寸会影响美观
+  menuWidth: string
   // 分栏风格(仅针对分栏布局column时生效)
   columnStyle: ColumnStyleg
   // 颜色
@@ -63,6 +65,8 @@ declare interface ThemeType {
   showRefresh: boolean
   // 是否开启搜索组件
   showSearch: boolean
+  // 是否开启主题组件
+  showTheme: boolean
   // 是否开启通知组件
   showNotice: boolean
   // 是否开启全屏组件

@@ -6,6 +6,8 @@ export const themeConfig: ThemeType = {
   layout: 'column',
   //blue-black
   themeName: 'blue-black',
+  // 菜单宽度，仅支持px，建议大小：266px、277px、288px，其余尺寸会影响美观
+  menuWidth: '266px',
   // 分栏风格：横向风格horizontal、纵向风格vertical、卡片风格card、箭头风格arrow
   columnStyle: 'card',
   //颜色
@@ -26,6 +28,8 @@ export const themeConfig: ThemeType = {
   showRefresh: true,
   //是否开启搜索组件
   showSearch: true,
+  // 是否开启主题组件
+  showTheme: true,
   //是否开启通知组件
   showNotice: true,
   //是否开启全屏组件

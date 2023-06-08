@@ -8,6 +8,7 @@
       :show-tabs="theme.showTabs"
     />
     <el-backtop target="#app" />
+    <vab-theme-drawer />
     <vab-theme-setting />
   </div>
 </template>
@@ -107,7 +108,7 @@
         position: relative;
         width: auto;
         min-height: 100%;
-        margin-left: $base-left-menu-width;
+        margin-left: var(--el-left-menu-width);
 
         &.is-collapse-main {
           margin-left: $base-left-menu-width-min;
@@ -119,7 +120,7 @@
 
         &:not(.is-collapse-main) {
           .fixed-header {
-            width: $base-right-content-width;
+            width: calc(100% - var(--el-left-menu-width));
           }
         }
       }

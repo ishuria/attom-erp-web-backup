@@ -48,7 +48,6 @@
     }
     flat(values, 0)
 
-    console.log(result)
     return result
   }
 
