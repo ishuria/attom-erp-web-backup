@@ -155,8 +155,10 @@
             [class*='ri-'],
             .vab-icon {
               margin-left: 0;
+              font-size: lighter;
               color: var(--el-color-white);
               cursor: pointer;
+              -webkit-font-smoothing: antialiased;
             }
 
             .el-sub-menu {
