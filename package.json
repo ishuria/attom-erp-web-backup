@@ -5,7 +5,7 @@
   "author": "vue-admin-beautiful.com",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint  */**/*.{vue,js,ts} --fix",
     "lint:prettier": "prettier */**/*.{html,vue,css,sass,scss,js,ts,md} --write",

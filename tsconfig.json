@@ -1,22 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["./*"],
-      "/@/*": ["./src/*"],
-      "/#/*": ["./types/*"],
-      "/@vab/*": ["./library/*"]
-    },
-
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ES2020", "DOM", "DOM.Iterable", "scripthost"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
     /* Bundler mode */
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -24,10 +16,29 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-
     "sourceMap": true,
-    "types": ["element-plus/global", "vite/client"]
+
+    /* Linting */
+    "strict": true,
+
+    "paths": {
+      "~/*": ["./*"],
+      "/@/*": ["./src/*"],
+      "/#/*": ["./types/*"],
+      "/@vab/*": ["./library/*"]
+    },
+
+    "types": ["element-plus/global", "vite/client"],
   },
-  "include": ["vite.config.ts", "**/*.ts", "**/*.tsx", "**/*.d.ts", "**/*.vue"],
-  "exclude": ["node_modules"]
+  "include": [
+    "library/**/*.ts",
+    "library/**/*.vue",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "mock/**/*.ts",
+    "mock/**/*.vue",
+    "types/**/*.d.ts"
+  ],
+  "exclude": ["node_modules"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
