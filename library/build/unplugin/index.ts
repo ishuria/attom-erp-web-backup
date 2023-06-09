@@ -14,6 +14,6 @@ export function createUnPlugin(env: Record<string, string>) {
       },
     ],
     resolvers: [],
-    dirs: ['library/components', 'src/plugins', 'src/**/vabAutoComponents'],
+    dirs: [],
   })
 }
