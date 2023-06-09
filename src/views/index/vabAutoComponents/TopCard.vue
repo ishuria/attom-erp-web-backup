@@ -128,6 +128,11 @@
         var(--el-color-primary)
       );
 
+      .right-icon {
+        color: var(--el-color-primary);
+        background: #fff;
+      }
+
       .bottom {
         .ri-arrow-up-line {
           color: var(--el-color-primary);
