@@ -33,7 +33,7 @@
     setTimeout(() => {
       loading.close()
       $baseMessage('切换成功', 'success', 'hey')
-    }, 2000)
+    }, 1000)
   }
 
   const setDefaultTheme = () => {
@@ -50,7 +50,7 @@
         if (document.body.getBoundingClientRect().width - 1 < 992)
           location.reload()
       }, 3000)
-    }, 2000)
+    }, 1000)
   }
 
   const handleSaveTheme = async () => {

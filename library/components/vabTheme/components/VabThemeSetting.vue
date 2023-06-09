@@ -55,7 +55,7 @@
       <a>
         <vab-icon icon="arrow-go-back-line" />
         <p>
-          {{ translateTitle('恢复默认') }}
+          {{ translateTitle('默认主题') }}
         </p>
       </a>
     </li>
