@@ -28,31 +28,29 @@
     const loading = $baseLoading()
     setTimeout(() => {
       updateTheme()
-    }, 200)
+    }, 500)
 
     setTimeout(() => {
       loading.close()
-    }, 1000)
+      $baseMessage('切换成功', 'success', 'hey')
+    }, 2000)
   }
 
   const setDefaultTheme = () => {
     state.drawerVisible = false
-    const loading = $baseLoading()
+    _updateTheme()
     setTimeout(() => {
+      resetTheme()
       $pub('shop-vite-reset-color')
       $pub('shop-vite-reset-dark')
-      resetTheme()
-      updateTheme()
-    }, 200)
+    }, 500)
 
     setTimeout(() => {
-      loading.close()
-      $baseMessage('恢复默认成功！', 'success', 'hey')
       setTimeout(() => {
         if (document.body.getBoundingClientRect().width - 1 < 992)
           location.reload()
       }, 3000)
-    }, 1000)
+    }, 2000)
   }
 
   const handleSaveTheme = async () => {
@@ -68,11 +66,16 @@
     $sub('shop-vite-reset', () => {
       setDefaultTheme()
     })
+    $sub('shop-vite-technology', () => {
+      theme.value.themeName = 'technology'
+      _updateTheme()
+    })
   })
 
   onBeforeUnmount(() => {
     $unsub('shop-vite-theme')
     $unsub('shop-vite-reset')
+    $unsub('shop-vite-technology')
   })
 </script>
 
@@ -126,7 +129,6 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <!-- 没写完 TODO -->
         <el-form-item :label="translateTitle('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
             <el-radio-button label="default">

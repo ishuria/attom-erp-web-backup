@@ -11,10 +11,10 @@ html > .vab-theme-technology {
   --el-bg-color: #103171;
   --el-bg-color-overlay: #103171;
   --el-text-color-primary: #e5eaf3;
-  --el-text-color-regular: #cfd3dc;
-  --el-text-color-secondary: #cfd3dc;
+  --el-text-color-regular: #e5eaf3;
+  --el-text-color-secondary: #e5eaf3;
   --el-text-color-placeholder: #e5eaf3;
-  --el-text-color-disabled: #e5eaf3;
+  --el-text-color-disabled: #cfd3dc;
   --el-border-color-darker: #{mix($base-color-white, #2c6191, 10%)};
   --el-border-color-dark: #{mix($base-color-white, #2c6191, 20%)};
   --el-border-color: #2c6191;
@@ -228,5 +228,9 @@ html > .vab-theme-technology {
   .vab-tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
     color: var(--el-color-black);
     background: var(--el-border-color);
+  }
+  /* .vab-hey-message */
+  [class*='vab-hey-message'] {
+    border: 1px solid var(--el-border-color) !important;
   }
 }

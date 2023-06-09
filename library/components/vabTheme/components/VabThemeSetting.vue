@@ -24,6 +24,9 @@
   const resetTheme = () => {
     $pub('shop-vite-reset')
   }
+  const technologyTheme = () => {
+    $pub('shop-vite-technology')
+  }
 </script>
 
 <template>
@@ -38,6 +41,14 @@
       <a>
         <vab-icon icon="shopping-cart-2-line" />
         <p>{{ translateTitle('购买源码') }}</p>
+      </a>
+    </li>
+    <li @click="technologyTheme">
+      <a>
+        <vab-icon icon="user-5-line" />
+        <p>
+          {{ translateTitle('科技主题') }}
+        </p>
       </a>
     </li>
     <li @click="resetTheme">
@@ -94,7 +105,8 @@
         1: #3698fd,
         2: #faa500,
         3: #7a66f8,
-        4: #ef4c5d,
+        4: #3698fd,
+        5: #ef4c5d,
       );
 
       @each $key, $color in $colors {
