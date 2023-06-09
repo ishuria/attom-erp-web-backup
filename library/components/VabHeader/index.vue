@@ -234,3 +234,8 @@
     }
   }
 </style>
+<style>
+  .el-menu--horizontal {
+    border: 0 !important;
+  }
+</style>

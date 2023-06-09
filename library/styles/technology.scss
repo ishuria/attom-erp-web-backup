@@ -1,12 +1,4 @@
-/*
- * @Author: 淋雨的小丸子 chu1204505056@126.com
- * @Date: 2023-06-08 16:46:10
- * @LastEditors: 淋雨的小丸子 chu1204505056@126.com
- * @LastEditTime: 2023-06-10 03:14:35
- * @FilePath: \shop-vite\library\styles\technology.scss
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
-html .vab-theme-technology {
+html > .vab-theme-technology {
   --el-dialog-bg-color: #040d32;
   --el-color-black: #cfd3dc;
   --el-color-white: #040d32;
@@ -36,6 +28,7 @@ html .vab-theme-technology {
   --el-fill-color-lighter: #{mix($base-color-white, #103171, 20%)};
   --el-fill-color-extra-light: #{mix($base-color-white, #103171, 10%)};
   --el-fill-color-blank: #{mix($base-color-white, #103171, 1%)};
+  --el-mask-color: #040d32;
 
   --w-e-textarea-bg-color: #2c6191;
   --w-e-textarea-color: #fff;
@@ -54,7 +47,7 @@ html .vab-theme-technology {
   --w-e-modal-button-bg-color: #2c6191;
   --w-e-modal-button-border-color: #2c6191;
 
-  color: #cfd3dc !important;
+  color: var(--el-color-black) !important;
   background-color: var(--el-color-white) !important;
 
   @mixin base-scrollbar {

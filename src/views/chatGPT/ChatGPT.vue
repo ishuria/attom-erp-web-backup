@@ -165,7 +165,7 @@
 </template>
 
 <style lang="scss" scoped>
-  $color_1: #999;
+  $color_1: var(--el-color-grey);
   $color_2: #333;
   $color_3: var(--el-color-primary);
   $color_4: #fff;
