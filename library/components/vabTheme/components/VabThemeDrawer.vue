@@ -6,6 +6,7 @@
   const $pub: any = inject('$pub')
   const $unsub: any = inject('$unsub')
   const $baseLoading: any = inject('$baseLoading')
+  const $baseMessage: any = inject('$baseMessage')
 
   const settingsStore: any = useSettingsStore()
   const { theme, device }: any = storeToRefs(settingsStore)
@@ -34,13 +35,21 @@
     }, 1000)
   }
 
-  const setDefaultTheme = async () => {
-    $pub('shop-vite-reset-color')
-    $pub('shop-vite-reset-dark')
-    await resetTheme()
-    await updateTheme()
-    state.drawerVisible = false
+  const setDefaultTheme = () => {
     if (document.body.getBoundingClientRect().width - 1 < 992) location.reload()
+    const loading = $baseLoading()
+    setTimeout(() => {
+      $pub('shop-vite-reset-color')
+      $pub('shop-vite-reset-dark')
+      resetTheme()
+      updateTheme()
+      state.drawerVisible = false
+    }, 200)
+
+    setTimeout(() => {
+      loading.close()
+      $baseMessage('恢复默认成功！', 'success', 'hey')
+    }, 1000)
   }
 
   const handleSaveTheme = async () => {

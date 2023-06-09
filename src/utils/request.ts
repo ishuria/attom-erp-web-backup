@@ -159,7 +159,7 @@ const handleData = async ({
       : statusText
   }`
   // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
-  gp.$baseMessage(errMsg, 'error', 'vab-hey-message-error')
+  gp.$baseMessage(errMsg, 'error', 'hey')
   if (needErrorLog())
     addErrorLog({ message: errMsg, stack: data, isRequest: true })
   return Promise.reject(data)
@@ -194,7 +194,7 @@ instance.interceptors.response.use(
       gp.$baseMessage(
         '连接后台接口失败，可能由以下原因造成：后端不支持跨域CORS、接口地址不存在、请求超时等，请联系管理员排查后端接口问题 ',
         'error',
-        'vab-hey-message-error'
+        'hey'
       )
       return {}
     } else return handleData(response)

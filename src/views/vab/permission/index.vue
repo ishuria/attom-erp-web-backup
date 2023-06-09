@@ -301,11 +301,7 @@
       }
       const handleRefreshToken = async () => {
         const { msg } = await expireToken()
-        $baseMessage(
-          `${msg}: [${token.value}] `,
-          'success',
-          'vab-hey-message-success'
-        )
+        $baseMessage(`${msg}: [${token.value}] `, 'success', 'hey')
       }
 
       fetchData()

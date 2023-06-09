@@ -99,7 +99,7 @@
         state['formRef'].validate(async (valid) => {
           if (valid) {
             const { msg } = await doEdit(state.form)
-            $baseMessage(msg, 'success', 'vab-hey-message-success')
+            $baseMessage(msg, 'success', 'hey')
             emit('fetch-data')
             close()
           }

@@ -247,7 +247,7 @@
         if (row.id) {
           $baseConfirm('你确定要删除当前项吗', null, async () => {
             const { msg } = await doDelete({ ids: row.id })
-            $baseMessage(msg, 'success', 'vab-hey-message-success')
+            $baseMessage(msg, 'success', 'hey')
             await fetchData()
           })
         } else {
@@ -255,11 +255,11 @@
             const ids = state.selectRows.map((item) => item.id).join()
             $baseConfirm('你确定要删除选中项吗', null, async () => {
               const { msg } = await doDelete({ ids: ids })
-              $baseMessage(msg, 'success', 'vab-hey-message-success')
+              $baseMessage(msg, 'success', 'hey')
               await fetchData()
             })
           } else {
-            $baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
+            $baseMessage('未选中任何行', 'error', 'hey')
           }
         }
       }
@@ -282,16 +282,12 @@
               },
             })
           } else {
-            $baseMessage(
-              '请选择一行进行详情页跳转',
-              'error',
-              'vab-hey-message-error'
-            )
+            $baseMessage('请选择一行进行详情页跳转', 'error', 'hey')
           }
         }
       }
       const handleMessage = () => {
-        $baseMessage('test1', 'success', false, 'vab-hey-message-success')
+        $baseMessage('test1', 'success', false, 'hey')
       }
       const handleAlert = () => {
         $baseAlert('11')

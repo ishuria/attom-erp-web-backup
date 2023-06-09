@@ -139,28 +139,16 @@
         $baseMessage('错了哦，这是一条错误消息', 'error')
       }
       const open5 = () => {
-        $baseMessage('这是一条消息提示', 'info', 'vab-hey-message-info')
+        $baseMessage('这是一条消息提示', 'info', 'hey')
       }
       const open6 = () => {
-        $baseMessage(
-          '恭喜你，这是一条成功消息',
-          'success',
-          'vab-hey-message-success'
-        )
+        $baseMessage('恭喜你，这是一条成功消息', 'success', 'hey')
       }
       const open7 = () => {
-        $baseMessage(
-          '警告哦，这是一条警告消息',
-          'warning',
-          'vab-hey-message-warning'
-        )
+        $baseMessage('警告哦，这是一条警告消息', 'warning', 'hey')
       }
       const open8 = () => {
-        $baseMessage(
-          '错了哦，这是一条错误消息',
-          'error',
-          'vab-hey-message-error'
-        )
+        $baseMessage('错了哦，这是一条错误消息', 'error', 'hey')
       }
       const open9 = () => {
         $baseNotify('这是一条消息的提示消息', '提示', 'info', 'bottom-right')

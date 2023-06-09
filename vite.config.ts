@@ -15,10 +15,20 @@ const info = {
 }
 process.env.VITE_APP_UPDATE_TIME = info.lastBuildTime
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const root = process.cwd()
   const env = loadEnv(mode, root)
+
+  //为了防止忘记配置而造成项目无法打包，请保留以下提示
+  const userName = env[`VITE_APP_GITHUB_USER_NAME`]
+  const secretKey = env[`VITE_APP_SECRET_KEY`]
+  const nodeEnv = env[`VITE_USER_NODE_ENV`]
+  if (nodeEnv === 'production')
+    if (userName === 'test' && secretKey === 'preview')
+      console.log(
+        '检测到您的用户名和key未配置，key在购买时通过邮件邀请函发放，请仔细阅读文档并进行配置'
+      )
+
   return {
     base: setting['publicPath'],
     root,

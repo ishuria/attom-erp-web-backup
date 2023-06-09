@@ -79,7 +79,7 @@ export const useUserStore = defineStore('user', {
         gp.$baseNotify(`欢迎登录${settingsStore.title}`, `${thisTime}！`)
       } else {
         const err = `登录接口异常，未正确返回${tokenName}...`
-        gp.$baseMessage(err, 'error', 'vab-hey-message-error')
+        gp.$baseMessage(err, 'error', 'hey')
         throw err
       }
     },
@@ -125,7 +125,7 @@ export const useUserStore = defineStore('user', {
         (permissions && !isArray(permissions))
       ) {
         const err = 'getUserInfo核心接口异常，请检查返回JSON格式是否正确'
-        gp.$baseMessage(err, 'error', 'vab-hey-message-error')
+        gp.$baseMessage(err, 'error', 'hey')
         throw err
       } else {
         const aclStore = useAclStore()

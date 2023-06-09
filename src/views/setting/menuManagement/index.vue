@@ -145,7 +145,7 @@
         if (row.path) {
           $baseConfirm('你确定要删除当前项吗', null, async () => {
             const { msg } = await doDelete({ paths: row.path })
-            $baseMessage(msg, 'success', 'vab-hey-message-success')
+            $baseMessage(msg, 'success', 'hey')
             await fetchData()
           })
         }

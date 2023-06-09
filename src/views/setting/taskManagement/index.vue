@@ -116,12 +116,11 @@
         fetchData()
       }
       const handlePlay = (status) => {
-        if (status)
-          $baseMessage('模拟停用成功', 'success', 'vab-hey-message-success')
-        else $baseMessage('模拟开启成功', 'success', 'vab-hey-message-success')
+        if (status) $baseMessage('模拟停用成功', 'success', 'hey')
+        else $baseMessage('模拟开启成功', 'success', 'hey')
       }
       const handleAdd = () => {
-        $baseMessage('模拟添加成功', 'success', 'vab-hey-message-success')
+        $baseMessage('模拟添加成功', 'success', 'hey')
       }
       onMounted(() => {
         fetchData()

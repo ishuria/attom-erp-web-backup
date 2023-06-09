@@ -229,7 +229,7 @@
         state['vabCropperRef'].dialogVisible = true
       }
       const onSubmit = () => {
-        $baseMessage('模拟保存成功', 'success', 'vab-hey-message-success')
+        $baseMessage('模拟保存成功', 'success', 'hey')
       }
 
       const handleClose = (tag) => {

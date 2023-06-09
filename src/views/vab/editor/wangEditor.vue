@@ -52,7 +52,7 @@
 
       const onSubmit = () => {
         $baseAlert(html.value)
-        $baseMessage('模拟保存成功', 'success', 'vab-hey-message-success')
+        $baseMessage('模拟保存成功', 'success', 'hey')
       }
 
       return {

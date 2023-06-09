@@ -69,11 +69,7 @@ export const useRoutesStore = defineStore('routes', {
           data: { list },
         } = await getList()
         if (!isArray(list))
-          gp.$baseMessage(
-            '路由格式返回有误！',
-            'error',
-            'vab-hey-message-error'
-          )
+          gp.$baseMessage('路由格式返回有误！', 'error', 'hey')
         if (list[list.length - 1].path !== '*')
           list.push({
             path: '/:pathMatch(.*)*',

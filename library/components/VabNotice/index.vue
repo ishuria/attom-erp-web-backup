@@ -31,7 +31,7 @@
   const handleClearNotice = () => {
     badge.value = undefined
     notices.value = []
-    $baseMessage('清空消息成功', 'success', 'vab-hey-message-success')
+    $baseMessage('清空消息成功', 'success', 'hey')
   }
 </script>
 

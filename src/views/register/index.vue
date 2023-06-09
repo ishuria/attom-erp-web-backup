@@ -208,7 +208,7 @@
               msg,
               data: { token },
             } = await register(state.form).catch(() => {})
-            //$baseMessage(msg, 'success', 'vab-hey-message-success')
+            //$baseMessage(msg, 'success', 'hey')
             $baseConfirm(
               `${msg}，点击确定模拟进入拥有【editor】角色的首页`,
               null,

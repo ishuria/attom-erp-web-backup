@@ -123,7 +123,7 @@
               ...state.form,
               ...treeObject,
             })
-            $baseMessage(msg, 'success', 'vab-hey-message-success')
+            $baseMessage(msg, 'success', 'hey')
             emit('fetch-data')
             close()
           }
