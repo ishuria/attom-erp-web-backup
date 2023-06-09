@@ -2,13 +2,13 @@
  * @description 全局样式
  */
 
-@import './var.scss';
-@import './normalize.scss';
-@import './transition.scss';
+@import './var';
+@import './normalize';
+@import './transition';
 @import 'element-plus/theme-chalk/display.css';
 @import 'element-plus/dist/index.css';
-@import './dark.scss';
-@import './technology.scss';
+@import './dark';
+@import './technology';
 
 @mixin base-scrollbar {
   &::-webkit-scrollbar {
@@ -84,7 +84,7 @@ html {
     }
 
     [class*='ri-'] {
-      vertical-align: 0px !important;
+      vertical-align: 0 !important;
       cursor: pointer;
     }
 

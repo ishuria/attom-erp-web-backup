@@ -1,7 +1,7 @@
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 
-export function createUnPlugin(env: Record<string, string>) {
+export function createUnPlugin() {
   return [
     AutoImport({
       imports: [

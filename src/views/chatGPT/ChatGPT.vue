@@ -126,7 +126,7 @@
                 <template v-for="(item, index) in list" :key="index">
                   <li :class="item.type == 'mine' ? 'vab-chat-mine' : ''">
                     <div class="vab-chat-user">
-                      <img :src="item.avatar" />
+                      <img :src="item.avatar" alt="头像" />
                       <cite>
                         {{ item.username }}
                         <i>{{ item.time }}</i>
@@ -178,11 +178,9 @@
   .chat-GPT-container {
     padding: 0 !important;
     background: $base-color-background !important;
-    :deep() {
-      .el-card__body {
-        position: relative;
-        min-height: calc($base-keep-alive-height - 20px);
-      }
+    :deep(.el-card__body) {
+      position: relative;
+      min-height: calc($base-keep-alive-height - 20px);
     }
     .vab-chat-main {
       height: calc($base-keep-alive-height - 230px);
@@ -199,7 +197,7 @@
         .vab-chat-text {
           position: relative;
           display: inline-block;
-          max-width: 462px\9;
+          max-width: 462px;
           min-height: 38px;
           padding: 8px 15px;
           margin-top: 20px;
@@ -302,10 +300,8 @@
       height: 150px;
       padding-right: 40px;
 
-      :deep() {
-        textarea {
-          height: 110px;
-        }
+      :deep(textarea) {
+        height: 110px;
       }
       .vab-chat-send {
         position: absolute;

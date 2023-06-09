@@ -6,7 +6,6 @@
 
 <style lang="scss" scoped>
   .page-banner {
-    :deep() {
-    }
+    // TODO
   }
 </style>

@@ -185,7 +185,7 @@
         width: 100%;
         height: 40px;
         margin-bottom: 10px;
-        box-shadow: rgb(7 17 27 / 6%) 6px 5px 8px 0px;
+        box-shadow: rgb(7 17 27 / 6%) 6px 5px 8px 0;
       "
     ></div>
 
@@ -365,7 +365,7 @@
             float: left;
             margin-top: 15px;
             margin-left: 20px;
-            font-family: PingFangSC-Medium;
+            font-family: PingFangSC-Medium, serif;
             font-size: 16px;
             line-height: 22px;
             color: #1c1f21;
