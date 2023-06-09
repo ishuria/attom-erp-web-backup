@@ -22,7 +22,7 @@ export function createVitePlugin(env: Record<string, string>) {
   if (nodeEnv !== 'development')
     if (isEmpty(userName) || isEmpty(secretKey)) return
   vitePlugins.push(createProgress(env) as any)
-  vitePlugins.push(createUnPlugin())
+  vitePlugins.push(createUnPlugin(env))
   vitePlugins.push(createPwa())
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
