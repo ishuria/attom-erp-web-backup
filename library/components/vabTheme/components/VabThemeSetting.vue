@@ -8,7 +8,7 @@
   const { theme } = storeToRefs(settingsStore)
 
   const handleOpenTheme = () => {
-    $pub('theme')
+    $pub('shop-vite-theme')
   }
 
   const buy = () => {
@@ -17,7 +17,12 @@
 
   const removeLocalStorage = () => {
     localStorage.clear()
+
     location.reload()
+  }
+
+  const resetTheme = () => {
+    $pub('shop-vite-reset')
   }
 </script>
 
@@ -33,6 +38,14 @@
       <a>
         <vab-icon icon="shopping-cart-2-line" />
         <p>{{ translateTitle('购买源码') }}</p>
+      </a>
+    </li>
+    <li @click="resetTheme">
+      <a>
+        <vab-icon icon="arrow-go-back-line" />
+        <p>
+          {{ translateTitle('恢复默认') }}
+        </p>
       </a>
     </li>
     <li @click="removeLocalStorage">
@@ -80,7 +93,8 @@
       $colors: (
         1: #3698fd,
         2: #faa500,
-        3: #ef4c5d,
+        3: #7a66f8,
+        4: #ef4c5d,
       );
 
       @each $key, $color in $colors {

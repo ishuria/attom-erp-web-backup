@@ -1,23 +1,21 @@
 <script lang="ts" setup>
   import { Sunny, Moon } from '@element-plus/icons-vue'
   import { useDark, useToggle } from '@vueuse/core'
-  import { ElLoading } from 'element-plus'
   import { useSettingsStore } from '/@/store/modules/settings'
 
+  const $sub: any = inject('$sub')
+  const $unsub: any = inject('$unsub')
+
+  const $baseLoading: any = inject('$baseLoading')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const isDark = useDark()
   const toggleDark = useToggle(isDark)
   const scheme = localStorage.getItem('vueuse-color-scheme')
   const value = ref(true)
-  if (scheme == 'auto') value.value = true
-  else value.value = false
+
   const _toggleDark = () => {
-    const loading = ElLoading.service({
-      lock: true,
-      text: 'Loading',
-      background: 'rgba(0, 0, 0, 0.7)',
-    })
+    const loading = $baseLoading()
     setTimeout(() => {
       toggleDark()
     }, 200)
@@ -25,6 +23,23 @@
       loading.close()
     }, 1000)
   }
+
+  onMounted(() => {
+    if (scheme == 'auto') value.value = true
+    else value.value = false
+
+    // 还原默认
+    $sub('shop-vite-reset-dark', () => {
+      if (localStorage.getItem('vueuse-color-scheme') == 'dark') {
+        value.value = true
+        _toggleDark()
+      }
+    })
+  })
+
+  onBeforeUnmount(() => {
+    $unsub('shop-vite-reset-dark')
+  })
 </script>
 
 <template>

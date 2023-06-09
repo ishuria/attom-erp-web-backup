@@ -16,18 +16,13 @@ export default {
   install: (app: App<Element>) => {
     /**
      * @description 全局加载层
-     * @param {number} index 自定义加载图标类名ID
      * @param {string} text 显示在加载图标下方的加载文案
      */
-    const $baseLoading = (
-      index: string | undefined = undefined,
-      text: string = loadingText
-    ) => {
+    const $baseLoading = (text = loadingText, background = '#fff') => {
       return ElLoading.service({
         lock: true,
-        text,
-        spinner: index ? `vab-loading-type${index}` : index,
-        background: 'hsla(0,0%,100%,.8)',
+        text: text,
+        background: background,
       })
     }
     app.provide('$baseLoading', $baseLoading)

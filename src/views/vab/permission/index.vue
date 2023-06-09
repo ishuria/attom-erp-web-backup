@@ -292,7 +292,7 @@
         state.tableData = filterRoutes([...list])
       }
       const handleChangeRole = async () => {
-        $baseLoading(0, '正在切换账号请稍后...')
+        $baseLoading('正在切换账号请稍后...')
         await localStorage.setItem(
           tokenTableName,
           `${state.form.account}-token-${Random.guid()}-${new Date().getTime()}`

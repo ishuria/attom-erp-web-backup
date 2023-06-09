@@ -1,10 +1,11 @@
 <script lang="ts" setup>
   import { translateTitle } from '/@/utils/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { ElLoading } from 'element-plus'
 
   const $sub: any = inject('$sub')
+  const $pub: any = inject('$pub')
   const $unsub: any = inject('$unsub')
+  const $baseLoading: any = inject('$baseLoading')
 
   const settingsStore: any = useSettingsStore()
   const { theme, device }: any = storeToRefs(settingsStore)
@@ -23,11 +24,7 @@
   }
 
   const _updateTheme = () => {
-    const loading = ElLoading.service({
-      lock: true,
-      text: 'Loading',
-      background: 'rgba(0, 0, 0, 0.7)',
-    })
+    const loading = $baseLoading()
     setTimeout(() => {
       updateTheme()
     }, 200)
@@ -38,6 +35,8 @@
   }
 
   const setDefaultTheme = async () => {
+    $pub('shop-vite-reset-color')
+    $pub('shop-vite-reset-dark')
     await resetTheme()
     await updateTheme()
     state.drawerVisible = false
@@ -51,13 +50,17 @@
   }
 
   onMounted(() => {
-    $sub('theme', () => {
+    $sub('shop-vite-theme', () => {
       handleOpenTheme()
+    })
+    $sub('shop-vite-reset', () => {
+      setDefaultTheme()
     })
   })
 
   onBeforeUnmount(() => {
-    $unsub('theme')
+    $unsub('shop-vite-theme')
+    $unsub('shop-vite-reset')
   })
 </script>
 

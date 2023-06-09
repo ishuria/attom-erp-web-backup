@@ -1,10 +1,15 @@
 <script lang="ts" setup>
+  import setting from '/@/config/'
   import { useSettingsStore } from '/@/store/modules/settings'
-  const color = ref('#4e88f3')
+
+  const _color = setting.color
+  const color = ref(_color)
   const $sub: any = inject('$sub')
+  const $unsub: any = inject('$unsub')
   const $pub: any = inject('$pub')
+
   const predefineColors = ref([
-    '#4e88f3',
+    _color,
     '#f01414',
     '#3fb884',
     '#1e90ff',
@@ -61,6 +66,11 @@
 
   onMounted(() => {
     handleChange(getColor)
+
+    // 还原默认
+    $sub('shop-vite-reset-color', () => {
+      handleChange(_color)
+    })
   })
 
   $sub('reload-color', (color: any) => {
@@ -69,6 +79,10 @@
 
   watch(color, (newVal) => {
     $pub('reload-color', newVal)
+  })
+
+  onBeforeUnmount(() => {
+    $unsub('shop-vite-reset-dark')
   })
 </script>
 
