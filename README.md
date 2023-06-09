@@ -5,15 +5,12 @@
 
 ## 🔈 注意事项
 
-- shop vite 首次运行，需执行自动化组件导入操作，故网页打开较慢，预计耗时五分钟，请耐心等待。。。
+- shop vite 首次运行，需执行自动化组件导入操作，故网页打开较慢，预计耗时 1-3 分钟，请耐心等待。。。
 
 ## 🔈 关于 shop-vite
 
 - shop-vite 与 admin plus 定位不同，shop-vite 定位小而精，admin-plus 定位大而全。
 - shop-vite 接口及使用规范继承 admin plus，有过 admin-plus 开发经验的用户可快速上手。
-- shop-vite 目前仅对已购买 admin-plus 及 admin-max 用户开放购买渠道，其他用户无法购买，admin-plus 用户购买 shop-vite 定价为 599，admin-max 用户购买 shop-vite 定价为 499。
-- shop-vite 秉承早买早享受的原则，并在此承诺，无论今后 shop-vite 如何定价，已购买 shop-vite 的老用户均享受最新代码更新权益。
-- shop-vite 目前不支持可视化布局配置，仅支持代码配置，布局支持两种（分栏布局、纵向布局），tab 风格支持三种（圆滑、卡片、灵动），配色无限制
 - shop-vite 发布时间较短，不代表最终品质，后续会持续进行更新，敬请期待。
 - shop-vite 对比 admin-plus 由于底层脚手架不同，故部分代码无法与 admin-plus 通用，shop-vite 优点开发时项目启动快，缺点开发时网页打开速度慢，暂无好的解决方案，如果介意网页打开速度请使用 admin-plus。
 
@@ -37,24 +34,23 @@
 - 7.购买者用于公司的项目商用时购买必须提供公司名称，用于证明购买过我们的项目来进行商业用途，防范法律风险，我们承诺对购买公司信息信息严格保密，不会泄漏到互联网或用于产品宣传。
 - 8.购买者用于个人学习需提供姓名、手机联系方式进行实名认证，如无法提供请勿下单。
 - 9.如用于外包项目，购买者购买项目中的源码不可直接对外出售，npm run build 编译后的项目不受限制。
-- 10.如果您的公司基于 Vab Admin 系列自行研发的产品（如 OA、ERP、SASS 等）需对外销售，并且产品中包含我们框架的前端源码，那么您无法购买以上版本，需联系客服购买专属定制版本（不为第三方提供前端框架代码请忽略本条）。
+- 10.如果您的公司基于 Shop Vite 系列自行研发的产品（如 OA、ERP、SASS 等）需对外销售，并且产品中包含我们框架的前端源码，那么您无法购买以上版本，需联系客服购买专属定制版本（不为第三方提供前端框架代码请忽略本条）。
 - 11.虚拟物品下单后不支持退货退款。
 - 12.购买者需遵守以上约定，最终解释权归 vab 系列著作权人所有，如果您无法遵守以上约定，请勿下单。
 
 ```
-注：以上协议以 https://vue-admin-beautiful.com/authorization/ 底部为准
+注：以上协议以 https://vue-admin-beautiful.com/authorization/shop-vite.html 为准
 ```
 
 ## 🔗 链接
 
-- 💻 常规版演示地址：[admin-vite](https://chu1204505056.gitee.io/admin-vite/)
+- 💻 常规版演示地址：[shop-vite](https://vue-admin-beautiful.com/shop-vite/)
 - 📝 使用文档：(文档地址及密码请查看 vip 群群公告第一条)
-- 🗃 更新日志：[Releases](https://github.com/vue-admin-beautiful/admin-vite/releases)
-- 📌 付费版及 vip 群购买地址：[购买地址](https://vue-admin-beautiful.com/authorization/)
+- 📌 付费版及 vip 群购买地址：[购买地址](https://vue-admin-beautiful.com/authorization/shop-vite.html)
 
 ## ✅ 版权须知
 
-Vab Admin 系列产品受国家计算机软件著作权保护（证书号：软著登字第 7051316 号），
+Vab 系列产品受国家计算机软件著作权保护（证书号：软著登字第 7051316 号），
 禁止公开及传播产品源文件、二次出售等，
 违者将承担相应的法律责任，并影响自身使用。
 
@@ -62,11 +58,11 @@ Vab Admin 系列产品受国家计算机软件著作权保护（证书号：软�
 
 ### vip 群
 
-- 每位购买 Admin 的用户均可获得 1 个免费的 vip 互助群免费入群资格，可反馈 bug、协助框架问题解答，无需额外购买
+- 每位购买 Shop Vite 的用户均可获得 1 个免费的 vip 互助群免费入群资格，可反馈 bug、协助框架问题解答，无需额外购买
 
 - 免费名额之外，额外加入 vip 群 （100/人 仅限已购买框架的的公司员工加入，购买后联系 微信 zxwk-bfq 即可）
 
-- [购买地址，网页右下角切换付款码即可](https://vue-admin-beautiful.com/authorization/)
+- [购买地址，网页右下角切换付款码即可](https://vue-admin-beautiful.com/authorization/shop-vite.html)
 
 ### 定制开发
 
