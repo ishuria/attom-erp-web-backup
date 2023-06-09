@@ -16,7 +16,7 @@ const info = {
 process.env.VITE_APP_UPDATE_TIME = info.lastBuildTime
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
+export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const root = process.cwd()
   const env = loadEnv(mode, root)
   return {
@@ -46,18 +46,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
       // https://github.com/vitejs/vite/issues/6333
       postcss: {
         plugins: [
-          require('autoprefixer')({
-            overrideBrowserslist: [
-              'Android 4.1',
-              'iOS 7.1',
-              'Chrome > 31',
-              'ff > 31',
-              'ie >= 8',
-              '> 1%',
-            ],
-            grid: true,
-          }),
-          require('postcss-flexbugs-fixes'),
+          require('autoprefixer')({ grid: true }),
           {
             postcssPlugin: 'internal:charset-removal',
             AtRule: {
