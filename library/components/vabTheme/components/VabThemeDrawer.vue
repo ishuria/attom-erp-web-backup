@@ -36,21 +36,15 @@
     }, 1000)
   }
 
-  const setDefaultTheme = () => {
+  const setDefaultTheme = async () => {
     state.drawerVisible = false
-    _updateTheme()
+    await _updateTheme()
     setTimeout(() => {
       resetTheme()
       $pub('shop-vite-reset-color')
       $pub('shop-vite-reset-dark')
     }, 500)
-
-    setTimeout(() => {
-      setTimeout(() => {
-        if (document.body.getBoundingClientRect().width - 1 < 992)
-          location.reload()
-      }, 3000)
-    }, 1000)
+    if (document.body.getBoundingClientRect().width - 1 < 992) location.reload()
   }
 
   const handleSaveTheme = async () => {

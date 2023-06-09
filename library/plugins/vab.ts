@@ -72,9 +72,18 @@ export default {
       message: string | VNode,
       type: 'success' | 'warning' | 'info' | 'error' = 'info',
       customClass: string,
-      dangerouslyUseHTMLString: boolean
+      dangerouslyUseHTMLString: boolean,
+      callback: any = undefined
     ) => {
       if (customClass == 'hey') customClass = `vab-hey-message-${type}`
+      if (
+        dangerouslyUseHTMLString &&
+        typeof dangerouslyUseHTMLString == 'function'
+      ) {
+        callback = dangerouslyUseHTMLString
+        dangerouslyUseHTMLString = false
+      }
+
       ElMessage({
         message,
         type,
@@ -82,6 +91,9 @@ export default {
         duration: messageDuration,
         dangerouslyUseHTMLString,
         showClose: true,
+        onClose: () => {
+          if (callback) callback()
+        },
       })
     }
     app.provide('$baseMessage', $baseMessage)
