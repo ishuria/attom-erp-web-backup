@@ -332,7 +332,7 @@
     }
 
     &-content {
-      width: calc(100% - 40px);
+      width: calc(100% - 35px);
 
       &-card {
         height: $base-tag-item-height;
@@ -487,6 +487,7 @@
                 background: #dee1e6;
                 mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkBAMAAAAdqzmBAAAAMFBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlTPQ5AAAAD3RSTlMAr3DvEM8wgCBA379gj5//tJBPAAAAnUlEQVRIx2NgAAM27fj/tAO/xBsYkIHyf9qCT8iWMf6nNQhAsk2f5rYheY7Dnua2/U+A28ZEe8v+F9Ax2v7/F4DbxkUH2wzgtvHTwbYPo7aN2jZq26hto7aN2jZq25Cy7Qvctnw62PYNbls9HWz7S8/G6//PsI6H4396gAUQy1je08W2jxDbpv6nD4gB2uWp+J9eYPsEhv/0BPS1DQBvoBLVZ3BppgAAAABJRU5ErkJggg==);
                 mask-size: 100% 100%;
+                z-index: 999;
               }
             }
           }
@@ -503,10 +504,8 @@
 
     &-more {
       position: relative;
-      right: -60px;
       box-sizing: border-box;
       display: block;
-      width: 80px;
       text-align: left;
 
       &-active,
@@ -537,7 +536,7 @@
 
       &-icon {
         display: inline-block;
-        color: #9a9a9a;
+        color: var(--el-color-grey);
         cursor: pointer;
         transition: transform 0.3s ease-out;
 
@@ -554,7 +553,7 @@
             width: 6px;
             height: 6px;
             content: '';
-            background: #9a9a9a;
+            background: var(--el-color-grey);
           }
 
           &:after {
@@ -564,7 +563,7 @@
             width: 6px;
             height: 6px;
             content: '';
-            background: #9a9a9a;
+            background: var(--el-color-grey);
           }
         }
 

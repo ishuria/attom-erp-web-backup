@@ -522,26 +522,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
-    path: '/shop',
-    name: 'Shop',
-    component: Layout,
-    meta: {
-      title: '店铺',
-      icon: 'shopping-bag-3-line',
-    },
-    children: [
-      {
-        path: 'shop',
-        name: 'Shop',
-        component: () => import('/@/views/index/index.vue'),
-        meta: {
-          title: '首页',
-          icon: 'home-2-line',
-        },
-      },
-    ],
-  },
-  {
     path: '/goods',
     name: 'Goods',
     component: Layout,

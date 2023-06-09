@@ -150,7 +150,7 @@
       padding: $base-padding $base-padding 0 $base-padding;
       margin-bottom: $base-margin;
       background: var(--el-color-white);
-      border: 1px solid #ebeef5;
+      border: 1px solid var(--el-border-color);
 
       :deep() {
         .el-form-item__content {
@@ -215,10 +215,10 @@
         justify-content: space-between;
         padding-top: 20px;
         text-align: right;
-        border-top: 1px solid #ebeef5;
+        border-top: 1px solid var(--el-border-color);
 
-        .el-button--mini.is-circle {
-          i {
+        .is-circle {
+          [class*='ri-'] {
             margin-right: 0 !important;
             font-size: 14px;
           }
@@ -237,7 +237,7 @@
       text-align: center;
       cursor: pointer;
 
-      i {
+      [class*='ri-'] {
         font-size: 30px;
       }
 

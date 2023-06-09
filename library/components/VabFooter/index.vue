@@ -21,7 +21,7 @@
     justify-content: center;
     min-height: 55px;
     padding: 0 $base-padding 0 $base-padding;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--el-color-grey);
     background: var(--el-color-white);
     border-top: 1px dashed var(--el-border-color-light);
 

@@ -36,7 +36,6 @@
   const colorTo = ref('var(--el-color-white)')
   const style = {
     background: `${colorTo.value} linear-gradient(120deg, ${colorFrom.value} 10%, ${colorTo.value}) no-repeat`,
-    backgroundSize: '30% 100%',
   }
 </script>
 

@@ -4,6 +4,7 @@
   })
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useRoutesStore } from '/@/store/modules/routes'
+  import { Search } from '@element-plus/icons-vue'
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
@@ -86,6 +87,7 @@
     class="vab-search-autocomplete"
     clearable
     :fetch-suggestions="querySearchAsync"
+    :prefix-icon="Search"
     @select="handleSelect"
   >
     <template #default="{ item }">

@@ -105,7 +105,7 @@
           font-size: 20px;
           font-weight: bold;
           line-height: 24px;
-          color: #222;
+          color: var(--el-color-grey);
           opacity: 0;
           animation-name: slideUp;
           animation-duration: 0.5s;
@@ -132,7 +132,7 @@
           height: 36px;
           font-size: var(--el-font-size-default);
           line-height: 36px;
-          color: #fff;
+          color: var(--el-color-white);
           text-align: center;
           cursor: pointer;
           background: var(--el-color-primary);

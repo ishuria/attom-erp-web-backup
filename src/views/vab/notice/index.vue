@@ -93,7 +93,7 @@
             title="信息提示"
           >
             <template #extra>
-              <el-button type="primary">确认</el-button>
+              <el-button type="primary" @click="open13">确认</el-button>
             </template>
           </el-result>
         </vab-card>

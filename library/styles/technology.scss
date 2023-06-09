@@ -1,3 +1,11 @@
+/*
+ * @Author: 淋雨的小丸子 chu1204505056@126.com
+ * @Date: 2023-06-08 16:46:10
+ * @LastEditors: 淋雨的小丸子 chu1204505056@126.com
+ * @LastEditTime: 2023-06-10 03:14:35
+ * @FilePath: \shop-vite\library\styles\technology.scss
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 html .vab-theme-technology {
   --el-dialog-bg-color: #040d32;
   --el-color-black: #cfd3dc;
@@ -5,10 +13,7 @@ html .vab-theme-technology {
   --el-color-grey: #cfd3dc;
   --el-color-menu: #040d32;
   --el-color-menu-second: #040d32;
-  --el-border-color-light: #040d32;
   --el-background-technology: #040d32;
-  --el-fill-color-blank: #103171;
-  --el-fill-color: #103171;
   --el-menu-text-color: #cfd3dc;
   --el-bg-color-page: #040d32;
   --el-bg-color: #103171;
@@ -17,7 +22,7 @@ html .vab-theme-technology {
   --el-text-color-regular: #cfd3dc;
   --el-text-color-secondary: #cfd3dc;
   --el-text-color-placeholder: #e5eaf3;
-  --el-text-color-disabled: e5eaf3;
+  --el-text-color-disabled: #e5eaf3;
   --el-border-color-darker: #{mix($base-color-white, #2c6191, 10%)};
   --el-border-color-dark: #{mix($base-color-white, #2c6191, 20%)};
   --el-border-color: #2c6191;
@@ -121,76 +126,28 @@ html .vab-theme-technology {
 
   /* el-dialog */
 
+  .el-dialog,
   .el-message-box {
     position: relative;
-    border: 2px solid #016886;
-    border-radius: 8px;
-
-    &__header {
-      position: relative;
-      z-index: 10;
-      padding-top: $base-padding - 5;
-
-      &btn {
-        top: $base-margin - 10;
-
-        .el-dialog__close,
-        .el-message-box__close {
-          width: 24px;
-          height: 24px;
-          line-height: 22px;
-          border: 1px solid transparent;
-          transition: none;
-
-          &:hover {
-            border: 1px solid #016886;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px;
-            opacity: 0.8;
-            transition: all 0.2s ease-out;
-          }
-        }
-      }
-    }
-
-    &__title,
-    &__content {
-      color: #fff;
-    }
-
-    .el-button:focus,
-    .el-button:hover {
-      opacity: 0.9;
-    }
-
-    .el-button--primary:focus,
-    .el-button--primary:hover {
-      opacity: 0.9;
-    }
-  }
-
-  .el-dialog {
-    position: relative;
+    overflow: visible;
     background: var(--el-background-technology);
     border: 2px solid #00a1ff;
     border-radius: 8px;
 
     &__header {
       position: relative;
-
       &btn {
         .el-dialog__close,
         .el-message-box__close {
           width: 24px;
           height: 24px;
           line-height: 22px;
-          color: #fff;
           border: 1px solid transparent;
           transition: none;
 
           &:hover {
             color: #fff;
-            border: 1px solid #00a1ff;
+            border: 2px solid #00a1ff;
             border-radius: 50%;
             box-shadow: 0 1px 3px rgba(0, 161, 255, 0.8);
             opacity: 0.8;
@@ -207,6 +164,7 @@ html .vab-theme-technology {
       left: 30px;
       z-index: 0;
       width: calc(100% - 60px);
+      pointer-events: none;
       content: '';
       border-top: 2px solid #016886;
       border-bottom: 2px solid #016886;
@@ -219,11 +177,13 @@ html .vab-theme-technology {
       left: -2px;
       z-index: 0;
       height: calc(100% - 60px);
+      pointer-events: none;
       content: '';
       border-right: 2px solid #016886;
       border-left: 2px solid #016886;
     }
   }
+
   /* el-dialog、el-message-box、el-popover */
   @media (max-width: 576px) {
     .el-dialog,
@@ -234,7 +194,8 @@ html .vab-theme-technology {
     }
   }
 
-  .el-pagination.is-background .btn-prev:disabled {
+  .el-pagination.is-background .btn-prev:disabled,
+  .el-pagination.is-background .btn-next:disabled {
     background-color: var(--el-pagination-button-bg-color);
   }
 
@@ -270,5 +231,9 @@ html .vab-theme-technology {
         color: var(--el-color-black) !important;
       }
     }
+  }
+  .vab-tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
+    color: var(--el-color-black);
+    background: var(--el-border-color);
   }
 }

@@ -1,3 +1,11 @@
+<!--
+ * @Author: 淋雨的小丸子 chu1204505056@126.com
+ * @Date: 2022-10-24 12:52:31
+ * @LastEditors: 淋雨的小丸子 chu1204505056@126.com
+ * @LastEditTime: 2023-06-10 03:19:12
+ * @FilePath: \shop-vite\src\views\statcenter\Dashboard.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <script lang="ts" setup></script>
 
 <template>
@@ -37,7 +45,6 @@
         padding-bottom: 0;
         font-size: 16px;
         font-weight: bolder;
-        color: #999;
         border-bottom: 0;
       }
       .el-card__body {
@@ -51,7 +58,6 @@
         }
         .extra-text {
           margin: 10px 0 10px 0;
-          color: #999;
         }
       }
     }

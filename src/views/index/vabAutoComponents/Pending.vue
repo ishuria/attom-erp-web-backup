@@ -32,7 +32,7 @@
           <span class="pending-tips">预警原因：用户投诉发货不及时</span>
         </vab-colorful-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <vab-colorful-card shadow="never" :style="style2">
           <div class="parting-line parting-line-primary"></div>
           <span class="pending-title pending-title-primary">

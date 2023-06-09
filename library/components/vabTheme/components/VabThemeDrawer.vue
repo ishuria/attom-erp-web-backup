@@ -36,7 +36,6 @@
   }
 
   const setDefaultTheme = () => {
-    if (document.body.getBoundingClientRect().width - 1 < 992) location.reload()
     const loading = $baseLoading()
     setTimeout(() => {
       $pub('shop-vite-reset-color')
@@ -49,6 +48,10 @@
     setTimeout(() => {
       loading.close()
       $baseMessage('恢复默认成功！', 'success', 'hey')
+      setTimeout(() => {
+        if (document.body.getBoundingClientRect().width - 1 < 992)
+          location.reload()
+      }, 3000)
     }, 1000)
   }
 

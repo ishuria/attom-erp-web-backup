@@ -98,7 +98,7 @@
 </script>
 
 <template>
-  <vab-card class="payment" shadow="hover" skeleton>
+  <vab-card class="flow" shadow="hover" skeleton>
     <template #header>
       <vab-icon icon="line-chart-line" />
       流量概况

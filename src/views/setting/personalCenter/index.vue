@@ -286,7 +286,7 @@
         margin-top: 15px;
         font-size: 24px;
         font-weight: 500;
-        color: #262626;
+        color: var(--el-color-grey);
       }
 
       &-description {

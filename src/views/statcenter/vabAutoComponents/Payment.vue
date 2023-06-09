@@ -117,6 +117,6 @@
     display: flex;
     align-items: center;
     margin-top: -10px;
-    color: #999;
+    color: var(--el-color-grey);
   }
 </style>

@@ -74,7 +74,7 @@ export default {
       customClass: string,
       dangerouslyUseHTMLString: boolean
     ) => {
-      if (customClass == 'hey') customClass = `vab-hey-message-${customClass}`
+      if (customClass == 'hey') customClass = `vab-hey-message-${type}`
       ElMessage({
         message,
         type,

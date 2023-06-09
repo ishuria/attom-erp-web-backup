@@ -73,6 +73,7 @@
 
     :deep() {
       .page-header {
+        min-height: 130px;
         margin-bottom: 20px;
       }
 

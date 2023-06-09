@@ -1,11 +1,11 @@
 import { gp } from '/@vab/plugins/vab'
 
 function clipboardSuccess(text: any) {
-  gp.$baseMessage(`拷贝${text}成功`, 'success', 'hey', false)
+  gp.$baseMessage(`拷贝${text}成功`, 'success', 'hey')
 }
 
 function clipboardError(text: any) {
-  gp.$baseMessage(`拷贝${text}失败`, 'error', 'hey', false)
+  gp.$baseMessage(`拷贝${text}失败`, 'error', 'hey')
 }
 
 /**
