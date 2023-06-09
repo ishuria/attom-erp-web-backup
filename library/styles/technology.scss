@@ -117,8 +117,7 @@ html > .vab-theme-technology {
     border-top: 1px solid var(--el-border-color-light) !important;
   }
 
-  /* el-dialog */
-
+  /*el-dialog、el-message-box */
   .el-dialog,
   .el-message-box {
     position: relative;
@@ -129,23 +128,20 @@ html > .vab-theme-technology {
 
     &__header {
       position: relative;
-      &btn {
-        .el-dialog__close,
-        .el-message-box__close {
-          width: 24px;
-          height: 24px;
-          line-height: 22px;
-          border: 1px solid transparent;
-          transition: none;
+      i[class*='__close'] {
+        width: 24px;
+        height: 24px;
+        line-height: 22px;
+        border: 1px solid transparent;
+        transition: none;
 
-          &:hover {
-            color: #fff;
-            border: 2px solid #00a1ff;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0, 161, 255, 0.8);
-            opacity: 0.8;
-            transition: all 0.2s ease-out;
-          }
+        &:hover {
+          color: #fff;
+          border: 2px solid #00a1ff;
+          border-radius: 50%;
+          box-shadow: 0 1px 3px rgba(0, 161, 255, 0.8);
+          opacity: 0.8;
+          transition: all 0.2s ease-out;
         }
       }
     }
@@ -175,6 +171,10 @@ html > .vab-theme-technology {
       border-right: 2px solid #016886;
       border-left: 2px solid #016886;
     }
+  }
+  /*el-drawer */
+  .el-drawer.rtl {
+    border-left: 1px solid var(--el-border-color);
   }
 
   /* el-dialog、el-message-box、el-popover */

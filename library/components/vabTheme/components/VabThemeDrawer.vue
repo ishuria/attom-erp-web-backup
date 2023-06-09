@@ -36,13 +36,13 @@
   }
 
   const setDefaultTheme = () => {
+    state.drawerVisible = false
     const loading = $baseLoading()
     setTimeout(() => {
       $pub('shop-vite-reset-color')
       $pub('shop-vite-reset-dark')
       resetTheme()
       updateTheme()
-      state.drawerVisible = false
     }, 200)
 
     setTimeout(() => {
@@ -295,6 +295,7 @@
         .el-form-item {
           display: flex;
           align-items: center;
+          margin-bottom: 17.5px;
 
           &__label {
             flex: 1 1;
@@ -315,8 +316,6 @@
           &.vab-shop-item1 {
             display: block !important;
             .el-form-item__content {
-              margin-top: 10px;
-
               .vab-shop-layout {
                 .el-radio-button {
                   position: relative;
@@ -325,7 +324,7 @@
                   width: 60px;
                   height: 60px;
                   padding: 0;
-                  margin: 10px;
+                  margin: 10px 10px 5px 4px;
                   cursor: pointer;
                   background: transparent;
                   border: 0;
