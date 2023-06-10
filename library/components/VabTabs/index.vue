@@ -357,7 +357,7 @@
               margin-right: 5px;
               line-height: $base-tag-item-height;
               border: 1px solid var(--el-border-color-light) !important;
-              border-radius: $base-border-radius;
+              border-radius: var(--el-border-radius-base);
               transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
 
               &.is-active {

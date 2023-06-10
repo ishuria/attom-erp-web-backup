@@ -150,6 +150,6 @@
     padding: $base-padding;
     overflow-y: auto;
     border: 1px solid #dcdfe6;
-    border-radius: $base-border-radius;
+    border-radius: var(--el-border-radius-base);
   }
 </style>

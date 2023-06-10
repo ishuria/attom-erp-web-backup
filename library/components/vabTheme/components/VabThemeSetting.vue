@@ -82,8 +82,8 @@
     cursor: pointer;
     background: var(--el-color-white);
     border: 1px solid var(--el-border-color-light);
-    border-top-left-radius: $base-border-radius + 3;
-    border-bottom-left-radius: $base-border-radius + 3;
+    border-top-left-radius: calc(var(--el-border-radius-base) + 3px);
+    border-bottom-left-radius: calc(var(--el-border-radius-base) + 3px);
     box-shadow: 0 0 50px 0 rgb(82 63 105 / 15%);
     transform: translateY(-50%);
 
@@ -133,7 +133,7 @@
         padding-top: 10px;
         text-align: center;
         background: #f6f8f9;
-        border-radius: $base-border-radius + 3;
+        border-radius: calc(var(--el-border-radius-base) + 3px);
 
         p {
           padding: 0;

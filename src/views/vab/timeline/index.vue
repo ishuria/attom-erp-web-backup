@@ -160,7 +160,7 @@
       padding: $base-padding;
       color: black;
       background: #e2e2e2;
-      border-radius: $base-border-radius + 2;
+      border-radius: calc(var(--el-border-radius-base) + 2px);
 
       &:after {
         position: absolute;
