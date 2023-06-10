@@ -343,7 +343,7 @@
           height: 48px;
           padding-left: 35px;
           font-size: var(--el-font-size-default);
-          line-height: 58px;
+          line-height: 48px;
           background: #fff;
           border: 0;
         }
