@@ -4,7 +4,12 @@
   import { translateTitle } from '/@/utils/i18n'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { isHashRouterMode } from '/@/config'
+  import {
+    isHashRouterMode,
+    defaultOpeneds,
+    uniqueOpened,
+    openFirstMenu,
+  } from '/@/config'
 
   const route: VabRoute = useRoute()
   const router = useRouter()

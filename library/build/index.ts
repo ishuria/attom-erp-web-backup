@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import chokidar from 'chokidar'
 import pc from 'picocolors'
 import dayjs from 'dayjs'
-
+import { devPort } from '/@/config/'
 import { createPwa } from './pwa/'
 import { createMock } from './mock/'
 import { createUnPlugin } from './unplugin/'
@@ -34,10 +34,7 @@ export function createVitePlugin(env: Record<string, string>) {
   return vitePlugins
 }
 
-export function createWatch(
-  env: Record<string, string>,
-  config: Record<string, string>
-) {
+export function createWatch(env: Record<string, string>) {
   //为了防止新同事忘记配置授权码而造成项目无法打包，请保留以下提示
   const userName = env[`${viteApp}GITHUB_USER_NAME`]
   const secretKey = env[`${viteApp}SECRET_KEY`]
@@ -59,7 +56,7 @@ export function createWatch(
       console.log(
         `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan(
           '[Vue Sh' + 'op Vite]'
-        )} ${pc.cyan(`http://localhost:${config['devPort']}/`)} ${pc.green(
+        )} ${pc.cyan(`http://localhost:${devPort}/`)} ${pc.green(
           'update success'
         )} `
       )

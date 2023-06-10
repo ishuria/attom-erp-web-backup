@@ -8,10 +8,13 @@ import VabProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import getPageTitle from '/@/utils/pageTitle'
 import { toLoginRoute } from '/@/utils/routes'
-import config from '/@/config'
+import {
+  authentication,
+  loginInterception,
+  routesWhiteList,
+  supportVisit,
+} from '/@/config'
 import { Router } from 'vue-router'
-const { authentication, loginInterception, routesWhiteList, supportVisit } =
-  config
 
 export function setupPermissions(router: Router) {
   VabProgress.configure({
