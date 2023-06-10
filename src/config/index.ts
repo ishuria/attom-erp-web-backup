@@ -6,11 +6,9 @@ import { settingConfig } from '/@/config/setting.config'
 import { themeConfig } from '/@/config/theme.config'
 import { netConfig } from '/@/config/net.config'
 
-const config: any = {
+export default {
   ...cliConfig,
   ...settingConfig,
   ...themeConfig,
   ...netConfig,
 }
-
-export default config
