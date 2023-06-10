@@ -151,12 +151,6 @@
     background: var(--el-color-white);
     border-right: 1px solid #e4e7ed;
 
-    :deep() {
-      * {
-        transition: var(--el-transition);
-      }
-    }
-
     &-vertical,
     &-card,
     &-arrow {
@@ -313,6 +307,9 @@
     }
 
     :deep() {
+      * {
+        transition: var(--el-transition);
+      }
       .el-scrollbar__wrap {
         overflow-x: hidden;
       }

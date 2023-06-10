@@ -214,14 +214,6 @@ html {
       }
     }
 
-    /* el-tag */
-    .el-tag {
-      border-radius: var(--el-border-radius-base);
-      & + .el-tag {
-        margin-left: 10px;
-      }
-    }
-
     a + a,
   /*   span + span, */
     a + .el-button,

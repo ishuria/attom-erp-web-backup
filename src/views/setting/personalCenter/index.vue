@@ -277,8 +277,8 @@
       :deep() {
         .el-avatar {
           img {
-            cursor: pointer;
             padding: 20px;
+            cursor: pointer;
           }
         }
       }

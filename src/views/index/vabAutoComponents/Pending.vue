@@ -53,6 +53,10 @@
       sup {
         top: -1px;
       }
+
+      .el-tag {
+        margin-right: 5px;
+      }
       .parting-line {
         float: left;
         width: 10px;
@@ -91,12 +95,6 @@
       .pending-tips {
         font-size: var(--el-font-size-small);
         color: var(--el-color-grey);
-      }
-    }
-
-    :deep() {
-      .el-tag {
-        margin-right: 5px;
       }
     }
   }
