@@ -1,5 +1,5 @@
 /**
- * @description 导出vue/cli配置，以下所有配置修改需要重启项目
+ * @description 导出cli配置，以下所有配置修改需要重启项目
  */
 export const cliConfig: { [key: string]: any } = {
   // 开发以及部署时的URL

@@ -1,8 +1,8 @@
 /**
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
-import setting from '/@/config'
-const { authentication, rolesControl } = setting
+import config from '/@/config'
+const { authentication, rolesControl } = config
 import { convertRouter, filterRoutes } from '/@/utils/routes'
 import { asyncRoutes, constantRoutes, resetRouter } from '/@/router'
 import { gp } from '/@vab/plugins/vab'

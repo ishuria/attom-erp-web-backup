@@ -1,6 +1,6 @@
 import type { App, VNode } from 'vue'
-import setting from '/@/config'
-const { loadingText, messageDuration } = setting
+import config from '/@/config'
+const { loadingText, messageDuration } = config
 import {
   ElLoading,
   ElMessage,

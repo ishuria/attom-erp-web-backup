@@ -1,8 +1,8 @@
 import type { App } from 'vue'
 import pinia from '/@/store'
 import { useErrorLogStore } from '/@/store/modules/errorLog'
-import setting from '/@/config'
-const { errorLog } = setting
+import config from '/@/config'
+const { errorLog } = config
 import { isArray } from '/@/utils/validate'
 
 export const needErrorLog = () => {

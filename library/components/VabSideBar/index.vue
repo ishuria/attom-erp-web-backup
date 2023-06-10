@@ -1,8 +1,8 @@
 <script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import setting from '/@/config'
-  const { defaultOpeneds, uniqueOpened } = setting
+  import config from '/@/config'
+  const { defaultOpeneds, uniqueOpened } = config
 
   const props = defineProps({
     layout: {

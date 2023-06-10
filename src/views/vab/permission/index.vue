@@ -259,7 +259,8 @@
   import { getList } from '/@/api/router'
   import { filterRoutes } from '/@/utils/routes'
   import { expireToken } from '/@/api/refreshToken'
-  import { Random } from 'mockjs'
+  import { uuid } from '/@/utils'
+
   const { authentication, loginInterception, rolesControl, tokenTableName } =
     config
 
@@ -295,7 +296,7 @@
         $baseLoading('正在切换账号请稍后...')
         await localStorage.setItem(
           tokenTableName,
-          `${state.form.account}-token-${Random.guid()}-${new Date().getTime()}`
+          `${state.form.account}-token-${uuid}-${new Date().getTime()}`
         )
         await location.reload()
       }

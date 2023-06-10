@@ -1,5 +1,4 @@
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
-//import setting from '/@/config'
 
 const pwaOptions: Partial<VitePWAOptions> = {
   base: '/shop-vite/',

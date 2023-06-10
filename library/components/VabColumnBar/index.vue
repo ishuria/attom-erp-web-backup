@@ -4,8 +4,8 @@
   import { translateTitle } from '/@/utils/i18n'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import setting from '/@/config'
-  const { defaultOpeneds, openFirstMenu, uniqueOpened } = setting
+  import config from '/@/config'
+  const { defaultOpeneds, openFirstMenu, uniqueOpened } = config
 
   const route: VabRoute = useRoute()
   const router = useRouter()
@@ -22,7 +22,7 @@
     getPartialRoutes: partialRoutes,
   }: any = storeToRefs(routesStore)
 
-  const { isHashRouterMode } = setting
+  const { isHashRouterMode } = config
 
   const handleTabClick = () => {
     nextTick(() => {

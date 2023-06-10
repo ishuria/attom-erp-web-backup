@@ -9,8 +9,8 @@ import { getUserInfo, login, logout, socialLogin } from '/@/api/user'
 import { getToken, removeToken, setToken } from '/@/utils/token'
 // import { resetRouter } from '/@/router'
 import { isArray, isString } from '/@/utils/validate'
-import setting from '/@/config'
-const { tokenName } = setting
+import config from '/@/config'
+const { tokenName } = config
 import { gp } from '/@vab/plugins/vab'
 
 export const useUserStore = defineStore('user', {

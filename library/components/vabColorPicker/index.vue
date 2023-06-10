@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-  import setting from '/@/config/'
+  import config from '/@/config/'
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const _color = setting.color
+  const _color = config.color
   const color = ref(_color)
   const $sub: any = inject('$sub')
   const $unsub: any = inject('$unsub')

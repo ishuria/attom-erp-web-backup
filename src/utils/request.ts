@@ -1,5 +1,5 @@
 import { useUserStore } from '/@/store/modules/user'
-import setting from '/@/config'
+import config from '/@/config'
 const {
   contentType,
   debounce,
@@ -7,7 +7,7 @@ const {
   requestTimeout,
   statusName,
   successCode,
-} = setting
+} = config
 import qs from 'qs'
 import router from '/@/router'
 import { isArray } from '/@/utils/validate'

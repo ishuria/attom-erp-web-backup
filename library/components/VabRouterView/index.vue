@@ -3,9 +3,9 @@
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { handleActivePath } from '/@/utils/routes'
-  import setting from '/@/config'
+  import config from '/@/config'
   import VabProgress from 'nprogress'
-  const { keepAliveMaxNum } = setting
+  const { keepAliveMaxNum } = config
 
   const route = useRoute()
 

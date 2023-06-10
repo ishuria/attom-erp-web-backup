@@ -36,7 +36,7 @@ export function createVitePlugin(env: Record<string, string>) {
 
 export function createWatch(
   env: Record<string, string>,
-  setting: Record<string, string>
+  config: Record<string, string>
 ) {
   //为了防止新同事忘记配置授权码而造成项目无法打包，请保留以下提示
   const userName = env[`${viteApp}GITHUB_USER_NAME`]
@@ -59,7 +59,7 @@ export function createWatch(
       console.log(
         `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan(
           '[Vue Sh' + 'op Vite]'
-        )} ${pc.cyan(`http://localhost:${setting['devPort']}/`)} ${pc.green(
+        )} ${pc.cyan(`http://localhost:${config['devPort']}/`)} ${pc.green(
           'update success'
         )} `
       )

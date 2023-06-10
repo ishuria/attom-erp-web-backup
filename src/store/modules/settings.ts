@@ -2,7 +2,7 @@
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
 import { isJson } from '/@/utils/validate'
-import setting from '/@/config'
+import config from '/@/config'
 const {
   columnStyle,
   color,
@@ -27,7 +27,7 @@ const {
   tabsBarStyle,
   themeName,
   title: _title,
-} = setting
+} = config
 
 const defaultTheme: ThemeType = {
   layout,

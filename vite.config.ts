@@ -2,7 +2,7 @@ import { basename, resolve } from 'path'
 import type { UserConfig, ConfigEnv } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import { createVitePlugin, createWatch } from '/@vab/build'
-import setting from './src/config'
+import config from './src/config'
 import dayjs from 'dayjs'
 import { name, version, dependencies, devDependencies } from './package.json'
 
@@ -18,14 +18,14 @@ process.env.VITE_APP_UPDATE_TIME = info.lastBuildTime
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const root = process.cwd()
   const env = loadEnv(mode, root)
-  createWatch(env, setting)
+  createWatch(env, config)
 
   return {
-    base: setting['publicPath'],
+    base: config['publicPath'],
     root,
     server: {
       open: true,
-      port: setting['devPort'],
+      port: config['devPort'],
       hmr: {
         overlay: true,
       },

@@ -11,9 +11,9 @@ import {
   RouteRecordName,
 } from 'vue-router'
 import Layout from '/@vab/layouts/index.vue'
-import setting from '/@/config'
+import config from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
-const { authentication, isHashRouterMode, publicPath } = setting
+const { authentication, isHashRouterMode, publicPath } = config
 
 export const constantRoutes: VabRouteRecordRaw[] = [
   {

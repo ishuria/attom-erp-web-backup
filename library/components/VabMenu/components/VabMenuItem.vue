@@ -2,8 +2,8 @@
   import { useSettingsStore } from '/@/store/modules/settings'
   import { isExternal } from '/@/utils/validate'
   import { translateTitle } from '/@/utils/i18n'
-  import setting from '/@/config'
-  const { isHashRouterMode } = setting
+  import config from '/@/config'
+  const { isHashRouterMode } = config
 
   const props = defineProps({
     itemOrMenu: {
