@@ -71,6 +71,32 @@ html > .vab-theme-technology {
       }
     }
   }
+
+  #app {
+    border: 1px solid var(--el-border-color-light) !important;
+  }
+  .vab-layout-header {
+    border-top: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color-light) !important;
+  }
+  .vab-side-bar {
+    border-top: 1px solid var(--el-border-color-light) !important;
+    border-left: 1px solid var(--el-border-color-light) !important;
+  }
+  .vab-layout-column {
+    border-top: 1px solid var(--el-border-color-light) !important;
+  }
+  .mobile {
+    .vab-side-bar {
+      border-left: 0px solid var(--el-border-color-light) !important;
+    }
+  }
+  .vab-layout-horizontal {
+    .vab-layout-header {
+      border-top: 1px solid var(--el-border-color-light) !important;
+      border-left: 1px solid var(--el-border-color-light) !important;
+    }
+  }
   .vab-nav {
     background: var(--el-color-white) !important;
   }
@@ -174,7 +200,7 @@ html > .vab-theme-technology {
   }
   /*el-drawer */
   .el-drawer.rtl {
-    border-left: 1px solid var(--el-border-color);
+    border: 1px solid var(--el-border-color);
   }
 
   /* el-dialog、el-message-box、el-popover */

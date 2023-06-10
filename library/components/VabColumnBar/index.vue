@@ -197,6 +197,10 @@
               width: $base-left-menu-width-min - 10 !important;
               height: $base-left-menu-width-min - 10 !important;
               border-radius: 5px;
+
+              &:hover {
+                background: var(--el-color-primary);
+              }
             }
 
             &.is-active {
