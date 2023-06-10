@@ -1,8 +1,7 @@
 import type { VabRouteRecordRaw, VabRoute } from '/@/router/types'
 import { hasPermission } from '/@/utils/permission'
 import { isExternal } from '/@/utils/validate'
-import config from '/@/config'
-const { recordRoute } = config
+import { recordRoute } from '/@/config'
 import qs from 'qs'
 
 /**

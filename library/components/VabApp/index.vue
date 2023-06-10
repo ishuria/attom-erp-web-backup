@@ -1,7 +1,6 @@
 <script setup>
-  import config from '/@/config'
+  import { pwa } from '/@/config'
   import i18n from '/@/i18n'
-  const { pwa } = config
 
   const VabUpdate = defineAsyncComponent(() =>
     import('/@/plugins/VabUpdate/index.vue')

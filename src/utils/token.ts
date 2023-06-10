@@ -1,5 +1,4 @@
-import config from '/@/config'
-const { storage, tokenTableName } = config
+import { storage, tokenTableName } from '/@/config'
 import cookie from 'js-cookie'
 
 /**

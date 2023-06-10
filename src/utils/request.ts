@@ -1,13 +1,12 @@
 import { useUserStore } from '/@/store/modules/user'
-import config from '/@/config'
-const {
+import {
   contentType,
   debounce,
   messageName,
   requestTimeout,
   statusName,
   successCode,
-} = config
+} from '/@/config'
 import qs from 'qs'
 import router from '/@/router'
 import { isArray } from '/@/utils/validate'

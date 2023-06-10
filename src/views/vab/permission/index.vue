@@ -255,14 +255,16 @@
 <script>
   import { useAclStore } from '/@/store/modules/acl'
   import { useUserStore } from '/@/store/modules/user'
-  import config from '/@/config'
+  import {
+    authentication,
+    loginInterception,
+    rolesControl,
+    tokenTableName,
+  } from '/@/config'
   import { getList } from '/@/api/router'
   import { filterRoutes } from '/@/utils/routes'
   import { expireToken } from '/@/api/refreshToken'
   import { uuid } from '/@/utils'
-
-  const { authentication, loginInterception, rolesControl, tokenTableName } =
-    config
 
   export default defineComponent({
     name: 'Permission',

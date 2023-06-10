@@ -2,15 +2,14 @@
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
 import { isJson } from '/@/utils/validate'
-import config from '/@/config'
-const {
+import {
   columnStyle,
   color,
   fixedHeader,
   foldSidebar,
   i18n,
   layout,
-  logo: _logo,
+  logo as _logo,
   menuWidth,
   showDark,
   showFullScreen,
@@ -26,8 +25,8 @@ const {
   showTabsIcon,
   tabsBarStyle,
   themeName,
-  title: _title,
-} = config
+  title as _title,
+} from '/@/config'
 
 const defaultTheme: ThemeType = {
   layout,
