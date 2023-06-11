@@ -28,17 +28,19 @@
       "/@vab/*": ["./library/*"]
     },
 
-    "types": ["element-plus/global", "vite/client"],
+    "types": ["element-plus/global", "vite/client"]
   },
   "include": [
     "library/**/*.ts",
     "library/**/*.vue",
     "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
     "src/**/*.vue",
+    "types/**/*.d.ts",
+    "types/**/*.ts",
     "mock/**/*.ts",
-    "mock/**/*.vue",
-    "types/**/*.d.ts"
+    "vite.config.ts"
   ],
-  "exclude": ["node_modules"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "exclude": ["node_modules", "dist", "**/*.js"]
 }

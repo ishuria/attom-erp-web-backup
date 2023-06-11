@@ -51,6 +51,13 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       outDir,
       assetsDir,
       chunkSizeWarningLimit,
+      rollupOptions: {
+        output: {
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+        },
+      },
     },
     css: {
       postcss: {
