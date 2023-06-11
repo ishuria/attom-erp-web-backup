@@ -5,22 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "~/*": ["./*"],
-      "/@/*": ["./src/*"],
-      "/#/*": ["./types/*"],
-      "/@vab/*": ["./library/*"]
-    }
+    "resolveJsonModule": true
   },
-  "include": [
-    "vite.config.ts",
-    "library/**/*.ts",
-    "library/**/*.vue",
-    "src/**/*.ts",
-    "src/**/*.vue",
-    "mock/**/*.ts",
-    "mock/**/*.vue",
-    "types/**/*.d.ts"
-  ]
+  "include": ["vite.config.ts"]
 }
