@@ -20,6 +20,7 @@
   const url = ref('https://api.oioweb.cn/api/ai/chat?text=')
 
   const changeGPT = (value) => {
+    $baseMessage(`切换${value}成功！`, 'success', 'hey')
     if (value == '小爱同学')
       url.value = 'https://api.oioweb.cn/api/ai/chat?text='
 
@@ -110,6 +111,9 @@
 
           finish.value = true
           scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
+        })
+        .catch(() => {
+          $baseMessage('chatGPT 余额不足！', 'error', 'hey')
         })
     }
   }
