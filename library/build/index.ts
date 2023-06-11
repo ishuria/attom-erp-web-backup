@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import chokidar from 'chokidar'
 import pc from 'picocolors'
 import dayjs from 'dayjs'
-import { devPort } from '/@/config/'
+import { port } from '/@/config/'
 import { createPwa } from './pwa/'
 import { createMock } from './mock/'
 import { createUnPlugin } from './unplugin/'
@@ -56,7 +56,7 @@ export function createWatch(env: Record<string, string>) {
       console.log(
         `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan(
           '[Vue Sh' + 'op Vite]'
-        )} ${pc.cyan(`http://localhost:${devPort}/`)} ${pc.green(
+        )} ${pc.cyan(`http://localhost:${port}/`)} ${pc.green(
           'update success'
         )} `
       )

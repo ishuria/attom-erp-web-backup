@@ -232,10 +232,8 @@
           position: absolute;
           left: 3px;
           display: inline-block;
-          *display: inline;
           font-size: 14px;
           vertical-align: top;
-          *zoom: 1;
           img {
             width: 40px;
             height: 40px;

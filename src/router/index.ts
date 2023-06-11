@@ -11,7 +11,7 @@ import {
   RouteRecordName,
 } from 'vue-router'
 import Layout from '/@vab/layouts/index.vue'
-import { authentication, isHashRouterMode, publicPath } from '/@/config'
+import { authentication, isHashRouterMode, base } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
 
 export const constantRoutes: VabRouteRecordRaw[] = [
@@ -661,8 +661,8 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
 
 const router = createRouter({
   history: isHashRouterMode
-    ? createWebHashHistory(publicPath)
-    : createWebHistory(publicPath),
+    ? createWebHashHistory(base)
+    : createWebHistory(base),
   routes: constantRoutes as RouteRecordRaw[],
 })
 

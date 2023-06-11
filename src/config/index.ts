@@ -6,7 +6,7 @@ import { settingConfig } from '/@/config/setting.config'
 import { themeConfig } from '/@/config/theme.config'
 import { netConfig } from '/@/config/net.config'
 
-const config: any = {
+const config: { [key: string]: any } = {
   ...cliConfig,
   ...settingConfig,
   ...themeConfig,
@@ -16,11 +16,13 @@ const config: any = {
 export default config
 
 export const {
-  publicPath,
-  outputDir,
+  base,
+  outDir,
   assetsDir,
-  devPort,
+  port,
   pwa,
+  chunkSizeWarningLimit,
+  open,
   title,
   titleSeparator,
   titleReverse,

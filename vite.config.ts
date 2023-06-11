@@ -2,9 +2,16 @@ import { basename, resolve } from 'path'
 import type { UserConfig, ConfigEnv } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import { createVitePlugin, createWatch } from '/@vab/build'
-import { publicPath, devPort } from './src/config'
 import dayjs from 'dayjs'
 import { name, version, dependencies, devDependencies } from './package.json'
+import {
+  base,
+  port,
+  open,
+  outDir,
+  assetsDir,
+  chunkSizeWarningLimit,
+} from './src/config'
 
 const info = {
   name,
@@ -21,11 +28,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   createWatch(env)
 
   return {
-    base: publicPath,
+    base,
     root,
     server: {
-      open: true,
-      port: devPort,
+      open,
+      port,
       hmr: {
         overlay: true,
       },
@@ -41,10 +48,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
     },
     build: {
-      chunkSizeWarningLimit: 20480,
+      outDir,
+      assetsDir,
+      chunkSizeWarningLimit,
     },
     css: {
-      // https://github.com/vitejs/vite/issues/6333
       postcss: {
         plugins: [
           require('autoprefixer')({ grid: true }),
@@ -52,9 +60,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             postcssPlugin: 'internal:charset-removal',
             AtRule: {
               charset: (atRule: { name: string; remove: () => void }) => {
-                if (atRule.name === 'charset') {
-                  atRule.remove()
-                }
+                if (atRule.name === 'charset') atRule.remove()
               },
             },
           },
