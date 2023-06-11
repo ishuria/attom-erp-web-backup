@@ -65,7 +65,6 @@
     "picocolors": "^1.0.0",
     "postcss-html": "^1.5.0",
     "prettier": "^2.8.8",
-    "rollup-plugin-javascript-obfuscator": "^1.0.4",
     "sass": "^1.63.3",
     "stylelint": "^15.7.0",
     "stylelint-config-recess-order": "^4.2.0",
