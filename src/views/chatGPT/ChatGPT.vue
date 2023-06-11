@@ -59,7 +59,7 @@
     }
     if (!finish.value) {
       $baseMessage(
-        'chatGPT还未回答' + '完您的上个问题，请稍' + '后再进行提问',
+        'ChatGPT还未回答' + '完您的上个问题，请稍' + '后再进行提问',
         'error',
         'hey'
       )
@@ -79,9 +79,9 @@
         },
         {
           type: 'tips',
-          result: 'chatGPT AI 内' + '容生成中，请稍后。。。',
+          result: 'ChatGPT AI 内' + '容生成中，请稍后。。。',
           avatar: 'static/img/chatGPT.png',
-          username: 'chatGPT',
+          username: 'ChatGPT',
           time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         }
       )
@@ -103,7 +103,7 @@
             type: 'he',
             result: answer || result.displayText,
             avatar: 'static/img/chatGPT.png',
-            username: 'chatGPT',
+            username: 'ChatGPT',
             time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           })
 
@@ -113,7 +113,8 @@
           scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
         })
         .catch(() => {
-          $baseMessage('chatGPT 余额不足！', 'error', 'hey')
+          $baseMessage('ChatGPT 余额不足！', 'error', 'hey')
+          finish.value = true
         })
     }
   }
