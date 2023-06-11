@@ -16,6 +16,20 @@
 
   const $baseMessage: any = inject('$baseMessage')
 
+  const radio = ref('小爱同学')
+  const url = ref('https://api.oioweb.cn/api/ai/chat?text=')
+
+  const changeGPT = (value) => {
+    if (value == '小爱同学')
+      url.value = 'https://api.oioweb.cn/api/ai/chat?text='
+
+    if (value == 'ChatGPT-V3.5')
+      url.value = 'https://wmapi.wenbo.li/api/gpt/?message='
+
+    if (value == 'ChatGPT-V4.0')
+      url.value = 'https://wmapi.wenbo.li/api/gpt/four/?message='
+  }
+
   const result =
     'Shop Vite \u6f14\u793a\u5730\u5740\u4ec5\u63d0\u4f9b ' +
     'chatGPT \u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6 ' +
@@ -39,14 +53,14 @@
   })
   const send = () => {
     if (!value.value) {
-      $baseMessage('提交内容不能为空', 'error', 'vab-hey-message-error')
+      $baseMessage('提交内容不能为空', 'error', 'hey')
       return
     }
     if (!finish.value) {
       $baseMessage(
         'chatGPT还未回答' + '完您的上个问题，请稍' + '后再进行提问',
         'error',
-        'vab-hey-message-error'
+        'hey'
       )
       return
     }
@@ -79,20 +93,20 @@
       const id = _.uniqueId('uuid_')
 
       axios
-        .get(`https://api.pearktrue.cn/api/gpt/?message=${value.value}`)
-        .then(({ data: { answer } }) => {
+        .get(`${url.value}${value.value}`)
+        .then(({ data: { answer, result } }) => {
           newList.pop()
 
           newList.push({
             id,
             type: 'he',
-            result: answer,
+            result: answer || result.displayText,
             avatar: 'static/img/chatGPT.png',
             username: 'chatGPT',
             time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           })
 
-          typeWriting(id, answer)
+          typeWriting(id, answer || result.displayText)
 
           finish.value = true
           scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
@@ -121,6 +135,11 @@
       <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <vab-card shadow="never">
           <div class="vab-chat-main">
+            <el-radio-group v-model="radio" @change="changeGPT">
+              <el-radio-button label="小爱同学" />
+              <el-radio-button label="ChatGPT-V3.5" />
+              <el-radio-button label="ChatGPT-V4.0" />
+            </el-radio-group>
             <el-scrollbar ref="scrollbarRef">
               <ul ref="innerRef">
                 <template v-for="(item, index) in list" :key="index">
