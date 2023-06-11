@@ -1,7 +1,9 @@
 /**
  * @description 导出通用配置
  */
-export const settingConfig: { [key: string]: any } = {
+export const settingConfig: {
+  [key: string]: string | boolean | number | Array<string>
+} = {
   // 标题，此项修改后需要重启项目！！！ (包括初次加载雪花屏的标题 页面的标题 浏览器的标题)
   title: 'Vue Shop Vite',
   // 标题分隔符
