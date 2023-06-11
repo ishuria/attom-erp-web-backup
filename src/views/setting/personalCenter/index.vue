@@ -251,7 +251,6 @@
       return {
         ...toRefs(state),
         avatar,
-        openDialog,
         onSubmit,
         showInput,
         handleClose,
