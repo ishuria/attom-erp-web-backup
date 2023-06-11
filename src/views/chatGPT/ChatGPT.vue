@@ -19,7 +19,7 @@
   const radio = ref('小爱同学')
   const url = ref('https://api.oioweb.cn/api/ai/chat?text=')
 
-  const changeGPT = (value: string) => {
+  const changeGPT: any = (value: any) => {
     $baseMessage(`切换${value}成功！`, 'success', 'hey')
     if (value == '小爱同学')
       url.value = 'https://api.oioweb.cn/api/ai/chat?text='
