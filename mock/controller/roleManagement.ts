@@ -17,8 +17,8 @@ export default [
   {
     url: '/roleManagement/getList',
     method: 'get',
-    response(config: any) {
-      const { role, pageNo = 1, pageSize = 20 } = config.query
+    response({ query }) {
+      const { role, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
         (item: any) => !(role && item.title.indexOf(role) < 0)
       )

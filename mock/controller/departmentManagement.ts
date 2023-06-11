@@ -49,8 +49,8 @@ export default [
   {
     url: '/departmentManagement/getList',
     method: 'get',
-    response: (config: any) => {
-      const { name, pageNo = 1, pageSize = 20 } = config.query
+    response: ({ query }) => {
+      const { name, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
         (item) => !(name && item.name.indexOf(name) < 0)
       )

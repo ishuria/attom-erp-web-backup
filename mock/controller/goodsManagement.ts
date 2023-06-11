@@ -1,5 +1,6 @@
 import { MockMethod } from 'vite-plugin-mock'
-import { mock, Random } from 'mockjs'
+import mockjs from 'mockjs'
+const { mock, Random } = mockjs
 
 /**
  * @description 随机生成图片url。
@@ -41,10 +42,8 @@ export default [
   {
     url: '/goodsManagement/getList',
     method: 'get',
-    response(config: {
-      query: { title: any; pageNo?: 1 | undefined; pageSize?: 20 | undefined }
-    }) {
-      const { title, pageNo = 1, pageSize = 20 } = config.query
+    response({ query }) {
+      const { title, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
         (item: { title: string | any[] }) =>
           !(title && item.title.indexOf(title) < 0)

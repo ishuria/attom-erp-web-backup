@@ -15,7 +15,7 @@
     "global:install": "npm install -g nrm,cnpm@8.2.0,npm-check-updates",
     "globle:update": "ncu -g",
     "module:install": "cnpm i",
-    "module:update": "ncu -u --reject vite-plugin-mock --registry https://registry.npmmirror.com&&npm run module:install",
+    "module:update": "ncu -u --registry https://registry.npmmirror.com&&npm run module:install",
     "module:reinstall": "rimraf node_modules&&npm run module:install",
     "git": "start ./git.sh"
   },
@@ -75,7 +75,7 @@
     "unplugin-vue-components": "^0.25.1",
     "vite": "^4.3.9",
     "vite-plugin-banner": "^0.7.0",
-    "vite-plugin-mock": "2.9.6",
+    "vite-plugin-mock": "^3.0.0",
     "vite-plugin-pwa": "^0.16.4",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.6.9",

@@ -1,5 +1,6 @@
 import { MockMethod } from 'vite-plugin-mock'
-import { mock } from 'mockjs'
+import mockjs from 'mockjs'
+const { mock } = mockjs
 
 const List: any = []
 const count = 50
@@ -28,8 +29,8 @@ export default [
   {
     url: '/taskManagement/getList',
     method: 'get',
-    response: (config: any) => {
-      const { account, pageNo = 1, pageSize = 20 } = config.query
+    response: ({ query }) => {
+      const { account, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
         (item: any) => !(account && item.account.indexOf(account) < 0)
       )

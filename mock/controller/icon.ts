@@ -2278,10 +2278,8 @@ export default [
   {
     url: '/icon/getList',
     method: 'get',
-    response(config: {
-      query: { title: any; pageNo?: 1 | undefined; pageSize?: 72 | undefined }
-    }) {
-      const { title, pageNo = 1, pageSize = 72 } = config.query
+    response({ query }) {
+      const { title, pageNo = 1, pageSize = 72 } = query
       const mockList = List.filter(
         (item) => !(title && item.indexOf(title) < 0)
       )

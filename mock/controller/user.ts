@@ -1,5 +1,6 @@
 import { MockMethod } from 'vite-plugin-mock'
-import { Random } from 'mockjs'
+import mockjs from 'mockjs'
+const { Random } = mockjs
 
 const tokens: { [key: string]: string } = {
   admin: `admin-token-${Random.guid()}-${new Date().getTime()}`,
@@ -36,8 +37,8 @@ export default [
   {
     url: '/login',
     method: 'post',
-    response(request: any) {
-      const { username } = request.body
+    response({ body }) {
+      const { username } = body
       const token = tokens[username]
       if (!token)
         return {
@@ -65,9 +66,8 @@ export default [
   {
     url: '/userInfo',
     method: 'get',
-    response(request: any) {
-      const authorization =
-        request.headers.authorization || request.headers.Authorization
+    response({ headers }) {
+      const authorization = headers.authorization || headers.Authorization
       if (!authorization.startsWith('Bearer '))
         return {
           code: 401,
