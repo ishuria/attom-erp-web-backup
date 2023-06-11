@@ -1,6 +1,5 @@
 import { MockMethod } from 'vite-plugin-mock'
-import mockjs from 'mockjs'
-const { Random } = mockjs
+import { Random } from '../utils/index.ts'
 
 const tokens: { [key: string]: string } = {
   admin: `admin-token-${Random.guid()}-${new Date().getTime()}`,

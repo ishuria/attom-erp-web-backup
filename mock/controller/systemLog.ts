@@ -1,28 +1,33 @@
 import { MockMethod } from 'vite-plugin-mock'
 
-import mockjs from 'mockjs'
-const { mock } = mockjs
-const List: any = []
+const List: {
+  uuid: string
+  id: string
+  account: string
+  'type|1': string[]
+  'account|1': string[]
+  'executeResult|1': string[]
+  ip: string
+  datetime: string
+}[] = []
 const count = 50
 for (let i = 0; i < count; i++) {
-  List.push(
-    mock({
-      uuid: '@uuid',
-      id: '@id',
-      account: '@account(1, 2)',
-      'type|1': ['操作日志', '数据库日志', '系统日志'],
-      'account|1': ['admin', 'editor', 'test'],
-      'executeResult|1': [
-        '登录成功',
-        '登录成功',
-        '登录失败',
-        '接口异常',
-        'dos攻击',
-      ],
-      ip: '@ip',
-      datetime: '@datetime',
-    })
-  )
+  List.push({
+    uuid: '@uuid',
+    id: '@id',
+    account: '@account(1, 2)',
+    'type|1': ['操作日志', '数据库日志', '系统日志'],
+    'account|1': ['admin', 'editor', 'test'],
+    'executeResult|1': [
+      '登录成功',
+      '登录成功',
+      '登录失败',
+      '接口异常',
+      'dos攻击',
+    ],
+    ip: '@ip',
+    datetime: '@datetime',
+  })
 }
 
 export default [

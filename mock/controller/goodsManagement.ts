@@ -1,41 +1,40 @@
 import { MockMethod } from 'vite-plugin-mock'
-import mockjs from 'mockjs'
-const { mock, Random } = mockjs
+import { handleRandomImage } from '../utils/index.ts'
 
-/**
- * @description 随机生成图片url。
- * @returns {string}
- */
-function handleRandomImage() {
-  return (
-    'https://fastly.jsdelivr.net/gh/' +
-    'chuzh' +
-    'ixin/image' +
-    `/table/vab-image-${Random.integer(1, 38)}.jpg`
-  )
-}
-
-const List: any = []
+const List: {
+  uuid: string
+  id: string
+  title: string
+  description: string
+  'status|1': string[]
+  author: string
+  datetime: string
+  pageViews: string
+  img: string
+  switch: string
+  percent: string
+  'rate|1': number[]
+  'type|1': number[]
+  percentage: string
+}[] = []
 const count = 50
 for (let i = 0; i < count; i++) {
-  List.push(
-    mock({
-      uuid: '@uuid',
-      id: '@id',
-      title: '@title(1, 2)',
-      description: '@csentence',
-      'status|1': ['published', 'draft', 'deleted'],
-      author: '@cname',
-      datetime: '@datetime',
-      pageViews: '@integer(300, 5000)',
-      img: handleRandomImage(),
-      switch: '@boolean',
-      percent: '@integer(80,99)',
-      'rate|1': [1, 2, 3, 4, 5],
-      'type|1': [0, 1],
-      percentage: '@integer(0,100)',
-    })
-  )
+  List.push({
+    uuid: '@uuid',
+    id: '@id',
+    title: '@title(1, 2)',
+    description: '@csentence',
+    'status|1': ['published', 'draft', 'deleted'],
+    author: '@cname',
+    datetime: '@datetime',
+    pageViews: '@integer(300, 5000)',
+    img: handleRandomImage(),
+    switch: '@boolean',
+    percent: '@integer(80,99)',
+    'rate|1': [1, 2, 3, 4, 5],
+    'type|1': [0, 1],
+    percentage: '@integer(0,100)',
+  })
 }
 
 export default [

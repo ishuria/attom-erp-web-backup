@@ -6,5 +6,6 @@ export function createMock() {
     ignore: /^index/,
     mockPath: './mock',
     enable: true,
+    watchFiles: false,
   })
 }
