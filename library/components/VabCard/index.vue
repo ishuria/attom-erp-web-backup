@@ -40,7 +40,7 @@
 <template>
   <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow">
     <template v-if="$slots.header || header" #header>
-      <slot name="header">{{ header }:any}</slot>
+      <slot name="header">{{ header }}</slot>
     </template>
     <el-skeleton
       v-if="skeleton"

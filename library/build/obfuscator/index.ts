@@ -14,7 +14,7 @@ export function createObfuscator() {
         disableConsoleOutput: true, // 通过用空函数替换它们来禁用console.log，console.info，console.error和console.warn。这使得调试器的使用更加困难。
         domainLock: [], // 锁定混淆的源代码，使其仅在特定域和/或子域上运行。这使得有人只需复制并粘贴源代码并在别处运行就变得非常困难。多个域和子域可以将代码锁定到多个域或子域。例如，要锁定它以使代码仅在www.example.com上运行添加www.example.com，以使其在example.com的任何子域上运行，请使用.example.com。
         identifierNamesGenerator: 'hexadecimal', // 标识符的混淆方式 hexadecimal(十六进制) mangled(短标识符)
-        identifiersPrefix: '', // 此选项使所有全局标识符都具有特定前缀。
+        identifiersPrefix: 'vue-admin-beautiful.com', // 此选项使所有全局标识符都具有特定前缀。
         inputFileName: '',
         log: false,
         renameGlobals: false, // 不要启动 通过声明启用全局变量和函数名称的混淆。
@@ -33,6 +33,7 @@ export function createObfuscator() {
         target: 'browser', // 您可以将混淆代码的目标环境设置为以下之一： Browser 、Browser No Eval 、Node 目前浏览器和节点的输出是相同的。
         transformObjectKeys: true, // 转换（混淆）对象键。例如，此代码var a = {enabled：true};使用此选项进行模糊处理时，将隐藏已启用的对象键：var a = {};a [_0x2ae0 [（'0x0'）] = true;。 理想情况下与String Array设置一起使用。
         unicodeEscapeSequence: true, // 将所有字符串转换为其unicode表示形式。例如，字符串“Hello World！”将被转换为“'\ x48 \ x65 \ x6c \ x6c \ x6f \ x20 \ x57 \ x6f \ x72 \ x6c \ x64 \ x21”。
+        // ... [See more](https://github.com/javascript-obfuscator/javascript-obfuscator)
       },
     }),
     apply: 'build', // 仅在生产环境下使用
