@@ -4,7 +4,7 @@
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card shadow="hover">
           <div class="personal-center-user-info">
-            <el-avatar :size="100" :src="avatar" @click="openDialog" />
+            <el-avatar :size="100" :src="avatar" />
             <div class="personal-center-user-info-full-name">
               {{ form.fullName }}
             </div>
@@ -225,9 +225,6 @@
         inputValue: '',
       })
 
-      const openDialog = () => {
-        state['vabCropperRef'].dialogVisible = true
-      }
       const onSubmit = () => {
         $baseMessage('模拟保存成功', 'success', 'hey')
       }
