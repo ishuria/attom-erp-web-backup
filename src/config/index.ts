@@ -70,7 +70,7 @@ export const {
   foldSidebar,
   showPageTransition,
   contentType,
-  requestTimeout,
+  timeout,
   successCode,
   statusName,
   messageName,

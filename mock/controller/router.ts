@@ -582,15 +582,6 @@ const list = [
         },
       },
       {
-        path: 'goodsTemplate',
-        name: 'GoodsTemplate',
-        component: 'views/goods/GoodsTemplate.vue',
-        meta: {
-          title: '商品分组',
-          icon: 'home-2-line',
-        },
-      },
-      {
         path: 'parameterDictionary',
         name: 'ParameterDictionary',
         component: 'views/goods/ParameterDictionary.vue',

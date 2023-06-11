@@ -3,7 +3,7 @@ import {
   contentType,
   debounce,
   messageName,
-  requestTimeout,
+  timeout,
   statusName,
   successCode,
 } from '/@/config'
@@ -168,7 +168,7 @@ const handleData = async ({
  */
 const instance = axios.create({
   baseURL: `${import.meta.env.VITE_APP_BASE_URL}`,
-  timeout: requestTimeout,
+  timeout,
   headers: {
     'Content-Type': contentType,
   },

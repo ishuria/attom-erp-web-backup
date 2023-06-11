@@ -644,15 +644,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
-        path: 'goodsTemplate',
-        name: 'GoodsTemplate',
-        component: () => import('/@/views/goods/GoodsTemplate.vue'),
-        meta: {
-          title: '商品分组',
-          icon: 'home-2-line',
-        },
-      },
-      {
         path: 'parameterDictionary',
         name: 'ParameterDictionary',
         component: () => import('/@/views/goods/ParameterDictionary.vue'),
