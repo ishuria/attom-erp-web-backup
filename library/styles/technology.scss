@@ -81,6 +81,7 @@ html > .vab-theme-technology {
   }
   .vab-side-bar {
     border-top: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color) !important;
     border-left: 1px solid var(--el-border-color-light) !important;
   }
   .vab-layout-column {
@@ -236,9 +237,6 @@ html > .vab-theme-technology {
     background: #214e85 !important;
   }
 
-  .vab-side-bar {
-    border-right: 1px solid var(--el-border-color) !important;
-  }
   .vab-header {
     border-bottom: 1px solid var(--el-border-color) !important;
     .logo-container-horizontal {
