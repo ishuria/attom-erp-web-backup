@@ -41,7 +41,7 @@ export default [
   {
     url: '/table/getList',
     method: 'get',
-    response: ({ query }) => {
+    response: ({ query }: any) => {
       const { title, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
         (item: { title: string | any[] }) =>

@@ -1,11 +1,13 @@
-import { viteMockServe } from 'vite-plugin-mock'
+import { viteMockServe as VabMockServe } from 'vite-plugin-mock'
 
 export function createMock() {
-  return viteMockServe({
-    logger: false,
+  return VabMockServe({
     ignore: /^index/,
-    mockPath: './mock',
-    enable: true,
-    watchFiles: false,
+    mockPath: 'mock',
+    injectCode: `
+      import { setupProdMockServer } from '/mock/index'
+      setupProdMockServer()
+      `,
+    logger: false,
   })
 }

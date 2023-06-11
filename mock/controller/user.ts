@@ -36,7 +36,7 @@ export default [
   {
     url: '/login',
     method: 'post',
-    response({ body }) {
+    response({ body }: any) {
       const { username } = body
       const token = tokens[username]
       if (!token)
@@ -65,7 +65,7 @@ export default [
   {
     url: '/userInfo',
     method: 'get',
-    response({ headers }) {
+    response({ header }: any) {
       const authorization = headers.authorization || headers.Authorization
       if (!authorization.startsWith('Bearer '))
         return {

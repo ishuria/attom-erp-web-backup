@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "1.7.0",
+  "version": "1.7.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -15,7 +15,7 @@
     "global:install": "npm install -g nrm,cnpm@8.2.0,npm-check-updates",
     "globle:update": "ncu -g",
     "module:install": "cnpm i",
-    "module:update": "ncu -u --registry https://registry.npmmirror.com&&npm run module:install",
+    "module:update": "ncu -u --reject vite-plugin-mock  --registry https://registry.npmmirror.com&&npm run module:install",
     "module:reinstall": "rimraf node_modules&&npm run module:install",
     "git": "start ./git.sh"
   },
@@ -65,6 +65,7 @@
     "picocolors": "^1.0.0",
     "postcss-html": "^1.5.0",
     "prettier": "^2.8.8",
+    "rollup-plugin-javascript-obfuscator": "^1.0.4",
     "sass": "^1.63.3",
     "stylelint": "^15.7.0",
     "stylelint-config-recess-order": "^4.2.0",
@@ -75,7 +76,7 @@
     "unplugin-vue-components": "^0.25.1",
     "vite": "^4.3.9",
     "vite-plugin-banner": "^0.7.0",
-    "vite-plugin-mock": "^3.0.0",
+    "vite-plugin-mock": "^2.9.6",
     "vite-plugin-pwa": "^0.16.4",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.6.9",

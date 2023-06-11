@@ -10,6 +10,7 @@ import { createUnPlugin } from './unplugin/'
 import { createSvgIcons } from './svgSprite/'
 import { createProgress } from './progress/'
 import { createBanner } from './banner/'
+import { createObfuscator } from './obfuscator/'
 
 const viteApp = 'VITE_' + 'APP_'
 const viteUser = 'VITE_' + 'USER_'
@@ -31,6 +32,7 @@ export function createVitePlugin(env: Record<string, string>) {
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
   vitePlugins.push(createBanner())
+  vitePlugins.push(createObfuscator())
   return vitePlugins
 }
 

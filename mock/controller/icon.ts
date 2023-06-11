@@ -2278,7 +2278,7 @@ export default [
   {
     url: '/icon/getList',
     method: 'get',
-    response({ query }) {
+    response({ query }: any) {
       const { title, pageNo = 1, pageSize = 72 } = query
       const mockList = List.filter(
         (item) => !(title && item.indexOf(title) < 0)

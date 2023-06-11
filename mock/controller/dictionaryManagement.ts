@@ -35,7 +35,7 @@ export default [
   {
     url: '/dictionaryManagement/getList',
     method: 'get',
-    response: ({ query }) => {
+    response: ({ query }: any) => {
       const { key, parentKey } = query
       const list1 = [
         {

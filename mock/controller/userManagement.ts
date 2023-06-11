@@ -31,7 +31,7 @@ export default [
   {
     url: '/userManagement/getList',
     method: 'get',
-    response({ query }) {
+    response({ query }: any) {
       const { username, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
         (item) => !(username && item.username.indexOf(username) < 0)

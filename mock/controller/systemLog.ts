@@ -34,7 +34,7 @@ export default [
   {
     url: '/systemLog/getList',
     method: 'get',
-    response: ({ query }) => {
+    response: ({ query }: any) => {
       const { account, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
         (item: any) => !(account && item.account.indexOf(account) < 0)
