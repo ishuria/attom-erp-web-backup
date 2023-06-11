@@ -65,8 +65,9 @@ export default [
   {
     url: '/userInfo',
     method: 'get',
-    response({ header }: any) {
-      const authorization = headers.authorization || headers.Authorization
+    response(request: any) {
+      const authorization =
+        request.headers.authorization || request.headers.Authorization
       if (!authorization.startsWith('Bearer '))
         return {
           code: 401,
