@@ -51,7 +51,7 @@ export function createWatch(env: Record<string, string>) {
     }
   }
 
-  chokidar.watch('./src').on('change', (path) => {
+  chokidar.watch('./src/views').on('change', (path) => {
     if (path.endsWith('vue')) {
       console.log(
         `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan(
