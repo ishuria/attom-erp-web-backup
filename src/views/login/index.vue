@@ -7,7 +7,7 @@
         <div class="title-tips">
           {{ translateTitle('欢迎来到') }}{{ title }}！
         </div>
-        <el-form-item prop="username" style="margin-top: 40px">
+        <el-form-item prop="username">
           <el-input
             v-model.trim="form.username"
             v-focus
@@ -33,20 +33,6 @@
             <template #prefix>
               <vab-icon icon="lock-line" />
             </template>
-            <!--  <template v-if="passwordType === 'password'" #suffix>
-                <vab-icon
-                  class="show-password"
-                  icon="eye-off-line"
-                  @click="handlePassword"
-                />
-              </template>
-              <template v-else #suffix>
-                <vab-icon
-                  class="show-password"
-                  icon="eye-line"
-                  @click="handlePassword"
-                />
-              </template> -->
           </el-input>
         </el-form-item>
         <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
@@ -227,6 +213,7 @@
 
 <style lang="scss" scoped>
   .login-container {
+    position: relative;
     height: 100vh;
     padding-top: 20vh;
     background: url('/@/assets/login_images/background.jpg') center center fixed
@@ -236,8 +223,8 @@
 
   @media (max-width: 576px) {
     .login-form {
-      width: auto !important;
-      margin: 0 5vw 0 5vw !important;
+      width: 85vw !important;
+      margin: auto !important;
       .left-img {
         display: none !important;
       }
@@ -249,9 +236,15 @@
     }
   }
   .login-form {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     width: 1000px;
+    height: 550px;
     padding: 4.5vh;
-    margin: 0 auto 0 auto;
+    margin: auto;
     overflow: hidden;
     background: var(--el-color-white);
     background-size: 100% 100%;

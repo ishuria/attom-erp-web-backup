@@ -289,6 +289,57 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'dynamicMeta',
+        name: 'DynamicMeta',
+        component: () => import('/@/views/vab/dynamicMeta/index.vue'),
+        meta: {
+          title: '动态Meta',
+          guard: ['Admin'],
+          icon: 'notification-badge-line',
+          badge: '0',
+        },
+      },
+      {
+        path: 'menu1',
+        name: 'Menu1',
+        meta: {
+          title: '多级路由缓存',
+          guard: ['Admin'],
+          icon: 'route-line',
+        },
+        children: [
+          {
+            path: 'menu1-1',
+            name: 'Menu11',
+            meta: {
+              title: '多级路由1-1',
+            },
+            children: [
+              {
+                path: 'menu1-1-1',
+                name: 'Menu111',
+                meta: {
+                  title: '多级路由1-1-1',
+                },
+                children: [
+                  {
+                    path: 'menu1-1-1-1',
+                    name: 'Menu1111',
+                    meta: {
+                      title: '多级路由1-1-1-1',
+                    },
+                    component: () =>
+                      import(
+                        '/@/views/vab/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue'
+                      ),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
