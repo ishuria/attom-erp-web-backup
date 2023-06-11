@@ -23,6 +23,7 @@ export const {
   pwa,
   chunkSizeWarningLimit,
   open,
+  cssCodeSplit,
   title,
   titleSeparator,
   titleReverse,

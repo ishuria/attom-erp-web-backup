@@ -32,7 +32,7 @@ export function createVitePlugin(env: Record<string, string>) {
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
   vitePlugins.push(createBanner())
-  vitePlugins.push(createObfuscator())
+  vitePlugins.push(createObfuscator(nodeEnv))
   return vitePlugins
 }
 

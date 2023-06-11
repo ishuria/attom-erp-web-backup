@@ -11,6 +11,7 @@ import {
   outDir,
   assetsDir,
   chunkSizeWarningLimit,
+  cssCodeSplit,
 } from './src/config'
 
 const info = {
@@ -51,6 +52,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       outDir,
       assetsDir,
       chunkSizeWarningLimit,
+      cssCodeSplit,
       rollupOptions: {
         output: {
           chunkFileNames: 'static/js/[name]-[hash].js',
