@@ -33,9 +33,9 @@
 
   const result =
     'Shop Vite \u6f14\u793a\u5730\u5740\u4ec5\u63d0\u4f9b ' +
-    'chatGPT \u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6 ' +
-    'chatGPT \u5b8c\u6574\u529f\u80fd\u8bf7\u8bbf\u95ee ' +
-    'open AI \u5b98\u7f51\u81ea\u884c\u8d2d\u4e70\u5bf9\u63a5\uff0c\u60a8\u73b0\u5728\u53ef\u4ee5\u8ddf\u6211\u5bf9\u8bdd\u4e86\u3002'
+    'ChatGPT \u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6 ' +
+    'ChatGPT \u5b8c\u6574\u529f\u80fd\u8bf7\u8bbf\u95ee ' +
+    'Open AI \u5b98\u7f51\u81ea\u884c\u8d2d\u4e70\u5bf9\u63a5\uff0c\u60a8\u73b0\u5728\u53ef\u4ee5\u8ddf\u6211\u5bf9\u8bdd\u4e86\u3002'
 
   const list: any = ref([
     {
@@ -43,7 +43,7 @@
       type: 'he',
       result,
       avatar: 'static/img/chatGPT.png',
-      username: 'chatGPT',
+      username: 'ChatGPT',
       time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     },
   ])
