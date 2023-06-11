@@ -9,7 +9,7 @@
     <el-popover
       popper-class="icon-selector-popper"
       trigger="hover"
-      :width="292"
+      :width="295"
     >
       <template #reference>
         <el-button>
