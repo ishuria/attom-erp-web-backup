@@ -279,6 +279,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'echarts',
+        name: 'Echarts',
+        component: () => import('/@/views/vab/echarts/index.vue'),
+        meta: {
+          title: '图表',
+          guard: ['Admin'],
+          icon: 'bubble-chart-line',
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {

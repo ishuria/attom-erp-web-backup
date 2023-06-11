@@ -222,6 +222,16 @@ const list = [
         },
       },
       {
+        path: 'echarts',
+        name: 'Echarts',
+        component: 'views/vab/echarts/index.vue',
+        meta: {
+          title: '图表',
+          guard: ['Admin'],
+          icon: 'bubble-chart-line',
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
