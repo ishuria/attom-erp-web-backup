@@ -9,12 +9,17 @@
 
   const predefineColors = ref([
     _color,
-    '#f01414',
-    '#3fb884',
     '#1e90ff',
-    '#6954f0',
+    '#4e6ef2',
     '#0052d9',
-    '#07CD5A',
+    '#3fb884',
+    '#07cd5a',
+    '#16baa9',
+    '#009688',
+    '#6954f0',
+    '#7b40f2',
+    '#ff2d55',
+    '#f01414',
   ])
 
   const settingsStore = useSettingsStore()
