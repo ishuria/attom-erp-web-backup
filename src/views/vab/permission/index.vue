@@ -22,11 +22,11 @@
           <el-radio-button label="test">test</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="过期Token模拟访问(令牌失效5s)">
+      <!-- <el-form-item label="过期Token模拟访问(令牌失效5s)">
         <el-button type="primary" @click="handleRefreshToken">
           点击模拟token过期访问接口，无痛刷新
         </el-button>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="当前账号">
         <el-descriptions border :column="3" direction="vertical">
           <el-descriptions-item>
@@ -298,7 +298,7 @@
         $baseLoading('正在切换账号请稍后...')
         await localStorage.setItem(
           tokenTableName,
-          `${state.form.account}-token-${uuid}-${new Date().getTime()}`
+          `${state.form.account}-token-${uuid()}-${new Date().getTime()}`
         )
         await location.reload()
       }
