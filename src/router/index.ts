@@ -340,6 +340,41 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         ],
       },
       {
+        path: 'table',
+        name: 'Table',
+        meta: {
+          title: '表格',
+          // 非editor角色的用户可见
+          guard: {
+            role: ['Editor'],
+            mode: 'except',
+          },
+          icon: 'table-2',
+        },
+        children: [
+          {
+            path: 'comprehensiveTable',
+            name: 'ComprehensiveTable',
+            component: () =>
+              import('/@/views/vab/table/comprehensiveTable.vue'),
+            meta: {
+              title: '综合表格',
+            },
+          },
+          {
+            path: 'comprehensiveTableDetail',
+            name: 'ComprehensiveTableDetail',
+            component: () =>
+              import('/@/views/vab/table/comprehensiveTableDetail.vue'),
+            meta: {
+              title: '详情页',
+              activeMenu: '/vab/table/comprehensiveTable',
+              dynamicNewTab: true, //详情页根据id传参不同可打开多个
+            },
+          },
+        ],
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
@@ -597,17 +632,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '商品管理',
           icon: 'home-2-line',
-        },
-      },
-      {
-        path: 'detail',
-        name: 'Detail',
-        component: () => import('/@/views/goods/Detail.vue'),
-        meta: {
-          hidden: true,
-          title: '详情页',
-          activeMenu: '/goods/goodsManagement',
-          dynamicNewTab: true, //详情页根据id传参不同可打开多个
         },
       },
       {

@@ -1,6 +1,12 @@
 <template>
   <div class="detail-container">
     <el-page-header :content="'【' + title + '】详情页面'" @back="goBack" />
+    <el-alert
+      :closable="false"
+      show-icon
+      title="详情页菜单高亮，并缓存详情页，返回上一页再次打开可看到效果，dynamicNewTab可配置详情页只打开一个tab页还是可以根据参数不同无限打开多个，当前展示的是可以打开多个"
+      type="success"
+    />
     <el-form inline :model="form">
       <el-form-item label="输入框缓存">
         <el-input v-model="form.text" />
@@ -11,7 +17,7 @@
           type="primary"
           @click="handleRefreshMainPage"
         >
-          刷新商品管理页面
+          刷新综合表格页面
         </el-button>
       </el-form-item>
     </el-form>
@@ -49,6 +55,7 @@
         江苏省苏州市吴中区吴中大道 1188 号
       </el-descriptions-item>
     </el-descriptions>
+    {{ route }}
   </div>
 </template>
 
@@ -58,7 +65,7 @@
   import { Refresh } from '@element-plus/icons-vue'
 
   export default defineComponent({
-    name: 'Detail',
+    name: 'ComprehensiveTableDetail',
     setup() {
       const route = useRoute()
       const router = useRouter()
@@ -78,13 +85,12 @@
       })
 
       const goBack = async () => {
-        const detailPath = await handleActivePath(route, true)
-        await router.push('/goods/goodsManagement')
-        await delVisitedRoute(detailPath)
+        await router.push('/vab/table/comprehensiveTable')
+        await delVisitedRoute(handleActivePath(route, true))
       }
 
       const handleRefreshMainPage = () => {
-        $pub('reload-router-view', 'GoodsManagement')
+        $pub('reload-router-view', 'ComprehensiveTable')
       }
 
       onMounted(() => {
