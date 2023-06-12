@@ -17,66 +17,74 @@
     <el-scrollbar>
       <table class="table">
         <tr>
-          <td>vue</td>
           <td>
-            {{ dependencies['vue'] }}
-            <el-popover
-              content="已升级至最新版本"
-              placement="top-start"
-              trigger="hover"
-              :width="200"
-            >
-              <template #reference>
-                <vab-icon icon="arrow-up-line" />
-              </template>
-            </el-popover>
+            vite
+            <span>{{ devDependencies['vite'] }}</span>
           </td>
-          <td>vite</td>
-          <td>{{ devDependencies['vite'] }}</td>
+          <td></td>
+          <td>
+            vue
+            <span>
+              <span>{{ dependencies['vue'] }}</span>
+            </span>
+          </td>
+          <td></td>
+          <td>
+            pinia
+            <span>{{ dependencies['pinia'] }}</span>
+          </td>
+          <td></td>
         </tr>
         <tr>
-          <td>pinia</td>
-          <td>{{ dependencies['pinia'] }}</td>
-          <td>element-plus</td>
           <td>
-            {{ dependencies['element-plus'] }}
-            <el-popover
-              content="已升级至最新版本"
-              placement="top-start"
-              trigger="hover"
-              :width="200"
-            >
-              <template #reference>
-                <vab-icon icon="arrow-up-line" />
-              </template>
-            </el-popover>
+            element-plus
+            <span>{{ dependencies['element-plus'] }}</span>
           </td>
-        </tr>
-        <tr>
-          <td>授权渠道</td>
-          <td colspan="3">
-            <a
-              href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
-              target="_blank"
-            >
-              <el-button type="primary">shop-vite ￥1399</el-button>
-            </a>
-            <a
-              href="https://vue-admin-beautiful.com/admin-plus"
-              target="_blank"
-            >
-              <el-button type="warning">admin-plus ￥799</el-button>
-            </a>
+          <td></td>
+          <td>
+            @vueuse/core
+            <span>{{ dependencies['@vueuse/core'] }}</span>
           </td>
+          <td></td>
+          <td>
+            axios
+            <span>{{ dependencies['axios'] }}</span>
+          </td>
+          <td></td>
         </tr>
-        <tr></tr>
       </table>
+      <div class="version-information-rely">
+        <a
+          href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
+          target="_blank"
+        >
+          <el-button type="primary">
+            <vab-icon icon="vip-diamond-line" />
+            Vue Shop Vite ￥1399
+          </el-button>
+        </a>
+        <a href="https://vue-admin-beautiful.com/admin-plus" target="_blank">
+          <el-button type="warning">
+            <vab-icon icon="vip-diamond-line" />
+            admin-plus ￥799
+          </el-button>
+        </a>
+      </div>
     </el-scrollbar>
   </vab-card>
 </template>
 
 <style lang="scss" scoped>
   .version-information {
+    &-rely {
+      min-width: 500px;
+      height: 50px;
+      padding-left: 10px;
+      margin-top: 10px;
+      line-height: 50px;
+      text-align: left;
+      border-radius: var(--el-border-radius-base);
+    }
     .table {
       width: 100%;
       color: var(--el-color-black);
@@ -85,12 +93,12 @@
 
       td {
         position: relative;
-        padding: 9px 15px !important;
+        padding: 11.5px 15px !important;
         overflow: hidden;
         font-size: var(--el-font-size-default);
         text-overflow: ellipsis;
         white-space: nowrap;
-        border: 1px solid #e6e6e6;
+        border: 0;
 
         i {
           color: var(--el-color-success);
@@ -99,9 +107,14 @@
         }
 
         &:nth-child(odd) {
-          width: 20%;
-          text-align: right;
+          width: 40%;
+          font-weight: bold;
           background-color: var(--el-color-white);
+          span {
+            margin-left: 10px;
+            font-weight: normal;
+            color: var(--el-color-grey);
+          }
         }
       }
     }

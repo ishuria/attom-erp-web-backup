@@ -77,13 +77,6 @@
         margin-bottom: 20px;
       }
 
-      .access,
-      .authorization,
-      .version-information {
-        min-height: 238.38px;
-        margin-bottom: 20px;
-      }
-
       .el-card {
         .el-card__header {
           position: relative;
