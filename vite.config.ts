@@ -21,9 +21,10 @@ const info = {
   devDependencies,
   lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
 }
-process.env.VITE_APP_UPDATE_TIME = info.lastBuildTime
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+  process.env['VITE_APP_UPDATE_TIME'] = info.lastBuildTime
+  process.env['VITE_USER_NODE_ENV'] = mode
   const root = process.cwd()
   const env = loadEnv(mode, root)
   createWatch(env)
