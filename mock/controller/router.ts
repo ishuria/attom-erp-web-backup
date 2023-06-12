@@ -9,6 +9,7 @@ const list = [
       title: '首页',
       icon: 'home-2-line',
       breadcrumbHidden: true,
+      levelHidden: true,
     },
     children: [
       {
