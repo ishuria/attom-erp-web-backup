@@ -70,7 +70,7 @@
         :xs="24"
       >
         <vab-link :to="item.link">
-          <vab-card class="icon-panel" shadow="hover">
+          <vab-card class="icon-panel" shadow="never">
             <el-badge class="item" :value="item.value">
               <vab-icon :icon="item.icon" />
             </el-badge>
@@ -91,37 +91,40 @@
     cursor: pointer;
     border: 0;
 
-    .el-card__body {
-      height: 120px;
+    :deep() {
+      .el-card__body {
+        height: 65px;
+        padding: 10px;
 
-      &:hover {
-        i {
-          color: var(--el-color-white);
-          background: var(--el-color-primary);
+        &:hover {
+          i {
+            color: var(--el-color-white);
+            background: var(--el-color-primary);
+          }
         }
-      }
 
-      i {
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        font-size: 30px;
-        line-height: 50px;
-        color: var(--el-color-primary);
-        background: var(--el-color-primary-light-9);
-        border-radius: var(--el-border-radius-base);
-        transition: all ease-in-out 0.3s;
-      }
+        i {
+          display: inline-block;
+          width: 50px;
+          height: 50px;
+          font-size: 30px;
+          line-height: 50px;
+          color: var(--el-color-primary);
+          background: var(--el-color-primary-light-9);
+          border-radius: var(--el-border-radius-base);
+          transition: all ease-in-out 0.3s;
+        }
 
-      .icon-panel-title {
-        display: inline-block;
-        padding-top: 10px;
-        margin-left: 10px;
-        vertical-align: -10px;
-        .icon-panel-tips {
-          margin-top: 5px;
-          font-size: var(--el-font-size-small);
-          color: var(--el-color-grey);
+        .icon-panel-title {
+          display: inline-block;
+          padding-top: 10px;
+          margin-left: 10px;
+          vertical-align: -10px;
+          .icon-panel-tips {
+            margin-top: 5px;
+            font-size: var(--el-font-size-small);
+            color: var(--el-color-grey);
+          }
         }
       }
     }
