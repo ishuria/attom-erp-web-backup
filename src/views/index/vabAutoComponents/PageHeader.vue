@@ -40,7 +40,11 @@
 </script>
 
 <template>
-  <vab-colorful-card class="page-header" shadow="never" :style="style">
+  <vab-colorful-card
+    class="page-header hidden-xs-only"
+    shadow="never"
+    :style="style"
+  >
     <el-avatar class="page-header-avatar" :src="avatar" />
     <div class="page-header-tip">
       <p class="page-header-tip-title">
