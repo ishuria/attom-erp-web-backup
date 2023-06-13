@@ -44,7 +44,7 @@ html {
     font-family: 'PingFang SC', Arial, 'Microsoft YaHei', sans-serif;
     font-size: var(--el-font-size-default);
     color: $base-color-black;
-    background: $base-color-background;
+    background: var(--el-background-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
@@ -63,13 +63,17 @@ html {
           transition: var(--el-transition);
 
           > section {
-            background: var(--el-color-white);
             transition: var(--el-transition);
 
             > [class*='-container'] {
               min-height: $base-keep-alive-height;
               padding: $base-padding;
               background: var(--el-color-white);
+              border-top: 1px solid var(--el-border-color-light);
+              border-right: 1px solid var(--el-border-color-light);
+              border-left: 1px solid var(--el-border-color-light);
+              border-top-left-radius: var(--el-border-radius-base);
+              border-top-right-radius: var(--el-border-radius-base);
               transition: var(--el-transition);
             }
           }

@@ -69,7 +69,8 @@
 <style lang="scss" scoped>
   .index-container {
     padding: 0 !important;
-    background: $base-color-background !important;
+    background: var(--el-background-color) !important;
+    border: 0 !important;
 
     :deep() {
       .page-header {

@@ -10,22 +10,8 @@
 
   &-enter {
     opacity: 0;
-    transform: translateX(-30px);
   }
 
-  &-leave-to {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-}
-
-.no-transform {
-  &-leave-active,
-  &-enter-active {
-    transition: none;
-  }
-
-  &-enter,
   &-leave-to {
     opacity: 0;
   }

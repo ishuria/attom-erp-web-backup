@@ -22,7 +22,7 @@
   <div class="vab-app-main">
     <section>
       <VabRouterView />
+      <vab-footer />
     </section>
-    <vab-footer />
   </div>
 </template>

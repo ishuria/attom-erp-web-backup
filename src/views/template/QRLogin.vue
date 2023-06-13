@@ -9,7 +9,6 @@
     scan.value = ''
     nextTick(() => {
       scan.value = getImageUrl('assets/qr_images/scan.png')
-      console.log(scan)
     })
   }, 10000)
 

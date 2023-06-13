@@ -51,12 +51,14 @@
       class="vab-main"
       :class="{
         'is-collapse-main': collapse,
+        'is-no-tabs': !showTabs,
       }"
     >
       <div
         class="vab-layout-header"
         :class="{
           'fixed-header': fixedHeader,
+          'is-no-tabs': !showTabs,
         }"
       >
         <vab-nav />

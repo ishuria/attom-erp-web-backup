@@ -24,13 +24,13 @@
           <div class="right-panel">
             <el-menu
               v-if="'horizontal' === layout"
-              active-text-color="var(--el-color-menu-text)"
-              background-color="var(--el-color-menu)"
+              active-text-color="var(--el-menu-color-text)"
+              background-color="var(--el-menu-background-color)"
               :default-active="activeMenu.data"
               menu-trigger="click"
               mode="horizontal"
               style="width: 100%"
-              text-color="var(--el-color-menu-text)"
+              text-color="var(--el-menu-color-text)"
             >
               <template
                 v-for="(item, index) in routes.flatMap((route) =>
@@ -66,7 +66,7 @@
     align-items: center;
     justify-items: flex-end;
     height: $base-header-height;
-    background: var(--el-color-menu);
+    background: var(--el-menu-background-color);
 
     .vab-main {
       padding: 0 $base-padding 0 $base-padding;

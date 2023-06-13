@@ -35,14 +35,14 @@
   >
     <vab-logo v-if="layout === 'vertical'" />
     <el-menu
-      background-color="var(--el-color-menu)"
+      background-color="var(--el-menu-background-color)"
       :collapse="collapse"
       :collapse-transition="false"
       :default-active="activeMenu.data"
       :default-openeds="defaultOpeneds"
       menu-trigger="click"
       mode="vertical"
-      text-color="var(--el-color-menu-text)"
+      text-color="var(--el-menu-color-text)"
       :unique-opened="uniqueOpened"
     >
       <template v-for="(item, index) in handleRoutes" :key="index + item.name">
@@ -74,7 +74,7 @@
     width: var(--el-left-menu-width);
     height: 100vh;
     overflow: hidden;
-    background: var(--el-color-menu);
+    background: var(--el-menu-background-color);
     transition: var(--el-transition);
 
     &.side-bar-common {

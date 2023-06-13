@@ -41,5 +41,5 @@ export const themeConfig: ThemeType = {
   //否默认收起左侧菜单
   foldSidebar: false,
   //是否开启页面动画
-  showPageTransition: true,
+  showPageTransition: false,
 }

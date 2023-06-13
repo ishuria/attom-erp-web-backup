@@ -71,7 +71,8 @@
     padding: 0 !important;
     margin: -19px -19px 19px -19px;
     overflow: hidden !important;
-    background: $base-color-background !important;
+    background: var(--el-background-color) !important;
+    border: 0 !important;
 
     &.w-e-full-screen-container {
       z-index: 9999 !important;

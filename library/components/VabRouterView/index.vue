@@ -73,7 +73,7 @@
   <router-view v-slot="{ Component }">
     <transition
       mode="out-in"
-      :name="theme.showPageTransition ? 'fade-transform' : 'no-transform'"
+      :name="theme.showPageTransition ? 'fade-transform' : ''"
     >
       <keep-alive :include="keepAliveNameList" :max="keepAliveMaxNum">
         <component :is="Component" :key="routerKey" ref="componentRef" />

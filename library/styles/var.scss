@@ -1,9 +1,10 @@
 :root {
   --el-border-radius-base: #{$base-border-radius};
   --el-left-menu-width: #{$base-left-menu-width};
-  --el-color-menu: #{$base-menu-background};
-  --el-color-menu-second: #fff;
-  --el-color-menu-text: #fff;
+  --el-background-color: #{$base-background-color};
+  --el-menu-background-color: #{$base-menu-background};
+  --el-menu-background-color-second: #fff;
+  --el-menu-color-text: #fff;
 
   --el-color-grey: #{$base-color-grey};
   --el-color-black: #{$base-color-black};

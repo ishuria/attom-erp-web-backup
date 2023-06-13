@@ -102,7 +102,7 @@
     </el-tabs>
 
     <el-menu
-      background-color="var(--el-color-menu-second)"
+      background-color="var(--el-menu-background-color-second)"
       :default-active="activeMenu.data"
       :default-openeds="defaultOpeneds"
       mode="vertical"
@@ -329,7 +329,7 @@
 
           .el-tabs__nav-wrap.is-left {
             margin-right: 0 !important;
-            background: var(--el-color-menu);
+            background: var(--el-menu-background-color);
 
             .el-tabs__nav-scroll {
               height: 100%;
@@ -345,7 +345,7 @@
 
         .el-tabs__nav {
           height: calc(100vh - #{$base-logo-height});
-          background: var(--el-color-menu);
+          background: var(--el-menu-background-color);
         }
 
         .el-tabs__item {

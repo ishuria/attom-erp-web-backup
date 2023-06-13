@@ -24,6 +24,11 @@
     color: var(--el-color-grey);
     background: var(--el-color-white);
     border-top: 1px dashed var(--el-border-color-light);
+    border-right: 1px solid var(--el-border-color-light);
+    border-bottom: 1px solid var(--el-border-color-light);
+    border-left: 1px solid var(--el-border-color-light);
+    border-bottom-right-radius: var(--el-border-radius-base);
+    border-bottom-left-radius: var(--el-border-radius-base);
 
     i {
       margin: 0 5px;

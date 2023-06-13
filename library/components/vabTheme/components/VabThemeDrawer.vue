@@ -82,7 +82,7 @@
     size="285px"
     :title="translateTitle('主题配置')"
   >
-    <el-scrollbar height="88vh">
+    <el-scrollbar height="85vh">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
           <template #label>

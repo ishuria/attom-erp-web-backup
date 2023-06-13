@@ -82,7 +82,10 @@
     [class*='vab-layout-'] {
       :deep() {
         .vab-layout-header {
-          border-bottom: 1px solid #e4e7ed;
+          border-bottom: 1px solid var(--el-border-color-light);
+          &.is-no-tabs {
+            border-bottom: 0;
+          }
         }
       }
 

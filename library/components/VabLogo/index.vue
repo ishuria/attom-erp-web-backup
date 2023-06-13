@@ -107,7 +107,7 @@
         width: var(--el-left-menu-width-min);
         height: $base-logo-height;
         margin: 0;
-        background: var(--el-color-menu);
+        background: var(--el-menu-background-color);
       }
 
       .title {
