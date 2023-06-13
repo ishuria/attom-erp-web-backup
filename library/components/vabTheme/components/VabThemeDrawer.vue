@@ -60,8 +60,8 @@
     $sub('shop-vite-reset', () => {
       setDefaultTheme()
     })
-    $sub('shop-vite-technology', () => {
-      theme.value.themeName = 'technology'
+    $sub('shop-vite-change-theme', (value: string) => {
+      theme.value.themeName = value
       _updateTheme()
     })
   })
@@ -69,7 +69,7 @@
   onBeforeUnmount(() => {
     $unsub('shop-vite-theme')
     $unsub('shop-vite-reset')
-    $unsub('shop-vite-technology')
+    $unsub('shop-vite-change-theme')
   })
 </script>
 

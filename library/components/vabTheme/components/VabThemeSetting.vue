@@ -24,8 +24,8 @@
   const resetTheme = () => {
     $pub('shop-vite-reset')
   }
-  const technologyTheme = () => {
-    $pub('shop-vite-technology')
+  const changeTheme = (value: string) => {
+    $pub('shop-vite-change-theme', value)
   }
 </script>
 
@@ -43,11 +43,19 @@
         <p>{{ translateTitle('购买源码') }}</p>
       </a>
     </li>
-    <li @click="technologyTheme">
+    <li @click="changeTheme('technology')">
       <a>
         <vab-icon icon="user-5-line" />
         <p>
           {{ translateTitle('科技主题') }}
+        </p>
+      </a>
+    </li>
+    <li @click="changeTheme('plain')">
+      <a>
+        <vab-icon icon="computer-line" />
+        <p>
+          {{ translateTitle('简洁主题') }}
         </p>
       </a>
     </li>
@@ -103,10 +111,11 @@
 
       $colors: (
         1: #3698fd,
-        2: #faa500,
-        3: #7a66f8,
-        4: #3698fd,
-        5: #ef4c5d,
+        2: #7a66f8,
+        3: #3698fd,
+        4: #faa500,
+        5: #3698fd,
+        6: #ef4c5d,
       );
 
       @each $key, $color in $colors {
