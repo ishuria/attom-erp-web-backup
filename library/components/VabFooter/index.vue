@@ -20,7 +20,7 @@
     align-items: center;
     justify-content: center;
     min-height: 55px;
-    padding: 0 $base-padding 0 $base-padding;
+    padding: 0 var(--el-padding) 0 var(--el-padding);
     color: var(--el-color-grey);
     background: var(--el-color-white);
     border-top: 1px dashed var(--el-border-color-light);

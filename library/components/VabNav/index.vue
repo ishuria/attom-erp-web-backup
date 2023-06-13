@@ -78,12 +78,12 @@
   .vab-nav {
     position: relative;
     height: $base-nav-height;
-    padding-right: $base-padding;
-    padding-left: $base-padding;
+    padding-right: var(--el-padding);
+    padding-left: var(--el-padding);
     overflow: hidden;
     user-select: none;
     background: var(--el-color-white);
-    border-bottom: 1px solid #e4e7ed;
+    border-bottom: 1px solid var(--el-border-color-light);
     .left-panel {
       display: flex;
       align-items: center;
@@ -92,12 +92,12 @@
 
       :deep() {
         .fold-unfold {
-          margin-right: $base-margin;
+          margin-right: var(--el-margin);
         }
 
         .el-tabs {
           width: 100%;
-          margin-left: $base-margin;
+          margin-left: var(--el-margin);
 
           .el-tabs__header {
             margin: 0;
@@ -141,7 +141,7 @@
 
       :deep() {
         [class*='ri-'] {
-          margin-left: $base-margin;
+          margin-left: var(--el-margin);
           color: var(--el-color-grey);
           cursor: pointer;
         }

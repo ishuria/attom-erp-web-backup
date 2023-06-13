@@ -6,14 +6,21 @@
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
 
-  const refreshRoute = () => {
-    $pub('reload-router-view')
+  const className = ref('')
+
+  const refreshRoute = async () => {
+    className.value = 'rotate'
+    await $pub('reload-router-view')
+    setTimeout(() => {
+      className.value = ''
+    }, 500)
   }
 </script>
 
 <template>
   <vab-icon
     v-if="theme.showRefresh"
+    :class="className"
     icon="refresh-line"
     @click="refreshRoute"
   />

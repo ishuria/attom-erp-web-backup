@@ -148,10 +148,10 @@
     .page-header {
       display: flex;
       align-items: center;
-      padding: $base-padding $base-padding 0 $base-padding;
-      margin-bottom: $base-margin;
+      padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
+      margin-bottom: var(--el-margin);
       background: var(--el-color-white);
-      border: 1px solid var(--el-border-color);
+      border: 1px solid var(--el-border-color-light);
 
       :deep() {
         .el-form-item__content {
@@ -175,7 +175,7 @@
           .card-header-tag {
             position: absolute;
             top: 15px;
-            right: $base-margin;
+            right: var(--el-margin);
           }
 
           > div > span {
@@ -193,7 +193,7 @@
 
           .card-footer-tag {
             position: absolute;
-            right: $base-margin;
+            right: var(--el-margin);
             bottom: 15px;
           }
         }
@@ -216,7 +216,7 @@
         justify-content: space-between;
         padding-top: 20px;
         text-align: right;
-        border-top: 1px solid var(--el-border-color);
+        border-top: 1px solid var(--el-border-color-light);
 
         .is-circle {
           [class*='ri-'] {

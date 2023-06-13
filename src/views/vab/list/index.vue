@@ -127,7 +127,7 @@
       outline: none;
 
       .list-item {
-        padding: $base-padding;
+        padding: var(--el-padding);
         border-bottom: 1px solid var(--el-border-color-light);
 
         &-meta {

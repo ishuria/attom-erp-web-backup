@@ -268,7 +268,7 @@
     border: 0 !important;
 
     #{$base}-user-info {
-      padding: $base-padding;
+      padding: var(--el-padding);
       text-align: center;
 
       :deep() {
@@ -327,7 +327,7 @@
       &-content {
         box-sizing: border-box;
         flex: 1;
-        margin-left: $base-margin;
+        margin-left: var(--el-margin);
 
         &-second {
           margin-top: 8px;

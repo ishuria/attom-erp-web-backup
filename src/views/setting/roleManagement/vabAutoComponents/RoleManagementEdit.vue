@@ -147,7 +147,7 @@
   .vab-tree-border {
     width: 100%;
     height: 250px;
-    padding: $base-padding;
+    padding: var(--el-padding);
     overflow-y: auto;
     border: 1px solid #dcdfe6;
     border-radius: var(--el-border-radius-base);

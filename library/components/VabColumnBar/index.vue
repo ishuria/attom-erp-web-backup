@@ -151,7 +151,7 @@
     height: 100vh;
     overflow: hidden;
     background: var(--el-color-white);
-    border-right: 1px solid #e4e7ed;
+    border-right: 1px solid var(--el-border-color-light);
 
     &-vertical,
     &-card,
@@ -368,7 +368,7 @@
         border: 0;
 
         .el-divider {
-          margin: 0 0 $base-margin 0;
+          margin: 0 0 var(--el-margin) 0;
           background-color: #f6f6f6;
 
           &__text {

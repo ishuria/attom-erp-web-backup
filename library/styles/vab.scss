@@ -58,7 +58,7 @@ html {
 
         .vab-app-main {
           width: 100%;
-          padding: $base-padding;
+          padding: var(--el-padding);
           overflow: hidden;
           transition: var(--el-transition);
 
@@ -67,7 +67,7 @@ html {
 
             > [class*='-container'] {
               min-height: $base-keep-alive-height;
-              padding: $base-padding;
+              padding: var(--el-padding);
               background: var(--el-color-white);
               border-top: 1px solid var(--el-border-color-light);
               border-right: 1px solid var(--el-border-color-light);
@@ -308,12 +308,12 @@ html {
 
     /*  .el-page-header */
     .el-page-header {
-      margin: 0 0 $base-margin 0;
+      margin: 0 0 var(--el-margin) 0;
     }
 
     /* el-alert */
     .el-alert {
-      margin: 0 0 $base-margin 0;
+      margin: 0 0 var(--el-margin) 0;
 
       &__closebtn {
         position: absolute !important;
@@ -434,7 +434,7 @@ html {
     /* el-pagination分页 */
     .el-pagination {
       justify-content: center;
-      margin: $base-margin 0 0 0;
+      margin: var(--el-margin) 0 0 0;
       font-weight: normal;
       color: var(--el-color-black);
     }
@@ -455,7 +455,7 @@ html {
     }
     /* el-card卡片 */
     .el-card {
-      margin-bottom: $base-margin;
+      margin-bottom: var(--el-margin);
       border-radius: var(--el-border-radius-base);
       transition: var(--el-transition);
 
@@ -470,7 +470,7 @@ html {
       }
 
       &__body {
-        padding: $base-padding;
+        padding: var(--el-padding);
       }
     }
 
@@ -484,7 +484,7 @@ html {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 
         .el-message__content {
-          padding-right: $base-padding;
+          padding-right: var(--el-padding);
           color: var(--el-color-grey);
         }
 
@@ -532,7 +532,7 @@ html {
 
     /* vab-table-expand */
     .vab-table-expand {
-      padding: $base-padding;
+      padding: var(--el-padding);
       line-height: 30px;
 
       &-title {

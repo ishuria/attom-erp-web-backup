@@ -186,11 +186,11 @@
 
     :deep() {
       .el-descriptions {
-        padding-top: $base-padding !important;
+        padding-top: var(--el-padding) !important;
       }
 
       .el-collapse {
-        margin-top: $base-margin !important;
+        margin-top: var(--el-margin) !important;
       }
     }
   }

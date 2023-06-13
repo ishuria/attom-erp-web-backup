@@ -316,14 +316,14 @@
     align-items: center;
     justify-content: space-between;
     min-height: $base-tabs-height;
-    padding-right: $base-padding;
-    padding-left: $base-padding;
+    padding-right: var(--el-padding);
+    padding-left: var(--el-padding);
     user-select: none;
     background: var(--el-color-white);
 
     :deep() {
       .fold-unfold {
-        margin-right: $base-margin;
+        margin-right: var(--el-margin);
       }
 
       [class*='ri'] {

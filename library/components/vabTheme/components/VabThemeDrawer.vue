@@ -273,7 +273,7 @@
   @use 'sass:math';
   .vab-drawer {
     .el-drawer__header {
-      padding: $base-padding $base-padding 0 $base-padding;
+      padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
       margin-bottom: 0;
     }
 
@@ -282,7 +282,7 @@
 
       .el-scrollbar__wrap {
         height: calc(100vh - 80px);
-        padding-right: $base-padding;
+        padding-right: var(--el-padding);
 
         .el-divider--horizontal {
           margin: $base-margin * 2 0 $base-margin * 2 0;

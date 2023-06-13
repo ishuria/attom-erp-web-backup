@@ -85,7 +85,7 @@
           .card-header-tag {
             position: absolute;
             top: 15px;
-            right: $base-margin;
+            right: var(--el-margin);
           }
 
           > div > span {
@@ -108,7 +108,7 @@
 
           .card-footer-tag {
             position: absolute;
-            right: $base-margin;
+            right: var(--el-margin);
             bottom: 15px;
           }
         }

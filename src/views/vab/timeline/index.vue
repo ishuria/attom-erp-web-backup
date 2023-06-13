@@ -149,7 +149,7 @@
           .card-header-radio {
             position: absolute;
             top: 20px;
-            right: $base-margin;
+            right: var(--el-margin);
           }
         }
       }
@@ -158,7 +158,7 @@
     .vab-info-card {
       position: relative;
       width: 80%;
-      padding: $base-padding;
+      padding: var(--el-padding);
       color: black;
       background: #e2e2e2;
       border-radius: calc(var(--el-border-radius-base) + 2px);

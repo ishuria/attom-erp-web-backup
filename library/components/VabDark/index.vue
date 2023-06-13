@@ -30,10 +30,8 @@
 
     // 还原默认
     $sub('shop-vite-reset-dark', () => {
-      if (localStorage.getItem('vueuse-color-scheme') == 'dark') {
-        value.value = true
-        _toggleDark()
-      }
+      value.value = true
+      if (localStorage.getItem('vueuse-color-scheme') == 'dark') _toggleDark()
     })
   })
 

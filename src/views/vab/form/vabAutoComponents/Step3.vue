@@ -88,15 +88,15 @@
 
     .pay-success {
       display: block;
-      margin: $base-margin auto 5px auto;
+      margin: var(--el-margin) auto 5px auto;
       font-size: 40px;
       color: var(--el-color-success);
     }
   }
 
   .pay-bottom {
-    padding: $base-padding;
-    margin-top: $base-margin;
+    padding: var(--el-padding);
+    margin-top: var(--el-margin);
     background: #f5f7f8;
     border: 1px dashed var(--el-border-color-light);
     border-radius: var(--el-border-radius-base);
@@ -104,7 +104,7 @@
 
   .pay-button-group {
     display: block;
-    margin: $base-margin auto;
+    margin: var(--el-margin) auto;
     text-align: center;
   }
 </style>

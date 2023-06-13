@@ -179,12 +179,12 @@
 
     .tree-button {
       width: 100%;
-      margin-bottom: $base-margin;
+      margin-bottom: var(--el-margin);
     }
 
     :deep() {
       .el-tree {
-        margin-top: $base-margin;
+        margin-top: var(--el-margin);
 
         &-node__label {
           display: block;

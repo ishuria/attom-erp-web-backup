@@ -69,7 +69,7 @@
     background: var(--el-menu-background-color);
 
     .vab-main {
-      padding: 0 $base-padding 0 $base-padding;
+      padding: 0 var(--el-padding) 0 var(--el-padding);
 
       .right-panel {
         display: flex;
@@ -199,7 +199,7 @@
           }
 
           [class*='ri-'] {
-            margin-left: $base-margin;
+            margin-left: var(--el-margin);
             font-size: lighter;
             color: var(--el-color-white);
             cursor: pointer;
