@@ -128,6 +128,9 @@
             <el-radio-button label="default">
               <template #default>默认</template>
             </el-radio-button>
+            <el-radio-button label="plain">
+              <template #default>简洁</template>
+            </el-radio-button>
             <el-radio-button label="technology">
               <template #default>科技</template>
             </el-radio-button>

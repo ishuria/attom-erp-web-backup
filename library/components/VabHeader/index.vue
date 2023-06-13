@@ -27,9 +27,9 @@
               active-text-color="var(--el-menu-color-text)"
               background-color="var(--el-menu-background-color)"
               :default-active="activeMenu.data"
-              menu-trigger="click"
+              menu-trigger="hover"
               mode="horizontal"
-              style="width: 100%"
+              style="width: 800px"
               text-color="var(--el-menu-color-text)"
             >
               <template
@@ -49,7 +49,7 @@
                 />
               </template>
             </el-menu>
-            <vab-right-tools />
+            <vab-right-tools is-horizontal />
           </div>
         </el-col>
       </el-row>

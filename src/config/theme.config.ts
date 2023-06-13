@@ -4,7 +4,7 @@
 export const themeConfig: ThemeType = {
   // 布局支持：分栏布局column、纵向布局vertical、横向布局horizontal
   layout: 'column',
-  // 主题支持：默认default、科技technology
+  // 主题支持：默认default、简洁plain、科技technology
   themeName: 'default',
   // 菜单宽度，仅支持px，建议大小：266px、277px、288px，其余尺寸会影响美观
   menuWidth: '266px',

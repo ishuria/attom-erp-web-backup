@@ -42,7 +42,7 @@
 
 <template>
   <el-switch
-    v-if="theme.showDark && 'default' == theme.themeName"
+    v-if="theme.showDark && 'technology' != theme.themeName"
     v-model="value"
     :active-icon="Sunny"
     :inactive-icon="Moon"
