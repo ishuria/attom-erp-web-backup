@@ -537,14 +537,19 @@ html {
         font-weight: bold;
       }
     }
-  }
-  /* svg */
-  [fill='#6c63ff'],
-  [fill='#7CADF6'] {
-    fill: var(--el-color-primary) !important;
-  }
-  .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
-  .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
-    background-color: var(--el-color-primary) !important;
+
+    /* svg */
+    [fill='#6c63ff'],
+    [fill='#7CADF6'] {
+      fill: var(--el-color-primary) !important;
+    }
+    .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
+    .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
+      background-color: var(--el-color-primary) !important;
+    }
+
+    .el-avatar {
+      background-color: var(--el-color-primary-light-9) !important;
+    }
   }
 }
