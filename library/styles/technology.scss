@@ -253,4 +253,12 @@ html > .vab-theme-technology {
   [class*='vab-hey-message'] {
     border: 1px solid var(--el-border-color-light) !important;
   }
+  /* svg */
+  [fill='#fff'] {
+    fill: var(--el-background-technology) !important;
+  }
+  [fill='#f2f2f2'],
+  [fill='#d0d2d5'] {
+    fill: var(--el-bg-color) !important;
+  }
 }
