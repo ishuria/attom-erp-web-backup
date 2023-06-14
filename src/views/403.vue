@@ -57,17 +57,24 @@
       top: 50%;
       left: 50%;
       width: 40vw;
-      height: 400px;
+      height: 300px;
       transform: translate(-50%, -50%);
 
       .pic-error {
         position: relative;
         float: left;
         width: 100%;
+        height: 300px;
         overflow: hidden;
         .error-svg-403 {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
           width: 100%;
-          height: 30vh;
+          height: 36vh;
+          margin: auto;
         }
       }
 
