@@ -136,7 +136,9 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-
+        <el-form-item :label="translateTitle('配色')">
+          <vab-color-picker />
+        </el-form-item>
         <el-form-item :label="translateTitle('菜单宽度')">
           <el-select
             v-model="theme.menuWidth"
