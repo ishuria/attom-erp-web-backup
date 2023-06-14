@@ -72,7 +72,7 @@
           bottom: 0;
           left: 0;
           width: 100%;
-          height: 36vh;
+          height: 100%;
           margin: auto;
         }
       }
