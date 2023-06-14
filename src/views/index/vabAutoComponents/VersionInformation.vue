@@ -109,11 +109,11 @@
         &:nth-child(odd) {
           width: 40%;
           font-weight: bold;
+          color: var(--el-color-grey);
           background-color: var(--el-color-white);
           span {
             margin-left: 10px;
             font-weight: normal;
-            color: var(--el-color-grey);
           }
         }
       }
