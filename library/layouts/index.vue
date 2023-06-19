@@ -10,6 +10,7 @@
     <el-backtop target="#app" />
     <vab-theme-drawer />
     <vab-theme-setting />
+    <vab-surely-form />
   </div>
 </template>
 
