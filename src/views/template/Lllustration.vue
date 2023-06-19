@@ -20,7 +20,7 @@
 </script>
 
 <template>
-  <div class="lllustration-container">
+  <div class="lllustration-container no-background-container">
     <el-row :gutter="15">
       <el-col>
         <vab-card shadow="hover">
@@ -50,10 +50,6 @@
 
 <style lang="scss" scoped>
   .lllustration-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     .vab-lllustration {
       width: 100%;
       height: 100%;

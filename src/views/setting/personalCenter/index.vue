@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-center-container">
+  <div class="personal-center-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card shadow="hover">
@@ -263,10 +263,6 @@
 <style lang="scss" scoped>
   $base: '.personal-center';
   #{$base}-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     #{$base}-user-info {
       padding: var(--el-padding);
       text-align: center;

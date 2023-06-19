@@ -558,5 +558,11 @@ html {
     .el-avatar {
       background-color: var(--el-color-primary-light-9) !important;
     }
+
+    .no-background-container {
+      padding: 0 !important;
+      background: var(--el-background-color) !important;
+      border: 0 !important;
+    }
   }
 }

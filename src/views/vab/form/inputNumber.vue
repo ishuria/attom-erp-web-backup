@@ -1,5 +1,5 @@
 <template>
-  <div class="input-number-container">
+  <div class="input-number-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>基础用法</span>
@@ -57,10 +57,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  .inputNumber-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

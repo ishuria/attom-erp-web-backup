@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-container">
+  <div class="timeline-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="12" :xl="8" :xs="24">
         <vab-card shadow="hover">
@@ -121,10 +121,6 @@
 
 <style lang="scss" scoped>
   .timeline-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .el-timeline-item__dot {
         [class*='ri'] {

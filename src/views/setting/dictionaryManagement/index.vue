@@ -1,5 +1,5 @@
 <template>
-  <div class="dictionary-management-container">
+  <div class="dictionary-management-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card shadow="hover">
@@ -174,10 +174,6 @@
 <style lang="scss" scoped>
   $base: '.dictionary-management';
   #{$base}-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     .tree-button {
       width: 100%;
       margin-bottom: var(--el-margin);

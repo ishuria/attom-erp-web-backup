@@ -1,5 +1,5 @@
 <template>
-  <div class="slider-container">
+  <div class="slider-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>基础用法</span>
@@ -73,10 +73,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  .slider-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

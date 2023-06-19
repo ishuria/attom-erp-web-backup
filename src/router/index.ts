@@ -269,6 +269,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'statistic',
+        name: 'Statistic',
+        component: () => import('/@/views/vab/statistic/index.vue'),
+        meta: {
+          title: '统计',
+          guard: ['Admin'],
+          icon: 'bar-chart-2-line',
+        },
+      },
+      {
         path: 'watermark',
         name: 'Watermark',
         component: () => import('/@/views/vab/watermark/index.vue'),

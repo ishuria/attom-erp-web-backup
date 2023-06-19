@@ -1,5 +1,5 @@
 <template>
-  <div class="date-picker-container">
+  <div class="date-picker-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>选择日</span>
@@ -107,10 +107,6 @@
 
 <style lang="scss" scoped>
   .date-picker-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .el-range-separator {
         box-sizing: content-box;

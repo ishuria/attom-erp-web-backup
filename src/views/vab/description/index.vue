@@ -1,5 +1,5 @@
 <template>
-  <div class="description-container">
+  <div class="description-container no-background-container">
     <vab-card shadow="never">
       <el-radio-group v-model="size">
         <el-radio label="large">默认</el-radio>
@@ -180,10 +180,6 @@
 
 <style lang="scss" scoped>
   .description-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .el-descriptions {
         padding-top: var(--el-padding) !important;

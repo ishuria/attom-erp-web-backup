@@ -1,5 +1,5 @@
 <template>
-  <div class="date-time-picker-container">
+  <div class="date-time-picker-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>日期和时间点</span>
@@ -57,10 +57,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  .date-time-picker-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

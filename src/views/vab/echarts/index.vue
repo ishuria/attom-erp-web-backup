@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="echarts-container">
+  <div class="echarts-container no-background-container">
     <el-row :gutter="20">
       <vab-chart-line title="折线图" />
       <vab-chart-bar title="柱状图" />
@@ -24,10 +24,6 @@
 
 <style lang="scss" scoped>
   .echarts-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .vab-card {
         height: 300px;

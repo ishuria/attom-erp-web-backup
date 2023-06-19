@@ -1,5 +1,5 @@
 <template>
-  <div class="checkbox-container">
+  <div class="checkbox-container no-background-container">
     <vab-card shadow="hover">
       <template #header><span>基础用法</span></template>
       <el-checkbox v-model="checked">备选项</el-checkbox>
@@ -68,10 +68,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  .checkbox-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

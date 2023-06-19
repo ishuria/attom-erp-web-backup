@@ -1,15 +1,7 @@
-<!--
- * @Author: 淋雨的小丸子 chu1204505056@126.com
- * @Date: 2022-10-24 12:52:31
- * @LastEditors: 淋雨的小丸子 chu1204505056@126.com
- * @LastEditTime: 2023-06-10 03:19:12
- * @FilePath: \shop-vite\src\views\statcenter\Dashboard.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <script lang="ts" setup></script>
 
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <!-- 实时支付金额 -->
@@ -34,10 +26,6 @@
 
 <style lang="scss" scoped>
   .dashboard-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .payment {
         height: 400px;

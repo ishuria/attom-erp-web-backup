@@ -1,5 +1,5 @@
 <template>
-  <div class="radio-container">
+  <div class="radio-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>基础用法</span>
@@ -64,10 +64,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  .radio-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

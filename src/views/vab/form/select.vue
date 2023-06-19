@@ -1,5 +1,5 @@
 <template>
-  <div class="select-container">
+  <div class="select-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>行政区划</span>
@@ -225,10 +225,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  .select-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

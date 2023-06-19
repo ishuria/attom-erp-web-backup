@@ -132,7 +132,7 @@
 </script>
 
 <template>
-  <div class="chat-GPT-container">
+  <div class="chat-GPT-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <vab-card shadow="never">
@@ -197,10 +197,6 @@
   $border-top-color_1: var(--el-color-primary);
 
   .chat-GPT-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep(.el-card__body) {
       position: relative;
       min-height: calc($base-keep-alive-height - 20px);

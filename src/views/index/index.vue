@@ -13,7 +13,7 @@
 </script>
 
 <template>
-  <div class="index-container">
+  <div class="index-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
         <page-header />
@@ -69,10 +69,6 @@
 
 <style lang="scss" scoped>
   .index-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .page-header {
         min-height: 130px;

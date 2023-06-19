@@ -1,5 +1,5 @@
 <template>
-  <div class="input-container">
+  <div class="input-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>基础用法</span>
@@ -108,10 +108,6 @@
 
 <style lang="scss" scoped>
   .input-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .el-input {
         width: 180px;

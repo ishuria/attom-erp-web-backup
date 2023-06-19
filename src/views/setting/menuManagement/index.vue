@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-management-container">
+  <div class="menu-management-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card shadow="hover">
@@ -182,11 +182,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  $base: '.menu-management';
-  #{$base}-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

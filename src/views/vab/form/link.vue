@@ -1,5 +1,5 @@
 <template>
-  <div class="link-container">
+  <div class="link-container no-background-container">
     <vab-card shadow="hover">
       <template #header>
         <span>基础用法</span>
@@ -55,10 +55,6 @@
 
 <style lang="scss" scoped>
   .link-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .el-link {
         margin-bottom: 10px;

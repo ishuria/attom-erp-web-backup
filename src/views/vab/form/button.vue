@@ -1,5 +1,5 @@
 <template>
-  <div class="button-container">
+  <div class="button-container no-background-container">
     <vab-card shadow="hover">
       <template #header><span>基础用法</span></template>
       <el-button>默认按钮</el-button>
@@ -161,10 +161,6 @@
 
 <style lang="scss" scoped>
   .button-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     :deep() {
       .el-card__body {
         padding-bottom: 10px;

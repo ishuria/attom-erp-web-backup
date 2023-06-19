@@ -1,5 +1,5 @@
 <template>
-  <div class="dynamic-meta-container">
+  <div class="dynamic-meta-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card shadow="hover">
@@ -126,11 +126,4 @@
   })
 </script>
 
-<style lang="scss" scoped>
-  $base: '.dynamic-meta';
-  #{$base}-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-  }
-</style>
+<style lang="scss" scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="task-management-container">
+  <div class="task-management-container no-background-container">
     <vab-query-form class="page-header">
       <vab-query-form-top-panel>
         <el-form :model="queryForm" inline label-width="60px" @submit.prevent>
@@ -141,10 +141,6 @@
 
 <style lang="scss" scoped>
   .task-management-container {
-    padding: 0 !important;
-    background: var(--el-background-color) !important;
-    border: 0 !important;
-
     .page-header {
       display: flex;
       align-items: center;
