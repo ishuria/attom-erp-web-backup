@@ -1,4 +1,5 @@
 import { MockMethod } from 'vite-plugin-mock'
+
 const list = [
   {
     name: '北京市',

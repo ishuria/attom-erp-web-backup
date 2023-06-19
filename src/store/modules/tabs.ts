@@ -92,6 +92,7 @@ export const useTabsStore = defineStore('tabs', {
           return route
         })
       }
+
       this.visitedRoutes = handleVisitedRoutes(this.visitedRoutes)
     },
   },

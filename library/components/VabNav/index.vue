@@ -84,6 +84,7 @@
     user-select: none;
     background: var(--el-color-white);
     border-bottom: 1px solid var(--el-border-color-light);
+
     .left-panel {
       display: flex;
       align-items: center;

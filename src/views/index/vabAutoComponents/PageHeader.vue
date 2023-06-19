@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
   import { getList } from '/@/api/description'
 
@@ -40,8 +40,8 @@
 </script>
 
 <template>
-  <vab-colorful-card class="page-header" shadow="never" :style="style">
-    <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
+  <vab-colorful-card :style="style" class="page-header" shadow="never">
+    <el-avatar :src="avatar" class="page-header-avatar hidden-xs-only" />
     <div class="page-header-tip">
       <p class="page-header-tip-title">
         {{ handleTips() }}
@@ -63,6 +63,7 @@
       .el-card__header {
         display: none;
       }
+
       .el-card__body {
         display: flex;
         flex-wrap: wrap;

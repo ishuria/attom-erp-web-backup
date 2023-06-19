@@ -20,12 +20,12 @@
       <el-button round type="info">信息按钮</el-button>
       <el-button round type="warning">警告按钮</el-button>
       <el-button round type="danger">危险按钮</el-button>
-      <el-button circle :icon="Search" />
-      <el-button circle :icon="Edit" type="primary" />
-      <el-button circle :icon="Check" type="success" />
-      <el-button circle :icon="Message" type="info" />
-      <el-button circle :icon="Star" type="warning" />
-      <el-button circle :icon="Delete" type="danger" />
+      <el-button :icon="Search" circle />
+      <el-button :icon="Edit" circle type="primary" />
+      <el-button :icon="Check" circle type="success" />
+      <el-button :icon="Message" circle type="info" />
+      <el-button :icon="Star" circle type="warning" />
+      <el-button :icon="Delete" circle type="danger" />
     </vab-card>
 
     <vab-card shadow="hover">
@@ -64,7 +64,9 @@
       <el-button :icon="Search" type="primary">搜索</el-button>
       <el-button type="primary">
         上传
-        <el-icon class="el-icon--right"><Upload /></el-icon>
+        <el-icon class="el-icon--right">
+          <Upload />
+        </el-icon>
       </el-button>
     </vab-card>
 
@@ -95,7 +97,9 @@
         <el-button :icon="ArrowLeft" type="primary">上一页</el-button>
         <el-button type="primary">
           下一页
-          <el-icon class="el-icon--right"><ArrowRight /></el-icon>
+          <el-icon class="el-icon--right">
+            <ArrowRight />
+          </el-icon>
         </el-button>
       </el-button-group>
       <el-button-group>
@@ -164,6 +168,7 @@
     :deep() {
       .el-card__body {
         padding-bottom: 10px;
+
         .el-button {
           margin: 0 10px 10px 10px;
         }

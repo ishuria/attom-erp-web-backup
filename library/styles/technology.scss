@@ -58,6 +58,7 @@ html > .vab-theme-technology {
       background-color: mix($base-color-white, #103171, 5%) !important;
     }
   }
+
   * {
     @include base-scrollbar;
   }
@@ -75,57 +76,71 @@ html > .vab-theme-technology {
   #app {
     border: 1px solid var(--el-border-color-light) !important;
   }
+
   .vab-layout-header {
     border-top: 1px solid var(--el-border-color-light) !important;
     border-right: 1px solid var(--el-border-color-light) !important;
   }
+
   .vab-side-bar {
     border-top: 1px solid var(--el-border-color-light) !important;
     border-right: 1px solid var(--el-border-color-light) !important;
     border-left: 1px solid var(--el-border-color-light) !important;
   }
+
   .vab-layout-column {
     border-top: 1px solid var(--el-border-color-light) !important;
   }
+
   .mobile {
     .vab-side-bar {
       border-left: 0px solid var(--el-border-color-light) !important;
     }
   }
+
   .vab-layout-horizontal {
     .vab-layout-header {
       border-top: 1px solid var(--el-border-color-light) !important;
       border-left: 1px solid var(--el-border-color-light) !important;
     }
   }
+
   .vab-nav {
     background: var(--el-color-white) !important;
   }
+
   [class*='-container'] {
     background: var(--el-color-white) !important;
   }
+
   .table {
     td {
       border: 1px solid var(--el-border-color-light) !important;
     }
   }
+
   .vab-column-bar-container .el-tabs .el-tabs__item {
     color: var(--el-color-black) !important;
   }
+
   .page-header-tip-title {
     color: var(--el-color-black) !important;
   }
+
   .vab-column-bar-container {
     border-right: 1px solid var(--el-border-color-light) !important;
   }
+
   .vab-tabs-content-card .el-tabs__header .el-tabs__item {
     border: 1px solid var(--el-border-color-light) !important;
   }
+
   .vab-column-bar-container .el-tabs .el-tabs__nav {
     width: 63px;
     background: var(--el-color-white) !important;
     border-right: 1px solid var(--el-border-color-light) !important;
   }
+
   .logo-container-column .logo {
     width: 63px !important;
     background: var(--el-color-white) !important;
@@ -151,6 +166,7 @@ html > .vab-theme-technology {
 
     &__header {
       position: relative;
+
       i[class*='__close'] {
         width: 24px;
         height: 24px;
@@ -195,6 +211,7 @@ html > .vab-theme-technology {
       border-left: 2px solid #016886;
     }
   }
+
   /*el-drawer */
   .el-drawer.rtl {
     border: 1px solid var(--el-border-color-light);
@@ -218,6 +235,7 @@ html > .vab-theme-technology {
   .el-drawer__header {
     color: var(--el-color-black);
   }
+
   .el-table {
     th {
       background: #040d32 !important;
@@ -229,15 +247,18 @@ html > .vab-theme-technology {
       border: 1px solid var(--el-border-color-light) !important;
     }
   }
+
   .el-input.is-disabled .el-input__wrapper {
     background: #214e85 !important;
   }
 
   .vab-header {
     border-bottom: 1px solid var(--el-border-color-light) !important;
+
     .logo-container-horizontal {
       height: calc($base-header-height - 1px);
     }
+
     .vab-main .right-panel {
       [class*='ri-'],
       .username {
@@ -245,18 +266,22 @@ html > .vab-theme-technology {
       }
     }
   }
+
   .vab-tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
     color: var(--el-color-black);
     background: var(--el-border-color-light);
   }
+
   /* .vab-hey-message */
   [class*='vab-hey-message'] {
     border: 1px solid var(--el-border-color-light) !important;
   }
+
   /* svg */
   [fill='#fff'] {
     fill: var(--el-background-technology) !important;
   }
+
   [fill='#f2f2f2'],
   [fill='#d0d2d5'] {
     fill: var(--el-bg-color) !important;

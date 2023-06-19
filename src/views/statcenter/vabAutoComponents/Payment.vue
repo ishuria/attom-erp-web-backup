@@ -2,6 +2,7 @@
   import _ from 'lodash'
   import { onBeforeRouteLeave } from 'vue-router'
   import VabChart from '/@/plugins/VabChart/index.vue'
+
   const initOptions = ref({
     renderer: 'svg',
   })
@@ -113,6 +114,7 @@
     width: 100%;
     height: 220px;
   }
+
   .update-time {
     display: flex;
     align-items: center;

@@ -9,6 +9,7 @@ figure {
   margin: auto;
   animation: rotate 2.4s linear infinite;
 }
+
 .white {
   top: 0;
   right: 0;
@@ -18,6 +19,7 @@ figure {
   opacity: 0;
   animation: flash 2.4s linear infinite;
 }
+
 .dot {
   position: absolute;
   width: 1.8em;
@@ -26,6 +28,7 @@ figure {
   border-radius: 100%;
   transition: all 1s ease;
 }
+
 .dot:nth-child(2) {
   top: 0;
   bottom: 0;
@@ -33,6 +36,7 @@ figure {
   background: #f56c6c;
   animation: dotsY 2.4s linear infinite;
 }
+
 .dot:nth-child(3) {
   top: 0;
   right: 0;
@@ -40,6 +44,7 @@ figure {
   background: #e6a23c;
   animation: dotsX 2.4s linear infinite;
 }
+
 .dot:nth-child(4) {
   top: 0;
   right: 0;
@@ -47,6 +52,7 @@ figure {
   background: #67c23a;
   animation: dotsY 2.4s linear infinite;
 }
+
 .dot:nth-child(5) {
   right: 0;
   bottom: 0;
@@ -82,6 +88,7 @@ figure {
     width: 0;
   }
 }
+
 @keyframes dotsX {
   66% {
     height: 1.8em;

@@ -7,9 +7,9 @@
       type="success"
     />
     <el-popover
+      :width="295"
       popper-class="icon-selector-popper"
       trigger="hover"
-      :width="295"
     >
       <template #reference>
         <el-button>

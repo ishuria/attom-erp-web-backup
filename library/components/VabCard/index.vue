@@ -38,15 +38,15 @@
 </script>
 
 <template>
-  <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow">
+  <el-card :body-style="bodyStyle" :shadow="shadow" class="vab-card">
     <template v-if="$slots.header || header" #header>
       <slot name="header">{{ header }}</slot>
     </template>
     <el-skeleton
       v-if="skeleton"
-      animated
       :loading="skeletonShow"
       :rows="skeletonRows"
+      animated
     >
       <template #default>
         <slot class="vab-card-transition" />
@@ -61,9 +61,11 @@
     &-transition {
       transition: var(--el-transition);
     }
+
     :deep() {
       .el-card__header {
         font-weight: 500;
+
         [class*='ri-'] {
           vertical-align: -1px !important;
           background: linear-gradient(

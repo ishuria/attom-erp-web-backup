@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { getIconList } from '/@/api/icon'
+
   const emit = defineEmits(['handle-icon'])
   const state: any = reactive({
     icon: '24-hours-fill',

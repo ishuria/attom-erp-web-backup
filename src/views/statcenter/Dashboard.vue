@@ -37,10 +37,12 @@
     padding: 0 !important;
     background: var(--el-background-color) !important;
     border: 0 !important;
+
     :deep() {
       .payment {
         height: 400px;
       }
+
       .el-card__header {
         padding-top: 25px;
         padding-bottom: 0;
@@ -48,8 +50,10 @@
         font-weight: bolder;
         border-bottom: 0;
       }
+
       .el-card__body {
         padding-bottom: 25px;
+
         .line-one {
           display: inline-flex;
           align-items: center;
@@ -57,6 +61,7 @@
           font-weight: 700;
           line-height: 42px;
         }
+
         .extra-text {
           margin: 10px 0 10px 0;
         }

@@ -9,12 +9,12 @@
     />
     <el-alert
       :closable="false"
-      show-icon
       :title="`当前路由模式为：{ authentication:${authentication} }，是否开启角色权限控制功能：{ rolesControl:${rolesControl} }`"
+      show-icon
       type="success"
     />
 
-    <el-form label-position="top" label-width="140px" :model="form">
+    <el-form :model="form" label-position="top" label-width="140px">
       <el-form-item label="账号切换">
         <el-radio-group v-model="form.account" @change="handleChangeRole">
           <el-radio-button label="admin">admin</el-radio-button>
@@ -28,7 +28,7 @@
         </el-button>
       </el-form-item> -->
       <el-form-item label="当前账号">
-        <el-descriptions border :column="3" direction="vertical">
+        <el-descriptions :column="3" border direction="vertical">
           <el-descriptions-item>
             <template #label>角色</template>
             <el-tag>{{ JSON.stringify(role) }}</el-tag>
@@ -144,11 +144,11 @@
     <el-row :gutter="20">
       <el-col :span="24">
         <el-table
-          border
           :data="tableData"
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+          border
           default-expand-all
           row-key="path"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
           <el-table-column
             align="center"

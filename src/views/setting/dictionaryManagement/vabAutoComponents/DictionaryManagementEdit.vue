@@ -5,7 +5,7 @@
     width="500px"
     @close="close"
   >
-    <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
+    <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="父级key值" prop="parentKey">
         <el-input v-model="form.parentKey" disabled />
       </el-form-item>

@@ -1,5 +1,5 @@
 <template>
-  <el-row class="vab-query-form" :gutter="0">
+  <el-row :gutter="0" class="vab-query-form">
     <slot />
   </el-row>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <vab-card class="top-card" :class="'top-card-' + background" shadow="hover">
+  <vab-card :class="'top-card-' + background" class="top-card" shadow="hover">
     <span>{{ title }}</span>
     <p>
       <vab-count

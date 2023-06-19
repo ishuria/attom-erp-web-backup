@@ -1,5 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import _ from 'lodash'
+
   const countConfig1 = ref({
     startVal: 0,
     endVal: _.random(1000, 20000),
@@ -19,8 +20,8 @@
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <top-card
-          background="blue"
           :count-config="countConfig1"
+          background="blue"
           icon="money-cny-circle-line"
           percentage="10%"
           title="总销量"

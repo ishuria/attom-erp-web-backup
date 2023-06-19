@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { getImageUrl } from '/@/utils/imageUrl'
+
   const QR = getImageUrl('assets/qr_images/QR.png')
   const scan = ref('')
   const dialogVisible = ref(false)
@@ -28,8 +29,8 @@
 
     <el-dialog v-model="dialogVisible" title="扫码登录" width="350px">
       <div class="qr-box">
-        <img class="qr-image" :src="QR" />
-        <img class="scan-image" :src="scan" />
+        <img :src="QR" class="qr-image" />
+        <img :src="scan" class="scan-image" />
         <div class="wechat-title">
           打开微信扫一扫，快速登录/注册
           <p>其他登录方式</p>
@@ -57,6 +58,7 @@
         width: 210px;
         height: 210px;
       }
+
       .scan-image {
         position: absolute;
         top: 50%;
@@ -66,8 +68,10 @@
         height: 180px;
         transform: translate(-50%, -80%);
       }
+
       .wechat-title {
         text-align: center;
+
         p {
           height: 24px;
           margin-bottom: 8px;
@@ -77,9 +81,11 @@
           color: #999aaa;
         }
       }
+
       .qr-box-bottom {
         text-align: center;
         cursor: pointer;
+
         [class*='ri-'] {
           margin: 10px;
           font-size: 20px;

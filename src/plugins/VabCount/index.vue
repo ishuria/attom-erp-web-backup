@@ -6,6 +6,7 @@
     requestAnimationFrame,
     cancelAnimationFrame,
   } from './requestAnimationFrame'
+
   export default {
     name: 'VabCount',
     props: {

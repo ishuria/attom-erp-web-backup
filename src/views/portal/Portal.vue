@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { getImageUrl } from '/@/utils/imageUrl'
+
   const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
 
   const background = ref('')
@@ -77,7 +78,7 @@
         </ul>
       </div>
     </header>
-    <div class="carousel-background" :style="{ background: background }"></div>
+    <div :style="{ background: background }" class="carousel-background"></div>
     <main>
       <el-row :gutter="0">
         <el-col :span="6">
@@ -116,9 +117,9 @@
         </el-col>
         <el-col :span="18">
           <el-carousel
+            :interval="3000"
             arrow="always"
             height="420px"
-            :interval="3000"
             @change="handleChange"
           >
             <el-carousel-item
@@ -193,7 +194,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <div class="news-tit"><h2>今日要闻</h2></div>
-          <el-image class="news-img" :src="banner_1" />
+          <el-image :src="banner_1" class="news-img" />
         </el-col>
         <el-col :span="16">
           <div class="news-tit"><h2>动态资讯</h2></div>
@@ -226,6 +227,7 @@
 <style lang="scss" scoped>
   .portal-main {
     margin-top: -15px;
+
     header {
       position: relative;
       z-index: 999;
@@ -238,9 +240,11 @@
         max-width: 1366px;
         margin: 0 auto;
       }
+
       .logo {
         float: left;
         margin: 0 20px;
+
         a {
           display: block;
           width: 140px;
@@ -249,6 +253,7 @@
           transition: background-color 0.2s;
         }
       }
+
       .nav-item {
         li {
           float: left;
@@ -277,12 +282,14 @@
       filter: blur(100px);
       opacity: 0.5;
     }
+
     main {
       width: 1152px;
       padding: 32px 0 0 0;
       margin-right: auto;
       margin-left: auto;
       border-top: 1px solid #f3f5f6;
+
       .left-tab {
         width: 100%;
         height: 420px;
@@ -310,6 +317,7 @@
         background: url('/@/assets/portal_images/carousel_2.jpg');
         background-size: cover;
       }
+
       .el-carousel__item:nth-of-type(3) {
         background: url('/@/assets/portal_images/carousel_3.jpg');
         background-size: cover;
@@ -333,6 +341,7 @@
 
         h1 {
           margin-top: -10px;
+
           .clip {
             font-size: 32px;
             line-height: 0;
@@ -341,14 +350,17 @@
             -webkit-text-fill-color: transparent;
           }
         }
+
         .text {
           margin-top: -10px;
           font-size: 24px;
           font-weight: bold;
         }
+
         .show-box {
           padding-top: 25px;
           padding-left: 20px;
+
           .system-class-icon {
             float: left;
             width: 50px;
@@ -357,10 +369,12 @@
             color: #fff;
             text-align: center;
             border-radius: 100%;
+
             [class*='ri'] {
               font-size: 24px;
             }
           }
+
           .describe {
             float: left;
             margin-top: 15px;
@@ -374,6 +388,7 @@
           }
         }
       }
+
       .news-tit {
         position: relative;
         width: 100%;
@@ -403,12 +418,14 @@
           &-table {
             padding: 0px;
           }
+
           &-day {
             height: 42px;
             line-height: 42px;
             text-align: center;
           }
         }
+
         .el-table {
           border-radius: 15px;
         }

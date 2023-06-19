@@ -179,10 +179,10 @@
     />
     <el-tabs
       v-model="tabActive"
-      class="vab-tabs-content"
       :class="{
         ['vab-tabs-content-' + theme.tabsBarStyle]: true,
       }"
+      class="vab-tabs-content"
       type="card"
       @tab-click="handleTabClick"
       @tab-remove="handleTabRemove"
@@ -221,7 +221,7 @@
       @command="handleCommand"
       @visible-change="handleVisibleChange"
     >
-      <span class="vab-tabs-more" :class="{ 'vab-tabs-more-active': active }">
+      <span :class="{ 'vab-tabs-more-active': active }" class="vab-tabs-more">
         <span class="vab-tabs-more-icon">
           <i class="box box-t"></i>
           <i class="box box-b"></i>
@@ -258,31 +258,31 @@
     </el-dropdown>
     <ul
       v-if="visible"
-      class="contextmenu el-dropdown-menu el-dropdown-menu--small"
       :style="{ left: left + 'px', top: top + 'px' }"
+      class="contextmenu el-dropdown-menu el-dropdown-menu--small"
     >
       <li
-        class="el-dropdown-menu__item"
         :class="{ 'is-disabled': visitedRoutes.length === 1 }"
+        class="el-dropdown-menu__item"
         @click="closeOthersTabs"
       >
         <vab-icon icon="close-line" />
         <span>{{ translateTitle('关闭其他') }}</span>
       </li>
       <li
-        class="el-dropdown-menu__item"
         :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
+        class="el-dropdown-menu__item"
         @click="closeLeftTabs"
       >
         <vab-icon icon="arrow-left-line" />
         <span>{{ translateTitle('关闭左侧') }}</span>
       </li>
       <li
-        class="el-dropdown-menu__item"
         :class="{
           'is-disabled':
             visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
         }"
+        class="el-dropdown-menu__item"
         @click="closeRightTabs"
       >
         <vab-icon icon="arrow-right-line" />
@@ -299,6 +299,7 @@
 <style lang="scss">
   .vab-tabs-more-dropdown {
     width: 115px;
+
     &[data-popper-placement='bottom-end'] {
       .el-popper__arrow {
         left: 95px !important;

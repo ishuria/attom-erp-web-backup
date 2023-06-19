@@ -19,11 +19,11 @@
         </vab-query-form>
         <el-form
           ref="formRef"
-          class="demo-form"
           :label-position="labelPosition"
-          label-width="100px"
           :model="form"
           :rules="rules"
+          class="demo-form"
+          label-width="100px"
         >
           <el-form-item label="活动名称" prop="name">
             <el-input v-model="form.name" />
@@ -67,10 +67,10 @@
           <el-form-item label="行政区划">
             <el-cascader
               v-model="form.area"
-              clearable
-              filterable
               :options="areaOptions"
               :props="{ label: 'name', value: 'code' }"
+              clearable
+              filterable
             />
           </el-form-item>
           <el-form-item label="穿梭框">

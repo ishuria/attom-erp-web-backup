@@ -30,17 +30,17 @@
 
 <template>
   <div
-    class="vab-layout-horizontal"
     :class="{
       fixed: fixedHeader,
       'no-tabs-bar': !showTabs,
     }"
+    class="vab-layout-horizontal"
   >
     <div
-      class="vab-layout-header"
       :class="{
         'fixed-header': fixedHeader,
       }"
+      class="vab-layout-header"
     >
       <vab-header layout="horizontal" />
       <div

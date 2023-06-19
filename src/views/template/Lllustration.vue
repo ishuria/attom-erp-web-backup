@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import clip from '/@/utils/clipboard'
+
   const lllustrationsArray: string[] = []
 
   const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
@@ -23,7 +24,7 @@
     <el-row :gutter="15">
       <el-col>
         <vab-card shadow="hover">
-          <el-form class="demo-form-inline" :inline="true">
+          <el-form :inline="true" class="demo-form-inline">
             <el-form-item label="换肤">
               <vab-color-picker />
             </el-form-item>
@@ -40,7 +41,7 @@
         :xs="12"
       >
         <vab-card shadow="hover" @click="handleCopyIcon(item)">
-          <vab-icon class="vab-lllustration" :icon="item" is-custom-svg />
+          <vab-icon :icon="item" class="vab-lllustration" is-custom-svg />
         </vab-card>
       </el-col>
     </el-row>
@@ -52,11 +53,13 @@
     padding: 0 !important;
     background: var(--el-background-color) !important;
     border: 0 !important;
+
     .vab-lllustration {
       width: 100%;
       height: 100%;
       cursor: pointer;
     }
+
     :deep() {
       .el-form-item {
         margin-bottom: 0px;

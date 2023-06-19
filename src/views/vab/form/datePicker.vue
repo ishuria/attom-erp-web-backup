@@ -8,8 +8,8 @@
       <el-date-picker
         v-model="value2"
         :disabled-date="disabledDate"
-        placeholder="选择日期"
         :shortcuts="shortcuts"
+        placeholder="选择日期"
         type="date"
       />
     </vab-card>

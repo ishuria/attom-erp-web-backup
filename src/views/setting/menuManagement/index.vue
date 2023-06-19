@@ -6,8 +6,8 @@
           <el-tree
             :data="data"
             :default-expanded-keys="['root']"
-            node-key="id"
             :props="defaultProps"
+            node-key="id"
             @node-click="handleNodeClick"
           />
         </vab-card>
@@ -23,11 +23,11 @@
           </vab-query-form>
           <el-table
             v-loading="listLoading"
-            border
             :data="list"
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+            border
             default-expand-all
             row-key="path"
-            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
             <el-table-column
               label="标题"

@@ -10,7 +10,7 @@
         </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
-        <el-form inline :model="queryForm" @submit.prevent>
+        <el-form :model="queryForm" inline @submit.prevent>
           <el-form-item>
             <el-input
               v-model.trim="queryForm.username"
@@ -29,8 +29,8 @@
 
     <el-table
       v-loading="listLoading"
-      border
       :data="list"
+      border
       @selection-change="setSelectRows"
     >
       <el-table-column align="center" show-overflow-tooltip type="selection" />
@@ -92,11 +92,11 @@
       </template>
     </el-table>
     <el-pagination
-      background
       :current-page="queryForm.pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
+      background
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />

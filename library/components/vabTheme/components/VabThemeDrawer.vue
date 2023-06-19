@@ -76,14 +76,14 @@
 <template>
   <el-drawer
     v-model="state.drawerVisible"
+    :title="translateTitle('主题配置')"
     append-to-body
     class="vab-drawer"
     direction="rtl"
     size="285px"
-    :title="translateTitle('主题配置')"
   >
     <el-scrollbar height="85vh">
-      <el-form ref="form" label-position="left" :model="theme">
+      <el-form ref="form" :model="theme" label-position="left">
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
           <template #label>
             {{ translateTitle('布局') }}
@@ -103,8 +103,8 @@
           </template>
           <el-radio-group
             v-model="theme.layout"
-            class="vab-shop-layout"
             :disabled="device === 'mobile'"
+            class="vab-shop-layout"
           >
             <el-radio-button label="column">
               <template #default>
@@ -276,6 +276,7 @@
 
 <style lang="scss">
   @use 'sass:math';
+
   .vab-drawer {
     .el-drawer__header {
       padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
@@ -300,6 +301,7 @@
 
           &__label {
             flex: 1 1;
+
             i {
               cursor: pointer;
             }
@@ -316,6 +318,7 @@
 
           &.vab-shop-item1 {
             display: block !important;
+
             .el-form-item__content {
               .vab-shop-layout {
                 .el-radio-button {
@@ -358,6 +361,7 @@
                     margin: 0;
                     border: 0;
                     box-shadow: none;
+
                     .vab-icon {
                       width: 60px;
                       height: 60px;

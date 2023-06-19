@@ -1,5 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import pkg from '~/package.json'
+
   const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
   const { dependencies, devDependencies, version } = pkg
 </script>
@@ -85,6 +86,7 @@
       text-align: left;
       border-radius: var(--el-border-radius-base);
     }
+
     .table {
       width: 100%;
       color: var(--el-color-black);
@@ -111,6 +113,7 @@
           font-weight: bold;
           color: var(--el-color-grey);
           background-color: var(--el-color-white);
+
           span {
             margin-left: 10px;
             font-weight: normal;

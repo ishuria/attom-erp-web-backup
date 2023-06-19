@@ -4,7 +4,7 @@
       <template #header>
         <span>基础用法</span>
       </template>
-      <el-input-number v-model="num" label="描述文字" :max="10" :min="1" />
+      <el-input-number v-model="num" :max="10" :min="1" label="描述文字" />
     </vab-card>
     <vab-card shadow="hover">
       <template #header>
@@ -30,9 +30,9 @@
       </template>
       <el-input-number
         v-model="num5"
-        controls-position="right"
         :max="10"
         :min="1"
+        controls-position="right"
       />
     </vab-card>
   </div>

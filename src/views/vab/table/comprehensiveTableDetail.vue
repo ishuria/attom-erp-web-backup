@@ -7,7 +7,7 @@
       title="详情页菜单高亮，并缓存详情页，返回上一页再次打开可看到效果，dynamicNewTab可配置详情页只打开一个tab页还是可以根据参数不同无限打开多个，当前展示的是可以打开多个"
       type="success"
     />
-    <el-form inline :model="form">
+    <el-form :model="form" inline>
       <el-form-item label="输入框缓存">
         <el-input v-model="form.text" />
       </el-form-item>
@@ -22,7 +22,7 @@
       </el-form-item>
     </el-form>
 
-    <el-descriptions border :column="3" title="详情">
+    <el-descriptions :column="3" border title="详情">
       <template #extra>
         <el-button size="small" type="primary">操作</el-button>
       </template>

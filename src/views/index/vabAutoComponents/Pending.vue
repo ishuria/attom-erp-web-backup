@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   const colorFrom1 = ref('rgba(240,2,20,0.098)')
   const colorTo1 = ref('var(--el-color-white)')
   const colorFrom2 = ref('var(--el-color-primary-light-9)')
@@ -18,11 +18,11 @@
     <template #header>
       <vab-icon icon="ball-pen-line" />
       待处理
-      <el-badge class="item" :value="6" />
+      <el-badge :value="6" class="item" />
     </template>
     <el-row :gutter="20">
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <vab-colorful-card shadow="never" :style="style1">
+        <vab-colorful-card :style="style1" shadow="never">
           <div class="parting-line parting-line-danger"></div>
           <span class="pending-title pending-title-danger">
             订单预警
@@ -33,7 +33,7 @@
         </vab-colorful-card>
       </el-col>
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <vab-colorful-card shadow="never" :style="style2">
+        <vab-colorful-card :style="style2" shadow="never">
           <div class="parting-line parting-line-primary"></div>
           <span class="pending-title pending-title-primary">
             售后工单
@@ -57,6 +57,7 @@
       .el-tag {
         margin-right: 5px;
       }
+
       .parting-line {
         float: left;
         width: 10px;
@@ -78,6 +79,7 @@
         font-size: 16px;
         font-weight: bold;
         line-height: 28px;
+
         span {
           font-size: var(--el-font-size-small);
           font-weight: normal;

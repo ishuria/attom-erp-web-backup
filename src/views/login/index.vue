@@ -1,8 +1,8 @@
 <template>
   <div class="login-container">
     <div class="login-form">
-      <img class="left-img" :src="leftImg" />
-      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
+      <img :src="leftImg" class="left-img" />
+      <el-form ref="formRef" :model="form" :rules="rules" label-position="left">
         <div class="title">hello !</div>
         <div class="title-tips">
           {{ translateTitle('欢迎来到') }}{{ title }}！
@@ -26,8 +26,8 @@
             ref="passwordRef"
             v-model.trim="form.password"
             :placeholder="translateTitle('请输入密码')"
-            tabindex="2"
             :type="passwordType"
+            tabindex="2"
             @keyup.enter="handleLogin"
           >
             <template #prefix>
@@ -47,7 +47,7 @@
               <vab-icon icon="barcode-box-line" />
             </template>
           </el-input>
-          <el-image class="code" :src="codeUrl" @click="changeCode" />
+          <el-image :src="codeUrl" class="code" @click="changeCode" />
         </el-form-item>
         <el-button class="login-btn" type="primary" @click="handleLogin">
           {{ translateTitle('登录') }}
@@ -131,9 +131,9 @@
           ],
           /* verificationCode: [
 {
-  required: true,
-  trigger: 'blur',
-  message: '验证码不能空',
+required: true,
+trigger: 'blur',
+message: '验证码不能空',
 },
 ], */
         },
@@ -225,9 +225,11 @@
     .login-form {
       width: 85vw !important;
       margin: auto !important;
+
       .left-img {
         display: none !important;
       }
+
       :deep() {
         .el-form--default {
           width: 94% !important;
@@ -235,6 +237,7 @@
       }
     }
   }
+
   .login-form {
     position: absolute;
     top: 0;
@@ -254,12 +257,14 @@
       float: left;
       width: 50%;
     }
+
     :deep() {
       .el-form--default {
         float: left;
         width: 44%;
         margin-left: 5.8%;
       }
+
       .title {
         font-size: 54px;
         font-weight: 500;

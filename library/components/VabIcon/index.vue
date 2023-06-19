@@ -1,6 +1,6 @@
 <template>
-  <img v-if="isExternal" class="img-icon" :src="icon" />
-  <svg v-else-if="isCustomSvg" aria-hidden="true" :class="svgClass">
+  <img v-if="isExternal" :src="icon" class="img-icon" />
+  <svg v-else-if="isCustomSvg" :class="svgClass" aria-hidden="true">
     <use :xlink:href="'#vab-icon-' + icon" />
   </svg>
   <!-- 内置svg雪碧图较大，对性能要求苛刻的用户请勿使用isDefaultSvg属性 -->
@@ -9,10 +9,10 @@
   </svg>
   <i
     v-else
-    aria-hidden="true"
     :class="{
       ['ri-' + icon]: true,
     }"
+    aria-hidden="true"
   />
 </template>
 

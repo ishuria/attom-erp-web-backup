@@ -200,14 +200,18 @@
     padding: 0 !important;
     background: var(--el-background-color) !important;
     border: 0 !important;
+
     :deep(.el-card__body) {
       position: relative;
       min-height: calc($base-keep-alive-height - 20px);
     }
+
     .vab-chat-main {
       height: calc($base-keep-alive-height - 230px);
+
       ul {
         padding: 5px 25px 15px 5px;
+
         li {
           position: relative;
           min-height: 68px;
@@ -230,6 +234,7 @@
           vertical-align: top;
           background-color: $background-color_1;
           border-radius: 5px;
+
           &:after {
             position: absolute;
             top: 13px;
@@ -242,25 +247,30 @@
             border-style: solid dashed dashed;
             border-width: 10px;
           }
+
           a {
             color: $color_3;
           }
+
           img {
             max-width: 100%;
             vertical-align: middle;
           }
         }
+
         .vab-chat-user {
           position: absolute;
           left: 3px;
           display: inline-block;
           font-size: 14px;
           vertical-align: top;
+
           img {
             width: 40px;
             height: 40px;
             border-radius: 100%;
           }
+
           cite {
             position: absolute;
             top: -5px;
@@ -272,39 +282,47 @@
             color: $color_1;
             text-align: left;
             white-space: nowrap;
+
             i {
               padding-left: 5px;
               font-style: normal;
             }
           }
         }
+
         .vab-chat-mine {
           padding-right: 60px;
           padding-left: 0;
           text-align: right;
+
           .vab-chat-user {
             right: 3px;
             left: auto;
+
             cite {
               right: 60px;
               left: auto;
               text-align: right;
+
               i {
                 padding-right: 5px;
                 padding-left: 0;
               }
             }
           }
+
           .vab-chat-text {
             margin-left: 0;
             color: $color_4;
             text-align: left;
             background-color: $background-color_3;
+
             &:after {
               right: -10px;
               left: auto;
               border-top-color: $border-top-color_1;
             }
+
             a {
               color: $color_4;
             }
@@ -323,6 +341,7 @@
       :deep(textarea) {
         height: 110px;
       }
+
       .vab-chat-send {
         position: absolute;
         right: 40px;

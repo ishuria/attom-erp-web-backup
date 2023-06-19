@@ -5,19 +5,19 @@
     width="500px"
     @close="close"
   >
-    <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
+    <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="父节点" prop="parentName">
         <el-select v-model="form.parentId" placeholder="请选择父节点">
           <el-option
             :label="form.parentName"
-            style="height: auto; padding: 0"
             :value="form.parentId"
+            style="height: auto; padding: 0"
           >
             <el-tree
               ref="treeRef"
               :data="treeData"
-              default-expand-all
               :props="defaultProps"
+              default-expand-all
               @node-click="handleNodeClick"
             />
           </el-option>

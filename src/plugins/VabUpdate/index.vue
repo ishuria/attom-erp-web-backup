@@ -27,7 +27,7 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { version } from '../../../package.json'
   import { useRegisterSW } from 'virtual:pwa-register/vue'
   import { useSettingsStore } from '/@/store/modules/settings'

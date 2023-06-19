@@ -5,7 +5,6 @@
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
     "skipLibCheck": true,
-
     /* Bundler mode */
     "allowJs": true,
     "moduleResolution": "Node",
@@ -17,17 +16,14 @@
     "noEmit": true,
     "jsx": "preserve",
     "sourceMap": true,
-
     /* Linting */
     "strict": true,
-
     "paths": {
       "~/*": ["./*"],
       "/@/*": ["./src/*"],
       "/#/*": ["./types/*"],
       "/@vab/*": ["./library/*"]
     },
-
     "types": ["element-plus/global", "vite/client"]
   },
   "include": [

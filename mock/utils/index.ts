@@ -1,4 +1,5 @@
 import mockjs from 'mockjs'
+
 export const { mock, Random } = mockjs
 
 /**

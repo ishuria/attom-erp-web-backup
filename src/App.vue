@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   onMounted(() => {
     if (
       location.hostname === 'vue-admin-beautiful.com' ||
@@ -15,6 +15,7 @@
               ['call']()
           }, 50)
         }
+
         try {
           block()
         } catch (err) {

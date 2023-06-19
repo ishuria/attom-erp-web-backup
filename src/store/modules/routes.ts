@@ -95,6 +95,7 @@ export const useRoutesStore = defineStore('routes', {
           return route
         })
       }
+
       this.routes = handleRoutes(this.routes)
     },
     /**

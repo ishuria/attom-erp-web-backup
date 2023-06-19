@@ -4,8 +4,8 @@
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card shadow="hover">
           <el-button
-            class="tree-button"
             :icon="Plus"
+            class="tree-button"
             type="primary"
             @click="handleEdit()"
           >
@@ -15,11 +15,11 @@
           <el-tree
             ref="treeRef"
             :data="data"
-            default-expand-all
             :default-expanded-keys="['root']"
             :filter-node-method="filterNode"
-            node-key="id"
             :props="defaultProps"
+            default-expand-all
+            node-key="id"
             @node-click="handleNodeClick"
           >
             <template #default="{ node, data }">
@@ -49,7 +49,7 @@
               </el-button>
             </vab-query-form-top-panel>
           </vab-query-form>
-          <el-table v-loading="listLoading" border :data="list">
+          <el-table v-loading="listLoading" :data="list" border>
             <el-table-column label="id" prop="id" show-overflow-tooltip />
             <el-table-column label="key值" prop="key" show-overflow-tooltip />
             <el-table-column
@@ -82,6 +82,7 @@
   import { getList } from '/@/api/dictionaryManagement'
   import { doDelete, getTree } from '/@/api/dictionaryManagement'
   import { Plus } from '@element-plus/icons-vue'
+
   export default defineComponent({
     name: 'DictionaryManagement',
     setup() {

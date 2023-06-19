@@ -65,6 +65,7 @@
         width: 100%;
         height: 300px;
         overflow: hidden;
+
         .error-svg-500 {
           position: absolute;
           top: 0;
@@ -86,6 +87,7 @@
           margin-left: 0 !important;
         }
       }
+
       .bullshit {
         position: relative;
         float: left;

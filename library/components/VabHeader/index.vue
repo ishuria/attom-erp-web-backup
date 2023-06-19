@@ -24,9 +24,9 @@
           <div class="right-panel">
             <el-menu
               v-if="'horizontal' === layout"
+              :default-active="activeMenu.data"
               active-text-color="var(--el-menu-color-text)"
               background-color="var(--el-menu-background-color)"
-              :default-active="activeMenu.data"
               menu-trigger="hover"
               mode="horizontal"
               style="width: 800px"
@@ -118,9 +118,11 @@
 
           .el-menu {
             border: 0 !important;
+
             * {
               border: 0 !important;
             }
+
             &.el-menu--horizontal {
               display: flex;
               align-items: center;
@@ -224,6 +226,7 @@
 
           .vab-search-autocomplete {
             margin-left: 20px;
+
             .el-input__wrapper {
               background-color: transparent;
               border-radius: 15px;

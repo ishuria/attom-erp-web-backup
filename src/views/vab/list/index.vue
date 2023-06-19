@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <vab-query-form>
         <vab-query-form-top-panel :span="24">
-          <el-form inline :model="queryForm" @submit.prevent>
+          <el-form :model="queryForm" inline @submit.prevent>
             <el-form-item>
               <el-input
                 v-model.trim="queryForm.title"
@@ -52,11 +52,11 @@
       </el-col>
       <el-col :span="24">
         <el-pagination
-          background
           :current-page="queryForm.pageNo"
           :layout="layout"
           :page-size="queryForm.pageSize"
           :total="total"
+          background
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />

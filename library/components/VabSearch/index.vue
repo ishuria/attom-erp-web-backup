@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   defineOptions({
     name: 'VabSearch',
   })
@@ -84,10 +84,10 @@
   <el-autocomplete
     v-if="theme.showSearch"
     v-model="state"
-    class="vab-search-autocomplete"
-    clearable
     :fetch-suggestions="querySearchAsync"
     :prefix-icon="Search"
+    class="vab-search-autocomplete"
+    clearable
     @select="handleSelect"
   >
     <template #default="{ item }">
@@ -102,9 +102,11 @@
 <style lang="scss">
   .vab-search-autocomplete {
     margin-right: 20px;
+
     .el-input {
       width: 150px !important;
     }
+
     &-sub-menu {
       color: var(--el-color-grey);
     }

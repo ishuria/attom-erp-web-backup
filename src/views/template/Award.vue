@@ -3,6 +3,7 @@
   import { VabAwardWheel } from '/@/plugins/VabAward'
 
   import { getImageUrl } from '/@/utils/imageUrl'
+
   const blockImg = getImageUrl('assets/award_images/block.png')
   const buttonImg = getImageUrl('assets/award_images/button.png')
   const award_1 = getImageUrl('assets/award_images/award_1.png')
@@ -135,8 +136,8 @@
       ref="awardWheelRef"
       :blocks="blocks"
       :buttons="buttons"
-      height="300px"
       :prizes="prizes"
+      height="300px"
       width="300px"
       @end="endCallback"
       @start="startCallback"

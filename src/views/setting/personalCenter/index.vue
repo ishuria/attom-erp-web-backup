@@ -61,7 +61,7 @@
           <el-tabs v-model="activeName">
             <el-tab-pane label="基本信息" name="first">
               <el-col :lg="12" :md="16" :sm="24" :xl="12" :xs="24">
-                <el-form label-width="80px" :model="form">
+                <el-form :model="form" label-width="80px">
                   <el-form-item label="姓名">
                     <el-input v-model="form.fullName" />
                   </el-form-item>
@@ -70,9 +70,9 @@
                   </el-form-item>
                   <el-form-item label="性别">
                     <el-select v-model="form.sex" style="width: 100%">
-                      <el-option label="保密" :value="0" />
-                      <el-option label="男" :value="1" />
-                      <el-option label="女" :value="2" />
+                      <el-option :value="0" label="保密" />
+                      <el-option :value="1" label="男" />
+                      <el-option :value="2" label="女" />
                     </el-select>
                   </el-form-item>
                   <el-form-item label="个人简介">
@@ -85,8 +85,8 @@
                     <el-tag
                       v-for="tag in dynamicTags"
                       :key="tag"
-                      closable
                       :disable-transitions="false"
+                      closable
                       style="
                         margin-right: 10px;
                         margin-bottom: 10px;

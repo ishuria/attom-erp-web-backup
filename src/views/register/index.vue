@@ -1,16 +1,16 @@
 <template>
   <div class="register-container">
     <div class="register-form">
-      <img class="left-img" :src="leftImg" />
-      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
+      <img :src="leftImg" class="left-img" />
+      <el-form ref="formRef" :model="form" :rules="rules" label-position="left">
         <div class="title">hello !</div>
         <div class="title-tips">{{ translateTitle('账号注册') }}</div>
         <el-form-item prop="username">
           <el-input
             v-model.trim="form.username"
             v-focus
-            auto-complete="off"
             :placeholder="translateTitle('请输入用户名')"
+            auto-complete="off"
             type="text"
           >
             <template #prefix>
@@ -21,8 +21,8 @@
         <el-form-item prop="phone">
           <el-input
             v-model.trim="form.phone"
-            maxlength="11"
             :placeholder="translateTitle('请输入手机号')"
+            maxlength="11"
             show-word-limit
             type="text"
           >
@@ -42,8 +42,8 @@
             </template>
           </el-input>
           <el-button
-            class="phone-code"
             :disabled="isGetPhone"
+            class="phone-code"
             type="primary"
             @click="getPhoneCode"
           >
@@ -53,8 +53,8 @@
         <el-form-item prop="password">
           <el-input
             v-model.trim="form.password"
-            autocomplete="new-password"
             :placeholder="translateTitle('请输入密码')"
+            autocomplete="new-password"
             type="password"
           >
             <template #prefix>
@@ -244,9 +244,11 @@
       .register-form {
         width: 85vw !important;
         margin: auto !important;
+
         .left-img {
           display: none !important;
         }
+
         :deep() {
           .el-form--default {
             width: 94% !important;
@@ -281,6 +283,7 @@
           width: 44%;
           margin-left: 5.8%;
         }
+
         .title {
           font-size: 54px;
           font-weight: 500;
@@ -394,6 +397,7 @@
           cursor: pointer;
           border-radius: var(--el-border-radius-base);
         }
+
         .phone-code {
           position: absolute;
           top: 8px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-shop-vite-box" :class="{ mobile }">
+  <div :class="{ mobile }" class="vue-shop-vite-box">
     <component
       :is="'vab-layout-' + theme.layout"
       :collapse="collapse"
@@ -84,6 +84,7 @@
       :deep() {
         .vab-layout-header {
           border-bottom: 1px solid var(--el-border-color-light);
+
           &.is-no-tabs {
             border-bottom: 0;
           }

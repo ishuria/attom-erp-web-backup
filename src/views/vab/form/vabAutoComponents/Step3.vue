@@ -6,10 +6,10 @@
     </div>
     <el-form
       ref="formRef"
-      class="pay-bottom"
-      label-width="100px"
       :model="form"
       :rules="rules"
+      class="pay-bottom"
+      label-width="100px"
     >
       <el-form-item label="付款账户">
         {{ infoData.payAccount }}

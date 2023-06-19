@@ -71,7 +71,7 @@
       >
         <vab-link :to="item.link">
           <vab-card class="icon-panel" shadow="never">
-            <el-badge class="item" :value="item.value">
+            <el-badge :value="item.value" class="item">
               <vab-icon :icon="item.icon" />
             </el-badge>
             <div class="icon-panel-title">
@@ -120,6 +120,7 @@
           padding-top: 10px;
           margin-left: 10px;
           vertical-align: -10px;
+
           .icon-panel-tips {
             margin-top: 5px;
             font-size: var(--el-font-size-small);
