@@ -32,13 +32,13 @@
   const treeRef = ref<InstanceType<typeof ElTree>>()
 
   const getCheckedNodes = () => {
-    console.log(treeRef.value!.getCheckedNodes(false, false))
+    console.log(treeRef.value?.getCheckedNodes(false, false))
   }
   const getCheckedKeys = () => {
-    console.log(treeRef.value!.getCheckedKeys(false))
+    console.log(treeRef.value?.getCheckedKeys(false))
   }
   const setCheckedNodes = () => {
-    treeRef.value!.setCheckedNodes(
+    treeRef.value?.setCheckedNodes(
       [
         {
           id: 5,
@@ -53,10 +53,10 @@
     )
   }
   const setCheckedKeys = () => {
-    treeRef.value!.setCheckedKeys([3], false)
+    treeRef.value?.setCheckedKeys([3], false)
   }
   const resetChecked = () => {
-    treeRef.value!.setCheckedKeys([], false)
+    treeRef.value?.setCheckedKeys([], false)
   }
 
   const defaultProps = {
