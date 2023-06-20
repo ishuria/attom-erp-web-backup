@@ -99,6 +99,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'chat-3-line',
         },
       },
+      {
+        path: 'speechSynthesis',
+        name: 'SpeechSynthesis',
+        component: () => import('/@/views/chatGPT/SpeechSynthesis.vue'),
+        meta: {
+          title: '语音合成',
+          icon: 'customer-service-line',
+        },
+      },
     ],
   },
   {
