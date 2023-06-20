@@ -109,7 +109,8 @@ html > .vab-theme-technology {
     background: var(--el-color-white) !important;
   }
 
-  [class*='-container'] {
+  [class*='-container'],
+  .no-background-container {
     background: var(--el-color-white) !important;
   }
 
