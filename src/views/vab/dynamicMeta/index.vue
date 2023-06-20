@@ -70,7 +70,6 @@
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useRoutesStore } from '/@/store/modules/routes'
   import getPageTitle from '/@/utils/pageTitle'
-  import VabIconSelector from '/@/plugins/VabIconSelector/index.vue'
 
   export default defineComponent({
     name: 'DynamicMeta',

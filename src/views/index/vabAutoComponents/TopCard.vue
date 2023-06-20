@@ -26,13 +26,9 @@
 
 <script>
   import _ from 'lodash'
-  import VabCount from '/@/plugins/VabCount/index.vue'
 
   export default defineComponent({
     name: 'TopCard',
-    components: {
-      VabCount,
-    },
     props: {
       background: {
         type: String,

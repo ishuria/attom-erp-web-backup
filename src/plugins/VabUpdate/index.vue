@@ -28,6 +28,9 @@
 </template>
 
 <script lang="ts" setup>
+  defineOptions({
+    name: 'VabUpdate',
+  })
   import { version } from '../../../package.json'
   import { useRegisterSW } from 'virtual:pwa-register/vue'
   import { useSettingsStore } from '/@/store/modules/settings'

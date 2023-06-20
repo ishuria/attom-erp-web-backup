@@ -1,7 +1,6 @@
 <script lang="ts" setup>
   import _ from 'lodash'
   import { onBeforeRouteLeave } from 'vue-router'
-  import VabChart from '/@/plugins/VabChart/index.vue'
 
   const initOptions = ref({
     renderer: 'svg',

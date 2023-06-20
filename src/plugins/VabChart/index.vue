@@ -12,6 +12,7 @@
   const REWATCH_TRIGGERS = ['manualUpdate', 'watchShallow']
 
   export default defineComponent({
+    name: 'VabChart',
     props: {
       option: {
         type: Object,

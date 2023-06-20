@@ -14,13 +14,9 @@
 </template>
 
 <script>
-  import VabChart from '/@/plugins/VabChart/index.vue'
-
   export default defineComponent({
     name: 'VabChartGauge',
-    components: {
-      VabChart,
-    },
+
     props: {
       title: {
         type: String,

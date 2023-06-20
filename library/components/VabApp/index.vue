@@ -2,10 +2,6 @@
   import { pwa } from '/@/config'
   import i18n from '/@/i18n'
 
-  const VabUpdate = defineAsyncComponent(() =>
-    import('/@/plugins/VabUpdate/index.vue')
-  )
-
   const locale = toRef(i18n.global, 'locale')
   const messages = toRef(i18n.global, 'messages')
 </script>

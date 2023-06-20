@@ -269,6 +269,26 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'count',
+        name: 'Count',
+        component: () => import('/@/views/vab/count/index.vue'),
+        meta: {
+          title: '数字自增长',
+          guard: ['Admin'],
+          icon: 'number-0',
+        },
+      },
+      {
+        path: 'tabs',
+        name: 'Tabs',
+        component: () => import('/@/views/vab/tabs/index.vue'),
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+        },
+      },
+      {
         path: 'statistic',
         name: 'Statistic',
         component: () => import('/@/views/vab/statistic/index.vue'),
