@@ -28,7 +28,7 @@
   }
 
   watch(filterText, (val) => {
-    treeRef.value!.filter(val)
+    treeRef.value?.filter(val)
   })
 
   const filterNode = (value: string, data: Tree) => {
