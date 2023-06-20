@@ -390,6 +390,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             component: () =>
               import('/@/views/vab/table/comprehensiveTableDetail.vue'),
             meta: {
+              hidden: true,
               title: '详情页',
               activeMenu: '/vab/table/comprehensiveTable',
               dynamicNewTab: true, //详情页根据id传参不同可打开多个

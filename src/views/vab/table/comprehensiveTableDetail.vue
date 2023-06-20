@@ -55,7 +55,6 @@
         江苏省苏州市吴中区吴中大道 1188 号
       </el-descriptions-item>
     </el-descriptions>
-    {{ route }}
   </div>
 </template>
 
