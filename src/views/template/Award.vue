@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import _ from 'lodash'
   import { getImageUrl } from '/@/utils/imageUrl'
-
+  import { VabAwardWheel } from '/@/plugins/VabAward'
   const blockImg = getImageUrl('assets/award_images/block.png')
   const buttonImg = getImageUrl('assets/award_images/button.png')
   const award_1 = getImageUrl('assets/award_images/award_1.png')
