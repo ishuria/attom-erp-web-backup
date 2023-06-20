@@ -25,7 +25,8 @@ html.dark {
   --w-e-modal-button-bg-color: #1d1e1f;
   --w-e-modal-button-border-color: #1d1e1f;
 
-  body {
+  body,
+  body[class*='vab-theme-'] {
     color: #cfd3dc !important;
     background-color: var(--el-color-white) !important;
 

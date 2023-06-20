@@ -1,4 +1,4 @@
-html > .vab-theme-technology {
+html > body.vab-theme-technology {
   --el-dialog-bg-color: #040d32;
   --el-color-black: #cfd3dc;
   --el-color-white: #040d32;
@@ -109,7 +109,7 @@ html > .vab-theme-technology {
     background: var(--el-color-white) !important;
   }
 
-  [class*='-container'],
+  section > div[class*='-container'],
   .no-background-container {
     background: var(--el-color-white) !important;
   }
