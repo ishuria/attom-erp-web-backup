@@ -129,7 +129,7 @@
               @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')"
             />
             <el-carousel-item
-              @click="openWindow('https://vue-admin-beautiful.com/shop-pro>')"
+              @click="openWindow('https://vue-admin-beautiful.com/admin-pro')"
             />
           </el-carousel>
         </el-col>
