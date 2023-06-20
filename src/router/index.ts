@@ -276,6 +276,18 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '统计',
           guard: ['Admin'],
           icon: 'bar-chart-2-line',
+          badge: 'New',
+        },
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('/@/views/vab/tree/index.vue'),
+        meta: {
+          title: '树',
+          guard: ['Admin'],
+          icon: 'node-tree',
+          badge: 'New',
         },
       },
       {
