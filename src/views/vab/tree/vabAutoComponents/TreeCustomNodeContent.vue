@@ -59,11 +59,10 @@
   }
 
   const renderContent = (
-    h,
+    h: any,
     {
       node,
       data,
-      store,
     }: {
       node: Node
       data: Tree

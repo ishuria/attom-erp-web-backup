@@ -12,8 +12,6 @@
 </template>
 
 <script lang="ts" setup>
-  import type Node from 'element-plus/es/components/tree/src/model/node'
-
   interface Tree {
     id: number
     label: string
@@ -21,7 +19,7 @@
     children?: Tree[]
   }
 
-  const customNodeClass = (data: Tree, node: Node) => {
+  const customNodeClass: any = (data: Tree) => {
     if (data.isPenultimate) {
       return 'is-penultimate'
     }
