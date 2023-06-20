@@ -1,14 +1,10 @@
 <template>
   <el-row>
     <el-col :span="8">
-      <el-countdown title="Start to grab" :value="value" />
+      <el-countdown title="开始抓取" :value="value" />
     </el-col>
     <el-col :span="8">
-      <el-countdown
-        title="Remaining VIP time"
-        format="HH:mm:ss"
-        :value="value1"
-      />
+      <el-countdown title="剩余VIP时间" format="HH:mm:ss" :value="value1" />
       <el-button class="countdown-footer" type="primary" @click="reset">
         Reset
       </el-button>
@@ -20,7 +16,7 @@
             <el-icon style="margin-right: 4px" :size="12">
               <Calendar />
             </el-icon>
-            Still to go until next month
+            直到下个月
           </div>
         </template>
       </el-countdown>

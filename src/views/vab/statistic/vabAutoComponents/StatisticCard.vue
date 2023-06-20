@@ -5,7 +5,7 @@
         <el-statistic :value="98500">
           <template #title>
             <div style="display: inline-flex; align-items: center">
-              Daily active users
+              每日活跃用户
               <el-tooltip
                 effect="dark"
                 content="Number of users who logged into the product in one day"
@@ -20,7 +20,7 @@
         </el-statistic>
         <div class="statistic-footer">
           <div class="footer-item">
-            <span>than yesterday</span>
+            <span>比昨天</span>
             <span class="green">
               24%
               <el-icon>
@@ -36,7 +36,7 @@
         <el-statistic :value="693700">
           <template #title>
             <div style="display: inline-flex; align-items: center">
-              Monthly Active Users
+              每月活跃用户
               <el-tooltip
                 effect="dark"
                 content="Number of users who logged into the product in one month"
@@ -51,7 +51,7 @@
         </el-statistic>
         <div class="statistic-footer">
           <div class="footer-item">
-            <span>month on month</span>
+            <span>环比</span>
             <span class="red">
               12%
               <el-icon>
@@ -64,16 +64,16 @@
     </el-col>
     <el-col :span="8">
       <div class="statistic-card">
-        <el-statistic :value="72000" title="New transactions today">
+        <el-statistic :value="72000" title="今日新增交易">
           <template #title>
             <div style="display: inline-flex; align-items: center">
-              New transactions today
+              今日新增交易
             </div>
           </template>
         </el-statistic>
         <div class="statistic-footer">
           <div class="footer-item">
-            <span>than yesterday</span>
+            <span>比昨天</span>
             <span class="green">
               16%
               <el-icon>

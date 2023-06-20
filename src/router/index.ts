@@ -332,6 +332,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'print',
+        name: 'Print',
+        component: () => import('/@/views/vab/print/index.vue'),
+        meta: {
+          title: '打印',
+          guard: ['Admin'],
+          icon: 'printer-line',
+        },
+      },
+      {
         path: 'dynamicMeta',
         name: 'DynamicMeta',
         component: () => import('/@/views/vab/dynamicMeta/index.vue'),

@@ -36,7 +36,8 @@
     "types/**/*.d.ts",
     "types/**/*.ts",
     "mock/**/*.ts",
-    "vite.config.ts"
+    "vite.config.ts",
+    "src/plugins/VabCount/requestAnimationFrame.js"
   ],
   "exclude": ["node_modules", "dist", "**/*.js"]
 }
