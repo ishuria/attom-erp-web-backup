@@ -56,7 +56,7 @@ const list = [
       {
         path: 'qRLogin',
         name: 'QRLogin',
-        component: '../views/template/QRLogin.vue',
+        component: '/@/views/template/QRLogin.vue',
         meta: {
           title: '二维码登录',
           icon: 'qr-scan-2-line',
@@ -65,7 +65,7 @@ const list = [
       {
         path: 'award',
         name: 'Award',
-        component: '../views/template/Award.vue',
+        component: '/@/views/template/Award.vue',
         meta: {
           title: '抽奖',
           icon: 'award-line',
@@ -74,7 +74,7 @@ const list = [
       {
         path: 'lllustration',
         name: 'Lllustration',
-        component: '../views/template/Lllustration.vue',
+        component: '/@/views/template/Lllustration.vue',
         meta: {
           title: '插画',
           icon: 'brush-3-line',
@@ -83,7 +83,7 @@ const list = [
       {
         path: '403',
         name: 'Error403',
-        component: '../views/403.vue',
+        component: '/@/views/403.vue',
         meta: {
           title: '403',
           icon: 'error-warning-line',
@@ -92,7 +92,7 @@ const list = [
       {
         path: '404',
         name: 'Error404',
-        component: '../views/404.vue',
+        component: '/@/views/404.vue',
         meta: {
           title: '404',
           icon: 'error-warning-line',
@@ -101,7 +101,7 @@ const list = [
       {
         path: '500',
         name: 'Error500',
-        component: '../views/500.vue',
+        component: '/@/views/500.vue',
         meta: {
           title: '500',
           icon: 'error-warning-line',

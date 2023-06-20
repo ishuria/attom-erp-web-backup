@@ -122,7 +122,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: 'qRLogin',
         name: 'QRLogin',
-        component: () => import('../views/template/QRLogin.vue'),
+        component: () => import('/@/views/template/QRLogin.vue'),
         meta: {
           title: '二维码登录',
           icon: 'qr-scan-2-line',
@@ -131,7 +131,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: 'award',
         name: 'Award',
-        component: () => import('../views/template/Award.vue'),
+        component: () => import('/@/views/template/Award.vue'),
         meta: {
           title: '抽奖',
           icon: 'award-line',
@@ -140,7 +140,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: 'lllustration',
         name: 'Lllustration',
-        component: () => import('../views/template/Lllustration.vue'),
+        component: () => import('/@/views/template/Lllustration.vue'),
         meta: {
           title: '插画',
           icon: 'brush-3-line',
@@ -149,7 +149,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: '403',
         name: 'Error403',
-        component: () => import('../views/403.vue'),
+        component: () => import('/@/views/403.vue'),
         meta: {
           title: '403',
           icon: 'error-warning-line',
@@ -158,7 +158,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: '404',
         name: 'Error404',
-        component: () => import('../views/404.vue'),
+        component: () => import('/@/views/404.vue'),
         meta: {
           title: '404',
           icon: 'error-warning-line',
@@ -167,7 +167,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: '500',
         name: 'Error500',
-        component: () => import('../views/500.vue'),
+        component: () => import('/@/views/500.vue'),
         meta: {
           title: '500',
           icon: 'error-warning-line',
