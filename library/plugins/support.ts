@@ -1,8 +1,7 @@
-import pkg from '~/package.json'
 import pinia from '/@/store'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { ElMessageBox } from 'element-plus'
-import { version } from '~/package.json'
+import { version, devDependencies } from '~/package.json'
 
 export default {
   install: () => {
@@ -32,10 +31,10 @@ export default {
       )
     }
     if (import.meta.env.MODE !== 'development') {
-      const dependencies: any = pkg.dependencies
+      const devDependencies: any = devDependencies
       if (
-        !dependencies['vite-plu' + 'gin-vit' + 'ebar'] ||
-        !dependencies['vite-plu' + 'gin-unpl' + 'ugin']
+        !devDependencies['vite-plu' + 'gin-vit' + 'ebar'] ||
+        !devDependencies['vite-plu' + 'gin-unpl' + 'ugin']
       )
         document.body.innerHTML = ''
     }
