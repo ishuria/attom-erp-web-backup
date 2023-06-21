@@ -17,20 +17,6 @@
   const _toggleDark = () => {
     const loading = $baseLoading()
     setTimeout(() => {
-      if (value.value == true) {
-        document.getElementsByTagName('body')[0].className =
-          localStorage.getItem('dark-before-class') as any
-        localStorage.setItem(
-          'dark-before-class',
-          document.getElementsByTagName('body')[0].className
-        )
-      } else {
-        localStorage.setItem(
-          'dark-before-class',
-          document.getElementsByTagName('body')[0].className
-        )
-        document.getElementsByTagName('body')[0].className = ''
-      }
       toggleDark()
     }, 200)
     setTimeout(() => {
@@ -44,7 +30,8 @@
 
     // 还原默认
     $sub('shop-vite-reset-dark', () => {
-      value.value = true
+      if (scheme == 'auto') value.value = true
+      else value.value = false
       if (localStorage.getItem('vueuse-color-scheme') == 'dark') _toggleDark()
     })
   })
@@ -56,7 +43,11 @@
 
 <template>
   <el-switch
-    v-if="theme.showDark"
+    v-if="
+      theme.showDark &&
+      'technology' != theme.themeName &&
+      'plain' != theme.themeName
+    "
     v-model="value"
     :active-icon="Sunny"
     :inactive-icon="Moon"

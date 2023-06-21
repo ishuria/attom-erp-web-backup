@@ -24,7 +24,9 @@
     useCssVar('--el-left-menu-width', ref(null)).value = theme.value.menuWidth
   }
 
-  const _updateTheme = () => {
+  const _updateTheme = (value: any = '') => {
+    if (value == 'default') $pub('shop-vite-reset-dark')
+
     const loading = $baseLoading()
     setTimeout(() => {
       updateTheme()
