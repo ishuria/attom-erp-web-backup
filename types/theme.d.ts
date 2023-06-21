@@ -56,6 +56,11 @@ declare type ColumnStyle =
    */
   | 'arrow'
   | string
+  /**
+   * 半圆风格
+   */
+  | 'semicircle'
+  | string
 
 declare type TabsBarStyle =
   /**

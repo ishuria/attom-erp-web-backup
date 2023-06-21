@@ -55,6 +55,25 @@ html.dark {
 
     .vab-column-bar-container {
       border-right: 1px solid var(--el-border-color-light) !important;
+      &-arrow {
+        .el-tabs {
+          .el-tabs__item {
+            &.is-active {
+              color: var(--el-menu-color-text) !important;
+              background: transparent !important;
+
+              .vab-column-grid {
+                background: transparent !important;
+
+                &:after {
+                  border-color: transparent var(--el-menu-color-text)
+                    transparent transparent;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     .vab-tabs-content-card .el-tabs__header .el-tabs__item {
@@ -62,13 +81,12 @@ html.dark {
     }
 
     .vab-column-bar-container .el-tabs .el-tabs__nav {
-      width: 63px;
+      margin-left: -1px !important;
       background: var(--el-color-white) !important;
       border-right: 1px solid var(--el-border-color-light) !important;
     }
 
     .logo-container-column .logo {
-      width: 63px !important;
       background: var(--el-color-white) !important;
       border-right: 1px solid var(--el-border-color-light) !important;
     }

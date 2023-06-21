@@ -8,7 +8,7 @@ export const themeConfig: ThemeType = {
   themeName: 'default',
   // 菜单宽度，仅支持px，建议大小：266px、277px、288px，其余尺寸会影响美观
   menuWidth: '266px',
-  // 分栏风格：横向风格horizontal、纵向风格vertical、卡片风格card、箭头风格arrow
+  // 分栏风格：横向风格horizontal、纵向风格vertical、卡片风格card、箭头风格arrow、半圆风格semicircle
   columnStyle: 'card',
   //颜色
   color: '#4e88f3',

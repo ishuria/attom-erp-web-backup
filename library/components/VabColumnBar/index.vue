@@ -165,22 +165,23 @@
       }
     }
 
-    &-horizontal {
+    &-horizontal,
+    &-semicircle {
       :deep() {
         .logo-container-column {
           .logo {
-            width: $base-left-menu-width-min * 1.3 !important;
+            width: $base-left-menu-width-min * 1.4 !important;
           }
 
           .title {
-            margin-left: $base-left-menu-width-min * 1.3 !important;
+            margin-left: $base-left-menu-width-min * 1.4 !important;
           }
         }
 
         .el-tabs + .el-menu {
-          left: $base-left-menu-width-min * 1.3;
+          left: $base-left-menu-width-min * 1.4;
           width: calc(
-            var(--el-left-menu-width) - #{$base-left-menu-width-min} * 1.3
+            var(--el-left-menu-width) - #{$base-left-menu-width-min} * 1.4
           );
           border: 0;
         }
@@ -246,7 +247,7 @@
                   height: 0;
                   overflow: hidden;
                   content: '';
-                  border-color: transparent #{var(--el-color-white)} transparent
+                  border-color: transparent var(--el-color-white) transparent
                     transparent;
                   border-style: solid dashed dashed;
                   border-width: 8px;
@@ -268,6 +269,19 @@
           min-width: 180px;
           margin-bottom: 5px;
           border-radius: 5px;
+        }
+      }
+    }
+
+    &-semicircle {
+      :deep() {
+        .el-tabs {
+          .el-tabs__item {
+            &.is-active {
+              border-top-left-radius: 99px;
+              border-bottom-left-radius: 99px;
+            }
+          }
         }
       }
     }
@@ -304,11 +318,16 @@
         }
       }
 
-      &-horizontal {
+      &-horizontal,
+      &-semicircle {
         justify-content: left;
-        width: $base-left-menu-width-min * 1.3;
-        height: #{calc($base-left-menu-width-min / 1.3)};
-        padding-left: #{calc($base-padding / 2)};
+        width: $base-left-menu-width-min * 1.4;
+        height: #{calc($base-left-menu-width-min / 1.4)};
+        padding-left: $base-padding;
+
+        [class*='ri-'] {
+          margin-right: 3px;
+        }
       }
     }
 

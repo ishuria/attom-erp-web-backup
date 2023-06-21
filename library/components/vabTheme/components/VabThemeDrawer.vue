@@ -232,6 +232,11 @@
               :label="translateTitle('箭头')"
               value="arrow"
             />
+            <el-option
+              key="semicircle"
+              :label="translateTitle('半圆')"
+              value="semicircle"
+            />
           </el-select>
         </el-form-item>
         <el-form-item :label="translateTitle('头部固定')">
