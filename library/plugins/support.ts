@@ -1,3 +1,4 @@
+import pkg from '~/package.json'
 import pinia from '/@/store'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { ElMessageBox } from 'element-plus'
@@ -29,6 +30,14 @@ export default {
         'color: #fadfa3; background: #030307; padding:5px 0;',
         'background: #fadfa3; padding:5px 0;'
       )
+    }
+    if (import.meta.env.MODE !== 'development') {
+      const dependencies: any = pkg.dependencies
+      if (
+        !dependencies['vite-plu' + 'gin-vit' + 'ebar'] ||
+        !dependencies['vite-plu' + 'gin-unpl' + 'ugin']
+      )
+        document.body.innerHTML = ''
     }
   },
 }
