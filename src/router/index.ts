@@ -341,6 +341,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'pdf',
+        name: 'PDF',
+        component: () => import('/@/views/vab/pdf/index.vue'),
+        meta: {
+          title: 'PDF',
+          guard: ['Admin'],
+          icon: 'file-pdf-line',
+        },
+      },
+      {
         path: 'print',
         name: 'Print',
         component: () => import('/@/views/vab/print/index.vue'),

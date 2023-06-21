@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "1.8.0",
+  "version": "1.8.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -44,7 +44,8 @@
     "typeit": "^8.7.1",
     "vue": "^3.3.4",
     "vue-i18n": "^9.2.2",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.2",
+    "vue3-pdfjs": "^0.1.6"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.3",
