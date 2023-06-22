@@ -33,7 +33,7 @@
       border
       @selection-change="setSelectRows"
     >
-      <el-table-column align="center" show-overflow-tooltip type="selection" />
+      <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
           {{ $index + 1 }}

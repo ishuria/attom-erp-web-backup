@@ -36,7 +36,7 @@
       row-key="id"
       @selection-change="setSelectRows"
     >
-      <el-table-column show-overflow-tooltip type="selection" />
+      <el-table-column type="selection" width="38" />
       <el-table-column label="名称" prop="name" show-overflow-tooltip />
       <el-table-column label="父节点Id" prop="parentId" show-overflow-tooltip />
       <el-table-column label="排序" prop="order" show-overflow-tooltip />

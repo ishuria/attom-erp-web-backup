@@ -123,4 +123,14 @@ html.dark {
   [fill='#fff'] {
     fill: var(--el-color-white) !important;
   }
+
+  .el-table {
+    th {
+      background: var(--el-color-white) !important;
+    }
+    th.el-table-fixed-column--left,
+    th.el-table-fixed-column--right {
+      background: var(--el-color-white) !important;
+    }
+  }
 }

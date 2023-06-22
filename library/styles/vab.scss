@@ -407,10 +407,6 @@ html {
 
     /* el-table表格 */
     .el-table {
-      .el-table__body-wrapper {
-        @include base-scrollbar;
-      }
-
       th {
         background: #f5f7fa;
       }
@@ -430,6 +426,11 @@ html {
             border-radius: var(--el-border-radius-base);
           }
         }
+      }
+
+      th.el-table-fixed-column--left,
+      th.el-table-fixed-column--right {
+        background: #f5f7fa;
       }
     }
 

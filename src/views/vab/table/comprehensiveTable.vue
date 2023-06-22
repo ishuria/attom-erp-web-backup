@@ -102,12 +102,7 @@
       @selection-change="setSelectRows"
       @sort-change="tableSortChange"
     >
-      <el-table-column
-        align="center"
-        show-overflow-tooltip
-        type="selection"
-        width="55"
-      />
+      <el-table-column type="selection" width="38" />
       <el-table-column
         align="center"
         label="序号"
@@ -194,7 +189,7 @@
         fixed="right"
         label="操作"
         show-overflow-tooltip
-        width="200"
+        width="250"
       >
         <template #default="{ row }">
           <el-button text type="primary" @click="handleDetail(row)">
