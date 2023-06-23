@@ -22,11 +22,6 @@
           <el-radio-button label="test">test</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <!-- <el-form-item label="过期Token模拟访问(令牌失效5s)">
-        <el-button type="primary" @click="handleRefreshToken">
-          点击模拟token过期访问接口，无痛刷新
-        </el-button>
-      </el-form-item> -->
       <el-form-item label="当前账号">
         <el-descriptions :column="3" border direction="vertical">
           <el-descriptions-item>
@@ -252,7 +247,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { useAclStore } from '/@/store/modules/acl'
   import { useUserStore } from '/@/store/modules/user'
   import {
@@ -263,63 +258,40 @@
   } from '/@/config'
   import { getList } from '/@/api/router'
   import { filterRoutes } from '/@/utils/routes'
-  import { expireToken } from '/@/api/refreshToken'
   import { uuid } from '/@/utils'
 
-  export default defineComponent({
+  defineOptions({
     name: 'Permission',
-    setup() {
-      const $baseLoading = inject('$baseLoading')
-      const $baseMessage = inject('$baseMessage')
+  })
 
-      const aclStore = useAclStore()
-      const { role, permission } = storeToRefs(aclStore)
-      const userStore = useUserStore()
-      const { username, token } = storeToRefs(userStore)
+  const $baseLoading: any = inject('$baseLoading')
+  const aclStore = useAclStore()
+  const { role, permission } = storeToRefs(aclStore)
+  const userStore = useUserStore()
+  const { username, token } = storeToRefs(userStore)
 
-      const state = reactive({
-        form: {
-          account: username.value,
-        },
-        tableData: [],
-        res: [],
-        authentication,
-        loginInterception,
-        rolesControl,
-      })
+  const form = ref({
+    account: username.value,
+  })
+  const tableData: any = ref([])
 
-      const fetchData = async () => {
-        const {
-          data: { list },
-        } = await getList()
-        state.tableData = filterRoutes([...list])
-      }
-      const handleChangeRole = async () => {
-        $baseLoading('正在切换账号请稍后...')
-        await localStorage.setItem(
-          tokenTableName,
-          `${state.form.account}-token-${uuid()}-${new Date().getTime()}`
-        )
-        await location.reload()
-      }
-      const handleRefreshToken = async () => {
-        const { msg } = await expireToken()
-        $baseMessage(`${msg}: [${token.value}] `, 'success', 'hey')
-      }
+  const fetchData = async () => {
+    const {
+      data: { list },
+    } = await getList()
+    tableData.value = filterRoutes([...list], true)
+  }
+  const handleChangeRole = async () => {
+    $baseLoading('正在切换账号请稍后...')
+    await localStorage.setItem(
+      tokenTableName,
+      `${form.value.account}-token-${uuid()}-${new Date().getTime()}`
+    )
+    await location.reload()
+  }
 
-      fetchData()
-
-      return {
-        ...toRefs(state),
-        role,
-        permission,
-        username,
-        token,
-        fetchData,
-        handleChangeRole,
-        handleRefreshToken,
-      }
-    },
+  onMounted(() => {
+    fetchData()
   })
 </script>
 
