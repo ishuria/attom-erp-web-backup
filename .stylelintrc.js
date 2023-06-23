@@ -14,4 +14,5 @@ module.exports = {
     'scss/no-global-function-names': null,
     'selector-pseudo-class-no-unknown': null,
   },
+  ignoreFiles: ['dist/**/*', 'index.html'],
 }
