@@ -66,63 +66,48 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useRoutesStore } from '/@/store/modules/routes'
   import getPageTitle from '/@/utils/pageTitle'
 
-  export default defineComponent({
+  defineOptions({
     name: 'DynamicMeta',
-    components: { VabIconSelector },
-    setup() {
-      const route = useRoute()
-
-      const tabsStore = useTabsStore()
-      const routesStore = useRoutesStore()
-
-      const { changeTabsMeta } = tabsStore
-      const { changeActiveMenu, changeMenuMeta } = routesStore
-
-      const state = reactive({
-        badge: 0,
-        icon: route.meta.icon,
-        defaultTitle: route.meta.title,
-      })
-      const handleBadge = (name) => {
-        state.badge = state.badge + 1
-        changeMenuMeta({
-          name,
-          meta: { badge: state.badge },
-        })
-      }
-      const resetBadge = (name, meta) => {
-        state.badge = 0
-        changeMenuMeta({ name, meta })
-      }
-      const handleMeta = (name, meta) => {
-        if (meta.title) document.title = getPageTitle(meta.title)
-        changeMenuMeta({ name, meta })
-        changeTabsMeta({ name, meta })
-      }
-      const handleIcon = (item) => {
-        state.icon = item
-        changeMenuMeta({ name: 'DynamicMeta', meta: { icon: item } })
-        changeTabsMeta({ name: 'DynamicMeta', meta: { icon: item } })
-      }
-      const handleActiveMenu = (activeMenu) => {
-        changeActiveMenu(activeMenu)
-      }
-
-      return {
-        ...toRefs(state),
-        handleBadge,
-        resetBadge,
-        handleMeta,
-        handleIcon,
-        handleActiveMenu,
-      }
-    },
   })
+  const route = useRoute()
+
+  const tabsStore = useTabsStore()
+  const routesStore = useRoutesStore()
+
+  const { changeTabsMeta } = tabsStore
+  const { changeActiveMenu, changeMenuMeta } = routesStore
+
+  const badge = ref(0)
+  const icon = ref(route.meta.icon)
+  const handleBadge = (name: any) => {
+    badge.value = badge.value + 1
+    changeMenuMeta({
+      name,
+      meta: { badge: badge.value },
+    })
+  }
+  const resetBadge = (name: any, meta: any) => {
+    badge.value = 0
+    changeMenuMeta({ name, meta })
+  }
+  const handleMeta = (name: any, meta: { title: string }) => {
+    if (meta.title) document.title = getPageTitle(meta.title)
+    changeMenuMeta({ name, meta })
+    changeTabsMeta({ name, meta })
+  }
+  const handleIcon = (item: any) => {
+    icon.value = item
+    changeMenuMeta({ name: 'DynamicMeta', meta: { icon: item } })
+    changeTabsMeta({ name: 'DynamicMeta', meta: { icon: item } })
+  }
+  const handleActiveMenu = (activeMenu: string) => {
+    changeActiveMenu(activeMenu)
+  }
 </script>
 
 <style lang="scss" scoped></style>
