@@ -10,9 +10,13 @@
   </div>
 </template>
 
-<script setup>
+<script lange="ts" setup>
   import { handleActivePath } from '/@/utils/routes'
   import { useTabsStore } from '/@/store/modules/tabs'
+
+  defineOptions({
+    name: 'Tabs',
+  })
 
   const route = useRoute()
   const router = useRouter()
