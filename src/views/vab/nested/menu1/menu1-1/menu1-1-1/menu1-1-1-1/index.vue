@@ -6,15 +6,9 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Menu1111',
-    setup() {
-      const value = ref('')
-
-      return {
-        value,
-      }
-    },
   })
+  const value = ref('')
 </script>
