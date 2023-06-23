@@ -71,52 +71,46 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Timeline',
-    setup() {
-      const state = reactive({
-        activities: [
-          {
-            content: '支持使用小清新图标',
-            timestamp: '2021-04-12 20:46',
-            icon: 'account-circle-line',
-            cardType: 'warning',
-          },
-          {
-            content: '支持使用小清新图标',
-            timestamp: '2021-04-18 20:46',
-            icon: 'archive-line',
-            cardType: 'error',
-          },
-          {
-            content: '支持自定义颜色',
-            timestamp: '2021-04-03 20:46',
-            color: '#13ce66',
-            cardType: 'success',
-          },
-          {
-            content: '支持默认颜色',
-            timestamp: '2021-04-03 20:46',
-            color: '#e4e7ed',
-          },
-          {
-            content: '支持success闪动',
-            timestamp: '2021-04-05 20:46',
-            waver: 'success',
-          },
-          {
-            content: '支持error闪动',
-            timestamp: '2021-04-05 20:46',
-            waver: 'error',
-          },
-        ],
-      })
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+
+  const activities: any = ref([
+    {
+      content: '支持使用小清新图标',
+      timestamp: '2021-04-12 20:46',
+      icon: 'account-circle-line',
+      cardType: 'warning',
+    },
+    {
+      content: '支持使用小清新图标',
+      timestamp: '2021-04-18 20:46',
+      icon: 'archive-line',
+      cardType: 'error',
+    },
+    {
+      content: '支持自定义颜色',
+      timestamp: '2021-04-03 20:46',
+      color: '#13ce66',
+      cardType: 'success',
+    },
+    {
+      content: '支持默认颜色',
+      timestamp: '2021-04-03 20:46',
+      color: '#e4e7ed',
+    },
+    {
+      content: '支持success闪动',
+      timestamp: '2021-04-05 20:46',
+      waver: 'success',
+    },
+    {
+      content: '支持error闪动',
+      timestamp: '2021-04-05 20:46',
+      waver: 'error',
+    },
+  ])
 </script>
 
 <style lang="scss" scoped>
