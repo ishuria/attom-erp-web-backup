@@ -155,27 +155,18 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Description',
-    setup() {
-      const state = reactive({
-        size: 'default',
-        accordion: false,
-        activeName: ['1', '2', '3', '4'],
-      })
-
-      const handleAccordion = (val) => {
-        if (val) state.activeName = '1'
-        else state.activeName = ['1', '2', '3', '4']
-      }
-
-      return {
-        ...toRefs(state),
-        handleAccordion,
-      }
-    },
   })
+  const size: any = ref('default')
+  const accordion: Ref<boolean> = ref(false)
+  const activeName: any = ref(['1', '2', '3', '4'])
+
+  const handleAccordion = (val: any) => {
+    if (val) activeName.value = '1'
+    else activeName.value = ['1', '2', '3', '4']
+  }
 </script>
 
 <style lang="scss" scoped>
