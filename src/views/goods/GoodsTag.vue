@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="goods-tag-container"></div>
+  <div class="goods-tag-container">TODO</div>
 </template>
 
 <style lang="scss" scoped></style>

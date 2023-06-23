@@ -1,5 +1,8 @@
 <script lang="ts" setup>
   import _ from 'lodash'
+  defineOptions({
+    name: 'Index',
+  })
 
   const countConfig1 = ref({
     startVal: 0,
