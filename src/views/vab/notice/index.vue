@@ -45,7 +45,9 @@
             title="成功提示"
           >
             <template #extra>
-              <el-button type="primary" @click="open13">确认</el-button>
+              <el-button type="primary" @click="open13('成功提示')">
+                确认
+              </el-button>
             </template>
           </el-result>
         </vab-card>
@@ -61,7 +63,9 @@
             title="警告提示"
           >
             <template #extra>
-              <el-button type="primary" @click="open13">确认</el-button>
+              <el-button type="primary" @click="open13('警告提示')">
+                确认
+              </el-button>
             </template>
           </el-result>
         </vab-card>
@@ -77,7 +81,9 @@
             title="错误提示"
           >
             <template #extra>
-              <el-button type="primary" @click="open13">确认</el-button>
+              <el-button type="primary" @click="open13('错误提示')">
+                确认
+              </el-button>
             </template>
           </el-result>
         </vab-card>
@@ -93,7 +99,9 @@
             title="信息提示"
           >
             <template #extra>
-              <el-button type="primary" @click="open13">确认</el-button>
+              <el-button type="primary" @click="open13('信息提示')">
+                确认
+              </el-button>
             </template>
           </el-result>
         </vab-card>
@@ -113,77 +121,54 @@
   </div>
 </template>
 
-<script lang="ts">
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Notice',
-    setup() {
-      const $baseAlert: any = inject('$baseAlert')
-      const $baseNotify: any = inject('$baseNotify')
-      const $baseMessage: any = inject('$baseMessage')
-
-      const state = reactive({
-        vabUpdateRef: null,
-        data: [],
-        toggleIndex: 0,
-      })
-      const open1 = () => {
-        $baseMessage('这是一条消息提示', 'info')
-      }
-      const open2 = () => {
-        $baseMessage('恭喜你，这是一条成功消息', 'success')
-      }
-      const open3 = () => {
-        $baseMessage('警告哦，这是一条警告消息', 'warning')
-      }
-      const open4 = () => {
-        $baseMessage('错了哦，这是一条错误消息', 'error')
-      }
-      const open5 = () => {
-        $baseMessage('这是一条消息提示', 'info', 'hey')
-      }
-      const open6 = () => {
-        $baseMessage('恭喜你，这是一条成功消息', 'success', 'hey')
-      }
-      const open7 = () => {
-        $baseMessage('警告哦，这是一条警告消息', 'warning', 'hey')
-      }
-      const open8 = () => {
-        $baseMessage('错了哦，这是一条错误消息', 'error', 'hey')
-      }
-      const open9 = () => {
-        $baseNotify('这是一条消息的提示消息', '提示', 'info', 'bottom-right')
-      }
-      const open10 = () => {
-        $baseNotify('这是一条成功的提示消息', '成功', 'success', 'bottom-right')
-      }
-      const open11 = () => {
-        $baseNotify('这是一条警告的提示消息', '警告', 'warning', 'bottom-right')
-      }
-      const open12 = () => {
-        $baseNotify('这是一条错误的提示消息', '错误', 'error', 'bottom-right')
-      }
-      const open13 = () => {
-        $baseAlert('这是一条消息提示')
-      }
-
-      return {
-        ...toRefs(state),
-        open1,
-        open2,
-        open3,
-        open4,
-        open5,
-        open6,
-        open7,
-        open8,
-        open9,
-        open10,
-        open11,
-        open12,
-        open13,
-      }
-    },
   })
+
+  const $baseAlert: any = inject('$baseAlert')
+  const $baseNotify: any = inject('$baseNotify')
+  const $baseMessage: any = inject('$baseMessage')
+
+  const open1 = () => {
+    $baseMessage('这是一条消息提示', 'info')
+  }
+  const open2 = () => {
+    $baseMessage('恭喜你，这是一条成功消息', 'success')
+  }
+  const open3 = () => {
+    $baseMessage('警告哦，这是一条警告消息', 'warning')
+  }
+  const open4 = () => {
+    $baseMessage('错了哦，这是一条错误消息', 'error')
+  }
+  const open5 = () => {
+    $baseMessage('这是一条消息提示', 'info', 'hey')
+  }
+  const open6 = () => {
+    $baseMessage('恭喜你，这是一条成功消息', 'success', 'hey')
+  }
+  const open7 = () => {
+    $baseMessage('警告哦，这是一条警告消息', 'warning', 'hey')
+  }
+  const open8 = () => {
+    $baseMessage('错了哦，这是一条错误消息', 'error', 'hey')
+  }
+  const open9 = () => {
+    $baseNotify('这是一条消息的提示消息', '提示', 'info', 'bottom-right')
+  }
+  const open10 = () => {
+    $baseNotify('这是一条成功的提示消息', '成功', 'success', 'bottom-right')
+  }
+  const open11 = () => {
+    $baseNotify('这是一条警告的提示消息', '警告', 'warning', 'bottom-right')
+  }
+  const open12 = () => {
+    $baseNotify('这是一条错误的提示消息', '错误', 'error', 'bottom-right')
+  }
+  const open13 = (value: string) => {
+    $baseAlert(`这是一条${value}弹框`)
+  }
 </script>
 
 <style lang="scss" scoped></style>
