@@ -71,80 +71,67 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import _ from 'lodash'
   import { getIconList } from '/@/api/icon'
   import clip from '/@/utils/clipboard'
-
-  export default defineComponent({
+  defineOptions({
     name: 'RemixIcon',
-    setup() {
-      const state = reactive({
-        queryIcon: [],
-        total: 0,
-        queryForm: {
-          pageNo: 1,
-          pageSize: 72,
-          title: '',
-          colorful: false,
-          num: 28,
-        },
-        layout: 'total, sizes, prev, pager, next, jumper',
-        emptyShow: true,
-      })
+  })
 
-      const fetchData = async () => {
-        const {
-          data: { list, total },
-        } = await getIconList(state.queryForm)
-        state.queryIcon = list.map((icon) => {
-          return { icon, color: randomHexColor() }
-        })
+  const queryIcon: any = ref([])
+  const total = ref(0)
+  const queryForm = ref({
+    pageNo: 1,
+    pageSize: 72,
+    title: '',
+    colorful: false,
+    num: 28,
+  })
+  const layout = ref('total, sizes, prev, pager, next, jumper')
+  const emptyShow = ref(true)
 
-        state.total = total
-        state.emptyShow = false
-      }
-      const handleSizeChange = (val) => {
-        state.queryForm.pageSize = val
-        fetchData()
-      }
-      const handleCurrentChange = (val) => {
-        state.queryForm.pageNo = val
-        fetchData()
-      }
-      const queryData = () => {
-        state.queryForm.pageNo = 1
-        fetchData()
-      }
-      const handleCopyText = (item) => {
-        clip(item)
-      }
-      const handleCopyIcon = (item) => {
-        clip(`<vab-icon icon="${item}" />`)
-      }
-      const randomHexColor = () => {
-        return _.shuffle([
-          '#1890FF',
-          '#36CBCB',
-          '#4ECB73',
-          '#FBD437',
-          '#F2637B',
-          '#975FE5',
-        ])
-      }
-      onMounted(() => {
-        fetchData()
-      })
-
-      return {
-        ...toRefs(state),
-        handleSizeChange,
-        handleCurrentChange,
-        queryData,
-        handleCopyText,
-        handleCopyIcon,
-      }
-    },
+  const fetchData = async () => {
+    const {
+      data: { list, total: _total },
+    } = await getIconList(queryForm.value)
+    queryIcon.value = list.map((icon: any) => {
+      return { icon, color: randomHexColor() }
+    })
+    total.value = _total
+    if (_total > 0) emptyShow.value = false
+    else emptyShow.value = true
+  }
+  const handleSizeChange = (val: number) => {
+    queryForm.value.pageSize = val
+    fetchData()
+  }
+  const handleCurrentChange = (val: number) => {
+    queryForm.value.pageNo = val
+    fetchData()
+  }
+  const queryData = () => {
+    queryForm.value.pageNo = 1
+    fetchData()
+  }
+  const handleCopyText = (item: string) => {
+    clip(item)
+  }
+  const handleCopyIcon = (item: any) => {
+    clip(`<vab-icon icon="${item}" />`)
+  }
+  const randomHexColor = () => {
+    return _.shuffle([
+      '#1890FF',
+      '#36CBCB',
+      '#4ECB73',
+      '#FBD437',
+      '#F2637B',
+      '#975FE5',
+    ])
+  }
+  onMounted(() => {
+    fetchData()
   })
 </script>
 

@@ -22,12 +22,9 @@
   </div>
 </template>
 
-<script lang="ts">
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'CustomSvg',
-    setup() {
-      return {}
-    },
   })
 </script>
 

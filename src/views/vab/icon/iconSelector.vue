@@ -23,22 +23,13 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'IconSelector',
-    setup() {
-      const state = reactive({
-        icon: '24-hours-fill',
-      })
-
-      const handleIcon = (item) => {
-        state.icon = item
-      }
-
-      return {
-        ...toRefs(state),
-        handleIcon,
-      }
-    },
   })
+  const icon = ref('24-hours-fill')
+
+  const handleIcon = (item: string) => {
+    icon.value = item
+  }
 </script>
