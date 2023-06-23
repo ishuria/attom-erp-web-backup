@@ -1,4 +1,4 @@
-<script setup>
+<script lange="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
   const fullYear = new Date().getFullYear()

@@ -1,4 +1,4 @@
-<script setup>
+<script lange="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
   import { handleActivePath } from '/@/utils/routes'
 

@@ -14,19 +14,17 @@
   </component>
 </template>
 
-<script>
-  import { useSettingsStore } from '/@/store/modules/settings'
-
-  const imports = import.meta.glob('./**/*.vue', { eager: true })
-  const Components = {}
+<script lang="ts">
+  const imports: any = import.meta.glob('./**/*.vue', { eager: true })
+  const components: any = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
-    Components[key.replace(/(\/|components|\.|vue)/g, '')] =
+    components[key.replace(/(\/|components|\.|vue)/g, '')] =
       imports[key].default
   })
 
   export default defineComponent({
     name: 'VabMenu',
-    components: Components,
+    components,
     props: {
       item: {
         type: Object,
@@ -38,12 +36,9 @@
       },
     },
     setup(props) {
-      const settingsStore = useSettingsStore()
-      const { collapse } = storeToRefs(settingsStore)
-
       const menuComponent = computed(() =>
         props.item.children &&
-        props.item.children.some((_route) => {
+        props.item.children.some((_route: { meta: { hidden: boolean } }) => {
           return _route.meta && _route.meta.hidden !== true
         })
           ? 'VabSubMenu'
@@ -51,7 +46,6 @@
       )
 
       return {
-        collapse,
         menuComponent,
       }
     },

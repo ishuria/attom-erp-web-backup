@@ -1,4 +1,4 @@
-<script setup>
+<script lange="ts" setup>
   import { onBeforeRouteLeave } from 'vue-router'
 
   defineProps({

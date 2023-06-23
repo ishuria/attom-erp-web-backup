@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
   import { useHead } from '@vueuse/head'
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useSettingsStore } from '/@/store/modules/settings'
@@ -8,8 +8,8 @@
 
   const route = useRoute()
 
-  const $sub = inject('$sub')
-  const $unsub = inject('$unsub')
+  const $sub: any = inject('$sub')
+  const $unsub: any = inject('$unsub')
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
@@ -49,7 +49,7 @@
     }简介、官网、首页、文档和下载 - 前端开发框架`
   })
 
-  $sub('reload-router-view', (refreshRouteName = route.name) => {
+  $sub('reload-router-view', (refreshRouteName: any = route.name) => {
     if (theme.value.showProgressBar) VabProgress.start()
     const cacheActivePath = routerKey.value
     routerKey.value = null

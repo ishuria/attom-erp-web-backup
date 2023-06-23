@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
   import { translateTitle } from '/@/utils/i18n'
 
   defineProps({

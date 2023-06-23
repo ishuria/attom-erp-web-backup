@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { isExternal } from '/@/utils/validate'
   import { translateTitle } from '/@/utils/i18n'
@@ -16,7 +16,7 @@
   const route = useRoute()
   const router = useRouter()
 
-  const $pub = inject('$pub')
+  const $pub: any = inject('$pub')
 
   const settingsStore = useSettingsStore()
   const { device } = storeToRefs(settingsStore)

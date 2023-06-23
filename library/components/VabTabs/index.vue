@@ -1,9 +1,11 @@
-<script setup>
+<script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { translateTitle } from '/@/utils/i18n'
   import { handleActivePath, handleTabs } from '/@/utils/routes'
+  import { RouteLocationNormalizedLoaded } from 'vue-router'
+  import { VabRoute } from '~/src/router/types'
 
   defineProps({
     layout: {
@@ -38,16 +40,17 @@
   const top = ref(0)
   const left = ref(0)
 
-  const isActive = (path) => path === handleActivePath(route, true)
-  const isNoCLosable = (tag) => tag.meta && tag.meta.noClosable
-  const handleTabClick = (tab) => {
+  const isActive = (path: any) => path === handleActivePath(route, true)
+  const isNoCLosable = (tag: { meta: { noClosable: any } }) =>
+    tag.meta && tag.meta.noClosable
+  const handleTabClick: any = (tab: any) => {
     if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
   }
-  const handleVisibleChange = (val) => {
+  const handleVisibleChange = (val: boolean) => {
     active.value = val
   }
-  const initNoCLosableTabs = (routes) => {
-    routes.forEach((_route) => {
+  const initNoCLosableTabs = (routes: any[]) => {
+    routes.forEach((_route: { meta: { noClosable: any }; children: any }) => {
       if (_route.meta && _route.meta.noClosable) addTabs(_route)
       if (_route.children) initNoCLosableTabs(_route.children)
     })
@@ -57,7 +60,7 @@
    * @param tag route
    * @returns {Promise<void>}
    */
-  const addTabs = async (tag) => {
+  const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
     const tab = handleTabs(tag)
     if (tab) {
       await addVisitedRoute(tab)
@@ -69,11 +72,11 @@
    * @param rawPath 原生路径
    * @returns {Promise<void>}
    */
-  const handleTabRemove = async (rawPath) => {
+  const handleTabRemove: any = async (rawPath: string) => {
     if (isActive(rawPath)) await toLastTab()
     await delVisitedRoute(rawPath)
   }
-  const handleCommand = (command) => {
+  const handleCommand = (command: any) => {
     switch (command) {
       case 'closeOthersTabs':
         closeOthersTabs()
@@ -194,10 +197,7 @@
         :name="item.path"
       >
         <template #label>
-          <span
-            style="display: inline-block"
-            @contextmenu.prevent="openMenu($event, item)"
-          >
+          <span style="display: inline-block" @contextmenu.prevent="openMenu">
             <template v-if="theme.showTabsIcon">
               <vab-icon
                 v-if="item.meta && item.meta.icon"

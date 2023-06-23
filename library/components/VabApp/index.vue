@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
   import { pwa } from '/@/config'
   import i18n from '/@/i18n'
 
