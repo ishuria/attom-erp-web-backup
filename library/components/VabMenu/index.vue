@@ -15,8 +15,6 @@
 </template>
 
 <script>
-  import { useSettingsStore } from '/@/store/modules/settings'
-
   const imports = import.meta.glob('./**/*.vue', { eager: true })
   const Components = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
@@ -38,9 +36,6 @@
       },
     },
     setup(props) {
-      const settingsStore = useSettingsStore()
-      const { collapse } = storeToRefs(settingsStore)
-
       const menuComponent = computed(() =>
         props.item.children &&
         props.item.children.some((_route) => {
@@ -51,7 +46,6 @@
       )
 
       return {
-        collapse,
         menuComponent,
       }
     },
