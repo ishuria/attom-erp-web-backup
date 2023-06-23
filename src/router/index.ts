@@ -253,6 +253,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         component: () => import('/@/views/vab/editor/wangEditor.vue'),
         meta: {
           title: '富文本编辑器',
+          icon: 'edit-box-line',
           guard: ['Admin'],
           dot: true,
         },
