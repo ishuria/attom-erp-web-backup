@@ -74,12 +74,12 @@
         data1.shift()
       }
       now = new Date(+new Date(now) + oneDay)
-      option.value.xAxis[0].data = []
-      option.value.series[0].data = []
-      option.value.series[1].data = []
-      option.value.xAxis[0].data = date
-      option.value.series[0].data = data0
-      option.value.series[1].data = data1
+      option.xAxis[0].data = []
+      option.series[0].data = []
+      option.series[1].data = []
+      option.xAxis[0].data = date
+      option.series[0].data = data0
+      option.series[1].data = data1
     }
 
     for (let i = 1; i < 6; i++) {

@@ -285,7 +285,7 @@
     $baseLoading('正在切换账号请稍后...')
     await localStorage.setItem(
       tokenTableName,
-      `${form.value.account}-token-${uuid()}-${new Date().getTime()}`
+      `${form.account}-token-${uuid()}-${new Date().getTime()}`
     )
     await location.reload()
   }

@@ -43,11 +43,11 @@
   })
 
   const copy = () => {
-    clip(form.value.url)
+    clip(form.url)
   }
 
   onMounted(() => {
-    form.value.url = 'https://vue-admin-beautiful.com/shop-vite'
+    form.url = 'https://vue-admin-beautiful.com/shop-vite'
   })
 </script>
 

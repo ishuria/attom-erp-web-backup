@@ -94,7 +94,7 @@
   const fetchData = async () => {
     const {
       data: { list, total: _total },
-    } = await getIconList(queryForm.value)
+    } = await getIconList(queryForm)
     queryIcon.value = list.map((icon: any) => {
       return { icon, color: randomHexColor() }
     })
@@ -103,15 +103,15 @@
     else emptyShow.value = true
   }
   const handleSizeChange = (val: number) => {
-    queryForm.value.pageSize = val
+    queryForm.pageSize = val
     fetchData()
   }
   const handleCurrentChange = (val: number) => {
-    queryForm.value.pageNo = val
+    queryForm.pageNo = val
     fetchData()
   }
   const queryData = () => {
-    queryForm.value.pageNo = 1
+    queryForm.pageNo = 1
     fetchData()
   }
   const handleCopyText = (item: string) => {
