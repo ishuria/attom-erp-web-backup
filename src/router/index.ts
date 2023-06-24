@@ -603,6 +603,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'printer-line',
         },
       },
+      {
+        path: 'share',
+        name: 'Share',
+        component: () => import('/@/views/other/share/index.vue'),
+        meta: {
+          title: '分享',
+          guard: ['Admin'],
+          icon: 'share-line',
+          dot: true,
+        },
+      },
     ],
   },
   {
