@@ -151,7 +151,7 @@
     height: 100vh;
     overflow: hidden;
     background: var(--el-color-white);
-    border-right: 1px solid var(--el-border-color-light);
+    border-right: 1px solid var(--el-border-color);
 
     &-vertical,
     &-card,

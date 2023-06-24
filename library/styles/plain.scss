@@ -81,7 +81,7 @@ html > .vab-theme-plain {
   }
 
   .vab-column-bar-container {
-    border-right: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color) !important;
 
     .el-tabs {
       @include container;
@@ -151,18 +151,18 @@ html > .vab-theme-plain {
   }
 
   .vab-tabs-content-card .el-tabs__header .el-tabs__item {
-    border: 1px solid var(--el-border-color-light) !important;
+    border: 1px solid var(--el-border-color) !important;
   }
 
   .vab-column-bar-container .el-tabs .el-tabs__nav {
     margin-left: -1px !important;
     background: var(--el-color-black) !important;
-    border-right: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color) !important;
   }
 
   .logo-container-column .logo {
     background: var(--el-color-black) !important;
-    border-right: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color) !important;
   }
 
   .vab-layout-vertical,
@@ -189,7 +189,7 @@ html > .vab-theme-plain {
     }
 
     .vab-side-bar {
-      border-right: 1px solid var(--el-border-color-light) !important;
+      border-right: 1px solid var(--el-border-color) !important;
       @include container;
 
       .el-menu-item {

@@ -69,7 +69,7 @@
     }
 
     [classname='w-e-toolbar-init'] {
-      border-bottom: 1px solid var(--el-border-color-light) !important;
+      border-bottom: 1px solid var(--el-border-color) !important;
     }
 
     .wang-editor-content {

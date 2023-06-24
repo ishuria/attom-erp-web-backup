@@ -185,270 +185,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     },
     children: [
       {
-        path: 'icon',
-        name: 'Icon',
-        meta: {
-          title: '图标',
-          icon: 'remixicon-line',
-        },
-        children: [
-          {
-            path: 'remixIcon',
-            name: 'RemixIcon',
-            component: () => import('/@/views/vab/icon/remixIcon.vue'),
-            meta: {
-              title: '小清新图标',
-            },
-          },
-          {
-            path: 'iconSelector',
-            name: 'IconSelector',
-            component: () => import('/@/views/vab/icon/iconSelector.vue'),
-            meta: {
-              title: '图标选择器',
-            },
-          },
-          {
-            path: 'customSvg',
-            name: 'CustomSvg',
-            component: () => import('/@/views/vab/icon/customSvg.vue'),
-            meta: {
-              title: '自定义图标',
-            },
-          },
-        ],
-      },
-      {
-        path: 'permission',
-        name: 'Permission',
-        component: () => import('/@/views/vab/permission/index.vue'),
-        meta: {
-          title: '角色权限',
-          icon: 'user-3-line',
-        },
-      },
-      {
-        path: 'list',
-        name: 'List',
-        component: () => import('/@/views/vab/list/index.vue'),
-        meta: {
-          title: '列表',
-          guard: ['Admin'],
-          icon: 'list-check-2',
-        },
-      },
-      {
-        path: 'description',
-        name: 'Description',
-        component: () => import('/@/views/vab/description/index.vue'),
-        meta: {
-          title: '描述',
-          guard: ['Admin'],
-          icon: 'slideshow-line',
-        },
-      },
-      {
-        path: 'wangEditor',
-        name: 'WangEditor',
-        component: () => import('/@/views/vab/editor/wangEditor.vue'),
-        meta: {
-          title: '富文本编辑器',
-          icon: 'edit-box-line',
-          guard: ['Admin'],
-          dot: true,
-        },
-      },
-      {
-        path: 'notice',
-        name: 'Notice',
-        component: () => import('/@/views/vab/notice/index.vue'),
-        meta: {
-          title: '通知',
-          guard: ['Admin'],
-          icon: 'message-2-line',
-        },
-      },
-      {
-        path: 'timeline',
-        name: 'Timeline',
-        component: () => import('/@/views/vab/timeline/index.vue'),
-        meta: {
-          title: '时间线',
-          guard: ['Admin'],
-          icon: 'time-line',
-        },
-      },
-      {
-        path: 'count',
-        name: 'Count',
-        component: () => import('/@/views/vab/count/index.vue'),
-        meta: {
-          title: '数字自增长',
-          guard: ['Admin'],
-          icon: 'number-0',
-        },
-      },
-      {
-        path: 'tabs',
-        name: 'Tabs',
-        component: () => import('/@/views/vab/tabs/index.vue'),
-        meta: {
-          title: '多标签',
-          guard: ['Admin'],
-          icon: 'bank-card-line',
-        },
-      },
-      {
-        path: 'statistic',
-        name: 'Statistic',
-        component: () => import('/@/views/vab/statistic/index.vue'),
-        meta: {
-          title: '统计',
-          guard: ['Admin'],
-          icon: 'bar-chart-2-line',
-          badge: 'New',
-        },
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('/@/views/vab/tree/index.vue'),
-        meta: {
-          title: '树',
-          guard: ['Admin'],
-          icon: 'node-tree',
-          badge: 'New',
-        },
-      },
-      {
-        path: 'watermark',
-        name: 'Watermark',
-        component: () => import('/@/views/vab/watermark/index.vue'),
-        meta: {
-          title: '水印',
-          guard: ['Admin'],
-          icon: 'water-flash-line',
-          dot: true,
-        },
-      },
-      {
-        path: 'echarts',
-        name: 'Echarts',
-        component: () => import('/@/views/vab/echarts/index.vue'),
-        meta: {
-          title: '图表',
-          guard: ['Admin'],
-          icon: 'bubble-chart-line',
-        },
-      },
-      {
-        path: 'pdf',
-        name: 'PDF',
-        component: () => import('/@/views/vab/pdf/index.vue'),
-        meta: {
-          title: 'PDF',
-          guard: ['Admin'],
-          icon: 'file-pdf-line',
-        },
-      },
-      {
-        path: 'print',
-        name: 'Print',
-        component: () => import('/@/views/vab/print/index.vue'),
-        meta: {
-          title: '打印',
-          guard: ['Admin'],
-          icon: 'printer-line',
-        },
-      },
-      {
-        path: 'dynamicMeta',
-        name: 'DynamicMeta',
-        component: () => import('/@/views/vab/dynamicMeta/index.vue'),
-        meta: {
-          title: '动态Meta',
-          guard: ['Admin'],
-          icon: 'notification-badge-line',
-          badge: '0',
-        },
-      },
-      {
-        path: 'menu1',
-        name: 'Menu1',
-        meta: {
-          title: '多级路由缓存',
-          guard: ['Admin'],
-          icon: 'route-line',
-        },
-        children: [
-          {
-            path: 'menu1-1',
-            name: 'Menu11',
-            meta: {
-              title: '多级路由1-1',
-            },
-            children: [
-              {
-                path: 'menu1-1-1',
-                name: 'Menu111',
-                meta: {
-                  title: '多级路由1-1-1',
-                },
-                children: [
-                  {
-                    path: 'menu1-1-1-1',
-                    name: 'Menu1111',
-                    meta: {
-                      title: '多级路由1-1-1-1',
-                    },
-                    component: () =>
-                      import(
-                        '/@/views/vab/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue'
-                      ),
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: 'table',
-        name: 'Table',
-        meta: {
-          title: '表格',
-          // 非editor角色的用户可见
-          guard: {
-            role: ['Editor'],
-            mode: 'except',
-          },
-          icon: 'table-2',
-        },
-        children: [
-          {
-            path: 'comprehensiveTable',
-            name: 'ComprehensiveTable',
-            component: () =>
-              import('/@/views/vab/table/comprehensiveTable.vue'),
-            meta: {
-              title: '综合表格',
-            },
-          },
-          {
-            path: 'comprehensiveTableDetail',
-            name: 'ComprehensiveTableDetail',
-            component: () =>
-              import('/@/views/vab/table/comprehensiveTableDetail.vue'),
-            meta: {
-              hidden: true,
-              title: '详情页',
-              activeMenu: '/vab/table/comprehensiveTable',
-              dynamicNewTab: true, //详情页根据id传参不同可打开多个
-            },
-          },
-        ],
-      },
-      {
         path: 'form',
         name: 'Form',
         meta: {
@@ -577,6 +313,281 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             meta: {
               title: '评分',
             },
+          },
+        ],
+      },
+      {
+        path: 'icon',
+        name: 'Icon',
+        meta: {
+          title: '图标',
+          icon: 'remixicon-line',
+        },
+        children: [
+          {
+            path: 'remixIcon',
+            name: 'RemixIcon',
+            component: () => import('/@/views/vab/icon/remixIcon.vue'),
+            meta: {
+              title: '小清新图标',
+            },
+          },
+          {
+            path: 'iconSelector',
+            name: 'IconSelector',
+            component: () => import('/@/views/vab/icon/iconSelector.vue'),
+            meta: {
+              title: '图标选择器',
+            },
+          },
+          {
+            path: 'customSvg',
+            name: 'CustomSvg',
+            component: () => import('/@/views/vab/icon/customSvg.vue'),
+            meta: {
+              title: '自定义图标',
+            },
+          },
+        ],
+      },
+      {
+        path: 'permission',
+        name: 'Permission',
+        component: () => import('/@/views/vab/permission/index.vue'),
+        meta: {
+          title: '角色权限',
+          icon: 'user-3-line',
+        },
+      },
+      {
+        path: 'table',
+        name: 'Table',
+        meta: {
+          title: '表格',
+          // 非editor角色的用户可见
+          guard: {
+            role: ['Editor'],
+            mode: 'except',
+          },
+          icon: 'table-2',
+        },
+        children: [
+          {
+            path: 'comprehensiveTable',
+            name: 'ComprehensiveTable',
+            component: () =>
+              import('/@/views/vab/table/comprehensiveTable.vue'),
+            meta: {
+              title: '综合表格',
+            },
+          },
+          {
+            path: 'comprehensiveTableDetail',
+            name: 'ComprehensiveTableDetail',
+            component: () =>
+              import('/@/views/vab/table/comprehensiveTableDetail.vue'),
+            meta: {
+              hidden: true,
+              title: '详情页',
+              activeMenu: '/vab/table/comprehensiveTable',
+              dynamicNewTab: true, //详情页根据id传参不同可打开多个
+            },
+          },
+        ],
+      },
+
+      {
+        path: 'list',
+        name: 'List',
+        component: () => import('/@/views/vab/list/index.vue'),
+        meta: {
+          title: '列表',
+          guard: ['Admin'],
+          icon: 'list-check-2',
+        },
+      },
+      {
+        path: 'description',
+        name: 'Description',
+        component: () => import('/@/views/vab/description/index.vue'),
+        meta: {
+          title: '描述',
+          guard: ['Admin'],
+          icon: 'slideshow-line',
+        },
+      },
+      {
+        path: 'wangEditor',
+        name: 'WangEditor',
+        component: () => import('/@/views/vab/editor/wangEditor.vue'),
+        meta: {
+          title: '富文本编辑器',
+          icon: 'edit-box-line',
+          guard: ['Admin'],
+          dot: true,
+        },
+      },
+      {
+        path: 'notice',
+        name: 'Notice',
+        component: () => import('/@/views/vab/notice/index.vue'),
+        meta: {
+          title: '通知',
+          guard: ['Admin'],
+          icon: 'message-2-line',
+        },
+      },
+      {
+        path: 'echarts',
+        name: 'Echarts',
+        component: () => import('/@/views/vab/echarts/index.vue'),
+        meta: {
+          title: '图表',
+          guard: ['Admin'],
+          icon: 'bubble-chart-line',
+        },
+      },
+      {
+        path: 'timeline',
+        name: 'Timeline',
+        component: () => import('/@/views/vab/timeline/index.vue'),
+        meta: {
+          title: '时间线',
+          guard: ['Admin'],
+          icon: 'time-line',
+        },
+      },
+      {
+        path: 'count',
+        name: 'Count',
+        component: () => import('/@/views/vab/count/index.vue'),
+        meta: {
+          title: '数字自增长',
+          guard: ['Admin'],
+          icon: 'number-0',
+        },
+      },
+      {
+        path: 'tabs',
+        name: 'Tabs',
+        component: () => import('/@/views/vab/tabs/index.vue'),
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+        },
+      },
+      {
+        path: 'statistic',
+        name: 'Statistic',
+        component: () => import('/@/views/vab/statistic/index.vue'),
+        meta: {
+          title: '统计',
+          guard: ['Admin'],
+          icon: 'bar-chart-2-line',
+        },
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('/@/views/vab/tree/index.vue'),
+        meta: {
+          title: '树',
+          guard: ['Admin'],
+          icon: 'node-tree',
+        },
+      },
+      {
+        path: 'signature',
+        name: 'Signature',
+        component: () => import('/@/views/vab/signature/index.vue'),
+        meta: {
+          title: '签名',
+          icon: 'edit-2-line',
+          guard: ['Admin'],
+          badge: 'New',
+        },
+      },
+      {
+        path: 'watermark',
+        name: 'Watermark',
+        component: () => import('/@/views/vab/watermark/index.vue'),
+        meta: {
+          title: '水印',
+          guard: ['Admin'],
+          icon: 'water-flash-line',
+          dot: true,
+        },
+      },
+
+      {
+        path: 'pdf',
+        name: 'PDF',
+        component: () => import('/@/views/vab/pdf/index.vue'),
+        meta: {
+          title: 'PDF',
+          guard: ['Admin'],
+          icon: 'file-pdf-line',
+        },
+      },
+      {
+        path: 'print',
+        name: 'Print',
+        component: () => import('/@/views/vab/print/index.vue'),
+        meta: {
+          title: '打印',
+          guard: ['Admin'],
+          icon: 'printer-line',
+        },
+      },
+      {
+        path: 'dynamicMeta',
+        name: 'DynamicMeta',
+        component: () => import('/@/views/vab/dynamicMeta/index.vue'),
+        meta: {
+          title: '动态Meta',
+          guard: ['Admin'],
+          icon: 'notification-badge-line',
+          badge: '0',
+        },
+      },
+      {
+        path: 'menu1',
+        name: 'Menu1',
+        meta: {
+          title: '多级路由缓存',
+          guard: ['Admin'],
+          icon: 'route-line',
+        },
+        children: [
+          {
+            path: 'menu1-1',
+            name: 'Menu11',
+            meta: {
+              title: '多级路由1-1',
+            },
+            children: [
+              {
+                path: 'menu1-1-1',
+                name: 'Menu111',
+                meta: {
+                  title: '多级路由1-1-1',
+                },
+                children: [
+                  {
+                    path: 'menu1-1-1-1',
+                    name: 'Menu1111',
+                    meta: {
+                      title: '多级路由1-1-1-1',
+                    },
+                    component: () =>
+                      import(
+                        '/@/views/vab/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue'
+                      ),
+                  },
+                ],
+              },
+            ],
           },
         ],
       },

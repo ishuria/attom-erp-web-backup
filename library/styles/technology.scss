@@ -18,8 +18,8 @@ html > body.vab-theme-technology {
   --el-border-color-darker: #{mix($base-color-white, #2c6191, 10%)};
   --el-border-color-dark: #{mix($base-color-white, #2c6191, 20%)};
   --el-border-color: #2c6191;
-  --el-border-color-light: #{mix($base-color-white, #2c6191, 10%)};
-  --el-border-color-lighter: #{mix($base-color-white, #2c6191, 20%)};
+  --el-border-color: #{mix($base-color-white, #2c6191, 10%)};
+  --el-border-colorer: #{mix($base-color-white, #2c6191, 20%)};
   --el-border-color-extra-light: #2c6191;
   --el-fill-color-darker: #2c6191;
   --el-fill-color-dark: #2c6191;
@@ -74,34 +74,34 @@ html > body.vab-theme-technology {
   }
 
   #app {
-    border: 1px solid var(--el-border-color-light) !important;
+    border: 1px solid var(--el-border-color) !important;
   }
 
   .vab-layout-header {
-    border-top: 1px solid var(--el-border-color-light) !important;
-    border-right: 1px solid var(--el-border-color-light) !important;
+    border-top: 1px solid var(--el-border-color) !important;
+    border-right: 1px solid var(--el-border-color) !important;
   }
 
   .vab-side-bar {
-    border-top: 1px solid var(--el-border-color-light) !important;
-    border-right: 1px solid var(--el-border-color-light) !important;
-    border-left: 1px solid var(--el-border-color-light) !important;
+    border-top: 1px solid var(--el-border-color) !important;
+    border-right: 1px solid var(--el-border-color) !important;
+    border-left: 1px solid var(--el-border-color) !important;
   }
 
   .vab-layout-column {
-    border-top: 1px solid var(--el-border-color-light) !important;
+    border-top: 1px solid var(--el-border-color) !important;
   }
 
   .mobile {
     .vab-side-bar {
-      border-left: 0px solid var(--el-border-color-light) !important;
+      border-left: 0px solid var(--el-border-color) !important;
     }
   }
 
   .vab-layout-horizontal {
     .vab-layout-header {
-      border-top: 1px solid var(--el-border-color-light) !important;
-      border-left: 1px solid var(--el-border-color-light) !important;
+      border-top: 1px solid var(--el-border-color) !important;
+      border-left: 1px solid var(--el-border-color) !important;
     }
   }
 
@@ -116,7 +116,7 @@ html > body.vab-theme-technology {
 
   .table {
     td {
-      border: 1px solid var(--el-border-color-light) !important;
+      border: 1px solid var(--el-border-color) !important;
     }
   }
 
@@ -129,7 +129,7 @@ html > body.vab-theme-technology {
   }
 
   .vab-column-bar-container {
-    border-right: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color) !important;
     &-arrow {
       .el-tabs {
         .el-tabs__item {
@@ -152,26 +152,26 @@ html > body.vab-theme-technology {
   }
 
   .vab-tabs-content-card .el-tabs__header .el-tabs__item {
-    border: 1px solid var(--el-border-color-light) !important;
+    border: 1px solid var(--el-border-color) !important;
   }
 
   .vab-column-bar-container .el-tabs .el-tabs__nav {
     margin-left: -1px !important;
     background: var(--el-color-white) !important;
-    border-right: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color) !important;
   }
 
   .logo-container-column .logo {
     background: var(--el-color-white) !important;
-    border-right: 1px solid var(--el-border-color-light) !important;
+    border-right: 1px solid var(--el-border-color) !important;
   }
 
   .vab-footer {
-    border-top: 1px dashed var(--el-border-color-light) !important;
+    border-top: 1px dashed var(--el-border-color) !important;
   }
 
   .notice-clear[data-v-46bd9876] {
-    border-top: 1px solid var(--el-border-color-light) !important;
+    border-top: 1px solid var(--el-border-color) !important;
   }
 
   /*el-dialog、el-message-box */
@@ -233,7 +233,7 @@ html > body.vab-theme-technology {
 
   /*el-drawer */
   .el-drawer.rtl {
-    border: 1px solid var(--el-border-color-light);
+    border: 1px solid var(--el-border-color);
   }
 
   /* el-dialog、el-message-box、el-popover */
@@ -267,7 +267,7 @@ html > body.vab-theme-technology {
 
   .el-radio-button {
     &__inner {
-      border: 1px solid var(--el-border-color-light) !important;
+      border: 1px solid var(--el-border-color) !important;
     }
   }
 
@@ -276,7 +276,7 @@ html > body.vab-theme-technology {
   }
 
   .vab-header {
-    border-bottom: 1px solid var(--el-border-color-light) !important;
+    border-bottom: 1px solid var(--el-border-color) !important;
 
     .logo-container-horizontal {
       height: calc($base-header-height - 1px);
@@ -292,12 +292,12 @@ html > body.vab-theme-technology {
 
   .vab-tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
     color: var(--el-color-black);
-    background: var(--el-border-color-light);
+    background: var(--el-border-color);
   }
 
   /* .vab-hey-message */
   [class*='vab-hey-message'] {
-    border: 1px solid var(--el-border-color-light) !important;
+    border: 1px solid var(--el-border-color) !important;
   }
 
   /* svg */

@@ -374,7 +374,7 @@
                       height: 60px;
                       padding: 0;
                       margin: 0;
-                      border: 1px solid var(--el-border-color-light);
+                      border: 1px solid var(--el-border-color);
                       border-radius: 5px;
                     }
                   }
@@ -398,7 +398,7 @@
       z-index: $base-z-index + 1;
       padding: math.div($base-padding, 2);
       background: var(--el-color-white);
-      border-top: 1px solid var(--el-border-color-light);
+      border-top: 1px solid var(--el-border-color);
     }
   }
 </style>

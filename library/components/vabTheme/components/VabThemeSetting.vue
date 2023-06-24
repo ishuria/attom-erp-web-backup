@@ -89,7 +89,7 @@
     text-align: center;
     cursor: pointer;
     background: var(--el-color-white);
-    border: 1px solid var(--el-border-color-light);
+    border: 1px solid var(--el-border-color);
     border-top-left-radius: calc(var(--el-border-radius-base) + 3px);
     border-bottom-left-radius: calc(var(--el-border-radius-base) + 3px);
     box-shadow: 0 0 50px 0 rgb(82 63 105 / 15%);

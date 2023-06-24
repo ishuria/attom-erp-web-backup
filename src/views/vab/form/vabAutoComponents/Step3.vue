@@ -98,7 +98,7 @@
     padding: var(--el-padding);
     margin-top: var(--el-margin);
     background: #f5f7f8;
-    border: 1px dashed var(--el-border-color-light);
+    border: 1px dashed var(--el-border-color);
     border-radius: var(--el-border-radius-base);
   }
 

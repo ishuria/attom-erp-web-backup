@@ -5,7 +5,7 @@ html.dark {
   --el-color-white: #1d1e1f;
   --el-color-grey: #cfd3dc;
   --el-menu-background-color-second: #1d1e1f;
-  --el-border-color-light: #414243;
+  --el-border-color: #414243;
   --el-menu-background-color: #1d1e1f;
 
   --w-e-textarea-bg-color: #1d1e1f;
@@ -41,7 +41,7 @@ html.dark {
 
     .table {
       td {
-        border: 1px solid var(--el-border-color-light) !important;
+        border: 1px solid var(--el-border-color) !important;
       }
     }
 
@@ -54,7 +54,7 @@ html.dark {
     }
 
     .vab-column-bar-container {
-      border-right: 1px solid var(--el-border-color-light) !important;
+      border-right: 1px solid var(--el-border-color) !important;
       &-arrow {
         .el-tabs {
           .el-tabs__item {
@@ -77,26 +77,26 @@ html.dark {
     }
 
     .vab-tabs-content-card .el-tabs__header .el-tabs__item {
-      border: 1px solid var(--el-border-color-light) !important;
+      border: 1px solid var(--el-border-color) !important;
     }
 
     .vab-column-bar-container .el-tabs .el-tabs__nav {
       margin-left: -1px !important;
       background: var(--el-color-white) !important;
-      border-right: 1px solid var(--el-border-color-light) !important;
+      border-right: 1px solid var(--el-border-color) !important;
     }
 
     .logo-container-column .logo {
       background: var(--el-color-white) !important;
-      border-right: 1px solid var(--el-border-color-light) !important;
+      border-right: 1px solid var(--el-border-color) !important;
     }
 
     .vab-footer {
-      border-top: 1px dashed var(--el-border-color-light) !important;
+      border-top: 1px dashed var(--el-border-color) !important;
     }
 
     .notice-clear {
-      border-top: 1px solid var(--el-border-color-light) !important;
+      border-top: 1px solid var(--el-border-color) !important;
     }
 
     .vab-side-bar {

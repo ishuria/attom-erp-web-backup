@@ -147,7 +147,7 @@
       padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
       margin-bottom: var(--el-margin);
       background: var(--el-color-white);
-      border: 1px solid var(--el-border-color-light);
+      border: 1px solid var(--el-border-color);
 
       :deep() {
         .el-form-item__content {
@@ -212,7 +212,7 @@
         justify-content: space-between;
         padding-top: 20px;
         text-align: right;
-        border-top: 1px solid var(--el-border-color-light);
+        border-top: 1px solid var(--el-border-color);
 
         .is-circle {
           [class*='ri-'] {

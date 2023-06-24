@@ -83,7 +83,7 @@
     overflow: hidden;
     user-select: none;
     background: var(--el-color-white);
-    border-bottom: 1px solid var(--el-border-color-light);
+    border-bottom: 1px solid var(--el-border-color);
 
     .left-panel {
       display: flex;
