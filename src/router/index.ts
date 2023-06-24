@@ -395,7 +395,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           },
         ],
       },
-
       {
         path: 'list',
         name: 'List',
@@ -414,6 +413,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '描述',
           guard: ['Admin'],
           icon: 'slideshow-line',
+        },
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('/@/views/vab/tree/index.vue'),
+        meta: {
+          title: '树',
+          guard: ['Admin'],
+          icon: 'node-tree',
         },
       },
       {
@@ -437,16 +446,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'message-2-line',
         },
       },
-      {
-        path: 'echarts',
-        name: 'Echarts',
-        component: () => import('/@/views/vab/echarts/index.vue'),
-        meta: {
-          title: '图表',
-          guard: ['Admin'],
-          icon: 'bubble-chart-line',
-        },
-      },
+
       {
         path: 'dynamicMeta',
         name: 'DynamicMeta',
@@ -478,81 +478,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'time-line',
         },
       },
-      {
-        path: 'count',
-        name: 'Count',
-        component: () => import('/@/views/vab/count/index.vue'),
-        meta: {
-          title: '数字自增长',
-          guard: ['Admin'],
-          icon: 'number-0',
-        },
-      },
-
-      {
-        path: 'statistic',
-        name: 'Statistic',
-        component: () => import('/@/views/vab/statistic/index.vue'),
-        meta: {
-          title: '统计',
-          guard: ['Admin'],
-          icon: 'bar-chart-2-line',
-        },
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('/@/views/vab/tree/index.vue'),
-        meta: {
-          title: '树',
-          guard: ['Admin'],
-          icon: 'node-tree',
-        },
-      },
-      {
-        path: 'signature',
-        name: 'Signature',
-        component: () => import('/@/views/vab/signature/index.vue'),
-        meta: {
-          title: '签名',
-          icon: 'edit-2-line',
-          guard: ['Admin'],
-          badge: 'New',
-        },
-      },
-      {
-        path: 'watermark',
-        name: 'Watermark',
-        component: () => import('/@/views/vab/watermark/index.vue'),
-        meta: {
-          title: '水印',
-          guard: ['Admin'],
-          icon: 'water-flash-line',
-          dot: true,
-        },
-      },
-
-      {
-        path: 'pdf',
-        name: 'PDF',
-        component: () => import('/@/views/vab/pdf/index.vue'),
-        meta: {
-          title: 'PDF',
-          guard: ['Admin'],
-          icon: 'file-pdf-line',
-        },
-      },
-      {
-        path: 'print',
-        name: 'Print',
-        component: () => import('/@/views/vab/print/index.vue'),
-        meta: {
-          title: '打印',
-          guard: ['Admin'],
-          icon: 'printer-line',
-        },
-      },
-
       {
         path: 'menu1',
         name: 'Menu1',
@@ -592,6 +517,91 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             ],
           },
         ],
+      },
+      {
+        path: 'statistic',
+        name: 'Statistic',
+        component: () => import('/@/views/vab/statistic/index.vue'),
+        meta: {
+          title: '统计',
+          guard: ['Admin'],
+          icon: 'bar-chart-2-line',
+        },
+      },
+    ],
+  },
+  {
+    path: '/other',
+    name: 'Other',
+    component: Layout,
+    meta: {
+      title: '其他',
+      icon: 'archive-line',
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: 'echarts',
+        name: 'Echarts',
+        component: () => import('/@/views/other/echarts/index.vue'),
+        meta: {
+          title: '图表',
+          guard: ['Admin'],
+          icon: 'bubble-chart-line',
+        },
+      },
+      {
+        path: 'count',
+        name: 'Count',
+        component: () => import('/@/views/other/count/index.vue'),
+        meta: {
+          title: '数字自增长',
+          guard: ['Admin'],
+          icon: 'number-0',
+        },
+      },
+      {
+        path: 'signature',
+        name: 'Signature',
+        component: () => import('/@/views/other/signature/index.vue'),
+        meta: {
+          title: '签名',
+          icon: 'edit-2-line',
+          guard: ['Admin'],
+          badge: 'New',
+        },
+      },
+      {
+        path: 'watermark',
+        name: 'Watermark',
+        component: () => import('/@/views/other/watermark/index.vue'),
+        meta: {
+          title: '水印',
+          guard: ['Admin'],
+          icon: 'water-flash-line',
+          dot: true,
+        },
+      },
+
+      {
+        path: 'pdf',
+        name: 'PDF',
+        component: () => import('/@/views/other/pdf/index.vue'),
+        meta: {
+          title: 'PDF',
+          guard: ['Admin'],
+          icon: 'file-pdf-line',
+        },
+      },
+      {
+        path: 'print',
+        name: 'Print',
+        component: () => import('/@/views/other/print/index.vue'),
+        meta: {
+          title: '打印',
+          guard: ['Admin'],
+          icon: 'printer-line',
+        },
       },
     ],
   },

@@ -15,7 +15,7 @@ const list = [
       {
         path: 'index',
         name: 'Index',
-        component: 'views/index/index.vue',
+        component: '/@/views/index/index.vue',
         meta: {
           title: '首页',
           icon: 'home-2-line',
@@ -36,10 +36,19 @@ const list = [
       {
         path: 'chatGPT',
         name: 'ChatGPT',
-        component: 'views/chatGPT/ChatGPT.vue',
+        component: '/@/views/chatGPT/ChatGPT.vue',
         meta: {
           title: 'chatGPT',
           icon: 'chat-3-line',
+        },
+      },
+      {
+        path: 'speechSynthesis',
+        name: 'SpeechSynthesis',
+        component: '/@/views/chatGPT/SpeechSynthesis.vue',
+        meta: {
+          title: '语音合成',
+          icon: 'customer-service-line',
         },
       },
     ],
@@ -129,7 +138,7 @@ const list = [
           {
             path: 'remixIcon',
             name: 'RemixIcon',
-            component: 'views/vab/icon/remixIcon.vue',
+            component: '/@/views/vab/icon/remixIcon.vue',
             meta: {
               title: '小清新图标',
             },
@@ -137,7 +146,7 @@ const list = [
           {
             path: 'iconSelector',
             name: 'IconSelector',
-            component: 'views/vab/icon/iconSelector.vue',
+            component: '/@/views/vab/icon/iconSelector.vue',
             meta: {
               title: '图标选择器',
             },
@@ -145,7 +154,7 @@ const list = [
           {
             path: 'customSvg',
             name: 'CustomSvg',
-            component: 'views/vab/icon/customSvg.vue',
+            component: '/@/views/vab/icon/customSvg.vue',
             meta: {
               title: '自定义图标',
             },
@@ -155,16 +164,182 @@ const list = [
       {
         path: 'permission',
         name: 'Permission',
-        component: 'views/vab/permission/index.vue',
+        component: '/@/views/vab/permission/index.vue',
         meta: {
           title: '角色权限',
           icon: 'user-3-line',
         },
       },
       {
+        path: 'form',
+        name: 'Form',
+        meta: {
+          title: '表单',
+          guard: ['Admin'],
+          icon: 'file-list-2-line',
+        },
+        children: [
+          {
+            path: 'comprehensiveForm',
+            name: 'ComprehensiveForm',
+            component: '/@/views/vab/form/comprehensiveForm.vue',
+            meta: {
+              title: '综合表单',
+            },
+          },
+          {
+            path: 'stepForm',
+            name: 'StepForm',
+            component: '/@/views/vab/form/stepForm.vue',
+            meta: {
+              title: '分步表单',
+            },
+          },
+          {
+            path: 'button',
+            name: 'Button',
+            component: '/@/views/vab/form/button.vue',
+            meta: {
+              title: '按钮',
+            },
+          },
+          {
+            path: 'link',
+            name: 'Link',
+            component: '/@/views/vab/form/link.vue',
+            meta: {
+              title: '文字链接',
+            },
+          },
+          {
+            path: 'radio',
+            name: 'Radio',
+            component: '/@/views/vab/form/radio.vue',
+            meta: {
+              title: '单选框',
+            },
+          },
+          {
+            path: 'checkbox',
+            name: 'Checkbox',
+            component: '/@/views/vab/form/checkbox.vue',
+            meta: {
+              title: '多选框',
+            },
+          },
+          {
+            path: 'input',
+            name: 'Input',
+            component: '/@/views/vab/form/input.vue',
+            meta: {
+              title: '输入框',
+            },
+          },
+          {
+            path: 'inputNumber',
+            name: 'InputNumber',
+            component: '/@/views/vab/form/inputNumber.vue',
+            meta: {
+              title: '计数器',
+            },
+          },
+          {
+            path: 'select',
+            name: 'Select',
+            component: '/@/views/vab/form/select.vue',
+            meta: {
+              title: '选择器',
+              dot: true,
+            },
+          },
+          {
+            path: 'switch',
+            name: 'Switch',
+            component: '/@/views/vab/form/switch.vue',
+            meta: {
+              title: '开关',
+            },
+          },
+          {
+            path: 'slider',
+            name: 'Slider',
+            component: '/@/views/vab/form/slider.vue',
+            meta: {
+              title: '滑块',
+            },
+          },
+          {
+            path: 'timePicker',
+            name: 'TimePicker',
+            component: '/@/views/vab/form/timePicker.vue',
+            meta: {
+              title: '时间选择器',
+            },
+          },
+          {
+            path: 'datePicker',
+            name: 'DatePicker',
+            component: '/@/views/vab/form/datePicker.vue',
+            meta: {
+              title: '日期选择器',
+            },
+          },
+          {
+            path: 'dateTimePicker',
+            name: 'DateTimePicker',
+            component: '/@/views/vab/form/dateTimePicker.vue',
+            meta: {
+              title: '日期时间选择器',
+            },
+          },
+          {
+            path: 'rate',
+            name: 'Rate',
+            component: '/@/views/vab/form/rate.vue',
+            meta: {
+              title: '评分',
+            },
+          },
+        ],
+      },
+      {
+        path: 'table',
+        name: 'Table',
+        meta: {
+          title: '表格',
+          // 非editor角色的用户可见
+          guard: {
+            role: ['Editor'],
+            mode: 'except',
+          },
+          icon: 'table-2',
+        },
+        children: [
+          {
+            path: 'comprehensiveTable',
+            name: 'ComprehensiveTable',
+            component: '/@/views/vab/table/comprehensiveTable.vue',
+            meta: {
+              title: '综合表格',
+            },
+          },
+          {
+            path: 'comprehensiveTableDetail',
+            name: 'ComprehensiveTableDetail',
+            component: '/@/views/vab/table/comprehensiveTableDetail.vue',
+            meta: {
+              hidden: true,
+              title: '详情页',
+              activeMenu: '/vab/table/comprehensiveTable',
+              dynamicNewTab: true, //详情页根据id传参不同可打开多个
+            },
+          },
+        ],
+      },
+      {
         path: 'list',
         name: 'List',
-        component: 'views/vab/list/index.vue',
+        component: '/@/views/vab/list/index.vue',
         meta: {
           title: '列表',
           guard: ['Admin'],
@@ -174,7 +349,7 @@ const list = [
       {
         path: 'description',
         name: 'Description',
-        component: 'views/vab/description/index.vue',
+        component: '/@/views/vab/description/index.vue',
         meta: {
           title: '描述',
           guard: ['Admin'],
@@ -182,11 +357,22 @@ const list = [
         },
       },
       {
+        path: 'tree',
+        name: 'Tree',
+        component: '/@/views/vab/tree/index.vue',
+        meta: {
+          title: '树',
+          guard: ['Admin'],
+          icon: 'node-tree',
+        },
+      },
+      {
         path: 'wangEditor',
         name: 'WangEditor',
-        component: 'views/vab/editor/wangEditor.vue',
+        component: '/@/views/vab/editor/wangEditor.vue',
         meta: {
           title: '富文本',
+          icon: 'edit-box-line',
           guard: ['Admin'],
           dot: true,
         },
@@ -194,53 +380,43 @@ const list = [
       {
         path: 'notice',
         name: 'Notice',
-        component: 'views/vab/notice/index.vue',
+        component: '/@/views/vab/notice/index.vue',
         meta: {
           title: '通知',
           guard: ['Admin'],
           icon: 'message-2-line',
         },
       },
-      {
-        path: 'timeline',
-        name: 'Timeline',
-        component: 'views/vab/timeline/index.vue',
-        meta: {
-          title: '时间线',
-          guard: ['Admin'],
-          icon: 'time-line',
-        },
-      },
-      {
-        path: 'watermark',
-        name: 'Watermark',
-        component: 'views/vab/watermark/index.vue',
-        meta: {
-          title: '水印',
-          guard: ['Admin'],
-          icon: 'water-flash-line',
-          dot: true,
-        },
-      },
-      {
-        path: 'echarts',
-        name: 'Echarts',
-        component: 'views/vab/echarts/index.vue',
-        meta: {
-          title: '图表',
-          guard: ['Admin'],
-          icon: 'bubble-chart-line',
-        },
-      },
+
       {
         path: 'dynamicMeta',
         name: 'DynamicMeta',
-        component: 'views/vab/dynamicMeta/index.vue',
+        component: '/@/views/vab/dynamicMeta/index.vue',
         meta: {
           title: '动态Meta',
           guard: ['Admin'],
           icon: 'notification-badge-line',
           badge: '0',
+        },
+      },
+      {
+        path: 'tabs',
+        name: 'Tabs',
+        component: '/@/views/vab/tabs/index.vue',
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+        },
+      },
+      {
+        path: 'timeline',
+        name: 'Timeline',
+        component: '/@/views/vab/timeline/index.vue',
+        meta: {
+          title: '时间线',
+          guard: ['Admin'],
+          icon: 'time-line',
         },
       },
       {
@@ -273,7 +449,7 @@ const list = [
                       title: '多级路由1-1-1-1',
                     },
                     component:
-                      'views/vab/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue',
+                      '/@/views/vab/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue',
                   },
                 ],
               },
@@ -282,170 +458,89 @@ const list = [
         ],
       },
       {
-        path: 'table',
-        name: 'Table',
+        path: 'statistic',
+        name: 'Statistic',
+        component: '/@/views/vab/statistic/index.vue',
         meta: {
-          title: '表格',
-          // 非editor角色的用户可见
-          guard: {
-            role: ['Editor'],
-            mode: 'except',
-          },
-          icon: 'table-2',
+          title: '统计',
+          guard: ['Admin'],
+          icon: 'bar-chart-2-line',
         },
-        children: [
-          {
-            path: 'comprehensiveTable',
-            name: 'ComprehensiveTable',
-            component: () => 'views/vab/table/comprehensiveTable.vue',
-            meta: {
-              title: '综合表格',
-            },
-          },
-          {
-            path: 'comprehensiveTableDetail',
-            name: 'ComprehensiveTableDetail',
-            component: () => 'views/vab/table/comprehensiveTableDetail.vue',
-            meta: {
-              hidden: true,
-              title: '详情页',
-              activeMenu: '/vab/table/comprehensiveTable',
-              dynamicNewTab: true, //详情页根据id传参不同可打开多个
-            },
-          },
-        ],
+      },
+    ],
+  },
+  {
+    path: '/other',
+    name: 'Other',
+    component: 'Layout',
+    meta: {
+      title: '其他',
+      icon: 'archive-line',
+      guard: ['Admin'],
+    },
+    children: [
+      {
+        path: 'echarts',
+        name: 'Echarts',
+        component: '/@/views/other/echarts/index.vue',
+        meta: {
+          title: '图表',
+          guard: ['Admin'],
+          icon: 'bubble-chart-line',
+        },
       },
       {
-        path: 'form',
-        name: 'Form',
+        path: 'count',
+        name: 'Count',
+        component: '/@/views/other/count/index.vue',
         meta: {
-          title: '表单',
+          title: '数字自增长',
           guard: ['Admin'],
-          icon: 'file-list-2-line',
+          icon: 'number-0',
         },
-        children: [
-          {
-            path: 'comprehensiveForm',
-            name: 'ComprehensiveForm',
-            component: 'views/vab/form/comprehensiveForm.vue',
-            meta: {
-              title: '综合表单',
-            },
-          },
-          {
-            path: 'stepForm',
-            name: 'StepForm',
-            component: 'views/vab/form/stepForm.vue',
-            meta: {
-              title: '分步表单',
-            },
-          },
-          {
-            path: 'button',
-            name: 'Button',
-            component: 'views/vab/form/button.vue',
-            meta: {
-              title: '按钮',
-            },
-          },
-          {
-            path: 'link',
-            name: 'Link',
-            component: 'views/vab/form/link.vue',
-            meta: {
-              title: '文字链接',
-            },
-          },
-          {
-            path: 'radio',
-            name: 'Radio',
-            component: 'views/vab/form/radio.vue',
-            meta: {
-              title: '单选框',
-            },
-          },
-          {
-            path: 'checkbox',
-            name: 'Checkbox',
-            component: 'views/vab/form/checkbox.vue',
-            meta: {
-              title: '多选框',
-            },
-          },
-          {
-            path: 'input',
-            name: 'Input',
-            component: 'views/vab/form/input.vue',
-            meta: {
-              title: '输入框',
-            },
-          },
-          {
-            path: 'inputNumber',
-            name: 'InputNumber',
-            component: 'views/vab/form/inputNumber.vue',
-            meta: {
-              title: '计数器',
-            },
-          },
-          {
-            path: 'select',
-            name: 'Select',
-            component: 'views/vab/form/select.vue',
-            meta: {
-              title: '选择器',
-              dot: true,
-            },
-          },
-          {
-            path: 'switch',
-            name: 'Switch',
-            component: 'views/vab/form/switch.vue',
-            meta: {
-              title: '开关',
-            },
-          },
-          {
-            path: 'slider',
-            name: 'Slider',
-            component: 'views/vab/form/slider.vue',
-            meta: {
-              title: '滑块',
-            },
-          },
-          {
-            path: 'timePicker',
-            name: 'TimePicker',
-            component: 'views/vab/form/timePicker.vue',
-            meta: {
-              title: '时间选择器',
-            },
-          },
-          {
-            path: 'datePicker',
-            name: 'DatePicker',
-            component: 'views/vab/form/datePicker.vue',
-            meta: {
-              title: '日期选择器',
-            },
-          },
-          {
-            path: 'dateTimePicker',
-            name: 'DateTimePicker',
-            component: 'views/vab/form/dateTimePicker.vue',
-            meta: {
-              title: '日期时间选择器',
-            },
-          },
-          {
-            path: 'rate',
-            name: 'Rate',
-            component: 'views/vab/form/rate.vue',
-            meta: {
-              title: '评分',
-            },
-          },
-        ],
+      },
+      {
+        path: 'signature',
+        name: 'Signature',
+        component: '/@/views/other/signature/index.vue',
+        meta: {
+          title: '签名',
+          icon: 'edit-2-line',
+          guard: ['Admin'],
+          badge: 'New',
+        },
+      },
+      {
+        path: 'watermark',
+        name: 'Watermark',
+        component: '/@/views/other/watermark/index.vue',
+        meta: {
+          title: '水印',
+          guard: ['Admin'],
+          icon: 'water-flash-line',
+          dot: true,
+        },
+      },
+
+      {
+        path: 'pdf',
+        name: 'PDF',
+        component: '/@/views/other/pdf/index.vue',
+        meta: {
+          title: 'PDF',
+          guard: ['Admin'],
+          icon: 'file-pdf-line',
+        },
+      },
+      {
+        path: 'print',
+        name: 'Print',
+        component: '/@/views/other/print/index.vue',
+        meta: {
+          title: '打印',
+          guard: ['Admin'],
+          icon: 'printer-line',
+        },
       },
     ],
   },
@@ -462,7 +557,7 @@ const list = [
       {
         path: 'personalCenter',
         name: 'PersonalCenter',
-        component: 'views/setting/personalCenter/index.vue',
+        component: '/@/views/setting/personalCenter/index.vue',
         meta: {
           title: '个人中心',
           icon: 'map-pin-user-line',
@@ -471,7 +566,7 @@ const list = [
       {
         path: 'userManagement',
         name: 'UserManagement',
-        component: 'views/setting/userManagement/index.vue',
+        component: '/@/views/setting/userManagement/index.vue',
         meta: {
           title: '用户管理',
           icon: 'user-3-line',
@@ -480,7 +575,7 @@ const list = [
       {
         path: 'roleManagement',
         name: 'RoleManagement',
-        component: 'views/setting/roleManagement/index.vue',
+        component: '/@/views/setting/roleManagement/index.vue',
         meta: {
           title: '角色管理',
           icon: 'admin-line',
@@ -489,7 +584,7 @@ const list = [
       {
         path: 'departmentManagement',
         name: 'DepartmentManagement',
-        component: 'views/setting/departmentManagement/index.vue',
+        component: '/@/views/setting/departmentManagement/index.vue',
         meta: {
           title: '部门管理',
           icon: 'group-line',
@@ -498,7 +593,7 @@ const list = [
       {
         path: 'menuManagement',
         name: 'MenuManagement',
-        component: 'views/setting/menuManagement/index.vue',
+        component: '/@/views/setting/menuManagement/index.vue',
         meta: {
           title: '菜单管理',
           icon: 'menu-2-fill',
@@ -507,7 +602,7 @@ const list = [
       {
         path: 'dictionaryManagement',
         name: 'DictionaryManagement',
-        component: 'views/setting/dictionaryManagement/index.vue',
+        component: '/@/views/setting/dictionaryManagement/index.vue',
         meta: {
           title: '字典管理',
           icon: 'book-2-line',
@@ -517,7 +612,7 @@ const list = [
       {
         path: 'taskManagement',
         name: 'TaskManagement',
-        component: 'views/setting/taskManagement/index.vue',
+        component: '/@/views/setting/taskManagement/index.vue',
         meta: {
           title: '任务管理',
           icon: 'task-line',
@@ -527,7 +622,7 @@ const list = [
       {
         path: 'systemLog',
         name: 'SystemLog',
-        component: 'views/setting/systemLog/index.vue',
+        component: '/@/views/setting/systemLog/index.vue',
         meta: {
           title: '系统日志',
           icon: 'file-shield-2-line',
@@ -547,7 +642,7 @@ const list = [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: 'views/statcenter/Dashboard.vue',
+        component: '/@/views/statcenter/Dashboard.vue',
         meta: {
           title: '数据概况',
           icon: 'pie-chart-line',
@@ -567,7 +662,7 @@ const list = [
       {
         path: 'goodsManagement',
         name: 'GoodsManagement',
-        component: 'views/goods/GoodsManagement.vue',
+        component: '/@/views/goods/GoodsManagement.vue',
         meta: {
           title: '商品管理',
           icon: 'home-2-line',
@@ -576,7 +671,7 @@ const list = [
       {
         path: 'goodsTag',
         name: 'GoodsTag',
-        component: 'views/goods/GoodsTag.vue',
+        component: '/@/views/goods/GoodsTag.vue',
         meta: {
           title: '商品分组',
           icon: 'home-2-line',
@@ -585,7 +680,7 @@ const list = [
       {
         path: 'parameterDictionary',
         name: 'ParameterDictionary',
-        component: 'views/goods/ParameterDictionary.vue',
+        component: '/@/views/goods/ParameterDictionary.vue',
         meta: {
           title: '参数字典',
           icon: 'home-2-line',
@@ -596,7 +691,7 @@ const list = [
   {
     path: '/portal',
     name: 'Portal',
-    component: 'views/portal/Portal.vue',
+    component: '/@/views/portal/Portal.vue',
     meta: {
       title: '门户',
       icon: 'user-heart-line',
@@ -612,6 +707,7 @@ const list = [
     },
   },
 ]
+
 export default [
   {
     url: '/router/getList',
