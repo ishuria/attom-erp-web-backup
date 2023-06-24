@@ -2,10 +2,10 @@
   import _ from 'lodash'
   import { onBeforeRouteLeave } from 'vue-router'
 
-  const initOptions = ref({
+  const initOptions = reactive({
     renderer: 'svg',
   })
-  const option: any = ref({
+  const option: any = reactive({
     tooltip: {
       trigger: 'axis',
       extraCssText: 'z-index:1',

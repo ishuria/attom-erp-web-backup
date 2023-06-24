@@ -29,7 +29,7 @@
   const html = ref(
     '<h1>一级标题</h1><h2>二级标题</h2><h3>三级标题</h3><p>hello world ~~~ </p><blockquote>blockquote</blockquote><pre><code class="language-javascript">const a = 100;</code></pre><p><img src="https://fastly.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg" alt="" data-href="" style=""/></p>'
   )
-  const editorConfig = ref({
+  const editorConfig = reactive({
     placeholder: '请输入内容...',
     MENU_CONF: {
       uploadImage: {

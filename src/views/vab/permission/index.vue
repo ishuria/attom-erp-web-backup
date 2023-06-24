@@ -270,7 +270,7 @@
   const userStore = useUserStore()
   const { username, token } = storeToRefs(userStore)
 
-  const form = ref({
+  const form = reactive({
     account: username.value,
   })
   const tableData: any = ref([])

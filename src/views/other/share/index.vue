@@ -38,7 +38,7 @@
     name: 'Share',
   })
 
-  const form = ref({
+  const form = reactive({
     url: '',
   })
 

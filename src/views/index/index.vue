@@ -4,7 +4,7 @@
     name: 'Index',
   })
 
-  const countConfig1 = ref({
+  const countConfig1 = reactive({
     startVal: 0,
     endVal: _.random(1000, 20000),
     decimals: 2,
@@ -31,6 +31,16 @@
         />
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
+        <top-card background="white" percentage="30%" title="活跃用户">
+          <template #tag>
+            <el-tag type="danger">日</el-tag>
+          </template>
+          <template #chart>
+            <active-users-bar />
+          </template>
+        </top-card>
+      </el-col>
+      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <top-card
           background="white"
           icon="money-cny-box-line"
@@ -41,19 +51,12 @@
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <top-card
           background="white"
-          icon="user-search-line"
-          percentage="30%"
-          title="活跃用户"
-        />
-      </el-col>
-      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <top-card
-          background="white"
           icon="passport-line"
           percentage="10%"
           title="订单"
         />
       </el-col>
+
       <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <pending />
       </el-col>

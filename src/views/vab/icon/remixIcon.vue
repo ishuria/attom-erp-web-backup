@@ -81,7 +81,7 @@
 
   const queryIcon: any = ref([])
   const total = ref(0)
-  const queryForm = ref({
+  const queryForm = reactive({
     pageNo: 1,
     pageSize: 72,
     title: '',

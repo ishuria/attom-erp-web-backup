@@ -1,6 +1,9 @@
 <template>
   <vab-card :class="'top-card-' + background" class="top-card" shadow="hover">
     <span>{{ title }}</span>
+    <template v-if="$slots.tag">
+      <slot name="tag">{{ tag }}</slot>
+    </template>
     <p>
       <vab-count
         :decimals="countConfig.decimals"
@@ -12,7 +15,7 @@
         :suffix="countConfig.suffix"
       />
     </p>
-    <div class="right-icon">
+    <div v-if="icon" class="right-icon">
       <vab-icon :icon="icon" />
     </div>
 
@@ -20,6 +23,9 @@
       自上周以来
       <vab-icon icon="arrow-up-line" />
       <span>{{ percentage }}</span>
+      <template v-if="$slots.chart">
+        <slot name="chart">{{ chart }}</slot>
+      </template>
     </div>
   </vab-card>
 </template>
@@ -40,7 +46,7 @@
       },
       icon: {
         type: String,
-        default: 'album-line',
+        default: '',
       },
       percentage: {
         type: String,
@@ -75,6 +81,12 @@
   .top-card {
     position: relative;
     height: 168px !important;
+
+    :deep() {
+      .el-tag {
+        float: right;
+      }
+    }
 
     p {
       font-size: 28px;

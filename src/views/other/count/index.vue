@@ -40,7 +40,7 @@
     name: 'Count',
   })
   const show = ref(true)
-  const form = ref({
+  const form = reactive({
     startVal: 0,
     endVal: 999,
     decimals: 0,
