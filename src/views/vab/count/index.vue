@@ -37,7 +37,7 @@
 
 <script setup>
   defineOptions({
-    name: 'VabIconSelector',
+    name: 'Count',
   })
   const show = ref(true)
   const form = ref({

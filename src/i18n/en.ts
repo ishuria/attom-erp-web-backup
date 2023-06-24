@@ -80,7 +80,7 @@ export default {
     加载: 'Loading',
     视频播放器: 'Player',
     编辑器: 'Editor',
-    富文本编辑器: 'Rich text editor',
+    富文本: 'Rich text editor',
     上传: 'Upload',
     错误日志模拟: 'Log',
     Excel: 'Excel',

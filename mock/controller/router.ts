@@ -186,7 +186,7 @@ const list = [
         name: 'WangEditor',
         component: 'views/vab/editor/wangEditor.vue',
         meta: {
-          title: '富文本编辑器',
+          title: '富文本',
           guard: ['Admin'],
           dot: true,
         },

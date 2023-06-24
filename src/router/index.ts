@@ -185,6 +185,49 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     },
     children: [
       {
+        path: 'icon',
+        name: 'Icon',
+        meta: {
+          title: '图标',
+          icon: 'remixicon-line',
+        },
+        children: [
+          {
+            path: 'remixIcon',
+            name: 'RemixIcon',
+            component: () => import('/@/views/vab/icon/remixIcon.vue'),
+            meta: {
+              title: '小清新图标',
+            },
+          },
+          {
+            path: 'iconSelector',
+            name: 'IconSelector',
+            component: () => import('/@/views/vab/icon/iconSelector.vue'),
+            meta: {
+              title: '图标选择器',
+            },
+          },
+          {
+            path: 'customSvg',
+            name: 'CustomSvg',
+            component: () => import('/@/views/vab/icon/customSvg.vue'),
+            meta: {
+              title: '自定义图标',
+            },
+          },
+        ],
+      },
+      {
+        path: 'permission',
+        name: 'Permission',
+        component: () => import('/@/views/vab/permission/index.vue'),
+        meta: {
+          title: '角色权限',
+          icon: 'user-3-line',
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
@@ -317,49 +360,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         ],
       },
       {
-        path: 'icon',
-        name: 'Icon',
-        meta: {
-          title: '图标',
-          icon: 'remixicon-line',
-        },
-        children: [
-          {
-            path: 'remixIcon',
-            name: 'RemixIcon',
-            component: () => import('/@/views/vab/icon/remixIcon.vue'),
-            meta: {
-              title: '小清新图标',
-            },
-          },
-          {
-            path: 'iconSelector',
-            name: 'IconSelector',
-            component: () => import('/@/views/vab/icon/iconSelector.vue'),
-            meta: {
-              title: '图标选择器',
-            },
-          },
-          {
-            path: 'customSvg',
-            name: 'CustomSvg',
-            component: () => import('/@/views/vab/icon/customSvg.vue'),
-            meta: {
-              title: '自定义图标',
-            },
-          },
-        ],
-      },
-      {
-        path: 'permission',
-        name: 'Permission',
-        component: () => import('/@/views/vab/permission/index.vue'),
-        meta: {
-          title: '角色权限',
-          icon: 'user-3-line',
-        },
-      },
-      {
         path: 'table',
         name: 'Table',
         meta: {
@@ -421,7 +421,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         name: 'WangEditor',
         component: () => import('/@/views/vab/editor/wangEditor.vue'),
         meta: {
-          title: '富文本编辑器',
+          title: '富文本',
           icon: 'edit-box-line',
           guard: ['Admin'],
           dot: true,
@@ -448,6 +448,27 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'dynamicMeta',
+        name: 'DynamicMeta',
+        component: () => import('/@/views/vab/dynamicMeta/index.vue'),
+        meta: {
+          title: '动态Meta',
+          guard: ['Admin'],
+          icon: 'notification-badge-line',
+          badge: '0',
+        },
+      },
+      {
+        path: 'tabs',
+        name: 'Tabs',
+        component: () => import('/@/views/vab/tabs/index.vue'),
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+        },
+      },
+      {
         path: 'timeline',
         name: 'Timeline',
         component: () => import('/@/views/vab/timeline/index.vue'),
@@ -467,16 +488,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'number-0',
         },
       },
-      {
-        path: 'tabs',
-        name: 'Tabs',
-        component: () => import('/@/views/vab/tabs/index.vue'),
-        meta: {
-          title: '多标签',
-          guard: ['Admin'],
-          icon: 'bank-card-line',
-        },
-      },
+
       {
         path: 'statistic',
         name: 'Statistic',
@@ -540,17 +552,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'printer-line',
         },
       },
-      {
-        path: 'dynamicMeta',
-        name: 'DynamicMeta',
-        component: () => import('/@/views/vab/dynamicMeta/index.vue'),
-        meta: {
-          title: '动态Meta',
-          guard: ['Admin'],
-          icon: 'notification-badge-line',
-          badge: '0',
-        },
-      },
+
       {
         path: 'menu1',
         name: 'Menu1',

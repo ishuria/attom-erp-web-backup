@@ -34,7 +34,7 @@
             <span>动态图标</span>
           </template>
           <el-popover
-            :width="292"
+            :width="305"
             popper-class="icon-selector-popper"
             trigger="hover"
           >

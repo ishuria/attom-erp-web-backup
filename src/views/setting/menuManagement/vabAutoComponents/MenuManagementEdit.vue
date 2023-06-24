@@ -32,7 +32,7 @@
       </el-form-item>
       <el-form-item label="图标">
         <el-popover
-          :width="292"
+          :width="305"
           popper-class="icon-selector-popper"
           trigger="hover"
         >
