@@ -1,5 +1,5 @@
 <template>
-  <img v-if="isExternal" :src="icon" class="img-icon" />
+  <img v-if="_isExternal" :src="icon" class="img-icon" />
   <svg v-else-if="isCustomSvg" :class="svgClass" aria-hidden="true">
     <use :xlink:href="'#vab-icon-' + icon" />
   </svg>
@@ -16,45 +16,43 @@
   />
 </template>
 
-<script>
+<script lang="ts" setup>
   import 'remixicon/fonts/remixicon.css'
   import { isExternal } from '/@/utils/validate'
 
-  export default {
+  defineOptions({
     name: 'VabIcon',
-    props: {
-      icon: {
-        type: String,
-        required: true,
-      },
-      // 是否使用自定义图标
-      isCustomSvg: {
-        type: Boolean,
-        default: false,
-      },
-      // 是否使用本地库Remix图标
-      isDefaultSvg: {
-        type: Boolean,
-        default: false,
-      },
-      className: {
-        type: String,
-        default: '',
-      },
-    },
-    setup(props) {
-      const svgClass = computed(() => {
-        if (props.className) return `vab-icon ${props.className}`
-        else return 'vab-icon'
-      })
+  })
 
-      return {
-        svgClass,
-        isExternal: isExternal(props.icon),
-        remixIconPath: import('remixicon/fonts/remixicon.symbol.svg'),
-      }
+  const props = defineProps({
+    icon: {
+      type: String,
+      required: true,
     },
-  }
+    // 是否使用自定义图标
+    isCustomSvg: {
+      type: Boolean,
+      default: false,
+    },
+    // 是否使用本地库Remix图标
+    isDefaultSvg: {
+      type: Boolean,
+      default: false,
+    },
+    className: {
+      type: String,
+      default: '',
+    },
+  })
+
+  const svgClass = computed(() => {
+    if (props.className) return `vab-icon ${props.className}`
+    else return 'vab-icon'
+  })
+
+  const remixIconPath = import('remixicon/fonts/remixicon.symbol.svg')
+
+  const _isExternal = isExternal(props.icon)
 </script>
 
 <style lang="scss" scoped>

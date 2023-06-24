@@ -11,6 +11,7 @@
     <vab-theme-drawer />
     <vab-theme-setting />
     <vab-surely-form />
+    <vab-statistics />
   </div>
 </template>
 
