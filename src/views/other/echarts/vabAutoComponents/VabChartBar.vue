@@ -13,41 +13,66 @@
   </el-col>
 </template>
 
-<script>
-  export default defineComponent({
-    name: 'VabChartBar',
+<script lang="ts" setup>
+  import _ from 'lodash'
 
-    props: {
-      title: {
-        type: String,
-        default: '',
-      },
+  defineOptions({
+    name: 'VabChartTreemap',
+  })
+
+  defineProps({
+    title: {
+      type: String,
+      default: '',
     },
-    data() {
-      return {
-        initOptions: {
-          renderer: 'svg',
-        },
-        option: {
-          grid: {
-            top: 20,
-            right: 20,
-            bottom: 40,
-            left: 40,
-          },
-          xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          },
-          yAxis: {
-            type: 'value',
-          },
-          series: {
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'bar',
-          },
-        },
-      }
+  })
+
+  const initOptions = reactive({
+    renderer: 'svg',
+  })
+
+  const option = reactive({
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 40,
+      left: 40,
     },
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: {
+      data: [
+        _.random(50, 200),
+        _.random(50, 200),
+        _.random(50, 200),
+        _.random(50, 200),
+        _.random(50, 200),
+        _.random(50, 200),
+        _.random(50, 200),
+      ],
+      type: 'bar',
+    },
+  })
+
+  const timer = setInterval(() => {
+    option.series.data = [
+      _.random(50, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(50, 100),
+      _.random(50, 200),
+    ]
+  }, 3000)
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
   })
 </script>

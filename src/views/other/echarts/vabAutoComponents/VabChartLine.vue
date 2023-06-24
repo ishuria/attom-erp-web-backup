@@ -13,41 +13,66 @@
   </el-col>
 </template>
 
-<script>
-  export default defineComponent({
-    name: 'VabChartLine',
+<script lang="ts" setup>
+  import _ from 'lodash'
 
-    props: {
-      title: {
-        type: String,
-        default: '',
-      },
+  defineOptions({
+    name: 'VabChartLine',
+  })
+
+  defineProps({
+    title: {
+      type: String,
+      default: '',
     },
-    data() {
-      return {
-        initOptions: {
-          renderer: 'svg',
-        },
-        option: {
-          grid: {
-            top: 20,
-            right: 20,
-            bottom: 40,
-            left: 40,
-          },
-          xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          },
-          yAxis: {
-            type: 'value',
-          },
-          series: {
-            data: [150, 230, 224, 218, 135, 147, 260],
-            type: 'line',
-          },
-        },
-      }
+  })
+
+  const initOptions = reactive({
+    renderer: 'svg',
+  })
+
+  const option = reactive({
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 40,
+      left: 40,
     },
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: {
+      data: [
+        _.random(50, 100),
+        _.random(10, 100),
+        _.random(10, 100),
+        _.random(10, 100),
+        _.random(10, 100),
+        _.random(50, 100),
+        _.random(50, 200),
+      ],
+      type: 'line',
+    },
+  })
+
+  const timer = setInterval(() => {
+    option.series.data = [
+      _.random(50, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(50, 100),
+      _.random(50, 200),
+    ]
+  }, 3000)
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
   })
 </script>

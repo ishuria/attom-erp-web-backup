@@ -13,45 +13,97 @@
   </el-col>
 </template>
 
-<script>
-  export default defineComponent({
-    name: 'VabChartCandlestick',
+<script lang="ts" setup>
+  import _ from 'lodash'
 
-    props: {
-      title: {
-        type: String,
-        default: '',
-      },
+  defineOptions({
+    name: 'VabChartCandlestick',
+  })
+
+  defineProps({
+    title: {
+      type: String,
+      default: '',
     },
-    data() {
-      return {
-        initOptions: {
-          renderer: 'svg',
-        },
-        option: {
-          grid: {
-            top: 20,
-            right: 20,
-            bottom: 40,
-            left: 40,
-          },
-          xAxis: {
-            data: ['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27'],
-          },
-          yAxis: {},
-          series: [
-            {
-              type: 'k',
-              data: [
-                [20, 34, 10, 38],
-                [40, 35, 30, 50],
-                [31, 38, 33, 44],
-                [38, 15, 5, 42],
-              ],
-            },
-          ],
-        },
-      }
+  })
+
+  const initOptions = reactive({
+    renderer: 'svg',
+  })
+
+  const option = reactive({
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 40,
+      left: 40,
     },
+    xAxis: {
+      data: ['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27'],
+    },
+    yAxis: {},
+    series: {
+      type: 'k',
+      data: [
+        [
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+        ],
+        [
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+        ],
+        [
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+        ],
+        [
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+          _.random(50, 100),
+        ],
+      ],
+    },
+  })
+
+  const timer = setInterval(() => {
+    option.series.data = [
+      [
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+      ],
+      [
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+      ],
+      [
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+      ],
+      [
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+        _.random(50, 100),
+      ],
+    ]
+  }, 3000)
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
   })
 </script>

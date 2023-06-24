@@ -548,6 +548,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '图表',
           guard: ['Admin'],
           icon: 'bubble-chart-line',
+          noKeepAlive: true,
         },
       },
       {

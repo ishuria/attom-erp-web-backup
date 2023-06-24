@@ -13,213 +13,397 @@
   </el-col>
 </template>
 
-<script>
-  export default defineComponent({
-    name: 'VabChartSunburst',
+<script lang="ts" setup>
+  import _ from 'lodash'
 
-    props: {
-      title: {
-        type: String,
-        default: '',
+  defineOptions({
+    name: 'VabChartSunburst',
+  })
+
+  defineProps({
+    title: {
+      type: String,
+      default: '',
+    },
+  })
+
+  const initOptions = reactive({
+    renderer: 'svg',
+  })
+
+  const option = reactive({
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 20,
+      left: 20,
+    },
+    series: {
+      type: 'sunburst',
+      data: [
+        {
+          children: [
+            {
+              value: _.random(0, 40),
+              children: [
+                {
+                  value: _.random(0, 40),
+                },
+                {
+                  value: _.random(0, 40),
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              value: _.random(0, 40),
+              children: [
+                {
+                  value: _.random(0, 40),
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                    {
+                      value: _.random(0, 40),
+                    },
+                    {
+                      value: _.random(0, 40),
+                    },
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: _.random(0, 40),
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: _.random(0, 40),
+          children: [
+            {
+              value: _.random(0, 40),
+              children: [
+                {
+                  value: _.random(0, 40),
+                },
+                {
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              children: [
+                {
+                  value: _.random(0, 40),
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: _.random(0, 40),
+          children: [
+            {
+              children: [
+                {
+                  value: _.random(0, 40),
+                },
+                {
+                  value: _.random(0, 40),
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: _.random(0, 40),
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          children: [
+            {
+              value: _.random(0, 40),
+              children: [
+                {
+                  value: _.random(0, 40),
+                },
+                {
+                  value: _.random(0, 40),
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: _.random(0, 40),
+                },
+              ],
+            },
+            {
+              value: _.random(0, 40),
+              children: [
+                {
+                  value: _.random(0, 40),
+                },
+                {
+                  children: [
+                    {
+                      value: _.random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: _.random(0, 40),
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      radius: ['10%', '100%'],
+      label: {
+        rotate: 'radial',
       },
     },
-    data() {
-      return {
-        initOptions: {
-          renderer: 'svg',
-        },
-        option: {
-          grid: {
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
-          },
-          series: {
-            type: 'sunburst',
-            data: [
+  })
+
+  const timer = setInterval(() => {
+    option.series.data = [
+      {
+        children: [
+          {
+            value: _.random(0, 40),
+            children: [
               {
-                children: [
-                  {
-                    value: 5,
-                    children: [
-                      {
-                        value: 1,
-                      },
-                      {
-                        value: 2,
-                        children: [
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                      {
-                        children: [
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    value: 10,
-                    children: [
-                      {
-                        value: 6,
-                        children: [
-                          {
-                            value: 1,
-                          },
-                          {
-                            value: 1,
-                          },
-                          {
-                            value: 1,
-                          },
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                      {
-                        value: 2,
-                        children: [
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                      {
-                        children: [
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
+                value: _.random(0, 40),
               },
               {
-                value: 9,
+                value: _.random(0, 40),
                 children: [
                   {
-                    value: 4,
-                    children: [
-                      {
-                        value: 2,
-                      },
-                      {
-                        children: [
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    children: [
-                      {
-                        value: 3,
-                        children: [
-                          {
-                            value: 1,
-                          },
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                value: 7,
-                children: [
-                  {
-                    children: [
-                      {
-                        value: 1,
-                      },
-                      {
-                        value: 3,
-                        children: [
-                          {
-                            value: 1,
-                          },
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                      {
-                        value: 2,
-                        children: [
-                          {
-                            value: 1,
-                          },
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                    ],
+                    value: _.random(0, 40),
                   },
                 ],
               },
               {
                 children: [
                   {
-                    value: 6,
-                    children: [
-                      {
-                        value: 1,
-                      },
-                      {
-                        value: 2,
-                        children: [
-                          {
-                            value: 2,
-                          },
-                        ],
-                      },
-                      {
-                        value: 1,
-                      },
-                    ],
-                  },
-                  {
-                    value: 3,
-                    children: [
-                      {
-                        value: 1,
-                      },
-                      {
-                        children: [
-                          {
-                            value: 1,
-                          },
-                        ],
-                      },
-                      {
-                        value: 1,
-                      },
-                    ],
+                    value: _.random(0, 40),
                   },
                 ],
               },
             ],
-            radius: ['10%', '100%'],
-            label: {
-              rotate: 'radial',
-            },
           },
-        },
-      }
-    },
+          {
+            value: _.random(0, 40),
+            children: [
+              {
+                value: _.random(0, 40),
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                  {
+                    value: _.random(0, 40),
+                  },
+                  {
+                    value: _.random(0, 40),
+                  },
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+              {
+                value: _.random(0, 40),
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+              {
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        value: _.random(0, 40),
+        children: [
+          {
+            value: _.random(0, 40),
+            children: [
+              {
+                value: _.random(0, 40),
+              },
+              {
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            children: [
+              {
+                value: _.random(0, 40),
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        value: _.random(0, 40),
+        children: [
+          {
+            children: [
+              {
+                value: _.random(0, 40),
+              },
+              {
+                value: _.random(0, 40),
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+              {
+                value: _.random(0, 40),
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            value: _.random(0, 40),
+            children: [
+              {
+                value: _.random(0, 40),
+              },
+              {
+                value: _.random(0, 40),
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+              {
+                value: _.random(0, 40),
+              },
+            ],
+          },
+          {
+            value: _.random(0, 40),
+            children: [
+              {
+                value: _.random(0, 40),
+              },
+              {
+                children: [
+                  {
+                    value: _.random(0, 40),
+                  },
+                ],
+              },
+              {
+                value: _.random(0, 40),
+              },
+            ],
+          },
+        ],
+      },
+    ]
+  }, 3000)
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
   })
 </script>

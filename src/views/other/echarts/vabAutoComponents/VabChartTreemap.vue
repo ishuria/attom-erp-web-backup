@@ -13,67 +13,105 @@
   </el-col>
 </template>
 
-<script>
-  export default defineComponent({
-    name: 'VabChartTreemap',
+<script lang="ts" setup>
+  import _ from 'lodash'
 
-    props: {
-      title: {
-        type: String,
-        default: '',
-      },
+  defineOptions({
+    name: 'VabChartBar',
+  })
+
+  defineProps({
+    title: {
+      type: String,
+      default: '',
     },
-    data() {
-      return {
-        initOptions: {
-          renderer: 'svg',
-        },
-        option: {
-          grid: {
-            top: 20,
-            right: 20,
-            bottom: 60,
-            left: 40,
-          },
-          series: [
+  })
+
+  const initOptions = reactive({
+    renderer: 'svg',
+  })
+
+  const option = reactive({
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 60,
+      left: 40,
+    },
+    series: {
+      type: 'treemap',
+      data: [
+        {
+          name: 'nodeA',
+          value: _.random(0, 10),
+          children: [
             {
-              type: 'treemap',
-              data: [
+              name: 'nodeAa',
+              value: _.random(0, 10),
+            },
+            {
+              name: 'nodeAb',
+              value: _.random(0, 10),
+            },
+          ],
+        },
+        {
+          name: 'nodeB',
+          value: _.random(0, 10),
+          children: [
+            {
+              name: 'nodeBa',
+              value: _.random(0, 10),
+              children: [
                 {
-                  name: 'nodeA', // First tree
-                  value: 10,
-                  children: [
-                    {
-                      name: 'nodeAa', // First leaf of first tree
-                      value: 4,
-                    },
-                    {
-                      name: 'nodeAb', // Second leaf of first tree
-                      value: 6,
-                    },
-                  ],
-                },
-                {
-                  name: 'nodeB', // Second tree
-                  value: 20,
-                  children: [
-                    {
-                      name: 'nodeBa', // Son of first tree
-                      value: 20,
-                      children: [
-                        {
-                          name: 'nodeBa1', // Granson of first tree
-                          value: 20,
-                        },
-                      ],
-                    },
-                  ],
+                  name: 'nodeBa1',
+                  value: _.random(0, 10),
                 },
               ],
             },
           ],
         },
-      }
+      ],
     },
+  })
+
+  const timer = setInterval(() => {
+    option.series.data = [
+      {
+        name: 'nodeA',
+        value: _.random(0, 10),
+        children: [
+          {
+            name: 'nodeAa',
+            value: _.random(0, 10),
+          },
+          {
+            name: 'nodeAb',
+            value: _.random(0, 10),
+          },
+        ],
+      },
+      {
+        name: 'nodeB',
+        value: _.random(0, 10),
+        children: [
+          {
+            name: 'nodeBa',
+            value: _.random(0, 10),
+            children: [
+              {
+                name: 'nodeBa1',
+                value: _.random(0, 10),
+              },
+            ],
+          },
+        ],
+      },
+    ]
+  }, 3000)
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
   })
 </script>

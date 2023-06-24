@@ -12,54 +12,67 @@
     </vab-card>
   </el-col>
 </template>
+<script lang="ts" setup>
+  import _ from 'lodash'
 
-<script>
-  export default defineComponent({
+  defineOptions({
     name: 'VabChartGauge',
+  })
 
-    props: {
-      title: {
-        type: String,
-        default: '',
+  defineProps({
+    title: {
+      type: String,
+      default: '',
+    },
+  })
+
+  const initOptions = reactive({
+    renderer: 'svg',
+  })
+
+  const option = reactive({
+    grid: {
+      top: 20,
+      right: 20,
+      bottom: 20,
+      left: 20,
+    },
+    tooltip: {
+      formatter: '{a} <br/>{b} : {c}%',
+    },
+    series: {
+      name: 'Pressure',
+      type: 'gauge',
+      radius: '100%',
+      progress: {
+        show: true,
       },
-    },
-    data() {
-      return {
-        initOptions: {
-          renderer: 'svg',
+      detail: {
+        formatter: '{value}',
+        valueAnimation: true,
+        fontSize: 14,
+        offsetCenter: [0, '70%'],
+      },
+      data: [
+        {
+          value: _.random(0, 100),
+          name: 'SCORE',
         },
-        option: {
-          grid: {
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 20,
-          },
-          tooltip: {
-            formatter: '{a} <br/>{b} : {c}%',
-          },
-          series: {
-            name: 'Pressure',
-            type: 'gauge',
-            radius: '100%',
-            progress: {
-              show: true,
-            },
-            detail: {
-              formatter: '{value}',
-              valueAnimation: true,
-              fontSize: 14,
-              offsetCenter: [0, '70%'],
-            },
-            data: [
-              {
-                value: 50,
-                name: 'SCORE',
-              },
-            ],
-          },
-        },
-      }
+      ],
     },
+  })
+
+  const timer = setInterval(() => {
+    option.series.data = [
+      {
+        value: _.random(0, 100),
+        name: 'SCORE',
+      },
+    ]
+  }, 3000)
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
   })
 </script>

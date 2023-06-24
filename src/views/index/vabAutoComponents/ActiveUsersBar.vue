@@ -6,13 +6,14 @@
 </template>
 
 <script lang="ts" setup>
+  import _ from 'lodash'
   import VabChart from '/@/plugins/VabChart/index.vue'
 
   const initOptions = reactive({
     renderer: 'svg',
   })
 
-  const option = reactive({
+  const option: any = reactive({
     grid: {
       left: '10%',
       top: 0,
@@ -45,18 +46,34 @@
         name: '',
         type: 'bar',
         data: [
-          80,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          50,
+          _.random(50, 100),
+          _.random(10, 100),
+          _.random(10, 100),
+          _.random(10, 100),
+          _.random(10, 100),
+          _.random(50, 100),
         ],
         itemStyle: {
           color: 'var(--el-color-primary)',
         },
       },
     ],
+  })
+
+  const timer = setInterval(() => {
+    option.series[0].data = [
+      _.random(50, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(10, 100),
+      _.random(50, 100),
+    ]
+  }, 3000)
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
   })
 </script>
 

@@ -1,4 +1,4 @@
-const watermark = {}
+const watermark: any = {}
 
 const setWatermark = (str: string) => {
   const id = '1.23452384164.123412416'
@@ -33,13 +33,10 @@ const setWatermark = (str: string) => {
   document.body.appendChild(div)
   return id
 }
-//@ts-ignore
 watermark.set = (str: any) => {
   let id = setWatermark(str)
   setInterval(() => {
-    if (document.getElementById(id) === null) {
-      id = setWatermark(str)
-    }
+    if (document.getElementById(id) === null) id = setWatermark(str)
   }, 500)
   window.onresize = () => {
     setWatermark(str)
