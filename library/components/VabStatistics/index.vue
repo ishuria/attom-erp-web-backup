@@ -9,7 +9,6 @@
       !location.hostname.includes('127') &&
       !location.hostname.includes('192')
     ) {
-      alert(location.hostname)
       ;(function () {
         const hm = document.createElement('script')
         hm.src = 'https://hm.baidu.com/hm.js?820b686671af452e8a4e18952ce946d8'
