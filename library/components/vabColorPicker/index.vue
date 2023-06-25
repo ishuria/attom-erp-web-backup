@@ -3,8 +3,8 @@
   import { useSettingsStore } from '/@/store/modules/settings'
 
   const color = ref(_color)
-  const $sub: any = inject('$sub')
-  const $unsub: any = inject('$unsub')
+  const $sub = inject<any>('$sub')
+  const $unsub = inject<any>('$unsub')
   const $pub: any = inject('$pub')
 
   const predefineColors = ref([

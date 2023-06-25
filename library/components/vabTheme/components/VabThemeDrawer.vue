@@ -2,11 +2,11 @@
   import { translateTitle } from '/@/utils/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const $sub: any = inject('$sub')
+  const $sub = inject<any>('$sub')
   const $pub: any = inject('$pub')
-  const $unsub: any = inject('$unsub')
-  const $baseLoading: any = inject('$baseLoading')
-  const $baseMessage: any = inject('$baseMessage')
+  const $unsub = inject<any>('$unsub')
+  const $baseLoading = inject<any>('$baseLoading')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const settingsStore: any = useSettingsStore()
   const { theme, device }: any = storeToRefs(settingsStore)

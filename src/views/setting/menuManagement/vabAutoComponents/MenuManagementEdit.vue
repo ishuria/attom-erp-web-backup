@@ -80,7 +80,7 @@
   defineOptions({ name: 'MenuManagementEdit' })
   const emit = defineEmits(['fetch-data'])
 
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const formRef: any = ref(null)
   let form: any = reactive({

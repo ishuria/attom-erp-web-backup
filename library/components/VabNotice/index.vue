@@ -3,7 +3,7 @@
   import { translateTitle } from '/@/utils/i18n'
   import { getList } from '/@/api/notice'
 
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)

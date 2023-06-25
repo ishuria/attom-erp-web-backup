@@ -14,7 +14,7 @@
   const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
   const finish = ref(true)
 
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const radio = ref('小爱同学')
   const url = ref('https://api.oioweb.cn/api/ai/chat?text=')

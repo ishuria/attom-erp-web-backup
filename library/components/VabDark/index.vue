@@ -3,10 +3,10 @@
   import { useDark, useToggle } from '@vueuse/core'
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const $sub: any = inject('$sub')
-  const $unsub: any = inject('$unsub')
+  const $sub = inject<any>('$sub')
+  const $unsub = inject<any>('$unsub')
 
-  const $baseLoading: any = inject('$baseLoading')
+  const $baseLoading = inject<any>('$baseLoading')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const isDark = useDark()

@@ -126,9 +126,9 @@
     name: 'Notice',
   })
 
-  const $baseAlert: any = inject('$baseAlert')
-  const $baseNotify: any = inject('$baseNotify')
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseAlert = inject<any>('$baseAlert')
+  const $baseNotify = inject<any>('$baseNotify')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const open1 = () => {
     $baseMessage('这是一条消息提示', 'info')

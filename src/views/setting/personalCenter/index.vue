@@ -202,7 +202,7 @@
     name: 'PersonalCenter',
   })
 
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const userStore = useUserStore()
   const { avatar } = storeToRefs(userStore)

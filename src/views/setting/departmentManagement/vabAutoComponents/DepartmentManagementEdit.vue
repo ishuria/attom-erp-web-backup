@@ -45,7 +45,7 @@
   })
 
   const emit = defineEmits(['fetch-data'])
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const formRef: any = ref(null)
   const treeData: any = ref([])

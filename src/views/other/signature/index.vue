@@ -5,7 +5,7 @@
 
   const canvas = ref()
   let ctx: CanvasRenderingContext2D
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
   let painting = false
   import { getImageUrl } from '/@/utils/imageUrl'
   const catUrl = getImageUrl('assets/signature_images/cat.png')

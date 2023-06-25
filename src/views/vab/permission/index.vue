@@ -264,7 +264,7 @@
     name: 'Permission',
   })
 
-  const $baseLoading: any = inject('$baseLoading')
+  const $baseLoading = inject<any>('$baseLoading')
   const aclStore = useAclStore()
   const { role, permission } = storeToRefs(aclStore)
   const userStore = useUserStore()

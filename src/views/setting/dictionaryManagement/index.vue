@@ -88,7 +88,7 @@
   })
 
   const $baseConfirm: any = inject('$baseConfirm')
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const treeRef: any = ref(null)
   const editRef: any = ref(null)

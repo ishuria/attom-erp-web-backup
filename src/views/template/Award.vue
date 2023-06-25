@@ -6,7 +6,7 @@
   const buttonImg = getImageUrl('assets/award_images/button.png')
   const award_1 = getImageUrl('assets/award_images/award_1.png')
   const award_2 = getImageUrl('assets/award_images/award_2.png')
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const blocks = [
     {

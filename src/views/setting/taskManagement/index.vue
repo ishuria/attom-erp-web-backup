@@ -91,7 +91,7 @@
     name: 'TaskManagement',
   })
 
-  const $baseMessage: any = inject('$baseMessage')
+  const $baseMessage = inject<any>('$baseMessage')
 
   const list: any = ref([])
   const listLoading = ref(true)

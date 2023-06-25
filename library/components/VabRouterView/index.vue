@@ -8,8 +8,8 @@
 
   const route = useRoute()
 
-  const $sub: any = inject('$sub')
-  const $unsub: any = inject('$unsub')
+  const $sub = inject<any>('$sub')
+  const $unsub = inject<any>('$unsub')
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
