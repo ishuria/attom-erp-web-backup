@@ -92,14 +92,12 @@
   const emptyShow = ref(true)
 
   const fetchData = async () => {
-    const {
-      data: { list, total: _total },
-    } = await getIconList(queryForm)
-    queryIcon.value = list.map((icon: any) => {
+    const { data } = await getIconList(queryForm)
+    queryIcon.value = data.list.map((icon: any) => {
       return { icon, color: randomHexColor() }
     })
-    total.value = _total
-    if (_total > 0) emptyShow.value = false
+    total.value = data.total
+    if (data.total > 0) emptyShow.value = false
     else emptyShow.value = true
   }
   const handleSizeChange = (val: number) => {

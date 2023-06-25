@@ -102,59 +102,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { getList } from '/@/api/systemLog'
   import { Search } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'SystemLog',
-    setup() {
-      const state = reactive({
-        list: [],
-        listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        total: 0,
-        queryForm: {
-          account: '',
-          searchDate: '',
-          pageNo: 1,
-          pageSize: 20,
-        },
-      })
+  })
 
-      const fetchData = async () => {
-        state.listLoading = true
-        const {
-          data: { list, total },
-        } = await getList(state.queryForm)
-        state.list = list
-        state.total = total
-        state.listLoading = false
-      }
-      const handleSizeChange = (val) => {
-        state.queryForm.pageSize = val
-        fetchData()
-      }
-      const handleCurrentChange = (val) => {
-        state.queryForm.pageNo = val
-        fetchData()
-      }
-      const queryData = () => {
-        state.queryForm.pageNo = 1
-        fetchData()
-      }
-      onMounted(() => {
-        fetchData()
-      })
+  const list = ref([])
+  const listLoading = ref(true)
+  const layout = ref('total, sizes, prev, pager, next, jumper')
+  const total = ref(0)
+  const queryForm = reactive({
+    account: '',
+    searchDate: '',
+    pageNo: 1,
+    pageSize: 20,
+  })
 
-      return {
-        ...toRefs(state),
-        fetchData,
-        handleSizeChange,
-        handleCurrentChange,
-        queryData,
-        Search,
-      }
-    },
+  const handleSizeChange = (val: any) => {
+    queryForm.pageSize = val
+    fetchData()
+  }
+  const handleCurrentChange = (val: any) => {
+    queryForm.pageNo = val
+    fetchData()
+  }
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+  }
+  onMounted(() => {
+    fetchData()
   })
 </script>

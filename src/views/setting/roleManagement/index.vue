@@ -2,10 +2,10 @@
   <div class="role-management-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button :icon="Plus" type="primary" @click="handleEdit($event)">
+        <el-button :icon="Plus" type="primary" @click="handleEdit()">
           添加
         </el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete($event)">
+        <el-button :icon="Delete" type="danger" @click="handleDelete()">
           批量删除
         </el-button>
       </vab-query-form-left-panel>
@@ -54,13 +54,7 @@
       <el-table-column align="center" label="按钮权限" show-overflow-tooltip>
         <template #default="{ row }">
           <el-tag v-for="(item, index) in row.btnRolesCheckedList" :key="index">
-            {{
-              {
-                'read:system': '读',
-                'write:system': '写',
-                'delete:system': '删',
-              }[item]
-            }}
+            {{ item }}
           </el-tag>
         </template>
       </el-table-column>
@@ -96,98 +90,79 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { doDelete, getList } from '/@/api/roleManagement'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'RoleManagement',
-    setup() {
-      const $baseConfirm = inject('$baseConfirm')
-      const $baseMessage = inject('$baseMessage')
+  })
 
-      const state = reactive({
-        editRef: null,
-        list: [],
-        listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        total: 0,
-        selectRows: '',
-        queryForm: {
-          pageNo: 1,
-          pageSize: 10,
-          role: '',
-        },
+  const $baseConfirm: any = inject('$baseConfirm')
+  const $baseMessage: any = inject('$baseMessage')
+
+  const editRef: any = ref(null)
+  const list = ref([])
+  const listLoading = ref(true)
+  const layout = ref('total, sizes, prev, pager, next, jumper')
+  const total = ref(0)
+  const selectRows: any = ref('')
+  const queryForm = reactive({
+    pageNo: 1,
+    pageSize: 10,
+    role: '',
+  })
+
+  const setSelectRows = (val: any) => {
+    selectRows.value = val
+  }
+  const handleEdit = (row: any = {}) => {
+    if (row.id) {
+      editRef.value.showEdit(row)
+    } else {
+      editRef.value.showEdit()
+    }
+  }
+  const handleDelete = (row: any = {}) => {
+    if (row.id) {
+      $baseConfirm('你确定要删除当前项吗', null, async () => {
+        const { msg }: any = await doDelete({ ids: row.id })
+        $baseMessage(msg, 'success', 'hey')
+        await fetchData()
       })
-
-      const setSelectRows = (val) => {
-        state.selectRows = val
+    } else {
+      if (selectRows.value.length > 0) {
+        const ids = selectRows.value.map((item: any) => item.id).join()
+        $baseConfirm('你确定要删除选中项吗', null, async () => {
+          const { msg }: any = await doDelete({ ids })
+          $baseMessage(msg, 'success', 'hey')
+          await fetchData()
+        })
+      } else {
+        $baseMessage('未选中任何行', 'error', 'hey')
       }
-      const handleEdit = (row) => {
-        if (row.id) {
-          state['editRef'].showEdit(row)
-        } else {
-          state['editRef'].showEdit()
-        }
-      }
-      const handleDelete = (row) => {
-        if (row.id) {
-          $baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
-            $baseMessage(msg, 'success', 'hey')
-            await fetchData()
-          })
-        } else {
-          if (state.selectRows.length > 0) {
-            const ids = state.selectRows.map((item) => item.id).join()
-            $baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids })
-              $baseMessage(msg, 'success', 'hey')
-              await fetchData()
-            })
-          } else {
-            $baseMessage('未选中任何行', 'error', 'hey')
-          }
-        }
-      }
-      const handleSizeChange = (val) => {
-        state.queryForm.pageSize = val
-        fetchData()
-      }
-      const handleCurrentChange = (val) => {
-        state.queryForm.pageNo = val
-        fetchData()
-      }
-      const queryData = () => {
-        state.queryForm.pageNo = 1
-        fetchData()
-      }
-      const fetchData = async () => {
-        state.listLoading = true
-        const {
-          data: { list, total },
-        } = await getList(state.queryForm)
-        state.list = list
-        state.total = total
-        state.listLoading = false
-      }
-      onMounted(() => {
-        fetchData()
-      })
-
-      return {
-        ...toRefs(state),
-        setSelectRows,
-        handleEdit,
-        handleDelete,
-        handleSizeChange,
-        handleCurrentChange,
-        queryData,
-        fetchData,
-        Delete,
-        Plus,
-        Search,
-      }
-    },
+    }
+  }
+  const handleSizeChange = (val: number) => {
+    queryForm.pageSize = val
+    fetchData()
+  }
+  const handleCurrentChange = (val: number) => {
+    queryForm.pageNo = val
+    fetchData()
+  }
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+  }
+  onMounted(() => {
+    fetchData()
   })
 </script>

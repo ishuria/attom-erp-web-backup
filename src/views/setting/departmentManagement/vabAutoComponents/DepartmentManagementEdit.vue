@@ -37,84 +37,74 @@
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { doEdit, getList } from '/@/api/departmentManagement'
 
-  export default defineComponent({
+  defineOptions({
     name: 'DepartmentManagementEdit',
-    emits: ['fetch-data'],
-    setup(props, { emit }) {
-      const $baseMessage = inject('$baseMessage')
-
-      const state = reactive({
-        formRef: null,
-        treeData: [],
-        defaultProps: {
-          children: 'children',
-          label: 'name',
-        },
-        form: {
-          parentName: '',
-          parentId: '',
-        },
-        rules: {
-          parentName: [
-            { required: true, trigger: 'blur', message: '请选择父节点' },
-          ],
-          name: [{ required: true, trigger: 'blur', message: '请输入名称' }],
-          order: [{ required: true, trigger: 'blur', message: '请输入排序' }],
-        },
-        title: '',
-        dialogFormVisible: false,
-      })
-
-      const fetchData = async () => {
-        const {
-          data: { list },
-        } = await getList()
-        state.treeData = list
-      }
-      const handleNodeClick = (node) => {
-        state.form.parentName = node.name
-        state.form.parentId = node.id
-      }
-      const showEdit = (row) => {
-        if (!row) {
-          state.title = '添加'
-        } else {
-          state.title = '编辑'
-          state.form = JSON.parse(JSON.stringify(row))
-        }
-        state.dialogFormVisible = true
-      }
-      const close = () => {
-        state['formRef'].resetFields()
-        state.form = {
-          parentName: '',
-          parentId: '',
-        }
-        state.dialogFormVisible = false
-      }
-      const save = () => {
-        state['formRef'].validate(async (valid) => {
-          if (valid) {
-            const { msg } = await doEdit(state.form)
-            $baseMessage(msg, 'success', 'hey')
-            emit('fetch-data')
-            close()
-          }
-        })
-      }
-
-      fetchData()
-
-      return {
-        ...toRefs(state),
-        handleNodeClick,
-        showEdit,
-        close,
-        save,
-      }
-    },
   })
+
+  const emit = defineEmits(['fetch-data'])
+  const $baseMessage: any = inject('$baseMessage')
+
+  const formRef: any = ref(null)
+  const treeData: any = ref([])
+  const defaultProps = reactive({
+    children: 'children',
+    label: 'name',
+  })
+  let form: any = ref({
+    parentName: '',
+    parentId: '',
+  })
+  const rules = reactive({
+    parentName: [{ required: true, trigger: 'blur', message: '请选择父节点' }],
+    name: [{ required: true, trigger: 'blur', message: '请输入名称' }],
+    order: [{ required: true, trigger: 'blur', message: '请输入排序' }],
+  })
+  const title = ref('')
+  const dialogFormVisible = ref(false)
+
+  const fetchData = async () => {
+    const { data } = await getList()
+    treeData.value = data.list
+  }
+  const handleNodeClick = (node: { name: any; id: any }) => {
+    form.parentName = node.name
+    form.parentId = node.id
+  }
+  const showEdit = (row: any) => {
+    if (!row) {
+      title.value = '添加'
+    } else {
+      title.value = '编辑'
+      form = reactive({ ...row })
+    }
+    dialogFormVisible.value = true
+  }
+
+  defineExpose({
+    showEdit,
+  })
+
+  const close = () => {
+    formRef.value.resetFields()
+    form = {
+      parentName: '',
+      parentId: '',
+    }
+    dialogFormVisible.value = false
+  }
+  const save = () => {
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        const { msg }: any = await doEdit(form)
+        $baseMessage(msg, 'success', 'hey')
+        emit('fetch-data')
+        close()
+      }
+    })
+  }
+
+  fetchData()
 </script>

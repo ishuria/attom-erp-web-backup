@@ -35,15 +35,7 @@
         </div>
       </el-form-item>
       <el-form-item label="按钮权限">
-        <el-checkbox-group v-model="form.btnRolesCheckedList">
-          <el-checkbox
-            v-for="item in btnRoles"
-            :key="item.value"
-            :label="item.value"
-          >
-            {{ item.lable }}
-          </el-checkbox>
-        </el-checkbox-group>
+        <el-input v-model="form.btnRolesCheckedList" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -53,93 +45,70 @@
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { doEdit } from '/@/api/roleManagement'
   import { getList } from '/@/api/router'
 
-  export default defineComponent({
+  defineOptions({
     name: 'RoleManagementEdit',
-    emits: ['fetch-data'],
-    setup(props, { emit }) {
-      const $baseMessage = inject('$baseMessage')
+  })
 
-      const state = reactive({
-        formRef: null,
-        treeRef: null,
-        form: {
-          btnRolesCheckedList: [],
-        },
-        rules: {
-          role: [{ required: true, trigger: 'blur', message: '请输入角色码' }],
-        },
-        title: '',
-        dialogFormVisible: false,
-        list: [],
-        /* btnRoles demo */
-        btnRoles: [
-          {
-            lable: '读',
-            value: 'read:system',
-          },
-          {
-            lable: '写',
-            value: 'write:system',
-          },
-          {
-            lable: '删',
-            value: 'delete:system',
-          },
-        ],
-      })
+  const emit = defineEmits(['fetch-data'])
 
-      const showEdit = (row) => {
-        if (!row) {
-          state.title = '添加'
-        } else {
-          state.title = '编辑'
-          state.form = JSON.parse(JSON.stringify(row))
-        }
-        state.dialogFormVisible = true
-      }
-      const close = () => {
-        state['formRef'].resetFields()
-        state.form = {
-          btnRolesCheckedList: [],
-        }
-        state.dialogFormVisible = false
-      }
-      const fetchData = async () => {
-        const {
-          data: { list },
-        } = await getList()
-        state.list = list
-      }
-      const save = () => {
-        state['formRef'].validate(async (valid) => {
-          if (valid) {
-            const tree = state['treeRef'].getCheckedKeys()
-            const treeObject = { 'treeArray:': tree }
-            const { msg } = await doEdit({
-              ...state.form,
-              ...treeObject,
-            })
-            $baseMessage(msg, 'success', 'hey')
-            emit('fetch-data')
-            close()
-          }
+  const $baseMessage: any = inject('$baseMessage')
+
+  const formRef: any = ref(null)
+  const treeRef: any = ref(null)
+  let form: any = reactive({
+    role: '',
+    btnRolesCheckedList: [],
+  })
+  const rules = reactive({
+    role: [{ required: true, trigger: 'blur', message: '请输入角色码' }],
+  })
+  const title = ref('')
+  const dialogFormVisible = ref(false)
+  const list = ref([])
+
+  const showEdit = (row: any) => {
+    if (!row) {
+      title.value = '添加'
+    } else {
+      title.value = '编辑'
+      form = reactive({ ...row })
+    }
+    dialogFormVisible.value = true
+  }
+
+  defineExpose({
+    showEdit,
+  })
+
+  const close = () => {
+    formRef.value.resetFields()
+    dialogFormVisible.value = false
+  }
+  const fetchData = async () => {
+    const { data } = await getList()
+    list.value = data.list
+  }
+  const save = () => {
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        const tree = treeRef.value.getCheckedKeys()
+        const treeObject = { 'treeArray:': tree }
+        const { msg }: any = await doEdit({
+          ...form,
+          ...treeObject,
         })
+        $baseMessage(msg, 'success', 'hey')
+        emit('fetch-data')
+        close()
       }
-      onMounted(() => {
-        fetchData()
-      })
-      return {
-        ...toRefs(state),
-        showEdit,
-        close,
-        fetchData,
-        save,
-      }
-    },
+    })
+  }
+  onMounted(() => {
+    fetchData()
   })
 </script>
 

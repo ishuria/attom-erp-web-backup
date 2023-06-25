@@ -2,9 +2,9 @@
   <div class="menu-management-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card shadow="never">
           <el-tree
-            :data="data"
+            :data="treeList"
             :default-expanded-keys="['root']"
             :props="defaultProps"
             node-key="id"
@@ -13,10 +13,10 @@
         </vab-card>
       </el-col>
       <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card shadow="never">
           <vab-query-form>
             <vab-query-form-top-panel :span="12">
-              <el-button :icon="Plus" type="primary" @click="handleEdit()">
+              <el-button :icon="Plus" type="primary" @click="handleEdit(null)">
                 添加
               </el-button>
             </vab-query-form-top-panel>
@@ -112,73 +112,58 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { getList } from '/@/api/router'
   import { doDelete, getTree } from '/@/api/menuManagement'
   import { Plus } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'MenuManagement',
-    setup() {
-      const $baseConfirm = inject('$baseConfirm')
-      const $baseMessage = inject('$baseMessage')
+  })
 
-      const state = reactive({
-        editRef: null,
-        data: [],
-        defaultProps: {
-          children: 'children',
-          label: 'label',
-        },
-        list: [],
-        listLoading: true,
+  const $baseConfirm: any = inject('$baseConfirm')
+  const $baseMessage: any = inject('$baseMessage')
+
+  const editRef: any = ref(null)
+  const treeList = ref([])
+  const defaultProps = reactive({
+    children: 'children',
+    label: 'label',
+  })
+  const list = ref([])
+  const listLoading = ref(true)
+
+  const handleEdit = (row: any = {}) => {
+    if (row && row.path) {
+      editRef.value.showEdit(row)
+    } else {
+      editRef.value.showEdit()
+    }
+  }
+  const handleDelete = (row: any = {}) => {
+    if (row.path) {
+      $baseConfirm('你确定要删除当前项吗', null, async () => {
+        const { msg }: any = await doDelete({ paths: row.path })
+        $baseMessage(msg, 'success', 'hey')
+        await fetchData()
       })
+    }
+  }
+  const fetchData = async (role: any = {}) => {
+    listLoading.value = true
+    const { data } = await getList({ role })
+    list.value = data.list
+    listLoading.value = false
+  }
+  const handleNodeClick = ({ role }: any) => {
+    fetchData(role)
+  }
 
-      const handleEdit = (row) => {
-        if (row && row.path) {
-          state['editRef'].showEdit(row)
-        } else {
-          state['editRef'].showEdit()
-        }
-      }
-      const handleDelete = (row) => {
-        if (row.path) {
-          $baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ paths: row.path })
-            $baseMessage(msg, 'success', 'hey')
-            await fetchData()
-          })
-        }
-      }
-      const fetchData = async (role) => {
-        state.listLoading = true
-        const {
-          data: { list },
-        } = await getList({ role })
-        state.list = list
-        state.listLoading = false
-      }
-      const handleNodeClick = ({ role }) => {
-        fetchData(role)
-      }
-
-      getTree().then(({ data }) => {
-        const { list } = data
-        state.data = list
-      })
-      onMounted(() => {
-        fetchData()
-      })
-
-      return {
-        ...toRefs(state),
-        handleEdit,
-        handleDelete,
-        fetchData,
-        handleNodeClick,
-        Plus,
-      }
-    },
+  onMounted(() => {
+    getTree().then(({ data }) => {
+      treeList.value = data.list
+    })
+    fetchData()
   })
 </script>
 

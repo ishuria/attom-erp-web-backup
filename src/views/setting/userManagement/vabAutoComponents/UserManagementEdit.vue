@@ -29,67 +29,59 @@
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { doEdit } from '/@/api/userManagement'
 
-  export default defineComponent({
+  defineOptions({
     name: 'UserManagementEdit',
-    emits: ['fetch-data'],
-    setup(props, { emit }) {
-      const $baseMessage = inject('$baseMessage')
-
-      const state = reactive({
-        formRef: null,
-        form: {
-          roles: [],
-        },
-        rules: {
-          username: [
-            { required: true, trigger: 'blur', message: '请输入用户名' },
-          ],
-          password: [
-            { required: true, trigger: 'blur', message: '请输入密码' },
-          ],
-          email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
-          roles: [{ required: true, trigger: 'blur', message: '请选择角色' }],
-        },
-        title: '',
-        dialogFormVisible: false,
-      })
-
-      const showEdit = (row) => {
-        if (!row) {
-          state.title = '添加'
-        } else {
-          state.title = '编辑'
-          state.form = JSON.parse(JSON.stringify(row))
-        }
-        state.dialogFormVisible = true
-      }
-      const close = () => {
-        state['formRef'].resetFields()
-        state.form = {
-          roles: [],
-        }
-        state.dialogFormVisible = false
-      }
-      const save = () => {
-        state['formRef'].validate(async (valid) => {
-          if (valid) {
-            const { msg } = await doEdit(state.form)
-            $baseMessage(msg, 'success', 'hey')
-            emit('fetch-data')
-            close()
-          }
-        })
-      }
-
-      return {
-        ...toRefs(state),
-        showEdit,
-        close,
-        save,
-      }
-    },
   })
+
+  const emit = defineEmits(['fetch-data'])
+  const $baseMessage: any = inject('$baseMessage')
+
+  const formRef: any = ref(null)
+  let form: any = ref({
+    username: '',
+    password: '',
+    email: '',
+    roles: [],
+  })
+  const rules = reactive({
+    username: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
+    password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
+    email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
+    roles: [{ required: true, trigger: 'blur', message: '请选择角色' }],
+  })
+  const title = ref('')
+  const dialogFormVisible = ref(false)
+
+  const showEdit = (row: any) => {
+    if (!row) {
+      title.value = '添加'
+    } else {
+      title.value = '编辑'
+      form = reactive({ ...row })
+    }
+    dialogFormVisible.value = true
+  }
+
+  defineExpose({
+    showEdit,
+  })
+
+  const close = () => {
+    formRef.value.resetFields()
+    dialogFormVisible.value = false
+  }
+
+  const save = () => {
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        const { msg }: any = await doEdit(form)
+        $baseMessage(msg, 'success', 'hey')
+        emit('fetch-data')
+        close()
+      }
+    })
+  }
 </script>

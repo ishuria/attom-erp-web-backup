@@ -7,7 +7,7 @@
             <el-input
               v-model.trim="queryForm.taskName"
               clearable
-              placeholder="请输入账号"
+              placeholder="请输入任务名"
             />
           </el-form-item>
           <el-form-item label="周期">
@@ -36,7 +36,7 @@
         :xl="6"
         :xs="24"
       >
-        <vab-card class="task-item" shadow="hover">
+        <vab-card class="task-item" shadow="never">
           <template #header>
             <vab-icon icon="task-line" />
             任务编号 - {{ item.id }}
@@ -73,7 +73,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="6" :md="8" :sm="12" :xl="6" :xs="24">
-        <vab-card class="task-add" shadow="hover" @click="handleAdd">
+        <vab-card class="task-add" shadow="never" @click="handleAdd">
           <vab-icon icon="add-circle-line" />
           <p>添加任务</p>
         </vab-card>
@@ -82,60 +82,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { getList } from '/@/api/taskManagement'
   import { Search } from '@element-plus/icons-vue'
   import { getImageUrl } from '/@/utils/imageUrl'
 
-  export default defineComponent({
+  defineOptions({
     name: 'TaskManagement',
-    setup() {
-      const $baseMessage = inject('$baseMessage')
+  })
 
-      const state = reactive({
-        list: [],
-        listLoading: true,
-        queryForm: {
-          taskName: '',
-          date: '',
-          pageNo: 1,
-          pageSize: 5,
-        },
-      })
+  const $baseMessage: any = inject('$baseMessage')
 
-      const fetchData = async () => {
-        state.listLoading = true
-        const {
-          data: { list },
-        } = await getList(state.queryForm)
-        state.list = list
-        state.listLoading = false
-      }
-      const queryData = () => {
-        state.queryForm.pageNo = 1
-        fetchData()
-      }
-      const handlePlay = (status) => {
-        if (status) $baseMessage('模拟停用成功', 'success', 'hey')
-        else $baseMessage('模拟开启成功', 'success', 'hey')
-      }
-      const handleAdd = () => {
-        $baseMessage('模拟添加成功', 'success', 'hey')
-      }
-      onMounted(() => {
-        fetchData()
-      })
+  const list: any = ref([])
+  const listLoading = ref(true)
+  const queryForm = reactive({
+    taskName: '',
+    date: '',
+    pageNo: 1,
+    pageSize: 5,
+  })
 
-      return {
-        ...toRefs(state),
-        fetchData,
-        queryData,
-        handlePlay,
-        handleAdd,
-        Search,
-        getImageUrl,
-      }
-    },
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    listLoading.value = false
+  }
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+  const handlePlay = (status: any) => {
+    if (status) $baseMessage('模拟停用成功', 'success', 'hey')
+    else $baseMessage('模拟开启成功', 'success', 'hey')
+  }
+  const handleAdd = () => {
+    $baseMessage('模拟添加成功', 'success', 'hey')
+  }
+  onMounted(() => {
+    fetchData()
   })
 </script>
 

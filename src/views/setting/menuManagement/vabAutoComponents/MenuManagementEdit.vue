@@ -74,87 +74,81 @@
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { doEdit } from '/@/api/menuManagement'
 
-  export default defineComponent({
-    name: 'MenuManagementEdit',
-    emits: ['fetch-data'],
-    setup(props, { emit }) {
-      const $baseMessage = inject('$baseMessage')
+  defineOptions({ name: 'MenuManagementEdit' })
+  const emit = defineEmits(['fetch-data'])
 
-      const state = reactive({
-        formRef: null,
-        form: {
-          meta: {
-            title: '',
-            icon: '',
-            badge: '',
-            dot: false,
-            hidden: false,
-            levelHidden: false,
-            isCustomSvg: false,
-            noClosable: false,
-            noKeepAlive: false,
-            tabHidden: false,
-          },
-        },
-        rules: {
-          parentId: [
-            { required: true, trigger: 'blur', message: '请输入父级id' },
-          ],
-          name: [{ required: true, trigger: 'blur', message: '请输入name' }],
-          path: [{ required: true, trigger: 'blur', message: '请输入path' }],
-          component: [
-            { required: true, trigger: 'blur', message: '请输入component' },
-          ],
-          'meta.title': [
-            { required: true, trigger: 'blur', message: '请输入标题' },
-          ],
-        },
-        title: '',
-        dialogFormVisible: false,
-      })
+  const $baseMessage: any = inject('$baseMessage')
 
-      const handleIcon = (item) => {
-        state.form.meta.icon = item
-      }
-      const showEdit = (row) => {
-        if (!row) {
-          state.title = '添加'
-        } else {
-          state.title = '编辑'
-          state.form = JSON.parse(JSON.stringify(row))
-        }
-        state.dialogFormVisible = true
-      }
-      const close = () => {
-        state['formRef'].resetFields()
-        state.form = {
-          meta: {
-            icon: '',
-          },
-        }
-        state.dialogFormVisible = false
-      }
-      const save = () => {
-        state['formRef'].validate(async (valid) => {
-          if (valid) {
-            const { msg } = await doEdit(state.form)
-            $baseMessage(msg, 'success', 'hey')
-            emit('fetch-data')
-            close()
-          }
-        })
-      }
-
-      return {
-        ...toRefs(state),
-        handleIcon,
-        showEdit,
-        close,
-        save,
-      }
+  const formRef: any = ref(null)
+  let form: any = reactive({
+    parentId: '',
+    name: '',
+    path: '',
+    component: '',
+    redirect: '',
+    meta: {
+      title: '',
+      icon: '',
+      badge: '',
+      dot: false,
+      hidden: false,
+      levelHidden: false,
+      isCustomSvg: false,
+      noClosable: false,
+      noKeepAlive: false,
+      tabHidden: false,
     },
   })
+
+  const rules = reactive({
+    parentId: [{ required: true, trigger: 'blur', message: '请输入父级id' }],
+    name: [{ required: true, trigger: 'blur', message: '请输入name' }],
+    path: [{ required: true, trigger: 'blur', message: '请输入path' }],
+    component: [
+      { required: true, trigger: 'blur', message: '请输入component' },
+    ],
+    'meta.title': [{ required: true, trigger: 'blur', message: '请输入标题' }],
+  })
+  const title = ref('')
+  const dialogFormVisible = ref(false)
+
+  const handleIcon = (item: string) => {
+    form.meta.icon = item
+  }
+  const showEdit = (row: any) => {
+    if (!row) {
+      title.value = '添加'
+    } else {
+      title.value = '编辑'
+      form = reactive({ ...row })
+    }
+    dialogFormVisible.value = true
+  }
+
+  defineExpose({
+    showEdit,
+  })
+
+  const close = () => {
+    formRef.value.resetFields()
+    form = {
+      meta: {
+        icon: '',
+      },
+    }
+    dialogFormVisible.value = false
+  }
+  const save = () => {
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        const { msg }: any = await doEdit(form)
+        $baseMessage(msg, 'success', 'hey')
+        emit('fetch-data')
+        close()
+      }
+    })
+  }
 </script>

@@ -20,7 +20,7 @@ export default [
     response({ query }: any) {
       const { role, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
-        (item: any) => !(role && item.title.indexOf(role) < 0)
+        (item: any) => !(role && item.role.indexOf(role) < 0)
       )
       const list = mockList.filter(
         (item: any, index: any) =>

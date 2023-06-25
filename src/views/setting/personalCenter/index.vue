@@ -2,7 +2,7 @@
   <div class="personal-center-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card shadow="never">
           <div class="personal-center-user-info">
             <el-avatar :size="100" :src="avatar" />
             <div class="personal-center-user-info-full-name">
@@ -57,7 +57,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="16" :md="12" :sm="24" :xl="16" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card shadow="never">
           <el-tabs v-model="activeName">
             <el-tab-pane label="基本信息" name="first">
               <el-col :lg="12" :md="16" :sm="24" :xl="12" :xs="24">
@@ -195,69 +195,58 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
 
-  export default defineComponent({
+  defineOptions({
     name: 'PersonalCenter',
-    setup() {
-      const $baseMessage = inject('$baseMessage')
-
-      const userStore = useUserStore()
-      const { avatar } = storeToRefs(userStore)
-
-      const _description = decodeURI(
-        '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
-      )
-
-      const state = reactive({
-        vabCropperRef: null,
-        activeName: 'first',
-        form: {
-          fullName: 'admin',
-          nickname: 'good luck',
-          sex: 2,
-          description: _description,
-        },
-        inputRef: null,
-        dynamicTags: ['腹黑', '怕麻烦', '小仙女', '仙气飘飘'],
-        inputVisible: false,
-        inputValue: '',
-      })
-
-      const onSubmit = () => {
-        $baseMessage('模拟保存成功', 'success', 'hey')
-      }
-
-      const handleClose = (tag) => {
-        state.dynamicTags.splice(state.dynamicTags.indexOf(tag), 1)
-      }
-
-      const showInput = () => {
-        state.inputVisible = true
-        nextTick(() => {
-          state.inputRef.focus()
-        })
-      }
-
-      const handleInputConfirm = () => {
-        if (state.inputValue) {
-          state.dynamicTags.push(state.inputValue)
-        }
-        state.inputVisible = false
-        state.inputValue = ''
-      }
-
-      return {
-        ...toRefs(state),
-        avatar,
-        onSubmit,
-        showInput,
-        handleClose,
-        handleInputConfirm,
-      }
-    },
   })
+
+  const $baseMessage: any = inject('$baseMessage')
+
+  const userStore = useUserStore()
+  const { avatar } = storeToRefs(userStore)
+
+  const _description = decodeURI(
+    '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
+  )
+
+  const activeName = ref('first')
+
+  const form = reactive({
+    fullName: 'admin',
+    nickname: 'good luck',
+    sex: 2,
+    description: _description,
+  })
+
+  const inputRef: any = ref(null)
+  const dynamicTags = ref(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
+  const inputVisible = ref(false)
+  const inputValue = ref('')
+
+  const onSubmit = () => {
+    $baseMessage('模拟保存成功', 'success', 'hey')
+  }
+
+  const handleClose = (tag: string) => {
+    dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+  }
+
+  const showInput = () => {
+    inputVisible.value = true
+    nextTick(() => {
+      inputRef.value.focus()
+    })
+  }
+
+  const handleInputConfirm = () => {
+    if (inputValue.value) {
+      dynamicTags.value.push(inputValue.value)
+    }
+    inputVisible.value = false
+    inputValue.value = ''
+  }
 </script>
 
 <style lang="scss" scoped>

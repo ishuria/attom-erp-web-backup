@@ -2,19 +2,19 @@
   <div class="dictionary-management-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card shadow="never">
           <el-button
             :icon="Plus"
             class="tree-button"
             type="primary"
-            @click="handleEdit()"
+            @click="handleEdit(null)"
           >
             添加字典分类
           </el-button>
           <el-input v-model="filterText" placeholder="请输入字典名称" />
           <el-tree
             ref="treeRef"
-            :data="data"
+            :data="treeList"
             :default-expanded-keys="['root']"
             :filter-node-method="filterNode"
             :props="defaultProps"
@@ -36,7 +36,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card shadow="never">
           <vab-query-form>
             <vab-query-form-top-panel :span="12">
               <el-button
@@ -78,96 +78,79 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { getList } from '/@/api/dictionaryManagement'
   import { doDelete, getTree } from '/@/api/dictionaryManagement'
   import { Plus } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'DictionaryManagement',
-    setup() {
-      const $baseConfirm = inject('$baseConfirm')
-      const $baseMessage = inject('$baseMessage')
+  })
 
-      const state = reactive({
-        treeRef: null,
-        editRef: null,
-        data: [],
-        defaultProps: {
-          children: 'children',
-          label: 'label',
-        },
-        list: [],
-        listLoading: true,
-        isRoot: true,
-        parentKey: '',
+  const $baseConfirm: any = inject('$baseConfirm')
+  const $baseMessage: any = inject('$baseMessage')
+
+  const treeRef: any = ref(null)
+  const editRef: any = ref(null)
+  const treeList: any = ref([])
+  const defaultProps = reactive({
+    children: 'children',
+    label: 'label',
+  })
+  let list = ref([])
+  const listLoading = ref(true)
+  const isRoot = ref(true)
+  const parentKey = ref('')
+
+  const handleEdit = (row: any) => {
+    editRef.value.showEdit(row)
+  }
+  const handleDelete = (row: { id: any }) => {
+    if (row.id) {
+      $baseConfirm('你确定要删除当前项吗', null, async () => {
+        const { msg }: any = await doDelete({ paths: row.id })
+        $baseMessage(msg, 'success', 'hey')
+        await fetchData()
       })
+    }
+  }
+  const fetchData = async (data = { key: 'root' }) => {
+    data.key !== 'root' ? (isRoot.value = false) : (isRoot.value = true)
+    parentKey.value = data.key
 
-      const handleEdit = (row) => {
-        state['editRef'].showEdit(row)
-      }
-      const handleDelete = (row) => {
-        if (row.id) {
-          $baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ paths: row.id })
-            $baseMessage(msg, 'success', 'hey')
-            await fetchData()
-          })
-        }
-      }
-      const fetchData = async (data = { key: 'root' }) => {
-        data.key !== 'root' ? (state.isRoot = false) : (state.isRoot = true)
-        state.parentKey = data.key
+    listLoading.value = true
+    const res = await getList(data)
+    list = res.data.list
+    listLoading.value = false
+  }
+  const handleNodeClick = (data: { key: string } | undefined) => {
+    fetchData(data)
+  }
 
-        state.listLoading = true
-        const {
-          data: { list },
-        } = await getList(data)
-        state.list = list
-        state.listLoading = false
-      }
-      const handleNodeClick = (data) => {
-        fetchData(data)
-      }
+  const filterText = ref('')
+  watch(filterText, (value) => {
+    treeRef.value.filter(value)
+  })
 
-      const filterText = ref('')
-      watch(filterText, (value) => {
-        state.treeRef.filter(value)
-      })
+  const filterNode: any = (value: any, data: any) => {
+    if (!value) return true
+    return data.label.includes(value)
+  }
 
-      const filterNode = (value, data) => {
-        if (!value) return true
-        return data.label.includes(value)
-      }
+  getTree().then(({ data }) => {
+    const { list } = data
+    treeList.value = list
+  })
+  const remove = (node: { parent: any }, data: any) => {
+    const parent = node.parent
+    const children = parent.data.children || parent.data
+    const index = children.findIndex((d: { id: any }) => d.id === data.id)
+    children.splice(index, 1)
+    treeList.value = [...treeList.value]
+  }
 
-      getTree().then(({ data }) => {
-        const { list } = data
-        state.data = list
-      })
-      const remove = (node, data) => {
-        const parent = node.parent
-        const children = parent.data.children || parent.data
-        const index = children.findIndex((d) => d.id === data.id)
-        children.splice(index, 1)
-        state.data = [...state.data]
-      }
-
-      onMounted(() => {
-        fetchData()
-      })
-
-      return {
-        ...toRefs(state),
-        filterText,
-        filterNode,
-        remove,
-        handleEdit,
-        handleDelete,
-        fetchData,
-        handleNodeClick,
-        Plus,
-      }
-    },
+  onMounted(() => {
+    fetchData()
   })
 </script>
 

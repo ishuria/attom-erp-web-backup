@@ -5,7 +5,7 @@
     width="500px"
     @close="close"
   >
-    <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+    <el-form ref="formRef" :model="form" label-width="80px">
       <el-form-item label="父级key值" prop="parentKey">
         <el-input v-model="form.parentKey" disabled />
       </el-form-item>
@@ -26,55 +26,56 @@
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { doEdit } from '/@/api/dictionaryManagement'
   import { uuid } from '/@/utils'
 
-  export default defineComponent({
+  defineOptions({
     name: 'DictionaryManagementEdit',
-    emits: ['fetch-data'],
-    setup(props, { emit }) {
-      const $baseMessage = inject('$baseMessage')
-
-      const state = reactive({
-        formRef: null,
-        form: {
-          id: uuid(),
-        },
-        rules: {},
-        title: '',
-        dialogFormVisible: false,
-      })
-      const showEdit = (row) => {
-        state.title = '添加/编辑'
-        if (row) state.form = { ...JSON.parse(JSON.stringify(row)), id: uuid() }
-        else state.form = { id: uuid(), parentKey: 'root' }
-        state.dialogFormVisible = true
-      }
-      const close = () => {
-        state['formRef'].resetFields()
-        state.form = {
-          id: uuid(),
-        }
-        state.dialogFormVisible = false
-      }
-      const save = () => {
-        state['formRef'].validate(async (valid) => {
-          if (valid) {
-            const { msg } = await doEdit(state.form)
-            $baseMessage(msg, 'success', 'hey')
-            emit('fetch-data', { key: state.form.parentKey })
-            close()
-          }
-        })
-      }
-
-      return {
-        ...toRefs(state),
-        showEdit,
-        close,
-        save,
-      }
-    },
   })
+
+  const emit = defineEmits(['fetch-data'])
+
+  const $baseMessage: any = inject('$baseMessage')
+
+  const formRef: any = ref(null)
+  let form: any = reactive({
+    parentKey: '',
+    id: uuid(),
+    key: '',
+    value: '',
+  })
+  const title = ref('')
+  const dialogFormVisible = ref(false)
+
+  const showEdit = (row: any) => {
+    title.value = '添加/编辑'
+    if (row) form = reactive({ ...row, id: uuid() })
+    else
+      form = reactive({
+        ...row,
+        id: uuid(),
+        parentKey: 'root',
+      })
+    dialogFormVisible.value = true
+  }
+
+  defineExpose({
+    showEdit,
+  })
+
+  const close = () => {
+    formRef.value.resetFields()
+    dialogFormVisible.value = false
+  }
+  const save = () => {
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        const { msg }: any = await doEdit(form)
+        $baseMessage(msg, 'success', 'hey')
+        emit('fetch-data', { key: form.parentKey })
+        close()
+      }
+    })
+  }
 </script>
