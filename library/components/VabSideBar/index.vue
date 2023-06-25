@@ -95,6 +95,7 @@
           > .el-menu-item,
           > .el-sub-menu {
             justify-content: center;
+            padding: 0;
             text-align: center;
 
             [class*='ri'] {
