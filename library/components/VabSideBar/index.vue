@@ -94,7 +94,14 @@
         .el-menu--collapse.el-menu {
           > .el-menu-item,
           > .el-sub-menu {
+            justify-content: center;
             text-align: center;
+
+            [class*='ri'] {
+              display: block;
+              padding: 0 !important;
+              margin: 0 !important;
+            }
 
             .el-tag {
               display: none;
