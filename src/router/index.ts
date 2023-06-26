@@ -437,6 +437,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'upload',
+        name: 'Upload',
+        component: () => import('/@/views/vab/upload/index.vue'),
+        meta: {
+          title: '上传',
+          icon: 'upload-cloud-2-line',
+          guard: ['Admin'],
+          dot: true,
+        },
+      },
+      {
         path: 'notice',
         name: 'Notice',
         component: () => import('/@/views/vab/notice/index.vue'),

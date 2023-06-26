@@ -565,5 +565,9 @@ html {
       background: var(--el-background-color) !important;
       border: 0 !important;
     }
+
+    .el-upload.el-upload--text + .el-button {
+      margin-left: 10px;
+    }
   }
 }
