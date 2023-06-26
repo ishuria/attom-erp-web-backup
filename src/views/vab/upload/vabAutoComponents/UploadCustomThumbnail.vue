@@ -40,9 +40,9 @@
 
   import type { UploadFile } from 'element-plus'
 
-  const dialogImageUrl = ref('')
-  const dialogVisible = ref(false)
-  const disabled = ref(false)
+  const dialogImageUrl: any = ref('')
+  const dialogVisible: any = ref(false)
+  const disabled: any = ref(false)
 
   const handleRemove = (file: UploadFile) => {
     console.log(file)
