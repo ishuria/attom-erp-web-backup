@@ -9,8 +9,8 @@
   const state = reactive({
     jumpTime: 8,
     oops: '抱歉!',
-    headline: '您没有操作角色...',
-    info: '当前帐号没有操作角色，请联系管理员。',
+    headline: '您没有操作权限...',
+    info: '当前帐号没有操作权限，请联系管理员。',
     btn: '返回首页',
   })
 

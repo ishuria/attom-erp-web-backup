@@ -152,7 +152,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         name: 'Resume',
         component: () => import('/@/views/template/Resume.vue'),
         meta: {
-          title: '个人简历',
+          title: '简历',
           icon: 'folder-user-line',
         },
       },
