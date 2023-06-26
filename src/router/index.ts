@@ -145,6 +145,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '插画',
           icon: 'brush-3-line',
+          dot: true,
         },
       },
       {
