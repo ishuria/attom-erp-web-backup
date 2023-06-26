@@ -24,7 +24,7 @@
     },
   ])
 
-  const handleChange: UploadProps['onChange'] = (uploadFile, uploadFiles) => {
+  const handleChange: UploadProps['onChange'] = () => {
     fileList.value = fileList.value.slice(-3)
   }
 </script>
