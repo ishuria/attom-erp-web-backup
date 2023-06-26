@@ -615,6 +615,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           dot: true,
         },
       },
+      {
+        path: 'passwordGenerator',
+        name: 'PasswordGenerator',
+        component: () => import('/@/views/other/passwordGenerator/index.vue'),
+        meta: {
+          title: '密码生成器',
+          guard: ['Admin'],
+          icon: 'lock-password-line',
+          dot: true,
+        },
+      },
     ],
   },
   {
