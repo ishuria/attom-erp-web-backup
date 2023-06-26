@@ -17,9 +17,9 @@ html > body.vab-theme-technology {
   --el-text-color-disabled: #cfd3dc;
   --el-border-color-darker: #{mix($base-color-white, #2c6191, 10%)};
   --el-border-color-dark: #{mix($base-color-white, #2c6191, 20%)};
-  --el-border-color: #2c6191;
   --el-border-color: #{mix($base-color-white, #2c6191, 10%)};
-  --el-border-colorer: #{mix($base-color-white, #2c6191, 20%)};
+  --el-border-color-light: #{mix($base-color-white, #2c6191, 20%)};
+  --el-border-color-lighter: #{mix($base-color-white, #2c6191, 30%)};
   --el-border-color-extra-light: #2c6191;
   --el-fill-color-darker: #2c6191;
   --el-fill-color-dark: #2c6191;
