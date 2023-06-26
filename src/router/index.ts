@@ -42,7 +42,7 @@ export const constantRoutes: VabRouteRecordRaw[] = [
   {
     path: '/403',
     name: '403',
-    component: () => import('/@/views/403.vue'),
+    component: () => import('/@/views/error/403.vue'),
     meta: {
       hidden: true,
     },
@@ -50,7 +50,7 @@ export const constantRoutes: VabRouteRecordRaw[] = [
   {
     path: '/404',
     name: '404',
-    component: () => import('/@/views/404.vue'),
+    component: () => import('/@/views/error/404.vue'),
     meta: {
       hidden: true,
     },
@@ -159,7 +159,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: '403',
         name: 'Error403',
-        component: () => import('/@/views/403.vue'),
+        component: () => import('/@/views/error/403.vue'),
         meta: {
           title: '403',
           icon: 'error-warning-line',
@@ -168,7 +168,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: '404',
         name: 'Error404',
-        component: () => import('/@/views/404.vue'),
+        component: () => import('/@/views/error/404.vue'),
         meta: {
           title: '404',
           icon: 'error-warning-line',
@@ -177,7 +177,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: '500',
         name: 'Error500',
-        component: () => import('/@/views/500.vue'),
+        component: () => import('/@/views/error/500.vue'),
         meta: {
           title: '500',
           icon: 'error-warning-line',

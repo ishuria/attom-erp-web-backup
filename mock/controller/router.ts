@@ -92,7 +92,7 @@ const list = [
       {
         path: '403',
         name: 'Error403',
-        component: '/@/views/403.vue',
+        component: '/@/views/error/403.vue',
         meta: {
           title: '403',
           icon: 'error-warning-line',
@@ -101,7 +101,7 @@ const list = [
       {
         path: '404',
         name: 'Error404',
-        component: '/@/views/404.vue',
+        component: '/@/views/error/404.vue',
         meta: {
           title: '404',
           icon: 'error-warning-line',
@@ -110,7 +110,7 @@ const list = [
       {
         path: '500',
         name: 'Error500',
-        component: '/@/views/500.vue',
+        component: '/@/views/error/500.vue',
         meta: {
           title: '500',
           icon: 'error-warning-line',
