@@ -173,6 +173,7 @@
             list-style-type: none;
             li {
               margin-bottom: 10px;
+              line-height: 22px;
               strong {
                 display: inline-block;
                 width: 60px;
