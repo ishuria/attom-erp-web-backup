@@ -49,7 +49,7 @@
   }
 
   const handlePictureCardPreview = (file: UploadFile) => {
-    dialogImageUrl.value = file.url ?? false
+    dialogImageUrl.value = file.url
     dialogVisible.value = true
   }
 

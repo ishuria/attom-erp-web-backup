@@ -46,7 +46,7 @@
   }
 
   const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
-    dialogImageUrl.value = uploadFile.url ?? false
+    dialogImageUrl.value = uploadFile.url
     dialogVisible.value = true
   }
 </script>
