@@ -183,6 +183,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'error-warning-line',
         },
       },
+      {
+        path: '503',
+        name: 'Error503',
+        component: () => import('/@/views/error/503.vue'),
+        meta: {
+          title: '503',
+          icon: 'error-warning-line',
+        },
+      },
     ],
   },
   {
