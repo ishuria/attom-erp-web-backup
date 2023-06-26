@@ -1,5 +1,5 @@
 <template>
-  <el-tree :props="props" :load="loadNode" lazy show-checkbox />
+  <el-tree lazy :load="loadNode" :props="props" show-checkbox />
 </template>
 
 <script lang="ts" setup>

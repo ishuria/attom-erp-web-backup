@@ -98,9 +98,9 @@
         @mousedown="onEventStart"
         @mousemove.stop.prevent="onEventMove"
         @mouseup="onEventEnd"
-        @touchstart="onEventStart"
-        @touchmove.stop.prevent="onEventMove"
         @touchend="onEventEnd"
+        @touchmove.stop.prevent="onEventMove"
+        @touchstart="onEventStart"
       ></canvas>
       <img :src="catUrl" />
     </div>

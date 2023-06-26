@@ -58,7 +58,7 @@
           </template>
           <el-form :model="form">
             <el-form-item label="密码长度">
-              <el-input-number v-model="form.length" :min="6" :max="32" />
+              <el-input-number v-model="form.length" :max="32" :min="6" />
             </el-form-item>
 
             <el-form-item label="包含大写字母">

@@ -18,8 +18,8 @@
 
 <template>
   <vab-icon
-    :icon="collapse ? unfold : fold"
     class="fold-unfold"
+    :icon="collapse ? unfold : fold"
     @click="toggleCollapse"
   />
 </template>

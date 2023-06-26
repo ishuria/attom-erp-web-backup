@@ -8,7 +8,7 @@
     />
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-form :model="queryForm" inline label-width="49px" @submit.prevent>
+        <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
           <el-form-item label="标题">
             <el-input v-model="queryForm.title" placeholder="请输入标题" />
           </el-form-item>
@@ -55,8 +55,8 @@
               <span v-if="fold">展开</span>
               <span v-else>合并</span>
               <vab-icon
-                :class="{ 'vab-dropdown-active': fold }"
                 class="vab-dropdown"
+                :class="{ 'vab-dropdown-active': fold }"
                 icon="arrow-up-s-line"
               />
             </el-button>
@@ -96,9 +96,9 @@
     <el-table
       ref="tableSortRef"
       v-loading="listLoading"
+      border
       :data="list"
       :height="height"
-      border
       @selection-change="setSelectRows"
       @sort-change="tableSortChange"
     >
@@ -134,8 +134,8 @@
         <template #default="{ row }">
           <el-image
             :preview-src-list="imageList"
-            :src="row.img"
             preview-teleported
+            :src="row.img"
           />
         </template>
       </el-table-column>
@@ -166,8 +166,8 @@
       <el-table-column align="center" label="状态" show-overflow-tooltip>
         <template #default="{ row }">
           <el-tooltip
-            :content="row.status"
             class="item"
+            :content="row.status"
             effect="dark"
             placement="top-start"
           >
@@ -208,11 +208,11 @@
       </template>
     </el-table>
     <el-pagination
+      background
       :current-page="queryForm.pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
-      background
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />

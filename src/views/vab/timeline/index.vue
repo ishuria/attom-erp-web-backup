@@ -16,10 +16,10 @@
                 <vab-icon v-if="item.icon" :icon="item.icon" />
                 <span
                   v-if="item.waver"
+                  class="vab-dot"
                   :class="{
                     ['vab-dot-' + item.waver]: true,
                   }"
-                  class="vab-dot"
                 >
                   <span></span>
                 </span>
@@ -49,17 +49,17 @@
                 <vab-icon v-if="item.icon" :icon="item.icon" />
                 <span
                   v-if="item.waver"
+                  class="vab-dot"
                   :class="{
                     ['vab-dot-' + item.waver]: true,
                   }"
-                  class="vab-dot"
                 >
                   <span></span>
                 </span>
               </template>
               <div
-                :class="{ ['vab-info-card-' + item.cardType]: true }"
                 class="vab-info-card"
+                :class="{ ['vab-info-card-' + item.cardType]: true }"
               >
                 {{ item.content }}
               </div>

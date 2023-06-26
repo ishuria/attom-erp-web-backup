@@ -7,10 +7,10 @@
   >
     <el-form
       ref="formRef"
-      :model="form"
-      :rules="rules"
       inline
       label-width="140px"
+      :model="form"
+      :rules="rules"
     >
       <el-form-item label="父级Id" prop="parentId">
         <el-input v-model="form.parentId" />
@@ -32,9 +32,9 @@
       </el-form-item>
       <el-form-item label="图标">
         <el-popover
-          :width="305"
           popper-class="icon-selector-popper"
           trigger="hover"
+          :width="305"
         >
           <template #reference>
             <el-input v-model="form.meta.icon" />

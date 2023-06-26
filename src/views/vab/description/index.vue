@@ -6,7 +6,7 @@
         <el-radio label="default">中等</el-radio>
         <el-radio label="small">小</el-radio>
       </el-radio-group>
-      <el-descriptions :column="3" :size="size" border title="带边框">
+      <el-descriptions border :column="3" :size="size" title="带边框">
         <template #extra>
           <el-button size="small" type="primary">Operation</el-button>
         </template>
@@ -52,10 +52,10 @@
       </el-descriptions>
 
       <el-descriptions
-        :column="4"
-        :size="size"
         border
+        :column="4"
         direction="vertical"
+        :size="size"
         title="带边框的垂直列表"
       >
         <el-descriptions-item label="Username">
@@ -64,7 +64,7 @@
         <el-descriptions-item label="Telephone">
           18100000000
         </el-descriptions-item>
-        <el-descriptions-item :span="2" label="Place">
+        <el-descriptions-item label="Place" :span="2">
           Suzhou
         </el-descriptions-item>
         <el-descriptions-item label="Remarks">
@@ -77,8 +77,8 @@
 
       <el-descriptions
         :column="4"
-        :size="size"
         direction="vertical"
+        :size="size"
         title="无边框的垂直列表"
       >
         <el-descriptions-item label="Username">
@@ -87,7 +87,7 @@
         <el-descriptions-item label="Telephone">
           18100000000
         </el-descriptions-item>
-        <el-descriptions-item :span="2" label="Place">
+        <el-descriptions-item label="Place" :span="2">
           Suzhou
         </el-descriptions-item>
         <el-descriptions-item label="Remarks">

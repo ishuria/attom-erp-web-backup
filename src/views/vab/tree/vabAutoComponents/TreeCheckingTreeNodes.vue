@@ -2,11 +2,11 @@
   <el-tree
     ref="treeRef"
     :data="data"
-    show-checkbox
     default-expand-all
-    node-key="id"
     highlight-current
+    node-key="id"
     :props="defaultProps"
+    show-checkbox
   />
 
   <div class="buttons">

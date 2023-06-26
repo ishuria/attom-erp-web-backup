@@ -5,7 +5,7 @@
     width="500px"
     @close="close"
   >
-    <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+    <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="角色码" prop="role">
         <el-input v-model="form.role" />
       </el-form-item>

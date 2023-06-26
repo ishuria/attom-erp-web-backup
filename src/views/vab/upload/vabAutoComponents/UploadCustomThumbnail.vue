@@ -1,10 +1,10 @@
 <template>
-  <el-upload action="/uploadFlie" list-type="picture-card" :auto-upload="false">
+  <el-upload action="/uploadFlie" :auto-upload="false" list-type="picture-card">
     <el-icon><Plus /></el-icon>
 
     <template #file="{ file }">
       <div>
-        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+        <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
         <span class="el-upload-list__item-actions">
           <span
             class="el-upload-list__item-preview"
@@ -32,7 +32,7 @@
   </el-upload>
 
   <el-dialog v-model="dialogVisible">
-    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+    <img alt="Preview Image" :src="dialogImageUrl" w-full />
   </el-dialog>
 </template>
 <script lang="ts" setup>

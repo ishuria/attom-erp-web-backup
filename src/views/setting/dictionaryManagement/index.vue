@@ -4,8 +4,8 @@
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card shadow="never">
           <el-button
-            :icon="Plus"
             class="tree-button"
+            :icon="Plus"
             type="primary"
             @click="handleEdit(null)"
           >
@@ -15,11 +15,11 @@
           <el-tree
             ref="treeRef"
             :data="treeList"
+            default-expand-all
             :default-expanded-keys="['root']"
             :filter-node-method="filterNode"
-            :props="defaultProps"
-            default-expand-all
             node-key="id"
+            :props="defaultProps"
             @node-click="handleNodeClick"
           >
             <template #default="{ node, data }">
@@ -49,7 +49,7 @@
               </el-button>
             </vab-query-form-top-panel>
           </vab-query-form>
-          <el-table v-loading="listLoading" :data="list" border>
+          <el-table v-loading="listLoading" border :data="list">
             <el-table-column label="id" prop="id" show-overflow-tooltip />
             <el-table-column label="key值" prop="key" show-overflow-tooltip />
             <el-table-column

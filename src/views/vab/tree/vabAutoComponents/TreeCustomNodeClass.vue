@@ -2,11 +2,11 @@
   <div class="custom-tree-node-container">
     <el-tree
       :data="data"
-      show-checkbox
-      node-key="id"
       default-expand-all
       :expand-on-click-node="false"
+      node-key="id"
       :props="{ class: customNodeClass }"
+      show-checkbox
     />
   </div>
 </template>

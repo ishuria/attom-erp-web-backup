@@ -30,20 +30,20 @@
 
 <template>
   <el-scrollbar
-    :class="{ 'is-collapse': collapse, 'side-bar-common': layout === 'common' }"
     class="vab-side-bar"
+    :class="{ 'is-collapse': collapse, 'side-bar-common': layout === 'common' }"
   >
     <vab-logo v-if="layout === 'vertical'" />
     <el-menu
+      background-color="var(--el-menu-background-color)"
       :collapse="collapse"
       :collapse-transition="false"
       :default-active="activeMenu.data"
       :default-openeds="defaultOpeneds"
-      :unique-opened="uniqueOpened"
-      background-color="var(--el-menu-background-color)"
       menu-trigger="click"
       mode="vertical"
       text-color="var(--el-menu-color-text)"
+      :unique-opened="uniqueOpened"
     >
       <template v-for="(item, index) in handleRoutes" :key="index + item.name">
         <vab-menu v-if="!item.meta.hidden" :item="item" />

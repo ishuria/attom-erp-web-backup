@@ -1,5 +1,5 @@
 <template>
-  <el-upload drag action="/uploadFlie" multiple>
+  <el-upload action="/uploadFlie" drag multiple>
     <el-icon class="el-icon--upload"><upload-filled /></el-icon>
     <div class="el-upload__text">
       将文件拖拽至此处或

@@ -30,14 +30,14 @@
       </template>
       <el-input
         v-model="input5"
-        :suffix-icon="Search"
         placeholder="请输入内容"
         style="float: left"
+        :suffix-icon="Search"
       />
       <el-input
         v-model="input6"
-        :prefix-icon="Search"
         placeholder="请输入内容"
+        :prefix-icon="Search"
         style="float: left"
       />
     </vab-card>
@@ -54,9 +54,9 @@
       <el-input v-model="input9" placeholder="请输入内容" style="width: 350px">
         <template #prepend>
           <el-select v-model="select" placeholder="请选择">
-            <el-option :value="1" label="选项1" />
-            <el-option :value="2" label="选项2" />
-            <el-option :value="3" label="选项3" />
+            <el-option label="选项1" :value="1" />
+            <el-option label="选项2" :value="2" />
+            <el-option label="选项3" :value="3" />
           </el-select>
         </template>
         <template #append>
@@ -70,8 +70,8 @@
       </template>
       <el-input
         v-model="textarea"
-        :rows="2"
         placeholder="请输入内容"
+        :rows="2"
         type="textarea"
       />
     </vab-card>

@@ -23,8 +23,8 @@
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <top-card
-          :count-config="countConfig1"
           background="blue"
+          :count-config="countConfig1"
           icon="money-cny-circle-line"
           percentage="10%"
           title="总销量"

@@ -1,11 +1,11 @@
 <template>
   <el-tree
     :data="data"
-    show-checkbox
-    node-key="id"
-    :default-expanded-keys="[2, 3]"
     :default-checked-keys="[5]"
+    :default-expanded-keys="[2, 3]"
+    node-key="id"
     :props="defaultProps"
+    show-checkbox
   />
 </template>
 

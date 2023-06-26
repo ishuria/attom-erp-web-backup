@@ -1,16 +1,16 @@
 <template>
   <el-tree
-    :allow-drop="allowDrop"
     :allow-drag="allowDrag"
+    :allow-drop="allowDrop"
     :data="data"
-    draggable
     default-expand-all
+    draggable
     node-key="id"
-    @node-drag-start="handleDragStart"
+    @node-drag-end="handleDragEnd"
     @node-drag-enter="handleDragEnter"
     @node-drag-leave="handleDragLeave"
     @node-drag-over="handleDragOver"
-    @node-drag-end="handleDragEnd"
+    @node-drag-start="handleDragStart"
     @node-drop="handleDrop"
   />
 </template>

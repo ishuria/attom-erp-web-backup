@@ -1,8 +1,8 @@
 <template>
   <div class="login-container">
     <div class="login-form">
-      <img :src="leftImg" class="left-img" />
-      <el-form ref="formRef" :model="form" :rules="rules" label-position="left">
+      <img class="left-img" :src="leftImg" />
+      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
         <div class="title">hello !</div>
         <div class="title-tips">
           {{ translateTitle('欢迎来到') }}{{ title }}！
@@ -26,8 +26,8 @@
             ref="passwordRef"
             v-model.trim="form.password"
             :placeholder="translateTitle('请输入密码')"
-            :type="passwordType"
             tabindex="2"
+            :type="passwordType"
             @keyup.enter="handleLogin"
           >
             <template #prefix>
@@ -47,7 +47,7 @@
               <vab-icon icon="barcode-box-line" />
             </template>
           </el-input>
-          <el-image :src="codeUrl" class="code" @click="changeCode" />
+          <el-image class="code" :src="codeUrl" @click="changeCode" />
         </el-form-item>
         <el-button class="login-btn" type="primary" @click="handleLogin">
           {{ translateTitle('登录') }}

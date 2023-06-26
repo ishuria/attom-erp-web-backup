@@ -7,10 +7,10 @@
       </template>
       <el-cascader
         v-model="area"
-        :options="areaOptions"
-        :props="{ label: 'name', value: 'code' }"
         clearable
         filterable
+        :options="areaOptions"
+        :props="{ label: 'name', value: 'code' }"
       />
     </vab-card>
     <vab-card shadow="hover">

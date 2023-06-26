@@ -26,8 +26,8 @@
       />
       <el-time-select
         v-model="endTime"
-        :min-time="startTime"
         end="18:30"
+        :min-time="startTime"
         placeholder="结束时间"
         start="08:30"
         step="00:15"

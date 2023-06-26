@@ -147,7 +147,7 @@
                 <template v-for="(item, index) in list" :key="index">
                   <li :class="item.type == 'mine' ? 'vab-chat-mine' : ''">
                     <div class="vab-chat-user">
-                      <img :src="item.avatar" alt="头像" />
+                      <img alt="头像" :src="item.avatar" />
                       <cite>
                         {{ item.username }}
                         <i>{{ item.time }}</i>

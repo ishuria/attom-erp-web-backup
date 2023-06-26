@@ -84,10 +84,10 @@
   <el-autocomplete
     v-if="theme.showSearch"
     v-model="state"
-    :fetch-suggestions="querySearchAsync"
-    :prefix-icon="Search"
     class="vab-search-autocomplete"
     clearable
+    :fetch-suggestions="querySearchAsync"
+    :prefix-icon="Search"
     @select="handleSelect"
   >
     <template #default="{ item }">

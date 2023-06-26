@@ -7,11 +7,11 @@
             <div style="display: inline-flex; align-items: center">
               每日活跃用户
               <el-tooltip
-                effect="dark"
                 content="Number of users who logged into the product in one day"
+                effect="dark"
                 placement="top"
               >
-                <el-icon style="margin-left: 4px" :size="12">
+                <el-icon :size="12" style="margin-left: 4px">
                   <Warning />
                 </el-icon>
               </el-tooltip>
@@ -38,11 +38,11 @@
             <div style="display: inline-flex; align-items: center">
               每月活跃用户
               <el-tooltip
-                effect="dark"
                 content="Number of users who logged into the product in one month"
+                effect="dark"
                 placement="top"
               >
-                <el-icon style="margin-left: 4px" :size="12">
+                <el-icon :size="12" style="margin-left: 4px">
                   <Warning />
                 </el-icon>
               </el-tooltip>
@@ -64,7 +64,7 @@
     </el-col>
     <el-col :span="8">
       <div class="statistic-card">
-        <el-statistic :value="72000" title="今日新增交易">
+        <el-statistic title="今日新增交易" :value="72000">
           <template #title>
             <div style="display: inline-flex; align-items: center">
               今日新增交易

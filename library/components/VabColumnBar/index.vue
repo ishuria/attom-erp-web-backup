@@ -64,11 +64,11 @@
 
 <template>
   <el-scrollbar
+    class="vab-column-bar-container"
     :class="{
       'is-collapse': collapse,
       ['vab-column-bar-container-' + theme.columnStyle]: true,
     }"
-    class="vab-column-bar-container"
   >
     <vab-logo style="z-index: 999" />
     <el-tabs v-model="tab.data" tab-position="left" @tab-click="handleTabClick">
@@ -76,11 +76,11 @@
         <el-tab-pane :name="item.name">
           <template #label>
             <div
+              class="vab-column-grid"
               :class="{
                 ['vab-column-grid-' + theme.columnStyle]: true,
               }"
               :title="translateTitle(item.meta.title)"
-              class="vab-column-grid"
             >
               <div>
                 <vab-icon
@@ -102,11 +102,11 @@
     </el-tabs>
 
     <el-menu
+      background-color="var(--el-menu-background-color-second)"
       :default-active="activeMenu.data"
       :default-openeds="defaultOpeneds"
-      :unique-opened="uniqueOpened"
-      background-color="var(--el-menu-background-color-second)"
       mode="vertical"
+      :unique-opened="uniqueOpened"
     >
       <el-divider />
       <template v-for="item in partialRoutes" :key="item.path">

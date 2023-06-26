@@ -1,16 +1,16 @@
 <template>
   <div class="register-container">
     <div class="register-form">
-      <img :src="leftImg" class="left-img" />
-      <el-form ref="formRef" :model="form" :rules="rules" label-position="left">
+      <img class="left-img" :src="leftImg" />
+      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
         <div class="title">hello !</div>
         <div class="title-tips">{{ translateTitle('账号注册') }}</div>
         <el-form-item prop="username">
           <el-input
             v-model.trim="form.username"
             v-focus
-            :placeholder="translateTitle('请输入用户名')"
             auto-complete="off"
+            :placeholder="translateTitle('请输入用户名')"
             type="text"
           >
             <template #prefix>
@@ -21,8 +21,8 @@
         <el-form-item prop="phone">
           <el-input
             v-model.trim="form.phone"
-            :placeholder="translateTitle('请输入手机号')"
             maxlength="11"
+            :placeholder="translateTitle('请输入手机号')"
             show-word-limit
             type="text"
           >
@@ -42,8 +42,8 @@
             </template>
           </el-input>
           <el-button
-            :disabled="isGetPhone"
             class="phone-code"
+            :disabled="isGetPhone"
             type="primary"
             @click="getPhoneCode"
           >
@@ -53,8 +53,8 @@
         <el-form-item prop="password">
           <el-input
             v-model.trim="form.password"
-            :placeholder="translateTitle('请输入密码')"
             autocomplete="new-password"
+            :placeholder="translateTitle('请输入密码')"
             type="password"
           >
             <template #prefix>

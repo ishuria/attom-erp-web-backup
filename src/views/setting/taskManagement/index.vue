@@ -2,7 +2,7 @@
   <div class="task-management-container no-background-container">
     <vab-query-form class="page-header">
       <vab-query-form-top-panel>
-        <el-form :model="queryForm" inline label-width="60px" @submit.prevent>
+        <el-form inline label-width="60px" :model="queryForm" @submit.prevent>
           <el-form-item label="任务名">
             <el-input
               v-model.trim="queryForm.taskName"
@@ -50,8 +50,8 @@
             <el-tag v-else class="card-header-tag" type="danger">已停用</el-tag>
           </template>
           <el-image
-            :src="getImageUrl('assets/task_image/task.png')"
             class="task-item-image"
+            :src="getImageUrl('assets/task_image/task.png')"
           />
 
           <div class="task-item-bottom">

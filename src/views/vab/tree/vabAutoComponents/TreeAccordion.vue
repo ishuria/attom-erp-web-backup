@@ -1,8 +1,8 @@
 <template>
   <el-tree
+    accordion
     :data="data"
     :props="defaultProps"
-    accordion
     @node-click="handleNodeClick"
   />
 </template>

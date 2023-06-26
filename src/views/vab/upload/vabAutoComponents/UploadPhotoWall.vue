@@ -10,7 +10,7 @@
   </el-upload>
 
   <el-dialog v-model="dialogVisible">
-    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+    <img alt="Preview Image" :src="dialogImageUrl" w-full />
   </el-dialog>
 </template>
 

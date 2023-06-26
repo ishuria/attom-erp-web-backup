@@ -36,8 +36,8 @@
 </script>
 
 <template>
-  <el-badge v-if="theme.showNotice" :value="badge" type="danger">
-    <el-popover :width="305" placement="bottom" trigger="hover">
+  <el-badge v-if="theme.showNotice" type="danger" :value="badge">
+    <el-popover placement="bottom" trigger="hover" :width="305">
       <template #reference>
         <vab-icon icon="notification-line" />
       </template>

@@ -94,8 +94,8 @@
 <template>
   <el-color-picker
     v-model="color"
-    :predefine="predefineColors"
     popper-class="vab-color-picker"
+    :predefine="predefineColors"
     @active-change="handleChange"
   />
 </template>

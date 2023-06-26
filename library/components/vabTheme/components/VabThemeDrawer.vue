@@ -78,14 +78,14 @@
 <template>
   <el-drawer
     v-model="state.drawerVisible"
-    :title="translateTitle('主题配置')"
     append-to-body
     class="vab-drawer"
     direction="rtl"
     size="285px"
+    :title="translateTitle('主题配置')"
   >
     <el-scrollbar height="85vh">
-      <el-form ref="form" :model="theme" label-position="left">
+      <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
           <template #label>
             {{ translateTitle('布局') }}
@@ -105,8 +105,8 @@
           </template>
           <el-radio-group
             v-model="theme.layout"
-            :disabled="device === 'mobile'"
             class="vab-shop-layout"
+            :disabled="device === 'mobile'"
           >
             <el-radio-button label="column">
               <template #default>

@@ -78,7 +78,7 @@
         </ul>
       </div>
     </header>
-    <div :style="{ background: background }" class="carousel-background"></div>
+    <div class="carousel-background" :style="{ background: background }"></div>
     <main>
       <el-row :gutter="0">
         <el-col :span="6">
@@ -117,9 +117,9 @@
         </el-col>
         <el-col :span="18">
           <el-carousel
-            :interval="3000"
             arrow="always"
             height="420px"
+            :interval="3000"
             @change="handleChange"
           >
             <el-carousel-item
@@ -194,7 +194,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <div class="news-tit"><h2>今日要闻</h2></div>
-          <el-image :src="banner_1" class="news-img" />
+          <el-image class="news-img" :src="banner_1" />
         </el-col>
         <el-col :span="16">
           <div class="news-tit"><h2>动态资讯</h2></div>

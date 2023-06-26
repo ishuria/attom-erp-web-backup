@@ -47,6 +47,11 @@ module.exports = {
     // 多字组件名称
     'vue/multi-word-component-names': 'off',
     // Vue属性排序
-    'vue/attributes-order': 'warn',
+    'vue/attributes-order': [
+      'warn',
+      {
+        alphabetical: true, //字母顺序
+      },
+    ],
   },
 }

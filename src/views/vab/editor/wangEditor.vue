@@ -3,8 +3,8 @@
     <Toolbar :editor="editorRef" style="border-bottom: 1px solid #e8e8e8" />
     <Editor
       v-model="html"
-      :default-config="editorConfig"
       class="wang-editor-content"
+      :default-config="editorConfig"
       style="height: 300px"
       @on-created="handleCreated"
     />

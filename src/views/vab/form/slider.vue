@@ -22,7 +22,7 @@
       <span class="demonstration">不显示间断点</span>
       <el-slider v-model="value6" :step="10" />
       <span class="demonstration">显示间断点</span>
-      <el-slider v-model="value6" :step="10" show-stops />
+      <el-slider v-model="value6" show-stops :step="10" />
     </vab-card>
     <vab-card shadow="hover">
       <template #header>

@@ -20,12 +20,12 @@
       <el-button round type="info">信息按钮</el-button>
       <el-button round type="warning">警告按钮</el-button>
       <el-button round type="danger">危险按钮</el-button>
-      <el-button :icon="Search" circle />
-      <el-button :icon="Edit" circle type="primary" />
-      <el-button :icon="Check" circle type="success" />
-      <el-button :icon="Message" circle type="info" />
-      <el-button :icon="Star" circle type="warning" />
-      <el-button :icon="Delete" circle type="danger" />
+      <el-button circle :icon="Search" />
+      <el-button circle :icon="Edit" type="primary" />
+      <el-button circle :icon="Check" type="success" />
+      <el-button circle :icon="Message" type="info" />
+      <el-button circle :icon="Star" type="warning" />
+      <el-button circle :icon="Delete" type="danger" />
     </vab-card>
 
     <vab-card shadow="hover">

@@ -1,8 +1,8 @@
 <template>
   <el-tree
-    :props="props"
-    :load="loadNode"
     lazy
+    :load="loadNode"
+    :props="props"
     show-checkbox
     @check-change="handleCheckChange"
   />

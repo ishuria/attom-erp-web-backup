@@ -71,7 +71,7 @@
       >
         <vab-link :to="item.link">
           <vab-card class="icon-panel" shadow="never">
-            <el-badge :value="item.value" class="item">
+            <el-badge class="item" :value="item.value">
               <vab-icon :icon="item.icon" />
             </el-badge>
             <div class="icon-panel-title">

@@ -24,7 +24,7 @@
     <el-row :gutter="15">
       <el-col>
         <vab-card shadow="hover">
-          <el-form :inline="true" class="demo-form-inline">
+          <el-form class="demo-form-inline" :inline="true">
             <el-form-item label="换肤">
               <vab-color-picker />
             </el-form-item>
@@ -41,7 +41,7 @@
         :xs="12"
       >
         <vab-card shadow="hover" @click="handleCopyIcon(item)">
-          <vab-icon :icon="item" class="vab-lllustration" is-custom-svg />
+          <vab-icon class="vab-lllustration" :icon="item" is-custom-svg />
         </vab-card>
       </el-col>
     </el-row>

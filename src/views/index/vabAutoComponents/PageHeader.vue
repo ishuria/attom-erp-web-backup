@@ -40,8 +40,8 @@
 </script>
 
 <template>
-  <vab-colorful-card :style="style" class="page-header" shadow="never">
-    <el-avatar :src="avatar" class="page-header-avatar hidden-xs-only" />
+  <vab-colorful-card class="page-header" shadow="never" :style="style">
+    <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
     <div class="page-header-tip">
       <p class="page-header-tip-title">
         {{ handleTips() }}

@@ -3,19 +3,19 @@
     <p>Using render-content</p>
     <el-tree
       :data="dataSource"
-      show-checkbox
-      node-key="id"
       default-expand-all
       :expand-on-click-node="false"
+      node-key="id"
       :render-content="renderContent"
+      show-checkbox
     />
     <p>Using scoped slot</p>
     <el-tree
       :data="dataSource"
-      show-checkbox
-      node-key="id"
       default-expand-all
       :expand-on-click-node="false"
+      node-key="id"
+      show-checkbox
     >
       <template #default="{ node, data }">
         <span class="custom-tree-node">

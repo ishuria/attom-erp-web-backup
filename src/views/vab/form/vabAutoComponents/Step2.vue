@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+    <el-form ref="formRef" label-width="100px" :model="form" :rules="rules">
       <el-form-item label="付款账户">
         {{ infoData.payAccount }}
       </el-form-item>

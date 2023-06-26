@@ -4,7 +4,7 @@
       <el-countdown title="开始抓取" :value="value" />
     </el-col>
     <el-col :span="8">
-      <el-countdown title="剩余VIP时间" format="HH:mm:ss" :value="value1" />
+      <el-countdown format="HH:mm:ss" title="剩余VIP时间" :value="value1" />
       <el-button class="countdown-footer" type="primary" @click="reset">
         Reset
       </el-button>
@@ -13,7 +13,7 @@
       <el-countdown format="DD [days] HH:mm:ss" :value="value2">
         <template #title>
           <div style="display: inline-flex; align-items: center">
-            <el-icon style="margin-right: 4px" :size="12">
+            <el-icon :size="12" style="margin-right: 4px">
               <Calendar />
             </el-icon>
             直到下个月

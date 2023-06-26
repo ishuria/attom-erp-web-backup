@@ -30,8 +30,8 @@
 <template>
   <div v-if="errorLogs.length > 0">
     <el-badge
-      :value="errorLogs.length"
       type="danger"
+      :value="errorLogs.length"
       @click="state.dialogVisible = true"
     >
       <vab-icon icon="bug-line" />
@@ -43,7 +43,7 @@
       title="shop-vite 异常捕获(温馨提示：错误必须解决)"
       width="70%"
     >
-      <el-table :data="errorLogs" border>
+      <el-table border :data="errorLogs">
         <el-table-column label="报错路由">
           <template #default="{ row }">
             <a :href="row.url" target="_blank">

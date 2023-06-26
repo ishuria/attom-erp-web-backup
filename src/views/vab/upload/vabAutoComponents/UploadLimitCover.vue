@@ -2,9 +2,9 @@
   <el-upload
     ref="upload"
     action="/uploadFlie"
+    :auto-upload="false"
     :limit="1"
     :on-exceed="handleExceed"
-    :auto-upload="false"
   >
     <template #trigger>
       <el-button type="primary">选择文件</el-button>

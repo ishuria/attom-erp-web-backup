@@ -2,7 +2,7 @@
   <div class="system-log-container">
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-form :model="queryForm" inline label-width="60px" @submit.prevent>
+        <el-form inline label-width="60px" :model="queryForm" @submit.prevent>
           <el-form-item label="账号">
             <el-input
               v-model.trim="queryForm.account"
@@ -91,11 +91,11 @@
       </template>
     </el-table>
     <el-pagination
+      background
       :current-page="queryForm.pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
-      background
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />

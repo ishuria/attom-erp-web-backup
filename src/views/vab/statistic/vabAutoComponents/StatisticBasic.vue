@@ -8,7 +8,7 @@
         <template #title>
           <div style="display: inline-flex; align-items: center">
             男女比例
-            <el-icon style="margin-left: 4px" :size="12">
+            <el-icon :size="12" style="margin-left: 4px">
               <Male />
             </el-icon>
           </div>

@@ -24,9 +24,9 @@
           <div class="right-panel">
             <el-menu
               v-if="'horizontal' === layout"
-              :default-active="activeMenu.data"
               active-text-color="var(--el-menu-color-text)"
               background-color="var(--el-menu-background-color)"
+              :default-active="activeMenu.data"
               menu-trigger="hover"
               mode="horizontal"
               style="width: 800px"

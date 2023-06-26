@@ -29,8 +29,8 @@
 
     <el-dialog v-model="dialogVisible" title="扫码登录" width="350px">
       <div class="qr-box">
-        <img :src="QR" class="qr-image" />
-        <img :src="scan" class="scan-image" />
+        <img class="qr-image" :src="QR" />
+        <img class="scan-image" :src="scan" />
         <div class="wechat-title">
           打开微信扫一扫，快速登录/注册
           <p>其他登录方式</p>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ mobile }" class="vue-shop-vite-box">
+  <div class="vue-shop-vite-box" :class="{ mobile }">
     <component
       :is="'vab-layout-' + theme.layout"
       :collapse="collapse"

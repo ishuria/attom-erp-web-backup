@@ -2,12 +2,12 @@
   <el-upload
     v-model:file-list="fileList"
     action="/uploadFlie"
-    multiple
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
     :before-remove="beforeRemove"
     :limit="3"
+    multiple
     :on-exceed="handleExceed"
+    :on-preview="handlePreview"
+    :on-remove="handleRemove"
   >
     <el-button type="primary">点击上传</el-button>
     <template #tip>

@@ -26,8 +26,8 @@ vab
     <vue-pdf
       v-for="page in numOfPages"
       :key="page"
-      :src="pdfSrc"
       :page="page"
+      :src="pdfSrc"
     />
   </div>
 </template>

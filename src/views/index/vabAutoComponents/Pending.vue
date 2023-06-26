@@ -18,11 +18,11 @@
     <template #header>
       <vab-icon icon="ball-pen-line" />
       待处理
-      <el-badge :value="6" class="item" />
+      <el-badge class="item" :value="6" />
     </template>
     <el-row :gutter="20">
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <vab-colorful-card :style="style1" shadow="never">
+        <vab-colorful-card shadow="never" :style="style1">
           <div class="parting-line parting-line-danger"></div>
           <span class="pending-title pending-title-danger">
             订单预警
@@ -33,7 +33,7 @@
         </vab-colorful-card>
       </el-col>
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <vab-colorful-card :style="style2" shadow="never">
+        <vab-colorful-card shadow="never" :style="style2">
           <div class="parting-line parting-line-primary"></div>
           <span class="pending-title pending-title-primary">
             售后工单
