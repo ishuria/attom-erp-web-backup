@@ -97,6 +97,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: 'chatGPT',
           icon: 'chat-3-line',
+          dot: true,
         },
       },
       {
@@ -644,6 +645,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'lock-password-line',
           dot: true,
+        },
+      },
+      {
+        path: 'throttleDebounce',
+        name: 'ThrottleDebounce',
+        component: () => import('/@/views/other/throttleDebounce/index.vue'),
+        meta: {
+          title: '节流&防抖',
+          guard: ['Admin'],
+          icon: 'water-percent-line',
         },
       },
     ],

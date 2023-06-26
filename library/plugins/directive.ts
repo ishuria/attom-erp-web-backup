@@ -1,10 +1,11 @@
 import type { App, DirectiveBinding } from 'vue'
 import { hasPermission } from '/@/utils/permission'
+import { throttle } from 'lodash'
 
 export default {
   install: (app: App<Element>) => {
     /**
-     * @description 自定义指令v-permissions
+     * @description 权限自定义指令v-permissions
      */
     app.directive('permissions', {
       mounted(el, binding: DirectiveBinding) {
@@ -12,6 +13,34 @@ export default {
         if (value)
           if (!hasPermission(value))
             el.parentNode && el.parentNode.removeChild(el)
+      },
+    })
+    /**
+     * @description 节流自定义指令v-throttle
+     */
+    app.directive('throttle', {
+      mounted(el: HTMLElement, binding: DirectiveBinding) {
+        const { value } = binding
+        const throttledFunction = throttle(value, 2000)
+        el.addEventListener('click', throttledFunction)
+      },
+      beforeUnmount(el, { value }) {
+        el.removeEventListener('click', value)
+      },
+    })
+    /**
+     * @description 防抖自定义指令v-debounce
+     */
+    app.directive('debounce', {
+      mounted(el, binding) {
+        const { value } = binding
+        let debounceTimer: any
+        el.addEventListener('click', () => {
+          clearTimeout(debounceTimer)
+          debounceTimer = setTimeout(() => {
+            value()
+          }, 1000)
+        })
       },
     })
   },
