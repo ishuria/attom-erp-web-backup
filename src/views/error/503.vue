@@ -11,7 +11,7 @@
   <div class="error-container">
     <div class="error-content">
       <div class="pic-error">
-        <vab-icon class="error-svg-503" icon="503" is-custom-svg />
+        <vab-icon class="error-svg" icon="503" is-custom-svg />
       </div>
       <div class="bullshit">
         <div class="bullshit-oops">{{ state.oops }}</div>
