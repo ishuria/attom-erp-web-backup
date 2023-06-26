@@ -31,57 +31,55 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { ElMessageBox } from 'element-plus'
   import VabPrint from '/@/plugins/VabPrint'
 
-  export default defineComponent({
+  defineOptions({
     name: 'Print',
-    setup() {
-      const state = reactive({
-        imageRef: null,
-        tableRef: null,
-        tableData: [
-          {
-            name: '马云',
-            address: '上海市普陀区金沙江路',
-          },
-          {
-            name: '马化腾',
-            address: '上海市普陀区金沙江路',
-          },
-          {
-            name: '李彦宏',
-            address: '上海市普陀区金沙江路',
-          },
-          {
-            name: '刘强东',
-            address: '上海市普陀区金沙江路',
-          },
-        ],
-      })
-
-      const print = async (val) => {
-        await VabPrint(state[val])
-      }
-      const remotePrint = () => {
-        ElMessageBox.prompt('', '自定义打印', {
-          inputType: 'textarea',
-          inputValue: `<h1>Vue Shop Vite</h1><p>vue-admin-beautiful.com/shop-vite</p>`,
-          inputErrorMessage: 'Invalid Email',
-          confirmButtonText: '打印',
-        })
-          .then(({ value }) => {
-            VabPrint(value)
-          })
-          .catch(() => {})
-      }
-
-      return {
-        ...toRefs(state),
-        print,
-        remotePrint,
-      }
-    },
   })
+
+  const imageRef = ref(null)
+  const tableRef = ref(null)
+  const tableData = ref([
+    {
+      name: '马云',
+      address: '上海市普陀区金沙江路',
+    },
+    {
+      name: '马化腾',
+      address: '上海市普陀区金沙江路',
+    },
+    {
+      name: '李彦宏',
+      address: '上海市普陀区金沙江路',
+    },
+    {
+      name: '刘强东',
+      address: '上海市普陀区金沙江路',
+    },
+  ])
+
+  const print = async (val: any) => {
+    switch (val) {
+      case 'imageRef':
+        await VabPrint(imageRef.value)
+        break
+      case 'tableRef':
+        await VabPrint(tableRef.value)
+        break
+    }
+  }
+  const remotePrint = () => {
+    ElMessageBox.prompt('', '自定义打印', {
+      inputType: 'textarea',
+      inputValue: `<h1>Vue Shop Vite</h1><p>vue-admin-beautiful.com/shop-vite</p>`,
+      inputErrorMessage: 'Invalid Email',
+      confirmButtonText: '打印',
+    })
+      .then(({ value }) => {
+        VabPrint(value)
+      })
+      .catch(() => {})
+  }
 </script>
