@@ -147,6 +147,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'resume',
+        name: 'Resume',
+        component: () => import('/@/views/template/Resume.vue'),
+        meta: {
+          title: '个人简历',
+          icon: 'folder-user-line',
+        },
+      },
+      {
         path: '403',
         name: 'Error403',
         component: () => import('/@/views/403.vue'),
