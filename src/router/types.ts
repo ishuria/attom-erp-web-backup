@@ -41,10 +41,12 @@ export interface VabRouteMeta {
   title?: string
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+
 export interface VabRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
-  name: string
+  path: string
+  // name 首字母必须大写
+  name: Capitalize<string>
   meta: VabRouteMeta
   fullPath?: string
   component?: Component | string
