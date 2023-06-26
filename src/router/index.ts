@@ -652,7 +652,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         name: 'ThrottleDebounce',
         component: () => import('/@/views/other/throttleDebounce/index.vue'),
         meta: {
-          title: '节流&防抖',
+          title: '节流防抖',
           guard: ['Admin'],
           icon: 'water-percent-line',
         },

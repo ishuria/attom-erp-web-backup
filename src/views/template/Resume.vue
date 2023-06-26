@@ -141,6 +141,14 @@
 
 <style lang="scss" scoped>
   .resume-container {
+    @media (max-width: 576px) {
+      .resume-box {
+        flex-direction: column !important;
+      }
+      .resume-left {
+        text-align: center;
+      }
+    }
     .resume-box {
       display: flex;
       flex-direction: row;
