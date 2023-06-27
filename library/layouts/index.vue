@@ -15,11 +15,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const imports = import.meta.glob('./**/*.vue', { eager: true })
-  const Components = {}
+  const imports: any = import.meta.glob('./**/*.vue', { eager: true })
+  const Components: any = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
     Components[key.replace(/(\/|\.|index.vue)/g, '')] = imports[key].default
   })
