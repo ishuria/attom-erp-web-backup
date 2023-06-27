@@ -14,9 +14,9 @@
   </component>
 </template>
 
-<script lang="ts">
-  const imports: any = import.meta.glob('./**/*.vue', { eager: true })
-  const Components: any = {}
+<script>
+  const imports = import.meta.glob('./**/*.vue', { eager: true })
+  const Components = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
     Components[key.replace(/(\/|components|\.|vue)/g, '')] =
       imports[key].default
@@ -38,7 +38,7 @@
     setup(props) {
       const menuComponent = computed(() =>
         props.item.children &&
-        props.item.children.some((route: any) => {
+        props.item.children.some((route) => {
           return route.meta && route.meta.hidden !== true
         })
           ? 'VabSubMenu'
