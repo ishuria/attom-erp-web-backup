@@ -550,6 +550,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '角色权限',
           icon: 'user-3-line',
+          badge: 'Hot',
         },
       },
       {
@@ -583,28 +584,28 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
         children: [
           {
-            path: 'menu1-1',
+            path: 'menu11',
             name: 'Menu11',
             meta: {
-              title: '多级路由1-1',
+              title: '路由1.1',
             },
             children: [
               {
-                path: 'menu1-1-1',
+                path: 'menu111',
                 name: 'Menu111',
                 meta: {
-                  title: '多级路由1-1-1',
+                  title: '路由1.1.1',
                 },
                 children: [
                   {
-                    path: 'menu1-1-1-1',
+                    path: 'menu1111',
                     name: 'Menu1111',
                     meta: {
-                      title: '多级路由1-1-1-1',
+                      title: '路由1.1.1.1',
                     },
                     component: () =>
                       import(
-                        '/@/views/operate/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue'
+                        '/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue'
                       ),
                   },
                 ],

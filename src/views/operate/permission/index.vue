@@ -134,116 +134,7 @@
           未拥有["Admin"]和["delete:system"]权限点的按钮
         </el-button>
       </el-form-item>
-      <el-form-item label="路由" />
     </el-form>
-    <el-row :gutter="20">
-      <el-col :span="24">
-        <el-table
-          border
-          :data="tableData"
-          default-expand-all
-          row-key="path"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        >
-          <el-table-column
-            align="center"
-            label="name"
-            prop="name"
-            show-overflow-tooltip
-            width="220"
-          />
-          <el-table-column
-            align="center"
-            label="path"
-            prop="path"
-            show-overflow-tooltip
-            width="220"
-          />
-          <el-table-column
-            align="center"
-            label="component"
-            prop="component"
-            show-overflow-tooltip
-            width="220"
-          />
-          <el-table-column
-            align="center"
-            label="redirect"
-            prop="redirect"
-            show-overflow-tooltip
-            width="220"
-          />
-          <el-table-column
-            align="center"
-            label="title"
-            prop="meta.title"
-            show-overflow-tooltip
-          />
-          <el-table-column align="center" label="icon" show-overflow-tooltip>
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                <vab-icon v-if="row.meta.icon" :icon="row.meta.icon" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="noClosable"
-            show-overflow-tooltip
-          >
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                {{ row.meta.noClosable || false }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="noKeepAlive"
-            show-overflow-tooltip
-            width="100"
-          >
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                <template v-if="!row.meta.noKeepAlive">false</template>
-                <template v-else>true</template>
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="badge" show-overflow-tooltip>
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                {{ row.meta.badge }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="isCustomSvg"
-            show-overflow-tooltip
-            width="140"
-          >
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                {{ row.meta.isCustomSvg || false }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="tabHidden"
-            show-overflow-tooltip
-          >
-            <template #default="{ row }">
-              <span v-if="row.meta">
-                <template v-if="!row.meta.tabHidden">false</template>
-                <template v-else>true</template>
-              </span>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
@@ -256,8 +147,6 @@
     rolesControl,
     tokenTableName,
   } from '/@/config'
-  import { getList } from '/@/api/router'
-  import { filterRoutes } from '/@/utils/routes'
   import { uuid } from '/@/utils'
 
   defineOptions({
@@ -273,14 +162,7 @@
   const form = reactive({
     account: username.value,
   })
-  const tableData: any = ref([])
 
-  const fetchData = async () => {
-    const {
-      data: { list },
-    } = await getList()
-    tableData.value = filterRoutes([...list], true)
-  }
   const handleChangeRole = async () => {
     $baseLoading('正在切换账号请稍后...')
     await localStorage.setItem(
@@ -289,10 +171,6 @@
     )
     await location.reload()
   }
-
-  onMounted(() => {
-    fetchData()
-  })
 </script>
 
 <style lang="scss" scoped>
