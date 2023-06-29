@@ -382,28 +382,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'message-2-line',
         },
       },
-
-      {
-        path: 'dynamicMeta',
-        name: 'DynamicMeta',
-        component: () => import('/@/views/vab/dynamicMeta/index.vue'),
-        meta: {
-          title: '动态Meta',
-          guard: ['Admin'],
-          icon: 'notification-badge-line',
-          badge: '0',
-        },
-      },
-      {
-        path: 'tabs',
-        name: 'Tabs',
-        component: () => import('/@/views/vab/tabs/index.vue'),
-        meta: {
-          title: '多标签',
-          guard: ['Admin'],
-          icon: 'bank-card-line',
-        },
-      },
       {
         path: 'timeline',
         name: 'Timeline',
@@ -413,46 +391,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'time-line',
         },
-      },
-      {
-        path: 'menu1',
-        name: 'Menu1',
-        meta: {
-          title: '多级路由缓存',
-          guard: ['Admin'],
-          icon: 'route-line',
-        },
-        children: [
-          {
-            path: 'menu1-1',
-            name: 'Menu11',
-            meta: {
-              title: '多级路由1-1',
-            },
-            children: [
-              {
-                path: 'menu1-1-1',
-                name: 'Menu111',
-                meta: {
-                  title: '多级路由1-1-1',
-                },
-                children: [
-                  {
-                    path: 'menu1-1-1-1',
-                    name: 'Menu1111',
-                    meta: {
-                      title: '多级路由1-1-1-1',
-                    },
-                    component: () =>
-                      import(
-                        '/@/views/vab/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue'
-                      ),
-                  },
-                ],
-              },
-            ],
-          },
-        ],
       },
       {
         path: 'statistic',
@@ -602,6 +540,78 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'water-percent-line',
         },
+      },
+    ],
+  },
+  {
+    path: '/operate',
+    name: 'Operate',
+    component: Layout,
+    meta: {
+      title: '操作',
+      icon: 'microscope-line',
+    },
+    children: [
+      {
+        path: 'dynamicMeta',
+        name: 'DynamicMeta',
+        component: () => import('/@/views/operate/dynamicMeta/index.vue'),
+        meta: {
+          title: '动态Meta',
+          guard: ['Admin'],
+          icon: 'notification-badge-line',
+          badge: '0',
+        },
+      },
+      {
+        path: 'tabs',
+        name: 'Tabs',
+        component: () => import('/@/views/operate/tabs/index.vue'),
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+        },
+      },
+      {
+        path: 'menu1',
+        name: 'Menu1',
+        meta: {
+          title: '多级路由缓存',
+          guard: ['Admin'],
+          icon: 'route-line',
+        },
+        children: [
+          {
+            path: 'menu1-1',
+            name: 'Menu11',
+            meta: {
+              title: '多级路由1-1',
+            },
+            children: [
+              {
+                path: 'menu1-1-1',
+                name: 'Menu111',
+                meta: {
+                  title: '多级路由1-1-1',
+                },
+                children: [
+                  {
+                    path: 'menu1-1-1-1',
+                    name: 'Menu1111',
+                    meta: {
+                      title: '多级路由1-1-1-1',
+                    },
+                    component: () =>
+                      import(
+                        '/@/views/operate/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue'
+                      ),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
     ],
   },
@@ -764,26 +774,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '系统日志',
           icon: 'file-shield-2-line',
-        },
-      },
-    ],
-  },
-  {
-    path: '/statcenter',
-    name: 'Statcenter',
-    component: Layout,
-    meta: {
-      title: '数据',
-      icon: 'line-chart-line',
-    },
-    children: [
-      {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: () => import('/@/views/statcenter/Dashboard.vue'),
-        meta: {
-          title: '数据概况',
-          icon: 'pie-chart-line',
         },
       },
     ],

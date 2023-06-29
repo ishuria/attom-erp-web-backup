@@ -35,4 +35,18 @@
   }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .watermark-container {
+    :deep() {
+      .el-button {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+
+      .el-button + .el-button {
+        margin-right: 10px;
+        margin-left: 0;
+      }
+    }
+  }
+</style>

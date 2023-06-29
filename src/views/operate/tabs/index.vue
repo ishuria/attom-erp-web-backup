@@ -93,3 +93,19 @@
     return path === handleActivePath(route, true)
   }
 </script>
+
+<style lang="scss" scoped>
+  .tabs-container {
+    :deep() {
+      .el-button {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+
+      .el-button + .el-button {
+        margin-right: 10px;
+        margin-left: 0;
+      }
+    }
+  }
+</style>
