@@ -1,12 +1,11 @@
 <template>
   <div class="tabs-container">
-    <el-button type="primary" @click="closeOthersTabs">关闭其他</el-button>
-    <el-button type="primary" @click="closeLeftTabs">关闭左侧</el-button>
-    <el-button type="primary" @click="closeRightTabs">关闭右侧</el-button>
-    <el-button type="primary" @click="closeAllTabs">关闭全部</el-button>
-    <el-button type="primary" @click="handleTabRemove(route.path)">
-      关闭当前
-    </el-button>
+    <el-button @click="closeOthersTabs">关闭其他标签页</el-button>
+    <el-button @click="closeLeftTabs">关闭左侧标签页</el-button>
+    <el-button @click="closeRightTabs">关闭右侧标签页</el-button>
+    <el-button @click="closeAllTabs">关闭全部标签页</el-button>
+    <el-button @click="handleTabRemove(route.path)">关闭当前</el-button>
+    <el-button @click="handleRefresh">刷新当前标签页</el-button>
   </div>
 </template>
 
@@ -20,7 +19,6 @@
 
   const route = useRoute()
   const router = useRouter()
-
   const tabStore = useTabsStore()
   const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabStore)
   const {
@@ -30,8 +28,9 @@
     delRightVisitedRoutes,
     delAllVisitedRoutes,
   } = tabStore
-
   const hoverRoute = ref(null)
+  const $pub = inject('$pub')
+
   /**
    * 根据原生路径删除标签中的标签
    * @param rawPath 原生路径
@@ -91,6 +90,12 @@
   }
   const isActive = (path) => {
     return path === handleActivePath(route, true)
+  }
+  /**
+   * 刷新当前标签页
+   */
+  const handleRefresh = () => {
+    $pub('reload-router-view', 'ComprehensiveTable')
   }
 </script>
 
