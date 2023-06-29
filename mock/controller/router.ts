@@ -40,6 +40,7 @@ const list = [
         meta: {
           title: 'chatGPT',
           icon: 'chat-3-line',
+          dot: true,
         },
       },
       {
@@ -49,71 +50,6 @@ const list = [
         meta: {
           title: '语音合成',
           icon: 'customer-service-line',
-        },
-      },
-    ],
-  },
-  {
-    path: '/template',
-    name: 'Template',
-    component: 'Layout',
-    meta: {
-      title: '模板',
-      icon: 'clipboard-line',
-    },
-    children: [
-      {
-        path: 'qRLogin',
-        name: 'QRLogin',
-        component: '/@/views/template/QRLogin.vue',
-        meta: {
-          title: '二维码登录',
-          icon: 'qr-scan-2-line',
-        },
-      },
-      {
-        path: 'award',
-        name: 'Award',
-        component: '/@/views/template/Award.vue',
-        meta: {
-          title: '抽奖',
-          icon: 'award-line',
-        },
-      },
-      {
-        path: 'lllustration',
-        name: 'Lllustration',
-        component: '/@/views/template/Lllustration.vue',
-        meta: {
-          title: '插画',
-          icon: 'brush-3-line',
-        },
-      },
-      {
-        path: '403',
-        name: 'Error403',
-        component: '/@/views/error/403.vue',
-        meta: {
-          title: '403',
-          icon: 'error-warning-line',
-        },
-      },
-      {
-        path: '404',
-        name: 'Error404',
-        component: '/@/views/error/404.vue',
-        meta: {
-          title: '404',
-          icon: 'error-warning-line',
-        },
-      },
-      {
-        path: '500',
-        name: 'Error500',
-        component: '/@/views/error/500.vue',
-        meta: {
-          title: '500',
-          icon: 'error-warning-line',
         },
       },
     ],
@@ -367,12 +303,12 @@ const list = [
         },
       },
       {
-        path: 'wangEditor',
-        name: 'WangEditor',
-        component: '/@/views/vab/editor/wangEditor.vue',
+        path: 'upload',
+        name: 'Upload',
+        component: '/@/views/vab/upload/index.vue',
         meta: {
-          title: '富文本',
-          icon: 'edit-box-line',
+          title: '上传',
+          icon: 'upload-cloud-2-line',
           guard: ['Admin'],
           dot: true,
         },
@@ -487,6 +423,37 @@ const list = [
           title: '图表',
           guard: ['Admin'],
           icon: 'bubble-chart-line',
+          noKeepAlive: true,
+        },
+      },
+      {
+        path: 'wangEditor',
+        name: 'WangEditor',
+        component: '/@/views/other/editor/wangEditor.vue',
+        meta: {
+          title: '富文本',
+          icon: 'edit-box-line',
+          guard: ['Admin'],
+          dot: true,
+        },
+      },
+      {
+        path: 'video',
+        name: 'Video',
+        component: '/@/views/other/video/index.vue',
+        meta: {
+          title: '视频播放器',
+          guard: ['Admin'],
+          icon: 'video-line',
+        },
+      },
+      {
+        path: 'award',
+        name: 'Award',
+        component: '/@/views/other/award/index.vue',
+        meta: {
+          title: '抽奖',
+          icon: 'award-line',
         },
       },
       {
@@ -540,6 +507,113 @@ const list = [
           title: '打印',
           guard: ['Admin'],
           icon: 'printer-line',
+        },
+      },
+      {
+        path: 'share',
+        name: 'Share',
+        component: '/@/views/other/share/index.vue',
+        meta: {
+          title: '分享',
+          guard: ['Admin'],
+          icon: 'share-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'passwordGenerator',
+        name: 'PasswordGenerator',
+        component: '/@/views/other/passwordGenerator/index.vue',
+        meta: {
+          title: '密码生成器',
+          guard: ['Admin'],
+          icon: 'lock-password-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'throttleDebounce',
+        name: 'ThrottleDebounce',
+        component: '/@/views/other/throttleDebounce/index.vue',
+        meta: {
+          title: '节流防抖',
+          guard: ['Admin'],
+          icon: 'water-percent-line',
+        },
+      },
+    ],
+  },
+  {
+    path: '/template',
+    name: 'Template',
+    component: 'Layout',
+    meta: {
+      title: '模板',
+      icon: 'clipboard-line',
+    },
+    children: [
+      {
+        path: 'lllustration',
+        name: 'Lllustration',
+        component: '/@/views/template/Lllustration.vue',
+        meta: {
+          title: '插画',
+          icon: 'brush-3-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'qRLogin',
+        name: 'QRLogin',
+        component: '/@/views/template/QRLogin.vue',
+        meta: {
+          title: '二维码登录',
+          icon: 'qr-scan-2-line',
+        },
+      },
+      {
+        path: 'resume',
+        name: 'Resume',
+        component: '/@/views/template/Resume.vue',
+        meta: {
+          title: '简历',
+          icon: 'folder-user-line',
+        },
+      },
+      {
+        path: '403',
+        name: 'Error403',
+        component: '/@/views/error/403.vue',
+        meta: {
+          title: '403',
+          icon: 'error-warning-line',
+        },
+      },
+      {
+        path: '404',
+        name: 'Error404',
+        component: '/@/views/error/404.vue',
+        meta: {
+          title: '404',
+          icon: 'error-warning-line',
+        },
+      },
+      {
+        path: '500',
+        name: 'Error500',
+        component: '/@/views/error/500.vue',
+        meta: {
+          title: '500',
+          icon: 'error-warning-line',
+        },
+      },
+      {
+        path: '503',
+        name: 'Error503',
+        component: '/@/views/error/503.vue',
+        meta: {
+          title: '503',
+          icon: 'error-warning-line',
         },
       },
     ],

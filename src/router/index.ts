@@ -112,90 +112,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
-    path: '/template',
-    name: 'Template',
-    component: Layout,
-    meta: {
-      title: '模板',
-      icon: 'clipboard-line',
-    },
-    children: [
-      {
-        path: 'qRLogin',
-        name: 'QRLogin',
-        component: () => import('/@/views/template/QRLogin.vue'),
-        meta: {
-          title: '二维码登录',
-          icon: 'qr-scan-2-line',
-        },
-      },
-      {
-        path: 'award',
-        name: 'Award',
-        component: () => import('/@/views/template/Award.vue'),
-        meta: {
-          title: '抽奖',
-          icon: 'award-line',
-        },
-      },
-      {
-        path: 'lllustration',
-        name: 'Lllustration',
-        component: () => import('/@/views/template/Lllustration.vue'),
-        meta: {
-          title: '插画',
-          icon: 'brush-3-line',
-          dot: true,
-        },
-      },
-      {
-        path: 'resume',
-        name: 'Resume',
-        component: () => import('/@/views/template/Resume.vue'),
-        meta: {
-          title: '简历',
-          icon: 'folder-user-line',
-        },
-      },
-      {
-        path: '403',
-        name: 'Error403',
-        component: () => import('/@/views/error/403.vue'),
-        meta: {
-          title: '403',
-          icon: 'error-warning-line',
-        },
-      },
-      {
-        path: '404',
-        name: 'Error404',
-        component: () => import('/@/views/error/404.vue'),
-        meta: {
-          title: '404',
-          icon: 'error-warning-line',
-        },
-      },
-      {
-        path: '500',
-        name: 'Error500',
-        component: () => import('/@/views/error/500.vue'),
-        meta: {
-          title: '500',
-          icon: 'error-warning-line',
-        },
-      },
-      {
-        path: '503',
-        name: 'Error503',
-        component: () => import('/@/views/error/503.vue'),
-        meta: {
-          title: '503',
-          icon: 'error-warning-line',
-        },
-      },
-    ],
-  },
-  {
     path: '/vab',
     name: 'Vab',
     component: Layout,
@@ -446,17 +362,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
-        path: 'wangEditor',
-        name: 'WangEditor',
-        component: () => import('/@/views/vab/editor/wangEditor.vue'),
-        meta: {
-          title: '富文本',
-          icon: 'edit-box-line',
-          guard: ['Admin'],
-          dot: true,
-        },
-      },
-      {
         path: 'upload',
         name: 'Upload',
         component: () => import('/@/views/vab/upload/index.vue'),
@@ -583,6 +488,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'wangEditor',
+        name: 'WangEditor',
+        component: () => import('/@/views/other/editor/wangEditor.vue'),
+        meta: {
+          title: '富文本',
+          icon: 'edit-box-line',
+          guard: ['Admin'],
+          dot: true,
+        },
+      },
+      {
         path: 'video',
         name: 'Video',
         component: () => import('/@/views/other/video/index.vue'),
@@ -590,6 +506,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '视频播放器',
           guard: ['Admin'],
           icon: 'video-line',
+        },
+      },
+      {
+        path: 'award',
+        name: 'Award',
+        component: () => import('/@/views/other/award/index.vue'),
+        meta: {
+          title: '抽奖',
+          icon: 'award-line',
         },
       },
       {
@@ -675,6 +600,81 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '节流防抖',
           guard: ['Admin'],
           icon: 'water-percent-line',
+        },
+      },
+    ],
+  },
+  {
+    path: '/template',
+    name: 'Template',
+    component: Layout,
+    meta: {
+      title: '模板',
+      icon: 'clipboard-line',
+    },
+    children: [
+      {
+        path: 'lllustration',
+        name: 'Lllustration',
+        component: () => import('/@/views/template/Lllustration.vue'),
+        meta: {
+          title: '插画',
+          icon: 'brush-3-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'qRLogin',
+        name: 'QRLogin',
+        component: () => import('/@/views/template/QRLogin.vue'),
+        meta: {
+          title: '二维码登录',
+          icon: 'qr-scan-2-line',
+        },
+      },
+      {
+        path: 'resume',
+        name: 'Resume',
+        component: () => import('/@/views/template/Resume.vue'),
+        meta: {
+          title: '简历',
+          icon: 'folder-user-line',
+        },
+      },
+      {
+        path: '403',
+        name: 'Error403',
+        component: () => import('/@/views/error/403.vue'),
+        meta: {
+          title: '403',
+          icon: 'error-warning-line',
+        },
+      },
+      {
+        path: '404',
+        name: 'Error404',
+        component: () => import('/@/views/error/404.vue'),
+        meta: {
+          title: '404',
+          icon: 'error-warning-line',
+        },
+      },
+      {
+        path: '500',
+        name: 'Error500',
+        component: () => import('/@/views/error/500.vue'),
+        meta: {
+          title: '500',
+          icon: 'error-warning-line',
+        },
+      },
+      {
+        path: '503',
+        name: 'Error503',
+        component: () => import('/@/views/error/503.vue'),
+        meta: {
+          title: '503',
+          icon: 'error-warning-line',
         },
       },
     ],
