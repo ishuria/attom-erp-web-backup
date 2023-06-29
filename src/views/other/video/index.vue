@@ -2,6 +2,10 @@
   defineOptions({
     name: 'Video',
   })
+  const isLeft = usePageLeave()
+
+  const $baseMessage = inject<any>('$baseMessage')
+
   const configMp4 = reactive({
     url:
       'https://fastly.jsdel' +
@@ -16,9 +20,21 @@
     fluid: true,
   })
 
+  let _Player: any
+
   const playerInstance = (Player: any) => {
-    console.log(Player)
+    _Player = Player
   }
+
+  watch(isLeft, (value) => {
+    if (true === value) {
+      $baseMessage('鼠标已离开页面，暂停播放！', 'warning', 'hey')
+      _Player.pause()
+    } else {
+      $baseMessage('鼠标已回到页面，继续播放！', 'success', 'hey')
+      _Player.play()
+    }
+  })
 </script>
 
 <template>

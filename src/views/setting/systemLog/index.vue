@@ -121,12 +121,12 @@
     pageSize: 20,
   })
 
-  const handleSizeChange = (val: any) => {
-    queryForm.pageSize = val
+  const handleSizeChange = (value: any) => {
+    queryForm.pageSize = value
     fetchData()
   }
-  const handleCurrentChange = (val: any) => {
-    queryForm.pageNo = val
+  const handleCurrentChange = (value: any) => {
+    queryForm.pageNo = value
     fetchData()
   }
   const queryData = () => {

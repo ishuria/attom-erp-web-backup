@@ -100,12 +100,12 @@
     if (data.total > 0) emptyShow.value = false
     else emptyShow.value = true
   }
-  const handleSizeChange = (val: number) => {
-    queryForm.pageSize = val
+  const handleSizeChange = (value: number) => {
+    queryForm.pageSize = value
     fetchData()
   }
-  const handleCurrentChange = (val: number) => {
-    queryForm.pageNo = val
+  const handleCurrentChange = (value: number) => {
+    queryForm.pageNo = value
     fetchData()
   }
   const queryData = () => {

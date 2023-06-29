@@ -283,12 +283,12 @@
           toggleSelection([state.list[0]])
         }, 0)
       }
-      const handleSizeChange = (val) => {
-        state.queryForm.pageSize = val
+      const handleSizeChange = (value) => {
+        state.queryForm.pageSize = value
         fetchData()
       }
-      const handleCurrentChange = (val) => {
-        state.queryForm.pageNo = val
+      const handleCurrentChange = (value) => {
+        state.queryForm.pageNo = value
         fetchData()
       }
       const queryData = () => {
@@ -318,8 +318,8 @@
         })
         state.imageList = imageList
       }
-      const setSelectRows = (val) => {
-        state.selectRows = val
+      const setSelectRows = (value) => {
+        state.selectRows = value
       }
       const handleAdd = () => {
         state['editRef'].showEdit()

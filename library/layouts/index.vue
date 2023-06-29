@@ -40,13 +40,13 @@
         mobile.value = document.body.getBoundingClientRect().width - 1 < 992
       }
 
-      watch(mobile, (val) => {
-        if (val) {
+      watch(mobile, (value) => {
+        if (value) {
           oldLayout = theme.value.layout
           foldSideBar()
         } else openSideBar()
-        theme.value.layout = val ? 'vertical' : oldLayout
-        toggleDevice(val ? 'mobile' : 'desktop')
+        theme.value.layout = value ? 'vertical' : oldLayout
+        toggleDevice(value ? 'mobile' : 'desktop')
       })
 
       onMounted(() => {

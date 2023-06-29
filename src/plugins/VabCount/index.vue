@@ -194,8 +194,8 @@
           this.$emit('callback')
         }
       },
-      isNumber(val) {
-        return !isNaN(parseFloat(val))
+      isNumber(value) {
+        return !isNaN(parseFloat(value))
       },
       formatNumber(num) {
         num = num.toFixed(this.decimals)

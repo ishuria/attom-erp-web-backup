@@ -221,11 +221,11 @@
         if (!this.manualUpdate) {
           this.__unwatchOptions = this.$watch(
             'option',
-            (val, oldVal) => {
-              if (!this.chart && val) {
+            (value, oldVal) => {
+              if (!this.chart && value) {
                 this.init()
               } else {
-                this.chart.setOption(val, val !== oldVal)
+                this.chart.setOption(value, value !== oldVal)
               }
             },
             { deep: !this.watchShallow }

@@ -163,8 +163,8 @@
   const accordion: Ref<boolean> = ref(false)
   const activeName: any = ref(['1', '2', '3', '4'])
 
-  const handleAccordion = (val: any) => {
-    if (val) activeName.value = '1'
+  const handleAccordion = (value: any) => {
+    if (value) activeName.value = '1'
     else activeName.value = ['1', '2', '3', '4']
   }
 </script>

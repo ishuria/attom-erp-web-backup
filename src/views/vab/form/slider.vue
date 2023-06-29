@@ -61,8 +61,8 @@
         value9: 0,
       })
 
-      const formatTooltip = (val) => {
-        return val / 100
+      const formatTooltip = (value) => {
+        return value / 100
       }
 
       return {

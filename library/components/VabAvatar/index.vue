@@ -12,8 +12,8 @@
 
   const active = ref(false)
 
-  const handleVisibleChange = (val) => {
-    active.value = val
+  const handleVisibleChange = (value) => {
+    active.value = value
   }
   const handleCommand = async (command) => {
     switch (command) {

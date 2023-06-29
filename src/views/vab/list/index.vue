@@ -91,12 +91,12 @@
         state.listLoading = false
         state.emptyShow = false
       }
-      const handleSizeChange = (val) => {
-        state.queryForm.pageSize = val
+      const handleSizeChange = (value) => {
+        state.queryForm.pageSize = value
         fetchData()
       }
-      const handleCurrentChange = (val) => {
-        state.queryForm.pageNo = val
+      const handleCurrentChange = (value) => {
+        state.queryForm.pageNo = value
         fetchData()
       }
       const queryData = () => {

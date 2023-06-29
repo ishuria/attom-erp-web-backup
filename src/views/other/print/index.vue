@@ -60,8 +60,8 @@
     },
   ])
 
-  const print = async (val: any) => {
-    switch (val) {
+  const print = async (value: any) => {
+    switch (value) {
       case 'imageRef':
         await VabPrint(imageRef.value)
         break

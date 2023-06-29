@@ -127,8 +127,8 @@
     username: '',
   })
 
-  const setSelectRows = (val: string) => {
-    selectRows.value = val
+  const setSelectRows = (value: string) => {
+    selectRows.value = value
   }
   const handleEdit = (row: any = {}) => {
     if (row.id) {
@@ -157,12 +157,12 @@
       }
     }
   }
-  const handleSizeChange = (val: any) => {
-    queryForm.pageSize = val
+  const handleSizeChange = (value: any) => {
+    queryForm.pageSize = value
     fetchData()
   }
-  const handleCurrentChange = (val: any) => {
-    queryForm.pageNo = val
+  const handleCurrentChange = (value: any) => {
+    queryForm.pageNo = value
     fetchData()
   }
   const queryData = () => {

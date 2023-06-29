@@ -46,8 +46,8 @@
   const handleTabClick: any = (tab: any) => {
     if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
   }
-  const handleVisibleChange = (val: boolean) => {
-    active.value = val
+  const handleVisibleChange = (value: boolean) => {
+    active.value = value
   }
   const initNoCLosableTabs = (routes: any[]) => {
     routes.forEach((_route: { meta: { noClosable: any }; children: any }) => {

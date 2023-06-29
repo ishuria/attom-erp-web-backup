@@ -53,20 +53,20 @@
     }
   }
 
-  const handleChange = (val: any) => {
+  const handleChange = (value: any) => {
     const el = ref(null)
     const _color = useCssVar('--el-color-primary', el)
-    _color.value = val
+    _color.value = value
 
     for (let index = 1; index < 10; index++) {
       useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(
-        val,
+        value,
         1 - index * 0.1
       )
     }
 
-    changeColor(val)
-    color.value = val
+    changeColor(value)
+    color.value = value
   }
 
   onMounted(() => {

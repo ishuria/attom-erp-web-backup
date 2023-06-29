@@ -21,12 +21,12 @@
     },
   })
 
-  const handleSizeChange: any = (val: string) => {
-    state.queryForm.pageSize = val
+  const handleSizeChange: any = (value: string) => {
+    state.queryForm.pageSize = value
     fetchData()
   }
-  const handleCurrentChange: any = (val: string) => {
-    state.queryForm.pageNo = val
+  const handleCurrentChange: any = (value: string) => {
+    state.queryForm.pageNo = value
     fetchData()
   }
   const queryData: any = () => {

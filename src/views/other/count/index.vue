@@ -5,10 +5,10 @@
         v-if="show"
         :decimals="form.decimals"
         :duration="form.duration"
-        :end-val="form.endVal"
+        :end-value="form.endVal"
         :prefix="form.prefix"
         :separator="form.separator"
-        :start-val="form.startVal"
+        :start-value="form.startVal"
         :suffix="form.suffix"
       />
     </div>

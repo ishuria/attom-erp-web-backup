@@ -8,10 +8,10 @@
       <vab-count
         :decimals="countConfig.decimals"
         :duration="countConfig.duration"
-        :end-val="countConfig.endVal"
+        :end-value="countConfig.endVal"
         :prefix="countConfig.prefix"
         :separator="countConfig.separator"
-        :start-val="countConfig.startVal"
+        :start-value="countConfig.startVal"
         :suffix="countConfig.suffix"
       />
     </p>
