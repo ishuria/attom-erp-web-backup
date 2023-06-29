@@ -583,6 +583,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'video',
+        name: 'Video',
+        component: () => import('/@/views/other/video/index.vue'),
+        meta: {
+          title: '视频播放器',
+          guard: ['Admin'],
+          icon: 'video-line',
+        },
+      },
+      {
         path: 'count',
         name: 'Count',
         component: () => import('/@/views/other/count/index.vue'),
