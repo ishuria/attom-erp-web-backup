@@ -31,7 +31,7 @@ export default {
     图标: 'Icon',
     自定义图标: 'Custom icon',
     常规图标: 'Awesome icon',
-    小清新图标: 'Remix icon',
+    默认图标: 'Remix icon',
     图标选择器: 'Icon selector',
     水印: 'Watermark',
     详情页: 'Detail',

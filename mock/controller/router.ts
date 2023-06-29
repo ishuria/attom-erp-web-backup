@@ -76,7 +76,7 @@ const list = [
             name: 'RemixIcon',
             component: '/@/views/vab/icon/remixIcon.vue',
             meta: {
-              title: '小清新图标',
+              title: '默认图标',
             },
           },
           {

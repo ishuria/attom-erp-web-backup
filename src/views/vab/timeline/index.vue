@@ -78,13 +78,13 @@
 
   const activities: any = ref([
     {
-      content: '支持使用小清新图标',
+      content: '支持使用默认图标',
       timestamp: '2021-04-12 20:46',
       icon: 'account-circle-line',
       cardType: 'warning',
     },
     {
-      content: '支持使用小清新图标',
+      content: '支持使用默认图标',
       timestamp: '2021-04-18 20:46',
       icon: 'archive-line',
       cardType: 'error',

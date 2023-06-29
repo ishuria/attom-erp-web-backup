@@ -133,7 +133,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             name: 'RemixIcon',
             component: () => import('/@/views/vab/icon/remixIcon.vue'),
             meta: {
-              title: '小清新图标',
+              title: '默认图标',
             },
           },
           {
