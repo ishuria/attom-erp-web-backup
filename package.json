@@ -23,7 +23,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "@lucky-canvas/vue": "latest",
-    "@vueuse/core": "^10.2.0",
+    "@vueuse/core": "^10.2.1",
     "@vueuse/head": "^1.1.26",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.9",
@@ -64,7 +64,7 @@
     "chokidar": "^3.5.3",
     "eslint": "^8.43.0",
     "eslint-plugin-vue": "^9.15.1",
-    "lint-staged": "^13.2.2",
+    "lint-staged": "^13.2.3",
     "picocolors": "^1.0.0",
     "postcss-html": "^1.5.0",
     "prettier": "^2.8.8",
@@ -73,7 +73,7 @@
     "stylelint-config-recess-order": "^4.2.0",
     "stylelint-config-recommended-scss": "^12.0.0",
     "stylelint-config-recommended-vue": "^1.4.0",
-    "typescript": "^5.1.5",
+    "typescript": "^5.1.6",
     "unplugin-auto-import": "^0.16.4",
     "unplugin-vue-components": "^0.25.1",
     "vite": "^4.3.9",
@@ -84,7 +84,7 @@
     "vite-plugin-unplugin": "^1.6.9",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^1.8.2"
+    "vue-tsc": "^1.8.3"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
