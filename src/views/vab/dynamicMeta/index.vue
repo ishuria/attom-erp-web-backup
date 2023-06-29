@@ -96,7 +96,7 @@
     changeMenuMeta({ name, meta })
   }
   const handleMeta = (name: any, meta: { title: string }) => {
-    if (meta.title) document.title = getPageTitle(meta.title)
+    if (meta.title) useTitle().value = getPageTitle(meta.title)
     changeMenuMeta({ name, meta })
     changeTabsMeta({ name, meta })
   }
