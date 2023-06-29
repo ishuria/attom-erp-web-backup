@@ -95,7 +95,7 @@
    * 刷新当前标签页
    */
   const handleRefresh = () => {
-    $pub('reload-router-view', 'ComprehensiveTable')
+    $pub('reload-router-view', 'Tabs')
   }
 </script>
 
