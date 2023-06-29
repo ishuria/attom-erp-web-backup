@@ -12,6 +12,8 @@
 </template>
 
 <script lang="ts" setup>
+  import { ElTree } from 'element-plus'
+
   interface Tree {
     [key: string]: any
   }
