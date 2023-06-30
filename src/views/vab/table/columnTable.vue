@@ -236,11 +236,6 @@
     name: 'ColumnTable',
   })
 
-  interface Tree {
-    label: string
-    children?: Tree[]
-  }
-
   const router = useRouter()
   const $baseConfirm = inject<any>('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
@@ -272,6 +267,12 @@
   const filterNode: any = (value: string, data: Tree) => {
     if (!value) return true
     return data.label.includes(value)
+  }
+
+  interface Tree {
+    id: number
+    label: string
+    children?: Tree[]
   }
 
   const data: Tree[] = [
