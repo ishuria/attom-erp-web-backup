@@ -9,42 +9,48 @@
   const value = ref(true)
 
   const _toggleDark = (event: MouseEvent) => {
-    const x = event.clientX
-    const y = event.clientY
-    const endRadius = Math.hypot(
-      Math.max(x, innerWidth - x),
-      Math.max(y, innerHeight - y)
-    )
-
-    let isDark: boolean
-
     // @ts-ignore
-    const transition = document.startViewTransition(() => {
-      const root = document.documentElement
-      isDark = root.classList.contains('dark')
-      root.classList.remove(isDark ? 'dark' : 'light')
-      root.classList.add(isDark ? 'light' : 'dark')
-      localStorage.setItem('vueuse-color-scheme', isDark ? 'light' : 'dark')
-    })
-
-    transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ]
-      document.documentElement.animate(
-        {
-          clipPath: isDark ? [...clipPath].reverse() : clipPath,
-        },
-        {
-          duration: 500,
-          easing: 'ease-in',
-          pseudoElement: isDark
-            ? '::view-transition-old(root)'
-            : '::view-transition-new(root)',
-        }
+    if (typeof document.startViewTransition === 'function') {
+      // 浏览器支持document.startViewTransition
+      const x = event.clientX
+      const y = event.clientY
+      const endRadius = Math.hypot(
+        Math.max(x, innerWidth - x),
+        Math.max(y, innerHeight - y)
       )
-    })
+      let isDark: boolean
+      // @ts-ignore
+      const transition = document.startViewTransition(() => {
+        const root = document.documentElement
+        isDark = root.classList.contains('dark')
+        root.classList.remove(isDark ? 'dark' : 'light')
+        root.classList.add(isDark ? 'light' : 'dark')
+        localStorage.setItem('vueuse-color-scheme', isDark ? 'light' : 'dark')
+      })
+      transition.ready.then(() => {
+        const clipPath = [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`,
+        ]
+        document.documentElement.animate(
+          {
+            clipPath: isDark ? [...clipPath].reverse() : clipPath,
+          },
+          {
+            duration: 500,
+            easing: 'ease-in',
+            pseudoElement: isDark
+              ? '::view-transition-old(root)'
+              : '::view-transition-new(root)',
+          }
+        )
+      })
+    } else {
+      // 浏览器不支持document.startViewTransition
+      const isDark = useDark()
+      const toggleDark = useToggle(isDark)
+      toggleDark()
+    }
   }
 
   onMounted(() => {
@@ -64,7 +70,7 @@
 
       if (localStorage.getItem('vueuse-color-scheme') == 'dark') {
         localStorage.setItem('vueuse-color-scheme', 'light')
-        useToggle(useDark())
+        useDark()
         value.value = true
       }
     })
