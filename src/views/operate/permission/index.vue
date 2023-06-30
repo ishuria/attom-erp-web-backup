@@ -10,7 +10,9 @@
     <el-alert
       :closable="false"
       show-icon
-      :title="`当前路由模式为：{ authentication:${authentication} }，是否开启角色权限控制功能：{ rolesControl:${rolesControl} }`"
+      :title="`当前路由模式为：${
+        authentication === 'all' ? '前端路由' : '后端路由'
+      } ，是否开启角色权限控制功能：${rolesControl === 'true' ? '是' : '否'}`"
       type="success"
     />
 
