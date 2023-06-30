@@ -192,23 +192,6 @@ export default {
     }
     app.provide('$baseNotify', $baseNotify)
 
-    /**
-     * @description 表格高度
-     * @param {*} formType
-     */
-    app.provide('$baseTableHeight', (formType: any) => {
-      let height = window.innerHeight
-      const paddingHeight = 291
-      const formHeight = 60
-
-      if ('number' === typeof formType) {
-        height = height - paddingHeight - formHeight * formType
-      } else {
-        height = height - paddingHeight
-      }
-      return height
-    })
-
     const _emitter = mitt()
     const $pub = (...args: any[]) => {
       _emitter.emit(_.head(args), args[1])

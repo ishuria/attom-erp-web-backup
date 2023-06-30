@@ -89,10 +89,6 @@
 
   const close = () => {
     formRef.value.resetFields()
-    form = {
-      parentName: '',
-      parentId: '',
-    }
     dialogFormVisible.value = false
   }
   const save = () => {
@@ -106,5 +102,7 @@
     })
   }
 
-  fetchData()
+  onMounted(() => {
+    fetchData()
+  })
 </script>

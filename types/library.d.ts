@@ -33,8 +33,6 @@ declare interface globalPropertiesType {
     duration?: number
   ): any
 
-  $baseTableHeight(formType: number | unknown): number
-
   $pub(...args: any[]): void
 
   $sub(): void

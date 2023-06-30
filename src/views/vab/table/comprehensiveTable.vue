@@ -67,17 +67,9 @@
         <el-button :icon="Plus" type="primary" @click="handleAdd">
           添加
         </el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete($event)">
+        <el-button :icon="Delete" type="danger" @click="handleDelete">
           删除
         </el-button>
-        <el-button type="primary" @click="handleMessage">
-          $baseMessage
-        </el-button>
-        <el-button type="primary" @click="handleAlert">$baseAlert</el-button>
-        <el-button type="primary" @click="handleConfirm">
-          $baseConfirm
-        </el-button>
-        <el-button type="primary" @click="handleNotify">$baseNotify</el-button>
         <el-button type="primary" @click="handleDetailStayTable">
           停留在本页后台打开详情页后（不常用）
         </el-button>
@@ -98,9 +90,7 @@
       v-loading="listLoading"
       border
       :data="list"
-      :height="height"
       @selection-change="setSelectRows"
-      @sort-change="tableSortChange"
     >
       <el-table-column type="selection" width="38" />
       <el-table-column
@@ -130,16 +120,6 @@
           <el-rate v-model="row.rate" disabled />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="头像">
-        <template #default="{ row }">
-          <el-image
-            :preview-src-list="imageList"
-            preview-teleported
-            :src="row.img"
-          />
-        </template>
-      </el-table-column>
-
       <el-table-column
         align="center"
         label="点击量"
@@ -216,256 +196,157 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <table-edit ref="editRef" @fetch-data="fetchData" />
+    <comprehensive-table-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { doDelete, getList } from '/@/api/table'
   import { handleMatched, handleTabs } from '/@/utils/routes'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'ComprehensiveTable',
-    setup() {
-      const router = useRouter()
+  })
 
-      const $baseConfirm = inject('$baseConfirm')
-      const $baseMessage = inject('$baseMessage')
-      const $baseAlert = inject('$baseAlert')
-      const $baseNotify = inject('$baseNotify')
-      const $baseTableHeight = inject('$baseTableHeight')
+  const router = useRouter()
+  const $baseConfirm = inject<any>('$baseConfirm')
+  const $baseMessage = inject<any>('$baseMessage')
+  const routesStore = useRoutesStore()
+  const { getRoutes: routes } = storeToRefs(routesStore)
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta, addVisitedRoute } = tabsStore
 
-      const routesStore = useRoutesStore()
-      const { getRoutes: routes } = storeToRefs(routesStore)
-      const tabsStore = useTabsStore()
-      const { changeTabsMeta, addVisitedRoute } = tabsStore
+  const editRef: Ref<any> = ref(null)
+  const tableSortRef: Ref<any> = ref(null)
+  const fold = ref(false)
+  const list = ref([])
+  const listLoading = ref(true)
+  const layout = ref('total, sizes, prev, pager, next, jumper')
+  const total = ref(0)
+  const selectRows: Ref<any> = ref('')
+  const queryForm: any = reactive({
+    pageNo: 1,
+    pageSize: 10,
+  })
 
-      const state = reactive({
-        editRef: null,
-        tableSortRef: null,
-        fold: false,
-        height: $baseTableHeight(3) - 30,
-        list: [],
-        imageList: [],
-        listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        total: 0,
-        selectRows: '',
-        queryForm: {
-          pageNo: 1,
-          pageSize: 10,
+  onActivated(() => {
+    tableSortRef.value.doLayout()
+    fetchData()
+  })
+
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+  }
+
+  const handleSizeChange = (value: number) => {
+    queryForm.pageSize = value
+    fetchData()
+  }
+  const handleCurrentChange = (value: number) => {
+    queryForm.pageNo = value
+    fetchData()
+  }
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+  const statusFilter = (status: string | number) => {
+    const statusMap: any = {
+      published: 'success',
+      draft: '',
+      deleted: 'danger',
+    }
+    return statusMap[status]
+  }
+  const handleFold = () => {
+    fold.value = !fold.value
+  }
+  const setSelectRows = (value: string) => {
+    selectRows.value = value
+  }
+  const handleAdd = () => {
+    editRef.value.showEdit()
+  }
+  const handleEdit = (row = {}) => {
+    editRef.value.showEdit(row)
+  }
+  const handleDelete = (row: any) => {
+    if (row.id) {
+      $baseConfirm('你确定要删除当前项吗', null, async () => {
+        const { msg }: any = await doDelete({ ids: row.id })
+        $baseMessage(msg, 'success', 'hey')
+        await fetchData()
+      })
+    } else {
+      if (selectRows.value.length > 0) {
+        const ids = selectRows.value.map((item: { id: any }) => item.id).join()
+        $baseConfirm('你确定要删除选中项吗', null, async () => {
+          const { msg }: any = await doDelete({ ids: ids })
+          $baseMessage(msg, 'success', 'hey')
+          await fetchData()
+        })
+      } else {
+        $baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
+      }
+    }
+  }
+  const handleDetailStayTable = async () => {
+    for (let i = 0; i < selectRows.value.length; i++) {
+      const matched = handleMatched(
+        routes.value,
+        '/vab/table/comprehensiveTableDetail'
+      )
+      const tab = handleTabs({
+        ...matched[matched.length - 1],
+        query: selectRows.value[i],
+      })
+      if (tab) {
+        await addVisitedRoute(tab)
+        await changeTabsMeta({
+          title: '详情页',
+          meta: {
+            title: `${tab.query.title} 详情页`,
+          },
+        })
+      }
+    }
+  }
+  const handleDetail = (row: any) => {
+    if (row.id)
+      router.push({
+        path: '/vab/table/detail',
+        query: {
+          ...row,
+          timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
         },
       })
-
-      onActivated(() => {
-        state['tableSortRef'].doLayout()
-        fetchData()
-      })
-
-      const fetchData = async () => {
-        state.listLoading = true
-        const {
-          data: { list, total },
-        } = await getList(state.queryForm)
-        state.list = list
-        const imageList = []
-        list.forEach((item) => {
-          imageList.push(item.img)
-        })
-        state.imageList = imageList
-        state.total = total
-        state.listLoading = false
-
-        setTimeout(() => {
-          toggleSelection([state.list[0]])
-        }, 0)
-      }
-      const handleSizeChange = (value) => {
-        state.queryForm.pageSize = value
-        fetchData()
-      }
-      const handleCurrentChange = (value) => {
-        state.queryForm.pageNo = value
-        fetchData()
-      }
-      const queryData = () => {
-        state.queryForm.pageNo = 1
-        fetchData()
-      }
-      const statusFilter = (status) => {
-        const statusMap = {
-          published: 'success',
-          draft: '',
-          deleted: 'danger',
-        }
-        return statusMap[status]
-      }
-      const handleFold = () => {
-        state.fold = !state.fold
-        handleHeight()
-      }
-      const handleHeight = () => {
-        if (state.fold) state.height = $baseTableHeight(2) - 47
-        else state.height = $baseTableHeight(3) - 30
-      }
-      const tableSortChange = () => {
-        const imageList = []
-        state.list.forEach((item) => {
-          imageList.push(item.img)
-        })
-        state.imageList = imageList
-      }
-      const setSelectRows = (value) => {
-        state.selectRows = value
-      }
-      const handleAdd = () => {
-        state['editRef'].showEdit()
-      }
-      const handleEdit = (row) => {
-        state['editRef'].showEdit(row)
-      }
-      const handleDelete = (row) => {
-        if (row.id) {
-          $baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
-            $baseMessage(msg, 'success', 'vab-hey-message-success')
-            await fetchData()
-          })
-        } else {
-          if (state.selectRows.length > 0) {
-            const ids = state.selectRows.map((item) => item.id).join()
-            $baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
-              $baseMessage(msg, 'success', 'vab-hey-message-success')
-              await fetchData()
-            })
-          } else {
-            $baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
-          }
-        }
-      }
-      const handleDetailStayTable = async () => {
-        for (let i = 0; i < state.selectRows.length; i++) {
-          const matched = handleMatched(
-            routes.value,
-            '/vab/table/comprehensiveTableDetail'
-          )
-          const tab = handleTabs({
-            ...matched[matched.length - 1],
-            query: state.selectRows[i],
-          })
-          if (tab) {
-            await addVisitedRoute(tab)
-            await changeTabsMeta({
-              title: '详情页',
-              meta: {
-                title: `${tab.query.title} 详情页`,
-              },
-            })
-          }
-        }
-      }
-      const handleDetail = (row) => {
-        if (row.id)
-          router.push({
-            path: '/vab/table/detail',
-            query: {
-              ...row,
-              timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
-            },
-          })
-        else {
-          if (state.selectRows.length === 1) {
-            router.push({
-              path: '/vab/table/comprehensiveTableDetail',
-              query: {
-                ...state.selectRows[0],
-                timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
-              },
-            })
-          } else {
-            $baseMessage(
-              '请选择一行进行详情页跳转',
-              'error',
-              'vab-hey-message-error'
-            )
-          }
-        }
-      }
-      const handleMessage = () => {
-        $baseMessage('test1', 'success', false, 'vab-hey-message-success')
-      }
-      const handleAlert = () => {
-        $baseAlert('11')
-        // $baseAlert('11', '自定义标题', () => {
-        //   /* 可以写回调; */
-        // })
-        // $baseAlert('11', null, () => {
-        //   /* 可以写回调; */
-        // })
-      }
-      const handleConfirm = () => {
-        $baseConfirm(
-          '你确定要执行该操作?',
-          null,
-          () => {
-            /* 可以写回调; */
+    else {
+      if (selectRows.value.length === 1) {
+        router.push({
+          path: '/vab/table/comprehensiveTableDetail',
+          query: {
+            ...selectRows.value[0],
+            timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
           },
-          () => {
-            /* 可以写回调; */
-          }
+        })
+      } else {
+        $baseMessage(
+          '请选择一行进行详情页跳转',
+          'error',
+          'vab-hey-message-error'
         )
       }
-      const handleNotify = () => {
-        $baseNotify('测试消息提示', 'test', 'success', 'bottom-right')
-      }
-      const toggleSelection = (rows) => {
-        if (rows) {
-          rows.forEach((row) => {
-            state['tableSortRef'].toggleRowSelection(row)
-          })
-        } else {
-          state['tableSortRef'].clearSelection()
-        }
-      }
+    }
+  }
 
-      onBeforeMount(() => {
-        window.addEventListener('resize', handleHeight)
-      })
-      onUnmounted(() => {
-        window.removeEventListener('resize', handleHeight)
-      })
-      onMounted(() => {
-        fetchData()
-      })
-
-      return {
-        ...toRefs(state),
-        handleSizeChange,
-        handleCurrentChange,
-        queryData,
-        statusFilter,
-        handleFold,
-        handleHeight,
-        tableSortChange,
-        setSelectRows,
-        handleAdd,
-        handleEdit,
-        handleDelete,
-        handleDetailStayTable,
-        handleDetail,
-        handleMessage,
-        handleAlert,
-        handleConfirm,
-        handleNotify,
-        fetchData,
-        Delete,
-        Plus,
-        Search,
-      }
-    },
+  onMounted(() => {
+    fetchData()
   })
 </script>

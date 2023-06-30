@@ -1,0 +1,75 @@
+<template>
+  <el-dialog
+    v-model="dialogFormVisible"
+    :title="title"
+    width="500px"
+    @close="close"
+  >
+    <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
+      <el-form-item label="标题" prop="title">
+        <el-input v-model.trim="form.title" />
+      </el-form-item>
+      <el-form-item label="作者" prop="author">
+        <el-input v-model.trim="form.author" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="close">取 消</el-button>
+      <el-button type="primary" @click="save">确 定</el-button>
+    </template>
+  </el-dialog>
+</template>
+
+<script lang="ts" setup>
+  import { doEdit } from '/@/api/table'
+
+  defineOptions({
+    name: 'ComprehensiveTableEdit',
+  })
+
+  const emit = defineEmits(['fetch-data'])
+
+  const $baseMessage = inject<any>('$baseMessage')
+
+  const formRef: any = ref(null)
+  let form: any = reactive({
+    title: '',
+    author: '',
+  })
+  const rules = reactive({
+    title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
+    author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
+  })
+  const title = ref('')
+  const dialogFormVisible = ref(false)
+
+  const showEdit = (row: any) => {
+    if (!row) {
+      title.value = '添加'
+    } else {
+      title.value = '编辑'
+      form = reactive({ ...row })
+    }
+    dialogFormVisible.value = true
+  }
+
+  defineExpose({
+    showEdit,
+  })
+
+  const close = () => {
+    formRef.value.resetFields()
+    dialogFormVisible.value = false
+  }
+
+  const save = () => {
+    formRef.value.validate(async (valid: any) => {
+      if (valid) {
+        const { msg }: any = await doEdit(form)
+        $baseMessage(msg, 'success', 'hey')
+        emit('fetch-data')
+        close()
+      }
+    })
+  }
+</script>

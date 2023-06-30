@@ -134,11 +134,6 @@
 
   const close = () => {
     formRef.value.resetFields()
-    form = {
-      meta: {
-        icon: '',
-      },
-    }
     dialogFormVisible.value = false
   }
   const save = () => {
