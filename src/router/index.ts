@@ -155,6 +155,49 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         ],
       },
       {
+        path: 'table',
+        name: 'Table',
+        meta: {
+          title: '表格',
+          // 非editor角色的用户可见
+          guard: {
+            role: ['Editor'],
+            mode: 'except',
+          },
+          icon: 'table-2',
+        },
+        children: [
+          {
+            path: 'defaultTable',
+            name: 'DefaultTable',
+            component: () => import('/@/views/vab/table/defaultTable.vue'),
+            meta: {
+              title: '默认表格',
+            },
+          },
+          {
+            path: 'columnTable',
+            name: 'ColumnTable',
+            component: () => import('/@/views/vab/table/columnTable.vue'),
+            meta: {
+              title: '左树右表表格',
+            },
+          },
+          {
+            path: 'defaultTableDetail',
+            name: 'ComprehensiveTableDetail',
+            component: () =>
+              import('/@/views/vab/table/defaultTableDetail.vue'),
+            meta: {
+              hidden: true,
+              title: '详情页',
+              activeMenu: '/vab/table/defaultTable',
+              dynamicNewTab: true, //详情页根据id传参不同可打开多个
+            },
+          },
+        ],
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
@@ -282,49 +325,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             component: () => import('/@/views/vab/form/rate.vue'),
             meta: {
               title: '评分',
-            },
-          },
-        ],
-      },
-      {
-        path: 'table',
-        name: 'Table',
-        meta: {
-          title: '表格',
-          // 非editor角色的用户可见
-          guard: {
-            role: ['Editor'],
-            mode: 'except',
-          },
-          icon: 'table-2',
-        },
-        children: [
-          {
-            path: 'defaultTable',
-            name: 'DefaultTable',
-            component: () => import('/@/views/vab/table/defaultTable.vue'),
-            meta: {
-              title: '默认表格',
-            },
-          },
-          {
-            path: 'columnTable',
-            name: 'ColumnTable',
-            component: () => import('/@/views/vab/table/columnTable.vue'),
-            meta: {
-              title: '左树右表表格',
-            },
-          },
-          {
-            path: 'defaultTableDetail',
-            name: 'ComprehensiveTableDetail',
-            component: () =>
-              import('/@/views/vab/table/defaultTableDetail.vue'),
-            meta: {
-              hidden: true,
-              title: '详情页',
-              activeMenu: '/vab/table/defaultTable',
-              dynamicNewTab: true, //详情页根据id传参不同可打开多个
             },
           },
         ],
