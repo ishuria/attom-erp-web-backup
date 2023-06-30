@@ -56,7 +56,7 @@
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form inline label-width="0" @submit.prevent>
-            <el-form-item label="">
+            <el-form-item>
               <el-input v-model="state.queryForm.title" />
             </el-form-item>
             <el-form-item label-width="0">

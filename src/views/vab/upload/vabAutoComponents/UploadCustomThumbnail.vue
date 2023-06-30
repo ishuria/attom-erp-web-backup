@@ -4,7 +4,7 @@
 
     <template #file="{ file }">
       <div>
-        <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
+        <img class="el-upload-list__item-thumbnail" :src="file.url" />
         <span class="el-upload-list__item-actions">
           <span
             class="el-upload-list__item-preview"

@@ -9,12 +9,7 @@
           <vab-icon icon="file-copy-line" />
           拷贝URL
         </el-button>
-        <el-popover
-          placement="bottom-start"
-          title=""
-          trigger="hover"
-          :width="220"
-        >
+        <el-popover placement="bottom-start" trigger="hover" :width="220">
           <template #reference>
             <el-button native-type="submit" type="primary">
               <vab-icon icon="qr-code-line" />
