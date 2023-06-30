@@ -24,18 +24,6 @@
           <el-form-item v-show="!fold" label="标题">
             <el-input v-model="queryForm.title" placeholder="请输入标题" />
           </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
           <el-form-item>
             <el-button
               :icon="Search"
@@ -64,18 +52,16 @@
         <el-button :icon="Delete" type="danger" @click="handleDelete">
           删除
         </el-button>
-        <el-button type="primary" @click="handleDetailStayTable">
-          停留在本页后台打开详情页后（不常用）
+        <el-button
+          style="margin: 0 0 10px !important"
+          type="primary"
+          @click="handleDetail"
+        >
+          详情页支持tab多开并高亮左侧菜单
         </el-button>
-        <el-badge class="item" value="New">
-          <el-button
-            style="margin: 0 0 10px !important"
-            type="primary"
-            @click="handleDetail"
-          >
-            详情页支持tab多开并高亮左侧菜单
-          </el-button>
-        </el-badge>
+        <el-button type="primary" @click="handleDetailStayTable">
+          后台打开详情页
+        </el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
 
@@ -190,7 +176,7 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <comprehensive-table-edit ref="editRef" @fetch-data="fetchData" />
+    <default-table-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -202,7 +188,7 @@
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
 
   defineOptions({
-    name: 'ComprehensiveTable',
+    name: 'DefaultTable',
   })
 
   const router = useRouter()
@@ -292,25 +278,28 @@
     }
   }
   const handleDetailStayTable = async () => {
-    for (let i = 0; i < selectRows.value.length; i++) {
-      const matched = handleMatched(
-        routes.value,
-        '/vab/table/comprehensiveTableDetail'
-      )
-      const tab = handleTabs({
-        ...matched[matched.length - 1],
-        query: selectRows.value[i],
-      })
-      if (tab) {
-        await addVisitedRoute(tab)
-        await changeTabsMeta({
-          title: '详情页',
-          meta: {
-            title: `${tab.query.title} 详情页`,
-          },
+    if (selectRows.value.length === 1)
+      for (let i = 0; i < selectRows.value.length; i++) {
+        const matched = handleMatched(
+          routes.value,
+          '/vab/table/defaultTableDetail'
+        )
+        const tab = handleTabs({
+          ...matched[matched.length - 1],
+          query: selectRows.value[i],
         })
+        if (tab) {
+          await addVisitedRoute(tab)
+          await changeTabsMeta({
+            title: '详情页',
+            meta: {
+              title: `${tab.query.title} 详情页`,
+            },
+          })
+        }
       }
-    }
+    else
+      $baseMessage('请选择一行进行详情页跳转', 'error', 'vab-hey-message-error')
   }
   const handleDetail = (row: any) => {
     if (row.id)
@@ -322,21 +311,20 @@
         },
       })
     else {
-      if (selectRows.value.length === 1) {
+      if (selectRows.value.length === 1)
         router.push({
-          path: '/vab/table/comprehensiveTableDetail',
+          path: '/vab/table/defaultTableDetail',
           query: {
             ...selectRows.value[0],
             timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
           },
         })
-      } else {
+      else
         $baseMessage(
           '请选择一行进行详情页跳转',
           'error',
           'vab-hey-message-error'
         )
-      }
     }
   }
 

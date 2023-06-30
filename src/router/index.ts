@@ -300,23 +300,22 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
         children: [
           {
-            path: 'comprehensiveTable',
-            name: 'ComprehensiveTable',
-            component: () =>
-              import('/@/views/vab/table/comprehensiveTable.vue'),
+            path: 'defaultTable',
+            name: 'DefaultTable',
+            component: () => import('/@/views/vab/table/defaultTable.vue'),
             meta: {
-              title: '综合表格',
+              title: '默认表格',
             },
           },
           {
-            path: 'comprehensiveTableDetail',
+            path: 'defaultTableDetail',
             name: 'ComprehensiveTableDetail',
             component: () =>
-              import('/@/views/vab/table/comprehensiveTableDetail.vue'),
+              import('/@/views/vab/table/defaultTableDetail.vue'),
             meta: {
               hidden: true,
               title: '详情页',
-              activeMenu: '/vab/table/comprehensiveTable',
+              activeMenu: '/vab/table/defaultTable',
               dynamicNewTab: true, //详情页根据id传参不同可打开多个
             },
           },

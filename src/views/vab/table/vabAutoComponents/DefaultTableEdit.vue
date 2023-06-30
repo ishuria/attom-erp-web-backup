@@ -24,7 +24,7 @@
   import { doEdit } from '/@/api/table'
 
   defineOptions({
-    name: 'ComprehensiveTableEdit',
+    name: 'DefaultTableEdit',
   })
 
   const emit = defineEmits(['fetch-data'])

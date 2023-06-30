@@ -37,7 +37,7 @@ export default {
     详情页: 'Detail',
     插画: 'illustration',
     表格: 'Table',
-    综合表格: 'Comprehensive table',
+    默认表格: 'Default table',
     行内编辑表格: 'Inline edit table',
     自定义表格: 'Custom table',
     动态表格: 'Dynamic table',

@@ -252,21 +252,21 @@ const list = [
         },
         children: [
           {
-            path: 'comprehensiveTable',
-            name: 'ComprehensiveTable',
-            component: '/@/views/vab/table/comprehensiveTable.vue',
+            path: 'defaultTable',
+            name: 'DefaultTable',
+            component: '/@/views/vab/table/defaultTable.vue',
             meta: {
-              title: '综合表格',
+              title: '默认表格',
             },
           },
           {
-            path: 'comprehensiveTableDetail',
-            name: 'ComprehensiveTableDetail',
-            component: '/@/views/vab/table/comprehensiveTableDetail.vue',
+            path: 'defaultTableDetail',
+            name: 'DefaultTableDetail',
+            component: '/@/views/vab/table/defaultTableDetail.vue',
             meta: {
               hidden: true,
               title: '详情页',
-              activeMenu: '/vab/table/comprehensiveTable',
+              activeMenu: '/vab/table/defaultTable',
               dynamicNewTab: true, //详情页根据id传参不同可打开多个
             },
           },

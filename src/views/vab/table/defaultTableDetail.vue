@@ -17,7 +17,7 @@
           type="primary"
           @click="handleRefreshMainPage"
         >
-          刷新综合表格页面
+          刷新默认表格页面
         </el-button>
       </el-form-item>
     </el-form>
@@ -84,12 +84,12 @@
       })
 
       const goBack = async () => {
-        await router.push('/vab/table/comprehensiveTable')
+        await router.push('/vab/table/defaultTable')
         await delVisitedRoute(handleActivePath(route, true))
       }
 
       const handleRefreshMainPage = () => {
-        $pub('reload-router-view', 'ComprehensiveTable')
+        $pub('reload-router-view', 'DefaultTable')
       }
 
       onMounted(() => {
