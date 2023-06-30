@@ -113,7 +113,7 @@ export const useSettingsStore = defineStore('settings', {
 
       if (this.theme.themeName !== 'default') {
         document.getElementsByTagName('html')[0].className = ''
-        localStorage.setItem('vueuse-color-scheme', 'auto')
+        localStorage.setItem('vueuse-color-scheme', 'light')
       }
 
       const el = ref(null)
