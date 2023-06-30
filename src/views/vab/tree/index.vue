@@ -40,7 +40,7 @@
     </vab-card>
     <vab-card shadow="never">
       <template #header>树节点过滤</template>
-      <tree-tree-node-filtering />
+      <tree-node-filtering />
     </vab-card>
     <vab-card shadow="never">
       <template #header>手风琴模式</template>

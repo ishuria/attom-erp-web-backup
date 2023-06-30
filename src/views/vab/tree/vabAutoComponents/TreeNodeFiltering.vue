@@ -1,9 +1,12 @@
 <template>
-  <el-input v-model="filterText" placeholder="Filter keyword" />
+  <el-input
+    v-model="filterText"
+    placeholder="请输入查询条件"
+    style="margin-bottom: 10px"
+  />
 
   <el-tree
     ref="treeRef"
-    class="filter-tree"
     :data="data"
     default-expand-all
     :filter-node-method="filterNode"

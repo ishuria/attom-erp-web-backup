@@ -9,12 +9,12 @@
     show-checkbox
   />
 
-  <div class="buttons">
-    <el-button @click="getCheckedNodes">get by node</el-button>
-    <el-button @click="getCheckedKeys">get by key</el-button>
-    <el-button @click="setCheckedNodes">set by node</el-button>
-    <el-button @click="setCheckedKeys">set by key</el-button>
-    <el-button @click="resetChecked">reset</el-button>
+  <div style="margin-top: 20px">
+    <el-button @click="getCheckedNodes">按节点获取</el-button>
+    <el-button @click="getCheckedKeys">按键获取</el-button>
+    <el-button @click="setCheckedNodes">按节点设置</el-button>
+    <el-button @click="setCheckedKeys">按键设置</el-button>
+    <el-button @click="resetChecked">重置</el-button>
   </div>
 </template>
 
@@ -114,3 +114,17 @@
     },
   ]
 </script>
+
+<style lang="scss" scoped>
+  :deep() {
+    .el-button {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .el-button + .el-button {
+      margin-right: 10px;
+      margin-left: 0;
+    }
+  }
+</style>

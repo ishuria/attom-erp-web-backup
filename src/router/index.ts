@@ -308,6 +308,14 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             },
           },
           {
+            path: 'columnTable',
+            name: 'ColumnTable',
+            component: () => import('/@/views/vab/table/columnTable.vue'),
+            meta: {
+              title: '左树右表表格',
+            },
+          },
+          {
             path: 'defaultTableDetail',
             name: 'ComprehensiveTableDetail',
             component: () =>
