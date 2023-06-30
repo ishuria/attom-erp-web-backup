@@ -44,7 +44,7 @@
   watchEffect(() => {
     routerKey.value = handleActivePath(route, true)
     updateKeepAliveNameList()
-    siteData.description = `${'Vue'} ${'Admin'} ${'Plus'}-${
+    siteData.description = `${'Vue'} ${'Shop'} ${'Vite'}-${
       route.meta.title
     }简介、官网、首页、文档和下载 - 前端开发框架`
   })
