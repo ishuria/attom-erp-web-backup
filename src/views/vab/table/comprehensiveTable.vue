@@ -1,11 +1,5 @@
 <template>
   <div class="comprehensive-table-container">
-    <el-alert
-      :closable="false"
-      show-icon
-      title="三级路由【缓存路由、固定表格高度、并根据窗口大小自适应】的示例。详情页请点击操作列按钮，支持tab多开并高亮左侧菜单"
-      type="success"
-    />
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
