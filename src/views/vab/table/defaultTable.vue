@@ -52,11 +52,7 @@
         <el-button :icon="Delete" type="danger" @click="handleDelete">
           删除
         </el-button>
-        <el-button
-          style="margin: 0 0 10px !important"
-          type="primary"
-          @click="handleDetail"
-        >
+        <el-button type="primary" @click="handleDetail">
           详情页支持tab多开并高亮左侧菜单
         </el-button>
         <el-button type="primary" @click="handleDetailStayTable">
