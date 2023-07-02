@@ -6,6 +6,7 @@
     width="410px"
     @close="close"
   >
+    <template #header></template>
     <div class="vab-update-icon">
       <vab-icon icon="upload-cloud-2-fill" />
     </div>
@@ -41,14 +42,18 @@
   const save = () => {
     button.value = '正在更新'
     loading.value = true
-    setTimeout(() => {
-      updateServiceWorker()
-    }, 1000 * 3)
+    updateServiceWorker()
   }
 
   const close = async () => {
-    needRefresh.value = false
+    needRefresh.value = true
   }
+
+  onMounted(() => {
+    setTimeout(() => {
+      save()
+    }, 1000 * 3)
+  })
 </script>
 
 <style lang="scss" scoped>
