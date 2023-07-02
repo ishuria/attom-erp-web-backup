@@ -101,7 +101,7 @@
   const $baseConfirm: any = inject('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
 
-  const editRef: any = ref(null)
+  const editRef: Ref<any> = ref(null)
   const list = ref([])
   const listLoading = ref(true)
   const layout = ref('total, sizes, prev, pager, next, jumper')

@@ -58,51 +58,44 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'DatePicker',
-    setup() {
-      const state = reactive({
-        disabledDate(time) {
-          return time.getTime() > Date.now()
-        },
-        shortcuts: [
-          {
-            text: '今天',
-            value: new Date(),
-          },
-          {
-            text: '昨天',
-            value: () => {
-              const date = new Date()
-              date.setTime(date.getTime() - 3600 * 1000 * 24)
-              return date
-            },
-          },
-          {
-            text: '一周前',
-            value: () => {
-              const date = new Date()
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-              return date
-            },
-          },
-        ],
-        value1: '',
-        value2: '',
-        value3: '',
-        value4: '',
-        value5: '',
-        value6: '',
-        value7: '',
-        value8: '',
-      })
-
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+
+  const disabledDate = (time: any) => {
+    return time.getTime() > Date.now()
+  }
+  const shortcuts: Ref<any> = ref([
+    {
+      text: '今天',
+      value: new Date(),
+    },
+    {
+      text: '昨天',
+      value: () => {
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24)
+        return date
+      },
+    },
+    {
+      text: '一周前',
+      value: () => {
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+        return date
+      },
+    },
+  ])
+  const value1: Ref<any> = ref('')
+  const value2: Ref<any> = ref('')
+  const value3: Ref<any> = ref('')
+  const value4: Ref<any> = ref('')
+  const value5: Ref<any> = ref('')
+  const value6: Ref<any> = ref('')
+  const value7: Ref<any> = ref('')
+  const value8: Ref<any> = ref('')
 </script>
 
 <style lang="scss" scoped>

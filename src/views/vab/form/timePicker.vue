@@ -49,49 +49,40 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Timepicker',
-    setup() {
-      const state = reactive({
-        value: '',
-        value1: new Date(2016, 9, 10, 18, 40),
-        startTime: '',
-        endTime: '',
-      })
-      const makeRange = (start, end) => {
-        const result = []
-        for (let i = start; i <= end; i++) {
-          result.push(i)
-        }
-        return result
-      }
-
-      const disabledHours = () => {
-        return makeRange(0, 16).concat(makeRange(19, 23))
-      }
-      const disabledMinutes = (hour) => {
-        if (hour === 17) {
-          return makeRange(0, 29)
-        }
-        if (hour === 18) {
-          return makeRange(31, 59)
-        }
-      }
-      const disabledSeconds = (hour, minute) => {
-        if (hour === 18 && minute === 30) {
-          return makeRange(1, 59)
-        }
-      }
-
-      return {
-        ...toRefs(state),
-        disabledHours,
-        disabledMinutes,
-        disabledSeconds,
-      }
-    },
   })
+
+  const value = ref('')
+  const value1 = ref(new Date(2016, 9, 10, 18, 40))
+  const startTime = ref('')
+  const endTime = ref('')
+
+  const makeRange = (start: number, end: number) => {
+    const result = []
+    for (let i = start; i <= end; i++) {
+      result.push(i)
+    }
+    return result
+  }
+
+  const disabledHours = () => {
+    return makeRange(0, 16).concat(makeRange(19, 23))
+  }
+  const disabledMinutes: any = (hour: number) => {
+    if (hour === 17) {
+      return makeRange(0, 29)
+    }
+    if (hour === 18) {
+      return makeRange(31, 59)
+    }
+  }
+  const disabledSeconds: any = (hour: number, minute: number) => {
+    if (hour === 18 && minute === 30) {
+      return makeRange(1, 59)
+    }
+  }
 </script>
 
 <style lang="scss" scoped></style>

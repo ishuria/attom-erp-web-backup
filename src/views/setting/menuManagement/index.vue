@@ -124,7 +124,7 @@
   const $baseConfirm: any = inject('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
 
-  const editRef: any = ref(null)
+  const editRef: Ref<any> = ref(null)
   const treeList = ref([])
   const defaultProps = reactive({
     children: 'children',

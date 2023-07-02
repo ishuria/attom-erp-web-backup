@@ -30,22 +30,15 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Switch',
-    setup() {
-      const state = reactive({
-        value: true,
-        value1: true,
-        value2: true,
-        value3: false,
-      })
-
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+
+  const value = ref(true)
+  const value1 = ref(true)
+  const value2 = ref(true)
+  const value3 = ref(false)
 </script>
 
 <style lang="scss" scoped></style>

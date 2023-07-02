@@ -50,9 +50,9 @@
     duration: 8000,
   })
   const handleChange = () => {
-    state.value = false
+    show.value = false
     setTimeout(() => {
-      state.value = true
+      show.value = true
     }, 300)
   }
 </script>

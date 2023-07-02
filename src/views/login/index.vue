@@ -65,7 +65,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useUserStore } from '/@/store/modules/user'
   import { translateTitle } from '/@/utils/i18n'
@@ -74,140 +74,111 @@
 
   import { getImageUrl } from '/@/utils/imageUrl'
 
-  export default defineComponent({
+  defineOptions({
     name: 'Login',
-    directives: {
-      focus: {
-        mounted(el) {
-          el.querySelector('input').focus()
-        },
+  })
+
+  const route = useRoute()
+  const router = useRouter()
+
+  const userStore = useUserStore()
+  const settingsStore = useSettingsStore()
+
+  const leftImg = ref('')
+  const img = getImageUrl(`assets/login_images/left_img.png`)
+  leftImg.value = img
+
+  const login = (form: any) => userStore.login(form)
+
+  const validateUsername = (rule: any, value: any, callback: any) => {
+    if ('' === value) callback(new Error(translateTitle('用户名不能为空')))
+    else callback()
+  }
+  const validatePassword = (rule: any, value: any, callback: any) => {
+    if (!isPassword(value))
+      callback(new Error(translateTitle('密码不能少于6位')))
+    else callback()
+  }
+
+  const title = settingsStore.getTitle
+
+  const formRef: Ref<any> = ref(null)
+  const passwordRef: Ref<any> = ref(null)
+
+  const form = reactive({
+    username: '',
+    password: '',
+    verificationCode: '',
+  })
+
+  const rules: any = reactive({
+    username: [
+      {
+        required: true,
+        trigger: 'blur',
+        validator: validateUsername,
       },
-    },
-    setup() {
-      const route = useRoute()
-      const router = useRouter()
+    ],
+    password: [
+      {
+        required: true,
+        trigger: 'blur',
+        validator: validatePassword,
+      },
+    ],
+  })
 
-      const userStore = useUserStore()
-      const settingsStore = useSettingsStore()
+  const loading: Ref<any> = ref(false)
+  const passwordType: Ref<any> = ref('password')
+  const redirect: Ref<any> = ref(undefined)
+  const timer: Ref<any> = ref(0)
+  const codeUrl: Ref<any> = ref('https://www.oschina.net/action/user/captcha')
+  const previewText: Ref<any> = ref('')
 
-      const leftImg = ref('')
-      const img = getImageUrl(`assets/login_images/left_img.png`)
-      leftImg.value = img
+  const handleRoute = () => {
+    return redirect.value === '/404' || redirect.value === '/403'
+      ? '/'
+      : redirect.value
+  }
 
-      const login = (form) => userStore.login(form)
-
-      const validateUsername = (rule, value, callback) => {
-        if ('' === value) callback(new Error(translateTitle('用户名不能为空')))
-        else callback()
-      }
-      const validatePassword = (rule, value, callback) => {
-        if (!isPassword(value))
-          callback(new Error(translateTitle('密码不能少于6位')))
-        else callback()
-      }
-
-      const state = reactive({
-        formRef: null,
-        passwordRef: null,
-        form: {
-          username: '',
-          password: '',
-          verificationCode: '',
-        },
-        rules: {
-          username: [
-            {
-              required: true,
-              trigger: 'blur',
-              validator: validateUsername,
-            },
-          ],
-          password: [
-            {
-              required: true,
-              trigger: 'blur',
-              validator: validatePassword,
-            },
-          ],
-          /* verificationCode: [
-{
-required: true,
-trigger: 'blur',
-message: '验证码不能空',
-},
-], */
-        },
-        loading: false,
-        passwordType: 'password',
-        redirect: undefined,
-        timer: 0,
-        codeUrl: 'https://www.oschina.net/action/user/captcha',
-        previewText: '',
-      })
-
-      const handleRoute = () => {
-        return state.redirect === '/404' || state.redirect === '/403'
-          ? '/'
-          : state.redirect
-      }
-      const handlePassword = () => {
-        state.passwordType === 'password'
-          ? (state.passwordType = '')
-          : (state.passwordType = 'password')
-        nextTick(() => {
-          state['passwordRef'].focus()
-        })
-      }
-      const handleLogin = async () => {
-        state['formRef'].validate(async (valid) => {
-          if (valid)
-            try {
-              state.loading = true
-              await login(state.form).catch(() => {})
-              await router.push(handleRoute())
-            } finally {
-              state.loading = false
-            }
-        })
-      }
-      const changeCode = () => {
-        state.codeUrl = `https://www.oschina.net/action/user/captcha?timestamp=${new Date().getTime()}`
-      }
-
-      onBeforeMount(() => {
-        state.form.username = 'admin'
-        state.form.password = '123456'
-        // 为了演示效果，会在官网演示页自动登录到首页，正式开发可删除
-        if (
-          location.hostname === 'vue-admin-beautiful.com' ||
-          location.hostname === 'chu1204505056.gitee.io'
-        ) {
-          state.previewText = '（演示地址验证码可不填）'
-          state.timer = setTimeout(() => {
-            handleLogin()
-          }, 5000)
+  const handleLogin = async () => {
+    formRef.value.validate(async (valid: any) => {
+      if (valid)
+        try {
+          loading.value = true
+          await login(form).catch(() => {})
+          await router.push(handleRoute())
+        } finally {
+          loading.value = false
         }
-      })
+    })
+  }
+  const changeCode = () => {
+    codeUrl.value = `https://www.oschina.net/action/user/captcha?timestamp=${new Date().getTime()}`
+  }
 
-      watchEffect(() => {
-        state.redirect = (route.query && route.query.redirect) || '/'
-      })
+  onBeforeMount(() => {
+    form.username = 'admin'
+    form.password = '123456'
+    // 为了演示效果，会在官网演示页自动登录到首页，正式开发可删除
+    if (
+      location.hostname === 'vue-admin-beautiful.com' ||
+      location.hostname === 'chu1204505056.gitee.io'
+    ) {
+      previewText.value = '（演示地址验证码可不填）'
+      timer.value = setTimeout(() => {
+        handleLogin()
+      }, 5000)
+    }
+  })
 
-      onBeforeRouteLeave((to, from, next) => {
-        clearInterval(state.timer)
-        next()
-      })
+  watchEffect(() => {
+    redirect.value = (route.query && route.query.redirect) || '/'
+  })
 
-      return {
-        translateTitle,
-        ...toRefs(state),
-        title: settingsStore.getTitle,
-        handlePassword,
-        handleLogin,
-        changeCode,
-        leftImg,
-      }
-    },
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer.value)
+    next()
   })
 </script>
 

@@ -45,23 +45,16 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Radio',
-    setup() {
-      const state = reactive({
-        radio: '1',
-        radio2: '选中且禁用',
-        radio3: 3,
-        radio4: '上海',
-        radio5: '1',
-      })
-
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+
+  const radio = ref('1')
+  const radio2 = ref('选中且禁用')
+  const radio3 = ref(3)
+  const radio4 = ref('上海')
+  const radio5 = ref('1')
 </script>
 
 <style lang="scss" scoped></style>

@@ -58,7 +58,7 @@ export default [
       return {
         code: 200,
         msg: '模拟注册成功',
-        data: { token: tokens['editor'] },
+        data: { token: tokens['admin'] },
       }
     },
   },

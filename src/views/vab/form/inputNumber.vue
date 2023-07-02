@@ -38,23 +38,15 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'InputNumber',
-    setup() {
-      const state = reactive({
-        num: 1,
-        num2: 1,
-        num3: 5,
-        num4: 1,
-        num5: 1,
-      })
-
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+  const num = ref(1)
+  const num2 = ref(1)
+  const num3 = ref(5)
+  const num4 = ref(1)
+  const num5 = ref(1)
 </script>
 
 <style lang="scss" scoped></style>

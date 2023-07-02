@@ -37,24 +37,16 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'DateTimePicker',
-    setup() {
-      const state = reactive({
-        value1: '',
-        value2: [
-          new Date(2000, 10, 10, 10, 10),
-          new Date(2000, 10, 11, 10, 10),
-        ],
-        value3: '',
-      })
-
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+  const value1: Ref<any> = ref('')
+  const value2: Ref<any> = ref([
+    new Date(2000, 10, 10, 10, 10),
+    new Date(2000, 10, 11, 10, 10),
+  ])
+  const value3: Ref<any> = ref('')
 </script>
 
 <style lang="scss" scoped></style>

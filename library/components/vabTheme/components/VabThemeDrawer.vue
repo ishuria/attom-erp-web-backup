@@ -11,13 +11,10 @@
   const settingsStore: any = useSettingsStore()
   const { theme, device }: any = storeToRefs(settingsStore)
   const { saveTheme, resetTheme, updateTheme }: any = settingsStore
-
-  const state = reactive({
-    drawerVisible: false,
-  })
+  const drawerVisible = ref(false)
 
   const handleOpenTheme = () => {
-    state.drawerVisible = true
+    drawerVisible.value = true
   }
 
   const updateMenuWidth = () => {
@@ -39,7 +36,7 @@
   }
 
   const setDefaultTheme = async () => {
-    state.drawerVisible = false
+    drawerVisible.value = false
     await _updateTheme()
     setTimeout(() => {
       resetTheme()
@@ -51,7 +48,7 @@
 
   const handleSaveTheme = async () => {
     await saveTheme()
-    state.drawerVisible = false
+    drawerVisible.value = false
     if (document.body.getBoundingClientRect().width - 1 < 992) location.reload()
   }
 
@@ -77,7 +74,7 @@
 
 <template>
   <el-drawer
-    v-model="state.drawerVisible"
+    v-model="drawerVisible"
     append-to-body
     class="vab-drawer"
     direction="rtl"

@@ -220,7 +220,7 @@
     description: _description,
   })
 
-  const inputRef: any = ref(null)
+  const inputRef: Ref<any> = ref(null)
   const dynamicTags = ref(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
   const inputVisible = ref(false)
   const inputValue = ref('')

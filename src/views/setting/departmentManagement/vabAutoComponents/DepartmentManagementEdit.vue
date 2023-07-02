@@ -47,7 +47,7 @@
   const emit = defineEmits(['fetch-data'])
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: any = ref(null)
+  const formRef: Ref<any> = ref(null)
   const treeData: any = ref([])
   const defaultProps = reactive({
     children: 'children',

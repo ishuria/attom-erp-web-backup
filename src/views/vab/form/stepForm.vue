@@ -29,26 +29,18 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'StepForm',
-    setup() {
-      const state = reactive({
-        active: 0,
-        form: {},
-      })
-
-      const handleSetStep = (active, form) => {
-        state.active = active
-        if (form) state.form = Object.assign(state.form, form)
-      }
-
-      return {
-        ...toRefs(state),
-        handleSetStep,
-      }
-    },
   })
+
+  const active: Ref<any> = ref(0)
+  let form: any = reactive({})
+
+  const handleSetStep = (active: any, _form: any) => {
+    active.value = active
+    if (_form) form = Object.assign(form, _form)
+  }
 </script>
 
 <style lang="scss" scoped>

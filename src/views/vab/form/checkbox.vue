@@ -43,29 +43,20 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Checkbox',
-    setup() {
-      const cityOptions = ['上海', '北京', '广州', '深圳']
-
-      const state = reactive({
-        checked: true,
-        checked1: false,
-        checked2: true,
-        checkList: ['选中且禁用', '复选框 A'],
-        checkedCities: ['上海', '北京'],
-        cities: cityOptions,
-        checkboxGroup1: ['上海'],
-        checked3: true,
-        checked4: false,
-      })
-
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+
+  const checked = ref(true)
+  const checked1 = ref(false)
+  const checked2 = ref(true)
+  const checkList = ref(['选中且禁用', '复选框 A'])
+  const checkedCities = ref(['上海', '北京'])
+  const cities = ref(['上海', '北京', '广州', '深圳'])
+  const checkboxGroup1 = ref(['上海'])
+  const checked3 = ref(true)
+  const checked4 = ref(false)
 </script>
 
 <style lang="scss" scoped></style>

@@ -57,8 +57,8 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: any = ref(null)
-  const treeRef: any = ref(null)
+  const formRef: Ref<any> = ref(null)
+  const treeRef: Ref<any> = ref(null)
   let form: any = reactive({
     role: '',
     btnRolesCheckedList: [],

@@ -1,10 +1,9 @@
 import request from '/@/utils/request'
 
-export function getList(params: any) {
+export function getList() {
   return request({
     url: '/area/getList',
     method: 'get',
-    params,
   })
 }
 

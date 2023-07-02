@@ -36,41 +36,32 @@
       </template>
       <el-slider v-model="value8" :max="10" range show-stops />
     </vab-card>
-    <!-- <vab-card shadow="hover">
+    <vab-card shadow="hover">
       <template #header>
         <span>竖向模式</span>
       </template>
       <el-slider v-model="value9" height="200px" vertical />
-    </vab-card> -->
+    </vab-card>
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Slider',
-    setup() {
-      const state = reactive({
-        value1: 0,
-        value2: 50,
-        value3: 36,
-        value4: 48,
-        value5: 42,
-        value6: 0,
-        value7: 0,
-        value8: [4, 8],
-        value9: 0,
-      })
-
-      const formatTooltip = (value) => {
-        return value / 100
-      }
-
-      return {
-        ...toRefs(state),
-        formatTooltip,
-      }
-    },
   })
+  const value1: Ref<any> = ref(0)
+  const value2: Ref<any> = ref(50)
+  const value3: Ref<any> = ref(36)
+  const value4: Ref<any> = ref(48)
+  const value5: Ref<any> = ref(42)
+  const value6: Ref<any> = ref(0)
+  const value7: Ref<any> = ref(0)
+  const value8: Ref<any> = ref([4, 8])
+  const value9: Ref<any> = ref(0)
+
+  const formatTooltip = (value: number) => {
+    return value / 100
+  }
 </script>
 
 <style lang="scss" scoped></style>

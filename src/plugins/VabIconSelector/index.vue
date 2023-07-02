@@ -6,42 +6,37 @@
   })
 
   const emit = defineEmits(['handle-icon'])
-  const state: any = reactive({
-    icon: '24-hours-fill',
-    layout: 'total, prev, next',
-    total: 0,
-    background: true,
-    height: 0,
-    selectRows: '',
-    queryIcon: [],
-    queryForm: {
-      pageNo: 1,
-      pageSize: 16,
-      title: '',
-    },
+
+  const icon = ref('24-hours-fill')
+  const layout = ref('total, prev, next')
+  const total = ref(0)
+  const background = ref(true)
+  const queryIcon = ref([])
+  const queryForm = reactive({
+    pageNo: 1,
+    pageSize: 16,
+    title: '',
   })
 
-  const handleSizeChange: any = (value: string) => {
-    state.queryForm.pageSize = value
+  const handleSizeChange: any = (value: number) => {
+    queryForm.pageSize = value
     fetchData()
   }
-  const handleCurrentChange: any = (value: string) => {
-    state.queryForm.pageNo = value
+  const handleCurrentChange: any = (value: number) => {
+    queryForm.pageNo = value
     fetchData()
   }
   const queryData: any = () => {
-    state.queryForm.pageNo = 1
+    queryForm.pageNo = 1
     fetchData()
   }
   const fetchData: any = async () => {
-    const {
-      data: { list, total },
-    } = await getIconList(state.queryForm)
-    state.queryIcon = list
-    state.total = total
+    const { data } = await getIconList(queryForm)
+    queryIcon.value = data.list
+    total.value = data.total
   }
   const handleIcon: any = (item: any) => {
-    state.icon = item
+    icon.value = item
     emit('handle-icon', item)
   }
 
@@ -57,7 +52,7 @@
         <vab-query-form-top-panel>
           <el-form inline label-width="0" @submit.prevent>
             <el-form-item>
-              <el-input v-model="state.queryForm.title" />
+              <el-input v-model="queryForm.title" />
             </el-form-item>
             <el-form-item label-width="0">
               <el-button native-type="submit" type="primary" @click="queryData">
@@ -68,18 +63,18 @@
         </vab-query-form-top-panel>
       </vab-query-form>
     </el-col>
-    <el-col v-for="(item, index) in state.queryIcon" :key="index" :span="6">
+    <el-col v-for="(item, index) in queryIcon" :key="index" :span="6">
       <vab-card shadow="hover" @click="handleIcon(item)">
         <vab-icon :icon="item" />
       </vab-card>
     </el-col>
     <el-col :span="24">
       <el-pagination
-        :background="state.background"
-        :current-page="state.queryForm.pageNo"
-        :layout="state.layout"
-        :page-size="state.queryForm.pageSize"
-        :total="state.total"
+        :background="background"
+        :current-page="queryForm.pageNo"
+        :layout="layout"
+        :page-size="queryForm.pageSize"
+        :total="total"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />

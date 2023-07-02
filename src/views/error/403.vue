@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-  const state = reactive({
-    oops: '抱歉!',
-    headline: '您没有操作权限...',
-    info: '当前帐号没有操作权限，请联系管理员。',
-    btn: '返回首页',
-  })
+  const oops = ref('抱歉！')
+  const headline = ref('您没有操作权限。')
+  const info = ref('当前帐号没有操作权限，请联系管理员。')
+  const btn = ref('返回首页')
 </script>
 
 <template>
@@ -14,12 +12,12 @@
         <vab-icon class="error-svg" icon="403" is-custom-svg />
       </div>
       <div class="bullshit">
-        <div class="bullshit-oops">{{ state.oops }}</div>
-        <div class="bullshit-headline">{{ state.headline }}</div>
-        <div class="bullshit-info">{{ state.info }}</div>
+        <div class="bullshit-oops">{{ oops }}</div>
+        <div class="bullshit-headline">{{ headline }}</div>
+        <div class="bullshit-info">{{ info }}</div>
         <router-link v-slot="{ navigate }" custom to="/">
           <a class="bullshit-return-home" @click="navigate">
-            {{ state.btn }}
+            {{ btn }}
           </a>
         </router-link>
       </div>

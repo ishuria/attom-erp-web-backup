@@ -65,56 +65,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { getList } from '/@/api/table'
   import { Search } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'List',
-    setup() {
-      const state = reactive({
-        list: [],
-        total: 0,
-        queryForm: { pageNo: 1, pageSize: 10, title: '' },
-        layout: 'total, sizes, prev, pager, next, jumper',
-        listLoading: true,
-        emptyShow: true,
-      })
+  })
 
-      const fetchData = async () => {
-        state.listLoading = true
-        const {
-          data: { list, total },
-        } = await getList(state.queryForm)
-        state.list = list
-        state.total = total
-        state.listLoading = false
-        state.emptyShow = false
-      }
-      const handleSizeChange = (value) => {
-        state.queryForm.pageSize = value
-        fetchData()
-      }
-      const handleCurrentChange = (value) => {
-        state.queryForm.pageNo = value
-        fetchData()
-      }
-      const queryData = () => {
-        state.queryForm.pageNo = 1
-        fetchData()
-      }
-      onMounted(() => {
-        fetchData()
-      })
+  const list: Ref<any> = ref([])
+  const total: Ref<any> = ref(0)
+  const queryForm: any = reactive({ pageNo: 1, pageSize: 10, title: '' })
+  const layout: Ref<any> = ref('total, sizes, prev, pager, next, jumper')
+  const listLoading: Ref<any> = ref(true)
+  const emptyShow: Ref<any> = ref(true)
 
-      return {
-        ...toRefs(state),
-        handleSizeChange,
-        handleCurrentChange,
-        queryData,
-        Search,
-      }
-    },
+  const fetchData = async () => {
+    listLoading.value = true
+    const {
+      data: { list, total },
+    } = await getList(queryForm)
+    list.value = list
+    total.value = total
+    listLoading.value = false
+    emptyShow.value = false
+  }
+  const handleSizeChange = (value: number) => {
+    queryForm.pageSize = value
+    fetchData()
+  }
+  const handleCurrentChange = (value: number) => {
+    queryForm.pageNo = value
+    fetchData()
+  }
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+  onMounted(() => {
+    fetchData()
   })
 </script>
 

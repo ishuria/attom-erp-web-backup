@@ -27,21 +27,14 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Rate',
-    setup() {
-      const state = reactive({
-        value1: null,
-        value2: null,
-        value3: 3.7,
-      })
-
-      return {
-        ...toRefs(state),
-      }
-    },
   })
+
+  const value1: Ref<any> = ref(null)
+  const value2: Ref<any> = ref(null)
+  const value3: Ref<any> = ref(3.7)
 </script>
 
 <style lang="scss" scoped></style>

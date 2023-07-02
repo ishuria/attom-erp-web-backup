@@ -8,7 +8,7 @@
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-  const state = ref('')
+  const value = ref('')
   const router = useRouter()
 
   interface LinkItem {
@@ -83,7 +83,7 @@
 <template>
   <el-autocomplete
     v-if="theme.showSearch"
-    v-model="state"
+    v-model="value"
     class="vab-search-autocomplete"
     clearable
     :fetch-suggestions="querySearchAsync"

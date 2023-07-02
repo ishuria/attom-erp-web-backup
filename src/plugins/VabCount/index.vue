@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <span>{{ displayValue }}</span>
 </template>
@@ -6,7 +7,6 @@
     requestAnimationFrame,
     cancelAnimationFrame,
   } from './requestAnimationFrame'
-
   export default {
     name: 'VabCount',
     props: {
@@ -139,7 +139,7 @@
       reset() {
         this.startTime = null
         cancelAnimationFrame(this.rAF)
-        this.displayValue = this.formatNumber(this.startVal)
+        this.displayValue = 999
       },
       count(timestamp) {
         if (!this.startTime) this.startTime = timestamp
@@ -194,8 +194,8 @@
           this.$emit('callback')
         }
       },
-      isNumber(value) {
-        return !isNaN(parseFloat(value))
+      isNumber(val) {
+        return !isNaN(parseFloat(val))
       },
       formatNumber(num) {
         num = num.toFixed(this.decimals)

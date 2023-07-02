@@ -5,9 +5,7 @@
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
 
-  const state = reactive({
-    description: '',
-  })
+  const description = ref('')
 
   const handleTips = () => {
     const hour = new Date().getHours()
@@ -22,10 +20,8 @@
       : `晚上好 ${username.value}，愿你天黑有灯，下雨有伞。`
   }
   const fetchData = async () => {
-    const {
-      data: { description },
-    } = await getList()
-    state.description = description
+    const { data } = await getList()
+    description.value = data.description
   }
 
   onMounted(() => {
@@ -46,7 +42,7 @@
       <p class="page-header-tip-title">
         {{ handleTips() }}
       </p>
-      <p class="page-header-tip-description" v-html="state.description"></p>
+      <p class="page-header-tip-description" v-html="description"></p>
     </div>
   </vab-colorful-card>
 </template>

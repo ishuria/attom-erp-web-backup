@@ -94,117 +94,105 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { getList } from '/@/api/area'
 
-  export default defineComponent({
+  defineOptions({
     name: 'ComprehensiveForm',
-    setup() {
-      const generateData = () => {
-        const data = []
-        const cities = ['上海', '北京', '广州']
-        const pinyin = ['shanghai', 'beijing', 'guangzhou']
-        cities.forEach((city, index) => {
-          data.push({
-            label: city,
-            key: index,
-            pinyin: pinyin[index],
-          })
-        })
-        return data
-      }
+  })
 
-      const state = reactive({
-        formRef: null,
-        labelPosition: 'right',
-        form: {
-          name: '',
-          region: '',
-          date: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          description: '',
-          rate: 0,
-          area: [],
-          transfer: [],
-        },
-        areaOptions: [],
-        rules: {
-          name: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
-            {
-              min: 3,
-              max: 5,
-              message: '长度在 3 到 5 个字符',
-              trigger: 'blur',
-            },
-          ],
-          region: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
-          ],
-          date: [
-            {
-              type: 'date',
-              required: true,
-              message: '请选择日期',
-              trigger: 'change',
-            },
-          ],
-          type: [
-            {
-              type: 'array',
-              required: true,
-              message: '请至少选择一个活动性质',
-              trigger: 'change',
-            },
-          ],
-          resource: [
-            { required: true, message: '请选择活动资源', trigger: 'change' },
-          ],
-          description: [
-            { required: true, message: '请填写活动形式', trigger: 'blur' },
-          ],
-        },
-        data: generateData(),
-        filterMethod(query, item) {
-          return item.pinyin.indexOf(query) > -1
-        },
+  const generateData = () => {
+    const data: any[] = []
+    const cities = ['上海', '北京', '广州']
+    const pinyin = ['shanghai', 'beijing', 'guangzhou']
+    cities.forEach((city, index) => {
+      data.push({
+        label: city,
+        key: index,
+        pinyin: pinyin[index],
       })
+    })
+    return data
+  }
 
-      const fetchData = async () => {
-        const {
-          data: { list },
-        } = await getList()
-        state.areaOptions = list
-      }
+  const formRef: Ref<any> = ref(null)
+  const labelPosition: Ref<any> = ref('right')
+  const form: any = reactive({
+    name: '',
+    region: '',
+    date: '',
+    date2: '',
+    delivery: false,
+    type: [],
+    resource: '',
+    description: '',
+    rate: 0,
+    area: [],
+    transfer: [],
+  })
+  const areaOptions: Ref<any> = ref([])
+  const rules: any = reactive({
+    name: [
+      { required: true, message: '请输入活动名称', trigger: 'blur' },
+      {
+        min: 3,
+        max: 5,
+        message: '长度在 3 到 5 个字符',
+        trigger: 'blur',
+      },
+    ],
+    region: [{ required: true, message: '请选择活动区域', trigger: 'change' }],
+    date: [
+      {
+        type: 'date',
+        required: true,
+        message: '请选择日期',
+        trigger: 'change',
+      },
+    ],
+    type: [
+      {
+        type: 'array',
+        required: true,
+        message: '请至少选择一个活动性质',
+        trigger: 'change',
+      },
+    ],
+    resource: [
+      { required: true, message: '请选择活动资源', trigger: 'change' },
+    ],
+    description: [
+      { required: true, message: '请填写活动形式', trigger: 'blur' },
+    ],
+  })
+  const data: Ref<any> = ref(generateData())
+  const filterMethod = (query: any, item: any) => {
+    return item.pinyin.indexOf(query) > -1
+  }
 
-      const submitForm = (formName) => {
-        state[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!')
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('error submit!!')
-          }
-        })
-      }
-      const resetForm = (formName) => {
-        state[formName].resetFields()
-      }
+  const fetchData = async () => {
+    const {
+      data: { list },
+    } = await getList()
+    areaOptions.value = list
+  }
 
-      onMounted(() => {
-        fetchData()
-      })
-
-      return {
-        ...toRefs(state),
-        submitForm,
-        resetForm,
-        fetchData,
+  const submitForm = (formName: any) => {
+    formName.value.validate((valid: any) => {
+      if (valid) {
+        alert('submit!')
+      } else {
+        // eslint-disable-next-line no-console
+        console.log('error submit!!')
       }
-    },
+    })
+  }
+  const resetForm = (formName: any) => {
+    formName.value.resetFields()
+  }
+
+  onMounted(() => {
+    fetchData()
   })
 </script>
 

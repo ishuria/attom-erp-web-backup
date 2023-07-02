@@ -1,6 +1,9 @@
 <template>
   <div class="detail-container">
-    <el-page-header :content="'【' + title + '】详情页面'" @back="goBack" />
+    <el-page-header
+      :content="'【' + route.query.title + '】详情页面'"
+      @back="goBack"
+    />
     <el-alert
       :closable="false"
       show-icon
@@ -58,63 +61,40 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { handleActivePath } from '/@/utils/routes'
   import { Refresh } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'ComprehensiveTableDetail',
-    setup() {
-      const route = useRoute()
-      const router = useRouter()
+  })
 
-      const $pub = inject('$pub')
+  const route: any = useRoute()
+  const router: any = useRouter()
 
-      const tabsStore = useTabsStore()
-      const { changeTabsMeta, delVisitedRoute } = tabsStore
+  const $pub = inject<any>('$pub')
 
-      const state = reactive({
-        route: { query: { title: '加载中' } },
-        rate: 0,
-        form: {
-          text: '',
-        },
-        title: '加载中',
-      })
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta, delVisitedRoute } = tabsStore
 
-      const goBack = async () => {
-        await router.push('/vab/table/defaultTable')
-        await delVisitedRoute(handleActivePath(route, true))
-      }
+  const form: any = reactive({ text: '' })
 
-      const handleRefreshMainPage = () => {
-        $pub('reload-router-view', 'DefaultTable')
-      }
+  const goBack = async () => {
+    await router.push('/vab/table/defaultTable')
+    await delVisitedRoute(handleActivePath(route, true))
+  }
 
-      onMounted(() => {
-        changeTabsMeta({
-          title: '详情页',
-          meta: {
-            title: `${route.query.title} 详情页`,
-          },
-        })
-        state.title = route.query.title
-        state.route = {
-          path: route.path,
-          params: route.params,
-          query: { ...route.query, ...{ rate: parseInt(route.query.rate) } },
-          name: route.name,
-          meta: route.meta,
-        }
-      })
+  const handleRefreshMainPage = () => {
+    $pub('reload-router-view', 'DefaultTable')
+  }
 
-      return {
-        ...toRefs(state),
-        goBack,
-        handleRefreshMainPage,
-        Refresh,
-      }
-    },
+  onMounted(() => {
+    changeTabsMeta({
+      title: '详情页',
+      meta: {
+        title: `${route.query.title} 详情页`,
+      },
+    })
   })
 </script>

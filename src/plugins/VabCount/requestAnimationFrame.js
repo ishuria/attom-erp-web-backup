@@ -6,19 +6,16 @@ let cancelAnimationFrame
 
 const isServer = typeof window === 'undefined'
 if (isServer) {
-  requestAnimationFrame = () => {
-    return
-  }
-  cancelAnimationFrame = () => {
-    return
-  }
+  requestAnimationFrame = function () {}
+  cancelAnimationFrame = function () {}
 } else {
   requestAnimationFrame = window.requestAnimationFrame
   cancelAnimationFrame = window.cancelAnimationFrame
   let prefix
   for (let i = 0; i < prefixes.length; i++) {
-    if (requestAnimationFrame && cancelAnimationFrame) break
-
+    if (requestAnimationFrame && cancelAnimationFrame) {
+      break
+    }
     prefix = prefixes[i]
     requestAnimationFrame =
       requestAnimationFrame || window[`${prefix}RequestAnimationFrame`]
@@ -29,7 +26,7 @@ if (isServer) {
   }
 
   if (!requestAnimationFrame || !cancelAnimationFrame) {
-    requestAnimationFrame = (callback) => {
+    requestAnimationFrame = function (callback) {
       const currTime = new Date().getTime()
       const timeToCall = Math.max(0, 16 - (currTime - lastTime))
       const id = window.setTimeout(() => {
@@ -39,7 +36,7 @@ if (isServer) {
       return id
     }
 
-    cancelAnimationFrame = (id) => {
+    cancelAnimationFrame = function (id) {
       window.clearTimeout(id)
     }
   }

@@ -82,7 +82,7 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: any = ref(null)
+  const formRef: Ref<any> = ref(null)
   let form: any = reactive({
     parentId: '',
     name: '',

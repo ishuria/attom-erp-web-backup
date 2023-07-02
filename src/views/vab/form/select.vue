@@ -107,121 +107,114 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { getList } from '/@/api/area'
 
-  export default defineComponent({
-    // eslint-disable-next-line vue/no-reserved-component-names
+  defineOptions({
     name: 'Select',
-    setup() {
-      const state = reactive({
-        options1: [
-          { value: '选项1', label: '黄金糕' },
-          { value: '选项2', label: '双皮奶' },
-          { value: '选项3', label: '蚵仔煎' },
-          { value: '选项4', label: '龙须面' },
-          { value: '选项5', label: '北京烤鸭' },
-        ],
-        value1: '',
-        options2: [
-          { value: '选项1', label: '黄金糕' },
-          { value: '选项2', label: '双皮奶', disabled: true },
-          { value: '选项3', label: '蚵仔煎' },
-          { value: '选项4', label: '龙须面' },
-          { value: '选项5', label: '北京烤鸭' },
-        ],
-        value2: '',
-        value3: [],
-        area: [],
-        treeValue: '',
-        areaOptions: [],
-        treeData: [
-          {
-            value: '1',
-            label: 'Level one 1',
-            children: [
-              {
-                value: '1-1',
-                label: 'Level two 1-1',
-                children: [
-                  {
-                    value: '1-1-1',
-                    label: 'Level three 1-1-1',
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            value: '2',
-            label: 'Level one 2',
-            children: [
-              {
-                value: '2-1',
-                label: 'Level two 2-1',
-                children: [
-                  {
-                    value: '2-1-1',
-                    label: 'Level three 2-1-1',
-                  },
-                ],
-              },
-              {
-                value: '2-2',
-                label: 'Level two 2-2',
-                children: [
-                  {
-                    value: '2-2-1',
-                    label: 'Level three 2-2-1',
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            value: '3',
-            label: 'Level one 3',
-            children: [
-              {
-                value: '3-1',
-                label: 'Level two 3-1',
-                children: [
-                  {
-                    value: '3-1-1',
-                    label: 'Level three 3-1-1',
-                  },
-                ],
-              },
-              {
-                value: '3-2',
-                label: 'Level two 3-2',
-                children: [
-                  {
-                    value: '3-2-1',
-                    label: 'Level three 3-2-1',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      })
+  })
 
-      const fetchData = async () => {
-        const {
-          data: { list },
-        } = await getList()
-        state.areaOptions = list
-      }
+  const options1: Ref<any> = ref([
+    { value: '选项1', label: '黄金糕' },
+    { value: '选项2', label: '双皮奶' },
+    { value: '选项3', label: '蚵仔煎' },
+    { value: '选项4', label: '龙须面' },
+    { value: '选项5', label: '北京烤鸭' },
+  ])
 
-      onMounted(() => {
-        fetchData()
-      })
-
-      return {
-        ...toRefs(state),
-      }
+  const value1: Ref<any> = ref('')
+  const options2: Ref<any> = ref([
+    { value: '选项1', label: '黄金糕' },
+    { value: '选项2', label: '双皮奶', disabled: true },
+    { value: '选项3', label: '蚵仔煎' },
+    { value: '选项4', label: '龙须面' },
+    { value: '选项5', label: '北京烤鸭' },
+  ])
+  const value2: Ref<any> = ref('')
+  const value3: Ref<any> = ref([])
+  const area: Ref<any> = ref([])
+  const treeValue: Ref<any> = ref('')
+  const areaOptions: Ref<any> = ref([])
+  const treeData: Ref<any> = ref([
+    {
+      value: '1',
+      label: 'Level one 1',
+      children: [
+        {
+          value: '1-1',
+          label: 'Level two 1-1',
+          children: [
+            {
+              value: '1-1-1',
+              label: 'Level three 1-1-1',
+            },
+          ],
+        },
+      ],
     },
+    {
+      value: '2',
+      label: 'Level one 2',
+      children: [
+        {
+          value: '2-1',
+          label: 'Level two 2-1',
+          children: [
+            {
+              value: '2-1-1',
+              label: 'Level three 2-1-1',
+            },
+          ],
+        },
+        {
+          value: '2-2',
+          label: 'Level two 2-2',
+          children: [
+            {
+              value: '2-2-1',
+              label: 'Level three 2-2-1',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      value: '3',
+      label: 'Level one 3',
+      children: [
+        {
+          value: '3-1',
+          label: 'Level two 3-1',
+          children: [
+            {
+              value: '3-1-1',
+              label: 'Level three 3-1-1',
+            },
+          ],
+        },
+        {
+          value: '3-2',
+          label: 'Level two 3-2',
+          children: [
+            {
+              value: '3-2-1',
+              label: 'Level three 3-2-1',
+            },
+          ],
+        },
+      ],
+    },
+  ])
+
+  const fetchData = async () => {
+    const {
+      data: { list },
+    } = await getList()
+    areaOptions.value = list
+  }
+
+  onMounted(() => {
+    fetchData()
   })
 </script>
 

@@ -78,32 +78,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { Search } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'Input',
-    setup() {
-      const state = reactive({
-        input1: '',
-        input2: '',
-        input3: '',
-        input4: '',
-        input5: '',
-        input6: '',
-        input7: '',
-        input8: '',
-        input9: '',
-        select: 1,
-        textarea: '',
-      })
-
-      return {
-        ...toRefs(state),
-        Search,
-      }
-    },
   })
+  const input1: Ref<any> = ref('')
+  const input2: Ref<any> = ref('')
+  const input3: Ref<any> = ref('')
+  const input4: Ref<any> = ref('')
+  const input5: Ref<any> = ref('')
+  const input6: Ref<any> = ref('')
+  const input7: Ref<any> = ref('')
+  const input8: Ref<any> = ref('')
+  const input9: Ref<any> = ref('')
+  const select: Ref<any> = ref(1)
+  const textarea: Ref<any> = ref('')
 </script>
 
 <style lang="scss" scoped>

@@ -4,10 +4,8 @@
   const errorLogStore = useErrorLogStore()
   const { errorLogs } = storeToRefs(errorLogStore)
   const { clearErrorLog } = errorLogStore
+  const dialogVisible = ref(false)
 
-  const state = reactive({
-    dialogVisible: false,
-  })
   const searchList = [
     {
       title: '百度搜索',
@@ -22,7 +20,7 @@
   ]
 
   const clearAll = () => {
-    state.dialogVisible = false
+    dialogVisible.value = false
     clearErrorLog()
   }
 </script>
@@ -32,13 +30,13 @@
     <el-badge
       type="danger"
       :value="errorLogs.length"
-      @click="state.dialogVisible = true"
+      @click="dialogVisible = true"
     >
       <vab-icon icon="bug-line" />
     </el-badge>
 
     <el-dialog
-      v-model="state.dialogVisible"
+      v-model="dialogVisible"
       append-to-body
       title="shop-vite 异常捕获(温馨提示：错误必须解决)"
       width="70%"
@@ -83,7 +81,7 @@
         </el-table-column>
       </el-table>
       <template #footer>
-        <el-button @click="state.dialogVisible = false">取 消</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="danger" @click="clearAll">暂不显示</el-button>
       </template>
     </el-dialog>

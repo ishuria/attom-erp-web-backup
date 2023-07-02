@@ -43,5 +43,13 @@ export default {
         })
       },
     })
+    /**
+     * @description 获取焦点自定义指令v-focus
+     */
+    app.directive('focus', {
+      mounted(el) {
+        el.querySelector('input').focus()
+      },
+    })
   },
 }

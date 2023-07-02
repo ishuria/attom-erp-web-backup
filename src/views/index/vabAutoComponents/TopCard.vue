@@ -2,7 +2,7 @@
   <vab-card class="top-card" :class="'top-card-' + background" shadow="hover">
     <span>{{ title }}</span>
     <template v-if="$slots.tag">
-      <slot name="tag">{{ tag }}</slot>
+      <slot name="tag"></slot>
     </template>
     <p>
       <vab-count
@@ -24,55 +24,49 @@
       <vab-icon icon="arrow-up-line" />
       <span>{{ percentage }}</span>
       <template v-if="$slots.chart">
-        <slot name="chart">{{ chart }}</slot>
+        <slot name="chart"></slot>
       </template>
     </div>
   </vab-card>
 </template>
 
-<script>
+<script lang="ts" setup>
   import _ from 'lodash'
 
-  export default defineComponent({
+  defineOptions({
     name: 'TopCard',
-    props: {
-      background: {
-        type: String,
-        default: 'white',
-      },
-      title: {
-        type: String,
-        default: 'Test',
-      },
-      icon: {
-        type: String,
-        default: '',
-      },
-      percentage: {
-        type: String,
-        default: '10%',
-      },
-      countConfig: {
-        type: Object,
-        default: () => {
-          return {
-            startVal: 0,
-            endVal: _.random(1000, 20000),
-            decimals: 0,
-            prefix: '',
-            suffix: '',
-            separator: ',',
-            duration: 8000,
-          }
-        },
-      },
-    },
-    setup() {
-      const state = reactive({})
+  })
 
-      return {
-        ...toRefs(state),
-      }
+  defineProps({
+    background: {
+      type: String,
+      default: 'white',
+    },
+    title: {
+      type: String,
+      default: 'Test',
+    },
+    icon: {
+      type: String,
+      default: '',
+    },
+    percentage: {
+      type: String,
+      default: '10%',
+    },
+    countConfig: {
+      type: Object,
+      default: () => {
+        return {
+          startVal: 0,
+          endVal: _.random(1000, 20000),
+          decimals: 0,
+          prefix: '',
+          suffix: '',
+          separator: ',',
+          duration: 8000,
+        }
+      },
     },
   })
 </script>
