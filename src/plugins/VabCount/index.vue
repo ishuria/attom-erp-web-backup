@@ -1,24 +1,19 @@
-<!-- eslint-disable -->
 <template>
   <span>{{ displayValue }}</span>
 </template>
 <script>
-  import {
-    requestAnimationFrame,
-    cancelAnimationFrame,
-  } from './requestAnimationFrame'
   export default {
     name: 'VabCount',
     props: {
-      startVal: {
+      startValue: {
         type: Number,
         required: false,
         default: 0,
       },
-      endVal: {
+      endValue: {
         type: Number,
         required: false,
-        default: 0,
+        default: 20,
       },
       duration: {
         type: Number,
@@ -72,8 +67,8 @@
     },
     data() {
       return {
-        localStartVal: this.startVal,
-        displayValue: this.formatNumber(this.startVal),
+        localstartValue: this.startValue,
+        displayValue: this.formatNumber(this.startValue),
         printVal: null,
         paused: false,
         localDuration: this.duration,
@@ -85,16 +80,16 @@
     },
     computed: {
       countDown() {
-        return this.startVal > this.endVal
+        return this.startValue > this.endValue
       },
     },
     watch: {
-      startVal() {
+      startValue() {
         if (this.autoplay) {
           this.start()
         }
       },
-      endVal() {
+      endValue() {
         if (this.autoplay) {
           this.start()
         }
@@ -112,7 +107,8 @@
     },
     methods: {
       start() {
-        this.localStartVal = this.startVal
+        console.log(this.startValue, this.endValue)
+        this.localstartValue = this.startValue
         this.startTime = null
         this.localDuration = this.duration
         this.paused = false
@@ -133,7 +129,7 @@
       resume() {
         this.startTime = null
         this.localDuration = +this.remaining
-        this.localStartVal = +this.printVal
+        this.localstartValue = +this.printVal
         requestAnimationFrame(this.count)
       },
       reset() {
@@ -150,40 +146,40 @@
         if (this.useEasing) {
           if (this.countDown) {
             this.printVal =
-              this.localStartVal -
+              this.localstartValue -
               this.easingFn(
                 progress,
                 0,
-                this.localStartVal - this.endVal,
+                this.localstartValue - this.endValue,
                 this.localDuration
               )
           } else {
             this.printVal = this.easingFn(
               progress,
-              this.localStartVal,
-              this.endVal - this.localStartVal,
+              this.localstartValue,
+              this.endValue - this.localstartValue,
               this.localDuration
             )
           }
         } else {
           if (this.countDown) {
             this.printVal =
-              this.localStartVal -
-              (this.localStartVal - this.endVal) *
+              this.localstartValue -
+              (this.localstartValue - this.endValue) *
                 (progress / this.localDuration)
           } else {
             this.printVal =
-              this.localStartVal +
-              (this.endVal - this.localStartVal) *
+              this.localstartValue +
+              (this.endValue - this.localstartValue) *
                 (progress / this.localDuration)
           }
         }
         if (this.countDown) {
           this.printVal =
-            this.printVal < this.endVal ? this.endVal : this.printVal
+            this.printVal < this.endValue ? this.endValue : this.printVal
         } else {
           this.printVal =
-            this.printVal > this.endVal ? this.endVal : this.printVal
+            this.printVal > this.endValue ? this.endValue : this.printVal
         }
 
         this.displayValue = this.formatNumber(this.printVal)
