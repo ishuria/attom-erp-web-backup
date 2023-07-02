@@ -9,11 +9,11 @@
     bodyStyle: {
       type: [String, Object, Array],
       default: '',
-    },
+    } as any,
     shadow: {
       type: String,
       default: '',
-    },
+    } as any,
     skeleton: {
       type: Boolean,
       default: false,
@@ -24,10 +24,9 @@
     },
   })
 
-  let timer = null
   const skeletonShow = ref(true)
 
-  timer = setTimeout(() => {
+  const timer: any = setTimeout(() => {
     skeletonShow.value = false
   }, 500)
 

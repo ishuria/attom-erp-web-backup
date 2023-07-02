@@ -3,7 +3,7 @@
     shadow: {
       type: String,
       default: '',
-    },
+    } as any,
     colorFrom: {
       type: String,
       default: '',

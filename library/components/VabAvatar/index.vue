@@ -12,10 +12,10 @@
 
   const active = ref(false)
 
-  const handleVisibleChange = (value) => {
+  const handleVisibleChange = (value: boolean) => {
     active.value = value
   }
-  const handleCommand = async (command) => {
+  const handleCommand = async (command: any) => {
     switch (command) {
       case 'logout':
         await logout()

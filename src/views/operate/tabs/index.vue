@@ -28,15 +28,15 @@
     delRightVisitedRoutes,
     delAllVisitedRoutes,
   } = tabStore
-  const hoverRoute = ref(null)
-  const $pub = inject('$pub')
+  const hoverRoute: Ref<any> = ref(null)
+  const $pub = inject<any>('$pub')
 
   /**
    * 根据原生路径删除标签中的标签
    * @param rawPath 原生路径
    * @returns {Promise<void>}
    */
-  const handleTabRemove = async (rawPath) => {
+  const handleTabRemove = async (rawPath: string) => {
     if (isActive(rawPath)) await toLastTab()
     await delVisitedRoute(rawPath)
   }
@@ -88,7 +88,7 @@
     if (latestView) await router.push(latestView)
     else await router.push('/')
   }
-  const isActive = (path) => {
+  const isActive = (path: any) => {
     return path === handleActivePath(route, true)
   }
   /**

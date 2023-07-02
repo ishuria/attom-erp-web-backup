@@ -5,7 +5,7 @@
   const route = useRoute()
 
   const routesStore = useRoutesStore()
-  const { tab, activeMenu } = storeToRefs(routesStore)
+  const { tab, activeMenu }: any = storeToRefs(routesStore)
 
   watch(
     route,

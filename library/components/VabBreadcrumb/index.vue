@@ -8,12 +8,12 @@
   const routesStore = useRoutesStore()
   const { getRoutes: routes } = storeToRefs(routesStore)
 
-  const breadcrumbList = computed(() =>
+  const breadcrumbList: any = computed(() =>
     handleMatched(routes.value, route.path).filter(
       (item) => !item.meta.breadcrumbHidden
     )
   )
-  const handleTo = (path) => {
+  const handleTo = (path: any) => {
     return { path }
   }
 </script>
