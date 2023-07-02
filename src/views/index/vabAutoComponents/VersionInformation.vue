@@ -18,40 +18,32 @@
     <el-scrollbar>
       <table class="table">
         <tr>
+          <td>vite</td>
           <td>
-            vite
             <span>{{ devDependencies['vite'] }}</span>
           </td>
-          <td></td>
+          <td>vue</td>
           <td>
-            vue
-            <span>
-              <span>{{ dependencies['vue'] }}</span>
-            </span>
+            <span>{{ dependencies['vue'] }}</span>
           </td>
-          <td></td>
+          <td>pinia</td>
           <td>
-            pinia
             <span>{{ dependencies['pinia'] }}</span>
           </td>
-          <td></td>
         </tr>
         <tr>
+          <td>element-plus</td>
           <td>
-            element-plus
             <span>{{ dependencies['element-plus'] }}</span>
           </td>
-          <td></td>
+          <td>@vueuse/core</td>
           <td>
-            @vueuse/core
             <span>{{ dependencies['@vueuse/core'] }}</span>
           </td>
-          <td></td>
+          <td>axios</td>
           <td>
-            axios
             <span>{{ dependencies['axios'] }}</span>
           </td>
-          <td></td>
         </tr>
       </table>
       <div class="version-information-rely">
@@ -95,12 +87,12 @@
 
       td {
         position: relative;
-        padding: 11.5px 15px !important;
+        padding: 11px 15px !important;
         overflow: hidden;
         font-size: var(--el-font-size-default);
         text-overflow: ellipsis;
         white-space: nowrap;
-        border: 0;
+        border: 1px solid var(--el-border-color);
 
         i {
           color: var(--el-color-success);
@@ -109,9 +101,10 @@
         }
 
         &:nth-child(odd) {
-          width: 40%;
+          width: 10%;
           font-weight: bold;
           color: var(--el-color-grey);
+          text-align: right;
           background-color: var(--el-color-white);
 
           span {
