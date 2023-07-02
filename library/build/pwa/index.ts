@@ -2,15 +2,16 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 
 const pwaOptions: Partial<VitePWAOptions> = {
   base: '/shop-vite/',
-  registerType: 'autoUpdate',
+  registerType: 'prompt',
   includeAssets: ['favicon.icon', 'static/img/*'],
   workbox: {
     cleanupOutdatedCaches: true,
   },
   manifest: {
     lang: 'zh',
-    name: 'Shop Vite',
-    short_name: 'Shop Vite',
+    name: 'Vue Shop Vite',
+    short_name: 'Vue Shop Vite',
+    description: 'Vue Shop Vite官网、文档、演示地址',
     background_color: '#ffffff',
     icons: [
       {

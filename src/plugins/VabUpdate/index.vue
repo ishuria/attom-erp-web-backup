@@ -15,10 +15,7 @@
       {{ title }}
       V{{ version }}
     </p>
-    <p>
-      更新时间：最近更新
-      <!-- {{ updateTime }} -->
-    </p>
+    <p>更新时间：最近更新</p>
     <template #footer>
       <el-button v-loading="loading" size="large" type="primary" @click="save">
         {{ button }}
@@ -76,7 +73,7 @@
 
       i {
         font-size: 50px;
-        color: #fff;
+        color: var(--el-color-white);
       }
     }
 
