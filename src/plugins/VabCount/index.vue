@@ -107,7 +107,6 @@
     },
     methods: {
       start() {
-        console.log(this.startValue, this.endValue)
         this.localstartValue = this.startValue
         this.startTime = null
         this.localDuration = this.duration
