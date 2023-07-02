@@ -54,10 +54,10 @@
           <template #header>
             <span>动态高亮菜单</span>
           </template>
-          <el-button @click="handleActiveMenu('/vab/notice')">
-            修改高亮菜单至通知组件
+          <el-button @click="handleActiveMenu('/operate/tabs')">
+            修改高亮菜单至多标签组件
           </el-button>
-          <el-button @click="handleActiveMenu('/vab/dynamicMeta')">
+          <el-button @click="handleActiveMenu('/operate/dynamicMeta')">
             还原默认高亮菜单
           </el-button>
         </vab-card>
