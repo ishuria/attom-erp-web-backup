@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script lange="ts" setup>
+<script lang="ts" setup>
   import { handleActivePath } from '/@/utils/routes'
   import { useTabsStore } from '/@/store/modules/tabs'
 

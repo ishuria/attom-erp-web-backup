@@ -1,4 +1,4 @@
-<script lange="ts" setup>
+<script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
   defineProps({

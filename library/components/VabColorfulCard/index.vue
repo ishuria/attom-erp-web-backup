@@ -1,4 +1,4 @@
-<script lange="ts" setup>
+<script lang="ts" setup>
   defineProps({
     shadow: {
       type: String,

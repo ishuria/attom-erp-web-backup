@@ -1,4 +1,4 @@
-<script lange="ts" setup>
+<script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
   import { translateTitle } from '/@/utils/i18n'
   import { handleMatched } from '/@/utils/routes'

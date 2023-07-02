@@ -1,4 +1,4 @@
-<script lange="ts" setup>
+<script lang="ts" setup>
   import { useErrorLogStore } from '/@/store/modules/errorLog'
 
   const errorLogStore = useErrorLogStore()

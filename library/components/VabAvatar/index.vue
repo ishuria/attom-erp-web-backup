@@ -1,4 +1,4 @@
-<script lange="ts" setup>
+<script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
   import { toLoginRoute } from '/@/utils/routes'
   import { translateTitle } from '/@/utils/i18n'
