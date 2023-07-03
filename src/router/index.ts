@@ -431,7 +431,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '富文本',
           icon: 'edit-box-line',
           guard: ['Admin'],
-          dot: true,
         },
       },
       {
@@ -452,6 +451,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '抽奖',
           icon: 'award-line',
+          badge: 'New',
         },
       },
       {
@@ -472,7 +472,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '签名',
           icon: 'edit-2-line',
           guard: ['Admin'],
-          badge: 'New',
         },
       },
       {
@@ -483,7 +482,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '水印',
           guard: ['Admin'],
           icon: 'water-flash-line',
-          dot: true,
         },
       },
 
@@ -526,7 +524,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '密码生成器',
           guard: ['Admin'],
           icon: 'lock-password-line',
-          dot: true,
         },
       },
       {
