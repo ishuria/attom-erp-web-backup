@@ -51,15 +51,17 @@ export function createWatch(env: Record<string, string>) {
     }
   }
 
-  chokidar.watch('./src/views').on('change', (path) => {
-    if (path.endsWith('vue')) {
-      console.log(
-        `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan(
-          '[Vue Sh' + 'op Vite]'
-        )} ${pc.cyan(`http://localhost:${port}/`)} ${pc.green(
-          'update success'
-        )} `
-      )
-    }
-  })
+  if (nodeEnv !== 'production') {
+    chokidar.watch('./src/views').on('change', (path) => {
+      if (path.endsWith('vue')) {
+        console.log(
+          `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan(
+            '[Vue Sh' + 'op Vite]'
+          )} ${pc.cyan(`http://localhost:${port}/`)} ${pc.green(
+            'update success'
+          )} `
+        )
+      }
+    })
+  }
 }
