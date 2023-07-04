@@ -1,6 +1,11 @@
 import request from '/@/utils/request'
+import { loginRSA } from '/@/config'
+import { encryptedData } from '/@/utils/encrypt'
 
-export async function login(data: any) {
+export async function login(data: object) {
+  if (loginRSA) {
+    data = { ...data, password: await encryptedData(data) }
+  }
   return request({
     url: '/login',
     method: 'post',

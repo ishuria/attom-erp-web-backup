@@ -43,5 +43,3 @@ public/video
 *.zip
 *.7z
 *.rar
-library/build/unplugin/auto-imports.d.ts
-library/build/unplugin/components.d.ts
