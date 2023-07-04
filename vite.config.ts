@@ -12,7 +12,7 @@ import {
   assetsDir,
   chunkSizeWarningLimit,
   cssCodeSplit,
-} from './src/config'
+} from '/@/config'
 
 const info = {
   name,
