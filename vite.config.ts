@@ -55,6 +55,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       chunkSizeWarningLimit,
       cssCodeSplit,
       rollupOptions: {
+        onwarn: () => {
+          return
+        },
         output: {
           chunkFileNames: 'static/js/[name]-[hash].js',
           entryFileNames: 'static/js/[name]-[hash].js',
