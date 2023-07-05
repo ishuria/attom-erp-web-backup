@@ -58,15 +58,11 @@
     if (localStorage.getItem('vueuse-color-scheme') == 'auto')
       localStorage.setItem('vueuse-color-scheme', 'light')
 
-    if (localStorage.getItem('vueuse-color-scheme') !== 'dark')
-      value.value = true
-    else value.value = false
+    value.value = localStorage.getItem('vueuse-color-scheme') !== 'dark'
 
     // 还原默认
     $sub('shop-vite-reset-dark', () => {
-      if (localStorage.getItem('vueuse-color-scheme') !== 'dark')
-        value.value = true
-      else value.value = false
+      value.value = localStorage.getItem('vueuse-color-scheme') !== 'dark'
 
       if (localStorage.getItem('vueuse-color-scheme') == 'dark') {
         localStorage.setItem('vueuse-color-scheme', 'light')
