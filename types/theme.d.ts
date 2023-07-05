@@ -23,9 +23,8 @@ declare type LayoutName =
    * 浮动布局
    */
   | 'float'
-  | string
 
-declare type ThemeName = 'default' | 'technology' | string
+declare type ThemeName = 'default' | 'plain' | 'technology'
 
 declare type Background =
   /**
@@ -36,7 +35,6 @@ declare type Background =
    * 自定义背景
    */
   | 'vab-background'
-  | string
 
 declare type ColumnStyle =
   /**
@@ -55,12 +53,10 @@ declare type ColumnStyle =
    * 箭头风格
    */
   | 'arrow'
-  | string
   /**
    * 半圆风格
    */
   | 'semicircle'
-  | string
 
 declare type TabsBarStyle =
   /**
@@ -75,7 +71,6 @@ declare type TabsBarStyle =
    * smooth
    */
   | 'smooth'
-  | string
 
 declare interface ThemeType {
   // 布局名称
