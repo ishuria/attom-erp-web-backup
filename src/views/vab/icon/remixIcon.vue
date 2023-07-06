@@ -148,8 +148,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 60px;
-        max-height: 60px;
+        min-height: 59.5px;
+        max-height: 59.5px;
         padding: #{calc($base-padding / 1.4)};
         cursor: pointer;
 
