@@ -576,7 +576,7 @@ html {
       .el-card__body {
         display: flex;
         flex-direction: column;
-        height: calc($base-keep-alive-height - $base-padding);
+        height: calc($base-keep-alive-height - $base-padding - 2px);
         .el-table {
           flex: 1;
         }
