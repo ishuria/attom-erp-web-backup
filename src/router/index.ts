@@ -173,6 +173,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             component: () => import('/@/views/vab/table/defaultTable.vue'),
             meta: {
               title: '默认表格',
+              dot: true,
             },
           },
           {
@@ -181,6 +182,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             component: () => import('/@/views/vab/table/columnTable.vue'),
             meta: {
               title: '左树右表表格',
+            },
+          },
+          {
+            path: 'tabsTable',
+            name: 'TabsTable',
+            component: () => import('/@/views/vab/table/tabsTable.vue'),
+            meta: {
+              title: '分类表格',
+              badge: 'New',
             },
           },
           {
