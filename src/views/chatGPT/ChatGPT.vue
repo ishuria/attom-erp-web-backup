@@ -187,13 +187,13 @@
 
 <style lang="scss" scoped>
   $color_1: var(--el-color-grey);
-  $color_2: #333;
+  $color_2: var(--el-color-grey);
   $color_3: var(--el-color-primary);
-  $color_4: #fff;
-  $background-color_1: #e2e2e2;
-  $background-color_2: #333;
+  $color_4: var(--el-color-white);
+  $background-color_1: var(--el-border-color);
+  $background-color_2: var(--el-color-grey);
   $background-color_3: var(--el-color-primary);
-  $border-color_1: #e2e2e2 transparent transparent;
+  $border-color_1: var(--el-border-color) transparent transparent;
   $border-top-color_1: var(--el-color-primary);
 
   .chat-GPT-container {
