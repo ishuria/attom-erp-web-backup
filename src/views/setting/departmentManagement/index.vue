@@ -1,5 +1,5 @@
 <template>
-  <div class="department-management-container">
+  <div class="department-management-container table-auto-height">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
         <el-button :icon="Plus" type="primary" @click="handleEdit(null)">

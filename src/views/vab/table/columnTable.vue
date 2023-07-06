@@ -1,5 +1,5 @@
 <template>
-  <div class="column-table-container no-background-container">
+  <div class="column-table-container no-background-container table-auto-height">
     <el-row :gutter="20">
       <el-col :span="4">
         <vab-card shadow="never">

@@ -570,5 +570,25 @@ html {
     .el-upload.el-upload--text + .el-button {
       margin-left: 10px;
     }
+
+    /* 表格自动高度 */
+    :not(.no-background-container).table-auto-height {
+      display: flex;
+      flex-direction: column;
+      height: $base-keep-alive-height;
+      .el-table {
+        flex: 1;
+      }
+    }
+    .no-background-container.table-auto-height {
+      .el-card__body {
+        display: flex;
+        flex-direction: column;
+        height: calc($base-keep-alive-height - $base-padding);
+        .el-table {
+          flex: 1;
+        }
+      }
+    }
   }
 }
