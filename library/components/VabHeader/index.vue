@@ -108,19 +108,8 @@
               -webkit-font-smoothing: antialiased;
             }
 
-            .el-sub-menu {
-              .vab-icon {
-                margin-top: 12px !important;
-              }
-            }
-
             .el-sub-menu,
             .el-menu-item {
-              i,
-              .vab-icon {
-                color: inherit;
-              }
-
               &.is-active {
                 border: 0 !important;
 
