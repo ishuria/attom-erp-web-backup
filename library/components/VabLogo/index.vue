@@ -58,8 +58,7 @@
   }
 
   .logo-container {
-    &-horizontal,
-    &-common {
+    &-horizontal {
       @include container;
 
       .logo {
@@ -76,8 +75,7 @@
 
     &-vertical,
     &-column,
-    &-comprehensive,
-    &-float {
+    &-comprehensive {
       @include container;
 
       height: $base-logo-height;

@@ -2,6 +2,7 @@
   import { useRoutesStore } from '/@/store/modules/routes'
   import { translateTitle } from '/@/utils/i18n'
   import { isExternal } from '/@/utils/validate'
+  import { openFirstMenu } from '/@/config'
 
   defineProps({
     layout: {
@@ -20,15 +21,15 @@
   } = storeToRefs(routesStore)
 
   const handleTabClick = () => {
-    if (isExternal(tabMenu.value.path)) {
-      window.open(tabMenu.value.path)
-      setTimeout(() => {
-        router.push('/')
-      }, 1000)
-    } else if (tabMenu.value) {
-      const { redirect } = tabMenu.value
-      router.push(redirect ? redirect : tabMenu.value)
-    }
+    nextTick(() => {
+      if (isExternal(tabMenu.value.path)) {
+        window.open(tabMenu.value.path)
+        setTimeout(() => {
+          router.push('/')
+        }, 1000)
+      } else if (openFirstMenu)
+        router.push(tabMenu.value.redirect || tabMenu.value)
+    })
   }
 </script>
 
@@ -37,11 +38,7 @@
     <el-row :gutter="15">
       <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="4">
         <div class="left-panel">
-          <vab-fold
-            v-if="layout !== 'float'"
-            fold="layout-left-2-line"
-            unfold="layout-left-line"
-          />
+          <vab-fold fold="layout-left-2-line" unfold="layout-left-line" />
           <el-tabs
             v-if="layout === 'comprehensive'"
             v-model="tab.data"

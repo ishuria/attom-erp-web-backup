@@ -29,11 +29,8 @@
 </script>
 
 <template>
-  <el-scrollbar
-    class="vab-side-bar"
-    :class="{ 'is-collapse': collapse, 'side-bar-common': layout === 'common' }"
-  >
-    <vab-logo v-if="layout === 'vertical'" />
+  <el-scrollbar class="vab-side-bar" :class="{ 'is-collapse': collapse }">
+    <vab-logo v-if="layout === 'comprehensive' || layout === 'vertical'" />
     <el-menu
       background-color="var(--el-menu-background-color)"
       :collapse="collapse"

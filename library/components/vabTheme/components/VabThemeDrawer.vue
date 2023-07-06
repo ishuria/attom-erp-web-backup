@@ -78,7 +78,7 @@
     append-to-body
     class="vab-drawer"
     direction="rtl"
-    size="285px"
+    size="286px"
     :title="translateTitle('主题配置')"
   >
     <el-scrollbar height="85vh">
@@ -120,6 +120,11 @@
                 <vab-icon icon="horizontal" is-custom-svg />
               </template>
             </el-radio-button>
+            <el-radio-button label="comprehensive">
+              <template #default>
+                <vab-icon icon="comprehensive" is-custom-svg />
+              </template>
+            </el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="translateTitle('主题')">
@@ -141,9 +146,7 @@
         <el-form-item :label="translateTitle('菜单宽度')">
           <el-select
             v-model="theme.menuWidth"
-            :disabled="
-              theme.layout === 'float' || theme.layout === 'horizontal'
-            "
+            :disabled="theme.layout === 'horizontal'"
             @change="updateMenuWidth"
           >
             <el-option key="266px" label="266px" value="266px" />
@@ -239,10 +242,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="translateTitle('头部固定')">
-          <el-switch
-            v-model="theme.fixedHeader"
-            :disabled="theme.layout === 'common'"
-          />
+          <el-switch v-model="theme.fixedHeader" />
         </el-form-item>
         <el-form-item :label="translateTitle('国际化')">
           <el-switch v-model="theme.showLanguage" />
@@ -329,8 +329,8 @@
                   position: relative;
                   display: block;
                   float: left;
-                  width: 60px;
-                  height: 60px;
+                  width: 50px;
+                  height: 50px;
                   padding: 0;
                   margin: 10px 10px 5px 4px;
                   cursor: pointer;
@@ -359,22 +359,25 @@
                     top: 0;
                     left: 0;
                     display: block;
-                    width: 60px;
-                    height: 60px;
+                    width: 50px;
+                    height: 50px;
                     padding: 0;
                     margin: 0;
                     border: 0;
                     box-shadow: none;
 
                     .vab-icon {
-                      width: 60px;
-                      height: 60px;
+                      width: 50px;
+                      height: 50px;
                       padding: 0;
                       margin: 0;
                       border: 1px solid var(--el-border-color);
                       border-radius: 5px;
                     }
                   }
+                }
+                .el-radio-button:last-child {
+                  margin-right: 0;
                 }
               }
             }
