@@ -1,7 +1,7 @@
 <template>
   <div class="column-table-container no-background-container table-auto-height">
     <el-row :gutter="20">
-      <el-col :span="4">
+      <el-col :lg="4" :md="24" :sm="24" :xl="4" :xs="24">
         <vab-card shadow="never">
           <el-input
             v-model="filterText"
@@ -18,7 +18,7 @@
           />
         </vab-card>
       </el-col>
-      <el-col :span="20">
+      <el-col :lg="20" :md="24" :sm="24" :xl="20" :xs="24">
         <vab-card shadow="never">
           <vab-query-form>
             <vab-query-form-top-panel>
@@ -246,7 +246,7 @@
 
   const editRef: Ref<any> = ref(null)
   const tableSortRef: Ref<any> = ref(null)
-  const fold = ref(false)
+  const fold = ref(true)
   const list = ref([])
   const listLoading = ref(true)
   const layout = ref('total, sizes, prev, pager, next, jumper')

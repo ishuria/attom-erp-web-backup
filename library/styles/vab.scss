@@ -369,14 +369,6 @@ html {
       }
     }
 
-    /* markdown编辑器*/
-    .editor-toolbar {
-      .no-mobile,
-      .fa-question-circle {
-        display: none;
-      }
-    }
-
     /* el-divider间隔线 */
     .el-divider--horizontal {
       margin: 8px 0 $base-margin + 8px 0;
@@ -587,6 +579,19 @@ html {
         height: calc($base-keep-alive-height - $base-padding);
         .el-table {
           flex: 1;
+        }
+      }
+    }
+    /* 手机端禁用表格自动高度 */
+    .mobile {
+      :not(.no-background-container).table-auto-height {
+        display: block !important;
+        height: auto !important;
+      }
+      .no-background-container.table-auto-height {
+        .el-card__body {
+          display: block !important;
+          height: auto !important;
         }
       }
     }

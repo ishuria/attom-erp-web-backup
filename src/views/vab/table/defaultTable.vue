@@ -197,7 +197,7 @@
 
   const editRef: Ref<any> = ref(null)
   const tableSortRef: Ref<any> = ref(null)
-  const fold = ref(false)
+  const fold = ref(true)
   const list = ref([])
   const listLoading = ref(true)
   const layout = ref('total, sizes, prev, pager, next, jumper')
