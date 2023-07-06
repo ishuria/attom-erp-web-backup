@@ -50,8 +50,6 @@
 
   let timer: any
   const updateTime = ref()
-  const lineOne0 = ref(_.random(2000, 4000))
-  const lineOne1 = ref(_.random(1000, 2000))
   onMounted(() => {
     const base = +new Date(2022, 10, 1)
     const oneDay = 24 * 3600 * 1000

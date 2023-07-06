@@ -391,6 +391,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'progress',
+        name: 'Progress',
+        component: () => import('/@/views/vab/progress/index.vue'),
+        meta: {
+          title: '进度条',
+          guard: ['Admin'],
+          icon: 'footprint-line',
+        },
+      },
+      {
         path: 'timeline',
         name: 'Timeline',
         component: () => import('/@/views/vab/timeline/index.vue'),
