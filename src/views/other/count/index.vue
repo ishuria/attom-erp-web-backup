@@ -1,7 +1,16 @@
 <template>
   <div class="count-container">
     <div class="count-text">
-      <span>{{ output.toFixed(form.decimals) }}</span>
+      <vab-count
+        v-if="show"
+        :decimals="form.decimals"
+        :duration="form.duration"
+        :end-value="form.endVal"
+        :prefix="form.prefix"
+        :separator="form.separator"
+        :start-value="form.startVal"
+        :suffix="form.suffix"
+      />
     </div>
     <el-form inline :model="form">
       <el-form-item label="起始值">
@@ -16,6 +25,12 @@
       <el-form-item label="小数位数">
         <el-input-number v-model="form.decimals" @change="handleChange" />
       </el-form-item>
+      <el-form-item label="前缀">
+        <el-input v-model="form.prefix" @change="handleChange" />
+      </el-form-item>
+      <el-form-item label="后缀">
+        <el-input v-model="form.suffix" @change="handleChange" />
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -24,23 +39,22 @@
   defineOptions({
     name: 'Count',
   })
+  const show = ref(true)
   const form = reactive({
     startVal: 0,
     endVal: 999,
     decimals: 0,
+    prefix: '',
+    suffix: '',
+    separator: ',',
     duration: 8000,
   })
-  const baseNumber = ref(form.startVal)
-  let output
   const handleChange = () => {
-    baseNumber.value = form.startVal
-    output = useTransition(baseNumber, {
-      duration: form.duration,
-      transition: [0.2, 0.2, 0, 1],
-    })
-    baseNumber.value = form.endVal
+    show.value = false
+    setTimeout(() => {
+      show.value = true
+    }, 300)
   }
-  handleChange()
 </script>
 
 <style lang="scss" scoped>
