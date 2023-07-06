@@ -6,6 +6,9 @@
   --el-menu-background-color-second: #fff;
   --el-menu-color-text: #fff;
 
+  --el-menu-horizontal-sub-item-height: #{$base-menu-item-height - 4px};
+  --el-menu-item-height: #{$base-menu-item-height};
+
   --el-color-grey: #{$base-color-grey};
   --el-color-black: #{$base-color-black};
 

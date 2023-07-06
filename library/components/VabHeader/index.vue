@@ -16,43 +16,34 @@
 <template>
   <div class="vab-header">
     <div class="vab-main">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <vab-logo />
-        </el-col>
-        <el-col :span="18">
-          <div class="right-panel">
-            <el-menu
-              v-if="'horizontal' === layout"
-              active-text-color="var(--el-menu-color-text)"
-              background-color="var(--el-menu-background-color)"
-              :default-active="activeMenu.data"
-              menu-trigger="hover"
-              mode="horizontal"
-              style="width: 800px"
-              text-color="var(--el-menu-color-text)"
-            >
-              <template
-                v-for="(item, index) in routes.flatMap((route) =>
-                  route['meta'] &&
-                  route['meta']['levelHidden'] &&
-                  route['children']
-                    ? [...route['children']]
-                    : route
-                )"
-              >
-                <vab-menu
-                  v-if="item['meta'] && !item['meta']['hidden']"
-                  :key="index + item['name']"
-                  :item="item"
-                  :layout="layout"
-                />
-              </template>
-            </el-menu>
-            <vab-right-tools is-horizontal />
-          </div>
-        </el-col>
-      </el-row>
+      <div class="right-panel">
+        <vab-logo />
+        <el-menu
+          v-if="'horizontal' === layout"
+          active-text-color="var(--el-menu-color-text)"
+          background-color="var(--el-menu-background-color)"
+          :default-active="activeMenu.data"
+          menu-trigger="hover"
+          mode="horizontal"
+          text-color="var(--el-menu-color-text)"
+        >
+          <template
+            v-for="(item, index) in routes.flatMap((route) =>
+              route.meta && route.meta.levelHidden && route.children
+                ? [...route.children]
+                : route
+            )"
+          >
+            <vab-menu
+              v-if="item.meta && !item.meta.hidden"
+              :key="index + item['name']"
+              :item="item"
+              :layout="layout"
+            />
+          </template>
+        </el-menu>
+        <vab-right-tools is-horizontal />
+      </div>
     </div>
   </div>
 </template>
@@ -74,81 +65,35 @@
       .right-panel {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         height: $base-header-height;
 
         :deep() {
+          .logo-container {
+            width: 360px;
+          }
+
           .el-sub-menu__icon-more {
             margin-top: #{math.div($base-menu-height - 20, 2)} !important;
             margin-right: 20px !important;
           }
 
-          > .el-menu--horizontal.el-menu {
-            > .el-sub-menu > .el-sub-menu__title {
-              padding-right: 0;
-
-              > .el-sub-menu__icon-arrow {
-                position: relative !important;
-                margin-top: -5px !important;
-                margin-right: 0;
-                margin-left: 30px;
-              }
-            }
-
-            > .el-menu-item {
-              .el-tag {
-                position: relative !important;
-                margin-top: 0 !important;
-                margin-right: -20px;
-                margin-left: 25px;
-              }
-
-              .vab-dot {
-                float: right;
-                margin-top: #{math.div($base-header-height - 6, 2)} + 1;
-              }
-
-              @media only screen and (max-width: 1199px) {
-                .el-tag {
-                  display: none;
-                }
-              }
-            }
-          }
-
           .el-menu {
             border: 0 !important;
 
-            * {
-              border: 0 !important;
-            }
-
             &.el-menu--horizontal {
-              display: flex;
-              align-items: center;
-              justify-content: flex-end;
               width: 100%;
               height: $base-menu-height;
               border: 0 !important;
 
               > .el-menu-item,
               > .el-sub-menu {
-                height: $base-menu-height;
-                margin-right: 3px;
-                line-height: $base-menu-height;
                 border-radius: 3px;
-
-                .el-sub-menu__icon-arrow {
-                  float: right;
-                  margin-top: -6px;
-                }
 
                 > .el-sub-menu__title {
                   display: flex;
                   align-items: flex-start;
-                  height: $base-menu-height;
                   line-height: $base-menu-height;
-                  border: 0 !important;
                   border-radius: 3px;
                 }
               }
@@ -238,7 +183,8 @@
   }
 </style>
 <style>
-  .el-menu--horizontal {
+  .el-menu--horizontal,
+  .el-popper.is-light {
     border: 0 !important;
   }
 </style>

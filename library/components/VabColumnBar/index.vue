@@ -398,10 +398,10 @@
 
         .el-menu-item,
         .el-sub-menu__title {
-          height: $base-menu-item-height;
+          height: var(--el-menu-item-height);
 
           overflow: hidden;
-          line-height: $base-menu-item-height;
+          line-height: var(--el-menu-item-height);
           text-overflow: ellipsis;
           white-space: nowrap;
           vertical-align: middle;
