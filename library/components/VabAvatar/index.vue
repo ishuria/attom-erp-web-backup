@@ -21,9 +21,6 @@
         await logout()
         await router.push(toLoginRoute(route.fullPath))
         break
-      case 'personalCenter':
-        await router.push('/setting/personalCenter')
-        break
     }
   }
 </script>
