@@ -82,11 +82,9 @@
 
   const fetchData = async () => {
     listLoading.value = true
-    const {
-      data: { list, total },
-    } = await getList(queryForm)
-    list.value = list
-    total.value = total
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    total.value = data.total
     listLoading.value = false
     emptyShow.value = false
   }

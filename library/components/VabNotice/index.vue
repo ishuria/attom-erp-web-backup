@@ -13,11 +13,9 @@
   const badge = ref(undefined)
 
   const fetchData = async () => {
-    const {
-      data: { list, total },
-    } = await getList()
-    notices.value = list
-    badge.value = total === 0 ? undefined : total
+    const { data } = await getList()
+    notices.value = data.list
+    badge.value = data.total === 0 ? undefined : data.total
   }
 
   nextTick(() => {
