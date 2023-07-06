@@ -4,13 +4,7 @@
       <vab-icon class="pay-success" icon="checkbox-circle-line" />
       <p>支付成功</p>
     </div>
-    <el-form
-      ref="formRef"
-      class="pay-bottom"
-      label-width="100px"
-      :model="form"
-      :rules="rules"
-    >
+    <el-form class="pay-bottom" label-width="100px">
       <el-form-item label="付款账户">
         {{ infoData.payAccount }}
       </el-form-item>
@@ -30,56 +24,23 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Step3',
-    props: {
-      infoData: {
-        type: Object,
-        default: () => {
-          return {}
-        },
+  })
+  defineProps({
+    infoData: {
+      type: Object,
+      default: () => {
+        return {}
       },
     },
-    emits: ['change-step'],
-    setup(props, { emit }) {
-      const state = reactive({
-        formRef: null,
-        form: {
-          password: '123456',
-        },
-        rules: {
-          password: [
-            { required: true, message: '请输入支付密码', trigger: 'blur' },
-          ],
-        },
-        loading: false,
-      })
-
-      const handleSubmit = () => {
-        state['formRef'].validate((valid) => {
-          if (valid) {
-            state.loading = true
-            setTimeout(() => {
-              emit('change-step', 2)
-              state.loading = false
-            }, 2000)
-          } else {
-            state.loading = false
-          }
-        })
-      }
-      const handlePrev = () => {
-        emit('change-step', 0)
-      }
-
-      return {
-        ...toRefs(state),
-        handleSubmit,
-        handlePrev,
-      }
-    },
   })
+  const emit = defineEmits(['change-step'])
+
+  const handlePrev = () => {
+    emit('change-step', 0)
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -97,7 +58,8 @@
   .pay-bottom {
     padding: var(--el-padding);
     margin-top: var(--el-margin);
-    background: #f5f7f8;
+    background-color: var(--el-color-primary-light-9);
+    border: 1px solid var(--el-color-primary);
     border: 1px dashed var(--el-border-color);
     border-radius: var(--el-border-radius-base);
   }

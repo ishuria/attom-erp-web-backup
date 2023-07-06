@@ -28,51 +28,43 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Step1',
-    emits: ['change-step'],
-    setup(props, { emit }) {
-      const state = reactive({
-        formRef: null,
-        form: {
-          payAccount: '****************',
-          gatheringAccount: '****************',
-          gatheringName: '***',
-          price: '100',
-        },
-        rules: {
-          payAccount: [
-            { required: true, message: '请选择付款账户', trigger: 'blur' },
-          ],
-          gatheringAccount: [
-            { required: true, message: '请输入收款账户', trigger: 'blur' },
-            { required: true, message: '账户名应为邮箱格式', trigger: 'blur' },
-          ],
-          gatheringName: [
-            { required: true, message: '请输入收款人姓名', trigger: 'blur' },
-          ],
-          price: [
-            { required: true, message: '请输入转账金额', trigger: 'blur' },
-            { pattern: /^(\d+)((?:\.\d+)?)$/, message: '请输入合法金额数字' },
-          ],
-        },
-      })
-
-      const handleSubmit = () => {
-        state['formRef'].validate((valid) => {
-          if (valid) {
-            emit('change-step', 1, state.form)
-          }
-        })
-      }
-
-      return {
-        ...toRefs(state),
-        handleSubmit,
-      }
-    },
   })
+  const emit = defineEmits(['change-step'])
+
+  const formRef: Ref<any> = ref(null)
+  const form: any = reactive({
+    payAccount: '****************',
+    gatheringAccount: '****************',
+    gatheringName: '***',
+    price: '100',
+  })
+  const rules: any = reactive({
+    payAccount: [
+      { required: true, message: '请选择付款账户', trigger: 'blur' },
+    ],
+    gatheringAccount: [
+      { required: true, message: '请输入收款账户', trigger: 'blur' },
+      { required: true, message: '账户名应为邮箱格式', trigger: 'blur' },
+    ],
+    gatheringName: [
+      { required: true, message: '请输入收款人姓名', trigger: 'blur' },
+    ],
+    price: [
+      { required: true, message: '请输入转账金额', trigger: 'blur' },
+      { pattern: /^(\d+)((?:\.\d+)?)$/, message: '请输入合法金额数字' },
+    ],
+  })
+
+  const handleSubmit = () => {
+    formRef.value.validate((valid: any) => {
+      if (valid) {
+        emit('change-step', 1, form)
+      }
+    })
+  }
 </script>
 
 <style lang="scss" scoped>

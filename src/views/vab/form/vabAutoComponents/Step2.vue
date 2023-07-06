@@ -26,56 +26,45 @@
   </div>
 </template>
 
-<script>
-  export default defineComponent({
+<script lang="ts" setup>
+  defineOptions({
     name: 'Step2',
-    props: {
-      infoData: {
-        type: Object,
-        default: () => {
-          return {}
-        },
+  })
+  defineProps({
+    infoData: {
+      type: Object,
+      default: () => {
+        return {}
       },
     },
-    emits: ['change-step'],
-    setup(props, { emit }) {
-      const state = reactive({
-        formRef: null,
-        form: {
-          password: '123456',
-        },
-        rules: {
-          password: [
-            { required: true, message: '请输入支付密码', trigger: 'blur' },
-          ],
-        },
-        loading: false,
-      })
-
-      const handleSubmit = () => {
-        state['formRef'].validate((valid) => {
-          if (valid) {
-            state.loading = true
-            setTimeout(() => {
-              emit('change-step', 2)
-              state.loading = false
-            }, 2000)
-          } else {
-            state.loading = false
-          }
-        })
-      }
-      const handlePrev = () => {
-        emit('change-step', 0)
-      }
-
-      return {
-        ...toRefs(state),
-        handleSubmit,
-        handlePrev,
-      }
-    },
   })
+  const emit = defineEmits(['change-step'])
+
+  const formRef: Ref<any> = ref(null)
+  const form: any = reactive({
+    password: '123456',
+  })
+  const rules: any = reactive({
+    password: [{ required: true, message: '请输入支付密码', trigger: 'blur' }],
+  })
+  const loading: Ref<any> = ref(false)
+
+  const handleSubmit = () => {
+    formRef.value.validate((valid: any) => {
+      if (valid) {
+        loading.value = true
+        setTimeout(() => {
+          emit('change-step', 2)
+          loading.value = false
+        }, 2000)
+      } else {
+        loading.value = false
+      }
+    })
+  }
+  const handlePrev = () => {
+    emit('change-step', 0)
+  }
 </script>
 
 <style lang="scss" scoped>

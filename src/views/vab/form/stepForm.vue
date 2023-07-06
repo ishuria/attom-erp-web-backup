@@ -37,8 +37,8 @@
   const active: Ref<any> = ref(0)
   let form: any = reactive({})
 
-  const handleSetStep = (active: any, _form: any) => {
-    active.value = active
+  const handleSetStep = (_active: any, _form: any) => {
+    active.value = _active
     if (_form) form = Object.assign(form, _form)
   }
 </script>
@@ -64,7 +64,6 @@
 
             .el-step__icon.is-text {
               color: var(--el-color-primary);
-              background: var(--el-color-primary-light-9);
               border: 1px solid;
             }
 
