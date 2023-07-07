@@ -1,6 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogFormVisible"
+    draggable
     :title="title"
     width="500px"
     @close="close"

@@ -27,7 +27,7 @@
   <div class="qr-login-container">
     <el-button @click="dialogVisible = true">打开</el-button>
 
-    <el-dialog v-model="dialogVisible" title="扫码登录" width="350px">
+    <el-dialog v-model="dialogVisible" draggable title="扫码登录" width="350px">
       <div class="qr-box">
         <img class="qr-image" :src="QR" />
         <img class="scan-image" :src="scan" />

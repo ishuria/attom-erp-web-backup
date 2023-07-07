@@ -9,7 +9,7 @@
     <el-icon><Plus /></el-icon>
   </el-upload>
 
-  <el-dialog v-model="dialogVisible">
+  <el-dialog v-model="dialogVisible" draggable>
     <img alt="Preview Image" :src="dialogImageUrl" w-full />
   </el-dialog>
 </template>

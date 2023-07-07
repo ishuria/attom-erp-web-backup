@@ -3,6 +3,7 @@
     v-model="needRefresh"
     append-to-body
     class="vab-update"
+    draggable
     width="410px"
     @close="close"
   >
