@@ -582,6 +582,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'layout-2-line',
         },
       },
+      {
+        path: 'drag',
+        name: 'Drag',
+        component: () => import('/@/views/other/drag/index.vue'),
+        meta: {
+          title: '拖拽',
+          icon: 'drag-drop-line',
+        },
+      },
     ],
   },
   {

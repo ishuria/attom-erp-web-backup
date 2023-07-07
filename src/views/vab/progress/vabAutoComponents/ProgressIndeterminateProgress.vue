@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-  const format = (percentage) =>
+  const format = (percentage: any) =>
     percentage === 100 ? 'Full' : `${percentage}%`
 </script>
 <style scoped>
