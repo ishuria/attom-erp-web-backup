@@ -36,7 +36,9 @@
           <el-button>
             <el-checkbox v-model="border" label="边框" />
           </el-button>
-
+          <el-button @click="queryData">
+            <vab-icon icon="refresh-line" />
+          </el-button>
           <el-button @click="clickFullScreen">
             <vab-icon
               :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
