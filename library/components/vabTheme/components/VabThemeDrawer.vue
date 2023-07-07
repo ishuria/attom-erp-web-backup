@@ -130,13 +130,13 @@
         <el-form-item :label="translateTitle('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
             <el-radio-button label="default">
-              <template #default>translateTitle('默认')</template>
+              <template #default>{{ translateTitle('默认') }}</template>
             </el-radio-button>
             <el-radio-button label="plain">
-              <template #default>translateTitle('简洁')</template>
+              <template #default>{{ translateTitle('简洁') }}</template>
             </el-radio-button>
             <el-radio-button label="technology">
-              <template #default>translateTitle('科技')</template>
+              <template #default>{{ translateTitle('科技') }}</template>
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
