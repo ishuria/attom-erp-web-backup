@@ -102,7 +102,7 @@ declare module 'vue' {
     VabQueryFormRightPanel: typeof import('./../../components/VabQueryForm/components/VabQueryFormRightPanel.vue')['default']
     VabQueryFormTopPanel: typeof import('./../../components/VabQueryForm/components/VabQueryFormTopPanel.vue')['default']
     VabRefresh: typeof import('./../../components/VabRefresh/index.vue')['default']
-    VabRightTools: typeof import('./../../components/vabRightTools/index.vue')['default']
+    VabRightTools: typeof import('./../../components/VabRightTools/index.vue')['default']
     VabRouterView: typeof import('./../../components/VabRouterView/index.vue')['default']
     VabSearch: typeof import('./../../components/VabSearch/index.vue')['default']
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']
