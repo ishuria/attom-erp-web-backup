@@ -93,12 +93,7 @@
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" width="38" />
-      <el-table-column
-        align="center"
-        label="序号"
-        show-overflow-tooltip
-        width="55"
-      >
+      <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
           {{ $index + 1 }}
         </template>
@@ -110,7 +105,6 @@
         :label="item.label"
         :prop="item.prop"
         :sortable="item.sortable"
-        width="auto"
       >
         <template #default="{ row }">
           <span v-if="item.label === '评级'">
@@ -120,12 +114,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column
-        align="center"
-        label="操作"
-        show-overflow-tooltip
-        width="200"
-      >
+      <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">
             编辑

@@ -50,12 +50,7 @@
           @selection-change="setSelectRows"
         >
           <el-table-column type="selection" width="38" />
-          <el-table-column
-            align="center"
-            label="序号"
-            show-overflow-tooltip
-            width="55"
-          >
+          <el-table-column align="center" label="序号" width="55">
             <template #default="{ $index }">
               {{ $index + 1 }}
             </template>

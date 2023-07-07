@@ -63,12 +63,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="操作"
-        show-overflow-tooltip
-        width="200"
-      >
+      <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">
             编辑

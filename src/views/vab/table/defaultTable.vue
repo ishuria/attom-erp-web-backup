@@ -70,12 +70,7 @@
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" width="38" />
-      <el-table-column
-        align="center"
-        label="序号"
-        show-overflow-tooltip
-        width="55"
-      >
+      <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
           {{ $index + 1 }}
         </template>
@@ -141,13 +136,7 @@
         show-overflow-tooltip
         width="200"
       />
-      <el-table-column
-        align="center"
-        fixed="right"
-        label="操作"
-        show-overflow-tooltip
-        width="250"
-      >
+      <el-table-column align="center" fixed="right" label="操作" width="250">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleDetail(row)">
             详情
