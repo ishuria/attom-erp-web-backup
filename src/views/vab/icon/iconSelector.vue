@@ -1,11 +1,5 @@
 <template>
   <div class="icon-selector-container">
-    <el-alert
-      :closable="false"
-      show-icon
-      title="图标选择器演示"
-      type="success"
-    />
     <el-popover
       popper-class="icon-selector-popper"
       trigger="hover"

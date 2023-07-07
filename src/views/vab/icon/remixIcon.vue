@@ -1,35 +1,46 @@
 <template>
   <div class="remix-icon-container">
-    <el-row :gutter="20">
-      <el-col :span="24">
+    <vab-query-form>
+      <vab-query-form-left-panel>
         <el-form inline label-width="80px" @submit.prevent>
           <el-form-item label="图标名称">
             <el-input v-model="queryForm.title" />
           </el-form-item>
           <el-form-item label-width="0">
-            <el-button native-type="submit" type="primary" @click="queryData">
+            <el-button
+              :icon="Search"
+              native-type="submit"
+              type="primary"
+              @click="queryData"
+            >
               查询
             </el-button>
-
-            <el-form-item label="文字大小">
-              <el-input-number
-                v-model="queryForm.num"
-                :max="40"
-                :min="12"
-                style="width: 120px; margin-right: 10px"
-              />
-              px
-            </el-form-item>
-            <el-form-item :label-width="0">
-              <el-checkbox
-                v-model="queryForm.colorful"
-                label="多彩图标"
-                @change="queryData"
-              />
-            </el-form-item>
           </el-form-item>
         </el-form>
-      </el-col>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline label-width="80px">
+          <el-form-item label="文字大小">
+            <el-input-number
+              v-model="queryForm.num"
+              :max="40"
+              :min="12"
+              style="width: 120px; margin: 0 10px 0 0"
+            />
+            px
+          </el-form-item>
+          <el-form-item>
+            <el-checkbox
+              v-model="queryForm.colorful"
+              label="多彩图标"
+              style="width: 85px; margin: 0 0 0 10px"
+              @change="queryData"
+            />
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+    <el-row :gutter="20">
       <el-col v-if="emptyShow" :span="24">
         <el-empty class="vab-data-empty" description="暂无数据" />
       </el-col>
@@ -75,6 +86,8 @@
   import _ from 'lodash'
   import { getIconList } from '/@/api/icon'
   import clip from '/@/utils/clipboard'
+  import { Search } from '@element-plus/icons-vue'
+
   defineOptions({
     name: 'RemixIcon',
   })
@@ -168,7 +181,7 @@
           width: 100%;
           padding: 4px 0;
           font-size: var(--el-font-size-small);
-          color: rgb(255, 255, 255);
+          color: var(--el-color-white);
           text-align: center;
           content: '点击复制';
           background-color: var(--el-color-primary);

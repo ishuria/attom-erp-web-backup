@@ -1,12 +1,5 @@
 <template>
   <div class="custom-svg-container">
-    <!-- 具体如何自定义查看文档，文档搜索vab-icon可看到用法 -->
-    <el-alert
-      :closable="false"
-      show-icon
-      title="自定义图标演示"
-      type="success"
-    />
     <el-row :gutter="15">
       <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="6">
         <vab-card shadow="hover">
