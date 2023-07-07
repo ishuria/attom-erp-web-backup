@@ -157,7 +157,7 @@
   const tableSortRef: Ref<any> = ref(null)
   const editRef: Ref<any> = ref(null)
   const border: Ref<any> = ref(true)
-  const stripe: Ref<any> = ref(true)
+  const stripe: Ref<any> = ref(false)
   const lineHeight: Ref<any> = ref('default')
   const isFullscreen: Ref<any> = ref(false)
   const checkList: Ref<any> = ref(['标题', '作者', '评级', '点击量', '时间'])
