@@ -3,11 +3,13 @@
   import { translateTitle } from '/@/utils/i18n'
   import { getList } from '/@/api/notice'
 
-  const $baseMessage = inject<any>('$baseMessage')
+  defineOptions({
+    name: 'VabNotice',
+  })
 
+  const $baseMessage = inject<any>('$baseMessage')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-
   const activeName = ref('notice')
   const notices: Ref = ref('')
   const badge = ref(undefined)

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-  import { onBeforeRouteLeave } from 'vue-router'
+  defineOptions({
+    name: 'VabCard',
+  })
 
   defineProps({
     header: {

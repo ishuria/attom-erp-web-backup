@@ -3,8 +3,11 @@
   import { translateTitle } from '/@/utils/i18n'
   import { handleMatched } from '/@/utils/routes'
 
-  const route = useRoute()
+  defineOptions({
+    name: 'VabBreadcrumb',
+  })
 
+  const route = useRoute()
   const routesStore = useRoutesStore()
   const { getRoutes: routes } = storeToRefs(routesStore)
 

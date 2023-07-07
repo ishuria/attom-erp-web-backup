@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import { isExternal } from '/@/utils/validate'
 
+  defineOptions({
+    name: 'VabLink',
+  })
+
   const props = defineProps({
     to: {
       type: String,

@@ -4,6 +4,10 @@
   import { isExternal } from '/@/utils/validate'
   import { openFirstMenu } from '/@/config'
 
+  defineOptions({
+    name: 'VabNav',
+  })
+
   defineProps({
     layout: {
       type: String,
@@ -12,7 +16,6 @@
   })
 
   const router = useRouter()
-
   const routesStore = useRoutesStore()
   const {
     getTab: tab,

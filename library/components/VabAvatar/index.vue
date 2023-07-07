@@ -3,13 +3,15 @@
   import { toLoginRoute } from '/@/utils/routes'
   import { translateTitle } from '/@/utils/i18n'
 
+  defineOptions({
+    name: 'VabAvatar',
+  })
+
   const route = useRoute()
   const router = useRouter()
-
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
   const { logout } = userStore
-
   const active = ref(false)
 
   const handleVisibleChange = (value: boolean) => {

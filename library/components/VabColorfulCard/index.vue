@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+  defineOptions({
+    name: 'VabColorfulCard',
+  })
+
   defineProps({
     shadow: {
       type: String,

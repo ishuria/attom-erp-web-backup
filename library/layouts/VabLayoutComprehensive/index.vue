@@ -1,5 +1,9 @@
 <!--综合布局 -->
 <script lang="ts" setup>
+  defineOptions({
+    name: 'VabLayoutComprehensive',
+  })
+
   defineProps({
     collapse: {
       type: Boolean,

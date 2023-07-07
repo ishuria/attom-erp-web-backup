@@ -2,6 +2,7 @@
   defineOptions({
     name: 'VabStatistics',
   })
+
   // 网站访问量统计 如不需要请自行注释
   onMounted(() => {
     if (

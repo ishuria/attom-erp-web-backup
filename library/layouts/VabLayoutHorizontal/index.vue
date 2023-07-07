@@ -1,5 +1,9 @@
 <!-- 横向布局 -->
 <script lang="ts" setup>
+  defineOptions({
+    name: 'VabLayoutHorizontal',
+  })
+
   defineProps({
     collapse: {
       type: Boolean,

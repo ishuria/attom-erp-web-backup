@@ -4,6 +4,10 @@
   import { translateTitle } from '/@/utils/i18n'
   import { isHashRouterMode } from '/@/config'
 
+  defineOptions({
+    name: 'VabMenuItem',
+  })
+
   const props = defineProps({
     itemOrMenu: {
       type: Object,
@@ -15,9 +19,7 @@
 
   const route = useRoute()
   const router = useRouter()
-
   const $pub: any = inject('$pub')
-
   const settingsStore = useSettingsStore()
   const { device } = storeToRefs(settingsStore)
   const { foldSideBar } = settingsStore

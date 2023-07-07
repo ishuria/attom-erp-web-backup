@@ -2,6 +2,10 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
+  defineOptions({
+    name: 'VabLayoutColumn',
+  })
+
   defineProps({
     collapse: {
       type: Boolean,

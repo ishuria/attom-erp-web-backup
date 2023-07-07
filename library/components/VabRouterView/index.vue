@@ -6,23 +6,24 @@
   import { keepAliveMaxNum } from '/@/config'
   import VabProgress from 'nprogress'
 
-  const route = useRoute()
+  defineOptions({
+    name: 'VabRouterView',
+  })
 
+  const route = useRoute()
   const $sub = inject<any>('$sub')
   const $unsub = inject<any>('$unsub')
-
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const tabsStore = useTabsStore()
   const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabsStore)
-
   const componentRef = ref()
   const routerKey = ref()
   const keepAliveNameList = ref()
-
   const siteData = reactive({
     description: '',
   })
+
   useHead({
     meta: [
       {

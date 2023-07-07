@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-  defineOptions({
-    name: 'VabSearch',
-  })
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { Search } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'VabSearch',
+  })
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)

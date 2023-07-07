@@ -3,8 +3,11 @@
   import getPageTitle from '/@/utils/pageTitle'
   import i18n from '/@/i18n'
 
-  const route = useRoute()
+  defineOptions({
+    name: 'VabLanguage',
+  })
 
+  const route = useRoute()
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const { changeLanguage } = settingsStore

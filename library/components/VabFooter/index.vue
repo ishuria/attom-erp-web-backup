@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
+  defineOptions({
+    name: 'VabFooter',
+  })
+
   const fullYear = new Date().getFullYear()
   const settingsStore = useSettingsStore()
   const { title } = storeToRefs(settingsStore)

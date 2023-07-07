@@ -2,6 +2,7 @@
   defineOptions({
     name: 'VabRightTools',
   })
+
   defineProps({
     isHorizontal: {
       type: Boolean,

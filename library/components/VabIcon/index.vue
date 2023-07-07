@@ -1,21 +1,3 @@
-<template>
-  <img v-if="_isExternal" class="img-icon" :src="icon" />
-  <svg v-else-if="isCustomSvg" aria-hidden="true" :class="svgClass">
-    <use :xlink:href="'#vab-icon-' + icon" />
-  </svg>
-  <!-- 内置svg雪碧图较大，对性能要求苛刻的用户请勿使用isDefaultSvg属性 -->
-  <svg v-else-if="isDefaultSvg" class="vab-icon">
-    <use :xlink:href="remixIconPath + '#ri-' + icon" />
-  </svg>
-  <i
-    v-else
-    aria-hidden="true"
-    :class="{
-      ['ri-' + icon]: true,
-    }"
-  />
-</template>
-
 <script lang="ts" setup>
   import 'remixicon/fonts/remixicon.css'
   import { isExternal } from '/@/utils/validate'
@@ -54,6 +36,24 @@
 
   const _isExternal = isExternal(props.icon)
 </script>
+
+<template>
+  <img v-if="_isExternal" class="img-icon" :src="icon" />
+  <svg v-else-if="isCustomSvg" aria-hidden="true" :class="svgClass">
+    <use :xlink:href="'#vab-icon-' + icon" />
+  </svg>
+  <!-- 内置svg雪碧图较大，对性能要求苛刻的用户请勿使用isDefaultSvg属性 -->
+  <svg v-else-if="isDefaultSvg" class="vab-icon">
+    <use :xlink:href="remixIconPath + '#ri-' + icon" />
+  </svg>
+  <i
+    v-else
+    aria-hidden="true"
+    :class="{
+      ['ri-' + icon]: true,
+    }"
+  />
+</template>
 
 <style lang="scss" scoped>
   .img-icon {

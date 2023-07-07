@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
+  defineOptions({
+    name: 'VabFold',
+  })
+
   defineProps({
     unfold: {
       type: String,

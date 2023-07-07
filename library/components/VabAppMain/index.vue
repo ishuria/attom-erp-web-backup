@@ -2,8 +2,11 @@
   import { useRoutesStore } from '/@/store/modules/routes'
   import { handleActivePath } from '/@/utils/routes'
 
-  const route = useRoute()
+  defineOptions({
+    name: 'VabAppMain',
+  })
 
+  const route = useRoute()
   const routesStore = useRoutesStore()
   const { tab, activeMenu }: any = storeToRefs(routesStore)
 

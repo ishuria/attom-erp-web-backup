@@ -7,6 +7,10 @@
   import { RouteLocationNormalizedLoaded } from 'vue-router'
   import { VabRoute } from '~/src/router/types'
 
+  defineOptions({
+    name: 'VabTabs',
+  })
+
   defineProps({
     layout: {
       type: String,
@@ -16,7 +20,6 @@
 
   const route = useRoute()
   const router = useRouter()
-
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const routesStore = useRoutesStore()
@@ -31,10 +34,8 @@
     delRightVisitedRoutes,
     delAllVisitedRoutes,
   } = tabsStore
-
   const tabActive = ref('')
   const active = ref(false)
-
   const hoverRoute = ref()
   const visible = ref(false)
   const top = ref(0)

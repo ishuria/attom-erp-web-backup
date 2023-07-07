@@ -2,6 +2,11 @@
   import { Sunny, Moon } from '@element-plus/icons-vue'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useDark, useToggle } from '@vueuse/core'
+
+  defineOptions({
+    name: 'VabDark',
+  })
+
   const $sub = inject<any>('$sub')
   const $unsub = inject<any>('$unsub')
   const settingsStore = useSettingsStore()

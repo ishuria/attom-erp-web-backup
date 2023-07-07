@@ -11,9 +11,12 @@
     openFirstMenu,
   } from '/@/config'
 
+  defineOptions({
+    name: 'VabColumnBar',
+  })
+
   const route: VabRoute = useRoute()
   const router = useRouter()
-
   const settingsStore = useSettingsStore()
   const { theme, collapse } = storeToRefs(settingsStore)
   const { foldSideBar, openSideBar } = settingsStore

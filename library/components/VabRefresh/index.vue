@@ -1,11 +1,13 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const $pub: any = inject('$pub')
+  defineOptions({
+    name: 'VabRefresh',
+  })
 
+  const $pub: any = inject('$pub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-
   const className = ref('')
 
   const refreshRoute = async () => {

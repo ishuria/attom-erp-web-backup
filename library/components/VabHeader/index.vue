@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
 
+  defineOptions({
+    name: 'VabHeader',
+  })
+
   defineProps({
     layout: {
       type: String,

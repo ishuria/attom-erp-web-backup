@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import { translateTitle } from '/@/utils/i18n'
 
+  defineOptions({
+    name: 'VabSubMenu',
+  })
+
   defineProps({
     itemOrMenu: {
       type: Object,

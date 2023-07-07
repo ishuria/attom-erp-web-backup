@@ -3,6 +3,10 @@
   import { useSettingsStore } from '/@/store/modules/settings'
   import { defaultOpeneds, uniqueOpened } from '/@/config'
 
+  defineOptions({
+    name: 'VabSideBar',
+  })
+
   const props = defineProps({
     layout: {
       type: String,
@@ -131,15 +135,13 @@
       .el-menu-item,
       .el-sub-menu__title {
         height: var(--el-menu-item-height);
+        margin: 0 10px 5px 10px;
         overflow: hidden;
         line-height: var(--el-menu-item-height);
         text-overflow: ellipsis;
         white-space: nowrap;
         vertical-align: middle;
-
-        i {
-          color: inherit;
-        }
+        border-radius: 5px;
       }
 
       .el-menu-item {

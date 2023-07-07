@@ -2,6 +2,10 @@
   import { pwa } from '/@/config'
   import i18n from '/@/i18n'
 
+  defineOptions({
+    name: 'VabApp',
+  })
+
   const locale = toRef(i18n.global, 'locale')
   const messages = toRef(i18n.global, 'messages')
 </script>
