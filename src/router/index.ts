@@ -591,6 +591,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'drag-drop-line',
         },
       },
+      {
+        path: 'transition',
+        name: 'Transition',
+        component: () => import('/@/views/other/transition/index.vue'),
+        meta: {
+          title: '过渡动画',
+          icon: 'hand-heart-line',
+        },
+      },
     ],
   },
   {

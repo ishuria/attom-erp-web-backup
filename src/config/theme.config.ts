@@ -40,6 +40,6 @@ export const themeConfig: ThemeType = {
   showDark: true,
   //否默认收起左侧菜单
   foldSidebar: false,
-  //是否开启页面动画  value为空：无动画、fade：淡入、fade-up：上滑淡入、fade-down：下滑淡入、fade-left：左滑淡入、fade-right：右滑淡入
+  //是否开启页面动画  value为空：无动画、el-fade-in-linear、el-fade-in、el-zoom-in-center、el-zoom-in-top、el-zoom-in-bottom。
   pageTransition: '',
 }

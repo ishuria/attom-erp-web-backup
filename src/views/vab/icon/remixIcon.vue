@@ -1,7 +1,7 @@
 <template>
   <div class="remix-icon-container">
-    <vab-query-form>
-      <vab-query-form-left-panel>
+    <el-row :gutter="20">
+      <el-col :span="24">
         <el-form inline label-width="80px" @submit.prevent>
           <el-form-item label="图标名称">
             <el-input v-model="queryForm.title" />
@@ -16,31 +16,26 @@
               查询
             </el-button>
           </el-form-item>
-        </el-form>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-form inline label-width="80px">
+          <el-form-item :label-width="0">
+            <el-button>
+              <el-checkbox
+                v-model="queryForm.colorful"
+                label="多彩图标"
+                @change="queryData"
+              />
+            </el-button>
+          </el-form-item>
           <el-form-item label="文字大小">
             <el-input-number
               v-model="queryForm.num"
               :max="40"
               :min="12"
-              style="width: 120px; margin: 0 10px 0 0"
+              style="width: 120px; margin-right: 10px"
             />
             px
           </el-form-item>
-          <el-form-item>
-            <el-checkbox
-              v-model="queryForm.colorful"
-              label="多彩图标"
-              style="width: 85px; margin: 0 0 0 10px"
-              @change="queryData"
-            />
-          </el-form-item>
         </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-    <el-row :gutter="20">
+      </el-col>
       <el-col v-if="emptyShow" :span="24">
         <el-empty class="vab-data-empty" description="暂无数据" />
       </el-col>

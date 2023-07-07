@@ -200,7 +200,7 @@
             .vab-column-grid {
               width: $base-left-menu-width-min - 10 !important;
               height: $base-left-menu-width-min - 10 !important;
-              border-radius: 5px;
+              border-radius: var(--el-border-radius-base);
 
               &:hover {
                 background: var(--el-color-primary);
@@ -228,7 +228,7 @@
         .el-menu-item {
           min-width: 180px;
           margin-bottom: 5px;
-          border-radius: 5px;
+          border-radius: var(--el-border-radius-base);
         }
       }
     }
@@ -271,7 +271,7 @@
         .el-menu-item {
           min-width: 180px;
           margin-bottom: 5px;
-          border-radius: 5px;
+          border-radius: var(--el-border-radius-base);
         }
       }
     }
@@ -432,7 +432,7 @@
     line-height: 34px;
     text-align: center;
     background: var(--el-color-primary-light-5);
-    border-radius: 5px;
+    border-radius: var(--el-border-radius-base);
 
     :deep() {
       .fold-unfold,

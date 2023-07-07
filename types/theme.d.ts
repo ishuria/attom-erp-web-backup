@@ -78,25 +78,25 @@ declare type pageTransitionStyle =
    */
   | ''
   /**
-   * 淡入
+   * el-fade-in-linear
    */
-  | 'fade'
+  | 'el-fade-in-linear'
   /**
-   * 上滑淡入
+   * el-fade-in
    */
-  | 'fade-up'
+  | 'el-fade-in'
   /**
-   * 下滑淡入
+   * el-zoom-in-center
    */
-  | 'fade-down'
+  | 'el-zoom-in-center'
   /**
-   * 左滑淡入
+   * el-zoom-in-top
    */
-  | 'fade-left'
+  | 'el-zoom-in-top'
   /**
-   * 右滑淡入
+   * el-zoom-in-bottom
    */
-  | 'fade-right'
+  | 'el-zoom-in-bottom'
 
 declare interface ThemeType {
   // 布局名称

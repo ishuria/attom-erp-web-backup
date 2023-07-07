@@ -141,7 +141,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         vertical-align: middle;
-        border-radius: 5px;
+        border-radius: var(--el-border-radius-base);
       }
 
       .el-menu-item {

@@ -229,7 +229,7 @@
           word-break: break-all;
           vertical-align: top;
           background-color: $background-color_1;
-          border-radius: 5px;
+          border-radius: var(--el-border-radius-base);
 
           &:after {
             position: absolute;
