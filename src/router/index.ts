@@ -194,6 +194,14 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             },
           },
           {
+            path: 'inlineEditTable',
+            name: 'InlineEditTable',
+            component: () => import('/@/views/vab/table/inlineEditTable.vue'),
+            meta: {
+              title: '行内编辑表格',
+            },
+          },
+          {
             path: 'defaultTableDetail',
             name: 'ComprehensiveTableDetail',
             component: () =>
