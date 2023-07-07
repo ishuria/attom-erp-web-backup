@@ -164,6 +164,7 @@ export default {
     错误页: 'Error',
     门户: 'Gateway',
     随机换肤: 'Random',
+    面板分割: 'Pane split',
     页面动画: 'Page transition',
     首页: 'Home',
     验证码: 'Verification code',

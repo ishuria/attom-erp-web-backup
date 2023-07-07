@@ -556,6 +556,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'water-percent-line',
         },
       },
+      {
+        path: 'paneSplit',
+        name: 'PaneSplit',
+        component: () => import('/@/views/other/paneSplit/index.vue'),
+        meta: {
+          title: '面板分割',
+          guard: ['Admin'],
+          icon: 'layout-2-line',
+        },
+      },
     ],
   },
   {
