@@ -206,7 +206,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             component: () => import('/@/views/vab/table/customTable.vue'),
             meta: {
               title: '自定义表格',
-              badge: 'New',
+              badge: 'Hot',
             },
           },
           {
