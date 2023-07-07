@@ -25,7 +25,7 @@
     const rn = ratio
       ?.split('/')
       ?.map(Number)
-      ?.filter((val) => !isNaN(val))
+      ?.filter((value) => !isNaN(value))
 
     if (!rn || rn.length !== 2) {
       return [1, 1]

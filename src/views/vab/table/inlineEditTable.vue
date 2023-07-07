@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-edit-table-container">
+  <div class="inline-edit-table-container table-auto-height">
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -9,6 +9,7 @@
           <el-form-item>
             <el-button
               :icon="Search"
+              :loading="listLoading"
               native-type="submit"
               type="primary"
               @click="queryData"
@@ -59,18 +60,29 @@
         width="160"
       >
         <template #default="{ row }">
-          <el-button v-if="!row.edit" type="text" @click="row.edit = !row.edit">
+          <el-button
+            v-if="!row.edit"
+            text
+            type="primary"
+            @click="row.edit = !row.edit"
+          >
             编辑
           </el-button>
           <el-button
             v-if="row.edit"
             style="margin-left: 10px"
-            type="text"
+            text
+            type="primary"
             @click="confirmEdit(row)"
           >
             保存
           </el-button>
-          <el-button v-if="row.edit" type="text" @click="cancelEdit(row)">
+          <el-button
+            v-if="row.edit"
+            text
+            type="primary"
+            @click="cancelEdit(row)"
+          >
             取消
           </el-button>
         </template>
@@ -120,12 +132,12 @@
     total.value = data.total
     listLoading.value = false
   }
-  const handleSizeChange = (val: any) => {
-    queryForm.pageSize = val
+  const handleSizeChange = (value: any) => {
+    queryForm.pageSize = value
     fetchData()
   }
-  const handleCurrentChange = (val: any) => {
-    queryForm.pageNo = val
+  const handleCurrentChange = (value: any) => {
+    queryForm.pageNo = value
     fetchData()
   }
   const queryData = () => {

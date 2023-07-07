@@ -73,6 +73,7 @@
                 <el-form-item>
                   <el-button
                     :icon="Search"
+                    :loading="listLoading"
                     native-type="submit"
                     type="primary"
                     @click="queryData"

@@ -19,7 +19,12 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" @click="queryData">
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              type="primary"
+              @click="queryData"
+            >
               查询
             </el-button>
           </el-form-item>
