@@ -266,7 +266,14 @@
           <el-switch v-model="theme.showFullScreen" />
         </el-form-item>
         <el-form-item :label="translateTitle('页面动画')">
-          <el-switch v-model="theme.showPageTransition" />
+          <el-select v-model="theme.pageTransition">
+            <el-option key="" label="无动画" value="" />
+            <el-option key="fade" label="淡入" value="fade" />
+            <el-option key="fade-up" label="上滑淡入" value="fade-up" />
+            <el-option key="fade-down" label="下滑淡入" value="fade-down" />
+            <el-option key="fade-left" label="左滑淡入" value="fade-left" />
+            <el-option key="fade-right" label="右滑淡入" value="fade-right" />
+          </el-select>
         </el-form-item>
       </el-form>
     </el-scrollbar>

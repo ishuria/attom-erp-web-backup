@@ -16,7 +16,7 @@ import {
   showThemeSetting,
   showLanguage,
   showNotice,
-  showPageTransition,
+  pageTransition,
   showProgressBar,
   showRefresh,
   showSearch,
@@ -48,7 +48,7 @@ const defaultTheme: ThemeType = {
   showFullScreen,
   showThemeSetting,
   foldSidebar,
-  showPageTransition,
+  pageTransition,
 }
 const getLocalStorage = (key: string) => {
   const value: any = localStorage.getItem(key)

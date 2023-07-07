@@ -72,6 +72,32 @@ declare type TabsBarStyle =
    */
   | 'smooth'
 
+declare type pageTransitionStyle =
+  /**
+   * 无动画
+   */
+  | ''
+  /**
+   * 淡入
+   */
+  | 'fade'
+  /**
+   * 上滑淡入
+   */
+  | 'fade-up'
+  /**
+   * 下滑淡入
+   */
+  | 'fade-down'
+  /**
+   * 左滑淡入
+   */
+  | 'fade-left'
+  /**
+   * 右滑淡入
+   */
+  | 'fade-right'
+
 declare interface ThemeType {
   // 布局名称
   layout: LayoutName
@@ -112,5 +138,5 @@ declare interface ThemeType {
   // 是否开启暗黑组件
   showDark: boolean
   // 是否开启页面动画
-  showPageTransition: boolean
+  pageTransition: pageTransitionStyle
 }

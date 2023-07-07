@@ -69,7 +69,7 @@ export const {
   showThemeSetting,
   showDark,
   foldSidebar,
-  showPageTransition,
+  pageTransition,
   contentType,
   timeout,
   successCode,
