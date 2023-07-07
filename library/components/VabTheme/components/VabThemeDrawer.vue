@@ -81,7 +81,7 @@
     append-to-body
     class="vab-drawer"
     direction="rtl"
-    size="286px"
+    size="288px"
     :title="translateTitle('主题配置')"
   >
     <el-scrollbar height="85vh">

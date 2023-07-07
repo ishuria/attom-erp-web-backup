@@ -67,7 +67,8 @@ html > .vab-theme-plain {
     }
   }
 
-  .logo-container-column {
+  .logo-container-column,
+  .logo-container-comprehensive {
     @include container;
 
     .title {
