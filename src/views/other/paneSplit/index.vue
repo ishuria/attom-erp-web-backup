@@ -6,7 +6,7 @@
 
 <template>
   <div class="pane-split-container no-background-container">
-    <vab-pane-split>
+    <vab-pane-split ratio="2/3">
       <template #one>
         <div class="pane-split-left">A</div>
       </template>

@@ -81,7 +81,6 @@ declare module 'vue' {
     VabColumnBar: typeof import('./../../components/VabColumnBar/index.vue')['default']
     VabCount: typeof import('./../../../src/plugins/VabCount/index.vue')['default']
     VabDark: typeof import('./../../components/VabDark/index.vue')['default']
-    VabDraggablePanel: typeof import('./../../../src/plugins/VabDraggablePanel/index.vue')['default']
     VabErrorLog: typeof import('./../../components/VabErrorLog/index.vue')['default']
     VabFold: typeof import('./../../components/VabFold/index.vue')['default']
     VabFooter: typeof import('./../../components/VabFooter/index.vue')['default']
