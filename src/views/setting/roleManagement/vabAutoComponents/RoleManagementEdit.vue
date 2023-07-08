@@ -120,7 +120,7 @@
     height: 250px;
     padding: var(--el-padding);
     overflow-y: auto;
-    border: 1px solid #dcdfe6;
+    border: 1px solid var(--el-border-color);
     border-radius: var(--el-border-radius-base);
   }
 </style>

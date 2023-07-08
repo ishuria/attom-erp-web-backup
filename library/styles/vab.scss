@@ -464,6 +464,17 @@ html {
         margin: 5vw;
       }
     }
+
+    /* .el-dialog */
+    .el-dialog {
+      border-radius: var(--el-border-radius-base);
+      &__body {
+        .el-form:not(.el-form--inline) {
+          margin-right: 30px;
+        }
+      }
+    }
+
     /* el-card卡片 */
     .el-card {
       margin-bottom: var(--el-margin);
