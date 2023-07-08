@@ -290,7 +290,7 @@
   const handleDetail = (row: any) => {
     if (row.id)
       router.push({
-        path: '/vab/table/detail',
+        path: '/vab/table/defaultTableDetail',
         query: {
           ...row,
           timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
