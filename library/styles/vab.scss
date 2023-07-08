@@ -585,6 +585,10 @@ html {
       height: $base-keep-alive-height;
       .el-table {
         flex: 1;
+      }
+      .vab-auto-box {
+        flex: 1;
+        padding: var(--el-padding);
         overflow-y: auto;
       }
     }

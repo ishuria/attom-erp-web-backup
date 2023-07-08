@@ -28,7 +28,7 @@
       class="vab-data-empty el-table"
       description="暂无数据"
     />
-    <ul v-loading="listLoading" class="el-table">
+    <ul v-loading="listLoading" class="vab-auto-box">
       <li v-for="(item, index) in list" :key="index" class="list-item">
         <div class="list-item-meta">
           <div class="list-item-meta-avatar">

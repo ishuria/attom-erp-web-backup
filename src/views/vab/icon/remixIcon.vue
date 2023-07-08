@@ -38,7 +38,7 @@
       </el-col>
     </el-row>
     <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
-    <div class="el-table">
+    <div class="vab-auto-box">
       <el-row :gutter="20">
         <el-col
           v-for="(item, index) in queryIcon"
