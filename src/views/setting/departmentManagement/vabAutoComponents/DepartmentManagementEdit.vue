@@ -7,25 +7,11 @@
     @close="close"
   >
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
-      <el-form-item label="父节点" prop="parentName">
-        <el-select v-model="form.parentId" placeholder="请选择父节点">
-          <el-option
-            :label="form.parentName"
-            style="height: auto; padding: 0"
-            :value="form.parentId"
-          >
-            <el-tree
-              ref="treeRef"
-              :data="treeData"
-              default-expand-all
-              :props="defaultProps"
-              @node-click="handleNodeClick"
-            />
-          </el-option>
-        </el-select>
+      <el-form-item label="父节点" prop="parentValue">
+        <el-tree-select v-model="form.parentValue" :data="treeData" />
       </el-form-item>
-      <el-form-item label="名称" prop="name">
-        <el-input v-model="form.name" />
+      <el-form-item label="名称" prop="label">
+        <el-input v-model="form.label" />
       </el-form-item>
       <el-form-item label="排序" prop="order">
         <el-input v-model="form.order" />
@@ -47,20 +33,14 @@
 
   const emit = defineEmits(['fetch-data'])
   const $baseMessage = inject<any>('$baseMessage')
-
   const formRef = ref<any>(null)
   const treeData = ref<any>([])
-  const defaultProps = reactive<any>({
-    children: 'children',
-    label: 'name',
-  })
   let form = ref<any>({
-    parentName: '',
-    parentId: '',
+    parentValue: '',
   })
   const rules = reactive<any>({
-    parentName: [{ required: true, trigger: 'blur', message: '请选择父节点' }],
-    name: [{ required: true, trigger: 'blur', message: '请输入名称' }],
+    parentValue: [{ required: true, trigger: 'blur', message: '请选择父节点' }],
+    label: [{ required: true, trigger: 'blur', message: '请输入名称' }],
     order: [{ required: true, trigger: 'blur', message: '请输入排序' }],
   })
   const title = ref<string>('')
@@ -70,10 +50,7 @@
     const { data } = await getList()
     treeData.value = data.list
   }
-  const handleNodeClick = (node: { name: any; id: any }) => {
-    form.parentName = node.name
-    form.parentId = node.id
-  }
+
   const showEdit = (row: any) => {
     if (!row) {
       title.value = '添加'
@@ -93,6 +70,7 @@
     formRef.value.resetFields()
     dialogFormVisible.value = false
   }
+
   const save = () => {
     formRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -108,3 +86,11 @@
     fetchData()
   })
 </script>
+
+<style lang="scss" scoped>
+  :deep() {
+    .el-select {
+      width: 100%;
+    }
+  }
+</style>

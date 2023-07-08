@@ -9,7 +9,7 @@
             class="tree-button"
             :icon="Plus"
             type="primary"
-            @click="handleEdit(null)"
+            @click="handleAdd"
           >
             添加字典分类
           </el-button>
@@ -94,9 +94,14 @@
   const isRoot = ref<boolean>(true)
   const parentKey = ref<string>('')
 
+  const handleAdd = () => {
+    editRef.value.showEdit()
+  }
+
   const handleEdit = (row: any) => {
     editRef.value.showEdit(row)
   }
+
   const handleDelete = (row: { id: any }) => {
     if (row.id) {
       $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -106,6 +111,7 @@
       })
     }
   }
+
   const fetchData = async (data = { key: 'root' }) => {
     data.key !== 'root' ? (isRoot.value = false) : (isRoot.value = true)
     parentKey.value = data.key

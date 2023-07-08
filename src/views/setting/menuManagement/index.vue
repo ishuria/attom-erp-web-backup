@@ -18,7 +18,7 @@
         <vab-card shadow="never">
           <vab-query-form>
             <vab-query-form-top-panel :span="12">
-              <el-button :icon="Plus" type="primary" @click="handleEdit(null)">
+              <el-button :icon="Plus" type="primary" @click="handleAdd">
                 添加
               </el-button>
             </vab-query-form-top-panel>
@@ -109,7 +109,6 @@
 
   const $baseConfirm: any = inject('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
-
   const editRef = ref<any>(null)
   const treeList = ref<any>([])
   const defaultProps = reactive<any>({
@@ -119,13 +118,14 @@
   const list = ref<any>([])
   const listLoading = ref<boolean>(true)
 
-  const handleEdit = (row: any = {}) => {
-    if (row && row.path) {
-      editRef.value.showEdit(row)
-    } else {
-      editRef.value.showEdit()
-    }
+  const handleAdd = () => {
+    editRef.value.showEdit()
   }
+
+  const handleEdit = (row: any = {}) => {
+    editRef.value.showEdit(row)
+  }
+
   const handleDelete = (row: any = {}) => {
     if (row.path) {
       $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -135,12 +135,14 @@
       })
     }
   }
+
   const fetchData = async (role: any = {}) => {
     listLoading.value = true
     const { data } = await getList({ role })
     list.value = data.list
     listLoading.value = false
   }
+
   const handleNodeClick = ({ role }: any) => {
     fetchData(role)
   }

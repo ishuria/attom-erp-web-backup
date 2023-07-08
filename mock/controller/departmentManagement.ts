@@ -2,41 +2,41 @@ import { MockMethod } from 'vite-plugin-mock'
 
 const List = [
   {
-    id: 'root',
+    value: 'root',
     createTime: '@datetime',
-    name: '根节点',
+    label: '根节点',
     order: 0,
     children: [
       {
-        id: '1',
-        parentId: 'root',
-        parentName: '根节点',
+        value: '1',
+        parentValue: 'root',
+        parentLabel: '根节点',
         createTime: '@datetime',
-        name: '桃花坞',
+        label: '桃花坞',
         order: 0,
       },
       {
-        id: '2',
-        parentId: 'root',
-        parentName: '根节点',
+        value: '2',
+        parentValue: 'root',
+        parentLabel: '根节点',
         createTime: '@datetime',
-        name: '少林寺',
+        label: '少林寺',
         order: 1,
         children: [
           {
-            id: '@uuid',
-            parentId: '2',
-            parentName: '少林寺',
+            value: '@uuid',
+            parentValue: '2',
+            parentLabel: '少林寺',
             createTime: '@datetime',
-            name: '达摩院',
+            label: '达摩院',
             order: 0,
           },
           {
-            id: '@uuid',
-            parentId: '2',
-            parentName: '少林寺',
+            value: '@uuid',
+            parentValue: '2',
+            parentLabel: '少林寺',
             createTime: '@datetime',
-            name: '戒律堂',
+            label: '戒律堂',
             order: 1,
           },
         ],
@@ -50,9 +50,9 @@ export default [
     url: '/departmentManagement/getList',
     method: 'get',
     response: ({ query }: any) => {
-      const { name, pageNo = 1, pageSize = 20 } = query
+      const { label, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
-        (item) => !(name && item.name.indexOf(name) < 0)
+        (item) => !(label && item.label.indexOf(label) < 0)
       )
       const list = mockList.filter(
         (item, index) =>

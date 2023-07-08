@@ -2,7 +2,7 @@
   <div class="user-management-container table-auto-height">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button :icon="Plus" type="primary" @click="handleEdit(null)">
+        <el-button :icon="Plus" type="primary" @click="handleAdd">
           添加
         </el-button>
         <el-button :icon="Delete" type="danger" @click="handleDelete">
@@ -110,13 +110,15 @@
   const setSelectRows = (value: string) => {
     selectRows.value = value
   }
-  const handleEdit = (row: any = {}) => {
-    if (row.id) {
-      editRef.value.showEdit(row)
-    } else {
-      editRef.value.showEdit()
-    }
+
+  const handleAdd = () => {
+    editRef.value.showEdit()
   }
+
+  const handleEdit = (row: any = {}) => {
+    editRef.value.showEdit(row)
+  }
+
   const handleDelete = (row: any = {}) => {
     if (row.id) {
       $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -137,10 +139,12 @@
       }
     }
   }
+
   const handleSizeChange = (value: any) => {
     queryForm.pageSize = value
     fetchData()
   }
+
   const handleCurrentChange = (value: any) => {
     queryForm.pageNo = value
     fetchData()

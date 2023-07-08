@@ -8,7 +8,6 @@
 
   const $baseConfirm = inject<any>('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
-
   const editRef = ref<any>(null)
   const tableSortRef = ref<any>(null)
   const list = ref<any>([])
@@ -38,23 +37,29 @@
     queryForm.pageSize = value
     fetchData()
   }
+
   const handleCurrentChange = (value: number) => {
     queryForm.pageNo = value
     fetchData()
   }
+
   const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
   }
+
   const setSelectRows = (value: string) => {
     selectRows.value = value
   }
+
   const handleAdd = () => {
     editRef.value.showEdit()
   }
+
   const handleEdit = (row = {}) => {
     editRef.value.showEdit(row)
   }
+
   const handleDelete = (row: any) => {
     if (row.id) {
       $baseConfirm('你确定要删除当前项吗', null, async () => {

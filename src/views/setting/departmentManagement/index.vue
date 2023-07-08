@@ -2,7 +2,7 @@
   <div class="department-management-container table-auto-height">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button :icon="Plus" type="primary" @click="handleEdit(null)">
+        <el-button :icon="Plus" type="primary" @click="handleAdd">
           添加
         </el-button>
         <el-button :icon="Delete" type="danger" @click="handleDelete">
@@ -13,7 +13,7 @@
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input
-              v-model.trim="queryForm.name"
+              v-model.trim="queryForm.label"
               clearable
               placeholder="请输入名称"
             />
@@ -42,8 +42,8 @@
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" width="38" />
-      <el-table-column label="名称" prop="name" />
-      <el-table-column label="父节点Id" prop="parentId" />
+      <el-table-column label="名称" prop="label" />
+      <el-table-column label="父节点Value" prop="parentValue" />
       <el-table-column label="排序" prop="order" />
       <el-table-column label="创建时间" prop="createTime" />
       <el-table-column label="操作" width="200">
@@ -52,7 +52,7 @@
             编辑
           </el-button>
           <el-button
-            :disabled="!row.parentId"
+            :disabled="!row.parentValue"
             text
             type="primary"
             @click="handleDelete({ row })"
@@ -83,7 +83,7 @@
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
 
   defineOptions({
-    name: 'DepartmentManagement',
+    label: 'DepartmentManagement',
   })
 
   const $baseConfirm: any = inject('$baseConfirm')
@@ -98,19 +98,21 @@
   const queryForm = reactive<any>({
     pageNo: 1,
     pageSize: 10,
-    name: '',
+    label: '',
   })
 
   const setSelectRows = (value: string) => {
     selectRows.value = value
   }
-  const handleEdit = (row: any = {}) => {
-    if (row.id) {
-      editRef.value.showEdit(row)
-    } else {
-      editRef.value.showEdit()
-    }
+
+  const handleAdd = () => {
+    editRef.value.showEdit()
   }
+
+  const handleEdit = (row: any = {}) => {
+    editRef.value.showEdit(row)
+  }
+
   const handleDelete = (row: any = {}) => {
     if (row.id) {
       $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -131,18 +133,22 @@
       }
     }
   }
+
   const handleSizeChange = (value: any) => {
     queryForm.pageSize = value
     fetchData()
   }
+
   const handleCurrentChange = (value: any) => {
     queryForm.pageNo = value
     fetchData()
   }
+
   const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
   }
+
   const fetchData = async () => {
     listLoading.value = true
     const { data } = await getList(queryForm)
@@ -150,6 +156,7 @@
     total.value = data.total
     listLoading.value = false
   }
+
   onMounted(() => {
     fetchData()
   })
