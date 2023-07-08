@@ -217,7 +217,7 @@
         .vab-chat-text {
           position: relative;
           display: inline-block;
-          max-width: 462px;
+          max-width: 100%;
           min-height: 38px;
           padding: 8px 15px;
           margin-top: 20px;
@@ -269,7 +269,7 @@
             position: absolute;
             top: -5px;
             left: 60px;
-            width: 500px;
+            width: 180px;
             font-size: 12px;
             font-style: normal;
             line-height: 24px;
