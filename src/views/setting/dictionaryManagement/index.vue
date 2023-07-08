@@ -26,13 +26,7 @@
           >
             <template #default="{ node, data }">
               <span>{{ node.label }}</span>
-              <a
-                v-if="!data.children"
-                style="margin-left: 10px"
-                @click="remove(node, data)"
-              >
-                删除
-              </a>
+              <a v-if="!data.children" @click="remove(node, data)">删除</a>
             </template>
           </el-tree>
         </vab-card>
@@ -153,8 +147,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $base: '.dictionary-management';
-  #{$base}-container {
+  .dictionary-management-container {
     .tree-button {
       width: 100%;
       margin-bottom: var(--el-margin);
@@ -167,6 +160,12 @@
         &-node__label {
           display: block;
           width: 100%;
+        }
+        &-node__content {
+          a {
+            position: absolute;
+            right: 5px;
+          }
         }
       }
     }

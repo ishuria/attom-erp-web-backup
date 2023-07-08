@@ -3,15 +3,15 @@
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card shadow="never">
-          <div class="personal-center-user-info">
+          <div class="user-info">
             <el-avatar :size="100" :src="avatar" />
-            <div class="personal-center-user-info-full-name">
+            <div class="user-info-full-name">
               {{ form.fullName }}
             </div>
-            <div class="personal-center-user-info-description">
+            <div class="user-info-description">
               {{ form.description }}
             </div>
-            <div class="personal-center-user-info-follow">
+            <div class="user-info-follow">
               <a href="https://github.com/chuzhixin" target="_blank">
                 <el-button round type="primary">
                   <vab-icon icon="group-line" />
@@ -20,7 +20,7 @@
               </a>
             </div>
 
-            <ul class="personal-center-user-info-list">
+            <ul class="user-info-list">
               <li>
                 <vab-icon icon="user-3-line" />
                 前端小白白
@@ -121,66 +121,60 @@
               </el-col>
             </el-tab-pane>
             <el-tab-pane label="账号绑定" name="second">
-              <div class="personal-center-item">
+              <div class="item">
                 <vab-icon icon="qq-line" style="color: #3492ed" />
-                <div class="personal-center-item-content">
+                <div class="item-content">
                   <div>绑定QQ</div>
-                  <div class="personal-center-item-content-second">
-                    当前未绑定绑定QQ账号
-                  </div>
+                  <div class="item-content-second">当前未绑定绑定QQ账号</div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
               <el-divider />
-              <div class="personal-center-item">
+              <div class="item">
                 <vab-icon icon="wechat-line" style="color: #4daf29" />
-                <div class="personal-center-item-content">
+                <div class="item-content">
                   <div>绑定微信</div>
-                  <div class="personal-center-item-content-second">
-                    当前未绑定绑定微信账号
-                  </div>
+                  <div class="item-content-second">当前未绑定绑定微信账号</div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
               <el-divider />
-              <div class="personal-center-item">
+              <div class="item">
                 <vab-icon icon="alipay-line" style="color: #1476fe" />
-                <div class="personal-center-item-content">
+                <div class="item-content">
                   <div>绑定支付宝</div>
-                  <div class="personal-center-item-content-second">
+                  <div class="item-content-second">
                     当前未绑定绑定支付宝账号
                   </div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
               <el-divider />
-              <div class="personal-center-item">
+              <div class="item">
                 <vab-icon icon="weibo-line" style="color: #ffd440" />
-                <div class="personal-center-item-content">
+                <div class="item-content">
                   <div>绑定微博</div>
-                  <div class="personal-center-item-content-second">
-                    当前未绑定绑定微博账号
-                  </div>
+                  <div class="item-content-second">当前未绑定绑定微博账号</div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
               <el-divider />
-              <div class="personal-center-item">
+              <div class="item">
                 <vab-icon icon="github-line" />
-                <div class="personal-center-item-content">
+                <div class="item-content">
                   <div>绑定Github</div>
-                  <div class="personal-center-item-content-second">
+                  <div class="item-content-second">
                     当前未绑定绑定Github账号
                   </div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
               <el-divider />
-              <div class="personal-center-item">
+              <div class="item">
                 <vab-icon icon="paypal-line" style="color: #012e85" />
-                <div class="personal-center-item-content">
+                <div class="item-content">
                   <div>绑定Paypal</div>
-                  <div class="personal-center-item-content-second">
+                  <div class="item-content-second">
                     当前未绑定绑定Paypal账号
                   </div>
                 </div>
@@ -250,9 +244,8 @@
 </script>
 
 <style lang="scss" scoped>
-  $base: '.personal-center';
-  #{$base}-container {
-    #{$base}-user-info {
+  .personal-center-container {
+    .user-info {
       padding: var(--el-padding);
       text-align: center;
 
@@ -302,7 +295,7 @@
       }
     }
 
-    #{$base}-item {
+    .item {
       display: flex;
 
       i {
