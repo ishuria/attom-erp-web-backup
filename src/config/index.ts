@@ -24,6 +24,7 @@ export const {
   chunkSizeWarningLimit,
   open,
   cssCodeSplit,
+  reportCompressedSize,
   title,
   titleSeparator,
   titleReverse,

@@ -19,4 +19,6 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   open: true,
   // build时启用/禁用 CSS 代码拆分
   cssCodeSplit: false,
+  // 启用/禁用 gzip 压缩大小报告
+  reportCompressedSize: false,
 }

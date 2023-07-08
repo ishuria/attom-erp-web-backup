@@ -12,6 +12,7 @@ import {
   assetsDir,
   chunkSizeWarningLimit,
   cssCodeSplit,
+  reportCompressedSize,
 } from '/@/config'
 
 const info = {
@@ -54,6 +55,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       assetsDir,
       chunkSizeWarningLimit,
       cssCodeSplit,
+      reportCompressedSize,
       rollupOptions: {
         onwarn: () => {
           return
