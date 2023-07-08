@@ -13,7 +13,7 @@
       'hixin/videos@master/video.mp4',
     id: 'mse',
     lang: 'zh',
-    volume: 0.3,
+    volume: 0,
     autoplay: true,
     screenShot: true,
     playbackRate: [0.5, 0.75, 1, 1.5, 2],
@@ -34,6 +34,10 @@
       $baseMessage('鼠标已回到页面，继续播放！', 'success', 'hey')
       _Player.play()
     }
+  })
+
+  onBeforeRouteLeave(() => {
+    _Player.pause()
   })
 </script>
 
