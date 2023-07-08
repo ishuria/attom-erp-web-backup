@@ -109,7 +109,6 @@ declare module 'vue' {
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']
     VabStatistics: typeof import('./../../components/VabStatistics/index.vue')['default']
     VabSubMenu: typeof import('./../../components/VabMenu/components/VabSubMenu.vue')['default']
-    VabSurelyForm: typeof import('./../../components/VabSurelyForm/index.vue')['default']
     VabTabs: typeof import('./../../components/VabTabs/index.vue')['default']
     VabTheme: typeof import('./../../components/VabTheme/index.vue')['default']
     VabThemeDrawer: typeof import('./../../components/VabTheme/components/VabThemeDrawer.vue')['default']
