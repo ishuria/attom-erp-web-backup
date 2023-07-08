@@ -602,18 +602,5 @@ html {
         }
       }
     }
-    /* 手机端禁用表格自动高度 */
-    .mobile {
-      :not(.no-background-container).table-auto-height {
-        display: block !important;
-        height: auto !important;
-      }
-      .no-background-container.table-auto-height {
-        .el-card__body {
-          display: block !important;
-          height: auto !important;
-        }
-      }
-    }
   }
 }

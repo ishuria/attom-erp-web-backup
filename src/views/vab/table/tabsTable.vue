@@ -33,11 +33,9 @@
             <el-button :icon="Delete" type="danger" @click="handleDelete">
               删除
             </el-button>
-            <el-button type="primary" @click="handleDetail">
-              详情页支持tab多开并高亮左侧菜单
-            </el-button>
+            <el-button type="primary" @click="handleDetail">详情</el-button>
             <el-button type="primary" @click="handleDetailStayTable">
-              后台打开详情页
+              后台打开详情
             </el-button>
           </vab-query-form-left-panel>
         </vab-query-form>
@@ -99,12 +97,7 @@
             prop="datetime"
             width="200"
           />
-          <el-table-column
-            align="center"
-            fixed="right"
-            label="操作"
-            width="250"
-          >
+          <el-table-column align="center" label="操作" width="250">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleDetail(row)">
                 详情
