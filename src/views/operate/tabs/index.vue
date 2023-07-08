@@ -1,11 +1,29 @@
 <template>
   <div class="tabs-container">
-    <el-button @click="closeOthersTabs">关闭其他标签页</el-button>
-    <el-button @click="closeLeftTabs">关闭左侧标签页</el-button>
-    <el-button @click="closeRightTabs">关闭右侧标签页</el-button>
-    <el-button @click="closeAllTabs">关闭全部标签页</el-button>
-    <el-button @click="handleTabRemove(route.path)">关闭当前</el-button>
-    <el-button @click="handleRefresh">刷新当前标签页</el-button>
+    <el-button @click="closeOthersTabs">
+      <vab-icon icon="close-line" />
+      关闭其他
+    </el-button>
+    <el-button @click="closeLeftTabs">
+      <vab-icon icon="arrow-left-line" />
+      关闭左侧
+    </el-button>
+    <el-button @click="closeRightTabs">
+      <vab-icon icon="arrow-right-line" />
+      关闭右侧
+    </el-button>
+    <el-button @click="closeAllTabs">
+      <vab-icon icon="close-line" />
+      关闭全部
+    </el-button>
+    <el-button @click="handleTabRemove(route.path)">
+      <vab-icon icon="close-line" />
+      关闭当前
+    </el-button>
+    <el-button @click="handleRefresh">
+      <vab-icon icon="refresh-line" />
+      刷新当前
+    </el-button>
   </div>
 </template>
 
