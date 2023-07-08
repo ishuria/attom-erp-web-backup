@@ -21,8 +21,8 @@
         <span class="custom-tree-node">
           <span>{{ node.label }}</span>
           <span>
-            <a @click="append(data)">Append</a>
-            <a style="margin-left: 8px" @click="remove(node, data)">Delete</a>
+            <a @click="append(data)">添加</a>
+            <a style="margin-left: 8px" @click="remove(node, data)">删除</a>
           </span>
         </span>
       </template>
@@ -82,7 +82,7 @@
           {
             onClick: () => append(data),
           },
-          'Append '
+          '添加 '
         ),
         h(
           'a',
@@ -90,7 +90,7 @@
             style: 'margin-left: 8px',
             onClick: () => remove(node, data),
           },
-          'Delete'
+          '删除'
         )
       )
     )
