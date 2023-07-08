@@ -32,24 +32,24 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: Ref<any> = ref(null)
-  let form: any = reactive({
+  const formRef = ref<any>(null)
+  let form = reactive<any>({
     title: '',
     author: '',
   })
-  const rules = reactive({
+  const rules = reactive<any>({
     title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
     author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
   })
-  const title = ref('')
-  const dialogFormVisible = ref(false)
+  const title = ref<string>('')
+  const dialogFormVisible = ref<boolean>(false)
 
   const showEdit = (row: any) => {
     if (!row) {
       title.value = '添加'
     } else {
       title.value = '编辑'
-      form = reactive({ ...row })
+      form = reactive<any>({ ...row })
     }
     dialogFormVisible.value = true
   }

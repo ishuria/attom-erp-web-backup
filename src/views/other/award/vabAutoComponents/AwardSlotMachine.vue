@@ -40,7 +40,7 @@
     colSpacing: '10px',
   }
 
-  const awardSlotMachineRef: Ref<any> = ref(null)
+  const awardSlotMachineRef = ref<any>(null)
   const startCallback = () => {
     awardSlotMachineRef.value.play()
 

@@ -3,7 +3,7 @@
     name: 'VabSurelyForm',
   })
 
-  const formShow = ref(false)
+  const formShow = ref<boolean>(false)
 
   onMounted(() => {
     if (

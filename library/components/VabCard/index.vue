@@ -26,7 +26,7 @@
     },
   })
 
-  const skeletonShow = ref(true)
+  const skeletonShow = ref<boolean>(true)
 
   const timer: any = setTimeout(() => {
     skeletonShow.value = false

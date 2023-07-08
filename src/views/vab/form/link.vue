@@ -40,16 +40,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { Edit } from '@element-plus/icons-vue'
 
-  export default defineComponent({
+  defineOptions({
     name: 'Link',
-    setup() {
-      return {
-        Edit,
-      }
-    },
   })
 </script>
 

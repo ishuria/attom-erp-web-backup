@@ -34,14 +34,14 @@
   })
   const emit = defineEmits(['change-step'])
 
-  const formRef: Ref<any> = ref(null)
-  const form: any = reactive({
+  const formRef = ref<any>(null)
+  const form = reactive<any>({
     payAccount: '****************',
     gatheringAccount: '****************',
     gatheringName: '***',
     price: '100',
   })
-  const rules: any = reactive({
+  const rules = reactive<any>({
     payAccount: [
       { required: true, message: '请选择付款账户', trigger: 'blur' },
     ],

@@ -29,9 +29,9 @@
   import dayjs from 'dayjs'
   import { Calendar } from '@element-plus/icons-vue'
 
-  const value = ref(Date.now() + 1000 * 60 * 60 * 7)
-  const value1 = ref(Date.now() + 1000 * 60 * 60 * 24 * 2)
-  const value2 = ref(dayjs().add(1, 'month').startOf('month'))
+  const value = ref<any>(Date.now() + 1000 * 60 * 60 * 7)
+  const value1 = ref<any>(Date.now() + 1000 * 60 * 60 * 24 * 2)
+  const value2 = ref<any>(dayjs().add(1, 'month').startOf('month'))
 
   function reset() {
     value1.value = Date.now() + 1000 * 60 * 60 * 24 * 2

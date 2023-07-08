@@ -6,11 +6,11 @@
     name: 'VabColorPicker',
   })
 
-  const color = ref(_color)
+  const color = ref<any>(_color)
   const $sub = inject<any>('$sub')
   const $unsub = inject<any>('$unsub')
   const $pub: any = inject('$pub')
-  const predefineColors = ref([
+  const predefineColors = ref<any>([
     _color,
     '#1e90ff',
     '#4e6ef2',
@@ -56,7 +56,7 @@
   }
 
   const handleChange = (value: any) => {
-    const el = ref(null)
+    const el = ref<any>(null)
     const _color = useCssVar('--el-color-primary', el)
     _color.value = value
 

@@ -34,12 +34,12 @@
     delRightVisitedRoutes,
     delAllVisitedRoutes,
   } = tabsStore
-  const tabActive = ref('')
-  const active = ref(false)
-  const hoverRoute = ref()
-  const visible = ref(false)
-  const top = ref(0)
-  const left = ref(0)
+  const tabActive = ref<string>('')
+  const active = ref<boolean>(false)
+  const hoverRoute = ref<any>()
+  const visible = ref<boolean>(false)
+  const top = ref<any>(0)
+  const left = ref<any>(0)
 
   const isActive = (path: any) => path === handleActivePath(route, true)
   const isNoCLosable = (tag: { meta: { noClosable: any } }) =>

@@ -26,10 +26,10 @@
   const $baseMessage = inject<any>('$baseMessage')
   const $baseAlert = inject<any>('$baseAlert')
   const editorRef = shallowRef<IDomEditor | undefined>(undefined)
-  const html = ref(
+  const html = ref<any>(
     '<h1>一级标题</h1><h2>二级标题</h2><h3>三级标题</h3><p>hello world ~~~ </p><blockquote>blockquote</blockquote><pre><code class="language-javascript">const a = 100;</code></pre><p><img src="https://fastly.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg"/></p>'
   )
-  const editorConfig = reactive({
+  const editorConfig = reactive<any>({
     placeholder: '请输入内容...',
     MENU_CONF: {
       uploadImage: {

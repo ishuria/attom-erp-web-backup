@@ -93,9 +93,9 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const list: any = ref([])
-  const listLoading = ref(true)
-  const queryForm = reactive({
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const queryForm = reactive<any>({
     taskName: '',
     date: '',
     pageNo: 1,

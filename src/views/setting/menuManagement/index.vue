@@ -126,14 +126,14 @@
   const $baseConfirm: any = inject('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
 
-  const editRef: Ref<any> = ref(null)
-  const treeList = ref([])
-  const defaultProps = reactive({
+  const editRef = ref<any>(null)
+  const treeList = ref<any>([])
+  const defaultProps = reactive<any>({
     children: 'children',
     label: 'label',
   })
-  const list = ref([])
-  const listLoading = ref(true)
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
 
   const handleEdit = (row: any = {}) => {
     if (row && row.path) {

@@ -39,9 +39,9 @@
     name: 'Print',
   })
 
-  const imageRef = ref(null)
-  const tableRef = ref(null)
-  const tableData = ref([
+  const imageRef = ref<any>(null)
+  const tableRef = ref<any>(null)
+  const tableData = ref<any>([
     {
       name: '马云',
       address: '上海市普陀区金沙江路',

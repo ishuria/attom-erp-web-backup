@@ -31,8 +31,8 @@
 </template>
 
 <script lang="ts" setup>
-  const show: Ref<any> = ref(true)
-  const checked: Ref<any> = ref(false)
+  const show = ref<boolean>(true)
+  const checked = ref<boolean>(false)
   let timer: any
   const handleChange = (value: any) => {
     if (value)

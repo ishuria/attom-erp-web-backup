@@ -116,7 +116,7 @@ export const useSettingsStore = defineStore('settings', {
         localStorage.setItem('vueuse-color-scheme', 'light')
       }
 
-      const el = ref(null)
+      const el = ref<any>(null)
       if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px'))
         useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'

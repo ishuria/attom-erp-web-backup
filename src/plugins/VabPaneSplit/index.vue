@@ -18,8 +18,8 @@
   const two = ref<HTMLElement>()
   const [initGrow1, initGrow2] = parseRatio(props.ratio as string)
 
-  const grow1 = ref(initGrow1)
-  const grow2 = ref(initGrow2)
+  const grow1 = ref<any>(initGrow1)
+  const grow2 = ref<any>(initGrow2)
 
   function parseRatio(ratio: string): [number, number] {
     const rn = ratio

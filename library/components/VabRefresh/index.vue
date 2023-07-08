@@ -8,7 +8,7 @@
   const $pub: any = inject('$pub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-  const className = ref('')
+  const className = ref<string>('')
 
   const refreshRoute = async () => {
     className.value = 'rotate'

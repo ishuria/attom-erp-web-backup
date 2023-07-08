@@ -9,11 +9,11 @@
   import _ from 'lodash'
   import VabChart from '/@/plugins/VabChart/index.vue'
 
-  const initOptions = reactive({
+  const initOptions = reactive<any>({
     renderer: 'svg',
   })
 
-  const option: any = reactive({
+  const option = reactive<any>({
     grid: {
       left: '10%',
       top: 0,

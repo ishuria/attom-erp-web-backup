@@ -211,19 +211,19 @@
     '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
   )
 
-  const activeName = ref('first')
+  const activeName = ref<string>('first')
 
-  const form = reactive({
+  const form = reactive<any>({
     fullName: 'admin',
     nickname: 'good luck',
     sex: 2,
     description: _description,
   })
 
-  const inputRef: Ref<any> = ref(null)
-  const dynamicTags = ref(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
-  const inputVisible = ref(false)
-  const inputValue = ref('')
+  const inputRef = ref<any>(null)
+  const dynamicTags = ref<any>(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
+  const inputVisible = ref<boolean>(false)
+  const inputValue = ref<string>('')
 
   const onSubmit = () => {
     $baseMessage('模拟保存成功', 'success', 'hey')

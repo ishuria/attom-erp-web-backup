@@ -21,7 +21,7 @@
   defineOptions({
     name: 'IconSelector',
   })
-  const icon = ref('24-hours-fill')
+  const icon = ref<string>('24-hours-fill')
 
   const handleIcon = (item: string) => {
     icon.value = item

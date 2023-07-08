@@ -11,7 +11,7 @@
   const $unsub = inject<any>('$unsub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-  const value = ref(true)
+  const value = ref<boolean>(true)
 
   const _toggleDark = (event: MouseEvent) => {
     // @ts-ignore

@@ -92,17 +92,17 @@
   const $baseConfirm: any = inject('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
 
-  const treeRef: Ref<any> = ref(null)
-  const editRef: Ref<any> = ref(null)
-  const treeList: any = ref([])
-  const defaultProps = reactive({
+  const treeRef = ref<any>(null)
+  const editRef = ref<any>(null)
+  const treeList = ref<any>([])
+  const defaultProps = reactive<any>({
     children: 'children',
     label: 'label',
   })
-  let list = ref([])
-  const listLoading = ref(true)
-  const isRoot = ref(true)
-  const parentKey = ref('')
+  let list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const isRoot = ref<boolean>(true)
+  const parentKey = ref<string>('')
 
   const handleEdit = (row: any) => {
     editRef.value.showEdit(row)
@@ -129,7 +129,7 @@
     fetchData(data)
   }
 
-  const filterText = ref('')
+  const filterText = ref<string>('')
   watch(filterText, (value) => {
     treeRef.value.filter(value)
   })

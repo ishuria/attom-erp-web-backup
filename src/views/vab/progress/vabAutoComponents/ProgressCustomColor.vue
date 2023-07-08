@@ -18,8 +18,8 @@
 <script lang="ts" setup>
   import { Minus, Plus } from '@element-plus/icons-vue'
 
-  const percentage = ref(20)
-  const customColor = ref('#409eff')
+  const percentage = ref<any>(20)
+  const customColor = ref<string>('#409eff')
 
   const customColors = [
     { color: '#f56c6c', percentage: 20 },

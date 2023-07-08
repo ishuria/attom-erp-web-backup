@@ -82,8 +82,8 @@
   const { changeTabsMeta } = tabsStore
   const { changeActiveMenu, changeMenuMeta } = routesStore
 
-  const badge = ref(0)
-  const icon: any = ref(route.meta.icon)
+  const badge = ref<any>(0)
+  const icon = ref<any>(route.meta.icon)
   const handleBadge = (name: any) => {
     badge.value = badge.value + 1
     changeMenuMeta({

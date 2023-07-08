@@ -28,7 +28,7 @@
     delRightVisitedRoutes,
     delAllVisitedRoutes,
   } = tabStore
-  const hoverRoute: Ref<any> = ref(null)
+  const hoverRoute = ref<any>(null)
   const $pub = inject<any>('$pub')
 
   /**

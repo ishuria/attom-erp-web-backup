@@ -2,7 +2,7 @@
   <div :id="config.id"></div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import Player from 'xgplayer'
   import 'xgplayer/dist/index.min.css'
 
@@ -22,7 +22,7 @@
     },
   })
 
-  const player = ref(null)
+  const player = ref<any>(null)
 
   const emit = defineEmits(['player'])
 

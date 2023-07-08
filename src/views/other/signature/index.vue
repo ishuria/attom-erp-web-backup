@@ -3,7 +3,7 @@
     name: 'Signature',
   })
 
-  const canvas = ref()
+  const canvas = ref<any>()
   let ctx: CanvasRenderingContext2D
   const $baseMessage = inject<any>('$baseMessage')
   let painting = false

@@ -76,7 +76,7 @@
     name: 'Timeline',
   })
 
-  const activities: any = ref([
+  const activities = ref<any>([
     {
       content: '支持使用默认图标',
       timestamp: '2021-04-12 20:46',

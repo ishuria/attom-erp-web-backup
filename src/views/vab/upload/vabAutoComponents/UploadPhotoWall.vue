@@ -38,8 +38,8 @@
     },
   ])
 
-  const dialogImageUrl: any = ref('')
-  const dialogVisible: any = ref(false)
+  const dialogImageUrl = ref<string | undefined>('')
+  const dialogVisible = ref<boolean>(false)
 
   const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
     console.log(uploadFile, uploadFiles)

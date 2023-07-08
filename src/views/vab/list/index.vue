@@ -74,12 +74,12 @@
     name: 'List',
   })
 
-  const list: Ref<any> = ref([])
-  const total: Ref<any> = ref(0)
-  const queryForm: any = reactive({ pageNo: 1, pageSize: 10, title: '' })
-  const layout: Ref<any> = ref('total, sizes, prev, pager, next, jumper')
-  const listLoading: Ref<any> = ref(true)
-  const emptyShow: Ref<any> = ref(true)
+  const list = ref<any>([])
+  const total = ref<any>(0)
+  const queryForm = reactive<any>({ pageNo: 1, pageSize: 10, title: '' })
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const listLoading = ref<boolean>(true)
+  const emptyShow = ref<boolean>(true)
 
   const fetchData = async () => {
     listLoading.value = true

@@ -84,7 +84,7 @@
   const userStore = useUserStore()
   const settingsStore = useSettingsStore()
 
-  const leftImg = ref('')
+  const leftImg = ref<string>('')
   const img = getImageUrl(`assets/login_images/left_img.png`)
   leftImg.value = img
 
@@ -102,16 +102,16 @@
 
   const title = settingsStore.getTitle
 
-  const formRef: Ref<any> = ref(null)
-  const passwordRef: Ref<any> = ref(null)
+  const formRef = ref<any>(null)
+  const passwordRef = ref<any>(null)
 
-  const form = reactive({
+  const form = reactive<any>({
     username: '',
     password: '',
     verificationCode: '',
   })
 
-  const rules: any = reactive({
+  const rules = reactive<any>({
     username: [
       {
         required: true,
@@ -128,12 +128,12 @@
     ],
   })
 
-  const loading: Ref<any> = ref(false)
-  const passwordType: Ref<any> = ref('password')
-  const redirect: Ref<any> = ref(undefined)
-  const timer: Ref<any> = ref(0)
-  const codeUrl: Ref<any> = ref('https://www.oschina.net/action/user/captcha')
-  const previewText: Ref<any> = ref('')
+  const loading = ref<boolean>(false)
+  const passwordType = ref<string>('password')
+  const redirect = ref<any>(undefined)
+  const timer = ref<any>(0)
+  const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
+  const previewText = ref<string>('')
 
   const handleRoute = () => {
     return redirect.value === '/404' || redirect.value === '/403'

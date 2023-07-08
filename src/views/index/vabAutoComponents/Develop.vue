@@ -2,10 +2,10 @@
   import _ from 'lodash'
   import { onBeforeRouteLeave } from 'vue-router'
 
-  const initOptions = reactive({
+  const initOptions = reactive<any>({
     renderer: 'svg',
   })
-  const option: any = reactive({
+  const option = reactive<any>({
     tooltip: {
       trigger: 'axis',
       extraCssText: 'z-index:1',
@@ -49,7 +49,7 @@
   })
 
   let timer: any
-  const updateTime = ref()
+  const updateTime = ref<any>()
   onMounted(() => {
     const base = +new Date(2022, 10, 1)
     const oneDay = 24 * 3600 * 1000

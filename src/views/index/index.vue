@@ -4,7 +4,7 @@
     name: 'Index',
   })
 
-  const countConfig1 = reactive({
+  const countConfig1 = reactive<any>({
     startVal: 0,
     endVal: _.random(1000, 20000),
     decimals: 2,

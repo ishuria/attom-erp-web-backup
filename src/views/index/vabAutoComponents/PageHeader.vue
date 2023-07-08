@@ -5,7 +5,7 @@
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
 
-  const description = ref('')
+  const description = ref<string>('')
 
   const handleTips = () => {
     const hour = new Date().getHours()
@@ -28,8 +28,8 @@
     fetchData()
   })
 
-  const colorFrom = ref('var(--el-color-primary-light-9)')
-  const colorTo = ref('var(--el-color-white)')
+  const colorFrom = ref<string>('var(--el-color-primary-light-9)')
+  const colorTo = ref<string>('var(--el-color-white)')
   const style = {
     background: `${colorTo.value} linear-gradient(120deg, ${colorFrom.value} 10%, ${colorTo.value}) no-repeat`,
   }

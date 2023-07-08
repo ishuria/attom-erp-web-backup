@@ -114,7 +114,7 @@
     },
   ]
 
-  const awardWheelRef: Ref<any> = ref(null)
+  const awardWheelRef = ref<any>(null)
   const startCallback = () => {
     awardWheelRef.value.play()
 

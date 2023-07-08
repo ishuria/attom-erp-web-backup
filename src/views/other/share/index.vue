@@ -33,7 +33,7 @@
     name: 'Share',
   })
 
-  const form = reactive({
+  const form = reactive<any>({
     url: '',
   })
 

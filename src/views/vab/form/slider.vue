@@ -49,15 +49,15 @@
   defineOptions({
     name: 'Slider',
   })
-  const value1: Ref<any> = ref(0)
-  const value2: Ref<any> = ref(50)
-  const value3: Ref<any> = ref(36)
-  const value4: Ref<any> = ref(48)
-  const value5: Ref<any> = ref(42)
-  const value6: Ref<any> = ref(0)
-  const value7: Ref<any> = ref(0)
-  const value8: Ref<any> = ref([4, 8])
-  const value9: Ref<any> = ref(0)
+  const value1 = ref<any>(0)
+  const value2 = ref<any>(50)
+  const value3 = ref<any>(36)
+  const value4 = ref<any>(48)
+  const value5 = ref<any>(42)
+  const value6 = ref<any>(0)
+  const value7 = ref<any>(0)
+  const value8 = ref<any>([4, 8])
+  const value9 = ref<any>(0)
 
   const formatTooltip = (value: number) => {
     return value / 100

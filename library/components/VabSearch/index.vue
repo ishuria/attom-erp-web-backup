@@ -9,7 +9,7 @@
 
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-  const value = ref('')
+  const value = ref<string>('')
   const router = useRouter()
 
   interface LinkItem {

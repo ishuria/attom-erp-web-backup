@@ -37,8 +37,8 @@
 
   const { getTitle: title } = useSettingsStore()
   const { needRefresh, updateServiceWorker } = useRegisterSW({})
-  const button = ref('立即升级')
-  const loading = ref(false)
+  const button = ref<string>('立即升级')
+  const loading = ref<boolean>(false)
 
   const save = () => {
     button.value = '正在更新'

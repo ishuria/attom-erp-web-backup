@@ -48,23 +48,23 @@
   const emit = defineEmits(['fetch-data'])
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: Ref<any> = ref(null)
-  const treeData: any = ref([])
-  const defaultProps = reactive({
+  const formRef = ref<any>(null)
+  const treeData = ref<any>([])
+  const defaultProps = reactive<any>({
     children: 'children',
     label: 'name',
   })
-  let form: any = ref({
+  let form = ref<any>({
     parentName: '',
     parentId: '',
   })
-  const rules = reactive({
+  const rules = reactive<any>({
     parentName: [{ required: true, trigger: 'blur', message: '请选择父节点' }],
     name: [{ required: true, trigger: 'blur', message: '请输入名称' }],
     order: [{ required: true, trigger: 'blur', message: '请输入排序' }],
   })
-  const title = ref('')
-  const dialogFormVisible = ref(false)
+  const title = ref<string>('')
+  const dialogFormVisible = ref<boolean>(false)
 
   const fetchData = async () => {
     const { data } = await getList()
@@ -79,7 +79,7 @@
       title.value = '添加'
     } else {
       title.value = '编辑'
-      form = reactive({ ...row })
+      form = reactive<any>({ ...row })
     }
     dialogFormVisible.value = true
   }

@@ -58,25 +58,25 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: Ref<any> = ref(null)
-  const treeRef: Ref<any> = ref(null)
-  let form: any = reactive({
+  const formRef = ref<any>(null)
+  const treeRef = ref<any>(null)
+  let form = reactive<any>({
     role: '',
     btnRolesCheckedList: [],
   })
-  const rules = reactive({
+  const rules = reactive<any>({
     role: [{ required: true, trigger: 'blur', message: '请输入角色码' }],
   })
-  const title = ref('')
-  const dialogFormVisible = ref(false)
-  const list = ref([])
+  const title = ref<string>('')
+  const dialogFormVisible = ref<boolean>(false)
+  const list = ref<any>([])
 
   const showEdit = (row: any) => {
     if (!row) {
       title.value = '添加'
     } else {
       title.value = '编辑'
-      form = reactive({ ...row })
+      form = reactive<any>({ ...row })
     }
     dialogFormVisible.value = true
   }

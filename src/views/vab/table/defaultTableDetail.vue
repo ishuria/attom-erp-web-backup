@@ -78,7 +78,7 @@
   const tabsStore = useTabsStore()
   const { changeTabsMeta, delVisitedRoute } = tabsStore
 
-  const form: any = reactive({ text: '' })
+  const form = reactive<any>({ text: '' })
 
   const goBack = async () => {
     await router.push('/vab/table/defaultTable')

@@ -10,9 +10,9 @@
   const $baseMessage = inject<any>('$baseMessage')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-  const activeName = ref('notice')
-  const notices: Ref = ref('')
-  const badge = ref(undefined)
+  const activeName = ref<string>('notice')
+  const notices = ref<Array<any>>([])
+  const badge = ref<any>(undefined)
 
   const fetchData = async () => {
     const { data } = await getList()

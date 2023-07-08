@@ -17,10 +17,10 @@
   const { theme } = storeToRefs(settingsStore)
   const tabsStore = useTabsStore()
   const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabsStore)
-  const componentRef = ref()
-  const routerKey = ref()
-  const keepAliveNameList = ref()
-  const siteData = reactive({
+  const componentRef = ref<any>()
+  const routerKey = ref<any>()
+  const keepAliveNameList = ref<any>()
+  const siteData = reactive<any>({
     description: '',
   })
 

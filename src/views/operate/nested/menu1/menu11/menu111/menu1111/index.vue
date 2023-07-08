@@ -13,7 +13,7 @@
     name: 'Menu1111',
   })
 
-  const value: any = ref('')
+  const value = ref<string>('')
   const $pub = inject<any>('$pub')
 
   const handleAdd = () => {

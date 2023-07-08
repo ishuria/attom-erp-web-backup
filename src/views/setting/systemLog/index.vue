@@ -115,11 +115,11 @@
     name: 'SystemLog',
   })
 
-  const list = ref([])
-  const listLoading = ref(true)
-  const layout = ref('total, sizes, prev, pager, next, jumper')
-  const total = ref(0)
-  const queryForm = reactive({
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const total = ref<any>(0)
+  const queryForm = reactive<any>({
     account: '',
     searchDate: '',
     pageNo: 1,

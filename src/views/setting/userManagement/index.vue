@@ -115,13 +115,13 @@
   const $baseConfirm: any = inject('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
 
-  const editRef: Ref<any> = ref(null)
-  const list = ref([])
-  const listLoading = ref(true)
-  const layout = ref('total, sizes, prev, pager, next, jumper')
-  const total = ref(0)
-  const selectRows: any = ref('')
-  const queryForm = reactive({
+  const editRef = ref<any>(null)
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const total = ref<any>(0)
+  const selectRows = ref<any>([])
+  const queryForm = reactive<any>({
     pageNo: 1,
     pageSize: 10,
     username: '',

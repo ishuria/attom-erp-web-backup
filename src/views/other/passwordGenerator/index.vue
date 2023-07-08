@@ -3,7 +3,7 @@
     name: 'PasswordGenerator',
   })
 
-  const form = reactive({
+  const form = reactive<any>({
     length: 16,
     includeUppercase: true,
     includeLowercase: true,
@@ -11,7 +11,7 @@
     includeSymbols: false,
   })
 
-  const generatedPassword = ref('')
+  const generatedPassword = ref<string>('')
 
   const generatePassword = () => {
     let characters = ''

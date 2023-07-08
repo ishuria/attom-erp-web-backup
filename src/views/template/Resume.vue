@@ -90,17 +90,17 @@
 </template>
 
 <script lang="ts" setup>
-  const name = ref('张三')
-  const gender = ref('男')
-  const age = ref(25)
-  const occupation = ref('前端工程师')
-  const email = ref('zhangsan@example.com')
-  const phoneNumber = ref('123456789')
+  const name = ref<string>('张三')
+  const gender = ref<string>('男')
+  const age = ref<any>(25)
+  const occupation = ref<string>('前端工程师')
+  const email = ref<string>('zhangsan@example.com')
+  const phoneNumber = ref<string>('123456789')
 
   import { getImageUrl } from '/@/utils/imageUrl'
   const avatar = getImageUrl('assets/avatar.svg')
 
-  const educations = ref([
+  const educations = ref<any>([
     {
       id: 1,
       school: '大学A',
@@ -117,7 +117,7 @@
     },
   ])
 
-  const experiences = ref([
+  const experiences = ref<any>([
     {
       id: 1,
       company: '公司A',

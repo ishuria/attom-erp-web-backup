@@ -3,7 +3,7 @@
 
   const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
 
-  const background = ref('')
+  const background = ref<string>('')
 
   const handleChange = (value: any) => {
     const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
@@ -14,7 +14,7 @@
     window.open(url)
   }
 
-  const date = ref(new Date())
+  const date = ref<any>(new Date())
   const tableData = [
     {
       date: '2016-05-03',

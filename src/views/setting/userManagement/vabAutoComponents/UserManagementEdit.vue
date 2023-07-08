@@ -40,28 +40,28 @@
   const emit = defineEmits(['fetch-data'])
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: Ref<any> = ref(null)
-  let form: any = ref({
+  const formRef = ref<any>(null)
+  let form = ref<any>({
     username: '',
     password: '',
     email: '',
     roles: [],
   })
-  const rules = reactive({
+  const rules = reactive<any>({
     username: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
     password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
     email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
     roles: [{ required: true, trigger: 'blur', message: '请选择角色' }],
   })
-  const title = ref('')
-  const dialogFormVisible = ref(false)
+  const title = ref<string>('')
+  const dialogFormVisible = ref<boolean>(false)
 
   const showEdit = (row: any) => {
     if (!row) {
       title.value = '添加'
     } else {
       title.value = '编辑'
-      form = reactive({ ...row })
+      form = reactive<any>({ ...row })
     }
     dialogFormVisible.value = true
   }

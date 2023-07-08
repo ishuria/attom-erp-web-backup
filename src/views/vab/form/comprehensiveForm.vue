@@ -115,9 +115,9 @@
     return data
   }
 
-  const formRef: Ref<any> = ref(null)
-  const labelPosition: Ref<any> = ref('right')
-  const form: any = reactive({
+  const formRef = ref<any>(null)
+  const labelPosition = ref<any>('right')
+  const form = reactive<any>({
     name: '',
     region: '',
     date: '',
@@ -130,8 +130,8 @@
     area: [],
     transfer: [],
   })
-  const areaOptions: Ref<any> = ref([])
-  const rules: any = reactive({
+  const areaOptions = ref<any>([])
+  const rules = reactive<any>({
     name: [
       { required: true, message: '请输入活动名称', trigger: 'blur' },
       {
@@ -165,7 +165,7 @@
       { required: true, message: '请填写活动形式', trigger: 'blur' },
     ],
   })
-  const data: Ref<any> = ref(generateData())
+  const data = ref<any>(generateData())
   const filterMethod = (query: any, item: any) => {
     return item.pinyin.indexOf(query) > -1
   }

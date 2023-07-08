@@ -156,19 +156,19 @@
   const $baseConfirm = inject<any>('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
 
-  const tableSortRef: Ref<any> = ref(null)
-  const editRef: Ref<any> = ref(null)
-  const border: Ref<any> = ref(true)
-  const stripe: Ref<any> = ref(false)
-  const lineHeight: Ref<any> = ref('default')
-  const isFullscreen: Ref<any> = ref(false)
-  const checkList: Ref<any> = ref(['标题', '作者', '评级', '点击量', '时间'])
-  const list: Ref<any> = ref([])
-  const listLoading: Ref<any> = ref(true)
-  const layout: Ref<any> = ref('total, sizes, prev, pager, next, jumper')
-  const total: Ref<any> = ref(0)
-  const selectRows: Ref<any> = ref('')
-  const columns: Ref<any> = ref([
+  const tableSortRef = ref<any>(null)
+  const editRef = ref<any>(null)
+  const border = ref<boolean>(true)
+  const stripe = ref<boolean>(false)
+  const lineHeight = ref<any>('default')
+  const isFullscreen = ref<boolean>(false)
+  const checkList = ref<any>(['标题', '作者', '评级', '点击量', '时间'])
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const total = ref<any>(0)
+  const selectRows = ref<any>([])
+  const columns = ref<any>([
     {
       label: '标题',
       prop: 'title',
@@ -196,7 +196,7 @@
       sortable: true,
     },
   ])
-  const queryForm: any = reactive({
+  const queryForm = reactive<any>({
     pageNo: 1,
     pageSize: 20,
     title: '',

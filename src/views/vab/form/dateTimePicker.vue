@@ -41,12 +41,12 @@
   defineOptions({
     name: 'DateTimePicker',
   })
-  const value1: Ref<any> = ref('')
-  const value2: Ref<any> = ref([
+  const value1 = ref<string>('')
+  const value2 = ref<any>([
     new Date(2000, 10, 10, 10, 10),
     new Date(2000, 10, 11, 10, 10),
   ])
-  const value3: Ref<any> = ref('')
+  const value3 = ref<string>('')
 </script>
 
 <style lang="scss" scoped></style>

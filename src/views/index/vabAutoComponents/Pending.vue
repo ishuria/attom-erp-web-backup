@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-  const colorFrom1 = ref('rgba(240,2,20,0.098)')
-  const colorTo1 = ref('var(--el-color-white)')
-  const colorFrom2 = ref('var(--el-color-primary-light-9)')
-  const colorTo2 = ref('var(--el-color-white)')
+  const colorFrom1 = ref<string>('rgba(240,2,20,0.098)')
+  const colorTo1 = ref<string>('var(--el-color-white)')
+  const colorFrom2 = ref<string>('var(--el-color-primary-light-9)')
+  const colorTo2 = ref<string>('var(--el-color-white)')
   const style1 = {
     background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
     border: 0,

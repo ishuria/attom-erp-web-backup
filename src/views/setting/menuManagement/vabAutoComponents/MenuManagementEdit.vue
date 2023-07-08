@@ -83,8 +83,8 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: Ref<any> = ref(null)
-  let form: any = reactive({
+  const formRef = ref<any>(null)
+  let form = reactive<any>({
     parentId: '',
     name: '',
     path: '',
@@ -104,7 +104,7 @@
     },
   })
 
-  const rules = reactive({
+  const rules = reactive<any>({
     parentId: [{ required: true, trigger: 'blur', message: '请输入父级id' }],
     name: [{ required: true, trigger: 'blur', message: '请输入name' }],
     path: [{ required: true, trigger: 'blur', message: '请输入path' }],
@@ -113,8 +113,8 @@
     ],
     'meta.title': [{ required: true, trigger: 'blur', message: '请输入标题' }],
   })
-  const title = ref('')
-  const dialogFormVisible = ref(false)
+  const title = ref<string>('')
+  const dialogFormVisible = ref<boolean>(false)
 
   const handleIcon = (item: string) => {
     form.meta.icon = item
@@ -124,7 +124,7 @@
       title.value = '添加'
     } else {
       title.value = '编辑'
-      form = reactive({ ...row })
+      form = reactive<any>({ ...row })
     }
     dialogFormVisible.value = true
   }

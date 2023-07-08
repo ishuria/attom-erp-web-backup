@@ -14,14 +14,15 @@
   const settingsStore: any = useSettingsStore()
   const { theme, device }: any = storeToRefs(settingsStore)
   const { saveTheme, resetTheme, updateTheme }: any = settingsStore
-  const drawerVisible = ref(false)
+  const drawerVisible = ref<boolean>(false)
 
   const handleOpenTheme = () => {
     drawerVisible.value = true
   }
 
   const updateMenuWidth = () => {
-    useCssVar('--el-left-menu-width', ref(null)).value = theme.value.menuWidth
+    useCssVar('--el-left-menu-width', ref<any>(null)).value =
+      theme.value.menuWidth
   }
 
   const _updateTheme = (value: any = '') => {

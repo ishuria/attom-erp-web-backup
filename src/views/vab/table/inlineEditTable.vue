@@ -101,11 +101,11 @@
     name: 'InlineEditTable',
   })
 
-  const list: Ref<any> = ref([])
-  const listLoading: Ref<any> = ref(true)
-  const layout: Ref<any> = ref('total, sizes, prev, pager, next, jumper')
-  const total: Ref<any> = ref(0)
-  const queryForm: any = reactive({
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const total = ref<any>(0)
+  const queryForm = reactive<any>({
     pageNo: 1,
     pageSize: 20,
     title: '',

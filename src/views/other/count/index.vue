@@ -35,12 +35,12 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   defineOptions({
     name: 'Count',
   })
-  const show = ref(true)
-  const form = reactive({
+  const show = ref<boolean>(true)
+  const form = reactive<any>({
     startVal: 0,
     endVal: 999,
     decimals: 0,

@@ -54,10 +54,10 @@
     name: 'Timepicker',
   })
 
-  const value = ref('')
-  const value1 = ref(new Date(2016, 9, 10, 18, 40))
-  const startTime = ref('')
-  const endTime = ref('')
+  const value = ref<string>('')
+  const value1 = ref<any>(new Date(2016, 9, 10, 18, 40))
+  const startTime = ref<string>('')
+  const endTime = ref<string>('')
 
   const makeRange = (start: number, end: number) => {
     const result = []

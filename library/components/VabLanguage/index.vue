@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import getPageTitle from '/@/utils/pageTitle'
   import i18n from '/@/i18n'
@@ -7,12 +7,12 @@
     name: 'VabLanguage',
   })
 
-  const route = useRoute()
+  const route: any = useRoute()
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const { changeLanguage } = settingsStore
 
-  const handleCommand = (language) => {
+  const handleCommand = (language: any) => {
     changeLanguage(language)
     i18n.global.locale = language
     document.title = getPageTitle(route.meta.title)

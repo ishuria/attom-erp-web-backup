@@ -6,7 +6,7 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const configMp4 = reactive({
+  const configMp4 = reactive<any>({
     url:
       'https://fastly.jsdel' +
       'ivr.net/gh/chuz' +

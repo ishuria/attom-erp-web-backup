@@ -66,7 +66,7 @@
   const disabledDate = (time: any) => {
     return time.getTime() > Date.now()
   }
-  const shortcuts: Ref<any> = ref([
+  const shortcuts = ref<any>([
     {
       text: '今天',
       value: new Date(),
@@ -88,14 +88,14 @@
       },
     },
   ])
-  const value1: Ref<any> = ref('')
-  const value2: Ref<any> = ref('')
-  const value3: Ref<any> = ref('')
-  const value4: Ref<any> = ref('')
-  const value5: Ref<any> = ref('')
-  const value6: Ref<any> = ref('')
-  const value7: Ref<any> = ref('')
-  const value8: Ref<any> = ref('')
+  const value1 = ref<string>('')
+  const value2 = ref<string>('')
+  const value3 = ref<string>('')
+  const value4 = ref<string>('')
+  const value5 = ref<string>('')
+  const value6 = ref<string>('')
+  const value7 = ref<string>('')
+  const value8 = ref<string>('')
 </script>
 
 <style lang="scss" scoped>

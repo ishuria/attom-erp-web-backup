@@ -144,7 +144,7 @@
     },
   ]
 
-  const awardGridRef: Ref<any> = ref(null)
+  const awardGridRef = ref<any>(null)
   const startCallback = () => {
     awardGridRef.value.play()
 

@@ -161,7 +161,7 @@
   const userStore = useUserStore()
   const { username, token } = storeToRefs(userStore)
 
-  const form = reactive({
+  const form = reactive<any>({
     account: username.value,
   })
 

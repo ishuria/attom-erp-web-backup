@@ -8,7 +8,7 @@
   const errorLogStore = useErrorLogStore()
   const { errorLogs } = storeToRefs(errorLogStore)
   const { clearErrorLog } = errorLogStore
-  const dialogVisible = ref(false)
+  const dialogVisible = ref<boolean>(false)
   const searchList = [
     {
       title: '百度搜索',

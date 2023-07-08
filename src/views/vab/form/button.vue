@@ -126,7 +126,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
   import {
     ArrowLeft,
     ArrowRight,
@@ -140,22 +140,8 @@
     Upload,
   } from '@element-plus/icons-vue'
 
-  export default defineComponent({
-    // eslint-disable-next-line vue/no-reserved-component-names
+  defineOptions({
     name: 'Button',
-    components: { ArrowRight, Upload },
-    setup() {
-      return {
-        Search,
-        Edit,
-        Check,
-        Message,
-        Star,
-        Delete,
-        ArrowLeft,
-        Share,
-      }
-    },
   })
 </script>
 

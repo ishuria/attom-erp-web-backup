@@ -845,6 +845,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'file-shield-2-line',
         },
       },
+      {
+        path: 'websiteSetting',
+        name: 'WebsiteSetting',
+        component: () => import('/@/views/setting/websiteSetting/index.vue'),
+        meta: {
+          title: '网站设置',
+          icon: 'global-line',
+        },
+      },
     ],
   },
   {

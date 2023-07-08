@@ -40,14 +40,14 @@
   })
   const emit = defineEmits(['change-step'])
 
-  const formRef: Ref<any> = ref(null)
-  const form: any = reactive({
+  const formRef = ref<any>(null)
+  const form = reactive<any>({
     password: '123456',
   })
-  const rules: any = reactive({
+  const rules = reactive<any>({
     password: [{ required: true, message: '请输入支付密码', trigger: 'blur' }],
   })
-  const loading: Ref<any> = ref(false)
+  const loading = ref<boolean>(false)
 
   const handleSubmit = () => {
     formRef.value.validate((valid: any) => {

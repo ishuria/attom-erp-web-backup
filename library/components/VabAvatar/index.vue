@@ -12,7 +12,7 @@
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
   const { logout } = userStore
-  const active = ref(false)
+  const active = ref<boolean>(false)
 
   const handleVisibleChange = (value: boolean) => {
     active.value = value

@@ -50,11 +50,11 @@
     name: 'Radio',
   })
 
-  const radio = ref('1')
-  const radio2 = ref('选中且禁用')
-  const radio3 = ref(3)
-  const radio4 = ref('上海')
-  const radio5 = ref('1')
+  const radio = ref<string>('1')
+  const radio2 = ref<string>('选中且禁用')
+  const radio3 = ref<any>(3)
+  const radio4 = ref<string>('上海')
+  const radio5 = ref<string>('1')
 </script>
 
 <style lang="scss" scoped></style>

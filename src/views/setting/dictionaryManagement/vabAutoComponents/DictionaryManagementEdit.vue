@@ -39,21 +39,21 @@
 
   const $baseMessage = inject<any>('$baseMessage')
 
-  const formRef: Ref<any> = ref(null)
-  let form: any = reactive({
+  const formRef = ref<any>(null)
+  let form = reactive<any>({
     parentKey: '',
     id: uuid(),
     key: '',
     value: '',
   })
-  const title = ref('')
-  const dialogFormVisible = ref(false)
+  const title = ref<string>('')
+  const dialogFormVisible = ref<boolean>(false)
 
   const showEdit = (row: any) => {
     title.value = '添加/编辑'
-    if (row) form = reactive({ ...row, id: uuid() })
+    if (row) form = reactive<any>({ ...row, id: uuid() })
     else
-      form = reactive({
+      form = reactive<any>({
         ...row,
         id: uuid(),
         parentKey: 'root',

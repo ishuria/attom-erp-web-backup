@@ -27,11 +27,11 @@
     },
   })
 
-  const initOptions = reactive({
+  const initOptions = reactive<any>({
     renderer: 'svg',
   })
 
-  const option = reactive({
+  const option = reactive<any>({
     grid: {
       top: 20,
       right: 20,

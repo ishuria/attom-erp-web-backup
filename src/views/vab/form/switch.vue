@@ -35,10 +35,10 @@
     name: 'Switch',
   })
 
-  const value = ref(true)
-  const value1 = ref(true)
-  const value2 = ref(true)
-  const value3 = ref(false)
+  const value = ref<boolean>(true)
+  const value1 = ref<boolean>(true)
+  const value2 = ref<boolean>(true)
+  const value3 = ref<boolean>(false)
 </script>
 
 <style lang="scss" scoped></style>

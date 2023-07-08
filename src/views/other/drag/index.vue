@@ -30,7 +30,7 @@
     name: 'Drag',
   })
 
-  const iconList: Ref<any> = ref([])
+  const iconList = ref<any>([])
   const randomHexColor = () => {
     return _.shuffle([
       '#1890FF',

@@ -114,7 +114,7 @@
     name: 'Select',
   })
 
-  const options1: Ref<any> = ref([
+  const options1 = ref<any>([
     { value: '选项1', label: '黄金糕' },
     { value: '选项2', label: '双皮奶' },
     { value: '选项3', label: '蚵仔煎' },
@@ -122,20 +122,20 @@
     { value: '选项5', label: '北京烤鸭' },
   ])
 
-  const value1: Ref<any> = ref('')
-  const options2: Ref<any> = ref([
+  const value1 = ref<string>('')
+  const options2 = ref<any>([
     { value: '选项1', label: '黄金糕' },
     { value: '选项2', label: '双皮奶', disabled: true },
     { value: '选项3', label: '蚵仔煎' },
     { value: '选项4', label: '龙须面' },
     { value: '选项5', label: '北京烤鸭' },
   ])
-  const value2: Ref<any> = ref('')
-  const value3: Ref<any> = ref([])
-  const area: Ref<any> = ref([])
-  const treeValue: Ref<any> = ref('')
-  const areaOptions: Ref<any> = ref([])
-  const treeData: Ref<any> = ref([
+  const value2 = ref<string>('')
+  const value3 = ref<any>([])
+  const area = ref<any>([])
+  const treeValue = ref<string>('')
+  const areaOptions = ref<any>([])
+  const treeData = ref<any>([
     {
       value: '1',
       label: 'Level one 1',

@@ -21,7 +21,7 @@
     [key: string]: any
   }
 
-  const filterText = ref('')
+  const filterText = ref<string>('')
   const treeRef = ref<InstanceType<typeof ElTree>>()
 
   const defaultProps = {

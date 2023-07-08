@@ -34,8 +34,8 @@
     name: 'StepForm',
   })
 
-  const active: Ref<any> = ref(0)
-  let form: any = reactive({})
+  const active = ref<any>(0)
+  let form = reactive<any>({})
 
   const handleSetStep = (_active: any, _form: any) => {
     active.value = _active

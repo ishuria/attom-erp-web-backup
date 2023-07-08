@@ -5,7 +5,7 @@
     undefined as unknown as SpeechSynthesisVoice
   )
 
-  const text = ref('')
+  const text = ref<string>('')
   const speech = useSpeechSynthesis(text, {
     voice,
   })

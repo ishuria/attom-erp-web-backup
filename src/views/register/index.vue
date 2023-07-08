@@ -100,7 +100,7 @@
   const userStore = useUserStore()
   const { setToken } = userStore
 
-  const leftImg = ref('')
+  const leftImg = ref<string>('')
   const img = getImageUrl(`assets/login_images/left_img.png`)
   leftImg.value = img
 
@@ -121,17 +121,17 @@
     }
   }
 
-  const formRef: Ref<any> = ref(null)
-  const isGetPhone: Ref<any> = ref(false)
-  const getPhoneInterval: Ref<any> = ref(null)
-  const phoneCode: Ref<any> = ref(translateTitle('获取验证码'))
-  const form: any = reactive({
+  const formRef = ref<any>(null)
+  const isGetPhone = ref<boolean>(false)
+  const getPhoneInterval = ref<any>(null)
+  const phoneCode = ref<any>(translateTitle('获取验证码'))
+  const form = reactive<any>({
     username: '',
     password: '',
     phone: '',
     verificationCode: '',
   })
-  const rules: any = reactive({
+  const rules = reactive<any>({
     username: [
       {
         required: true,

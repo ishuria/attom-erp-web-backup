@@ -87,17 +87,17 @@
     name: 'RemixIcon',
   })
 
-  const queryIcon: any = ref([])
-  const total = ref(0)
-  const queryForm = reactive({
+  const queryIcon = ref<any>([])
+  const total = ref<any>(0)
+  const queryForm = reactive<any>({
     pageNo: 1,
     pageSize: 72,
     title: '',
     colorful: false,
     num: 28,
   })
-  const layout = ref('total, sizes, prev, pager, next, jumper')
-  const emptyShow = ref(false)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const emptyShow = ref<boolean>(false)
 
   const fetchData = async () => {
     const { data } = await getIconList(queryForm)

@@ -84,17 +84,17 @@
   defineOptions({
     name: 'Input',
   })
-  const input1: Ref<any> = ref('')
-  const input2: Ref<any> = ref('')
-  const input3: Ref<any> = ref('')
-  const input4: Ref<any> = ref('')
-  const input5: Ref<any> = ref('')
-  const input6: Ref<any> = ref('')
-  const input7: Ref<any> = ref('')
-  const input8: Ref<any> = ref('')
-  const input9: Ref<any> = ref('')
-  const select: Ref<any> = ref(1)
-  const textarea: Ref<any> = ref('')
+  const input1 = ref<string>('')
+  const input2 = ref<string>('')
+  const input3 = ref<string>('')
+  const input4 = ref<string>('')
+  const input5 = ref<string>('')
+  const input6 = ref<string>('')
+  const input7 = ref<string>('')
+  const input8 = ref<string>('')
+  const input9 = ref<string>('')
+  const select = ref<any>(1)
+  const textarea = ref<string>('')
 </script>
 
 <style lang="scss" scoped>

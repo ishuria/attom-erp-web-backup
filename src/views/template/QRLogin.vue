@@ -2,8 +2,8 @@
   import { getImageUrl } from '/@/utils/imageUrl'
 
   const QR = getImageUrl('assets/qr_images/QR.png')
-  const scan = ref('')
-  const dialogVisible = ref(false)
+  const scan = ref<string>('')
+  const dialogVisible = ref<boolean>(false)
 
   scan.value = getImageUrl('assets/qr_images/scan.png')
   const timer = setInterval(() => {

@@ -6,7 +6,7 @@ vab
     name: 'PDF',
   })
 
-  const source = ref(
+  const source = ref<any>(
     'https://fastly.jsdelivr.net/gh/' + 'chuzh' + 'ixin/image' + `/demo.pdf`
   )
 </script>

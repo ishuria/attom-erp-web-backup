@@ -185,15 +185,15 @@
   const tabsStore = useTabsStore()
   const { changeTabsMeta, addVisitedRoute } = tabsStore
 
-  const editRef: Ref<any> = ref(null)
-  const tableSortRef: Ref<any> = ref(null)
-  const fold = ref(true)
-  const list = ref([])
-  const listLoading = ref(true)
-  const layout = ref('total, sizes, prev, pager, next, jumper')
-  const total = ref(0)
-  const selectRows: Ref<any> = ref('')
-  const queryForm: any = reactive({
+  const editRef = ref<any>(null)
+  const tableSortRef = ref<any>(null)
+  const fold = ref<boolean>(true)
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const total = ref<any>(0)
+  const selectRows = ref<any>([])
+  const queryForm = reactive<any>({
     pageNo: 1,
     pageSize: 10,
   })

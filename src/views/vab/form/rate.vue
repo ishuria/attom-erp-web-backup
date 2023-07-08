@@ -32,9 +32,9 @@
     name: 'Rate',
   })
 
-  const value1: Ref<any> = ref(null)
-  const value2: Ref<any> = ref(null)
-  const value3: Ref<any> = ref(3.7)
+  const value1 = ref<any>(null)
+  const value2 = ref<any>(null)
+  const value3 = ref<any>(3.7)
 </script>
 
 <style lang="scss" scoped></style>
