@@ -48,7 +48,7 @@
           <span v-else @click="row.edit = !row.edit">{{ row.author }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="160">
+      <el-table-column align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button
             v-if="!row.edit"
@@ -60,7 +60,6 @@
           </el-button>
           <el-button
             v-if="row.edit"
-            style="margin-left: 10px"
             text
             type="primary"
             @click="confirmEdit(row)"
