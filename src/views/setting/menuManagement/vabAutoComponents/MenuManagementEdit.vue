@@ -3,7 +3,7 @@
     v-model="dialogFormVisible"
     draggable
     :title="title"
-    width="60%"
+    width="830px"
     @close="close"
   >
     <el-form
@@ -122,7 +122,25 @@
   const showEdit = (row: any) => {
     if (!row) {
       title.value = '添加'
-      form = reactive<any>({})
+      form = reactive<any>({
+        parentId: '',
+        name: '',
+        path: '',
+        component: '',
+        redirect: '',
+        meta: {
+          title: '',
+          icon: '',
+          badge: '',
+          dot: false,
+          hidden: false,
+          levelHidden: false,
+          isCustomSvg: false,
+          noClosable: false,
+          noKeepAlive: false,
+          tabHidden: false,
+        },
+      })
     } else {
       title.value = '编辑'
       form = reactive<any>({ ...row })
