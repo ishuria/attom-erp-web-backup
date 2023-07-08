@@ -752,15 +752,6 @@ const list = [
           icon: 'home-2-line',
         },
       },
-      {
-        path: 'parameterDictionary',
-        name: 'ParameterDictionary',
-        component: '/@/views/goods/ParameterDictionary.vue',
-        meta: {
-          title: '参数字典',
-          icon: 'home-2-line',
-        },
-      },
     ],
   },
   {

@@ -883,15 +883,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'home-2-line',
         },
       },
-      {
-        path: 'parameterDictionary',
-        name: 'ParameterDictionary',
-        component: () => import('/@/views/goods/ParameterDictionary.vue'),
-        meta: {
-          title: '参数字典',
-          icon: 'home-2-line',
-        },
-      },
     ],
   },
   {

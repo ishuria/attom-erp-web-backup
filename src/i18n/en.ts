@@ -35,7 +35,6 @@ export default {
     单选框: 'Radio',
     卡片: 'Card',
     卡片拖拽: 'Card drag',
-    参数字典: 'Parameter dictionary',
     商品: 'Goods',
     商品分组: 'Goods grouping',
     商品管理: 'Goods management',
