@@ -113,10 +113,11 @@
   const fetchData = async () => {
     listLoading.value = true
     const { data } = await getList(queryForm)
-    list.value = data.list.map((v: any) => {
-      v.edit = false
-      v.originalTitle = v.title
-      return v
+    list.value = data.list.map((item: any) => {
+      item.edit = false
+      item.originalTitle = item.title
+      item.originalAuthor = item.author
+      return item
     })
     total.value = data.total
     listLoading.value = false
@@ -133,21 +134,15 @@
     queryForm.pageNo = 1
     fetchData()
   }
-  const cancelEdit = (row: {
-    title: any
-    originalTitle: any
-    edit: boolean
-  }) => {
+  const cancelEdit = (row: any) => {
     row.title = row.originalTitle
+    row.author = row.originalAuthor
     row.edit = false
   }
-  const confirmEdit = (row: {
-    edit: boolean
-    originalTitle: any
-    title: any
-  }) => {
+  const confirmEdit = (row: any) => {
     row.edit = false
     row.originalTitle = row.title
+    row.originalAuthor = row.author
   }
   onMounted(() => {
     fetchData()
