@@ -149,8 +149,8 @@
       position: relative;
       width: 80%;
       padding: var(--el-padding);
-      color: black;
-      background: #e2e2e2;
+      color: var(--el-color-black);
+      background: var(--el-border-color);
       border-radius: calc(var(--el-border-radius-base) + 2px);
 
       &:after {
@@ -161,7 +161,7 @@
         height: 0;
         overflow: hidden;
         content: '';
-        border-color: #e2e2e2 transparent transparent;
+        border-color: var(--el-border-color) transparent transparent;
         border-style: solid dashed dashed;
         border-width: 10px;
       }
