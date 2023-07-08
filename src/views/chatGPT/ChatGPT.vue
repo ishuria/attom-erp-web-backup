@@ -20,15 +20,13 @@
   const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
 
   const changeGPT = (value: any) => {
-    $baseMessage(`切换${value}成功！`, 'success', 'hey')
     if (value == '小爱同学')
       url.value = 'https://api.oioweb.cn/api/ai/chat?text='
-
-    if (value == 'ChatGPT-V3.5')
+    if (value == 'GPT3.5')
       url.value = 'https://wmapi.wenbo.li/api/gpt/?message='
-
-    if (value == 'ChatGPT-V4.0')
+    if (value == 'GPT4.0')
       url.value = 'https://wmapi.wenbo.li/api/gpt/four/?message='
+    $baseMessage(`切换${value}成功！`, 'success', 'hey')
   }
 
   const result =
@@ -56,7 +54,7 @@
     }
     if (!finish.value) {
       $baseMessage(
-        'ChatGPT还未回答' + '完您的上个问题，请稍' + '后再进行提问',
+        `${radio.value}还未回答` + `完您的上个问题，请稍` + `后再进行提问`,
         'error',
         'hey'
       )
@@ -76,7 +74,7 @@
         },
         {
           type: 'tips',
-          result: 'ChatGPT AI 内' + '容生成中，请稍后。。。',
+          result: `${radio.value} AI 内` + `容生成中，请稍后。。。`,
           avatar: 'static/img/chatGPT.png',
           username: 'ChatGPT',
           time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -110,7 +108,7 @@
           scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
         })
         .catch(() => {
-          $baseMessage('ChatGPT 余额不足！', 'error', 'hey')
+          $baseMessage(`${radio.value} 余额不足！`, 'error', 'hey')
           finish.value = true
         })
     }
@@ -139,8 +137,8 @@
           <div class="vab-chat-main">
             <el-radio-group v-model="radio" @change="changeGPT">
               <el-radio-button label="小爱同学" />
-              <el-radio-button label="ChatGPT-V3.5" />
-              <el-radio-button label="ChatGPT-V4.0" />
+              <el-radio-button label="GPT3.5" />
+              <el-radio-button label="GPT4.0" />
             </el-radio-group>
             <el-scrollbar ref="scrollbarRef">
               <ul ref="innerRef">
