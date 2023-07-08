@@ -343,14 +343,3 @@
     }
   }
 </style>
-<style>
-  /* 手机端禁用表格自动高度 */
-  .mobile {
-    .tabs-table-container.no-background-container {
-      .el-tab-pane {
-        display: block !important;
-        height: auto !important;
-      }
-    }
-  }
-</style>
