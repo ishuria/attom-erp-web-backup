@@ -1,5 +1,5 @@
 <template>
-  <div class="remix-icon-container">
+  <div class="remix-icon-container table-auto-height">
     <el-row :gutter="20">
       <el-col :span="24">
         <el-form inline label-width="80px" @submit.prevent>
@@ -36,44 +36,44 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col v-if="emptyShow" :span="24">
-        <el-empty class="vab-data-empty" description="暂无数据" />
-      </el-col>
-      <el-col
-        v-for="(item, index) in queryIcon"
-        :key="index"
-        :lg="2"
-        :md="3"
-        :sm="8"
-        :xl="2"
-        :xs="6"
-      >
-        <vab-card shadow="hover" @click="handleCopyIcon(item.icon)">
-          <vab-icon
-            :icon="item.icon"
-            :style="{
-              color: queryForm.colorful ? item.color : 'var(--el-color-grey)',
-              fontSize: queryForm.num + 'px',
-            }"
-          />
-        </vab-card>
-        <div class="icon-text" @click="handleCopyText(item.icon)">
-          {{ item.icon }}
-        </div>
-      </el-col>
-      <el-col :span="24">
-        <el-pagination
-          background
-          :current-page="queryForm.pageNo"
-          :layout="layout"
-          :page-size="queryForm.pageSize"
-          :page-sizes="[72, 144, 216, 288]"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        />
-      </el-col>
     </el-row>
+    <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
+    <div class="el-table">
+      <el-row :gutter="20">
+        <el-col
+          v-for="(item, index) in queryIcon"
+          :key="index"
+          :lg="2"
+          :md="3"
+          :sm="8"
+          :xl="2"
+          :xs="6"
+        >
+          <vab-card shadow="hover" @click="handleCopyIcon(item.icon)">
+            <vab-icon
+              :icon="item.icon"
+              :style="{
+                color: queryForm.colorful ? item.color : 'var(--el-color-grey)',
+                fontSize: queryForm.num + 'px',
+              }"
+            />
+          </vab-card>
+          <div class="icon-text" @click="handleCopyText(item.icon)">
+            {{ item.icon }}
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+    <el-pagination
+      background
+      :current-page="queryForm.pageNo"
+      :layout="layout"
+      :page-size="queryForm.pageSize"
+      :page-sizes="[72, 144, 216, 288]"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
   </div>
 </template>
 
@@ -97,7 +97,7 @@
     num: 28,
   })
   const layout = ref('total, sizes, prev, pager, next, jumper')
-  const emptyShow = ref(true)
+  const emptyShow = ref(false)
 
   const fetchData = async () => {
     const { data } = await getIconList(queryForm)

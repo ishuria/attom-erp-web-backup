@@ -196,7 +196,7 @@ html {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 600px;
+      min-height: 580px;
       margin: auto;
     }
 
@@ -585,6 +585,7 @@ html {
       height: $base-keep-alive-height;
       .el-table {
         flex: 1;
+        overflow-y: auto;
       }
     }
     .no-background-container.table-auto-height {
