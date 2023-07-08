@@ -27,7 +27,7 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="标题" show-overflow-tooltip>
+      <el-table-column align="center" label="标题">
         <template #default="{ row }">
           <template v-if="row.edit">
             <el-input v-model="row.title" style="width: 300px" />
@@ -35,12 +35,7 @@
           <span v-else @click="row.edit = !row.edit">{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="作者"
-        prop="author"
-        show-overflow-tooltip
-      >
+      <el-table-column align="center" label="作者" prop="author">
         <template #default="{ row }">
           <template v-if="row.edit">
             <el-input v-model="row.author" style="width: 300px" />

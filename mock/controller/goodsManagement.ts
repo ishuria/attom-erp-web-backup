@@ -1,39 +1,21 @@
 import { MockMethod } from 'vite-plugin-mock'
 import { handleRandomImage } from '../utils/index.ts'
 
-const List: {
-  uuid: string
-  id: string
-  title: string
-  description: string
-  'status|1': string[]
-  author: string
-  datetime: string
-  pageViews: string
-  img: string
-  switch: string
-  percent: string
-  'rate|1': number[]
-  'type|1': number[]
-  percentage: string
-}[] = []
+const List = <any>[]
 const count = 50
 for (let i = 0; i < count; i++) {
   List.push({
     uuid: '@uuid',
     id: '@id',
     title: '@title(1, 2)',
-    description: '@csentence',
-    'status|1': ['published', 'draft', 'deleted'],
-    author: '@cname',
+    name: '@title(1, 2)',
+    'type|1': ['视频饮料', '家用电器', '其他'],
+    price: '￥' + '@integer(0,100)',
+    sales: '@integer(0,100)',
+    stock: '@integer(0,100)',
+    'status|1': ['已上架', '已下架', '待上架'],
     datetime: '@datetime',
-    pageViews: '@integer(300, 5000)',
-    img: handleRandomImage(),
-    switch: '@boolean',
-    percent: '@integer(80,99)',
-    'rate|1': [1, 2, 3, 4, 5],
-    'type|1': [0, 1],
-    percentage: '@integer(0,100)',
+    image: handleRandomImage(),
   })
 }
 
@@ -42,10 +24,10 @@ export default [
     url: '/goodsManagement/getList',
     method: 'get',
     response({ query }: any) {
-      const { title, pageNo = 1, pageSize = 20 } = query
+      const { name, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
-        (item: { title: string | any[] }) =>
-          !(title && item.title.indexOf(title) < 0)
+        (item: { name: string | any[] }) =>
+          !(name && item.name.indexOf(name) < 0)
       )
       const list = mockList.filter(
         (item: any, index: number) =>

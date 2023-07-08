@@ -44,7 +44,7 @@
               :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
             />
           </el-button>
-          <el-popover popper-class="custom-table-radio" trigger="hover">
+          <el-popover trigger="hover" :width="162">
             <el-radio-group v-model="lineHeight">
               <el-radio-button label="large">大</el-radio-button>
               <el-radio-button label="default">中</el-radio-button>
@@ -296,10 +296,5 @@
         }
       }
     }
-  }
-</style>
-<style lang="scss">
-  .custom-table-radio {
-    width: 160px !important;
   }
 </style>

@@ -52,14 +52,10 @@
             </vab-query-form-top-panel>
           </vab-query-form>
           <el-table v-loading="listLoading" border :data="list">
-            <el-table-column label="id" prop="id" show-overflow-tooltip />
-            <el-table-column label="key值" prop="key" show-overflow-tooltip />
-            <el-table-column
-              label="字典值"
-              prop="value"
-              show-overflow-tooltip
-            />
-            <el-table-column label="操作" show-overflow-tooltip width="200">
+            <el-table-column label="id" prop="id" />
+            <el-table-column label="key值" prop="key" />
+            <el-table-column label="字典值" prop="value" />
+            <el-table-column label="操作" width="200">
               <template #default="{ row }">
                 <el-button text type="primary" @click="handleEdit(row)">
                   编辑

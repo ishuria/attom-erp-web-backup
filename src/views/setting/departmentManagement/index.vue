@@ -42,14 +42,10 @@
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" width="38" />
-      <el-table-column label="名称" prop="name" show-overflow-tooltip />
-      <el-table-column label="父节点Id" prop="parentId" show-overflow-tooltip />
-      <el-table-column label="排序" prop="order" show-overflow-tooltip />
-      <el-table-column
-        label="创建时间"
-        prop="createTime"
-        show-overflow-tooltip
-      />
+      <el-table-column label="名称" prop="name" />
+      <el-table-column label="父节点Id" prop="parentId" />
+      <el-table-column label="排序" prop="order" />
+      <el-table-column label="创建时间" prop="createTime" />
       <el-table-column label="操作" width="200">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">

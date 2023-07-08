@@ -58,4 +58,24 @@ export default [
       }
     },
   },
+  {
+    url: '/table/doEdit',
+    method: 'post',
+    response: () => {
+      return {
+        code: 200,
+        msg: '模拟保存成功',
+      }
+    },
+  },
+  {
+    url: '/table/doDelete',
+    method: 'post',
+    response: () => {
+      return {
+        code: 200,
+        msg: '模拟删除成功',
+      }
+    },
+  },
 ] as MockMethod[]

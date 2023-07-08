@@ -115,28 +115,13 @@
             @selection-change="setSelectRows"
           >
             <el-table-column type="selection" width="38" />
-            <el-table-column
-              align="center"
-              label="序号"
-              show-overflow-tooltip
-              width="55"
-            >
+            <el-table-column align="center" label="序号" width="55">
               <template #default="{ $index }">
                 {{ $index + 1 }}
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              label="标题"
-              prop="title"
-              show-overflow-tooltip
-            />
-            <el-table-column
-              align="center"
-              label="作者"
-              prop="author"
-              show-overflow-tooltip
-            />
+            <el-table-column align="center" label="标题" prop="title" />
+            <el-table-column align="center" label="作者" prop="author" />
             <el-table-column align="center" label="评级">
               <template #default="{ row }">
                 <el-rate v-model="row.rate" disabled />
@@ -146,15 +131,9 @@
               align="center"
               label="点击量"
               prop="pageViews"
-              show-overflow-tooltip
               sortable
             />
-            <el-table-column
-              align="center"
-              label="开关"
-              prop="switch"
-              show-overflow-tooltip
-            >
+            <el-table-column align="center" label="开关" prop="switch">
               <template #default="{ row }">
                 <el-tooltip
                   :content="row.switch === 0 ? '点击开启' : '点击关闭'"
@@ -165,7 +144,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="状态" show-overflow-tooltip>
+            <el-table-column align="center" label="状态">
               <template #default="{ row }">
                 <el-tooltip
                   class="item"
@@ -183,14 +162,12 @@
               align="center"
               label="时间"
               prop="datetime"
-              show-overflow-tooltip
               width="200"
             />
             <el-table-column
               align="center"
               fixed="right"
               label="操作"
-              show-overflow-tooltip
               width="250"
             >
               <template #default="{ row }">

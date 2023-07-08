@@ -31,69 +31,53 @@
             row-key="path"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
-            <el-table-column
-              label="标题"
-              prop="meta.title"
-              show-overflow-tooltip
-            />
-            <el-table-column label="name" prop="name" show-overflow-tooltip />
-            <el-table-column label="路径" prop="path" show-overflow-tooltip />
-            <el-table-column label="是否隐藏" show-overflow-tooltip>
+            <el-table-column label="标题" prop="meta.title" />
+            <el-table-column label="name" prop="name" />
+            <el-table-column label="路径" prop="path" />
+            <el-table-column label="是否隐藏">
               <template #default="{ row }">
                 {{ row.meta.hidden ? '是' : '否' }}
               </template>
             </el-table-column>
-            <el-table-column
-              label="是否隐藏当前节点"
-              show-overflow-tooltip
-              width="100"
-            >
+            <el-table-column label="是否隐藏当前节点" width="100">
               <template #default="{ row }">
                 {{ row.meta.levelHidden ? '是' : '否' }}
               </template>
             </el-table-column>
-            <el-table-column
-              label="vue文件路径"
-              prop="component"
-              show-overflow-tooltip
-            />
-            <el-table-column label="重定向" show-overflow-tooltip>
+            <el-table-column label="vue文件路径" prop="component" />
+            <el-table-column label="重定向">
               <template #default="{ row }">
                 {{ row.redirect || '无' }}
               </template>
             </el-table-column>
-            <el-table-column label="图标" show-overflow-tooltip>
+            <el-table-column label="图标">
               <template #default="{ row }">
                 <vab-icon v-if="row.meta.icon" :icon="row.meta.icon" />
               </template>
             </el-table-column>
-            <el-table-column label="是否固定" show-overflow-tooltip>
+            <el-table-column label="是否固定">
               <template #default="{ row }">
                 {{ row.meta.noClosable ? '是' : '否' }}
               </template>
             </el-table-column>
-            <el-table-column
-              label="是否无缓存"
-              show-overflow-tooltip
-              width="120"
-            >
+            <el-table-column label="是否无缓存" width="120">
               <template #default="{ row }">
                 {{ row.meta.noKeepAlive ? '是' : '否' }}
               </template>
             </el-table-column>
-            <el-table-column label="badge" show-overflow-tooltip>
+            <el-table-column label="badge">
               <template #default="{ row }">
                 <el-tag v-if="row.meta.badge" effect="dark" type="danger">
                   {{ row.meta.badge }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="dot" show-overflow-tooltip>
+            <el-table-column label="dot">
               <template #default="{ row }">
                 {{ row.meta.dot ? '是' : '否' }}
               </template>
             </el-table-column>
-            <el-table-column label="操作" show-overflow-tooltip width="200">
+            <el-table-column label="操作" width="200">
               <template #default="{ row }">
                 <el-button text type="primary" @click="handleEdit(row)">
                   编辑
