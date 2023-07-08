@@ -41,6 +41,10 @@
 </template>
 
 <script setup lang="ts">
+  defineOptions({
+    name: 'WebsiteSetting',
+  })
+
   interface formType {
     siteName: string
     siteUrl: string
@@ -50,11 +54,11 @@
   }
 
   const form = reactive<formType>({
-    siteName: '',
-    siteUrl: '',
+    siteName: 'Vue Shop Vite',
+    siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
     metaKeywords: '',
     metaDesc: '',
-    copyright: '',
+    copyright: '网站设置',
   })
   const formRef = ref<any>(null)
   const formRules = reactive<any>({
