@@ -2,10 +2,9 @@
   defineOptions({
     name: 'Video',
   })
+
+  const route = useRoute()
   const isLeft = usePageLeave()
-
-  const $baseMessage = inject<any>('$baseMessage')
-
   const configMp4 = reactive<any>({
     url:
       'https://fastly.jsdel' +
@@ -19,7 +18,6 @@
     playbackRate: [0.5, 0.75, 1, 1.5, 2],
     fluid: true,
   })
-
   let _Player: any
 
   const playerInstance = (Player: any) => {
@@ -27,13 +25,8 @@
   }
 
   watch(isLeft, (value) => {
-    if (true === value) {
-      $baseMessage('鼠标已离开页面，暂停播放！', 'warning', 'hey')
-      _Player.pause()
-    } else {
-      $baseMessage('鼠标已回到页面，继续播放！', 'success', 'hey')
-      _Player.play()
-    }
+    if (true === value && 'Video' === route.name) _Player.pause()
+    else _Player.play()
   })
 
   onBeforeRouteLeave(() => {
