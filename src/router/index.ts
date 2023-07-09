@@ -856,6 +856,30 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
+    path: '/noColumn',
+    name: 'NoColumn',
+    component: Layout,
+    meta: {
+      title: '单栏',
+      icon: 'delete-column',
+      guard: ['Admin'],
+      breadcrumbHidden: true,
+    },
+    children: [
+      {
+        path: 'deleteColumn',
+        name: 'DeleteColumn',
+        component: () => import('/@/views/noColumn/deleteColumn/index.vue'),
+        meta: {
+          title: '单栏',
+          icon: 'delete-column',
+          noColumn: true,
+          hidden: true,
+        },
+      },
+    ],
+  },
+  {
     path: '/goods',
     name: 'Goods',
     component: Layout,

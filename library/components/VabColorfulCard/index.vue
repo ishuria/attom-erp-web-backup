@@ -6,7 +6,7 @@
   defineProps({
     shadow: {
       type: String,
-      default: '',
+      default: 'never',
     } as any,
     colorFrom: {
       type: String,

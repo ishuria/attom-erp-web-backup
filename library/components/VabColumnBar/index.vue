@@ -52,15 +52,17 @@
   }
 
   watchEffect(() => {
-    const foldUnfold: any = document.querySelector(
-      '.fold-unfold'
-    ) as HTMLElement
+    const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
+    const floatFold: any = document.querySelector('.float-fold')
+
     if (theme.value.layout === 'column' && route.meta.noColumn) {
       foldSideBar()
       if (foldUnfold) foldUnfold.style = 'display:none'
+      if (floatFold) floatFold.style = 'display:none'
     } else {
       openSideBar()
       if (foldUnfold) foldUnfold.style = ''
+      if (floatFold) floatFold.style = ''
     }
   })
 </script>
@@ -116,11 +118,6 @@
         <vab-menu v-if="!item.meta.hidden" :item="item" />
       </template>
     </el-menu>
-    <div class="float-portal">
-      <vab-link target="_blank" to="/portal">
-        <vab-icon icon="user-heart-line" />
-      </vab-link>
-    </div>
     <div class="float-fold">
       <vab-fold fold="layout-left-2-line" unfold="layout-left-line" />
     </div>
@@ -392,7 +389,7 @@
 
         .el-divider {
           margin: 0 0 var(--el-margin) 0;
-          background-color: #f6f6f6;
+          background-color: var(--el-border-color);
 
           &__text {
             color: var(--el-color-black);
@@ -421,12 +418,11 @@
     }
   }
 
-  .float-fold,
-  .float-portal {
+  .float-fold {
     position: fixed;
     bottom: 13px;
     left: 14px;
-    z-index: 99999;
+    z-index: 9999;
     width: 34px;
     height: 34px;
     line-height: 34px;
@@ -442,9 +438,5 @@
         cursor: pointer;
       }
     }
-  }
-
-  .float-portal {
-    bottom: 56px !important;
   }
 </style>

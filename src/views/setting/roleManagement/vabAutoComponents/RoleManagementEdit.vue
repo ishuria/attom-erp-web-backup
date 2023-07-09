@@ -19,11 +19,8 @@
               '/',
               '/vab',
               '/other',
-              '/mall',
               '/noColumn',
               '/setting',
-              '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
-              '/error',
             ]"
             :default-expanded-keys="[]"
             node-key="path"
