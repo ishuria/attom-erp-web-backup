@@ -51,19 +51,29 @@
     })
   }
 
-  watchEffect(() => {
-    const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
-    const floatFold: any = document.querySelector('.float-fold')
+  nextTick(() => {
+    watch(
+      route,
+      () => {
+        const foldUnfold: any = document.querySelector(
+          '.left-panel .fold-unfold'
+        )
+        const floatFold: any = document.querySelector('.float-fold')
 
-    if (theme.value.layout === 'column' && route.meta.noColumn) {
-      foldSideBar()
-      if (foldUnfold) foldUnfold.style = 'display:none'
-      if (floatFold) floatFold.style = 'display:none'
-    } else {
-      openSideBar()
-      if (foldUnfold) foldUnfold.style = ''
-      if (floatFold) floatFold.style = ''
-    }
+        if (theme.value.layout === 'column' && route.meta.noColumn) {
+          foldSideBar()
+          if (foldUnfold) foldUnfold.style = 'display:none'
+          if (floatFold) floatFold.style = 'display:none'
+        } else {
+          openSideBar()
+          if (foldUnfold) foldUnfold.style = ''
+          if (floatFold) floatFold.style = ''
+        }
+      },
+      {
+        immediate: true,
+      }
+    )
   })
 </script>
 
