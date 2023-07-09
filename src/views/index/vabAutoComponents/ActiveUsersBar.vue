@@ -79,11 +79,13 @@
 </script>
 
 <style lang="scss" scoped>
-  .echarts {
-    position: absolute;
-    right: 10px;
-    bottom: 22px;
-    width: calc(100% - 160px) !important;
-    height: 60px !important;
+  :deep() {
+    .echarts {
+      position: absolute;
+      right: 10px;
+      bottom: 22px;
+      width: calc(100% - 160px) !important;
+      height: 60px !important;
+    }
   }
 </style>

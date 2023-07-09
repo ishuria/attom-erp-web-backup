@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ActiveUsersBar: typeof import('./../../../src/views/index/vabAutoComponents/ActiveUsersBar.vue')['default']
+    Authorization: typeof import('./../../../src/views/index/vabAutoComponents/Authorization.vue')['default']
     AwardGrid: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardGrid.vue')['default']
     AwardSlotMachine: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardSlotMachine.vue')['default']
     AwardWheel: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardWheel.vue')['default']

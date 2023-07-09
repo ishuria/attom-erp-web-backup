@@ -67,8 +67,11 @@
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
         <recommendation />
       </el-col>
-      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+      <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <develop />
+      </el-col>
+      <el-col :lg="6" :md="12" :sm="24" :xl="12" :xs="24">
+        <authorization />
       </el-col>
     </el-row>
   </div>

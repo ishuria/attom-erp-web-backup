@@ -101,35 +101,31 @@
       流量概况
       <el-tag class="card-header-tag" type="success">日</el-tag>
     </template>
-    <div class="line-two">
-      自上周以来
-      <vab-icon icon="arrow-up-line" />
-      <span>44%</span>
-    </div>
+
     <vab-chart :option="option" theme="vab-echarts-theme" />
+    <div class="bottom">
+      <div class="line-two">
+        自上周以来
+        <span>提升 44%</span>
+      </div>
+    </div>
   </vab-card>
 </template>
 
-<style lang="scss">
-  .echarts {
-    width: 100%;
-    height: 220px;
+<style lang="scss" scoped>
+  :deep() {
+    .echarts {
+      height: 140px !important;
+    }
   }
 
+  .bottom {
+    padding-top: 20px;
+    margin-top: 5px;
+    text-align: left;
+    border-top: 1px solid $base-border-color;
+  }
   .line-two {
-    margin: 10px 0 10px 0;
-
-    .ri-arrow-up-line {
-      width: 18px;
-      height: 18px;
-      margin: 0 3px 0 2px;
-      color: var(--el-color-success);
-      vertical-align: -3px !important;
-      background: var(--el-color-success-light);
-      border-radius: 50%;
-      transform: scale(0.8);
-    }
-
     span {
       color: var(--el-color-success);
     }
