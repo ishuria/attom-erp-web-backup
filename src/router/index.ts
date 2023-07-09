@@ -578,7 +578,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '面板分割',
           guard: ['Admin'],
-          icon: 'layout-2-line',
+          icon: 'split-cells-horizontal',
         },
       },
       {

@@ -520,7 +520,7 @@ const list = [
         meta: {
           title: '面板分割',
           guard: ['Admin'],
-          icon: '"Layout"-2-line',
+          icon: 'split-cells-horizontal',
         },
       },
       {
