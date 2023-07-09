@@ -1,137 +1,3 @@
-<template>
-  <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
-      <el-tab-pane label="当前" name="first">
-        <vab-query-form>
-          <vab-query-form-top-panel>
-            <el-form
-              inline
-              label-width="49px"
-              :model="queryForm"
-              @submit.prevent
-            >
-              <el-form-item label="分类">
-                <el-check-tag :checked="queryForm.checked1" @change="onChange1">
-                  分类一
-                </el-check-tag>
-                <el-check-tag :checked="queryForm.checked2" @change="onChange2">
-                  分类二
-                </el-check-tag>
-                <el-check-tag :checked="queryForm.checked3" @change="onChange3">
-                  分类三
-                </el-check-tag>
-                <el-check-tag :checked="queryForm.checked4" @change="onChange4">
-                  分类四
-                </el-check-tag>
-              </el-form-item>
-            </el-form>
-          </vab-query-form-top-panel>
-          <vab-query-form-left-panel :span="24">
-            <el-button :icon="Plus" type="primary" @click="handleAdd">
-              添加
-            </el-button>
-            <el-button :icon="Delete" type="danger" @click="handleDelete">
-              删除
-            </el-button>
-            <el-button type="primary" @click="handleDetail">详情</el-button>
-            <el-button type="primary" @click="handleDetailStayTable">
-              后台打开详情
-            </el-button>
-          </vab-query-form-left-panel>
-        </vab-query-form>
-
-        <el-table
-          ref="tableSortRef"
-          v-loading="listLoading"
-          border
-          :data="list"
-          @selection-change="setSelectRows"
-        >
-          <el-table-column type="selection" width="38" />
-          <el-table-column align="center" label="序号" width="55">
-            <template #default="{ $index }">
-              {{ $index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="标题" prop="title" />
-          <el-table-column align="center" label="作者" prop="author" />
-          <el-table-column align="center" label="评级">
-            <template #default="{ row }">
-              <el-rate v-model="row.rate" disabled />
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="点击量"
-            prop="pageViews"
-            sortable
-          />
-          <el-table-column align="center" label="开关" prop="switch">
-            <template #default="{ row }">
-              <el-tooltip
-                :content="row.switch === 0 ? '点击开启' : '点击关闭'"
-                :enterable="false"
-                placement="top"
-              >
-                <el-switch v-model="row.switch" />
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="状态">
-            <template #default="{ row }">
-              <el-tooltip
-                class="item"
-                :content="row.status"
-                effect="dark"
-                placement="top-start"
-              >
-                <el-tag :type="statusFilter(row.status)">
-                  {{ row.status }}
-                </el-tag>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            label="时间"
-            prop="datetime"
-            width="200"
-          />
-          <el-table-column align="center" label="操作" width="250">
-            <template #default="{ row }">
-              <el-button text type="primary" @click="handleDetail(row)">
-                详情
-              </el-button>
-              <el-button text type="primary" @click="handleEdit(row)">
-                编辑
-              </el-button>
-              <el-button text type="primary" @click="handleDelete(row)">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
-        <el-pagination
-          background
-          :current-page="queryForm.pageNo"
-          :layout="layout"
-          :page-size="queryForm.pageSize"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        />
-        <default-table-edit ref="editRef" @fetch-data="fetchData" />
-      </el-tab-pane>
-      <el-tab-pane label="其他" name="second">
-        <el-empty class="vab-data-empty" description="暂无数据" />
-      </el-tab-pane>
-    </el-tabs>
-  </div>
-</template>
-
 <script lang="ts" setup>
   defineOptions({
     name: 'TabsTable',
@@ -307,6 +173,140 @@
   })
 </script>
 
+<template>
+  <div class="tabs-table-container no-background-container">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+      <el-tab-pane label="当前" name="first">
+        <vab-query-form>
+          <vab-query-form-top-panel>
+            <el-form
+              inline
+              label-width="49px"
+              :model="queryForm"
+              @submit.prevent
+            >
+              <el-form-item label="分类">
+                <el-check-tag :checked="queryForm.checked1" @change="onChange1">
+                  分类一
+                </el-check-tag>
+                <el-check-tag :checked="queryForm.checked2" @change="onChange2">
+                  分类二
+                </el-check-tag>
+                <el-check-tag :checked="queryForm.checked3" @change="onChange3">
+                  分类三
+                </el-check-tag>
+                <el-check-tag :checked="queryForm.checked4" @change="onChange4">
+                  分类四
+                </el-check-tag>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-top-panel>
+          <vab-query-form-left-panel :span="24">
+            <el-button :icon="Plus" type="primary" @click="handleAdd">
+              添加
+            </el-button>
+            <el-button :icon="Delete" type="danger" @click="handleDelete">
+              删除
+            </el-button>
+            <el-button type="primary" @click="handleDetail">详情</el-button>
+            <el-button type="primary" @click="handleDetailStayTable">
+              后台打开详情
+            </el-button>
+          </vab-query-form-left-panel>
+        </vab-query-form>
+
+        <el-table
+          ref="tableSortRef"
+          v-loading="listLoading"
+          border
+          :data="list"
+          @selection-change="setSelectRows"
+        >
+          <el-table-column type="selection" width="38" />
+          <el-table-column align="center" label="序号" width="55">
+            <template #default="{ $index }">
+              {{ $index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="标题" prop="title" />
+          <el-table-column align="center" label="作者" prop="author" />
+          <el-table-column align="center" label="评级">
+            <template #default="{ row }">
+              <el-rate v-model="row.rate" disabled />
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="点击量"
+            prop="pageViews"
+            sortable
+          />
+          <el-table-column align="center" label="开关" prop="switch">
+            <template #default="{ row }">
+              <el-tooltip
+                :content="row.switch === 0 ? '点击开启' : '点击关闭'"
+                :enterable="false"
+                placement="top"
+              >
+                <el-switch v-model="row.switch" />
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="状态">
+            <template #default="{ row }">
+              <el-tooltip
+                class="item"
+                :content="row.status"
+                effect="dark"
+                placement="top-start"
+              >
+                <el-tag :type="statusFilter(row.status)">
+                  {{ row.status }}
+                </el-tag>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="时间"
+            prop="datetime"
+            width="200"
+          />
+          <el-table-column align="center" label="操作" width="250">
+            <template #default="{ row }">
+              <el-button text type="primary" @click="handleDetail(row)">
+                详情
+              </el-button>
+              <el-button text type="primary" @click="handleEdit(row)">
+                编辑
+              </el-button>
+              <el-button text type="primary" @click="handleDelete(row)">
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <el-pagination
+          background
+          :current-page="queryForm.pageNo"
+          :layout="layout"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+        <default-table-edit ref="editRef" @fetch-data="fetchData" />
+      </el-tab-pane>
+      <el-tab-pane label="其他" name="second">
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+</template>
+
 <style lang="scss" scoped>
   .tabs-table-container {
     :deep() {
@@ -323,11 +323,18 @@
           height: calc(
             $base-keep-alive-height - $base-padding - 70px
           ) !important;
-          .el-check-tag {
-            margin-right: 10px;
-            border-radius: 99px;
+          .vab-query-form {
+            .el-form {
+              .el-form-item:first-child {
+                margin: 0 !important;
+                .el-check-tag,
+                .el-form-item__label {
+                  margin: 0 10px 5px 0;
+                  border-radius: 99px;
+                }
+              }
+            }
           }
-
           .el-table {
             flex: 1;
           }
