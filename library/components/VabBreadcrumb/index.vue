@@ -17,7 +17,7 @@
     )
   )
   const handleTo = (path: any) => {
-    return { path }
+    if (path) return { path }
   }
 </script>
 
