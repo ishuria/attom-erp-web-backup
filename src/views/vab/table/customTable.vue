@@ -285,8 +285,8 @@
   .custom-table-container {
     .custom-table-right-tools {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      justify-content: center;
 
       :deep() {
         .el-button {

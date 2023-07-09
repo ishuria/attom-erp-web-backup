@@ -42,31 +42,31 @@
       </el-form-item>
       <el-form-item label="按钮级角色">
         <el-button v-permissions="['Admin']" type="primary">
-          拥有["Admin"]角色的按钮
+          拥有["Admin"]的按钮
         </el-button>
         <el-button
           v-permissions="{ role: ['Admin'], mode: 'except' }"
           type="danger"
         >
-          未拥有["Admin"]角色的按钮
+          未拥有["Admin"]的按钮
         </el-button>
         <el-button v-permissions="['Editor']" type="primary">
-          拥有["Editor"]角色的按钮
+          拥有["Editor"]的按钮
         </el-button>
         <el-button
           v-permissions="{ role: ['Editor'], mode: 'except' }"
           type="danger"
         >
-          未拥有["Editor"]角色的按钮
+          未拥有["Editor"]的按钮
         </el-button>
         <el-button
           v-permissions="{ role: ['Admin', 'Editor'], mode: 'allOf' }"
           type="primary"
         >
-          同时拥有["Admin","Editor"]角色的按钮
+          同时拥有["Admin","Editor"]的按钮
         </el-button>
         <el-button v-permissions="['Test']" type="primary">
-          拥有["Test"]角色的按钮
+          拥有["Test"]的按钮
         </el-button>
       </el-form-item>
       <!--  注意其中roles-代表组件name，这样可以区分到具体页面 -->
@@ -75,37 +75,37 @@
           v-permissions="{ permission: ['read:system'] }"
           type="primary"
         >
-          拥有["read:system"]权限点的按钮
+          拥有["read:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{ permission: ['read:system'], mode: 'except' }"
           type="danger"
         >
-          未拥有["'read:system'"]权限点的按钮
+          未拥有["'read:system'"]的按钮
         </el-button>
         <el-button
           v-permissions="{ permission: ['write:system'] }"
           type="primary"
         >
-          拥有["write:system"]权限点的按钮
+          拥有["write:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{ permission: ['write:system'], mode: 'except' }"
           type="danger"
         >
-          未拥有["write:system"]权限点的按钮
+          未拥有["write:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{ permission: ['delete:system'] }"
           type="primary"
         >
-          拥有["delete:system"]权限点的按钮
+          拥有["delete:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{ permission: ['delete:system'], mode: 'except' }"
           type="danger"
         >
-          未拥有["delete:system"]权限点的按钮
+          未拥有["delete:system"]的按钮
         </el-button>
       </el-form-item>
       <el-form-item label="按钮级角色&权限点">
@@ -113,7 +113,7 @@
           v-permissions="{ role: ['Admin'], permission: ['delete:system'] }"
           type="primary"
         >
-          拥有["Admin"]角色或者["delete:system"]权限点的按钮
+          拥有["Admin"]角色或["delete:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{
@@ -123,7 +123,7 @@
           }"
           type="primary"
         >
-          拥有["Editor"]角色和["read:system"]权限点的按钮
+          拥有["Editor"]角色和["read:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{
@@ -133,7 +133,7 @@
           }"
           type="danger"
         >
-          未拥有["Admin"]和["delete:system"]权限点的按钮
+          未拥有["Admin"]和["delete:system"]的按钮
         </el-button>
       </el-form-item>
     </el-form>

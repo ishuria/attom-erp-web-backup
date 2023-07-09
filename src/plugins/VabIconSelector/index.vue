@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { getIconList } from '/@/api/icon'
+  import { Search } from '@element-plus/icons-vue'
 
   defineOptions({
     name: 'VabIconSelector',
@@ -55,9 +56,12 @@
               <el-input v-model="queryForm.title" />
             </el-form-item>
             <el-form-item label-width="0">
-              <el-button native-type="submit" type="primary" @click="queryData">
-                <vab-icon icon="search-line" />
-              </el-button>
+              <el-button
+                :icon="Search"
+                native-type="submit"
+                type="primary"
+                @click="queryData"
+              />
             </el-form-item>
           </el-form>
         </vab-query-form-top-panel>
@@ -84,6 +88,7 @@
 
 <style lang="scss">
   .icon-selector-popper {
+    width: 300px !important;
     .vab-query-form {
       margin-top: calc(var(--el-margin) / 2);
     }
@@ -97,7 +102,7 @@
       height: 25px;
       cursor: pointer;
 
-      i {
+      [class*='ri-'] {
         font-size: 28px;
         color: var(--el-color-grey);
         text-align: center;

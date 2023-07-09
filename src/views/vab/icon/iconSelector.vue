@@ -1,10 +1,6 @@
 <template>
   <div class="icon-selector-container">
-    <el-popover
-      popper-class="icon-selector-popper"
-      trigger="hover"
-      :width="305"
-    >
+    <el-popover popper-class="icon-selector-popper" trigger="hover">
       <template #reference>
         <el-button>
           <vab-icon :icon="icon" />

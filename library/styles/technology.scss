@@ -236,15 +236,6 @@ html > body.vab-theme-technology {
     border: 1px solid var(--el-border-color);
   }
 
-  /* el-dialog、el-message-box、el-popover */
-  @media (max-width: 576px) {
-    .el-dialog,
-    .el-message-box,
-    .el-popover.el-popper {
-      width: auto !important;
-      margin: 5vw;
-    }
-  }
 
   .el-pagination.is-background .btn-prev:disabled,
   .el-pagination.is-background .btn-next:disabled {

@@ -458,8 +458,7 @@ html {
     /* el-dialog、el-message-box、el-popover */
     @media (max-width: 576px) {
       .el-dialog,
-      .el-message-box,
-      .el-popover.el-popper {
+      .el-message-box{
         width: auto !important;
         margin: 5vw;
       }
