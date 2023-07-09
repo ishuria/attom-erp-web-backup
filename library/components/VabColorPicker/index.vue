@@ -104,8 +104,15 @@
 
 <style lang="scss">
   .vab-color-picker {
+    box-sizing: content-box !important;
+    padding: calc(var(--el-padding) / 2);
+
     .el-color-dropdown__link-btn {
       display: none;
+    }
+
+    .el-color-dropdown__btns {
+      margin-top: 0;
     }
   }
 </style>
