@@ -12,8 +12,7 @@
 - shop-vite 与 admin plus 定位不同，shop-vite 定位小而精，admin-plus 定位大而全。
 - shop-vite 接口及使用规范继承 admin plus，有过 admin-plus 开发经验的用户可快速上手。
 - shop-vite 发布时间较短，不代表最终品质，后续会持续进行更新，敬请期待。
-- shop-vite 对比 admin-plus 由于底层脚手架不同，故部分代码无法与 admin-plus 通用，shop-vite
-  优点开发时项目启动快，缺点开发时虽启动速度比 webpack5 快十倍，但网页打开速度比 webpack5 稍慢，如果介意网页打开速度请使用 admin-plus。
+- shop-vite 对比 admin-plus 由于底层脚手架不同，故部分代码无法与 admin-plus 通用。
 
 ## 🔈 框架使用建议
 
