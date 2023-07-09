@@ -25,7 +25,6 @@
       default: '',
     },
   })
-
   const initOptions = reactive<any>({
     renderer: 'svg',
   })

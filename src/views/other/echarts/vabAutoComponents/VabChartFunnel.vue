@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
   import _ from 'lodash'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartFunnel',
@@ -27,6 +28,8 @@
     },
   })
 
+  const settingsStore: any = useSettingsStore()
+  const { color }: any = storeToRefs(settingsStore)
   const initOptions = reactive<any>({
     renderer: 'svg',
   })
@@ -86,6 +89,14 @@
       { value: _.random(80, 100), name: '展现' },
     ]
   }, 3000)
+
+  watch(
+    color,
+    () => {
+      option.color = [color.value]
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)

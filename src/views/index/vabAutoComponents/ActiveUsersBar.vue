@@ -1,18 +1,18 @@
 <template>
   <div>
     <vab-chart :init-options="initOptions" :option="option" />
-    <div class="echarts-mask"></div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import _ from 'lodash'
-  import VabChart from '/@/plugins/VabChart/index.vue'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
+  const settingsStore: any = useSettingsStore()
+  const { color }: any = storeToRefs(settingsStore)
   const initOptions = reactive<any>({
     renderer: 'svg',
   })
-
   const option = reactive<any>({
     grid: {
       left: '10%',
@@ -54,22 +54,25 @@
           _.random(50, 100),
         ],
         itemStyle: {
-          color: 'var(--el-color-primary)',
+          color,
         },
       },
     ],
   })
 
-  const timer = setInterval(() => {
-    option.series[0].data = [
-      _.random(50, 100),
-      _.random(10, 100),
-      _.random(10, 100),
-      _.random(10, 100),
-      _.random(10, 100),
-      _.random(50, 100),
-    ]
-  }, 3000)
+  let timer: any
+  onMounted(() => {
+    timer = setInterval(() => {
+      option.series[0].data = [
+        _.random(50, 100),
+        _.random(10, 100),
+        _.random(10, 100),
+        _.random(10, 100),
+        _.random(10, 100),
+        _.random(50, 100),
+      ]
+    }, 3000)
+  })
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)
@@ -84,13 +87,5 @@
     bottom: 22px;
     width: calc(100% - 160px) !important;
     height: 60px !important;
-  }
-  .echarts-mask {
-    position: absolute;
-    right: 10px;
-    bottom: 22px;
-    width: calc(100% - 160px) !important;
-    height: 60px !important;
-    background-color: transparent;
   }
 </style>

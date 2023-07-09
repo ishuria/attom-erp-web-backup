@@ -14,6 +14,7 @@
 </template>
 <script lang="ts" setup>
   import _ from 'lodash'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartThemeRiver',
@@ -26,6 +27,8 @@
     },
   })
 
+  const settingsStore: any = useSettingsStore()
+  const { color }: any = storeToRefs(settingsStore)
   const initOptions = reactive<any>({
     renderer: 'svg',
   })
@@ -338,6 +341,14 @@
       ['2015/11/28', _.random(0, 100), 'DD'],
     ]
   }, 3000)
+
+  watch(
+    color,
+    () => {
+      option.color = [color.value]
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)

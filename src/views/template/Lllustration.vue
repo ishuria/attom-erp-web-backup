@@ -21,10 +21,10 @@
 
 <template>
   <div class="lllustration-container no-background-container">
-    <el-row :gutter="15">
+    <el-row :gutter="20">
       <el-col>
         <vab-card shadow="hover">
-          <el-form class="demo-form-inline" :inline="true">
+          <el-form :inline="true">
             <el-form-item label="换肤">
               <vab-color-picker />
             </el-form-item>

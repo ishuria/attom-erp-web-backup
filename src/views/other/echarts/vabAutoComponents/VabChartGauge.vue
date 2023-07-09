@@ -14,6 +14,7 @@
 </template>
 <script lang="ts" setup>
   import _ from 'lodash'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartGauge',
@@ -26,6 +27,8 @@
     },
   })
 
+  const settingsStore: any = useSettingsStore()
+  const { color }: any = storeToRefs(settingsStore)
   const initOptions = reactive<any>({
     renderer: 'svg',
   })
@@ -70,6 +73,14 @@
       },
     ]
   }, 3000)
+
+  watch(
+    color,
+    () => {
+      option.color = color.value
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)

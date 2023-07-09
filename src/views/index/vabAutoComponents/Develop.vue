@@ -1,6 +1,11 @@
 <script lang="ts" setup>
   import _ from 'lodash'
+  import VabChart from '/@/plugins/VabChart/index.vue'
   import { onBeforeRouteLeave } from 'vue-router'
+  import { useSettingsStore } from '/@/store/modules/settings'
+
+  const settingsStore: any = useSettingsStore()
+  const { color }: any = storeToRefs(settingsStore)
 
   const initOptions = reactive<any>({
     renderer: 'svg',
@@ -38,12 +43,14 @@
         type: 'line',
         data: [],
         smooth: true,
-      },
-      {
-        name: '访客数',
-        type: 'line',
-        data: [],
-        smooth: true,
+        areaStyle: {},
+        itemStyle: {
+          borderRadius: [0, 5, 5, 0],
+          color: new VabChart.graphic.LinearGradient(0, 0, 1, 0, [
+            { offset: 0, color: '#74df9f' },
+            { offset: 1, color },
+          ]),
+        },
       },
     ],
   })
@@ -55,29 +62,24 @@
     const oneDay = 24 * 3600 * 1000
     const date: any = []
 
-    const data0 = [Math.random() * 1500]
-    const data1 = [Math.random() * 1500]
+    const data = [Math.random() * 1500]
     let now: any = new Date(base)
     updateTime.value = now
 
     const addData = (shift: boolean) => {
       now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
       date.push(now)
-      data0.push(_.random(2000, 4000))
-      data1.push(_.random(1000, 2000))
+      data.push(_.random(2000, 4000))
 
       if (shift) {
         date.shift()
-        data0.shift()
-        data1.shift()
+        data.shift()
       }
       now = new Date(+new Date(now) + oneDay)
       option.xAxis[0].data = []
       option.series[0].data = []
-      option.series[1].data = []
       option.xAxis[0].data = date
-      option.series[0].data = data0
-      option.series[1].data = data1
+      option.series[0].data = data
     }
 
     for (let i = 1; i < 6; i++) {
@@ -106,9 +108,6 @@
       自上周以来
       <vab-icon icon="arrow-up-line" />
       <span>44%</span>
-      /
-      <vab-icon icon="arrow-up-line" />
-      <span>24%</span>
     </div>
     <vab-chart
       :init-options="initOptions"

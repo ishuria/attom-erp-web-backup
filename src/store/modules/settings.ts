@@ -87,7 +87,6 @@ export const useSettingsStore = defineStore('settings', {
   actions: {
     updateState(obj: any) {
       Object.getOwnPropertyNames(obj).forEach((key) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this[key] = obj[key]
         localStorage.setItem(

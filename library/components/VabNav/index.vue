@@ -38,7 +38,7 @@
 
 <template>
   <div class="vab-nav">
-    <el-row :gutter="15">
+    <el-row :gutter="20">
       <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="4">
         <div class="left-panel">
           <vab-fold fold="layout-left-2-line" unfold="layout-left-line" />

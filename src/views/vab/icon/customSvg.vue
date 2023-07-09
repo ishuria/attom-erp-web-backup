@@ -1,6 +1,6 @@
 <template>
   <div class="custom-svg-container">
-    <el-row :gutter="15">
+    <el-row :gutter="20">
       <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="6">
         <vab-card shadow="hover">
           <vab-icon icon="vab" is-custom-svg />

@@ -26,7 +26,7 @@
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
-    <el-row :gutter="15">
+    <el-row :gutter="20">
       <el-col
         v-for="item in list"
         :key="item.id"

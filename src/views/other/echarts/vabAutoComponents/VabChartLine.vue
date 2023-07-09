@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
   import _ from 'lodash'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartLine',
@@ -27,10 +28,11 @@
     },
   })
 
+  const settingsStore: any = useSettingsStore()
+  const { color }: any = storeToRefs(settingsStore)
   const initOptions = reactive<any>({
     renderer: 'svg',
   })
-
   const option = reactive<any>({
     grid: {
       top: 20,
@@ -70,6 +72,14 @@
       _.random(50, 200),
     ]
   }, 3000)
+
+  watch(
+    color,
+    () => {
+      option.color = [color.value]
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)
