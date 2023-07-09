@@ -98,6 +98,7 @@
   const phoneNumber = ref<string>('123456789')
 
   import { getImageUrl } from '/@/utils/imageUrl'
+
   const avatar = getImageUrl('assets/avatar.svg')
 
   const educations = ref<any>([
@@ -149,6 +150,7 @@
         text-align: center;
       }
     }
+
     .resume-box {
       display: flex;
       flex-direction: row;
@@ -179,9 +181,11 @@
           ul {
             padding-left: 0;
             list-style-type: none;
+
             li {
               margin-bottom: 10px;
               line-height: 22px;
+
               strong {
                 display: inline-block;
                 width: 60px;
@@ -201,18 +205,22 @@
         .header {
           padding: 10px 10px 0 5px;
           border-bottom: 5px solid var(--el-color-primary);
+
           h3 {
             line-height: 0;
           }
         }
+
         .content {
           padding: 10px;
 
           ul {
             padding-left: 0;
             list-style-type: none;
+
             li {
               margin-bottom: 10px;
+
               strong {
                 display: inline-block;
                 width: 60px;

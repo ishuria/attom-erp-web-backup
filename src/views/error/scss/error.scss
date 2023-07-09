@@ -3,11 +3,13 @@
     .error-content {
       flex-direction: column !important;
       padding-top: 6.5vh;
+
       .pic-error {
         height: 200px !important;
       }
     }
   }
+
   .error-content {
     display: flex;
     flex-direction: row;
@@ -16,6 +18,7 @@
     max-width: 1000px;
     height: calc($base-keep-alive-height - 40px);
     margin: auto;
+
     .pic-error {
       flex-basis: 50%;
       height: 300px;

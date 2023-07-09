@@ -27,6 +27,7 @@
   import VabQrCode from '/@/plugins/VabQrCode'
   import clip from '/@/utils/clipboard'
   import { getImageUrl } from '/@/utils/imageUrl'
+
   const logoUrl = getImageUrl('assets/avatar.svg')
 
   defineOptions({

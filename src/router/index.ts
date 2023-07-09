@@ -3,15 +3,15 @@
  */
 import type { VabRouteRecordRaw } from './types'
 import type { RouteRecordRaw } from 'vue-router'
-import type { App } from 'vue'
 import {
   createRouter,
   createWebHashHistory,
   createWebHistory,
   RouteRecordName,
 } from 'vue-router'
+import type { App } from 'vue'
 import Layout from '/@vab/layouts/index.vue'
-import { authentication, isHashRouterMode, base } from '/@/config'
+import { authentication, base, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
 
 export const constantRoutes: VabRouteRecordRaw[] = [

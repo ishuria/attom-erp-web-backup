@@ -3,9 +3,9 @@ import {
   contentType,
   debounce,
   messageName,
-  timeout,
   statusName,
   successCode,
+  timeout,
 } from '/@/config'
 import qs from 'qs'
 import router from '/@/router'

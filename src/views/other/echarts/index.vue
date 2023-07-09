@@ -37,6 +37,7 @@
       .el-form-item {
         margin-bottom: 0px;
       }
+
       .vab-card {
         .echarts {
           width: 100%;

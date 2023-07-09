@@ -1,6 +1,8 @@
 <template>
   <el-upload action="/uploadFlie" :auto-upload="false" list-type="picture-card">
-    <el-icon><Plus /></el-icon>
+    <el-icon>
+      <Plus />
+    </el-icon>
 
     <template #file="{ file }">
       <div>

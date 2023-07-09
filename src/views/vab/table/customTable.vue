@@ -64,9 +64,9 @@
             </template>
             <el-checkbox-group v-model="checkList">
               <vab-draggable
-                v-bind="dragOptions"
                 item-key="{ element }"
                 :list="columns"
+                v-bind="dragOptions"
               >
                 <template #item="{ element }">
                   <div>

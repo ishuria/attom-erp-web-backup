@@ -16,9 +16,8 @@
   </el-upload>
 </template>
 <script lang="ts" setup>
-  import { ElMessage, ElMessageBox } from 'element-plus'
-
   import type { UploadProps, UploadUserFile } from 'element-plus'
+  import { ElMessage, ElMessageBox } from 'element-plus'
 
   const fileList = ref<UploadUserFile[]>([])
 

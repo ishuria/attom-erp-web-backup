@@ -90,6 +90,7 @@
     display: flex;
     flex-direction: row;
   }
+
   .is-penultimate > .el-tree-node__children > div {
     width: 25%;
   }

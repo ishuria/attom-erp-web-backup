@@ -71,8 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/dictionaryManagement'
-  import { doDelete, getTree } from '/@/api/dictionaryManagement'
+  import { doDelete, getList, getTree } from '/@/api/dictionaryManagement'
   import { Plus } from '@element-plus/icons-vue'
 
   defineOptions({
@@ -167,6 +166,7 @@
           display: block;
           width: 100%;
         }
+
         &-node__content {
           a {
             position: absolute;

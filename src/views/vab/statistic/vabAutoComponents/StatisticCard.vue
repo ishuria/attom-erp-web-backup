@@ -142,6 +142,7 @@
   .green {
     color: var(--el-color-success);
   }
+
   .red {
     color: var(--el-color-error);
   }

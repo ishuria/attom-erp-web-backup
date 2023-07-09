@@ -16,9 +16,9 @@
   </el-upload>
 </template>
 
-<script setup lang="ts">
-  import { genFileId } from 'element-plus'
+<script lang="ts" setup>
   import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
+  import { genFileId } from 'element-plus'
 
   const upload = ref<UploadInstance>()
 

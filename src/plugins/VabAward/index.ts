@@ -1,6 +1,6 @@
 import {
-  LuckyWheel as VabAwardWheel,
   LuckyGrid as VabAwardGrid,
+  LuckyWheel as VabAwardWheel,
   SlotMachine as VabSlotMachine,
 } from '@lucky-canvas/vue'
 

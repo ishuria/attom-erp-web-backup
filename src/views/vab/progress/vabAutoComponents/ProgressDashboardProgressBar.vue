@@ -48,6 +48,7 @@
     width: 350px;
     margin-bottom: 15px;
   }
+
   .demo-progress .el-progress--circle {
     margin-right: 15px;
   }

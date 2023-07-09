@@ -1,6 +1,8 @@
 <template>
   <el-upload action="/uploadFlie" drag multiple>
-    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+    <el-icon class="el-icon--upload">
+      <upload-filled />
+    </el-icon>
     <div class="el-upload__text">
       将文件拖拽至此处或
       <em>点击上传</em>
@@ -11,6 +13,6 @@
   </el-upload>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { UploadFilled } from '@element-plus/icons-vue'
 </script>

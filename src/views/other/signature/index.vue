@@ -8,6 +8,7 @@
   const $baseMessage = inject<any>('$baseMessage')
   let painting = false
   import { getImageUrl } from '/@/utils/imageUrl'
+
   const catUrl = getImageUrl('assets/signature_images/cat.png')
 
   const getOffset = (event: MouseEvent | TouchEvent) => {
@@ -123,6 +124,7 @@
       margin-bottom: 15px;
       border: 40px solid var(--el-border-color);
       border-radius: var(--el-border-radius-base);
+
       img {
         position: absolute;
         right: 15px;
@@ -137,6 +139,7 @@
         width: 100%;
         height: 250px;
         border: 30px solid var(--el-border-color);
+
         img {
           position: absolute;
           right: 15px;

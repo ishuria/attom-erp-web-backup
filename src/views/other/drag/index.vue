@@ -7,7 +7,7 @@
     </vab-query-form>
 
     <el-row :gutter="20">
-      <vab-draggable v-model="iconList" v-bind="dragOptions" item-key="icon">
+      <vab-draggable v-model="iconList" item-key="icon" v-bind="dragOptions">
         <template #item="{ element: item }">
           <el-col :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
             <vab-card class="icon-panel">
@@ -83,6 +83,7 @@
         }
       }
     }
+
     .icon-panel {
       height: 120px;
       text-align: center;

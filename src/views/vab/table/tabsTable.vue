@@ -323,10 +323,12 @@
           height: calc(
             $base-keep-alive-height - $base-padding - 70px
           ) !important;
+
           .vab-query-form {
             .el-form {
               .el-form-item:first-child {
                 margin: 0 !important;
+
                 .el-check-tag,
                 .el-form-item__label {
                   margin: 0 10px 5px 0;
@@ -335,6 +337,7 @@
               }
             }
           }
+
           .el-table {
             flex: 1;
           }

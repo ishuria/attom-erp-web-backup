@@ -1,4 +1,4 @@
-import type { VabRouteRecordRaw, VabRoute } from '/@/router/types'
+import type { VabRoute, VabRouteRecordRaw } from '/@/router/types'
 import { hasPermission } from '/@/utils/permission'
 import { isExternal } from '/@/utils/validate'
 import { recordRoute } from '/@/config'

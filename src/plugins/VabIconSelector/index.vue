@@ -87,6 +87,7 @@
     .vab-query-form {
       margin-top: calc(var(--el-margin) / 2);
     }
+
     .el-card__body {
       position: relative;
       display: flex;

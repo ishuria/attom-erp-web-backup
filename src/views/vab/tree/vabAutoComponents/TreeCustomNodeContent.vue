@@ -38,6 +38,7 @@
     label: string
     children?: Tree[]
   }
+
   let id = 1000
 
   const append = (data: Tree) => {
