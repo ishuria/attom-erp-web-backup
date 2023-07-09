@@ -52,7 +52,7 @@
   }
 
   nextTick(() => {
-    if (theme.value.layout === 'column')
+    if (theme.value.layout === 'column' && device.value !== 'mobile')
       watch(route, () => {
         const foldUnfold: any = document.querySelector(
           '.left-panel .fold-unfold'
@@ -60,11 +60,11 @@
         const floatFold: any = document.querySelector('.float-fold')
 
         if (route.meta.noColumn) {
-          if (device.value !== 'mobile') foldSideBar()
+          foldSideBar()
           if (foldUnfold) foldUnfold.style = 'display:none'
           if (floatFold) floatFold.style = 'display:none'
         } else {
-          if (device.value !== 'mobile') openSideBar()
+          openSideBar()
           if (foldUnfold) foldUnfold.style = ''
           if (floatFold) floatFold.style = ''
         }
