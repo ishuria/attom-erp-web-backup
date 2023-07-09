@@ -53,7 +53,7 @@
 </script>
 
 <template>
-  <vab-card shadow="never">
+  <vab-card>
     <template #header>
       <vab-icon icon="reserved-line" />
       经营建议
@@ -70,7 +70,7 @@
         :xs="24"
       >
         <vab-link :to="item.link">
-          <vab-card class="icon-panel" shadow="never">
+          <vab-card class="icon-panel">
             <el-badge class="item" :value="item.value">
               <vab-icon :icon="item.icon" />
             </el-badge>

@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="20">
     <el-col v-for="(item, index) in iconList" :key="index" :span="6">
-      <vab-card class="icon-panel" shadow="hover" @click="handleMore">
+      <vab-card class="icon-panel" @click="handleMore">
         <vab-icon :icon="item.icon" :style="{ backgroundColor: item.color }" />
         <p>{{ item.title }}</p>
       </vab-card>

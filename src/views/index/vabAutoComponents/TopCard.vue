@@ -1,5 +1,5 @@
 <template>
-  <vab-card class="top-card" :class="'top-card-' + background" shadow="hover">
+  <vab-card class="top-card" :class="'top-card-' + background">
     <span>{{ title }}</span>
     <template v-if="$slots.tag">
       <slot name="tag"></slot>

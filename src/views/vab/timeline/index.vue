@@ -2,7 +2,7 @@
   <div class="timeline-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="12" :xl="8" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>常规风格</template>
 
           <el-timeline>
@@ -24,7 +24,7 @@
                   <span></span>
                 </span>
               </template>
-              <vab-card v-if="item.card" shadow="hover">
+              <vab-card v-if="item.card">
                 {{ item.content }}
               </vab-card>
               <template v-else>
@@ -35,7 +35,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="12" :xl="8" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>卡片风格</template>
 
           <el-timeline>

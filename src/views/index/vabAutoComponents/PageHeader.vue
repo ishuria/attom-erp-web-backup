@@ -36,7 +36,7 @@
 </script>
 
 <template>
-  <vab-colorful-card class="page-header" shadow="never" :style="style">
+  <vab-colorful-card class="page-header" :style="style">
     <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
     <div class="page-header-tip">
       <p class="page-header-tip-title">

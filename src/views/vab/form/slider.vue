@@ -1,6 +1,6 @@
 <template>
   <div class="slider-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础用法</span>
       </template>
@@ -15,7 +15,7 @@
       <span class="demonstration">禁用</span>
       <el-slider v-model="value5" disabled />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>离散值</span>
       </template>
@@ -24,19 +24,19 @@
       <span class="demonstration">显示间断点</span>
       <el-slider v-model="value6" show-stops :step="10" />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>带有输入框</span>
       </template>
       <el-slider v-model="value7" show-input />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>范围选择</span>
       </template>
       <el-slider v-model="value8" :max="10" range show-stops />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>竖向模式</span>
       </template>

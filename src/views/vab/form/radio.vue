@@ -1,20 +1,20 @@
 <template>
   <div class="radio-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础用法</span>
       </template>
       <el-radio v-model="radio" label="1">备选项</el-radio>
       <el-radio v-model="radio" label="2">备选项</el-radio>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>禁用状态</span>
       </template>
       <el-radio v-model="radio2" disabled label="禁用">备选项</el-radio>
       <el-radio v-model="radio2" disabled label="选中且禁用">备选项</el-radio>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>单选框组</span>
       </template>
@@ -24,7 +24,7 @@
         <el-radio :label="9">备选项</el-radio>
       </el-radio-group>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>按钮样式</span>
       </template>
@@ -35,7 +35,7 @@
         <el-radio-button label="深圳" />
       </el-radio-group>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>带有边框</span>
       </template>

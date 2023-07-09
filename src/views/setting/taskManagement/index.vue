@@ -36,7 +36,7 @@
         :xl="6"
         :xs="24"
       >
-        <vab-card class="task-item" shadow="never">
+        <vab-card class="task-item">
           <template #header>
             <vab-icon icon="task-line" />
             任务编号 - {{ item.id }}
@@ -73,7 +73,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="6" :md="8" :sm="12" :xl="6" :xs="24">
-        <vab-card class="task-add" shadow="never" @click="handleAdd">
+        <vab-card class="task-add" @click="handleAdd">
           <vab-icon icon="add-circle-line" />
           <p>添加任务</p>
         </vab-card>

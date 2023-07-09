@@ -1,6 +1,6 @@
 <template>
   <div class="switch-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础用法</span>
       </template>
@@ -10,7 +10,7 @@
         inactive-color="#ff4949"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>文字描述</span>
       </template>
@@ -20,7 +20,7 @@
         inactive-text="按年付费"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>禁用状态</span>
       </template>

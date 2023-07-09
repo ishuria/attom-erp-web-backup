@@ -64,7 +64,7 @@
       </vab-query-form>
     </el-col>
     <el-col v-for="(item, index) in queryIcon" :key="index" :span="6">
-      <vab-card shadow="hover" @click="handleIcon(item)">
+      <vab-card @click="handleIcon(item)">
         <vab-icon :icon="item" />
       </vab-card>
     </el-col>

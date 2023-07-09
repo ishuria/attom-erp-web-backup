@@ -1,6 +1,6 @@
 <template>
   <div class="button-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header><span>基础用法</span></template>
       <el-button>默认按钮</el-button>
       <el-button type="primary">主要按钮</el-button>
@@ -28,7 +28,7 @@
       <el-button circle :icon="Delete" type="danger" />
     </vab-card>
 
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>禁用状态</span>
       </template>
@@ -46,7 +46,7 @@
       <el-button disabled plain type="danger">危险按钮</el-button>
     </vab-card>
 
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>文字按钮</span>
       </template>
@@ -54,7 +54,7 @@
       <el-button disabled text>文字按钮</el-button>
     </vab-card>
 
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>element内置图标按钮</span>
       </template>
@@ -70,7 +70,7 @@
       </el-button>
     </vab-card>
 
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>自定义图标按钮</span>
       </template>
@@ -89,7 +89,7 @@
       </el-button>
     </vab-card>
 
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>按钮组</span>
       </template>
@@ -108,13 +108,13 @@
         <el-button :icon="Delete" type="primary" />
       </el-button-group>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>加载中</span>
       </template>
       <el-button :loading="true" type="primary">加载中</el-button>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>不同尺寸</span>
       </template>

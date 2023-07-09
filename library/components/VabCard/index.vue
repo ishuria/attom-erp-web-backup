@@ -14,7 +14,7 @@
     } as any,
     shadow: {
       type: String,
-      default: '',
+      default: 'never',
     } as any,
     skeleton: {
       type: Boolean,

@@ -1,30 +1,30 @@
 <template>
   <div class="input-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础用法</span>
       </template>
       <el-input v-model="input1" placeholder="请输入内容" width="“200px”" />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>禁用状态</span>
       </template>
       <el-input v-model="input2" :disabled="true" placeholder="请输入内容" />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>可清空</span>
       </template>
       <el-input v-model="input3" clearable placeholder="请输入内容" />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>密码框</span>
       </template>
       <el-input v-model="input4" placeholder="请输入内容" show-password />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>带 icon 的输入框</span>
       </template>
@@ -41,7 +41,7 @@
         style="float: left"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>复合型输入框</span>
       </template>
@@ -64,7 +64,7 @@
         </template>
       </el-input>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>textarea</span>
       </template>

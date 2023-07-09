@@ -7,9 +7,6 @@
   const settingsStore: any = useSettingsStore()
   const { color }: any = storeToRefs(settingsStore)
 
-  const initOptions = reactive<any>({
-    renderer: 'svg',
-  })
   const option = reactive<any>({
     tooltip: {
       trigger: 'axis',
@@ -98,7 +95,7 @@
 </script>
 
 <template>
-  <vab-card class="Develop" shadow="never">
+  <vab-card class="Develop">
     <template #header>
       <vab-icon icon="line-chart-line" />
       流量概况
@@ -109,11 +106,7 @@
       <vab-icon icon="arrow-up-line" />
       <span>44%</span>
     </div>
-    <vab-chart
-      :init-options="initOptions"
-      :option="option"
-      theme="vab-echarts-theme"
-    />
+    <vab-chart :option="option" theme="vab-echarts-theme" />
   </vab-card>
 </template>
 

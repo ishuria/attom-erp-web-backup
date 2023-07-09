@@ -24,7 +24,11 @@
       },
       initOptions: {
         type: Object,
-        default: () => {},
+        default: () => {
+          return {
+            renderer: 'svg',
+          }
+        },
       },
       group: {
         type: String,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-chart :init-options="initOptions" :option="option" />
+    <vab-chart :option="option" />
   </div>
 </template>
 
@@ -10,9 +10,7 @@
 
   const settingsStore: any = useSettingsStore()
   const { color }: any = storeToRefs(settingsStore)
-  const initOptions = reactive<any>({
-    renderer: 'svg',
-  })
+
   const option = reactive<any>({
     grid: {
       left: '10%',

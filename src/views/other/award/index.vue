@@ -8,7 +8,7 @@
   <div class="award-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <template #header>
             <div>
               <span>大转盘</span>
@@ -18,7 +18,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <template #header>
             <div>
               <span>九宫格</span>
@@ -28,7 +28,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <template #header>
             <div>
               <span>老虎机</span>

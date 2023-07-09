@@ -49,7 +49,7 @@
           :xl="2"
           :xs="6"
         >
-          <vab-card shadow="hover" @click="handleCopyIcon(item.icon)">
+          <vab-card @click="handleCopyIcon(item.icon)">
             <vab-icon
               :icon="item.icon"
               :style="{

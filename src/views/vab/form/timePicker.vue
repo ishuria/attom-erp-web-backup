@@ -1,6 +1,6 @@
 <template>
   <div class="time-picker-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>固定时间点</span>
       </template>
@@ -12,7 +12,7 @@
         step="00:15"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>固定时间范围</span>
       </template>
@@ -34,7 +34,7 @@
       />
     </vab-card>
 
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>任意时间点</span>
       </template>

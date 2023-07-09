@@ -2,7 +2,7 @@
   <div class="notice-container no-background-container">
     <el-row :gutter="20">
       <el-col :span="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>element-plus风格 Message 消息提示</span>
           </template>
@@ -13,7 +13,7 @@
         </vab-card>
       </el-col>
       <el-col :span="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>element-plus风格 Message 消息提示</span>
           </template>
@@ -24,7 +24,7 @@
         </vab-card>
       </el-col>
       <el-col :span="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>Notification 消息提示</span>
           </template>
@@ -35,7 +35,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>成功提示</span>
           </template>
@@ -53,7 +53,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>警告提示</span>
           </template>
@@ -71,7 +71,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>错误提示</span>
           </template>
@@ -89,7 +89,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>信息提示</span>
           </template>
@@ -107,7 +107,7 @@
         </vab-card>
       </el-col>
       <el-col :span="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>Alert 警告</span>
           </template>

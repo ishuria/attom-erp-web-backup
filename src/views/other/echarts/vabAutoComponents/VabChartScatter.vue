@@ -1,14 +1,10 @@
 <template>
   <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
-    <vab-card shadow="hover" skeleton>
+    <vab-card skeleton>
       <template #header>
         <span>{{ title }}</span>
       </template>
-      <vab-chart
-        :init-options="initOptions"
-        :option="option"
-        theme="vab-echarts-theme"
-      />
+      <vab-chart :option="option" theme="vab-echarts-theme" />
     </vab-card>
   </el-col>
 </template>
@@ -24,9 +20,6 @@
       type: String,
       default: '',
     },
-  })
-  const initOptions = reactive<any>({
-    renderer: 'svg',
   })
 
   const option = reactive<any>({

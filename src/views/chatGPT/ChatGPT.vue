@@ -133,7 +133,7 @@
   <div class="chat-GPT-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <div class="vab-chat-main">
             <el-radio-group v-model="radio" @change="changeGPT">
               <el-radio-button label="小爱同学" />

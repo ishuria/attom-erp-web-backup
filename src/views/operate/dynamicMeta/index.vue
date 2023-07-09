@@ -2,7 +2,7 @@
   <div class="dynamic-meta-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>动态标题</span>
           </template>
@@ -15,7 +15,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>动态徽章</span>
           </template>
@@ -29,7 +29,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>动态图标</span>
           </template>
@@ -50,7 +50,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="hover">
+        <vab-card>
           <template #header>
             <span>动态高亮菜单</span>
           </template>

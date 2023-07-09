@@ -1,6 +1,6 @@
 <template>
   <div class="link-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础用法</span>
       </template>
@@ -13,7 +13,7 @@
       <el-link type="danger">危险链接</el-link>
       <el-link type="info">信息链接</el-link>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>禁用状态</span>
       </template>
@@ -24,14 +24,14 @@
       <el-link disabled type="danger">危险链接</el-link>
       <el-link disabled type="info">信息链接</el-link>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>下划线</span>
       </template>
       <el-link :underline="false">无下划线</el-link>
       <el-link>有下划线</el-link>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>图标</span>
       </template>

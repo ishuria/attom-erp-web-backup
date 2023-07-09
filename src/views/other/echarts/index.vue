@@ -8,7 +8,7 @@
   <div class="echarts-container no-background-container">
     <el-row :gutter="20">
       <el-col>
-        <vab-card shadow="hover">
+        <vab-card>
           <el-form class="demo-form-inline" :inline="true">
             <el-form-item label="换肤">
               <vab-color-picker />

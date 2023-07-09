@@ -2,7 +2,7 @@
   <div class="column-table-container no-background-container table-auto-height">
     <el-row :gutter="20">
       <el-col :lg="4" :md="24" :sm="24" :xl="4" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <el-input
             v-model="filterText"
             placeholder="请输入查询条件"
@@ -19,7 +19,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="20" :md="24" :sm="24" :xl="20" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <vab-query-form>
             <vab-query-form-top-panel>
               <el-form

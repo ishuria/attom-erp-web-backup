@@ -2,12 +2,12 @@
   <div class="custom-svg-container">
     <el-row :gutter="20">
       <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="6">
-        <vab-card shadow="hover">
+        <vab-card>
           <vab-icon icon="vab" is-custom-svg />
         </vab-card>
       </el-col>
       <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="6">
-        <vab-card shadow="hover">
+        <vab-card>
           <vab-icon icon="mall-fill" is-custom-svg />
         </vab-card>
       </el-col>

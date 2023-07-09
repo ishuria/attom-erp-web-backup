@@ -1,6 +1,6 @@
 <template>
   <div class="select-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>行政区划</span>
         <el-tag class="card-header-tag" type="danger">New</el-tag>
@@ -13,7 +13,7 @@
         :props="{ label: 'name', value: 'code' }"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>树选择</span>
         <el-tag class="card-header-tag" type="danger">New</el-tag>
@@ -25,7 +25,7 @@
         show-checkbox
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础用法</span>
       </template>
@@ -38,7 +38,7 @@
         />
       </el-select>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>有禁用选项</span>
       </template>
@@ -52,7 +52,7 @@
         />
       </el-select>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>禁用状态</span>
       </template>
@@ -65,7 +65,7 @@
         />
       </el-select>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>可清空单选</span>
       </template>
@@ -78,7 +78,7 @@
         />
       </el-select>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础多选</span>
       </template>
@@ -91,7 +91,7 @@
         />
       </el-select>
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>可搜索</span>
       </template>

@@ -6,7 +6,7 @@
 </script>
 
 <template>
-  <vab-card class="version-information" shadow="never">
+  <vab-card class="version-information">
     <template #header>
       <vab-icon icon="information-line" />
       信息

@@ -1,6 +1,6 @@
 <template>
   <div class="date-time-picker-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>日期和时间点</span>
       </template>
@@ -10,7 +10,7 @@
         type="datetime"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>日期和时间范围</span>
       </template>
@@ -22,7 +22,7 @@
         type="datetimerange"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>默认的起始与结束时刻</span>
       </template>

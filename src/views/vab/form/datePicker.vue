@@ -1,6 +1,6 @@
 <template>
   <div class="date-picker-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>选择日</span>
       </template>
@@ -13,7 +13,7 @@
         type="date"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>其他日期单位</span>
       </template>
@@ -31,7 +31,7 @@
         type="dates"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>选择日期范围</span>
       </template>
@@ -43,7 +43,7 @@
         type="daterange"
       />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>选择月份范围</span>
       </template>

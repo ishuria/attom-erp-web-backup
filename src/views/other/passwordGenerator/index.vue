@@ -43,7 +43,7 @@
   <div class="password-generator-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <template #header>
             <div>
               <span>密码生成器</span>

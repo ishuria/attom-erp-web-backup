@@ -10,7 +10,7 @@
       <vab-draggable v-model="iconList" v-bind="dragOptions" item-key="icon">
         <template #item="{ element: item }">
           <el-col :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
-            <vab-card class="icon-panel" shadow="never">
+            <vab-card class="icon-panel">
               <vab-icon :icon="item.icon" :style="{ color: item.color }" />
               <p>按住拖拽</p>
             </vab-card>

@@ -1,6 +1,6 @@
 <template>
   <div class="description-container no-background-container">
-    <vab-card shadow="never">
+    <vab-card>
       <el-radio-group v-model="size">
         <el-radio label="large">默认</el-radio>
         <el-radio label="default">中等</el-radio>
@@ -99,7 +99,7 @@
       </el-descriptions>
     </vab-card>
 
-    <vab-card shadow="never">
+    <vab-card>
       手风琴
       <el-switch v-model="accordion" inline-prompt @change="handleAccordion" />
 

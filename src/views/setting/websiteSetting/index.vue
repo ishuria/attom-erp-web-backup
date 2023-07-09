@@ -2,7 +2,7 @@
   <div class="website-setting-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <template #header>
             <div>
               <span>网站设置</span>

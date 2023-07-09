@@ -1,18 +1,18 @@
 <template>
   <div class="rate-container no-background-container">
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>基础用法</span>
       </template>
       <el-rate v-model="value1" />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>辅助文字</span>
       </template>
       <el-rate v-model="value2" show-text />
     </vab-card>
-    <vab-card shadow="hover">
+    <vab-card>
       <template #header>
         <span>只读</span>
       </template>

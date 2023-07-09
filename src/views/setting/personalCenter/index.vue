@@ -2,7 +2,7 @@
   <div class="personal-center-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <div class="user-info">
             <el-avatar :size="100" :src="avatar" />
             <div class="user-info-full-name">
@@ -57,7 +57,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="16" :md="12" :sm="24" :xl="16" :xs="24">
-        <vab-card shadow="never">
+        <vab-card>
           <el-tabs v-model="activeName">
             <el-tab-pane label="基本信息" name="first">
               <el-col :lg="12" :md="16" :sm="24" :xl="12" :xs="24">
