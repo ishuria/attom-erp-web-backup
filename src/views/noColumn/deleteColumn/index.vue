@@ -1,6 +1,6 @@
 <template>
   <div class="delete-column-container">
-    <el-alert title="单栏页面演示" />
+    <el-alert :closable="false" title="单栏页面演示" />
   </div>
 </template>
 
