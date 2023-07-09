@@ -18,7 +18,7 @@
   const route: VabRoute = useRoute()
   const router = useRouter()
   const settingsStore = useSettingsStore()
-  const { theme, collapse } = storeToRefs(settingsStore)
+  const { collapse, device, theme } = storeToRefs(settingsStore)
   const { foldSideBar, openSideBar } = settingsStore
   const routesStore = useRoutesStore()
   const {
@@ -52,28 +52,23 @@
   }
 
   nextTick(() => {
-    watch(
-      route,
-      () => {
+    if (theme.value.layout === 'column')
+      watch(route, () => {
         const foldUnfold: any = document.querySelector(
           '.left-panel .fold-unfold'
         )
         const floatFold: any = document.querySelector('.float-fold')
 
-        if (theme.value.layout === 'column' && route.meta.noColumn) {
-          foldSideBar()
+        if (route.meta.noColumn) {
+          if (device.value !== 'mobile') foldSideBar()
           if (foldUnfold) foldUnfold.style = 'display:none'
           if (floatFold) floatFold.style = 'display:none'
         } else {
-          openSideBar()
+          if (device.value !== 'mobile') openSideBar()
           if (foldUnfold) foldUnfold.style = ''
           if (floatFold) floatFold.style = ''
         }
-      },
-      {
-        immediate: true,
-      }
-    )
+      })
   })
 </script>
 
