@@ -52,19 +52,18 @@
   }
 
   nextTick(() => {
-    if (theme.value.layout === 'column' && device.value !== 'mobile')
+    if (theme.value.layout === 'column')
       watch(route, () => {
         const foldUnfold: any = document.querySelector(
           '.left-panel .fold-unfold'
         )
         const floatFold: any = document.querySelector('.float-fold')
-
         if (route.meta.noColumn) {
-          foldSideBar()
+          if (device.value !== 'mobile') foldSideBar()
           if (foldUnfold) foldUnfold.style = 'display:none'
           if (floatFold) floatFold.style = 'display:none'
         } else {
-          openSideBar()
+          if (device.value !== 'mobile') openSideBar()
           if (foldUnfold) foldUnfold.style = ''
           if (floatFold) floatFold.style = ''
         }
