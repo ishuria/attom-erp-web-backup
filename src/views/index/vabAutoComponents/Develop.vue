@@ -102,7 +102,7 @@
       <el-tag class="card-header-tag" type="success">日</el-tag>
     </template>
 
-    <vab-chart :option="option" theme="vab-echarts-theme" />
+    <vab-chart :option="option" />
     <div class="bottom">
       <div class="line-two">
         自上周以来

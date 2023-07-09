@@ -85,7 +85,7 @@
       授权数
       <el-tag class="card-header-tag" type="warning">周</el-tag>
     </template>
-    <vab-chart :option="option" theme="vab-echarts-theme" />
+    <vab-chart :option="option" />
     <div class="bottom">
       <span>
         授权数:

@@ -20,7 +20,9 @@
       },
       theme: {
         type: [String, Object],
-        default: () => {},
+        default: () => {
+          return 'vab-echarts-theme'
+        },
       },
       initOptions: {
         type: Object,

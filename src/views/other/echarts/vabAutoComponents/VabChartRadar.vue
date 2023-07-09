@@ -1,10 +1,11 @@
+<!-- 雷达图 -->
 <template>
   <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
     <vab-card skeleton>
       <template #header>
         <span>{{ title }}</span>
       </template>
-      <vab-chart :option="option" theme="vab-echarts-theme" />
+      <vab-chart :option="option" />
     </vab-card>
   </el-col>
 </template>
@@ -43,7 +44,7 @@
       ],
     },
     series: {
-      name: '预算 vs 开销',
+      name: '预算分配',
       type: 'radar',
       data: [
         {
@@ -55,16 +56,6 @@
             _.random(50, 1000),
           ],
           name: '预算分配',
-        },
-        {
-          value: [
-            _.random(50, 1000),
-            _.random(50, 1000),
-            _.random(50, 1000),
-            _.random(50, 1000),
-            _.random(50, 1000),
-          ],
-          name: '实际开销',
         },
       ],
     },
@@ -81,16 +72,6 @@
           _.random(50, 1000),
         ],
         name: '预算分配',
-      },
-      {
-        value: [
-          _.random(50, 1000),
-          _.random(50, 1000),
-          _.random(50, 1000),
-          _.random(50, 1000),
-          _.random(50, 1000),
-        ],
-        name: '实际开销',
       },
     ]
   }, 3000)
