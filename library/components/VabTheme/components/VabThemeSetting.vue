@@ -40,12 +40,6 @@
         <p>{{ translateTitle('主题配置') }}</p>
       </a>
     </li>
-    <li @click="buy">
-      <a>
-        <vab-icon icon="shopping-cart-2-line" />
-        <p>{{ translateTitle('购买源码') }}</p>
-      </a>
-    </li>
     <li @click="changeTheme('technology')">
       <a>
         <vab-icon icon="user-5-line" />
@@ -68,6 +62,12 @@
         <p>
           {{ translateTitle('默认主题') }}
         </p>
+      </a>
+    </li>
+    <li @click="buy">
+      <a>
+        <vab-icon icon="shopping-cart-2-line" />
+        <p>{{ translateTitle('购买源码') }}</p>
       </a>
     </li>
     <li @click="removeLocalStorage">
@@ -116,8 +116,8 @@
         1: #3698fd,
         2: #7a66f8,
         3: #3698fd,
-        4: #faa500,
-        5: #3698fd,
+        4: #7a66f8,
+        5: #faa500,
         6: #ef4c5d,
       );
 
