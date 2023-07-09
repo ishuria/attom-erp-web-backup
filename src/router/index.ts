@@ -450,7 +450,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     children: [
       {
         path: 'echarts',
-        name: 'Echarts',
+        name: 'ECharts',
         component: () => import('/@/views/other/echarts/index.vue'),
         meta: {
           title: '图表',

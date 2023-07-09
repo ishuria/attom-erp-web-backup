@@ -98,13 +98,72 @@ const list = [
         ],
       },
       {
-        path: 'permission',
-        name: 'Permission',
-        component: '/@/views/vab/permission/index.vue',
+        path: 'table',
+        name: 'Table',
         meta: {
-          title: '角色权限',
-          icon: 'user-3-line',
+          title: '表格',
+          // 非editor角色的用户可见
+          guard: {
+            role: ['Editor'],
+            mode: 'except',
+          },
+          icon: 'table-2',
         },
+        children: [
+          {
+            path: 'defaultTable',
+            name: 'DefaultTable',
+            component: '/@/views/vab/table/defaultTable.vue',
+            meta: {
+              title: '默认表格',
+            },
+          },
+          {
+            path: 'columnTable',
+            name: 'ColumnTable',
+            component: '/@/views/vab/table/columnTable.vue',
+            meta: {
+              title: '左树右表表格',
+            },
+          },
+          {
+            path: 'tabsTable',
+            name: 'TabsTable',
+            component: '/@/views/vab/table/tabsTable.vue',
+            meta: {
+              title: '分类表格',
+              dot: true,
+            },
+          },
+          {
+            path: 'inlineEditTable',
+            name: 'InlineEditTable',
+            component: '/@/views/vab/table/inlineEditTable.vue',
+            meta: {
+              title: '行内编辑表格',
+            },
+          },
+          {
+            path: 'customTable',
+            name: 'CustomTable',
+            component: '/@/views/vab/table/customTable.vue',
+            meta: {
+              title: '自定义表格',
+              badge: 'Hot',
+            },
+          },
+          {
+            path: 'defaultTableDetail',
+            name: 'ComprehensiveTableDetail',
+            component: '/@/views/vab/table/defaultTableDetail.vue',
+            meta: {
+              hidden: true,
+              title: '详情页',
+              activeMenu: '/vab/table/defaultTable',
+              dynamicNewTab: true, //详情页根据id传参不同可打开多个
+            },
+          },
+        ],
       },
       {
         path: 'form',
@@ -239,40 +298,6 @@ const list = [
         ],
       },
       {
-        path: 'table',
-        name: 'Table',
-        meta: {
-          title: '表格',
-          // 非editor角色的用户可见
-          guard: {
-            role: ['Editor'],
-            mode: 'except',
-          },
-          icon: 'table-2',
-        },
-        children: [
-          {
-            path: 'defaultTable',
-            name: 'DefaultTable',
-            component: '/@/views/vab/table/defaultTable.vue',
-            meta: {
-              title: '默认表格',
-            },
-          },
-          {
-            path: 'defaultTableDetail',
-            name: 'DefaultTableDetail',
-            component: '/@/views/vab/table/defaultTableDetail.vue',
-            meta: {
-              hidden: true,
-              title: '详情页',
-              activeMenu: '/vab/table/defaultTable',
-              dynamicNewTab: true, //详情页根据id传参不同可打开多个
-            },
-          },
-        ],
-      },
-      {
         path: 'list',
         name: 'List',
         component: '/@/views/vab/list/index.vue',
@@ -323,26 +348,14 @@ const list = [
           icon: 'message-2-line',
         },
       },
-
       {
-        path: 'dynamicMeta',
-        name: 'DynamicMeta',
-        component: '/@/views/vab/dynamicMeta/index.vue',
+        path: 'progress',
+        name: 'Progress',
+        component: '/@/views/vab/progress/index.vue',
         meta: {
-          title: '动态Meta',
+          title: '进度条',
           guard: ['Admin'],
-          icon: 'notification-badge-line',
-          badge: '0',
-        },
-      },
-      {
-        path: 'tabs',
-        name: 'Tabs',
-        component: '/@/views/vab/tabs/index.vue',
-        meta: {
-          title: '多标签',
-          guard: ['Admin'],
-          icon: 'bank-card-line',
+          icon: 'footprint-line',
         },
       },
       {
@@ -354,44 +367,6 @@ const list = [
           guard: ['Admin'],
           icon: 'time-line',
         },
-      },
-      {
-        path: 'menu1',
-        name: 'Menu1',
-        meta: {
-          title: '多级路由缓存',
-          guard: ['Admin'],
-          icon: 'route-line',
-        },
-        children: [
-          {
-            path: 'menu1-1',
-            name: 'Menu11',
-            meta: {
-              title: '多级路由1-1',
-            },
-            children: [
-              {
-                path: 'menu1-1-1',
-                name: 'Menu111',
-                meta: {
-                  title: '多级路由1-1-1',
-                },
-                children: [
-                  {
-                    path: 'menu1-1-1-1',
-                    name: 'Menu1111',
-                    meta: {
-                      title: '多级路由1-1-1-1',
-                    },
-                    component:
-                      '/@/views/vab/nested/menu1/menu1-1/menu1-1-1/menu1-1-1-1/index.vue',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
       },
       {
         path: 'statistic',
@@ -417,7 +392,7 @@ const list = [
     children: [
       {
         path: 'echarts',
-        name: 'Echarts',
+        name: 'ECharts',
         component: '/@/views/other/echarts/index.vue',
         meta: {
           title: '图表',
@@ -434,7 +409,6 @@ const list = [
           title: '富文本',
           icon: 'edit-box-line',
           guard: ['Admin'],
-          dot: true,
         },
       },
       {
@@ -445,7 +419,6 @@ const list = [
           title: '视频播放器',
           guard: ['Admin'],
           icon: 'video-line',
-          noKeepAlive: true,
         },
       },
       {
@@ -455,6 +428,7 @@ const list = [
         meta: {
           title: '抽奖',
           icon: 'award-line',
+          badge: 'New',
         },
       },
       {
@@ -475,7 +449,6 @@ const list = [
           title: '签名',
           icon: 'edit-2-line',
           guard: ['Admin'],
-          badge: 'New',
         },
       },
       {
@@ -486,7 +459,6 @@ const list = [
           title: '水印',
           guard: ['Admin'],
           icon: 'water-flash-line',
-          dot: true,
         },
       },
 
@@ -529,7 +501,6 @@ const list = [
           title: '密码生成器',
           guard: ['Admin'],
           icon: 'lock-password-line',
-          dot: true,
         },
       },
       {
@@ -541,6 +512,114 @@ const list = [
           guard: ['Admin'],
           icon: 'water-percent-line',
         },
+      },
+      {
+        path: 'paneSplit',
+        name: 'PaneSplit',
+        component: '/@/views/other/paneSplit/index.vue',
+        meta: {
+          title: '面板分割',
+          guard: ['Admin'],
+          icon: '"Layout"-2-line',
+        },
+      },
+      {
+        path: 'drag',
+        name: 'Drag',
+        component: '/@/views/other/drag/index.vue',
+        meta: {
+          title: '拖拽',
+          icon: 'drag-drop-line',
+        },
+      },
+      {
+        path: 'transition',
+        name: 'Transition',
+        component: '/@/views/other/transition/index.vue',
+        meta: {
+          title: '过渡动画',
+          icon: 'hand-heart-line',
+        },
+      },
+    ],
+  },
+  {
+    path: '/operate',
+    name: 'Operate',
+    component: 'Layout',
+    meta: {
+      title: '操作',
+      icon: 'microscope-line',
+    },
+    children: [
+      {
+        path: 'permission',
+        name: 'Permission',
+        component: '/@/views/operate/permission/index.vue',
+        meta: {
+          title: '角色权限',
+          icon: 'user-3-line',
+          badge: 'Hot',
+        },
+      },
+      {
+        path: 'dynamicMeta',
+        name: 'DynamicMeta',
+        component: '/@/views/operate/dynamicMeta/index.vue',
+        meta: {
+          title: '动态Meta',
+          guard: ['Admin'],
+          icon: 'notification-badge-line',
+          badge: '0',
+        },
+      },
+      {
+        path: 'tabs',
+        name: 'Tabs',
+        component: '/@/views/operate/tabs/index.vue',
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+        },
+      },
+      {
+        path: 'menu1',
+        name: 'Menu1',
+        meta: {
+          title: '多级路由缓存',
+          guard: ['Admin'],
+          icon: 'route-line',
+        },
+        children: [
+          {
+            path: 'menu11',
+            name: 'Menu11',
+            meta: {
+              title: '路由1.1',
+            },
+            children: [
+              {
+                path: 'menu111',
+                name: 'Menu111',
+                meta: {
+                  title: '路由1.1.1',
+                },
+                children: [
+                  {
+                    path: 'menu1111',
+                    name: 'Menu1111',
+                    meta: {
+                      title: '路由1.1.1.1',
+                    },
+                    component:
+                      '/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
     ],
   },
@@ -703,24 +782,37 @@ const list = [
           icon: 'file-shield-2-line',
         },
       },
+      {
+        path: 'websiteSetting',
+        name: 'WebsiteSetting',
+        component: '/@/views/setting/websiteSetting/index.vue',
+        meta: {
+          title: '网站设置',
+          icon: 'global-line',
+        },
+      },
     ],
   },
   {
-    path: '/statcenter',
-    name: 'Statcenter',
+    path: '/noColumn',
+    name: 'NoColumn',
     component: 'Layout',
     meta: {
-      title: '数据',
-      icon: 'line-chart-line',
+      title: '单栏',
+      icon: 'delete-column',
+      guard: ['Admin'],
+      breadcrumbHidden: true,
     },
     children: [
       {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: '/@/views/statcenter/Dashboard.vue',
+        path: 'deleteColumn',
+        name: 'DeleteColumn',
+        component: '/@/views/noColumn/deleteColumn/index.vue',
         meta: {
-          title: '数据概况',
-          icon: 'pie-chart-line',
+          title: '单栏',
+          icon: 'delete-column',
+          noColumn: true,
+          hidden: true,
         },
       },
     ],
@@ -765,7 +857,7 @@ const list = [
     },
   },
   {
-    path: '/:pathMatch(.*)*',
+    path: '/:pathMatch(.**',
     redirect: '/404',
     name: 'NotFound',
     meta: {
@@ -778,7 +870,7 @@ export default [
   {
     url: '/router/getList',
     method: 'get',
-    response: () => {
+    response() {
       return {
         code: 200,
         msg: 'success',

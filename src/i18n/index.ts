@@ -1,18 +1,18 @@
 import pinia from '/@/store'
 import { useSettingsStore } from '/@/store/modules/settings'
-import en from './en'
-import zh from './zh'
 import { createI18n } from 'vue-i18n'
 import enLocale from 'element-plus/lib/locale/lang/en'
 import zhLocale from 'element-plus/lib/locale/lang/zh-cn'
+import en from './en.json'
 
 const messages = {
   en: {
-    ...en,
+    ...{
+      vabI18n: en,
+    },
     ...enLocale,
   },
   zh: {
-    ...zh,
     ...zhLocale,
   },
 }
