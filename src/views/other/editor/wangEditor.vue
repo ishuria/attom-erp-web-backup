@@ -1,19 +1,3 @@
-<template>
-  <div class="wang-editor-container">
-    <Toolbar :editor="editorRef" style="border-bottom: 1px solid #e8e8e8" />
-    <Editor
-      v-model="html"
-      class="wang-editor-content"
-      :default-config="editorConfig"
-      style="height: 300px"
-      @on-created="handleCreated"
-    />
-    <div class="wang-editor-footer">
-      <el-button type="primary" @click="onSubmit">保存</el-button>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
   import '@wangeditor/editor/dist/css/style.css'
   import { IDomEditor } from '@wangeditor/editor'
@@ -56,6 +40,24 @@
   }
 </script>
 
+<template>
+  <div class="wang-editor-container">
+    <Toolbar
+      :editor="editorRef"
+      style="border-bottom: 1px solid var(--el-border-color)"
+    />
+    <Editor
+      v-model="html"
+      class="wang-editor-content"
+      :default-config="editorConfig"
+      @on-created="handleCreated"
+    />
+    <div class="wang-editor-footer">
+      <el-button type="primary" @click="onSubmit">保存</el-button>
+    </div>
+  </div>
+</template>
+
 <style lang="scss">
   .wang-editor-container {
     padding: 0 !important;
@@ -74,11 +76,14 @@
 
     .wang-editor-content {
       width: 70%;
-      height: 500px !important;
-      padding: 0px 40px 0 40px;
+      height: calc($base-keep-alive-height - 100px) !important;
       margin: 20px auto 20px auto;
       background-color: var(--el-color-white);
       border: 0;
+    }
+
+    #w-e-textarea-1 {
+      margin: var(--el-margin) !important;
     }
 
     .wang-editor-footer {
