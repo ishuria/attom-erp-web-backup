@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+  import _ from 'lodash'
   import { color as _color } from '/@/config/'
   import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -43,16 +44,12 @@
     return sColorChange
   }
 
-  const colorRgba = (str: any, n: number) => {
+  const colorRgba = (str: any, n = 1) => {
     const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
     const sColor = str.toLowerCase()
-    n = n || 1
-    if (sColor && reg.test(sColor)) {
-      const sColorChange = getRgbNum(sColor)
-      return `rgba(${sColorChange.join(',')},${n})`
-    } else {
-      return sColor
-    }
+    if (sColor && reg.test(sColor))
+      return `rgba(${getRgbNum(sColor).join(',')},${_.round(n, 1)})`
+    else return sColor
   }
 
   const handleChange = (value: any) => {

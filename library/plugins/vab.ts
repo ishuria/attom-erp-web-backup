@@ -7,7 +7,7 @@ import {
   ElNotification,
 } from 'element-plus'
 import mitt from 'mitt'
-import _ from 'lodash-es'
+import _ from 'lodash'
 
 export let gp: Record<string, any>
 
