@@ -6,8 +6,8 @@
     name: 'VabThemeSetting',
   })
 
-  const $pub: any = inject('$pub')
-  const settingsStore: any = useSettingsStore()
+  const $pub = inject<any>('$pub')
+  const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
 
   const handleOpenTheme = () => {

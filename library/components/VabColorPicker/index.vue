@@ -9,7 +9,7 @@
   const color = ref<any>(_color)
   const $sub = inject<any>('$sub')
   const $unsub = inject<any>('$unsub')
-  const $pub: any = inject('$pub')
+  const $pub = inject<any>('$pub')
   const predefineColors = ref<any>([
     _color,
     '#1e90ff',

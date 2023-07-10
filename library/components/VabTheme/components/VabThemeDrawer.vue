@@ -7,12 +7,12 @@
   })
 
   const $sub = inject<any>('$sub')
-  const $pub: any = inject('$pub')
+  const $pub = inject<any>('$pub')
   const $unsub = inject<any>('$unsub')
   const $baseLoading = inject<any>('$baseLoading')
   const $baseMessage = inject<any>('$baseMessage')
-  const settingsStore: any = useSettingsStore()
-  const { theme, device }: any = storeToRefs(settingsStore)
+  const settingsStore = useSettingsStore()
+  const { theme, device } = storeToRefs<any>(settingsStore)
   const { saveTheme, resetTheme, updateTheme }: any = settingsStore
   const drawerVisible = ref<boolean>(false)
 

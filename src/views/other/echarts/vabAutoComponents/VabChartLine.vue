@@ -25,8 +25,8 @@
     },
   })
 
-  const settingsStore: any = useSettingsStore()
-  const { color }: any = storeToRefs(settingsStore)
+  const settingsStore = useSettingsStore()
+  const { color } = storeToRefs(settingsStore)
 
   const option = reactive<any>({
     grid: {

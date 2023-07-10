@@ -19,7 +19,7 @@
 
   const route = useRoute()
   const router = useRouter()
-  const $pub: any = inject('$pub')
+  const $pub = inject<any>('$pub')
   const settingsStore = useSettingsStore()
   const { device } = storeToRefs(settingsStore)
   const { foldSideBar } = settingsStore

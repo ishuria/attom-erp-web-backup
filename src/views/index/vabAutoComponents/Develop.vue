@@ -4,8 +4,8 @@
   import { onBeforeRouteLeave } from 'vue-router'
   import { useSettingsStore } from '/@/store/modules/settings'
 
-  const settingsStore: any = useSettingsStore()
-  const { color }: any = storeToRefs(settingsStore)
+  const settingsStore = useSettingsStore()
+  const { color } = storeToRefs(settingsStore)
 
   const option = reactive<any>({
     tooltip: {

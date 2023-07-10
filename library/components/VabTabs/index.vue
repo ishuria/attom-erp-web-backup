@@ -5,7 +5,7 @@
   import { translateTitle } from '/@/utils/i18n'
   import { handleActivePath, handleTabs } from '/@/utils/routes'
   import { RouteLocationNormalizedLoaded } from 'vue-router'
-  import { VabRoute } from '~/src/router/types'
+  import { VabRoute } from '/@/router/types'
 
   defineOptions({
     name: 'VabTabs',

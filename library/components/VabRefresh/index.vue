@@ -5,7 +5,7 @@
     name: 'VabRefresh',
   })
 
-  const $pub: any = inject('$pub')
+  const $pub = inject<any>('$pub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const className = ref<string>('')
