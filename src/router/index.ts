@@ -436,6 +436,26 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'bar-chart-2-line',
         },
       },
+      {
+        path: 'image',
+        name: 'Image',
+        component: () => import('/@/views/vab/image/index.vue'),
+        meta: {
+          title: '图片',
+          guard: ['Admin'],
+          icon: 'image-2-line',
+        },
+      },
+      {
+        path: 'infiniteScroll',
+        name: 'InfiniteScroll',
+        component: () => import('/@/views/vab/infiniteScroll/index.vue'),
+        meta: {
+          title: '无限滚动',
+          guard: ['Admin'],
+          icon: 'align-vertically',
+        },
+      },
     ],
   },
   {

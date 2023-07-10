@@ -32,7 +32,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref } from 'vue'
   import { Minus, Plus } from '@element-plus/icons-vue'
 
   const percentage = ref<number>(70)

@@ -1,0 +1,35 @@
+<template>
+  <div class="demo-image">
+    <div v-for="fit in fits" :key="fit" class="block">
+      <span class="demonstration">{{ fit }}</span>
+      <el-image :fit="fit" :src="url" style="width: 100px; height: 100px" />
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+  const fits = ['fill', 'contain', 'cover', 'none', 'scale-down']
+  const url =
+    'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+</script>
+
+<style scoped>
+  .demo-image .block {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 20%;
+    padding: 30px 0;
+    text-align: center;
+    vertical-align: top;
+    border-right: solid 1px var(--el-border-color);
+  }
+  .demo-image .block:last-child {
+    border-right: none;
+  }
+  .demo-image .demonstration {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: var(--el-text-color-secondary);
+  }
+</style>
