@@ -120,10 +120,6 @@
     font-size: var(--el-font-size-default);
     text-align: center;
     cursor: pointer;
-    border-top: 1px solid #e8eaec;
-
-    i {
-      margin-right: 3px;
-    }
+    border-top: 1px solid var(--el-border-color);
   }
 </style>

@@ -170,10 +170,6 @@ html > body.vab-theme-technology {
     border-top: 1px dashed var(--el-border-color) !important;
   }
 
-  .notice-clear[data-v-46bd9876] {
-    border-top: 1px solid var(--el-border-color) !important;
-  }
-
   /*el-dialog、el-message-box */
   .el-dialog,
   .el-message-box {
@@ -236,7 +232,6 @@ html > body.vab-theme-technology {
     border: 1px solid var(--el-border-color);
   }
 
-
   .el-pagination.is-background .btn-prev:disabled,
   .el-pagination.is-background .btn-next:disabled {
     background-color: var(--el-pagination-button-bg-color);
@@ -250,9 +245,10 @@ html > body.vab-theme-technology {
     td {
       background: var(--el-color-white) !important;
     }
-    th,th.el-table-fixed-column--left,
+    th,
+    th.el-table-fixed-column--left,
     th.el-table-fixed-column--right {
-      background:#123172 !important;
+      background: #123172 !important;
     }
   }
 
