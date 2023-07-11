@@ -184,10 +184,10 @@
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="custom-table-right-tools">
-          <el-button>
+          <el-button class="hidden-xs-only">
             <el-checkbox v-model="stripe" label="斑马纹" />
           </el-button>
-          <el-button>
+          <el-button class="hidden-xs-only">
             <el-checkbox v-model="border" label="边框" />
           </el-button>
           <el-button @click="queryData">
@@ -312,7 +312,6 @@
   .custom-table-container {
     .custom-table-right-tools {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
 
       :deep() {
