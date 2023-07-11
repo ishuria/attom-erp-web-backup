@@ -10,13 +10,8 @@
   const tabsStore = useTabsStore()
   const route = useRoute()
   const { delVisitedRoute } = tabsStore
-  const router = useRouter()
 
-  const goBackHome = async () => {
-    await router.push({ path: '/index' })
-    await delVisitedRoute(handleActivePath(route as VabRoute, true))
-  }
-  const goBackPrevious = async () => {
+  const goBack = async () => {
     await delVisitedRoute(handleActivePath(route as VabRoute, true))
     await history.go(-1)
   }
@@ -24,11 +19,7 @@
 
 <template>
   <div class="no-layout-container">
-    <el-page-header content="无框" title="返回上一页" @back="goBackPrevious">
-      <template #extra>
-        <el-button type="primary" @click="goBackHome">返回首页</el-button>
-      </template>
-    </el-page-header>
+    <el-page-header content="无框" title="返回上一页" @back="goBack" />
 
     <el-alert :closable="false" title="无框示例" type="success" />
   </div>
