@@ -59,7 +59,6 @@
 
   const _updateTheme = (value: any = '') => {
     if (value == 'default') $pub('shop-vite-reset-dark')
-
     const loading = $baseLoading()
     setTimeout(() => {
       updateTheme()
@@ -72,20 +71,18 @@
   }
 
   const setDefaultTheme = async () => {
-    drawerVisible.value = false
     await _updateTheme()
-    setTimeout(() => {
-      resetTheme()
-      $pub('shop-vite-reset-color')
-      $pub('shop-vite-reset-dark')
-    }, 500)
-    if (document.body.getBoundingClientRect().width - 1 < 992) location.reload()
+    await resetTheme()
+    await $pub('shop-vite-reset-color')
+    await $pub('shop-vite-reset-dark')
+    drawerVisible.value = false
+    if ('mobile' === device.value) location.reload()
   }
 
   const handleSaveTheme = async () => {
     await saveTheme()
     drawerVisible.value = false
-    if (document.body.getBoundingClientRect().width - 1 < 992) location.reload()
+    if ('mobile' === device.value) location.reload()
   }
 
   onMounted(() => {
