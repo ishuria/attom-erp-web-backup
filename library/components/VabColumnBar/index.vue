@@ -58,7 +58,7 @@
           '.left-panel .fold-unfold'
         )
         const floatFold: any = document.querySelector('.float-fold')
-        if (route.meta.noColumn) {
+        if (route.meta.noColumn && theme.value.layout === 'column') {
           if (device.value !== 'mobile') foldSideBar()
           if (foldUnfold) foldUnfold.style = 'display:none'
           if (floatFold) floatFold.style = 'display:none'
