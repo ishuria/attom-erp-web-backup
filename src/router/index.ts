@@ -652,6 +652,53 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'dynamicSegment',
+        name: 'DynamicSegment',
+        meta: {
+          title: '动态路径参数',
+          guard: ['Admin'],
+          icon: 'arrow-left-right-line',
+        },
+        children: [
+          {
+            path: 'test1/:id',
+            name: 'Test1',
+            component: () =>
+              import('/@/views/operate/dynamicSegment/test1.vue'),
+            meta: {
+              hidden: true,
+              title: 'Params',
+              dynamicNewTab: true,
+            },
+          },
+          {
+            path: 'test1/1',
+            name: 'Test1/1',
+            component: () =>
+              import('/@/views/operate/dynamicSegment/test1.vue'),
+            meta: { title: 'Params id=1' },
+          },
+          {
+            path: 'test2',
+            name: 'Test2',
+            component: () =>
+              import('/@/views/operate/dynamicSegment/test2.vue'),
+            meta: {
+              hidden: true,
+              title: 'Query',
+              dynamicNewTab: true,
+            },
+          },
+          {
+            path: 'test2?id=1',
+            name: 'Test2?id=1',
+            component: () =>
+              import('/@/views/operate/dynamicSegment/test2.vue'),
+            meta: { title: 'Query id=1' },
+          },
+        ],
+      },
+      {
         path: 'tabs',
         name: 'Tabs',
         component: () => import('/@/views/operate/tabs/index.vue'),
