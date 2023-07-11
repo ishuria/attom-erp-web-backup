@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-  const count = ref(0)
+  const count = ref<any>(0)
   const load = () => {
     count.value += 2
   }

@@ -19,7 +19,7 @@
     </p>
     <p>更新时间：最近更新</p>
     <template #footer>
-      <el-button v-loading="loading" size="large" type="primary" @click="save">
+      <el-button v-loading="loading" type="primary" @click="save">
         {{ button }}
       </el-button>
     </template>

@@ -456,6 +456,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'align-vertically',
         },
       },
+      {
+        path: 'drawer',
+        name: 'Drawer',
+        component: () => import('/@/views/vab/drawer/index.vue'),
+        meta: {
+          title: '抽屉',
+          guard: ['Admin'],
+          icon: 'archive-drawer-line',
+        },
+      },
     ],
   },
   {

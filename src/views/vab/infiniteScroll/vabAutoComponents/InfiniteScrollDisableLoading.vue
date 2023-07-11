@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-  const count = ref(10)
-  const loading = ref(false)
+  const count = ref<any>(10)
+  const loading = ref<boolean>(false)
   const noMore = computed(() => count.value >= 20)
   const disabled = computed(() => loading.value || noMore.value)
   const load = () => {
