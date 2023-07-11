@@ -1,152 +1,3 @@
-<template>
-  <div class="comprehensive-table-container table-auto-height">
-    <vab-query-form>
-      <vab-query-form-top-panel>
-        <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
-          <el-form-item label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              :icon="Search"
-              :loading="listLoading"
-              native-type="submit"
-              type="primary"
-              @click="queryData"
-            >
-              查询
-            </el-button>
-            <el-button text type="primary" @click="handleFold">
-              <span v-if="fold">展开</span>
-              <span v-else>合并</span>
-              <vab-icon
-                class="vab-dropdown"
-                :class="{ 'vab-dropdown-active': fold }"
-                icon="arrow-up-s-line"
-              />
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-top-panel>
-      <vab-query-form-left-panel :span="24">
-        <el-button :icon="Plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete">
-          删除
-        </el-button>
-        <el-button type="primary" @click="handleDetail">详情</el-button>
-        <el-button type="primary" @click="handleDetailStayTable">
-          后台打开详情
-        </el-button>
-      </vab-query-form-left-panel>
-    </vab-query-form>
-
-    <el-table
-      ref="tableSortRef"
-      v-loading="listLoading"
-      border
-      :data="list"
-      @selection-change="setSelectRows"
-    >
-      <el-table-column type="selection" width="38" />
-      <el-table-column align="center" label="序号" width="55">
-        <template #default="{ $index }">
-          {{ $index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="标题" prop="title" />
-      <el-table-column align="center" label="作者" prop="author" />
-      <el-table-column align="center" label="评级">
-        <template #default="{ row }">
-          <el-rate v-model="row.rate" disabled />
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="点击量"
-        prop="pageViews"
-        sortable
-      />
-      <el-table-column align="center" label="开关" prop="switch">
-        <template #default="{ row }">
-          <el-tooltip
-            :content="row.switch === 0 ? '点击开启' : '点击关闭'"
-            :enterable="false"
-            placement="top"
-          >
-            <el-switch v-model="row.switch" />
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="状态">
-        <template #default="{ row }">
-          <el-tooltip
-            class="item"
-            :content="row.status"
-            effect="dark"
-            placement="top-start"
-          >
-            <el-tag :type="statusFilter(row.status)">
-              {{ row.status }}
-            </el-tag>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="时间"
-        prop="datetime"
-        width="200"
-      />
-      <el-table-column align="center" label="操作" width="250">
-        <template #default="{ row }">
-          <el-button text type="primary" @click="handleDetail(row)">
-            详情
-          </el-button>
-          <el-button text type="primary" @click="handleEdit(row)">
-            编辑
-          </el-button>
-          <el-button text type="primary" @click="handleDelete(row)">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
-      </template>
-    </el-table>
-    <el-pagination
-      background
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    />
-    <default-table-edit ref="editRef" @fetch-data="fetchData" />
-  </div>
-</template>
-
 <script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useRoutesStore } from '/@/store/modules/routes'
@@ -299,3 +150,152 @@
     fetchData()
   })
 </script>
+
+<template>
+  <div class="comprehensive-table-container table-auto-height">
+    <vab-query-form>
+      <vab-query-form-top-panel>
+        <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
+          <el-form-item label="标题">
+            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item label="标题">
+            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              native-type="submit"
+              type="primary"
+              @click="queryData"
+            >
+              查询
+            </el-button>
+            <el-button text type="primary" @click="handleFold">
+              <span v-if="fold">展开</span>
+              <span v-else>合并</span>
+              <vab-icon
+                class="vab-dropdown"
+                :class="{ 'vab-dropdown-active': fold }"
+                icon="arrow-up-s-line"
+              />
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-top-panel>
+      <vab-query-form-left-panel :span="24">
+        <el-button :icon="Plus" type="primary" @click="handleAdd">
+          添加
+        </el-button>
+        <el-button :icon="Delete" type="danger" @click="handleDelete">
+          删除
+        </el-button>
+        <el-button type="primary" @click="handleDetail">详情</el-button>
+        <el-button type="primary" @click="handleDetailStayTable">
+          后台打开详情
+        </el-button>
+      </vab-query-form-left-panel>
+    </vab-query-form>
+
+    <el-table
+      ref="tableSortRef"
+      v-loading="listLoading"
+      border
+      :data="list"
+      @selection-change="setSelectRows"
+    >
+      <el-table-column type="selection" width="38" />
+      <el-table-column align="center" label="序号" width="55">
+        <template #default="{ $index }">
+          {{ $index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="标题" prop="title" />
+      <el-table-column align="center" label="作者" prop="author" />
+      <el-table-column align="center" label="评级">
+        <template #default="{ row }">
+          <el-rate v-model="row.rate" disabled />
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="点击量"
+        prop="pageViews"
+        sortable
+      />
+      <el-table-column align="center" label="开关" prop="switch">
+        <template #default="{ row }">
+          <el-tooltip
+            :content="row.switch === 0 ? '点击开启' : '点击关闭'"
+            :enterable="false"
+            placement="top"
+          >
+            <el-switch v-model="row.switch" />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="状态">
+        <template #default="{ row }">
+          <el-tooltip
+            class="item"
+            :content="row.status"
+            effect="dark"
+            placement="top-start"
+          >
+            <el-tag :type="statusFilter(row.status)">
+              {{ row.status }}
+            </el-tag>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="时间"
+        prop="datetime"
+        width="200"
+      />
+      <el-table-column align="center" label="操作" width="250">
+        <template #default="{ row }">
+          <el-button text type="primary" @click="handleDetail(row)">
+            详情
+          </el-button>
+          <el-button text type="primary" @click="handleEdit(row)">
+            编辑
+          </el-button>
+          <el-button text type="primary" @click="handleDelete(row)">
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
+    <el-pagination
+      background
+      :current-page="queryForm.pageNo"
+      :layout="layout"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <default-table-edit ref="editRef" @fetch-data="fetchData" />
+  </div>
+</template>

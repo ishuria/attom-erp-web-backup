@@ -67,7 +67,7 @@
   import { Refresh } from '@element-plus/icons-vue'
 
   defineOptions({
-    name: 'ComprehensiveTableDetail',
+    name: 'DefaultTableDetail',
   })
 
   const route: any = useRoute()

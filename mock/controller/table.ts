@@ -10,7 +10,7 @@ const List: {
   author: string
   datetime: string
   pageViews: string
-  img: string
+  image: string
   switch: string
   percent: string
   'rate|1': number[]
@@ -28,7 +28,7 @@ for (let i = 0; i < count; i++) {
     author: '@cname',
     datetime: '@datetime',
     pageViews: '@integer(300, 5000)',
-    img: handleRandomImage(),
+    image: handleRandomImage(),
     switch: '@boolean',
     percent: '@integer(80,99)',
     'rate|1': [1, 2, 3, 4, 5],

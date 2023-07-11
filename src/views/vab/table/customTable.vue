@@ -1,3 +1,157 @@
+<script lang="ts" setup>
+  import { doDelete, getList } from '/@/api/table'
+  import VabDraggable from 'vuedraggable'
+  import { Delete, Plus, Search } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'CustomTable',
+  })
+
+  const $baseConfirm = inject<any>('$baseConfirm')
+  const $baseMessage = inject<any>('$baseMessage')
+
+  const tableSortRef = ref<any>(null)
+  const editRef = ref<any>(null)
+  const border = ref<boolean>(true)
+  const stripe = ref<boolean>(false)
+  const lineHeight = ref<any>('default')
+  const isFullscreen = ref<boolean>(false)
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const total = ref<any>(0)
+  const selectRows = ref<any>([])
+  const columns = ref<any>([
+    {
+      label: 'id',
+      prop: 'id',
+      sortable: true,
+    },
+    {
+      label: '标题',
+      prop: 'title',
+      sortable: true,
+      disableCheck: true,
+      checked: true,
+    },
+    {
+      label: '图片',
+      prop: 'title',
+    },
+    {
+      label: '作者',
+      prop: 'author',
+      sortable: true,
+      checked: true,
+    },
+    {
+      label: '评级',
+      prop: 'rate',
+      sortable: true,
+      checked: true,
+    },
+    {
+      label: '点击量',
+      prop: 'pageViews',
+      sortable: true,
+      checked: true,
+    },
+    {
+      label: '时间',
+      prop: 'datetime',
+      sortable: true,
+      checked: true,
+    },
+  ])
+  const checkList = ref<any>([])
+  const queryForm = reactive<any>({
+    pageNo: 1,
+    pageSize: 20,
+    title: '',
+  })
+
+  const dragOptions = computed(() => {
+    return {
+      animation: 600,
+      group: 'description',
+    }
+  })
+
+  const finallyColumns = computed(() => {
+    return columns.value.filter((item: any) =>
+      checkList.value.includes(item.label)
+    )
+  })
+
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+  }
+
+  const handleSizeChange = (value: any) => {
+    queryForm.pageSize = value
+    fetchData()
+  }
+
+  const handleCurrentChange = (value: any) => {
+    queryForm.pageNo = value
+    fetchData()
+  }
+
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+
+  const clickFullScreen = () => {
+    isFullscreen.value = !isFullscreen.value
+  }
+
+  const setSelectRows = (value: any) => {
+    selectRows.value = value
+  }
+
+  const handleAdd = () => {
+    editRef.value.showEdit()
+  }
+
+  const handleEdit = (row: any) => {
+    editRef.value.showEdit(row)
+  }
+
+  const handleDelete = (row: any) => {
+    if (row.id) {
+      $baseConfirm('你确定要删除当前项吗', null, async () => {
+        const { msg }: any = await doDelete({ ids: row.id })
+        $baseMessage(msg, 'success', 'vab-hey-message-success')
+        await fetchData()
+      })
+    } else {
+      if (selectRows.value.length > 0) {
+        const ids = selectRows.value.map((item: any) => item.id).join()
+        $baseConfirm('你确定要删除选中项吗', null, async () => {
+          const { msg }: any = await doDelete({ ids: ids })
+          $baseMessage(msg, 'success', 'vab-hey-message-success')
+          await fetchData()
+        })
+      } else {
+        $baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
+      }
+    }
+  }
+
+  onMounted(() => {
+    columns.value.forEach((item: any) => {
+      if (item.checked) checkList.value.push(item.label)
+    })
+
+    fetchData()
+  })
+</script>
+
 <template>
   <div
     class="custom-table-container table-auto-height"
@@ -112,6 +266,16 @@
           <span v-if="item.label === '评级'">
             <el-rate v-model="row.rate" disabled />
           </span>
+          <el-popover
+            v-if="item.label === '图片'"
+            placement="top-start"
+            trigger="hover"
+          >
+            <el-image :src="row.image" />
+            <template #reference>
+              <el-image :src="row.image" />
+            </template>
+          </el-popover>
           <span v-else>{{ row[item.prop] }}</span>
         </template>
       </el-table-column>
@@ -143,143 +307,6 @@
     <default-table-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
-
-<script lang="ts" setup>
-  import { doDelete, getList } from '/@/api/table'
-  import VabDraggable from 'vuedraggable'
-  import { Delete, Plus, Search } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'CustomTable',
-  })
-
-  const $baseConfirm = inject<any>('$baseConfirm')
-  const $baseMessage = inject<any>('$baseMessage')
-
-  const tableSortRef = ref<any>(null)
-  const editRef = ref<any>(null)
-  const border = ref<boolean>(true)
-  const stripe = ref<boolean>(false)
-  const lineHeight = ref<any>('default')
-  const isFullscreen = ref<boolean>(false)
-  const checkList = ref<any>(['标题', '作者', '评级', '点击量', '时间'])
-  const list = ref<any>([])
-  const listLoading = ref<boolean>(true)
-  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-  const total = ref<any>(0)
-  const selectRows = ref<any>([])
-  const columns = ref<any>([
-    {
-      label: '标题',
-      prop: 'title',
-      sortable: true,
-      disableCheck: true,
-    },
-    {
-      label: '作者',
-      prop: 'author',
-      sortable: true,
-    },
-    {
-      label: '评级',
-      prop: 'rate',
-      sortable: true,
-    },
-    {
-      label: '点击量',
-      prop: 'pageViews',
-      sortable: true,
-    },
-    {
-      label: '时间',
-      prop: 'datetime',
-      sortable: true,
-    },
-  ])
-  const queryForm = reactive<any>({
-    pageNo: 1,
-    pageSize: 20,
-    title: '',
-  })
-
-  const dragOptions = computed(() => {
-    return {
-      animation: 600,
-      group: 'description',
-    }
-  })
-
-  const finallyColumns = computed(() => {
-    console.log(columns.value)
-    return columns.value.filter((item: any) =>
-      checkList.value.includes(item.label)
-    )
-  })
-
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
-  }
-
-  const handleSizeChange = (value: any) => {
-    queryForm.pageSize = value
-    fetchData()
-  }
-
-  const handleCurrentChange = (value: any) => {
-    queryForm.pageNo = value
-    fetchData()
-  }
-
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
-
-  const clickFullScreen = () => {
-    isFullscreen.value = !isFullscreen.value
-  }
-
-  const setSelectRows = (value: any) => {
-    selectRows.value = value
-  }
-
-  const handleAdd = () => {
-    editRef.value.showEdit()
-  }
-
-  const handleEdit = (row: any) => {
-    editRef.value.showEdit(row)
-  }
-
-  const handleDelete = (row: any) => {
-    if (row.id) {
-      $baseConfirm('你确定要删除当前项吗', null, async () => {
-        const { msg }: any = await doDelete({ ids: row.id })
-        $baseMessage(msg, 'success', 'vab-hey-message-success')
-        await fetchData()
-      })
-    } else {
-      if (selectRows.value.length > 0) {
-        const ids = selectRows.value.map((item: any) => item.id).join()
-        $baseConfirm('你确定要删除选中项吗', null, async () => {
-          const { msg }: any = await doDelete({ ids: ids })
-          $baseMessage(msg, 'success', 'vab-hey-message-success')
-          await fetchData()
-        })
-      } else {
-        $baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
-      }
-    }
-  }
-
-  onMounted(() => {
-    fetchData()
-  })
-</script>
 
 <style lang="scss" scoped>
   .custom-table-container {
