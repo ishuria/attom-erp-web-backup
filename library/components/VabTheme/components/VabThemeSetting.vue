@@ -115,8 +115,8 @@
       $colors: (
         1: #3698fd,
         2: #7a66f8,
-        3: #3698fd,
-        4: #7a66f8,
+        3: #3fb884,
+        4: #3698fd,
         5: #faa500,
         6: #ef4c5d,
       );
@@ -126,18 +126,25 @@
           a {
             color: $color;
             background: mix($base-color-white, $color, 90%);
-            transition:
-              color 0.15s ease,
-              background-color 0.15s ease,
-              border-color 0.15s ease,
-              box-shadow 0.15s ease,
-              -webkit-box-shadow 0.15s ease;
+            transition: all 0.15s ease;
 
             &:hover {
               color: var(--el-color-white);
               background: $color;
+
+              [class*='ri-'] {
+                scale: 1.1;
+              }
             }
           }
+        }
+      }
+
+      &:nth-child(1),
+      &:nth-child(4) {
+        a {
+          color: var(--el-color-primary);
+          background: var(--el-color-primary-light-9);
         }
       }
 
