@@ -19,7 +19,9 @@
 
 <template>
   <div class="no-layout-container">
-    <el-page-header content="无框" title="返回上一页" @back="goBack" />
+    <el-page-header content="无框" title="返回上一页" @back="goBack">
+      <template #extra><vab-full-screen /></template>
+    </el-page-header>
 
     <el-alert :closable="false" title="无框示例" type="success" />
   </div>
