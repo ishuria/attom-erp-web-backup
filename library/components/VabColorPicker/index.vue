@@ -54,8 +54,8 @@
 
   const handleChange = (value: any) => {
     const el = ref<any>(null)
-    const _color = useCssVar('--el-color-primary', el)
-    _color.value = value
+    useCssVar('--el-color-primary-dark-2', el).value = value
+    useCssVar('--el-color-primary', el).value = value
 
     for (let index = 1; index < 10; index++) {
       useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(

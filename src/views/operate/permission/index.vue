@@ -4,7 +4,7 @@
       v-if="!loginInterception"
       :closable="false"
       show-icon
-      title="检测到您当前的登录拦截已关闭，无法模拟切换角色功能，请在src/config/setting.config.js中配置loginInterception为ture，开启登录拦截"
+      title="检测到您当前的登录拦截已关闭，无法模拟切换角色功能，请在src/config/setting.config.js中配置loginInterception为true，开启登录拦截"
       type="success"
     />
     <el-alert
@@ -113,7 +113,7 @@
           v-permissions="{ role: ['Admin'], permission: ['delete:system'] }"
           type="primary"
         >
-          拥有["Admin"]角色或["delete:system"]的按钮
+          拥有["Admin"]或["delete:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{
@@ -123,7 +123,7 @@
           }"
           type="primary"
         >
-          拥有["Editor"]角色和["read:system"]的按钮
+          拥有["Editor"]和["read:system"]的按钮
         </el-button>
         <el-button
           v-permissions="{
