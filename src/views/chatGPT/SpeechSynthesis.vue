@@ -19,6 +19,7 @@
 
   let synth: SpeechSynthesis
   const voices = ref<SpeechSynthesisVoice[]>([])
+
   onMounted(() => {
     if (speech.isSupported.value) {
       setTimeout(() => {
@@ -34,9 +35,11 @@
     if (speech.status.value === 'pause') window.speechSynthesis.resume()
     else speech.speak()
   }
+
   const pause = () => {
     window.speechSynthesis.pause()
   }
+
   const stop = () => {
     window.speechSynthesis.cancel()
   }
@@ -68,27 +71,11 @@
               </el-select>
             </el-form-item>
             <el-form-item label="操作">
-              <el-button
-                :disabled="speech.isPlaying.value"
-                type="primary"
-                @click="play"
-              >
+              <el-button type="primary" @click="play">
                 {{ speech.status.value === 'pause' ? '继续' : '播放' }}
               </el-button>
-              <el-button
-                :disabled="!speech.isPlaying.value"
-                type="warning"
-                @click="pause"
-              >
-                暂停
-              </el-button>
-              <el-button
-                :disabled="!speech.isPlaying.value"
-                type="danger"
-                @click="stop"
-              >
-                结束
-              </el-button>
+              <el-button type="warning" @click="pause">暂停</el-button>
+              <el-button type="danger" @click="stop">结束</el-button>
             </el-form-item>
           </el-form>
         </el-col>
