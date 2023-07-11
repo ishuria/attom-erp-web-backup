@@ -122,7 +122,7 @@
     }
 
     &-blue {
-      color: #fff;
+      color: var(--el-color-white);
       background: var(--el-color-primary);
       background: linear-gradient(
         90deg,
@@ -132,17 +132,17 @@
 
       .right-icon {
         color: var(--el-color-primary);
-        background: #fff;
+        background: var(--el-color-white);
       }
 
       .bottom {
         .ri-arrow-up-line {
           color: var(--el-color-primary);
-          background: #fff;
+          background: var(--el-color-white);
         }
 
         span {
-          color: #fff;
+          color: var(--el-color-white);
         }
       }
     }

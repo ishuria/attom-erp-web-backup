@@ -84,9 +84,9 @@
         <el-col :span="6">
           <div class="left-tab">
             <el-menu
-              active-text-color="#fff"
+              active-text-color="var(--el-color-white)"
               background-color="#39364d"
-              text-color="#fff"
+              text-color="var(--el-color-white)"
             >
               <el-menu-item
                 index="1"
@@ -233,7 +233,7 @@
       z-index: 999;
       height: 71px;
       margin: 0;
-      background: rgba(#fff, 0.5);
+      background: rgba(var(--el-color-white), 0.5);
 
       .index-nav {
         min-width: 1152px;
@@ -366,7 +366,7 @@
             width: 50px;
             height: 50px;
             line-height: 50px;
-            color: #fff;
+            color: var(--el-color-white);
             text-align: center;
             border-radius: 100%;
 

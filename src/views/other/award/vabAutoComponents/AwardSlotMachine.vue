@@ -75,7 +75,7 @@
   .machine-button {
     position: absolute;
     bottom: 52px;
-    color: #fff;
+    color: var(--el-color-white);
     background: transparent;
     border: 0;
   }

@@ -265,6 +265,7 @@
         align="center"
         :label="item.label"
         :prop="item.prop"
+        show-overflow-tooltip
         :sortable="item.sortable"
       >
         <template #default="{ row }">
@@ -285,12 +286,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">
             编辑
           </el-button>
-          <el-button text type="primary" @click="handleDelete(row)">
+          <el-button text type="danger" @click="handleDelete(row)">
             删除
           </el-button>
         </template>

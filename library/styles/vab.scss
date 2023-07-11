@@ -455,7 +455,7 @@ html {
       user-select: none;
     }
 
-    /* el-dialog、el-message-box、el-popover */
+    /* el-dialog */
     @media (max-width: 576px) {
       .el-dialog {
         width: auto !important;
@@ -463,7 +463,6 @@ html {
       }
     }
 
-    /* .el-dialog */
     .el-dialog {
       border-radius: var(--el-border-radius-base);
       &__body {

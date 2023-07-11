@@ -383,7 +383,7 @@
           width: 120px;
           height: 32px;
           font-size: var(--el-font-size-default);
-          color: #fff;
+          color: var(--el-color-white);
           cursor: pointer;
           user-select: none;
           border-radius: 3px;

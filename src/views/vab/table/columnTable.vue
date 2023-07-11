@@ -311,7 +311,12 @@
                   >
                     查询
                   </el-button>
-                  <el-button text type="primary" @click="handleFold">
+                  <el-button
+                    class="hidden-xs-only"
+                    text
+                    type="primary"
+                    @click="handleFold"
+                  >
                     <span v-if="fold">展开</span>
                     <span v-else>合并</span>
                     <vab-icon
@@ -349,7 +354,12 @@
                 {{ $index + 1 }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="标题" prop="title" />
+            <el-table-column
+              align="center"
+              label="标题"
+              prop="title"
+              show-overflow-tooltip
+            />
             <el-table-column align="center" label="作者" prop="author" />
             <el-table-column align="center" label="评级">
               <template #default="{ row }">
@@ -393,7 +403,7 @@
               prop="datetime"
               width="200"
             />
-            <el-table-column align="center" label="操作" width="250">
+            <el-table-column align="center" label="操作" width="237">
               <template #default="{ row }">
                 <el-button text type="primary" @click="handleDetail(row)">
                   详情
@@ -401,7 +411,7 @@
                 <el-button text type="primary" @click="handleEdit(row)">
                   编辑
                 </el-button>
-                <el-button text type="primary" @click="handleDelete(row)">
+                <el-button text type="danger" @click="handleDelete(row)">
                   删除
                 </el-button>
               </template>

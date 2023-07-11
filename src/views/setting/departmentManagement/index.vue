@@ -46,7 +46,7 @@
       <el-table-column label="父节点Value" prop="parentValue" />
       <el-table-column label="排序" prop="order" />
       <el-table-column label="创建时间" prop="createTime" />
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="162">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">
             编辑
