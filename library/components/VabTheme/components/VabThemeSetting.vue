@@ -106,36 +106,10 @@
       margin: 0;
       list-style: none;
 
-      // &:nth-child(2) {
-      //   [class*='ri-'] {
-      //     animation: rotate 6s linear infinite;
-      //   }
-      // }
-
-      $colors: (
-        1: #3698fd,
-        2: #7a66f8,
-        3: #3fb884,
-        4: #3698fd,
-        5: #faa500,
-        6: #ef4c5d,
-      );
-
-      @each $key, $color in $colors {
-        &:nth-child(#{$key}) {
-          a {
-            color: $color;
-            background: mix($base-color-white, $color, 90%);
-            transition: all 0.15s ease;
-
-            &:hover {
-              color: var(--el-color-white);
-              background: $color;
-
-              [class*='ri-'] {
-                scale: 1.1;
-              }
-            }
+      &:nth-child(n) {
+        a {
+          &:hover {
+            color: var(--el-color-white);
           }
         }
       }
@@ -145,6 +119,54 @@
         a {
           color: var(--el-color-primary);
           background: var(--el-color-primary-light-9);
+
+          &:hover {
+            background: var(--el-color-primary);
+          }
+        }
+      }
+
+      &:nth-child(2) {
+        a {
+          color: var(--el-color-success);
+          background: var(--el-color-success-lighter);
+
+          &:hover {
+            background: var(--el-color-success);
+          }
+        }
+      }
+
+      &:nth-child(3) {
+        a {
+          color: var(--el-color-info);
+          background: var(--el-color-info-lighter);
+
+          &:hover {
+            background: var(--el-color-info);
+          }
+        }
+      }
+
+      &:nth-child(5) {
+        a {
+          color: var(--el-color-warning);
+          background: var(--el-color-warning-lighter);
+
+          &:hover {
+            background: var(--el-color-warning);
+          }
+        }
+      }
+
+      &:nth-child(6) {
+        a {
+          color: var(--el-color-danger);
+          background: var(--el-color-danger-lighter);
+
+          &:hover {
+            background: var(--el-color-danger);
+          }
         }
       }
 
@@ -154,7 +176,7 @@
         height: 60px;
         padding-top: 10px;
         text-align: center;
-        background: #f6f8f9;
+        background: var(--el-color-white);
         border-radius: calc(var(--el-border-radius-base) + 3px);
 
         p {

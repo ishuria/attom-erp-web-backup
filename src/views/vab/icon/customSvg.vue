@@ -32,7 +32,7 @@
         justify-content: center;
         min-height: 60px;
         max-height: 60px;
-        padding: #{calc($base-padding / 1.4)};
+        padding: calc(var(--el-padding) / 1.4);
         cursor: pointer;
 
         i {

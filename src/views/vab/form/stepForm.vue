@@ -47,7 +47,7 @@
   .step-form-container {
     :deep() {
       .el-steps {
-        margin: $base-margin auto $base-margin * 2 auto;
+        margin: var(--el-margin) auto calc(var(--el-margin) * 2) auto;
 
         .el-step__title.is-process {
           color: var(--el-color-primary);

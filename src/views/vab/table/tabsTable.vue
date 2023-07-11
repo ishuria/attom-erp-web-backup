@@ -321,7 +321,7 @@
           display: flex;
           flex-direction: column;
           height: calc(
-            $base-keep-alive-height - $base-padding - 70px
+            var(--el-keep-alive-height) - var(--el-padding) - 70px
           ) !important;
 
           .vab-query-form {

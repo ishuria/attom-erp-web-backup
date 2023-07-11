@@ -197,11 +197,11 @@
   .chat-GPT-container {
     :deep(.el-card__body) {
       position: relative;
-      min-height: calc($base-keep-alive-height - 20px);
+      min-height: calc(var(--el-keep-alive-height) - 20px);
     }
 
     .vab-chat-main {
-      height: calc($base-keep-alive-height - 230px);
+      height: calc(var(--el-keep-alive-height) - 230px);
 
       ul {
         padding: 5px 25px 15px 5px;

@@ -158,7 +158,7 @@
         justify-content: center;
         min-height: 59.5px;
         max-height: 59.5px;
-        padding: #{calc($base-padding / 1.4)};
+        padding: calc(var(--el-padding) / 1.4);
         cursor: pointer;
 
         i {
@@ -185,7 +185,7 @@
 
         &:hover {
           i {
-            margin-top: -#{calc($base-margin / 1.2)};
+            margin-bottom: calc(var(--el-margin) / 1.2);
           }
 
           &::after {

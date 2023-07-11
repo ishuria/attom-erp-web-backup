@@ -27,7 +27,7 @@
 <style lang="scss" scoped>
   .pane-split-container {
     width: 100%;
-    height: calc($base-keep-alive-height - $base-padding) !important;
+    height: calc(var(--el-keep-alive-height) - var(--el-padding)) !important;
 
     @mixin panel {
       display: flex;

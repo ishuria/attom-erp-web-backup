@@ -322,7 +322,7 @@
         padding-right: var(--el-padding);
 
         .el-divider--horizontal {
-          margin: $base-margin * 2 0 $base-margin * 2 0;
+          margin: calc(var(--el-margin) * 2) 0 calc(var(--el-margin) * 2) 0;
         }
 
         .el-form-item {
@@ -423,7 +423,7 @@
       bottom: 0;
       left: 0;
       z-index: $base-z-index + 1;
-      padding: math.div($base-padding, 2);
+      padding: calc(var(--el-padding) / 2);
       background: var(--el-color-white);
       border-top: 1px solid var(--el-border-color);
     }

@@ -61,11 +61,11 @@
   .count-container {
     .count-text {
       height: 80px;
-      margin-bottom: $base-margin;
+      margin-bottom: calc(var(--el-margin) / 2);
       font-size: 60px;
       font-weight: bold;
       text-align: center;
-      background: linear-gradient(to top, #77e0a0, #75c3e9);
+      background: linear-gradient(to top, #77e0a0, var(--el-color-primary));
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }

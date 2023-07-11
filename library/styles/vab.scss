@@ -68,7 +68,7 @@ html {
             transition: var(--el-transition);
 
             > [class*='-container'] {
-              min-height: $base-keep-alive-height;
+              min-height: var(--el-keep-alive-height);
               padding: var(--el-padding);
               background: var(--el-color-white);
               border-top: 1px solid var(--el-border-color);
@@ -386,7 +386,7 @@ html {
 
     /* el-divider间隔线 */
     .el-divider--horizontal {
-      margin: 8px 0 $base-margin + 8px 0;
+      margin: 8px 0 calc(var(--el-margin) + 8px) 0;
 
       .el-divider__text {
         display: -webkit-box;
@@ -591,7 +591,7 @@ html {
     :not(.no-background-container).table-auto-height {
       display: flex;
       flex-direction: column;
-      height: $base-keep-alive-height;
+      height: var(--el-keep-alive-height);
       .el-table {
         flex: 1;
       }
@@ -605,7 +605,7 @@ html {
       .el-card__body {
         display: flex;
         flex-direction: column;
-        height: calc($base-keep-alive-height - $base-padding - 2px);
+        height: calc(var(--el-keep-alive-height) - var(--el-padding) - 2px);
         .el-table {
           flex: 1;
         }

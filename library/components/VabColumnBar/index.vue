@@ -326,8 +326,8 @@
       &-semicircle {
         justify-content: left;
         width: $base-left-menu-width-min * 1.4;
-        height: #{calc($base-left-menu-width-min / 1.4)};
-        padding-left: $base-padding;
+        height: calc(#{$base-left-menu-width-min} / 1.4);
+        padding-left: var(--el-padding);
 
         [class*='ri-'] {
           margin-right: 3px;

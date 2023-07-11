@@ -86,31 +86,27 @@ $base-transition:
 
 //vite不支持export，vab样式重写
 $vab-color-primary: $base-color-primary;
-$vab-color-primary-light-1: mix($base-color-white, $base-color-primary, 10%);
-$vab-color-primary-light-2: mix($base-color-white, $base-color-primary, 20%);
-$vab-color-primary-light-3: mix($base-color-white, $base-color-primary, 30%);
-$vab-color-primary-light-4: mix($base-color-white, $base-color-primary, 40%);
-$vab-color-primary-light-5: mix($base-color-white, $base-color-primary, 50%);
-$vab-color-primary-light-6: mix($base-color-white, $base-color-primary, 60%);
-$vab-color-primary-light-7: mix($base-color-white, $base-color-primary, 70%);
-$vab-color-primary-light-8: mix($base-color-white, $base-color-primary, 80%);
-$vab-color-primary-light-9: mix($base-color-white, $base-color-primary, 90%);
+$vab-color-primary-light-1: rgba($base-color-primary, 0.9);
+$vab-color-primary-light-2: rgba($base-color-primary, 0.8);
+$vab-color-primary-light-3: rgba($base-color-primary, 0.7);
+$vab-color-primary-light-4: rgba($base-color-primary, 0.6);
+$vab-color-primary-light-5: rgba($base-color-primary, 0.5);
+$vab-color-primary-light-6: rgba($base-color-primary, 0.4);
+$vab-color-primary-light-7: rgba($base-color-primary, 0.3);
+$vab-color-primary-light-8: rgba($base-color-primary, 0.2);
+$vab-color-primary-light-9: rgba($base-color-primary, 0.1);
 $vab-color-success: $base-color-success;
-$vab-color-success-light: mix($base-color-white, $base-color-success, 80%);
-$vab-color-success-lighter: mix($base-color-white, $base-color-success, 90%);
+$vab-color-success-light: rgba($base-color-success, 0.2);
+$vab-color-success-lighter: rgba($base-color-success, 0.1);
 $vab-color-warning: $base-color-warning;
-$vab-color-warning-light: mix($base-color-white, $base-color-warning, 80%);
-$vab-color-warning-lighter: mix($base-color-white, $base-color-warning, 90%);
+$vab-color-warning-light: rgba($base-color-warning, 0.2);
+$vab-color-warning-lighter: rgba($base-color-warning, 0.1);
 $vab-color-danger: $base-color-danger;
-$vab-color-danger-light: mix($base-color-white, $base-color-danger, 80%);
-$vab-color-danger-lighter: mix($base-color-white, $base-color-danger, 90%);
+$vab-color-danger-light: rgba($base-color-error, 0.2);
+$vab-color-danger-lighter: rgba($base-color-error, 0.1);
 $vab-color-error: $base-color-error;
-$vab-color-error-light: mix($base-color-white, $base-color-error, 80%);
-$vab-color-error-lighter: mix($base-color-white, $base-color-error, 90%);
+$vab-color-error-light: rgba($base-color-error, 0.2);
+$vab-color-error-lighter: rgba($base-color-error, 0.1);
 $vab-color-info: $base-color-text-secondary;
-$vab-color-info-light: mix($base-color-white, $base-color-text-secondary, 80%);
-$vab-color-info-lighter: mix(
-  $base-color-white,
-  $base-color-text-secondary,
-  90%
-);
+$vab-color-info-light: rgba($base-color-text-secondary, 0.2);
+$vab-color-info-lighter: rgba($base-color-text-secondary, 0.1);
