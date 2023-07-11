@@ -15,6 +15,38 @@
   const { theme, device } = storeToRefs<any>(settingsStore)
   const { saveTheme, resetTheme, updateTheme }: any = settingsStore
   const drawerVisible = ref<boolean>(false)
+  const layoutList = ref<any>([
+    'column',
+    'vertical',
+    'horizontal',
+    'comprehensive',
+  ])
+  const tabsBarStyleList = ref<any>([
+    { label: '卡片', value: 'card' },
+    { label: '灵动', value: 'smart' },
+    { label: '圆滑', value: 'smooth' },
+  ])
+  const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
+  const themeNameList = ref<any>([
+    { label: 'default', title: '默认' },
+    { label: 'plain', title: '简洁' },
+    { label: 'technology', title: '科技' },
+  ])
+  const columnStyleList = ref<any>([
+    { value: 'vertical', label: '纵向' },
+    { value: 'horizontal', label: '横向' },
+    { value: 'card', label: '卡片' },
+    { value: 'arrow', label: '箭头' },
+    { value: 'semicircle', label: '半圆' },
+  ])
+  const pageTransitionList = ref<any>([
+    { value: '', label: '无动画' },
+    { value: 'el-fade-in-linear', label: 'fade-in-linear' },
+    { value: 'el-fade-in', label: 'fade-in' },
+    { value: 'el-zoom-in-center', label: 'zoom-in-center' },
+    { value: 'el-zoom-in-top', label: 'zoom-in-top' },
+    { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
+  ])
 
   const handleOpenTheme = () => {
     drawerVisible.value = true
@@ -109,38 +141,25 @@
             class="vab-shop-layout"
             :disabled="device === 'mobile'"
           >
-            <el-radio-button label="column">
+            <el-radio-button
+              v-for="item in layoutList"
+              :key="item"
+              :label="item"
+            >
               <template #default>
-                <vab-icon icon="column" is-custom-svg />
-              </template>
-            </el-radio-button>
-            <el-radio-button label="vertical">
-              <template #default>
-                <vab-icon icon="vertical" is-custom-svg />
-              </template>
-            </el-radio-button>
-            <el-radio-button label="horizontal">
-              <template #default>
-                <vab-icon icon="horizontal" is-custom-svg />
-              </template>
-            </el-radio-button>
-            <el-radio-button label="comprehensive">
-              <template #default>
-                <vab-icon icon="comprehensive" is-custom-svg />
+                <vab-icon :icon="item" is-custom-svg />
               </template>
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="translateTitle('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
-            <el-radio-button label="default">
-              <template #default>{{ translateTitle('默认') }}</template>
-            </el-radio-button>
-            <el-radio-button label="plain">
-              <template #default>{{ translateTitle('简洁') }}</template>
-            </el-radio-button>
-            <el-radio-button label="technology">
-              <template #default>{{ translateTitle('科技') }}</template>
+            <el-radio-button
+              v-for="item in themeNameList"
+              :key="item.label"
+              :label="item.label"
+            >
+              <template #default>{{ translateTitle(item.title) }}</template>
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
@@ -153,9 +172,12 @@
             :disabled="theme.layout === 'horizontal'"
             @change="updateMenuWidth"
           >
-            <el-option key="266px" label="266px" value="266px" />
-            <el-option key="277px" label="277px" value="277px" />
-            <el-option key="288px" label="288px" value="288px" />
+            <el-option
+              v-for="item in menuWidthList"
+              :key="item"
+              :label="item"
+              :value="item"
+            />
           </el-select>
         </el-form-item>
         <el-form-item :label="translateTitle('标签')">
@@ -187,19 +209,10 @@
           </template>
           <el-select v-model="theme.tabsBarStyle" :disabled="!theme.showTabs">
             <el-option
-              key="card"
-              :label="translateTitle('卡片')"
-              value="card"
-            />
-            <el-option
-              key="smart"
-              :label="translateTitle('灵动')"
-              value="smart"
-            />
-            <el-option
-              key="smooth"
-              :label="translateTitle('圆滑')"
-              value="smooth"
+              v-for="item in tabsBarStyleList"
+              :key="item.value"
+              :label="translateTitle(item.label)"
+              :value="item.value"
             />
           </el-select>
         </el-form-item>
@@ -219,29 +232,10 @@
             :disabled="theme.layout !== 'column'"
           >
             <el-option
-              key="vertical"
-              :label="translateTitle('纵向')"
-              value="vertical"
-            />
-            <el-option
-              key="horizontal"
-              :label="translateTitle('横向')"
-              value="horizontal"
-            />
-            <el-option
-              key="card"
-              :label="translateTitle('卡片')"
-              value="card"
-            />
-            <el-option
-              key="arrow"
-              :label="translateTitle('箭头')"
-              value="arrow"
-            />
-            <el-option
-              key="semicircle"
-              :label="translateTitle('半圆')"
-              value="semicircle"
+              v-for="item in columnStyleList"
+              :key="item.value"
+              :label="translateTitle(item.label)"
+              :value="item.value"
             />
           </el-select>
         </el-form-item>
@@ -268,27 +262,11 @@
         </el-form-item>
         <el-form-item :label="translateTitle('页面动画')">
           <el-select v-model="theme.pageTransition">
-            <el-option key="" label="无动画" value="" />
             <el-option
-              key="el-fade-in-linear"
-              label="fade-in-linear"
-              value="el-fade-in-linear"
-            />
-            <el-option key="el-fade-in" label="fade-in" value="el-fade-in" />
-            <el-option
-              key="el-zoom-in-center"
-              label="zoom-in-center"
-              value="el-zoom-in-center"
-            />
-            <el-option
-              key="el-zoom-in-top"
-              label="zoom-in-top"
-              value="el-zoom-in-top"
-            />
-            <el-option
-              key="el-zoom-in-bottom"
-              label="zoom-in-bottom"
-              value="el-zoom-in-bottom"
+              v-for="item in pageTransitionList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             />
           </el-select>
         </el-form-item>
@@ -306,8 +284,6 @@
 </template>
 
 <style lang="scss">
-  @use 'sass:math';
-
   .vab-drawer {
     .el-drawer__header {
       padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
