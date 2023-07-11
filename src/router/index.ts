@@ -619,6 +619,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'hand-heart-line',
         },
       },
+      {
+        path: 'noLayout',
+        name: 'NoLayout',
+        component: () => import('/@/views/other/noLayout/index.vue'),
+        meta: {
+          title: '无框',
+          guard: ['Admin'],
+          icon: 'aspect-ratio-line',
+          dot: true,
+        },
+      },
     ],
   },
   {
