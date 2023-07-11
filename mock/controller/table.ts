@@ -22,8 +22,8 @@ for (let i = 0; i < count; i++) {
   List.push({
     uuid: '@uuid',
     id: '@id',
-    title: '@title(1, 2)',
-    description: '@csentence',
+    title: '@ctitle(5, 10)',
+    description: '@cparagraph',
     'status|1': ['published', 'draft', 'deleted'],
     author: '@cname',
     datetime: '@datetime',

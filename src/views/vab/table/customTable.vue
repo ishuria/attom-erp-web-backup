@@ -62,6 +62,11 @@
       sortable: true,
       checked: true,
     },
+    {
+      label: '描述',
+      prop: 'description',
+      sortable: true,
+    },
   ])
   const checkList = ref<any>([])
   const queryForm = reactive<any>({
