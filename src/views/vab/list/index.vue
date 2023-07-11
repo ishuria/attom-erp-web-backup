@@ -76,7 +76,11 @@
 
   const list = ref<any>([])
   const total = ref<any>(0)
-  const queryForm = reactive<any>({ pageNo: 1, pageSize: 10, title: '' })
+  const queryForm = reactive<any>({
+    pageNo: 1,
+    pageSize: 20,
+    title: '',
+  })
   const layout = ref<string>('total, sizes, prev, pager, next, jumper')
   const listLoading = ref<boolean>(true)
   const emptyShow = ref<boolean>(true)

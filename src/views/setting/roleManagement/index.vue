@@ -99,7 +99,7 @@
   const selectRows = ref<any>([])
   const queryForm = reactive<any>({
     pageNo: 1,
-    pageSize: 10,
+    pageSize: 20,
     role: '',
   })
 
