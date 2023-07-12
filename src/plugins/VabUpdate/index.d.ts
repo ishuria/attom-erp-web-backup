@@ -1,13 +1,8 @@
 declare module 'virtual:pwa-register/vue' {
   import type { Ref } from 'vue'
+  import type { RegisterSWOptions } from 'vite-plugin-pwa/types'
 
-  export type RegisterSWOptions = {
-    immediate?: boolean
-    onNeedRefresh?: () => void
-    onOfflineReady?: () => void
-    onRegistered?: (registration: ServiceWorkerRegistration | undefined) => void
-    onRegisterError?: (error: any) => void
-  }
+  export type { RegisterSWOptions }
 
   export function useRegisterSW(options?: RegisterSWOptions): {
     needRefresh: Ref<boolean>

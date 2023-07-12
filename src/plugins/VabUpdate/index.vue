@@ -36,14 +36,15 @@
   })
 
   const { getTitle: title } = useSettingsStore()
-  const { needRefresh, updateServiceWorker } = useRegisterSW({})
+  const { needRefresh, updateServiceWorker } = useRegisterSW()
   const button = ref<string>('立即升级')
   const loading = ref<boolean>(false)
 
-  const save = () => {
+  const save = async () => {
     button.value = '正在更新'
     loading.value = true
-    updateServiceWorker()
+    await updateServiceWorker()
+    loading.value = false
   }
 
   const close = async () => {
