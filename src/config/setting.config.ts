@@ -17,7 +17,7 @@ export const settingConfig: {
   // 付费版本copyright可随意修改
   copyright: 'vue-admin-beautiful.com',
   // 缓存路由的最大数量
-  keepAliveMaxNum: 20,
+  keepAliveMaxNum: 99,
   // 路由模式，是否为hash模式
   isHashRouterMode: true,
   // 不经过token校验的路由，白名单路由建议配置到与login页面同级，如果需要放行带传参的页面，请使用query传参，配置时只配置path即可
