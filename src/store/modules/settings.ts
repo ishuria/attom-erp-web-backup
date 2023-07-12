@@ -59,7 +59,7 @@ const getLocalStorage = (key: string) => {
   }
 }
 
-const theme = getLocalStorage('theme') || { ...defaultTheme }
+const theme = getLocalStorage('shop-vite-theme') || { ...defaultTheme }
 const { collapse = foldSidebar } = getLocalStorage('collapse')
 const { language = i18n } = getLocalStorage('language')
 const { logo = _logo } = getLocalStorage('logo')
@@ -98,11 +98,11 @@ export const useSettingsStore = defineStore('settings', {
       })
     },
     saveTheme() {
-      localStorage.setItem('theme', JSON.stringify(this.theme))
+      localStorage.setItem('shop-vite-theme', JSON.stringify(this.theme))
     },
     resetTheme() {
       this.theme = { ...defaultTheme }
-      localStorage.removeItem('theme')
+      localStorage.removeItem('shop-vite-theme')
       this.updateTheme()
     },
     updateTheme() {

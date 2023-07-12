@@ -2,12 +2,9 @@
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
 import { useAclStore } from './acl'
-// import { useTabsStore } from './tabs'
-// import { useRoutesStore } from './routes'
 import { useSettingsStore } from './settings'
 import { getUserInfo, login, logout, socialLogin } from '/@/api/user'
 import { getToken, removeToken, setToken } from '/@/utils/token'
-// import { resetRouter } from '/@/router'
 import { isArray, isString } from '/@/utils/validate'
 import { tokenName } from '/@/config'
 import { gp } from '/@vab/plugins/vab'
@@ -150,19 +147,6 @@ export const useUserStore = defineStore('user', {
      * @description 重置token、roles、permission、router、tabsBar等
      */
     async resetAll() {
-      // this.setToken('')
-      // this.setUsername('游客')
-      // this.setAvatar('https://i.gtimg.cn/club/item/face/img/2/15922_100.gif')
-
-      // const aclStore = useAclStore()
-      // const routesStore = useRoutesStore()
-      // const tabsStore = useTabsStore()
-      // aclStore.setFull(false)
-      // aclStore.setRole([])
-      // aclStore.setPermission([])
-      // routesStore.clearRoutes()
-      // tabsStore.delAllVisitedRoutes()
-      // await resetRouter()
       removeToken()
     },
   },

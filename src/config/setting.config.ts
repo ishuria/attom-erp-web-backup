@@ -33,9 +33,9 @@ export const settingConfig: {
   loadingText: '正在加载中...',
   // token名称
   tokenName: 'token',
-  // token在localStorage、sessionStorage、cookie存储的key的名称
+  // token在localStorage、sessionStorage存储的key的名称
   tokenTableName: 'shop-vite-token',
-  // token存储位置localStorage sessionStorage cookie
+  // token存储位置localStorage sessionStorage
   storage: 'localStorage',
   // token失效回退到登录页时是否记录本次的路由（是否记录当前tab页）
   recordRoute: true,
