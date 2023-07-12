@@ -242,53 +242,15 @@ html {
       margin-left: 10px;
     }
 
-    .el-drawer__wrapper {
-      outline: none !important;
-
-      * {
-        outline: none !important;
+    /* 毛玻璃遮罩 */
+    .el-overlay {
+      backdrop-filter: blur(5px);
+      > div {
+        backdrop-filter: none;
       }
     }
-
-    /* v-modal遮罩 */
-    .v-modal {
-      z-index: $base-z-index;
-      background-color: rgba(0, 0, 0, 0.5);
-      opacity: 0.6;
-      //backdrop-filter: blur(10px);
-    }
-
-    /* el-image-viewer遮罩 */
     .el-image-viewer__mask {
-      background-color: rgba(0, 0, 0, 0.5);
-      opacity: 0.6;
-      //backdrop-filter: blur(10px);
-    }
-
-    /* el-loading-mask遮罩 */
-    .el-loading-mask {
-      z-index: $base-z-index - 10 !important;
-
-      &.is-fullscreen {
-        z-index: $base-z-index + 99 !important;
-      }
-    }
-
-    /* el-scrollbar滚动条 */
-    .el-scrollbar {
-      height: 100%;
-
-      &__bar {
-        z-index: 999;
-      }
-
-      &__thumb {
-        background-color: mix($base-color-white, $base-menu-background, 90%);
-
-        &:hover {
-          background-color: mix($base-color-white, $base-menu-background, 80%);
-        }
-      }
+      backdrop-filter: blur(5px);
     }
 
     /* el-form表单 */
@@ -450,7 +412,7 @@ html {
       color: var(--el-color-black);
     }
 
-    /* el-menu菜单开始 */
+    /* el-menu菜单 */
     .el-menu {
       user-select: none;
     }
