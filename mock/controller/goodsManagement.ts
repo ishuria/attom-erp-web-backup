@@ -7,8 +7,8 @@ for (let i = 0; i < count; i++) {
   List.push({
     uuid: '@uuid',
     id: '@id',
-    title: '@title(1, 2)',
-    name: '@title(1, 2)',
+    title: '@ctitle(5, 10)',
+    name: '@ctitle(3, 6)',
     'type|1': ['视频饮料', '家用电器', '其他'],
     price: '￥' + '@integer(0,100)',
     sales: '@integer(0,100)',
