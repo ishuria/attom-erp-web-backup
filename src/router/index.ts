@@ -662,6 +662,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'tabs',
+        name: 'Tabs',
+        component: () => import('/@/views/operate/tabs/index.vue'),
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+          badge: 'Hot',
+        },
+      },
+      {
         path: 'dynamicMeta',
         name: 'DynamicMeta',
         component: () => import('/@/views/operate/dynamicMeta/index.vue'),
@@ -719,16 +730,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           },
         ],
       },
-      {
-        path: 'tabs',
-        name: 'Tabs',
-        component: () => import('/@/views/operate/tabs/index.vue'),
-        meta: {
-          title: '多标签',
-          guard: ['Admin'],
-          icon: 'bank-card-line',
-        },
-      },
+
       {
         path: 'menu1',
         name: 'Menu1',

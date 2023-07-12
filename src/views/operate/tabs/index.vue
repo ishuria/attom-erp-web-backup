@@ -1,33 +1,5 @@
-<template>
-  <div class="tabs-container">
-    <el-button @click="closeOthersTabs">
-      <vab-icon icon="close-line" />
-      关闭其他
-    </el-button>
-    <el-button @click="closeLeftTabs">
-      <vab-icon icon="arrow-left-line" />
-      关闭左侧
-    </el-button>
-    <el-button @click="closeRightTabs">
-      <vab-icon icon="arrow-right-line" />
-      关闭右侧
-    </el-button>
-    <el-button @click="closeAllTabs">
-      <vab-icon icon="close-line" />
-      关闭全部
-    </el-button>
-    <el-button @click="handleTabRemove(route.path)">
-      <vab-icon icon="close-line" />
-      关闭当前
-    </el-button>
-    <el-button @click="handleRefresh">
-      <vab-icon icon="refresh-line" />
-      刷新当前
-    </el-button>
-  </div>
-</template>
-
 <script lang="ts" setup>
+  import _ from 'lodash'
   import { handleActivePath } from '/@/utils/routes'
   import { useTabsStore } from '/@/store/modules/tabs'
 
@@ -49,56 +21,37 @@
   const hoverRoute = ref<any>(null)
   const $pub = inject<any>('$pub')
 
-  /**
-   * 根据原生路径删除标签中的标签
-   * @param rawPath 原生路径
-   * @returns {Promise<void>}
-   */
   const handleTabRemove = async (rawPath: string) => {
     if (isActive(rawPath)) await toLastTab()
     await delVisitedRoute(rawPath)
   }
-  /**
-   * 删除其他标签页
-   * @returns {Promise<void>}
-   */
+
   const closeOthersTabs = async () => {
     if (hoverRoute.value) {
       await router.push(hoverRoute.value)
       await delOthersVisitedRoutes(hoverRoute.value.path)
     } else await delOthersVisitedRoutes(handleActivePath(route, true))
   }
-  /**
-   * 删除左侧标签页
-   * @returns {Promise<void>}
-   */
+
   const closeLeftTabs = async () => {
     if (hoverRoute.value) {
       await router.push(hoverRoute.value)
       await delLeftVisitedRoutes(hoverRoute.value.path)
     } else await delLeftVisitedRoutes(handleActivePath(route, true))
   }
-  /**
-   * 删除右侧标签页
-   * @returns {Promise<void>}
-   */
+
   const closeRightTabs = async () => {
     if (hoverRoute.value) {
       await router.push(hoverRoute.value)
       await delRightVisitedRoutes(hoverRoute.value.path)
     } else await delRightVisitedRoutes(handleActivePath(route, true))
   }
-  /**
-   * 删除所有标签页
-   * @returns {Promise<void>}
-   */
+
   const closeAllTabs = async () => {
     await delAllVisitedRoutes()
     await toLastTab()
   }
-  /**
-   * 跳转最后一个标签页
-   */
+
   const toLastTab = async () => {
     const latestView = visitedRoutes.value
       .filter((_) => _.path !== handleActivePath(route, true))
@@ -106,16 +59,75 @@
     if (latestView) await router.push(latestView)
     else await router.push('/')
   }
+
   const isActive = (path: any) => {
     return path === handleActivePath(route, true)
   }
-  /**
-   * 刷新当前标签页
-   */
+
   const handleRefresh = () => {
     $pub('reload-router-view', 'Tabs')
   }
+
+  const handleOpenParams = () => {
+    router.push(`/operate/dynamicSegment/test1/${_.random(0, 100)}`)
+  }
+
+  const handleOpenQuery = () => {
+    router.push(`/operate/dynamicSegment/test2?id=${_.random(0, 100)}`)
+  }
 </script>
+
+<template>
+  <div class="tabs-container no-background-container">
+    <vab-card>
+      <template #header>
+        <div>
+          <span>标签页操作</span>
+        </div>
+      </template>
+      <el-button type="primary" @click="closeOthersTabs">
+        <vab-icon icon="close-line" />
+        关闭其他
+      </el-button>
+      <el-button type="primary" @click="closeLeftTabs">
+        <vab-icon icon="arrow-left-line" />
+        关闭左侧
+      </el-button>
+      <el-button type="primary" @click="closeRightTabs">
+        <vab-icon icon="arrow-right-line" />
+        关闭右侧
+      </el-button>
+      <el-button type="primary" @click="closeAllTabs">
+        <vab-icon icon="close-line" />
+        关闭全部
+      </el-button>
+      <el-button type="primary" @click="handleTabRemove(route.path)">
+        <vab-icon icon="close-line" />
+        关闭当前
+      </el-button>
+      <el-button type="primary" @click="handleRefresh">
+        <vab-icon icon="refresh-line" />
+        刷新当前
+      </el-button>
+    </vab-card>
+    <vab-card>
+      <template #header>
+        <div>
+          <span>params传参(支持多开)</span>
+        </div>
+      </template>
+      <el-button type="primary" @click="handleOpenParams">点击跳转</el-button>
+    </vab-card>
+    <vab-card>
+      <template #header>
+        <div>
+          <span>query传参(支持多开)</span>
+        </div>
+      </template>
+      <el-button type="primary" @click="handleOpenQuery">点击跳转</el-button>
+    </vab-card>
+  </div>
+</template>
 
 <style lang="scss" scoped>
   .tabs-container {
@@ -128,6 +140,10 @@
       .el-button + .el-button {
         margin-right: 10px;
         margin-left: 0;
+      }
+
+      .el-card__body {
+        padding-bottom: calc(var(--el-padding) / 2);
       }
     }
   }
