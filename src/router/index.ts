@@ -953,6 +953,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       title: '单栏',
       icon: 'delete-column',
       guard: ['Admin'],
+      levelHidden: true,
       breadcrumbHidden: true,
     },
     children: [
@@ -964,7 +965,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '单栏',
           icon: 'delete-column',
           noColumn: true,
-          hidden: true,
         },
       },
     ],
