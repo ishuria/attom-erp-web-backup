@@ -110,6 +110,7 @@
       height: 140px !important;
     }
   }
+
   .bottom {
     padding-top: 20px;
     margin-top: 5px;

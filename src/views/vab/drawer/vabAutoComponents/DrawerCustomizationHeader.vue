@@ -4,7 +4,9 @@
     <template #header="{ close, titleId, titleClass }">
       <h4 :id="titleId" :class="titleClass">这是个自定义头部抽屉</h4>
       <el-button type="danger" @click="close">
-        <el-icon class="el-icon--left"><CircleCloseFilled /></el-icon>
+        <el-icon class="el-icon--left">
+          <CircleCloseFilled />
+        </el-icon>
         关闭
       </el-button>
     </template>

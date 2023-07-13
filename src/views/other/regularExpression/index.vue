@@ -4,12 +4,12 @@
   })
 
   import {
+    isChinese,
     isEmail,
-    isPhone,
+    isEnglish,
     isIdCard,
     isNumber,
-    isEnglish,
-    isChinese,
+    isPhone,
     isUrl,
   } from '/@/utils/validate'
 

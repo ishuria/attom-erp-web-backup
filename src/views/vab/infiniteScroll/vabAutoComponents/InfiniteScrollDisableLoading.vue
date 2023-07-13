@@ -31,6 +31,7 @@
     height: 245px;
     text-align: center;
   }
+
   .infinite-list-wrapper .list {
     padding: 0;
     margin: 0;
@@ -45,6 +46,7 @@
     color: var(--el-color-danger);
     background: var(--el-color-danger-light-9);
   }
+
   .infinite-list-wrapper .list-item + .list-item {
     margin-top: 10px;
   }

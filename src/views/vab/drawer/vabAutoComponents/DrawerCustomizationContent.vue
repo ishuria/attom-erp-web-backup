@@ -44,8 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ElMessageBox } from 'element-plus'
-  import { ElDrawer } from 'element-plus'
+  import { ElDrawer, ElMessageBox } from 'element-plus'
 
   const formLabelWidth = '80px'
   let timer: any

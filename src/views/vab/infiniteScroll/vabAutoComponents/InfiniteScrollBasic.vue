@@ -18,6 +18,7 @@
     margin: 0;
     list-style: none;
   }
+
   .infinite-list .infinite-list-item {
     display: flex;
     align-items: center;
@@ -27,6 +28,7 @@
     color: var(--el-color-primary);
     background: var(--el-color-primary-light-9);
   }
+
   .infinite-list .infinite-list-item + .list-item {
     margin-top: 10px;
   }

@@ -23,9 +23,11 @@
     vertical-align: top;
     border-right: solid 1px var(--el-border-color);
   }
+
   .demo-image .block:last-child {
     border-right: none;
   }
+
   .demo-image .demonstration {
     display: block;
     margin-bottom: 20px;

@@ -8,6 +8,7 @@
 <script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import VabJsonViewer from 'vue-json-viewer'
+
   defineOptions({
     name: 'Test2',
   })

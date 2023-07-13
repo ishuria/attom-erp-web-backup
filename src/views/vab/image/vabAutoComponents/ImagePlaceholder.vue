@@ -33,12 +33,14 @@
     vertical-align: top;
     border-right: solid 1px var(--el-border-color);
   }
+
   .demo-image__placeholder .demonstration {
     display: block;
     margin-bottom: 20px;
     font-size: 14px;
     color: var(--el-text-color-secondary);
   }
+
   .demo-image__placeholder .el-image {
     max-width: 300px;
     max-height: 200px;
@@ -55,6 +57,7 @@
     color: var(--el-text-color-secondary);
     background: var(--el-fill-color-light);
   }
+
   .demo-image__placeholder .dot {
     overflow: hidden;
     animation: dot 2s infinite steps(3, start);

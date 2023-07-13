@@ -125,6 +125,7 @@
     text-align: left;
     border-top: 1px solid $base-border-color;
   }
+
   .line-two {
     span {
       color: var(--el-color-success);

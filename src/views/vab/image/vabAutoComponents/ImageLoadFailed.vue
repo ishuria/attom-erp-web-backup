@@ -9,7 +9,9 @@
       <el-image>
         <template #error>
           <div class="image-slot">
-            <el-icon><icon-picture /></el-icon>
+            <el-icon>
+              <icon-picture />
+            </el-icon>
           </div>
         </template>
       </el-image>
@@ -17,7 +19,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { Picture as IconPicture } from '@element-plus/icons-vue'
 </script>
 
@@ -31,12 +33,14 @@
     vertical-align: top;
     border-right: solid 1px var(--el-border-color);
   }
+
   .demo-image__error .demonstration {
     display: block;
     margin-bottom: 20px;
     font-size: 14px;
     color: var(--el-text-color-secondary);
   }
+
   .demo-image__error .el-image {
     width: 100%;
     max-width: 300px;
@@ -55,6 +59,7 @@
     color: var(--el-text-color-secondary);
     background: var(--el-fill-color-light);
   }
+
   .demo-image__error .image-slot .el-icon {
     font-size: 30px;
   }
