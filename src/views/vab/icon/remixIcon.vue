@@ -112,24 +112,31 @@
     if (data.total > 0) emptyShow.value = false
     else emptyShow.value = true
   }
+
   const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
     queryForm.pageSize = value
     fetchData()
   }
+
   const handleCurrentChange = (value: number) => {
     queryForm.pageNo = value
     fetchData()
   }
+
   const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
   }
+
   const handleCopyText = (item: string) => {
     clip(item)
   }
+
   const handleCopyIcon = (item: any) => {
     clip(`<vab-icon icon="${item}" />`)
   }
+
   const randomHexColor = () => {
     return _.shuffle([
       '#1890FF',
@@ -140,6 +147,7 @@
       '#975FE5',
     ])
   }
+
   onMounted(() => {
     fetchData()
   })

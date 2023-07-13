@@ -134,12 +134,13 @@
     }
   }
 
-  const handleSizeChange = (value: any) => {
+  const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
     queryForm.pageSize = value
     fetchData()
   }
 
-  const handleCurrentChange = (value: any) => {
+  const handleCurrentChange = (value: number) => {
     queryForm.pageNo = value
     fetchData()
   }

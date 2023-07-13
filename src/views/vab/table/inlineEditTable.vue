@@ -29,7 +29,8 @@
     listLoading.value = false
   }
 
-  const handleSizeChange = (value: any) => {
+  const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
     queryForm.pageSize = value
     fetchData()
   }

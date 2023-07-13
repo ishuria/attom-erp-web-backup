@@ -19,24 +19,29 @@
     title: '',
   })
 
-  const handleSizeChange: any = (value: number) => {
+  const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
     queryForm.pageSize = value
     fetchData()
   }
-  const handleCurrentChange: any = (value: number) => {
+
+  const handleCurrentChange = (value: number) => {
     queryForm.pageNo = value
     fetchData()
   }
-  const queryData: any = () => {
+
+  const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
   }
-  const fetchData: any = async () => {
+
+  const fetchData = async () => {
     const { data } = await getIconList(queryForm)
     queryIcon.value = data.list
     total.value = data.total
   }
-  const handleIcon: any = (item: any) => {
+
+  const handleIcon = (item: any) => {
     icon.value = item
     emit('handle-icon', item)
   }

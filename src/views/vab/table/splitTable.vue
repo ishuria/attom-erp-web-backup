@@ -121,17 +121,21 @@
   }
 
   const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
     queryForm.pageSize = value
     fetchData()
   }
+
   const handleCurrentChange = (value: number) => {
     queryForm.pageNo = value
     fetchData()
   }
+
   const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
   }
+
   const statusFilter = (status: string | number) => {
     const statusMap: any = {
       published: 'success',
@@ -140,18 +144,23 @@
     }
     return statusMap[status]
   }
+
   const handleFold = () => {
     fold.value = !fold.value
   }
+
   const setSelectRows = (value: string) => {
     selectRows.value = value
   }
+
   const handleAdd = () => {
     editRef.value.showEdit()
   }
+
   const handleEdit = (row = {}) => {
     editRef.value.showEdit(row)
   }
+
   const handleDelete = (row: any) => {
     if (row.id) {
       $baseConfirm('你确定要删除当前项吗', null, async () => {
@@ -172,6 +181,7 @@
       }
     }
   }
+
   const handleDetailStayTable = async () => {
     if (selectRows.value.length === 1)
       for (let i = 0; i < selectRows.value.length; i++) {
@@ -196,6 +206,7 @@
     else
       $baseMessage('请选择一行进行详情页跳转', 'error', 'vab-hey-message-error')
   }
+
   const handleDetail = (row: any) => {
     if (row.id)
       router.push({

@@ -140,19 +140,22 @@
     }
   }
 
-  const handleSizeChange = (value: any) => {
+  const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
     queryForm.pageSize = value
     fetchData()
   }
 
-  const handleCurrentChange = (value: any) => {
+  const handleCurrentChange = (value: number) => {
     queryForm.pageNo = value
     fetchData()
   }
+
   const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
   }
+
   const fetchData = async () => {
     listLoading.value = true
     const { data } = await getList(queryForm)
@@ -160,6 +163,7 @@
     total.value = data.total
     listLoading.value = false
   }
+
   onMounted(() => {
     fetchData()
   })
