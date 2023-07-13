@@ -4,13 +4,23 @@
       <template #header>
         <span>基础用法</span>
       </template>
-      <el-input v-model="input1" placeholder="请输入内容" width="“200px”" />
+      <el-input
+        v-model="input1"
+        clearable
+        placeholder="请输入内容"
+        width="“200px”"
+      />
     </vab-card>
     <vab-card>
       <template #header>
         <span>禁用状态</span>
       </template>
-      <el-input v-model="input2" :disabled="true" placeholder="请输入内容" />
+      <el-input
+        v-model="input2"
+        clearable
+        :disabled="true"
+        placeholder="请输入内容"
+      />
     </vab-card>
     <vab-card>
       <template #header>
@@ -22,7 +32,12 @@
       <template #header>
         <span>密码框</span>
       </template>
-      <el-input v-model="input4" placeholder="请输入内容" show-password />
+      <el-input
+        v-model="input4"
+        clearable
+        placeholder="请输入内容"
+        show-password
+      />
     </vab-card>
     <vab-card>
       <template #header>
@@ -45,13 +60,28 @@
       <template #header>
         <span>复合型输入框</span>
       </template>
-      <el-input v-model="input7" placeholder="请输入内容" style="width: 300px">
+      <el-input
+        v-model="input7"
+        clearable
+        placeholder="请输入内容"
+        style="width: 300px"
+      >
         <template #prepend>Http://</template>
       </el-input>
-      <el-input v-model="input8" placeholder="请输入内容" style="width: 300px">
+      <el-input
+        v-model="input8"
+        clearable
+        placeholder="请输入内容"
+        style="width: 300px"
+      >
         <template #append>.com</template>
       </el-input>
-      <el-input v-model="input9" placeholder="请输入内容" style="width: 350px">
+      <el-input
+        v-model="input9"
+        clearable
+        placeholder="请输入内容"
+        style="width: 350px"
+      >
         <template #prepend>
           <el-select v-model="select" placeholder="请选择">
             <el-option label="选项1" :value="1" />

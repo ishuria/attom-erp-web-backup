@@ -12,7 +12,7 @@
     />
     <el-form inline :model="form">
       <el-form-item label="输入框缓存">
-        <el-input v-model="form.text" />
+        <el-input v-model="form.text" clearable />
       </el-form-item>
       <el-form-item :label-width="0">
         <el-button

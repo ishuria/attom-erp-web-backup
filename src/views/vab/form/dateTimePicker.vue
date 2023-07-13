@@ -48,5 +48,3 @@
   ])
   const value3 = ref<string>('')
 </script>
-
-<style lang="scss" scoped></style>

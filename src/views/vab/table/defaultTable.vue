@@ -157,25 +157,53 @@
       <vab-query-form-top-panel>
         <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
           <el-form-item label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" placeholder="请输入标题" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item>
             <el-button

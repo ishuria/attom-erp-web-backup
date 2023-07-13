@@ -20,5 +20,3 @@
     <el-button v-debounce="debounceClick">防抖函数</el-button>
   </div>
 </template>
-
-<style lang="scss" scoped></style>

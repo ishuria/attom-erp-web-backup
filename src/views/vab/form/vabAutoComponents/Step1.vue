@@ -2,16 +2,16 @@
   <div>
     <el-form ref="formRef" label-width="100px" :model="form" :rules="rules">
       <el-form-item label="付款账户" prop="payAccount">
-        <el-input v-model="form.payAccount" />
+        <el-input v-model="form.payAccount" clearable />
       </el-form-item>
       <el-form-item label="收款账户" prop="gatheringAccount">
-        <el-input v-model="form.gatheringAccount" />
+        <el-input v-model="form.gatheringAccount" clearable />
       </el-form-item>
       <el-form-item label="收款人姓名" prop="gatheringName">
-        <el-input v-model="form.gatheringName" />
+        <el-input v-model="form.gatheringName" clearable />
       </el-form-item>
       <el-form-item label="转账金额" prop="price">
-        <el-input v-model="form.price" />
+        <el-input v-model="form.price" clearable />
       </el-form-item>
     </el-form>
     <div class="pay-button-group">

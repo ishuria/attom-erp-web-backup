@@ -15,22 +15,22 @@
       :rules="rules"
     >
       <el-form-item label="父级Id" prop="parentId">
-        <el-input v-model="form.parentId" />
+        <el-input v-model="form.parentId" clearable />
       </el-form-item>
       <el-form-item label="name" prop="name">
-        <el-input v-model="form.name" />
+        <el-input v-model="form.name" clearable />
       </el-form-item>
       <el-form-item label="路径" prop="path">
-        <el-input v-model="form.path" />
+        <el-input v-model="form.path" clearable />
       </el-form-item>
       <el-form-item label="vue文件路径" prop="component">
-        <el-input v-model="form.component" />
+        <el-input v-model="form.component" clearable />
       </el-form-item>
       <el-form-item label="重定向" prop="redirect">
-        <el-input v-model="form.redirect" />
+        <el-input v-model="form.redirect" clearable />
       </el-form-item>
       <el-form-item label="标题" prop="meta.title">
-        <el-input v-model="form.meta.title" />
+        <el-input v-model="form.meta.title" clearable />
       </el-form-item>
       <el-form-item label="图标">
         <el-popover
@@ -39,13 +39,13 @@
           :width="305"
         >
           <template #reference>
-            <el-input v-model="form.meta.icon" />
+            <el-input v-model="form.meta.icon" clearable />
           </template>
           <vab-icon-selector @handle-icon="handleIcon" />
         </el-popover>
       </el-form-item>
       <el-form-item label="badge">
-        <el-input v-model="form.meta.badge" />
+        <el-input v-model="form.meta.badge" clearable />
       </el-form-item>
       <el-form-item label="dot">
         <el-switch v-model="form.meta.dot" />

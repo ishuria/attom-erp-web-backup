@@ -9,7 +9,7 @@
   >
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="角色码" prop="role">
-        <el-input v-model="form.role" />
+        <el-input v-model="form.role" clearable />
       </el-form-item>
       <el-form-item label="菜单">
         <div class="vab-tree-border">
@@ -34,7 +34,7 @@
         </div>
       </el-form-item>
       <el-form-item label="按钮权限">
-        <el-input v-model="form.btnRolesCheckedList" />
+        <el-input v-model="form.btnRolesCheckedList" clearable />
       </el-form-item>
     </el-form>
     <template #footer>

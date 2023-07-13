@@ -26,7 +26,7 @@
           :rules="rules"
         >
           <el-form-item label="活动名称" prop="name">
-            <el-input v-model="form.name" />
+            <el-input v-model="form.name" clearable />
           </el-form-item>
           <el-form-item label="活动区域" prop="region">
             <el-select v-model="form.region" placeholder="请选择活动区域">
@@ -59,7 +59,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="活动形式" prop="description">
-            <el-input v-model="form.description" type="textarea" />
+            <el-input v-model="form.description" clearable type="textarea" />
           </el-form-item>
           <el-form-item label="评星">
             <el-rate v-model="form.rate" show-text />
@@ -86,7 +86,9 @@
             <el-button type="primary" @click="submitForm('formRef')">
               立即创建
             </el-button>
-            <el-button @click="resetForm('formRef')">重置</el-button>
+            <el-button type="danger" @click="resetForm('formRef')">
+              重置
+            </el-button>
           </el-form-item>
         </el-form>
       </el-col>

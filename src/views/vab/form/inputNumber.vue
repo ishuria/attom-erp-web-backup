@@ -48,5 +48,3 @@
   const num4 = ref<any>(1)
   const num5 = ref<any>(1)
 </script>
-
-<style lang="scss" scoped></style>

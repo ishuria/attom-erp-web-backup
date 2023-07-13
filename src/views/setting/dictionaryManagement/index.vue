@@ -13,7 +13,11 @@
           >
             添加字典分类
           </el-button>
-          <el-input v-model="filterText" placeholder="请输入字典名称" />
+          <el-input
+            v-model="filterText"
+            clearable
+            placeholder="请输入字典名称"
+          />
           <el-tree
             ref="treeRef"
             :data="treeList"

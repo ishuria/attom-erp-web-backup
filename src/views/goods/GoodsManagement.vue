@@ -100,7 +100,11 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.name" placeholder="请输入商品名称" />
+            <el-input
+              v-model="queryForm.name"
+              clearable
+              placeholder="请输入商品名称"
+            />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -193,5 +197,3 @@
     <default-table-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
-
-<style lang="scss" scoped></style>

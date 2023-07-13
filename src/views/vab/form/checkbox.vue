@@ -58,5 +58,3 @@
   const checked3 = ref<boolean>(true)
   const checked4 = ref<boolean>(false)
 </script>
-
-<style lang="scss" scoped></style>

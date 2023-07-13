@@ -2,7 +2,7 @@
   <div class="share-container">
     <el-form :model="form" @submit.prevent>
       <el-form-item label="URL">
-        <el-input v-model="form.url" />
+        <el-input v-model="form.url" clearable />
       </el-form-item>
       <el-form-item>
         <el-button native-type="submit" type="primary" @click="copy">

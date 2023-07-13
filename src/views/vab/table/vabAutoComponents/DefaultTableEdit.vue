@@ -9,10 +9,10 @@
   >
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="标题" prop="title" show-overflow-tooltip>
-        <el-input v-model.trim="form.title" />
+        <el-input v-model.trim="form.title" clearable />
       </el-form-item>
       <el-form-item label="作者" prop="author">
-        <el-input v-model.trim="form.author" />
+        <el-input v-model.trim="form.author" clearable />
       </el-form-item>
     </el-form>
     <template #footer>

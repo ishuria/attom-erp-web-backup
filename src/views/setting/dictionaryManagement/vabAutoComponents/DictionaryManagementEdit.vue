@@ -9,16 +9,16 @@
   >
     <el-form ref="formRef" label-width="80px" :model="form">
       <el-form-item label="父级key值" prop="parentKey">
-        <el-input v-model="form.parentKey" disabled />
+        <el-input v-model="form.parentKey" clearable disabled />
       </el-form-item>
       <el-form-item label="id" prop="id">
-        <el-input v-model="form.id" disabled />
+        <el-input v-model="form.id" clearable disabled />
       </el-form-item>
       <el-form-item label="key值" prop="key">
-        <el-input v-model="form.key" />
+        <el-input v-model="form.key" clearable />
       </el-form-item>
       <el-form-item label="字典值" prop="value">
-        <el-input v-model="form.value" />
+        <el-input v-model="form.value" clearable />
       </el-form-item>
     </el-form>
     <template #footer>

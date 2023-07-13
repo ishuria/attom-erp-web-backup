@@ -14,7 +14,7 @@
         <strong>￥{{ infoData.price }}元</strong>
       </el-form-item>
       <el-form-item label="支付密码" prop="password">
-        <el-input v-model="form.password" type="password" />
+        <el-input v-model="form.password" clearable type="password" />
       </el-form-item>
     </el-form>
     <div class="pay-button-group">

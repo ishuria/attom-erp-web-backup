@@ -12,10 +12,10 @@
         <el-tree-select v-model="form.parentValue" :data="treeData" />
       </el-form-item>
       <el-form-item label="名称" prop="label">
-        <el-input v-model="form.label" />
+        <el-input v-model="form.label" clearable />
       </el-form-item>
       <el-form-item label="排序" prop="order">
-        <el-input v-model="form.order" />
+        <el-input v-model="form.order" clearable />
       </el-form-item>
     </el-form>
     <template #footer>

@@ -61,7 +61,7 @@
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="标题" />
+            <el-input v-model="queryForm.title" clearable placeholder="标题" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -87,7 +87,7 @@
       <el-table-column align="center" label="标题">
         <template #default="{ row }">
           <template v-if="row.edit">
-            <el-input v-model="row.title" style="width: 300px" />
+            <el-input v-model="row.title" clearable style="width: 300px" />
           </template>
           <span v-else @click="row.edit = !row.edit">{{ row.title }}</span>
         </template>
@@ -95,7 +95,7 @@
       <el-table-column align="center" label="作者" prop="author">
         <template #default="{ row }">
           <template v-if="row.edit">
-            <el-input v-model="row.author" style="width: 300px" />
+            <el-input v-model="row.author" clearable style="width: 300px" />
           </template>
           <span v-else @click="row.edit = !row.edit">{{ row.author }}</span>
         </template>

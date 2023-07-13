@@ -2,7 +2,7 @@
   <div class="card-drag-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="sort">重置顺序</el-button>
+        <el-button type="danger" @click="sort">重置顺序</el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
 

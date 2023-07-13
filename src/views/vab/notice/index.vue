@@ -170,5 +170,3 @@
     $baseAlert(`这是一条${value}弹框`)
   }
 </script>
-
-<style lang="scss" scoped></style>

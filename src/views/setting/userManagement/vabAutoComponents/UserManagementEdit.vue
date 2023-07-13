@@ -9,13 +9,13 @@
   >
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="用户名" prop="username">
-        <el-input v-model.trim="form.username" />
+        <el-input v-model.trim="form.username" clearable />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model.trim="form.password" type="password" />
+        <el-input v-model.trim="form.password" clearable type="password" />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model.trim="form.email" />
+        <el-input v-model.trim="form.email" clearable />
       </el-form-item>
       <el-form-item label="角色" prop="roles">
         <el-checkbox-group v-model="form.roles">

@@ -63,5 +63,3 @@
     return value / 100
   }
 </script>
-
-<style lang="scss" scoped></style>

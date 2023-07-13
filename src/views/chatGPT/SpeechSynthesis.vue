@@ -58,7 +58,7 @@
         <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
           <el-form label-position="top">
             <el-form-item label="文本">
-              <el-input v-model="text" rows="12" type="textarea" />
+              <el-input v-model="text" clearable rows="12" type="textarea" />
             </el-form-item>
             <el-form-item label="语言">
               <el-select v-model="voice" style="width: 400px">
@@ -83,5 +83,3 @@
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped></style>

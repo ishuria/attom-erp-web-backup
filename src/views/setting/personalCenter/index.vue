@@ -63,10 +63,10 @@
               <el-col :lg="12" :md="16" :sm="24" :xl="12" :xs="24">
                 <el-form label-width="80px" :model="form">
                   <el-form-item label="姓名">
-                    <el-input v-model="form.fullName" />
+                    <el-input v-model="form.fullName" clearable />
                   </el-form-item>
                   <el-form-item label="昵称">
-                    <el-input v-model="form.nickname" />
+                    <el-input v-model="form.nickname" clearable />
                   </el-form-item>
                   <el-form-item label="性别">
                     <el-select v-model="form.sex" style="width: 100%">
@@ -76,7 +76,11 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="个人简介">
-                    <el-input v-model="form.description" type="textarea" />
+                    <el-input
+                      v-model="form.description"
+                      clearable
+                      type="textarea"
+                    />
                   </el-form-item>
                   <el-form-item>
                     <template #label>

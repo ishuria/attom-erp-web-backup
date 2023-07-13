@@ -40,5 +40,3 @@
   const value2 = ref<boolean>(true)
   const value3 = ref<boolean>(false)
 </script>
-
-<style lang="scss" scoped></style>

@@ -3,5 +3,3 @@
 <template>
   <div class="goods-tag-container">TODO</div>
 </template>
-
-<style lang="scss" scoped></style>

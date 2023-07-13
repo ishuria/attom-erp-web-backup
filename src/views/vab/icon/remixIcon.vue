@@ -4,7 +4,11 @@
       <el-col :span="24">
         <el-form inline label-width="80px" @submit.prevent>
           <el-form-item label="图标名称">
-            <el-input v-model="queryForm.title" placeholder="请输入图标名称" />
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入图标名称"
+            />
           </el-form-item>
           <el-form-item label-width="0">
             <el-button

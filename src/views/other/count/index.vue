@@ -26,10 +26,10 @@
         <el-input-number v-model="form.decimals" @change="handleChange" />
       </el-form-item>
       <el-form-item label="前缀">
-        <el-input v-model="form.prefix" @change="handleChange" />
+        <el-input v-model="form.prefix" clearable @change="handleChange" />
       </el-form-item>
       <el-form-item label="后缀">
-        <el-input v-model="form.suffix" @change="handleChange" />
+        <el-input v-model="form.suffix" clearable @change="handleChange" />
       </el-form-item>
     </el-form>
   </div>

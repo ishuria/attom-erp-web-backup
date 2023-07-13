@@ -53,7 +53,7 @@
         <vab-query-form-top-panel>
           <el-form inline label-width="0" @submit.prevent>
             <el-form-item>
-              <el-input v-model="queryForm.title" />
+              <el-input v-model="queryForm.title" clearable />
             </el-form-item>
             <el-form-item label-width="0">
               <el-button

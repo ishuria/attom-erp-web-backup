@@ -56,5 +56,3 @@
   const radio4 = ref<string>('上海')
   const radio5 = ref<string>('1')
 </script>
-
-<style lang="scss" scoped></style>

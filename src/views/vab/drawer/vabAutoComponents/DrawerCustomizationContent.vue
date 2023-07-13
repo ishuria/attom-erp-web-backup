@@ -24,7 +24,7 @@
     <div>
       <el-form :model="form">
         <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" />
+          <el-input v-model="form.name" autocomplete="off" clearable />
         </el-form-item>
         <el-form-item label="地区" :label-width="formLabelWidth">
           <el-select v-model="form.region" placeholder="请选择活动区域">

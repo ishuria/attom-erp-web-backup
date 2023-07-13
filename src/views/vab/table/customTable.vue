@@ -166,7 +166,7 @@
       <vab-query-form-left-panel>
         <el-form inline label-width="0" :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="标题" />
+            <el-input v-model="queryForm.title" clearable placeholder="标题" />
           </el-form-item>
           <el-form-item>
             <el-button

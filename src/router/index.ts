@@ -592,6 +592,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'regularExpression',
+        name: 'RegularExpression',
+        component: () => import('/@/views/other/regularExpression/index.vue'),
+        meta: {
+          title: '正则表达式',
+          guard: ['Admin'],
+          icon: 'file-copy-2-line',
+        },
+      },
+      {
         path: 'throttleDebounce',
         name: 'ThrottleDebounce',
         component: () => import('/@/views/other/throttleDebounce/index.vue'),

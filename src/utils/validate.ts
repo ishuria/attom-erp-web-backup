@@ -22,7 +22,7 @@ export function isPassword(value: string) {
  * @returns {boolean}
  */
 export function isNumber(value: string) {
-  const reg = /^[0-9]*$/
+  const reg = /^-?\d+(\.\d+)?$/
   return reg.test(value)
 }
 
@@ -48,13 +48,13 @@ export function isIP(ip: string) {
 }
 
 /**
- * @description 判断是否是传统网站
+ * @description 判断是否是为URL
  * @param url
  * @returns {boolean}
  */
 export function isUrl(url: string) {
   const reg =
-    /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/
+    /^(http|https):\/\/[a-zA-Z-9]+([-.]\w+)*\.[a-zA-Z]{2,20}(:[-\d]{1,5})?(\/.*)?$/
   return reg.test(url)
 }
 
@@ -125,18 +125,17 @@ export function isPort(value: string) {
  * @returns {boolean}
  */
 export function isPhone(value: string) {
-  const reg = /^1\d{10}$/
+  const reg = /^1[3456789]\d{9}$/
   return reg.test(value)
 }
 
 /**
- * @description 判断是否是身份证号(第二代)
+ * @description 判断是否是身份证号
  * @param value
  * @returns {boolean}
  */
 export function isIdCard(value: string) {
-  const reg =
-    /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+  const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
   return reg.test(value)
 }
 
@@ -187,16 +186,6 @@ export function isTel(value: string) {
 }
 
 /**
- * @description 判断是否为数字且最多两位小数
- * @param value
- * @returns {boolean}
- */
-export function isNum(value: string) {
-  const reg = /^\d+(\.\d{1,2})?$/
-  return reg.test(value)
-}
-
-/**
  * @description 判断是否为json
  * @param value
  * @returns {boolean}
@@ -207,4 +196,24 @@ export function isJson(value: any) {
     return !!(typeof obj === 'object' && obj)
   }
   return false
+}
+
+/**
+ * @description 判断是否为json
+ * @param value
+ * @returns {boolean}
+ */
+export function isChinese(value: any) {
+  const reg = /^[\u4e00-\u9fa5]+$/
+  return reg.test(value)
+}
+
+/**
+ * @description 判断是否为英文
+ * @param value
+ * @returns {boolean}
+ */
+export function isEnglish(value: any) {
+  const reg = /^[a-zA-Z]+$/
+  return reg.test(value)
 }

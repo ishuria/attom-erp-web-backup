@@ -36,5 +36,3 @@
   const value2 = ref<any>(null)
   const value3 = ref<any>(3.7)
 </script>
-
-<style lang="scss" scoped></style>

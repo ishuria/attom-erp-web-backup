@@ -10,11 +10,11 @@
   />
 
   <div style="margin-top: 20px">
-    <el-button @click="getCheckedNodes">按节点获取</el-button>
-    <el-button @click="getCheckedKeys">按键获取</el-button>
-    <el-button @click="setCheckedNodes">按节点设置</el-button>
-    <el-button @click="setCheckedKeys">按键设置</el-button>
-    <el-button @click="resetChecked">重置</el-button>
+    <el-button type="primary" @click="getCheckedNodes">按节点获取</el-button>
+    <el-button type="primary" @click="getCheckedKeys">按键获取</el-button>
+    <el-button type="primary" @click="setCheckedNodes">按节点设置</el-button>
+    <el-button type="primary" @click="setCheckedKeys">按键设置</el-button>
+    <el-button type="danger" @click="resetChecked">重置</el-button>
   </div>
 </template>
 

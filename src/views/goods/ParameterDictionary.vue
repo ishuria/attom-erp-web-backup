@@ -3,5 +3,3 @@
 <template>
   <div class="parameter-dictionary-container">TODO</div>
 </template>
-
-<style lang="scss" scoped></style>

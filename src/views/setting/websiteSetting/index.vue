@@ -16,19 +16,19 @@
             @submit="submitForm"
           >
             <el-form-item label="网站名称" prop="siteName">
-              <el-input v-model="form.siteName" />
+              <el-input v-model="form.siteName" clearable />
             </el-form-item>
             <el-form-item label="网址" prop="siteUrl">
-              <el-input v-model="form.siteUrl" />
+              <el-input v-model="form.siteUrl" clearable />
             </el-form-item>
             <el-form-item label="META关键词" prop="metaKeywords">
-              <el-input v-model="form.metaKeywords" />
+              <el-input v-model="form.metaKeywords" clearable />
             </el-form-item>
             <el-form-item label="META描述" prop="metaDesc">
-              <el-input v-model="form.metaDesc" />
+              <el-input v-model="form.metaDesc" clearable />
             </el-form-item>
             <el-form-item label="版权信息" prop="copyright">
-              <el-input v-model="form.copyright" />
+              <el-input v-model="form.copyright" clearable />
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm">保存</el-button>
