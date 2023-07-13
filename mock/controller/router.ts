@@ -154,7 +154,7 @@ const list = [
           },
           {
             path: 'defaultTableDetail',
-            name: 'ComprehensiveTableDetail',
+            name: 'DefaultTableDetail',
             component: '/@/views/vab/table/defaultTableDetail.vue',
             meta: {
               hidden: true,

@@ -219,7 +219,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           },
           {
             path: 'defaultTableDetail',
-            name: 'ComprehensiveTableDetail',
+            name: 'DefaultTableDetail',
             component: () =>
               import('/@/views/vab/table/defaultTableDetail.vue'),
             meta: {
