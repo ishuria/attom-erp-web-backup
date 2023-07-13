@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { useRoutesStore } from '/@/store/modules/routes'
   import { doDelete, getList } from '/@/api/table'
+  import { handleMatched, handleTabs } from '/@/utils/routes'
   import VabDraggable from 'vuedraggable'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
 
@@ -7,9 +10,15 @@
     name: 'CustomTable',
   })
 
+  const router = useRouter()
+  const routesStore = useRoutesStore()
+  const { getRoutes: routes } = storeToRefs(routesStore)
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta, addVisitedRoute } = tabsStore
   const $baseConfirm = inject<any>('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
   const tableSortRef = ref<any>(null)
+  const fold = ref<boolean>(true)
   const editRef = ref<any>(null)
   const border = ref<boolean>(true)
   const stripe = ref<boolean>(false)
@@ -119,6 +128,10 @@
     selectRows.value = value
   }
 
+  const handleFold = () => {
+    fold.value = !fold.value
+  }
+
   const handleAdd = () => {
     editRef.value.showEdit()
   }
@@ -148,6 +161,58 @@
     }
   }
 
+  const handleDetailStayTable = async () => {
+    if (selectRows.value.length === 1)
+      for (let i = 0; i < selectRows.value.length; i++) {
+        const matched = handleMatched(
+          routes.value,
+          '/vab/table/defaultTableDetail'
+        )
+        const tab = handleTabs({
+          ...matched[matched.length - 1],
+          query: selectRows.value[i],
+        })
+        if (tab) {
+          await addVisitedRoute(tab)
+          await changeTabsMeta({
+            title: '详情页',
+            meta: {
+              title: `${tab.query.title} 详情页`,
+            },
+          })
+        }
+      }
+    else
+      $baseMessage('请选择一行进行详情页跳转', 'error', 'vab-hey-message-error')
+  }
+
+  const handleDetail = (row: any) => {
+    if (row.id)
+      router.push({
+        path: '/vab/table/defaultTableDetail',
+        query: {
+          ...row,
+          timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+        },
+      })
+    else {
+      if (selectRows.value.length === 1)
+        router.push({
+          path: '/vab/table/defaultTableDetail',
+          query: {
+            ...selectRows.value[0],
+            timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+          },
+        })
+      else
+        $baseMessage(
+          '请选择一行进行详情页跳转',
+          'error',
+          'vab-hey-message-error'
+        )
+    }
+  }
+
   onMounted(() => {
     columns.value.forEach((item: any) => {
       if (item.checked) checkList.value.push(item.label)
@@ -163,10 +228,56 @@
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-form inline label-width="0" :model="queryForm" @submit.prevent>
-          <el-form-item>
-            <el-input v-model="queryForm.title" clearable placeholder="标题" />
+      <vab-query-form-top-panel>
+        <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
+          <el-form-item label="标题">
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="标题">
+            <el-input
+              v-model="queryForm.title"
+              clearable
+              placeholder="请输入标题"
+            />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -178,14 +289,34 @@
             >
               查询
             </el-button>
-            <el-button :icon="Plus" type="primary" @click="handleAdd">
-              添加
-            </el-button>
-            <el-button :icon="Delete" type="danger" @click="handleDelete">
-              删除
+            <el-button
+              class="hidden-xs-only"
+              text
+              type="primary"
+              @click="handleFold"
+            >
+              <span v-if="fold">展开</span>
+              <span v-else>合并</span>
+              <vab-icon
+                class="vab-dropdown"
+                :class="{ 'vab-dropdown-active': fold }"
+                icon="arrow-up-s-line"
+              />
             </el-button>
           </el-form-item>
         </el-form>
+      </vab-query-form-top-panel>
+      <vab-query-form-left-panel>
+        <el-button :icon="Plus" type="primary" @click="handleAdd">
+          添加
+        </el-button>
+        <el-button :icon="Delete" type="danger" @click="handleDelete">
+          删除
+        </el-button>
+        <el-button type="primary" @click="handleDetail">详情</el-button>
+        <el-button type="primary" @click="handleDetailStayTable">
+          后台打开详情
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="custom-table-right-tools">
@@ -286,8 +417,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="162">
+      <el-table-column align="center" label="操作" width="237">
         <template #default="{ row }">
+          <el-button text type="primary" @click="handleDetail(row)">
+            详情
+          </el-button>
           <el-button text type="primary" @click="handleEdit(row)">
             编辑
           </el-button>
