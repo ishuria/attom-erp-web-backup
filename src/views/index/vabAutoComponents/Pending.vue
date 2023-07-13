@@ -76,7 +76,7 @@
 
       .pending-title {
         display: block;
-        font-size: 16px;
+        font-size: var(--el-font-size-big);
         font-weight: bold;
         line-height: 28px;
 

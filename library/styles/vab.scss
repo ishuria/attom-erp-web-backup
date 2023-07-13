@@ -90,7 +90,6 @@ html {
     }
 
     [class*='ri-'] {
-      vertical-align: -1px !important;
       cursor: pointer;
     }
 
@@ -223,7 +222,6 @@ html {
       [class*='ri-'] {
         margin-right: 3px;
         font-size: var(--el-font-size-small);
-        vertical-align: -1.8px;
       }
 
       .el-icon {

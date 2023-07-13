@@ -110,7 +110,6 @@
         height: 18px;
         margin: 0 3px 0 2px;
         color: var(--el-color-success);
-        vertical-align: -1px !important;
         background: var(--el-color-success-light);
         border-radius: 50%;
         transform: scale(0.8);

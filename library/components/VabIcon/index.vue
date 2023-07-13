@@ -58,25 +58,25 @@
 <style lang="scss" scoped>
   .img-icon {
     display: inline-block;
-    width: 2em;
-    height: 2em;
+    width: var(--el-font-size-big);
+    height: var(--el-font-size-big);
     vertical-align: middle;
   }
 
   .vab-icon {
     display: inline-block;
-    width: 16px;
-    height: 16px;
+    width: var(--el-font-size-big);
+    height: var(--el-font-size-big);
     margin: 0 auto;
     overflow: hidden;
-    vertical-align: middle;
+    vertical-align: top;
     fill: currentColor;
   }
 
   [class*='ri'] {
     display: inline-block;
-    font-size: 16px;
+    font-size: var(--el-font-size-big);
     text-align: center;
-    vertical-align: -3.5px;
+    vertical-align: -0.85px;
   }
 </style>

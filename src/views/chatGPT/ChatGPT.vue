@@ -271,7 +271,7 @@
             top: -5px;
             left: 60px;
             width: 180px;
-            font-size: 12px;
+            font-size: var(--el-font-size-small);
             font-style: normal;
             line-height: 24px;
             color: $color_1;

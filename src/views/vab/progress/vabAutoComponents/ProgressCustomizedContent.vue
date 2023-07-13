@@ -37,7 +37,7 @@
   .percentage-label {
     display: block;
     margin-top: 10px;
-    font-size: 12px;
+    font-size: var(--el-font-size-small);
   }
 
   .demo-progress .el-progress--line {

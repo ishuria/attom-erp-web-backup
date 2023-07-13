@@ -224,8 +224,8 @@
       }
 
       p {
-        margin-top: 20px;
-        font-size: 12px;
+        margin-top: var(--el-margin);
+        font-size: var(--el-font-size-small);
       }
     }
   }

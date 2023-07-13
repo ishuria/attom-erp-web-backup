@@ -140,7 +140,6 @@
         line-height: var(--el-menu-item-height);
         text-overflow: ellipsis;
         white-space: nowrap;
-        vertical-align: middle;
         border-radius: var(--el-border-radius-base);
       }
 

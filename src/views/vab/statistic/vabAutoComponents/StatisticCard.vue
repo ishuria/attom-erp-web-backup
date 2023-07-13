@@ -122,8 +122,8 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin-top: 16px;
-    font-size: 12px;
+    margin-top: var(--el-font-size-big);
+    font-size: var(--el-font-size-small);
     color: var(--el-text-color-regular);
   }
 

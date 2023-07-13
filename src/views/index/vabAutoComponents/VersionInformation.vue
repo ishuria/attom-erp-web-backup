@@ -94,12 +94,6 @@
         white-space: nowrap;
         border: 1px solid var(--el-border-color);
 
-        i {
-          color: var(--el-color-success);
-          vertical-align: -3px;
-          cursor: pointer;
-        }
-
         &:nth-child(odd) {
           width: 10%;
           font-weight: bold;

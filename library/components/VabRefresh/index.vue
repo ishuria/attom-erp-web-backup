@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { translateTitle } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabRefresh',
@@ -20,10 +21,12 @@
 </script>
 
 <template>
-  <vab-icon
-    v-if="theme.showRefresh"
-    :class="className"
-    icon="refresh-line"
-    @click="refreshRoute"
-  />
+  <el-tooltip :content="translateTitle('刷新')" placement="bottom">
+    <vab-icon
+      v-if="theme.showRefresh"
+      :class="className"
+      icon="refresh-line"
+      @click="refreshRoute"
+    />
+  </el-tooltip>
 </template>

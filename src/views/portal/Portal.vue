@@ -264,7 +264,7 @@
             display: block;
             height: 71px;
             padding: 0 16px;
-            font-size: 16px;
+            font-size: var(--el-font-size-big);
             line-height: 71px;
             color: #545c63;
             text-align: center;
@@ -380,9 +380,9 @@
             margin-top: 15px;
             margin-left: 20px;
             font-family: PingFangSC-Medium, serif;
-            font-size: 16px;
+            font-size: var(--el-font-size-big);
             line-height: 22px;
-            color: #1c1f21;
+            color: var(--el-color-grey);
             letter-spacing: 0.76px;
             white-space: nowrap;
           }

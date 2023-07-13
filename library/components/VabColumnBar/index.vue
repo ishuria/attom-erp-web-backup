@@ -100,7 +100,10 @@
                 <span v-if="translateTitle(item.meta.title).length < 4">
                   {{ translateTitle(item.meta.title) }}
                 </span>
-                <span v-else style="font-size: 12px; zoom: 0.88">
+                <span
+                  v-else
+                  style="font-size: var(--el-font-size-small); zoom: 0.88"
+                >
                   {{ translateTitle(item.meta.title) }}
                 </span>
               </div>
@@ -403,12 +406,10 @@
         .el-menu-item,
         .el-sub-menu__title {
           height: var(--el-menu-item-height);
-
           overflow: hidden;
           line-height: var(--el-menu-item-height);
           text-overflow: ellipsis;
           white-space: nowrap;
-          vertical-align: middle;
 
           @include active;
         }

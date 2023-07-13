@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { translateTitle } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabFullScreen',
@@ -11,9 +12,11 @@
 </script>
 
 <template>
-  <vab-icon
-    v-if="theme.showFullScreen"
-    :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-    @click="toggle"
-  />
+  <el-tooltip :content="translateTitle('全屏')" placement="bottom">
+    <vab-icon
+      v-if="theme.showFullScreen"
+      :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
+      @click="toggle"
+    />
+  </el-tooltip>
 </template>

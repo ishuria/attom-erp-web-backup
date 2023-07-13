@@ -68,7 +68,6 @@
         font-weight: 500;
 
         [class*='ri-'] {
-          vertical-align: -1px !important;
           background: linear-gradient(
             120deg,
             #bd34fe 30%,

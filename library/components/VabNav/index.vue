@@ -55,7 +55,6 @@
                     v-if="item.meta.icon"
                     :icon="item.meta.icon"
                     :is-custom-svg="item.meta.isCustomSvg"
-                    style="min-width: 16px"
                   />
                   {{ translateTitle(item.meta.title) }}
                 </template>
