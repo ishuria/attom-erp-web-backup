@@ -1,5 +1,40 @@
+<script lang="ts" setup>
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { handleActivePath } from '/@/utils/routes'
+  import { Refresh } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'DefaultTableDetail',
+  })
+
+  const route: any = useRoute()
+  const router: any = useRouter()
+  const $pub = inject<any>('$pub')
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta, delVisitedRoute } = tabsStore
+  const form = reactive<any>({ text: '' })
+
+  const goBack = async () => {
+    await router.push('/vab/table/defaultTable')
+    await delVisitedRoute(handleActivePath(route, true))
+  }
+
+  const handleRefreshMainPage = () => {
+    $pub('reload-router-view', 'DefaultTable')
+  }
+
+  onMounted(() => {
+    changeTabsMeta({
+      title: '详情页',
+      meta: {
+        title: `${route.query.title} 详情页`,
+      },
+    })
+  })
+</script>
+
 <template>
-  <div class="detail-container">
+  <div class="default-table-container">
     <el-page-header
       :content="'【' + route.query.title + '】详情页面'"
       @back="goBack"
@@ -60,41 +95,3 @@
     </el-descriptions>
   </div>
 </template>
-
-<script lang="ts" setup>
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { handleActivePath } from '/@/utils/routes'
-  import { Refresh } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'DefaultTableDetail',
-  })
-
-  const route: any = useRoute()
-  const router: any = useRouter()
-
-  const $pub = inject<any>('$pub')
-
-  const tabsStore = useTabsStore()
-  const { changeTabsMeta, delVisitedRoute } = tabsStore
-
-  const form = reactive<any>({ text: '' })
-
-  const goBack = async () => {
-    await router.push('/vab/table/defaultTable')
-    await delVisitedRoute(handleActivePath(route, true))
-  }
-
-  const handleRefreshMainPage = () => {
-    $pub('reload-router-view', 'DefaultTable')
-  }
-
-  onMounted(() => {
-    changeTabsMeta({
-      title: '详情页',
-      meta: {
-        title: `${route.query.title} 详情页`,
-      },
-    })
-  })
-</script>

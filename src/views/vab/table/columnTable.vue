@@ -17,7 +17,6 @@
   const { getRoutes: routes } = storeToRefs(routesStore)
   const tabsStore = useTabsStore()
   const { changeTabsMeta, addVisitedRoute } = tabsStore
-
   const editRef = ref<any>(null)
   const tableSortRef = ref<any>(null)
   const fold = ref<boolean>(true)

@@ -9,7 +9,6 @@
 
   const $baseConfirm = inject<any>('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
-
   const tableSortRef = ref<any>(null)
   const editRef = ref<any>(null)
   const border = ref<boolean>(true)

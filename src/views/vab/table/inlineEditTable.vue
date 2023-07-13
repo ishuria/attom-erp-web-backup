@@ -28,28 +28,34 @@
     total.value = data.total
     listLoading.value = false
   }
+
   const handleSizeChange = (value: any) => {
     queryForm.pageSize = value
     fetchData()
   }
+
   const handleCurrentChange = (value: any) => {
     queryForm.pageNo = value
     fetchData()
   }
+
   const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
   }
+
   const cancelEdit = (row: any) => {
     row.title = row.originalTitle
     row.author = row.originalAuthor
     row.edit = false
   }
+
   const confirmEdit = (row: any) => {
     row.edit = false
     row.originalTitle = row.title
     row.originalAuthor = row.author
   }
+
   onMounted(() => {
     fetchData()
   })
