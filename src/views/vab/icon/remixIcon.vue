@@ -10,7 +10,7 @@
               placeholder="请输入图标名称"
             />
           </el-form-item>
-          <el-form-item label-width="0">
+          <el-form-item>
             <el-button
               :icon="Search"
               native-type="submit"
@@ -20,7 +20,7 @@
               查询
             </el-button>
           </el-form-item>
-          <el-form-item :label-width="0">
+          <el-form-item>
             <el-button>
               <el-checkbox
                 v-model="queryForm.colorful"
