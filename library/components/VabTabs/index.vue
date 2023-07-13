@@ -476,6 +476,7 @@
                 margin: 0 calc(var(--el-margin) / 2) 0
                   calc(var(--el-margin) / 2);
               }
+
               .is-icon-close {
                 margin-right: 0;
               }

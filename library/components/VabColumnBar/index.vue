@@ -5,10 +5,10 @@
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
   import {
-    isHashRouterMode,
     defaultOpeneds,
-    uniqueOpened,
+    isHashRouterMode,
     openFirstMenu,
+    uniqueOpened,
   } from '/@/config'
 
   defineOptions({

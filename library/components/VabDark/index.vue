@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Sunny, Moon } from '@element-plus/icons-vue'
+  import { Moon, Sunny } from '@element-plus/icons-vue'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useDark, useToggle } from '@vueuse/core'
 
@@ -118,6 +118,7 @@
     &::view-transition-old(root) {
       z-index: 1;
     }
+
     &::view-transition-new(root) {
       z-index: 999;
     }

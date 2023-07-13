@@ -130,6 +130,7 @@ html > body.vab-theme-technology {
 
   .vab-column-bar-container {
     border-right: 1px solid var(--el-border-color) !important;
+
     &-arrow {
       .el-tabs {
         .el-tabs__item {
@@ -245,6 +246,7 @@ html > body.vab-theme-technology {
     td {
       background: var(--el-color-white) !important;
     }
+
     th,
     th.el-table-fixed-column--left,
     th.el-table-fixed-column--right {

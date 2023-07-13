@@ -245,10 +245,12 @@ html {
     /* 毛玻璃遮罩 */
     .el-overlay {
       backdrop-filter: blur(5px);
+
       > div {
         backdrop-filter: none;
       }
     }
+
     .el-image-viewer__mask {
       backdrop-filter: blur(5px);
     }
@@ -427,6 +429,7 @@ html {
 
     .el-dialog {
       border-radius: var(--el-border-radius-base);
+
       &__body {
         .el-form:not(.el-form--inline) {
           margin-right: 30px;
@@ -553,20 +556,24 @@ html {
       display: flex;
       flex-direction: column;
       height: var(--el-keep-alive-height);
+
       .el-table {
         flex: 1;
       }
+
       .vab-auto-box {
         flex: 1;
         padding: var(--el-padding);
         overflow-y: auto;
       }
     }
+
     .no-background-container.table-auto-height {
       .el-card__body {
         display: flex;
         flex-direction: column;
         height: calc(var(--el-keep-alive-height) - var(--el-padding) - 2px);
+
         .el-table {
           flex: 1;
         }
