@@ -29,26 +29,26 @@ import {
 } from '/@/config'
 
 const defaultTheme: ThemeType = {
-  layout,
-  themeName,
-  columnStyle,
   color,
+  columnStyle,
   fixedHeader,
+  foldSidebar,
+  layout,
   menuWidth,
+  pageTransition,
   showDark,
-  showProgressBar,
-  showTabs,
-  tabsBarStyle,
-  showTabsIcon,
+  showFullScreen,
   showLanguage,
+  showNotice,
+  showProgressBar,
   showRefresh,
   showSearch,
+  showTabs,
+  showTabsIcon,
   showTheme,
-  showNotice,
-  showFullScreen,
   showThemeSetting,
-  foldSidebar,
-  pageTransition,
+  tabsBarStyle,
+  themeName,
 }
 const getLocalStorage = (key: string) => {
   const value: any = localStorage.getItem(key)

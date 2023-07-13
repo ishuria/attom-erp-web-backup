@@ -10,25 +10,13 @@ import { isArray } from '/@/utils/validate'
 
 export const useRoutesStore = defineStore('routes', {
   state: (): RoutesModuleType => ({
-    /**
-     * 一级菜单值
-     */
     tab: {
       data: undefined,
     },
-    /**
-     * 一级菜单
-     */
     tabMenu: undefined,
-    /**
-     * 自定义激活菜单
-     */
     activeMenu: {
       data: undefined,
     },
-    /**
-     * 一级菜单
-     */
     routes: [],
   }),
   getters: {
