@@ -1,5 +1,9 @@
 <!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
 <script lang="ts" setup>
+  defineOptions({
+    name: 'ChatGPT',
+  })
+
   import { useUserStore } from '/@/store/modules/user'
   import { ElScrollbar } from 'element-plus'
   import dayjs from 'dayjs'
