@@ -546,6 +546,13 @@ html {
       fill: var(--el-color-primary) !important;
     }
 
+    .el-menu-item,
+    .el-sub-menu__title {
+      > span {
+        margin-top: 1px;
+      }
+    }
+
     .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
     .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
       background-color: var(--el-color-primary) !important;

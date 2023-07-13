@@ -322,10 +322,6 @@
       .fold-unfold {
         margin-right: var(--el-margin);
       }
-
-      [class*='ri'] {
-        margin-right: 3px;
-      }
     }
 
     &-content {

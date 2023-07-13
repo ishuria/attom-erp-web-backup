@@ -77,6 +77,6 @@
     display: inline-block;
     font-size: var(--el-font-size-big);
     text-align: center;
-    vertical-align: -0.85px;
+    vertical-align: 0;
   }
 </style>
