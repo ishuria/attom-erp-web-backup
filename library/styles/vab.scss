@@ -243,16 +243,32 @@ html {
     }
 
     /* 毛玻璃遮罩 */
-    .el-overlay {
+    .el-overlay,
+    .el-image-viewer__mask {
+      background-color: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(5px);
+      opacity: 1;
 
       > div {
         backdrop-filter: none;
       }
     }
 
-    .el-image-viewer__mask {
+    /* v-modal、el-image-viewer__mask遮罩 */
+    .v-modal {
+      z-index: $base-z-index;
+      background-color: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(5px);
+      opacity: 1;
+    }
+
+    /* el-loading-mask遮罩 */
+    .el-loading-mask {
+      z-index: $base-z-index - 10 !important;
+
+      &.is-fullscreen {
+        z-index: $base-z-index + 99 !important;
+      }
     }
 
     /* el-form表单 */

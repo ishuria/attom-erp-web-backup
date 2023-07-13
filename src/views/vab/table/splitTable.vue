@@ -230,7 +230,14 @@
 
 <template>
   <div class="split-table-container no-background-container table-auto-height">
-    <vab-pane-split ratio="4/20">
+    <vab-card class="hidden-sm-and-up">
+      <el-alert
+        :closable="false"
+        title="手机端不支持分割表格演示"
+        type="error"
+      />
+    </vab-card>
+    <vab-pane-split class="hidden-xs-only" ratio="4/20">
       <template #one>
         <vab-card>
           <el-input
