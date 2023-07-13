@@ -59,7 +59,7 @@
   }
 
   function confirmClick() {
-    ElMessageBox.confirm(`你确认选择${radio1.value}吗？`)
+    ElMessageBox.confirm(`您确认选择${radio1.value}吗？`)
       .then(() => {
         drawer2.value = false
       })

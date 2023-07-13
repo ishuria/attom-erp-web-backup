@@ -121,7 +121,7 @@
 
   const handleDelete = (row: any = {}) => {
     if (row.id) {
-      $baseConfirm('你确定要删除当前项吗', null, async () => {
+      $baseConfirm('您确定要删除当前项吗', null, async () => {
         const { msg }: any = await doDelete({ ids: row.id })
         $baseMessage(msg, 'success', 'hey')
         await fetchData()
@@ -129,7 +129,7 @@
     } else {
       if (selectRows.value.length > 0) {
         const ids = selectRows.value.map((item: { id: any }) => item.id).join()
-        $baseConfirm('你确定要删除选中项吗', null, async () => {
+        $baseConfirm('您确定要删除选中项吗', null, async () => {
           const { msg }: any = await doDelete({ ids })
           $baseMessage(msg, 'success', 'hey')
           await fetchData()

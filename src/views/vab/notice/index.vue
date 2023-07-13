@@ -134,7 +134,7 @@
     $baseMessage('这是一条消息提示', 'info')
   }
   const open2 = () => {
-    $baseMessage('恭喜你，这是一条成功消息', 'success')
+    $baseMessage('恭喜您，这是一条成功消息', 'success')
   }
   const open3 = () => {
     $baseMessage('警告哦，这是一条警告消息', 'warning')
@@ -146,7 +146,7 @@
     $baseMessage('这是一条消息提示', 'info', 'hey')
   }
   const open6 = () => {
-    $baseMessage('恭喜你，这是一条成功消息', 'success', 'hey')
+    $baseMessage('恭喜您，这是一条成功消息', 'success', 'hey')
   }
   const open7 = () => {
     $baseMessage('警告哦，这是一条警告消息', 'warning', 'hey')

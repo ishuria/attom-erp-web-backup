@@ -125,7 +125,7 @@
     }, 3000)
   }
   const endCallback = (prize: any) => {
-    $baseMessage(`恭喜你获得${prize.fonts[0].text}`, 'success', 'hey')
+    $baseMessage(`恭喜您获得${prize.fonts[0].text}`, 'success', 'hey')
   }
 </script>
 

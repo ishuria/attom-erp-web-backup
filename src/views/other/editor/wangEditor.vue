@@ -17,7 +17,7 @@
     placeholder: '请输入内容...',
     MENU_CONF: {
       uploadImage: {
-        server: '', // 你的服务器地址，注意：当前接口格式特殊与其他vab接口不同，请查看vip文档
+        server: '', // 您的服务器地址，注意：当前接口格式特殊与其他vab接口不同，请查看vip文档
         fieldName: 'vab-file-name',
         allowedFileTypes: ['image/*'],
         headers: {}, // 如需传递token请写到在这里

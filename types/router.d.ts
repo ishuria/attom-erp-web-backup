@@ -47,7 +47,7 @@ declare interface VabRouteMeta {
   // 图标
   icon?: string
   // 是否是自定义svg图标(默认值：false)
-  // 如果设置true，那么需要把你的svg拷贝到icon下，然后icon字段配置上你的图标名
+  // 如果设置true，那么需要把您的svg拷贝到icon下，然后icon字段配置上您的图标名
   isCustomSvg?: boolean
   // 是否显示在菜单中显示隐藏一级路由(默认值：true)
   levelHidden?: boolean
