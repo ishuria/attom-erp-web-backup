@@ -93,7 +93,6 @@
     :active-icon="Sunny"
     :inactive-icon="Moon"
     inline-prompt
-    style="margin-right: 20px"
     @click="_toggleDark($event)"
   />
 </template>

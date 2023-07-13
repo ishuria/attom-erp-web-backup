@@ -19,9 +19,9 @@
     />
     <vab-color-picker />
     <vab-theme />
-    <vab-error-log />
+    <vab-error-log class="hidden-xs-only" />
     <vab-notice />
-    <vab-full-screen class="hidden-xs-only" />
+    <vab-full-screen />
     <vab-language />
     <vab-refresh />
     <vab-avatar />

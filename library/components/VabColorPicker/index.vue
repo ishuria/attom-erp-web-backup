@@ -91,12 +91,14 @@
 </script>
 
 <template>
-  <el-color-picker
-    v-model="color"
-    popper-class="vab-color-picker"
-    :predefine="predefineColors"
-    @active-change="handleChange"
-  />
+  <div style="margin-left: var(--el-margin)">
+    <el-color-picker
+      v-model="color"
+      popper-class="vab-color-picker"
+      :predefine="predefineColors"
+      @active-change="handleChange"
+    />
+  </div>
 </template>
 
 <style lang="scss">

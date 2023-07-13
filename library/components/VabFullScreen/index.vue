@@ -12,11 +12,13 @@
 </script>
 
 <template>
-  <el-tooltip :content="translateTitle('全屏')" placement="bottom">
-    <vab-icon
-      v-if="theme.showFullScreen"
-      :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-      @click="toggle"
-    />
-  </el-tooltip>
+  <div>
+    <el-tooltip :content="translateTitle('全屏')" placement="bottom">
+      <vab-icon
+        v-if="theme.showFullScreen"
+        :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
+        @click="toggle"
+      />
+    </el-tooltip>
+  </div>
 </template>
