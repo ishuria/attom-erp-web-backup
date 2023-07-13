@@ -123,7 +123,7 @@ const list = [
             name: 'ColumnTable',
             component: '/@/views/vab/table/columnTable.vue',
             meta: {
-              title: '左树右表表格',
+              title: '左树右表',
             },
           },
           {

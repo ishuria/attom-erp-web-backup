@@ -180,7 +180,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             name: 'ColumnTable',
             component: () => import('/@/views/vab/table/columnTable.vue'),
             meta: {
-              title: '左树右表表格',
+              title: '左树右表',
             },
           },
           {
@@ -207,6 +207,14 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             meta: {
               title: '自定义表格',
               badge: 'Hot',
+            },
+          },
+          {
+            path: 'splitTable',
+            name: 'SplitTable',
+            component: () => import('/@/views/vab/table/splitTable.vue'),
+            meta: {
+              title: '分割表格',
             },
           },
           {
