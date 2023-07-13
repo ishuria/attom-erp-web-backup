@@ -1,70 +1,3 @@
-<template>
-  <div class="login-container">
-    <div class="login-form">
-      <img class="left-img" :src="leftImg" />
-      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
-        <div class="title">hello !</div>
-        <div class="title-tips">
-          {{ translateTitle('欢迎来到') }}{{ title }}！
-        </div>
-        <el-form-item prop="username">
-          <el-input
-            v-model.trim="form.username"
-            v-focus
-            :placeholder="translateTitle('请输入用户名')"
-            tabindex="1"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="user-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            :key="passwordType"
-            ref="passwordRef"
-            v-model.trim="form.password"
-            :placeholder="translateTitle('请输入密码')"
-            tabindex="2"
-            :type="passwordType"
-            @keyup.enter="handleLogin"
-          >
-            <template #prefix>
-              <vab-icon icon="lock-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
-        <el-form-item prop="verificationCode">
-          <el-input
-            v-model.trim="form.verificationCode"
-            :placeholder="translateTitle('验证码') + previewText"
-            tabindex="3"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="barcode-box-line" />
-            </template>
-          </el-input>
-          <el-image class="code" :src="codeUrl" @click="changeCode" />
-        </el-form-item>
-        <el-button class="login-btn" type="primary" @click="handleLogin">
-          {{ translateTitle('登录') }}
-        </el-button>
-        <router-link to="/register">
-          <el-button
-            style="margin-top: 20px; margin-left: -10px"
-            type="primary"
-          >
-            {{ translateTitle('注册') }}
-          </el-button>
-        </router-link>
-      </el-form>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useUserStore } from '/@/store/modules/user'
@@ -142,16 +75,17 @@
   }
 
   const handleLogin = async () => {
-    formRef.value.validate(async (valid: any) => {
-      if (valid)
-        try {
-          loading.value = true
-          await login(form).catch(() => {})
-          await router.push(handleRoute())
-        } finally {
-          loading.value = false
-        }
-    })
+    if (formRef.value)
+      formRef.value.validate(async (valid: any) => {
+        if (valid)
+          try {
+            loading.value = true
+            await login(form).catch(() => {})
+            await router.push(handleRoute())
+          } finally {
+            loading.value = false
+          }
+      })
   }
   const changeCode = () => {
     codeUrl.value = `https://www.oschina.net/action/user/captcha?timestamp=${new Date().getTime()}`
@@ -181,6 +115,72 @@
     next()
   })
 </script>
+
+<template>
+  <div class="login-container">
+    <div class="login-form">
+      <img class="left-img" :src="leftImg" />
+      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
+        <div class="title">hello !</div>
+        <div class="title-tips">
+          {{ translateTitle('欢迎来到') }}{{ title }}！
+        </div>
+        <el-form-item prop="username">
+          <el-input
+            v-model.trim="form.username"
+            v-focus
+            clearable
+            :placeholder="translateTitle('请输入用户名')"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="user-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            :key="passwordType"
+            ref="passwordRef"
+            v-model.trim="form.password"
+            clearable
+            :placeholder="translateTitle('请输入密码')"
+            :type="passwordType"
+            @keyup.enter="handleLogin"
+          >
+            <template #prefix>
+              <vab-icon icon="lock-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
+        <el-form-item prop="verificationCode">
+          <el-input
+            v-model.trim="form.verificationCode"
+            :placeholder="translateTitle('验证码') + previewText"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="barcode-box-line" />
+            </template>
+          </el-input>
+          <el-image class="code" :src="codeUrl" @click="changeCode" />
+        </el-form-item>
+        <el-button v-throttle="handleLogin" class="login-btn" type="primary">
+          {{ translateTitle('登录') }}
+        </el-button>
+        <router-link to="/register">
+          <el-button
+            style="margin-top: 20px; margin-left: -10px"
+            type="primary"
+          >
+            {{ translateTitle('注册') }}
+          </el-button>
+        </router-link>
+      </el-form>
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
   .login-container {
@@ -254,105 +254,23 @@
         width: 220px;
         height: 50px;
         margin-top: 5px;
-        border: 0;
-
-        &:hover {
-          opacity: 0.9;
-        }
-
-        .forget-passwordword {
-          width: 100%;
-          margin-top: 40px;
-          text-align: left;
-
-          .forget-password {
-            width: 129px;
-            height: 19px;
-            font-size: 20px;
-            font-weight: 400;
-            color: rgba(92, 102, 240, 1);
-          }
-        }
-      }
-
-      .tips {
-        margin-bottom: 10px;
-        font-size: var(--el-font-size-default);
-        color: var(--el-color-white);
-
-        span {
-          &:first-of-type {
-            margin-right: 16px;
-          }
-        }
-      }
-
-      .title-container {
-        position: relative;
-
-        .title {
-          margin: 0 auto 40px auto;
-          font-size: 34px;
-          font-weight: bold;
-          color: var(--el-color-primary);
-          text-align: center;
-        }
-      }
-
-      i {
-        position: absolute;
-        top: 9px;
-        left: 15px;
-        z-index: $base-z-index;
-        font-size: 16px;
-        color: var(--el-color-black);
-        cursor: pointer;
-        user-select: none;
-      }
-
-      .show-password {
-        position: absolute;
-        right: 25px;
-        left: -35px;
-        font-size: 16px;
-        color: var(--el-color-black);
-        cursor: pointer;
-        user-select: none;
       }
 
       .el-form-item {
-        padding-right: 0;
         margin: 20px 0;
-        color: #454545;
-        background: transparent;
-        border: 1px solid transparent;
-        border-radius: 2px;
-
-        &__content {
-          min-height: $base-input-height;
-          line-height: $base-input-height;
-        }
 
         &__error {
           position: absolute;
-          top: 100%;
-          left: 18px;
           font-size: var(--el-font-size-small);
           line-height: 18px;
           color: var(--el-color-error);
         }
-      }
 
-      .el-input {
-        box-sizing: border-box;
-
-        input {
-          height: 48px;
-          padding-left: 35px;
-          font-size: var(--el-font-size-default);
-          line-height: 48px;
-          background: var(--el-color-white);
-          border: 0;
+        .el-input {
+          input {
+            height: 48px;
+            line-height: 48px;
+          }
         }
       }
 

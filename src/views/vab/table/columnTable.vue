@@ -298,6 +298,7 @@
                 <el-form-item v-show="!fold" label="标题">
                   <el-input
                     v-model="queryForm.title"
+                    clearable
                     placeholder="请输入标题"
                   />
                 </el-form-item>

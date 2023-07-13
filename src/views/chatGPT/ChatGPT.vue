@@ -167,6 +167,7 @@
               <el-input
                 ref="textareaRef"
                 v-model="value"
+                clearable
                 resize="none"
                 show-word-limit
                 type="textarea"

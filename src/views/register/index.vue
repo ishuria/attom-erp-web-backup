@@ -1,87 +1,3 @@
-<template>
-  <div class="register-container">
-    <div class="register-form">
-      <img class="left-img" :src="leftImg" />
-      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
-        <div class="title">hello !</div>
-        <div class="title-tips">{{ translateTitle('账号注册') }}</div>
-        <el-form-item prop="username">
-          <el-input
-            v-model.trim="form.username"
-            v-focus
-            auto-complete="off"
-            :placeholder="translateTitle('请输入用户名')"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="user-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="phone">
-          <el-input
-            v-model.trim="form.phone"
-            maxlength="11"
-            :placeholder="translateTitle('请输入手机号')"
-            show-word-limit
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="smartphone-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="phoneCode" style="position: relative">
-          <el-input
-            v-model.trim="form.phoneCode"
-            :placeholder="translateTitle('请输入手机验证码')"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="barcode-box-line" />
-            </template>
-          </el-input>
-          <el-button
-            class="phone-code"
-            :disabled="isGetPhone"
-            type="primary"
-            @click="getPhoneCode"
-          >
-            {{ phoneCode }}
-          </el-button>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            v-model.trim="form.password"
-            autocomplete="new-password"
-            :placeholder="translateTitle('请输入密码')"
-            type="password"
-          >
-            <template #prefix>
-              <vab-icon icon="lock-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-button
-          class="register-btn"
-          type="primary"
-          @click.prevent="handleRegister"
-        >
-          {{ translateTitle('注册') }}
-        </el-button>
-        <router-link to="/login">
-          <el-button
-            style="margin-top: 20px; margin-left: -10px"
-            type="primary"
-          >
-            {{ translateTitle('登录') }}
-          </el-button>
-        </router-link>
-      </el-form>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
   import { translateTitle } from '/@/utils/i18n'
   import { isPassword, isPhone } from '/@/utils/validate'
@@ -209,6 +125,93 @@
   })
 </script>
 
+<template>
+  <div class="register-container">
+    <div class="register-form">
+      <img class="left-img" :src="leftImg" />
+      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
+        <div class="title">hello !</div>
+        <div class="title-tips">{{ translateTitle('账号注册') }}</div>
+        <el-form-item prop="username">
+          <el-input
+            v-model.trim="form.username"
+            v-focus
+            auto-complete="off"
+            clearable
+            :placeholder="translateTitle('请输入用户名')"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="user-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="phone">
+          <el-input
+            v-model.trim="form.phone"
+            clearable
+            maxlength="11"
+            :placeholder="translateTitle('请输入手机号')"
+            show-word-limit
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="smartphone-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="phoneCode" style="position: relative">
+          <el-input
+            v-model.trim="form.phoneCode"
+            :placeholder="translateTitle('请输入手机验证码')"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="barcode-box-line" />
+            </template>
+          </el-input>
+          <el-button
+            class="phone-code"
+            :disabled="isGetPhone"
+            type="primary"
+            @click="getPhoneCode"
+          >
+            {{ phoneCode }}
+          </el-button>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model.trim="form.password"
+            autocomplete="new-password"
+            clearable
+            :placeholder="translateTitle('请输入密码')"
+            type="password"
+          >
+            <template #prefix>
+              <vab-icon icon="lock-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-button
+          class="register-btn"
+          type="primary"
+          @click.prevent="handleRegister"
+        >
+          {{ translateTitle('注册') }}
+        </el-button>
+        <router-link to="/login">
+          <el-button
+            style="margin-top: 20px; margin-left: -10px"
+            type="primary"
+          >
+            {{ translateTitle('登录') }}
+          </el-button>
+        </router-link>
+      </el-form>
+    </div>
+  </div>
+</template>
+
 <style lang="scss" scoped>
   .register-container {
     position: relative;
@@ -280,91 +283,23 @@
           width: 220px;
           height: 50px;
           margin-top: 5px;
-          border: 0;
-
-          &:hover {
-            opacity: 0.9;
-          }
-        }
-
-        .tips {
-          margin-bottom: 10px;
-          font-size: var(--el-font-size-default);
-          color: var(--el-color-white);
-
-          span {
-            &:first-of-type {
-              margin-right: 16px;
-            }
-          }
-        }
-
-        .title-container {
-          position: relative;
-
-          .title {
-            margin: 0 auto 40px auto;
-            font-size: 34px;
-            font-weight: bold;
-            color: var(--el-color-primary);
-            text-align: center;
-          }
-        }
-
-        i {
-          position: absolute;
-          top: 9px;
-          left: 15px;
-          z-index: $base-z-index;
-          font-size: 16px;
-          color: var(--el-color-black);
-          cursor: pointer;
-          user-select: none;
-        }
-
-        .show-password {
-          position: absolute;
-          right: 25px;
-          left: -35px;
-          font-size: 16px;
-          color: var(--el-color-black);
-          cursor: pointer;
-          user-select: none;
         }
 
         .el-form-item {
-          padding-right: 0;
           margin: 20px 0;
-          color: #454545;
-          background: transparent;
-          border: 1px solid transparent;
-          border-radius: 2px;
-
-          &__content {
-            min-height: $base-input-height;
-            line-height: $base-input-height;
-          }
 
           &__error {
             position: absolute;
-            top: 100%;
-            left: 18px;
             font-size: var(--el-font-size-small);
             line-height: 18px;
             color: var(--el-color-error);
           }
-        }
 
-        .el-input {
-          box-sizing: border-box;
-
-          input {
-            height: 48px;
-            padding-left: 35px;
-            font-size: var(--el-font-size-default);
-            line-height: 48px;
-            background: var(--el-color-white);
-            border: 0;
+          .el-input {
+            input {
+              height: 48px;
+              line-height: 48px;
+            }
           }
         }
 
