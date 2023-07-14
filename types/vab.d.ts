@@ -1,5 +1,5 @@
 declare module 'vite-plugin-unplugin'
 declare module 'vite-plugin-vitebar'
 declare module 'vue-json-viewer'
-declare module 'element-plus/dist/locale/en'
-declare module 'element-plus/dist/locale/zh-cn'
+declare module 'element-plus/dist/locale/en.mjs'
+declare module 'element-plus/dist/locale/zh-cn.mjs'
