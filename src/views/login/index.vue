@@ -120,7 +120,13 @@
   <div class="login-container">
     <div class="login-form">
       <img class="left-img" :src="leftImg" />
-      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
+      <el-form
+        ref="formRef"
+        label-position="left"
+        :model="form"
+        :rules="rules"
+        @submit.prevent
+      >
         <div class="title">hello !</div>
         <div class="title-tips">
           {{ translateTitle('欢迎来到') }}{{ title }}！
@@ -166,7 +172,12 @@
           </el-input>
           <el-image class="code" :src="codeUrl" @click="changeCode" />
         </el-form-item>
-        <el-button v-throttle="handleLogin" class="login-btn" type="primary">
+        <el-button
+          v-throttle="handleLogin"
+          class="login-btn"
+          native-type="submit"
+          type="primary"
+        >
           {{ translateTitle('登录') }}
         </el-button>
         <router-link to="/register">

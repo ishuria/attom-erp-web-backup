@@ -1,4 +1,3 @@
-import { VabRoute } from './types'
 /**
  * @description router全局配置，如有必要可分文件抽离，其中asyncRoutes只有在intelligence模式下才会用到，pro版只支持remixIcon图标，具体配置请查看vip群文档
  */
@@ -646,6 +645,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '密码生成器',
           guard: ['Admin'],
           icon: 'lock-password-line',
+        },
+      },
+      {
+        path: 'amount',
+        name: 'Amount',
+        component: () => import('/@/views/other/amount/index.vue'),
+        meta: {
+          title: '大写金额转换',
+          guard: ['Admin'],
+          icon: 'money-cny-box-line',
         },
       },
       {

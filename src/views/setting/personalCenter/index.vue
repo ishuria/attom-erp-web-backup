@@ -61,7 +61,7 @@
           <el-tabs v-model="activeName">
             <el-tab-pane label="基本信息" name="first">
               <el-col :lg="12" :md="16" :sm="24" :xl="12" :xs="24">
-                <el-form label-width="80px" :model="form">
+                <el-form label-width="80px" :model="form" @submit.prevent>
                   <el-form-item label="姓名">
                     <el-input v-model="form.fullName" clearable />
                   </el-form-item>
@@ -119,7 +119,13 @@
                     </el-button>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="onSubmit">保存</el-button>
+                    <el-button
+                      native-type="submit"
+                      type="primary"
+                      @click="onSubmit"
+                    >
+                      保存
+                    </el-button>
                   </el-form-item>
                 </el-form>
               </el-col>

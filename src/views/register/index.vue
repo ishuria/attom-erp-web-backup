@@ -129,7 +129,13 @@
   <div class="register-container">
     <div class="register-form">
       <img class="left-img" :src="leftImg" />
-      <el-form ref="formRef" label-position="left" :model="form" :rules="rules">
+      <el-form
+        ref="formRef"
+        label-position="left"
+        :model="form"
+        :rules="rules"
+        @submit.prevent
+      >
         <div class="title">hello !</div>
         <div class="title-tips">{{ translateTitle('账号注册') }}</div>
         <el-form-item prop="username">
@@ -194,6 +200,7 @@
         </el-form-item>
         <el-button
           class="register-btn"
+          native-type="submit"
           type="primary"
           @click.prevent="handleRegister"
         >

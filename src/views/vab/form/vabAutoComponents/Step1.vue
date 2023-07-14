@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-form ref="formRef" label-width="100px" :model="form" :rules="rules">
+    <el-form
+      ref="formRef"
+      label-width="100px"
+      :model="form"
+      :rules="rules"
+      @submit.prevent
+    >
       <el-form-item label="付款账户" prop="payAccount">
         <el-input v-model="form.payAccount" clearable />
       </el-form-item>
@@ -15,7 +21,9 @@
       </el-form-item>
     </el-form>
     <div class="pay-button-group">
-      <el-button type="primary" @click="handleSubmit">下一步</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSubmit">
+        下一步
+      </el-button>
     </div>
     <el-alert :closable="false">
       <h3>转账到支付宝</h3>

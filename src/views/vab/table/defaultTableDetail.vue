@@ -50,7 +50,7 @@
       :closable="false"
       title="默认表格、左树右表、分类表格、自定义表格、分割表格共用的详情页demo，所有表格都会跳转详情至此页面，当前详情页允许多开。"
     />
-    <el-form inline :model="form">
+    <el-form inline :model="form" @submit.prevent>
       <el-form-item label="输入框缓存">
         <el-input v-model="form.text" clearable />
       </el-form-item>
