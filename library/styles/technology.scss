@@ -94,7 +94,7 @@ html > body.vab-theme-technology {
 
   .mobile {
     .vab-side-bar {
-      border-left: 0px solid var(--el-border-color) !important;
+      border-left: 0 solid var(--el-border-color) !important;
     }
   }
 
@@ -114,11 +114,6 @@ html > body.vab-theme-technology {
     background: var(--el-color-white) !important;
   }
 
-  .table {
-    td {
-      border: 1px solid var(--el-border-color) !important;
-    }
-  }
 
   .vab-column-bar-container .el-tabs .el-tabs__item {
     color: var(--el-color-black) !important;

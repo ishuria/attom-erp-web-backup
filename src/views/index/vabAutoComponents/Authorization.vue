@@ -115,6 +115,6 @@
     padding-top: 20px;
     margin-top: 5px;
     text-align: left;
-    border-top: 1px solid $base-border-color;
+    border-top: 1px solid var(--el-border-color);
   }
 </style>

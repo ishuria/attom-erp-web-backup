@@ -4,7 +4,7 @@
     <el-button type="primary" @click="setCustomWatermark">
       添加自定义水印
     </el-button>
-    <el-button type="primary" @click="setWatermark('')">移除水印</el-button>
+    <el-button type="danger" @click="setWatermark('')">移除水印</el-button>
   </div>
 </template>
 

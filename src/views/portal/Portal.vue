@@ -411,12 +411,12 @@
 
       :deep() {
         .el-calendar {
-          padding: 0px;
+          padding: 0;
           margin-bottom: 20px;
           border-radius: 15px;
 
           &-table {
-            padding: 0px;
+            padding: 0;
           }
 
           &-day {

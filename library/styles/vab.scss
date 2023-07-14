@@ -271,7 +271,6 @@ html {
       background-color: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(2.5px);
       opacity: 1;
-      transform: translateZ();
 
       > div {
         backdrop-filter: none;
@@ -284,7 +283,6 @@ html {
       background-color: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(2.5px);
       opacity: 1;
-      transform: translateZ();
     }
 
     /* el-loading-mask遮罩 */

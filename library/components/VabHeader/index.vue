@@ -106,7 +106,6 @@
             [class*='ri-'],
             .vab-icon {
               margin-left: 0;
-              font-size: lighter;
               color: var(--el-color-white);
               cursor: pointer;
               -webkit-font-smoothing: antialiased;
@@ -140,7 +139,6 @@
 
           [class*='ri-'] {
             margin-left: var(--el-margin);
-            font-size: lighter;
             color: var(--el-color-white);
             cursor: pointer;
             -webkit-font-smoothing: antialiased;
