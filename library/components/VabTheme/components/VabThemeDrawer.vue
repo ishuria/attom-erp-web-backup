@@ -83,18 +83,15 @@
   }
 
   const setDefaultTheme = async () => {
-    await _updateTheme()
     await resetTheme()
     await $pub('shop-vite-reset-color')
     await $pub('shop-vite-reset-dark')
     drawerVisible.value = false
-    if ('mobile' === device.value) location.reload()
   }
 
   const handleSaveTheme = async () => {
     await saveTheme()
     drawerVisible.value = false
-    if ('mobile' === device.value) location.reload()
   }
 
   onMounted(() => {
