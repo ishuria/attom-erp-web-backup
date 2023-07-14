@@ -49,10 +49,6 @@
   const stop = () => {
     speech.stop()
   }
-
-  const clear = () => {
-    text.value = ''
-  }
 </script>
 
 <template>
@@ -95,20 +91,6 @@
                 @click="stop"
               >
                 结束
-              </el-button>
-              <el-button
-                :disabled="speech.isPlaying.value"
-                type="danger"
-                @click="fetchData"
-              >
-                重置
-              </el-button>
-              <el-button
-                :disabled="speech.isPlaying.value"
-                type="danger"
-                @click="clear"
-              >
-                清空
               </el-button>
             </el-form-item>
           </el-form>
