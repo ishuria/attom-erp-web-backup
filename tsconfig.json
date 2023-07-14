@@ -24,7 +24,12 @@
       "/#/*": ["./types/*"],
       "/@vab/*": ["./library/*"]
     },
-    "types": ["element-plus/global", "vite/client", "vite-plugin-pwa/vue"]
+    "types": [
+      "element-plus/global",
+      "vite/client",
+      "vite-plugin-pwa/vue",
+      "vite-plugin-svg-icons/client"
+    ]
   },
   "include": [
     "library/**/*.ts",
