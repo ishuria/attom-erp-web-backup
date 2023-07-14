@@ -399,8 +399,8 @@
             }
           }
 
-          .el-input__inner {
-            width: 115px;
+          .el-input__wrapper {
+            width: 95px;
           }
         }
       }
