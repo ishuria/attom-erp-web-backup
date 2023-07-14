@@ -16,6 +16,8 @@ export const themeConfig: ThemeType = {
   fixedHeader: true,
   //是否开启顶部进度条
   showProgressBar: true,
+  //是否开启页脚
+  showFooter: true,
   //是否开启标签页
   showTabs: true,
   //显示标签页时标签页样式：卡片风格card、灵动风格smart、圆滑风格smooth

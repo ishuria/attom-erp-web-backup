@@ -7,11 +7,11 @@
 
   const fullYear = new Date().getFullYear()
   const settingsStore = useSettingsStore()
-  const { title } = storeToRefs(settingsStore)
+  const { title, theme } = storeToRefs(settingsStore)
 </script>
 
 <template>
-  <footer class="vab-footer">
+  <footer v-if="theme.showFooter" class="vab-footer">
     Copyright
     <vab-icon icon="copyright-line" />
     {{ fullYear }} {{ title }}
@@ -27,7 +27,6 @@
     padding: 0 var(--el-padding) 0 var(--el-padding);
     color: var(--el-color-grey);
     background: var(--el-color-white);
-    border-top: 1px dashed var(--el-border-color);
     border-right: 1px solid var(--el-border-color);
     border-bottom: 1px solid var(--el-border-color);
     border-left: 1px solid var(--el-border-color);

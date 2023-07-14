@@ -59,6 +59,7 @@ export const {
   showProgressBar,
   showRefresh,
   showSearch,
+  showFooter,
   showTabs,
   showTabsIcon,
   showTheme,

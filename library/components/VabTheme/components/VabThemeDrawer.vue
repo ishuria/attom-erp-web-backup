@@ -53,8 +53,20 @@
   }
 
   const updateMenuWidth = () => {
-    useCssVar('--el-left-menu-width', ref<any>(null)).value =
-      theme.value.menuWidth
+    const el = ref<any>(null)
+    useCssVar('--el-left-menu-width', el).value = theme.value.menuWidth
+  }
+
+  const handleShowFooter = (value: any) => {
+    const el = ref<any>(null)
+    if (!value) useCssVar('--el-footer-height', el).value = '0px'
+    else useCssVar('--el-footer-height', el).value = '58px'
+  }
+
+  const handleShowTabs = (value: any) => {
+    const el = ref<any>(null)
+    if (!value) useCssVar('--el-tabs-height', el).value = '0px'
+    else useCssVar('--el-tabs-height', el).value = '50px'
   }
 
   const _updateTheme = (value: any = '') => {
@@ -177,8 +189,11 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item :label="translateTitle('页脚')">
+          <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
+        </el-form-item>
         <el-form-item :label="translateTitle('标签')">
-          <el-switch v-model="theme.showTabs" />
+          <el-switch v-model="theme.showTabs" @change="handleShowTabs" />
         </el-form-item>
         <el-form-item>
           <template #label>

@@ -65,10 +65,6 @@ $base-tabs-height: 50px;
 $base-tag-item-height: 34px;
 //菜单li标签的高度
 $base-menu-item-height: 50px;
-//app-main的高度
-$base-keep-alive-height: calc(
-  100vh - #{$base-nav-height} - #{$base-tabs-height} - #{$base-padding} * 2 - 58px
-);
 //纵向左侧导航未折叠的宽度
 $base-left-menu-width: 266px;
 //纵向左侧导航未折叠右侧内容的宽度

@@ -115,6 +115,8 @@ declare interface ThemeType {
   foldSidebar: boolean
   // 是否开启顶部进度条
   showProgressBar: boolean
+  //是否开启页脚
+  showFooter: boolean
   // 是否开启标签页
   showTabs: boolean
   // 显示标签页时标签页样式

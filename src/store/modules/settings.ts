@@ -13,6 +13,7 @@ import {
   menuWidth,
   pageTransition,
   showDark,
+  showFooter,
   showFullScreen,
   showLanguage,
   showNotice,
@@ -37,6 +38,7 @@ const defaultTheme: ThemeType = {
   menuWidth,
   pageTransition,
   showDark,
+  showFooter,
   showFullScreen,
   showLanguage,
   showNotice,
@@ -119,6 +121,13 @@ export const useSettingsStore = defineStore('settings', {
       if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px'))
         useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'
+
+      if (!this.theme.showTabs) useCssVar('--el-tabs-height', el).value = '0px'
+      else useCssVar('--el-tabs-height', el).value = '50px'
+
+      if (!this.theme.showFooter)
+        useCssVar('--el-footer-height', el).value = '0px'
+      else useCssVar('--el-footer-height', el).value = '58px'
     },
     toggleCollapse() {
       this.collapse = !this.collapse
