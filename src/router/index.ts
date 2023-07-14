@@ -97,7 +97,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         component: () => import('/@/views/chatGPT/ChatGPT.vue'),
         meta: {
           title: 'chatGPT',
-          icon: 'chat-3-line',
+          icon: 'openai-line',
           dot: true,
         },
       },
@@ -108,6 +108,33 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '语音合成',
           icon: 'customer-service-line',
+        },
+      },
+      {
+        path: '//claude.ai/chat',
+        name: 'Claude',
+        meta: {
+          title: 'Claude',
+          target: '_blank',
+          icon: 'brain-line',
+        },
+      },
+      {
+        path: '//yiyan.baidu.com',
+        name: 'Yiyan',
+        meta: {
+          title: '文心一言',
+          target: '_blank',
+          icon: 'baidu-line',
+        },
+      },
+      {
+        path: '//qianwen.aliyun.com/chat',
+        name: 'Qianwen',
+        meta: {
+          title: '通义千问',
+          target: '_blank',
+          icon: 'taobao-line',
         },
       },
     ],
@@ -689,6 +716,42 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'aspect-ratio-line',
           dot: true,
         },
+      },
+      {
+        path: 'iframe',
+        name: 'Iframe',
+        meta: {
+          title: '内嵌网页',
+          guard: ['Admin'],
+          icon: 'window-line',
+        },
+        children: [
+          {
+            path: 'iframeView',
+            name: 'IframeView',
+            component: () => import('/@/views/other/iframe/view.vue'),
+            meta: {
+              title: 'Iframe',
+              icon: 'window-line',
+              dynamicNewTab: true,
+              hidden: true,
+            },
+          },
+          {
+            path: 'iframeView?url=cn.vuejs.org',
+            name: 'Vue',
+            meta: {
+              title: 'Vue',
+            },
+          },
+          {
+            path: 'iframeView?url=cn.vitejs.dev',
+            name: 'Vite',
+            meta: {
+              title: 'Vite',
+            },
+          },
+        ],
       },
     ],
   },

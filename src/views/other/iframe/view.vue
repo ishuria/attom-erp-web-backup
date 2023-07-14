@@ -1,0 +1,49 @@
+<template>
+  <div class="iframe-container">
+    <iframe frameborder="0" :src="url" />
+  </div>
+</template>
+
+<script lang="ts" setup>
+  import { useTabsStore } from '/@/store/modules/tabs'
+
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta } = tabsStore
+  const route = useRoute()
+
+  defineOptions({
+    name: 'Iframe',
+  })
+
+  const url = ref<any>('')
+
+  const handleIframe = () => {
+    url.value = `https://${route.query.url}`
+    const meta = { ...route.meta, ...route.query }
+    changeTabsMeta({
+      title: 'Iframe',
+      meta,
+    })
+  }
+
+  watch(
+    route,
+    () => {
+      handleIframe()
+    },
+    { immediate: true }
+  )
+
+  onMounted(() => {
+    handleIframe()
+  })
+</script>
+
+<style lang="scss" scoped>
+  .iframe-container {
+    iframe {
+      width: 100%;
+      height: var(--el-keep-alive-height);
+    }
+  }
+</style>

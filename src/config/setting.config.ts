@@ -67,6 +67,7 @@ export const settingConfig: {
     '/vab/form',
     '/operate/dynamicSegment',
     '/other/editor',
+    '/other/iframe',
   ],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],
