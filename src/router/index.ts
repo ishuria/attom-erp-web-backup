@@ -620,6 +620,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
+        name: 'ExternalLink',
+        meta: {
+          title: '外链',
+          target: '_blank',
+          guard: ['Admin', 'Editor'],
+          icon: 'external-link-line',
+        },
+      },
+      {
         path: 'paneSplit',
         name: 'PaneSplit',
         component: () => import('/@/views/other/paneSplit/index.vue'),
