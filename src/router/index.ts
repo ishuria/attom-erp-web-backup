@@ -1,3 +1,4 @@
+import { VabRoute } from './types'
 /**
  * @description router全局配置，如有必要可分文件抽离，其中asyncRoutes只有在intelligence模式下才会用到，pro版只支持remixIcon图标，具体配置请查看vip群文档
  */
@@ -498,15 +499,36 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
-        path: 'wangEditor',
-        name: 'WangEditor',
-        component: () => import('/@/views/other/editor/wangEditor.vue'),
+        path: 'editor',
+        name: 'Editor',
+        component: Layout,
         meta: {
-          title: '富文本',
+          title: '编辑器',
           icon: 'edit-box-line',
           guard: ['Admin'],
         },
+        children: [
+          {
+            path: 'wangEditor',
+            name: 'WangEditor',
+            component: () => import('/@/views/other/editor/wangEditor.vue'),
+            meta: {
+              title: '富文本',
+              guard: ['Admin'],
+            },
+          },
+          {
+            path: 'mdEditor',
+            name: 'MdEditor',
+            component: () => import('/@/views/other/editor/mdEditor.vue'),
+            meta: {
+              title: 'Markdown',
+              guard: ['Admin'],
+            },
+          },
+        ],
       },
+
       {
         path: 'video',
         name: 'Video',

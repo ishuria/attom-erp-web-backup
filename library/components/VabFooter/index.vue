@@ -25,13 +25,11 @@
     justify-content: center;
     min-height: 55px;
     padding: 0 var(--el-padding) 0 var(--el-padding);
+    margin-top: -1px;
     color: var(--el-color-grey);
     background: var(--el-color-white);
-    border-right: 1px solid var(--el-border-color);
-    border-bottom: 1px solid var(--el-border-color);
-    border-left: 1px solid var(--el-border-color);
-    border-bottom-right-radius: var(--el-border-radius-base);
-    border-bottom-left-radius: var(--el-border-radius-base);
+    border: 1px solid var(--el-border-color);
+    border-radius: var(--el-border-radius-base);
 
     i {
       margin: 0 5px;
