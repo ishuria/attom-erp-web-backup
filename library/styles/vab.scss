@@ -629,5 +629,12 @@ html {
         }
       }
     }
+
+    .jv-container.jv-light {
+      .jv-key,
+      .jv-item.jv-object {
+        color: var(--el-color-black);
+      }
+    }
   }
 }
