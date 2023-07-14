@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
   import VabChart from '/@/plugins/VabChart/index.vue'
   import { onBeforeRouteLeave } from 'vue-router'
   import { useSettingsStore } from '/@/store/modules/settings'
@@ -66,7 +66,7 @@
     const addData = (shift: boolean) => {
       now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
       date.push(now)
-      data.push(_.random(2000, 4000))
+      data.push(random(2000, 4000))
 
       if (shift) {
         date.shift()

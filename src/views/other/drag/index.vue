@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { shuffle } from 'lodash-es'
   import VabDraggable from 'vuedraggable'
   import { getIconList } from '/@/api/icon'
 
@@ -32,7 +32,7 @@
 
   const iconList = ref<any>([])
   const randomHexColor = () => {
-    return _.shuffle([
+    return shuffle([
       '#1890FF',
       '#36CBCB',
       '#4ECB73',

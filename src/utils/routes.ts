@@ -61,7 +61,7 @@ export function filterRoutes(
         route.children = filterRoutes(route.children, rolesControl, route.path)
         if (route.children.length > 0) {
           route.childrenPathList = route.children.flatMap(
-            (_: VabRouteRecordRaw) => _.childrenPathList
+            (item: VabRouteRecordRaw) => item.childrenPathList
           )
           if (!route.redirect)
             route.redirect = route.children[0].redirect

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
   import { getImageUrl } from '/@/utils/imageUrl'
   import { VabAwardGrid } from '/@/plugins/VabAward'
 
@@ -150,7 +150,7 @@
 
     setTimeout(() => {
       //中奖的数组下标
-      const index = _.random(0, 5)
+      const index = random(0, 5)
       awardGridRef.value.stop(index)
     }, 3000)
   }

@@ -1,6 +1,6 @@
 import type { App, DirectiveBinding } from 'vue'
 import { hasPermission } from '/@/utils/permission'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 
 export default {
   install: (app: App<Element>) => {

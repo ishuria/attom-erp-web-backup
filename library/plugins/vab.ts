@@ -7,7 +7,7 @@ import {
   ElNotification,
 } from 'element-plus'
 import mitt from 'mitt'
-import _ from 'lodash'
+import { head, toArray } from 'lodash-es'
 
 export let gp: Record<string, any>
 
@@ -194,17 +194,17 @@ export default {
 
     const _emitter = mitt()
     const $pub = (...args: any[]) => {
-      _emitter.emit(_.head(args), args[1])
+      _emitter.emit(head(args), args[1])
     }
     app.provide('$pub', $pub)
     const $sub = function () {
       // eslint-disable-next-line prefer-rest-params
-      Reflect.apply(_emitter.on, _emitter, _.toArray(arguments))
+      Reflect.apply(_emitter.on, _emitter, toArray(arguments))
     }
     app.provide('$sub', $sub)
     app.provide('$unsub', function () {
       // eslint-disable-next-line prefer-rest-params
-      Reflect.apply(_emitter.off, _emitter, _.toArray(arguments))
+      Reflect.apply(_emitter.off, _emitter, toArray(arguments))
     })
 
     gp = {

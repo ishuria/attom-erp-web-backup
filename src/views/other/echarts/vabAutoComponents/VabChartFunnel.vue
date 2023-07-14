@@ -1,17 +1,6 @@
 <!-- 漏斗图 -->
-<template>
-  <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
-    <vab-card skeleton>
-      <template #header>
-        <span>{{ title }}</span>
-      </template>
-      <vab-chart :option="option" />
-    </vab-card>
-  </el-col>
-</template>
-
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
@@ -65,22 +54,22 @@
         },
       },
       data: [
-        { value: _.random(0, 100), name: '访问' },
-        { value: _.random(20, 100), name: '咨询' },
-        { value: _.random(40, 100), name: '订单' },
-        { value: _.random(60, 100), name: '点击' },
-        { value: _.random(80, 100), name: '展现' },
+        { value: random(0, 100), name: '访问' },
+        { value: random(20, 100), name: '咨询' },
+        { value: random(40, 100), name: '订单' },
+        { value: random(60, 100), name: '点击' },
+        { value: random(80, 100), name: '展现' },
       ],
     },
   })
 
   const timer = setInterval(() => {
     option.series.data = [
-      { value: _.random(0, 100), name: '访问' },
-      { value: _.random(20, 100), name: '咨询' },
-      { value: _.random(40, 100), name: '订单' },
-      { value: _.random(60, 100), name: '点击' },
-      { value: _.random(80, 100), name: '展现' },
+      { value: random(0, 100), name: '访问' },
+      { value: random(20, 100), name: '咨询' },
+      { value: random(40, 100), name: '订单' },
+      { value: random(60, 100), name: '点击' },
+      { value: random(80, 100), name: '展现' },
     ]
   }, 3000)
 
@@ -97,3 +86,14 @@
     next()
   })
 </script>
+
+<template>
+  <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
+    <vab-card skeleton>
+      <template #header>
+        <span>{{ title }}</span>
+      </template>
+      <vab-chart :option="option" />
+    </vab-card>
+  </el-col>
+</template>

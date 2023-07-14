@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
 
   defineOptions({
     name: 'Index',
@@ -7,7 +7,7 @@
 
   const countConfig1 = reactive<any>({
     startVal: 0,
-    endVal: _.random(1000, 20000),
+    endVal: random(1000, 20000),
     decimals: 2,
     prefix: '￥',
     suffix: '',

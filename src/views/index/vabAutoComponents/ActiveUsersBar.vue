@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   const settingsStore = useSettingsStore()
@@ -44,12 +44,12 @@
         name: '',
         type: 'bar',
         data: [
-          _.random(50, 100),
-          _.random(10, 100),
-          _.random(10, 100),
-          _.random(10, 100),
-          _.random(10, 100),
-          _.random(50, 100),
+          random(50, 100),
+          random(10, 100),
+          random(10, 100),
+          random(10, 100),
+          random(10, 100),
+          random(50, 100),
         ],
         itemStyle: {
           color,
@@ -62,12 +62,12 @@
   onMounted(() => {
     timer = setInterval(() => {
       option.series[0].data = [
-        _.random(50, 100),
-        _.random(10, 100),
-        _.random(10, 100),
-        _.random(10, 100),
-        _.random(10, 100),
-        _.random(50, 100),
+        random(50, 100),
+        random(10, 100),
+        random(10, 100),
+        random(10, 100),
+        random(10, 100),
+        random(50, 100),
       ]
     }, 3000)
   })

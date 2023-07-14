@@ -1,17 +1,6 @@
 <!-- K线图 -->
-<template>
-  <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
-    <vab-card skeleton>
-      <template #header>
-        <span>{{ title }}</span>
-      </template>
-      <vab-chart :option="option" />
-    </vab-card>
-  </el-col>
-</template>
-
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
 
   defineOptions({
     name: 'VabChartCandlestick',
@@ -38,60 +27,20 @@
     series: {
       type: 'k',
       data: [
-        [
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-        ],
-        [
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-        ],
-        [
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-        ],
-        [
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-          _.random(50, 100),
-        ],
+        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
       ],
     },
   })
 
   const timer = setInterval(() => {
     option.series.data = [
-      [
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-      ],
-      [
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-      ],
-      [
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-      ],
-      [
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-        _.random(50, 100),
-      ],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
     ]
   }, 3000)
 
@@ -100,3 +49,14 @@
     next()
   })
 </script>
+
+<template>
+  <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
+    <vab-card skeleton>
+      <template #header>
+        <span>{{ title }}</span>
+      </template>
+      <vab-chart :option="option" />
+    </vab-card>
+  </el-col>
+</template>

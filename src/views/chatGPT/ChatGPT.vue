@@ -8,7 +8,7 @@
   import { ElScrollbar } from 'element-plus'
   import dayjs from 'dayjs'
   import TypeIt from 'typeit'
-  import _ from 'lodash'
+  import { uniqueId } from 'lodash-es'
 
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
@@ -90,7 +90,7 @@
         scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
       }, 0)
 
-      const id = _.uniqueId('uuid_')
+      const id = uniqueId('uuid_')
 
       axios
         .get(`${url.value}${value.value}`)

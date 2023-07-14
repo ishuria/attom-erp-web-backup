@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
   import { handleActivePath } from '/@/utils/routes'
   import { useTabsStore } from '/@/store/modules/tabs'
 
@@ -54,7 +54,7 @@
 
   const toLastTab = async () => {
     const latestView = visitedRoutes.value
-      .filter((_) => _.path !== handleActivePath(route, true))
+      .filter((item) => item.path !== handleActivePath(route, true))
       .slice(-1)[0]
     if (latestView) await router.push(latestView)
     else await router.push('/')
@@ -69,11 +69,11 @@
   }
 
   const handleOpenParams = () => {
-    router.push(`/operate/dynamicSegment/test1/${_.random(0, 100)}`)
+    router.push(`/operate/dynamicSegment/test1/${random(0, 100)}`)
   }
 
   const handleOpenQuery = () => {
-    router.push(`/operate/dynamicSegment/test2?id=${_.random(0, 100)}`)
+    router.push(`/operate/dynamicSegment/test2?id=${random(0, 100)}`)
   }
 </script>
 

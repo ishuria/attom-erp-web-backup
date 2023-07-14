@@ -1,3 +1,44 @@
+<script lang="ts" setup>
+  import { random } from 'lodash-es'
+
+  defineOptions({
+    name: 'TopCard',
+  })
+
+  defineProps({
+    background: {
+      type: String,
+      default: 'white',
+    },
+    title: {
+      type: String,
+      default: 'Test',
+    },
+    icon: {
+      type: String,
+      default: '',
+    },
+    percentage: {
+      type: String,
+      default: '10%',
+    },
+    countConfig: {
+      type: Object,
+      default: () => {
+        return {
+          startVal: 0,
+          endVal: random(1000, 20000),
+          decimals: 0,
+          prefix: '',
+          suffix: '',
+          separator: ',',
+          duration: 8000,
+        }
+      },
+    },
+  })
+</script>
+
 <template>
   <vab-card class="top-card" :class="'top-card-' + background">
     <span>{{ title }}</span>
@@ -29,47 +70,6 @@
     </div>
   </vab-card>
 </template>
-
-<script lang="ts" setup>
-  import _ from 'lodash'
-
-  defineOptions({
-    name: 'TopCard',
-  })
-
-  defineProps({
-    background: {
-      type: String,
-      default: 'white',
-    },
-    title: {
-      type: String,
-      default: 'Test',
-    },
-    icon: {
-      type: String,
-      default: '',
-    },
-    percentage: {
-      type: String,
-      default: '10%',
-    },
-    countConfig: {
-      type: Object,
-      default: () => {
-        return {
-          startVal: 0,
-          endVal: _.random(1000, 20000),
-          decimals: 0,
-          prefix: '',
-          suffix: '',
-          separator: ',',
-          duration: 8000,
-        }
-      },
-    },
-  })
-</script>
 
 <style lang="scss" scoped>
   .top-card {

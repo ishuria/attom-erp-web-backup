@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { pull, random, sample } from 'lodash-es'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
@@ -12,7 +12,7 @@
   const n = ref<number>(5)
   const countConfig = reactive<any>({
     startVal: 0,
-    endVal: _.random(1000, 20000),
+    endVal: random(1000, 20000),
     decimals: 0,
     prefix: '',
     suffix: '',
@@ -69,8 +69,8 @@
       if (n.value > 0) {
         n.value--
       } else {
-        option.series[0].type = _.sample(
-          _.pull(['bar', 'line', 'scatter'], option.series[0].type)
+        option.series[0].type = sample(
+          pull(['bar', 'line', 'scatter'], option.series[0].type)
         )
         n.value = 5
       }

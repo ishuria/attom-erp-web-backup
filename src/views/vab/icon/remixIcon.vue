@@ -1,3 +1,75 @@
+<script lang="ts" setup>
+  import { shuffle } from 'lodash-es'
+  import { getIconList } from '/@/api/icon'
+  import clip from '/@/utils/clipboard'
+  import { Search } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'RemixIcon',
+  })
+
+  const queryIcon = ref<any>([])
+  const total = ref<any>(0)
+  const queryForm = reactive<any>({
+    pageNo: 1,
+    pageSize: 72,
+    title: '',
+    colorful: false,
+    num: 28,
+  })
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const emptyShow = ref<boolean>(false)
+
+  const fetchData = async () => {
+    const { data } = await getIconList(queryForm)
+    queryIcon.value = data.list.map((icon: any) => {
+      return { icon, color: randomHexColor() }
+    })
+    total.value = data.total
+    if (data.total > 0) emptyShow.value = false
+    else emptyShow.value = true
+  }
+
+  const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
+    queryForm.pageSize = value
+    fetchData()
+  }
+
+  const handleCurrentChange = (value: number) => {
+    queryForm.pageNo = value
+    fetchData()
+  }
+
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+
+  const handleCopyText = (item: string) => {
+    clip(item)
+  }
+
+  const handleCopyIcon = (item: any) => {
+    clip(`<vab-icon icon="${item}" />`)
+  }
+
+  const randomHexColor = () => {
+    return shuffle([
+      '#1890FF',
+      '#36CBCB',
+      '#4ECB73',
+      '#FBD437',
+      '#F2637B',
+      '#975FE5',
+    ])
+  }
+
+  onMounted(() => {
+    fetchData()
+  })
+</script>
+
 <template>
   <div class="remix-icon-container table-auto-height">
     <el-row :gutter="20">
@@ -80,78 +152,6 @@
     />
   </div>
 </template>
-
-<script lang="ts" setup>
-  import _ from 'lodash'
-  import { getIconList } from '/@/api/icon'
-  import clip from '/@/utils/clipboard'
-  import { Search } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'RemixIcon',
-  })
-
-  const queryIcon = ref<any>([])
-  const total = ref<any>(0)
-  const queryForm = reactive<any>({
-    pageNo: 1,
-    pageSize: 72,
-    title: '',
-    colorful: false,
-    num: 28,
-  })
-  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-  const emptyShow = ref<boolean>(false)
-
-  const fetchData = async () => {
-    const { data } = await getIconList(queryForm)
-    queryIcon.value = data.list.map((icon: any) => {
-      return { icon, color: randomHexColor() }
-    })
-    total.value = data.total
-    if (data.total > 0) emptyShow.value = false
-    else emptyShow.value = true
-  }
-
-  const handleSizeChange = (value: number) => {
-    queryForm.pageNo = 1
-    queryForm.pageSize = value
-    fetchData()
-  }
-
-  const handleCurrentChange = (value: number) => {
-    queryForm.pageNo = value
-    fetchData()
-  }
-
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
-
-  const handleCopyText = (item: string) => {
-    clip(item)
-  }
-
-  const handleCopyIcon = (item: any) => {
-    clip(`<vab-icon icon="${item}" />`)
-  }
-
-  const randomHexColor = () => {
-    return _.shuffle([
-      '#1890FF',
-      '#36CBCB',
-      '#4ECB73',
-      '#FBD437',
-      '#F2637B',
-      '#975FE5',
-    ])
-  }
-
-  onMounted(() => {
-    fetchData()
-  })
-</script>
 
 <style lang="scss" scoped>
   .remix-icon-container {

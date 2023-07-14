@@ -1,17 +1,6 @@
 <!-- 矩形树图 -->
-<template>
-  <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
-    <vab-card skeleton>
-      <template #header>
-        <span>{{ title }}</span>
-      </template>
-      <vab-chart :option="option" />
-    </vab-card>
-  </el-col>
-</template>
-
 <script lang="ts" setup>
-  import _ from 'lodash'
+  import { random } from 'lodash-es'
 
   defineOptions({
     name: 'VabChartTreemap',
@@ -36,29 +25,29 @@
       data: [
         {
           name: 'nodeA',
-          value: _.random(0, 10),
+          value: random(0, 10),
           children: [
             {
               name: 'nodeAa',
-              value: _.random(0, 10),
+              value: random(0, 10),
             },
             {
               name: 'nodeAb',
-              value: _.random(0, 10),
+              value: random(0, 10),
             },
           ],
         },
         {
           name: 'nodeB',
-          value: _.random(0, 10),
+          value: random(0, 10),
           children: [
             {
               name: 'nodeBa',
-              value: _.random(0, 10),
+              value: random(0, 10),
               children: [
                 {
                   name: 'nodeBa1',
-                  value: _.random(0, 10),
+                  value: random(0, 10),
                 },
               ],
             },
@@ -72,29 +61,29 @@
     option.series.data = [
       {
         name: 'nodeA',
-        value: _.random(0, 10),
+        value: random(0, 10),
         children: [
           {
             name: 'nodeAa',
-            value: _.random(0, 10),
+            value: random(0, 10),
           },
           {
             name: 'nodeAb',
-            value: _.random(0, 10),
+            value: random(0, 10),
           },
         ],
       },
       {
         name: 'nodeB',
-        value: _.random(0, 10),
+        value: random(0, 10),
         children: [
           {
             name: 'nodeBa',
-            value: _.random(0, 10),
+            value: random(0, 10),
             children: [
               {
                 name: 'nodeBa1',
-                value: _.random(0, 10),
+                value: random(0, 10),
               },
             ],
           },
@@ -108,3 +97,14 @@
     next()
   })
 </script>
+
+<template>
+  <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
+    <vab-card skeleton>
+      <template #header>
+        <span>{{ title }}</span>
+      </template>
+      <vab-chart :option="option" />
+    </vab-card>
+  </el-col>
+</template>
