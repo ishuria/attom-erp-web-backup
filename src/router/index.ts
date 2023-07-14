@@ -95,7 +95,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         name: 'ChatGPT',
         component: () => import('/@/views/chatGPT/ChatGPT.vue'),
         meta: {
-          title: 'chatGPT',
+          title: 'ChatGPT',
           icon: 'openai-line',
           dot: true,
         },
