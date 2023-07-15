@@ -89,7 +89,7 @@
   .icon-panel {
     margin-bottom: 8px;
     cursor: pointer;
-    border: 0;
+    border: 0 !important;
 
     :deep() {
       .el-card__body {
