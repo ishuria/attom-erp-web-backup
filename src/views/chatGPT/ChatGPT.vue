@@ -200,9 +200,10 @@
   $border-top-color_1: var(--el-color-primary);
 
   .chat-GPT-container {
+    box-sizing: border-box;
     :deep(.el-card__body) {
       position: relative;
-      min-height: calc(var(--el-keep-alive-height) - 20px);
+      height: calc(var(--el-keep-alive-height) - var(--el-padding) - 2px);
     }
 
     .vab-chat-main {
