@@ -56,10 +56,33 @@
         border-radius: var(--el-border-radius-base);
         box-shadow: none;
         transition: var(--el-transition);
+        &--fullscreen {
+          z-index: 9999;
+          border-radius: 0;
+        }
       }
-      .v-md-editor--fullscreen {
-        z-index: 9999;
-        border-radius: 0;
+
+      @media (max-width: 576px) {
+        .v-md-editor {
+          &__toolbar-right,
+          &__toolbar-divider {
+            display: none;
+          }
+
+          &__main {
+            flex-direction: column !important;
+            overflow-y: auto;
+          }
+
+          &__preview-wrapper {
+            border-top: 1px solid var(--el-border-color);
+          }
+
+          &__editor-wrapper,
+          &__preview-wrapper {
+            min-height: 100vh;
+          }
+        }
       }
     }
   }
