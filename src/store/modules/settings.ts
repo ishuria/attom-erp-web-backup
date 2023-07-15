@@ -61,7 +61,9 @@ const getLocalStorage = (key: string) => {
   }
 }
 
-const theme = getLocalStorage('shop-vite-theme') || { ...defaultTheme }
+const theme = { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
+  ...defaultTheme,
+}
 const { collapse = foldSidebar } = getLocalStorage('collapse')
 const { language = i18n } = getLocalStorage('language')
 const { logo = _logo } = getLocalStorage('logo')
