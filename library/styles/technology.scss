@@ -50,29 +50,6 @@ html > body.vab-theme-technology {
   color: var(--el-color-black) !important;
   background-color: var(--el-color-white) !important;
 
-  @mixin base-scrollbar {
-    &::-webkit-scrollbar-thumb {
-      background-color: mix($base-color-white, #103171, 10%) !important;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: mix($base-color-white, #103171, 5%) !important;
-    }
-  }
-
-  * {
-    @include base-scrollbar;
-  }
-
-  .el-scrollbar {
-    &__thumb {
-      background-color: mix($base-color-white, #103171, 10%) !important;
-
-      &:hover {
-        background-color: mix($base-color-white, #103171, 5%) !important;
-      }
-    }
-  }
-
   #app {
     border: 1px solid var(--el-border-color) !important;
   }
@@ -113,7 +90,6 @@ html > body.vab-theme-technology {
   .no-background-container {
     background: var(--el-color-white) !important;
   }
-
 
   .vab-column-bar-container .el-tabs .el-tabs__item {
     color: var(--el-color-black) !important;

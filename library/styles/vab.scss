@@ -17,12 +17,12 @@
     height: 8px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: mix($base-color-white, $base-menu-background, 90%);
-    border: 3px solid transparent;
-    border-radius: 7px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: mix($base-color-white, $base-menu-background, 80%);
+    background-color: var(--el-border-color-lighter);
+    border-radius: var(--el-border-radius-round);
+
+    &:hover {
+      background-color: var(--el-border-color-light);
+    }
   }
 }
 
@@ -54,6 +54,21 @@ html {
       height: 100vh;
       overflow: auto;
       @include base-scrollbar;
+
+      .el-scrollbar {
+        &__thumb {
+          width: 8px;
+          height: 8px;
+          background-color: var(--el-border-color-lighter);
+          border-radius: var(--el-border-radius-round);
+          opacity: 1;
+
+          &:hover {
+            background-color: var(--el-border-color-light);
+            opacity: 1;
+          }
+        }
+      }
 
       .vab-main {
         transition: var(--el-transition);
