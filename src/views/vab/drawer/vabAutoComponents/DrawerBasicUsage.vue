@@ -45,7 +45,9 @@
   const direction = ref<any>('rtl')
   const radio1 = ref<any>('Option 1')
   const handleClose = (done: () => void) => {
-    ElMessageBox.confirm('您确定要关闭抽屉吗？')
+    ElMessageBox.confirm('您确定要关闭抽屉吗？', {
+      draggable: true,
+    })
       .then(() => {
         done()
       })
@@ -59,7 +61,9 @@
   }
 
   function confirmClick() {
-    ElMessageBox.confirm(`您确认选择${radio1.value}吗？`)
+    ElMessageBox.confirm(`您确认选择${radio1.value}吗？`, {
+      draggable: true,
+    })
       .then(() => {
         drawer2.value = false
       })

@@ -38,7 +38,9 @@
   }
 
   const beforeRemove: UploadProps['beforeRemove'] = (uploadFile) => {
-    return ElMessageBox.confirm(`是否取消上传 ${uploadFile.name} ？`).then(
+    return ElMessageBox.confirm(`是否取消上传 ${uploadFile.name} ？`, {
+      draggable: true,
+    }).then(
       () => true,
       () => false
     )

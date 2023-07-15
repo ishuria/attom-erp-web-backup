@@ -16,7 +16,7 @@
 
 <template>
   <div class="throttle-debounce-container">
-    <el-button v-throttle="throttleClick">节流函数</el-button>
-    <el-button v-debounce="debounceClick">防抖函数</el-button>
+    <el-button v-throttle="throttleClick" type="primary">节流函数</el-button>
+    <el-button v-debounce="debounceClick" type="primary">防抖函数</el-button>
   </div>
 </template>

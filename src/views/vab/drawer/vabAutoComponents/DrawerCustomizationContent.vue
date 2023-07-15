@@ -96,7 +96,9 @@
     if (loading.value) {
       return
     }
-    ElMessageBox.confirm('您确定要提交吗？')
+    ElMessageBox.confirm('您确定要提交吗？', {
+      draggable: true,
+    })
       .then(() => {
         loading.value = true
         timer = setTimeout(() => {

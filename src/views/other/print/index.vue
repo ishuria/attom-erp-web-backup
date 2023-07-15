@@ -76,6 +76,7 @@
       inputValue: `<h1>Vue Shop Vite</h1><p>vue-admin-beautiful.com/shop-vite</p>`,
       inputErrorMessage: 'Invalid Email',
       confirmButtonText: '打印',
+      draggable: true,
     })
       .then(({ value }) => {
         VabPrint(value)

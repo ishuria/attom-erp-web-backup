@@ -117,6 +117,7 @@ export default {
         ElMessageBox.alert(content, title, {
           confirmButtonText: '确定',
           dangerouslyUseHTMLString: true, // 此处可能引起跨站攻击，建议配置为false
+          draggable: true,
           callback: () => {
             if (callback) callback()
           },

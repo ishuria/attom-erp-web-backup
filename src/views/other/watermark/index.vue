@@ -27,6 +27,7 @@
     ElMessageBox.prompt('请输入自定义水印', '温馨提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
+      draggable: true,
     })
       .then(({ value }) => {
         if (value) setWatermark(value)
