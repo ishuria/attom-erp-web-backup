@@ -20,9 +20,12 @@
   const handleIframe = () => {
     url.value = `https://${route.query.url}`
     const meta = { ...route.meta, ...route.query }
-    changeTabsMeta({
-      title: 'Iframe',
-      meta,
+    console.log(meta)
+    nextTick(() => {
+      changeTabsMeta({
+        title: 'Iframe',
+        meta,
+      })
     })
   }
 
@@ -33,10 +36,6 @@
     },
     { immediate: true }
   )
-
-  onMounted(() => {
-    handleIframe()
-  })
 </script>
 
 <style lang="scss" scoped>

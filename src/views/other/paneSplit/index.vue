@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="pane-split-container no-background-container">
+  <div class="pane-split-container no-background-container table-auto-height">
     <vab-card class="hidden-sm-and-up">
       <el-alert
         :closable="false"
@@ -13,21 +13,23 @@
         type="error"
       />
     </vab-card>
-    <vab-pane-split class="hidden-xs-only" ratio="2/3">
-      <template #one>
-        <div class="pane-split-left">A</div>
-      </template>
-      <template #two>
-        <vab-pane-split class="pane-split-right" horizontal>
-          <template #one>
-            <div class="pane-split-up">B</div>
-          </template>
-          <template #two>
-            <div class="pane-split-down">C</div>
-          </template>
-        </vab-pane-split>
-      </template>
-    </vab-pane-split>
+    <vab-card class="hidden-xs-only">
+      <vab-pane-split ratio="2/3">
+        <template #one>
+          <div class="pane-split-left">A</div>
+        </template>
+        <template #two>
+          <vab-pane-split class="pane-split-right" horizontal>
+            <template #one>
+              <div class="pane-split-up">B</div>
+            </template>
+            <template #two>
+              <div class="pane-split-down">C</div>
+            </template>
+          </vab-pane-split>
+        </template>
+      </vab-pane-split>
+    </vab-card>
   </div>
 </template>
 
