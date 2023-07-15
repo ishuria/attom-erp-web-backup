@@ -20,7 +20,6 @@
   const handleIframe = () => {
     url.value = `https://${route.query.url}`
     const meta = { ...route.meta, ...route.query }
-    console.log(meta)
     nextTick(() => {
       changeTabsMeta({
         title: 'Iframe',
