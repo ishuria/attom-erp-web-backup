@@ -120,13 +120,12 @@
       mode="vertical"
       :unique-opened="uniqueOpened"
     >
-      <el-divider />
       <template v-for="item in partialRoutes" :key="item.path">
         <vab-menu v-if="!item.meta.hidden" :item="item" />
       </template>
     </el-menu>
     <div class="float-fold">
-      <vab-fold fold="layout-left-2-line" unfold="layout-left-line" />
+      <vab-fold fold="contract-left-line" unfold="contract-right-line" />
     </div>
   </el-scrollbar>
 </template>
@@ -392,16 +391,8 @@
       }
 
       .el-menu {
+        margin-top: 10px;
         border: 0;
-
-        .el-divider {
-          margin: 0 0 var(--el-margin) 0;
-          background-color: var(--el-border-color);
-
-          &__text {
-            color: var(--el-color-black);
-          }
-        }
 
         .el-menu-item,
         .el-sub-menu__title {

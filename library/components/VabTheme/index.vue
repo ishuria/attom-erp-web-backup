@@ -18,7 +18,7 @@
 <template>
   <el-tooltip :content="translateTitle('主题配置')" placement="bottom">
     <span v-if="theme.showTheme">
-      <vab-icon icon="brush-line" @click="handleOpenTheme" />
+      <vab-icon icon="t-shirt-line" @click="handleOpenTheme" />
     </span>
   </el-tooltip>
 </template>

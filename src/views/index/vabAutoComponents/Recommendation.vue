@@ -8,7 +8,7 @@
       link: '',
     },
     {
-      icon: 'brush-line',
+      icon: 'copyright-line',
       title: '商标管理',
       tips: '工商管理快捷入口',
       link: '',

@@ -113,11 +113,19 @@
       }
 
       .title {
-        padding-right: 15px;
-        padding-left: 15px;
-        margin-left: $base-left-menu-width-min !important;
+        position: fixed;
+        left: var(--el-left-menu-width-min) !important;
+        box-sizing: border-box;
+        display: block !important;
+        width: calc(
+          var(--el-left-menu-width) - var(--el-left-menu-width-min) - 1px
+        );
+        height: var(--el-nav-height);
+        margin-left: 0 !important;
         color: var(--el-color-black) !important;
         background: var(--el-color-white) !important;
+        border-bottom: 1px solid var(--el-border-color);
+
         @include title;
       }
     }

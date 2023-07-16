@@ -36,7 +36,7 @@
   <ul v-if="theme.showThemeSetting" class="vab-theme-setting">
     <li @click="handleOpenTheme">
       <a>
-        <vab-icon icon="brush-line" />
+        <vab-icon icon="t-shirt-line" />
         <p>{{ translateTitle('主题配置') }}</p>
       </a>
     </li>
