@@ -236,11 +236,10 @@ html {
 
     /* el-button按钮 */
     .el-button {
-      [class*='ri-'] + span {
-        margin-left: 3px;
-      }
-
-      [class*='el-icon-'] + span {
+      [class*='el-icon-'] + span,
+      span + [class*='el-icon-'],
+      [class*='ri-'] + span,
+      span + [class*='ri-'] {
         margin-left: 3px;
       }
     }

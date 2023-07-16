@@ -78,7 +78,7 @@
             >
               <el-button>
                 <vab-icon :icon="item.icon" />
-                {{ item.title }}
+                <span>{{ item.title }}</span>
               </el-button>
             </a>
           </template>

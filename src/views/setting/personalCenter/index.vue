@@ -69,7 +69,7 @@
               <a href="https://github.com/chuzhixin" target="_blank">
                 <el-button round type="primary">
                   <vab-icon icon="group-line" />
-                  Follow me
+                  <span>Follow me</span>
                 </el-button>
               </a>
             </div>

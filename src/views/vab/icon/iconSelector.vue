@@ -15,7 +15,7 @@
       <template #reference>
         <el-button>
           <vab-icon :icon="icon" />
-          图标选择器
+          <span>图标选择器</span>
           <vab-icon icon="arrow-down-s-line" />
         </el-button>
       </template>

@@ -9,10 +9,7 @@
   <el-drawer v-model="visible" :show-close="false">
     <template #header="{ close, titleId, titleClass }">
       <h4 :id="titleId" :class="titleClass">这是个自定义头部抽屉</h4>
-      <el-button type="danger" @click="close">
-        <el-icon class="el-icon--left">
-          <CircleCloseFilled />
-        </el-icon>
+      <el-button :icon="CircleCloseFilled" type="danger" @click="close">
         关闭
       </el-button>
     </template>

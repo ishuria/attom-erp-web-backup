@@ -107,11 +107,11 @@
     </div>
     <el-button type="primary" @click="handleSaveImg">
       <vab-icon icon="save-line" />
-      保存为图片
+      <span>存为图片</span>
     </el-button>
     <el-button type="danger" @click="handleClearSign">
       <vab-icon icon="delete-bin-5-line" />
-      清空签名
+      <span>清空签名</span>
     </el-button>
   </div>
 </template>

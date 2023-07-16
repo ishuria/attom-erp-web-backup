@@ -7,13 +7,13 @@
       <el-form-item>
         <el-button native-type="submit" type="primary" @click="copy">
           <vab-icon icon="file-copy-line" />
-          拷贝URL
+          <span>拷贝URL</span>
         </el-button>
         <el-popover placement="bottom-start" trigger="hover" :width="220">
           <template #reference>
             <el-button native-type="submit" type="primary">
               <vab-icon icon="qr-code-line" />
-              生成二维码
+              <span>生成二维码</span>
             </el-button>
           </template>
           <vab-qr-code :dot-scale="0.5" :logo-src="logoUrl" :text="form.url" />

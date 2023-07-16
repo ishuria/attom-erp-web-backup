@@ -196,15 +196,7 @@
         align-items: center;
         justify-content: space-between;
         padding-top: 20px;
-        text-align: right;
         border-top: 1px solid var(--el-border-color);
-
-        .is-circle {
-          [class*='ri-'] {
-            margin-right: 0 !important;
-            font-size: 14px;
-          }
-        }
       }
     }
 

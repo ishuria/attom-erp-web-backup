@@ -102,7 +102,7 @@
         <template #reference>
           <el-button>
             <vab-icon :icon="icon" />
-            修改图标
+            <span>修改图标</span>
             <vab-icon icon="arrow-down-s-line" />
           </el-button>
         </template>

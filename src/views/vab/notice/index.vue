@@ -56,10 +56,10 @@
           <template #header>
             <span>element-plus风格 Message 消息提示</span>
           </template>
-          <el-button plain type="primary" @click="open1">消息</el-button>
-          <el-button plain type="success" @click="open2">成功</el-button>
-          <el-button plain type="warning" @click="open3">警告</el-button>
-          <el-button plain type="danger" @click="open4">错误</el-button>
+          <el-button type="primary" @click="open1">消息</el-button>
+          <el-button type="success" @click="open2">成功</el-button>
+          <el-button type="warning" @click="open3">警告</el-button>
+          <el-button type="danger" @click="open4">错误</el-button>
         </vab-card>
       </el-col>
       <el-col :span="24">
@@ -67,10 +67,10 @@
           <template #header>
             <span>element-plus风格 Message 消息提示</span>
           </template>
-          <el-button plain type="primary" @click="open5">消息</el-button>
-          <el-button plain type="success" @click="open6">成功</el-button>
-          <el-button plain type="warning" @click="open7">警告</el-button>
-          <el-button plain type="danger" @click="open8">错误</el-button>
+          <el-button type="primary" @click="open5">消息</el-button>
+          <el-button type="success" @click="open6">成功</el-button>
+          <el-button type="warning" @click="open7">警告</el-button>
+          <el-button type="danger" @click="open8">错误</el-button>
         </vab-card>
       </el-col>
       <el-col :span="24">
@@ -78,10 +78,10 @@
           <template #header>
             <span>Notification 消息提示</span>
           </template>
-          <el-button plain type="info" @click="open9">消息</el-button>
-          <el-button plain type="success" @click="open10">成功</el-button>
-          <el-button plain type="warning" @click="open11">警告</el-button>
-          <el-button plain type="danger" @click="open12">错误</el-button>
+          <el-button type="info" @click="open9">消息</el-button>
+          <el-button type="success" @click="open10">成功</el-button>
+          <el-button type="warning" @click="open11">警告</el-button>
+          <el-button type="danger" @click="open12">错误</el-button>
         </vab-card>
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
