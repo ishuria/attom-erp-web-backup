@@ -467,8 +467,8 @@
           height: calc(
             var(--el-keep-alive-height) - var(--el-padding)
           ) !important;
-          margin-right: calc(var(--el-margin));
-          margin-left: calc(var(--el-margin));
+          margin-right: calc(var(--el-margin) / 2);
+          margin-left: calc(var(--el-margin) / 2);
         }
       }
     }
