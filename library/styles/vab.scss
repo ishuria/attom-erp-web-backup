@@ -13,15 +13,17 @@
 
 @mixin base-scrollbar {
   &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: var(--el-border-color-lighter);
+    background-color: rgba(#909399, 0.3);
     border-radius: var(--el-border-radius-round);
+    transition: var(--el-transition-duration) background-color;
 
     &:hover {
-      background-color: var(--el-border-color-light);
+      background-color: var(--el-scrollbar-hover-bg-color);
+      background-color: rgba(#909399, 0.5);
     }
   }
 }
@@ -54,21 +56,6 @@ html {
       height: 100vh;
       overflow: auto;
       @include base-scrollbar;
-
-      .el-scrollbar {
-        &__thumb {
-          width: 8px;
-          height: 8px;
-          background-color: var(--el-border-color-lighter);
-          border-radius: var(--el-border-radius-round);
-          opacity: 1;
-
-          &:hover {
-            background-color: var(--el-border-color-light);
-            opacity: 1;
-          }
-        }
-      }
 
       .vab-main {
         transition: var(--el-transition);
