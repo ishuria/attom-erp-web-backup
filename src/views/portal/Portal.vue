@@ -60,7 +60,10 @@
 </script>
 <template>
   <el-scrollbar>
-    <div class="portal-main">
+    <div class="portal-main-mobile">
+      <el-alert :closable="false" title="手机端不支持门户演示" type="error" />
+    </div>
+    <div class="portal-main hidden-xs-only">
       <header>
         <div class="index-nav">
           <div class="logo">
@@ -249,6 +252,12 @@
 <style lang="scss" scoped>
   .portal-main {
     margin-top: -15px;
+
+    &-mobile {
+      height: 100vh;
+      padding: var(--el-padding);
+      background: var(--el-color-white);
+    }
 
     header {
       position: relative;

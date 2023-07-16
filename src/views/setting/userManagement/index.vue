@@ -135,7 +135,7 @@
           await fetchData()
         })
       } else {
-        $baseMessage('未选中任何行', 'error', 'hey')
+        $baseMessage('您未选中任何行', 'warning', 'hey')
       }
     }
   }

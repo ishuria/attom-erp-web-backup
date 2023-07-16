@@ -89,7 +89,7 @@ export default {
         customClass,
         duration: messageDuration,
         dangerouslyUseHTMLString,
-        showClose: true,
+        showClose: false,
         onClose: () => {
           if (callback) callback()
         },

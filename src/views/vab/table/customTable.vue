@@ -156,7 +156,7 @@
           await fetchData()
         })
       } else {
-        $baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
+        $baseMessage('您未选中任何行', 'warning', 'hey')
       }
     }
   }
@@ -182,8 +182,7 @@
           })
         }
       }
-    else
-      $baseMessage('请选择一行进行详情页跳转', 'error', 'vab-hey-message-error')
+    else $baseMessage('您未选中任何行', 'warning', 'hey')
   }
 
   const handleDetail = (row: any) => {
@@ -204,12 +203,7 @@
             timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
           },
         })
-      else
-        $baseMessage(
-          '请选择一行进行详情页跳转',
-          'error',
-          'vab-hey-message-error'
-        )
+      else $baseMessage('您未选中任何行', 'warning', 'hey')
     }
   }
 

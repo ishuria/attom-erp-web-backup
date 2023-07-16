@@ -77,7 +77,7 @@
           await fetchData()
         })
       } else {
-        $baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
+        $baseMessage('您未选中任何行', 'warning', 'hey')
       }
     }
   }
