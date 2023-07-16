@@ -29,7 +29,7 @@
   }
 
   const handleClearNotice = () => {
-    badge.value = undefined
+    badge.value = ''
     notices.value = []
     $baseMessage('清空消息成功', 'success', 'hey')
   }
@@ -45,24 +45,26 @@
         <el-tab-pane :label="translateTitle('通知')" name="notice">
           <div class="notice-list">
             <el-scrollbar>
-              <ul>
+              <ul v-if="badge">
                 <li v-for="(item, index) in notices" :key="index">
                   <el-avatar :size="45" :src="item.image" />
                   <span v-html="item.notice" />
                 </li>
               </ul>
+              <el-empty v-else description="暂无数据" />
             </el-scrollbar>
           </div>
         </el-tab-pane>
         <el-tab-pane :label="translateTitle('邮件')" name="email">
           <div class="notice-list">
             <el-scrollbar>
-              <ul>
+              <ul v-if="badge">
                 <li v-for="(item, index) in notices" :key="index">
                   <el-avatar :size="45" :src="item.image" />
                   <span>{{ item.email }}</span>
                 </li>
               </ul>
+              <el-empty v-else description="暂无数据" />
             </el-scrollbar>
           </div>
         </el-tab-pane>
@@ -85,7 +87,7 @@
   }
 
   .notice-list {
-    height: 29vh;
+    height: 24vh;
 
     ul {
       padding: 0 15px 0 0;
