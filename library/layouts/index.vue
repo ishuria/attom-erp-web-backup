@@ -1,17 +1,19 @@
 <template>
-  <div class="vue-shop-vite-box" :class="{ mobile }">
-    <component
-      :is="'vab-layout-' + theme.layout"
-      :collapse="collapse"
-      :device="device"
-      :fixed-header="theme.fixedHeader"
-      :show-tabs="theme.showTabs"
-    />
-    <el-backtop target="#app" />
-    <vab-theme-drawer />
-    <vab-theme-setting />
-    <vab-statistics />
-  </div>
+  <el-scrollbar>
+    <div class="vue-shop-vite-box" :class="{ mobile }">
+      <component
+        :is="'vab-layout-' + theme.layout"
+        :collapse="collapse"
+        :device="device"
+        :fixed-header="theme.fixedHeader"
+        :show-tabs="theme.showTabs"
+      />
+      <el-backtop target="#app" />
+      <vab-theme-drawer />
+      <vab-theme-setting />
+      <vab-statistics />
+    </div>
+  </el-scrollbar>
 </template>
 
 <script>

@@ -54,7 +54,6 @@ html {
 
     #app {
       height: 100vh;
-      overflow: auto;
       @include base-scrollbar;
 
       .vab-main {
