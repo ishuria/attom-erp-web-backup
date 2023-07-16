@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar>
+  <el-scrollbar wrap-class="scroll-wrap">
     <div class="vue-shop-vite-box" :class="{ mobile }">
       <component
         :is="'vab-layout-' + theme.layout"
@@ -8,11 +8,11 @@
         :fixed-header="theme.fixedHeader"
         :show-tabs="theme.showTabs"
       />
-      <el-backtop target="#app" />
-      <vab-theme-drawer />
-      <vab-theme-setting />
-      <vab-statistics />
     </div>
+    <vab-theme-drawer />
+    <vab-theme-setting />
+    <vab-statistics />
+    <el-backtop target="#app .scroll-wrap" />
   </el-scrollbar>
 </template>
 
@@ -75,6 +75,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .el-scrollbar__view.scroll-view {
+    overflow: auto;
+  }
   .vue-shop-vite-box {
     position: relative;
     width: 100%;

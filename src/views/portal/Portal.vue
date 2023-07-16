@@ -59,169 +59,191 @@
   ]
 </script>
 <template>
-  <div class="portal-main">
-    <header>
-      <div class="index-nav">
-        <div class="logo">
-          <a href="/"></a>
+  <el-scrollbar>
+    <div class="portal-main">
+      <header>
+        <div class="index-nav">
+          <div class="logo">
+            <a href="/"></a>
+          </div>
+          <ul class="nav-item">
+            <li>
+              <a href="#/portal">门户页</a>
+            </li>
+            <li>
+              <a href="#/index">管理页</a>
+            </li>
+            <li><a href="#/portal">页面3</a></li>
+            <li><a href="#/portal">页面4</a></li>
+            <li><a href="#/portal">页面5</a></li>
+          </ul>
         </div>
-        <ul class="nav-item">
-          <li>
-            <a href="#/portal">门户页</a>
-          </li>
-          <li>
-            <a href="#/index">管理页</a>
-          </li>
-          <li><a href="#/portal">页面3</a></li>
-          <li><a href="#/portal">页面4</a></li>
-          <li><a href="#/portal">页面5</a></li>
-        </ul>
-      </div>
-    </header>
-    <div class="carousel-background" :style="{ background: background }"></div>
-    <main>
-      <el-row :gutter="0">
-        <el-col :span="6">
-          <div class="left-tab">
-            <el-menu
-              active-text-color="var(--el-color-white)"
-              background-color="#39364d"
-              text-color="var(--el-color-white)"
-            >
-              <el-menu-item
-                index="1"
-                @click="
-                  openWindow('https://vue-admin-beautiful.com/admin-pro>')
-                "
+      </header>
+      <div
+        class="carousel-background"
+        :style="{ background: background }"
+      ></div>
+      <main>
+        <el-row :gutter="0">
+          <el-col :span="6">
+            <div class="left-tab">
+              <el-menu
+                active-text-color="var(--el-color-white)"
+                background-color="#39364d"
+                text-color="var(--el-color-white)"
               >
-                <template #title>Vue Admin Pro：企业级中后台前端框架</template>
-              </el-menu-item>
-              <el-menu-item
-                index="2"
+                <el-menu-item
+                  index="1"
+                  @click="
+                    openWindow('https://vue-admin-beautiful.com/admin-pro>')
+                  "
+                >
+                  <template #title>
+                    Vue Admin Pro：企业级中后台前端框架
+                  </template>
+                </el-menu-item>
+                <el-menu-item
+                  index="2"
+                  @click="
+                    openWindow('https://vue-admin-beautiful.com/admin-plus>')
+                  "
+                >
+                  <template #title>
+                    Vue Admin Plus：企业级中后台前端框架
+                  </template>
+                </el-menu-item>
+                <el-menu-item
+                  index="3"
+                  @click="
+                    openWindow('https://vue-admin-beautiful.com/shop-vite>')
+                  "
+                >
+                  <template #title>Vue Shop Vite：全新一代前端模板</template>
+                </el-menu-item>
+              </el-menu>
+            </div>
+          </el-col>
+          <el-col :span="18">
+            <el-carousel
+              arrow="always"
+              height="420px"
+              :interval="3000"
+              @change="handleChange"
+            >
+              <el-carousel-item
                 @click="
                   openWindow('https://vue-admin-beautiful.com/admin-plus>')
                 "
-              >
-                <template #title>Vue Admin Plus：企业级中后台前端框架</template>
-              </el-menu-item>
-              <el-menu-item
-                index="3"
+              />
+              <el-carousel-item
                 @click="
                   openWindow('https://vue-admin-beautiful.com/shop-vite>')
                 "
-              >
-                <template #title>Vue Shop Vite：全新一代前端模板</template>
-              </el-menu-item>
-            </el-menu>
-          </div>
-        </el-col>
-        <el-col :span="18">
-          <el-carousel
-            arrow="always"
-            height="420px"
-            :interval="3000"
-            @change="handleChange"
-          >
-            <el-carousel-item
-              @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')"
-            />
-            <el-carousel-item
-              @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')"
-            />
-            <el-carousel-item
-              @click="openWindow('https://vue-admin-beautiful.com/admin-pro')"
-            />
-          </el-carousel>
-        </el-col>
-        <el-col :span="24">
-          <div style="background-color: #f5f7fa">
-            <div class="description-box">
-              <el-row>
-                <el-col :span="6">
-                  <div class="show-box">
-                    <div style="float: left">
-                      <h1>
-                        <span class="clip">Vue Shop Vite</span>
-                      </h1>
-                      <p class="text">全新一代的前端模板</p>
+              />
+              <el-carousel-item
+                @click="openWindow('https://vue-admin-beautiful.com/admin-pro')"
+              />
+            </el-carousel>
+          </el-col>
+          <el-col :span="24">
+            <div style="background-color: #f5f7fa">
+              <div class="description-box">
+                <el-row>
+                  <el-col :span="6">
+                    <div class="show-box">
+                      <div style="float: left">
+                        <h1>
+                          <span class="clip">Vue Shop Vite</span>
+                        </h1>
+                        <p class="text">全新一代的前端模板</p>
+                      </div>
                     </div>
-                  </div>
-                  <el-divider direction="vertical" />
-                </el-col>
-                <el-col :span="6">
-                  <div class="show-box">
-                    <div class="system-class-icon" style="background: #20c2dc">
-                      <vab-icon icon="bubble-chart-line" />
+                    <el-divider direction="vertical" />
+                  </el-col>
+                  <el-col :span="6">
+                    <div class="show-box">
+                      <div
+                        class="system-class-icon"
+                        style="background: #20c2dc"
+                      >
+                        <vab-icon icon="bubble-chart-line" />
+                      </div>
+                      <div class="describe">高效 Efficient</div>
                     </div>
-                    <div class="describe">高效 Efficient</div>
-                  </div>
-                  <el-divider direction="vertical" />
-                </el-col>
-                <el-col :span="6">
-                  <div class="show-box">
-                    <div class="system-class-icon" style="background: #f7753f">
-                      <vab-icon icon="medal-fill" />
+                    <el-divider direction="vertical" />
+                  </el-col>
+                  <el-col :span="6">
+                    <div class="show-box">
+                      <div
+                        class="system-class-icon"
+                        style="background: #f7753f"
+                      >
+                        <vab-icon icon="medal-fill" />
+                      </div>
+                      <div class="describe">专业 Major</div>
                     </div>
-                    <div class="describe">专业 Major</div>
-                  </div>
-                  <el-divider direction="vertical" />
-                </el-col>
-                <el-col :span="6">
-                  <div class="show-box">
-                    <div class="system-class-icon" style="background: #6a59f4">
-                      <vab-icon icon="seedling-fill" />
+                    <el-divider direction="vertical" />
+                  </el-col>
+                  <el-col :span="6">
+                    <div class="show-box">
+                      <div
+                        class="system-class-icon"
+                        style="background: #6a59f4"
+                      >
+                        <vab-icon icon="seedling-fill" />
+                      </div>
+                      <div class="describe">美观 Beautiful</div>
                     </div>
-                    <div class="describe">美观 Beautiful</div>
-                  </div>
-                </el-col>
-              </el-row>
+                  </el-col>
+                </el-row>
+              </div>
             </div>
-          </div>
-        </el-col>
-      </el-row>
-    </main>
+          </el-col>
+        </el-row>
+      </main>
 
-    <div
-      style="
-        width: 100%;
-        height: 40px;
-        margin-bottom: 10px;
-        box-shadow: rgb(7 17 27 / 6%) 6px 5px 8px 0;
-      "
-    ></div>
+      <div
+        style="
+          width: 100%;
+          height: 40px;
+          margin-bottom: 10px;
+          box-shadow: rgb(7 17 27 / 6%) 6px 5px 8px 0;
+        "
+      ></div>
 
-    <main style="background: #f5f7fa">
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <div class="news-tit"><h2>今日要闻</h2></div>
-          <el-image class="news-img" :src="banner_1" />
-        </el-col>
-        <el-col :span="16">
-          <div class="news-tit"><h2>动态资讯</h2></div>
-          <icon-list />
-        </el-col>
-      </el-row>
-    </main>
+      <main style="background: #f5f7fa">
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <div class="news-tit"><h2>今日要闻</h2></div>
+            <el-image class="news-img" :src="banner_1" />
+          </el-col>
+          <el-col :span="16">
+            <div class="news-tit"><h2>动态资讯</h2></div>
+            <icon-list />
+          </el-col>
+        </el-row>
+      </main>
 
-    <main style="background: #f5f7fa">
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <div class="news-tit"><h2>工作日程</h2></div>
-          <el-calendar v-model="date" />
-        </el-col>
-        <el-col :span="16">
-          <div class="news-tit"><h2>互动留言</h2></div>
-          <el-table :data="tableData" max-height="355">
-            <el-table-column label="Date" prop="date" />
-            <el-table-column label="Name" prop="name" />
-            <el-table-column label="Address" prop="address" />
-          </el-table>
-        </el-col>
-      </el-row>
-    </main>
+      <main style="background: #f5f7fa">
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <div class="news-tit"><h2>工作日程</h2></div>
+            <el-calendar v-model="date" />
+          </el-col>
+          <el-col :span="16">
+            <div class="news-tit"><h2>互动留言</h2></div>
+            <el-table :data="tableData" max-height="355">
+              <el-table-column label="Date" prop="date" />
+              <el-table-column label="Name" prop="name" />
+              <el-table-column label="Address" prop="address" />
+            </el-table>
+          </el-col>
+        </el-row>
+      </main>
 
-    <vab-footer />
-  </div>
+      <vab-footer />
+    </div>
+  </el-scrollbar>
 </template>
 
 <style lang="scss" scoped>
