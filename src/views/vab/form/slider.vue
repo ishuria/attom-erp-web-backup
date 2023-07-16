@@ -1,3 +1,22 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Slider',
+  })
+  const value1 = ref<any>(0)
+  const value2 = ref<any>(50)
+  const value3 = ref<any>(36)
+  const value4 = ref<any>(48)
+  const value5 = ref<any>(42)
+  const value6 = ref<any>(0)
+  const value7 = ref<any>(0)
+  const value8 = ref<any>([4, 8])
+  const value9 = ref<any>(0)
+
+  const formatTooltip = (value: number) => {
+    return value / 100
+  }
+</script>
+
 <template>
   <div class="slider-container no-background-container">
     <vab-card>
@@ -44,22 +63,3 @@
     </vab-card>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Slider',
-  })
-  const value1 = ref<any>(0)
-  const value2 = ref<any>(50)
-  const value3 = ref<any>(36)
-  const value4 = ref<any>(48)
-  const value5 = ref<any>(42)
-  const value6 = ref<any>(0)
-  const value7 = ref<any>(0)
-  const value8 = ref<any>([4, 8])
-  const value9 = ref<any>(0)
-
-  const formatTooltip = (value: number) => {
-    return value / 100
-  }
-</script>

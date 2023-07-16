@@ -1,3 +1,14 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'IconSelector',
+  })
+  const icon = ref<string>('24-hours-fill')
+
+  const handleIcon = (item: string) => {
+    icon.value = item
+  }
+</script>
+
 <template>
   <div class="icon-selector-container">
     <el-popover popper-class="icon-selector-popper" trigger="hover">
@@ -12,14 +23,3 @@
     </el-popover>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'IconSelector',
-  })
-  const icon = ref<string>('24-hours-fill')
-
-  const handleIcon = (item: string) => {
-    icon.value = item
-  }
-</script>

@@ -1,3 +1,17 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'StepForm',
+  })
+
+  const active = ref<any>(0)
+  let form = reactive<any>({})
+
+  const handleSetStep = (_active: any, _form: any) => {
+    active.value = _active
+    if (_form) form = Object.assign(form, _form)
+  }
+</script>
+
 <template>
   <div class="step-form-container">
     <el-row :gutter="20">
@@ -28,20 +42,6 @@
     </el-row>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'StepForm',
-  })
-
-  const active = ref<any>(0)
-  let form = reactive<any>({})
-
-  const handleSetStep = (_active: any, _form: any) => {
-    active.value = _active
-    if (_form) form = Object.assign(form, _form)
-  }
-</script>
 
 <style lang="scss" scoped>
   .step-form-container {

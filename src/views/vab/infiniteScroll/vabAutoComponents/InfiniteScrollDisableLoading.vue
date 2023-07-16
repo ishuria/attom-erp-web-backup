@@ -1,17 +1,3 @@
-<template>
-  <div class="infinite-list-wrapper" style="overflow: auto">
-    <ul
-      v-infinite-scroll="load"
-      class="list"
-      :infinite-scroll-disabled="disabled"
-    >
-      <li v-for="i in count" :key="i" class="list-item">{{ i }}</li>
-    </ul>
-    <p v-if="loading">加载中...</p>
-    <p v-if="noMore">没有更多了</p>
-  </div>
-</template>
-
 <script lang="ts" setup>
   const count = ref<any>(10)
   const loading = ref<boolean>(false)
@@ -25,6 +11,20 @@
     }, 2000)
   }
 </script>
+
+<template>
+  <div class="infinite-list-wrapper" style="overflow: auto">
+    <ul
+      v-infinite-scroll="load"
+      class="list"
+      :infinite-scroll-disabled="disabled"
+    >
+      <li v-for="i in count" :key="i" class="list-item">{{ i }}</li>
+    </ul>
+    <p v-if="loading">加载中...</p>
+    <p v-if="noMore">没有更多了</p>
+  </div>
+</template>
 
 <style>
   .infinite-list-wrapper {

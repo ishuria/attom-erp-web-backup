@@ -1,3 +1,15 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'DateTimePicker',
+  })
+  const value1 = ref<string>('')
+  const value2 = ref<any>([
+    new Date(2000, 10, 10, 10, 10),
+    new Date(2000, 10, 11, 10, 10),
+  ])
+  const value3 = ref<string>('')
+</script>
+
 <template>
   <div class="date-time-picker-container no-background-container">
     <vab-card>
@@ -36,15 +48,3 @@
     </vab-card>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'DateTimePicker',
-  })
-  const value1 = ref<string>('')
-  const value2 = ref<any>([
-    new Date(2000, 10, 10, 10, 10),
-    new Date(2000, 10, 11, 10, 10),
-  ])
-  const value3 = ref<string>('')
-</script>

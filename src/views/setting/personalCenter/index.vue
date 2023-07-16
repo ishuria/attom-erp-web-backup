@@ -1,3 +1,57 @@
+<script lang="ts" setup>
+  import { useUserStore } from '/@/store/modules/user'
+
+  defineOptions({
+    name: 'PersonalCenter',
+  })
+
+  const $baseMessage = inject<any>('$baseMessage')
+
+  const userStore = useUserStore()
+  const { avatar } = storeToRefs(userStore)
+
+  const _description = decodeURI(
+    '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
+  )
+
+  const activeName = ref<string>('first')
+
+  const form = reactive<any>({
+    fullName: 'admin',
+    nickname: 'good luck',
+    sex: 2,
+    description: _description,
+  })
+
+  const inputRef = ref<any>(null)
+  const dynamicTags = ref<any>(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
+  const inputVisible = ref<boolean>(false)
+  const inputValue = ref<string>('')
+
+  const onSubmit = () => {
+    $baseMessage('模拟保存成功', 'success', 'hey')
+  }
+
+  const handleClose = (tag: string) => {
+    dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+  }
+
+  const showInput = () => {
+    inputVisible.value = true
+    nextTick(() => {
+      inputRef.value.focus()
+    })
+  }
+
+  const handleInputConfirm = () => {
+    if (inputValue.value) {
+      dynamicTags.value.push(inputValue.value)
+    }
+    inputVisible.value = false
+    inputValue.value = ''
+  }
+</script>
+
 <template>
   <div class="personal-center-container no-background-container">
     <el-row :gutter="20">
@@ -198,60 +252,6 @@
     </el-row>
   </div>
 </template>
-
-<script lang="ts" setup>
-  import { useUserStore } from '/@/store/modules/user'
-
-  defineOptions({
-    name: 'PersonalCenter',
-  })
-
-  const $baseMessage = inject<any>('$baseMessage')
-
-  const userStore = useUserStore()
-  const { avatar } = storeToRefs(userStore)
-
-  const _description = decodeURI(
-    '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
-  )
-
-  const activeName = ref<string>('first')
-
-  const form = reactive<any>({
-    fullName: 'admin',
-    nickname: 'good luck',
-    sex: 2,
-    description: _description,
-  })
-
-  const inputRef = ref<any>(null)
-  const dynamicTags = ref<any>(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
-  const inputVisible = ref<boolean>(false)
-  const inputValue = ref<string>('')
-
-  const onSubmit = () => {
-    $baseMessage('模拟保存成功', 'success', 'hey')
-  }
-
-  const handleClose = (tag: string) => {
-    dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
-  }
-
-  const showInput = () => {
-    inputVisible.value = true
-    nextTick(() => {
-      inputRef.value.focus()
-    })
-  }
-
-  const handleInputConfirm = () => {
-    if (inputValue.value) {
-      dynamicTags.value.push(inputValue.value)
-    }
-    inputVisible.value = false
-    inputValue.value = ''
-  }
-</script>
 
 <style lang="scss" scoped>
   .personal-center-container {

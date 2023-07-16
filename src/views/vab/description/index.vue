@@ -1,3 +1,17 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Description',
+  })
+  const size = ref<any>('default')
+  const accordion: Ref<boolean> = ref<boolean>(false)
+  const activeName = ref<any>(['1', '2', '3', '4'])
+
+  const handleAccordion = (value: any) => {
+    if (value) activeName.value = '1'
+    else activeName.value = ['1', '2', '3', '4']
+  }
+</script>
+
 <template>
   <div class="description-container no-background-container">
     <vab-card>
@@ -154,20 +168,6 @@
     </vab-card>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Description',
-  })
-  const size = ref<any>('default')
-  const accordion: Ref<boolean> = ref<boolean>(false)
-  const activeName = ref<any>(['1', '2', '3', '4'])
-
-  const handleAccordion = (value: any) => {
-    if (value) activeName.value = '1'
-    else activeName.value = ['1', '2', '3', '4']
-  }
-</script>
 
 <style lang="scss" scoped>
   .description-container {

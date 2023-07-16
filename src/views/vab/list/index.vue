@@ -1,3 +1,53 @@
+<script lang="ts" setup>
+  import { getList } from '/@/api/table'
+  import { Search } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'List',
+  })
+
+  const list = ref<any>([])
+  const total = ref<any>(0)
+  const queryForm = reactive<any>({
+    pageNo: 1,
+    pageSize: 20,
+    title: '',
+  })
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const listLoading = ref<boolean>(true)
+  const emptyShow = ref<boolean>(true)
+
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+    if (data.total > 0) emptyShow.value = false
+    else emptyShow.value = true
+  }
+
+  const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
+    queryForm.pageSize = value
+    fetchData()
+  }
+
+  const handleCurrentChange = (value: number) => {
+    queryForm.pageNo = value
+    fetchData()
+  }
+
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+
+  onMounted(() => {
+    fetchData()
+  })
+</script>
+
 <template>
   <div class="list-container table-auto-height">
     <vab-query-form>
@@ -65,56 +115,6 @@
     />
   </div>
 </template>
-
-<script lang="ts" setup>
-  import { getList } from '/@/api/table'
-  import { Search } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'List',
-  })
-
-  const list = ref<any>([])
-  const total = ref<any>(0)
-  const queryForm = reactive<any>({
-    pageNo: 1,
-    pageSize: 20,
-    title: '',
-  })
-  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-  const listLoading = ref<boolean>(true)
-  const emptyShow = ref<boolean>(true)
-
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
-    if (data.total > 0) emptyShow.value = false
-    else emptyShow.value = true
-  }
-
-  const handleSizeChange = (value: number) => {
-    queryForm.pageNo = 1
-    queryForm.pageSize = value
-    fetchData()
-  }
-
-  const handleCurrentChange = (value: number) => {
-    queryForm.pageNo = value
-    fetchData()
-  }
-
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
-
-  onMounted(() => {
-    fetchData()
-  })
-</script>
 
 <style lang="scss" scoped>
   .list-container {

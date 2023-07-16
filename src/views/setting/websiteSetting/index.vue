@@ -1,45 +1,3 @@
-<template>
-  <div class="website-setting-container no-background-container">
-    <el-row :gutter="20">
-      <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
-        <vab-card>
-          <template #header>
-            <div>
-              <span>网站设置</span>
-            </div>
-          </template>
-          <el-form
-            ref="formRef"
-            label-width="100px"
-            :model="form"
-            :rules="formRules"
-            @submit="submitForm"
-          >
-            <el-form-item label="网站名称" prop="siteName">
-              <el-input v-model="form.siteName" clearable />
-            </el-form-item>
-            <el-form-item label="网址" prop="siteUrl">
-              <el-input v-model="form.siteUrl" clearable />
-            </el-form-item>
-            <el-form-item label="META关键词" prop="metaKeywords">
-              <el-input v-model="form.metaKeywords" clearable />
-            </el-form-item>
-            <el-form-item label="META描述" prop="metaDesc">
-              <el-input v-model="form.metaDesc" clearable />
-            </el-form-item>
-            <el-form-item label="版权信息" prop="copyright">
-              <el-input v-model="form.copyright" clearable />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitForm">保存</el-button>
-            </el-form-item>
-          </el-form>
-        </vab-card>
-      </el-col>
-    </el-row>
-  </div>
-</template>
-
 <script lang="ts" setup>
   defineOptions({
     name: 'WebsiteSetting',
@@ -86,3 +44,45 @@
     })
   }
 </script>
+
+<template>
+  <div class="website-setting-container no-background-container">
+    <el-row :gutter="20">
+      <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
+        <vab-card>
+          <template #header>
+            <div>
+              <span>网站设置</span>
+            </div>
+          </template>
+          <el-form
+            ref="formRef"
+            label-width="100px"
+            :model="form"
+            :rules="formRules"
+            @submit="submitForm"
+          >
+            <el-form-item label="网站名称" prop="siteName">
+              <el-input v-model="form.siteName" clearable />
+            </el-form-item>
+            <el-form-item label="网址" prop="siteUrl">
+              <el-input v-model="form.siteUrl" clearable />
+            </el-form-item>
+            <el-form-item label="META关键词" prop="metaKeywords">
+              <el-input v-model="form.metaKeywords" clearable />
+            </el-form-item>
+            <el-form-item label="META描述" prop="metaDesc">
+              <el-input v-model="form.metaDesc" clearable />
+            </el-form-item>
+            <el-form-item label="版权信息" prop="copyright">
+              <el-input v-model="form.copyright" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm">保存</el-button>
+            </el-form-item>
+          </el-form>
+        </vab-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>

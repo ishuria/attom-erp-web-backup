@@ -1,3 +1,14 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Switch',
+  })
+
+  const value = ref<boolean>(true)
+  const value1 = ref<boolean>(true)
+  const value2 = ref<boolean>(true)
+  const value3 = ref<boolean>(false)
+</script>
+
 <template>
   <div class="switch-container no-background-container">
     <vab-card>
@@ -6,8 +17,8 @@
       </template>
       <el-switch
         v-model="value"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
+        active-color="var(--el-color-success)"
+        inactive-color="var(--el-color-warning)"
       />
     </vab-card>
     <vab-card>
@@ -29,14 +40,3 @@
     </vab-card>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Switch',
-  })
-
-  const value = ref<boolean>(true)
-  const value1 = ref<boolean>(true)
-  const value2 = ref<boolean>(true)
-  const value3 = ref<boolean>(false)
-</script>

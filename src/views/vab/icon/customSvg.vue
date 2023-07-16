@@ -1,3 +1,9 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'CustomSvg',
+  })
+</script>
+
 <template>
   <div class="custom-svg-container">
     <el-row :gutter="20">
@@ -14,12 +20,6 @@
     </el-row>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'CustomSvg',
-  })
-</script>
 
 <style lang="scss" scoped>
   .custom-svg-container {

@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+  import { ChatLineRound, Male } from '@element-plus/icons-vue'
+</script>
+
 <template>
   <el-row>
     <el-col :span="6">
@@ -30,10 +34,6 @@
     </el-col>
   </el-row>
 </template>
-
-<script lang="ts" setup>
-  import { ChatLineRound, Male } from '@element-plus/icons-vue'
-</script>
 
 <style scoped>
   .el-col {

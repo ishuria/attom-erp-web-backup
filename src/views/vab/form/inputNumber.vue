@@ -1,3 +1,14 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'InputNumber',
+  })
+  const num = ref<any>(1)
+  const num2 = ref<any>(1)
+  const num3 = ref<any>(5)
+  const num4 = ref<any>(1)
+  const num5 = ref<any>(1)
+</script>
+
 <template>
   <div class="input-number-container no-background-container">
     <vab-card>
@@ -37,14 +48,3 @@
     </vab-card>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'InputNumber',
-  })
-  const num = ref<any>(1)
-  const num2 = ref<any>(1)
-  const num3 = ref<any>(5)
-  const num4 = ref<any>(1)
-  const num5 = ref<any>(1)
-</script>

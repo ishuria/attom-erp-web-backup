@@ -1,3 +1,43 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'DatePicker',
+  })
+
+  const disabledDate = (time: any) => {
+    return time.getTime() > Date.now()
+  }
+  const shortcuts = ref<any>([
+    {
+      text: '今天',
+      value: new Date(),
+    },
+    {
+      text: '昨天',
+      value: () => {
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24)
+        return date
+      },
+    },
+    {
+      text: '一周前',
+      value: () => {
+        const date = new Date()
+        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+        return date
+      },
+    },
+  ])
+  const value1 = ref<string>('')
+  const value2 = ref<string>('')
+  const value3 = ref<string>('')
+  const value4 = ref<string>('')
+  const value5 = ref<string>('')
+  const value6 = ref<string>('')
+  const value7 = ref<string>('')
+  const value8 = ref<string>('')
+</script>
+
 <template>
   <div class="date-picker-container no-background-container">
     <vab-card>
@@ -57,46 +97,6 @@
     </vab-card>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'DatePicker',
-  })
-
-  const disabledDate = (time: any) => {
-    return time.getTime() > Date.now()
-  }
-  const shortcuts = ref<any>([
-    {
-      text: '今天',
-      value: new Date(),
-    },
-    {
-      text: '昨天',
-      value: () => {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24)
-        return date
-      },
-    },
-    {
-      text: '一周前',
-      value: () => {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-        return date
-      },
-    },
-  ])
-  const value1 = ref<string>('')
-  const value2 = ref<string>('')
-  const value3 = ref<string>('')
-  const value4 = ref<string>('')
-  const value5 = ref<string>('')
-  const value6 = ref<string>('')
-  const value7 = ref<string>('')
-  const value8 = ref<string>('')
-</script>
 
 <style lang="scss" scoped>
   .date-picker-container {

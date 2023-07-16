@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Rate',
+  })
+
+  const value1 = ref<any>(null)
+  const value2 = ref<any>(null)
+  const value3 = ref<any>(3.7)
+</script>
+
 <template>
   <div class="rate-container no-background-container">
     <vab-card>
@@ -26,13 +36,3 @@
     </vab-card>
   </div>
 </template>
-
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Rate',
-  })
-
-  const value1 = ref<any>(null)
-  const value2 = ref<any>(null)
-  const value3 = ref<any>(3.7)
-</script>
