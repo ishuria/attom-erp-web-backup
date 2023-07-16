@@ -51,40 +51,44 @@
       <template #header>
         <span>动态标题</span>
       </template>
-      <el-button
-        type="primary"
-        @click="handleMeta('DynamicMeta', { title: 'vab-demo' })"
-      >
-        标题变更为 vab-demo
-      </el-button>
-      <el-button
-        type="warning"
-        @click="handleMeta('DynamicMeta', { title: '动态Meta' })"
-      >
-        还原为默认标题
-      </el-button>
+      <el-space wrap>
+        <el-button
+          type="primary"
+          @click="handleMeta('DynamicMeta', { title: 'vab-demo' })"
+        >
+          标题变更为 vab-demo
+        </el-button>
+        <el-button
+          type="warning"
+          @click="handleMeta('DynamicMeta', { title: '动态Meta' })"
+        >
+          还原为默认标题
+        </el-button>
+      </el-space>
     </vab-card>
     <vab-card>
       <template #header>
         <span>动态徽章</span>
       </template>
-      <el-badge style="margin-right: 10px" :value="badge">
-        <el-button type="primary" @click="handleBadge('DynamicMeta')">
-          徽章+ 1
+      <el-space wrap>
+        <el-badge style="margin-right: 10px" :value="badge">
+          <el-button type="primary" @click="handleBadge('DynamicMeta')">
+            徽章+ 1
+          </el-button>
+        </el-badge>
+        <el-button
+          type="danger"
+          @click="resetBadge('DynamicMeta', { badge: '0' })"
+        >
+          徽章清零
         </el-button>
-      </el-badge>
-      <el-button
-        type="danger"
-        @click="resetBadge('DynamicMeta', { badge: '0' })"
-      >
-        徽章清零
-      </el-button>
-      <el-button
-        type="danger"
-        @click="resetBadge('DynamicMeta', { badge: false })"
-      >
-        移除徽章
-      </el-button>
+        <el-button
+          type="danger"
+          @click="resetBadge('DynamicMeta', { badge: false })"
+        >
+          移除徽章
+        </el-button>
+      </el-space>
     </vab-card>
     <vab-card>
       <template #header>
@@ -109,15 +113,17 @@
       <template #header>
         <span>动态高亮菜单</span>
       </template>
-      <el-button type="primary" @click="handleActiveMenu('/operate/tabs')">
-        修改高亮菜单至多标签组件
-      </el-button>
-      <el-button
-        type="warning"
-        @click="handleActiveMenu('/operate/dynamicMeta')"
-      >
-        还原默认高亮菜单
-      </el-button>
+      <el-space wrap>
+        <el-button type="primary" @click="handleActiveMenu('/operate/tabs')">
+          高亮菜单至多标签
+        </el-button>
+        <el-button
+          type="warning"
+          @click="handleActiveMenu('/operate/dynamicMeta')"
+        >
+          还原默认高亮
+        </el-button>
+      </el-space>
     </vab-card>
   </div>
 </template>

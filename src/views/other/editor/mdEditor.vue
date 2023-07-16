@@ -49,7 +49,7 @@
   .md-editor-container {
     :deep() {
       .v-md-editor {
-        height: calc(var(--el-keep-alive-height) - var(--el-margin));
+        min-height: calc(var(--el-keep-alive-height) - var(--el-margin));
         padding: var(--el-padding);
         background: var(--el-color-white);
         border: 1px solid var(--el-border-color);
@@ -80,7 +80,11 @@
 
           &__editor-wrapper,
           &__preview-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: auto;
             min-height: 100vh;
+            overflow: hidden;
           }
         }
       }

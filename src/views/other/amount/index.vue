@@ -79,7 +79,7 @@
 <template>
   <div class="amount-container no-background-container">
     <el-row :gutter="20">
-      <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
+      <el-col :lg="8" :md="12" :sm="12" :xl="8" :xs="24">
         <vab-card>
           <template #header>
             <div>

@@ -15,7 +15,7 @@
   const queryIcon = ref<any>([])
   const queryForm = reactive<any>({
     pageNo: 1,
-    pageSize: 16,
+    pageSize: 20,
     title: '',
   })
 
@@ -96,6 +96,10 @@
     width: 300px !important;
     .vab-query-form {
       margin-top: calc(var(--el-margin) / 2);
+
+      .el-input__wrapper {
+        width: 220px;
+      }
     }
 
     .el-card__body {

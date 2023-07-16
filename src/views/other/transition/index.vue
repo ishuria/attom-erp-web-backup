@@ -1,10 +1,10 @@
 <template>
   <div class="transition-container">
-    <el-button @click="show = !show">
-      {{ show ? '点击隐藏' : '点击显示' }}
-    </el-button>
     <el-button>
       <el-checkbox v-model="checked" label="循环播放" @change="handleChange" />
+    </el-button>
+    <el-button @click="show = !show">
+      {{ show ? '点击隐藏' : '点击显示' }}
     </el-button>
 
     <div style="display: flex; flex-wrap: wrap; margin-top: 20px">

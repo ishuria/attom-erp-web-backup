@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "2.4.5",
+  "version": "2.5.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -15,7 +15,7 @@
     "lint:stylelint": "stylelint {src,mock,library}/**/*.{vue,css,sass,scss} --fix --cache --cache-location node_modules/.cache/stylelint/",
     "global:install": "npm install -g nrm,cnpm@8.2.0,npm-check-updates",
     "globle:update": "ncu -g",
-    "module:install": "cnpm i",
+    "module:install": "pnpm install",
     "module:update": "ncu -u --reject vite-plugin-mock --registry https://registry.npmmirror.com&&npm run module:install",
     "module:reinstall": "rimraf node_modules&&npm run module:install",
     "git": "start ./git.sh"

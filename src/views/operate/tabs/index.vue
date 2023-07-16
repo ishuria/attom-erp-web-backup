@@ -85,30 +85,16 @@
           <span>标签页操作</span>
         </div>
       </template>
-      <el-button type="primary" @click="closeOthersTabs">
-        <vab-icon icon="close-line" />
-        关闭其他
-      </el-button>
-      <el-button type="primary" @click="closeLeftTabs">
-        <vab-icon icon="arrow-left-line" />
-        关闭左侧
-      </el-button>
-      <el-button type="primary" @click="closeRightTabs">
-        <vab-icon icon="arrow-right-line" />
-        关闭右侧
-      </el-button>
-      <el-button type="primary" @click="closeAllTabs">
-        <vab-icon icon="close-line" />
-        关闭全部
-      </el-button>
-      <el-button type="primary" @click="handleTabRemove(route.path)">
-        <vab-icon icon="close-line" />
-        关闭当前
-      </el-button>
-      <el-button type="primary" @click="handleRefresh">
-        <vab-icon icon="refresh-line" />
-        刷新当前
-      </el-button>
+      <el-space wrap>
+        <el-button type="primary" @click="closeOthersTabs">关闭其他</el-button>
+        <el-button type="primary" @click="closeLeftTabs">关闭左侧</el-button>
+        <el-button type="primary" @click="closeRightTabs">关闭右侧</el-button>
+        <el-button type="primary" @click="closeAllTabs">关闭全部</el-button>
+        <el-button type="primary" @click="handleTabRemove(route.path)">
+          关闭当前
+        </el-button>
+        <el-button type="primary" @click="handleRefresh">刷新当前</el-button>
+      </el-space>
     </vab-card>
     <vab-card>
       <template #header>
@@ -128,23 +114,3 @@
     </vab-card>
   </div>
 </template>
-
-<style lang="scss" scoped>
-  .tabs-container {
-    :deep() {
-      .el-button {
-        margin-right: 10px;
-        margin-bottom: 10px;
-      }
-
-      .el-button + .el-button {
-        margin-right: 10px;
-        margin-left: 0;
-      }
-
-      .el-card__body {
-        padding-bottom: calc(var(--el-padding) / 2);
-      }
-    }
-  }
-</style>
