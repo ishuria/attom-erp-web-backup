@@ -451,14 +451,6 @@
     .custom-table-right-tools {
       display: flex;
       align-items: center;
-
-      :deep() {
-        .el-button {
-          [class*='ri-'] {
-            margin-right: 0;
-          }
-        }
-      }
     }
   }
 </style>

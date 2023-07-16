@@ -115,7 +115,7 @@
         </el-button>
         <el-button type="primary">
           <vab-icon icon="account-box-line" />
-          用户名
+          <span>用户名</span>
         </el-button>
       </el-space>
     </vab-card>
