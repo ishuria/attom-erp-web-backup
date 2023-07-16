@@ -222,7 +222,7 @@ html {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 580px;
+      min-height: calc(var(--el-keep-alive-height) - 250px);
       margin: auto;
     }
 
