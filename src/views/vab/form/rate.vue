@@ -21,7 +21,7 @@
         disabled
         score-template="{value}"
         show-score
-        text-color="#ff9900"
+        text-color="var(--el-color-warning)"
       />
     </vab-card>
   </div>
