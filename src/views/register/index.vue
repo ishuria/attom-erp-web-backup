@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
   import { isPassword, isPhone } from '/@/utils/validate'
   import { register } from '/@/api/user'
   import { useUserStore } from '/@/store/modules/user'

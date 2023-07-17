@@ -2,7 +2,7 @@
   import { round } from 'lodash-es'
   import { color as _color } from '/@/config/'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
 
   defineOptions({
     name: 'VabColorPicker',

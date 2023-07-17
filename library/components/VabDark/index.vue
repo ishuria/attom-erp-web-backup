@@ -2,7 +2,7 @@
   import { Moon, Sunny } from '@element-plus/icons-vue'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useDark, useToggle } from '@vueuse/core'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
 
   defineOptions({
     name: 'VabDark',

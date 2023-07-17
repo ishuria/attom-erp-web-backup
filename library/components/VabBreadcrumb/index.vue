@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
   import { handleMatched } from '/@/utils/routes'
 
   defineOptions({

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useUserStore } from '/@/store/modules/user'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
   import { isPassword } from '/@/utils/validate'
   import { onBeforeRouteLeave } from 'vue-router'
 

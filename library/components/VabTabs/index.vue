@@ -2,7 +2,7 @@
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
   import { handleActivePath, handleTabs } from '/@/utils/routes'
   import { RouteLocationNormalizedLoaded } from 'vue-router'
   import { VabRoute } from '/@/router/types'

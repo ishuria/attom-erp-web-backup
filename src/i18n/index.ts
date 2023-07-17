@@ -5,26 +5,40 @@ import enLocale from 'element-plus/dist/locale/en.mjs'
 import zhLocale from 'element-plus/dist/locale/zh-cn.mjs'
 import en from './en.json'
 
-const messages = {
+export { enLocale, zhLocale }
+
+const messages: Record<LanguageType, any> = {
   en: {
-    ...{
-      vabI18n: en,
-    },
-    ...enLocale,
+    ...en,
   },
-  zh: {
-    ...zhLocale,
-  },
+  zh: {},
 }
 
 function getLanguage() {
   const { getLanguage } = useSettingsStore(pinia)
-  return getLanguage || 'zh'
+  return getLanguage
 }
 
-const i18n = createI18n({
+export const i18n = createI18n({
+  legacy: false,
   locale: getLanguage(),
+  fallbackLocale: 'zh',
   messages,
 })
 
-export default i18n
+export function setupI18n(app: any) {
+  app.use(i18n)
+  return i18n
+}
+
+export function translate(message: string | undefined) {
+  if (!message) {
+    return ''
+  }
+  return (
+    [getLanguage(), 'vabI18n', message].reduce(
+      (o, k) => (o || {})[k],
+      messages as any
+    ) || message
+  )
+}

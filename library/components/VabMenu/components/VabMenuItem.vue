@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { isExternal } from '/@/utils/validate'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
   import { isHashRouterMode } from '/@/config'
 
   defineOptions({

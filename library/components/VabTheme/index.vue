@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
 
   defineOptions({
     name: 'VabTheme',

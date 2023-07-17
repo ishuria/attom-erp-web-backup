@@ -1,13 +1,14 @@
 <script lang="ts" setup>
   import { pwa } from '/@/config'
-  import i18n from '/@/i18n'
+  import { enLocale, zhLocale } from '/@/i18n'
+
+  const { locale: language } = useI18n()
+
+  const locale = computed(() => (language.value === 'en' ? enLocale : zhLocale))
 
   defineOptions({
     name: 'VabApp',
   })
-
-  const locale = toRef(i18n.global, 'locale')
-  const messages = toRef(i18n.global, 'messages')
 </script>
 
 <template>
@@ -15,7 +16,7 @@
     :button="{
       autoInsertSpace: true,
     }"
-    :locale="messages[locale]"
+    :locale="locale"
   >
     <router-view />
     <vab-update v-if="pwa" ref="vabUpdateRef" />

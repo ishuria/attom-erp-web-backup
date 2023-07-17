@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { VabRoute } from '/#/router'
   import { isExternal } from '/@/utils/validate'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
   import {

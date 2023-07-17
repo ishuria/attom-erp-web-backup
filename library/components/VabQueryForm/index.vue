@@ -25,6 +25,9 @@
 
   .vab-query-form {
     :deep() {
+      .el-input {
+        width: 175px;
+      }
       .el-form-item:first-child {
         margin: 0 0 calc(var(--el-margin) / 2) 0 !important;
       }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
 
   defineOptions({
     name: 'VabSubMenu',

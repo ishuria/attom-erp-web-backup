@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
   import { toLoginRoute } from '/@/utils/routes'
-  import { translate } from '/@/utils/i18n'
+  import { translate } from '/@/i18n'
 
   defineOptions({
     name: 'VabAvatar',
