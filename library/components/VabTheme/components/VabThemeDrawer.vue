@@ -287,6 +287,9 @@
         <el-form-item :label="translateTitle('全屏')">
           <el-switch v-model="theme.showFullScreen" />
         </el-form-item>
+        <el-form-item :label="translateTitle('锁屏')">
+          <el-switch v-model="theme.showLock" />
+        </el-form-item>
         <el-form-item :label="translateTitle('页面动画')">
           <el-select v-model="theme.pageTransition">
             <el-option

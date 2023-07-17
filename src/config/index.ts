@@ -57,6 +57,7 @@ export const {
   showFooter,
   showFullScreen,
   showLanguage,
+  showLock,
   showNotice,
   showProgressBar,
   showRefresh,

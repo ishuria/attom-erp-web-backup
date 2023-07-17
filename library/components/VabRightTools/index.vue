@@ -20,6 +20,7 @@
     <vab-color-picker />
     <vab-error-log class="hidden-xs-only" />
     <vab-theme />
+    <vab-lock />
     <vab-notice />
     <vab-language />
     <vab-full-screen />

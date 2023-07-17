@@ -28,7 +28,7 @@ html > body.vab-theme-technology {
   --el-fill-color-lighter: #{mix($base-color-white, #103171, 20%)};
   --el-fill-color-extra-light: #{mix($base-color-white, #103171, 10%)};
   --el-fill-color-blank: #{mix($base-color-white, #103171, 1%)};
-  --el-mask-color: #040d32;
+  --el-mask-color: rgba(16, 49, 113, 0.6);
 
   --w-e-textarea-bg-color: #2c6191;
   --w-e-textarea-color: #fff;

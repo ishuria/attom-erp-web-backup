@@ -143,4 +143,6 @@ declare interface ThemeType {
   pageTransition: pageTransitionStyle
   // 圆角
   radius: number
+  // 是否开启锁屏
+  showLock: boolean
 }

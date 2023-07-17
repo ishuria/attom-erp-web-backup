@@ -103,6 +103,7 @@ declare module 'vue' {
     VabIconSelector: typeof import('./../../../src/plugins/VabIconSelector/index.vue')['default']
     VabLanguage: typeof import('./../../components/VabLanguage/index.vue')['default']
     VabLink: typeof import('./../../components/VabLink/index.vue')['default']
+    VabLock: typeof import('./../../components/VabLock/index.vue')['default']
     VabLogo: typeof import('./../../components/VabLogo/index.vue')['default']
     VabMenu: typeof import('./../../components/VabMenu/index.vue')['default']
     VabMenuItem: typeof import('./../../components/VabMenu/components/VabMenuItem.vue')['default']

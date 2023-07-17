@@ -69,4 +69,6 @@
     100vh - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 2 -
       var(--el-footer-height)
   );
+
+  --el-mask-color: rgba(255, 255, 255, 0.6);
 }

@@ -46,4 +46,6 @@ export const themeConfig: ThemeType = {
   pageTransition: '',
   // 圆角（单位px，类型必须为数字）
   radius: 5,
+  // 是否开启锁屏
+  showLock: true,
 }

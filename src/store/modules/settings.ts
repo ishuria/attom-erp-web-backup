@@ -17,6 +17,7 @@ import {
   showFooter,
   showFullScreen,
   showLanguage,
+  showLock,
   showNotice,
   showProgressBar,
   showRefresh,
@@ -43,6 +44,7 @@ const defaultTheme: ThemeType = {
   showFooter,
   showFullScreen,
   showLanguage,
+  showLock,
   showNotice,
   showProgressBar,
   showRefresh,
@@ -68,6 +70,7 @@ const theme = { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
 }
 const { collapse = foldSidebar } = getLocalStorage('collapse')
 const { language = i18n } = getLocalStorage('language')
+const { lock = false } = getLocalStorage('lock')
 const { logo = _logo } = getLocalStorage('logo')
 const { title = _title } = getLocalStorage('title')
 
@@ -78,6 +81,7 @@ export const useSettingsStore = defineStore('settings', {
     collapse,
     color: getLocalStorage('color').color || color,
     language,
+    lock,
     logo,
     title,
   }),
@@ -86,6 +90,7 @@ export const useSettingsStore = defineStore('settings', {
     getDevice: (state) => state.device,
     getCollapse: (state) => state.collapse,
     getColor: (state) => state.color,
+    getLock: (state) => state.lock,
     getLanguage: (state) => state.language,
     getLogo: (state) => state.logo,
     getTitle: (state) => state.title,
@@ -158,6 +163,12 @@ export const useSettingsStore = defineStore('settings', {
     },
     changeLanguage(language: string) {
       this.updateState({ language })
+    },
+    handleLock() {
+      this.updateState({ lock: true })
+    },
+    handleUnLock() {
+      this.updateState({ lock: false })
     },
     changeLogo(logo: string) {
       this.updateState({ logo })
