@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabRefresh',
@@ -21,7 +21,7 @@
 </script>
 
 <template>
-  <el-tooltip :content="translateTitle('刷新')">
+  <el-tooltip :content="translate('刷新')">
     <vab-icon
       v-if="theme.showRefresh"
       :class="className"

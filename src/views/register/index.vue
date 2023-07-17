@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
   import { isPassword, isPhone } from '/@/utils/validate'
   import { register } from '/@/api/user'
   import { useUserStore } from '/@/store/modules/user'
@@ -21,17 +21,16 @@
   leftImg.value = img
 
   const validateUsername = (rule: any, value: any, callback: any) => {
-    if ('' === value) callback(new Error(translateTitle('用户名不能为空')))
+    if ('' === value) callback(new Error(translate('用户名不能为空')))
     else callback()
   }
   const validatePassword = (rule: any, value: any, callback: any) => {
-    if (!isPassword(value))
-      callback(new Error(translateTitle('密码不能少于6位')))
+    if (!isPassword(value)) callback(new Error(translate('密码不能少于6位')))
     else callback()
   }
   const validatePhone = (rule: any, value: any, callback: any) => {
     if (!isPhone(value)) {
-      callback(new Error(translateTitle('请输入正确的手机号')))
+      callback(new Error(translate('请输入正确的手机号')))
     } else {
       callback()
     }
@@ -40,7 +39,7 @@
   const formRef = ref<any>(null)
   const isGetPhone = ref<boolean>(false)
   const getPhoneInterval = ref<any>(null)
-  const phoneCode = ref<any>(translateTitle('获取验证码'))
+  const phoneCode = ref<any>(translate('获取验证码'))
   const form = reactive<any>({
     username: '',
     password: '',
@@ -52,7 +51,7 @@
       {
         required: true,
         trigger: 'blur',
-        message: translateTitle('请输入用户名'),
+        message: translate('请输入用户名'),
       },
       { validator: validateUsername, trigger: 'blur' },
     ],
@@ -60,7 +59,7 @@
       {
         required: true,
         trigger: 'blur',
-        message: translateTitle('请输入手机号'),
+        message: translate('请输入手机号'),
       },
       { validator: validatePhone, trigger: 'blur' },
     ],
@@ -68,7 +67,7 @@
       {
         required: true,
         trigger: 'blur',
-        message: translateTitle('请输入密码'),
+        message: translate('请输入密码'),
       },
       { validator: validatePassword, trigger: 'blur' },
     ],
@@ -76,7 +75,7 @@
       {
         required: true,
         trigger: 'blur',
-        message: translateTitle('请输入手机验证码'),
+        message: translate('请输入手机验证码'),
       },
     ],
   })
@@ -91,10 +90,10 @@
     getPhoneInterval.value = setInterval(() => {
       if (n > 0) {
         n--
-        phoneCode.value = `${translateTitle('获取验证码 ') + n}s`
+        phoneCode.value = `${translate('获取验证码 ') + n}s`
       } else {
         clearInterval(getPhoneInterval.value)
-        phoneCode.value = translateTitle('获取验证码')
+        phoneCode.value = translate('获取验证码')
         getPhoneInterval.value = null
         isGetPhone.value = false
       }
@@ -137,14 +136,14 @@
         @submit.prevent
       >
         <div class="title">hello !</div>
-        <div class="title-tips">{{ translateTitle('账号注册') }}</div>
+        <div class="title-tips">{{ translate('账号注册') }}</div>
         <el-form-item prop="username">
           <el-input
             v-model.trim="form.username"
             v-focus
             auto-complete="off"
             clearable
-            :placeholder="translateTitle('请输入用户名')"
+            :placeholder="translate('请输入用户名')"
             type="text"
           >
             <template #prefix>
@@ -157,7 +156,7 @@
             v-model.trim="form.phone"
             clearable
             maxlength="11"
-            :placeholder="translateTitle('请输入手机号')"
+            :placeholder="translate('请输入手机号')"
             show-word-limit
             type="text"
           >
@@ -169,7 +168,7 @@
         <el-form-item prop="phoneCode" style="position: relative">
           <el-input
             v-model.trim="form.phoneCode"
-            :placeholder="translateTitle('请输入手机验证码')"
+            :placeholder="translate('请输入手机验证码')"
             type="text"
           >
             <template #prefix>
@@ -190,7 +189,7 @@
             v-model.trim="form.password"
             autocomplete="new-password"
             clearable
-            :placeholder="translateTitle('请输入密码')"
+            :placeholder="translate('请输入密码')"
             type="password"
           >
             <template #prefix>
@@ -204,14 +203,14 @@
           type="primary"
           @click.prevent="handleRegister"
         >
-          {{ translateTitle('注册') }}
+          {{ translate('注册') }}
         </el-button>
         <router-link to="/login">
           <el-button
             style="margin-top: 20px; margin-left: -10px"
             type="primary"
           >
-            {{ translateTitle('登录') }}
+            {{ translate('登录') }}
           </el-button>
         </router-link>
       </el-form>

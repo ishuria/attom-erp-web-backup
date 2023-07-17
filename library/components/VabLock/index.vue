@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabLock',
@@ -52,7 +52,7 @@
 </script>
 
 <template>
-  <el-tooltip :content="translateTitle('锁屏')">
+  <el-tooltip :content="translate('锁屏')">
     <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
   </el-tooltip>
 
@@ -72,7 +72,7 @@
         <div class="vab-screen-lock-content-title">
           <el-avatar :size="180" :src="avatar" />
           <vab-icon icon="lock-line" />
-          {{ title }} {{ translateTitle('屏幕已锁定') }}
+          {{ title }} {{ translate('屏幕已锁定') }}
         </div>
         <div class="vab-screen-lock-content-form">
           <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
@@ -81,7 +81,7 @@
                 v-model="form.password"
                 v-focus
                 autocomplete="off"
-                :placeholder="translateTitle('请输入密码123456')"
+                :placeholder="translate('请输入密码123456')"
                 type="password"
               >
                 <template #suffix>
@@ -91,14 +91,14 @@
                     @click="handleUnLock"
                   >
                     <vab-icon icon="lock-line" />
-                    <span>{{ translateTitle('解锁') }}</span>
+                    <span>{{ translate('解锁') }}</span>
                   </el-button>
                 </template>
               </el-input>
             </el-form-item>
           </el-form>
         </div>
-        <span @click="randomBackground">{{ translateTitle('切换壁纸') }}</span>
+        <span @click="randomBackground">{{ translate('切换壁纸') }}</span>
       </div>
     </div>
   </transition>

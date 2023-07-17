@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
@@ -131,16 +131,16 @@
     class="vab-drawer"
     direction="rtl"
     size="288px"
-    :title="translateTitle('主题配置')"
+    :title="translate('主题配置')"
   >
     <el-scrollbar height="85vh">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
           <template #label>
-            {{ translateTitle('布局') }}
+            {{ translate('布局') }}
             <el-tooltip
               :content="
-                translateTitle(
+                translate(
                   '布局配置仅' +
                     '在电脑视窗下生效，手机视窗时将' +
                     '默认锁定为纵向布局'
@@ -166,21 +166,21 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="translateTitle('主题')">
+        <el-form-item :label="translate('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
             <el-radio-button
               v-for="item in themeNameList"
               :key="item.label"
               :label="item.label"
             >
-              <template #default>{{ translateTitle(item.title) }}</template>
+              <template #default>{{ translate(item.title) }}</template>
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="translateTitle('配色')">
+        <el-form-item :label="translate('配色')">
           <vab-color-picker />
         </el-form-item>
-        <el-form-item :label="translateTitle('菜单宽度')">
+        <el-form-item :label="translate('菜单宽度')">
           <el-select
             v-model="theme.menuWidth"
             :disabled="theme.layout === 'horizontal'"
@@ -194,10 +194,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item :label="translateTitle('页脚')">
+        <el-form-item :label="translate('页脚')">
           <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
         </el-form-item>
-        <el-form-item :label="translateTitle('圆角')">
+        <el-form-item :label="translate('圆角')">
           <el-input-number
             v-model="theme.radius"
             :max="26"
@@ -205,13 +205,13 @@
             @change="handleRadius"
           />
         </el-form-item>
-        <el-form-item :label="translateTitle('标签')">
+        <el-form-item :label="translate('标签')">
           <el-switch v-model="theme.showTabs" @change="handleShowTabs" />
         </el-form-item>
         <el-form-item>
           <template #label>
-            {{ translateTitle('标签图标') }}
-            <el-tooltip :content="translateTitle('标签开启时生效')">
+            {{ translate('标签图标') }}
+            <el-tooltip :content="translate('标签开启时生效')">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -219,8 +219,8 @@
         </el-form-item>
         <el-form-item>
           <template #label>
-            {{ translateTitle('标签风格') }}
-            <el-tooltip :content="translateTitle('标签开启时生效')">
+            {{ translate('标签风格') }}
+            <el-tooltip :content="translate('标签开启时生效')">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -228,15 +228,15 @@
             <el-option
               v-for="item in tabsBarStyleList"
               :key="item.value"
-              :label="translateTitle(item.label)"
+              :label="translate(item.label)"
               :value="item.value"
             />
           </el-select>
         </el-form-item>
         <el-form-item>
           <template #label>
-            {{ translateTitle('分栏风格') }}
-            <el-tooltip :content="translateTitle('分栏布局时生效')">
+            {{ translate('分栏风格') }}
+            <el-tooltip :content="translate('分栏布局时生效')">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -247,41 +247,41 @@
             <el-option
               v-for="item in columnStyleList"
               :key="item.value"
-              :label="translateTitle(item.label)"
+              :label="translate(item.label)"
               :value="item.value"
             />
           </el-select>
         </el-form-item>
-        <el-form-item :label="translateTitle('头部固定')">
+        <el-form-item :label="translate('头部固定')">
           <el-switch v-model="theme.fixedHeader" />
         </el-form-item>
-        <el-form-item :label="translateTitle('国际化')">
+        <el-form-item :label="translate('国际化')">
           <el-switch v-model="theme.showLanguage" />
         </el-form-item>
-        <el-form-item :label="translateTitle('进度条')">
+        <el-form-item :label="translate('进度条')">
           <el-switch v-model="theme.showProgressBar" />
         </el-form-item>
-        <el-form-item :label="translateTitle('刷新')">
+        <el-form-item :label="translate('刷新')">
           <el-switch v-model="theme.showRefresh" />
         </el-form-item>
-        <el-form-item :label="translateTitle('搜索')">
+        <el-form-item :label="translate('搜索')">
           <el-switch v-model="theme.showSearch" />
         </el-form-item>
-        <el-form-item :label="translateTitle('通知')">
+        <el-form-item :label="translate('通知')">
           <el-switch v-model="theme.showNotice" />
         </el-form-item>
-        <el-form-item :label="translateTitle('全屏')">
+        <el-form-item :label="translate('全屏')">
           <el-switch v-model="theme.showFullScreen" />
         </el-form-item>
-        <el-form-item :label="translateTitle('锁屏')">
+        <el-form-item :label="translate('锁屏')">
           <el-switch v-model="theme.showLock" />
         </el-form-item>
-        <el-form-item :label="translateTitle('页面动画')">
+        <el-form-item :label="translate('页面动画')">
           <el-select v-model="theme.pageTransition">
             <el-option
               v-for="item in pageTransitionList"
               :key="item.value"
-              :label="translateTitle(item.label)"
+              :label="translate(item.label)"
               :value="item.value"
             />
           </el-select>
@@ -290,10 +290,10 @@
     </el-scrollbar>
     <template #footer>
       <el-button type="primary" @click="handleSaveTheme">
-        {{ translateTitle('保存') }}
+        {{ translate('保存') }}
       </el-button>
       <el-button @click="setDefaultTheme">
-        {{ translateTitle('恢复默认') }}
+        {{ translate('恢复默认') }}
       </el-button>
     </template>
   </el-drawer>

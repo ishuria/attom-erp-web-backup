@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabThemeSetting',
@@ -37,14 +37,14 @@
     <li @click="handleOpenTheme">
       <a>
         <vab-icon icon="t-shirt-line" />
-        <p>{{ translateTitle('主题配置') }}</p>
+        <p>{{ translate('主题配置') }}</p>
       </a>
     </li>
     <li @click="changeTheme('technology')">
       <a>
         <vab-icon icon="user-5-line" />
         <p>
-          {{ translateTitle('科技主题') }}
+          {{ translate('科技主题') }}
         </p>
       </a>
     </li>
@@ -52,7 +52,7 @@
       <a>
         <vab-icon icon="computer-line" />
         <p>
-          {{ translateTitle('简洁主题') }}
+          {{ translate('简洁主题') }}
         </p>
       </a>
     </li>
@@ -60,21 +60,21 @@
       <a>
         <vab-icon icon="arrow-go-back-line" />
         <p>
-          {{ translateTitle('默认主题') }}
+          {{ translate('默认主题') }}
         </p>
       </a>
     </li>
     <li @click="buy">
       <a>
         <vab-icon icon="shopping-cart-2-line" />
-        <p>{{ translateTitle('购买源码') }}</p>
+        <p>{{ translate('购买源码') }}</p>
       </a>
     </li>
     <li @click="removeLocalStorage">
       <a>
         <vab-icon icon="delete-bin-4-line" />
         <p>
-          {{ translateTitle('清理缓存') }}
+          {{ translate('清理缓存') }}
         </p>
       </a>
     </li>

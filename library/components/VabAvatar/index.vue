@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
   import { toLoginRoute } from '/@/utils/routes'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabAvatar',
@@ -44,7 +44,7 @@
       <el-dropdown-menu>
         <el-dropdown-item command="logout">
           <vab-icon icon="logout-circle-r-line" />
-          <span>{{ translateTitle('退出登录') }}</span>
+          <span>{{ translate('退出登录') }}</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>

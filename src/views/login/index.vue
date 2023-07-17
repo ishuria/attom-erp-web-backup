@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useUserStore } from '/@/store/modules/user'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
   import { isPassword } from '/@/utils/validate'
   import { onBeforeRouteLeave } from 'vue-router'
 
@@ -24,12 +24,11 @@
   const login = (form: any) => userStore.login(form)
 
   const validateUsername = (rule: any, value: any, callback: any) => {
-    if ('' === value) callback(new Error(translateTitle('用户名不能为空')))
+    if ('' === value) callback(new Error(translate('用户名不能为空')))
     else callback()
   }
   const validatePassword = (rule: any, value: any, callback: any) => {
-    if (!isPassword(value))
-      callback(new Error(translateTitle('密码不能少于6位')))
+    if (!isPassword(value)) callback(new Error(translate('密码不能少于6位')))
     else callback()
   }
 
@@ -128,15 +127,13 @@
         @submit.prevent
       >
         <div class="title">hello !</div>
-        <div class="title-tips">
-          {{ translateTitle('欢迎来到') }}{{ title }}！
-        </div>
+        <div class="title-tips">{{ translate('欢迎来到') }}{{ title }}！</div>
         <el-form-item prop="username">
           <el-input
             v-model.trim="form.username"
             v-focus
             clearable
-            :placeholder="translateTitle('请输入用户名')"
+            :placeholder="translate('请输入用户名')"
             type="text"
           >
             <template #prefix>
@@ -150,7 +147,7 @@
             ref="passwordRef"
             v-model.trim="form.password"
             clearable
-            :placeholder="translateTitle('请输入密码')"
+            :placeholder="translate('请输入密码')"
             :type="passwordType"
             @keyup.enter="handleLogin"
           >
@@ -163,7 +160,7 @@
         <el-form-item prop="verificationCode">
           <el-input
             v-model.trim="form.verificationCode"
-            :placeholder="translateTitle('验证码') + previewText"
+            :placeholder="translate('验证码') + previewText"
             type="text"
           >
             <template #prefix>
@@ -178,14 +175,14 @@
           native-type="submit"
           type="primary"
         >
-          {{ translateTitle('登录') }}
+          {{ translate('登录') }}
         </el-button>
         <router-link to="/register">
           <el-button
             style="margin-top: 20px; margin-left: -10px"
             type="primary"
           >
-            {{ translateTitle('注册') }}
+            {{ translate('注册') }}
           </el-button>
         </router-link>
       </el-form>

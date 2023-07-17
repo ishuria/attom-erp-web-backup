@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabTheme',
@@ -16,7 +16,7 @@
 </script>
 
 <template>
-  <el-tooltip :content="translateTitle('主题配置')">
+  <el-tooltip :content="translate('主题配置')">
     <span v-if="theme.showTheme">
       <vab-icon icon="t-shirt-line" @click="handleOpenTheme" />
     </span>

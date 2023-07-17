@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
   import { handleMatched } from '/@/utils/routes'
 
   defineOptions({
@@ -29,7 +29,7 @@
       :to="handleTo(item.redirect)"
     >
       <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" />
-      <span>{{ translateTitle(item.meta.title) }}</span>
+      <span>{{ translate(item.meta.title) }}</span>
     </el-breadcrumb-item>
   </el-breadcrumb>
 </template>

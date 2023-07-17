@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { VabRoute } from '/#/router'
   import { isExternal } from '/@/utils/validate'
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
   import {
@@ -89,7 +89,7 @@
               :class="{
                 ['vab-column-grid-' + theme.columnStyle]: true,
               }"
-              :title="translateTitle(item.meta.title)"
+              :title="translate(item.meta.title)"
             >
               <div>
                 <vab-icon
@@ -97,14 +97,14 @@
                   :icon="item.meta.icon"
                   :is-custom-svg="item.meta.isCustomSvg"
                 />
-                <span v-if="translateTitle(item.meta.title).length < 4">
-                  {{ translateTitle(item.meta.title) }}
+                <span v-if="translate(item.meta.title).length < 4">
+                  {{ translate(item.meta.title) }}
                 </span>
                 <span
                   v-else
                   style="font-size: var(--el-font-size-small); zoom: 0.88"
                 >
-                  {{ translateTitle(item.meta.title) }}
+                  {{ translate(item.meta.title) }}
                 </span>
               </div>
             </div>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { translateTitle } from '/@/utils/i18n'
+  import { translate } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabSubMenu',
@@ -27,10 +27,10 @@
         v-if="itemOrMenu.meta && itemOrMenu.meta.icon"
         :icon="itemOrMenu.meta.icon"
         :is-custom-svg="itemOrMenu.meta.isCustomSvg"
-        :title="translateTitle(itemOrMenu.meta.title)"
+        :title="translate(itemOrMenu.meta.title)"
       />
-      <span :title="translateTitle(itemOrMenu.meta.title)">
-        {{ translateTitle(itemOrMenu.meta.title) }}
+      <span :title="translate(itemOrMenu.meta.title)">
+        {{ translate(itemOrMenu.meta.title) }}
       </span>
     </template>
     <slot />
