@@ -16,7 +16,7 @@
             <div style="display: inline-flex; align-items: center">
               每日活跃用户
               <el-tooltip
-                content="Number of users who logged into the product in one day"
+                content="一天内登录该产品的用户数"
                 effect="dark"
                 placement="top"
               >

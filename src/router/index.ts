@@ -86,7 +86,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     name: 'Chat',
     component: Layout,
     meta: {
-      title: 'GPT',
+      title: 'Gpt',
       icon: 'chat-1-line',
     },
     children: [
@@ -611,7 +611,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         name: 'PDF',
         component: () => import('/@/views/other/pdf/index.vue'),
         meta: {
-          title: 'PDF',
+          title: 'Pdf',
           guard: ['Admin'],
           icon: 'file-pdf-line',
         },

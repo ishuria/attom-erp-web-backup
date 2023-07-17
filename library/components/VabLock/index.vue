@@ -52,7 +52,10 @@
 </script>
 
 <template>
-  <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
+  <el-tooltip :content="translateTitle('锁屏')">
+    <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
+  </el-tooltip>
+
   <transition v-if="theme.showLock" mode="out-in" name="fade-transform">
     <div v-if="lock" class="vab-screen-lock">
       <div
@@ -78,7 +81,7 @@
                 v-model="form.password"
                 v-focus
                 autocomplete="off"
-                placeholder="请输出密码123456"
+                :placeholder="translateTitle('请输入密码123456')"
                 type="password"
               >
                 <template #suffix>

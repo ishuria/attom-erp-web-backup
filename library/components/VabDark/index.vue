@@ -2,6 +2,7 @@
   import { Moon, Sunny } from '@element-plus/icons-vue'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useDark, useToggle } from '@vueuse/core'
+  import { translateTitle } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabDark',
@@ -83,18 +84,20 @@
 </script>
 
 <template>
-  <el-switch
-    v-if="
-      theme.showDark &&
-      'technology' != theme.themeName &&
-      'plain' != theme.themeName
-    "
-    v-model="value"
-    :active-icon="Sunny"
-    :inactive-icon="Moon"
-    inline-prompt
-    @click="_toggleDark($event)"
-  />
+  <el-tooltip :content="translateTitle(value ? '日间模式' : '暗黑模式')">
+    <el-switch
+      v-if="
+        theme.showDark &&
+        'technology' != theme.themeName &&
+        'plain' != theme.themeName
+      "
+      v-model="value"
+      :active-icon="Sunny"
+      :inactive-icon="Moon"
+      inline-prompt
+      @click="_toggleDark($event)"
+    />
+  </el-tooltip>
 </template>
 
 <style lang="scss">

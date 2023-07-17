@@ -2,6 +2,7 @@
   import { round } from 'lodash-es'
   import { color as _color } from '/@/config/'
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { translateTitle } from '/@/utils/i18n'
 
   defineOptions({
     name: 'VabColorPicker',
@@ -91,14 +92,16 @@
 </script>
 
 <template>
-  <div style="margin-left: var(--el-margin)">
-    <el-color-picker
-      v-model="color"
-      popper-class="vab-color-picker"
-      :predefine="predefineColors"
-      @active-change="handleChange"
-    />
-  </div>
+  <el-tooltip :content="translateTitle('主题色')">
+    <div style="margin-left: var(--el-margin)">
+      <el-color-picker
+        v-model="color"
+        popper-class="vab-color-picker"
+        :predefine="predefineColors"
+        @active-change="handleChange"
+      />
+    </div>
+  </el-tooltip>
 </template>
 
 <style lang="scss">

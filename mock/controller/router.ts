@@ -29,7 +29,7 @@ const list = [
     name: 'Chat',
     component: 'Layout',
     meta: {
-      title: 'GPT',
+      title: 'Gpt',
       icon: 'chat-1-line',
     },
     children: [
@@ -467,7 +467,7 @@ const list = [
         name: 'PDF',
         component: '/@/views/other/pdf/index.vue',
         meta: {
-          title: 'PDF',
+          title: 'Pdf',
           guard: ['Admin'],
           icon: 'file-pdf-line',
         },

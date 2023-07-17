@@ -146,8 +146,6 @@
                     '默认锁定为纵向布局'
                 )
               "
-              effect="dark"
-              placement="top"
             >
               <vab-icon icon="question-line" />
             </el-tooltip>
@@ -213,11 +211,7 @@
         <el-form-item>
           <template #label>
             {{ translateTitle('标签图标') }}
-            <el-tooltip
-              :content="translateTitle('标签开启时生效')"
-              effect="dark"
-              placement="top"
-            >
+            <el-tooltip :content="translateTitle('标签开启时生效')">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -226,11 +220,7 @@
         <el-form-item>
           <template #label>
             {{ translateTitle('标签风格') }}
-            <el-tooltip
-              :content="translateTitle('标签开启时生效')"
-              effect="dark"
-              placement="top"
-            >
+            <el-tooltip :content="translateTitle('标签开启时生效')">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -246,11 +236,7 @@
         <el-form-item>
           <template #label>
             {{ translateTitle('分栏风格') }}
-            <el-tooltip
-              :content="translateTitle('分栏布局时生效')"
-              effect="dark"
-              placement="top"
-            >
+            <el-tooltip :content="translateTitle('分栏布局时生效')">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -295,7 +281,7 @@
             <el-option
               v-for="item in pageTransitionList"
               :key="item.value"
-              :label="item.label"
+              :label="translateTitle(item.label)"
               :value="item.value"
             />
           </el-select>
