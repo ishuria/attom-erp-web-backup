@@ -236,6 +236,16 @@ html {
 
     /* el-button按钮 */
     .el-button {
+      border-radius: var(--el-border-radius-base);
+
+      &.is-round {
+        border-radius: var(--el-border-radius-round);
+      }
+
+      &.is-circle {
+        border-radius: var(--el-border-radius-circle);
+      }
+
       [class*='el-icon-'] + span,
       span + [class*='el-icon-'],
       [class*='ri-'] + span,

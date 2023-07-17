@@ -278,10 +278,9 @@
         }
 
         .el-input {
-          input {
-            height: 48px;
-            line-height: 48px;
-          }
+          width: 100%;
+          height: 48px;
+          line-height: 48px;
         }
       }
 
