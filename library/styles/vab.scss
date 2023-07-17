@@ -442,6 +442,8 @@ html {
 
     /* el-pagination分页 */
     .el-pagination {
+      --el-pagination-border-radius: var(--el-border-radius-base);
+
       justify-content: center;
       margin: var(--el-margin) 0 0 0;
       font-weight: normal;
