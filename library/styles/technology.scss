@@ -237,8 +237,10 @@ html > body.vab-theme-technology {
     }
   }
 
-  .el-input.is-disabled .el-input__wrapper {
-    background: #214e85 !important;
+  .el-input.is-disabled {
+    .el-input__wrapper {
+      background: #214e85 !important;
+    }
   }
 
   .vab-header {

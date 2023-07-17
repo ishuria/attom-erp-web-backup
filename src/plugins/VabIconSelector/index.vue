@@ -97,7 +97,7 @@
     .vab-query-form {
       margin-top: calc(var(--el-margin) / 2);
 
-      .el-input__wrapper {
+      .el-input {
         width: 220px;
       }
     }

@@ -44,4 +44,6 @@ export const themeConfig: ThemeType = {
   foldSidebar: false,
   //是否开启页面动画  value为空：无动画、el-fade-in-linear、el-fade-in、el-zoom-in-center、el-zoom-in-top、el-zoom-in-bottom。
   pageTransition: '',
+  // 圆角（单位px，类型必须为数字）
+  radius: 5,
 }

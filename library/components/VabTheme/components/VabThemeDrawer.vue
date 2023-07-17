@@ -63,6 +63,11 @@
     else useCssVar('--el-footer-height', el).value = '58px'
   }
 
+  const handleRadius = (value: any) => {
+    const el = ref<any>(null)
+    useCssVar('--el-border-radius-base', el).value = `${value}px`
+  }
+
   const handleShowTabs = (value: any) => {
     const el = ref<any>(null)
     if (!value) useCssVar('--el-tabs-height', el).value = '0px'
@@ -194,6 +199,14 @@
         <el-form-item :label="translateTitle('页脚')">
           <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
         </el-form-item>
+        <el-form-item :label="translateTitle('圆角')">
+          <el-input-number
+            v-model="theme.radius"
+            :max="26"
+            :min="3"
+            @change="handleRadius"
+          />
+        </el-form-item>
         <el-form-item :label="translateTitle('标签')">
           <el-switch v-model="theme.showTabs" @change="handleShowTabs" />
         </el-form-item>
@@ -311,10 +324,6 @@
         height: calc(100vh - 80px);
         padding-right: var(--el-padding);
 
-        .el-divider--horizontal {
-          margin: calc(var(--el-margin) * 2) 0 calc(var(--el-margin) * 2) 0;
-        }
-
         .el-form-item {
           display: flex;
           align-items: center;
@@ -366,6 +375,8 @@
 
                   .el-radio-button__original-radio:checked
                     + .el-radio-button__inner {
+                    background: transparent;
+
                     .vab-icon {
                       box-shadow: 0 0 2px 2px var(--el-color-primary);
                     }
@@ -401,8 +412,9 @@
             }
           }
 
-          .el-input__wrapper {
-            width: 95px;
+          .el-input,
+          .el-input-number {
+            width: 105px;
           }
         }
       }

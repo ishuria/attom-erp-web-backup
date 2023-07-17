@@ -141,4 +141,6 @@ declare interface ThemeType {
   showDark: boolean
   // 是否开启页面动画
   pageTransition: pageTransitionStyle
+  // 圆角
+  radius: number
 }

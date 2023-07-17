@@ -20,10 +20,6 @@
     badge.value = data.total === 0 ? undefined : data.total
   }
 
-  nextTick(() => {
-    if (theme.value.showNotice) fetchData()
-  })
-
   const handleClick = () => {
     fetchData()
   }
@@ -33,13 +29,17 @@
     notices.value = []
     $baseMessage('清空消息成功', 'success', 'hey')
   }
+
+  onMounted(() => {
+    if (theme.value.showNotice) fetchData()
+  })
 </script>
 
 <template>
   <el-badge v-if="theme.showNotice" type="danger" :value="badge">
     <el-popover placement="bottom" trigger="hover" :width="305">
       <template #reference>
-        <vab-icon icon="notification-line" />
+        <vab-icon icon="notification-2-line" />
       </template>
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane :label="translateTitle('通知')" name="notice">

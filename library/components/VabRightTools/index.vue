@@ -18,11 +18,11 @@
       :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }"
     />
     <vab-color-picker />
-    <vab-theme />
     <vab-error-log class="hidden-xs-only" />
+    <vab-theme />
     <vab-notice />
-    <vab-full-screen />
     <vab-language />
+    <vab-full-screen />
     <vab-refresh />
     <vab-avatar />
   </div>

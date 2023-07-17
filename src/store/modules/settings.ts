@@ -12,6 +12,7 @@ import {
   logo as _logo,
   menuWidth,
   pageTransition,
+  radius,
   showDark,
   showFooter,
   showFullScreen,
@@ -37,6 +38,7 @@ const defaultTheme: ThemeType = {
   layout,
   menuWidth,
   pageTransition,
+  radius,
   showDark,
   showFooter,
   showFullScreen,
@@ -132,6 +134,14 @@ export const useSettingsStore = defineStore('settings', {
       if (!this.theme.showFooter)
         useCssVar('--el-footer-height', el).value = '0px'
       else useCssVar('--el-footer-height', el).value = '58px'
+
+      if (this.theme.radius)
+        useCssVar(
+          '--el-border-radius-base',
+          el
+        ).value = `${this.theme.radius}px`
+      else
+        useCssVar('--el-left-menu-width', el).value = `${this.theme.radius}px`
     },
     toggleCollapse() {
       this.collapse = !this.collapse

@@ -159,15 +159,6 @@
               border: 0;
             }
           }
-
-          .vab-search-autocomplete {
-            margin-left: 20px;
-
-            .el-input__wrapper {
-              background-color: transparent;
-              border-radius: 15px;
-            }
-          }
         }
       }
     }

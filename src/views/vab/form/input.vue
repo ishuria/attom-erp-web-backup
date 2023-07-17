@@ -120,7 +120,7 @@
     :deep() {
       .el-select {
         .el-input__wrapper {
-          width: 100px;
+          width: 80px;
         }
       }
     }
