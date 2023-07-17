@@ -74,6 +74,7 @@
       display: flex;
       align-content: center;
       align-items: center;
+      width: max-content;
       height: 40px;
       margin-left: 6px;
       line-height: 40px;
