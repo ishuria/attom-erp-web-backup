@@ -8,7 +8,7 @@ export const { mock, Random } = mockjs
  */
 function handleRandomImage() {
   return (
-    'https://fastly.jsdelivr.net/gh/' +
+    'https://cdn.jsdelivr.net/gh/' +
     'chuzh' +
     'ixin/image' +
     `/table/vab-image-${Random.integer(1, 38)}.jpg`

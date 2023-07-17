@@ -7,7 +7,7 @@ vab
   })
 
   const source = ref<any>(
-    'https://fastly.jsdelivr.net/gh/' + 'chuzh' + 'ixin/image' + `/demo.pdf`
+    'https://cdn.jsdelivr.net/gh/chuzhixin/image/demo.pdf'
   )
 </script>
 

@@ -12,7 +12,7 @@
   const settingsStore = useSettingsStore()
   const { theme, lock, title } = storeToRefs(settingsStore)
   const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
-  const url = 'https://fastly.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
+  const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
 
   const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
   const randomBackground = () => {
@@ -130,7 +130,8 @@
 
     &-content {
       z-index: $base-z-index;
-      padding: 40px 95px 40px 95px;
+      width: 400px;
+      padding: 40px 55px 40px 55px;
       color: var(--el-color-grey);
       text-align: center;
       background: var(--el-mask-color);
@@ -161,7 +162,7 @@
         :deep() {
           .el-input {
             position: relative;
-            width: 300px;
+            width: 100%;
             height: 40px;
             line-height: 40px;
 
@@ -190,7 +191,7 @@
 
     @media (max-width: 576px) {
       .vab-screen-lock-content {
-        width: auto !important;
+        width: 100% !important;
         margin: 5vw;
       }
     }

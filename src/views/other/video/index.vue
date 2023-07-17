@@ -6,10 +6,7 @@
   const route = useRoute()
   const isLeft = usePageLeave()
   const configMp4 = reactive<any>({
-    url:
-      'https://fastly.jsdel' +
-      'ivr.net/gh/chuz' +
-      'hixin/videos@master/video.mp4',
+    url: 'https://cdn.jsdelivr.net/gh/chuz' + 'hixin/videos@master/video.mp4',
     id: 'mse',
     lang: 'zh',
     volume: 0,

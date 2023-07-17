@@ -10,7 +10,7 @@
 
   const markdownContent = ref<any>(`
 <div align="center">
-  <img width="200" src="https://fastly.jsdelivr.net/gh/chuzhixin/image/logo/vab.png"/>
+  <img width="200" src="https://cdn.jsdelivr.net/gh/chuzhixin/image/logo/vab.png"/>
   <h1> vue-admin-better
     <img width="100" src="https://img.shields.io/github/stars/chuzhixin/vue-admin-beautiful?style=flat-square&logo=GitHub"/>
   </h1>

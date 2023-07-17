@@ -14,13 +14,7 @@
     </el-button>
     <img
       ref="imageRef"
-      :src="
-        'https://fastly.jsdelivr.net/gh/' +
-        'chuzh' +
-        'ixin/image' +
-        '/table/vab-im' +
-        'age-1.jpg'
-      "
+      src="https://cdn.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg"
       style="display: block; width: 520px; margin-top: 15px"
     />
     <br />
