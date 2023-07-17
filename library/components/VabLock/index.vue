@@ -148,6 +148,17 @@
         color: var(--el-color-grey);
         text-align: center;
 
+        :deep() {
+          .el-avatar {
+            width: 150px;
+            height: 150px;
+            img {
+              padding: 30px;
+              cursor: pointer;
+            }
+          }
+        }
+
         .ri-lock-line,
         .ri-lock-unlock-line {
           display: block;
