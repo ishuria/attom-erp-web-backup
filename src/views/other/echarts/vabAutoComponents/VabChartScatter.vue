@@ -1,6 +1,7 @@
 <!-- 散点图 -->
 <script lang="ts" setup>
   import { random } from 'lodash-es'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartScatter',
@@ -12,6 +13,9 @@
       default: '',
     },
   })
+
+  const settingsStore = useSettingsStore()
+  const { color } = storeToRefs(settingsStore)
 
   const option = reactive<any>({
     grid: {
@@ -78,6 +82,14 @@
       [random(1, 20), random(1, 20)],
     ]
   }, 3000)
+
+  watch(
+    color,
+    () => {
+      option.color = [color.value]
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)

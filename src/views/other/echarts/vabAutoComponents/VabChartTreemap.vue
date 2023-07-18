@@ -1,6 +1,7 @@
 <!-- 矩形树图 -->
 <script lang="ts" setup>
   import { random } from 'lodash-es'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartTreemap',
@@ -12,6 +13,9 @@
       default: '',
     },
   })
+
+  const settingsStore = useSettingsStore()
+  const { color } = storeToRefs(settingsStore)
 
   const option = reactive<any>({
     grid: {
@@ -37,22 +41,6 @@
             },
           ],
         },
-        {
-          name: 'nodeB',
-          value: random(0, 10),
-          children: [
-            {
-              name: 'nodeBa',
-              value: random(0, 10),
-              children: [
-                {
-                  name: 'nodeBa1',
-                  value: random(0, 10),
-                },
-              ],
-            },
-          ],
-        },
       ],
     },
   })
@@ -73,24 +61,18 @@
           },
         ],
       },
-      {
-        name: 'nodeB',
-        value: random(0, 10),
-        children: [
-          {
-            name: 'nodeBa',
-            value: random(0, 10),
-            children: [
-              {
-                name: 'nodeBa1',
-                value: random(0, 10),
-              },
-            ],
-          },
-        ],
-      },
     ]
   }, 3000)
+
+  watch(
+    color,
+    () => {
+      setTimeout(() => {
+        option.color = [color.value]
+      })
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)

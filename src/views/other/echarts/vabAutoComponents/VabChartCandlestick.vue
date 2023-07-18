@@ -1,6 +1,7 @@
 <!-- K线图 -->
 <script lang="ts" setup>
   import { random } from 'lodash-es'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartCandlestick',
@@ -12,6 +13,9 @@
       default: '',
     },
   })
+
+  const settingsStore = useSettingsStore()
+  const { color } = storeToRefs(settingsStore)
 
   const option = reactive<any>({
     grid: {
@@ -25,13 +29,19 @@
     },
     yAxis: {},
     series: {
-      type: 'k',
+      type: 'candlestick',
       data: [
         [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
         [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
         [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
         [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
       ],
+      itemStyle: {
+        color: color.value,
+        borderColor: color.value,
+        color0: '#f2637b',
+        borderColor0: '#f2637b',
+      },
     },
   })
 
@@ -43,6 +53,15 @@
       [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
     ]
   }, 3000)
+
+  watch(
+    color,
+    () => {
+      option.series.itemStyle.color = color.value
+      option.series.itemStyle.borderColor = color.value
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)

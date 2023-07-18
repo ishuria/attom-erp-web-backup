@@ -391,7 +391,7 @@
   watch(
     color,
     () => {
-      option.color = [color.value]
+      option.data[0].itemStyle.color = color.value
     },
     { immediate: true }
   )
