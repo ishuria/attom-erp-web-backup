@@ -134,14 +134,14 @@
         <vab-card>
           <template #header>直播推流</template>
           <el-row :gutter="1">
-            <el-col :span="12">
+            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
               <vab-player-hls
                 :config="configHls1"
                 style="background-color: rgba(0, 0, 0, 0.87)"
                 @player="playerInstance1"
               />
             </el-col>
-            <el-col :span="12">
+            <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
               <vab-player-hls
                 :config="configHls2"
                 style="background-color: rgba(0, 0, 0, 0.87)"
@@ -151,14 +151,14 @@
           </el-row>
 
           <el-row :gutter="1">
-            <el-col :span="12">
+            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
               <vab-player-hls
                 :config="configHls3"
                 style="background-color: rgba(0, 0, 0, 0.87)"
                 @player="playerInstance3"
               />
             </el-col>
-            <el-col :span="12">
+            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
               <vab-player-hls
                 :config="configHls4"
                 style="background-color: rgba(0, 0, 0, 0.87)"
@@ -180,6 +180,19 @@
       }
       .el-row:last-child {
         margin-bottom: 0;
+      }
+
+      @media (max-width: 576px) {
+        .el-row {
+          margin-bottom: var(--el-margin);
+          .el-col {
+            margin-bottom: var(--el-margin);
+          }
+
+          .el-col:last-child {
+            margin-bottom: 0;
+          }
+        }
       }
     }
   }
