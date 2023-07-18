@@ -12,6 +12,7 @@ declare module 'vue' {
     AwardGrid: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardGrid.vue')['default']
     AwardSlotMachine: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardSlotMachine.vue')['default']
     AwardWheel: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardWheel.vue')['default']
+    copy: typeof import('./../../components/VabSearch/index copy.vue')['default']
     DefaultTableEdit: typeof import('./../../../src/views/vab/table/vabAutoComponents/DefaultTableEdit.vue')['default']
     DepartmentManagementEdit: typeof import('./../../../src/views/setting/departmentManagement/vabAutoComponents/DepartmentManagementEdit.vue')['default']
     Develop: typeof import('./../../../src/views/index/vabAutoComponents/Develop.vue')['default']
