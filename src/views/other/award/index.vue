@@ -9,31 +9,19 @@
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card>
-          <template #header>
-            <div>
-              <span>大转盘</span>
-            </div>
-          </template>
+          <template #header>大转盘</template>
           <award-wheel />
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card>
-          <template #header>
-            <div>
-              <span>九宫格</span>
-            </div>
-          </template>
+          <template #header>九宫格</template>
           <award-grid />
         </vab-card>
       </el-col>
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card>
-          <template #header>
-            <div>
-              <span>老虎机</span>
-            </div>
-          </template>
+          <template #header>老虎机</template>
           <award-slot-machine />
         </vab-card>
       </el-col>

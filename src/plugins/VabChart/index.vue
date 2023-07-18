@@ -4,7 +4,7 @@
 
 <script>
   import * as echarts from 'echarts'
-  import debounce from 'lodash-es/debounce'
+  import { debounce } from 'lodash-es'
   import theme from './theme/vab-echarts-theme.json'
   import { addListener, removeListener } from 'resize-detector'
 

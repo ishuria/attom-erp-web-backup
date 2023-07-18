@@ -111,6 +111,7 @@ declare module 'vue' {
     VabNotice: typeof import('./../../components/VabNotice/index.vue')['default']
     VabPaneSplit: typeof import('./../../../src/plugins/VabPaneSplit/index.vue')['default']
     VabPlayer: typeof import('./../../../src/plugins/VabPlayer/index.vue')['default']
+    VabPlayerHls: typeof import('./../../../src/plugins/VabPlayer/VabPlayerHls.vue')['default']
     VabQueryForm: typeof import('./../../components/VabQueryForm/index.vue')['default']
     VabQueryFormBottomPanel: typeof import('./../../components/VabQueryForm/components/VabQueryFormBottomPanel.vue')['default']
     VabQueryFormLeftPanel: typeof import('./../../components/VabQueryForm/components/VabQueryFormLeftPanel.vue')['default']

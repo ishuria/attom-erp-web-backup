@@ -45,16 +45,14 @@
       <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
         <vab-card>
           <template #header>
-            <div>
-              <span>密码生成器</span>
-              <el-button
-                class="password-generator-button"
-                type="primary"
-                @click="generatePassword"
-              >
-                生成密码
-              </el-button>
-            </div>
+            密码生成器
+            <el-button
+              class="password-generator-button"
+              type="primary"
+              @click="generatePassword"
+            >
+              生成密码
+            </el-button>
           </template>
           <el-form :model="form">
             <el-form-item label="密码长度">

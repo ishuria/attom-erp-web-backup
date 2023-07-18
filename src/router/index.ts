@@ -563,6 +563,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '视频播放器',
           guard: ['Admin'],
           icon: 'video-line',
+          dot: true,
         },
       },
       {

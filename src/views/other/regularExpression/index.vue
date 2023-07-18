@@ -111,11 +111,7 @@
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card>
-          <template #header>
-            <div>
-              <span>正则表达式</span>
-            </div>
-          </template>
+          <template #header>正则表达式</template>
           <el-form
             ref="formRef"
             label-width="100px"

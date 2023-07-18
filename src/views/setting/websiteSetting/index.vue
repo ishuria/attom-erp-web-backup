@@ -50,11 +50,7 @@
     <el-row :gutter="20">
       <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
         <vab-card>
-          <template #header>
-            <div>
-              <span>网站设置</span>
-            </div>
-          </template>
+          <template #header>网站设置</template>
           <el-form
             ref="formRef"
             label-width="100px"
