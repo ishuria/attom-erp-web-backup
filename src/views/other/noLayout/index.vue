@@ -13,7 +13,7 @@
 
   const goBack = async () => {
     await delVisitedRoute(handleActivePath(route as VabRoute, true))
-    await history.go(-1)
+    await history.back()
   }
 </script>
 

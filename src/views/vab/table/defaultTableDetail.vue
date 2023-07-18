@@ -19,7 +19,7 @@
 
   const goBack = async () => {
     await delVisitedRoute(handleActivePath(route, true))
-    history.go(-1)
+    history.back()
   }
 
   const handleRefreshMainPage = (name: string) => {

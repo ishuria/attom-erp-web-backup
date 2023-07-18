@@ -31,9 +31,6 @@
       if (isExternal(routePath)) {
         window.open(routePath)
         router.push('/redirect')
-        setTimeout(() => {
-          history.back()
-        }, 500)
       } else if (route.path !== routePath)
         isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
     } else {

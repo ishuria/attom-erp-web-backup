@@ -28,9 +28,6 @@
       if (isExternal(tabMenu.value.path)) {
         window.open(tabMenu.value.path)
         router.push('/redirect')
-        setTimeout(() => {
-          history.back()
-        }, 500)
       } else if (openFirstMenu)
         router.push(tabMenu.value.redirect || tabMenu.value)
     })
