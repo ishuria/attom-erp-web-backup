@@ -5,8 +5,8 @@
     name: 'Video',
   })
 
-  const route = useRoute()
-  const isLeft = usePageLeave()
+  // const route = useRoute()
+  // const isLeft = usePageLeave()
   const configMp4 = reactive<any>({
     url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
     id: uniqueId('uuid_mp4_'),
@@ -92,20 +92,28 @@
     _Player4 = Player
   }
 
-  watch(isLeft, (value) => {
-    if (true === value && 'Video' === route.name) {
-      _Player0.pause()
-      _Player1.pause()
-      _Player2.pause()
-      _Player3.pause()
-      _Player4.pause()
-    } else {
-      _Player0.play()
-      _Player1.play()
-      _Player2.play()
-      _Player3.play()
-      _Player4.play()
-    }
+  // watch(isLeft, (value) => {
+  //   if (true === value && 'Video' === route.name) {
+  //     _Player0.pause()
+  //     _Player1.pause()
+  //     _Player2.pause()
+  //     _Player3.pause()
+  //     _Player4.pause()
+  //   } else {
+  //     _Player0.play()
+  //     _Player1.play()
+  //     _Player2.play()
+  //     _Player3.play()
+  //     _Player4.play()
+  //   }
+  // })
+
+  onActivated(() => {
+    _Player0.play()
+    _Player1.play()
+    _Player2.play()
+    _Player3.play()
+    _Player4.play()
   })
 
   onBeforeRouteLeave(() => {
