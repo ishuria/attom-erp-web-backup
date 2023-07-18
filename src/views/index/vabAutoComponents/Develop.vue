@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+  import { graphic } from 'echarts/core'
   import { random } from 'lodash-es'
-  import VabChart from '/@/plugins/VabChart/index.vue'
   import { onBeforeRouteLeave } from 'vue-router'
   import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -43,9 +43,9 @@
         areaStyle: {},
         itemStyle: {
           borderRadius: [0, 5, 5, 0],
-          color: new VabChart.graphic.LinearGradient(0, 0, 1, 0, [
+          color: new graphic.LinearGradient(0, 0, 1, 0, [
             { offset: 0, color: '#74df9f' },
-            { offset: 1, color },
+            { offset: 1, color: color.value },
           ]),
         },
       },
