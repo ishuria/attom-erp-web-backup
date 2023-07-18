@@ -2,6 +2,7 @@
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { Search } from '@element-plus/icons-vue'
+  import { isExternal } from '/@/utils/validate'
 
   defineOptions({
     name: 'VabSearch',
@@ -29,28 +30,40 @@
   })
 
   const loadAll = () => {
-    const values = JSON.parse(JSON.stringify(handleRoutes.value))
-
+    const values = unref(handleRoutes)
     const result: any = []
 
-    const flat = (nodes: any, parentId: any) => {
+    const flat = (nodes: any) => {
       if (!nodes || nodes.length === 0) return []
       nodes.forEach((node: any) => {
         result.push({
           title: node.meta.title,
+          hidden: node.meta.hidden,
           value: node.meta.title,
           link: node.path,
           path: node.path,
           name: node.name,
-          parentId: parentId,
           icon: node.meta.icon,
+          level: !node.meta.icon ? 3 : 0,
         })
-        return flat(node.children, node.path)
+        return flat(node.children)
       })
     }
-    flat(values, 0)
 
-    return result
+    flat(values)
+
+    return result.filter((item: any) => !item.hidden)
+  }
+
+  const isMultipleSlashes = (string: string, number: number) => {
+    const regex = /\//g
+    const match = string.match(regex)
+
+    if (match && match.length === number) {
+      return true
+    } else {
+      return false
+    }
   }
 
   let timeout: NodeJS.Timeout
@@ -73,7 +86,16 @@
   }
 
   const handleSelect: any = (item: any) => {
-    router.push(item)
+    nextTick(() => {
+      if (isExternal(item.path)) {
+        window.open(item.path)
+        setTimeout(() => {
+          router.push('/')
+        }, 500)
+      } else {
+        router.push(item)
+      }
+    })
   }
 
   onMounted(() => {
@@ -92,8 +114,39 @@
     @select="handleSelect"
   >
     <template #default="{ item }">
-      <div v-if="item.parentId != 0">
-        <vab-icon :icon="item.icon || 'donut-chart-line'" />
+      <div v-if="isMultipleSlashes(item.path, 1)">
+        <vab-icon v-if="item.icon" :icon="item.icon" />
+        {{ item.value }}
+      </div>
+      <div
+        v-else-if="item.name === 'Menu11'"
+        style="padding-left: calc(var(--el-padding) * 3)"
+      >
+        <vab-icon v-if="item.icon" :icon="item.icon" />
+        {{ item.value }}
+      </div>
+      <div
+        v-else-if="item.name === 'Menu111'"
+        style="padding-left: calc(var(--el-padding) * 4)"
+      >
+        {{ item.value }}
+      </div>
+      <div
+        v-else-if="item.name === 'Menu1111'"
+        style="padding-left: calc(var(--el-padding) * 5)"
+      >
+        {{ item.value }}
+      </div>
+      <div
+        v-else-if="item.level === 3"
+        style="padding-left: calc(var(--el-padding) * 2)"
+      >
+        <vab-icon v-if="item.icon" :icon="item.icon" />
+        {{ item.value }}
+      </div>
+
+      <div v-else style="padding-left: var(--el-padding)">
+        <vab-icon v-if="item.icon" :icon="item.icon" />
         {{ item.value }}
       </div>
     </template>

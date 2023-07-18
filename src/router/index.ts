@@ -1106,7 +1106,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         component: () => import('/@/views/goods/GoodsManagement.vue'),
         meta: {
           title: '商品管理',
-          icon: 'home-2-line',
+          icon: 'shopping-basket-line',
         },
       },
       {
@@ -1115,7 +1115,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         component: () => import('/@/views/goods/GoodsTag.vue'),
         meta: {
           title: '商品分组',
-          icon: 'home-2-line',
+          icon: 'shopping-basket-2-line',
         },
       },
     ],
