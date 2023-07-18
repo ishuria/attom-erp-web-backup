@@ -86,7 +86,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     name: 'Chat',
     component: Layout,
     meta: {
-      title: 'Gpt',
+      title: 'GPT',
       icon: 'chat-1-line',
     },
     children: [

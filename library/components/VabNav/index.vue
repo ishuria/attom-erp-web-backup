@@ -27,9 +27,10 @@
     nextTick(() => {
       if (isExternal(tabMenu.value.path)) {
         window.open(tabMenu.value.path)
+        router.push('/redirect')
         setTimeout(() => {
-          router.push('/')
-        }, 1000)
+          history.back()
+        }, 500)
       } else if (openFirstMenu)
         router.push(tabMenu.value.redirect || tabMenu.value)
     })

@@ -28,8 +28,13 @@
     const routePath = props.itemOrMenu.path
     const target = props.itemOrMenu.meta.target
     if (target === '_blank') {
-      if (isExternal(routePath)) window.open(routePath)
-      else if (route.path !== routePath)
+      if (isExternal(routePath)) {
+        window.open(routePath)
+        router.push('/redirect')
+        setTimeout(() => {
+          history.back()
+        }, 500)
+      } else if (route.path !== routePath)
         isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
     } else {
       if (isExternal(routePath)) window.location.href = routePath
