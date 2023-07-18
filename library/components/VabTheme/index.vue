@@ -16,7 +16,7 @@
 </script>
 
 <template>
-  <el-tooltip :content="translate('主题配置')">
+  <el-tooltip :content="translate('主题配置')" effect="light">
     <span v-if="theme.showTheme">
       <vab-icon icon="t-shirt-line" @click="handleOpenTheme" />
     </span>

@@ -92,7 +92,7 @@
 </script>
 
 <template>
-  <el-tooltip :content="translate('主题色')">
+  <el-tooltip :content="translate('主题色')" effect="light">
     <div style="margin-left: var(--el-margin)">
       <el-color-picker
         v-model="color"

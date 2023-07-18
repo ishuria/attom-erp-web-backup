@@ -84,7 +84,10 @@
 </script>
 
 <template>
-  <el-tooltip :content="translate(value ? '日间模式' : '暗黑模式')">
+  <el-tooltip
+    :content="translate(value ? '日间模式' : '暗黑模式')"
+    effect="light"
+  >
     <el-switch
       v-if="
         theme.showDark &&

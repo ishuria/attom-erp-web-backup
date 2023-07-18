@@ -1,7 +1,6 @@
 <!-- 旭日图 -->
 <script lang="ts" setup>
   import { random } from 'lodash-es'
-  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabChartSunburst',
@@ -13,9 +12,6 @@
       default: '',
     },
   })
-
-  const settingsStore = useSettingsStore()
-  const { color } = storeToRefs(settingsStore)
 
   const option = reactive<any>({
     grid: {
@@ -387,14 +383,6 @@
       },
     ]
   }, 3000)
-
-  watch(
-    color,
-    () => {
-      option.data[0].itemStyle.color = color.value
-    },
-    { immediate: true }
-  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)

@@ -146,6 +146,7 @@
                     '默认锁定为纵向布局'
                 )
               "
+              effect="light"
             >
               <vab-icon icon="question-line" />
             </el-tooltip>
@@ -211,7 +212,7 @@
         <el-form-item>
           <template #label>
             {{ translate('标签图标') }}
-            <el-tooltip :content="translate('标签开启时生效')">
+            <el-tooltip :content="translate('标签开启时生效')" effect="light">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -220,7 +221,7 @@
         <el-form-item>
           <template #label>
             {{ translate('标签风格') }}
-            <el-tooltip :content="translate('标签开启时生效')">
+            <el-tooltip :content="translate('标签开启时生效')" effect="light">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>
@@ -236,7 +237,7 @@
         <el-form-item>
           <template #label>
             {{ translate('分栏风格') }}
-            <el-tooltip :content="translate('分栏布局时生效')">
+            <el-tooltip :content="translate('分栏布局时生效')" effect="light">
               <vab-icon icon="question-line" />
             </el-tooltip>
           </template>

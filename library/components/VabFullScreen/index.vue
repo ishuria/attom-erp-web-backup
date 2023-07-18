@@ -13,7 +13,10 @@
 
 <template>
   <div>
-    <el-tooltip :content="translate(isFullscreen ? '退出全屏' : '全屏')">
+    <el-tooltip
+      :content="translate(isFullscreen ? '退出全屏' : '全屏')"
+      effect="light"
+    >
       <vab-icon
         v-if="theme.showFullScreen"
         :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"

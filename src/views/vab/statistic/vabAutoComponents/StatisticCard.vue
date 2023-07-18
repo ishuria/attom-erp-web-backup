@@ -15,11 +15,7 @@
           <template #title>
             <div style="display: inline-flex; align-items: center">
               每日活跃用户
-              <el-tooltip
-                content="一天内登录该产品的用户数"
-                effect="dark"
-                placement="top"
-              >
+              <el-tooltip content="一天内登录该产品的用户数" effect="light">
                 <el-icon :size="12" style="margin-left: 4px">
                   <Warning />
                 </el-icon>
@@ -48,7 +44,7 @@
               每月活跃用户
               <el-tooltip
                 content="Number of users who logged into the product in one month"
-                effect="dark"
+                effect="light"
                 placement="top"
               >
                 <el-icon :size="12" style="margin-left: 4px">

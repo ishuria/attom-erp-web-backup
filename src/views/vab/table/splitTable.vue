@@ -396,8 +396,7 @@
               <template #default="{ row }">
                 <el-tooltip
                   :content="row.switch === 0 ? '点击开启' : '点击关闭'"
-                  :enterable="false"
-                  placement="top"
+                  effect="light"
                 >
                   <el-switch v-model="row.switch" />
                 </el-tooltip>
@@ -405,12 +404,7 @@
             </el-table-column>
             <el-table-column align="center" label="状态">
               <template #default="{ row }">
-                <el-tooltip
-                  class="item"
-                  :content="row.status"
-                  effect="dark"
-                  placement="top-start"
-                >
+                <el-tooltip :content="row.status" effect="light">
                   <el-tag :type="statusFilter(row.status)">
                     {{ row.status }}
                   </el-tag>

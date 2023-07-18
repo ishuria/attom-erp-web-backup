@@ -21,7 +21,7 @@
 </script>
 
 <template>
-  <el-tooltip :content="translate('刷新')">
+  <el-tooltip :content="translate('刷新')" effect="light">
     <vab-icon
       v-if="theme.showRefresh"
       :class="className"

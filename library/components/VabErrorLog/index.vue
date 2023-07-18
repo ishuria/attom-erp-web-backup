@@ -43,7 +43,7 @@
       append-to-body
       draggable
       title="shop-vite 异常捕获(温馨提示：错误必须解决)"
-      width="70%"
+      width="60%"
     >
       <el-table border :data="errorLogs">
         <el-table-column label="报错路由">
@@ -58,18 +58,11 @@
             <el-tag type="danger">{{ row.err.message }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="错误详情" width="120">
+        <el-table-column label="操作">
           <template #default="{ row }">
-            <el-popover placement="top-start" trigger="hover">
-              {{ row.err.stack }}
-              <template #reference>
-                <el-button>查看</el-button>
-              </template>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="380">
-          <template #default="{ row }">
+            <el-tooltip :content="row.err.stack" effect="light">
+              <el-button>错误详情</el-button>
+            </el-tooltip>
             <a
               v-for="(item, index) in searchList"
               :key="index"
@@ -91,14 +84,3 @@
     </el-dialog>
   </div>
 </template>
-
-<style lang="scss" scoped>
-  :deep(.el-badge) {
-    .el-button {
-      display: flex;
-      align-items: center;
-      justify-items: center;
-      height: 28px;
-    }
-  }
-</style>

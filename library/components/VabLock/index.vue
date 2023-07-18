@@ -52,7 +52,7 @@
 </script>
 
 <template>
-  <el-tooltip :content="translate('锁屏')">
+  <el-tooltip :content="translate('锁屏')" effect="light">
     <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
   </el-tooltip>
 
