@@ -168,6 +168,7 @@
       immediate: true,
     }
   )
+
   watchEffect(() => {
     if (visible.value) document.body.addEventListener('click', closeMenu)
     else document.body.removeEventListener('click', closeMenu)

@@ -28,16 +28,17 @@
   const handleCreated = (editor: IDomEditor) => {
     editorRef.value = editor
   }
-  onBeforeUnmount(() => {
-    const editor = editorRef.value
-    if (editor == null) return
-    editor.destroy()
-  })
 
   const onSubmit = () => {
     $baseAlert(html.value)
     $baseMessage('模拟保存成功', 'success', 'hey')
   }
+
+  onBeforeUnmount(() => {
+    const editor = editorRef.value
+    if (editor == null) return
+    editor.destroy()
+  })
 </script>
 
 <template>

@@ -37,9 +37,15 @@
     })
   }
 
-  onMounted(() => {
-    value.value = route.name
-  })
+  watch(
+    route,
+    () => {
+      value.value = route.name
+    },
+    {
+      immediate: true,
+    }
+  )
 </script>
 
 <template>
@@ -47,6 +53,7 @@
     v-if="theme.showSearch"
     v-model="value"
     class="vab-search"
+    clearable
     :data="addFieldToTree(routes)"
     filterable
     :prefix-icon="Search"
