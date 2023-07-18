@@ -116,7 +116,7 @@
     _Player4.play()
   })
 
-  onBeforeRouteLeave(() => {
+  onDeactivated(() => {
     _Player0.pause()
     _Player1.pause()
     _Player2.pause()
