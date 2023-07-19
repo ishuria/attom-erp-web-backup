@@ -5,12 +5,14 @@
     class="vab-search"
     clearable
     :data="addFieldToTree(routes)"
+    default-expand-all
     filterable
+    highlight-current
     :prefix-icon="Search"
     @node-click="handleSelect"
   >
     <template #default="{ data }">
-      <vab-icon :icon="data.meta.icon" />
+      <vab-icon v-if="data.meta && data.meta.icon" :icon="data.meta.icon" />
       <span>{{ data.meta.title }}</span>
     </template>
   </el-tree-select>
@@ -40,7 +42,7 @@
       node.label = node.meta.title
       if (node.children && node.children.length) addFieldToTree(node.children)
     })
-    return routes.value
+    return data
   }
 
   const handleSelect = (item: any) => {
@@ -69,11 +71,5 @@
 <style lang="scss" scoped>
   .vab-search {
     margin-right: 20px;
-
-    :deep() {
-      .el-input {
-        width: 150px !important;
-      }
-    }
   }
 </style>

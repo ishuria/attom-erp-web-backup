@@ -184,7 +184,6 @@
       if (valid) {
         alert('submit!')
       } else {
-        // eslint-disable-next-line no-console
         console.log('error submit!!')
       }
     })

@@ -8,6 +8,16 @@ import { gp } from '/@vab/plugins/vab'
 import { getList } from '/@/api/router'
 import { isArray } from '/@/utils/validate'
 
+const filterHidden = (data: any) => {
+  return data.reduce((acc: any, item: any) => {
+    if (item.meta && item.meta.hidden) return acc
+    const newItem = { ...item }
+    if (item.children && item.children.length > 0)
+      newItem.children = filterHidden(item.children)
+    return [...acc, newItem]
+  }, [])
+}
+
 export const useRoutesStore = defineStore('routes', {
   state: (): RoutesModuleType => ({
     tab: {
@@ -69,7 +79,7 @@ export const useRoutesStore = defineStore('routes', {
       // 根据权限和rolesControl过滤路由
       const accessRoutes = filterRoutes([...constantRoutes, ...routes], control)
       // 设置菜单所需路由
-      this.routes = JSON.parse(JSON.stringify(accessRoutes))
+      this.routes = filterHidden(accessRoutes)
       // 根据可访问路由重置Vue Router
       await resetRouter(accessRoutes)
     },
