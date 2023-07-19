@@ -11,7 +11,7 @@
       :closable="false"
       :title="`当前路由模式为：${
         authentication === 'all' ? '后端路由' : '前端路由'
-      } ，是否开启角色权限控制功能：${rolesControl === true ? '是' : '否'}`"
+      } ，是否开启前端角色权限控制：${rolesControl === true ? '是' : '否'}`"
     />
 
     <el-form label-position="top" label-width="140px" :model="form">
