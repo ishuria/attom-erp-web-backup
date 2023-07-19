@@ -27,7 +27,7 @@
           active-text-color="var(--el-menu-color-text)"
           background-color="var(--el-menu-background-color)"
           :default-active="activeMenu.data"
-          menu-trigger="click"
+          menu-trigger="hover"
           mode="horizontal"
           text-color="var(--el-menu-color-text)"
         >
