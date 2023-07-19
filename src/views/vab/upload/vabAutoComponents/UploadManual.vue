@@ -11,6 +11,7 @@
     </template>
   </el-upload>
 </template>
+
 <script lang="ts" setup>
   import type { UploadInstance } from 'element-plus'
 

@@ -1,3 +1,15 @@
+<template>
+  <div class="no-layout-container">
+    <el-page-header content="无框" title="返回上一页" @back="goBack">
+      <template #extra>
+        <vab-full-screen />
+      </template>
+    </el-page-header>
+
+    <el-alert :closable="false" title="无框示例" type="success" />
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { handleActivePath } from '/@/utils/routes'
   import { useTabsStore } from '/@/store/modules/tabs'
@@ -16,18 +28,6 @@
     await history.back()
   }
 </script>
-
-<template>
-  <div class="no-layout-container">
-    <el-page-header content="无框" title="返回上一页" @back="goBack">
-      <template #extra>
-        <vab-full-screen />
-      </template>
-    </el-page-header>
-
-    <el-alert :closable="false" title="无框示例" type="success" />
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .no-layout-container {

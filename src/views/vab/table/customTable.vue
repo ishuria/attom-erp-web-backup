@@ -1,221 +1,3 @@
-<script lang="ts" setup>
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { doDelete, getList } from '/@/api/table'
-  import { handleMatched, handleTabs } from '/@/utils/routes'
-  import VabDraggable from 'vuedraggable'
-  import { Delete, Plus, Search } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'CustomTable',
-  })
-
-  const router = useRouter()
-  const routesStore = useRoutesStore()
-  const { getRoutes: routes } = storeToRefs(routesStore)
-  const tabsStore = useTabsStore()
-  const { changeTabsMeta, addVisitedRoute } = tabsStore
-  const $baseConfirm = inject<any>('$baseConfirm')
-  const $baseMessage = inject<any>('$baseMessage')
-  const tableSortRef = ref<any>(null)
-  const fold = ref<boolean>(true)
-  const editRef = ref<any>(null)
-  const border = ref<boolean>(true)
-  const stripe = ref<boolean>(false)
-  const lineHeight = ref<any>('default')
-  const isFullscreen = ref<boolean>(false)
-  const list = ref<any>([])
-  const listLoading = ref<boolean>(true)
-  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-  const total = ref<any>(0)
-  const selectRows = ref<any>([])
-  const columns = ref<any>([
-    {
-      label: 'id',
-      prop: 'id',
-      sortable: true,
-    },
-    {
-      label: '标题',
-      prop: 'title',
-      sortable: true,
-      disableCheck: true,
-      checked: true,
-    },
-    {
-      label: '图片',
-      prop: 'title',
-    },
-    {
-      label: '作者',
-      prop: 'author',
-      sortable: true,
-      checked: true,
-    },
-    {
-      label: '评级',
-      prop: 'rate',
-      sortable: true,
-      checked: true,
-    },
-    {
-      label: '点击量',
-      prop: 'pageViews',
-      sortable: true,
-      checked: true,
-    },
-    {
-      label: '时间',
-      prop: 'datetime',
-      sortable: true,
-      checked: true,
-    },
-    {
-      label: '描述',
-      prop: 'description',
-      sortable: true,
-    },
-  ])
-  const checkList = ref<any>([])
-  const queryForm = reactive<any>({
-    pageNo: 1,
-    pageSize: 20,
-    title: '',
-  })
-
-  const dragOptions = computed(() => {
-    return {
-      animation: 600,
-      group: 'description',
-    }
-  })
-
-  const finallyColumns = computed(() => {
-    return columns.value.filter((item: any) =>
-      checkList.value.includes(item.label)
-    )
-  })
-
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
-  }
-
-  const handleSizeChange = (value: number) => {
-    queryForm.pageNo = 1
-    queryForm.pageSize = value
-    fetchData()
-  }
-
-  const handleCurrentChange = (value: number) => {
-    queryForm.pageNo = value
-    fetchData()
-  }
-
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
-
-  const clickFullScreen = () => {
-    isFullscreen.value = !isFullscreen.value
-  }
-
-  const setSelectRows = (value: any) => {
-    selectRows.value = value
-  }
-
-  const handleFold = () => {
-    fold.value = !fold.value
-  }
-
-  const handleAdd = () => {
-    editRef.value.showEdit()
-  }
-
-  const handleEdit = (row: any) => {
-    editRef.value.showEdit(row)
-  }
-
-  const handleDelete = (row: any) => {
-    if (row.id) {
-      $baseConfirm('您确定要删除当前项吗', null, async () => {
-        const { msg }: any = await doDelete({ ids: row.id })
-        $baseMessage(msg, 'success', 'vab-hey-message-success')
-        await fetchData()
-      })
-    } else {
-      if (selectRows.value.length > 0) {
-        const ids = selectRows.value.map((item: any) => item.id).join()
-        $baseConfirm('您确定要删除选中项吗', null, async () => {
-          const { msg }: any = await doDelete({ ids: ids })
-          $baseMessage(msg, 'success', 'vab-hey-message-success')
-          await fetchData()
-        })
-      } else {
-        $baseMessage('您未选中任何行', 'warning', 'hey')
-      }
-    }
-  }
-
-  const handleDetailStayTable = async () => {
-    if (selectRows.value.length === 1)
-      for (let i = 0; i < selectRows.value.length; i++) {
-        const matched = handleMatched(
-          routes.value,
-          '/vab/table/defaultTableDetail'
-        )
-        const tab = handleTabs({
-          ...matched[matched.length - 1],
-          query: selectRows.value[i],
-        })
-        if (tab) {
-          await addVisitedRoute(tab)
-          await changeTabsMeta({
-            title: '详情页',
-            meta: {
-              title: `${tab.query.title} 详情页`,
-            },
-          })
-        }
-      }
-    else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
-  }
-
-  const handleDetail = (row: any) => {
-    if (row.id)
-      router.push({
-        path: '/vab/table/defaultTableDetail',
-        query: {
-          ...row,
-          timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
-        },
-      })
-    else {
-      if (selectRows.value.length === 1)
-        router.push({
-          path: '/vab/table/defaultTableDetail',
-          query: {
-            ...selectRows.value[0],
-            timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
-          },
-        })
-      else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
-    }
-  }
-
-  onMounted(() => {
-    columns.value.forEach((item: any) => {
-      if (item.checked) checkList.value.push(item.label)
-    })
-
-    fetchData()
-  })
-</script>
-
 <template>
   <div
     class="custom-table-container table-auto-height"
@@ -445,6 +227,224 @@
     <default-table-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { doDelete, getList } from '/@/api/table'
+  import { handleMatched, handleTabs } from '/@/utils/routes'
+  import VabDraggable from 'vuedraggable'
+  import { Delete, Plus, Search } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'CustomTable',
+  })
+
+  const router = useRouter()
+  const routesStore = useRoutesStore()
+  const { getRoutes: routes } = storeToRefs(routesStore)
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta, addVisitedRoute } = tabsStore
+  const $baseConfirm = inject<any>('$baseConfirm')
+  const $baseMessage = inject<any>('$baseMessage')
+  const tableSortRef = ref<any>(null)
+  const fold = ref<boolean>(true)
+  const editRef = ref<any>(null)
+  const border = ref<boolean>(true)
+  const stripe = ref<boolean>(false)
+  const lineHeight = ref<any>('default')
+  const isFullscreen = ref<boolean>(false)
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+  const total = ref<any>(0)
+  const selectRows = ref<any>([])
+  const columns = ref<any>([
+    {
+      label: 'id',
+      prop: 'id',
+      sortable: true,
+    },
+    {
+      label: '标题',
+      prop: 'title',
+      sortable: true,
+      disableCheck: true,
+      checked: true,
+    },
+    {
+      label: '图片',
+      prop: 'title',
+    },
+    {
+      label: '作者',
+      prop: 'author',
+      sortable: true,
+      checked: true,
+    },
+    {
+      label: '评级',
+      prop: 'rate',
+      sortable: true,
+      checked: true,
+    },
+    {
+      label: '点击量',
+      prop: 'pageViews',
+      sortable: true,
+      checked: true,
+    },
+    {
+      label: '时间',
+      prop: 'datetime',
+      sortable: true,
+      checked: true,
+    },
+    {
+      label: '描述',
+      prop: 'description',
+      sortable: true,
+    },
+  ])
+  const checkList = ref<any>([])
+  const queryForm = reactive<any>({
+    pageNo: 1,
+    pageSize: 20,
+    title: '',
+  })
+
+  const dragOptions = computed(() => {
+    return {
+      animation: 600,
+      group: 'description',
+    }
+  })
+
+  const finallyColumns = computed(() => {
+    return columns.value.filter((item: any) =>
+      checkList.value.includes(item.label)
+    )
+  })
+
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+  }
+
+  const handleSizeChange = (value: number) => {
+    queryForm.pageNo = 1
+    queryForm.pageSize = value
+    fetchData()
+  }
+
+  const handleCurrentChange = (value: number) => {
+    queryForm.pageNo = value
+    fetchData()
+  }
+
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+
+  const clickFullScreen = () => {
+    isFullscreen.value = !isFullscreen.value
+  }
+
+  const setSelectRows = (value: any) => {
+    selectRows.value = value
+  }
+
+  const handleFold = () => {
+    fold.value = !fold.value
+  }
+
+  const handleAdd = () => {
+    editRef.value.showEdit()
+  }
+
+  const handleEdit = (row: any) => {
+    editRef.value.showEdit(row)
+  }
+
+  const handleDelete = (row: any) => {
+    if (row.id) {
+      $baseConfirm('您确定要删除当前项吗', null, async () => {
+        const { msg }: any = await doDelete({ ids: row.id })
+        $baseMessage(msg, 'success', 'vab-hey-message-success')
+        await fetchData()
+      })
+    } else {
+      if (selectRows.value.length > 0) {
+        const ids = selectRows.value.map((item: any) => item.id).join()
+        $baseConfirm('您确定要删除选中项吗', null, async () => {
+          const { msg }: any = await doDelete({ ids: ids })
+          $baseMessage(msg, 'success', 'vab-hey-message-success')
+          await fetchData()
+        })
+      } else {
+        $baseMessage('您未选中任何行', 'warning', 'hey')
+      }
+    }
+  }
+
+  const handleDetailStayTable = async () => {
+    if (selectRows.value.length === 1)
+      for (let i = 0; i < selectRows.value.length; i++) {
+        const matched = handleMatched(
+          routes.value,
+          '/vab/table/defaultTableDetail'
+        )
+        const tab = handleTabs({
+          ...matched[matched.length - 1],
+          query: selectRows.value[i],
+        })
+        if (tab) {
+          await addVisitedRoute(tab)
+          await changeTabsMeta({
+            title: '详情页',
+            meta: {
+              title: `${tab.query.title} 详情页`,
+            },
+          })
+        }
+      }
+    else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
+  }
+
+  const handleDetail = (row: any) => {
+    if (row.id)
+      router.push({
+        path: '/vab/table/defaultTableDetail',
+        query: {
+          ...row,
+          timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+        },
+      })
+    else {
+      if (selectRows.value.length === 1)
+        router.push({
+          path: '/vab/table/defaultTableDetail',
+          query: {
+            ...selectRows.value[0],
+            timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+          },
+        })
+      else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
+    }
+  }
+
+  onMounted(() => {
+    columns.value.forEach((item: any) => {
+      if (item.checked) checkList.value.push(item.label)
+    })
+
+    fetchData()
+  })
+</script>
 
 <style lang="scss" scoped>
   .custom-table-container {

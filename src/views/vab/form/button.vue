@@ -1,22 +1,3 @@
-<script lang="ts" setup>
-  import {
-    ArrowLeft,
-    ArrowRight,
-    Check,
-    Delete,
-    Edit,
-    Message,
-    Search,
-    Share,
-    Star,
-    Upload,
-  } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'Button',
-  })
-</script>
-
 <template>
   <div class="button-container no-background-container">
     <vab-card>
@@ -162,3 +143,22 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import {
+    ArrowLeft,
+    ArrowRight,
+    Check,
+    Delete,
+    Edit,
+    Message,
+    Search,
+    Share,
+    Star,
+    Upload,
+  } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'Button',
+  })
+</script>

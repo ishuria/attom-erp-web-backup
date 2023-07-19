@@ -1,24 +1,3 @@
-<script lang="ts" setup>
-  import clip from '/@/utils/clipboard'
-
-  const lllustrationsArray: string[] = []
-
-  const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
-    eager: true,
-  })
-
-  for (const key in files) {
-    const _key = key.slice(11)
-    lllustrationsArray.push(_key.substring(0, _key.length - 4))
-  }
-
-  const handleCopyIcon = (item: any) => {
-    clip(
-      `<vab-icon style="width:100%;height:300px" icon="${item}" is-custom-svg/>`
-    )
-  }
-</script>
-
 <template>
   <div class="lllustration-container no-background-container">
     <el-row :gutter="20">
@@ -47,6 +26,27 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import clip from '/@/utils/clipboard'
+
+  const lllustrationsArray: string[] = []
+
+  const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
+    eager: true,
+  })
+
+  for (const key in files) {
+    const _key = key.slice(11)
+    lllustrationsArray.push(_key.substring(0, _key.length - 4))
+  }
+
+  const handleCopyIcon = (item: any) => {
+    clip(
+      `<vab-icon style="width:100%;height:300px" icon="${item}" is-custom-svg/>`
+    )
+  }
+</script>
 
 <style lang="scss" scoped>
   .lllustration-container {

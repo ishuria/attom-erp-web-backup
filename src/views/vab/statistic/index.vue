@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Statistic',
-  })
-</script>
-
 <template>
   <div class="statistic-container no-background-container">
     <vab-card>
@@ -20,3 +14,9 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Statistic',
+  })
+</script>

@@ -1,22 +1,3 @@
-<script lang="ts" setup>
-  import { useRoutesStore } from '/@/store/modules/routes'
-
-  defineOptions({
-    name: 'VabHeader',
-  })
-
-  defineProps({
-    layout: {
-      type: String,
-      default: 'horizontal',
-    },
-  })
-
-  const routesStore = useRoutesStore()
-  const { getActiveMenu: activeMenu, getRoutes: routes } =
-    storeToRefs(routesStore)
-</script>
-
 <template>
   <div class="vab-header">
     <div class="vab-main">
@@ -51,6 +32,25 @@
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useRoutesStore } from '/@/store/modules/routes'
+
+  defineOptions({
+    name: 'VabHeader',
+  })
+
+  defineProps({
+    layout: {
+      type: String,
+      default: 'horizontal',
+    },
+  })
+
+  const routesStore = useRoutesStore()
+  const { getActiveMenu: activeMenu, getRoutes: routes } =
+    storeToRefs(routesStore)
+</script>
 
 <style lang="scss" scoped>
   @use 'sass:math';

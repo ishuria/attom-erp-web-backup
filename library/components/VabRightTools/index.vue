@@ -1,16 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'VabRightTools',
-  })
-
-  defineProps({
-    isHorizontal: {
-      type: Boolean,
-      default: false,
-    },
-  })
-</script>
-
 <template>
   <div class="vab-right-tools">
     <vab-search v-if="!isHorizontal" class="hidden-xs-only" />
@@ -28,6 +15,19 @@
     <vab-avatar />
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'VabRightTools',
+  })
+
+  defineProps({
+    isHorizontal: {
+      type: Boolean,
+      default: false,
+    },
+  })
+</script>
 
 <style lang="scss" scoped>
   .vab-right-tools {

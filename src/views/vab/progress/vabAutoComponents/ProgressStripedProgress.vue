@@ -1,23 +1,3 @@
-<script lang="ts" setup>
-  import { Minus, Plus } from '@element-plus/icons-vue'
-
-  const percentage = ref<number>(70)
-  const duration = computed(() => Math.floor(percentage.value / 10))
-
-  const increase = () => {
-    percentage.value += 10
-    if (percentage.value > 100) {
-      percentage.value = 100
-    }
-  }
-  const decrease = () => {
-    percentage.value -= 10
-    if (percentage.value < 0) {
-      percentage.value = 0
-    }
-  }
-</script>
-
 <template>
   <div class="demo-progress">
     <el-progress :percentage="50" striped :stroke-width="15" />
@@ -50,6 +30,26 @@
     </el-button-group>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { Minus, Plus } from '@element-plus/icons-vue'
+
+  const percentage = ref<number>(70)
+  const duration = computed(() => Math.floor(percentage.value / 10))
+
+  const increase = () => {
+    percentage.value += 10
+    if (percentage.value > 100) {
+      percentage.value = 100
+    }
+  }
+  const decrease = () => {
+    percentage.value -= 10
+    if (percentage.value < 0) {
+      percentage.value = 0
+    }
+  }
+</script>
 
 <style scoped>
   .demo-progress .el-progress--line {

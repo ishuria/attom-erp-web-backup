@@ -1,4 +1,35 @@
-<!-- 横向布局 -->
+<template>
+  <div
+    class="vab-layout-horizontal"
+    :class="{
+      fixed: fixedHeader,
+      'no-tabs-bar': !showTabs,
+    }"
+  >
+    <div
+      class="vab-layout-header"
+      :class="{
+        'fixed-header': fixedHeader,
+      }"
+    >
+      <vab-header layout="horizontal" />
+      <div
+        v-show="showTabs"
+        :class="{
+          'vab-tabs-horizontal': showTabs,
+        }"
+      >
+        <div class="vab-main">
+          <vab-tabs />
+        </div>
+      </div>
+    </div>
+    <div class="vab-main main-padding">
+      <vab-app-main />
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'VabLayoutHorizontal',
@@ -31,38 +62,6 @@
     },
   })
 </script>
-
-<template>
-  <div
-    class="vab-layout-horizontal"
-    :class="{
-      fixed: fixedHeader,
-      'no-tabs-bar': !showTabs,
-    }"
-  >
-    <div
-      class="vab-layout-header"
-      :class="{
-        'fixed-header': fixedHeader,
-      }"
-    >
-      <vab-header layout="horizontal" />
-      <div
-        v-show="showTabs"
-        :class="{
-          'vab-tabs-horizontal': showTabs,
-        }"
-      >
-        <div class="vab-main">
-          <vab-tabs />
-        </div>
-      </div>
-    </div>
-    <div class="vab-main main-padding">
-      <vab-app-main />
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .vab-layout-horizontal {

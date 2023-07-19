@@ -1,14 +1,3 @@
-<script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-
-  defineOptions({
-    name: 'VabLogo',
-  })
-
-  const settingsStore = useSettingsStore()
-  const { theme, logo, title } = storeToRefs(settingsStore)
-</script>
-
 <template>
   <div
     class="logo-container"
@@ -30,6 +19,17 @@
     </router-link>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useSettingsStore } from '/@/store/modules/settings'
+
+  defineOptions({
+    name: 'VabLogo',
+  })
+
+  const settingsStore = useSettingsStore()
+  const { theme, logo, title } = storeToRefs(settingsStore)
+</script>
 
 <style lang="scss" scoped>
   @mixin container {

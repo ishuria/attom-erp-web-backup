@@ -15,6 +15,7 @@
     </template>
   </el-upload>
 </template>
+
 <script lang="ts" setup>
   import type { UploadProps, UploadUserFile } from 'element-plus'
   import { ElMessage, ElMessageBox } from 'element-plus'

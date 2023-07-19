@@ -1,3 +1,15 @@
+<template>
+  <vab-colorful-card class="page-header" :style="style">
+    <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
+    <div class="page-header-tip">
+      <p class="page-header-tip-title">
+        {{ handleTips() }}
+      </p>
+      <p class="page-header-tip-description" v-html="description"></p>
+    </div>
+  </vab-colorful-card>
+</template>
+
 <script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
   import { getList } from '/@/api/description'
@@ -34,18 +46,6 @@
     background: `${colorTo.value} linear-gradient(120deg, ${colorFrom.value} 10%, ${colorTo.value}) no-repeat`,
   }
 </script>
-
-<template>
-  <vab-colorful-card class="page-header" :style="style">
-    <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
-    <div class="page-header-tip">
-      <p class="page-header-tip-title">
-        {{ handleTips() }}
-      </p>
-      <p class="page-header-tip-description" v-html="description"></p>
-    </div>
-  </vab-colorful-card>
-</template>
 
 <style lang="scss" scoped>
   .page-header {

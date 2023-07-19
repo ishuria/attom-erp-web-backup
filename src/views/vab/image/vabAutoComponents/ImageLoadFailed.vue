@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-  import { Picture as IconPicture } from '@element-plus/icons-vue'
-</script>
-
 <template>
   <div class="demo-image__error">
     <div class="block">
@@ -22,6 +18,10 @@
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { Picture as IconPicture } from '@element-plus/icons-vue'
+</script>
 
 <style scoped>
   .demo-image__error .block {

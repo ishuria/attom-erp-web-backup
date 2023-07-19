@@ -1,18 +1,3 @@
-<script lang="ts" setup>
-  const colorFrom1 = ref<string>('rgba(240,2,20,0.098)')
-  const colorTo1 = ref<string>('var(--el-color-white)')
-  const colorFrom2 = ref<string>('var(--el-color-primary-light-9)')
-  const colorTo2 = ref<string>('var(--el-color-white)')
-  const style1 = {
-    background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
-    border: 0,
-  }
-  const style2 = {
-    background: `linear-gradient(to right,${colorFrom2.value}, ${colorTo2.value}) no-repeat`,
-    border: 0,
-  }
-</script>
-
 <template>
   <vab-card class="pending">
     <template #header>
@@ -46,6 +31,21 @@
     </el-row>
   </vab-card>
 </template>
+
+<script lang="ts" setup>
+  const colorFrom1 = ref<string>('rgba(240,2,20,0.098)')
+  const colorTo1 = ref<string>('var(--el-color-white)')
+  const colorFrom2 = ref<string>('var(--el-color-primary-light-9)')
+  const colorTo2 = ref<string>('var(--el-color-white)')
+  const style1 = {
+    background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
+    border: 0,
+  }
+  const style2 = {
+    background: `linear-gradient(to right,${colorFrom2.value}, ${colorTo2.value}) no-repeat`,
+    border: 0,
+  }
+</script>
 
 <style lang="scss" scoped>
   .pending {

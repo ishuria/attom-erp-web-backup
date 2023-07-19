@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'ECharts',
-  })
-</script>
-
 <template>
   <div class="echarts-container no-background-container">
     <el-row :gutter="20">
@@ -30,6 +24,12 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'ECharts',
+  })
+</script>
 
 <style lang="scss" scoped>
   .echarts-container {

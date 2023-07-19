@@ -1,33 +1,3 @@
-<script lang="ts" setup>
-  import { useErrorLogStore } from '/@/store/modules/errorLog'
-
-  defineOptions({
-    name: 'VabErrorLog',
-  })
-
-  const errorLogStore = useErrorLogStore()
-  const { errorLogs } = storeToRefs(errorLogStore)
-  const { clearErrorLog } = errorLogStore
-  const dialogVisible = ref<boolean>(false)
-  const searchList = [
-    {
-      title: '百度搜索',
-      url: 'https://www.baidu.com/baidu?wd=',
-      icon: 'baidu-line',
-    },
-    {
-      title: '谷歌搜索',
-      url: 'https://www.google.com/search?q=',
-      icon: 'google-line',
-    },
-  ]
-
-  const clearAll = () => {
-    dialogVisible.value = false
-    clearErrorLog()
-  }
-</script>
-
 <template>
   <div v-if="errorLogs.length > 0">
     <el-badge
@@ -84,3 +54,33 @@
     </el-dialog>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useErrorLogStore } from '/@/store/modules/errorLog'
+
+  defineOptions({
+    name: 'VabErrorLog',
+  })
+
+  const errorLogStore = useErrorLogStore()
+  const { errorLogs } = storeToRefs(errorLogStore)
+  const { clearErrorLog } = errorLogStore
+  const dialogVisible = ref<boolean>(false)
+  const searchList = [
+    {
+      title: '百度搜索',
+      url: 'https://www.baidu.com/baidu?wd=',
+      icon: 'baidu-line',
+    },
+    {
+      title: '谷歌搜索',
+      url: 'https://www.google.com/search?q=',
+      icon: 'google-line',
+    },
+  ]
+
+  const clearAll = () => {
+    dialogVisible.value = false
+    clearErrorLog()
+  }
+</script>

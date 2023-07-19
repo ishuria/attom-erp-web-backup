@@ -1,3 +1,27 @@
+<template>
+  <el-dropdown @command="handleCommand" @visible-change="handleVisibleChange">
+    <span class="avatar-dropdown">
+      <el-avatar class="user-avatar" :src="avatar" />
+      <div class="username">
+        <span class="hidden-xs-only">{{ username }}</span>
+        <vab-icon
+          class="vab-dropdown"
+          :class="{ 'vab-dropdown-active': active }"
+          icon="arrow-down-s-line"
+        />
+      </div>
+    </span>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="logout">
+          <vab-icon icon="logout-circle-r-line" />
+          <span>{{ translate('退出登录') }}</span>
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+</template>
+
 <script lang="ts" setup>
   import { useUserStore } from '/@/store/modules/user'
   import { toLoginRoute } from '/@/utils/routes'
@@ -26,30 +50,6 @@
     }
   }
 </script>
-
-<template>
-  <el-dropdown @command="handleCommand" @visible-change="handleVisibleChange">
-    <span class="avatar-dropdown">
-      <el-avatar class="user-avatar" :src="avatar" />
-      <div class="username">
-        <span class="hidden-xs-only">{{ username }}</span>
-        <vab-icon
-          class="vab-dropdown"
-          :class="{ 'vab-dropdown-active': active }"
-          icon="arrow-down-s-line"
-        />
-      </div>
-    </span>
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item command="logout">
-          <vab-icon icon="logout-circle-r-line" />
-          <span>{{ translate('退出登录') }}</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
-</template>
 
 <style lang="scss" scoped>
   .avatar-dropdown {

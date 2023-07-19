@@ -1,3 +1,83 @@
+<template>
+  <div class="department-management-container table-auto-height">
+    <vab-query-form>
+      <vab-query-form-left-panel :span="12">
+        <el-button :icon="Plus" type="primary" @click="handleAdd">
+          添加
+        </el-button>
+        <el-button :icon="Delete" type="danger" @click="handleDelete">
+          批量删除
+        </el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel :span="12">
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input
+              v-model.trim="queryForm.label"
+              clearable
+              placeholder="请输入名称"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              type="primary"
+              @click="queryData"
+            >
+              查询
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+
+    <el-table
+      v-loading="listLoading"
+      border
+      :data="list"
+      default-expand-all
+      row-key="id"
+      :tree-props="{ children: 'children' }"
+      @selection-change="setSelectRows"
+    >
+      <el-table-column type="selection" width="38" />
+      <el-table-column label="名称" prop="label" />
+      <el-table-column label="父节点Value" prop="parentValue" />
+      <el-table-column label="排序" prop="order" />
+      <el-table-column label="创建时间" prop="createTime" />
+      <el-table-column label="操作" width="162">
+        <template #default="{ row }">
+          <el-button text type="primary" @click="handleEdit(row)">
+            编辑
+          </el-button>
+          <el-button
+            :disabled="!row.parentValue"
+            text
+            type="primary"
+            @click="handleDelete({ row })"
+          >
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
+    <el-pagination
+      background
+      :current-page="queryForm.pageNo"
+      :layout="layout"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <department-management-edit ref="editRef" @fetch-data="fetchData" />
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { doDelete, getList } from '/@/api/departmentManagement'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
@@ -82,83 +162,3 @@
     fetchData()
   })
 </script>
-
-<template>
-  <div class="department-management-container table-auto-height">
-    <vab-query-form>
-      <vab-query-form-left-panel :span="12">
-        <el-button :icon="Plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete">
-          批量删除
-        </el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="12">
-        <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.label"
-              clearable
-              placeholder="请输入名称"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              :icon="Search"
-              :loading="listLoading"
-              type="primary"
-              @click="queryData"
-            >
-              查询
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-
-    <el-table
-      v-loading="listLoading"
-      border
-      :data="list"
-      default-expand-all
-      row-key="id"
-      :tree-props="{ children: 'children' }"
-      @selection-change="setSelectRows"
-    >
-      <el-table-column type="selection" width="38" />
-      <el-table-column label="名称" prop="label" />
-      <el-table-column label="父节点Value" prop="parentValue" />
-      <el-table-column label="排序" prop="order" />
-      <el-table-column label="创建时间" prop="createTime" />
-      <el-table-column label="操作" width="162">
-        <template #default="{ row }">
-          <el-button text type="primary" @click="handleEdit(row)">
-            编辑
-          </el-button>
-          <el-button
-            :disabled="!row.parentValue"
-            text
-            type="primary"
-            @click="handleDelete({ row })"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
-      </template>
-    </el-table>
-    <el-pagination
-      background
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    />
-    <department-management-edit ref="editRef" @fetch-data="fetchData" />
-  </div>
-</template>

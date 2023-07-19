@@ -1,3 +1,7 @@
+<template>
+  <div></div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'VabStatistics',
@@ -19,7 +23,3 @@
     }
   })
 </script>
-
-<template>
-  <div></div>
-</template>

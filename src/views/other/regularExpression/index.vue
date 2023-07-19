@@ -1,3 +1,47 @@
+<template>
+  <div class="regular-expression-container no-background-container">
+    <el-row :gutter="20">
+      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
+        <vab-card>
+          <template #header>正则表达式</template>
+          <el-form
+            ref="formRef"
+            label-width="100px"
+            :model="form"
+            :rules="rules"
+          >
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" clearable />
+            </el-form-item>
+            <el-form-item label="手机号码" prop="phone">
+              <el-input v-model="form.phone" clearable />
+            </el-form-item>
+            <el-form-item label="身份证号码" prop="idCard">
+              <el-input v-model="form.idCard" clearable />
+            </el-form-item>
+            <el-form-item label="数字" prop="number">
+              <el-input v-model="form.number" clearable />
+            </el-form-item>
+            <el-form-item label="英文字符" prop="english">
+              <el-input v-model="form.english" clearable />
+            </el-form-item>
+            <el-form-item label="中文字符" prop="chinese">
+              <el-input v-model="form.chinese" clearable />
+            </el-form-item>
+            <el-form-item label="URL" prop="url">
+              <el-input v-model="form.url" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm">提交</el-button>
+              <el-button type="danger" @click="resetForm">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </vab-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'RegularExpression',
@@ -105,47 +149,3 @@
     formRef.value.resetFields()
   }
 </script>
-
-<template>
-  <div class="regular-expression-container no-background-container">
-    <el-row :gutter="20">
-      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card>
-          <template #header>正则表达式</template>
-          <el-form
-            ref="formRef"
-            label-width="100px"
-            :model="form"
-            :rules="rules"
-          >
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" clearable />
-            </el-form-item>
-            <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="form.phone" clearable />
-            </el-form-item>
-            <el-form-item label="身份证号码" prop="idCard">
-              <el-input v-model="form.idCard" clearable />
-            </el-form-item>
-            <el-form-item label="数字" prop="number">
-              <el-input v-model="form.number" clearable />
-            </el-form-item>
-            <el-form-item label="英文字符" prop="english">
-              <el-input v-model="form.english" clearable />
-            </el-form-item>
-            <el-form-item label="中文字符" prop="chinese">
-              <el-input v-model="form.chinese" clearable />
-            </el-form-item>
-            <el-form-item label="URL" prop="url">
-              <el-input v-model="form.url" clearable />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitForm">提交</el-button>
-              <el-button type="danger" @click="resetForm">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </vab-card>
-      </el-col>
-    </el-row>
-  </div>
-</template>

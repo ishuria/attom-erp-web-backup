@@ -1,50 +1,3 @@
-<script lang="ts" setup>
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import getPageTitle from '/@/utils/pageTitle'
-
-  defineOptions({
-    name: 'DynamicMeta',
-  })
-
-  const route = useRoute()
-  const tabsStore = useTabsStore()
-  const routesStore = useRoutesStore()
-  const { changeTabsMeta } = tabsStore
-  const { changeActiveMenu, changeMenuMeta } = routesStore
-  const badge = ref<number>(0)
-  const icon = ref<any>(route.meta.icon)
-
-  const handleBadge = (name: any) => {
-    badge.value = badge.value + 1
-    changeMenuMeta({
-      name,
-      meta: { badge: badge.value },
-    })
-  }
-
-  const resetBadge = (name: any, meta: any) => {
-    badge.value = 0
-    changeMenuMeta({ name, meta })
-  }
-
-  const handleMeta = (name: any, meta: { title: string }) => {
-    if (meta.title) useTitle().value = getPageTitle(meta.title)
-    changeMenuMeta({ name, meta })
-    changeTabsMeta({ name, meta })
-  }
-
-  const handleIcon = (item: any) => {
-    icon.value = item
-    changeMenuMeta({ name: 'DynamicMeta', meta: { icon: item } })
-    changeTabsMeta({ name: 'DynamicMeta', meta: { icon: item } })
-  }
-
-  const handleActiveMenu = (activeMenu: string) => {
-    changeActiveMenu(activeMenu)
-  }
-</script>
-
 <template>
   <div class="dynamic-meta-container no-background-container">
     <vab-card>
@@ -71,7 +24,7 @@
         <span>动态徽章</span>
       </template>
       <el-space wrap>
-        <el-badge style="margin-right: 10px" :value="badge">
+        <el-badge :hidden="hidden" style="margin-right: 10px" :value="badge">
           <el-button type="primary" @click="handleBadge('DynamicMeta')">
             徽章+ 1
           </el-button>
@@ -84,7 +37,7 @@
         </el-button>
         <el-button
           type="danger"
-          @click="resetBadge('DynamicMeta', { badge: false })"
+          @click="removeBadge('DynamicMeta', { badge: false })"
         >
           移除徽章
         </el-button>
@@ -127,3 +80,59 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import getPageTitle from '/@/utils/pageTitle'
+
+  defineOptions({
+    name: 'DynamicMeta',
+  })
+
+  const route = useRoute()
+  const tabsStore = useTabsStore()
+  const routesStore = useRoutesStore()
+  const { changeTabsMeta } = tabsStore
+  const { changeActiveMenu, changeMenuMeta } = routesStore
+  const badge = ref<number>(0)
+  const icon = ref<any>(route.meta.icon)
+  const hidden = ref<boolean>(false)
+
+  const handleBadge = (name: any) => {
+    badge.value = badge.value + 1
+    hidden.value = false
+    changeMenuMeta({
+      name,
+      meta: { badge: badge.value },
+    })
+  }
+
+  const resetBadge = (name: any, meta: any) => {
+    badge.value = 0
+    hidden.value = false
+    changeMenuMeta({ name, meta })
+  }
+
+  const removeBadge = (name: any, meta: any) => {
+    badge.value = 0
+    hidden.value = true
+    changeMenuMeta({ name, meta })
+  }
+
+  const handleMeta = (name: any, meta: { title: string }) => {
+    if (meta.title) useTitle().value = getPageTitle(meta.title)
+    changeMenuMeta({ name, meta })
+    changeTabsMeta({ name, meta })
+  }
+
+  const handleIcon = (item: any) => {
+    icon.value = item
+    changeMenuMeta({ name: 'DynamicMeta', meta: { icon: item } })
+    changeTabsMeta({ name: 'DynamicMeta', meta: { icon: item } })
+  }
+
+  const handleActiveMenu = (activeMenu: string) => {
+    changeActiveMenu(activeMenu)
+  }
+</script>

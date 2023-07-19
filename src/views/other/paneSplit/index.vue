@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'PaneSplit',
-  })
-</script>
-
 <template>
   <div class="pane-split-container no-background-container table-auto-height">
     <vab-card class="hidden-sm-and-up">
@@ -32,6 +26,12 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'PaneSplit',
+  })
+</script>
 
 <style lang="scss" scoped>
   .pane-split-container {

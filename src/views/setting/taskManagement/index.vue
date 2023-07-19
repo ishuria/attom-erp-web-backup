@@ -1,45 +1,3 @@
-<script lang="ts" setup>
-  import { getList } from '/@/api/taskManagement'
-  import { Search } from '@element-plus/icons-vue'
-  import { getImageUrl } from '/@/utils/imageUrl'
-
-  defineOptions({
-    name: 'TaskManagement',
-  })
-
-  const $baseMessage = inject<any>('$baseMessage')
-
-  const list = ref<any>([])
-  const listLoading = ref<boolean>(true)
-  const queryForm = reactive<any>({
-    taskName: '',
-    date: '',
-    pageNo: 1,
-    pageSize: 5,
-  })
-
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    listLoading.value = false
-  }
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
-  const handlePlay = (status: any) => {
-    if (status) $baseMessage('模拟停用成功', 'success', 'hey')
-    else $baseMessage('模拟开启成功', 'success', 'hey')
-  }
-  const handleAdd = () => {
-    $baseMessage('模拟添加成功', 'success', 'hey')
-  }
-  onMounted(() => {
-    fetchData()
-  })
-</script>
-
 <template>
   <div class="task-management-container no-background-container">
     <vab-query-form class="page-header">
@@ -123,6 +81,48 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { getList } from '/@/api/taskManagement'
+  import { Search } from '@element-plus/icons-vue'
+  import { getImageUrl } from '/@/utils/imageUrl'
+
+  defineOptions({
+    name: 'TaskManagement',
+  })
+
+  const $baseMessage = inject<any>('$baseMessage')
+
+  const list = ref<any>([])
+  const listLoading = ref<boolean>(true)
+  const queryForm = reactive<any>({
+    taskName: '',
+    date: '',
+    pageNo: 1,
+    pageSize: 5,
+  })
+
+  const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getList(queryForm)
+    list.value = data.list
+    listLoading.value = false
+  }
+  const queryData = () => {
+    queryForm.pageNo = 1
+    fetchData()
+  }
+  const handlePlay = (status: any) => {
+    if (status) $baseMessage('模拟停用成功', 'success', 'hey')
+    else $baseMessage('模拟开启成功', 'success', 'hey')
+  }
+  const handleAdd = () => {
+    $baseMessage('模拟添加成功', 'success', 'hey')
+  }
+  onMounted(() => {
+    fetchData()
+  })
+</script>
 
 <style lang="scss" scoped>
   .task-management-container {

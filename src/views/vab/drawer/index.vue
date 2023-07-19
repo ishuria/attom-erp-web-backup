@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Drawer',
-  })
-</script>
-
 <template>
   <div class="drawer-container no-background-container">
     <vab-card>
@@ -28,3 +22,9 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Drawer',
+  })
+</script>

@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Tree',
-  })
-</script>
-
 <template>
   <div class="tree-container no-background-container">
     <vab-card>
@@ -52,3 +46,9 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Tree',
+  })
+</script>

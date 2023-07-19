@@ -1,3 +1,79 @@
+<template>
+  <div
+    class="dictionary-management-container no-background-container table-auto-height"
+  >
+    <el-row :gutter="20">
+      <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
+        <vab-card>
+          <el-button
+            class="tree-button"
+            :icon="Plus"
+            type="primary"
+            @click="handleAdd"
+          >
+            添加字典分类
+          </el-button>
+          <el-input
+            v-model="filterText"
+            clearable
+            placeholder="请输入字典名称"
+          />
+          <el-tree
+            ref="treeRef"
+            :data="treeList"
+            default-expand-all
+            :default-expanded-keys="['root']"
+            :filter-node-method="filterNode"
+            node-key="id"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+          >
+            <template #default="{ node, data }">
+              <span>{{ node.label }}</span>
+              <a v-if="!data.children" @click="remove(node, data)">删除</a>
+            </template>
+          </el-tree>
+        </vab-card>
+      </el-col>
+      <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
+        <vab-card>
+          <vab-query-form>
+            <vab-query-form-top-panel :span="12">
+              <el-button
+                :disabled="isRoot"
+                :icon="Plus"
+                type="primary"
+                @click="handleEdit({ parentKey })"
+              >
+                添加
+              </el-button>
+            </vab-query-form-top-panel>
+          </vab-query-form>
+          <el-table v-loading="listLoading" border :data="list">
+            <el-table-column label="id" prop="id" />
+            <el-table-column label="key值" prop="key" />
+            <el-table-column label="字典值" prop="value" />
+            <el-table-column label="操作" width="162">
+              <template #default="{ row }">
+                <el-button text type="primary" @click="handleEdit(row)">
+                  编辑
+                </el-button>
+                <el-button text type="danger" @click="handleDelete(row)">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-empty class="vab-data-empty" description="暂无数据" />
+            </template>
+          </el-table>
+        </vab-card>
+      </el-col>
+    </el-row>
+    <dictionary-management-edit ref="editRef" @fetch-data="fetchData" />
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { doDelete, getList, getTree } from '/@/api/dictionaryManagement'
   import { Plus } from '@element-plus/icons-vue'
@@ -78,82 +154,6 @@
     fetchData()
   })
 </script>
-
-<template>
-  <div
-    class="dictionary-management-container no-background-container table-auto-height"
-  >
-    <el-row :gutter="20">
-      <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
-        <vab-card>
-          <el-button
-            class="tree-button"
-            :icon="Plus"
-            type="primary"
-            @click="handleAdd"
-          >
-            添加字典分类
-          </el-button>
-          <el-input
-            v-model="filterText"
-            clearable
-            placeholder="请输入字典名称"
-          />
-          <el-tree
-            ref="treeRef"
-            :data="treeList"
-            default-expand-all
-            :default-expanded-keys="['root']"
-            :filter-node-method="filterNode"
-            node-key="id"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
-          >
-            <template #default="{ node, data }">
-              <span>{{ node.label }}</span>
-              <a v-if="!data.children" @click="remove(node, data)">删除</a>
-            </template>
-          </el-tree>
-        </vab-card>
-      </el-col>
-      <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
-        <vab-card>
-          <vab-query-form>
-            <vab-query-form-top-panel :span="12">
-              <el-button
-                :disabled="isRoot"
-                :icon="Plus"
-                type="primary"
-                @click="handleEdit({ parentKey })"
-              >
-                添加
-              </el-button>
-            </vab-query-form-top-panel>
-          </vab-query-form>
-          <el-table v-loading="listLoading" border :data="list">
-            <el-table-column label="id" prop="id" />
-            <el-table-column label="key值" prop="key" />
-            <el-table-column label="字典值" prop="value" />
-            <el-table-column label="操作" width="162">
-              <template #default="{ row }">
-                <el-button text type="primary" @click="handleEdit(row)">
-                  编辑
-                </el-button>
-                <el-button text type="danger" @click="handleDelete(row)">
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-            <template #empty>
-              <el-empty class="vab-data-empty" description="暂无数据" />
-            </template>
-          </el-table>
-        </vab-card>
-      </el-col>
-    </el-row>
-    <dictionary-management-edit ref="editRef" @fetch-data="fetchData" />
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .dictionary-management-container {

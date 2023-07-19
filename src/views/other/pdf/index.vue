@@ -1,4 +1,9 @@
-vab
+<template>
+  <div class="pdf-container">
+    <vab-pdf :source="source" />
+  </div>
+</template>
+
 <script lang="ts" setup>
   import VabPdf from '/@/plugins/VabPdf'
 
@@ -10,9 +15,3 @@ vab
     'https://cdn.jsdelivr.net/gh/chuzhixin/image/demo.pdf'
   )
 </script>
-
-<template>
-  <div class="pdf-container">
-    <vab-pdf :source="source" />
-  </div>
-</template>

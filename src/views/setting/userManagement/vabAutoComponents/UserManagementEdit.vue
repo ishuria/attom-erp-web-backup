@@ -1,3 +1,36 @@
+<template>
+  <el-dialog
+    v-model="dialogFormVisible"
+    append-to-body
+    draggable
+    :title="title"
+    width="500px"
+    @close="close"
+  >
+    <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model.trim="form.username" clearable />
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model.trim="form.password" clearable type="password" />
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model.trim="form.email" clearable />
+      </el-form-item>
+      <el-form-item label="角色" prop="roles">
+        <el-checkbox-group v-model="form.roles">
+          <el-checkbox label="admin" />
+          <el-checkbox label="editor" />
+        </el-checkbox-group>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="close">取 消</el-button>
+      <el-button type="primary" @click="save">确 定</el-button>
+    </template>
+  </el-dialog>
+</template>
+
 <script lang="ts" setup>
   import { doEdit } from '/@/api/userManagement'
 
@@ -55,36 +88,3 @@
     })
   }
 </script>
-
-<template>
-  <el-dialog
-    v-model="dialogFormVisible"
-    append-to-body
-    draggable
-    :title="title"
-    width="500px"
-    @close="close"
-  >
-    <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model.trim="form.username" clearable />
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model.trim="form.password" clearable type="password" />
-      </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model.trim="form.email" clearable />
-      </el-form-item>
-      <el-form-item label="角色" prop="roles">
-        <el-checkbox-group v-model="form.roles">
-          <el-checkbox label="admin" />
-          <el-checkbox label="editor" />
-        </el-checkbox-group>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="save">确 定</el-button>
-    </template>
-  </el-dialog>
-</template>

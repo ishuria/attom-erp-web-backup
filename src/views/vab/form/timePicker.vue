@@ -1,39 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Timepicker',
-  })
-
-  const value = ref<string>('')
-  const value1 = ref<any>(new Date(2016, 9, 10, 18, 40))
-  const startTime = ref<string>('')
-  const endTime = ref<string>('')
-
-  const makeRange = (start: number, end: number) => {
-    const result = []
-    for (let i = start; i <= end; i++) {
-      result.push(i)
-    }
-    return result
-  }
-
-  const disabledHours = () => {
-    return makeRange(0, 16).concat(makeRange(19, 23))
-  }
-  const disabledMinutes: any = (hour: number) => {
-    if (hour === 17) {
-      return makeRange(0, 29)
-    }
-    if (hour === 18) {
-      return makeRange(31, 59)
-    }
-  }
-  const disabledSeconds: any = (hour: number, minute: number) => {
-    if (hour === 18 && minute === 30) {
-      return makeRange(1, 59)
-    }
-  }
-</script>
-
 <template>
   <div class="time-picker-container no-background-container">
     <vab-card>
@@ -84,3 +48,39 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Timepicker',
+  })
+
+  const value = ref<string>('')
+  const value1 = ref<any>(new Date(2016, 9, 10, 18, 40))
+  const startTime = ref<string>('')
+  const endTime = ref<string>('')
+
+  const makeRange = (start: number, end: number) => {
+    const result = []
+    for (let i = start; i <= end; i++) {
+      result.push(i)
+    }
+    return result
+  }
+
+  const disabledHours = () => {
+    return makeRange(0, 16).concat(makeRange(19, 23))
+  }
+  const disabledMinutes: any = (hour: number) => {
+    if (hour === 17) {
+      return makeRange(0, 29)
+    }
+    if (hour === 18) {
+      return makeRange(31, 59)
+    }
+  }
+  const disabledSeconds: any = (hour: number, minute: number) => {
+    if (hour === 18 && minute === 30) {
+      return makeRange(1, 59)
+    }
+  }
+</script>

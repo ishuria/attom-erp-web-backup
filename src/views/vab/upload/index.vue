@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Upload',
-  })
-</script>
-
 <template>
   <div class="upload-container no-background-container">
     <vab-card>
@@ -40,3 +34,9 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Upload',
+  })
+</script>

@@ -1,11 +1,3 @@
-<script lang="ts" setup>
-  import { Edit } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'Link',
-  })
-</script>
-
 <template>
   <div class="link-container no-background-container">
     <vab-card>
@@ -55,3 +47,11 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { Edit } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'Link',
+  })
+</script>

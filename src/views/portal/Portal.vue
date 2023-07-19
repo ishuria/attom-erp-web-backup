@@ -1,63 +1,3 @@
-<script lang="ts" setup>
-  import { getImageUrl } from '/@/utils/imageUrl'
-
-  const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
-
-  const background = ref<string>('')
-
-  const handleChange = (value: any) => {
-    const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
-    background.value = `url('${img}')`
-  }
-
-  const openWindow = (url: string) => {
-    window.open(url)
-  }
-
-  const date = ref<any>(new Date())
-  const tableData = [
-    {
-      date: '2016-05-03',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-02',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-04',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-  ]
-</script>
 <template>
   <el-scrollbar>
     <div class="portal-main-mobile hidden-sm-and-up">
@@ -248,6 +188,67 @@
     </div>
   </el-scrollbar>
 </template>
+
+<script lang="ts" setup>
+  import { getImageUrl } from '/@/utils/imageUrl'
+
+  const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
+
+  const background = ref<string>('')
+
+  const handleChange = (value: any) => {
+    const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
+    background.value = `url('${img}')`
+  }
+
+  const openWindow = (url: string) => {
+    window.open(url)
+  }
+
+  const date = ref<any>(new Date())
+  const tableData = [
+    {
+      date: '2016-05-03',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-02',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-04',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+      date: '2016-05-01',
+      name: 'Tom',
+      address: 'No. 189, Grove St, Los Angeles',
+    },
+  ]
+</script>
 
 <style lang="scss" scoped>
   .portal-main {

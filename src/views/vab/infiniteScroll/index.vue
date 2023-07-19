@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'InfiniteScroll',
-  })
-</script>
-
 <template>
   <div class="infinite-scroll-container no-background-container">
     <vab-card>
@@ -16,3 +10,9 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'InfiniteScroll',
+  })
+</script>

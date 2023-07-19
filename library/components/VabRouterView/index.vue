@@ -1,3 +1,13 @@
+<template>
+  <router-view v-slot="{ Component }">
+    <transition mode="out-in" :name="theme.pageTransition">
+      <keep-alive :include="keepAliveNameList" :max="keepAliveMaxNum">
+        <component :is="Component" :key="routerKey" ref="componentRef" />
+      </keep-alive>
+    </transition>
+  </router-view>
+</template>
+
 <script lang="ts" setup>
   import { useHead } from '@vueuse/head'
   import { useTabsStore } from '/@/store/modules/tabs'
@@ -69,13 +79,3 @@
     $unsub('reload-router-view')
   })
 </script>
-
-<template>
-  <router-view v-slot="{ Component }">
-    <transition mode="out-in" :name="theme.pageTransition">
-      <keep-alive :include="keepAliveNameList" :max="keepAliveMaxNum">
-        <component :is="Component" :key="routerKey" ref="componentRef" />
-      </keep-alive>
-    </transition>
-  </router-view>
-</template>

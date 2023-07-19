@@ -1,3 +1,29 @@
+<template>
+  <vab-card class="authorization" skeleton>
+    <template #header>
+      <vab-icon icon="bar-chart-2-line" />
+      授权数
+      <el-tag class="card-header-tag" type="warning">周</el-tag>
+    </template>
+    <vab-chart :option="option" />
+    <div class="bottom">
+      <span>
+        授权数:
+        <vab-count
+          :decimals="countConfig.decimals"
+          :duration="countConfig.duration"
+          :end-val="countConfig.endVal"
+          :prefix="countConfig.prefix"
+          :separator="countConfig.separator"
+          :start-val="countConfig.startVal"
+          :suffix="countConfig.suffix"
+        />
+        <el-tag class="card-footer-tag" type="success">倒计时 {{ n }}s</el-tag>
+      </span>
+    </div>
+  </vab-card>
+</template>
+
 <script lang="ts" setup>
   import { pull, random, sample } from 'lodash-es'
   import { useSettingsStore } from '/@/store/modules/settings'
@@ -77,32 +103,6 @@
     }, 1000)
   })
 </script>
-
-<template>
-  <vab-card class="authorization" skeleton>
-    <template #header>
-      <vab-icon icon="bar-chart-2-line" />
-      授权数
-      <el-tag class="card-header-tag" type="warning">周</el-tag>
-    </template>
-    <vab-chart :option="option" />
-    <div class="bottom">
-      <span>
-        授权数:
-        <vab-count
-          :decimals="countConfig.decimals"
-          :duration="countConfig.duration"
-          :end-val="countConfig.endVal"
-          :prefix="countConfig.prefix"
-          :separator="countConfig.separator"
-          :start-val="countConfig.startVal"
-          :suffix="countConfig.suffix"
-        />
-        <el-tag class="card-footer-tag" type="success">倒计时 {{ n }}s</el-tag>
-      </span>
-    </div>
-  </vab-card>
-</template>
 
 <style lang="scss" scoped>
   :deep() {

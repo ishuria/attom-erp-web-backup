@@ -1,21 +1,3 @@
-<script lang="ts" setup>
-  import { random } from 'lodash-es'
-
-  defineOptions({
-    name: 'Index',
-  })
-
-  const countConfig1 = reactive<any>({
-    startVal: 0,
-    endVal: random(1000, 20000),
-    decimals: 2,
-    prefix: '￥',
-    suffix: '',
-    separator: ',',
-    duration: 8000,
-  })
-</script>
-
 <template>
   <div class="index-container no-background-container">
     <el-row :gutter="20">
@@ -76,6 +58,24 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { random } from 'lodash-es'
+
+  defineOptions({
+    name: 'Index',
+  })
+
+  const countConfig1 = reactive<any>({
+    startVal: 0,
+    endVal: random(1000, 20000),
+    decimals: 2,
+    prefix: '￥',
+    suffix: '',
+    separator: ',',
+    duration: 8000,
+  })
+</script>
 
 <style lang="scss" scoped>
   .index-container {

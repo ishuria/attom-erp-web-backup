@@ -1,3 +1,24 @@
+<template>
+  <el-scrollbar class="vab-side-bar" :class="{ 'is-collapse': collapse }">
+    <vab-logo v-if="layout === 'comprehensive' || layout === 'vertical'" />
+    <el-menu
+      background-color="var(--el-menu-background-color)"
+      :collapse="collapse"
+      :collapse-transition="false"
+      :default-active="activeMenu.data"
+      :default-openeds="defaultOpeneds"
+      menu-trigger="click"
+      mode="vertical"
+      text-color="var(--el-menu-color-text)"
+      :unique-opened="uniqueOpened"
+    >
+      <template v-for="(item, index) in handleRoutes" :key="index + item.name">
+        <vab-menu v-if="!item.meta.hidden" :item="item" />
+      </template>
+    </el-menu>
+  </el-scrollbar>
+</template>
+
 <script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
@@ -31,27 +52,6 @@
         )
   })
 </script>
-
-<template>
-  <el-scrollbar class="vab-side-bar" :class="{ 'is-collapse': collapse }">
-    <vab-logo v-if="layout === 'comprehensive' || layout === 'vertical'" />
-    <el-menu
-      background-color="var(--el-menu-background-color)"
-      :collapse="collapse"
-      :collapse-transition="false"
-      :default-active="activeMenu.data"
-      :default-openeds="defaultOpeneds"
-      menu-trigger="click"
-      mode="vertical"
-      text-color="var(--el-menu-color-text)"
-      :unique-opened="uniqueOpened"
-    >
-      <template v-for="(item, index) in handleRoutes" :key="index + item.name">
-        <vab-menu v-if="!item.meta.hidden" :item="item" />
-      </template>
-    </el-menu>
-  </el-scrollbar>
-</template>
 
 <style lang="scss" scoped>
   @mixin active {

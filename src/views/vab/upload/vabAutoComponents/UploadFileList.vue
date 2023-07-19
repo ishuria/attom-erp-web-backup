@@ -10,6 +10,7 @@
     </template>
   </el-upload>
 </template>
+
 <script lang="ts" setup>
   import type { UploadProps, UploadUserFile } from 'element-plus'
 

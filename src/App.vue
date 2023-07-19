@@ -1,3 +1,7 @@
+<template>
+  <vab-app />
+</template>
+
 <script lang="ts" setup>
   onMounted(() => {
     if (
@@ -25,6 +29,3 @@
     }
   })
 </script>
-<template>
-  <vab-app />
-</template>

@@ -1,3 +1,41 @@
+<template>
+  <div class="tabs-container no-background-container">
+    <vab-card>
+      <template #header>
+        <div>
+          <span>标签页操作</span>
+        </div>
+      </template>
+      <el-space wrap>
+        <el-button type="primary" @click="closeOthersTabs">关闭其他</el-button>
+        <el-button type="primary" @click="closeLeftTabs">关闭左侧</el-button>
+        <el-button type="primary" @click="closeRightTabs">关闭右侧</el-button>
+        <el-button type="primary" @click="closeAllTabs">关闭全部</el-button>
+        <el-button type="primary" @click="handleTabRemove(route.path)">
+          关闭当前
+        </el-button>
+        <el-button type="primary" @click="handleRefresh">刷新当前</el-button>
+      </el-space>
+    </vab-card>
+    <vab-card>
+      <template #header>
+        <div>
+          <span>params传参(支持多开)</span>
+        </div>
+      </template>
+      <el-button type="primary" @click="handleOpenParams">点击跳转</el-button>
+    </vab-card>
+    <vab-card>
+      <template #header>
+        <div>
+          <span>query传参(支持多开)</span>
+        </div>
+      </template>
+      <el-button type="primary" @click="handleOpenQuery">点击跳转</el-button>
+    </vab-card>
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { random } from 'lodash-es'
   import { handleActivePath } from '/@/utils/routes'
@@ -76,41 +114,3 @@
     router.push(`/operate/dynamicSegment/test2?id=${random(0, 100)}`)
   }
 </script>
-
-<template>
-  <div class="tabs-container no-background-container">
-    <vab-card>
-      <template #header>
-        <div>
-          <span>标签页操作</span>
-        </div>
-      </template>
-      <el-space wrap>
-        <el-button type="primary" @click="closeOthersTabs">关闭其他</el-button>
-        <el-button type="primary" @click="closeLeftTabs">关闭左侧</el-button>
-        <el-button type="primary" @click="closeRightTabs">关闭右侧</el-button>
-        <el-button type="primary" @click="closeAllTabs">关闭全部</el-button>
-        <el-button type="primary" @click="handleTabRemove(route.path)">
-          关闭当前
-        </el-button>
-        <el-button type="primary" @click="handleRefresh">刷新当前</el-button>
-      </el-space>
-    </vab-card>
-    <vab-card>
-      <template #header>
-        <div>
-          <span>params传参(支持多开)</span>
-        </div>
-      </template>
-      <el-button type="primary" @click="handleOpenParams">点击跳转</el-button>
-    </vab-card>
-    <vab-card>
-      <template #header>
-        <div>
-          <span>query传参(支持多开)</span>
-        </div>
-      </template>
-      <el-button type="primary" @click="handleOpenQuery">点击跳转</el-button>
-    </vab-card>
-  </div>
-</template>

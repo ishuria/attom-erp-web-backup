@@ -1,3 +1,121 @@
+<template>
+  <div class="vab-tabs">
+    <el-tabs
+      v-model="tabActive"
+      class="vab-tabs-content"
+      :class="{
+        ['vab-tabs-content-' + theme.tabsBarStyle]: true,
+      }"
+      type="card"
+      @tab-click="handleTabClick"
+      @tab-remove="handleTabRemove"
+    >
+      <el-tab-pane
+        v-for="item in visitedRoutes"
+        :key="item.path"
+        :closable="!isNoCLosable(item)"
+        :name="item.path"
+      >
+        <template #label>
+          <span class="vab-tabs-title" @contextmenu.prevent="openMenu">
+            <template v-if="theme.showTabsIcon">
+              <vab-icon
+                v-if="item.meta && item.meta.icon"
+                :icon="item.meta.icon"
+                :is-custom-svg="item.meta.isCustomSvg"
+              />
+              <!--  如果没有图标那么取第二级的图标 -->
+              <vab-icon v-else :icon="item.parentIcon" />
+            </template>
+            <span>
+              {{ translate(item.meta.title) }}
+            </span>
+          </span>
+        </template>
+      </el-tab-pane>
+    </el-tabs>
+
+    <el-dropdown
+      placement="bottom-end"
+      popper-class="vab-tabs-more-dropdown"
+      @command="handleCommand"
+      @visible-change="handleVisibleChange"
+    >
+      <span class="vab-tabs-more" :class="{ 'vab-tabs-more-active': active }">
+        <span class="vab-tabs-more-icon">
+          <i class="box box-t"></i>
+          <i class="box box-b"></i>
+        </span>
+      </span>
+      <template #dropdown>
+        <el-dropdown-menu class="tabs-more">
+          <el-dropdown-item command="closeOthersTabs">
+            <vab-icon icon="close-line" />
+            <span>
+              {{ translate('关闭其他') }}
+            </span>
+          </el-dropdown-item>
+          <el-dropdown-item command="closeLeftTabs">
+            <vab-icon icon="arrow-left-line" />
+            <span>
+              {{ translate('关闭左侧') }}
+            </span>
+          </el-dropdown-item>
+          <el-dropdown-item command="closeRightTabs">
+            <vab-icon icon="arrow-right-line" />
+            <span>
+              {{ translate('关闭右侧') }}
+            </span>
+          </el-dropdown-item>
+          <el-dropdown-item command="closeAllTabs">
+            <vab-icon icon="close-line" />
+            <span>
+              {{ translate('关闭全部') }}
+            </span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+    <ul
+      v-if="visible"
+      class="contextmenu el-dropdown-menu el-dropdown-menu--small"
+      :style="{ left: left + 'px', top: top + 'px' }"
+    >
+      <li
+        class="el-dropdown-menu__item"
+        :class="{ 'is-disabled': visitedRoutes.length === 1 }"
+        @click="closeOthersTabs"
+      >
+        <vab-icon icon="close-line" />
+        <span>{{ translate('关闭其他') }}</span>
+      </li>
+      <li
+        class="el-dropdown-menu__item"
+        :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
+        @click="closeLeftTabs"
+      >
+        <vab-icon icon="arrow-left-line" />
+        <span>{{ translate('关闭左侧') }}</span>
+      </li>
+      <li
+        class="el-dropdown-menu__item"
+        :class="{
+          'is-disabled':
+            visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
+        }"
+        @click="closeRightTabs"
+      >
+        <vab-icon icon="arrow-right-line" />
+        <span>{{ translate('关闭右侧') }}</span>
+      </li>
+      <li class="el-dropdown-menu__item" @click="closeAllTabs">
+        <vab-icon icon="close-line" />
+        <span>{{ translate('关闭全部') }}</span>
+      </li>
+    </ul>
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { useTabsStore } from '/@/store/modules/tabs'
   import { useRoutesStore } from '/@/store/modules/routes'
@@ -174,124 +292,6 @@
     else document.body.removeEventListener('click', closeMenu)
   })
 </script>
-
-<template>
-  <div class="vab-tabs">
-    <el-tabs
-      v-model="tabActive"
-      class="vab-tabs-content"
-      :class="{
-        ['vab-tabs-content-' + theme.tabsBarStyle]: true,
-      }"
-      type="card"
-      @tab-click="handleTabClick"
-      @tab-remove="handleTabRemove"
-    >
-      <el-tab-pane
-        v-for="item in visitedRoutes"
-        :key="item.path"
-        :closable="!isNoCLosable(item)"
-        :name="item.path"
-      >
-        <template #label>
-          <span class="vab-tabs-title" @contextmenu.prevent="openMenu">
-            <template v-if="theme.showTabsIcon">
-              <vab-icon
-                v-if="item.meta && item.meta.icon"
-                :icon="item.meta.icon"
-                :is-custom-svg="item.meta.isCustomSvg"
-              />
-              <!--  如果没有图标那么取第二级的图标 -->
-              <vab-icon v-else :icon="item.parentIcon" />
-            </template>
-            <span>
-              {{ translate(item.meta.title) }}
-            </span>
-          </span>
-        </template>
-      </el-tab-pane>
-    </el-tabs>
-
-    <el-dropdown
-      placement="bottom-end"
-      popper-class="vab-tabs-more-dropdown"
-      @command="handleCommand"
-      @visible-change="handleVisibleChange"
-    >
-      <span class="vab-tabs-more" :class="{ 'vab-tabs-more-active': active }">
-        <span class="vab-tabs-more-icon">
-          <i class="box box-t"></i>
-          <i class="box box-b"></i>
-        </span>
-      </span>
-      <template #dropdown>
-        <el-dropdown-menu class="tabs-more">
-          <el-dropdown-item command="closeOthersTabs">
-            <vab-icon icon="close-line" />
-            <span>
-              {{ translate('关闭其他') }}
-            </span>
-          </el-dropdown-item>
-          <el-dropdown-item command="closeLeftTabs">
-            <vab-icon icon="arrow-left-line" />
-            <span>
-              {{ translate('关闭左侧') }}
-            </span>
-          </el-dropdown-item>
-          <el-dropdown-item command="closeRightTabs">
-            <vab-icon icon="arrow-right-line" />
-            <span>
-              {{ translate('关闭右侧') }}
-            </span>
-          </el-dropdown-item>
-          <el-dropdown-item command="closeAllTabs">
-            <vab-icon icon="close-line" />
-            <span>
-              {{ translate('关闭全部') }}
-            </span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-    <ul
-      v-if="visible"
-      class="contextmenu el-dropdown-menu el-dropdown-menu--small"
-      :style="{ left: left + 'px', top: top + 'px' }"
-    >
-      <li
-        class="el-dropdown-menu__item"
-        :class="{ 'is-disabled': visitedRoutes.length === 1 }"
-        @click="closeOthersTabs"
-      >
-        <vab-icon icon="close-line" />
-        <span>{{ translate('关闭其他') }}</span>
-      </li>
-      <li
-        class="el-dropdown-menu__item"
-        :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
-        @click="closeLeftTabs"
-      >
-        <vab-icon icon="arrow-left-line" />
-        <span>{{ translate('关闭左侧') }}</span>
-      </li>
-      <li
-        class="el-dropdown-menu__item"
-        :class="{
-          'is-disabled':
-            visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
-        }"
-        @click="closeRightTabs"
-      >
-        <vab-icon icon="arrow-right-line" />
-        <span>{{ translate('关闭右侧') }}</span>
-      </li>
-      <li class="el-dropdown-menu__item" @click="closeAllTabs">
-        <vab-icon icon="close-line" />
-        <span>{{ translate('关闭全部') }}</span>
-      </li>
-    </ul>
-  </div>
-</template>
 
 <style lang="scss">
   .vab-tabs-more-dropdown {

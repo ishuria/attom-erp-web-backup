@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-  const drawer = ref<boolean>(false)
-</script>
-
 <template>
   <el-button type="primary" @click="drawer = true">打开</el-button>
 
@@ -9,3 +5,7 @@
     <span>我是标题</span>
   </el-drawer>
 </template>
+
+<script lang="ts" setup>
+  const drawer = ref<boolean>(false)
+</script>

@@ -1,3 +1,16 @@
+<template>
+  <vab-award-wheel
+    ref="awardWheelRef"
+    :blocks="blocks"
+    :buttons="buttons"
+    height="300px"
+    :prizes="prizes"
+    width="300px"
+    @end="endCallback"
+    @start="startCallback"
+  />
+</template>
+
 <script lang="ts" setup>
   import { random } from 'lodash-es'
   import { getImageUrl } from '/@/utils/imageUrl'
@@ -128,16 +141,3 @@
     $baseMessage(`恭喜您获得${prize.fonts[0].text}`, 'success', 'hey')
   }
 </script>
-
-<template>
-  <vab-award-wheel
-    ref="awardWheelRef"
-    :blocks="blocks"
-    :buttons="buttons"
-    height="300px"
-    :prizes="prizes"
-    width="300px"
-    @end="endCallback"
-    @start="startCallback"
-  />
-</template>

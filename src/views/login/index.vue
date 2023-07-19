@@ -1,3 +1,78 @@
+<template>
+  <div class="login-container">
+    <div class="login-form">
+      <img class="left-img" :src="leftImg" />
+      <el-form
+        ref="formRef"
+        label-position="left"
+        :model="form"
+        :rules="rules"
+        @submit.prevent
+      >
+        <div class="title">hello !</div>
+        <div class="title-tips">{{ translate('欢迎来到') }}{{ title }}！</div>
+        <el-form-item prop="username">
+          <el-input
+            v-model.trim="form.username"
+            v-focus
+            clearable
+            :placeholder="translate('请输入用户名')"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="user-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            :key="passwordType"
+            ref="passwordRef"
+            v-model.trim="form.password"
+            clearable
+            :placeholder="translate('请输入密码')"
+            :type="passwordType"
+            @keyup.enter="handleLogin"
+          >
+            <template #prefix>
+              <vab-icon icon="lock-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
+        <el-form-item prop="verificationCode">
+          <el-input
+            v-model.trim="form.verificationCode"
+            :placeholder="translate('验证码') + previewText"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="barcode-box-line" />
+            </template>
+          </el-input>
+          <el-image class="code" :src="codeUrl" @click="changeCode" />
+        </el-form-item>
+        <el-button
+          v-throttle="handleLogin"
+          class="login-btn"
+          native-type="submit"
+          type="primary"
+        >
+          {{ translate('登录') }}
+        </el-button>
+        <router-link to="/register">
+          <el-button
+            style="margin-top: 20px; margin-left: -10px"
+            type="primary"
+          >
+            {{ translate('注册') }}
+          </el-button>
+        </router-link>
+      </el-form>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useUserStore } from '/@/store/modules/user'
@@ -114,81 +189,6 @@
     next()
   })
 </script>
-
-<template>
-  <div class="login-container">
-    <div class="login-form">
-      <img class="left-img" :src="leftImg" />
-      <el-form
-        ref="formRef"
-        label-position="left"
-        :model="form"
-        :rules="rules"
-        @submit.prevent
-      >
-        <div class="title">hello !</div>
-        <div class="title-tips">{{ translate('欢迎来到') }}{{ title }}！</div>
-        <el-form-item prop="username">
-          <el-input
-            v-model.trim="form.username"
-            v-focus
-            clearable
-            :placeholder="translate('请输入用户名')"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="user-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            :key="passwordType"
-            ref="passwordRef"
-            v-model.trim="form.password"
-            clearable
-            :placeholder="translate('请输入密码')"
-            :type="passwordType"
-            @keyup.enter="handleLogin"
-          >
-            <template #prefix>
-              <vab-icon icon="lock-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
-        <el-form-item prop="verificationCode">
-          <el-input
-            v-model.trim="form.verificationCode"
-            :placeholder="translate('验证码') + previewText"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="barcode-box-line" />
-            </template>
-          </el-input>
-          <el-image class="code" :src="codeUrl" @click="changeCode" />
-        </el-form-item>
-        <el-button
-          v-throttle="handleLogin"
-          class="login-btn"
-          native-type="submit"
-          type="primary"
-        >
-          {{ translate('登录') }}
-        </el-button>
-        <router-link to="/register">
-          <el-button
-            style="margin-top: 20px; margin-left: -10px"
-            type="primary"
-          >
-            {{ translate('注册') }}
-          </el-button>
-        </router-link>
-      </el-form>
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .login-container {

@@ -1,39 +1,3 @@
-<script lang="ts" setup>
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { translate } from '/@/i18n'
-  import { isExternal } from '/@/utils/validate'
-  import { openFirstMenu } from '/@/config'
-
-  defineOptions({
-    name: 'VabNav',
-  })
-
-  defineProps({
-    layout: {
-      type: String,
-      default: '',
-    },
-  })
-
-  const router = useRouter()
-  const routesStore = useRoutesStore()
-  const {
-    getTab: tab,
-    getTabMenu: tabMenu,
-    getRoutes: routes,
-  } = storeToRefs(routesStore)
-
-  const handleTabClick = () => {
-    nextTick(() => {
-      if (isExternal(tabMenu.value.path)) {
-        window.open(tabMenu.value.path)
-        router.push('/redirect')
-      } else if (openFirstMenu)
-        router.push(tabMenu.value.redirect || tabMenu.value)
-    })
-  }
-</script>
-
 <template>
   <div class="vab-nav">
     <el-row :gutter="20">
@@ -70,6 +34,42 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { translate } from '/@/i18n'
+  import { isExternal } from '/@/utils/validate'
+  import { openFirstMenu } from '/@/config'
+
+  defineOptions({
+    name: 'VabNav',
+  })
+
+  defineProps({
+    layout: {
+      type: String,
+      default: '',
+    },
+  })
+
+  const router = useRouter()
+  const routesStore = useRoutesStore()
+  const {
+    getTab: tab,
+    getTabMenu: tabMenu,
+    getRoutes: routes,
+  } = storeToRefs(routesStore)
+
+  const handleTabClick = () => {
+    nextTick(() => {
+      if (isExternal(tabMenu.value.path)) {
+        window.open(tabMenu.value.path)
+        router.push('/redirect')
+      } else if (openFirstMenu)
+        router.push(tabMenu.value.redirect || tabMenu.value)
+    })
+  }
+</script>
 
 <style lang="scss" scoped>
   .vab-nav {

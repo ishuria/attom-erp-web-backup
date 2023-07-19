@@ -1,3 +1,13 @@
+<template>
+  <v-chart
+    ref="VChartRef"
+    :autoresize="autoresize"
+    :option="option"
+    @click="handleClick"
+    @highlight="handleHighlight"
+  />
+</template>
+
 <script lang="ts" setup>
   /* eslint-disable @typescript-eslint/no-unused-vars */
   import theme from './theme/vab-echarts-theme.json'
@@ -162,13 +172,3 @@
     return VChartRef.value.getHeight()
   }
 </script>
-
-<template>
-  <v-chart
-    ref="VChartRef"
-    :autoresize="autoresize"
-    :option="option"
-    @click="handleClick"
-    @highlight="handleHighlight"
-  />
-</template>

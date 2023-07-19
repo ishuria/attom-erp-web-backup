@@ -1,14 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Switch',
-  })
-
-  const value = ref<boolean>(true)
-  const value1 = ref<boolean>(true)
-  const value2 = ref<boolean>(true)
-  const value3 = ref<boolean>(false)
-</script>
-
 <template>
   <div class="switch-container no-background-container">
     <vab-card>
@@ -40,3 +29,14 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Switch',
+  })
+
+  const value = ref<boolean>(true)
+  const value1 = ref<boolean>(true)
+  const value2 = ref<boolean>(true)
+  const value3 = ref<boolean>(false)
+</script>

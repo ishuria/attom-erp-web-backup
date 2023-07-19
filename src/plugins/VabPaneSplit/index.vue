@@ -1,5 +1,15 @@
-<!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
-<!-- eslint-disable vue/require-default-prop -->
+<template>
+  <div class="split" :class="{ horizontal }">
+    <div ref="one" class="sub" :style="{ flexGrow: grow1 }">
+      <slot name="one"></slot>
+    </div>
+    <div class="resizer" @mousedown="startResize"></div>
+    <div ref="two" class="sub" :style="{ flexGrow: grow2 }">
+      <slot name="two"></slot>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'VabPaneSplit',
@@ -67,18 +77,6 @@
     document.addEventListener('mouseup', handleMouseUp)
   }
 </script>
-
-<template>
-  <div class="split" :class="{ horizontal }">
-    <div ref="one" class="sub" :style="{ flexGrow: grow1 }">
-      <slot name="one"></slot>
-    </div>
-    <div class="resizer" @mousedown="startResize"></div>
-    <div ref="two" class="sub" :style="{ flexGrow: grow2 }">
-      <slot name="two"></slot>
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .forbid-select {

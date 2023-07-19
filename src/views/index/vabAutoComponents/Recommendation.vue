@@ -1,3 +1,36 @@
+<template>
+  <vab-card>
+    <template #header>
+      <vab-icon icon="reserved-line" />
+      经营建议
+    </template>
+
+    <el-row :gutter="20">
+      <el-col
+        v-for="(item, index) in iconList"
+        :key="index"
+        :lg="6"
+        :md="8"
+        :sm="8"
+        :xl="6"
+        :xs="24"
+      >
+        <vab-link :to="item.link">
+          <vab-card class="icon-panel">
+            <el-badge class="item" :value="item.value">
+              <vab-icon :icon="item.icon" />
+            </el-badge>
+            <div class="icon-panel-title">
+              {{ item.title }}
+              <div class="icon-panel-tips">{{ item.tips }}</div>
+            </div>
+          </vab-card>
+        </vab-link>
+      </el-col>
+    </el-row>
+  </vab-card>
+</template>
+
 <script lang="ts" setup>
   const iconList = [
     {
@@ -51,39 +84,6 @@
     },
   ]
 </script>
-
-<template>
-  <vab-card>
-    <template #header>
-      <vab-icon icon="reserved-line" />
-      经营建议
-    </template>
-
-    <el-row :gutter="20">
-      <el-col
-        v-for="(item, index) in iconList"
-        :key="index"
-        :lg="6"
-        :md="8"
-        :sm="8"
-        :xl="6"
-        :xs="24"
-      >
-        <vab-link :to="item.link">
-          <vab-card class="icon-panel">
-            <el-badge class="item" :value="item.value">
-              <vab-icon :icon="item.icon" />
-            </el-badge>
-            <div class="icon-panel-title">
-              {{ item.title }}
-              <div class="icon-panel-tips">{{ item.tips }}</div>
-            </div>
-          </vab-card>
-        </vab-link>
-      </el-col>
-    </el-row>
-  </vab-card>
-</template>
 
 <style lang="scss" scoped>
   .icon-panel {

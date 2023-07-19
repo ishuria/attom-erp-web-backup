@@ -1,3 +1,9 @@
+<template>
+  <component :is="type" v-bind="linkProps()">
+    <slot />
+  </component>
+</template>
+
 <script lang="ts" setup>
   import { isExternal } from '/@/utils/validate'
 
@@ -27,9 +33,3 @@
         }
       : { to: props.to, target: props.target }
 </script>
-
-<template>
-  <component :is="type" v-bind="linkProps()">
-    <slot />
-  </component>
-</template>

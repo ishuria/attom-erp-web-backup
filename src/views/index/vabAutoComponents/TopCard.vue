@@ -1,3 +1,35 @@
+<template>
+  <vab-card class="top-card" :class="'top-card-' + background">
+    {{ title }}
+    <template v-if="$slots.tag">
+      <slot name="tag"></slot>
+    </template>
+    <p>
+      <vab-count
+        :decimals="countConfig.decimals"
+        :duration="countConfig.duration"
+        :end-value="countConfig.endVal"
+        :prefix="countConfig.prefix"
+        :separator="countConfig.separator"
+        :start-value="countConfig.startVal"
+        :suffix="countConfig.suffix"
+      />
+    </p>
+    <div v-if="icon" class="right-icon">
+      <vab-icon :icon="icon" />
+    </div>
+
+    <div class="bottom">
+      自上周以来
+      <vab-icon icon="arrow-up-line" />
+      <span>{{ percentage }}</span>
+      <template v-if="$slots.chart">
+        <slot name="chart"></slot>
+      </template>
+    </div>
+  </vab-card>
+</template>
+
 <script lang="ts" setup>
   import { random } from 'lodash-es'
 
@@ -38,38 +70,6 @@
     },
   })
 </script>
-
-<template>
-  <vab-card class="top-card" :class="'top-card-' + background">
-    {{ title }}
-    <template v-if="$slots.tag">
-      <slot name="tag"></slot>
-    </template>
-    <p>
-      <vab-count
-        :decimals="countConfig.decimals"
-        :duration="countConfig.duration"
-        :end-value="countConfig.endVal"
-        :prefix="countConfig.prefix"
-        :separator="countConfig.separator"
-        :start-value="countConfig.startVal"
-        :suffix="countConfig.suffix"
-      />
-    </p>
-    <div v-if="icon" class="right-icon">
-      <vab-icon :icon="icon" />
-    </div>
-
-    <div class="bottom">
-      自上周以来
-      <vab-icon icon="arrow-up-line" />
-      <span>{{ percentage }}</span>
-      <template v-if="$slots.chart">
-        <slot name="chart"></slot>
-      </template>
-    </div>
-  </vab-card>
-</template>
 
 <style lang="scss" scoped>
   .top-card {

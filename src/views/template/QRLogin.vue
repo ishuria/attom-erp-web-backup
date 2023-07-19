@@ -1,3 +1,27 @@
+<template>
+  <div class="qr-login-container">
+    <el-button type="primary" @click="dialogVisible = true">打开</el-button>
+
+    <el-dialog v-model="dialogVisible" draggable title="扫码登录" width="350px">
+      <div class="qr-box">
+        <img class="qr-image" :src="QR" />
+        <img class="scan-image" :src="scan" />
+        <div class="wechat-title">
+          打开微信扫一扫，快速登录/注册
+          <p>其他登录方式</p>
+        </div>
+
+        <div class="qr-box-bottom">
+          <vab-icon icon="qq-fill" />
+          <vab-icon icon="weibo-fill" />
+          <vab-icon icon="wechat-fill" />
+          <vab-icon icon="github-fill" />
+        </div>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { getImageUrl } from '/@/utils/imageUrl'
 
@@ -22,30 +46,6 @@
     next()
   })
 </script>
-
-<template>
-  <div class="qr-login-container">
-    <el-button type="primary" @click="dialogVisible = true">打开</el-button>
-
-    <el-dialog v-model="dialogVisible" draggable title="扫码登录" width="350px">
-      <div class="qr-box">
-        <img class="qr-image" :src="QR" />
-        <img class="scan-image" :src="scan" />
-        <div class="wechat-title">
-          打开微信扫一扫，快速登录/注册
-          <p>其他登录方式</p>
-        </div>
-
-        <div class="qr-box-bottom">
-          <vab-icon icon="qq-fill" />
-          <vab-icon icon="weibo-fill" />
-          <vab-icon icon="wechat-fill" />
-          <vab-icon icon="github-fill" />
-        </div>
-      </div>
-    </el-dialog>
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .qr-login-container {

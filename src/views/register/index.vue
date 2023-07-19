@@ -1,3 +1,97 @@
+<template>
+  <div class="register-container">
+    <div class="register-form">
+      <img class="left-img" :src="leftImg" />
+      <el-form
+        ref="formRef"
+        label-position="left"
+        :model="form"
+        :rules="rules"
+        @submit.prevent
+      >
+        <div class="title">hello !</div>
+        <div class="title-tips">{{ translate('账号注册') }}</div>
+        <el-form-item prop="username">
+          <el-input
+            v-model.trim="form.username"
+            v-focus
+            auto-complete="off"
+            clearable
+            :placeholder="translate('请输入用户名')"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="user-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="phone">
+          <el-input
+            v-model.trim="form.phone"
+            clearable
+            maxlength="11"
+            :placeholder="translate('请输入手机号')"
+            show-word-limit
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="smartphone-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="phoneCode" style="position: relative">
+          <el-input
+            v-model.trim="form.phoneCode"
+            :placeholder="translate('请输入手机验证码')"
+            type="text"
+          >
+            <template #prefix>
+              <vab-icon icon="barcode-box-line" />
+            </template>
+          </el-input>
+          <el-button
+            class="phone-code"
+            :disabled="isGetPhone"
+            type="primary"
+            @click="getPhoneCode"
+          >
+            {{ phoneCode }}
+          </el-button>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model.trim="form.password"
+            autocomplete="new-password"
+            clearable
+            :placeholder="translate('请输入密码')"
+            type="password"
+          >
+            <template #prefix>
+              <vab-icon icon="lock-line" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-button
+          class="register-btn"
+          native-type="submit"
+          type="primary"
+          @click.prevent="handleRegister"
+        >
+          {{ translate('注册') }}
+        </el-button>
+        <router-link to="/login">
+          <el-button
+            style="margin-top: 20px; margin-left: -10px"
+            type="primary"
+          >
+            {{ translate('登录') }}
+          </el-button>
+        </router-link>
+      </el-form>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { translate } from '/@/i18n'
   import { isPassword, isPhone } from '/@/utils/validate'
@@ -123,100 +217,6 @@
     getPhoneInterval.value = null
   })
 </script>
-
-<template>
-  <div class="register-container">
-    <div class="register-form">
-      <img class="left-img" :src="leftImg" />
-      <el-form
-        ref="formRef"
-        label-position="left"
-        :model="form"
-        :rules="rules"
-        @submit.prevent
-      >
-        <div class="title">hello !</div>
-        <div class="title-tips">{{ translate('账号注册') }}</div>
-        <el-form-item prop="username">
-          <el-input
-            v-model.trim="form.username"
-            v-focus
-            auto-complete="off"
-            clearable
-            :placeholder="translate('请输入用户名')"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="user-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="phone">
-          <el-input
-            v-model.trim="form.phone"
-            clearable
-            maxlength="11"
-            :placeholder="translate('请输入手机号')"
-            show-word-limit
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="smartphone-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="phoneCode" style="position: relative">
-          <el-input
-            v-model.trim="form.phoneCode"
-            :placeholder="translate('请输入手机验证码')"
-            type="text"
-          >
-            <template #prefix>
-              <vab-icon icon="barcode-box-line" />
-            </template>
-          </el-input>
-          <el-button
-            class="phone-code"
-            :disabled="isGetPhone"
-            type="primary"
-            @click="getPhoneCode"
-          >
-            {{ phoneCode }}
-          </el-button>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            v-model.trim="form.password"
-            autocomplete="new-password"
-            clearable
-            :placeholder="translate('请输入密码')"
-            type="password"
-          >
-            <template #prefix>
-              <vab-icon icon="lock-line" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-button
-          class="register-btn"
-          native-type="submit"
-          type="primary"
-          @click.prevent="handleRegister"
-        >
-          {{ translate('注册') }}
-        </el-button>
-        <router-link to="/login">
-          <el-button
-            style="margin-top: 20px; margin-left: -10px"
-            type="primary"
-          >
-            {{ translate('登录') }}
-          </el-button>
-        </router-link>
-      </el-form>
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .register-container {

@@ -1,3 +1,30 @@
+<template>
+  <el-menu-item :index="itemOrMenu.path" @click="handleLink">
+    <vab-icon
+      v-if="itemOrMenu.meta && itemOrMenu.meta.icon"
+      :icon="itemOrMenu.meta.icon"
+      :is-custom-svg="itemOrMenu.meta.isCustomSvg"
+      :title="translate(itemOrMenu.meta.title)"
+    />
+    <span :title="translate(itemOrMenu.meta.title)">
+      {{ translate(itemOrMenu.meta.title) }}
+    </span>
+    <el-tag
+      v-if="itemOrMenu.meta && itemOrMenu.meta.badge"
+      effect="dark"
+      type="danger"
+    >
+      {{ itemOrMenu.meta.badge }}
+    </el-tag>
+    <span
+      v-if="itemOrMenu.meta && itemOrMenu.meta.dot"
+      class="vab-dot vab-dot-error"
+    >
+      <span />
+    </span>
+  </el-menu-item>
+</template>
+
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { isExternal } from '/@/utils/validate'
@@ -42,33 +69,6 @@
     }
   }
 </script>
-
-<template>
-  <el-menu-item :index="itemOrMenu.path" @click="handleLink">
-    <vab-icon
-      v-if="itemOrMenu.meta && itemOrMenu.meta.icon"
-      :icon="itemOrMenu.meta.icon"
-      :is-custom-svg="itemOrMenu.meta.isCustomSvg"
-      :title="translate(itemOrMenu.meta.title)"
-    />
-    <span :title="translate(itemOrMenu.meta.title)">
-      {{ translate(itemOrMenu.meta.title) }}
-    </span>
-    <el-tag
-      v-if="itemOrMenu.meta && itemOrMenu.meta.badge"
-      effect="dark"
-      type="danger"
-    >
-      {{ itemOrMenu.meta.badge }}
-    </el-tag>
-    <span
-      v-if="itemOrMenu.meta && itemOrMenu.meta.dot"
-      class="vab-dot vab-dot-error"
-    >
-      <span />
-    </span>
-  </el-menu-item>
-</template>
 
 <style lang="scss" scoped>
   :deep(.el-tag) {

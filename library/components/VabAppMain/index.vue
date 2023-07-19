@@ -1,3 +1,12 @@
+<template>
+  <div class="vab-app-main">
+    <section>
+      <VabRouterView />
+      <vab-footer />
+    </section>
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
   import { handleActivePath } from '/@/utils/routes'
@@ -20,12 +29,3 @@
     { immediate: true }
   )
 </script>
-
-<template>
-  <div class="vab-app-main">
-    <section>
-      <VabRouterView />
-      <vab-footer />
-    </section>
-  </div>
-</template>

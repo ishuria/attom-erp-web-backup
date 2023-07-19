@@ -1,56 +1,3 @@
-<script lang="ts" setup>
-  import { useUserStore } from '/@/store/modules/user'
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/i18n'
-
-  defineOptions({
-    name: 'VabLock',
-  })
-
-  const userStore = useUserStore()
-  const { avatar } = storeToRefs(userStore)
-  const settingsStore = useSettingsStore()
-  const { theme, lock, title } = storeToRefs(settingsStore)
-  const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
-  const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
-
-  const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
-  const randomBackground = () => {
-    background.value = `${url}${Math.round(Math.random() * 31)}.jpg`
-  }
-
-  const validatePass = (rule: any, value: string, callback: any) => {
-    if (value === '' || value !== '123456') {
-      callback(new Error('请输入正确的密码'))
-    } else {
-      callback()
-    }
-  }
-
-  const formRef = ref()
-  const form = ref({
-    password: '123456',
-  })
-  const rules = {
-    password: [{ validator: validatePass, trigger: 'blur' }],
-  }
-
-  const handleUnLock = () => {
-    formRef.value.validate(async (valid: boolean) => {
-      if (valid) {
-        setTimeout(async () => {
-          await _handleUnLock()
-          await randomBackground()
-        }, 500)
-      }
-    })
-  }
-
-  const handleLock = () => {
-    _handleLock()
-  }
-</script>
-
 <template>
   <el-tooltip :content="translate('锁屏')" effect="light">
     <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
@@ -103,6 +50,59 @@
     </div>
   </transition>
 </template>
+
+<script lang="ts" setup>
+  import { useUserStore } from '/@/store/modules/user'
+  import { useSettingsStore } from '/@/store/modules/settings'
+  import { translate } from '/@/i18n'
+
+  defineOptions({
+    name: 'VabLock',
+  })
+
+  const userStore = useUserStore()
+  const { avatar } = storeToRefs(userStore)
+  const settingsStore = useSettingsStore()
+  const { theme, lock, title } = storeToRefs(settingsStore)
+  const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
+  const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
+
+  const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
+  const randomBackground = () => {
+    background.value = `${url}${Math.round(Math.random() * 31)}.jpg`
+  }
+
+  const validatePass = (rule: any, value: string, callback: any) => {
+    if (value === '' || value !== '123456') {
+      callback(new Error('请输入正确的密码'))
+    } else {
+      callback()
+    }
+  }
+
+  const formRef = ref()
+  const form = ref({
+    password: '123456',
+  })
+  const rules = {
+    password: [{ validator: validatePass, trigger: 'blur' }],
+  }
+
+  const handleUnLock = () => {
+    formRef.value.validate(async (valid: boolean) => {
+      if (valid) {
+        setTimeout(async () => {
+          await _handleUnLock()
+          await randomBackground()
+        }, 500)
+      }
+    })
+  }
+
+  const handleLock = () => {
+    _handleLock()
+  }
+</script>
 
 <style lang="scss" scoped>
   .vab-screen-lock {

@@ -1,3 +1,21 @@
+<template>
+  <el-card
+    class="vab-colorful-card"
+    :shadow="shadow"
+    :style="
+      style
+        ? style
+        : {
+            background: `linear-gradient(120deg, ${colorFrom} 10%, ${colorTo})`,
+          }
+    "
+  >
+    <template #header>{{ title }}</template>
+    <vab-icon v-if="icon" :icon="icon" />
+    <slot />
+  </el-card>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'VabColorfulCard',
@@ -30,24 +48,6 @@
     },
   })
 </script>
-
-<template>
-  <el-card
-    class="vab-colorful-card"
-    :shadow="shadow"
-    :style="
-      style
-        ? style
-        : {
-            background: `linear-gradient(120deg, ${colorFrom} 10%, ${colorTo})`,
-          }
-    "
-  >
-    <template #header>{{ title }}</template>
-    <vab-icon v-if="icon" :icon="icon" />
-    <slot />
-  </el-card>
-</template>
 
 <style lang="scss" scoped>
   .vab-colorful-card {

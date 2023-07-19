@@ -1,10 +1,3 @@
-<script lang="ts" setup>
-  import pkg from '~/package.json'
-
-  const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
-  const { dependencies, devDependencies, version } = pkg
-</script>
-
 <template>
   <vab-card class="version-information">
     <template #header>
@@ -66,6 +59,13 @@
     </el-scrollbar>
   </vab-card>
 </template>
+
+<script lang="ts" setup>
+  import pkg from '~/package.json'
+
+  const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
+  const { dependencies, devDependencies, version } = pkg
+</script>
 
 <style lang="scss" scoped>
   .version-information {

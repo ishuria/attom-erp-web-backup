@@ -1,3 +1,14 @@
+<template>
+  <el-tooltip :content="translate('刷新')" effect="light">
+    <vab-icon
+      v-if="theme.showRefresh"
+      :class="className"
+      icon="refresh-line"
+      @click="refreshRoute"
+    />
+  </el-tooltip>
+</template>
+
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { translate } from '/@/i18n'
@@ -19,14 +30,3 @@
     }, 500)
   }
 </script>
-
-<template>
-  <el-tooltip :content="translate('刷新')" effect="light">
-    <vab-icon
-      v-if="theme.showRefresh"
-      :class="className"
-      icon="refresh-line"
-      @click="refreshRoute"
-    />
-  </el-tooltip>
-</template>

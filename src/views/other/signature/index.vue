@@ -1,3 +1,30 @@
+<template>
+  <div class="signature-container">
+    <div class="signature-canvas-box">
+      <canvas
+        ref="canvas"
+        height="200"
+        width="500"
+        @mousedown="onEventStart"
+        @mousemove.stop.prevent="onEventMove"
+        @mouseup="onEventEnd"
+        @touchend="onEventEnd"
+        @touchmove.stop.prevent="onEventMove"
+        @touchstart="onEventStart"
+      ></canvas>
+      <img :src="catUrl" />
+    </div>
+    <el-button type="primary" @click="handleSaveImg">
+      <vab-icon icon="save-line" />
+      <span>存为图片</span>
+    </el-button>
+    <el-button type="danger" @click="handleClearSign">
+      <vab-icon icon="delete-bin-5-line" />
+      <span>清空签名</span>
+    </el-button>
+  </div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'Signature',
@@ -88,33 +115,6 @@
     ctx.stroke()
   }
 </script>
-
-<template>
-  <div class="signature-container">
-    <div class="signature-canvas-box">
-      <canvas
-        ref="canvas"
-        height="200"
-        width="500"
-        @mousedown="onEventStart"
-        @mousemove.stop.prevent="onEventMove"
-        @mouseup="onEventEnd"
-        @touchend="onEventEnd"
-        @touchmove.stop.prevent="onEventMove"
-        @touchstart="onEventStart"
-      ></canvas>
-      <img :src="catUrl" />
-    </div>
-    <el-button type="primary" @click="handleSaveImg">
-      <vab-icon icon="save-line" />
-      <span>存为图片</span>
-    </el-button>
-    <el-button type="danger" @click="handleClearSign">
-      <vab-icon icon="delete-bin-5-line" />
-      <span>清空签名</span>
-    </el-button>
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .signature-container {

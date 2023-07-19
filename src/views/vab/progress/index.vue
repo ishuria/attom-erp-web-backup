@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Progress',
-  })
-</script>
-
 <template>
   <div class="progress-container no-background-container">
     <vab-card>
@@ -40,3 +34,9 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Progress',
+  })
+</script>

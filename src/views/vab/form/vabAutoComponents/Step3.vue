@@ -1,22 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Step3',
-  })
-  defineProps({
-    infoData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
-    },
-  })
-  const emit = defineEmits(['change-step'])
-
-  const handlePrev = () => {
-    emit('change-step', 0)
-  }
-</script>
-
 <template>
   <div>
     <div class="pay-top-content">
@@ -42,6 +23,25 @@
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Step3',
+  })
+  defineProps({
+    infoData: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+  })
+  const emit = defineEmits(['change-step'])
+
+  const handlePrev = () => {
+    emit('change-step', 0)
+  }
+</script>
 
 <style lang="scss" scoped>
   .pay-top-content {

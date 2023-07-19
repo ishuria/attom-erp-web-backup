@@ -1,44 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'PasswordGenerator',
-  })
-
-  const form = reactive<any>({
-    length: 16,
-    includeUppercase: true,
-    includeLowercase: true,
-    includeNumbers: true,
-    includeSymbols: false,
-  })
-
-  const generatedPassword = ref<string>('')
-
-  const generatePassword = () => {
-    let characters = ''
-    let password = ''
-
-    if (form.includeUppercase) {
-      characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    }
-    if (form.includeLowercase) {
-      characters += 'abcdefghijklmnopqrstuvwxyz'
-    }
-    if (form.includeNumbers) {
-      characters += '0123456789'
-    }
-    if (form.includeSymbols) {
-      characters += '!@#$%^&*()_+~`|}{[]:;?><,./-='
-    }
-
-    for (let i = 0; i < form.length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length)
-      password += characters.charAt(randomIndex)
-    }
-
-    generatedPassword.value = password
-  }
-</script>
-
 <template>
   <div class="password-generator-container no-background-container">
     <el-row :gutter="20">
@@ -85,6 +44,47 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'PasswordGenerator',
+  })
+
+  const form = reactive<any>({
+    length: 16,
+    includeUppercase: true,
+    includeLowercase: true,
+    includeNumbers: true,
+    includeSymbols: false,
+  })
+
+  const generatedPassword = ref<string>('')
+
+  const generatePassword = () => {
+    let characters = ''
+    let password = ''
+
+    if (form.includeUppercase) {
+      characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    }
+    if (form.includeLowercase) {
+      characters += 'abcdefghijklmnopqrstuvwxyz'
+    }
+    if (form.includeNumbers) {
+      characters += '0123456789'
+    }
+    if (form.includeSymbols) {
+      characters += '!@#$%^&*()_+~`|}{[]:;?><,./-='
+    }
+
+    for (let i = 0; i < form.length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length)
+      password += characters.charAt(randomIndex)
+    }
+
+    generatedPassword.value = password
+  }
+</script>
 
 <style lang="scss" scoped>
   .password-generator-container {

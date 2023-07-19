@@ -1,3 +1,11 @@
+<template>
+  <footer v-if="theme.showFooter" class="vab-footer">
+    Copyright
+    <vab-icon icon="copyright-line" />
+    {{ fullYear }} {{ title }}
+  </footer>
+</template>
+
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -9,14 +17,6 @@
   const settingsStore = useSettingsStore()
   const { title, theme } = storeToRefs(settingsStore)
 </script>
-
-<template>
-  <footer v-if="theme.showFooter" class="vab-footer">
-    Copyright
-    <vab-icon icon="copyright-line" />
-    {{ fullYear }} {{ title }}
-  </footer>
-</template>
 
 <style lang="scss" scoped>
   .vab-footer {

@@ -1,3 +1,48 @@
+<template>
+  <el-button type="primary" @click="table = true">带表格的的抽屉</el-button>
+  <el-button type="primary" @click="dialog = true">带表单的的抽屉</el-button>
+  <el-drawer
+    v-model="table"
+    direction="rtl"
+    size="50%"
+    title="我有一个嵌套表！"
+  >
+    <el-table :data="gridData">
+      <el-table-column label="日期" property="date" width="150" />
+      <el-table-column label="姓名" property="name" width="200" />
+      <el-table-column label="地址" property="address" />
+    </el-table>
+  </el-drawer>
+
+  <el-drawer
+    ref="drawerRef"
+    v-model="dialog"
+    :before-close="handleClose"
+    direction="ltr"
+    title="我有一个嵌套的表单！"
+  >
+    <div>
+      <el-form :model="form">
+        <el-form-item label="姓名" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off" clearable />
+        </el-form-item>
+        <el-form-item label="地区" :label-width="formLabelWidth">
+          <el-select v-model="form.region" placeholder="请选择活动区域">
+            <el-option label="上海" value="shanghai" />
+            <el-option label="北京" value="beijing" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div>
+        <el-button @click="cancelForm">取消</el-button>
+        <el-button :loading="loading" type="primary" @click="onClick">
+          {{ loading ? '提交中 ...' : '提交' }}
+        </el-button>
+      </div>
+    </div>
+  </el-drawer>
+</template>
+
 <script lang="ts" setup>
   import { ElDrawer, ElMessageBox } from 'element-plus'
 
@@ -75,48 +120,3 @@
     clearTimeout(timer)
   }
 </script>
-
-<template>
-  <el-button type="primary" @click="table = true">带表格的的抽屉</el-button>
-  <el-button type="primary" @click="dialog = true">带表单的的抽屉</el-button>
-  <el-drawer
-    v-model="table"
-    direction="rtl"
-    size="50%"
-    title="我有一个嵌套表！"
-  >
-    <el-table :data="gridData">
-      <el-table-column label="日期" property="date" width="150" />
-      <el-table-column label="姓名" property="name" width="200" />
-      <el-table-column label="地址" property="address" />
-    </el-table>
-  </el-drawer>
-
-  <el-drawer
-    ref="drawerRef"
-    v-model="dialog"
-    :before-close="handleClose"
-    direction="ltr"
-    title="我有一个嵌套的表单！"
-  >
-    <div>
-      <el-form :model="form">
-        <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" clearable />
-        </el-form-item>
-        <el-form-item label="地区" :label-width="formLabelWidth">
-          <el-select v-model="form.region" placeholder="请选择活动区域">
-            <el-option label="上海" value="shanghai" />
-            <el-option label="北京" value="beijing" />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div>
-        <el-button @click="cancelForm">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="onClick">
-          {{ loading ? '提交中 ...' : '提交' }}
-        </el-button>
-      </div>
-    </div>
-  </el-drawer>
-</template>

@@ -1,3 +1,9 @@
+<template>
+  <div class="md-editor-container no-background-container">
+    <v-md-editor v-model="markdownContent" />
+  </div>
+</template>
+
 <script lang="ts" setup>
   import VMdEditor from '@kangc/v-md-editor'
   import '@kangc/v-md-editor/lib/style/base-editor.css'
@@ -38,12 +44,6 @@
 
   VMdEditor.use(githubTheme)
 </script>
-
-<template>
-  <div class="md-editor-container no-background-container">
-    <v-md-editor v-model="markdownContent" />
-  </div>
-</template>
 
 <style lang="scss" scoped>
   .md-editor-container {

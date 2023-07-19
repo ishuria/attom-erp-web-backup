@@ -1,12 +1,3 @@
-<script lang="ts" setup>
-  import {
-    ArrowRight,
-    CaretBottom,
-    CaretTop,
-    Warning,
-  } from '@element-plus/icons-vue'
-</script>
-
 <template>
   <el-row :gutter="16">
     <el-col :span="8">
@@ -96,6 +87,15 @@
     </el-col>
   </el-row>
 </template>
+
+<script lang="ts" setup>
+  import {
+    ArrowRight,
+    CaretBottom,
+    CaretTop,
+    Warning,
+  } from '@element-plus/icons-vue'
+</script>
 
 <style scoped>
   :global(h2#card-usage ~ .example .example-showcase) {

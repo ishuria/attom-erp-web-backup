@@ -1,3 +1,62 @@
+<template>
+  <el-scrollbar
+    class="vab-column-bar-container"
+    :class="{
+      'is-collapse': collapse,
+      ['vab-column-bar-container-' + theme.columnStyle]: true,
+    }"
+  >
+    <vab-logo style="z-index: 999" />
+    <el-tabs v-model="tab.data" tab-position="left" @tab-click="handleTabClick">
+      <template v-for="(item, index) in routes" :key="index + item.name">
+        <el-tab-pane :name="item.name">
+          <template #label>
+            <div
+              class="vab-column-grid"
+              :class="{
+                ['vab-column-grid-' + theme.columnStyle]: true,
+              }"
+              :title="translate(item.meta.title)"
+            >
+              <div>
+                <vab-icon
+                  v-if="item.meta.icon"
+                  :icon="item.meta.icon"
+                  :is-custom-svg="item.meta.isCustomSvg"
+                />
+                <span v-if="translate(item.meta.title).length < 4">
+                  {{ translate(item.meta.title) }}
+                </span>
+                <span
+                  v-else
+                  style="font-size: var(--el-font-size-small); zoom: 0.88"
+                >
+                  {{ translate(item.meta.title) }}
+                </span>
+              </div>
+            </div>
+          </template>
+        </el-tab-pane>
+      </template>
+    </el-tabs>
+
+    <el-menu
+      background-color="var(--el-menu-background-color-second)"
+      :default-active="activeMenu.data"
+      :default-openeds="defaultOpeneds"
+      mode="vertical"
+      :unique-opened="uniqueOpened"
+    >
+      <template v-for="item in partialRoutes" :key="item.path">
+        <vab-menu v-if="!item.meta.hidden" :item="item" />
+      </template>
+    </el-menu>
+    <div class="float-fold">
+      <vab-fold fold="contract-left-line" unfold="contract-right-line" />
+    </div>
+  </el-scrollbar>
+</template>
+
 <script lang="ts" setup>
   import { VabRoute } from '/#/router'
   import { isExternal } from '/@/utils/validate'
@@ -65,65 +124,6 @@
       })
   })
 </script>
-
-<template>
-  <el-scrollbar
-    class="vab-column-bar-container"
-    :class="{
-      'is-collapse': collapse,
-      ['vab-column-bar-container-' + theme.columnStyle]: true,
-    }"
-  >
-    <vab-logo style="z-index: 999" />
-    <el-tabs v-model="tab.data" tab-position="left" @tab-click="handleTabClick">
-      <template v-for="(item, index) in routes" :key="index + item.name">
-        <el-tab-pane :name="item.name">
-          <template #label>
-            <div
-              class="vab-column-grid"
-              :class="{
-                ['vab-column-grid-' + theme.columnStyle]: true,
-              }"
-              :title="translate(item.meta.title)"
-            >
-              <div>
-                <vab-icon
-                  v-if="item.meta.icon"
-                  :icon="item.meta.icon"
-                  :is-custom-svg="item.meta.isCustomSvg"
-                />
-                <span v-if="translate(item.meta.title).length < 4">
-                  {{ translate(item.meta.title) }}
-                </span>
-                <span
-                  v-else
-                  style="font-size: var(--el-font-size-small); zoom: 0.88"
-                >
-                  {{ translate(item.meta.title) }}
-                </span>
-              </div>
-            </div>
-          </template>
-        </el-tab-pane>
-      </template>
-    </el-tabs>
-
-    <el-menu
-      background-color="var(--el-menu-background-color-second)"
-      :default-active="activeMenu.data"
-      :default-openeds="defaultOpeneds"
-      mode="vertical"
-      :unique-opened="uniqueOpened"
-    >
-      <template v-for="item in partialRoutes" :key="item.path">
-        <vab-menu v-if="!item.meta.hidden" :item="item" />
-      </template>
-    </el-menu>
-    <div class="float-fold">
-      <vab-fold fold="contract-left-line" unfold="contract-right-line" />
-    </div>
-  </el-scrollbar>
-</template>
 
 <style lang="scss" scoped>
   @mixin active {

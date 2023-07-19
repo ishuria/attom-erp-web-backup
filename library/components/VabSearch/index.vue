@@ -1,3 +1,21 @@
+<template>
+  <el-tree-select
+    v-if="theme.showSearch"
+    v-model="value"
+    class="vab-search"
+    clearable
+    :data="addFieldToTree(routes)"
+    filterable
+    :prefix-icon="Search"
+    @node-click="handleSelect"
+  >
+    <template #default="{ data }">
+      <vab-icon :icon="data.meta.icon" />
+      <span>{{ data.meta.title }}</span>
+    </template>
+  </el-tree-select>
+</template>
+
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useRoutesStore } from '/@/store/modules/routes'
@@ -47,24 +65,6 @@
     }
   )
 </script>
-
-<template>
-  <el-tree-select
-    v-if="theme.showSearch"
-    v-model="value"
-    class="vab-search"
-    clearable
-    :data="addFieldToTree(routes)"
-    filterable
-    :prefix-icon="Search"
-    @node-click="handleSelect"
-  >
-    <template #default="{ data }">
-      <vab-icon :icon="data.meta.icon" />
-      <span>{{ data.meta.title }}</span>
-    </template>
-  </el-tree-select>
-</template>
 
 <style lang="scss" scoped>
   .vab-search {

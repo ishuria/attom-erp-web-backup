@@ -1,3 +1,43 @@
+<template>
+  <el-row :gutter="20">
+    <el-col :span="24">
+      <vab-query-form>
+        <vab-query-form-top-panel>
+          <el-form inline label-width="0" @submit.prevent>
+            <el-form-item>
+              <el-input v-model="queryForm.title" clearable />
+            </el-form-item>
+            <el-form-item label-width="0">
+              <el-button
+                :icon="Search"
+                native-type="submit"
+                type="primary"
+                @click="queryData"
+              />
+            </el-form-item>
+          </el-form>
+        </vab-query-form-top-panel>
+      </vab-query-form>
+    </el-col>
+    <el-col v-for="(item, index) in queryIcon" :key="index" :span="6">
+      <vab-card @click="handleIcon(item)">
+        <vab-icon :icon="item" />
+      </vab-card>
+    </el-col>
+    <el-col :span="24">
+      <el-pagination
+        :background="background"
+        :current-page="queryForm.pageNo"
+        :layout="layout"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+    </el-col>
+  </el-row>
+</template>
+
 <script lang="ts" setup>
   import { getIconList } from '/@/api/icon'
   import { Search } from '@element-plus/icons-vue'
@@ -50,46 +90,6 @@
     fetchData()
   })
 </script>
-
-<template>
-  <el-row :gutter="20">
-    <el-col :span="24">
-      <vab-query-form>
-        <vab-query-form-top-panel>
-          <el-form inline label-width="0" @submit.prevent>
-            <el-form-item>
-              <el-input v-model="queryForm.title" clearable />
-            </el-form-item>
-            <el-form-item label-width="0">
-              <el-button
-                :icon="Search"
-                native-type="submit"
-                type="primary"
-                @click="queryData"
-              />
-            </el-form-item>
-          </el-form>
-        </vab-query-form-top-panel>
-      </vab-query-form>
-    </el-col>
-    <el-col v-for="(item, index) in queryIcon" :key="index" :span="6">
-      <vab-card @click="handleIcon(item)">
-        <vab-icon :icon="item" />
-      </vab-card>
-    </el-col>
-    <el-col :span="24">
-      <el-pagination
-        :background="background"
-        :current-page="queryForm.pageNo"
-        :layout="layout"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
-    </el-col>
-  </el-row>
-</template>
 
 <style lang="scss">
   .icon-selector-popper {

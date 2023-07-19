@@ -1,20 +1,3 @@
-<script lang="ts" setup>
-  import { translate } from '/@/i18n'
-
-  defineOptions({
-    name: 'VabSubMenu',
-  })
-
-  defineProps({
-    itemOrMenu: {
-      type: Object,
-      default() {
-        return null
-      },
-    },
-  })
-</script>
-
 <template>
   <template v-if="itemOrMenu.meta && itemOrMenu.meta.levelHidden">
     <template v-for="route in itemOrMenu.children" :key="route.path">
@@ -36,3 +19,20 @@
     <slot />
   </el-sub-menu>
 </template>
+
+<script lang="ts" setup>
+  import { translate } from '/@/i18n'
+
+  defineOptions({
+    name: 'VabSubMenu',
+  })
+
+  defineProps({
+    itemOrMenu: {
+      type: Object,
+      default() {
+        return null
+      },
+    },
+  })
+</script>

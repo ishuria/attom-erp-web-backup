@@ -1,16 +1,3 @@
-<script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/i18n'
-
-  defineOptions({
-    name: 'VabFullScreen',
-  })
-
-  const { isFullscreen, toggle } = useFullscreen()
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
-</script>
-
 <template>
   <div>
     <el-tooltip
@@ -25,3 +12,16 @@
     </el-tooltip>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useSettingsStore } from '/@/store/modules/settings'
+  import { translate } from '/@/i18n'
+
+  defineOptions({
+    name: 'VabFullScreen',
+  })
+
+  const { isFullscreen, toggle } = useFullscreen()
+  const settingsStore = useSettingsStore()
+  const { theme } = storeToRefs(settingsStore)
+</script>

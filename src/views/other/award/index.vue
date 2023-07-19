@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Award',
-  })
-</script>
-
 <template>
   <div class="award-container no-background-container">
     <el-row :gutter="20">
@@ -28,6 +22,12 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Award',
+  })
+</script>
 
 <style lang="scss" scoped>
   .award-container {

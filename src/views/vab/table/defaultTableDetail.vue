@@ -1,45 +1,3 @@
-<script lang="ts" setup>
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { handleActivePath } from '/@/utils/routes'
-  import { ArrowDown, Refresh } from '@element-plus/icons-vue'
-
-  defineOptions({
-    name: 'DefaultTableDetail',
-  })
-
-  const route: any = useRoute()
-  const $pub = inject<any>('$pub')
-  const tabsStore = useTabsStore()
-  const { changeTabsMeta, delVisitedRoute } = tabsStore
-  const form = reactive<any>({ text: '' })
-  const routesStore = useRoutesStore()
-  const { changeActiveMenu } = routesStore
-  const rate = ref<number>(parseInt(route.query.rate))
-
-  const goBack = async () => {
-    await delVisitedRoute(handleActivePath(route, true))
-    history.back()
-  }
-
-  const handleRefreshMainPage = (name: string) => {
-    $pub('reload-router-view', name)
-  }
-
-  const handleActiveMenu = (activeMenu: string) => {
-    changeActiveMenu(activeMenu)
-  }
-
-  onMounted(() => {
-    changeTabsMeta({
-      title: '详情页',
-      meta: {
-        title: `${route.query.title} 详情页`,
-      },
-    })
-  })
-</script>
-
 <template>
   <div class="default-table-detail-container">
     <el-page-header
@@ -134,6 +92,48 @@
     </el-descriptions>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { handleActivePath } from '/@/utils/routes'
+  import { ArrowDown, Refresh } from '@element-plus/icons-vue'
+
+  defineOptions({
+    name: 'DefaultTableDetail',
+  })
+
+  const route: any = useRoute()
+  const $pub = inject<any>('$pub')
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta, delVisitedRoute } = tabsStore
+  const form = reactive<any>({ text: '' })
+  const routesStore = useRoutesStore()
+  const { changeActiveMenu } = routesStore
+  const rate = ref<number>(parseInt(route.query.rate))
+
+  const goBack = async () => {
+    await delVisitedRoute(handleActivePath(route, true))
+    history.back()
+  }
+
+  const handleRefreshMainPage = (name: string) => {
+    $pub('reload-router-view', name)
+  }
+
+  const handleActiveMenu = (activeMenu: string) => {
+    changeActiveMenu(activeMenu)
+  }
+
+  onMounted(() => {
+    changeTabsMeta({
+      title: '详情页',
+      meta: {
+        title: `${route.query.title} 详情页`,
+      },
+    })
+  })
+</script>
 
 <style lang="scss" scoped>
   .default-table-detail-container {

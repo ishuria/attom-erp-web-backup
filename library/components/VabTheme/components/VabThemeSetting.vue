@@ -1,37 +1,3 @@
-<script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/i18n'
-
-  defineOptions({
-    name: 'VabThemeSetting',
-  })
-
-  const $pub = inject<any>('$pub')
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
-
-  const handleOpenTheme = () => {
-    $pub('shop-vite-theme')
-  }
-
-  const buy = () => {
-    window.open('https://vue-admin-beautiful.com/authorization/shop-vite.html')
-  }
-
-  const removeLocalStorage = () => {
-    localStorage.clear()
-
-    location.reload()
-  }
-
-  const resetTheme = () => {
-    $pub('shop-vite-reset')
-  }
-  const changeTheme = (value: string) => {
-    $pub('shop-vite-change-theme', value)
-  }
-</script>
-
 <template>
   <ul v-if="theme.showThemeSetting" class="vab-theme-setting">
     <li @click="handleOpenTheme">
@@ -80,6 +46,40 @@
     </li>
   </ul>
 </template>
+
+<script lang="ts" setup>
+  import { useSettingsStore } from '/@/store/modules/settings'
+  import { translate } from '/@/i18n'
+
+  defineOptions({
+    name: 'VabThemeSetting',
+  })
+
+  const $pub = inject<any>('$pub')
+  const settingsStore = useSettingsStore()
+  const { theme } = storeToRefs(settingsStore)
+
+  const handleOpenTheme = () => {
+    $pub('shop-vite-theme')
+  }
+
+  const buy = () => {
+    window.open('https://vue-admin-beautiful.com/authorization/shop-vite.html')
+  }
+
+  const removeLocalStorage = () => {
+    localStorage.clear()
+
+    location.reload()
+  }
+
+  const resetTheme = () => {
+    $pub('shop-vite-reset')
+  }
+  const changeTheme = (value: string) => {
+    $pub('shop-vite-change-theme', value)
+  }
+</script>
 
 <style lang="scss" scoped>
   .vab-theme-setting {

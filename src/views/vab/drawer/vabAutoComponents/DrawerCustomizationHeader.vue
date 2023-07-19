@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  import { CircleCloseFilled } from '@element-plus/icons-vue'
-
-  const visible = ref<boolean>(false)
-</script>
-
 <template>
   <el-button type="primary" @click="visible = true">自定义头部抽屉</el-button>
   <el-drawer v-model="visible" :show-close="false">
@@ -16,3 +10,9 @@
     这是抽屉内容
   </el-drawer>
 </template>
+
+<script lang="ts" setup>
+  import { CircleCloseFilled } from '@element-plus/icons-vue'
+
+  const visible = ref<boolean>(false)
+</script>

@@ -1,3 +1,16 @@
+<template>
+  <el-tooltip :content="translate('主题色')" effect="light">
+    <div style="margin-left: var(--el-margin)">
+      <el-color-picker
+        v-model="color"
+        popper-class="vab-color-picker"
+        :predefine="predefineColors"
+        @active-change="handleChange"
+      />
+    </div>
+  </el-tooltip>
+</template>
+
 <script lang="ts" setup>
   import { round } from 'lodash-es'
   import { color as _color } from '/@/config/'
@@ -90,19 +103,6 @@
     $unsub('shop-vite-reset-dark')
   })
 </script>
-
-<template>
-  <el-tooltip :content="translate('主题色')" effect="light">
-    <div style="margin-left: var(--el-margin)">
-      <el-color-picker
-        v-model="color"
-        popper-class="vab-color-picker"
-        :predefine="predefineColors"
-        @active-change="handleChange"
-      />
-    </div>
-  </el-tooltip>
-</template>
 
 <style lang="scss">
   .vab-color-picker {

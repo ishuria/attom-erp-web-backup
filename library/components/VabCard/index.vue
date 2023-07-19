@@ -1,3 +1,22 @@
+<template>
+  <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow">
+    <template v-if="$slots.header" #header>
+      <slot name="header"></slot>
+    </template>
+    <el-skeleton
+      v-if="skeleton"
+      animated
+      :loading="skeletonShow"
+      :rows="skeletonRows"
+    >
+      <template #default>
+        <slot />
+      </template>
+    </el-skeleton>
+    <slot v-else />
+  </el-card>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'VabCard',
@@ -37,25 +56,6 @@
     next()
   })
 </script>
-
-<template>
-  <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow">
-    <template v-if="$slots.header" #header>
-      <slot name="header"></slot>
-    </template>
-    <el-skeleton
-      v-if="skeleton"
-      animated
-      :loading="skeletonShow"
-      :rows="skeletonRows"
-    >
-      <template #default>
-        <slot />
-      </template>
-    </el-skeleton>
-    <slot v-else />
-  </el-card>
-</template>
 
 <style lang="scss" scoped>
   .vab-card {

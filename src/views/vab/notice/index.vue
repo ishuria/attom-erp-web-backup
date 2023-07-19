@@ -1,53 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Notice',
-  })
-
-  const $baseAlert = inject<any>('$baseAlert')
-  const $baseNotify = inject<any>('$baseNotify')
-  const $baseMessage = inject<any>('$baseMessage')
-
-  const open1 = () => {
-    $baseMessage('这是一条消息提示', 'info')
-  }
-  const open2 = () => {
-    $baseMessage('恭喜您，这是一条成功消息', 'success')
-  }
-  const open3 = () => {
-    $baseMessage('警告哦，这是一条警告消息', 'warning')
-  }
-  const open4 = () => {
-    $baseMessage('错了哦，这是一条错误消息', 'error')
-  }
-  const open5 = () => {
-    $baseMessage('这是一条消息提示', 'info', 'hey')
-  }
-  const open6 = () => {
-    $baseMessage('恭喜您，这是一条成功消息', 'success', 'hey')
-  }
-  const open7 = () => {
-    $baseMessage('警告哦，这是一条警告消息', 'warning', 'hey')
-  }
-  const open8 = () => {
-    $baseMessage('错了哦，这是一条错误消息', 'error', 'hey')
-  }
-  const open9 = () => {
-    $baseNotify('这是一条消息的提示消息', '提示', 'info', 'bottom-right')
-  }
-  const open10 = () => {
-    $baseNotify('这是一条成功的提示消息', '成功', 'success', 'bottom-right')
-  }
-  const open11 = () => {
-    $baseNotify('这是一条警告的提示消息', '警告', 'warning', 'bottom-right')
-  }
-  const open12 = () => {
-    $baseNotify('这是一条错误的提示消息', '错误', 'error', 'bottom-right')
-  }
-  const open13 = (value: string) => {
-    $baseAlert(`这是一条${value}弹框`)
-  }
-</script>
-
 <template>
   <div class="notice-container no-background-container">
     <el-row :gutter="20">
@@ -170,3 +120,53 @@
     </el-row>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Notice',
+  })
+
+  const $baseAlert = inject<any>('$baseAlert')
+  const $baseNotify = inject<any>('$baseNotify')
+  const $baseMessage = inject<any>('$baseMessage')
+
+  const open1 = () => {
+    $baseMessage('这是一条消息提示', 'info')
+  }
+  const open2 = () => {
+    $baseMessage('恭喜您，这是一条成功消息', 'success')
+  }
+  const open3 = () => {
+    $baseMessage('警告哦，这是一条警告消息', 'warning')
+  }
+  const open4 = () => {
+    $baseMessage('错了哦，这是一条错误消息', 'error')
+  }
+  const open5 = () => {
+    $baseMessage('这是一条消息提示', 'info', 'hey')
+  }
+  const open6 = () => {
+    $baseMessage('恭喜您，这是一条成功消息', 'success', 'hey')
+  }
+  const open7 = () => {
+    $baseMessage('警告哦，这是一条警告消息', 'warning', 'hey')
+  }
+  const open8 = () => {
+    $baseMessage('错了哦，这是一条错误消息', 'error', 'hey')
+  }
+  const open9 = () => {
+    $baseNotify('这是一条消息的提示消息', '提示', 'info', 'bottom-right')
+  }
+  const open10 = () => {
+    $baseNotify('这是一条成功的提示消息', '成功', 'success', 'bottom-right')
+  }
+  const open11 = () => {
+    $baseNotify('这是一条警告的提示消息', '警告', 'warning', 'bottom-right')
+  }
+  const open12 = () => {
+    $baseNotify('这是一条错误的提示消息', '错误', 'error', 'bottom-right')
+  }
+  const open13 = (value: string) => {
+    $baseAlert(`这是一条${value}弹框`)
+  }
+</script>

@@ -1,17 +1,3 @@
-<script lang="ts" setup>
-  const count = ref<any>(10)
-  const loading = ref<boolean>(false)
-  const noMore = computed(() => count.value >= 20)
-  const disabled = computed(() => loading.value || noMore.value)
-  const load = () => {
-    loading.value = true
-    setTimeout(() => {
-      count.value += 2
-      loading.value = false
-    }, 2000)
-  }
-</script>
-
 <template>
   <div class="infinite-list-wrapper" style="overflow: auto">
     <ul
@@ -25,6 +11,20 @@
     <p v-if="noMore">没有更多了</p>
   </div>
 </template>
+
+<script lang="ts" setup>
+  const count = ref<any>(10)
+  const loading = ref<boolean>(false)
+  const noMore = computed(() => count.value >= 20)
+  const disabled = computed(() => loading.value || noMore.value)
+  const load = () => {
+    loading.value = true
+    setTimeout(() => {
+      count.value += 2
+      loading.value = false
+    }, 2000)
+  }
+</script>
 
 <style>
   .infinite-list-wrapper {

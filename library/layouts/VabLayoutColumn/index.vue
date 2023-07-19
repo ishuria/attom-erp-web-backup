@@ -1,36 +1,3 @@
-<!--分栏布局 -->
-<script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-
-  defineOptions({
-    name: 'VabLayoutColumn',
-  })
-
-  defineProps({
-    collapse: {
-      type: Boolean,
-      default() {
-        return false
-      },
-    },
-    fixedHeader: {
-      type: Boolean,
-      default() {
-        return true
-      },
-    },
-    showTabs: {
-      type: Boolean,
-      default() {
-        return true
-      },
-    },
-  })
-
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
-</script>
-
 <template>
   <div
     class="vab-layout-column"
@@ -62,6 +29,38 @@
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+  import { useSettingsStore } from '/@/store/modules/settings'
+
+  defineOptions({
+    name: 'VabLayoutColumn',
+  })
+
+  defineProps({
+    collapse: {
+      type: Boolean,
+      default() {
+        return false
+      },
+    },
+    fixedHeader: {
+      type: Boolean,
+      default() {
+        return true
+      },
+    },
+    showTabs: {
+      type: Boolean,
+      default() {
+        return true
+      },
+    },
+  })
+
+  const settingsStore = useSettingsStore()
+  const { theme } = storeToRefs(settingsStore)
+</script>
 
 <style lang="scss" scoped>
   .vab-layout-column {

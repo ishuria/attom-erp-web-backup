@@ -1,40 +1,3 @@
-<script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/i18n'
-  import { getList } from '/@/api/notice'
-
-  defineOptions({
-    name: 'VabNotice',
-  })
-
-  const $baseMessage = inject<any>('$baseMessage')
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
-  const activeName = ref<string>('notice')
-  const notices = ref<Array<any>>([])
-  const badge = ref<any>(undefined)
-
-  const fetchData = async () => {
-    const { data } = await getList()
-    notices.value = data.list
-    badge.value = data.total === 0 ? undefined : data.total
-  }
-
-  const handleClick = () => {
-    fetchData()
-  }
-
-  const handleClearNotice = () => {
-    badge.value = ''
-    notices.value = []
-    $baseMessage('清空消息成功', 'success', 'hey')
-  }
-
-  onMounted(() => {
-    if (theme.value.showNotice) fetchData()
-  })
-</script>
-
 <template>
   <el-badge v-if="theme.showNotice" type="danger" :value="badge">
     <el-popover placement="bottom" trigger="hover" :width="305">
@@ -78,6 +41,43 @@
     </el-popover>
   </el-badge>
 </template>
+
+<script lang="ts" setup>
+  import { useSettingsStore } from '/@/store/modules/settings'
+  import { translate } from '/@/i18n'
+  import { getList } from '/@/api/notice'
+
+  defineOptions({
+    name: 'VabNotice',
+  })
+
+  const $baseMessage = inject<any>('$baseMessage')
+  const settingsStore = useSettingsStore()
+  const { theme } = storeToRefs(settingsStore)
+  const activeName = ref<string>('notice')
+  const notices = ref<Array<any>>([])
+  const badge = ref<any>(undefined)
+
+  const fetchData = async () => {
+    const { data } = await getList()
+    notices.value = data.list
+    badge.value = data.total === 0 ? undefined : data.total
+  }
+
+  const handleClick = () => {
+    fetchData()
+  }
+
+  const handleClearNotice = () => {
+    badge.value = ''
+    notices.value = []
+    $baseMessage('清空消息成功', 'success', 'hey')
+  }
+
+  onMounted(() => {
+    if (theme.value.showNotice) fetchData()
+  })
+</script>
 
 <style lang="scss" scoped>
   :deep() {

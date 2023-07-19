@@ -32,6 +32,8 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'vue/no-reserved-component-names': 'off',
+    'vue/require-default-prop': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'vue/no-v-html': 'off',
     'vue/html-self-closing': [
       'error',

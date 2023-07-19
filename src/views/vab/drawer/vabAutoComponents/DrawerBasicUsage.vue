@@ -1,39 +1,3 @@
-<script lang="ts" setup>
-  import { ElMessageBox } from 'element-plus'
-
-  const drawer = ref<boolean>(false)
-  const drawer2 = ref<boolean>(false)
-  const direction = ref<any>('rtl')
-  const radio1 = ref<any>('Option 1')
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm('您确定要关闭抽屉吗？', {
-      draggable: true,
-    })
-      .then(() => {
-        done()
-      })
-      .catch(() => {
-        // catch error
-      })
-  }
-
-  function cancelClick() {
-    drawer2.value = false
-  }
-
-  function confirmClick() {
-    ElMessageBox.confirm(`您确认选择${radio1.value}吗？`, {
-      draggable: true,
-    })
-      .then(() => {
-        drawer2.value = false
-      })
-      .catch(() => {
-        // catch error
-      })
-  }
-</script>
-
 <template>
   <el-radio-group v-model="direction">
     <el-radio label="ltr">从左到右</el-radio>
@@ -72,3 +36,39 @@
     </template>
   </el-drawer>
 </template>
+
+<script lang="ts" setup>
+  import { ElMessageBox } from 'element-plus'
+
+  const drawer = ref<boolean>(false)
+  const drawer2 = ref<boolean>(false)
+  const direction = ref<any>('rtl')
+  const radio1 = ref<any>('Option 1')
+  const handleClose = (done: () => void) => {
+    ElMessageBox.confirm('您确定要关闭抽屉吗？', {
+      draggable: true,
+    })
+      .then(() => {
+        done()
+      })
+      .catch(() => {
+        // catch error
+      })
+  }
+
+  function cancelClick() {
+    drawer2.value = false
+  }
+
+  function confirmClick() {
+    ElMessageBox.confirm(`您确认选择${radio1.value}吗？`, {
+      draggable: true,
+    })
+      .then(() => {
+        drawer2.value = false
+      })
+      .catch(() => {
+        // catch error
+      })
+  }
+</script>

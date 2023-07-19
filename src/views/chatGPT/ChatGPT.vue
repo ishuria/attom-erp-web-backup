@@ -1,4 +1,58 @@
-<!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
+<template>
+  <div class="chat-GPT-container no-background-container">
+    <el-row :gutter="20">
+      <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
+        <vab-card>
+          <div class="vab-chat-main">
+            <el-radio-group v-model="radio" @change="changeGPT">
+              <el-radio-button label="小爱同学" />
+              <el-radio-button label="GPT3.5" />
+              <el-radio-button label="GPT4.0" />
+            </el-radio-group>
+            <el-scrollbar ref="scrollbarRef">
+              <ul ref="innerRef">
+                <template v-for="(item, index) in list" :key="index">
+                  <li :class="item.type == 'mine' ? 'vab-chat-mine' : ''">
+                    <div class="vab-chat-user">
+                      <img alt="头像" :src="item.avatar" />
+                      <cite>
+                        {{ item.username }}
+                        <i>{{ item.time }}</i>
+                      </cite>
+                    </div>
+                    <div class="vab-chat-text">
+                      <span v-if="item.type == 'mine' || item.type == 'tips'">
+                        {{ item.result }}
+                      </span>
+                      <span v-if="item.type == 'he'" :id="item.id"></span>
+                    </div>
+                  </li>
+                </template>
+              </ul>
+            </el-scrollbar>
+          </div>
+          <div class="vab-chat-footer">
+            <div class="vab-chat-textarea">
+              <el-input
+                ref="textareaRef"
+                v-model="value"
+                clearable
+                resize="none"
+                show-word-limit
+                type="textarea"
+                @keyup.enter="send"
+              />
+            </div>
+            <div class="vab-chat-send">
+              <el-button type="primary" @click="send">发送</el-button>
+            </div>
+          </div>
+        </vab-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'ChatGPT',
@@ -87,7 +141,8 @@
 
       setTimeout(() => {
         value.value = ''
-        scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
+        if (scrollbarRef.value && innerRef.value)
+          scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
       }, 0)
 
       const id = uniqueId('uuid_')
@@ -109,7 +164,8 @@
           typeWriting(id, answer || result.displayText)
 
           finish.value = true
-          scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight - 380)
+          if (scrollbarRef.value && innerRef.value)
+            scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
         })
         .catch(() => {
           $baseMessage(`${radio.value} 余额不足！`, 'error', 'hey')
@@ -132,61 +188,6 @@
     }, 0)
   }
 </script>
-
-<template>
-  <div class="chat-GPT-container no-background-container">
-    <el-row :gutter="20">
-      <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
-        <vab-card>
-          <div class="vab-chat-main">
-            <el-radio-group v-model="radio" @change="changeGPT">
-              <el-radio-button label="小爱同学" />
-              <el-radio-button label="GPT3.5" />
-              <el-radio-button label="GPT4.0" />
-            </el-radio-group>
-            <el-scrollbar ref="scrollbarRef">
-              <ul ref="innerRef">
-                <template v-for="(item, index) in list" :key="index">
-                  <li :class="item.type == 'mine' ? 'vab-chat-mine' : ''">
-                    <div class="vab-chat-user">
-                      <img alt="头像" :src="item.avatar" />
-                      <cite>
-                        {{ item.username }}
-                        <i>{{ item.time }}</i>
-                      </cite>
-                    </div>
-                    <div class="vab-chat-text">
-                      <span v-if="item.type == 'mine' || item.type == 'tips'">
-                        {{ item.result }}
-                      </span>
-                      <span v-if="item.type == 'he'" :id="item.id"></span>
-                    </div>
-                  </li>
-                </template>
-              </ul>
-            </el-scrollbar>
-          </div>
-          <div class="vab-chat-footer">
-            <div class="vab-chat-textarea">
-              <el-input
-                ref="textareaRef"
-                v-model="value"
-                clearable
-                resize="none"
-                show-word-limit
-                type="textarea"
-                @keyup.enter="send"
-              />
-            </div>
-            <div class="vab-chat-send">
-              <el-button type="primary" @click="send">发送</el-button>
-            </div>
-          </div>
-        </vab-card>
-      </el-col>
-    </el-row>
-  </div>
-</template>
 
 <style lang="scss" scoped>
   $color_1: var(--el-color-grey);

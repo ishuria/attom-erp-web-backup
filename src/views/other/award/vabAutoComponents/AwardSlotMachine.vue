@@ -1,3 +1,16 @@
+<template>
+  <vab-slot-machine
+    ref="awardSlotMachineRef"
+    :blocks="blocks"
+    :default-config="defaultConfig"
+    height="300px"
+    :prizes="prizes"
+    :slots="slots"
+    width="300px"
+  />
+  <el-button class="machine-button" @click="startCallback">点击抽奖</el-button>
+</template>
+
 <script lang="ts" setup>
   import { getImageUrl } from '/@/utils/imageUrl'
   import { VabSlotMachine } from '/@/plugins/VabAward'
@@ -57,19 +70,6 @@
     }, 3000)
   }
 </script>
-
-<template>
-  <vab-slot-machine
-    ref="awardSlotMachineRef"
-    :blocks="blocks"
-    :default-config="defaultConfig"
-    height="300px"
-    :prizes="prizes"
-    :slots="slots"
-    width="300px"
-  />
-  <el-button class="machine-button" @click="startCallback">点击抽奖</el-button>
-</template>
 
 <style lang="scss" scoped>
   .machine-button {

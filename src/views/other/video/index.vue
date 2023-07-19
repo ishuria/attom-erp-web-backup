@@ -1,3 +1,58 @@
+<template>
+  <div class="video-container no-background-container">
+    <el-row :gutter="20">
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <vab-card>
+          <template #header>Mp4</template>
+          <vab-player
+            :config="configMp4"
+            style="background-color: rgba(0, 0, 0, 0.87)"
+            @player="playerInstance0"
+          />
+        </vab-card>
+      </el-col>
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <vab-card>
+          <template #header>直播推流</template>
+          <el-row :gutter="1">
+            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
+              <vab-player-hls
+                :config="configHls1"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance1"
+              />
+            </el-col>
+            <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+              <vab-player-hls
+                :config="configHls2"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance2"
+              />
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="1">
+            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
+              <vab-player-hls
+                :config="configHls3"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance3"
+              />
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
+              <vab-player-hls
+                :config="configHls4"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance4"
+              />
+            </el-col>
+          </el-row>
+        </vab-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
 <script lang="ts" setup>
   import { uniqueId } from 'lodash-es'
 
@@ -124,61 +179,6 @@
     _Player4.pause()
   })
 </script>
-
-<template>
-  <div class="video-container no-background-container">
-    <el-row :gutter="20">
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <vab-card>
-          <template #header>Mp4</template>
-          <vab-player
-            :config="configMp4"
-            style="background-color: rgba(0, 0, 0, 0.87)"
-            @player="playerInstance0"
-          />
-        </vab-card>
-      </el-col>
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <vab-card>
-          <template #header>直播推流</template>
-          <el-row :gutter="1">
-            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
-              <vab-player-hls
-                :config="configHls1"
-                style="background-color: rgba(0, 0, 0, 0.87)"
-                @player="playerInstance1"
-              />
-            </el-col>
-            <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-              <vab-player-hls
-                :config="configHls2"
-                style="background-color: rgba(0, 0, 0, 0.87)"
-                @player="playerInstance2"
-              />
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="1">
-            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
-              <vab-player-hls
-                :config="configHls3"
-                style="background-color: rgba(0, 0, 0, 0.87)"
-                @player="playerInstance3"
-              />
-            </el-col>
-            <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
-              <vab-player-hls
-                :config="configHls4"
-                style="background-color: rgba(0, 0, 0, 0.87)"
-                @player="playerInstance4"
-              />
-            </el-col>
-          </el-row>
-        </vab-card>
-      </el-col>
-    </el-row>
-  </div>
-</template>
 
 <style scoped>
   .video-container {

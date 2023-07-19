@@ -51,6 +51,7 @@
     }
   }
 </script>
+
 <style scoped>
   .demo-progress .el-progress--line {
     width: 350px;

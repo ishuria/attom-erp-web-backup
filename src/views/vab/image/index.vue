@@ -1,9 +1,3 @@
-<script lang="ts" setup>
-  defineOptions({
-    name: 'Image',
-  })
-</script>
-
 <template>
   <div class="image-container no-background-container">
     <vab-card>
@@ -28,3 +22,9 @@
     </vab-card>
   </div>
 </template>
+
+<script lang="ts" setup>
+  defineOptions({
+    name: 'Image',
+  })
+</script>

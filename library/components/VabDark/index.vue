@@ -1,3 +1,23 @@
+<template>
+  <el-tooltip
+    :content="translate(value ? '日间模式' : '暗黑模式')"
+    effect="light"
+  >
+    <el-switch
+      v-if="
+        theme.showDark &&
+        'technology' != theme.themeName &&
+        'plain' != theme.themeName
+      "
+      v-model="value"
+      :active-icon="Sunny"
+      :inactive-icon="Moon"
+      inline-prompt
+      @click="_toggleDark($event)"
+    />
+  </el-tooltip>
+</template>
+
 <script lang="ts" setup>
   import { Moon, Sunny } from '@element-plus/icons-vue'
   import { useSettingsStore } from '/@/store/modules/settings'
@@ -82,26 +102,6 @@
     $unsub('shop-vite-reset-dark')
   })
 </script>
-
-<template>
-  <el-tooltip
-    :content="translate(value ? '日间模式' : '暗黑模式')"
-    effect="light"
-  >
-    <el-switch
-      v-if="
-        theme.showDark &&
-        'technology' != theme.themeName &&
-        'plain' != theme.themeName
-      "
-      v-model="value"
-      :active-icon="Sunny"
-      :inactive-icon="Moon"
-      inline-prompt
-      @click="_toggleDark($event)"
-    />
-  </el-tooltip>
-</template>
 
 <style lang="scss">
   /* stylelint-disable selector-pseudo-element-no-unknown */

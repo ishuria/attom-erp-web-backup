@@ -1,5 +1,3 @@
-<script lang="ts" setup></script>
-
 <template>
   <div class="page-banner"></div>
 </template>

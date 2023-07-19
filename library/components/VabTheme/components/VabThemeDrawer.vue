@@ -1,129 +1,3 @@
-<script lang="ts" setup>
-  import { translate } from '/@/i18n'
-  import { useSettingsStore } from '/@/store/modules/settings'
-
-  defineOptions({
-    name: 'VabThemeDrawer',
-  })
-
-  const $sub = inject<any>('$sub')
-  const $pub = inject<any>('$pub')
-  const $unsub = inject<any>('$unsub')
-  const $baseLoading = inject<any>('$baseLoading')
-  const $baseMessage = inject<any>('$baseMessage')
-  const settingsStore = useSettingsStore()
-  const { theme, device } = storeToRefs<any>(settingsStore)
-  const { saveTheme, resetTheme, updateTheme }: any = settingsStore
-  const drawerVisible = ref<boolean>(false)
-  const layoutList = ref<any>([
-    'column',
-    'vertical',
-    'horizontal',
-    'comprehensive',
-  ])
-  const tabsBarStyleList = ref<any>([
-    { label: '卡片', value: 'card' },
-    { label: '灵动', value: 'smart' },
-    { label: '圆滑', value: 'smooth' },
-  ])
-  const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
-  const themeNameList = ref<any>([
-    { label: 'default', title: '默认' },
-    { label: 'plain', title: '简洁' },
-    { label: 'technology', title: '科技' },
-  ])
-  const columnStyleList = ref<any>([
-    { value: 'vertical', label: '纵向' },
-    { value: 'horizontal', label: '横向' },
-    { value: 'card', label: '卡片' },
-    { value: 'arrow', label: '箭头' },
-    { value: 'semicircle', label: '半圆' },
-  ])
-  const pageTransitionList = ref<any>([
-    { value: '', label: '无动画' },
-    { value: 'el-fade-in-linear', label: 'fade-in-linear' },
-    { value: 'el-fade-in', label: 'fade-in' },
-    { value: 'el-zoom-in-center', label: 'zoom-in-center' },
-    { value: 'el-zoom-in-top', label: 'zoom-in-top' },
-    { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
-  ])
-
-  const handleOpenTheme = () => {
-    drawerVisible.value = true
-  }
-
-  const updateMenuWidth = () => {
-    const el = ref<any>(null)
-    useCssVar('--el-left-menu-width', el).value = theme.value.menuWidth
-  }
-
-  const handleShowFooter = (value: any) => {
-    const el = ref<any>(null)
-    if (!value) useCssVar('--el-footer-height', el).value = '0px'
-    else useCssVar('--el-footer-height', el).value = '58px'
-  }
-
-  const handleRadius = (value: any) => {
-    const el = ref<any>(null)
-    useCssVar('--el-border-radius-base', el).value = `${value}px`
-  }
-
-  const handleShowTabs = (value: any) => {
-    const el = ref<any>(null)
-    if (!value) useCssVar('--el-tabs-height', el).value = '0px'
-    else useCssVar('--el-tabs-height', el).value = '50px'
-  }
-
-  const _updateTheme = (value: any = '') => {
-    if (value == 'default') $pub('shop-vite-reset-dark')
-    const loading = $baseLoading()
-    setTimeout(() => {
-      updateTheme()
-    }, 500)
-
-    setTimeout(() => {
-      loading.close()
-      $baseMessage('切换成功', 'success', 'hey')
-    }, 1000)
-  }
-
-  const setDefaultTheme = async () => {
-    const loading = $baseLoading()
-    await resetTheme()
-    await $pub('shop-vite-reset-color')
-    await $pub('shop-vite-reset-dark')
-    drawerVisible.value = false
-    setTimeout(() => {
-      loading.close()
-      $baseMessage('切换成功', 'success', 'hey')
-    }, 1000)
-  }
-
-  const handleSaveTheme = async () => {
-    await saveTheme()
-    drawerVisible.value = false
-  }
-
-  onMounted(() => {
-    $sub('shop-vite-theme', () => {
-      handleOpenTheme()
-    })
-    $sub('shop-vite-reset', () => {
-      setDefaultTheme()
-    })
-    $sub('shop-vite-change-theme', (value: string) => {
-      theme.value.themeName = value
-      _updateTheme()
-    })
-  })
-
-  onBeforeUnmount(() => {
-    $unsub('shop-vite-theme')
-    $unsub('shop-vite-reset')
-    $unsub('shop-vite-change-theme')
-  })
-</script>
-
 <template>
   <el-drawer
     v-model="drawerVisible"
@@ -299,6 +173,132 @@
     </template>
   </el-drawer>
 </template>
+
+<script lang="ts" setup>
+  import { translate } from '/@/i18n'
+  import { useSettingsStore } from '/@/store/modules/settings'
+
+  defineOptions({
+    name: 'VabThemeDrawer',
+  })
+
+  const $sub = inject<any>('$sub')
+  const $pub = inject<any>('$pub')
+  const $unsub = inject<any>('$unsub')
+  const $baseLoading = inject<any>('$baseLoading')
+  const $baseMessage = inject<any>('$baseMessage')
+  const settingsStore = useSettingsStore()
+  const { theme, device } = storeToRefs<any>(settingsStore)
+  const { saveTheme, resetTheme, updateTheme }: any = settingsStore
+  const drawerVisible = ref<boolean>(false)
+  const layoutList = ref<any>([
+    'column',
+    'vertical',
+    'horizontal',
+    'comprehensive',
+  ])
+  const tabsBarStyleList = ref<any>([
+    { label: '卡片', value: 'card' },
+    { label: '灵动', value: 'smart' },
+    { label: '圆滑', value: 'smooth' },
+  ])
+  const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
+  const themeNameList = ref<any>([
+    { label: 'default', title: '默认' },
+    { label: 'plain', title: '简洁' },
+    { label: 'technology', title: '科技' },
+  ])
+  const columnStyleList = ref<any>([
+    { value: 'vertical', label: '纵向' },
+    { value: 'horizontal', label: '横向' },
+    { value: 'card', label: '卡片' },
+    { value: 'arrow', label: '箭头' },
+    { value: 'semicircle', label: '半圆' },
+  ])
+  const pageTransitionList = ref<any>([
+    { value: '', label: '无动画' },
+    { value: 'el-fade-in-linear', label: 'fade-in-linear' },
+    { value: 'el-fade-in', label: 'fade-in' },
+    { value: 'el-zoom-in-center', label: 'zoom-in-center' },
+    { value: 'el-zoom-in-top', label: 'zoom-in-top' },
+    { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
+  ])
+
+  const handleOpenTheme = () => {
+    drawerVisible.value = true
+  }
+
+  const updateMenuWidth = () => {
+    const el = ref<any>(null)
+    useCssVar('--el-left-menu-width', el).value = theme.value.menuWidth
+  }
+
+  const handleShowFooter = (value: any) => {
+    const el = ref<any>(null)
+    if (!value) useCssVar('--el-footer-height', el).value = '0px'
+    else useCssVar('--el-footer-height', el).value = '58px'
+  }
+
+  const handleRadius = (value: any) => {
+    const el = ref<any>(null)
+    useCssVar('--el-border-radius-base', el).value = `${value}px`
+  }
+
+  const handleShowTabs = (value: any) => {
+    const el = ref<any>(null)
+    if (!value) useCssVar('--el-tabs-height', el).value = '0px'
+    else useCssVar('--el-tabs-height', el).value = '50px'
+  }
+
+  const _updateTheme = (value: any = '') => {
+    if (value == 'default') $pub('shop-vite-reset-dark')
+    const loading = $baseLoading()
+    setTimeout(() => {
+      updateTheme()
+    }, 500)
+
+    setTimeout(() => {
+      loading.close()
+      $baseMessage('切换成功', 'success', 'hey')
+    }, 1000)
+  }
+
+  const setDefaultTheme = async () => {
+    const loading = $baseLoading()
+    await resetTheme()
+    await $pub('shop-vite-reset-color')
+    await $pub('shop-vite-reset-dark')
+    drawerVisible.value = false
+    setTimeout(() => {
+      loading.close()
+      $baseMessage('切换成功', 'success', 'hey')
+    }, 1000)
+  }
+
+  const handleSaveTheme = async () => {
+    await saveTheme()
+    drawerVisible.value = false
+  }
+
+  onMounted(() => {
+    $sub('shop-vite-theme', () => {
+      handleOpenTheme()
+    })
+    $sub('shop-vite-reset', () => {
+      setDefaultTheme()
+    })
+    $sub('shop-vite-change-theme', (value: string) => {
+      theme.value.themeName = value
+      _updateTheme()
+    })
+  })
+
+  onBeforeUnmount(() => {
+    $unsub('shop-vite-theme')
+    $unsub('shop-vite-reset')
+    $unsub('shop-vite-change-theme')
+  })
+</script>
 
 <style lang="scss">
   .vab-drawer {

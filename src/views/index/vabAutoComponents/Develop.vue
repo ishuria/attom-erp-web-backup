@@ -1,3 +1,21 @@
+<template>
+  <vab-card class="Develop">
+    <template #header>
+      <vab-icon icon="line-chart-line" />
+      流量概况
+      <el-tag class="card-header-tag" type="success">日</el-tag>
+    </template>
+
+    <vab-chart :option="option" />
+    <div class="bottom">
+      <div class="line-two">
+        自上周以来
+        <span>提升 44%</span>
+      </div>
+    </div>
+  </vab-card>
+</template>
+
 <script lang="ts" setup>
   import { graphic } from 'echarts/core'
   import { random } from 'lodash-es'
@@ -93,24 +111,6 @@
     next()
   })
 </script>
-
-<template>
-  <vab-card class="Develop">
-    <template #header>
-      <vab-icon icon="line-chart-line" />
-      流量概况
-      <el-tag class="card-header-tag" type="success">日</el-tag>
-    </template>
-
-    <vab-chart :option="option" />
-    <div class="bottom">
-      <div class="line-two">
-        自上周以来
-        <span>提升 44%</span>
-      </div>
-    </div>
-  </vab-card>
-</template>
 
 <style lang="scss" scoped>
   :deep() {

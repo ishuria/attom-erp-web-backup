@@ -1,3 +1,11 @@
+<template>
+  <vab-icon
+    class="fold-unfold"
+    :icon="collapse ? unfold : fold"
+    @click="toggleCollapse"
+  />
+</template>
+
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -19,14 +27,6 @@
   const { collapse } = storeToRefs(settingsStore)
   const { toggleCollapse } = settingsStore
 </script>
-
-<template>
-  <vab-icon
-    class="fold-unfold"
-    :icon="collapse ? unfold : fold"
-    @click="toggleCollapse"
-  />
-</template>
 
 <style lang="scss" scoped>
   .fold-unfold {

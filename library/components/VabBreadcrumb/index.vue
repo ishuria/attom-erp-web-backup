@@ -1,3 +1,16 @@
+<template>
+  <el-breadcrumb class="vab-breadcrumb" separator="/">
+    <el-breadcrumb-item
+      v-for="(item, index) in breadcrumbList"
+      :key="index"
+      :to="handleTo(item.redirect)"
+    >
+      <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" />
+      <span>{{ translate(item.meta.title) }}</span>
+    </el-breadcrumb-item>
+  </el-breadcrumb>
+</template>
+
 <script lang="ts" setup>
   import { useRoutesStore } from '/@/store/modules/routes'
   import { translate } from '/@/i18n'
@@ -20,19 +33,6 @@
     if (path) return { path }
   }
 </script>
-
-<template>
-  <el-breadcrumb class="vab-breadcrumb" separator="/">
-    <el-breadcrumb-item
-      v-for="(item, index) in breadcrumbList"
-      :key="index"
-      :to="handleTo(item.redirect)"
-    >
-      <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" />
-      <span>{{ translate(item.meta.title) }}</span>
-    </el-breadcrumb-item>
-  </el-breadcrumb>
-</template>
 
 <style lang="scss" scoped>
   .vab-breadcrumb {

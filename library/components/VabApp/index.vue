@@ -1,3 +1,15 @@
+<template>
+  <el-config-provider
+    :button="{
+      autoInsertSpace: true,
+    }"
+    :locale="locale"
+  >
+    <router-view />
+    <vab-update v-if="pwa" />
+  </el-config-provider>
+</template>
+
 <script lang="ts" setup>
   import { pwa } from '/@/config'
   import { enLocale, zhLocale } from '/@/i18n'
@@ -10,15 +22,3 @@
     name: 'VabApp',
   })
 </script>
-
-<template>
-  <el-config-provider
-    :button="{
-      autoInsertSpace: true,
-    }"
-    :locale="locale"
-  >
-    <router-view />
-    <vab-update v-if="pwa" />
-  </el-config-provider>
-</template>
