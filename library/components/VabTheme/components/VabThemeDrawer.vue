@@ -7,7 +7,7 @@
     size="288px"
     :title="translate('主题配置')"
   >
-    <el-scrollbar height="85vh">
+    <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
           <template #label>
@@ -69,17 +69,6 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item :label="translate('页脚')">
-          <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
-        </el-form-item>
-        <el-form-item :label="translate('圆角')">
-          <el-input-number
-            v-model="theme.radius"
-            :max="26"
-            :min="3"
-            @change="handleRadius"
-          />
-        </el-form-item>
         <el-form-item :label="translate('标签')">
           <el-switch v-model="theme.showTabs" @change="handleShowTabs" />
         </el-form-item>
@@ -108,6 +97,12 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item :label="translate('页脚')">
+          <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
+        </el-form-item>
+        <el-form-item :label="translate('右侧浮窗')">
+          <el-switch v-model="theme.showThemeSetting" />
+        </el-form-item>
         <el-form-item>
           <template #label>
             {{ translate('分栏风格') }}
@@ -126,6 +121,14 @@
               :value="item.value"
             />
           </el-select>
+        </el-form-item>
+        <el-form-item :label="translate('圆角')">
+          <el-input-number
+            v-model="theme.radius"
+            :max="26"
+            :min="3"
+            @change="handleRadius"
+          />
         </el-form-item>
         <el-form-item :label="translate('头部固定')">
           <el-switch v-model="theme.fixedHeader" />
