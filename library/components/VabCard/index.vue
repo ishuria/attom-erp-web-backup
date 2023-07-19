@@ -40,8 +40,8 @@
 
 <template>
   <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow">
-    <template v-if="$slots.header || header" #header>
-      <slot name="header">{{ header }}</slot>
+    <template v-if="$slots.header" #header>
+      <slot name="header"></slot>
     </template>
     <el-skeleton
       v-if="skeleton"
@@ -50,19 +50,15 @@
       :rows="skeletonRows"
     >
       <template #default>
-        <slot class="vab-card-transition" />
+        <slot />
       </template>
     </el-skeleton>
-    <slot v-else class="vab-card-transition" />
+    <slot v-else />
   </el-card>
 </template>
 
 <style lang="scss" scoped>
   .vab-card {
-    &-transition {
-      transition: var(--el-transition);
-    }
-
     :deep() {
       .el-card__header {
         font-weight: 500;

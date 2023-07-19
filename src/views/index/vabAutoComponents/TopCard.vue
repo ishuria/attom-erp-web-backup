@@ -41,7 +41,7 @@
 
 <template>
   <vab-card class="top-card" :class="'top-card-' + background">
-    <span>{{ title }}</span>
+    {{ title }}
     <template v-if="$slots.tag">
       <slot name="tag"></slot>
     </template>
