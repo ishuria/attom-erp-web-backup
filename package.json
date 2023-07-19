@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "2.6.0",
+  "version": "2.6.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -49,7 +49,7 @@
     "vue-pdf-embed": "^1.1.6",
     "vue-qr": "^4.0.9",
     "vue-router": "^4.2.4",
-    "vuedraggable": "^4.0.1",
+    "vuedraggable": "^4.1.0",
     "xgplayer": "^3.0.5",
     "xgplayer-hls.js": "^3.0.5"
   },
@@ -72,7 +72,7 @@
     "postcss-html": "^1.5.0",
     "prettier": "^3.0.0",
     "sass": "^1.63.6",
-    "stylelint": "^15.10.1",
+    "stylelint": "^15.10.2",
     "stylelint-config-recess-order": "^4.3.0",
     "stylelint-config-recommended-scss": "^12.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",
