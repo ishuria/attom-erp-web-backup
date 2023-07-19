@@ -1,5 +1,5 @@
 <template>
-  <div class="roles-container">
+  <div class="permission-container">
     <el-alert
       v-if="!loginInterception"
       :closable="false"
@@ -10,7 +10,7 @@
     <el-alert
       :closable="false"
       :title="`当前路由模式为：${
-        authentication === 'all' ? '前端路由' : '后端路由'
+        authentication === 'all' ? '后端路由' : '前端路由'
       } ，是否开启角色权限控制功能：${rolesControl === 'true' ? '是' : '否'}`"
     />
 
