@@ -21,7 +21,7 @@
       <vab-menu :item="route" />
     </template>
   </template>
-  <el-sub-menu v-else :index="itemOrMenu.path" popper-class="vab-sub-menu">
+  <el-sub-menu v-else :index="itemOrMenu.path">
     <template #title>
       <vab-icon
         v-if="itemOrMenu.meta && itemOrMenu.meta.icon"
@@ -36,9 +36,3 @@
     <slot />
   </el-sub-menu>
 </template>
-
-<style lang="scss">
-  .vab-sub-menu {
-    border: 0 !important;
-  }
-</style>

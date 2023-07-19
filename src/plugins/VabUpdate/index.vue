@@ -120,7 +120,6 @@
             var(--el-color-primary-light-3),
             var(--el-color-primary)
           );
-          border: 0;
           border-radius: 20px;
         }
       }

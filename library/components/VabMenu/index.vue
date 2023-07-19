@@ -51,15 +51,3 @@
     },
   })
 </script>
-
-<style lang="scss" scoped>
-  .vab-menu-children-height {
-    height: 60vh !important;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-    }
-  }
-</style>

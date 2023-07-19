@@ -292,16 +292,6 @@
         h5 {
           margin: -20px 0 5px;
         }
-
-        :deep() {
-          .el-tag {
-            margin-right: 10px !important;
-          }
-
-          .el-tag + .el-tag {
-            margin-left: 0;
-          }
-        }
       }
     }
 

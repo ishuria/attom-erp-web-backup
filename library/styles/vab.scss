@@ -307,17 +307,13 @@ html {
       }
     }
 
-    /*  el-badge */
-    .el-badge__content {
-      border: 0;
-    }
-
     /* el-tag */
     .el-tag {
+      margin-right: 10px;
       border-radius: var(--el-border-radius-base);
 
-      & + .el-tag {
-        margin-left: 10px;
+      &:last-child {
+        margin-right: 0;
       }
     }
 

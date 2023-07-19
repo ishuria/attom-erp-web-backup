@@ -78,7 +78,6 @@
     padding-right: 4px;
     padding-left: 4px;
     line-height: 16px;
-    border: 0;
   }
 
   .vab-dot {

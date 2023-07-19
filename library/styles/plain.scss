@@ -5,28 +5,6 @@ html > .vab-theme-plain {
   --el-menu-color-text: #515a6e;
   --el-menu-hover-bg-color: red !important;
 
-  .vab-sub-menu,
-  .el-popper.is-pure.is-light {
-    border: 0 !important;
-
-    .el-menu--horizontal,
-    .el-menu--vertical {
-      border: 0 !important;
-
-      .el-menu-item:not(.is-disabled):focus,
-      .el-menu-item:not(.is-disabled):hover {
-        color: var(--el-color-primary) !important;
-        background-color: var(--el-color-primary-light-9) !important;
-      }
-
-      .el-menu-item,
-      .el-sub-menu__title {
-        height: 40px;
-        line-height: 40px;
-      }
-    }
-  }
-
   @mixin container {
     color: var(--el-menu-color-text) !important;
     background: var(--el-color-black) !important;
@@ -206,6 +184,9 @@ html > .vab-theme-plain {
       @include container;
 
       .right-panel {
+        [class*='ri-'] {
+          color: var(--el-menu-color-text);
+        }
         .username,
         .username *,
         > i,
