@@ -3,7 +3,7 @@
  */
 import { useAclStore } from './acl'
 import { useSettingsStore } from './settings'
-import { getUserInfo, login, logout, socialLogin } from '/@/api/user'
+import { getUserInfo, login, logout } from '/@/api/user'
 import { getToken, removeToken, setToken } from '/@/utils/token'
 import { isArray, isString } from '/@/utils/validate'
 import { tokenName } from '/@/config'
@@ -87,16 +87,6 @@ export const useUserStore = defineStore('user', {
       const {
         data: { [tokenName]: token },
       } = await login(userInfo)
-      this.afterLogin(token, tokenName)
-    },
-    /**
-     * @description 第三方登录
-     * @param {*} tokenData
-     */
-    async socialLogin(tokenData: any) {
-      const {
-        data: { [tokenName]: token },
-      } = await socialLogin(tokenData)
       this.afterLogin(token, tokenName)
     },
     /**

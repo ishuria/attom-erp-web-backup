@@ -792,7 +792,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '多标签',
           guard: ['Admin'],
           icon: 'bank-card-line',
-          badge: 'Hot',
         },
       },
       {
@@ -853,7 +852,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           },
         ],
       },
-
+      {
+        path: 'log',
+        name: 'Log',
+        component: () => import('/@/views/operate/errorLog/index.vue'),
+        meta: {
+          title: '错误日志',
+          guard: ['Admin'],
+          icon: 'error-warning-line',
+        },
+      },
       {
         path: 'menu1',
         name: 'Menu1',
