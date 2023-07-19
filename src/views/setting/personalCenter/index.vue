@@ -61,7 +61,7 @@
           <el-tabs v-model="activeName">
             <el-tab-pane label="基本信息" name="first">
               <el-col :lg="12" :md="16" :sm="24" :xl="12" :xs="24">
-                <el-form label-width="80px" :model="form" @submit.prevent>
+                <el-form label-position="top" :model="form" @submit.prevent>
                   <el-form-item label="姓名">
                     <el-input v-model="form.fullName" clearable />
                   </el-form-item>
@@ -91,11 +91,7 @@
                       :key="tag"
                       closable
                       :disable-transitions="false"
-                      style="
-                        margin-right: 10px;
-                        margin-bottom: 10px;
-                        margin-left: 0;
-                      "
+                      style="margin-bottom: 10px"
                       @close="handleClose(tag)"
                     >
                       {{ tag }}
@@ -105,9 +101,8 @@
                       ref="inputRef"
                       v-model="inputValue"
                       size="small"
-                      style="width: 100px; margin-bottom: 10px"
+                      style="margin-bottom: 10px"
                       @blur="handleInputConfirm"
-                      @keyup.enter="handleInputConfirm"
                     />
                     <el-button
                       v-else
