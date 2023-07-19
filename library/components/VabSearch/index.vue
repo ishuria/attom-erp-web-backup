@@ -70,6 +70,12 @@
 
 <style lang="scss" scoped>
   .vab-search {
-    margin-right: 20px;
+    margin-right: var(--el-margin);
+
+    :deep() {
+      .el-input {
+        width: 150px !important;
+      }
+    }
   }
 </style>

@@ -47,9 +47,7 @@
       mode="vertical"
       :unique-opened="uniqueOpened"
     >
-      <template v-for="item in partialRoutes" :key="item.path">
-        <vab-menu v-if="!item.meta.hidden" :item="item" />
-      </template>
+      <vab-menu v-for="item in partialRoutes" :key="item.path" :item="item" />
     </el-menu>
     <div class="float-fold">
       <vab-fold fold="contract-left-line" unfold="contract-right-line" />

@@ -1,9 +1,5 @@
 <template>
-  <component
-    :is="menuComponent"
-    v-if="item.meta && !item.meta.hidden"
-    :item-or-menu="item"
-  >
+  <component :is="menuComponent" :item-or-menu="item">
     <template v-if="item.children && item.children.length">
       <vab-menu
         v-for="route in item.children"

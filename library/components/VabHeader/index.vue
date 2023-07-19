@@ -12,20 +12,12 @@
           mode="horizontal"
           text-color="var(--el-menu-color-text)"
         >
-          <template
-            v-for="(item, index) in routes.flatMap((route) =>
-              route.meta && route.meta.levelHidden && route.children
-                ? [...route.children]
-                : route
-            )"
-          >
-            <vab-menu
-              v-if="item.meta && !item.meta.hidden"
-              :key="index + item['name']"
-              :item="item"
-              :layout="layout"
-            />
-          </template>
+          <vab-menu
+            v-for="(item, index) in handleRoutes"
+            :key="index + item['name']"
+            :item="item"
+            :layout="layout"
+          />
         </el-menu>
         <vab-right-tools is-horizontal />
       </div>
@@ -50,6 +42,14 @@
   const routesStore = useRoutesStore()
   const { getActiveMenu: activeMenu, getRoutes: routes } =
     storeToRefs(routesStore)
+
+  const handleRoutes = computed(() => {
+    return routes.value.flatMap((route) =>
+      route.meta && route.meta.levelHidden && route.children
+        ? [...route.children]
+        : route
+    )
+  })
 </script>
 
 <style lang="scss" scoped>

@@ -12,9 +12,11 @@
       text-color="var(--el-menu-color-text)"
       :unique-opened="uniqueOpened"
     >
-      <template v-for="(item, index) in handleRoutes" :key="index + item.name">
-        <vab-menu v-if="!item.meta.hidden" :item="item" />
-      </template>
+      <vab-menu
+        v-for="(item, index) in handleRoutes"
+        :key="index + item.name"
+        :item="item"
+      />
     </el-menu>
   </el-scrollbar>
 </template>
