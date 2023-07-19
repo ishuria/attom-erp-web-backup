@@ -1,54 +1,54 @@
 <template>
-  <el-tooltip :content="translate('锁屏')" effect="light">
-    <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
-  </el-tooltip>
-
-  <transition v-if="theme.showLock" mode="out-in" name="fade-transform">
-    <div v-if="lock" class="vab-screen-lock">
-      <div
-        class="vab-screen-lock-background"
-        :style="{
-          background: `fixed url(${background}) center`,
-          backgroundSize: '100% 100%',
-          filter: 'blur(10px)',
-          transform: 'scale(1.05)',
-        }"
-      ></div>
-
-      <div class="vab-screen-lock-content">
-        <div class="vab-screen-lock-content-title">
-          <el-avatar :size="180" :src="avatar" />
-          <vab-icon icon="lock-line" />
-          {{ title }} {{ translate('屏幕已锁定') }}
+  <div>
+    <el-tooltip :content="translate('锁屏')" effect="light">
+      <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
+    </el-tooltip>
+    <transition name="el-zoom-in-top">
+      <div v-show="lock" class="vab-screen-lock">
+        <div
+          class="vab-screen-lock-background"
+          :style="{
+            background: `fixed url(${background}) center`,
+            backgroundSize: '100% 100%',
+            filter: 'blur(10px)',
+            transform: 'scale(1.05)',
+          }"
+        ></div>
+        <div class="vab-screen-lock-content">
+          <div class="vab-screen-lock-content-title">
+            <el-avatar :size="180" :src="avatar" />
+            <vab-icon icon="lock-line" />
+            {{ title }} {{ translate('屏幕已锁定') }}
+          </div>
+          <div class="vab-screen-lock-content-form">
+            <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
+              <el-form-item label="" :label-width="0" prop="password">
+                <el-input
+                  v-model="form.password"
+                  v-focus
+                  autocomplete="off"
+                  :placeholder="translate('请输入密码123456')"
+                  type="password"
+                >
+                  <template #suffix>
+                    <el-button
+                      native-type="submit"
+                      type="primary"
+                      @click="handleUnLock"
+                    >
+                      <vab-icon icon="lock-line" />
+                      <span>{{ translate('解锁') }}</span>
+                    </el-button>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+          <span @click="randomBackground">{{ translate('切换壁纸') }}</span>
         </div>
-        <div class="vab-screen-lock-content-form">
-          <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
-            <el-form-item label="" :label-width="0" prop="password">
-              <el-input
-                v-model="form.password"
-                v-focus
-                autocomplete="off"
-                :placeholder="translate('请输入密码123456')"
-                type="password"
-              >
-                <template #suffix>
-                  <el-button
-                    native-type="submit"
-                    type="primary"
-                    @click="handleUnLock"
-                  >
-                    <vab-icon icon="lock-line" />
-                    <span>{{ translate('解锁') }}</span>
-                  </el-button>
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-        <span @click="randomBackground">{{ translate('切换壁纸') }}</span>
       </div>
-    </div>
-  </transition>
+    </transition>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -93,7 +93,6 @@
       if (valid) {
         setTimeout(async () => {
           await _handleUnLock()
-          await randomBackground()
         }, 500)
       }
     })
@@ -120,7 +119,6 @@
     background: var(--el-mask-color);
     backdrop-filter: blur(10px);
     opacity: var(--opacity-value);
-    transition: var(--el-transition);
 
     &-background {
       position: absolute;
@@ -160,15 +158,13 @@
               cursor: pointer;
             }
           }
-        }
 
-        .ri-lock-line,
-        .ri-lock-unlock-line {
-          display: block;
-          margin: auto !important;
-          font-size: 30px;
-          color: var(--el-color-grey) !important;
-          transition: var(--el-transition);
+          .ri-lock-line {
+            display: block;
+            margin: auto !important;
+            font-size: 30px;
+            color: var(--el-color-grey) !important;
+          }
         }
       }
 
