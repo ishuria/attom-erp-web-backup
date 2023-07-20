@@ -50,9 +50,7 @@
       if (!item.children)
         if (isExternal(item.path)) {
           window.open(item.path)
-          setTimeout(() => {
-            router.push('/')
-          }, 500)
+          router.push('/redirect')
         } else router.push(item)
     })
   }
