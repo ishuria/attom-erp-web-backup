@@ -78,7 +78,7 @@
     </el-dropdown>
     <ul
       v-if="visible"
-      class="contextmenu el-dropdown-menu el-dropdown-menu--small"
+      class="contextmenu el-dropdown-menu"
       :style="{ left: left + 'px', top: top + 'px' }"
     >
       <li
@@ -334,8 +334,10 @@
         :deep() {
           .el-tabs__nav-next,
           .el-tabs__nav-prev {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: $base-tag-item-height;
-            line-height: $base-tag-item-height;
           }
 
           .el-tabs__header {
@@ -375,8 +377,10 @@
         :deep() {
           .el-tabs__nav-next,
           .el-tabs__nav-prev {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: $base-tag-item-height;
-            line-height: $base-tag-item-height;
           }
 
           .el-tabs__header {
@@ -400,7 +404,6 @@
 
                 &:after {
                   width: 100%;
-                  transition: var(--el-transition);
                 }
               }
 
@@ -412,7 +415,6 @@
                 height: 2px;
                 content: '';
                 background-color: var(--el-color-primary);
-                transition: var(--el-transition);
               }
 
               &:hover {
@@ -420,7 +422,6 @@
 
                 &:after {
                   width: 100%;
-                  transition: var(--el-transition);
                 }
               }
             }
@@ -429,35 +430,35 @@
       }
 
       &-smooth {
-        height: $base-tag-item-height + 4;
+        height: $base-tag-item-height;
 
         :deep() {
+          .el-tabs__nav {
+            margin-top: 3.5px;
+          }
+
           .el-tabs__nav-next,
           .el-tabs__nav-prev {
-            height: $base-tag-item-height + 4;
-            line-height: $base-tag-item-height + 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: $base-tag-item-height;
           }
 
           .el-tabs__header {
-            border-bottom: 0;
+            border: 0;
 
-            .el-tabs__nav {
+            * {
               border: 0;
             }
 
             .el-tabs__item {
               display: flex;
               height: $base-tag-item-height + 4;
-              padding-right: 20px !important;
-              padding-left: 20px !important;
-              margin-top: #{calc(
-                  ($base-tabs-height - $base-tag-item-height - 4.1px) / 2
-                )};
+              padding-right: var(--el-margin) !important;
+              padding-left: var(--el-margin) !important;
               margin-right: -18px;
-              line-height: $base-tag-item-height + 4;
               text-align: center;
-              border: 0;
-              outline: none;
               transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
 
               &:hover {
@@ -502,6 +503,10 @@
       top: 0;
       left: 0;
       z-index: 10;
+      .el-dropdown-menu__item:hover {
+        color: var(--el-color-primary);
+        background-color: var(--el-color-primary-light-9);
+      }
     }
 
     &-more {
