@@ -84,6 +84,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
       preprocessorOptions: {
         scss: {
+          sassOptions: { outputStyle: 'expanded' },
           additionalData(content: string, loaderContext: string) {
             return ['variables.scss'].includes(basename(loaderContext))
               ? content
