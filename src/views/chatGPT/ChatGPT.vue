@@ -137,7 +137,6 @@
     if (finish.value) {
       finish.value = false
       const newList = list.value
-      value.value = ''
       const id = uniqueId('uuid_')
       newList.push(
         {
@@ -158,6 +157,7 @@
       axios
         .get(`${url.value}${value.value}`)
         .then(async ({ data: { result } }) => {
+          value.value = ''
           await newList.pop()
           await newList.push({
             id,
