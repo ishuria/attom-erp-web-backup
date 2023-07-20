@@ -73,6 +73,7 @@
         </el-form-item>
         <el-button
           class="register-btn"
+          :loading="loading"
           native-type="submit"
           type="primary"
           @click.prevent="handleRegister"
@@ -104,15 +105,21 @@
   })
 
   const $baseConfirm = inject<any>('$baseConfirm')
-
   const router = useRouter()
-
   const userStore = useUserStore()
   const { setToken } = userStore
-
-  const leftImg = ref<string>('')
-  const img = getImageUrl(`assets/login_images/left_img.png`)
-  leftImg.value = img
+  const leftImg = ref<string>(getImageUrl(`assets/login_images/left_img.png`))
+  const loading = ref<boolean>(false)
+  const formRef = ref<any>(null)
+  const isGetPhone = ref<boolean>(false)
+  const getPhoneInterval = ref<any>(null)
+  const phoneCode = ref<any>(translate('获取验证码'))
+  const form = reactive<any>({
+    username: '',
+    password: '',
+    phone: '',
+    verificationCode: '',
+  })
 
   const validateUsername = (rule: any, value: any, callback: any) => {
     if ('' === value) callback(new Error(translate('用户名不能为空')))
@@ -130,16 +137,6 @@
     }
   }
 
-  const formRef = ref<any>(null)
-  const isGetPhone = ref<boolean>(false)
-  const getPhoneInterval = ref<any>(null)
-  const phoneCode = ref<any>(translate('获取验证码'))
-  const form = reactive<any>({
-    username: '',
-    password: '',
-    phone: '',
-    verificationCode: '',
-  })
   const rules = reactive<any>({
     username: [
       {
@@ -196,14 +193,18 @@
   const handleRegister = () => {
     formRef.value.validate(async (valid: any) => {
       if (valid) {
+        loading.value = true
         const {
           msg,
           data: { token },
-        }: any = await register(form).catch(() => {})
+        }: any = await register(form).catch(() => {
+          loading.value = false
+        })
         $baseConfirm(
           `${msg}，点击确定模拟进入拥有【admin】角色的首页`,
           null,
           async () => {
+            loading.value = false
             setToken(token)
             await router.push('/index')
           }
@@ -285,10 +286,8 @@
         }
 
         .register-btn {
-          display: inherit;
-          width: 220px;
+          width: 100%;
           height: 50px;
-          margin-top: 5px;
         }
 
         .el-form-item {

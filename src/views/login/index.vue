@@ -55,6 +55,7 @@
         <el-button
           v-throttle="handleLogin"
           class="login-btn"
+          :loading="loading"
           native-type="submit"
           type="primary"
         >
@@ -79,7 +80,6 @@
   import { translate } from '/@/i18n'
   import { isPassword } from '/@/utils/validate'
   import { onBeforeRouteLeave } from 'vue-router'
-
   import { getImageUrl } from '/@/utils/imageUrl'
 
   defineOptions({
@@ -88,15 +88,24 @@
 
   const route = useRoute()
   const router = useRouter()
-
   const userStore = useUserStore()
   const settingsStore = useSettingsStore()
-
-  const leftImg = ref<string>('')
-  const img = getImageUrl(`assets/login_images/left_img.png`)
-  leftImg.value = img
-
+  const leftImg = ref<string>(getImageUrl(`assets/login_images/left_img.png`))
   const login = (form: any) => userStore.login(form)
+  const loading = ref<boolean>(false)
+  const passwordType = ref<string>('password')
+  const redirect = ref<any>(undefined)
+  let timer: any
+  const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
+  const previewText = ref<string>('')
+  const title = settingsStore.getTitle
+  const formRef = ref<any>(null)
+  const passwordRef = ref<any>(null)
+  const form = reactive<any>({
+    username: '',
+    password: '',
+    verificationCode: '',
+  })
 
   const validateUsername = (rule: any, value: any, callback: any) => {
     if ('' === value) callback(new Error(translate('用户名不能为空')))
@@ -106,17 +115,6 @@
     if (!isPassword(value)) callback(new Error(translate('密码不能少于6位')))
     else callback()
   }
-
-  const title = settingsStore.getTitle
-
-  const formRef = ref<any>(null)
-  const passwordRef = ref<any>(null)
-
-  const form = reactive<any>({
-    username: '',
-    password: '',
-    verificationCode: '',
-  })
 
   const rules = reactive<any>({
     username: [
@@ -135,13 +133,6 @@
     ],
   })
 
-  const loading = ref<boolean>(false)
-  const passwordType = ref<string>('password')
-  const redirect = ref<any>(undefined)
-  const timer = ref<any>(0)
-  const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
-  const previewText = ref<string>('')
-
   const handleRoute = () => {
     return redirect.value === '/404' || redirect.value === '/403'
       ? '/'
@@ -154,7 +145,9 @@
         if (valid)
           try {
             loading.value = true
-            await login(form).catch(() => {})
+            await login(form).catch(() => {
+              loading.value = false
+            })
             await router.push(handleRoute())
           } finally {
             loading.value = false
@@ -174,7 +167,7 @@
       location.hostname === 'chu1204505056.gitee.io'
     ) {
       previewText.value = '（演示地址验证码可不填）'
-      timer.value = setTimeout(() => {
+      timer = setTimeout(() => {
         handleLogin()
       }, 5000)
     }
@@ -185,7 +178,7 @@
   })
 
   onBeforeRouteLeave((to, from, next) => {
-    clearInterval(timer.value)
+    clearInterval(timer)
     next()
   })
 </script>
@@ -258,10 +251,8 @@
       }
 
       .login-btn {
-        display: inherit;
-        width: 220px;
+        width: 100%;
         height: 50px;
-        margin-top: 5px;
       }
 
       .el-form-item {

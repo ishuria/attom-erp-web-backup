@@ -40,11 +40,14 @@
                 resize="none"
                 show-word-limit
                 type="textarea"
-                @keyup.enter="send"
+                @keydown.enter="send"
+                @keydown.enter.prevent
               />
             </div>
             <div class="vab-chat-send">
-              <el-button type="primary" @click="send">发送</el-button>
+              <el-button :loading="loading" type="primary" @click="send">
+                发送
+              </el-button>
             </div>
           </div>
         </vab-card>
@@ -78,6 +81,12 @@
     'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text='
   )
   const avatarUrl = getImageUrl('assets/chatGPT_images/chatGPT.png')
+  const loading = ref<boolean>(false)
+
+  const timer = setInterval(() => {
+    if (scrollbarRef.value && innerRef.value)
+      scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
+  }, 500)
 
   const changeGPT = (value: any) => {
     if (value == '小爱同学')
@@ -110,8 +119,10 @@
     typeWriting('uuid_9999', result)
   })
   const send = () => {
+    loading.value = true
     if (!value.value) {
       $baseMessage('提交内容不能为空', 'error', 'hey')
+      loading.value = false
       return
     }
     if (!finish.value) {
@@ -120,12 +131,14 @@
         'error',
         'hey'
       )
+      loading.value = false
       return
     }
     if (finish.value) {
       finish.value = false
       const newList = list.value
-
+      value.value = ''
+      const id = uniqueId('uuid_')
       newList.push(
         {
           type: 'mine',
@@ -142,38 +155,26 @@
           time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         }
       )
-
-      setTimeout(() => {
-        value.value = ''
-        if (scrollbarRef.value && innerRef.value)
-          scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
-      }, 0)
-
-      const id = uniqueId('uuid_')
-
       axios
         .get(`${url.value}${value.value}`)
-        .then(({ data: { answer, result } }) => {
-          newList.pop()
-
-          newList.push({
+        .then(async ({ data: { result } }) => {
+          await newList.pop()
+          await newList.push({
             id,
             type: 'he',
-            result: answer || result.displayText,
+            result: result.displayText,
             avatar: avatarUrl,
             username: 'ChatGPT',
             time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           })
-
-          typeWriting(id, answer || result.displayText)
-
+          await typeWriting(id, result.displayText)
           finish.value = true
-          if (scrollbarRef.value && innerRef.value)
-            scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
+          loading.value = false
         })
         .catch(() => {
           $baseMessage(`${radio.value} 余额不足！`, 'error', 'hey')
           finish.value = true
+          loading.value = false
         })
     }
   }
@@ -183,7 +184,7 @@
       new (TypeIt as any)(`#${id}`, {
         strings: [answer],
         cursorChar: "<span class='cursorChar'>|<span>", //用于光标的字符。HTML也可以
-        speed: 50,
+        speed: 25,
         lifeLike: true, // 使打字速度不规则
         cursor: false, //在字符串末尾显示闪烁的光标
         breakLines: false, // 控制是将多个字符串打印在彼此之上，还是删除这些字符串并相互替换
@@ -191,6 +192,11 @@
       }).go()
     }, 0)
   }
+
+  onBeforeRouteLeave((to, from, next) => {
+    clearInterval(timer)
+    next()
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -212,7 +218,7 @@
     }
 
     .vab-chat-main {
-      height: calc(var(--el-keep-alive-height) - 230px);
+      height: calc(var(--el-keep-alive-height) - 255px);
 
       ul {
         padding: 5px 25px 15px 5px;

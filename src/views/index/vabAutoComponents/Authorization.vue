@@ -34,7 +34,7 @@
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
-  const timer = ref<any>()
+  let timer: any
   const n = ref<number>(5)
   const countConfig = reactive<any>({
     startVal: 0,
@@ -86,12 +86,12 @@
   })
 
   onBeforeRouteLeave((to, from, next) => {
-    clearInterval(timer.value)
+    clearInterval(timer)
     next()
   })
 
   onMounted(() => {
-    timer.value = setInterval(() => {
+    timer = setInterval(() => {
       if (n.value > 0) {
         n.value--
       } else {
