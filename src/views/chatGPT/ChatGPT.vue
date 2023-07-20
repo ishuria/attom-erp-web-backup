@@ -271,8 +271,10 @@
           vertical-align: top;
 
           img {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
+            padding: 8px;
+            background-color: var(--el-color-primary-light-9);
             border-radius: 100%;
           }
 
