@@ -73,7 +73,7 @@
   const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
   const finish = ref<boolean>(true)
   const $baseMessage = inject<any>('$baseMessage')
-  const radio = ref<string>('小爱同学')
+  const radio = ref<string>('GPT3.5')
   const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
   const avatarUrl = getImageUrl('assets/chatGPT_images/chatGPT.png')
 
@@ -81,9 +81,11 @@
     if (value == '小爱同学')
       url.value = 'https://api.oioweb.cn/api/ai/chat?text='
     if (value == 'GPT3.5')
-      url.value = 'https://wmapi.wenbo.li/api/gpt/?message='
+      url.value =
+        'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text='
     if (value == 'GPT4.0')
-      url.value = 'https://wmapi.wenbo.li/api/gpt/four/?message='
+      url.value =
+        'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-4&text='
     $baseMessage(`切换${value}成功！`, 'success', 'hey')
   }
 
@@ -133,7 +135,7 @@
         {
           type: 'tips',
           result: `${radio.value} AI 内` + `容生成中，请稍后。。。`,
-          avatar: 'static/img/chatGPT.png',
+          avatar: avatarUrl,
           username: 'ChatGPT',
           time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         }
@@ -156,7 +158,7 @@
             id,
             type: 'he',
             result: answer || result.displayText,
-            avatar: 'static/img/chatGPT.png',
+            avatar: avatarUrl,
             username: 'ChatGPT',
             time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           })
