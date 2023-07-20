@@ -18,7 +18,8 @@
     "module:install": "pnpm install",
     "module:update": "ncu -u --reject vite-plugin-mock --registry https://registry.npmmirror.com&&npm run module:install",
     "module:reinstall": "rimraf node_modules&&npm run module:install",
-    "git": "start ./git.sh"
+    "git": "start ./git.sh",
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
@@ -58,6 +59,7 @@
     "@types/mockjs": "^1.0.7",
     "@types/nprogress": "^0.2.0",
     "@types/qs": "^6.9.7",
+    "@vite-pwa/assets-generator": "^0.0.4",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/compiler-sfc": "^3.3.4",
     "@vue/eslint-config-prettier": "^7.1.0",

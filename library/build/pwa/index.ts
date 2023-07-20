@@ -3,7 +3,6 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 const pwaOptions: Partial<VitePWAOptions> = {
   base: './',
   registerType: 'autoUpdate',
-  includeAssets: ['favicon.icon', 'static/img/*'],
   workbox: {
     cleanupOutdatedCaches: true,
   },
@@ -13,16 +12,29 @@ const pwaOptions: Partial<VitePWAOptions> = {
     short_name: 'Vue Shop Vite',
     description: 'Vue Shop Vite官网、文档、演示地址',
     background_color: '#ffffff',
+    theme_color: '#ffffff',
     icons: [
       {
-        src: 'static/img/pwa-192x192.png',
+        src: 'pwa-64x64.png',
+        sizes: '64x64',
+        type: 'image/png',
+      },
+      {
+        src: 'pwa-192x192.png',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: 'static/img/pwa-512x512.png',
+        src: 'pwa-512x512.png',
         sizes: '512x512',
         type: 'image/png',
+        purpose: 'any',
+      },
+      {
+        src: 'maskable-icon-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
       },
     ],
   },

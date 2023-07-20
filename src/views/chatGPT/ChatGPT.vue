@@ -63,6 +63,7 @@
   import dayjs from 'dayjs'
   import TypeIt from 'typeit'
   import { uniqueId } from 'lodash-es'
+  import { getImageUrl } from '/@/utils/imageUrl'
 
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
@@ -71,11 +72,10 @@
   const innerRef = ref<HTMLDivElement>()
   const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
   const finish = ref<boolean>(true)
-
   const $baseMessage = inject<any>('$baseMessage')
-
   const radio = ref<string>('小爱同学')
   const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
+  const avatarUrl = getImageUrl('assets/chatGPT_images/chatGPT.png')
 
   const changeGPT = (value: any) => {
     if (value == '小爱同学')
@@ -95,7 +95,7 @@
       id: 'uuid_9999',
       type: 'he',
       result,
-      avatar: 'static/img/chatGPT.png',
+      avatar: avatarUrl,
       username: 'ChatGPT',
       time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
     },
