@@ -12,6 +12,7 @@ module.exports = {
     '@vue/eslint-config-typescript/recommended',
     // https://github.com/prettier/eslint-plugin-prettier/issues/562
     'plugin:prettier/recommended',
+    '@vue/eslint-config-prettier',
   ],
   globals: { defineOptions: 'writable' },
   parser: 'vue-eslint-parser',
