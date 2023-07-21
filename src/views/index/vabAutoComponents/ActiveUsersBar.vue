@@ -10,6 +10,7 @@
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
+  let timer: any
 
   const option = reactive<any>({
     grid: {
@@ -56,7 +57,6 @@
     },
   })
 
-  let timer: any
   onMounted(() => {
     timer = setInterval(() => {
       option.series.data = [
@@ -69,6 +69,14 @@
       ]
     }, 3000)
   })
+
+  watch(
+    color,
+    () => {
+      option.series.itemStyle.color = color.value
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)
