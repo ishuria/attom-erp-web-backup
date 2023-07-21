@@ -145,7 +145,8 @@ html > .vab-theme-plain {
   }
 
   .vab-layout-vertical,
-  .vab-layout-horizontal {
+  .vab-layout-horizontal,
+  .vab-layout-comprehensive {
     .el-menu {
       @include container;
 

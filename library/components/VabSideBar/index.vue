@@ -98,7 +98,9 @@
           > .el-menu-item,
           > .el-sub-menu {
             justify-content: center;
+            height: calc(var(--el-menu-item-height) - 6px);
             padding: 0;
+            line-height: calc(var(--el-menu-item-height) - 6px);
             text-align: center;
 
             [class*='ri'] {
