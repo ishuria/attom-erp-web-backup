@@ -52,7 +52,7 @@
         isDark = root.classList.contains('dark')
         root.classList.remove(isDark ? 'dark' : 'light')
         root.classList.add(isDark ? 'light' : 'dark')
-        localStorage.setItem('vueuse-color-scheme', isDark ? 'light' : 'dark')
+        handleSetScheme(isDark ? 'light' : 'dark')
       })
       transition.ready.then(() => {
         const clipPath = [
@@ -74,19 +74,30 @@
       })
     } else {
       // 浏览器不支持document.startViewTransition
-      const isDark = useDark()
-      const toggleDark = useToggle(isDark)
+      const toggleDark = useToggle(handleUseDark())
       toggleDark()
     }
   }
 
+  const handleUseDark = () => {
+    return useDark()
+  }
+
+  const handleGetScheme = (value: string) => {
+    return localStorage.getItem('vueuse-color-scheme') === value
+  }
+
+  const handleSetScheme = (value: string) => {
+    return localStorage.setItem('vueuse-color-scheme', value)
+  }
+
   // 还原默认
   $sub('shop-vite-reset-dark', () => {
-    value.value = localStorage.getItem('vueuse-color-scheme') !== 'light'
+    value.value = handleGetScheme('dark')
 
-    if (localStorage.getItem('vueuse-color-scheme') == 'dark') {
-      localStorage.setItem('vueuse-color-scheme', 'light')
-      useDark()
+    if (handleGetScheme('dark')) {
+      handleSetScheme('light')
+      handleUseDark()
       value.value = false
     }
   })
@@ -96,11 +107,9 @@
   })
 
   onMounted(() => {
-    useDark()
-    if (localStorage.getItem('vueuse-color-scheme') == 'auto')
-      localStorage.setItem('vueuse-color-scheme', 'light')
-
-    value.value = localStorage.getItem('vueuse-color-scheme') !== 'light'
+    handleUseDark()
+    if (handleGetScheme('auto')) handleSetScheme('light')
+    value.value = handleGetScheme('dark')
   })
 
   watch(value, (newVal) => {
