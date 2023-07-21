@@ -52,6 +52,9 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
+        <el-form-item :label="translate('暗黑模式')">
+          <vab-dark />
+        </el-form-item>
         <el-form-item :label="translate('配色')">
           <vab-color-picker />
         </el-form-item>
@@ -283,17 +286,17 @@
     drawerVisible.value = false
   }
 
-  onMounted(() => {
-    $sub('shop-vite-theme', () => {
-      handleOpenTheme()
-    })
-    $sub('shop-vite-reset', () => {
-      setDefaultTheme()
-    })
-    $sub('shop-vite-change-theme', (value: string) => {
-      theme.value.themeName = value
-      _updateTheme()
-    })
+  $sub('shop-vite-theme', () => {
+    handleOpenTheme()
+  })
+
+  $sub('shop-vite-reset', () => {
+    setDefaultTheme()
+  })
+
+  $sub('shop-vite-change-theme', (value: string) => {
+    theme.value.themeName = value
+    _updateTheme()
   })
 
   onBeforeUnmount(() => {

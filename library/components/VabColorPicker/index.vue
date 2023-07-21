@@ -82,17 +82,17 @@
     color.value = value
   }
 
-  onMounted(() => {
-    handleChange(getColor)
-
-    // 还原默认
-    $sub('shop-vite-reset-color', () => {
-      handleChange(_color)
-    })
+  // 还原默认
+  $sub('shop-vite-reset-color', () => {
+    handleChange(_color)
   })
 
   $sub('reload-color', (color: any) => {
     handleChange(color)
+  })
+
+  onMounted(() => {
+    handleChange(getColor)
   })
 
   watch(color, (newVal) => {

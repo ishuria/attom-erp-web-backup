@@ -1,6 +1,6 @@
 <template>
   <el-tooltip
-    :content="translate(value ? '日间模式' : '暗黑模式')"
+    :content="translate(value ? '暗黑模式' : '日间模式')"
     effect="light"
   >
     <el-switch
@@ -10,8 +10,8 @@
         'plain' != theme.themeName
       "
       v-model="value"
-      :active-icon="Sunny"
-      :inactive-icon="Moon"
+      :active-icon="Moon"
+      :inactive-icon="Sunny"
       inline-prompt
       @click="_toggleDark($event)"
     />
@@ -30,9 +30,10 @@
 
   const $sub = inject<any>('$sub')
   const $unsub = inject<any>('$unsub')
+  const $pub = inject<any>('$pub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
-  const value = ref<boolean>(true)
+  const value = ref<boolean>(false)
 
   const _toggleDark = (event: MouseEvent) => {
     // @ts-ignore
@@ -79,23 +80,31 @@
     }
   }
 
+  // 还原默认
+  $sub('shop-vite-reset-dark', () => {
+    value.value = localStorage.getItem('vueuse-color-scheme') !== 'light'
+
+    if (localStorage.getItem('vueuse-color-scheme') == 'dark') {
+      localStorage.setItem('vueuse-color-scheme', 'light')
+      useDark()
+      value.value = false
+    }
+  })
+
+  $sub('reload-dark', (color: any) => {
+    value.value = color
+  })
+
   onMounted(() => {
     useDark()
     if (localStorage.getItem('vueuse-color-scheme') == 'auto')
       localStorage.setItem('vueuse-color-scheme', 'light')
 
-    value.value = localStorage.getItem('vueuse-color-scheme') !== 'dark'
+    value.value = localStorage.getItem('vueuse-color-scheme') !== 'light'
+  })
 
-    // 还原默认
-    $sub('shop-vite-reset-dark', () => {
-      value.value = localStorage.getItem('vueuse-color-scheme') !== 'dark'
-
-      if (localStorage.getItem('vueuse-color-scheme') == 'dark') {
-        localStorage.setItem('vueuse-color-scheme', 'light')
-        useDark()
-        value.value = true
-      }
-    })
+  watch(value, (newVal) => {
+    $pub('reload-dark', newVal)
   })
 
   onBeforeUnmount(() => {
