@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "2.7.0",
+  "version": "2.7.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -81,7 +81,7 @@
     "typescript": "^5.1.6",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.1",
-    "vite": "^4.4.5",
+    "vite": "^4.4.6",
     "vite-plugin-banner": "^0.7.0",
     "vite-plugin-mock": "2.9.6",
     "vite-plugin-pwa": "^0.16.4",
