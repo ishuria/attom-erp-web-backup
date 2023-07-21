@@ -114,12 +114,6 @@
             margin-left: var(--el-margin);
             color: var(--el-color-white);
           }
-
-          .el-color-picker {
-            &__trigger {
-              border: 0;
-            }
-          }
         }
       }
     }
