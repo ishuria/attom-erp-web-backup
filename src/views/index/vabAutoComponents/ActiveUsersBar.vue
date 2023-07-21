@@ -38,30 +38,28 @@
         show: false,
       },
     },
-    series: [
-      {
-        barWidth: 18,
-        name: '',
-        type: 'bar',
-        data: [
-          random(50, 100),
-          random(10, 100),
-          random(10, 100),
-          random(10, 100),
-          random(10, 100),
-          random(50, 100),
-        ],
-        itemStyle: {
-          color,
-        },
+    series: {
+      barWidth: 18,
+      name: '',
+      type: 'bar',
+      data: [
+        random(50, 100),
+        random(10, 100),
+        random(10, 100),
+        random(10, 100),
+        random(10, 100),
+        random(50, 100),
+      ],
+      itemStyle: {
+        color: color.value,
       },
-    ],
+    },
   })
 
   let timer: any
   onMounted(() => {
     timer = setInterval(() => {
-      option.series[0].data = [
+      option.series.data = [
         random(50, 100),
         random(10, 100),
         random(10, 100),

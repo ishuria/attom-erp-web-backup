@@ -57,33 +57,37 @@
       bottom: '0%',
       containLabel: true,
     },
-    xAxis: [
-      {
-        type: 'category',
-        data: ['0时', '4时', '8时', '12时', '16时', '20时', '24时'],
-        axisTick: {
-          alignWithLabel: true,
-        },
+    xAxis: {
+      type: 'category',
+      data: ['0时', '4时', '8时', '12时', '16时', '20时', '24时'],
+      axisTick: {
+        alignWithLabel: true,
       },
-    ],
-    yAxis: [
-      {
-        type: 'value',
+    },
+
+    yAxis: {
+      type: 'value',
+    },
+
+    series: {
+      name: '授权数',
+      type: 'bar',
+      barWidth: '60%',
+      data: [10, 52, 20, 33, 39, 33, 22],
+      itemStyle: {
+        borderRadius: [2, 2, 0, 0],
+        color: color.value,
       },
-    ],
-    series: [
-      {
-        name: '授权数',
-        type: 'bar',
-        barWidth: '60%',
-        data: [10, 52, 20, 33, 39, 33, 22],
-        itemStyle: {
-          borderRadius: [2, 2, 0, 0],
-          color,
-        },
-      },
-    ],
+    },
   })
+
+  watch(
+    color,
+    () => {
+      option.series.itemStyle.color = color.value
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)
@@ -95,8 +99,8 @@
       if (n.value > 0) {
         n.value--
       } else {
-        option.series[0].type = sample(
-          pull(['bar', 'line', 'scatter'], option.series[0].type)
+        option.series.type = sample(
+          pull(['bar', 'line', 'scatter'], option.series.type)
         )
         n.value = 5
       }

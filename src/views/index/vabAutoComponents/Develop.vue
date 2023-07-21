@@ -24,6 +24,8 @@
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
+  let timer: any
+  const updateTime = ref<any>()
 
   const option = reactive<any>({
     tooltip: {
@@ -37,41 +39,35 @@
       bottom: '0%',
       containLabel: true,
     },
-    xAxis: [
-      {
-        type: 'category',
-        boundaryGap: false,
-        data: [],
-        axisTick: {
-          alignWithLabel: true,
-        },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: [],
+      axisTick: {
+        alignWithLabel: true,
       },
-    ],
-    yAxis: [
-      {
-        type: 'value',
+    },
+
+    yAxis: {
+      type: 'value',
+    },
+
+    series: {
+      name: '浏览量',
+      type: 'line',
+      data: [],
+      smooth: true,
+      areaStyle: {},
+      itemStyle: {
+        borderRadius: [0, 5, 5, 0],
+        color: new graphic.LinearGradient(0, 0, 1, 0, [
+          { offset: 0, color: '#74df9f' },
+          { offset: 1, color: color.value },
+        ]),
       },
-    ],
-    series: [
-      {
-        name: '浏览量',
-        type: 'line',
-        data: [],
-        smooth: true,
-        areaStyle: {},
-        itemStyle: {
-          borderRadius: [0, 5, 5, 0],
-          color: new graphic.LinearGradient(0, 0, 1, 0, [
-            { offset: 0, color: '#74df9f' },
-            { offset: 1, color: color.value },
-          ]),
-        },
-      },
-    ],
+    },
   })
 
-  let timer: any
-  const updateTime = ref<any>()
   onMounted(() => {
     const base = +new Date(2022, 10, 1)
     const oneDay = 24 * 3600 * 1000
@@ -91,10 +87,10 @@
         data.shift()
       }
       now = new Date(+new Date(now) + oneDay)
-      option.xAxis[0].data = []
-      option.series[0].data = []
-      option.xAxis[0].data = date
-      option.series[0].data = data
+      option.xAxis.data = []
+      option.series.data = []
+      option.xAxis.data = date
+      option.series.data = data
     }
 
     for (let i = 1; i < 6; i++) {
@@ -105,6 +101,17 @@
       addData(true)
     }, 5000)
   })
+
+  watch(
+    color,
+    () => {
+      option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
+        { offset: 0, color: '#74df9f' },
+        { offset: 1, color: color.value },
+      ])
+    },
+    { immediate: true }
+  )
 
   onBeforeRouteLeave((to, from, next) => {
     clearInterval(timer)
