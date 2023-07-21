@@ -13,7 +13,7 @@
   >
     <template #default="{ data }">
       <vab-icon v-if="data.meta && data.meta.icon" :icon="data.meta.icon" />
-      <span>{{ data.meta.title }}</span>
+      <span>{{ translate(data.meta.title) }}</span>
     </template>
   </el-tree-select>
 </template>
@@ -23,6 +23,7 @@
   import { useRoutesStore } from '/@/store/modules/routes'
   import { Search } from '@element-plus/icons-vue'
   import { isExternal } from '/@/utils/validate'
+  import { translate } from '/@/i18n'
 
   defineOptions({
     name: 'VabSearch',
@@ -39,7 +40,7 @@
   const addFieldToTree = (data: any) => {
     data.forEach((node: any) => {
       node.value = node.name
-      node.label = node.meta.title
+      node.label = translate(node.meta.title)
       if (node.children && node.children.length) addFieldToTree(node.children)
     })
     return data
