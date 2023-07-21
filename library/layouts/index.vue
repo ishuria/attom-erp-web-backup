@@ -78,6 +78,7 @@
   .el-scrollbar__view.scroll-view {
     overflow: auto;
   }
+
   .vue-shop-vite-box {
     position: relative;
     width: 100%;

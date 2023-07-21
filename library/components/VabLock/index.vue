@@ -153,6 +153,7 @@
           .el-avatar {
             width: 150px;
             height: 150px;
+
             img {
               padding: 30px;
               cursor: pointer;
@@ -180,6 +181,7 @@
               padding-right: 0;
               border: 1px solid var(--el-color-primary);
               box-shadow: none;
+
               .el-input__suffix {
                 .el-button {
                   position: absolute;
@@ -189,6 +191,7 @@
                   border-top-left-radius: 0;
                   border-bottom-left-radius: 0;
                 }
+
                 .el-input__validateIcon {
                   display: none;
                 }

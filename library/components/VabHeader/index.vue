@@ -127,6 +127,7 @@
     ) {
     margin-top: calc(var(--el-margin) * 0.4);
   }
+
   .el-menu--horizontal {
     border: 0;
   }

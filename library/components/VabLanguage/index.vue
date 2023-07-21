@@ -13,6 +13,7 @@
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
   import getPageTitle from '/@/utils/pageTitle'
+
   const { locale } = useI18n()
   const route = useRoute()
   const settingsStore = useSettingsStore()

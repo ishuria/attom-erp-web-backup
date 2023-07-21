@@ -186,6 +186,7 @@
       .el-row {
         margin-bottom: 1px;
       }
+
       .el-row:last-child {
         margin-bottom: 0;
       }
@@ -193,6 +194,7 @@
       @media (max-width: 576px) {
         .el-row {
           margin-bottom: var(--el-margin);
+
           .el-col {
             margin-bottom: var(--el-margin);
           }

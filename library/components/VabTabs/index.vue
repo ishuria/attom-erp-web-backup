@@ -503,6 +503,7 @@
       top: 0;
       left: 0;
       z-index: 10;
+
       .el-dropdown-menu__item:hover {
         color: var(--el-color-primary);
         background-color: var(--el-color-primary-light-9);

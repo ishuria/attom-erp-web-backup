@@ -56,6 +56,7 @@
         border-radius: var(--el-border-radius-base);
         box-shadow: none;
         transition: var(--el-transition);
+
         &--fullscreen {
           z-index: 9999;
           border-radius: 0;

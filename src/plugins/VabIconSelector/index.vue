@@ -94,6 +94,7 @@
 <style lang="scss">
   .icon-selector-popper {
     width: 300px !important;
+
     .vab-query-form {
       margin-top: calc(var(--el-margin) / 2);
 

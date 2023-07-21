@@ -212,6 +212,7 @@
 
   .chat-GPT-container {
     box-sizing: border-box;
+
     :deep(.el-card__body) {
       position: relative;
       height: calc(var(--el-keep-alive-height) - var(--el-padding) - 2px);

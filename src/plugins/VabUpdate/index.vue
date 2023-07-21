@@ -15,7 +15,7 @@
     <h3>版本更新：</h3>
     <p>
       {{ title }}
-      V{{ version }}
+      V{{ _version }}
     </p>
     <p>更新时间：最近更新</p>
     <template #footer>
@@ -28,6 +28,7 @@
 
 <script lang="ts" setup>
   import { version } from '~/package.json'
+  import { translate } from '/@/i18n'
   import { useRegisterSW } from 'virtual:pwa-register/vue'
   import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -37,11 +38,12 @@
 
   const { getTitle: title } = useSettingsStore()
   const { needRefresh, updateServiceWorker } = useRegisterSW()
-  const button = ref<string>('立即升级')
+  const button = ref<string>(translate('立即升级'))
   const loading = ref<boolean>(false)
+  const _version = ref<any>(version)
 
   const save = async () => {
-    button.value = '正在更新'
+    button.value = translate('正在更新')
     loading.value = true
     await updateServiceWorker()
     loading.value = false
