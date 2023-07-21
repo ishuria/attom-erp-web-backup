@@ -13,7 +13,7 @@
 <script lang="ts" setup>
   import { handleActivePath } from '/@/utils/routes'
   import { useTabsStore } from '/@/store/modules/tabs'
-  import { VabRoute } from '/#/router'
+  import { VabRoute } from '/@/router/types'
 
   defineOptions({
     name: 'NoLayout',

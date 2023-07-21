@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { VabRoute } from '/#/router'
+  import { VabRoute } from '/@/router/types'
   import { isExternal } from '/@/utils/validate'
   import { translate } from '/@/i18n'
   import { useRoutesStore } from '/@/store/modules/routes'
