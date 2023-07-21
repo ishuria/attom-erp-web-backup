@@ -5,22 +5,23 @@ import { createVitePlugin, createWatch } from '/@vab/build'
 import dayjs from 'dayjs'
 import { name, version, dependencies, devDependencies } from './package.json'
 import {
-  base,
-  port,
-  open,
-  outDir,
   assetsDir,
+  base,
   chunkSizeWarningLimit,
   cssCodeSplit,
+  open,
+  outDir,
+  port,
   reportCompressedSize,
 } from '/@/config'
 
+const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
 const info = {
-  name,
-  version,
   dependencies,
   devDependencies,
-  lastBuildTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  lastBuildTime,
+  name,
+  version,
 }
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
@@ -52,10 +53,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
     },
     build: {
-      outDir,
       assetsDir,
       chunkSizeWarningLimit,
       cssCodeSplit,
+      outDir,
       reportCompressedSize,
       rollupOptions: {
         onwarn: () => {
