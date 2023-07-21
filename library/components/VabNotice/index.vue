@@ -87,7 +87,7 @@
   }
 
   .notice-list {
-    height: 24vh;
+    height: 300px;
 
     ul {
       padding: 0 15px 0 0;
@@ -96,7 +96,7 @@
       li {
         display: flex;
         align-items: center;
-        padding: 10px 0 10px 0;
+        padding: 11px 0 11px 0;
 
         :deep() {
           .el-avatar {
