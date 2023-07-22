@@ -31,7 +31,7 @@
       </a>
     </li>
     <li @click="buy">
-      <a>
+      <a class="vab-buy">
         <vab-icon icon="shopping-cart-2-line" />
         <p>{{ translate('购买源码') }}</p>
       </a>

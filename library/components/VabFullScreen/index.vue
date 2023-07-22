@@ -6,6 +6,7 @@
     >
       <vab-icon
         v-if="theme.showFullScreen"
+        class="vab-full-screen"
         :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
         @click="toggle"
       />

@@ -1,9 +1,9 @@
 <template>
   <el-tooltip :content="translate('主题色')" effect="light">
-    <div style="margin-left: var(--el-margin)">
+    <div class="vab-color-picker" style="margin-left: var(--el-margin)">
       <el-color-picker
         v-model="color"
-        popper-class="vab-color-picker"
+        popper-class="vab-color-picker-popper"
         :predefine="predefineColors"
         @active-change="handleChange"
       />
@@ -116,7 +116,7 @@
     padding: 0;
   }
 
-  .vab-color-picker {
+  .vab-color-picker-popper {
     box-sizing: content-box !important;
     padding: calc(var(--el-padding) / 2);
 

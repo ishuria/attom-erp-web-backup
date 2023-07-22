@@ -806,6 +806,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'guide',
+        name: 'Guide',
+        component: () => import('/@/views/operate/guid/index.vue'),
+        meta: {
+          title: '页面引导',
+          guard: ['Admin'],
+          icon: 'guide-line',
+          dot: true,
+        },
+      },
+      {
         path: 'dynamicSegment',
         name: 'DynamicSegment',
         meta: {

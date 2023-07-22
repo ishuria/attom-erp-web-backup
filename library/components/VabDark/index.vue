@@ -11,6 +11,7 @@
       "
       v-model="value"
       :active-icon="Moon"
+      class="vab-dark"
       :inactive-icon="Sunny"
       inline-prompt
       @click="_toggleDark($event)"
