@@ -19,8 +19,7 @@
     "module:update": "ncu -u --reject vite-plugin-mock --registry https://registry.npmmirror.com&&npm run module:install",
     "module:reinstall": "rimraf node_modules&&npm run module:install",
     "git": "start ./git.sh",
-    "generate-pwa-assets": "pwa-assets-generator",
-    "mac-module:update": "ncu -u --reject vite-plugin-mock --registry https://registry.npmmirror.com&&sudo pnpm install"
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
