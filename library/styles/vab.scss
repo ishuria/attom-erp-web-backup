@@ -83,6 +83,9 @@ html {
     }
 
     .vue-shop-vite-box.mobile {
+      --el-margin: 15px;
+      --el-padding: 15px;
+
       .ri-contract-right-line.fold-unfold {
         position: fixed;
         bottom: var(--el-margin);
