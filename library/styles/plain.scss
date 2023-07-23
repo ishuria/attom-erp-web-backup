@@ -1,9 +1,8 @@
-html > .vab-theme-plain {
+html > body.vab-theme-plain > #app {
   $base-menu-background: #fff;
   --el-color-black: #fff;
   --el-menu-background-color: #fff;
   --el-menu-color-text: #515a6e;
-  --el-menu-hover-bg-color: red !important;
 
   @mixin container {
     color: var(--el-menu-color-text) !important;
@@ -49,6 +48,10 @@ html > .vab-theme-plain {
   .logo-container-comprehensive {
     @include container;
 
+    .logo {
+      border-right: 1px solid var(--el-border-color) !important;
+    }
+
     .title {
       @include container;
     }
@@ -64,6 +67,10 @@ html > .vab-theme-plain {
 
     .el-tabs {
       @include container;
+
+      .el-tabs__nav {
+        border-right: 1px solid var(--el-border-color) !important;
+      }
 
       .el-tabs__nav-wrap.is-left {
         background: #f7faff !important;
@@ -131,12 +138,6 @@ html > .vab-theme-plain {
 
   .vab-tabs-content-card .el-tabs__header .el-tabs__item {
     border: 1px solid var(--el-border-color) !important;
-  }
-
-  .vab-column-bar-container .el-tabs .el-tabs__nav {
-    margin-left: -1px !important;
-    background: var(--el-color-black) !important;
-    border-right: 1px solid var(--el-border-color) !important;
   }
 
   .logo-container-column .logo {
@@ -297,5 +298,9 @@ html > .vab-theme-plain {
         }
       }
     }
+  }
+
+  .vab-side-bar {
+    border-right: 1px solid var(--el-border-color) !important;
   }
 }

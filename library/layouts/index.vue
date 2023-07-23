@@ -50,7 +50,7 @@
         toggleDevice(value ? 'mobile' : 'desktop')
       })
 
-      onMounted(() => {
+      onBeforeMount(() => {
         resizeBody()
         updateTheme()
         window.addEventListener('resize', resizeBody)

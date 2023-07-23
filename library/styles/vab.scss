@@ -620,5 +620,18 @@ html {
         color: var(--el-color-black);
       }
     }
+    .vab-column-bar-container .el-tabs .el-tabs__nav {
+      margin-left: -1px !important;
+      border-right: 1px solid var(--el-menu-background-color) !important;
+    }
+
+    .logo-container-column .logo {
+      border-right: 1px solid var(--el-menu-background-color) !important;
+    }
+
+    .vab-side-bar {
+      margin-left: -1px !important;
+      border-right: 1px solid var(--el-menu-background-color) !important;
+    }
   }
 }

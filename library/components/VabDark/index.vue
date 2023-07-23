@@ -147,4 +147,8 @@
       z-index: 999;
     }
   }
+
+  .vab-dark {
+    margin-left: var(--el-margin);
+  }
 </style>
