@@ -22,7 +22,6 @@
 <script lang="ts" setup>
   import { Moon, Sunny } from '@element-plus/icons-vue'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { useDark, useToggle } from '@vueuse/core'
   import { translate } from '/@/i18n'
 
   defineOptions({

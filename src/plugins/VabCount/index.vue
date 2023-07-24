@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-  import { TransitionPresets } from '@vueuse/core'
   import { isNumber } from '/@/utils/validate'
 
   defineOptions({
