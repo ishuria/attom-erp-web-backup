@@ -100,7 +100,6 @@ declare module 'vue' {
     VabFooter: typeof import('./../../components/VabFooter/index.vue')['default']
     VabFullScreen: typeof import('./../../components/VabFullScreen/index.vue')['default']
     VabHeader: typeof import('./../../components/VabHeader/index.vue')['default']
-    VabIcon: typeof import('./../../components/VabIcon/index.vue')['default']
     VabIconSelector: typeof import('./../../../src/plugins/VabIconSelector/index.vue')['default']
     VabLanguage: typeof import('./../../components/VabLanguage/index.vue')['default']
     VabLink: typeof import('./../../components/VabLink/index.vue')['default']
