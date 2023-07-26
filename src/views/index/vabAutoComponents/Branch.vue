@@ -13,7 +13,7 @@
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
-  const option = reactive({
+  const option = reactive<any>({
     tooltip: {
       trigger: 'item',
     },

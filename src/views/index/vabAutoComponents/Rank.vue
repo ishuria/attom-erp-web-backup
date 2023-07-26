@@ -60,7 +60,7 @@
           show: true,
           position: 'right',
           fontSize: 12,
-          formatter: ({ data }) => {
+          formatter: ({ data }: any) => {
             return `${data}万元`
           },
         },
