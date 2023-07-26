@@ -79,6 +79,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           noClosable: true,
         },
       },
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('/@/views/index/dashboard.vue'),
+        meta: {
+          title: '看板',
+          icon: 'dashboard-2-line',
+        },
+      },
     ],
   },
   {

@@ -57,7 +57,15 @@
     },
   })
 
-  onMounted(() => {
+  watch(
+    color,
+    () => {
+      option.series.itemStyle.color = color.value
+    },
+    { immediate: true }
+  )
+
+  onActivated(() => {
     timer = setInterval(() => {
       option.series.data = [
         random(50, 100),
@@ -70,17 +78,8 @@
     }, 3000)
   })
 
-  watch(
-    color,
-    () => {
-      option.series.itemStyle.color = color.value
-    },
-    { immediate: true }
-  )
-
-  onBeforeRouteLeave((to, from, next) => {
+  onDeactivated(() => {
     clearInterval(timer)
-    next()
   })
 </script>
 

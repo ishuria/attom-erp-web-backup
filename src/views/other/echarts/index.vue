@@ -17,10 +17,10 @@
       <vab-chart-radar title="雷达图" />
       <vab-chart-gauge title="仪表图" />
       <vab-chart-theme-river title="河流流向图" />
-      <vab-chart-treemap title="矩形树图" />
-      <vab-chart-sunburst title="旭日图" />
       <vab-chart-funnel title="漏斗图" />
       <vab-chart-candlestick title="K线图" />
+      <vab-chart-treemap title="矩形树图" />
+      <vab-chart-sunburst title="旭日图" />
     </el-row>
   </div>
 </template>

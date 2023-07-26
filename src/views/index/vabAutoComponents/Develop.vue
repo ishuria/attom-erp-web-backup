@@ -19,7 +19,6 @@
 <script lang="ts" setup>
   import { graphic } from 'echarts/core'
   import { random } from 'lodash-es'
-  import { onBeforeRouteLeave } from 'vue-router'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   const settingsStore = useSettingsStore()
@@ -68,7 +67,18 @@
     },
   })
 
-  onMounted(() => {
+  watch(
+    color,
+    () => {
+      option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
+        { offset: 0, color: '#74df9f' },
+        { offset: 1, color: color.value },
+      ])
+    },
+    { immediate: true }
+  )
+
+  onActivated(() => {
     const base = +new Date(2022, 10, 1)
     const oneDay = 24 * 3600 * 1000
     const date: any = []
@@ -102,20 +112,8 @@
     }, 5000)
   })
 
-  watch(
-    color,
-    () => {
-      option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
-        { offset: 0, color: '#74df9f' },
-        { offset: 1, color: color.value },
-      ])
-    },
-    { immediate: true }
-  )
-
-  onBeforeRouteLeave((to, from, next) => {
+  onDeactivated(() => {
     clearInterval(timer)
-    next()
   })
 </script>
 

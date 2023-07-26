@@ -1,5 +1,5 @@
 <template>
-  <vab-card class="authorization" skeleton>
+  <vab-card class="authorization">
     <template #header>
       <vab-icon icon="bar-chart-2-line" />
       授权数
@@ -89,12 +89,7 @@
     { immediate: true }
   )
 
-  onBeforeRouteLeave((to, from, next) => {
-    clearInterval(timer)
-    next()
-  })
-
-  onMounted(() => {
+  onActivated(() => {
     timer = setInterval(() => {
       if (n.value > 0) {
         n.value--
@@ -105,6 +100,10 @@
         n.value = 5
       }
     }, 1000)
+  })
+
+  onDeactivated(() => {
+    clearInterval(timer)
   })
 </script>
 
