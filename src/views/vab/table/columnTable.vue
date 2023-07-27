@@ -226,7 +226,7 @@
   const $baseConfirm = inject<any>('$baseConfirm')
   const $baseMessage = inject<any>('$baseMessage')
   const routesStore = useRoutesStore()
-  const { getRoutes: routes } = storeToRefs(routesStore)
+  const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
   const tabsStore = useTabsStore()
   const { changeTabsMeta, addVisitedRoute } = tabsStore
   const editRef = ref<any>(null)
@@ -398,7 +398,7 @@
     if (selectRows.value.length === 1)
       for (let i = 0; i < selectRows.value.length; i++) {
         const matched = handleMatched(
-          routes.value,
+          allRoutes.value,
           '/vab/table/defaultTableDetail'
         )
         const tab = handleTabs({

@@ -17,6 +17,7 @@ declare interface RoutesModuleType {
     data: string | undefined
   }
   routes: any[]
+  allRoutes: any[]
 }
 
 declare type DeviceType = 'mobile' | 'desktop'

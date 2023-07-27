@@ -28,6 +28,7 @@ export const useRoutesStore = defineStore('routes', {
       data: undefined,
     },
     routes: [],
+    allRoutes: [],
   }),
   getters: {
     getTab: (state) => state.tab,
@@ -38,6 +39,10 @@ export const useRoutesStore = defineStore('routes', {
     getActiveMenu: (state) => state.activeMenu,
     getRoutes: (state) =>
       state.routes.filter(
+        (_route) => _route.meta && _route.meta.hidden !== true
+      ),
+    getAllRoutes: (state) =>
+      state.allRoutes.filter(
         (_route) => _route.meta && _route.meta.hidden !== true
       ),
     getPartialRoutes: (state) =>
@@ -80,6 +85,7 @@ export const useRoutesStore = defineStore('routes', {
       const accessRoutes = filterRoutes([...constantRoutes, ...routes], control)
       // 设置菜单所需路由
       this.routes = filterHidden(accessRoutes)
+      this.allRoutes = accessRoutes
       // 根据可访问路由重置Vue Router
       await resetRouter(accessRoutes)
     },
