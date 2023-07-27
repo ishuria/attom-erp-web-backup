@@ -8,8 +8,6 @@ const list = [
     meta: {
       title: '首页',
       icon: 'home-2-line',
-      breadcrumbHidden: true,
-      levelHidden: true,
     },
     children: [
       {
@@ -20,6 +18,15 @@ const list = [
           title: '首页',
           icon: 'home-2-line',
           noClosable: true,
+        },
+      },
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: '/@/views/index/dashboard.vue',
+        meta: {
+          title: '看板',
+          icon: 'dashboard-2-line',
         },
       },
     ],
@@ -38,8 +45,8 @@ const list = [
         name: 'ChatGPT',
         component: '/@/views/chatGPT/ChatGPT.vue',
         meta: {
-          title: 'chatGPT',
-          icon: 'chat-3-line',
+          title: 'ChatGPT',
+          icon: 'openai-line',
           dot: true,
         },
       },
@@ -50,6 +57,33 @@ const list = [
         meta: {
           title: '语音合成',
           icon: 'customer-service-line',
+        },
+      },
+      {
+        path: '//claude.ai/chat',
+        name: 'Claude',
+        meta: {
+          title: 'Claude',
+          target: '_blank',
+          icon: 'brain-line',
+        },
+      },
+      {
+        path: '//yiyan.baidu.com',
+        name: 'Yiyan',
+        meta: {
+          title: '文心一言',
+          target: '_blank',
+          icon: 'baidu-line',
+        },
+      },
+      {
+        path: '//qianwen.aliyun.com/chat',
+        name: 'Qianwen',
+        meta: {
+          title: '通义千问',
+          target: '_blank',
+          icon: 'taobao-line',
         },
       },
     ],
@@ -150,6 +184,14 @@ const list = [
             meta: {
               title: '自定义表格',
               badge: 'Hot',
+            },
+          },
+          {
+            path: 'splitTable',
+            name: 'SplitTable',
+            component: '/@/views/vab/table/splitTable.vue',
+            meta: {
+              title: '分割表格',
             },
           },
           {
@@ -378,6 +420,36 @@ const list = [
           icon: 'bar-chart-2-line',
         },
       },
+      {
+        path: 'image',
+        name: 'Image',
+        component: '/@/views/vab/image/index.vue',
+        meta: {
+          title: '图片',
+          guard: ['Admin'],
+          icon: 'image-2-line',
+        },
+      },
+      {
+        path: 'infiniteScroll',
+        name: 'InfiniteScroll',
+        component: '/@/views/vab/infiniteScroll/index.vue',
+        meta: {
+          title: '无限滚动',
+          guard: ['Admin'],
+          icon: 'align-vertically',
+        },
+      },
+      {
+        path: 'drawer',
+        name: 'Drawer',
+        component: '/@/views/vab/drawer/index.vue',
+        meta: {
+          title: '抽屉',
+          guard: ['Admin'],
+          icon: 'archive-drawer-line',
+        },
+      },
     ],
   },
   {
@@ -402,15 +474,36 @@ const list = [
         },
       },
       {
-        path: 'wangEditor',
-        name: 'WangEditor',
-        component: '/@/views/other/editor/wangEditor.vue',
+        path: 'editor',
+        name: 'Editor',
+        component: 'Layout',
         meta: {
-          title: '富文本',
+          title: '编辑器',
           icon: 'edit-box-line',
           guard: ['Admin'],
         },
+        children: [
+          {
+            path: 'wangEditor',
+            name: 'WangEditor',
+            component: '/@/views/other/editor/wangEditor.vue',
+            meta: {
+              title: '富文本',
+              guard: ['Admin'],
+            },
+          },
+          {
+            path: 'mdEditor',
+            name: 'MdEditor',
+            component: '/@/views/other/editor/mdEditor.vue',
+            meta: {
+              title: 'Markdown',
+              guard: ['Admin'],
+            },
+          },
+        ],
       },
+
       {
         path: 'video',
         name: 'Video',
@@ -419,6 +512,7 @@ const list = [
           title: '视频播放器',
           guard: ['Admin'],
           icon: 'video-line',
+          dot: true,
         },
       },
       {
@@ -504,6 +598,26 @@ const list = [
         },
       },
       {
+        path: 'amount',
+        name: 'Amount',
+        component: '/@/views/other/amount/index.vue',
+        meta: {
+          title: '大写金额转换',
+          guard: ['Admin'],
+          icon: 'money-cny-box-line',
+        },
+      },
+      {
+        path: 'regularExpression',
+        name: 'RegularExpression',
+        component: '/@/views/other/regularExpression/index.vue',
+        meta: {
+          title: '正则表达式',
+          guard: ['Admin'],
+          icon: 'file-copy-2-line',
+        },
+      },
+      {
         path: 'throttleDebounce',
         name: 'ThrottleDebounce',
         component: '/@/views/other/throttleDebounce/index.vue',
@@ -511,6 +625,16 @@ const list = [
           title: '节流防抖',
           guard: ['Admin'],
           icon: 'water-percent-line',
+        },
+      },
+      {
+        path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
+        name: 'ExternalLink',
+        meta: {
+          title: '外链',
+          target: '_blank',
+          guard: ['Admin', 'Editor'],
+          icon: 'external-link-line',
         },
       },
       {
@@ -541,6 +665,53 @@ const list = [
           icon: 'hand-heart-line',
         },
       },
+      {
+        path: 'no“Layout”',
+        name: 'No“Layout”',
+        component: '/@/views/other/no“Layout”/index.vue',
+        meta: {
+          title: '无框',
+          guard: ['Admin'],
+          icon: 'aspect-ratio-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'iframe',
+        name: 'Iframe',
+        meta: {
+          title: '内嵌网页',
+          guard: ['Admin'],
+          icon: 'window-line',
+        },
+        children: [
+          {
+            path: 'iframeView',
+            name: 'IframeView',
+            component: '/@/views/other/iframe/view.vue',
+            meta: {
+              title: 'Iframe',
+              icon: 'window-line',
+              dynamicNewTab: true,
+              hidden: true,
+            },
+          },
+          {
+            path: 'iframeView?url=cn.vuejs.org&title=Vue',
+            name: 'Vue',
+            meta: {
+              title: 'Vue',
+            },
+          },
+          {
+            path: 'iframeView?url=cn.vitejs.dev&title=Vite',
+            name: 'Vite',
+            meta: {
+              title: 'Vite',
+            },
+          },
+        ],
+      },
     ],
   },
   {
@@ -563,6 +734,16 @@ const list = [
         },
       },
       {
+        path: 'tabs',
+        name: 'Tabs',
+        component: '/@/views/operate/tabs/index.vue',
+        meta: {
+          title: '多标签',
+          guard: ['Admin'],
+          icon: 'bank-card-line',
+        },
+      },
+      {
         path: 'dynamicMeta',
         name: 'DynamicMeta',
         component: '/@/views/operate/dynamicMeta/index.vue',
@@ -574,13 +755,67 @@ const list = [
         },
       },
       {
-        path: 'tabs',
-        name: 'Tabs',
-        component: '/@/views/operate/tabs/index.vue',
+        path: 'guide',
+        name: 'Guide',
+        component: '/@/views/operate/guid/index.vue',
         meta: {
-          title: '多标签',
+          title: '页面引导',
           guard: ['Admin'],
-          icon: 'bank-card-line',
+          icon: 'guide-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'dynamicSegment',
+        name: 'DynamicSegment',
+        meta: {
+          title: '动态路径参数',
+          guard: ['Admin'],
+          icon: 'arrow-left-right-line',
+        },
+        children: [
+          {
+            path: 'test1/:id',
+            name: 'Test1',
+            component: '/@/views/operate/dynamicSegment/test1.vue',
+            meta: {
+              hidden: true,
+              title: 'Params',
+              dynamicNewTab: true,
+            },
+          },
+          {
+            path: 'test1/1',
+            name: 'Test1/1',
+            component: '/@/views/operate/dynamicSegment/test1.vue',
+            meta: { title: 'Params id=1' },
+          },
+          {
+            path: 'test2',
+            name: 'Test2',
+            component: '/@/views/operate/dynamicSegment/test2.vue',
+            meta: {
+              hidden: true,
+              title: 'Query',
+              dynamicNewTab: true,
+            },
+          },
+          {
+            path: 'test2?id=1',
+            name: 'Test2?id=1',
+            component: '/@/views/operate/dynamicSegment/test2.vue',
+            meta: { title: 'Query id=1' },
+          },
+        ],
+      },
+      {
+        path: 'log',
+        name: 'Log',
+        component: '/@/views/operate/errorLog/index.vue',
+        meta: {
+          title: '错误日志',
+          guard: ['Admin'],
+          icon: 'error-warning-line',
         },
       },
       {
@@ -801,6 +1036,7 @@ const list = [
       title: '单栏',
       icon: 'delete-column',
       guard: ['Admin'],
+      levelHidden: true,
       breadcrumbHidden: true,
     },
     children: [
@@ -812,7 +1048,6 @@ const list = [
           title: '单栏',
           icon: 'delete-column',
           noColumn: true,
-          hidden: true,
         },
       },
     ],
@@ -832,7 +1067,7 @@ const list = [
         component: '/@/views/goods/GoodsManagement.vue',
         meta: {
           title: '商品管理',
-          icon: 'home-2-line',
+          icon: 'shopping-basket-line',
         },
       },
       {
@@ -841,7 +1076,7 @@ const list = [
         component: '/@/views/goods/GoodsTag.vue',
         meta: {
           title: '商品分组',
-          icon: 'home-2-line',
+          icon: 'shopping-basket-2-line',
         },
       },
     ],
@@ -857,7 +1092,7 @@ const list = [
     },
   },
   {
-    path: '/:pathMatch(.**',
+    path: '/:pathMatch(.*)*',
     redirect: '/404',
     name: 'NotFound',
     meta: {
