@@ -106,9 +106,9 @@ const list = [
         },
         children: [
           {
-            path: 'remixIcon',
-            name: 'RemixIcon',
-            component: '/@/views/vab/icon/remixIcon.vue',
+            path: 'defaultIcon',
+            name: 'DefaultIcon',
+            component: '/@/views/vab/icon/defaultIcon.vue',
             meta: {
               title: '默认图标',
             },

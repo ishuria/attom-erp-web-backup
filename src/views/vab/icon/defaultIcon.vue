@@ -1,7 +1,7 @@
 <template>
-  <div class="remix-icon-container table-auto-height">
-    <el-row :gutter="20">
-      <el-col :span="24">
+  <div class="default-icon-container table-auto-height">
+    <vab-query-form>
+      <vab-query-form-top-panel>
         <el-form inline label-width="80px" @submit.prevent>
           <el-form-item label="图标名称">
             <el-input
@@ -39,8 +39,8 @@
             px
           </el-form-item>
         </el-form>
-      </el-col>
-    </el-row>
+      </vab-query-form-top-panel>
+    </vab-query-form>
     <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
     <div class="vab-auto-box">
       <el-row :gutter="20">
@@ -88,7 +88,7 @@
   import { Search } from '@element-plus/icons-vue'
 
   defineOptions({
-    name: 'RemixIcon',
+    name: 'DefaultIcon',
   })
 
   const queryIcon = ref<any>([])
@@ -154,7 +154,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .remix-icon-container {
+  .default-icon-container {
     :deep() {
       .el-form--inline {
         .el-form-item {

@@ -163,9 +163,9 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
         children: [
           {
-            path: 'remixIcon',
-            name: 'RemixIcon',
-            component: () => import('/@/views/vab/icon/remixIcon.vue'),
+            path: 'defaultIcon',
+            name: 'DefaultIcon',
+            component: () => import('/@/views/vab/icon/defaultIcon.vue'),
             meta: {
               title: '默认图标',
             },
