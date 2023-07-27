@@ -93,7 +93,7 @@
 
     .resizer {
       width: 5px;
-      cursor: w-resize;
+      cursor: col-resize;
       background-color: var(--el-border-color);
       transition: 0.3s;
 
@@ -134,7 +134,7 @@
       .resizer {
         width: 100%;
         height: 5px;
-        cursor: n-resize;
+        cursor: row-resize;
       }
     }
   }
