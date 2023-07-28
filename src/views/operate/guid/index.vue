@@ -23,6 +23,12 @@
             position: 'left',
           },
           {
+            element: document.querySelector('.logo .vab-icon'),
+            title: 'logo',
+            intro: '这里是logo',
+            position: 'bottom',
+          },
+          {
             element: document.querySelector('.vab-dark'),
             title: '暗黑模式',
             intro: '这里是暗黑模式',
@@ -71,6 +77,13 @@
             position: 'left',
           },
           {
+            element: document.querySelector('.vab-tabs-more-icon'),
+            title: '操作',
+            intro: '这里是操作',
+            position: 'left',
+          },
+
+          {
             element: document.querySelector('.vab-buy'),
             title: '购买源码',
             intro: '这里是购买源码',
@@ -80,6 +93,7 @@
         nextLabel: '下一步',
         prevLabel: '上一步',
         doneLabel: '完成',
+        showBullets: true,
       })
       .start()
   }
@@ -87,6 +101,7 @@
 
 <style lang="scss">
   .introjs-tooltip {
+    width: 300px;
     background-color: var(--el-color-white);
     border-radius: var(--el-border-radius-base);
     transition: var(--el-transition);
@@ -127,7 +142,12 @@
     }
   }
 
+  .introjs-overlay {
+    pointer-events: none;
+  }
+
   .introjs-helperLayer.introjs-fixedTooltip {
+    pointer-events: none;
     box-shadow:
       var(--el-color-primary) 0px 0px 1px 1px,
       rgba(0, 0, 0, 0.25) 0px 0px 0px 5000px !important;
@@ -135,12 +155,16 @@
 
   .introjs-tooltip-header {
     padding: var(--el-padding);
-    padding-bottom: 10px;
     margin-right: 16px;
   }
 
+  .introjs-tooltiptext {
+    padding: calc(var(--el-padding) / 2) var(--el-padding) var(--el-padding)
+      var(--el-padding);
+  }
+
   .introjs-tooltip-title {
-    font-size: var(--el-font-size-defaultss);
+    font-size: var(--el-font-size-default);
     font-weight: normal;
     color: var(--el-text-color-primary);
   }
@@ -153,5 +177,13 @@
     &:hover {
       color: var(--el-color-primary) !important;
     }
+  }
+
+  .introjs-bullets {
+    padding-top: 0;
+  }
+
+  .introjs-tooltipbuttons {
+    border-top: 0;
   }
 </style>
