@@ -105,21 +105,28 @@
 
   nextTick(() => {
     if (theme.value.layout === 'column')
-      watch(route, () => {
-        const foldUnfold: any = document.querySelector(
-          '.left-panel .fold-unfold'
-        )
-        const floatFold: any = document.querySelector('.float-fold')
-        if (route.meta.noColumn && theme.value.layout === 'column') {
-          if (device.value !== 'mobile') foldSideBar()
-          if (foldUnfold) foldUnfold.style = 'display:none'
-          if (floatFold) floatFold.style = 'display:none'
-        } else {
-          if (device.value !== 'mobile') openSideBar()
-          if (foldUnfold) foldUnfold.style = ''
-          if (floatFold) floatFold.style = ''
+      watch(
+        route,
+        () => {
+          const foldUnfold: any = document.querySelector(
+            '.left-panel .fold-unfold'
+          )
+          console.log(route.meta)
+          const floatFold: any = document.querySelector('.float-fold')
+          if (route.meta.noColumn && theme.value.layout === 'column') {
+            if (device.value !== 'mobile') foldSideBar()
+            if (foldUnfold) foldUnfold.style = 'display:none'
+            if (floatFold) floatFold.style = 'display:none'
+          } else {
+            if (device.value !== 'mobile') openSideBar()
+            if (foldUnfold) foldUnfold.style = ''
+            if (floatFold) floatFold.style = ''
+          }
+        },
+        {
+          immediate: true,
         }
-      })
+      )
   })
 </script>
 
