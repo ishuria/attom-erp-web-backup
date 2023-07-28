@@ -72,7 +72,6 @@
     &-rely {
       min-width: 500px;
       height: 50px;
-      padding-left: 10px;
       margin-top: 10px;
       line-height: 50px;
       text-align: left;
