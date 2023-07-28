@@ -41,24 +41,16 @@
       name: '访问来源',
       type: 'pie',
       radius: ['40%', '80%'],
-      avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10,
         borderColor: '#fff',
         borderWidth: 2,
-      },
-      label: {
-        show: false,
-        position: 'center',
       },
       emphasis: {
         label: {
           show: true,
           fontSize: '14',
         },
-      },
-      labelLine: {
-        show: false,
       },
       data: [
         { value: random(0, 100), name: '搜索引擎' },

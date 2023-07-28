@@ -21,15 +21,11 @@
       {
         name: '访问来源',
         type: 'pie',
-        radius: ['50%', '70%'],
+        radius: ['40%', '80%'],
         itemStyle: {
           borderRadius: 10,
+          borderColor: '#fff',
           borderWidth: 2,
-        },
-        emphasis: {
-          label: {
-            show: true,
-          },
         },
         data: [
           { value: 1048, name: '搜索引擎' },
