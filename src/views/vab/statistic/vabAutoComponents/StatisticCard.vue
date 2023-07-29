@@ -8,7 +8,7 @@
               每日活跃用户
               <el-tooltip content="一天内登录该产品的用户数" effect="light">
                 <el-icon :size="12" style="margin-left: 4px">
-                  <Warning />
+                  <warning />
                 </el-icon>
               </el-tooltip>
             </div>
@@ -20,7 +20,7 @@
             <span class="green">
               24%
               <el-icon>
-                <CaretTop />
+                <caret-top />
               </el-icon>
             </span>
           </div>
@@ -39,7 +39,7 @@
                 placement="top"
               >
                 <el-icon :size="12" style="margin-left: 4px">
-                  <Warning />
+                  <warning />
                 </el-icon>
               </el-tooltip>
             </div>
@@ -51,7 +51,7 @@
             <span class="red">
               12%
               <el-icon>
-                <CaretBottom />
+                <caret-bottom />
               </el-icon>
             </span>
           </div>
@@ -73,13 +73,13 @@
             <span class="green">
               16%
               <el-icon>
-                <CaretTop />
+                <caret-top />
               </el-icon>
             </span>
           </div>
           <div class="footer-item">
             <el-icon :size="14">
-              <ArrowRight />
+              <arrow-right />
             </el-icon>
           </div>
         </div>

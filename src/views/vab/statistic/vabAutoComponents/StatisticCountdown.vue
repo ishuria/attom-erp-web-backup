@@ -14,7 +14,7 @@
         <template #title>
           <div style="display: inline-flex; align-items: center">
             <el-icon :size="12" style="margin-right: 4px">
-              <Calendar />
+              <calendar />
             </el-icon>
             直到下个月
           </div>

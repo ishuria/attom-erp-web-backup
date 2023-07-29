@@ -1,7 +1,7 @@
 <template>
   <el-upload action="/uploadFlie" :auto-upload="false" list-type="picture-card">
     <el-icon>
-      <Plus />
+      <plus />
     </el-icon>
 
     <template #file="{ file }">
@@ -15,10 +15,10 @@
             <el-icon><zoom-in /></el-icon>
           </span>
           <span v-if="!disabled" class="el-upload-list__item-delete">
-            <el-icon><Download /></el-icon>
+            <el-icon><download /></el-icon>
           </span>
           <span v-if="!disabled" class="el-upload-list__item-delete">
-            <el-icon><Delete /></el-icon>
+            <el-icon><delete /></el-icon>
           </span>
         </span>
       </div>

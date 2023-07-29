@@ -31,6 +31,14 @@ module.exports = {
     'no-debugger': 'off',
     'prefer-template': 'error',
     'prettier/prettier': 'warn',
+    'vue/component-name-in-template-casing': [
+      'error',
+      'kebab-case',
+      {
+        registeredComponentsOnly: false,
+        ignores: [],
+      },
+    ],
     'vue/multi-word-component-names': 'off',
     'vue/no-reserved-component-names': 'off',
     'vue/no-setup-props-destructure': 'off',

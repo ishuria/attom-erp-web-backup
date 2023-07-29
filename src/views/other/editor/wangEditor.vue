@@ -1,10 +1,10 @@
 <template>
   <div class="wang-editor-container">
-    <Toolbar
+    <toolbar
       :editor="editorRef"
       style="border-bottom: 1px solid var(--el-border-color)"
     />
-    <Editor
+    <editor
       v-model="html"
       class="wang-editor-content"
       :default-config="editorConfig"

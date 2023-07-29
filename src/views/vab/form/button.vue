@@ -74,7 +74,7 @@
         <el-button type="primary">
           上传
           <el-icon class="el-icon--right">
-            <Upload />
+            <upload />
           </el-icon>
         </el-button>
       </el-space>
@@ -111,7 +111,7 @@
           <el-button type="primary">
             下一页
             <el-icon class="el-icon--right">
-              <ArrowRight />
+              <arrow-right />
             </el-icon>
           </el-button>
         </el-button-group>

@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="12">
           <div class="data-screen-card" :style="{ height: topCardHeight }">
-            TODO
+            <data-screen-map />
           </div>
           <div class="data-screen-card" :style="{ height: bottomCardHeight }">
             TODO

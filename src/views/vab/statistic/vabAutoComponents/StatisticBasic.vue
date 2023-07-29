@@ -9,7 +9,7 @@
           <div style="display: inline-flex; align-items: center">
             男女比例
             <el-icon :size="12" style="margin-left: 4px">
-              <Male />
+              <male />
             </el-icon>
           </div>
         </template>
@@ -23,7 +23,7 @@
       <el-statistic title="反馈编号" :value="562">
         <template #suffix>
           <el-icon style="vertical-align: -0.125em">
-            <ChatLineRound />
+            <chat-line-round />
           </el-icon>
         </template>
       </el-statistic>

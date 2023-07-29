@@ -6,7 +6,7 @@
     :on-preview="handlePictureCardPreview"
   >
     <el-icon>
-      <Plus />
+      <plus />
     </el-icon>
   </el-upload>
 
