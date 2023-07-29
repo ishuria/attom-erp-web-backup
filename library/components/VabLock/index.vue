@@ -52,9 +52,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { useUserStore } from '/@/store/modules/user'
-  import { useSettingsStore } from '/@/store/modules/settings'
   import { translate } from '/@/i18n'
+  import { useSettingsStore } from '/@/store/modules/settings'
+  import { useUserStore } from '/@/store/modules/user'
 
   defineOptions({
     name: 'VabLock',

@@ -26,9 +26,10 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.stylelint": true,
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
   },
-  "stylelint.validate": ["html", "vue", "js", "scss"],
+  "stylelint.validate": ["vue", "scss"],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -49,11 +50,11 @@
   "docthis.includeDescriptionTag": true,
   "docthis.enableHungarianNotationEvaluation": true,
   "docthis.inferTypesFromNames": true,
-  "vetur.format.defaultFormatter.html": "prettier",
   "files.autoSave": "onFocusChange",
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/src"
   },
   "files.eol": "\n",
-  "vue.codeActions.savingTimeLimit": 100000
+  "vue.codeActions.savingTimeLimit": 100000,
+  "editor.formatOnType": true
 }

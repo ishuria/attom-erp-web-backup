@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoutesStore } from '/@/store/modules/routes'
   import { translate } from '/@/i18n'
+  import { useRoutesStore } from '/@/store/modules/routes'
   import { handleMatched } from '/@/utils/routes'
 
   defineOptions({

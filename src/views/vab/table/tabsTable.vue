@@ -139,12 +139,11 @@
   defineOptions({
     name: 'TabsTable',
   })
-  import type { TabsPaneContext } from 'element-plus'
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { doDelete, getList } from '/@/api/table'
-  import { handleMatched, handleTabs } from '/@/utils/routes'
   import { Delete, Plus } from '@element-plus/icons-vue'
+  import { doDelete, getList } from '/@/api/table'
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { handleMatched, handleTabs } from '/@/utils/routes'
 
   const activeName = ref<string>('first')
   const router = useRouter()

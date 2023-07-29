@@ -2,8 +2,8 @@ import type { App } from 'vue'
 // 加载雪碧图
 import 'virtual:svg-icons-register'
 // 加载全局样式样式
-import './styles/vab.scss'
 import { createHead } from '@vueuse/head'
+import './styles/vab.scss'
 // 加载图标
 import { VabIcon } from 'vsv-icon'
 import 'vsv-icon/dist/style.css'

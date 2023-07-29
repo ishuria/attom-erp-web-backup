@@ -117,13 +117,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { useTabsStore } from '/@/store/modules/tabs'
+  import { RouteLocationNormalizedLoaded } from 'vue-router'
+  import { translate } from '/@/i18n'
+  import { VabRoute } from '/@/router/types'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/i18n'
+  import { useTabsStore } from '/@/store/modules/tabs'
   import { handleActivePath, handleTabs } from '/@/utils/routes'
-  import { RouteLocationNormalizedLoaded } from 'vue-router'
-  import { VabRoute } from '/@/router/types'
 
   defineOptions({
     name: 'VabTabs',

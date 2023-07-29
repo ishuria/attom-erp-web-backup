@@ -14,8 +14,8 @@
 <script lang="ts" setup>
   import { round } from 'lodash-es'
   import { color as _color } from '/@/config/'
-  import { useSettingsStore } from '/@/store/modules/settings'
   import { translate } from '/@/i18n'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabColorPicker',

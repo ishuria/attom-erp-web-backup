@@ -39,8 +39,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { getIconList } from '/@/api/icon'
   import { Search } from '@element-plus/icons-vue'
+  import { getIconList } from '/@/api/icon'
 
   defineOptions({
     name: 'VabIconSelector',

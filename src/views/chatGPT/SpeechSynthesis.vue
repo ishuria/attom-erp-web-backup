@@ -49,11 +49,11 @@
 </template>
 
 <script lang="ts" setup>
+  import { getList } from '/@/api/description'
+
   defineOptions({
     name: 'SpeechSynthesis',
   })
-
-  import { getList } from '/@/api/description'
 
   const voice = ref<SpeechSynthesisVoice>(
     undefined as unknown as SpeechSynthesisVoice

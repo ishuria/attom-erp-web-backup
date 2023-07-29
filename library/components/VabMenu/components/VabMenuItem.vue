@@ -26,10 +26,10 @@
 </template>
 
 <script lang="ts" setup>
+  import { isHashRouterMode } from '/@/config'
+  import { translate } from '/@/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { isExternal } from '/@/utils/validate'
-  import { translate } from '/@/i18n'
-  import { isHashRouterMode } from '/@/config'
 
   defineOptions({
     name: 'VabMenuItem',

@@ -10,9 +10,6 @@
 
 <script lang="ts" setup>
   /* eslint-disable @typescript-eslint/no-unused-vars */
-  import theme from './theme/vab-echarts-theme.json'
-  import { use } from 'echarts/core'
-  import { CanvasRenderer, SVGRenderer } from 'echarts/renderers'
   import {
     BarChart,
     BoxplotChart,
@@ -42,10 +39,10 @@
     AxisPointerComponent,
     BrushComponent,
     CalendarComponent,
-    DatasetComponent,
     DataZoomComponent,
     DataZoomInsideComponent,
     DataZoomSliderComponent,
+    DatasetComponent,
     GeoComponent,
     GraphicComponent,
     GridComponent,
@@ -65,7 +62,10 @@
     VisualMapContinuousComponent,
     VisualMapPiecewiseComponent,
   } from 'echarts/components'
+  import { use } from 'echarts/core'
+  import { CanvasRenderer, SVGRenderer } from 'echarts/renderers'
   import VChart, { THEME_KEY } from 'vue-echarts'
+  import theme from './theme/vab-echarts-theme.json'
 
   defineOptions({
     name: 'VabChart',
