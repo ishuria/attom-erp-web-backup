@@ -91,7 +91,7 @@
     handleChange(color)
   })
 
-  onMounted(() => {
+  onBeforeMount(() => {
     handleChange(getColor)
   })
 
