@@ -350,11 +350,16 @@
             .el-tabs__item {
               box-sizing: border-box;
               height: $base-tag-item-height;
+              padding-right: var(--el-padding) !important;
+              padding-left: var(--el-padding) !important;
               margin-right: 5px;
               line-height: $base-tag-item-height;
-              border: 1px solid var(--el-border-color) !important;
+              border: 1px solid var(--el-border-color);
               border-radius: var(--el-border-radius-base);
-              transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+
+              .is-icon-close {
+                width: 14px !important;
+              }
 
               &.is-active {
                 color: var(--el-color-primary);
@@ -392,11 +397,16 @@
 
             .el-tabs__item {
               height: $base-tag-item-height;
+              padding-right: var(--el-padding) !important;
+              padding-left: var(--el-padding) !important;
               margin-right: 5px;
               line-height: $base-tag-item-height;
               border: 0;
               outline: none;
-              transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+
+              .is-icon-close {
+                width: 14px !important;
+              }
 
               &.is-active {
                 background: var(--el-color-primary-light-9);
@@ -459,7 +469,6 @@
               padding-left: var(--el-margin) !important;
               margin-right: -18px;
               text-align: center;
-              transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
 
               &:hover {
                 z-index: 999;
@@ -476,7 +485,7 @@
               }
 
               .is-icon-close {
-                margin-right: 0;
+                width: 14px !important;
               }
 
               &.is-active {
