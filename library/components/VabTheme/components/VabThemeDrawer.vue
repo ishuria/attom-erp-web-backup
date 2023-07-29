@@ -290,7 +290,7 @@
     handleOpenTheme()
   })
 
-  $sub('shop-vite-reset', () => {
+  $sub('shop-vite-reset-theme', () => {
     setDefaultTheme()
   })
 
@@ -301,7 +301,7 @@
 
   onBeforeUnmount(() => {
     $unsub('shop-vite-theme')
-    $unsub('shop-vite-reset')
+    $unsub('shop-vite-reset-theme')
     $unsub('shop-vite-change-theme')
   })
 </script>

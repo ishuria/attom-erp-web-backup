@@ -47,14 +47,9 @@
 
   const skeletonShow = ref<boolean>(true)
 
-  const timer: any = setTimeout(() => {
+  setTimeout(() => {
     skeletonShow.value = false
   }, 500)
-
-  onBeforeRouteLeave((to, from, next) => {
-    clearInterval(timer)
-    next()
-  })
 </script>
 
 <style lang="scss" scoped>

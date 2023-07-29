@@ -28,22 +28,27 @@
   const QR = getImageUrl('assets/qr_images/QR.png')
   const scan = ref<string>('')
   const dialogVisible = ref<boolean>(false)
+  let timer: any
+  let timer2: any
 
   scan.value = getImageUrl('assets/qr_images/scan.png')
-  const timer = setInterval(() => {
-    scan.value = ''
-    nextTick(() => {
-      scan.value = getImageUrl('assets/qr_images/scan.png')
-    })
-  }, 10000)
 
-  const timer2 = setTimeout(() => {
-    dialogVisible.value = true
-  }, 1000)
-  onBeforeRouteLeave((to, from, next) => {
+  onActivated(() => {
+    timer = setInterval(() => {
+      scan.value = ''
+      nextTick(() => {
+        scan.value = getImageUrl('assets/qr_images/scan.png')
+      })
+    }, 10000)
+
+    timer2 = setTimeout(() => {
+      dialogVisible.value = true
+    }, 1000)
+  })
+
+  onDeactivated(() => {
     clearInterval(timer)
     clearInterval(timer2)
-    next()
   })
 </script>
 

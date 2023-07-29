@@ -74,7 +74,7 @@
   }
 
   const resetTheme = () => {
-    $pub('shop-vite-reset')
+    $pub('shop-vite-reset-theme')
   }
   const changeTheme = (value: string) => {
     $pub('shop-vite-change-theme', value)

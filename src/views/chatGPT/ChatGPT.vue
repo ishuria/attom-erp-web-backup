@@ -80,11 +80,9 @@
   const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
   const avatarUrl = getImageUrl('assets/chatGPT_images/chatGPT.png')
   const loading = ref<boolean>(false)
-
-  const timer = setInterval(() => {
-    if (scrollbarRef.value && innerRef.value)
-      scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
-  }, 500)
+  let timer: any
+  const result =
+    '\u0053\u0068\u006f\u0070\u0020\u0056\u0069\u0074\u0065\u0020\u6f14\u793a\u5730\u5740\u4ec5\u63d0\u4f9b\u0020\u0043\u0068\u0061\u0074\u0047\u0050\u0054\u0020\u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6\u0020\u0043\u0068\u0061\u0074\u0047\u0050\u0054\u0020\u5b8c\u6574\u529f\u80fd\u8bf7\u8bbf\u95ee\u0020\u004f\u0070\u0065\u006e\u0020\u0041\u0049\u0020\u5b98\u7f51\u81ea\u884c\u8d2d\u4e70\u5bf9\u63a5\uff0c\u60a8\u73b0\u5728\u53ef\u4ee5\u8ddf\u6211\u5bf9\u8bdd\u4e86'
 
   const changeGPT = (value: any) => {
     if (value == '小爱同学')
@@ -98,9 +96,6 @@
     $baseMessage(`切换${value}成功！`, 'success', 'hey')
   }
 
-  const result =
-    '\u0053\u0068\u006f\u0070\u0020\u0056\u0069\u0074\u0065\u0020\u6f14\u793a\u5730\u5740\u4ec5\u63d0\u4f9b\u0020\u0043\u0068\u0061\u0074\u0047\u0050\u0054\u0020\u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6\u0020\u0043\u0068\u0061\u0074\u0047\u0050\u0054\u0020\u5b8c\u6574\u529f\u80fd\u8bf7\u8bbf\u95ee\u0020\u004f\u0070\u0065\u006e\u0020\u0041\u0049\u0020\u5b98\u7f51\u81ea\u884c\u8d2d\u4e70\u5bf9\u63a5\uff0c\u60a8\u73b0\u5728\u53ef\u4ee5\u8ddf\u6211\u5bf9\u8bdd\u4e86'
-
   const list = ref<any>([
     {
       id: 'uuid_9999',
@@ -112,10 +107,6 @@
     },
   ])
 
-  onMounted(() => {
-    textareaRef.value.focus()
-    typeWriting('uuid_9999', result)
-  })
   const send = () => {
     loading.value = true
     if (!value.value) {
@@ -191,9 +182,21 @@
     }, 0)
   }
 
-  onBeforeRouteLeave((to, from, next) => {
+  onMounted(() => {
+    textareaRef.value.focus()
+    typeWriting('uuid_9999', result)
+  })
+
+  onActivated(() => {
+    timer = setInterval(() => {
+      console.log(1)
+      if (scrollbarRef.value && innerRef.value)
+        scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
+    }, 500)
+  })
+
+  onDeactivated(() => {
     clearInterval(timer)
-    next()
   })
 </script>
 

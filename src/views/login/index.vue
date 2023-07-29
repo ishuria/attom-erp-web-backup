@@ -79,7 +79,6 @@
   import { useUserStore } from '/@/store/modules/user'
   import { translate } from '/@/i18n'
   import { isPassword } from '/@/utils/validate'
-  import { onBeforeRouteLeave } from 'vue-router'
   import { getImageUrl } from '/@/utils/imageUrl'
 
   defineOptions({

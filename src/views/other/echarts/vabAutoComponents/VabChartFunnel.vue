@@ -26,6 +26,7 @@
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
+  let timer: any
 
   const option = reactive<any>({
     grid: {
@@ -73,16 +74,6 @@
     },
   })
 
-  const timer = setInterval(() => {
-    option.series.data = [
-      { value: random(0, 100), name: '访问' },
-      { value: random(20, 100), name: '咨询' },
-      { value: random(40, 100), name: '订单' },
-      { value: random(60, 100), name: '点击' },
-      { value: random(80, 100), name: '展现' },
-    ]
-  }, 3000)
-
   watch(
     color,
     () => {
@@ -91,8 +82,19 @@
     { immediate: true }
   )
 
-  onBeforeRouteLeave((to, from, next) => {
+  onActivated(() => {
+    timer = setInterval(() => {
+      option.series.data = [
+        { value: random(0, 100), name: '访问' },
+        { value: random(20, 100), name: '咨询' },
+        { value: random(40, 100), name: '订单' },
+        { value: random(60, 100), name: '点击' },
+        { value: random(80, 100), name: '展现' },
+      ]
+    }, 3000)
+  })
+
+  onDeactivated(() => {
     clearInterval(timer)
-    next()
   })
 </script>

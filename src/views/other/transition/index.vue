@@ -34,6 +34,7 @@
   const show = ref<boolean>(true)
   const checked = ref<boolean>(false)
   let timer: any
+
   const handleChange = (value: any) => {
     if (value)
       timer = setInterval(() => {
@@ -42,9 +43,8 @@
     else clearInterval(timer)
   }
 
-  onBeforeRouteLeave((to, from, next) => {
+  onDeactivated(() => {
     clearInterval(timer)
-    next()
   })
 </script>
 

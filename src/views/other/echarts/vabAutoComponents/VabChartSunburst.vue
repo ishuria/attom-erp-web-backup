@@ -23,6 +23,8 @@
     },
   })
 
+  let timer: any
+
   const option = reactive<any>({
     grid: {
       top: 20,
@@ -215,187 +217,188 @@
     },
   })
 
-  const timer = setInterval(() => {
-    option.series.data = [
-      {
-        children: [
-          {
-            value: random(0, 40),
-            children: [
-              {
-                value: random(0, 40),
-              },
-              {
-                value: random(0, 40),
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-              {
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            value: random(0, 40),
-            children: [
-              {
-                value: random(0, 40),
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                  {
-                    value: random(0, 40),
-                  },
-                  {
-                    value: random(0, 40),
-                  },
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-              {
-                value: random(0, 40),
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-              {
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: random(0, 40),
-        children: [
-          {
-            value: random(0, 40),
-            children: [
-              {
-                value: random(0, 40),
-              },
-              {
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            children: [
-              {
-                value: random(0, 40),
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: random(0, 40),
-        children: [
-          {
-            children: [
-              {
-                value: random(0, 40),
-              },
-              {
-                value: random(0, 40),
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-              {
-                value: random(0, 40),
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        children: [
-          {
-            value: random(0, 40),
-            children: [
-              {
-                value: random(0, 40),
-              },
-              {
-                value: random(0, 40),
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-              {
-                value: random(0, 40),
-              },
-            ],
-          },
-          {
-            value: random(0, 40),
-            children: [
-              {
-                value: random(0, 40),
-              },
-              {
-                children: [
-                  {
-                    value: random(0, 40),
-                  },
-                ],
-              },
-              {
-                value: random(0, 40),
-              },
-            ],
-          },
-        ],
-      },
-    ]
-  }, 3000)
+  onActivated(() => {
+    timer = setInterval(() => {
+      option.series.data = [
+        {
+          children: [
+            {
+              value: random(0, 40),
+              children: [
+                {
+                  value: random(0, 40),
+                },
+                {
+                  value: random(0, 40),
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              value: random(0, 40),
+              children: [
+                {
+                  value: random(0, 40),
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                    {
+                      value: random(0, 40),
+                    },
+                    {
+                      value: random(0, 40),
+                    },
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: random(0, 40),
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: random(0, 40),
+          children: [
+            {
+              value: random(0, 40),
+              children: [
+                {
+                  value: random(0, 40),
+                },
+                {
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              children: [
+                {
+                  value: random(0, 40),
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: random(0, 40),
+          children: [
+            {
+              children: [
+                {
+                  value: random(0, 40),
+                },
+                {
+                  value: random(0, 40),
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: random(0, 40),
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          children: [
+            {
+              value: random(0, 40),
+              children: [
+                {
+                  value: random(0, 40),
+                },
+                {
+                  value: random(0, 40),
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: random(0, 40),
+                },
+              ],
+            },
+            {
+              value: random(0, 40),
+              children: [
+                {
+                  value: random(0, 40),
+                },
+                {
+                  children: [
+                    {
+                      value: random(0, 40),
+                    },
+                  ],
+                },
+                {
+                  value: random(0, 40),
+                },
+              ],
+            },
+          ],
+        },
+      ]
+    }, 3000)
+  })
 
-  onBeforeRouteLeave((to, from, next) => {
+  onDeactivated(() => {
     clearInterval(timer)
-    next()
   })
 </script>
