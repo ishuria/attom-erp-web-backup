@@ -354,8 +354,8 @@
               padding-left: var(--el-padding) !important;
               margin-right: 5px;
               line-height: $base-tag-item-height;
-              border: 1px solid var(--el-border-color);
-              border-radius: var(--el-border-radius-base);
+              border: 1px solid var(--el-border-color) !important;
+              border-radius: var(--el-border-radius-base) !important;
 
               .is-icon-close {
                 width: 14px !important;
@@ -364,12 +364,6 @@
               &.is-active {
                 color: var(--el-color-primary);
                 background: var(--el-color-primary-light-9);
-                border: 1px solid var(--el-color-primary);
-                outline: none;
-              }
-
-              &:hover {
-                border: 1px solid var(--el-color-primary);
               }
             }
           }
