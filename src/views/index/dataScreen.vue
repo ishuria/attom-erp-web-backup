@@ -13,7 +13,15 @@
 <template>
   <div
     id="data-screen-container"
-    class="data-screen-container no-layout-container"
+    class="data-screen-container no-layout-container hidden-sm-and-up"
+  >
+    <div style="width: 100vw; padding: 20px">
+      <el-alert :closable="false" title="手机端不支持门户演示" type="error" />
+    </div>
+  </div>
+  <div
+    id="data-screen-container"
+    class="data-screen-container no-layout-container hidden-xs-only"
   >
     <data-screen-header
       :style="{

@@ -32,7 +32,6 @@ declare module 'vue' {
     ImagePreview: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImagePreview.vue')['default']
     InfiniteScrollBasic: typeof import('./../../../src/views/vab/infiniteScroll/vabAutoComponents/InfiniteScrollBasic.vue')['default']
     InfiniteScrollDisableLoading: typeof import('./../../../src/views/vab/infiniteScroll/vabAutoComponents/InfiniteScrollDisableLoading.vue')['default']
-    Map: typeof import('./../../../src/views/index/vabAutoComponents/Map.vue')['default']
     MenuManagementEdit: typeof import('./../../../src/views/setting/menuManagement/vabAutoComponents/MenuManagementEdit.vue')['default']
     PageBanner: typeof import('./../../../src/views/index/vabAutoComponents/PageBanner.vue')['default']
     PageHeader: typeof import('./../../../src/views/index/vabAutoComponents/PageHeader.vue')['default']
