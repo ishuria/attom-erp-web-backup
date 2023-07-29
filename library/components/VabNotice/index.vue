@@ -87,7 +87,7 @@
   }
 
   .notice-list {
-    height: 300px;
+    height: 315px;
 
     ul {
       padding: 0 15px 0 0;
@@ -96,7 +96,12 @@
       li {
         display: flex;
         align-items: center;
-        padding: 11px 0 11px 0;
+        padding: 10px 0 15px 0;
+
+        &:hover {
+          background-color: var(--el-color-primary-light-9);
+          border-radius: var(--el-border-radius-base);
+        }
 
         :deep() {
           .el-avatar {
