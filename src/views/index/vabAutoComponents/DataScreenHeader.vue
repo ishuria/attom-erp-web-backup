@@ -3,6 +3,7 @@
     <el-col :span="24">
       <div class="data-screen-header">
         <span>Vue Shop Vite 数据大屏</span>
+        <vab-full-screen class="data-full-screen" />
       </div>
     </el-col>
   </el-row>
@@ -14,6 +15,23 @@
     text-align: center;
     background: url('/@/assets/data_screen_images/bgtop.png') no-repeat;
     background-size: 100% 100%;
+
+    .data-full-screen {
+      position: fixed;
+      top: 15px;
+      right: 40px;
+      width: 60px;
+      height: 60px;
+      background: #2ba3ff;
+      border-radius: 50%;
+      box-shadow: 0 2px 12px 0 #2ba3ff;
+
+      :deep() {
+        [class*='ri-'] {
+          font-size: 20px;
+        }
+      }
+    }
 
     span {
       position: relative;

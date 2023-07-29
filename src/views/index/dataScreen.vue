@@ -4,8 +4,8 @@
   })
 
   const headerContentHeight = ref<any>('60px')
-  const topCardHeight = ref<any>('528px')
-  const bottomCardHeight = ref<any>('calc((100vh - 674px)')
+  const topCardHeight = ref<any>('calc((100vh - 320px)')
+  const bottomCardHeight = ref<any>('174px')
   const leftCardHeight = ref<any>('calc((100vh - 165px) / 3)')
   const rightCardHeight = ref<any>('calc((100vh - 165px) / 3)')
 </script>

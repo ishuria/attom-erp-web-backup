@@ -2,6 +2,7 @@
   <v-chart
     ref="VChartRef"
     :autoresize="autoresize"
+    class="vab-chart"
     :option="option"
     @click="handleClick"
     @highlight="handleHighlight"
@@ -172,3 +173,10 @@
     return VChartRef.value.getHeight()
   }
 </script>
+
+<style lang="scss" scoped>
+  .vab-chart {
+    width: 100%;
+    height: 100%;
+  }
+</style>
