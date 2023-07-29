@@ -29,13 +29,16 @@
   }
 
   const treeRef = ref<InstanceType<typeof ElTree>>()
+  const $baseMessage = inject<any>('$baseMessage')
 
   const getCheckedNodes = () => {
-    console.log(treeRef.value?.getCheckedNodes(false, false))
+    $baseMessage(treeRef.value?.getCheckedNodes(false, false), 'success', 'hey')
   }
+
   const getCheckedKeys = () => {
-    console.log(treeRef.value?.getCheckedKeys(false))
+    $baseMessage(treeRef.value?.getCheckedKeys(false), 'success', 'hey')
   }
+
   const setCheckedNodes = () => {
     treeRef.value?.setCheckedNodes(
       [
@@ -51,9 +54,11 @@
       false
     )
   }
+
   const setCheckedKeys = () => {
     treeRef.value?.setCheckedKeys([3], false)
   }
+
   const resetChecked = () => {
     treeRef.value?.setCheckedKeys([], false)
   }

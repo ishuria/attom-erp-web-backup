@@ -1,11 +1,5 @@
 <template>
-  <el-tree
-    lazy
-    :load="loadNode"
-    :props="props"
-    show-checkbox
-    @check-change="handleCheckChange"
-  />
+  <el-tree lazy :load="loadNode" :props="props" show-checkbox />
 </template>
 
 <script lang="ts" setup>
@@ -20,14 +14,6 @@
   const props = {
     label: 'name',
     children: 'zones',
-  }
-
-  const handleCheckChange = (
-    data: Tree,
-    checked: boolean,
-    indeterminate: boolean
-  ) => {
-    console.log(data, checked, indeterminate)
   }
 
   const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {

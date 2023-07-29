@@ -80,11 +80,6 @@
 <style lang="scss" scoped>
   .index-container {
     :deep() {
-      .page-header {
-        min-height: 130px;
-        margin-bottom: 20px;
-      }
-
       .el-card {
         .el-card__header {
           position: relative;

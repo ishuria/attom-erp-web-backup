@@ -14,18 +14,10 @@
           >
             <el-icon><zoom-in /></el-icon>
           </span>
-          <span
-            v-if="!disabled"
-            class="el-upload-list__item-delete"
-            @click="handleDownload(file)"
-          >
+          <span v-if="!disabled" class="el-upload-list__item-delete">
             <el-icon><Download /></el-icon>
           </span>
-          <span
-            v-if="!disabled"
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)"
-          >
+          <span v-if="!disabled" class="el-upload-list__item-delete">
             <el-icon><Delete /></el-icon>
           </span>
         </span>
@@ -47,16 +39,8 @@
   const dialogVisible = ref<boolean>(false)
   const disabled = ref<boolean>(false)
 
-  const handleRemove = (file: UploadFile) => {
-    console.log(file)
-  }
-
   const handlePictureCardPreview = (file: UploadFile) => {
     dialogImageUrl.value = file.url
     dialogVisible.value = true
-  }
-
-  const handleDownload = (file: UploadFile) => {
-    console.log(file)
   }
 </script>

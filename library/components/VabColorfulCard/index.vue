@@ -10,7 +10,9 @@
           }
     "
   >
-    <template #header>{{ title }}</template>
+    <template v-if="$slots.header" #header>
+      <slot name="header"></slot>
+    </template>
     <vab-icon v-if="icon" :icon="icon" />
     <slot />
   </el-card>

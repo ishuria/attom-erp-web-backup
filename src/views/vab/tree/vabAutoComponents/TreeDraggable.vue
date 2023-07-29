@@ -6,48 +6,13 @@
     default-expand-all
     draggable
     node-key="id"
-    @node-drag-end="handleDragEnd"
-    @node-drag-enter="handleDragEnter"
-    @node-drag-leave="handleDragLeave"
-    @node-drag-over="handleDragOver"
-    @node-drag-start="handleDragStart"
-    @node-drop="handleDrop"
   />
 </template>
 
 <script lang="ts" setup>
   import type Node from 'element-plus/es/components/tree/src/model/node'
-  import type {
-    AllowDropType,
-    NodeDropType,
-  } from 'element-plus/es/components/tree/src/tree.type'
+  import type { AllowDropType } from 'element-plus/es/components/tree/src/tree.type'
 
-  const handleDragStart = (node: Node) => {
-    console.log('drag start', node)
-  }
-  const handleDragEnter = (draggingNode: Node, dropNode: Node) => {
-    console.log('tree drag enter:', dropNode.label)
-  }
-  const handleDragLeave = (draggingNode: Node, dropNode: Node) => {
-    console.log('tree drag leave:', dropNode.label)
-  }
-  const handleDragOver = (draggingNode: Node, dropNode: Node) => {
-    console.log('tree drag over:', dropNode.label)
-  }
-  const handleDragEnd = (
-    draggingNode: Node,
-    dropNode: Node,
-    dropType: NodeDropType
-  ) => {
-    console.log('tree drag end:', dropNode && dropNode.label, dropType)
-  }
-  const handleDrop = (
-    draggingNode: Node,
-    dropNode: Node,
-    dropType: NodeDropType
-  ) => {
-    console.log('tree drop:', dropNode.label, dropType)
-  }
   const allowDrop = (
     draggingNode: Node,
     dropNode: Node,
@@ -59,6 +24,7 @@
       return true
     }
   }
+
   const allowDrag = (draggingNode: Node) => {
     return !draggingNode.data.label.includes('三级 3-1-1')
   }

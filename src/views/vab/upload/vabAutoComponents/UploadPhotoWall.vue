@@ -4,7 +4,6 @@
     action="/uploadFlie"
     list-type="picture-card"
     :on-preview="handlePictureCardPreview"
-    :on-remove="handleRemove"
   >
     <el-icon>
       <Plus />
@@ -42,10 +41,6 @@
 
   const dialogImageUrl = ref<string | undefined>('')
   const dialogVisible = ref<boolean>(false)
-
-  const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
-    console.log(uploadFile, uploadFiles)
-  }
 
   const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
     dialogImageUrl.value = uploadFile.url

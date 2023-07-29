@@ -49,6 +49,8 @@
     copyright: string
   }
 
+  const $baseMessage = inject<any>('$baseMessage')
+
   const form = reactive<formType>({
     siteName: 'Vue Shop Vite',
     siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
@@ -77,7 +79,7 @@
   const submitForm = () => {
     formRef.value.validate((valid: boolean) => {
       if (valid) {
-        console.log('提交表单', form)
+        $baseMessage('表单提交成功', 'success', 'hey')
       }
     })
   }

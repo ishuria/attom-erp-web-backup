@@ -1,20 +1,11 @@
 <template>
-  <el-tree
-    accordion
-    :data="data"
-    :props="defaultProps"
-    @node-click="handleNodeClick"
-  />
+  <el-tree accordion :data="data" :props="defaultProps" />
 </template>
 
 <script lang="ts" setup>
   interface Tree {
     label: string
     children?: Tree[]
-  }
-
-  const handleNodeClick = (data: Tree) => {
-    console.log(data)
   }
 
   const data: Tree[] = [

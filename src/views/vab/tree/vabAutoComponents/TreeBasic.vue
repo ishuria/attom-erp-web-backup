@@ -1,15 +1,11 @@
 <template>
-  <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" />
+  <el-tree :data="data" :props="defaultProps" />
 </template>
 
 <script lang="ts" setup>
   interface Tree {
     label: string
     children?: Tree[]
-  }
-
-  const handleNodeClick = (data: Tree) => {
-    console.log(data)
   }
 
   const data: Tree[] = [

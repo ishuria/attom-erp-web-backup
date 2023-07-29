@@ -168,6 +168,8 @@
     ],
   })
   const data = ref<any>(generateData())
+  const $baseMessage = inject<any>('$baseMessage')
+
   const filterMethod = (query: any, item: any) => {
     return item.pinyin.indexOf(query) > -1
   }
@@ -182,12 +184,13 @@
   const submitForm = (formName: any) => {
     formName.value.validate((valid: any) => {
       if (valid) {
-        alert('submit!')
+        $baseMessage('表单提交成功', 'success', 'hey')
       } else {
-        console.log('error submit!!')
+        $baseMessage('表单提交失败', 'error', 'hey')
       }
     })
   }
+
   const resetForm = (formName: any) => {
     formName.value.resetFields()
   }

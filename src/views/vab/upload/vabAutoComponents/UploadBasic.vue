@@ -6,8 +6,6 @@
     :limit="3"
     multiple
     :on-exceed="handleExceed"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
   >
     <el-button type="primary">点击上传</el-button>
     <template #tip>
@@ -21,14 +19,6 @@
   import { ElMessage, ElMessageBox } from 'element-plus'
 
   const fileList = ref<UploadUserFile[]>([])
-
-  const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
-    console.log(file, uploadFiles)
-  }
-
-  const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-    console.log(uploadFile)
-  }
 
   const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
     ElMessage.warning(

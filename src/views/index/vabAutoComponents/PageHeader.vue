@@ -49,6 +49,7 @@
 
 <style lang="scss" scoped>
   .page-header {
+    min-height: 135px;
     transition: none;
 
     :deep() {
@@ -56,16 +57,10 @@
         transition: none;
       }
 
-      .el-card__header {
-        display: none;
-      }
-
       .el-card__body {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
         padding-top: 10px;
-        padding-bottom: 10px;
       }
     }
 

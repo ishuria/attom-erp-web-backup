@@ -189,7 +189,6 @@
 
   onActivated(() => {
     timer = setInterval(() => {
-      console.log(1)
       if (scrollbarRef.value && innerRef.value)
         scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
     }, 500)

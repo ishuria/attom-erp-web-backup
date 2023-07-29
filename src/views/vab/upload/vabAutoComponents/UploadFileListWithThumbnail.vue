@@ -3,8 +3,6 @@
     v-model:file-list="fileList"
     action="/uploadFlie"
     list-type="picture"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
   >
     <el-button type="primary">点击上传</el-button>
     <template #tip>
@@ -14,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-  import type { UploadProps, UploadUserFile } from 'element-plus'
+  import type { UploadUserFile } from 'element-plus'
 
   const fileList = ref<UploadUserFile[]>([
     {
@@ -26,12 +24,4 @@
       url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
     },
   ])
-
-  const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
-    console.log(uploadFile, uploadFiles)
-  }
-
-  const handlePreview: UploadProps['onPreview'] = (file) => {
-    console.log(file)
-  }
 </script>
