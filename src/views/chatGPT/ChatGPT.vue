@@ -77,9 +77,7 @@
   const finish = ref<boolean>(true)
   const $baseMessage = inject<any>('$baseMessage')
   const radio = ref<string>('小爱同学')
-  const url = ref<string>(
-    'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text='
-  )
+  const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
   const avatarUrl = getImageUrl('assets/chatGPT_images/chatGPT.png')
   const loading = ref<boolean>(false)
 
