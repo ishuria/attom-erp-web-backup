@@ -60,6 +60,7 @@
         router.push('/redirect')
       } else if (route.path !== routePath)
         isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
+      router.push('/redirect')
     } else {
       if (isExternal(routePath)) window.location.href = routePath
       else if (route.path !== routePath) {

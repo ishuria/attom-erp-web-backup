@@ -1,7 +1,7 @@
 /**
  * @description router全局配置，如有必要可分文件抽离，其中asyncRoutes只有在intelligence模式下才会用到，pro版只支持remixIcon图标，具体配置请查看vip群文档
  */
-import type { VabRouteRecordRaw } from './types'
+import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import {
   createRouter,
@@ -9,10 +9,10 @@ import {
   createWebHistory,
   RouteRecordName,
 } from 'vue-router'
-import type { App } from 'vue'
-import Layout from '/@vab/layouts/index.vue'
+import type { VabRouteRecordRaw } from './types'
 import { authentication, base, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
+import Layout from '/@vab/layouts/index.vue'
 
 export const constantRoutes: VabRouteRecordRaw[] = [
   {
@@ -84,6 +84,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '看板',
           icon: 'dashboard-2-line',
+        },
+      },
+      {
+        path: 'dataScreen',
+        name: 'DataScreen',
+        component: () => import('/@/views/index/dataScreen.vue'),
+        meta: {
+          title: '数据大屏',
+          icon: 'database-2-line',
+          target: '_blank',
+          badge: '敬请期待',
         },
       },
     ],
