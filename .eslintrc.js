@@ -48,13 +48,12 @@ module.exports = {
         math: 'always',
       },
     ],
-    // 多字组件名称
+    'vue/no-setup-props-destructure': 'off',
     'vue/multi-word-component-names': 'off',
-    // Vue属性排序
     'vue/attributes-order': [
       'warn',
       {
-        alphabetical: true, //字母顺序
+        alphabetical: true,
       },
     ],
   },

@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "2.9.5",
+  "version": "3.0.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -69,7 +69,7 @@
     "chokidar": "^3.5.3",
     "eslint": "^8.46.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-vue": "^9.15.1",
+    "eslint-plugin-vue": "^9.16.0",
     "lint-staged": "^13.2.3",
     "picocolors": "^1.0.0",
     "postcss-html": "^1.5.0",
