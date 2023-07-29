@@ -8,6 +8,7 @@
     <el-row :gutter="20">
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <vab-colorful-card :style="style1">
+          <template #header></template>
           <div class="parting-line parting-line-danger"></div>
           <span class="pending-title pending-title-danger">
             订单预警
@@ -19,6 +20,7 @@
       </el-col>
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <vab-colorful-card :style="style2">
+          <template #header></template>
           <div class="parting-line parting-line-primary"></div>
           <span class="pending-title pending-title-primary">
             售后工单

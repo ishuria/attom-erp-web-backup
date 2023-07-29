@@ -1,3 +1,7 @@
+<template>
+  <div class="redirect-container"></div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'Redirect',
