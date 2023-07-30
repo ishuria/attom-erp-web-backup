@@ -12,10 +12,10 @@
 
   const option = reactive<any>({
     grid: {
-      top: '12.5%',
-      left: '10%',
-      right: '2.5%',
-      bottom: '15%',
+      top: '30px',
+      left: '40px',
+      right: '20px',
+      bottom: '40px',
     },
     xAxis: [
       {
