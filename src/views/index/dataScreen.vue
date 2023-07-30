@@ -50,7 +50,8 @@
               TODO
             </div>
             <div class="data-screen-card" :style="{ height: rightCardHeight2 }">
-              TODO
+              <div class="card-title">销售额</div>
+              <data-screen-right2 />
             </div>
             <div class="data-screen-card" :style="{ height: rightCardHeight3 }">
               <div class="card-title">访问量</div>

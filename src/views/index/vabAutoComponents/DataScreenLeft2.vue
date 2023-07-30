@@ -6,7 +6,7 @@
   import { random } from 'lodash-es'
 
   defineOptions({
-    name: 'DataScreenRight3',
+    name: 'DataScreenLeft2',
   })
 
   const option = reactive<any>({

@@ -61,19 +61,36 @@
       广西: [108.479, 23.1152],
       海南: [110.3893, 19.8516],
       上海: [121.4648, 31.2891],
+      香港: [114.109497, 22.396428],
+      澳门: [113.5440083, 22.20167546],
+      钓鱼岛: [112.071486, 26.249452],
+      赤尾屿: [116.271486, 25.549452],
     }
 
     const coordsData: any = []
 
     Object.keys(geoCoordMap).forEach((key) => {
-      coordsData.push({
-        coords: [[...geoCoordMap[key]], [117.1582, 36.8701]],
-      })
+      coordsData.push(
+        {
+          coords: [[...geoCoordMap[key]], [117.1582, 36.8701]],
+        },
+        {
+          coords: [[117.1582, 36.8701], [...geoCoordMap[key]]],
+        },
+        {
+          coords: [[...geoCoordMap[key]], [116.4551, 40.2539]],
+        },
+        {
+          coords: [[116.4551, 40.2539], [...geoCoordMap[key]]],
+        }
+      )
     })
 
     option.geo = {
       map: 'china',
       type: 'map',
+      zoom: 1.2,
+      roam: true,
       label: {
         show: true,
         color: '#ffffff',

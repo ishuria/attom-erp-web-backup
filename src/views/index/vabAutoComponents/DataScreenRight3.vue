@@ -13,13 +13,13 @@
   const option = reactive<any>({
     grid: {
       top: '30px',
-      left: '0px',
-      right: '20px',
+      left: '0',
+      right: '10px',
       bottom: '20px',
       containLabel: true,
     },
     tooltip: {
-      trigger: 'item',
+      trigger: 'axis',
     },
     xAxis: [
       {
