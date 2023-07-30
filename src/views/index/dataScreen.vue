@@ -21,13 +21,14 @@
       <div style="padding: 30px 40px 0px 40px">
         <el-row :gutter="20">
           <el-col :span="6">
-            <div class="data-screen-card" :style="{ height: leftCardHeight }">
+            <div class="data-screen-card" :style="{ height: leftCardHeight1 }">
+              <div class="card-title">数据聚合</div>
+              <data-screen-left1 />
+            </div>
+            <div class="data-screen-card" :style="{ height: leftCardHeight2 }">
               TODO
             </div>
-            <div class="data-screen-card" :style="{ height: leftCardHeight }">
-              TODO
-            </div>
-            <div class="data-screen-card" :style="{ height: leftCardHeight }">
+            <div class="data-screen-card" :style="{ height: leftCardHeight3 }">
               TODO
             </div>
           </el-col>
@@ -64,8 +65,12 @@
 
   const headerContentHeight = ref<any>('60px')
   const topCardHeight = ref<any>('calc((100vh - 320px)')
-  const bottomCardHeight = ref<any>('176px')
-  const leftCardHeight = ref<any>('calc((100vh - 165px) / 3)')
+  const bottomCardHeight = ref<any>('174px')
+
+  const leftCardHeight1 = ref<any>('calc((100vh - 165px) / 3.5)')
+  const leftCardHeight2 = ref<any>('calc((100vh - 165px) / 3)')
+  const leftCardHeight3 = ref<any>('calc((100vh - 165px) / 2.63)')
+
   const rightCardHeight1 = ref<any>('calc((100vh - 165px) / 3)')
   const rightCardHeight2 = ref<any>('calc((100vh - 165px) / 2.63)')
   const rightCardHeight3 = ref<any>('calc((100vh - 165px) / 3.5)')
@@ -73,6 +78,16 @@
 
   onMounted(() => {
     $baseMessage('点击右上角【全屏】按钮使用效果更佳', 'success', 'hey')
+
+    if (
+      location.hostname === 'vue-admin-beautiful.com' ||
+      location.hostname === 'chu1204505056.gitee.io'
+    ) {
+      // 数据大屏占用内存较大，演示地址每隔3分钟刷新一次页面缓解浏览器压力
+      setTimeout(() => {
+        location.reload()
+      }, 1000 * 3)
+    }
   })
 </script>
 

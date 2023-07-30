@@ -13,9 +13,13 @@
   const option = reactive<any>({
     grid: {
       top: '30px',
-      left: '40px',
+      left: '0px',
       right: '20px',
-      bottom: '40px',
+      bottom: '20px',
+      containLabel: true,
+    },
+    tooltip: {
+      trigger: 'axis',
     },
     xAxis: [
       {
@@ -27,9 +31,7 @@
           },
         },
         axisLabel: {
-          textStyle: {
-            color: '#eee',
-          },
+          color: '#eee',
         },
         boundaryGap: false,
         splitLine: {
@@ -49,73 +51,65 @@
           },
         },
         axisLabel: {
-          textStyle: {
-            color: '#eee',
-          },
+          color: '#eee',
         },
         splitLine: {
           show: false,
         },
       },
     ],
-    series: [
-      {
-        name: '',
-        type: 'line',
-        smooth: true,
-        showAllSymbol: false,
-        symbol: 'circle',
-        symbolSize: 2,
-        lineStyle: {
-          normal: {
-            color: '#00b3f4',
-          },
-        },
-        itemStyle: {
-          color: '#00b3f4',
-        },
-        tooltip: {
-          show: true,
-        },
-        areaStyle: {
-          normal: {
-            color: new graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: 'rgba(0,179,244,0.3)',
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(0,179,244,0)',
-                },
-              ],
-              false
-            ),
-            shadowColor: 'rgba(0,179,244, 0.9)',
-            shadowBlur: 20,
-          },
-        },
-        data: [
-          random(100, 2000),
-          random(100, 2000),
-          random(100, 2000),
-          random(100, 2000),
-          random(100, 2000),
-          random(100, 2000),
-          random(100, 2000),
-          random(100, 2000),
-        ],
+    series: {
+      name: '',
+      type: 'line',
+      smooth: true,
+      showAllSymbol: false,
+      symbol: 'circle',
+      symbolSize: 2,
+      lineStyle: {
+        color: '#00b3f4',
       },
-    ],
+      itemStyle: {
+        color: '#00b3f4',
+      },
+      tooltip: {
+        show: true,
+      },
+      areaStyle: {
+        color: new graphic.LinearGradient(
+          0,
+          0,
+          0,
+          1,
+          [
+            {
+              offset: 0,
+              color: 'rgba(0,179,244,0.3)',
+            },
+            {
+              offset: 1,
+              color: 'rgba(0,179,244,0)',
+            },
+          ],
+          false
+        ),
+        shadowColor: 'rgba(0,179,244, 0.9)',
+        shadowBlur: 20,
+      },
+      data: [
+        random(100, 2000),
+        random(100, 2000),
+        random(100, 2000),
+        random(100, 2000),
+        random(100, 2000),
+        random(100, 2000),
+        random(100, 2000),
+        random(100, 2000),
+      ],
+    },
   })
 
   setInterval(() => {
-    option.series[0].data = [
+    option.series.data = [
       random(100, 2000),
       random(100, 2000),
       random(100, 2000),
@@ -127,5 +121,3 @@
     ]
   }, 1000 * 5)
 </script>
-
-<style lang="scss" scoped></style>
