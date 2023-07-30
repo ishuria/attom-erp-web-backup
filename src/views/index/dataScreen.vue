@@ -78,7 +78,7 @@
 
 <style lang="scss" scoped>
   #data-screen-container.data-screen-container.no-layout-container {
-    box-sizing: border-box;
+    min-width: 1720px;
     color: #fff;
     background: #01022e !important;
 

@@ -13,7 +13,6 @@ declare module 'vue' {
     AwardSlotMachine: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardSlotMachine.vue')['default']
     AwardWheel: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardWheel.vue')['default']
     Branch: typeof import('./../../../src/views/index/vabAutoComponents/Branch.vue')['default']
-    copy: typeof import('../../../src/views/index/vabAutoComponents/DataScreenRight3.vue')['default']
     DataScreenBottom: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenBottom.vue')['default']
     DataScreenHeader: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenHeader.vue')['default']
     DataScreenMap: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenMap.vue')['default']
