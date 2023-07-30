@@ -34,7 +34,8 @@
               <data-screen-left2 />
             </div>
             <div class="data-screen-card" :style="{ height: leftCardHeight3 }">
-              TODO
+              <div class="card-title">人员分布</div>
+              <data-screen-left3 />
             </div>
           </el-col>
           <el-col :span="12">
