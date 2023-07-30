@@ -78,9 +78,7 @@
       label: {
         show: true,
         position: 'inside',
-        textStyle: {
-          color: '#fff',
-        },
+        color: '#fff',
       },
     },
   })
