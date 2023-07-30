@@ -94,11 +94,13 @@
     return formatNumber(output.value)
   })
 
-  const start = () => {
-    source.value = props.endValue
-  }
-
-  if (props.autoplay) {
-    start()
-  }
+  watch(
+    props,
+    (props) => {
+      if (props.autoplay) {
+        source.value = props.endValue
+      }
+    },
+    { immediate: true }
+  )
 </script>

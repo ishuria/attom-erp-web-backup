@@ -2,7 +2,6 @@
   <div class="count-container">
     <div class="count-text">
       <vab-count
-        v-if="show"
         :decimals="form.decimals"
         :duration="form.duration"
         :end-value="form.endVal"
@@ -14,22 +13,22 @@
     </div>
     <el-form inline :model="form">
       <el-form-item label="起始值">
-        <el-input-number v-model="form.startVal" @change="handleChange" />
+        <el-input-number v-model="form.startVal" />
       </el-form-item>
       <el-form-item label="最终值">
-        <el-input-number v-model="form.endVal" @change="handleChange" />
+        <el-input-number v-model="form.endVal" />
       </el-form-item>
       <el-form-item label="持续时间">
-        <el-input-number v-model="form.duration" @change="handleChange" />
+        <el-input-number v-model="form.duration" />
       </el-form-item>
       <el-form-item label="小数位数">
-        <el-input-number v-model="form.decimals" @change="handleChange" />
+        <el-input-number v-model="form.decimals" :max="2" />
       </el-form-item>
       <el-form-item label="前缀">
-        <el-input v-model="form.prefix" clearable @change="handleChange" />
+        <el-input v-model="form.prefix" clearable />
       </el-form-item>
       <el-form-item label="后缀">
-        <el-input v-model="form.suffix" clearable @change="handleChange" />
+        <el-input v-model="form.suffix" clearable />
       </el-form-item>
     </el-form>
   </div>
@@ -39,7 +38,7 @@
   defineOptions({
     name: 'Count',
   })
-  const show = ref<boolean>(true)
+
   const form = reactive<any>({
     startVal: 0,
     endVal: 999,
@@ -47,14 +46,8 @@
     prefix: '',
     suffix: '',
     separator: ',',
-    duration: 8000,
+    duration: 5000,
   })
-  const handleChange = () => {
-    show.value = false
-    setTimeout(() => {
-      show.value = true
-    }, 300)
-  }
 </script>
 
 <style lang="scss" scoped>

@@ -1,3 +1,61 @@
+<template>
+  <div>
+    <div
+      id="data-screen-container"
+      class="data-screen-container no-layout-container hidden-sm-and-up"
+    >
+      <div style="width: 100vw; padding: 20px">
+        <el-alert :closable="false" title="手机端不支持门户演示" type="error" />
+      </div>
+    </div>
+    <div
+      id="data-screen-container"
+      class="data-screen-container no-layout-container hidden-xs-only"
+    >
+      <data-screen-header
+        :style="{
+          height: headerContentHeight,
+          'line-height': headerContentHeight,
+        }"
+      />
+      <div style="padding: 30px 40px 0px 40px">
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <div class="data-screen-card" :style="{ height: leftCardHeight }">
+              TODO
+            </div>
+            <div class="data-screen-card" :style="{ height: leftCardHeight }">
+              TODO
+            </div>
+            <div class="data-screen-card" :style="{ height: leftCardHeight }">
+              TODO
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="data-screen-card" :style="{ height: topCardHeight }">
+              <data-screen-map />
+            </div>
+            <div class="data-screen-card" :style="{ height: bottomCardHeight }">
+              <data-screen-bottom />
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="data-screen-card" :style="{ height: rightCardHeight }">
+              TODO
+            </div>
+            <div class="data-screen-card" :style="{ height: rightCardHeight }">
+              TODO
+            </div>
+            <div class="data-screen-card" :style="{ height: rightCardHeight }">
+              TODO
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
   defineOptions({
     name: 'DataScreen',
@@ -10,67 +68,9 @@
   const rightCardHeight = ref<any>('calc((100vh - 165px) / 3)')
 </script>
 
-<template>
-  <div
-    id="data-screen-container"
-    class="data-screen-container no-layout-container hidden-sm-and-up"
-  >
-    <div style="width: 100vw; padding: 20px">
-      <el-alert :closable="false" title="手机端不支持门户演示" type="error" />
-    </div>
-  </div>
-  <div
-    id="data-screen-container"
-    class="data-screen-container no-layout-container hidden-xs-only"
-  >
-    <data-screen-header
-      :style="{
-        height: headerContentHeight,
-        'line-height': headerContentHeight,
-      }"
-    />
-    <div style="padding: 30px 40px 0px 40px">
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <div class="data-screen-card" :style="{ height: leftCardHeight }">
-            TODO
-          </div>
-          <div class="data-screen-card" :style="{ height: leftCardHeight }">
-            TODO
-          </div>
-          <div class="data-screen-card" :style="{ height: leftCardHeight }">
-            TODO
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="data-screen-card" :style="{ height: topCardHeight }">
-            <data-screen-map />
-          </div>
-          <div class="data-screen-card" :style="{ height: bottomCardHeight }">
-            TODO
-          </div>
-        </el-col>
-        <el-col :span="6">
-          <div class="data-screen-card" :style="{ height: rightCardHeight }">
-            TODO
-          </div>
-          <div class="data-screen-card" :style="{ height: rightCardHeight }">
-            TODO
-          </div>
-          <div class="data-screen-card" :style="{ height: rightCardHeight }">
-            TODO
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-  </div>
-</template>
-
 <style lang="scss" scoped>
   #data-screen-container.data-screen-container.no-layout-container {
     box-sizing: border-box;
-    min-width: 1720px;
-    min-height: 937px;
     color: #fff;
     background: #01022e !important;
 
