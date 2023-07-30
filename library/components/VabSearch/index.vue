@@ -19,11 +19,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { useRoutesStore } from '/@/store/modules/routes'
   import { Search } from '@element-plus/icons-vue'
-  import { isExternal } from '/@/utils/validate'
+  import { isHashRouterMode } from '/@/config'
   import { translate } from '/@/i18n'
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { useSettingsStore } from '/@/store/modules/settings'
+  import { isExternal } from '/@/utils/validate'
 
   defineOptions({
     name: 'VabSearch',
@@ -52,6 +53,13 @@
         if (isExternal(item.path)) {
           window.open(item.path)
           router.push('/redirect')
+          return
+        } else if (item.meta.target === '_blank') {
+          isHashRouterMode
+            ? window.open(`#${item.path}`)
+            : window.open(item.path)
+          router.push('/redirect')
+          return
         } else router.push(item)
     })
   }
