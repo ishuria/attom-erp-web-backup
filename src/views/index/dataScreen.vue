@@ -89,9 +89,12 @@
       location.hostname === 'chu1204505056.gitee.io'
     ) {
       // 数据大屏占用内存较大，演示地址每隔3分钟刷新一次页面缓解浏览器压力
-      setTimeout(() => {
-        location.reload()
-      }, 1000 * 3)
+      setTimeout(
+        () => {
+          location.reload()
+        },
+        1000 * 3 * 60
+      )
     }
   })
 </script>
