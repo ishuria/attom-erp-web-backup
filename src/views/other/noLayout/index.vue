@@ -11,9 +11,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { handleActivePath } from '/@/utils/routes'
-  import { useTabsStore } from '/@/store/modules/tabs'
   import { VabRoute } from '/@/router/types'
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { handleActivePath } from '/@/utils/routes'
 
   defineOptions({
     name: 'NoLayout',
@@ -31,9 +31,6 @@
 
 <style lang="scss" scoped>
   .no-layout-container {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    border-radius: 0 !important;
+    padding: var(--el-padding);
   }
 </style>
