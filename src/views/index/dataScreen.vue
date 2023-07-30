@@ -48,7 +48,8 @@
           </el-col>
           <el-col :span="6">
             <div class="data-screen-card" :style="{ height: rightCardHeight1 }">
-              TODO
+              <div class="card-title">数据聚合</div>
+              <data-screen-right1 />
             </div>
             <div class="data-screen-card" :style="{ height: rightCardHeight2 }">
               <div class="card-title">销售额</div>

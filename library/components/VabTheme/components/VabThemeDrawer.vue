@@ -14,11 +14,7 @@
             {{ translate('布局') }}
             <el-tooltip
               :content="
-                translate(
-                  '布局配置仅' +
-                    '在电脑视窗下生效，手机视窗时将' +
-                    '默认锁定为纵向布局'
-                )
+                translate('布局仅在电脑端下生效，手机端将默认锁定为纵向布局')
               "
               effect="light"
             >

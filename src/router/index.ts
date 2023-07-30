@@ -94,7 +94,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '数据大屏',
           icon: 'database-2-line',
           target: '_blank',
-          badge: '敬请期待',
+          badge: 'Hot',
         },
       },
     ],

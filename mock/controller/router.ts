@@ -29,6 +29,17 @@ const list = [
           icon: 'dashboard-2-line',
         },
       },
+      {
+        path: 'dataScreen',
+        name: 'DataScreen',
+        component: '/@/views/index/dataScreen.vue',
+        meta: {
+          title: '数据大屏',
+          icon: 'database-2-line',
+          target: '_blank',
+          badge: 'Hot',
+        },
+      },
     ],
   },
   {
@@ -666,9 +677,9 @@ const list = [
         },
       },
       {
-        path: 'no“Layout”',
-        name: 'No“Layout”',
-        component: '/@/views/other/no“Layout”/index.vue',
+        path: 'noLayout',
+        name: 'NoLayout',
+        component: '/@/views/other/noLayout/index.vue',
         meta: {
           title: '无框',
           guard: ['Admin'],
