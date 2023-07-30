@@ -112,7 +112,7 @@
     countConfig2.endValue = countConfig2.endValue + random(0, 100)
     countConfig3.endValue = countConfig3.endValue + random(0, 100)
     countConfig4.endValue = countConfig4.endValue + random(0, 100)
-  }, 5000)
+  }, 1000 * 5)
 </script>
 
 <style lang="scss" scoped>

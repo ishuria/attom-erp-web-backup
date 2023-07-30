@@ -12,10 +12,10 @@
 
   const option = reactive<any>({
     grid: {
-      left: '20px',
-      right: '20px',
-      bottom: '20px',
-      top: '20px',
+      left: '0',
+      right: '0',
+      bottom: '0',
+      top: '10px',
       containLabel: true,
     },
     tooltip: {
@@ -75,6 +75,13 @@
         random(100, 2000),
         random(100, 2000),
       ],
+      label: {
+        show: true,
+        position: 'inside',
+        textStyle: {
+          color: '#fff',
+        },
+      },
     },
   })
 

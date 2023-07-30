@@ -26,7 +26,8 @@
               <data-screen-left1 />
             </div>
             <div class="data-screen-card" :style="{ height: leftCardHeight2 }">
-              TODO
+              <div class="card-title">人群画像</div>
+              <data-screen-left2 />
             </div>
             <div class="data-screen-card" :style="{ height: leftCardHeight3 }">
               TODO

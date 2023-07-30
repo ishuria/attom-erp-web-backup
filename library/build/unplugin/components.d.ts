@@ -16,6 +16,7 @@ declare module 'vue' {
     DataScreenBottom: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenBottom.vue')['default']
     DataScreenHeader: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenHeader.vue')['default']
     DataScreenLeft1: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenLeft1.vue')['default']
+    DataScreenLeft2: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenLeft2.vue')['default']
     DataScreenMap: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenMap.vue')['default']
     DataScreenRight3: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenRight3.vue')['default']
     DefaultTableEdit: typeof import('./../../../src/views/vab/table/vabAutoComponents/DefaultTableEdit.vue')['default']

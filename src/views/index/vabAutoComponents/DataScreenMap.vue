@@ -11,7 +11,7 @@
 
   const option = reactive<any>({
     tooltip: {
-      trigger: 'axis',
+      trigger: 'item',
     },
     grid: {
       top: '0%',

@@ -19,7 +19,7 @@
       containLabel: true,
     },
     tooltip: {
-      trigger: 'axis',
+      trigger: 'item',
     },
     xAxis: [
       {
