@@ -40,14 +40,15 @@
             </div>
           </el-col>
           <el-col :span="6">
-            <div class="data-screen-card" :style="{ height: rightCardHeight }">
+            <div class="data-screen-card" :style="{ height: rightCardHeight1 }">
               TODO
             </div>
-            <div class="data-screen-card" :style="{ height: rightCardHeight }">
+            <div class="data-screen-card" :style="{ height: rightCardHeight2 }">
               TODO
             </div>
-            <div class="data-screen-card" :style="{ height: rightCardHeight }">
-              TODO
+            <div class="data-screen-card" :style="{ height: rightCardHeight3 }">
+              <div class="card-title">访问量</div>
+              <data-screen-right3 />
             </div>
           </el-col>
         </el-row>
@@ -63,9 +64,16 @@
 
   const headerContentHeight = ref<any>('60px')
   const topCardHeight = ref<any>('calc((100vh - 320px)')
-  const bottomCardHeight = ref<any>('174px')
+  const bottomCardHeight = ref<any>('176px')
   const leftCardHeight = ref<any>('calc((100vh - 165px) / 3)')
-  const rightCardHeight = ref<any>('calc((100vh - 165px) / 3)')
+  const rightCardHeight1 = ref<any>('calc((100vh - 165px) / 3)')
+  const rightCardHeight2 = ref<any>('calc((100vh - 165px) / 2.63)')
+  const rightCardHeight3 = ref<any>('calc((100vh - 165px) / 3.5)')
+  const $baseMessage = inject<any>('$baseMessage')
+
+  onMounted(() => {
+    $baseMessage('点击右上角【全屏】按钮使用效果更佳', 'success', 'hey')
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -80,8 +88,16 @@
       min-height: 160px;
       padding: 20px;
       margin-bottom: 20px;
-      border: 3px solid #00a1ff;
+      border: 3px solid #01ffff;
       border-radius: 3px;
+
+      .card-title {
+        height: 20px;
+        padding-left: 10px;
+        line-height: 20px;
+        text-align: left;
+        border-left: 3px solid #01ffff;
+      }
 
       &::before {
         position: absolute;
