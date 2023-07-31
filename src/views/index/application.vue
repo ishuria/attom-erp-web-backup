@@ -12,7 +12,7 @@
   })
 
   const $baseMessage = inject<any>('$baseMessage')
-  const disabled = ref<boolean>(true)
+  const disabled = ref<boolean>(false)
   // @ts-ignore
   let deferredPrompt: BeforeInstallPromptEvent = 'init'
 
@@ -21,7 +21,6 @@
       e.preventDefault()
       if (deferredPrompt === 'init') {
         deferredPrompt = e
-        disabled.value = false
       }
     })
   }
@@ -30,6 +29,7 @@
 
   const handleInstall = () => {
     if (deferredPrompt && deferredPrompt !== 'init') {
+      disabled.value = false
       deferredPrompt.prompt()
       deferredPrompt.userChoice.then((choiceResult: any) => {
         console.log(choiceResult.outcome)
@@ -44,6 +44,8 @@
           )
         }
       })
+    } else {
+      disabled.value = true
     }
   }
 </script>
