@@ -1,21 +1,16 @@
 <template>
-  <div>
-    <div
-      id="data-screen-container"
-      class="data-screen-container no-layout-container hidden-sm-and-up"
-    >
-      <div style="width: 100vw; padding: 20px">
-        <el-alert
-          :closable="false"
-          title="手机端不支持数据大屏演示"
-          type="error"
-        />
-      </div>
+  <div
+    id="data-screen-container"
+    class="data-screen-container no-layout-container"
+  >
+    <div class="hidden-sm-and-up" style="width: 100vw; padding: 20px">
+      <el-alert
+        :closable="false"
+        title="手机端不支持数据大屏演示"
+        type="error"
+      />
     </div>
-    <div
-      id="data-screen-container"
-      class="data-screen-container no-layout-container hidden-xs-only"
-    >
+    <div class="hidden-xs-only">
       <data-screen-header
         :style="{
           height: headerContentHeight,
@@ -104,7 +99,7 @@
 
 <style lang="scss" scoped>
   #data-screen-container.data-screen-container.no-layout-container {
-    min-width: 1720px;
+    overflow: auto;
     color: #fff;
     background: #01022e !important;
 
