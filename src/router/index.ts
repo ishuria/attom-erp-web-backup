@@ -104,6 +104,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '客户端',
           icon: 'apps-2-line',
+          noKeepAlive: true,
           dot: true,
         },
       },
