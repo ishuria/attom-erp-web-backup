@@ -3,7 +3,7 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 export function createPwa(env: any) {
   const pwaOptions: Partial<VitePWAOptions> = {
     base: env.VITE_USER_NODE_ENV == 'production' ? './' : '',
-    registerType: 'autoUpdate',
+    registerType: 'prompt', // prompt、autoUpdate
     // devOptions: {
     //   enabled: true,
     // },
