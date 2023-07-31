@@ -1,3 +1,4 @@
+import autoprefixer from 'autoprefixer'
 import dayjs from 'dayjs'
 import { basename, resolve } from 'path'
 import type { ConfigEnv, UserConfig } from 'vite'
@@ -72,7 +73,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     css: {
       postcss: {
         plugins: [
-          require('autoprefixer')({ grid: true }),
+          autoprefixer({ grid: true }),
           {
             postcssPlugin: 'internal:charset-removal',
             AtRule: {

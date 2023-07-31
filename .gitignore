@@ -2,6 +2,7 @@
 node_modules
 /dist
 /mock/controller/*.mjs
+/dev-dist
 
 # local env files
 .env.local

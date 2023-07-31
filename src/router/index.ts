@@ -97,6 +97,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           badge: 'Hot',
         },
       },
+      {
+        path: 'application',
+        name: 'Application',
+        component: () => import('/@/views/index/application.vue'),
+        meta: {
+          title: '客户端',
+          icon: 'apps-2-line',
+          dot: true,
+        },
+      },
     ],
   },
   {

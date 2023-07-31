@@ -14,11 +14,10 @@
   import { pwa } from '/@/config'
   import { enLocale, zhLocale } from '/@/i18n'
 
-  const { locale: language } = useI18n()
-
-  const locale = computed(() => (language.value === 'en' ? enLocale : zhLocale))
-
   defineOptions({
     name: 'VabApp',
   })
+
+  const { locale: language } = useI18n()
+  const locale = computed(() => (language.value === 'en' ? enLocale : zhLocale))
 </script>

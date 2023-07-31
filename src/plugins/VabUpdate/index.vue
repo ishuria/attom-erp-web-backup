@@ -19,7 +19,7 @@
     </p>
     <p>更新时间：最近更新</p>
     <template #footer>
-      <el-button v-loading="loading" type="primary" @click="save">
+      <el-button :loading="loading" type="primary" @click="save">
         {{ button }}
       </el-button>
     </template>
@@ -27,9 +27,9 @@
 </template>
 
 <script lang="ts" setup>
+  import { useRegisterSW } from 'virtual:pwa-register/vue'
   import { version } from '~/package.json'
   import { translate } from '/@/i18n'
-  import { useRegisterSW } from 'virtual:pwa-register/vue'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
@@ -46,7 +46,6 @@
     button.value = translate('正在更新')
     loading.value = true
     await updateServiceWorker()
-    loading.value = false
   }
 
   const close = async () => {

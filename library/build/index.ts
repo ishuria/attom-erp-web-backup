@@ -27,7 +27,7 @@ export function createVitePlugin(env: Record<string, string>) {
     if (isEmpty(userName) || isEmpty(secretKey)) return
   vitePlugins.push(createProgress(env) as any)
   vitePlugins.push(createUnPlugin(env))
-  vitePlugins.push(createPwa())
+  vitePlugins.push(createPwa(env))
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
   vitePlugins.push(createBanner())
