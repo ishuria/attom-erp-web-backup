@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "3.0.5",
+  "version": "3.1.0",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -25,7 +25,7 @@
     "@element-plus/icons-vue": "^2.1.0",
     "@kangc/v-md-editor": "^2.3.15",
     "@lucky-canvas/vue": "latest",
-    "@vueuse/core": "^10.2.1",
+    "@vueuse/core": "^10.3.0",
     "@vueuse/head": "^1.1.26",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
