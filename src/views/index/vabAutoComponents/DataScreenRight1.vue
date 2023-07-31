@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
+  import { graphic } from 'echarts/core'
   import { random } from 'lodash-es'
 
   defineOptions({
@@ -56,6 +57,27 @@
     ],
     series: {
       symbolSize: 10,
+      itemStyle: {
+        color: new graphic.LinearGradient(
+          0,
+          0,
+          0,
+          1,
+          [
+            {
+              offset: 0,
+              color: '#2fc4d1',
+            },
+            {
+              offset: 1,
+              color: 'rgba(0,179,244, 0.9)',
+            },
+          ],
+          false
+        ),
+        shadowColor: 'rgba(0,179,244, 0.9)',
+        shadowBlur: 20,
+      },
       data: [
         [random(1, 20), random(1, 20)],
         [random(1, 20), random(1, 20)],

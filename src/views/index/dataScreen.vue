@@ -48,7 +48,7 @@
           </el-col>
           <el-col :span="6">
             <div class="data-screen-card" :style="{ height: rightCardHeight1 }">
-              <div class="card-title">数据聚合</div>
+              <div class="card-title">数据散点</div>
               <data-screen-right1 />
             </div>
             <div class="data-screen-card" :style="{ height: rightCardHeight2 }">
