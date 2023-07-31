@@ -83,6 +83,10 @@
         --el-table-tr-bg-color: transparent;
         --el-table-expanded-cell-bg-color: transparent;
         flex: 1;
+        th {
+          background: #101f58 !important;
+          border-radius: 5px;
+        }
       }
     }
   }
