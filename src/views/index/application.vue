@@ -20,7 +20,7 @@
   let deferredPrompt: BeforeInstallPromptEvent = 'init'
 
   const PWAInstallationGuide = () => {
-    window.addEventListener('beforeinstallprompt', function (e) {
+    window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault()
       if (deferredPrompt === 'init') deferredPrompt = e
     })
