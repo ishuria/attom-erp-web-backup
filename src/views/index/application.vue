@@ -1,8 +1,12 @@
 <template>
   <div class="application-container">
-    <el-button :disabled="disabled" type="primary" @click="handleInstall">
-      点击安装
-    </el-button>
+    <el-alert
+      :closable="false"
+      title="如果无法安装，PC端请点击浏览器地址栏右侧安装按钮进行安装，手机端请点击添加到主屏幕进行安装"
+      type="info"
+    />
+
+    <el-button type="primary" @click="handleInstall">点击安装</el-button>
   </div>
 </template>
 
@@ -12,16 +16,13 @@
   })
 
   const $baseMessage = inject<any>('$baseMessage')
-  const disabled = ref<boolean>(false)
   // @ts-ignore
   let deferredPrompt: BeforeInstallPromptEvent = 'init'
 
   const PWAInstallationGuide = () => {
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault()
-      if (deferredPrompt === 'init') {
-        deferredPrompt = e
-      }
+      if (deferredPrompt === 'init') deferredPrompt = e
     })
   }
 
@@ -29,7 +30,6 @@
 
   const handleInstall = () => {
     if (deferredPrompt && deferredPrompt !== 'init') {
-      disabled.value = false
       deferredPrompt.prompt()
       deferredPrompt.userChoice.then((choiceResult: any) => {
         console.log(choiceResult.outcome)
@@ -44,10 +44,6 @@
           )
         }
       })
-    } else {
-      disabled.value = true
     }
   }
 </script>
-
-<style lang="scss" scoped></style>
