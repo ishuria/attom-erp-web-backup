@@ -1,27 +1,21 @@
 <template>
-  <el-tooltip
-    :content="translate(value ? '暗黑模式' : '日间模式')"
-    effect="light"
-  >
-    <el-switch
-      v-if="
-        theme.showDark &&
-        'technology' != theme.themeName &&
-        'plain' != theme.themeName
-      "
-      v-model="value"
-      :active-icon="Moon"
-      class="vab-dark"
-      :inactive-icon="Sunny"
-      inline-prompt
-      @click="_toggleDark($event)"
-    />
-  </el-tooltip>
+  <el-switch
+    v-if="
+      theme.showDark &&
+      'technology' != theme.themeName &&
+      'plain' != theme.themeName
+    "
+    v-model="value"
+    :active-icon="Moon"
+    class="vab-dark"
+    :inactive-icon="Sunny"
+    inline-prompt
+    @click="_toggleDark($event)"
+  />
 </template>
 
 <script lang="ts" setup>
   import { Moon, Sunny } from '@element-plus/icons-vue'
-  import { translate } from '/@/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({

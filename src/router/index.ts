@@ -846,6 +846,26 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'randomTheme',
+        name: 'RandomTheme',
+        component: () => import('/@/views/operate/randomTheme/index.vue'),
+        meta: {
+          title: '随机换肤',
+          guard: ['Admin'],
+          icon: 'ai-generate',
+        },
+      },
+      {
+        path: 'log',
+        name: 'Log',
+        component: () => import('/@/views/operate/errorLog/index.vue'),
+        meta: {
+          title: '错误日志',
+          guard: ['Admin'],
+          icon: 'error-warning-line',
+        },
+      },
+      {
         path: 'dynamicSegment',
         name: 'DynamicSegment',
         meta: {
@@ -891,16 +911,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             meta: { title: 'Query id=1' },
           },
         ],
-      },
-      {
-        path: 'log',
-        name: 'Log',
-        component: () => import('/@/views/operate/errorLog/index.vue'),
-        meta: {
-          title: '错误日志',
-          guard: ['Admin'],
-          icon: 'error-warning-line',
-        },
       },
       {
         path: 'menu1',

@@ -31,6 +31,6 @@
 
 <style lang="scss" scoped>
   .no-layout-container {
-    padding: var(--el-padding);
+    padding: var(--el-padding) !important;
   }
 </style>

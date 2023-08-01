@@ -1,20 +1,17 @@
 <template>
-  <el-tooltip :content="translate('主题色')" effect="light">
-    <div class="vab-color-picker" style="margin-left: var(--el-margin)">
-      <el-color-picker
-        v-model="color"
-        popper-class="vab-color-picker-popper"
-        :predefine="predefineColors"
-        @active-change="handleChange"
-      />
-    </div>
-  </el-tooltip>
+  <div class="vab-color-picker" style="margin-left: var(--el-margin)">
+    <el-color-picker
+      v-model="color"
+      popper-class="vab-color-picker-popper"
+      :predefine="predefineColors"
+      @active-change="handleChange"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
   import { round } from 'lodash-es'
   import { color as _color } from '/@/config/'
-  import { translate } from '/@/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({

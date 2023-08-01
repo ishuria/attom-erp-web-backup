@@ -23,12 +23,6 @@
             position: 'left',
           },
           {
-            element: document.querySelector('.logo .vab-icon'),
-            title: 'logo',
-            intro: '这里是logo',
-            position: 'bottom',
-          },
-          {
             element: document.querySelector('.vab-dark'),
             title: '暗黑模式',
             intro: '这里是暗黑模式',

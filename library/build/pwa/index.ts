@@ -1,12 +1,9 @@
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 
-export function createPwa(env: any) {
+export function createPwa() {
   const pwaOptions: Partial<VitePWAOptions> = {
-    base: env.VITE_USER_NODE_ENV == 'production' ? './' : '',
+    base: './',
     registerType: 'autoUpdate', // prompt、autoUpdate
-    // devOptions: {
-    //   enabled: true,
-    // },
     workbox: {
       cleanupOutdatedCaches: true,
     },

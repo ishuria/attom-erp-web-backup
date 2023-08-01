@@ -1,4 +1,4 @@
-html > body.vab-theme-plain > #app {
+html > body.vab-theme-plain {
   $base-menu-background: #fff;
   --el-color-black: #fff;
   --el-menu-background-color: #fff;
@@ -31,6 +31,17 @@ html > body.vab-theme-plain > #app {
         color: var(--el-color-primary) !important;
       }
     }
+  }
+
+  .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
+  .el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
+    color: var(--el-color-primary) !important;
+    background-color: var(--el-color-primary-light-9) !important;
+  }
+
+  .el-menu--horizontal .el-sub-menu__title:not(.is-disabled):focus,
+  .el-menu--horizontal .el-sub-menu__title:not(.is-disabled):hover {
+    border-radius: var(--el-border-radius-base) !important;
   }
 
   .logo-container-common,
@@ -126,7 +137,7 @@ html > body.vab-theme-plain > #app {
               background: transparent !important;
 
               &:after {
-                border-color: transparent var(--el-menu-color-text) transparent
+                border-color: transparent var(--el-border-color) transparent
                   transparent;
               }
             }

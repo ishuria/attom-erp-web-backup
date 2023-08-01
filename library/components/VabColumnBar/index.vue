@@ -130,6 +130,7 @@
 </script>
 
 <style lang="scss" scoped>
+  /* stylelint-disable scss/operator-no-newline-after */
   @mixin active {
     &:hover {
       color: var(--el-color-primary);
@@ -164,7 +165,9 @@
       :deep() {
         .el-tabs + .el-menu {
           left: var(--el-left-menu-width-min);
-          width: calc(var(--el-left-menu-width) - #{$base-left-menu-width-min});
+          width: calc(
+            var(--el-left-menu-width) - var(--el-left-menu-width-min)
+          );
           border: 0;
         }
       }
@@ -175,18 +178,22 @@
       :deep() {
         .logo-container-column {
           .logo {
-            width: $base-left-menu-width-min * 1.4 !important;
+            width: calc(var(--el-left-menu-width-min) * 1.4) !important;
           }
 
           .title {
-            margin-left: $base-left-menu-width-min * 1.4 !important;
+            left: calc(var(--el-left-menu-width-min) * 1.4) !important;
+            width: calc(
+              var(--el-left-menu-width) -
+                calc(var(--el-left-menu-width-min) * 1.4) - 1px
+            );
           }
         }
 
         .el-tabs + .el-menu {
           left: $base-left-menu-width-min * 1.4;
           width: calc(
-            var(--el-left-menu-width) - #{$base-left-menu-width-min} * 1.4
+            var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4
           );
           border: 0;
         }
@@ -200,8 +207,8 @@
             padding: 5px !important;
 
             .vab-column-grid {
-              width: $base-left-menu-width-min - 10 !important;
-              height: $base-left-menu-width-min - 10 !important;
+              width: calc(var(--el-left-menu-width-min) - 10px) !important;
+              height: calc(var(--el-left-menu-width-min) - 10px) !important;
               border-radius: var(--el-border-radius-base);
 
               &:hover {
@@ -220,9 +227,9 @@
         }
 
         .el-tabs + .el-menu {
-          left: $base-left-menu-width-min + 10;
+          left: calc(var(--el-left-menu-width-min) + 10px);
           width: calc(
-            var(--el-left-menu-width) - #{$base-left-menu-width-min} - 20px
+            var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px
           );
         }
 
@@ -247,7 +254,7 @@
 
                 &:after {
                   position: absolute;
-                  right: 0;
+                  right: -1px;
                   width: 0;
                   height: 0;
                   overflow: hidden;
@@ -265,7 +272,7 @@
         .el-tabs + .el-menu {
           left: $base-left-menu-width-min + 10;
           width: calc(
-            var(--el-left-menu-width) - #{$base-left-menu-width-min} - 20px
+            var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px
           );
         }
 
@@ -326,8 +333,8 @@
       &-horizontal,
       &-semicircle {
         justify-content: left;
-        width: $base-left-menu-width-min * 1.4;
-        height: calc(#{$base-left-menu-width-min} / 1.4);
+        width: calc(var(--el-left-menu-width-min) * 1.4);
+        height: calc(var(--el-left-menu-width-min) / 1.4);
         padding-left: var(--el-padding);
 
         [class*='ri-'] {
