@@ -583,7 +583,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           },
         ],
       },
-
       {
         path: 'video',
         name: 'Video',
@@ -593,6 +592,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'video-line',
           dot: true,
+        },
+      },
+      {
+        path: 'workflow',
+        name: 'Workflow',
+        component: () => import('/@/views/other/workflow/index.vue'),
+        meta: {
+          title: '工作流',
+          guard: ['Admin'],
+          icon: 'flow-chart',
         },
       },
       {

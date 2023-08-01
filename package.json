@@ -24,7 +24,9 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "@kangc/v-md-editor": "^2.3.15",
-    "@lucky-canvas/vue": "latest",
+    "@logicflow/core": "^1.2.10",
+    "@logicflow/extension": "^1.2.10",
+    "@lucky-canvas/vue": "^0.1.11",
     "@vueuse/core": "^10.3.0",
     "@vueuse/head": "^1.1.26",
     "@wangeditor/editor": "^5.1.23",
