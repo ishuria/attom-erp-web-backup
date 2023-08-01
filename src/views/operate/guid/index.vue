@@ -106,7 +106,6 @@
   }
 
   .introjs-button {
-    height: 32px;
     padding: 8px 15px;
     line-height: 1;
     color: var(--el-color-white) !important;
