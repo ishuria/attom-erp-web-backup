@@ -13,7 +13,7 @@
   })
 
   const settingsStore = useSettingsStore()
-  const { theme, device } = storeToRefs(settingsStore)
+  const { theme, device, color } = storeToRefs(settingsStore)
   const { saveTheme, updateTheme } = settingsStore
   const $pub = inject<any>('$pub')
   const $baseLoading = inject<any>('$baseLoading')
@@ -57,11 +57,28 @@
               ])
             : 'vertical'
 
+        const _color = shuffle(color.value, [
+          '#1e90ff',
+          '#4e88f3',
+          '#0052d9',
+          '#3fb884',
+          '#16baa9',
+          '#07c160',
+          '#009688',
+          '#6954f0',
+          '#7b40f2',
+          '#ff2d55',
+          '#f01414',
+        ])
+
         theme.value.themeName = themeName
         theme.value.columnStyle = columnStyle
         theme.value.tabsBarStyle = tabsBarStyle
         theme.value.showTabsIcon = showTabsIcon
         theme.value.layout = layout
+
+        if (themeName !== 'technology') color.value = _color
+        else color.value = '#4e88f3'
 
         updateTheme()
         saveTheme()

@@ -234,6 +234,7 @@ html > body.vab-theme-plain {
             > .el-sub-menu.is-active {
               > .el-sub-menu__title {
                 background-color: var(--el-color-primary-light-9) !important;
+                border-radius: var(--el-border-radius-base);
                 @include active;
               }
             }
