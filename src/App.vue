@@ -8,9 +8,8 @@
       location.hostname === 'vue-admin-beautiful.com' ||
       location.hostname === 'chu1204505056.gitee.io'
     ) {
-      // 演示地址禁止调试
       ;(() => {
-        function block() {
+        const block = () => {
           setInterval(() => {
             ;(function () {
               return false
@@ -21,6 +20,7 @@
         }
 
         try {
+          console.error('演示地址禁止调试，如需调试代码请联系客服购买！')
           block()
         } catch (err) {
           console.log(err)
