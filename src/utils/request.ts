@@ -1,4 +1,5 @@
-import { useUserStore } from '/@/store/modules/user'
+import { stringify } from 'qs'
+import { refreshToken } from '/@/api/refreshToken'
 import {
   contentType,
   debounce,
@@ -8,9 +9,9 @@ import {
   timeout,
 } from '/@/config'
 import router from '/@/router'
+import { useUserStore } from '/@/store/modules/user'
 import { isArray } from '/@/utils/validate'
 import { addErrorLog, needErrorLog } from '/@vab/plugins/errorLog'
-import { refreshToken } from '/@/api/refreshToken'
 import { gp } from '/@vab/plugins/vab'
 
 let loadingInstance: any
@@ -55,6 +56,13 @@ const requestConf = (config: any) => {
 
   // 规范写法 不可随意自定义
   if (token) config.headers['Authorization'] = `Bearer ${token}`
+
+  if (
+    config.data &&
+    config.headers['Content-Type'] ===
+      'application/x-www-form-urlencoded;charset=UTF-8'
+  )
+    config.data = stringify(config.data)
 
   if (debounce.some((item: string) => config.url.includes(item)))
     loadingInstance = gp.$baseLoading()

@@ -1,8 +1,8 @@
+import { stringify } from 'qs'
+import { recordRoute } from '/@/config'
 import type { VabRoute, VabRouteRecordRaw } from '/@/router/types'
 import { hasPermission } from '/@/utils/permission'
 import { isExternal } from '/@/utils/validate'
-import { recordRoute } from '/@/config'
-import qs from 'qs'
 
 /**
  * @description all模式渲染后端返回路由,支持包含views路径的所有页面
@@ -133,7 +133,7 @@ export function handleActivePath(route: VabRoute, isTab = false) {
     : path
   const fullPath =
     route.query && Object.keys(route.query).length
-      ? `${route.path}?${qs.stringify(route.query)}`
+      ? `${route.path}?${stringify(route.query)}`
       : route.path
   if (isTab) return meta.dynamicNewTab ? fullPath : rawPath
   if (meta.activeMenu) return meta.activeMenu

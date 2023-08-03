@@ -22,6 +22,11 @@
           <el-radio-button label="test">test</el-radio-button>
         </el-radio-group>
       </el-form-item>
+      <el-form-item label="token续期（每隔5s可刷新token）">
+        <el-button type="primary" @click="handleRefreshToken">
+          刷新token
+        </el-button>
+      </el-form-item>
       <el-form-item label="当前账号">
         <el-descriptions border :column="3" direction="vertical">
           <el-descriptions-item>
@@ -139,14 +144,15 @@
 </template>
 
 <script lang="ts" setup>
-  import { useAclStore } from '/@/store/modules/acl'
-  import { useUserStore } from '/@/store/modules/user'
+  import { expireToken } from '/@/api/refreshToken'
   import {
     authentication,
     loginInterception,
     rolesControl,
     tokenTableName,
   } from '/@/config'
+  import { useAclStore } from '/@/store/modules/acl'
+  import { useUserStore } from '/@/store/modules/user'
   import { uuid } from '/@/utils'
 
   defineOptions({
@@ -158,6 +164,7 @@
   const { role, permission } = storeToRefs(aclStore)
   const userStore = useUserStore()
   const { username, token } = storeToRefs(userStore)
+  const $baseMessage = inject<any>('$baseMessage')
 
   const form = reactive<any>({
     account: username.value,
@@ -171,6 +178,14 @@
     )
     await location.reload()
   }
+
+  const handleRefreshToken = async () => {
+    await expireToken()
+  }
+
+  watch(token, (value) => {
+    $baseMessage(`token：${value}，刷新成功！`, 'success', 'hey')
+  })
 </script>
 
 <style lang="scss" scoped>
