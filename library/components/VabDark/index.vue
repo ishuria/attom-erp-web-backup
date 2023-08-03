@@ -27,9 +27,10 @@
   const $pub = inject<any>('$pub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
+  const { updateMode } = settingsStore
   const value = ref<boolean>(false)
 
-  const _toggleDark = (event: MouseEvent) => {
+  const _toggleDark = async (event: MouseEvent) => {
     // @ts-ignore
     if (typeof document.startViewTransition === 'function') {
       // 浏览器支持document.startViewTransition
@@ -48,7 +49,7 @@
         root.classList.add(isDark ? 'light' : 'dark')
         handleSetScheme(isDark ? 'light' : 'dark')
       })
-      transition.ready.then(() => {
+      await transition.ready.then(() => {
         const clipPath = [
           `circle(0px at ${x}px ${y}px)`,
           `circle(${endRadius}px at ${x}px ${y}px)`,
@@ -69,8 +70,9 @@
     } else {
       // 浏览器不支持document.startViewTransition
       const toggleDark = useToggle(handleUseDark())
-      toggleDark()
+      await toggleDark()
     }
+    await updateMode(localStorage.getItem('vueuse-color-scheme'))
   }
 
   const handleUseDark = () => {

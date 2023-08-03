@@ -88,6 +88,7 @@ export const useSettingsStore = defineStore('settings', {
     lock,
     logo,
     title,
+    mode: localStorage.getItem('vueuse-color-scheme') || 'light',
   }),
   getters: {
     getTheme: (state) => state.theme,
@@ -98,6 +99,7 @@ export const useSettingsStore = defineStore('settings', {
     getLanguage: (state) => state.language,
     getLogo: (state) => state.logo,
     getTitle: (state) => state.title,
+    getMode: (state) => state.mode,
   },
   actions: {
     updateState(obj: any) {
@@ -111,6 +113,9 @@ export const useSettingsStore = defineStore('settings', {
             : `{"${key}":${obj[key]}}`
         )
       })
+    },
+    updateMode(value: any) {
+      this.mode = value
     },
     saveTheme() {
       localStorage.setItem('shop-vite-theme', JSON.stringify(this.theme))

@@ -12,20 +12,8 @@
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
           <template #label>
             {{ translate('布局') }}
-            <el-tooltip
-              :content="
-                translate('布局仅在电脑端下生效，手机端将默认锁定为纵向布局')
-              "
-              effect="light"
-            >
-              <vab-icon icon="question-line" />
-            </el-tooltip>
           </template>
-          <el-radio-group
-            v-model="theme.layout"
-            class="vab-shop-layout"
-            :disabled="device === 'mobile'"
-          >
+          <el-radio-group v-model="theme.layout" class="vab-shop-layout">
             <el-radio-button
               v-for="item in layoutList"
               :key="item"
@@ -61,17 +49,16 @@
           <vab-color-picker />
         </el-form-item>
         <el-form-item
-          v-if="'default' === theme.themeName"
+          v-if="'default' === theme.themeName && mode !== 'dark'"
           :label="translate('菜单背景跟随配色')"
         >
           <el-switch v-model="theme.isFolow" @change="updateIsFolow" />
         </el-form-item>
-        <el-form-item :label="translate('菜单宽度')">
-          <el-select
-            v-model="theme.menuWidth"
-            :disabled="theme.layout === 'horizontal'"
-            @change="updateMenuWidth"
-          >
+        <el-form-item
+          v-if="theme.layout !== 'horizontal'"
+          :label="translate('菜单宽度')"
+        >
+          <el-select v-model="theme.menuWidth" @change="updateMenuWidth">
             <el-option
               v-for="item in menuWidthList"
               :key="item"
@@ -83,23 +70,17 @@
         <el-form-item :label="translate('标签')">
           <el-switch v-model="theme.showTabs" @change="handleShowTabs" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="theme.showTabs">
           <template #label>
             {{ translate('标签图标') }}
-            <el-tooltip :content="translate('标签开启时生效')" effect="light">
-              <vab-icon icon="question-line" />
-            </el-tooltip>
           </template>
-          <el-switch v-model="theme.showTabsIcon" :disabled="!theme.showTabs" />
+          <el-switch v-model="theme.showTabsIcon" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="theme.showTabs">
           <template #label>
             {{ translate('标签风格') }}
-            <el-tooltip :content="translate('标签开启时生效')" effect="light">
-              <vab-icon icon="question-line" />
-            </el-tooltip>
           </template>
-          <el-select v-model="theme.tabsBarStyle" :disabled="!theme.showTabs">
+          <el-select v-model="theme.tabsBarStyle">
             <el-option
               v-for="item in tabsBarStyleList"
               :key="item.value"
@@ -114,17 +95,11 @@
         <el-form-item :label="translate('右侧浮窗')">
           <el-switch v-model="theme.showThemeSetting" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="theme.layout === 'column'">
           <template #label>
             {{ translate('分栏风格') }}
-            <el-tooltip :content="translate('分栏布局时生效')" effect="light">
-              <vab-icon icon="question-line" />
-            </el-tooltip>
           </template>
-          <el-select
-            v-model="theme.columnStyle"
-            :disabled="theme.layout !== 'column'"
-          >
+          <el-select v-model="theme.columnStyle">
             <el-option
               v-for="item in columnStyleList"
               :key="item.value"
@@ -203,9 +178,10 @@
   const $baseLoading = inject<any>('$baseLoading')
   const $baseMessage = inject<any>('$baseMessage')
   const settingsStore = useSettingsStore()
-  const { theme, device, color } = storeToRefs<any>(settingsStore)
-  const { saveTheme, resetTheme, updateTheme }: any = settingsStore
+  const { theme, device, color, mode } = storeToRefs<any>(settingsStore)
+  const { saveTheme, resetTheme, updateTheme } = settingsStore
   const drawerVisible = ref<boolean>(false)
+
   const layoutList = ref<any>([
     'column',
     'vertical',

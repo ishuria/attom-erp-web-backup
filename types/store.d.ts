@@ -32,6 +32,7 @@ declare interface SettingsModuleType {
   logo: string
   title: string
   color: string
+  mode: string
 }
 
 declare interface TabsModuleType {
