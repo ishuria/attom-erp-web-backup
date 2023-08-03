@@ -61,6 +61,38 @@
           z-index: 9999;
           border-radius: 0;
         }
+
+        &__toolbar {
+          border-bottom: 1px solid var(--el-border-color);
+
+          &-divider:before {
+            border-left: 1px solid var(--el-border-color);
+          }
+
+          &-item {
+            color: var(--el-color-black);
+            &--active,
+            &:hover {
+              color: var(--el-color-white);
+              background: var(--el-color-black);
+            }
+          }
+        }
+
+        &__editor-wrapper {
+          border-right: 1px solid var(--el-border-color);
+        }
+
+        .v-md-textarea-editor pre,
+        .v-md-textarea-editor textarea {
+          color: var(--el-color-black);
+          background-color: var(--el-color-white);
+        }
+
+        .github-markdown-body h1,
+        .github-markdown-body h2 {
+          border-bottom: 1px solid var(--el-border-color);
+        }
       }
 
       @media (max-width: 576px) {
