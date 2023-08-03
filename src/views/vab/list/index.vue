@@ -32,24 +32,24 @@
       <li v-for="(item, index) in list" :key="index" class="list-item">
         <div class="list-item-meta">
           <div class="list-item-meta-avatar">
-            <el-image :src="item.img" />
+            <el-image :src="item.image" />
           </div>
-          <div class="list-item-meta-content">
+          <div class="list-item-meta-content hidden-xs-only">
             <div class="list-item-meta-title">
               {{ item.title }}
             </div>
-            <div class="list-item-meta-description">
+            <div class="list-item-meta-description hidden-xs-only">
               {{ item.description }}
             </div>
+          </div>
+          <div class="list-item-meta-content">
+            <el-progress :percentage="item.percentage" />
           </div>
           <div class="list-item-meta-content">
             <div class="list-item-meta-item">
               <span>时间</span>
               <p>{{ item.datetime }}</p>
             </div>
-          </div>
-          <div class="list-item-meta-content">
-            <el-progress :percentage="item.percentage" />
           </div>
         </div>
       </li>
@@ -67,8 +67,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/table'
   import { Search } from '@element-plus/icons-vue'
+  import { getList } from '/@/api/table'
 
   defineOptions({
     name: 'List',
