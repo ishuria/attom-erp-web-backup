@@ -55,7 +55,7 @@
             :disabled="!row.parentValue"
             text
             type="primary"
-            @click="handleDelete({ row })"
+            @click="handleDelete(row)"
           >
             删除
           </el-button>
@@ -79,8 +79,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { doDelete, getList } from '/@/api/departmentManagement'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
+  import { doDelete, getList } from '/@/api/departmentManagement'
 
   defineOptions({
     label: 'DepartmentManagement',
