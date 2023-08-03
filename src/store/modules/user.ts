@@ -3,10 +3,11 @@
  */
 import { useAclStore } from './acl'
 import { useSettingsStore } from './settings'
+import { useTabsStore } from './tabs'
 import { getUserInfo, login, logout } from '/@/api/user'
+import { tokenName } from '/@/config'
 import { getToken, removeToken, setToken } from '/@/utils/token'
 import { isArray, isString } from '/@/utils/validate'
-import { tokenName } from '/@/config'
 import { gp } from '/@vab/plugins/vab'
 
 export const useUserStore = defineStore('user', {
@@ -129,15 +130,24 @@ export const useUserStore = defineStore('user', {
      * @description 退出登录
      */
     async logout() {
-      await this.resetAll()
       await logout()
+      await this.resetAll()
       await location.reload()
     },
     /**
      * @description 重置token、roles、permission、router、tabsBar等
      */
     async resetAll() {
-      removeToken()
+      const aclStore = useAclStore()
+      const tabsStore = useTabsStore()
+      await removeToken()
+      this.setToken('')
+      this.setUsername('游客')
+      this.setAvatar('https://i.gtimg.cn/club/item/face/img/2/15922_100.gif')
+      await aclStore.setPermission([])
+      await aclStore.setFull(false)
+      await aclStore.setRole([])
+      await tabsStore.delAllVisitedRoutes()
     },
   },
 })
