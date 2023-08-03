@@ -25,7 +25,14 @@
         @set-properties-finish="closeDialog"
       />
     </el-drawer>
-    <el-dialog v-model="dataVisible" title="数据" width="50%">
+    <el-dialog
+      v-model="dataVisible"
+      append-to-body
+      class="graph-data-dialog"
+      draggable
+      height="100px"
+      title="数据"
+    >
       <data-dialog :graph-data="graphData" />
     </el-dialog>
   </div>
@@ -281,6 +288,15 @@
     .add-panel {
       position: absolute;
       z-index: 11;
+    }
+  }
+</style>
+
+<style lang="scss">
+  .graph-data-dialog {
+    .el-dialog__body {
+      max-height: 70vh;
+      overflow-y: auto;
     }
   }
 </style>
