@@ -1,12 +1,8 @@
 <template>
   <div class="workflow-container">
-    <!-- 辅助工具栏 -->
     <control v-if="lf" class="vab-control" :lf="lf" @cat-data="catData" />
-    <!-- 节点面板 -->
     <node-panel :lf="lf" />
-    <!-- 画布 -->
     <div id="container" ref="container"></div>
-    <!-- 用户节点自定义操作面板 -->
     <add-panel
       v-if="showAddPanel"
       class="add-panel"
@@ -15,7 +11,6 @@
       :style="addPanelStyle"
       @add-node-finish="hideAddPanel"
     />
-    <!-- 属性面板 -->
     <el-drawer
       v-model="dialogVisible"
       :before-close="closeDialog"
@@ -30,7 +25,6 @@
         @set-properties-finish="closeDialog"
       />
     </el-drawer>
-    <!-- 数据查看面板 -->
     <el-dialog v-model="dataVisible" title="数据" width="50%">
       <data-dialog :graph-data="graphData" />
     </el-dialog>
@@ -51,6 +45,7 @@
     registerUser,
   } from './vabAutoComponents/registerNode'
   import { getList } from '/@/api/workflow'
+  import { gp } from '/@vab/plugins/vab'
 
   export default defineComponent({
     name: 'Workflow',
@@ -80,7 +75,6 @@
         this.$_initLf()
       },
       $_initLf() {
-        const _this = this
         // 画布配置
         const config = {
           container: this.$refs.container,
@@ -101,22 +95,15 @@
               return true
             },
             beforeDelete(data) {
-              // 可以根据data数据判断是否允许删除，允许返回true,不允许返回false
-              // 文档： http://logic-flow.org/guide/basic/keyboard.html#%E5%A6%82%E4%BD%95%E9%98%BB%E6%AD%A2%E5%88%A0%E9%99%A4%E6%88%96%E8%80%85%E6%8B%B7%E8%B4%9D%E8%A1%8C%E4%B8%BA
               console.log('beforeDelete', data)
-              // _this.$message('不允许删除', 'error')
               return true
             },
           },
         }
-        // 使用插件
         LogicFlow.use(Menu)
         LogicFlow.use(Snapshot)
-        // 渲染画布
         this.lf = new LogicFlow({ ...config })
 
-        // 菜单配置文档：http://logic-flow.org/guide/extension/extension-components.html#%E8%8F%9C%E5%8D%95
-        // 重置，增加，节点自由配置(以user节点为示例)
         this.lf.setMenuConfig({
           nodeMenu: [],
           edgeMenu: [],
@@ -153,7 +140,6 @@
             },
           ],
         })
-        // 设置主题
         this.lf.setTheme({
           circle: {
             r: 20,
@@ -200,7 +186,6 @@
         })
         this.registerNode()
       },
-      // 自定义
       registerNode() {
         registerStart(this.lf)
         registerUser(this.lf)
@@ -236,10 +221,7 @@
           this.hideAddPanel()
         })
         this.lf.on('connection:not-allowed', (data) => {
-          this.$message({
-            type: 'error',
-            message: data.msg,
-          })
+          gp.$baseMessage(data.msg, 'error', 'hey')
         })
         this.lf.on('node:mousemove', () => {
           console.log('on mousemove')
