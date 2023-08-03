@@ -78,11 +78,11 @@
         theme.value.showTabsIcon = showTabsIcon
         theme.value.layout = layout
 
-        if (themeName !== 'technology') {
-          color.value = _color
-          theme.value.isFolow = isFolow
-        } else {
-          color.value = '#4e88f3'
+        if (themeName !== 'technology') color.value = _color
+        else color.value = '#4e88f3'
+
+        if (themeName === 'default') theme.value.isFolow = isFolow
+        else {
           theme.value.isFolow = false
           const el = ref<any>(null)
           if (theme.value.isFolow)

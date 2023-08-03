@@ -61,7 +61,7 @@
           <vab-color-picker />
         </el-form-item>
         <el-form-item
-          v-if="'technology' != theme.themeName"
+          v-if="'default' === theme.themeName"
           :label="translate('菜单背景跟随配色')"
         >
           <el-switch v-model="theme.isFolow" @change="updateIsFolow" />
