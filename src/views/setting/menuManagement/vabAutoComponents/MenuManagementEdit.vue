@@ -79,11 +79,12 @@
 <script lang="ts" setup>
   import { doEdit } from '/@/api/menuManagement'
 
-  defineOptions({ name: 'MenuManagementEdit' })
+  defineOptions({
+    name: 'MenuManagementEdit',
+  })
+
   const emit = defineEmits(['fetch-data'])
-
   const $baseMessage = inject<any>('$baseMessage')
-
   const formRef = ref<any>(null)
   let form = reactive<any>({
     parentId: '',
@@ -104,7 +105,6 @@
       tabHidden: false,
     },
   })
-
   const rules = reactive<any>({
     parentId: [{ required: true, trigger: 'blur', message: '请输入父级id' }],
     name: [{ required: true, trigger: 'blur', message: '请输入name' }],
@@ -120,6 +120,7 @@
   const handleIcon = (item: string) => {
     form.meta.icon = item
   }
+
   const showEdit = (row: any) => {
     if (!row) {
       title.value = '添加'
@@ -156,7 +157,9 @@
   const close = () => {
     formRef.value.resetFields()
     dialogFormVisible.value = false
+    emit('fetch-data')
   }
+
   const save = () => {
     formRef.value.validate(async (valid: any) => {
       if (valid) {
@@ -168,3 +171,9 @@
     })
   }
 </script>
+
+<style lang="scss" scoped>
+  .el-input {
+    width: 200px;
+  }
+</style>
