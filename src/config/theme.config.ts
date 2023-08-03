@@ -12,6 +12,8 @@ export const themeConfig: ThemeType = {
   columnStyle: 'card',
   //颜色
   color: '#4e88f3',
+  //菜单背景跟随配色
+  isFolow: false,
   //是否固定头部固定
   fixedHeader: true,
   //是否开启顶部进度条

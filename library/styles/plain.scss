@@ -315,4 +315,11 @@ html > body.vab-theme-plain {
   .vab-side-bar {
     border-right: 1px solid var(--el-border-color) !important;
   }
+
+  .jv-container.jv-light {
+    .jv-key,
+    .jv-item.jv-object {
+      color: var(--el-menu-color-text) !important;
+    }
+  }
 }

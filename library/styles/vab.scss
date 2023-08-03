@@ -627,11 +627,14 @@ html {
     }
 
     .jv-container.jv-light {
+      background: var(--el-color-white);
+
       .jv-key,
       .jv-item.jv-object {
         color: var(--el-color-black);
       }
     }
+
     .vab-column-bar-container .el-tabs .el-tabs__nav {
       margin-left: -1px !important;
       border-right: 1px solid var(--el-menu-background-color) !important;

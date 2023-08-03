@@ -1,15 +1,16 @@
 /**
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
-import { isJson } from '/@/utils/validate'
 import {
+  logo as _logo,
+  title as _title,
   color,
   columnStyle,
   fixedHeader,
   foldSidebar,
   i18n,
+  isFolow,
   layout,
-  logo as _logo,
   menuWidth,
   pageTransition,
   radius,
@@ -28,8 +29,9 @@ import {
   showThemeSetting,
   tabsBarStyle,
   themeName,
-  title as _title,
 } from '/@/config'
+import { lightenColor } from '/@/utils/lightenColor'
+import { isJson } from '/@/utils/validate'
 
 const defaultTheme: ThemeType = {
   color,
@@ -41,6 +43,7 @@ const defaultTheme: ThemeType = {
   pageTransition,
   radius,
   showDark,
+  isFolow,
   showFooter,
   showFullScreen,
   showLanguage,
@@ -56,6 +59,7 @@ const defaultTheme: ThemeType = {
   tabsBarStyle,
   themeName,
 }
+
 const getLocalStorage = (key: string) => {
   const value: any = localStorage.getItem(key)
   if (isJson(value)) {
@@ -139,6 +143,14 @@ export const useSettingsStore = defineStore('settings', {
       if (!this.theme.showFooter)
         useCssVar('--el-footer-height', el).value = '0px'
       else useCssVar('--el-footer-height', el).value = '58px'
+
+      if (!this.theme.isFolow)
+        useCssVar('--el-menu-background-color', el).value = '#282c34'
+      else
+        useCssVar('--el-menu-background-color', el).value = lightenColor(
+          this.color,
+          10
+        )
 
       if (this.theme.radius)
         useCssVar(

@@ -1,5 +1,9 @@
 <template>
-  <div class="vab-color-picker" style="margin-left: var(--el-margin)">
+  <div
+    v-if="'technology' != theme.themeName"
+    class="vab-color-picker"
+    style="margin-left: var(--el-margin)"
+  >
     <el-color-picker
       v-model="color"
       popper-class="vab-color-picker-popper"
@@ -13,6 +17,7 @@
   import { round } from 'lodash-es'
   import { color as _color } from '/@/config/'
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { lightenColor } from '/@/utils/lightenColor'
 
   defineOptions({
     name: 'VabColorPicker',
@@ -33,11 +38,12 @@
     '#009688',
     '#6954f0',
     '#7b40f2',
-    '#ff2d55',
+
     '#f01414',
   ])
   const settingsStore = useSettingsStore()
   const { changeColor, getColor } = settingsStore
+  const { theme } = storeToRefs(settingsStore)
 
   const getRgbNum = (sColor: string) => {
     if (sColor.length === 4) {
@@ -73,6 +79,13 @@
         1 - index * 0.1
       )
     }
+
+    if (theme.value.isFolow)
+      useCssVar('--el-menu-background-color', el).value = lightenColor(
+        value,
+        15
+      )
+    else useCssVar('--el-menu-background-color', el).value = '#282c34'
 
     changeColor(value)
     color.value = value

@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { lightenColor } from '/@/utils/lightenColor'
 
   defineOptions({
     name: 'RandomTheme',
@@ -56,7 +57,6 @@
                 'comprehensive',
               ])
             : 'vertical'
-
         const _color = shuffle(color.value, [
           '#1e90ff',
           '#4e88f3',
@@ -67,9 +67,10 @@
           '#009688',
           '#6954f0',
           '#7b40f2',
-          '#ff2d55',
+
           '#f01414',
         ])
+        const isFolow = shuffle(theme.value.isFolow, [true, false])
 
         theme.value.themeName = themeName
         theme.value.columnStyle = columnStyle
@@ -77,8 +78,20 @@
         theme.value.showTabsIcon = showTabsIcon
         theme.value.layout = layout
 
-        if (themeName !== 'technology') color.value = _color
-        else color.value = '#4e88f3'
+        if (themeName !== 'technology') {
+          color.value = _color
+          theme.value.isFolow = isFolow
+        } else {
+          color.value = '#4e88f3'
+          theme.value.isFolow = false
+          const el = ref<any>(null)
+          if (theme.value.isFolow)
+            useCssVar('--el-menu-background-color', el).value = lightenColor(
+              color.value,
+              15
+            )
+          else useCssVar('--el-menu-background-color', el).value = '#282c34'
+        }
 
         updateTheme()
         saveTheme()

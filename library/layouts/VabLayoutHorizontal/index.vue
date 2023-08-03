@@ -74,7 +74,6 @@
 
     .vab-tabs-horizontal {
       background: var(--el-color-white);
-      box-shadow: $base-box-shadow;
     }
 
     .vab-nav {

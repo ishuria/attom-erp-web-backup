@@ -48,11 +48,23 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="translate('暗黑模式')">
+        <el-form-item
+          v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
+          :label="translate('暗黑模式')"
+        >
           <vab-dark />
         </el-form-item>
-        <el-form-item :label="translate('配色')">
+        <el-form-item
+          v-if="'technology' != theme.themeName"
+          :label="translate('配色')"
+        >
           <vab-color-picker />
+        </el-form-item>
+        <el-form-item
+          v-if="'technology' != theme.themeName"
+          :label="translate('菜单背景跟随配色')"
+        >
+          <el-switch v-model="theme.isFolow" @change="updateIsFolow" />
         </el-form-item>
         <el-form-item :label="translate('菜单宽度')">
           <el-select
@@ -179,6 +191,7 @@
 <script lang="ts" setup>
   import { translate } from '/@/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { lightenColor } from '/@/utils/lightenColor'
 
   defineOptions({
     name: 'VabThemeDrawer',
@@ -190,7 +203,7 @@
   const $baseLoading = inject<any>('$baseLoading')
   const $baseMessage = inject<any>('$baseMessage')
   const settingsStore = useSettingsStore()
-  const { theme, device } = storeToRefs<any>(settingsStore)
+  const { theme, device, color } = storeToRefs<any>(settingsStore)
   const { saveTheme, resetTheme, updateTheme }: any = settingsStore
   const drawerVisible = ref<boolean>(false)
   const layoutList = ref<any>([
@@ -235,6 +248,16 @@
     useCssVar('--el-left-menu-width', el).value = theme.value.menuWidth
   }
 
+  const updateIsFolow = (value: any) => {
+    const el = ref<any>(null)
+    if (value)
+      useCssVar('--el-menu-background-color', el).value = lightenColor(
+        color.value,
+        15
+      )
+    else useCssVar('--el-menu-background-color', el).value = '#282c34'
+  }
+
   const handleShowFooter = (value: any) => {
     const el = ref<any>(null)
     if (!value) useCssVar('--el-footer-height', el).value = '0px'
@@ -254,6 +277,10 @@
 
   const _updateTheme = (value: any = '') => {
     if (value == 'default') $pub('shop-vite-reset-dark')
+    if (theme.value.themeName == 'technology') {
+      $pub('shop-vite-reset-color')
+    }
+
     const loading = $baseLoading()
     setTimeout(() => {
       updateTheme()
