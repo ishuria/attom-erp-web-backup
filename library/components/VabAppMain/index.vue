@@ -17,7 +17,7 @@
 
   const route = useRoute()
   const routesStore = useRoutesStore()
-  const { tab, activeMenu }: any = storeToRefs(routesStore)
+  const { tab, activeMenu } = storeToRefs<any>(routesStore)
 
   watch(
     route,
