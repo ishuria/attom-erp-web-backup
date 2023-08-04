@@ -32,7 +32,6 @@
     if (deferredPrompt && deferredPrompt !== 'init') {
       deferredPrompt.prompt()
       deferredPrompt.userChoice.then((choiceResult: any) => {
-        console.log(choiceResult.outcome)
         if (choiceResult.outcome === 'dismissed') {
           $baseMessage(
             '检测到您已取消安装需为您重载网页',

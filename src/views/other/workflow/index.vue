@@ -97,12 +97,10 @@
           },
           edgeTextDraggable: true,
           guards: {
-            beforeClone(data) {
-              console.log('beforeClone', data)
+            beforeClone() {
               return true
             },
-            beforeDelete(data) {
-              console.log('beforeDelete', data)
+            beforeDelete() {
               return true
             },
           },
@@ -127,9 +125,9 @@
               text: '属性',
               callback(node) {
                 alert(`
-                节点id：${node.id}
-                节点类型：${node.type}
-                节点坐标：(x: ${node.x}, y: ${node.y})`)
+                  节点id：${node.id}
+                  节点类型：${node.type}
+                  节点坐标：(x: ${node.x}, y: ${node.y})`)
               },
             },
           ],
@@ -138,11 +136,11 @@
               text: '属性',
               callback(edge) {
                 alert(`
-                边id：${edge.id}
-                边类型：${edge.type}
-                边坐标：(x: ${edge.x}, y: ${edge.y})
-                源节点id：${edge.sourceNodeId}
-                目标节点id：${edge.targetNodeId}`)
+                  边id：${edge.id}
+                  边类型：${edge.type}
+                  边坐标：(x: ${edge.x}, y: ${edge.y})
+                  源节点id：${edge.sourceNodeId}
+                  目标节点id：${edge.targetNodeId}`)
               },
             },
           ],
@@ -207,17 +205,14 @@
         this.event()
       },
       getData() {
-        const data = this.lf.getGraphData()
-        console.log(JSON.stringify(data))
+        this.lf.getGraphData()
       },
       event() {
         this.lf.on('node:click', ({ data }) => {
-          console.log('node:click', data)
           this.clickNode = data
           this.dialogVisible = true
         })
         this.lf.on('edge:click', ({ data }) => {
-          console.log('edge:click', data)
           this.clickNode = data
           this.dialogVisible = true
         })
@@ -230,23 +225,18 @@
         this.lf.on('connection:not-allowed', (data) => {
           gp.$baseMessage(data.msg, 'error', 'hey')
         })
-        this.lf.on('node:mousemove', () => {
-          console.log('on mousemove')
-        })
+        this.lf.on('node:mousemove', () => {})
       },
       clickPlus(e, attributes) {
         e.stopPropagation()
-        console.log('clickPlus', e, attributes)
         const { clientX, clientY } = e
-        console.log(clientX, clientY)
         this.addPanelStyle.top = `${clientY - 40}px`
         this.addPanelStyle.left = `${clientX}px`
         this.showAddPanel = true
         this.addClickNode = attributes
       },
-      mouseDownPlus(e, attributes) {
+      mouseDownPlus(e) {
         e.stopPropagation()
-        console.log('mouseDownPlus', e, attributes)
       },
       hideAddPanel() {
         this.showAddPanel = false

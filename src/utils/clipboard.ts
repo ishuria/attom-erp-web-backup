@@ -21,8 +21,7 @@ export default function handleClipboard(text: string) {
     .then(() => {
       clipboardSuccess(text)
     })
-    .catch((err) => {
-      console.log(err)
+    .catch(() => {
       clipboardError(text)
     })
 }

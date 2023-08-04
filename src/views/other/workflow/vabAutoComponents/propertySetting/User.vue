@@ -90,7 +90,6 @@
     },
     methods: {
       onSubmit() {
-        console.log('submit!')
         const { id } = this.$props.nodeData
         this.$props.lf.setProperties(id, this.$data.form)
         this.$emit('onClose')
