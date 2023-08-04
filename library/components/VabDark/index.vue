@@ -1,10 +1,6 @@
 <template>
   <el-switch
-    v-if="
-      theme.showDark &&
-      'technology' != theme.themeName &&
-      'plain' != theme.themeName
-    "
+    v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
     v-model="value"
     :active-icon="Moon"
     class="vab-dark"
@@ -15,8 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { Moon, Sunny } from '@element-plus/icons-vue'
-  import { useSettingsStore } from '/@/store/modules/settings'
+  import { Moon, Sunny } from '@element-plus/icons-vue';
+import { useSettingsStore } from '/@/store/modules/settings';
 
   defineOptions({
     name: 'VabDark',

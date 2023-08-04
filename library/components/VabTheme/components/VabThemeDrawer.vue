@@ -116,14 +116,14 @@
             @change="handleRadius"
           />
         </el-form-item>
+        <el-form-item :label="translate('头部固定')">
+          <el-switch v-model="theme.fixedHeader" />
+        </el-form-item>
         <el-form-item :label="translate('暗黑组件')">
           <el-switch v-model="theme.showDark" />
         </el-form-item>
         <el-form-item :label="translate('颜色选择器')">
           <el-switch v-model="theme.showColorPicker" />
-        </el-form-item>
-        <el-form-item :label="translate('头部固定')">
-          <el-switch v-model="theme.fixedHeader" />
         </el-form-item>
         <el-form-item :label="translate('国际化')">
           <el-switch v-model="theme.showLanguage" />

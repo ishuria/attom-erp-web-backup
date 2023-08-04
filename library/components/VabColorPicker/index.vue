@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="theme.showColorPicker && 'technology' != theme.themeName"
+    v-if="'technology' != theme.themeName"
     class="vab-color-picker"
     style="margin-left: var(--el-margin)"
   >

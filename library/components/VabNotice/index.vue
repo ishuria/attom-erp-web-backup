@@ -1,5 +1,5 @@
 <template>
-  <el-badge v-if="theme.showNotice" type="danger" :value="badge">
+  <el-badge type="danger" :value="badge">
     <el-popover placement="bottom" trigger="hover" :width="305">
       <template #reference>
         <vab-icon icon="notification-2-line" />
@@ -43,9 +43,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { translate } from '/@/i18n'
   import { getList } from '/@/api/notice'
+  import { translate } from '/@/i18n'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabNotice',

@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown v-if="theme.showLanguage" @command="handleCommand">
+  <el-dropdown @command="handleCommand">
     <vab-icon icon="translate-2" />
     <template #dropdown>
       <el-dropdown-menu>
@@ -17,7 +17,6 @@
   const { locale } = useI18n()
   const route = useRoute()
   const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
   const { changeLanguage } = settingsStore
 
   const handleCommand = (language: string) => {

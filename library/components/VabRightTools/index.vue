@@ -2,21 +2,25 @@
   <div class="vab-right-tools">
     <vab-search v-if="!isHorizontal" class="hidden-xs-only" />
     <vab-dark
+      v-show="theme.showDark"
       :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }"
     />
-    <vab-color-picker />
-    <vab-error-log class="hidden-xs-only" />
+    <vab-color-picker v-show="theme.showColorPicker" />
     <vab-theme />
-    <vab-lock />
-    <vab-notice />
-    <vab-language />
-    <vab-full-screen />
-    <vab-refresh />
+    <vab-error-log class="hidden-xs-only" />
+    <vab-lock v-show="theme.showLock" />
+    <vab-notice v-show="theme.showNotice" />
+    <vab-language v-show="theme.showLanguage" />
+    <vab-full-screen v-show="theme.showFullScreen" />
+    <vab-refresh v-show="theme.showRefresh" />
+
     <vab-avatar />
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { useSettingsStore } from '/@/store/modules/settings'
+
   defineOptions({
     name: 'VabRightTools',
   })
@@ -27,6 +31,9 @@
       default: false,
     },
   })
+
+  const settingsStore = useSettingsStore()
+  const { theme } = storeToRefs(settingsStore)
 </script>
 
 <style lang="scss" scoped>

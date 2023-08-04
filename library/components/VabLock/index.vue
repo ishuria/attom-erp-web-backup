@@ -1,8 +1,6 @@
 <template>
   <div>
-    <el-tooltip :content="translate('锁屏')" effect="light">
-      <vab-icon v-if="theme.showLock" icon="lock-line" @click="handleLock" />
-    </el-tooltip>
+    <vab-icon icon="lock-line" @click="handleLock" />
     <transition name="el-zoom-in-top">
       <div v-show="lock" class="vab-screen-lock">
         <div
@@ -63,7 +61,7 @@
   const userStore = useUserStore()
   const { avatar } = storeToRefs(userStore)
   const settingsStore = useSettingsStore()
-  const { theme, lock, title } = storeToRefs(settingsStore)
+  const { lock, title } = storeToRefs(settingsStore)
   const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
   const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
 

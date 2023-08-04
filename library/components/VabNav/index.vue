@@ -36,10 +36,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { translate } from '/@/i18n'
-  import { isExternal } from '/@/utils/validate'
   import { openFirstMenu } from '/@/config'
+  import { translate } from '/@/i18n'
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { isExternal } from '/@/utils/validate'
 
   defineOptions({
     name: 'VabNav',
@@ -136,6 +136,7 @@
       align-items: center;
       justify-content: flex-end;
       height: $base-nav-height;
+      transition: var(--el-transition);
 
       :deep() {
         [class*='ri-'] {
