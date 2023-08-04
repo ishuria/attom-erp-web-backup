@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { Moon, Sunny } from '@element-plus/icons-vue';
-import { useSettingsStore } from '/@/store/modules/settings';
+  import { Moon, Sunny } from '@element-plus/icons-vue'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabDark',
