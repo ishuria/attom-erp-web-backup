@@ -67,11 +67,11 @@
     .vab-main {
       &.is-collapse-main {
         &.vab-main-horizontal {
-          margin-left: $base-left-menu-width-min * 1.3;
+          margin-left: calc(var(--el-left-menu-width-min) * 1.3);
 
           :deep() {
             .fixed-header {
-              width: calc(100% - #{$base-left-menu-width-min} * 1.3);
+              width: calc(100% - var(--el-left-menu-width-min) * 1.3);
             }
           }
         }

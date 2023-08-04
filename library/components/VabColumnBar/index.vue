@@ -184,14 +184,15 @@
           .title {
             left: calc(var(--el-left-menu-width-min) * 1.4) !important;
             width: calc(
-              var(--el-left-menu-width) -
-                calc(var(--el-left-menu-width-min) * 1.4) - 1px
+              var(--el-left-menu-width) - calc(
+                  var(--el-left-menu-width-min) * 1.4
+                ) - 1px
             );
           }
         }
 
         .el-tabs + .el-menu {
-          left: $base-left-menu-width-min * 1.4;
+          left: calc(var(--el-left-menu-width-min) * 1.4);
           width: calc(
             var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4
           );
@@ -270,7 +271,7 @@
         }
 
         .el-tabs + .el-menu {
-          left: $base-left-menu-width-min + 10;
+          left: calc(var(--el-left-menu-width-min) + 10px);
           width: calc(
             var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px
           );

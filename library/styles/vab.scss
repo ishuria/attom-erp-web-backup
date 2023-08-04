@@ -28,13 +28,8 @@
   }
 }
 
-.vab-layout-header,
-[class*='-bar-container'] {
+* {
   transition: var(--el-transition);
-
-  * {
-    transition: var(--el-transition);
-  }
 }
 
 html {
