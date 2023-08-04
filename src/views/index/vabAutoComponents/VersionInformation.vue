@@ -15,6 +15,10 @@
           <td>
             <span>{{ devDependencies['vite'] }}</span>
           </td>
+          <td>typescript</td>
+          <td>
+            <span>{{ devDependencies['typescript'] }}</span>
+          </td>
           <td>vue</td>
           <td>
             <span>{{ dependencies['vue'] }}</span>
@@ -25,11 +29,15 @@
           </td>
         </tr>
         <tr>
+          <td>vue-router</td>
+          <td>
+            <span>{{ dependencies['vue-router'] }}</span>
+          </td>
           <td>element-plus</td>
           <td>
             <span>{{ dependencies['element-plus'] }}</span>
           </td>
-          <td>@vueuse/core</td>
+          <td>vueuse</td>
           <td>
             <span>{{ dependencies['@vueuse/core'] }}</span>
           </td>
