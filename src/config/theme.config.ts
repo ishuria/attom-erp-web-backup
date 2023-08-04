@@ -50,4 +50,6 @@ export const themeConfig: ThemeType = {
   radius: 5,
   // 是否开启锁屏
   showLock: true,
+  // 是否开启颜色选择器组件
+  showColorPicker: true,
 }

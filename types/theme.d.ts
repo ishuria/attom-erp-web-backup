@@ -147,4 +147,6 @@ declare interface ThemeType {
   radius: number
   // 是否开启锁屏
   showLock: boolean
+  // 是否开启颜色选择器组件
+  showColorPicker: boolean
 }

@@ -54,6 +54,7 @@ export const {
   reportCompressedSize,
   rolesControl,
   routesWhiteList,
+  showColorPicker,
   showDark,
   showFooter,
   showFullScreen,
