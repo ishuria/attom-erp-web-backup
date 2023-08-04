@@ -1,7 +1,7 @@
 <template>
   <div>
     <vab-icon icon="lock-line" @click="handleLock" />
-    <transition name="el-zoom-in-top">
+    <el-collapse-transition>
       <div v-show="lock" class="vab-screen-lock">
         <div
           class="vab-screen-lock-background"
@@ -45,7 +45,7 @@
           <span @click="randomBackground">{{ translate('切换壁纸') }}</span>
         </div>
       </div>
-    </transition>
+    </el-collapse-transition>
   </div>
 </template>
 
