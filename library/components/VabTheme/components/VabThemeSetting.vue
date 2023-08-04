@@ -1,55 +1,70 @@
 <template>
-  <ul v-if="theme.showThemeSetting" class="vab-theme-setting">
-    <li @click="handleOpenTheme">
-      <a>
-        <vab-icon icon="t-shirt-line" />
-        <p>{{ translate('主题配置') }}</p>
-      </a>
-    </li>
-    <li @click="changeTheme('technology')">
-      <a>
-        <vab-icon icon="user-5-line" />
-        <p>
-          {{ translate('科技主题') }}
-        </p>
-      </a>
-    </li>
-    <li @click="changeTheme('plain')">
-      <a>
-        <vab-icon icon="computer-line" />
-        <p>
-          {{ translate('简洁主题') }}
-        </p>
-      </a>
-    </li>
-    <li @click="resetTheme">
-      <a>
-        <vab-icon icon="arrow-go-back-line" />
-        <p>
-          {{ translate('默认主题') }}
-        </p>
-      </a>
-    </li>
-    <li @click="buy">
+  <div v-if="theme.showThemeSetting" class="vab-theme-setting">
+    <el-collapse-transition>
+      <section v-show="show">
+        <div @click="handleOpenTheme">
+          <a>
+            <vab-icon icon="t-shirt-line" />
+            <p>{{ translate('主题配置') }}</p>
+          </a>
+        </div>
+        <div @click="changeTheme('technology')">
+          <a>
+            <vab-icon icon="user-5-line" />
+            <p>
+              {{ translate('科技主题') }}
+            </p>
+          </a>
+        </div>
+        <div @click="changeTheme('plain')">
+          <a>
+            <vab-icon icon="computer-line" />
+            <p>
+              {{ translate('简洁主题') }}
+            </p>
+          </a>
+        </div>
+        <div @click="resetTheme">
+          <a>
+            <vab-icon icon="arrow-go-back-line" />
+            <p>
+              {{ translate('默认主题') }}
+            </p>
+          </a>
+        </div>
+        <div @click="removeLocalStorage">
+          <a>
+            <vab-icon icon="delete-bin-4-line" />
+            <p>
+              {{ translate('清理缓存') }}
+            </p>
+          </a>
+        </div>
+      </section>
+    </el-collapse-transition>
+
+    <div class="vab-buy-box" @click="buy">
       <a class="vab-buy">
         <vab-icon icon="shopping-cart-2-line" />
         <p>{{ translate('购买源码') }}</p>
       </a>
-    </li>
-    <li @click="removeLocalStorage">
+    </div>
+    <div class="vab-show-hide-box" @click="toggleShowHide">
       <a>
-        <vab-icon icon="delete-bin-4-line" />
+        <vab-icon
+          :icon="show ? 'arrow-up-double-line' : 'arrow-down-double-line'"
+        />
         <p>
-          {{ translate('清理缓存') }}
+          {{ translate(show ? '收起浮窗' : '展开浮窗') }}
         </p>
       </a>
-    </li>
-  </ul>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
   import { translate } from '/@/i18n'
+  import { useSettingsStore } from '/@/store/modules/settings'
 
   defineOptions({
     name: 'VabThemeSetting',
@@ -58,6 +73,7 @@
   const $pub = inject<any>('$pub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
+  const show = ref<boolean>(true)
 
   const handleOpenTheme = () => {
     $pub('shop-vite-theme')
@@ -69,15 +85,19 @@
 
   const removeLocalStorage = () => {
     localStorage.clear()
-
     location.reload()
   }
 
   const resetTheme = () => {
     $pub('shop-vite-reset-theme')
   }
+
   const changeTheme = (value: string) => {
     $pub('shop-vite-change-theme', value)
+  }
+
+  const toggleShowHide = () => {
+    show.value = !show.value
   }
 </script>
 
@@ -100,7 +120,7 @@
     box-shadow: 0 0 50px 0 rgb(82 63 105 / 15%);
     transform: translateY(-50%);
 
-    > li {
+    div {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -152,17 +172,6 @@
 
       &:nth-child(5) {
         a {
-          color: var(--el-color-warning);
-          background: var(--el-color-warning-lighter);
-
-          &:hover {
-            background: var(--el-color-warning);
-          }
-        }
-      }
-
-      &:nth-child(6) {
-        a {
           color: var(--el-color-danger);
           background: var(--el-color-danger-lighter);
 
@@ -189,6 +198,29 @@
           line-height: 25px;
           text-overflow: ellipsis;
           white-space: nowrap;
+        }
+      }
+    }
+
+    .vab-buy-box {
+      a {
+        color: var(--el-color-warning) !important;
+        background: var(--el-color-warning-lighter) !important;
+
+        &:hover {
+          color: var(--el-color-white) !important;
+          background: var(--el-color-warning) !important;
+        }
+      }
+    }
+    .vab-show-hide-box {
+      a {
+        color: var(--el-color-primary) !important;
+        background: var(--el-color-primary-light-9) !important;
+
+        &:hover {
+          color: var(--el-color-white) !important;
+          background: var(--el-color-primary) !important;
         }
       }
     }
