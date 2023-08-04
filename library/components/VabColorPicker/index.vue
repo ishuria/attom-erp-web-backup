@@ -114,11 +114,6 @@
 </script>
 
 <style lang="scss">
-  .el-color-picker__trigger,
-  .el-tooltip__trigger:hover {
-    border: 0;
-  }
-
   .el-color-picker__trigger {
     width: 20px;
     height: 20px;

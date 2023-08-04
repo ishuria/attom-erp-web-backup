@@ -28,8 +28,19 @@
   }
 }
 
-* {
+.vue-shop-vite-box {
   transition: var(--el-transition);
+
+  * {
+    transition: var(--el-transition);
+  }
+
+  [class*='-container'] {
+    transition: none;
+    * {
+      transition: none;
+    }
+  }
 }
 
 html {
