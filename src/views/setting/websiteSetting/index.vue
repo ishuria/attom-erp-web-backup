@@ -56,7 +56,7 @@
     siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
     metaKeywords: '',
     metaDesc: '',
-    copyright: '网站设置',
+    copyright: '',
   })
   const formRef = ref<any>(null)
   const formRules = reactive<any>({
