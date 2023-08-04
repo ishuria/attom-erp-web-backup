@@ -11,18 +11,18 @@
         :suffix="form.suffix"
       />
     </div>
-    <el-form inline :model="form">
+    <el-form inline label-width="80px" :model="form">
       <el-form-item label="起始值">
-        <el-input-number v-model="form.startVal" />
+        <el-input-number v-model="form.startVal" :min="0" />
       </el-form-item>
       <el-form-item label="最终值">
-        <el-input-number v-model="form.endVal" />
+        <el-input-number v-model="form.endVal" :min="0" />
       </el-form-item>
       <el-form-item label="持续时间">
-        <el-input-number v-model="form.duration" />
+        <el-input-number v-model="form.duration" :min="0" />
       </el-form-item>
       <el-form-item label="小数位数">
-        <el-input-number v-model="form.decimals" :max="2" />
+        <el-input-number v-model="form.decimals" :max="2" :min="0" />
       </el-form-item>
       <el-form-item label="前缀">
         <el-input v-model="form.prefix" clearable />
