@@ -70,7 +70,7 @@
 
           '#f01414',
         ])
-        const isFolow = shuffle(theme.value.isFolow, [true, false])
+        const isFollow = shuffle(theme.value.isFollow, [true, false])
 
         theme.value.themeName = themeName
         theme.value.columnStyle = columnStyle
@@ -81,11 +81,11 @@
         if (themeName !== 'technology') color.value = _color
         else color.value = '#4e88f3'
 
-        if (themeName === 'default') theme.value.isFolow = isFolow
+        if (themeName === 'default') theme.value.isFollow = isFollow
         else {
-          theme.value.isFolow = false
+          theme.value.isFollow = false
           const el = ref<any>(null)
-          if (theme.value.isFolow)
+          if (theme.value.isFollow)
             useCssVar('--el-menu-background-color', el).value = lightenColor(
               color.value,
               15

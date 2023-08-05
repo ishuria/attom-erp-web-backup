@@ -56,5 +56,27 @@
   },
   "files.eol": "\n",
   "vue.codeActions.savingTimeLimit": 100000,
-  "editor.formatOnType": true
+  "editor.formatOnType": true,
+  "cSpell.words": [
+    "echarts",
+    "globle",
+    "jsencrypt",
+    "kangc",
+    "logicflow",
+    "mockjs",
+    "nprogress",
+    "Openeds",
+    "picocolors",
+    "pinia",
+    "stylelint",
+    "textareas",
+    "typeit",
+    "unplugin",
+    "unsub",
+    "vite",
+    "vitebar",
+    "vueuse",
+    "wangeditor",
+    "xgplayer"
+  ]
 }

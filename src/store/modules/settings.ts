@@ -9,7 +9,7 @@ import {
   fixedHeader,
   foldSidebar,
   i18n,
-  isFolow,
+  isFollow,
   layout,
   menuWidth,
   pageTransition,
@@ -39,7 +39,7 @@ const defaultTheme: ThemeType = {
   columnStyle,
   fixedHeader,
   foldSidebar,
-  isFolow,
+  isFollow,
   layout,
   menuWidth,
   pageTransition,
@@ -151,7 +151,7 @@ export const useSettingsStore = defineStore('settings', {
         useCssVar('--el-footer-height', el).value = '0px'
       else useCssVar('--el-footer-height', el).value = '58px'
 
-      if (!this.theme.isFolow)
+      if (!this.theme.isFollow)
         useCssVar('--el-menu-background-color', el).value = '#282c34'
       else
         useCssVar('--el-menu-background-color', el).value = lightenColor(

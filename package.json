@@ -47,7 +47,7 @@
     "typeit": "^8.7.1",
     "vsv-icon": "^1.0.0",
     "vue": "^3.3.4",
-    "vue-echarts": "^6.6.0",
+    "vue-echarts": "^6.6.1",
     "vue-i18n": "^9.2.2",
     "vue-json-viewer": "^3.0.4",
     "vue-pdf-embed": "^1.1.6",

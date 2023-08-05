@@ -110,7 +110,7 @@ declare interface ThemeType {
   // 颜色
   color: string
   //菜单背景跟随配色
-  isFolow: boolean
+  isFollow: boolean
   // 是否固定头部固定
   fixedHeader: boolean
   // 纵向布局时是否默认收起左侧菜单（不支持分栏布局）

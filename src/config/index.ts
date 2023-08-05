@@ -42,7 +42,7 @@ export const {
   menuWidth,
   messageDuration,
   messageName,
-  isFolow,
+  isFollow,
   open,
   openFirstMenu,
   outDir,

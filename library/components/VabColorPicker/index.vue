@@ -80,7 +80,7 @@
       )
     }
 
-    if (theme.value.isFolow)
+    if (theme.value.isFollow)
       useCssVar('--el-menu-background-color', el).value = lightenColor(
         value,
         15

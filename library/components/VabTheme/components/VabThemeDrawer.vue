@@ -52,7 +52,7 @@
           v-if="'default' === theme.themeName && mode !== 'dark'"
           :label="translate('菜单背景跟随配色')"
         >
-          <el-switch v-model="theme.isFolow" @change="updateIsFolow" />
+          <el-switch v-model="theme.isFollow" @change="updateIsFollow" />
         </el-form-item>
         <el-form-item
           v-if="theme.layout !== 'horizontal'"
@@ -230,7 +230,7 @@
     useCssVar('--el-left-menu-width', el).value = theme.value.menuWidth
   }
 
-  const updateIsFolow = (value: any) => {
+  const updateIsFollow = (value: any) => {
     const el = ref<any>(null)
     if (value)
       useCssVar('--el-menu-background-color', el).value = lightenColor(

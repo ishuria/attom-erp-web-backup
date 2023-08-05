@@ -22,9 +22,9 @@
 </template>
 
 <script lang="ts" setup>
+  import { defaultOpeneds, uniqueOpened } from '/@/config'
   import { useRoutesStore } from '/@/store/modules/routes'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { defaultOpeneds, uniqueOpened } from '/@/config'
 
   defineOptions({
     name: 'VabSideBar',
