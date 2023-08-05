@@ -471,6 +471,7 @@ html {
       margin-bottom: var(--el-margin);
       border: 1px solid var(--el-border-color);
       border-radius: var(--el-border-radius-base);
+      transition: var(--el-transition) !important;
 
       &__header {
         position: relative;
