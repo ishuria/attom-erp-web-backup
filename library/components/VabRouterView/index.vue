@@ -10,11 +10,11 @@
 
 <script lang="ts" setup>
   import { useHead } from '@vueuse/head'
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { handleActivePath } from '/@/utils/routes'
-  import { keepAliveMaxNum } from '/@/config'
   import VabProgress from 'nprogress'
+  import { keepAliveMaxNum } from '/@/config'
+  import { useSettingsStore } from '/@/store/modules/settings'
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { handleActivePath } from '/@/utils/routes'
 
   defineOptions({
     name: 'VabRouterView',
@@ -22,7 +22,7 @@
 
   const route = useRoute()
   const $sub = inject<any>('$sub')
-  const $unsub = inject<any>('$unsub')
+  // const $unsub = inject<any>('$unsub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const tabsStore = useTabsStore()
@@ -74,8 +74,7 @@
     }, 200)
   })
 
-  onUnmounted(() => {
-    $unsub('get-code')
-    $unsub('reload-router-view')
-  })
+  // onUnmounted(() => {
+  //   $unsub('reload-router-view')
+  // })
 </script>
