@@ -50,9 +50,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @use 'sass:math';
-
-  $base-menu-height: 40px;
   .vab-header {
     display: flex;
     align-items: center;
@@ -81,7 +78,7 @@
           .el-menu {
             &.el-menu--horizontal {
               width: 100%;
-              height: $base-menu-height;
+              height: 40px;
               border: 0;
 
               * {
