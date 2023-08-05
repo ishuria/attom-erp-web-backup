@@ -8,7 +8,7 @@ import './styles/vab.scss'
 import { VabIcon } from 'vsv-icon'
 import 'vsv-icon/dist/style.css'
 
-export function setupVab(app: App<Element>) {
+export const setupVab = (app: App<Element>) => {
   app.use(createHead())
   app.component('VabIcon', VabIcon)
   // 加载插件

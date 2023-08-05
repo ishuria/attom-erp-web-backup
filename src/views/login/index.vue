@@ -75,11 +75,11 @@
 </template>
 
 <script lang="ts" setup>
+  import { translate } from '/@/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
   import { useUserStore } from '/@/store/modules/user'
-  import { translate } from '/@/i18n'
-  import { isPassword } from '/@/utils/validate'
   import { getImageUrl } from '/@/utils/imageUrl'
+  import { isPassword } from '/@/utils/validate'
 
   defineOptions({
     name: 'Login',

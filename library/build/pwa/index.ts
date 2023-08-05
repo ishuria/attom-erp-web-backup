@@ -40,6 +40,6 @@ const pwaOptions: Partial<VitePWAOptions> = {
   },
 }
 
-export function createPwa() {
+export const createPwa = () => {
   return VitePWA(pwaOptions)
 }

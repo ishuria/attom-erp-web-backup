@@ -61,11 +61,11 @@
     name: 'ChatGPT',
   })
 
-  import { useUserStore } from '/@/store/modules/user'
-  import { ElScrollbar } from 'element-plus'
   import dayjs from 'dayjs'
-  import TypeIt from 'typeit'
+  import { ElScrollbar } from 'element-plus'
   import { uniqueId } from 'lodash-es'
+  import TypeIt from 'typeit'
+  import { useUserStore } from '/@/store/modules/user'
   import { getImageUrl } from '/@/utils/imageUrl'
 
   const userStore = useUserStore()

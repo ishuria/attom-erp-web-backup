@@ -1,6 +1,6 @@
 import { unplugin } from 'vite-plugin-unplugin'
 
-export function createUnPlugin(env: Record<string, string>) {
+export const createUnPlugin = (env: Record<string, string>) => {
   return unplugin({
     env,
     imports: [

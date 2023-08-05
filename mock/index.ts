@@ -10,6 +10,6 @@ Object.keys(modules).forEach((key) => {
   mockModules.push(...module.default)
 })
 
-export function setupProdMockServer() {
+export const setupProdMockServer = () => {
   createProdMockServer(mockModules)
 }

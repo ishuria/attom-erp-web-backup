@@ -28,7 +28,7 @@
         borderRadius: 10,
         borderColor: '#01ffff',
         borderWidth: 2,
-        color: function (params: any) {
+        color: (params: any) => {
           const colorList = [
             '#385afe',
             '#95de64',

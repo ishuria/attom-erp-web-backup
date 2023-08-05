@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts" setup>
+  // @ts-nocheck
   import { Moon, Sunny } from '@element-plus/icons-vue'
   import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -27,9 +28,7 @@
   const value = ref<boolean>(false)
 
   const _toggleDark = async (event: MouseEvent) => {
-    // @ts-ignore
     if (typeof document.startViewTransition === 'function') {
-      // 浏览器支持document.startViewTransition
       const x = event.clientX
       const y = event.clientY
       const endRadius = Math.hypot(
@@ -37,7 +36,6 @@
         Math.max(y, innerHeight - y)
       )
       let isDark: boolean
-      // @ts-ignore
       const transition = document.startViewTransition(() => {
         const root = document.documentElement
         isDark = root.classList.contains('dark')
@@ -64,7 +62,6 @@
         )
       })
     } else {
-      // 浏览器不支持document.startViewTransition
       const toggleDark = useToggle(handleUseDark())
       await toggleDark()
     }

@@ -58,7 +58,12 @@
   "vue.codeActions.savingTimeLimit": 100000,
   "editor.formatOnType": true,
   "cSpell.words": [
+    "axios",
+    "chuzhixin",
+    "ctitle",
+    "datetime",
     "echarts",
+    "gitee",
     "globle",
     "jsencrypt",
     "kangc",

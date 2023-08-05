@@ -14,7 +14,7 @@ import { port } from '/@/config/'
 const viteApp = 'VITE_' + 'APP_'
 const viteUser = 'VITE_' + 'USER_'
 
-export function createVitePlugin(env: Record<string, string>) {
+export const createVitePlugin = (env: Record<string, string>) => {
   const vitePlugins: (Plugin | Plugin[])[] = [vue()]
   const userName = env[`${viteApp}GITHUB_USER_NAME`]
   const secretKey = env[`${viteApp}SECRET_KEY`]
@@ -34,7 +34,7 @@ export function createVitePlugin(env: Record<string, string>) {
   return vitePlugins
 }
 
-export function createWatch(env: Record<string, string>) {
+export const createWatch = (env: Record<string, string>) => {
   //为了防止新同事忘记配置授权码而造成项目无法打包，请保留以下提示
   const userName = env[`${viteApp}GITHUB_USER_NAME`]
   const secretKey = env[`${viteApp}SECRET_KEY`]

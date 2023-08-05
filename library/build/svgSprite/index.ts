@@ -1,7 +1,7 @@
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
-export function createSvgIcons() {
+export const createSvgIcons = () => {
   return createSvgIconsPlugin({
     iconDirs: [path.resolve(process.cwd(), 'src/icon')],
     symbolId: 'vab-icon-[name]',
