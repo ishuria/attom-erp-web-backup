@@ -28,22 +28,6 @@
   }
 }
 
-.vue-shop-vite-box {
-  transition: var(--el-transition);
-
-  * {
-    transition: var(--el-transition);
-  }
-
-  [class*='-container'] {
-    transition: none;
-
-    * {
-      transition: none;
-    }
-  }
-}
-
 html {
   body {
     position: relative;
@@ -63,25 +47,31 @@ html {
 
       @include base-scrollbar;
 
-      .vab-main {
-        transition: var(--el-transition);
-
-        .vab-app-main {
-          width: 100%;
-          padding: var(--el-padding);
-          overflow: hidden;
+      .vue-shop-vite-box {
+        * {
           transition: var(--el-transition);
+        }
 
-          > section {
-            transition: var(--el-transition);
+        [class*='-container'] {
+          * {
+            transition: none;
+          }
+        }
 
-            > [class*='-container'] {
-              min-height: var(--el-keep-alive-height);
-              padding: var(--el-padding);
-              background: var(--el-color-white);
-              border: 1px solid var(--el-border-color);
-              border-radius: var(--el-border-radius-base);
-              transition: var(--el-transition);
+        .vab-main {
+          .vab-app-main {
+            width: 100%;
+            padding: var(--el-padding);
+            overflow: hidden;
+
+            > section {
+              > [class*='-container'] {
+                min-height: var(--el-keep-alive-height);
+                padding: var(--el-padding);
+                background: var(--el-color-white);
+                border: 1px solid var(--el-border-color);
+                border-radius: var(--el-border-radius-base);
+              }
             }
           }
         }
@@ -170,8 +160,6 @@ html {
 
     /* vab-dropdown下拉动画 */
     .vab-dropdown {
-      transition: var(--el-transition);
-
       &-active {
         transform: rotateZ(180deg);
       }
@@ -483,7 +471,6 @@ html {
       margin-bottom: var(--el-margin);
       border: 1px solid var(--el-border-color);
       border-radius: var(--el-border-radius-base);
-      transition: var(--el-transition);
 
       &__header {
         position: relative;
