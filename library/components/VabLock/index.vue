@@ -104,7 +104,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: $base-z-index;
+    z-index: var(--el-z-index);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -120,11 +120,11 @@
       right: 0;
       bottom: 0;
       left: 0;
-      z-index: $base-z-index - 1;
+      z-index: calc(var(--el-z-index) - 1);
     }
 
     &-content {
-      z-index: $base-z-index;
+      z-index: var(--el-z-index);
       width: 400px;
       padding: 40px 55px 40px 55px;
       color: var(--el-color-grey);

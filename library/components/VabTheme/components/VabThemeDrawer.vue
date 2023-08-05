@@ -390,7 +390,7 @@
       right: 0;
       bottom: 0;
       left: 0;
-      z-index: $base-z-index + 1;
+      z-index: calc(var(--el-z-index) + 1);
       padding: calc(var(--el-padding) / 2);
       background: var(--el-color-white);
       border-top: 1px solid var(--el-border-color);

@@ -104,7 +104,7 @@
     position: fixed;
     top: 50%;
     right: 0;
-    z-index: $base-z-index - 2;
+    z-index: calc(var(--el-z-index) - 2);
     padding: 10px 0 0 0;
     margin: 0;
     text-align: center;

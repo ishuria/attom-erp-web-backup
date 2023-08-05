@@ -69,7 +69,7 @@
     top: 0;
     bottom: 0;
     left: 0;
-    z-index: $base-z-index + 1;
+    z-index: calc(var(--el-z-index) + 1);
     width: var(--el-left-menu-width);
     height: 100vh;
     overflow: hidden;

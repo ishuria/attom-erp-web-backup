@@ -110,7 +110,7 @@
         position: fixed;
         top: 0;
         right: 0;
-        z-index: $base-z-index - 1;
+        z-index: calc(var(--el-z-index) - 1);
         width: 100%;
       }
 
