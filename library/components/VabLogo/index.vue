@@ -31,9 +31,9 @@
 <style lang="scss" scoped>
   @mixin container {
     position: relative;
-    height: $base-header-height;
+    height: var(--el-header-height);
     overflow: hidden;
-    line-height: $base-header-height;
+    line-height: var(--el-header-height);
     background: transparent;
   }
 
@@ -41,7 +41,7 @@
     display: inline-block;
     width: 32px;
     height: 32px;
-    color: $base-title-color;
+    color: var(--el-title-color);
     vertical-align: middle;
     fill: currentColor;
   }
@@ -52,7 +52,7 @@
     overflow: hidden;
     font-size: 20px;
     line-height: 55px;
-    color: $base-title-color;
+    color: var(--el-title-color);
     text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: middle;
@@ -79,8 +79,8 @@
     &-comprehensive {
       @include container;
 
-      height: $base-logo-height;
-      line-height: $base-logo-height;
+      height: var(--el-logo-height);
+      line-height: var(--el-logo-height);
       text-align: center;
 
       .logo {
@@ -92,7 +92,7 @@
 
       .title {
         @include title;
-        max-width: $base-left-menu-width - 60;
+        max-width: calc(var(--el-left-menu-width) - 60);
       }
     }
 
@@ -104,7 +104,7 @@
         top: 0;
         display: block;
         width: var(--el-left-menu-width-min);
-        height: $base-logo-height;
+        height: var(--el-logo-height);
         margin: 0;
         background: var(--el-menu-background-color);
       }

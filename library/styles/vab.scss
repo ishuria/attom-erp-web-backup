@@ -53,7 +53,7 @@ html {
     overflow: hidden;
     font-family: 'PingFang SC', Arial, 'Microsoft YaHei', sans-serif;
     font-size: var(--el-font-size-default);
-    color: $base-color-black;
+    color: var(--el-color-black);
     background: var(--el-background-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

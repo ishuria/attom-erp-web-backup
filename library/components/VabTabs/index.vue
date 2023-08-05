@@ -311,7 +311,7 @@
     align-content: center;
     align-items: center;
     justify-content: space-between;
-    min-height: $base-tabs-height;
+    min-height: var(--el-tabs-height);
     padding-right: var(--el-padding);
     padding-left: var(--el-padding);
     user-select: none;
@@ -327,7 +327,7 @@
       width: calc(100% - 35px);
 
       &-card {
-        height: $base-tag-item-height;
+        height: var(--el-tag-item-height);
 
         :deep() {
           .el-tabs__nav-next,
@@ -335,7 +335,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: $base-tag-item-height;
+            height: var(--el-tag-item-height);
           }
 
           .el-tabs__header {
@@ -347,11 +347,11 @@
 
             .el-tabs__item {
               box-sizing: border-box;
-              height: $base-tag-item-height;
+              height: var(--el-tag-item-height);
               padding-right: var(--el-padding) !important;
               padding-left: var(--el-padding) !important;
               margin-right: 5px;
-              line-height: $base-tag-item-height;
+              line-height: var(--el-tag-item-height);
               border: 1px solid var(--el-border-color) !important;
               border-radius: var(--el-border-radius-base) !important;
 
@@ -369,7 +369,7 @@
       }
 
       &-smart {
-        height: $base-tag-item-height;
+        height: var(--el-tag-item-height);
 
         :deep() {
           .el-tabs__nav-next,
@@ -377,7 +377,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: $base-tag-item-height;
+            height: var(--el-tag-item-height);
           }
 
           .el-tabs__header {
@@ -388,11 +388,11 @@
             }
 
             .el-tabs__item {
-              height: $base-tag-item-height;
+              height: var(--el-tag-item-height);
               padding-right: var(--el-padding) !important;
               padding-left: var(--el-padding) !important;
               margin-right: 5px;
-              line-height: $base-tag-item-height;
+              line-height: var(--el-tag-item-height);
               border: 0;
               outline: none;
 
@@ -432,7 +432,7 @@
       }
 
       &-smooth {
-        height: $base-tag-item-height;
+        height: var(--el-tag-item-height);
 
         :deep() {
           .el-tabs__nav {
@@ -444,7 +444,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: $base-tag-item-height;
+            height: var(--el-tag-item-height);
           }
 
           .el-tabs__header {
@@ -456,7 +456,7 @@
 
             .el-tabs__item {
               display: flex;
-              height: $base-tag-item-height + 4;
+              height: calc(var(--el-tag-item-height) + 4px);
               padding-right: var(--el-margin) !important;
               padding-left: var(--el-margin) !important;
               margin-right: -18px;

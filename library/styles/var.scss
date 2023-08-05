@@ -73,4 +73,10 @@
 
   --el-mask-color: rgba(255, 255, 255, 0.6);
   --el-z-index: #{$base-z-index};
+  --el-header-height: #{$base-header-height};
+  --el-tag-item-height: #{$base-tag-item-height};
+  --el-logo-height: #{$base-logo-height};
+  --el-title-color: #{$base-title-color};
+  --el-input-height: #{$base-input-height};
+  --el-right-content-width-min: #{$base-right-content-width-min};
 }

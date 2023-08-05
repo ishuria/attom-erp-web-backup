@@ -353,7 +353,7 @@
         }
 
         .el-tabs__nav {
-          height: calc(100vh - #{$base-logo-height});
+          height: calc(100vh - var(--el-logo-height));
           background: var(--el-menu-background-color);
         }
 

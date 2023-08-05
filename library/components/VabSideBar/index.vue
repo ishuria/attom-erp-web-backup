@@ -77,8 +77,8 @@
     transition: var(--el-transition);
 
     &.side-bar-common {
-      top: $base-header-height;
-      height: calc(100vh - #{$base-header-height});
+      top: var(--el-header-height);
+      height: calc(100vh - var(--el-header-height));
     }
 
     &.is-collapse {

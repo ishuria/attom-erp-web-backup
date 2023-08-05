@@ -34,9 +34,9 @@
 
 <style lang="scss" scoped>
   .vab-breadcrumb {
-    height: $base-nav-height;
+    height: var(--el-nav-height);
     font-size: var(--el-font-size-default);
-    line-height: $base-nav-height;
+    line-height: var(--el-nav-height);
 
     :deep() {
       .el-breadcrumb__item {

@@ -69,7 +69,7 @@
 <style lang="scss" scoped>
   .vab-nav {
     position: relative;
-    height: $base-nav-height;
+    height: var(--el-nav-height);
     padding-right: var(--el-padding);
     padding-left: var(--el-padding);
     overflow: hidden;
@@ -81,7 +81,7 @@
       display: flex;
       align-items: center;
       justify-items: center;
-      height: $base-nav-height;
+      height: var(--el-nav-height);
 
       :deep() {
         .fold-unfold {
@@ -130,7 +130,7 @@
       align-content: center;
       align-items: center;
       justify-content: flex-end;
-      height: $base-nav-height;
+      height: var(--el-nav-height);
       transition: var(--el-transition);
 
       :deep() {

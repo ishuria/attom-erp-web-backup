@@ -97,11 +97,11 @@
       }
 
       &.fixed {
-        padding-top: $base-nav-height + $base-tabs-height;
+        padding-top: calc(var(--el-nav-height) + var(--el-tabs-height));
       }
 
       &.fixed.no-tabs-bar {
-        padding-top: $base-nav-height;
+        padding-top: var(--el-nav-height);
       }
     }
 
@@ -124,7 +124,7 @@
           margin-left: var(--el-left-menu-width-min);
 
           .fixed-header {
-            width: $base-right-content-width-min;
+            width: var(--el-right-content-width-min);
           }
         }
 

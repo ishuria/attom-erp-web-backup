@@ -11,7 +11,7 @@
     align-content: center;
     align-items: center;
     justify-content: flex-start;
-    min-height: $base-input-height;
+    min-height: var(-el-input-height);
     margin: 0 0 calc(var(--el-margin) / 2) 0;
     .el-form-item__content {
       display: flex;

@@ -57,7 +57,7 @@
     display: flex;
     align-items: center;
     justify-items: flex-end;
-    height: $base-header-height;
+    height: var(--el-header-height);
     background: var(--el-menu-background-color);
 
     .vab-main {
@@ -67,7 +67,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: $base-header-height;
+        height: var(--el-header-height);
 
         :deep() {
           .logo-container {
