@@ -1,11 +1,6 @@
 <template>
   <div class="node-panel">
-    <div
-      v-for="item in nodeList"
-      :key="item.text"
-      class="node-item"
-      @mousedown="$_dragNode(item)"
-    >
+    <div v-for="item in nodeList" :key="item.text" class="node-item" @mousedown="$_dragNode(item)">
       <div class="node-item-icon" :class="item.class">
         <vab-icon :icon="item.icon" />
       </div>

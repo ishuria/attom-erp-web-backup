@@ -14,11 +14,7 @@
             {{ translate('布局') }}
           </template>
           <el-radio-group v-model="theme.layout" class="vab-shop-layout">
-            <el-radio-button
-              v-for="item in layoutList"
-              :key="item"
-              :label="item"
-            >
+            <el-radio-button v-for="item in layoutList" :key="item" :label="item">
               <template #default>
                 <vab-icon :icon="item" is-custom-svg />
               </template>
@@ -27,11 +23,7 @@
         </el-form-item>
         <el-form-item :label="translate('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
-            <el-radio-button
-              v-for="item in themeNameList"
-              :key="item.label"
-              :label="item.label"
-            >
+            <el-radio-button v-for="item in themeNameList" :key="item.label" :label="item.label">
               <template #default>{{ translate(item.title) }}</template>
             </el-radio-button>
           </el-radio-group>
@@ -42,10 +34,7 @@
         >
           <vab-dark />
         </el-form-item>
-        <el-form-item
-          v-if="'technology' != theme.themeName"
-          :label="translate('配色')"
-        >
+        <el-form-item v-if="'technology' != theme.themeName" :label="translate('配色')">
           <vab-color-picker />
         </el-form-item>
         <el-form-item
@@ -54,17 +43,9 @@
         >
           <el-switch v-model="theme.isFollow" @change="updateIsFollow" />
         </el-form-item>
-        <el-form-item
-          v-if="theme.layout !== 'horizontal'"
-          :label="translate('菜单宽度')"
-        >
+        <el-form-item v-if="theme.layout !== 'horizontal'" :label="translate('菜单宽度')">
           <el-select v-model="theme.menuWidth" @change="updateMenuWidth">
-            <el-option
-              v-for="item in menuWidthList"
-              :key="item"
-              :label="item"
-              :value="item"
-            />
+            <el-option v-for="item in menuWidthList" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <el-form-item :label="translate('标签')">
@@ -109,12 +90,7 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="translate('圆角')">
-          <el-input-number
-            v-model="theme.radius"
-            :max="26"
-            :min="3"
-            @change="handleRadius"
-          />
+          <el-input-number v-model="theme.radius" :max="26" :min="3" @change="handleRadius" />
         </el-form-item>
         <el-form-item :label="translate('头部固定')">
           <el-switch v-model="theme.fixedHeader" />
@@ -188,12 +164,7 @@
   const { saveTheme, resetTheme, updateTheme } = settingsStore
   const drawerVisible = ref<boolean>(false)
 
-  const layoutList = ref<any>([
-    'column',
-    'vertical',
-    'horizontal',
-    'comprehensive',
-  ])
+  const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
   const tabsBarStyleList = ref<any>([
     { label: '卡片', value: 'card' },
     { label: '灵动', value: 'smart' },
@@ -232,11 +203,7 @@
 
   const updateIsFollow = (value: any) => {
     const el = ref<any>(null)
-    if (value)
-      useCssVar('--el-menu-background-color', el).value = lightenColor(
-        color.value,
-        15
-      )
+    if (value) useCssVar('--el-menu-background-color', el).value = lightenColor(color.value, 15)
     else useCssVar('--el-menu-background-color', el).value = '#282c34'
   }
 
@@ -372,8 +339,7 @@
                     display: none;
                   }
 
-                  .el-radio-button__original-radio:checked
-                    + .el-radio-button__inner {
+                  .el-radio-button__original-radio:checked + .el-radio-button__inner {
                     background: transparent;
 
                     .vab-icon {

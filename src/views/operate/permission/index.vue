@@ -23,9 +23,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="token续期（每隔5s可刷新token）">
-        <el-button type="primary" @click="handleRefreshToken">
-          刷新token
-        </el-button>
+        <el-button type="primary" @click="handleRefreshToken">刷新token</el-button>
       </el-form-item>
       <el-form-item label="当前账号">
         <el-descriptions border :column="3" direction="vertical">
@@ -44,70 +42,37 @@
         </el-descriptions>
       </el-form-item>
       <el-form-item label="按钮级角色">
-        <el-button v-permissions="['Admin']" type="primary">
-          拥有["Admin"]的按钮
-        </el-button>
-        <el-button
-          v-permissions="{ role: ['Admin'], mode: 'except' }"
-          type="danger"
-        >
+        <el-button v-permissions="['Admin']" type="primary">拥有["Admin"]的按钮</el-button>
+        <el-button v-permissions="{ role: ['Admin'], mode: 'except' }" type="danger">
           未拥有["Admin"]的按钮
         </el-button>
-        <el-button v-permissions="['Editor']" type="primary">
-          拥有["Editor"]的按钮
-        </el-button>
-        <el-button
-          v-permissions="{ role: ['Editor'], mode: 'except' }"
-          type="danger"
-        >
+        <el-button v-permissions="['Editor']" type="primary">拥有["Editor"]的按钮</el-button>
+        <el-button v-permissions="{ role: ['Editor'], mode: 'except' }" type="danger">
           未拥有["Editor"]的按钮
         </el-button>
-        <el-button
-          v-permissions="{ role: ['Admin', 'Editor'], mode: 'allOf' }"
-          type="primary"
-        >
+        <el-button v-permissions="{ role: ['Admin', 'Editor'], mode: 'allOf' }" type="primary">
           同时拥有["Admin","Editor"]的按钮
         </el-button>
-        <el-button v-permissions="['Test']" type="primary">
-          拥有["Test"]的按钮
-        </el-button>
+        <el-button v-permissions="['Test']" type="primary">拥有["Test"]的按钮</el-button>
       </el-form-item>
       <!--  注意其中roles-代表组件name，这样可以区分到具体页面 -->
       <el-form-item label="按钮级权限点">
-        <el-button
-          v-permissions="{ permission: ['read:system'] }"
-          type="primary"
-        >
+        <el-button v-permissions="{ permission: ['read:system'] }" type="primary">
           拥有["read:system"]的按钮
         </el-button>
-        <el-button
-          v-permissions="{ permission: ['read:system'], mode: 'except' }"
-          type="danger"
-        >
+        <el-button v-permissions="{ permission: ['read:system'], mode: 'except' }" type="danger">
           未拥有["'read:system'"]的按钮
         </el-button>
-        <el-button
-          v-permissions="{ permission: ['write:system'] }"
-          type="primary"
-        >
+        <el-button v-permissions="{ permission: ['write:system'] }" type="primary">
           拥有["write:system"]的按钮
         </el-button>
-        <el-button
-          v-permissions="{ permission: ['write:system'], mode: 'except' }"
-          type="danger"
-        >
+        <el-button v-permissions="{ permission: ['write:system'], mode: 'except' }" type="danger">
           未拥有["write:system"]的按钮
         </el-button>
-        <el-button
-          v-permissions="{ permission: ['delete:system'] }"
-          type="primary"
-        >
+        <el-button v-permissions="{ permission: ['delete:system'] }" type="primary">
           拥有["delete:system"]的按钮
         </el-button>
-        <el-button
-          v-permissions="{ permission: ['delete:system'], mode: 'except' }"
-          type="danger"
-        >
+        <el-button v-permissions="{ permission: ['delete:system'], mode: 'except' }" type="danger">
           未拥有["delete:system"]的按钮
         </el-button>
       </el-form-item>
@@ -145,12 +110,7 @@
 
 <script lang="ts" setup>
   import { expireToken } from '/@/api/refreshToken'
-  import {
-    authentication,
-    loginInterception,
-    rolesControl,
-    tokenTableName,
-  } from '/@/config'
+  import { authentication, loginInterception, rolesControl, tokenTableName } from '/@/config'
   import { useAclStore } from '/@/store/modules/acl'
   import { useUserStore } from '/@/store/modules/user'
   import { uuid } from '/@/utils'

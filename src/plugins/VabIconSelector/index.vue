@@ -8,12 +8,7 @@
               <el-input v-model="queryForm.title" clearable />
             </el-form-item>
             <el-form-item label-width="0">
-              <el-button
-                :icon="Search"
-                native-type="submit"
-                type="primary"
-                @click="queryData"
-              />
+              <el-button :icon="Search" native-type="submit" type="primary" @click="queryData" />
             </el-form-item>
           </el-form>
         </vab-query-form-top-panel>

@@ -6,12 +6,8 @@
       <el-button plain @click="$_zoomReset">大小适应</el-button>
       <el-button plain @click="$_translateRest">定位还原</el-button>
       <el-button plain @click="$_reset">还原(大小&定位)</el-button>
-      <el-button :disabled="undoDisable" plain @click="$_undo">
-        上一步(ctrl+z)
-      </el-button>
-      <el-button :disabled="redoDisable" plain @click="$_redo">
-        下一步(ctrl+y)
-      </el-button>
+      <el-button :disabled="undoDisable" plain @click="$_undo">上一步(ctrl+z)</el-button>
+      <el-button :disabled="redoDisable" plain @click="$_redo">下一步(ctrl+y)</el-button>
       <el-button plain @click="$_download">下载图片</el-button>
       <el-button plain @click="$_catData">查看数据</el-button>
     </el-button-group>
@@ -37,13 +33,10 @@
       }
     },
     mounted() {
-      this.$props.lf.on(
-        'history:change',
-        ({ data: { undoAble, redoAble } }) => {
-          this.$data.undoDisable = !undoAble
-          this.$data.redoDisable = !redoAble
-        }
-      )
+      this.$props.lf.on('history:change', ({ data: { undoAble, redoAble } }) => {
+        this.$data.undoDisable = !undoAble
+        this.$data.redoDisable = !redoAble
+      })
     },
     methods: {
       $_zoomIn() {

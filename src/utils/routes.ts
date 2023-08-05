@@ -17,13 +17,11 @@ export function convertRouter(asyncRoutes: VabRouteRecordRaw[]) {
         route.component = () => import('/@vab/layouts/index.vue')
       } else {
         const index = route.component.indexOf('views')
-        const path =
-          index > 0 ? route.component.slice(index) : `${route.component}`
+        const path = index > 0 ? route.component.slice(index) : `${route.component}`
         route.component = routeAllPathToCompMap[`../${path}`]
       }
     }
-    if (route.children && route.children.length)
-      route.children = convertRouter(route.children)
+    if (route.children && route.children.length) route.children = convertRouter(route.children)
     if (route.children && route.children.length === 0) delete route.children
     return route
   })
@@ -36,26 +34,17 @@ export function convertRouter(asyncRoutes: VabRouteRecordRaw[]) {
  * @param baseUrl 基础路由
  * @returns {[]}
  */
-export function filterRoutes(
-  routes: VabRouteRecordRaw[],
-  rolesControl: boolean,
-  baseUrl = '/'
-) {
+export function filterRoutes(routes: VabRouteRecordRaw[], rolesControl: boolean, baseUrl = '/') {
   return routes
     .filter((route: VabRouteRecordRaw) =>
-      rolesControl && route.meta && route.meta.guard
-        ? hasPermission(route.meta.guard)
-        : true
+      rolesControl && route.meta && route.meta.guard ? hasPermission(route.meta.guard) : true
     )
     .map((route: VabRouteRecordRaw) => {
       route = { ...route }
       if (route.path !== '*' && !isExternal(route.path)) {
         if (baseUrl.slice(-1) === '/')
-          route.path =
-            baseUrl + (route.path[0] === '/' ? route.path.slice(1) : route.path)
-        else
-          route.path =
-            baseUrl + (route.path[0] === '/' ? route.path : `/${route.path}`)
+          route.path = baseUrl + (route.path[0] === '/' ? route.path.slice(1) : route.path)
+        else route.path = baseUrl + (route.path[0] === '/' ? route.path : `/${route.path}`)
       }
       if (route.children && route.children.length > 0) {
         route.children = filterRoutes(route.children, rolesControl, route.path)
@@ -85,10 +74,7 @@ export function filterRoutes(
  * @param path 路径
  * @returns {*} matched
  */
-export function handleMatched(
-  routes: VabRouteRecordRaw[],
-  path: string
-): VabRouteRecordRaw[] {
+export function handleMatched(routes: VabRouteRecordRaw[], path: string): VabRouteRecordRaw[] {
   return routes
     .filter((route) => route.childrenPathList.indexOf(path) + 1)
     .flatMap((route) =>
@@ -104,8 +90,7 @@ export function handleTabs(tag: VabRoute) {
   let parentIcon = null
   if (tag.matched)
     for (let i = tag.matched.length - 2; i >= 0; i--)
-      if (!parentIcon && tag.matched[i].meta.icon)
-        parentIcon = tag.matched[i].meta.icon
+      if (!parentIcon && tag.matched[i].meta.icon) parentIcon = tag.matched[i].meta.icon
   if (!parentIcon) parentIcon = 'menu-line'
   const path = handleActivePath(tag, true)
   if (tag.name && tag.meta && tag.meta.tabHidden !== true) {
@@ -128,9 +113,7 @@ export function handleTabs(tag: VabRoute) {
  */
 export function handleActivePath(route: VabRoute, isTab = false) {
   const { meta, path } = route
-  const rawPath = route.matched
-    ? route.matched[route.matched.length - 1].path
-    : path
+  const rawPath = route.matched ? route.matched[route.matched.length - 1].path : path
   const fullPath =
     route.query && Object.keys(route.query).length
       ? `${route.path}?${stringify(route.query)}`

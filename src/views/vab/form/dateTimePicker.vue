@@ -4,11 +4,7 @@
       <template #header>
         <span>日期和时间点</span>
       </template>
-      <el-date-picker
-        v-model="value1"
-        placeholder="选择日期时间"
-        type="datetime"
-      />
+      <el-date-picker v-model="value1" placeholder="选择日期时间" type="datetime" />
     </vab-card>
     <vab-card>
       <template #header>
@@ -42,9 +38,6 @@
     name: 'DateTimePicker',
   })
   const value1 = ref<string>('')
-  const value2 = ref<any>([
-    new Date(2000, 10, 10, 10, 10),
-    new Date(2000, 10, 11, 10, 10),
-  ])
+  const value2 = ref<any>([new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)])
   const value3 = ref<string>('')
 </script>

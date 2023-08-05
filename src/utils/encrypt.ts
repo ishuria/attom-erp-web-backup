@@ -16,9 +16,7 @@ export async function encryptedData(data: string | object) {
   } = await getPublicKey()
   if (typeof data === 'object') data = JSON.stringify(data)
   const encrypt = new JSEncrypt()
-  encrypt.setPublicKey(
-    `-----BEGIN PUBLIC KEY-----${publicKey}-----END PUBLIC KEY-----`
-  )
+  encrypt.setPublicKey(`-----BEGIN PUBLIC KEY-----${publicKey}-----END PUBLIC KEY-----`)
   return encrypt.encrypt(data)
 }
 
@@ -29,9 +27,7 @@ export async function encryptedData(data: string | object) {
  */
 export function decryptedData(data: string) {
   const decrypt = new JSEncrypt()
-  decrypt.setPrivateKey(
-    `-----BEGIN RSA PRIVATE KEY-----${privateKey}-----END RSA PRIVATE KEY-----`
-  )
+  decrypt.setPrivateKey(`-----BEGIN RSA PRIVATE KEY-----${privateKey}-----END RSA PRIVATE KEY-----`)
   const decrypted = decrypt.decrypt(data)
   return isJson(decrypted) ? JSON.parse(decrypted) : decrypted
 }

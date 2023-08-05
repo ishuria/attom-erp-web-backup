@@ -6,8 +6,7 @@ export default [
     url: '/expireToken',
     method: 'get',
     response(request) {
-      const authorization =
-        request.headers.authorization || request.headers.Authorization
+      const authorization = request.headers.authorization || request.headers.Authorization
       const arr = authorization.split('-')
       const tokenTime = parseInt(arr[arr.length - 1])
 
@@ -27,8 +26,7 @@ export default [
     url: '/refreshToken',
     method: 'get',
     response(request) {
-      const authorization =
-        request.headers.authorization || request.headers.Authorization
+      const authorization = request.headers.authorization || request.headers.Authorization
       let token = ''
       if (authorization.includes('admin-token'))
         token = `admin-token-${Random.guid()}-${new Date().getTime()}`

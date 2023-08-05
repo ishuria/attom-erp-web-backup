@@ -18,13 +18,7 @@ for (let i = 0; i < count; i++) {
     account: '@account(1, 2)',
     'type|1': ['操作日志', '数据库日志', '系统日志'],
     'account|1': ['admin', 'editor', 'test'],
-    'executeResult|1': [
-      '登录成功',
-      '登录成功',
-      '登录失败',
-      '接口异常',
-      'dos攻击',
-    ],
+    'executeResult|1': ['登录成功', '登录成功', '登录失败', '接口异常', 'dos攻击'],
     ip: '@ip',
     datetime: '@datetime',
   })
@@ -36,12 +30,9 @@ export default [
     method: 'get',
     response: ({ query }: any) => {
       const { account, pageNo = 1, pageSize = 20 } = query
-      const mockList = List.filter(
-        (item: any) => !(account && item.account.indexOf(account) < 0)
-      )
+      const mockList = List.filter((item: any) => !(account && item.account.indexOf(account) < 0))
       const list = mockList.filter(
-        (item: any, index: any) =>
-          index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+        (item: any, index: any) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
       )
       return {
         code: 200,

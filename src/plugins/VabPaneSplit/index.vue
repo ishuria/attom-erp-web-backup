@@ -49,12 +49,8 @@
     two.value?.classList.add('forbid-select')
 
     const initialPos = props.horizontal ? mde.clientY : mde?.clientX
-    const sizeOne = props.horizontal
-      ? one?.value?.offsetHeight
-      : one?.value?.offsetWidth
-    const sizeTwo = props.horizontal
-      ? two?.value?.offsetHeight
-      : two?.value?.offsetWidth
+    const sizeOne = props.horizontal ? one?.value?.offsetHeight : one?.value?.offsetWidth
+    const sizeTwo = props.horizontal ? two?.value?.offsetHeight : two?.value?.offsetWidth
 
     function handleMouseMove(mme: MouseEvent) {
       const pos = props.horizontal ? mme.clientY : mme?.clientX

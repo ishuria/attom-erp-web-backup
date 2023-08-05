@@ -45,9 +45,7 @@
 
   const updateKeepAliveNameList = (refreshRouteName = null) => {
     keepAliveNameList.value = visitedRoutes.value
-      .filter(
-        (item) => !item.meta.noKeepAlive && item.name !== refreshRouteName
-      )
+      .filter((item) => !item.meta.noKeepAlive && item.name !== refreshRouteName)
       .flatMap((item) => item.name)
   }
 

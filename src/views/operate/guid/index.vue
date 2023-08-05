@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import intro from 'intro.js'
   import 'intro.js/minified/introjs.min.css'
 
@@ -157,8 +157,7 @@
   }
 
   .introjs-tooltiptext {
-    padding: calc(var(--el-padding) / 2) var(--el-padding) var(--el-padding)
-      var(--el-padding);
+    padding: calc(var(--el-padding) / 2) var(--el-padding) var(--el-padding) var(--el-padding);
   }
 
   .introjs-tooltip-title {

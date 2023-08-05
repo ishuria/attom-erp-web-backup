@@ -71,9 +71,7 @@ export function formatTime(time: any, option: any) {
   if (option) {
     return parseTime(time, option)
   } else {
-    return `${
-      d.getMonth() + 1
-    }月${d.getDate()}日${d.getHours()}时${d.getMinutes()}分`
+    return `${d.getMonth() + 1}月${d.getDate()}日${d.getHours()}时${d.getMinutes()}分`
   }
 }
 
@@ -102,12 +100,8 @@ export function paramObj(url: string) {
  * @returns {*}
  */
 export function translateDataToTree(data: any[]) {
-  const parent = data.filter(
-    (value) => value.parentId === 'undefined' || value.parentId === null
-  )
-  const children = data.filter(
-    (value) => value.parentId !== 'undefined' && value.parentId !== null
-  )
+  const parent = data.filter((value) => value.parentId === 'undefined' || value.parentId === null)
+  const children = data.filter((value) => value.parentId !== 'undefined' && value.parentId !== null)
   const translator = (parent: any[], children: any[]) => {
     parent.forEach((_parent: any) => {
       children.forEach((current: any, index: number) => {

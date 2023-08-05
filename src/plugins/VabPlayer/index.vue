@@ -46,8 +46,6 @@
   })
 
   onBeforeMount(() => {
-    player.value &&
-      typeof player.value.destroy === 'function' &&
-      player.value.destroy()
+    player.value && typeof player.value.destroy === 'function' && player.value.destroy()
   })
 </script>

@@ -5,16 +5,10 @@
         <span>动态标题</span>
       </template>
       <el-space wrap>
-        <el-button
-          type="primary"
-          @click="handleMeta('DynamicMeta', { title: 'vab-demo' })"
-        >
+        <el-button type="primary" @click="handleMeta('DynamicMeta', { title: 'vab-demo' })">
           标题变更为 vab-demo
         </el-button>
-        <el-button
-          type="warning"
-          @click="handleMeta('DynamicMeta', { title: '动态Meta' })"
-        >
+        <el-button type="warning" @click="handleMeta('DynamicMeta', { title: '动态Meta' })">
           还原为默认标题
         </el-button>
       </el-space>
@@ -25,20 +19,12 @@
       </template>
       <el-space wrap>
         <el-badge :hidden="hidden" style="margin-right: 10px" :value="badge">
-          <el-button type="primary" @click="handleBadge('DynamicMeta')">
-            徽章+ 1
-          </el-button>
+          <el-button type="primary" @click="handleBadge('DynamicMeta')">徽章+ 1</el-button>
         </el-badge>
-        <el-button
-          type="danger"
-          @click="resetBadge('DynamicMeta', { badge: '0' })"
-        >
+        <el-button type="danger" @click="resetBadge('DynamicMeta', { badge: '0' })">
           徽章清零
         </el-button>
-        <el-button
-          type="danger"
-          @click="removeBadge('DynamicMeta', { badge: false })"
-        >
+        <el-button type="danger" @click="removeBadge('DynamicMeta', { badge: false })">
           移除徽章
         </el-button>
       </el-space>
@@ -47,11 +33,7 @@
       <template #header>
         <span>动态图标</span>
       </template>
-      <el-popover
-        popper-class="icon-selector-popper"
-        trigger="hover"
-        :width="305"
-      >
+      <el-popover popper-class="icon-selector-popper" trigger="hover" :width="305">
         <template #reference>
           <el-button>
             <vab-icon :icon="icon" />
@@ -70,10 +52,7 @@
         <el-button type="primary" @click="handleActiveMenu('/operate/tabs')">
           高亮菜单至多标签
         </el-button>
-        <el-button
-          type="warning"
-          @click="handleActiveMenu('/operate/dynamicMeta')"
-        >
+        <el-button type="warning" @click="handleActiveMenu('/operate/dynamicMeta')">
           还原默认高亮
         </el-button>
       </el-space>

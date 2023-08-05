@@ -57,10 +57,7 @@
                   <span></span>
                 </span>
               </template>
-              <div
-                class="vab-info-card"
-                :class="{ ['vab-info-card-' + item.cardType]: true }"
-              >
+              <div class="vab-info-card" :class="{ ['vab-info-card-' + item.cardType]: true }">
                 {{ item.content }}
               </div>
             </el-timeline-item>

@@ -62,9 +62,7 @@
       <div class="statistic-card">
         <el-statistic title="今日新增交易" :value="72000">
           <template #title>
-            <div style="display: inline-flex; align-items: center">
-              今日新增交易
-            </div>
+            <div style="display: inline-flex; align-items: center">今日新增交易</div>
           </template>
         </el-statistic>
         <div class="statistic-footer">
@@ -89,12 +87,7 @@
 </template>
 
 <script lang="ts" setup>
-  import {
-    ArrowRight,
-    CaretBottom,
-    CaretTop,
-    Warning,
-  } from '@element-plus/icons-vue'
+  import { ArrowRight, CaretBottom, CaretTop, Warning } from '@element-plus/icons-vue'
 </script>
 
 <style scoped>

@@ -1,12 +1,7 @@
 <template>
   <div class="menu1-1-1-1-container">
     <el-alert :closable="false" title="路由1.1.1.1" type="success">
-      <el-input
-        v-model="value"
-        clearable
-        style="width: 250px"
-        type="textarea"
-      />
+      <el-input v-model="value" clearable style="width: 250px" type="textarea" />
     </el-alert>
     <el-button type="primary" @click="handleAdd">模拟填充数据</el-button>
     <el-button type="primary" @click="handleRefresh">刷新当前标签页</el-button>

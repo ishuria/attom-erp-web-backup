@@ -48,10 +48,7 @@
         </tr>
       </table>
       <div class="version-information-rely">
-        <a
-          href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
-          target="_blank"
-        >
+        <a href="https://vue-admin-beautiful.com/authorization/shop-vite.html" target="_blank">
           <el-button type="primary">
             <vab-icon icon="vip-diamond-line" />
             <span>Vue Shop Vite ￥1399</span>

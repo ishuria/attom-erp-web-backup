@@ -68,8 +68,7 @@ Print.prototype = {
     }
 
     for (let k2 = 0; k2 < textareas.length; k2++) {
-      if (textareas[k2].type == 'textarea')
-        textareas[k2].innerHTML = textareas[k2].value
+      if (textareas[k2].type == 'textarea') textareas[k2].innerHTML = textareas[k2].value
     }
 
     for (let k3 = 0; k3 < selects.length; k3++) {
@@ -77,8 +76,7 @@ Print.prototype = {
         const child: any = selects[k3].children
         for (const i in child) {
           if (child[i].tagName == 'OPTION') {
-            if (child[i].selected == true)
-              child[i].setAttribute('selected', 'selected')
+            if (child[i].selected == true) child[i].setAttribute('selected', 'selected')
             else child[i].removeAttribute('selected')
           }
         }
@@ -92,10 +90,7 @@ Print.prototype = {
     const iframe: any = document.createElement('iframe')
     const f: any = document.body.appendChild(iframe)
     iframe.id = 'myIframe'
-    iframe.setAttribute(
-      'style',
-      'position:absolute;width:0;height:0;top:-10px;left:-10px;'
-    )
+    iframe.setAttribute('style', 'position:absolute;width:0;height:0;top:-10px;left:-10px;')
     const w: any = f.contentWindow || f.contentDocument
     const doc: any = f.contentDocument || f.contentWindow.document
     doc.open()
@@ -120,8 +115,7 @@ Print.prototype = {
       setTimeout(function () {
         frameWindow.focus()
         try {
-          if (!frameWindow.document.execCommand('print', false, null))
-            frameWindow.print()
+          if (!frameWindow.document.execCommand('print', false, null)) frameWindow.print()
         } catch (e) {
           frameWindow.print()
         }
@@ -138,10 +132,7 @@ Print.prototype = {
         }
       : function (obj: { nodeType: number; nodeName: any }) {
           return (
-            obj &&
-            typeof obj === 'object' &&
-            obj.nodeType === 1 &&
-            typeof obj.nodeName === 'string'
+            obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string'
           )
         },
 }

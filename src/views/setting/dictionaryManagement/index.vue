@@ -1,23 +1,12 @@
 <template>
-  <div
-    class="dictionary-management-container no-background-container table-auto-height"
-  >
+  <div class="dictionary-management-container no-background-container table-auto-height">
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card>
-          <el-button
-            class="tree-button"
-            :icon="Plus"
-            type="primary"
-            @click="handleAdd"
-          >
+          <el-button class="tree-button" :icon="Plus" type="primary" @click="handleAdd">
             添加字典分类
           </el-button>
-          <el-input
-            v-model="filterText"
-            clearable
-            placeholder="请输入字典名称"
-          />
+          <el-input v-model="filterText" clearable placeholder="请输入字典名称" />
           <el-tree
             ref="treeRef"
             :data="treeList"
@@ -55,12 +44,8 @@
             <el-table-column label="字典值" prop="value" />
             <el-table-column label="操作" width="162">
               <template #default="{ row }">
-                <el-button text type="primary" @click="handleEdit(row)">
-                  编辑
-                </el-button>
-                <el-button text type="danger" @click="handleDelete(row)">
-                  删除
-                </el-button>
+                <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+                <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
             <template #empty>

@@ -14,11 +14,7 @@
       <template #header>
         <span>文字描述</span>
       </template>
-      <el-switch
-        v-model="value1"
-        active-text="按月付费"
-        inactive-text="按年付费"
-      />
+      <el-switch v-model="value1" active-text="按月付费" inactive-text="按年付费" />
     </vab-card>
     <vab-card>
       <template #header>

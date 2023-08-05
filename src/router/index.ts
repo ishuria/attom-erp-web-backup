@@ -3,12 +3,7 @@
  */
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
-import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory,
-  RouteRecordName,
-} from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory, RouteRecordName } from 'vue-router'
 import type { VabRouteRecordRaw } from './types'
 import { base, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
@@ -276,8 +271,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           {
             path: 'defaultTableDetail',
             name: 'DefaultTableDetail',
-            component: () =>
-              import('/@/views/vab/table/defaultTableDetail.vue'),
+            component: () => import('/@/views/vab/table/defaultTableDetail.vue'),
             meta: {
               hidden: true,
               title: '详情页',
@@ -886,8 +880,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           {
             path: 'test1/:id',
             name: 'Test1',
-            component: () =>
-              import('/@/views/operate/dynamicSegment/test1.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/test1.vue'),
             meta: {
               hidden: true,
               title: 'Params',
@@ -897,15 +890,13 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           {
             path: 'test1/1',
             name: 'Test1/1',
-            component: () =>
-              import('/@/views/operate/dynamicSegment/test1.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/test1.vue'),
             meta: { title: 'Params id=1' },
           },
           {
             path: 'test2',
             name: 'Test2',
-            component: () =>
-              import('/@/views/operate/dynamicSegment/test2.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/test2.vue'),
             meta: {
               hidden: true,
               title: 'Query',
@@ -915,8 +906,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           {
             path: 'test2?id=1',
             name: 'Test2?id=1',
-            component: () =>
-              import('/@/views/operate/dynamicSegment/test2.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/test2.vue'),
             meta: { title: 'Query id=1' },
           },
         ],
@@ -951,9 +941,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
                       title: '路由1.1.1.1',
                     },
                     component: () =>
-                      import(
-                        '/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue'
-                      ),
+                      import('/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue'),
                   },
                 ],
               },
@@ -1078,8 +1066,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: 'departmentManagement',
         name: 'DepartmentManagement',
-        component: () =>
-          import('/@/views/setting/departmentManagement/index.vue'),
+        component: () => import('/@/views/setting/departmentManagement/index.vue'),
         meta: {
           title: '部门管理',
           icon: 'group-line',
@@ -1097,8 +1084,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: 'dictionaryManagement',
         name: 'DictionaryManagement',
-        component: () =>
-          import('/@/views/setting/dictionaryManagement/index.vue'),
+        component: () => import('/@/views/setting/dictionaryManagement/index.vue'),
         meta: {
           title: '字典管理',
           icon: 'book-2-line',
@@ -1209,9 +1195,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: isHashRouterMode
-    ? createWebHashHistory(base)
-    : createWebHistory(base),
+  history: isHashRouterMode ? createWebHashHistory(base) : createWebHistory(base),
   routes: constantRoutes as RouteRecordRaw[],
 })
 

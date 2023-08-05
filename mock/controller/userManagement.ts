@@ -33,12 +33,9 @@ export default [
     method: 'get',
     response({ query }: any) {
       const { username, pageNo = 1, pageSize = 20 } = query
-      const mockList = List.filter(
-        (item) => !(username && item.username.indexOf(username) < 0)
-      )
+      const mockList = List.filter((item) => !(username && item.username.indexOf(username) < 0))
       const list = mockList.filter(
-        (item, index) =>
-          index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+        (item, index) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
       )
       return {
         code: 200,

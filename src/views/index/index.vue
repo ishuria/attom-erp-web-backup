@@ -24,20 +24,10 @@
         </top-card>
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <top-card
-          background="white"
-          icon="money-cny-box-line"
-          percentage="44%"
-          title="总成交"
-        />
+        <top-card background="white" icon="money-cny-box-line" percentage="44%" title="总成交" />
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <top-card
-          background="white"
-          icon="passport-line"
-          percentage="10%"
-          title="订单"
-        />
+        <top-card background="white" icon="passport-line" percentage="10%" title="订单" />
       </el-col>
 
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">

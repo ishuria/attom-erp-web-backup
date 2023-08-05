@@ -1,11 +1,7 @@
 <template>
   <component :is="menuComponent" :item-or-menu="item">
     <template v-if="item.children && item.children.length">
-      <vab-menu
-        v-for="route in item.children"
-        :key="route.path"
-        :item="route"
-      />
+      <vab-menu v-for="route in item.children" :key="route.path" :item="route" />
     </template>
   </component>
 </template>
@@ -14,8 +10,7 @@
   const imports = import.meta.glob('./**/*.vue', { eager: true })
   const Components = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
-    Components[key.replace(/(\/|components|\.|vue)/g, '')] =
-      imports[key].default
+    Components[key.replace(/(\/|components|\.|vue)/g, '')] = imports[key].default
   })
 
   export default defineComponent({

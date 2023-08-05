@@ -1,9 +1,5 @@
 <template>
-  <vab-icon
-    class="fold-unfold"
-    :icon="collapse ? unfold : fold"
-    @click="toggleCollapse"
-  />
+  <vab-icon class="fold-unfold" :icon="collapse ? unfold : fold" @click="toggleCollapse" />
 </template>
 
 <script lang="ts" setup>

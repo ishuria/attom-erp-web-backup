@@ -6,8 +6,7 @@ export const useTabsStore = defineStore('tabs', {
     visitedRoutes: [],
   }),
   getters: {
-    getVisitedRoutes: (state) =>
-      state.visitedRoutes.filter((route) => route.name !== 'Login'),
+    getVisitedRoutes: (state) => state.visitedRoutes.filter((route) => route.name !== 'Login'),
   },
   actions: {
     /**
@@ -30,9 +29,7 @@ export const useTabsStore = defineStore('tabs', {
      * @returns
      */
     delVisitedRoute(path: string) {
-      this.visitedRoutes = this.visitedRoutes.filter(
-        (route) => route.path !== path
-      )
+      this.visitedRoutes = this.visitedRoutes.filter((route) => route.path !== path)
     },
     /**
      * @description 删除当前标签页以外其它全部标签页
@@ -74,9 +71,7 @@ export const useTabsStore = defineStore('tabs', {
      * @returns
      */
     delAllVisitedRoutes() {
-      this.visitedRoutes = this.visitedRoutes.filter(
-        (route) => route.meta.noClosable
-      )
+      this.visitedRoutes = this.visitedRoutes.filter((route) => route.meta.noClosable)
     },
     /**
      * @description 修改 meta

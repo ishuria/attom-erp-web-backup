@@ -66,8 +66,7 @@ export default [
     url: '/userInfo',
     method: 'get',
     response(request: any) {
-      const authorization =
-        request.headers.authorization || request.headers.Authorization
+      const authorization = request.headers.authorization || request.headers.Authorization
       if (!authorization.startsWith('Bearer '))
         return {
           code: 401,
@@ -76,9 +75,7 @@ export default [
 
       const username = authorization.replace('Bearer ', '').split('-token-')[0]
       const roles = username2role[username] || []
-      const permissions = [
-        ...new Set(roles.flatMap((role) => role2permission[role])),
-      ]
+      const permissions = [...new Set(roles.flatMap((role) => role2permission[role]))]
 
       return {
         code: 200,

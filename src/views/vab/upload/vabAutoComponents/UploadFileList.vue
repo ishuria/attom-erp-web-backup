@@ -1,9 +1,5 @@
 <template>
-  <el-upload
-    v-model:file-list="fileList"
-    action="/uploadFlie"
-    :on-change="handleChange"
-  >
+  <el-upload v-model:file-list="fileList" action="/uploadFlie" :on-change="handleChange">
     <el-button type="primary">点击上传</el-button>
     <template #tip>
       <div class="el-upload__tip">jpg/png 文件需小于500kb</div>

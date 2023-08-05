@@ -7,12 +7,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
-        <top-card
-          background="white"
-          icon="bard-line"
-          percentage="14%"
-          title="数据挖掘"
-        />
+        <top-card background="white" icon="bard-line" percentage="14%" title="数据挖掘" />
       </el-col>
       <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
         <top-card
@@ -81,6 +76,7 @@
     :deep() {
       .dashboard-user {
         height: 168px !important;
+
         .el-card__body {
           display: flex;
           align-items: center;

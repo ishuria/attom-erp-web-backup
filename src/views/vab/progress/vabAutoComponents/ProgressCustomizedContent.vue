@@ -3,12 +3,7 @@
     <el-progress :percentage="50">
       <el-button text>Content</el-button>
     </el-progress>
-    <el-progress
-      :percentage="50"
-      status="exception"
-      :stroke-width="20"
-      :text-inside="true"
-    >
+    <el-progress :percentage="50" status="exception" :stroke-width="20" :text-inside="true">
       <span>Content</span>
     </el-progress>
     <el-progress :percentage="100" status="success" type="circle">

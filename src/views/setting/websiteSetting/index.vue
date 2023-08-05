@@ -69,9 +69,7 @@
         trigger: 'blur',
       },
     ],
-    metaKeywords: [
-      { required: true, message: '请输入META关键词', trigger: 'blur' },
-    ],
+    metaKeywords: [{ required: true, message: '请输入META关键词', trigger: 'blur' }],
     metaDesc: [{ required: true, message: '请输入META描述', trigger: 'blur' }],
     copyright: [{ required: true, message: '请输入版权信息', trigger: 'blur' }],
   })

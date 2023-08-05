@@ -2,21 +2,13 @@
   <div class="goods-management-container table-auto-height">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button :icon="Plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete">
-          删除
-        </el-button>
+        <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
+        <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input
-              v-model="queryForm.name"
-              clearable
-              placeholder="请输入商品名称"
-            />
+            <el-input v-model="queryForm.name" clearable placeholder="请输入商品名称" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -65,32 +57,17 @@
       <el-table-column align="center" label="状态" prop="status" sortable>
         <template #default="{ row }">
           <el-tag
-            :type="
-              row.status == '已上架'
-                ? 'success'
-                : row.status == '待上架'
-                ? 'warning'
-                : 'info'
-            "
+            :type="row.status == '已上架' ? 'success' : row.status == '待上架' ? 'warning' : 'info'"
           >
             {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="时间"
-        prop="datetime"
-        width="200"
-      />
+      <el-table-column align="center" label="时间" prop="datetime" width="200" />
       <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
-          <el-button text type="primary" @click="handleEdit(row)">
-            编辑
-          </el-button>
-          <el-button text type="danger" @click="handleDelete(row)">
-            删除
-          </el-button>
+          <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+          <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
       <template #empty>

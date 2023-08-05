@@ -71,11 +71,7 @@
       height: 100px;
       line-height: 100px;
       text-align: center;
-      background: linear-gradient(
-        50deg,
-        var(--el-color-primary),
-        var(--el-color-primary-light-7)
-      );
+      background: linear-gradient(50deg, var(--el-color-primary), var(--el-color-primary-light-7));
       border-radius: 50%;
       transform: translateX(-50%);
 

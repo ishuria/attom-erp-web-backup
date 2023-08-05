@@ -1,12 +1,7 @@
 <template>
   <div class="data-screen-left3">
     <el-table :data="tableData">
-      <el-table-column
-        label="Name"
-        prop="name"
-        show-overflow-tooltip
-        width="130px"
-      />
+      <el-table-column label="Name" prop="name" show-overflow-tooltip width="130px" />
       <el-table-column label="Address" prop="address" show-overflow-tooltip />
     </el-table>
   </div>
@@ -83,6 +78,7 @@
         --el-table-tr-bg-color: transparent;
         --el-table-expanded-cell-bg-color: transparent;
         flex: 1;
+
         th {
           background: #101f58 !important;
           border-radius: 5px;

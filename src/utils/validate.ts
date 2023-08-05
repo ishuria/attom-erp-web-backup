@@ -53,8 +53,7 @@ export function isIP(ip: string) {
  * @returns {boolean}
  */
 export function isUrl(url: string) {
-  const reg =
-    /^(http|https):\/\/[a-zA-Z-9]+([-.]\w+)*\.[a-zA-Z]{2,20}(:[-\d]{1,5})?(\/.*)?$/
+  const reg = /^(http|https):\/\/[a-zA-Z-9]+([-.]\w+)*\.[a-zA-Z]{2,20}(:[-\d]{1,5})?(\/.*)?$/
   return reg.test(url)
 }
 

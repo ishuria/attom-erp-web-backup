@@ -22,10 +22,7 @@
           </ul>
         </div>
       </header>
-      <div
-        class="carousel-background"
-        :style="{ background: background }"
-      ></div>
+      <div class="carousel-background" :style="{ background: background }"></div>
       <main>
         <el-row :gutter="0">
           <el-col :span="6">
@@ -37,29 +34,19 @@
               >
                 <el-menu-item
                   index="1"
-                  @click="
-                    openWindow('https://vue-admin-beautiful.com/admin-pro>')
-                  "
+                  @click="openWindow('https://vue-admin-beautiful.com/admin-pro>')"
                 >
-                  <template #title>
-                    Vue Admin Pro：企业级中后台前端框架
-                  </template>
+                  <template #title>Vue Admin Pro：企业级中后台前端框架</template>
                 </el-menu-item>
                 <el-menu-item
                   index="2"
-                  @click="
-                    openWindow('https://vue-admin-beautiful.com/admin-plus>')
-                  "
+                  @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')"
                 >
-                  <template #title>
-                    Vue Admin Plus：企业级中后台前端框架
-                  </template>
+                  <template #title>Vue Admin Plus：企业级中后台前端框架</template>
                 </el-menu-item>
                 <el-menu-item
                   index="3"
-                  @click="
-                    openWindow('https://vue-admin-beautiful.com/shop-vite>')
-                  "
+                  @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')"
                 >
                   <template #title>Vue Shop Vite：全新一代前端模板</template>
                 </el-menu-item>
@@ -67,25 +54,12 @@
             </div>
           </el-col>
           <el-col :span="18">
-            <el-carousel
-              arrow="always"
-              height="420px"
-              :interval="3000"
-              @change="handleChange"
-            >
+            <el-carousel arrow="always" height="420px" :interval="3000" @change="handleChange">
               <el-carousel-item
-                @click="
-                  openWindow('https://vue-admin-beautiful.com/admin-plus>')
-                "
+                @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')"
               />
-              <el-carousel-item
-                @click="
-                  openWindow('https://vue-admin-beautiful.com/shop-vite>')
-                "
-              />
-              <el-carousel-item
-                @click="openWindow('https://vue-admin-beautiful.com/admin-pro')"
-              />
+              <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')" />
+              <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/admin-pro')" />
             </el-carousel>
           </el-col>
           <el-col :span="24">
@@ -105,10 +79,7 @@
                   </el-col>
                   <el-col :span="6">
                     <div class="show-box">
-                      <div
-                        class="system-class-icon"
-                        style="background: #20c2dc"
-                      >
+                      <div class="system-class-icon" style="background: #20c2dc">
                         <vab-icon icon="bubble-chart-line" />
                       </div>
                       <div class="describe">高效 Efficient</div>
@@ -117,10 +88,7 @@
                   </el-col>
                   <el-col :span="6">
                     <div class="show-box">
-                      <div
-                        class="system-class-icon"
-                        style="background: #f7753f"
-                      >
+                      <div class="system-class-icon" style="background: #f7753f">
                         <vab-icon icon="medal-fill" />
                       </div>
                       <div class="describe">专业 Major</div>
@@ -129,10 +97,7 @@
                   </el-col>
                   <el-col :span="6">
                     <div class="show-box">
-                      <div
-                        class="system-class-icon"
-                        style="background: #6a59f4"
-                      >
+                      <div class="system-class-icon" style="background: #6a59f4">
                         <vab-icon icon="seedling-fill" />
                       </div>
                       <div class="describe">美观 Beautiful</div>

@@ -12,8 +12,7 @@ const filterHidden = (data: any) => {
   return data.reduce((acc: any, item: any) => {
     if (item.meta && item.meta.hidden) return acc
     const newItem = { ...item }
-    if (item.children && item.children.length > 0)
-      newItem.children = filterHidden(item.children)
+    if (item.children && item.children.length > 0) newItem.children = filterHidden(item.children)
     return [...acc, newItem]
   }, [])
 }
@@ -38,13 +37,9 @@ export const useRoutesStore = defineStore('routes', {
         : { meta: { title: '' } },
     getActiveMenu: (state) => state.activeMenu,
     getRoutes: (state) =>
-      state.routes.filter(
-        (_route) => _route.meta && _route.meta.hidden !== true
-      ),
+      state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getAllRoutes: (state) =>
-      state.allRoutes.filter(
-        (_route) => _route.meta && _route.meta.hidden !== true
-      ),
+      state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getPartialRoutes: (state) =>
       state.tab.data
         ? state.routes.find((route) => route.name === state.tab.data) &&
@@ -70,8 +65,7 @@ export const useRoutesStore = defineStore('routes', {
         const {
           data: { list },
         } = await getList()
-        if (!isArray(list))
-          gp.$baseMessage('路由格式返回有误！', 'error', 'hey')
+        if (!isArray(list)) gp.$baseMessage('路由格式返回有误！', 'error', 'hey')
         if (list[list.length - 1].path !== '*')
           list.push({
             path: '/:pathMatch(.*)*',
@@ -92,10 +86,8 @@ export const useRoutesStore = defineStore('routes', {
     changeMenuMeta(options: any) {
       function handleRoutes(routes: any[]) {
         return routes.map((route) => {
-          if (route.name === options.name)
-            Object.assign(route.meta, options.meta)
-          if (route.children && route.children.length)
-            route.children = handleRoutes(route.children)
+          if (route.name === options.name) Object.assign(route.meta, options.meta)
+          if (route.children && route.children.length) route.children = handleRoutes(route.children)
           return route
         })
       }

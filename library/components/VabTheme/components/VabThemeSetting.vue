@@ -51,9 +51,7 @@
     </div>
     <div class="vab-show-hide-box" @click="toggleShowHide">
       <a>
-        <vab-icon
-          :icon="show ? 'arrow-up-double-line' : 'arrow-down-double-line'"
-        />
+        <vab-icon :icon="show ? 'arrow-up-double-line' : 'arrow-down-double-line'" />
         <p>
           {{ translate(show ? '收起浮窗' : '展开浮窗') }}
         </p>
@@ -213,6 +211,7 @@
         }
       }
     }
+
     .vab-show-hide-box {
       a {
         color: var(--el-color-primary) !important;

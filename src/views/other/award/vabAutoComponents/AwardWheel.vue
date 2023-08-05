@@ -36,9 +36,7 @@
   ]
   const prizes = [
     {
-      fonts: [
-        { text: '10金币', top: '10%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '10金币', top: '10%', fontColor: '#ff6642', fontSize: 12 }],
       background: '#fefaea',
       imgs: [
         {
@@ -49,9 +47,7 @@
       ],
     },
     {
-      fonts: [
-        { text: '0.1元', top: '10%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '0.1元', top: '10%', fontColor: '#ff6642', fontSize: 12 }],
       background: '#ffe358',
       imgs: [
         {
@@ -62,9 +58,7 @@
       ],
     },
     {
-      fonts: [
-        { text: '20金币', top: '10%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '20金币', top: '10%', fontColor: '#ff6642', fontSize: 12 }],
       background: '#fefaea',
       imgs: [
         {
@@ -75,9 +69,7 @@
       ],
     },
     {
-      fonts: [
-        { text: '0.2元', top: '10%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '0.2元', top: '10%', fontColor: '#ff6642', fontSize: 12 }],
       background: '#ffe358',
       imgs: [
         {
@@ -88,9 +80,7 @@
       ],
     },
     {
-      fonts: [
-        { text: '30金币', top: '10%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '30金币', top: '10%', fontColor: '#ff6642', fontSize: 12 }],
       background: '#fefaea',
       imgs: [
         {
@@ -101,9 +91,7 @@
       ],
     },
     {
-      fonts: [
-        { text: '0.3元', top: '10%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '0.3元', top: '10%', fontColor: '#ff6642', fontSize: 12 }],
       background: '#ffe358',
       imgs: [
         {

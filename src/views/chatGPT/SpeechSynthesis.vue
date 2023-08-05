@@ -18,25 +18,13 @@
               </el-select>
             </el-form-item>
             <el-form-item label="操作">
-              <el-button
-                :disabled="speech.isPlaying.value"
-                type="primary"
-                @click="play"
-              >
+              <el-button :disabled="speech.isPlaying.value" type="primary" @click="play">
                 {{ speech.status.value === 'pause' ? '继续' : '播放' }}
               </el-button>
-              <el-button
-                :disabled="!speech.isPlaying.value"
-                type="warning"
-                @click="pause"
-              >
+              <el-button :disabled="!speech.isPlaying.value" type="warning" @click="pause">
                 暂停
               </el-button>
-              <el-button
-                :disabled="!speech.isPlaying.value"
-                type="danger"
-                @click="stop"
-              >
+              <el-button :disabled="!speech.isPlaying.value" type="danger" @click="stop">
                 结束
               </el-button>
             </el-form-item>
@@ -55,9 +43,7 @@
     name: 'SpeechSynthesis',
   })
 
-  const voice = ref<SpeechSynthesisVoice>(
-    undefined as unknown as SpeechSynthesisVoice
-  )
+  const voice = ref<SpeechSynthesisVoice>(undefined as unknown as SpeechSynthesisVoice)
 
   const text = ref<string>('')
   const speech = useSpeechSynthesis(text, {

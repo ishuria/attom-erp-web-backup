@@ -40,14 +40,11 @@
   })
 
   const routesStore = useRoutesStore()
-  const { getActiveMenu: activeMenu, getRoutes: routes } =
-    storeToRefs(routesStore)
+  const { getActiveMenu: activeMenu, getRoutes: routes } = storeToRefs(routesStore)
 
   const handleRoutes = computed(() => {
     return routes.value.flatMap((route) =>
-      route.meta && route.meta.levelHidden && route.children
-        ? [...route.children]
-        : route
+      route.meta && route.meta.levelHidden && route.children ? [...route.children] : route
     )
   })
 </script>
@@ -121,10 +118,7 @@
 </style>
 
 <style>
-  .el-popper.is-pure.is-light:has(
-      .el-menu--horizontal,
-      .el-menu--popup-container
-    ) {
+  .el-popper.is-pure.is-light:has(.el-menu--horizontal, .el-menu--popup-container) {
     margin-top: calc(var(--el-margin) * 0.4);
   }
 

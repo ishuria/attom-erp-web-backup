@@ -100,8 +100,7 @@
       <li
         class="el-dropdown-menu__item"
         :class="{
-          'is-disabled':
-            visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
+          'is-disabled': visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
         }"
         @click="closeRightTabs"
       >
@@ -160,8 +159,7 @@
   const left = ref<any>(0)
 
   const isActive = (path: any) => path === handleActivePath(route, true)
-  const isNoCLosable = (tag: { meta: { noClosable: any } }) =>
-    tag.meta && tag.meta.noClosable
+  const isNoCLosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
   const handleTabClick: any = (tab: any) => {
     if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
   }
@@ -474,8 +472,7 @@
 
               .vab-tabs-title {
                 flex: 1;
-                margin: 0 calc(var(--el-margin) / 2) 0
-                  calc(var(--el-margin) / 2);
+                margin: 0 calc(var(--el-margin) / 2) 0 calc(var(--el-margin) / 2);
               }
 
               .is-icon-close {

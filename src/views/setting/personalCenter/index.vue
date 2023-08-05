@@ -76,11 +76,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="个人简介">
-                    <el-input
-                      v-model="form.description"
-                      clearable
-                      type="textarea"
-                    />
+                    <el-input v-model="form.description" clearable type="textarea" />
                   </el-form-item>
                   <el-form-item>
                     <template #label>
@@ -104,21 +100,12 @@
                       style="margin-bottom: 10px"
                       @blur="handleInputConfirm"
                     />
-                    <el-button
-                      v-else
-                      size="small"
-                      style="margin-bottom: 10px"
-                      @click="showInput"
-                    >
+                    <el-button v-else size="small" style="margin-bottom: 10px" @click="showInput">
                       添加
                     </el-button>
                   </el-form-item>
                   <el-form-item>
-                    <el-button
-                      native-type="submit"
-                      type="primary"
-                      @click="onSubmit"
-                    >
+                    <el-button native-type="submit" type="primary" @click="onSubmit">
                       保存
                     </el-button>
                   </el-form-item>
@@ -148,9 +135,7 @@
                 <vab-icon icon="alipay-line" style="color: #1476fe" />
                 <div class="item-content">
                   <div>绑定支付宝</div>
-                  <div class="item-content-second">
-                    当前未绑定绑定支付宝账号
-                  </div>
+                  <div class="item-content-second">当前未绑定绑定支付宝账号</div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
@@ -168,9 +153,7 @@
                 <vab-icon icon="github-line" />
                 <div class="item-content">
                   <div>绑定Github</div>
-                  <div class="item-content-second">
-                    当前未绑定绑定Github账号
-                  </div>
+                  <div class="item-content-second">当前未绑定绑定Github账号</div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
@@ -179,9 +162,7 @@
                 <vab-icon icon="paypal-line" style="color: #012e85" />
                 <div class="item-content">
                   <div>绑定Paypal</div>
-                  <div class="item-content-second">
-                    当前未绑定绑定Paypal账号
-                  </div>
+                  <div class="item-content-second">当前未绑定绑定Paypal账号</div>
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>

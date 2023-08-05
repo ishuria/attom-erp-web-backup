@@ -4,12 +4,7 @@
       <el-tab-pane label="当前" name="first">
         <vab-query-form>
           <vab-query-form-top-panel>
-            <el-form
-              inline
-              label-width="49px"
-              :model="queryForm"
-              @submit.prevent
-            >
+            <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
               <el-form-item label="分类">
                 <el-check-tag :checked="queryForm.checked1" @change="onChange1">
                   分类一
@@ -27,18 +22,10 @@
             </el-form>
           </vab-query-form-top-panel>
           <vab-query-form-left-panel :span="24">
-            <el-button :icon="Plus" type="primary" @click="handleAdd">
-              添加
-            </el-button>
-            <el-button :icon="Delete" type="danger" @click="handleDelete">
-              删除
-            </el-button>
+            <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
+            <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
             <el-button type="primary" @click="handleDetail">详情</el-button>
-            <el-button
-              class="hidden-xs-only"
-              type="primary"
-              @click="handleDetailStayTable"
-            >
+            <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">
               后台打开详情
             </el-button>
           </vab-query-form-left-panel>
@@ -57,30 +44,17 @@
               {{ $index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            label="标题"
-            prop="title"
-            show-overflow-tooltip
-          />
+          <el-table-column align="center" label="标题" prop="title" show-overflow-tooltip />
           <el-table-column align="center" label="作者" prop="author" />
           <el-table-column align="center" label="评级">
             <template #default="{ row }">
               <el-rate v-model="row.rate" disabled />
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            label="点击量"
-            prop="pageViews"
-            sortable
-          />
+          <el-table-column align="center" label="点击量" prop="pageViews" sortable />
           <el-table-column align="center" label="开关" prop="switch">
             <template #default="{ row }">
-              <el-tooltip
-                :content="row.switch === 0 ? '点击开启' : '点击关闭'"
-                effect="light"
-              >
+              <el-tooltip :content="row.switch === 0 ? '点击开启' : '点击关闭'" effect="light">
                 <el-switch v-model="row.switch" />
               </el-tooltip>
             </template>
@@ -94,23 +68,12 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            label="时间"
-            prop="datetime"
-            width="200"
-          />
+          <el-table-column align="center" label="时间" prop="datetime" width="200" />
           <el-table-column align="center" label="操作" width="237">
             <template #default="{ row }">
-              <el-button text type="primary" @click="handleDetail(row)">
-                详情
-              </el-button>
-              <el-button text type="primary" @click="handleEdit(row)">
-                编辑
-              </el-button>
-              <el-button text type="danger" @click="handleDelete(row)">
-                删除
-              </el-button>
+              <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
+              <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+              <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -263,10 +226,7 @@
   const handleDetailStayTable = async () => {
     if (selectRows.value.length === 1)
       for (let i = 0; i < selectRows.value.length; i++) {
-        const matched = handleMatched(
-          allRoutes.value,
-          '/vab/table/defaultTableDetail'
-        )
+        const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
         const tab = handleTabs({
           ...matched[matched.length - 1],
           query: selectRows.value[i],
@@ -324,9 +284,7 @@
         .el-tab-pane {
           display: flex;
           flex-direction: column;
-          height: calc(
-            var(--el-keep-alive-height) - var(--el-padding) - 70px
-          ) !important;
+          height: calc(var(--el-keep-alive-height) - var(--el-padding) - 70px) !important;
 
           .vab-query-form {
             .el-form {

@@ -54,19 +54,14 @@
 
   const router = useRouter()
   const routesStore = useRoutesStore()
-  const {
-    getTab: tab,
-    getTabMenu: tabMenu,
-    getRoutes: routes,
-  } = storeToRefs(routesStore)
+  const { getTab: tab, getTabMenu: tabMenu, getRoutes: routes } = storeToRefs(routesStore)
 
   const handleTabClick = () => {
     nextTick(() => {
       if (isExternal(tabMenu.value.path)) {
         window.open(tabMenu.value.path)
         router.push('/redirect')
-      } else if (openFirstMenu)
-        router.push(tabMenu.value.redirect || tabMenu.value)
+      } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
     })
   }
 </script>

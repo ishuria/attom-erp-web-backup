@@ -16,13 +16,7 @@
           <el-tree
             ref="treeRef"
             :data="list"
-            :default-checked-keys="[
-              '/',
-              '/vab',
-              '/other',
-              '/noColumn',
-              '/setting',
-            ]"
+            :default-checked-keys="['/', '/vab', '/other', '/noColumn', '/setting']"
             :default-expanded-keys="[]"
             node-key="path"
             show-checkbox

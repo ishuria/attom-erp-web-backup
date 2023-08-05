@@ -137,8 +137,7 @@ html > body.vab-theme-plain {
               background: transparent !important;
 
               &:after {
-                border-color: transparent var(--el-border-color) transparent
-                  transparent;
+                border-color: transparent var(--el-border-color) transparent transparent;
               }
             }
           }

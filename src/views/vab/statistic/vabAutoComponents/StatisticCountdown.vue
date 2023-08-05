@@ -5,9 +5,7 @@
     </el-col>
     <el-col :span="8">
       <el-countdown format="HH:mm:ss" title="剩余VIP时间" :value="value1" />
-      <el-button class="countdown-footer" type="danger" @click="reset">
-        重置
-      </el-button>
+      <el-button class="countdown-footer" type="danger" @click="reset">重置</el-button>
     </el-col>
     <el-col :span="8">
       <el-countdown format="DD [天] HH:mm:ss" :value="value2">

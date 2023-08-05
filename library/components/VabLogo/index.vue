@@ -10,10 +10,7 @@
         <!-- 使用自定义svg示例 -->
         <vab-icon v-if="logo" :icon="logo" is-custom-svg />
       </span>
-      <span
-        class="title"
-        :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }"
-      >
+      <span class="title" :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }">
         {{ title }}
       </span>
     </router-link>
@@ -117,9 +114,7 @@
         left: var(--el-left-menu-width-min) !important;
         box-sizing: border-box;
         display: block !important;
-        width: calc(
-          var(--el-left-menu-width) - var(--el-left-menu-width-min) - 1px
-        );
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 1px);
         height: var(--el-nav-height);
         margin-left: 0 !important;
         color: var(--el-color-black) !important;

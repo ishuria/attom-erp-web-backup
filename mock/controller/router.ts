@@ -858,8 +858,7 @@ const list = [
                     meta: {
                       title: '路由1.1.1.1',
                     },
-                    component:
-                      '/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue',
+                    component: '/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue',
                   },
                 ],
               },

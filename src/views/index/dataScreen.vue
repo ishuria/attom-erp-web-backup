@@ -1,14 +1,7 @@
 <template>
-  <div
-    id="data-screen-container"
-    class="data-screen-container no-layout-container"
-  >
+  <div id="data-screen-container" class="data-screen-container no-layout-container">
     <div class="hidden-sm-and-up" style="width: 100vw; padding: 20px">
-      <el-alert
-        :closable="false"
-        title="手机端不支持数据大屏演示"
-        type="error"
-      />
+      <el-alert :closable="false" title="手机端不支持数据大屏演示" type="error" />
     </div>
     <div class="hidden-xs-only">
       <data-screen-header
@@ -163,6 +156,7 @@
       transform: scale(1);
     }
   }
+
   @keyframes twinkImage {
     0% {
       opacity: 0.9;
@@ -177,6 +171,7 @@
       transform: scale(1);
     }
   }
+
   @keyframes rotate-left {
     0% {
       transform: rotate(0deg);
@@ -190,6 +185,7 @@
       transform: rotate(-360deg);
     }
   }
+
   @keyframes rotate-right {
     0% {
       transform: rotate(0deg);

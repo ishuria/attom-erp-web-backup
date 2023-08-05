@@ -7,13 +7,7 @@
     width="830px"
     @close="close"
   >
-    <el-form
-      ref="formRef"
-      inline
-      label-width="140px"
-      :model="form"
-      :rules="rules"
-    >
+    <el-form ref="formRef" inline label-width="140px" :model="form" :rules="rules">
       <el-form-item label="父级Id" prop="parentId">
         <el-input v-model="form.parentId" clearable />
       </el-form-item>
@@ -33,11 +27,7 @@
         <el-input v-model="form.meta.title" clearable />
       </el-form-item>
       <el-form-item label="图标">
-        <el-popover
-          popper-class="icon-selector-popper"
-          trigger="hover"
-          :width="305"
-        >
+        <el-popover popper-class="icon-selector-popper" trigger="hover" :width="305">
           <template #reference>
             <el-input v-model="form.meta.icon" clearable />
           </template>
@@ -109,9 +99,7 @@
     parentId: [{ required: true, trigger: 'blur', message: '请输入父级id' }],
     name: [{ required: true, trigger: 'blur', message: '请输入name' }],
     path: [{ required: true, trigger: 'blur', message: '请输入path' }],
-    component: [
-      { required: true, trigger: 'blur', message: '请输入component' },
-    ],
+    component: [{ required: true, trigger: 'blur', message: '请输入component' }],
     'meta.title': [{ required: true, trigger: 'blur', message: '请输入标题' }],
   })
   const title = ref<string>('')

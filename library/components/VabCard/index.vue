@@ -3,12 +3,7 @@
     <template v-if="$slots.header" #header>
       <slot name="header"></slot>
     </template>
-    <el-skeleton
-      v-if="skeleton"
-      animated
-      :loading="skeletonShow"
-      :rows="skeletonRows"
-    >
+    <el-skeleton v-if="skeleton" animated :loading="skeletonShow" :rows="skeletonRows">
       <template #default>
         <slot />
       </template>
@@ -59,11 +54,7 @@
         font-weight: 500;
 
         [class*='ri-'] {
-          background: linear-gradient(
-            120deg,
-            #bd34fe 30%,
-            var(--el-color-primary)
-          );
+          background: linear-gradient(120deg, #bd34fe 30%, var(--el-color-primary));
           background-clip: text;
           -webkit-text-fill-color: transparent;
         }

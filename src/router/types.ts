@@ -55,8 +55,7 @@ export interface VabRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   childrenNameList?: (string | undefined)[]
 }
 
-export interface VabRoute
-  extends Omit<VabRouteRecordRaw, 'children' | 'childrenNameList'> {
+export interface VabRoute extends Omit<VabRouteRecordRaw, 'children' | 'childrenNameList'> {
   query?: any
   params?: any
   matched?: VabRoute[]

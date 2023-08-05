@@ -123,11 +123,7 @@
     &-blue {
       color: var(--el-color-white);
       background: var(--el-color-primary);
-      background: linear-gradient(
-        90deg,
-        var(--el-color-primary-light-4),
-        var(--el-color-primary)
-      );
+      background: linear-gradient(90deg, var(--el-color-primary-light-4), var(--el-color-primary));
 
       .right-icon {
         color: var(--el-color-primary);

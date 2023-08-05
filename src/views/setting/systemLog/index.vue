@@ -4,11 +4,7 @@
       <vab-query-form-top-panel>
         <el-form inline label-width="60px" :model="queryForm" @submit.prevent>
           <el-form-item label="账号">
-            <el-input
-              v-model.trim="queryForm.account"
-              clearable
-              placeholder="请输入账号"
-            />
+            <el-input v-model.trim="queryForm.account" clearable placeholder="请输入账号" />
           </el-form-item>
           <el-form-item label="周期">
             <el-date-picker
@@ -19,12 +15,7 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button
-              :icon="Search"
-              :loading="listLoading"
-              type="primary"
-              @click="queryData"
-            >
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
               查询
             </el-button>
           </el-form-item>

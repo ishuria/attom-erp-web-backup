@@ -1,9 +1,6 @@
 <template>
   <div class="default-table-detail-container">
-    <el-page-header
-      :content="'【' + route.query.title + '】详情页面'"
-      @back="goBack"
-    />
+    <el-page-header :content="'【' + route.query.title + '】详情页面'" @back="goBack" />
     <el-alert
       :closable="false"
       title="默认表格、左树右表、分类表格、自定义表格、分割表格共用的详情页demo，所有表格都会跳转详情至此页面，当前详情页允许多开。"
@@ -22,16 +19,10 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="DefaultTable">
-                默认表格
-              </el-dropdown-item>
-              <el-dropdown-item command="ColumnTable">
-                左树右表
-              </el-dropdown-item>
+              <el-dropdown-item command="DefaultTable">默认表格</el-dropdown-item>
+              <el-dropdown-item command="ColumnTable">左树右表</el-dropdown-item>
               <el-dropdown-item command="TabsTable">分类表格</el-dropdown-item>
-              <el-dropdown-item command="CustomTable">
-                自定义表格
-              </el-dropdown-item>
+              <el-dropdown-item command="CustomTable">自定义表格</el-dropdown-item>
               <el-dropdown-item command="SplitTable">分割表格</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -47,21 +38,11 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="/vab/table/defaultTable">
-                默认表格
-              </el-dropdown-item>
-              <el-dropdown-item command="/vab/table/columnTable">
-                左树右表
-              </el-dropdown-item>
-              <el-dropdown-item command="/vab/table/tabsTable">
-                分类表格
-              </el-dropdown-item>
-              <el-dropdown-item command="/vab/table/customTable">
-                自定义表格
-              </el-dropdown-item>
-              <el-dropdown-item command="/vab/table/splitTable">
-                分割表格
-              </el-dropdown-item>
+              <el-dropdown-item command="/vab/table/defaultTable">默认表格</el-dropdown-item>
+              <el-dropdown-item command="/vab/table/columnTable">左树右表</el-dropdown-item>
+              <el-dropdown-item command="/vab/table/tabsTable">分类表格</el-dropdown-item>
+              <el-dropdown-item command="/vab/table/customTable">自定义表格</el-dropdown-item>
+              <el-dropdown-item command="/vab/table/splitTable">分割表格</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

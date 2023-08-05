@@ -71,6 +71,7 @@
 
           &-item {
             color: var(--el-color-black);
+
             &--active,
             &:hover {
               color: var(--el-color-white);

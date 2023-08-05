@@ -1,5 +1,4 @@
-import type { RouteRecordRaw } from 'vue-router'
-import type { _RouteLocationBase } from 'vue-router'
+import type { _RouteLocationBase, RouteRecordRaw } from 'vue-router'
 import { RouteRecordNormalized } from 'vue-router'
 
 /**

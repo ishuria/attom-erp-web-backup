@@ -44,12 +44,10 @@ export default [
     response: ({ query }: any) => {
       const { title, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter(
-        (item: { title: string | any[] }) =>
-          !(title && item.title.indexOf(title) < 0)
+        (item: { title: string | any[] }) => !(title && item.title.indexOf(title) < 0)
       )
       const list = mockList.filter(
-        (item: any, index: number) =>
-          index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+        (item: any, index: number) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
       )
       return {
         code: 200,

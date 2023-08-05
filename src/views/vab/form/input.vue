@@ -29,12 +29,7 @@
         <span>密码框</span>
       </template>
       <el-space wrap>
-        <el-input
-          v-model="input4"
-          clearable
-          placeholder="请输入内容"
-          show-password
-        />
+        <el-input v-model="input4" clearable placeholder="请输入内容" show-password />
       </el-space>
     </vab-card>
     <vab-card>
@@ -42,16 +37,8 @@
         <span>带 icon 的输入框</span>
       </template>
       <el-space wrap>
-        <el-input
-          v-model="input5"
-          placeholder="请输入内容"
-          :suffix-icon="Search"
-        />
-        <el-input
-          v-model="input6"
-          placeholder="请输入内容"
-          :prefix-icon="Search"
-        />
+        <el-input v-model="input5" placeholder="请输入内容" :suffix-icon="Search" />
+        <el-input v-model="input6" placeholder="请输入内容" :prefix-icon="Search" />
       </el-space>
     </vab-card>
     <vab-card>
@@ -84,12 +71,7 @@
         <span>textarea</span>
       </template>
       <el-space wrap>
-        <el-input
-          v-model="textarea"
-          placeholder="请输入内容"
-          :rows="2"
-          type="textarea"
-        />
+        <el-input v-model="textarea" placeholder="请输入内容" :rows="2" type="textarea" />
       </el-space>
     </vab-card>
   </div>

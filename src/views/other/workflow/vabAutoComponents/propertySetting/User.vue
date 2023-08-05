@@ -21,11 +21,7 @@
         </el-col>
         <el-col class="line" :span="2">-</el-col>
         <el-col :span="11">
-          <el-time-picker
-            v-model="form.date2"
-            placeholder="选择时间"
-            style="width: 100%"
-          />
+          <el-time-picker v-model="form.date2" placeholder="选择时间" style="width: 100%" />
         </el-col>
       </el-form-item>
       <el-form-item label="即时配送">

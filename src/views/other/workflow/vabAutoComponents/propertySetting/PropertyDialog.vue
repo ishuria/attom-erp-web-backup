@@ -1,17 +1,7 @@
 <template>
   <div class="property-dialog">
-    <user
-      v-if="nodeData.type === 'user'"
-      :lf="lf"
-      :node-data="nodeData"
-      @on-close="handleClose"
-    />
-    <common-property
-      v-else
-      :lf="lf"
-      :node-data="nodeData"
-      @on-close="handleClose"
-    />
+    <user v-if="nodeData.type === 'user'" :lf="lf" :node-data="nodeData" @on-close="handleClose" />
+    <common-property v-else :lf="lf" :node-data="nodeData" @on-close="handleClose" />
   </div>
 </template>
 

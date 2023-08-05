@@ -18,12 +18,7 @@
         <span>树选择</span>
         <el-tag class="card-header-tag" type="danger">New</el-tag>
       </template>
-      <el-tree-select
-        v-model="treeValue"
-        :data="treeData"
-        multiple
-        show-checkbox
-      />
+      <el-tree-select v-model="treeValue" :data="treeData" multiple show-checkbox />
     </vab-card>
     <vab-card>
       <template #header>

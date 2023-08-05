@@ -5,11 +5,7 @@
         <vab-card>
           <template #header>
             密码生成器
-            <el-button
-              class="password-generator-button"
-              type="primary"
-              @click="generatePassword"
-            >
+            <el-button class="password-generator-button" type="primary" @click="generatePassword">
               生成密码
             </el-button>
           </template>

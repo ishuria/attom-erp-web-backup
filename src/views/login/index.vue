@@ -2,13 +2,7 @@
   <div class="login-container">
     <div class="login-form">
       <img class="left-img" :src="leftImg" />
-      <el-form
-        ref="formRef"
-        label-position="left"
-        :model="form"
-        :rules="rules"
-        @submit.prevent
-      >
+      <el-form ref="formRef" label-position="left" :model="form" :rules="rules" @submit.prevent>
         <div class="title">hello !</div>
         <div class="title-tips">{{ translate('欢迎来到') }}{{ title }}！</div>
         <el-form-item prop="username">
@@ -62,10 +56,7 @@
           {{ translate('登录') }}
         </el-button>
         <router-link to="/register">
-          <el-button
-            style="margin-top: 20px; margin-left: -10px"
-            type="primary"
-          >
+          <el-button style="margin-top: 20px; margin-left: -10px" type="primary">
             {{ translate('注册') }}
           </el-button>
         </router-link>
@@ -133,9 +124,7 @@
   })
 
   const handleRoute = () => {
-    return redirect.value === '/404' || redirect.value === '/403'
-      ? '/'
-      : redirect.value
+    return redirect.value === '/404' || redirect.value === '/403' ? '/' : redirect.value
   }
 
   const handleLogin = async () => {
@@ -187,8 +176,7 @@
     position: relative;
     height: 100vh;
     padding-top: 20vh;
-    background: url('/@/assets/login_images/background.jpg') center center fixed
-      no-repeat;
+    background: url('/@/assets/login_images/background.jpg') center center fixed no-repeat;
     background-size: cover;
   }
 

@@ -29,13 +29,7 @@
         borderColor: '#01ffff',
         borderWidth: 2,
         color: (params: any) => {
-          const colorList = [
-            '#385afe',
-            '#95de64',
-            '#ff7a45',
-            '#101e57',
-            '#2c3e50',
-          ]
+          const colorList = ['#385afe', '#95de64', '#ff7a45', '#101e57', '#2c3e50']
           return colorList[params.dataIndex]
         },
       },

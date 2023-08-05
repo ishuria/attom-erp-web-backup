@@ -2,29 +2,16 @@
   <div class="user-management-container table-auto-height">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button :icon="Plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete">
-          批量删除
-        </el-button>
+        <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
+        <el-button :icon="Delete" type="danger" @click="handleDelete">批量删除</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input
-              v-model.trim="queryForm.username"
-              clearable
-              placeholder="请输入用户名"
-            />
+            <el-input v-model.trim="queryForm.username" clearable placeholder="请输入用户名" />
           </el-form-item>
           <el-form-item>
-            <el-button
-              :icon="Search"
-              :loading="listLoading"
-              type="primary"
-              @click="queryData"
-            >
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
               查询
             </el-button>
           </el-form-item>
@@ -32,12 +19,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table
-      v-loading="listLoading"
-      border
-      :data="list"
-      @selection-change="setSelectRows"
-    >
+    <el-table v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
@@ -59,12 +41,8 @@
       <el-table-column align="center" label="修改时间" prop="datatime" />
       <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
-          <el-button text type="primary" @click="handleEdit(row)">
-            编辑
-          </el-button>
-          <el-button text type="danger" @click="handleDelete(row)">
-            删除
-          </el-button>
+          <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+          <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
       <template #empty>

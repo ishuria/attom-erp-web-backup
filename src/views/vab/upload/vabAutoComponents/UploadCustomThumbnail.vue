@@ -8,10 +8,7 @@
       <div>
         <img class="el-upload-list__item-thumbnail" :src="file.url" />
         <span class="el-upload-list__item-actions">
-          <span
-            class="el-upload-list__item-preview"
-            @click="handlePictureCardPreview(file)"
-          >
+          <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
             <el-icon><zoom-in /></el-icon>
           </span>
           <span v-if="!disabled" class="el-upload-list__item-delete">

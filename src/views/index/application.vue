@@ -33,14 +33,9 @@
       deferredPrompt.prompt()
       deferredPrompt.userChoice.then((choiceResult: any) => {
         if (choiceResult.outcome === 'dismissed') {
-          $baseMessage(
-            '检测到您已取消安装需为您重载网页',
-            'error',
-            'hey',
-            () => {
-              location.reload()
-            }
-          )
+          $baseMessage('检测到您已取消安装需为您重载网页', 'error', 'hey', () => {
+            location.reload()
+          })
         }
       })
     }

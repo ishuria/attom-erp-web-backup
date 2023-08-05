@@ -13,11 +13,7 @@
   import type Node from 'element-plus/es/components/tree/src/model/node'
   import type { AllowDropType } from 'element-plus/es/components/tree/src/tree.type'
 
-  const allowDrop = (
-    draggingNode: Node,
-    dropNode: Node,
-    type: AllowDropType
-  ) => {
+  const allowDrop = (draggingNode: Node, dropNode: Node, type: AllowDropType) => {
     if (dropNode.data.label === '二级 3-1') {
       return type !== 'inner'
     } else {

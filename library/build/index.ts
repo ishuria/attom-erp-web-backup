@@ -23,8 +23,7 @@ export const createVitePlugin = (env: Record<string, string>) => {
     return value == undefined || value == '' || value == null
   }
   if (isEmpty(userName) || isEmpty(secretKey)) return
-  if (nodeEnv !== 'development')
-    if (isEmpty(userName) || isEmpty(secretKey)) return
+  if (nodeEnv !== 'development') if (isEmpty(userName) || isEmpty(secretKey)) return
   vitePlugins.push(createProgress(env) as any)
   vitePlugins.push(createUnPlugin(env))
   vitePlugins.push(createPwa())
@@ -55,11 +54,9 @@ export const createWatch = (env: Record<string, string>) => {
     chokidar.watch('./src/views').on('change', (path) => {
       if (path.endsWith('vue')) {
         console.log(
-          `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan(
-            '[Vue Sh' + 'op Vite]'
-          )} ${pc.cyan(`http://localhost:${port}/`)} ${pc.green(
-            'update success'
-          )} `
+          `\n${pc.gray(dayjs().format('HH:mm:ss'))} ${pc.cyan('[Vue Sh' + 'op Vite]')} ${pc.cyan(
+            `http://localhost:${port}/`
+          )} ${pc.green('update success')} `
         )
       }
     })

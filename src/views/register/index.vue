@@ -2,13 +2,7 @@
   <div class="register-container">
     <div class="register-form">
       <img class="left-img" :src="leftImg" />
-      <el-form
-        ref="formRef"
-        label-position="left"
-        :model="form"
-        :rules="rules"
-        @submit.prevent
-      >
+      <el-form ref="formRef" label-position="left" :model="form" :rules="rules" @submit.prevent>
         <div class="title">hello !</div>
         <div class="title-tips">{{ translate('账号注册') }}</div>
         <el-form-item prop="username">
@@ -49,12 +43,7 @@
               <vab-icon icon="barcode-box-line" />
             </template>
           </el-input>
-          <el-button
-            class="phone-code"
-            :disabled="isGetPhone"
-            type="primary"
-            @click="getPhoneCode"
-          >
+          <el-button class="phone-code" :disabled="isGetPhone" type="primary" @click="getPhoneCode">
             {{ phoneCode }}
           </el-button>
         </el-form-item>
@@ -81,10 +70,7 @@
           {{ translate('注册') }}
         </el-button>
         <router-link to="/login">
-          <el-button
-            style="margin-top: 20px; margin-left: -10px"
-            type="primary"
-          >
+          <el-button style="margin-top: 20px; margin-left: -10px" type="primary">
             {{ translate('登录') }}
           </el-button>
         </router-link>
@@ -200,15 +186,11 @@
         }: any = await register(form).catch(() => {
           loading.value = false
         })
-        $baseConfirm(
-          `${msg}，点击确定模拟进入拥有【admin】角色的首页`,
-          null,
-          async () => {
-            loading.value = false
-            setToken(token)
-            await router.push('/index')
-          }
-        )
+        $baseConfirm(`${msg}，点击确定模拟进入拥有【admin】角色的首页`, null, async () => {
+          loading.value = false
+          setToken(token)
+          await router.push('/index')
+        })
       }
     })
   }
@@ -224,8 +206,7 @@
     position: relative;
     height: 100vh;
     min-height: 700px;
-    background: url('/@/assets/login_images/background.jpg') center center fixed
-      no-repeat;
+    background: url('/@/assets/login_images/background.jpg') center center fixed no-repeat;
     background-size: cover;
 
     @media (max-width: 576px) {

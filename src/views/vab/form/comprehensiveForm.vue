@@ -35,11 +35,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="活动时间" prop="date">
-            <el-date-picker
-              v-model="form.date"
-              placeholder="选择日期时间"
-              type="datetime"
-            />
+            <el-date-picker v-model="form.date" placeholder="选择日期时间" type="datetime" />
           </el-form-item>
           <el-form-item label="即时配送" prop="delivery">
             <el-switch v-model="form.delivery" />
@@ -83,12 +79,8 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('formRef')">
-              立即创建
-            </el-button>
-            <el-button type="danger" @click="resetForm('formRef')">
-              重置
-            </el-button>
+            <el-button type="primary" @click="submitForm('formRef')">立即创建</el-button>
+            <el-button type="danger" @click="resetForm('formRef')">重置</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -160,12 +152,8 @@
         trigger: 'change',
       },
     ],
-    resource: [
-      { required: true, message: '请选择活动资源', trigger: 'change' },
-    ],
-    description: [
-      { required: true, message: '请填写活动形式', trigger: 'blur' },
-    ],
+    resource: [{ required: true, message: '请选择活动资源', trigger: 'change' }],
+    description: [{ required: true, message: '请填写活动形式', trigger: 'blur' }],
   })
   const data = ref<any>(generateData())
   const $baseMessage = inject<any>('$baseMessage')

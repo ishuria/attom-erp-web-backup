@@ -63,8 +63,7 @@
   const colorRgba = (str: any, n = 1) => {
     const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
     const sColor = str.toLowerCase()
-    if (sColor && reg.test(sColor))
-      return `rgba(${getRgbNum(sColor).join(',')},${round(n, 1)})`
+    if (sColor && reg.test(sColor)) return `rgba(${getRgbNum(sColor).join(',')},${round(n, 1)})`
     else return sColor
   }
 
@@ -74,17 +73,11 @@
     useCssVar('--el-color-primary', el).value = value
 
     for (let index = 1; index < 10; index++) {
-      useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(
-        value,
-        1 - index * 0.1
-      )
+      useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(value, 1 - index * 0.1)
     }
 
     if (theme.value.isFollow)
-      useCssVar('--el-menu-background-color', el).value = lightenColor(
-        value,
-        15
-      )
+      useCssVar('--el-menu-background-color', el).value = lightenColor(value, 15)
     else useCssVar('--el-menu-background-color', el).value = '#282c34'
 
     changeColor(value)

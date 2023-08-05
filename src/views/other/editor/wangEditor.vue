@@ -1,9 +1,6 @@
 <template>
   <div class="wang-editor-container">
-    <toolbar
-      :editor="editorRef"
-      style="border-bottom: 1px solid var(--el-border-color)"
-    />
+    <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
     <editor
       v-model="html"
       class="wang-editor-content"

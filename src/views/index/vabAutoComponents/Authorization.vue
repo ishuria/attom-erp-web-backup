@@ -94,9 +94,7 @@
       if (n.value > 0) {
         n.value--
       } else {
-        option.series.type = sample(
-          pull(['bar', 'line', 'scatter'], option.series.type)
-        )
+        option.series.type = sample(pull(['bar', 'line', 'scatter'], option.series.type))
         n.value = 5
       }
     }, 1000)

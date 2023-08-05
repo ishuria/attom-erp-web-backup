@@ -21,8 +21,7 @@ export default function registerUser(lf) {
 
       getShape() {
         const { model } = this.props
-        const { width, height, x, y, fillOpacity, strokeOpacity, points } =
-          model
+        const { width, height, x, y, fillOpacity, strokeOpacity, points } = model
         const style = model.getNodeStyle()
         const transform = `matrix(1 0 0 1 ${x - width / 2} ${y - height / 2})`
         const pointsPath = points.map((point) => point.join(',')).join(' ')

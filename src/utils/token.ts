@@ -7,8 +7,7 @@ const storage = _storage || 'localStorage'
  */
 export function getToken() {
   if ('localStorage' === storage) return localStorage.getItem(tokenTableName)
-  else if ('sessionStorage' === storage)
-    return sessionStorage.getItem(tokenTableName)
+  else if ('sessionStorage' === storage) return sessionStorage.getItem(tokenTableName)
 }
 
 /**
@@ -16,10 +15,8 @@ export function getToken() {
  * @param token
  */
 export function setToken(token: string) {
-  if ('localStorage' === storage)
-    return localStorage.setItem(tokenTableName, token)
-  else if ('sessionStorage' === storage)
-    return sessionStorage.setItem(tokenTableName, token)
+  if ('localStorage' === storage) return localStorage.setItem(tokenTableName, token)
+  else if ('sessionStorage' === storage) return sessionStorage.setItem(tokenTableName, token)
 }
 
 /**

@@ -1,10 +1,6 @@
 <template>
   <div v-if="errorLogs.length > 0">
-    <el-badge
-      type="danger"
-      :value="errorLogs.length"
-      @click="dialogVisible = true"
-    >
+    <el-badge type="danger" :value="errorLogs.length" @click="dialogVisible = true">
       <vab-icon icon="bug-line" />
     </el-badge>
 

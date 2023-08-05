@@ -69,12 +69,7 @@
         ]),
       },
       barWidth: 15,
-      data: [
-        random(100, 2000),
-        random(100, 2000),
-        random(100, 2000),
-        random(100, 2000),
-      ],
+      data: [random(100, 2000), random(100, 2000), random(100, 2000), random(100, 2000)],
       label: {
         show: true,
         position: 'inside',

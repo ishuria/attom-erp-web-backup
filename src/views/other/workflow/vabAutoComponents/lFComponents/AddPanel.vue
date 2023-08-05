@@ -8,9 +8,7 @@
       </div>
     </el-tab-pane>
     <el-tab-pane label="添加组">
-      <el-button class="add-node-btn" type="primary" @click="$_addTempalte">
-        模板
-      </el-button>
+      <el-button class="add-node-btn" type="primary" @click="$_addTempalte">模板</el-button>
     </el-tab-pane>
   </el-tabs>
 </template>

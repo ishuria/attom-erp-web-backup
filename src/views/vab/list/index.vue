@@ -4,30 +4,17 @@
       <vab-query-form-top-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input
-              v-model.trim="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model.trim="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item>
-            <el-button
-              :icon="Search"
-              :loading="listLoading"
-              type="primary"
-              @click="queryData"
-            >
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
               查询
             </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
-    <el-empty
-      v-if="emptyShow"
-      class="vab-data-empty el-table"
-      description="暂无数据"
-    />
+    <el-empty v-if="emptyShow" class="vab-data-empty el-table" description="暂无数据" />
     <ul v-loading="listLoading" class="vab-auto-box">
       <li v-for="(item, index) in list" :key="index" class="list-item">
         <div class="list-item-meta">

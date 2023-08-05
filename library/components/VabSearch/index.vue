@@ -55,9 +55,7 @@
           router.push('/redirect')
           return
         } else if (item.meta.target === '_blank') {
-          isHashRouterMode
-            ? window.open(`#${item.path}`)
-            : window.open(item.path)
+          isHashRouterMode ? window.open(`#${item.path}`) : window.open(item.path)
           router.push('/redirect')
           return
         } else router.push(item)

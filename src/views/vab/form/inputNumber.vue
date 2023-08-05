@@ -28,12 +28,7 @@
       <template #header>
         <span>按钮位置</span>
       </template>
-      <el-input-number
-        v-model="num5"
-        controls-position="right"
-        :max="10"
-        :min="1"
-      />
+      <el-input-number v-model="num5" controls-position="right" :max="10" :min="1" />
     </vab-card>
   </div>
 </template>

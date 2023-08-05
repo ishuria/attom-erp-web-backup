@@ -36,12 +36,8 @@
         <template #extra>
           <el-button size="small" type="primary">Operation</el-button>
         </template>
-        <el-descriptions-item label="Username">
-          kooriookami
-        </el-descriptions-item>
-        <el-descriptions-item label="Telephone">
-          18100000000
-        </el-descriptions-item>
+        <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
+        <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
         <el-descriptions-item label="Place">Suzhou</el-descriptions-item>
         <el-descriptions-item label="Remarks">
           <el-tag size="small">School</el-tag>
@@ -58,15 +54,9 @@
         :size="size"
         title="带边框的垂直列表"
       >
-        <el-descriptions-item label="Username">
-          kooriookami
-        </el-descriptions-item>
-        <el-descriptions-item label="Telephone">
-          18100000000
-        </el-descriptions-item>
-        <el-descriptions-item label="Place" :span="2">
-          Suzhou
-        </el-descriptions-item>
+        <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
+        <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
+        <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
         <el-descriptions-item label="Remarks">
           <el-tag size="small">School</el-tag>
         </el-descriptions-item>
@@ -75,21 +65,10 @@
         </el-descriptions-item>
       </el-descriptions>
 
-      <el-descriptions
-        :column="4"
-        direction="vertical"
-        :size="size"
-        title="无边框的垂直列表"
-      >
-        <el-descriptions-item label="Username">
-          kooriookami
-        </el-descriptions-item>
-        <el-descriptions-item label="Telephone">
-          18100000000
-        </el-descriptions-item>
-        <el-descriptions-item label="Place" :span="2">
-          Suzhou
-        </el-descriptions-item>
+      <el-descriptions :column="4" direction="vertical" :size="size" title="无边框的垂直列表">
+        <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
+        <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
+        <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
         <el-descriptions-item label="Remarks">
           <el-tag size="small">School</el-tag>
         </el-descriptions-item>
@@ -106,48 +85,42 @@
       <el-collapse v-model="activeName" :accordion="accordion">
         <el-collapse-item name="1" title="Consistency">
           <div>
-            Consistent with real life: in line with the process and logic of
-            real life, and comply with languages and habits that the users are
-            used to;
+            Consistent with real life: in line with the process and logic of real life, and comply
+            with languages and habits that the users are used to;
           </div>
           <div>
-            Consistent within interface: all elements should be consistent, such
-            as: design style, icons and texts, position of elements, etc.
+            Consistent within interface: all elements should be consistent, such as: design style,
+            icons and texts, position of elements, etc.
           </div>
         </el-collapse-item>
         <el-collapse-item name="2" title="Feedback">
           <div>
-            Operation feedback: enable the users to clearly perceive their
-            operations by style updates and interactive effects;
+            Operation feedback: enable the users to clearly perceive their operations by style
+            updates and interactive effects;
           </div>
           <div>
-            Visual feedback: reflect current state by updating or rearranging
-            elements of the page.
+            Visual feedback: reflect current state by updating or rearranging elements of the page.
           </div>
         </el-collapse-item>
         <el-collapse-item name="3" title="Efficiency">
+          <div>Simplify the process: keep operating process simple and intuitive;</div>
           <div>
-            Simplify the process: keep operating process simple and intuitive;
+            Definite and clear: enunciate your intentions clearly so that the users can quickly
+            understand and make decisions;
           </div>
           <div>
-            Definite and clear: enunciate your intentions clearly so that the
-            users can quickly understand and make decisions;
-          </div>
-          <div>
-            Easy to identify: the interface should be straightforward, which
-            helps the users to identify and frees them from memorizing and
-            recalling.
+            Easy to identify: the interface should be straightforward, which helps the users to
+            identify and frees them from memorizing and recalling.
           </div>
         </el-collapse-item>
         <el-collapse-item name="4" title="Controllability">
           <div>
-            Decision making: giving advices about operations is acceptable, but
-            do not make decisions for the users;
+            Decision making: giving advices about operations is acceptable, but do not make
+            decisions for the users;
           </div>
           <div>
-            Controlled consequences: users should be granted the freedom to
-            operate, including canceling, aborting or terminating current
-            operation.
+            Controlled consequences: users should be granted the freedom to operate, including
+            canceling, aborting or terminating current operation.
           </div>
         </el-collapse-item>
       </el-collapse>

@@ -4,29 +4,16 @@
       <vab-query-form-top-panel>
         <el-form inline label-width="80px" @submit.prevent>
           <el-form-item label="图标名称">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入图标名称"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入图标名称" />
           </el-form-item>
           <el-form-item>
-            <el-button
-              :icon="Search"
-              native-type="submit"
-              type="primary"
-              @click="queryData"
-            >
+            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">
               查询
             </el-button>
           </el-form-item>
           <el-form-item>
             <el-button>
-              <el-checkbox
-                v-model="queryForm.colorful"
-                label="多彩图标"
-                @change="queryData"
-              />
+              <el-checkbox v-model="queryForm.colorful" label="多彩图标" @change="queryData" />
             </el-button>
           </el-form-item>
           <el-form-item label="文字大小">
@@ -138,14 +125,7 @@
   }
 
   const randomHexColor = () => {
-    return shuffle([
-      '#1890FF',
-      '#36CBCB',
-      '#4ECB73',
-      '#FBD437',
-      '#F2637B',
-      '#975FE5',
-    ])
+    return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
   }
 
   onMounted(() => {

@@ -10,10 +10,7 @@
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
-            <vab-count
-              :end-value="countConfig1.endValue"
-              :start-value="countConfig1.startValue"
-            />
+            <vab-count :end-value="countConfig1.endValue" :start-value="countConfig1.startValue" />
             <p>累计访问量</p>
           </div>
         </el-col>
@@ -29,10 +26,7 @@
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
-            <vab-count
-              :end-value="countConfig2.endValue"
-              :start-value="countConfig2.startValue"
-            />
+            <vab-count :end-value="countConfig2.endValue" :start-value="countConfig2.startValue" />
             <p>累计用户数</p>
           </div>
         </el-col>
@@ -48,10 +42,7 @@
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
-            <vab-count
-              :end-value="countConfig3.endValue"
-              :start-value="countConfig3.startValue"
-            />
+            <vab-count :end-value="countConfig3.endValue" :start-value="countConfig3.startValue" />
             <p>累计产出模型</p>
           </div>
         </el-col>
@@ -67,10 +58,7 @@
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
-            <vab-count
-              :end-value="countConfig4.endValue"
-              :start-value="countConfig4.startValue"
-            />
+            <vab-count :end-value="countConfig4.endValue" :start-value="countConfig4.startValue" />
             <p>累计评估模型</p>
           </div>
         </el-col>

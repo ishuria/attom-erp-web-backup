@@ -1,9 +1,5 @@
 <template>
-  <el-input
-    v-model="filterText"
-    placeholder="请输入查询条件"
-    style="margin-bottom: 10px"
-  />
+  <el-input v-model="filterText" placeholder="请输入查询条件" style="margin-bottom: 10px" />
 
   <el-tree
     ref="treeRef"

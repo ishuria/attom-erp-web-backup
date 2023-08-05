@@ -10,12 +10,7 @@
   <el-button type="primary" @click="drawer = true">打开</el-button>
   <el-button type="primary" @click="drawer2 = true">包含页脚</el-button>
 
-  <el-drawer
-    v-model="drawer"
-    :before-close="handleClose"
-    :direction="direction"
-    title="我是标题"
-  >
+  <el-drawer v-model="drawer" :before-close="handleClose" :direction="direction" title="我是标题">
     <span>Hi, there!</span>
   </el-drawer>
   <el-drawer v-model="drawer2" :direction="direction">

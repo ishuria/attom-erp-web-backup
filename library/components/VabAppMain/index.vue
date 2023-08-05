@@ -22,8 +22,7 @@
   watch(
     route,
     () => {
-      if (tab.value.data !== route.matched[0].name)
-        tab.value.data = route.matched[0].name
+      if (tab.value.data !== route.matched[0].name) tab.value.data = route.matched[0].name
       activeMenu.value.data = handleActivePath(route)
     },
     { immediate: true }

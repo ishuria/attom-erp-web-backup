@@ -1,11 +1,6 @@
 import type { App, VNode } from 'vue'
 import { loadingText, messageDuration } from '/@/config'
-import {
-  ElLoading,
-  ElMessage,
-  ElMessageBox,
-  ElNotification,
-} from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import mitt from 'mitt'
 import { head, toArray } from 'lodash-es'
 
@@ -13,8 +8,7 @@ export let gp: Record<string, any>
 
 const isCheck = () => {
   if (
-    import.meta.env.MODE !==
-      '\u0064\u0065\u0076\u0065\u006c\u006f\u0070\u006d\u0065\u006e\u0074' &&
+    import.meta.env.MODE !== '\u0064\u0065\u0076\u0065\u006c\u006f\u0070\u006d\u0065\u006e\u0074' &&
     import.meta.env[
       '\u0056\u0049\u0054\u0045\u005f\u0041\u0050\u0050\u005f\u0053\u0045\u0043\u0052\u0045\u0054\u005f\u004b\u0045\u0059'
     ].length < 50
@@ -73,10 +67,7 @@ export default {
       callback: any = undefined
     ) => {
       if (customClass == 'hey') customClass = `vab-hey-message-${type}`
-      if (
-        dangerouslyUseHTMLString &&
-        typeof dangerouslyUseHTMLString == 'function'
-      ) {
+      if (dangerouslyUseHTMLString && typeof dangerouslyUseHTMLString == 'function') {
         callback = dangerouslyUseHTMLString
         dangerouslyUseHTMLString = false
       }
@@ -101,11 +92,7 @@ export default {
      * @param {function} callback 若不使用Promise,可以使用此参数指定MessageBox关闭后的回调
      */
 
-    const $baseAlert = (
-      content: string | VNode,
-      title = '温馨提示',
-      callback: any = undefined
-    ) => {
+    const $baseAlert = (content: string | VNode, title = '温馨提示', callback: any = undefined) => {
       if (title && typeof title == 'function') {
         callback = title
         title = '温馨提示'
@@ -168,11 +155,7 @@ export default {
       message: string,
       title: string,
       type: 'success' | 'warning' | 'info' | 'error' = 'success',
-      position:
-        | 'top-right'
-        | 'top-left'
-        | 'bottom-right'
-        | 'bottom-left' = 'top-right',
+      position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' = 'top-right',
       duration: number = messageDuration
     ) => {
       ElNotification({

@@ -39,15 +39,9 @@
           <template #header>
             <span>成功提示</span>
           </template>
-          <el-result
-            icon="success"
-            sub-title="请根据提示进行操作"
-            title="成功提示"
-          >
+          <el-result icon="success" sub-title="请根据提示进行操作" title="成功提示">
             <template #extra>
-              <el-button type="primary" @click="open13('成功提示')">
-                确认
-              </el-button>
+              <el-button type="primary" @click="open13('成功提示')">确认</el-button>
             </template>
           </el-result>
         </vab-card>
@@ -57,15 +51,9 @@
           <template #header>
             <span>警告提示</span>
           </template>
-          <el-result
-            icon="warning"
-            sub-title="请根据提示进行操作"
-            title="警告提示"
-          >
+          <el-result icon="warning" sub-title="请根据提示进行操作" title="警告提示">
             <template #extra>
-              <el-button type="primary" @click="open13('警告提示')">
-                确认
-              </el-button>
+              <el-button type="primary" @click="open13('警告提示')">确认</el-button>
             </template>
           </el-result>
         </vab-card>
@@ -75,15 +63,9 @@
           <template #header>
             <span>错误提示</span>
           </template>
-          <el-result
-            icon="error"
-            sub-title="请根据提示进行操作"
-            title="错误提示"
-          >
+          <el-result icon="error" sub-title="请根据提示进行操作" title="错误提示">
             <template #extra>
-              <el-button type="primary" @click="open13('错误提示')">
-                确认
-              </el-button>
+              <el-button type="primary" @click="open13('错误提示')">确认</el-button>
             </template>
           </el-result>
         </vab-card>
@@ -93,15 +75,9 @@
           <template #header>
             <span>信息提示</span>
           </template>
-          <el-result
-            icon="info"
-            sub-title="请根据提示进行操作"
-            title="信息提示"
-          >
+          <el-result icon="info" sub-title="请根据提示进行操作" title="信息提示">
             <template #extra>
-              <el-button type="primary" @click="open13('信息提示')">
-                确认
-              </el-button>
+              <el-button type="primary" @click="open13('信息提示')">确认</el-button>
             </template>
           </el-result>
         </vab-card>

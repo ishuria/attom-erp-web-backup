@@ -14,16 +14,8 @@
           <el-step description="完成" title="第3步" />
         </el-steps>
         <step1 v-if="active === 0" @change-step="handleSetStep" />
-        <step2
-          v-if="active === 1"
-          :info-data="form"
-          @change-step="handleSetStep"
-        />
-        <step3
-          v-if="active === 2"
-          :info-data="form"
-          @change-step="handleSetStep"
-        />
+        <step2 v-if="active === 1" :info-data="form" @change-step="handleSetStep" />
+        <step3 v-if="active === 2" :info-data="form" @change-step="handleSetStep" />
       </el-col>
     </el-row>
   </div>

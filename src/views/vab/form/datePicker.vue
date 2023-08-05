@@ -17,19 +17,10 @@
       <template #header>
         <span>其他日期单位</span>
       </template>
-      <el-date-picker
-        v-model="value3"
-        format="yyyy 第 WW 周"
-        placeholder="选择周"
-        type="week"
-      />
+      <el-date-picker v-model="value3" format="yyyy 第 WW 周" placeholder="选择周" type="week" />
       <el-date-picker v-model="value4" placeholder="选择月" type="month" />
       <el-date-picker v-model="value5" placeholder="选择年" type="year" />
-      <el-date-picker
-        v-model="value6"
-        placeholder="选择一个或多个日期"
-        type="dates"
-      />
+      <el-date-picker v-model="value6" placeholder="选择一个或多个日期" type="dates" />
     </vab-card>
     <vab-card>
       <template #header>

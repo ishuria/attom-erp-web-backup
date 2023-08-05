@@ -29,11 +29,7 @@
                   type="password"
                 >
                   <template #suffix>
-                    <el-button
-                      native-type="submit"
-                      type="primary"
-                      @click="handleUnLock"
-                    >
+                    <el-button native-type="submit" type="primary" @click="handleUnLock">
                       <vab-icon icon="lock-line" />
                       <span>{{ translate('解锁') }}</span>
                     </el-button>

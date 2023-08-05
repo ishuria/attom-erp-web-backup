@@ -55,9 +55,7 @@
       index: 0,
       x: 0,
       y: 0,
-      fonts: [
-        { text: '1元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '1元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
 
@@ -69,9 +67,7 @@
       index: 1,
       x: 1,
       y: 0,
-      fonts: [
-        { text: '100元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '100元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
       col: 1,
@@ -82,9 +78,7 @@
       index: 2,
       x: 2,
       y: 0,
-      fonts: [
-        { text: '0.5元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '0.5元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
       col: 1,
@@ -95,9 +89,7 @@
       index: 3,
       x: 2,
       y: 1,
-      fonts: [
-        { text: '2元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '2元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
       col: 1,
@@ -108,9 +100,7 @@
       index: 4,
       x: 2,
       y: 2,
-      fonts: [
-        { text: '10元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '10元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
       col: 1,
@@ -121,9 +111,7 @@
       index: 5,
       x: 1,
       y: 2,
-      fonts: [
-        { text: '50元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '50元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
       col: 1,
@@ -134,9 +122,7 @@
       index: 6,
       x: 0,
       y: 2,
-      fonts: [
-        { text: '0.3元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '0.3元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
       col: 1,
@@ -147,9 +133,7 @@
       index: 7,
       x: 0,
       y: 1,
-      fonts: [
-        { text: '20元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 },
-      ],
+      fonts: [{ text: '20元红包', top: '70%', fontColor: '#ff6642', fontSize: 12 }],
       imgs: [{ src: award_1, width: '30%', top: '15%' }],
       background: '#fefaea',
       col: 1,

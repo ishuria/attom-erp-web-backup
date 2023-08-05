@@ -11,7 +11,5 @@
     name: 'PDF',
   })
 
-  const source = ref<any>(
-    'https://cdn.jsdelivr.net/gh/chuzhixin/image/demo.pdf'
-  )
+  const source = ref<any>('https://cdn.jsdelivr.net/gh/chuzhixin/image/demo.pdf')
 </script>

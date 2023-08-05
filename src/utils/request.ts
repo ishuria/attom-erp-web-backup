@@ -1,13 +1,6 @@
 import { stringify } from 'qs'
 import { refreshToken } from '/@/api/refreshToken'
-import {
-  contentType,
-  debounce,
-  messageName,
-  statusName,
-  successCode,
-  timeout,
-} from '/@/config'
+import { contentType, debounce, messageName, statusName, successCode, timeout } from '/@/config'
 import router from '/@/router'
 import { useUserStore } from '/@/store/modules/user'
 import { isArray } from '/@/utils/validate'
@@ -21,9 +14,7 @@ let refreshToking = false
 let requests: any[] = []
 
 // 操作正常Code数组
-const codeVerificationArray = isArray(successCode)
-  ? [...successCode]
-  : [...[successCode]]
+const codeVerificationArray = isArray(successCode) ? [...successCode] : [...[successCode]]
 
 const CODE_MESSAGE: any = {
   200: '服务器成功返回请求数据',
@@ -59,8 +50,7 @@ const requestConf = (config: any) => {
 
   if (
     config.data &&
-    config.headers['Content-Type'] ===
-      'application/x-www-form-urlencoded;charset=UTF-8'
+    config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8'
   )
     config.data = stringify(config.data)
 
@@ -160,8 +150,7 @@ const handleData = async ({
   }`
   // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
   gp.$baseMessage(errMsg, 'error', 'hey')
-  if (needErrorLog())
-    addErrorLog({ message: errMsg, stack: data, isRequest: true })
+  if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })
   return Promise.reject(data)
 }
 /**

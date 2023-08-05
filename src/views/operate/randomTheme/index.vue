@@ -21,20 +21,14 @@
   const $baseMessage = inject<any>('$baseMessage')
 
   const shuffle = (val: any, list: any) =>
-    list.filter((item: any) => item !== val)[
-      (Math.random() * (list.length - 1)) | 0
-    ]
+    list.filter((item: any) => item !== val)[(Math.random() * (list.length - 1)) | 0]
 
   const randomTheme = async () => {
     const loading = $baseLoading()
 
     setTimeout(() => {
       try {
-        const themeName = shuffle(theme.value.themeName, [
-          'default',
-          'plain',
-          'technology',
-        ])
+        const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
         const columnStyle = shuffle(theme.value.columnStyle, [
           'vertical',
           'horizontal',
@@ -42,20 +36,11 @@
           'arrow',
           'semicircle',
         ])
-        const tabsBarStyle = shuffle(theme.value.tabsBarStyle, [
-          'card',
-          'smart',
-          'smooth',
-        ])
+        const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth'])
         const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
         const layout =
           device.value === 'desktop'
-            ? shuffle(theme.value.layout, [
-                'horizontal',
-                'vertical',
-                'column',
-                'comprehensive',
-              ])
+            ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive'])
             : 'vertical'
         const _color = shuffle(color.value, [
           '#1e90ff',
@@ -86,10 +71,7 @@
           theme.value.isFollow = false
           const el = ref<any>(null)
           if (theme.value.isFollow)
-            useCssVar('--el-menu-background-color', el).value = lightenColor(
-              color.value,
-              15
-            )
+            useCssVar('--el-menu-background-color', el).value = lightenColor(color.value, 15)
           else useCssVar('--el-menu-background-color', el).value = '#282c34'
         }
 

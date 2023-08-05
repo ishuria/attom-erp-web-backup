@@ -8,12 +8,7 @@ import VabProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import getPageTitle from '/@/utils/pageTitle'
 import { toLoginRoute } from '/@/utils/routes'
-import {
-  authentication,
-  loginInterception,
-  routesWhiteList,
-  supportVisit,
-} from '/@/config'
+import { authentication, loginInterception, routesWhiteList, supportVisit } from '/@/config'
 import { Router } from 'vue-router'
 
 export function setupPermissions(router: Router) {
@@ -68,8 +63,7 @@ export function setupPermissions(router: Router) {
     }
   })
   router.afterEach((to) => {
-    if (typeof to.meta.title === 'string')
-      document.title = getPageTitle(to.meta.title)
+    if (typeof to.meta.title === 'string') document.title = getPageTitle(to.meta.title)
     if (VabProgress.status) VabProgress.done()
   })
 }

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="menu-management-container no-background-container table-auto-height"
-  >
+  <div class="menu-management-container no-background-container table-auto-height">
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card>
@@ -18,9 +16,7 @@
         <vab-card>
           <vab-query-form>
             <vab-query-form-top-panel :span="12">
-              <el-button :icon="Plus" type="primary" @click="handleAdd">
-                添加
-              </el-button>
+              <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
             </vab-query-form-top-panel>
           </vab-query-form>
           <el-table
@@ -47,11 +43,7 @@
                     {{ row.meta.levelHidden ? '是' : '否' }}
                   </template>
                 </el-table-column> -->
-            <el-table-column
-              align="center"
-              label="vue文件路径"
-              prop="component"
-            />
+            <el-table-column align="center" label="vue文件路径" prop="component" />
             <!-- <el-table-column align="center" label="重定向">
                 <template #default="{ row }">
                   {{ row.redirect || '无' }}
@@ -86,12 +78,8 @@
               </el-table-column> -->
             <el-table-column align="center" label="操作" width="162">
               <template #default="{ row }">
-                <el-button text type="primary" @click="handleEdit(row)">
-                  编辑
-                </el-button>
-                <el-button text type="danger" @click="handleDelete(row)">
-                  删除
-                </el-button>
+                <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+                <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
               </template>
             </el-table-column>
             <template #empty>

@@ -32,14 +32,7 @@
 
   const iconList = ref<any>([])
   const randomHexColor = () => {
-    return shuffle([
-      '#1890FF',
-      '#36CBCB',
-      '#4ECB73',
-      '#FBD437',
-      '#F2637B',
-      '#975FE5',
-    ])
+    return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
   }
   const fetchData = async () => {
     const { data } = await getIconList({

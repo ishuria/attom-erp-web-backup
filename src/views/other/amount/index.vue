@@ -4,20 +4,12 @@
       <el-col :lg="8" :md="12" :sm="12" :xl="8" :xs="24">
         <vab-card>
           <template #header>大写金额转换</template>
-          <el-form
-            ref="formRef"
-            label-position="top"
-            :model="form"
-            :rules="rules"
-            @submit.prevent
-          >
+          <el-form ref="formRef" label-position="top" :model="form" :rules="rules" @submit.prevent>
             <el-form-item label="金额（数字）" prop="amount">
               <el-input v-model="form.amount" clearable />
             </el-form-item>
             <el-form-item label="操作">
-              <el-button native-type="submit" type="primary" @click="onInput">
-                转换
-              </el-button>
+              <el-button native-type="submit" type="primary" @click="onInput">转换</el-button>
             </el-form-item>
             <el-form-item label="转换结果">
               <h2>{{ form.transformed }}</h2>

@@ -67,8 +67,7 @@ html.dark > body[class*='vab-theme-'] {
               background: transparent !important;
 
               &:after {
-                border-color: transparent var(--el-menu-color-text) transparent
-                  transparent;
+                border-color: transparent var(--el-menu-color-text) transparent transparent;
               }
             }
           }

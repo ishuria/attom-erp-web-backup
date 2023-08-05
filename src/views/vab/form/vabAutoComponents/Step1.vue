@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-form
-      ref="formRef"
-      label-width="100px"
-      :model="form"
-      :rules="rules"
-      @submit.prevent
-    >
+    <el-form ref="formRef" label-width="100px" :model="form" :rules="rules" @submit.prevent>
       <el-form-item label="付款账户" prop="payAccount">
         <el-input v-model="form.payAccount" clearable />
       </el-form-item>
@@ -21,17 +15,13 @@
       </el-form-item>
     </el-form>
     <div class="pay-button-group">
-      <el-button native-type="submit" type="primary" @click="handleSubmit">
-        下一步
-      </el-button>
+      <el-button native-type="submit" type="primary" @click="handleSubmit">下一步</el-button>
     </div>
     <el-alert :closable="false">
       <h3>转账到支付宝</h3>
       <p>生活好，支付宝。生活好，支付宝。生活好，支付宝。生活好，支付宝。</p>
       <h3>转账到微信</h3>
-      <p>
-        微不可挡，万众一信。微不可挡，万众一信。微不可挡，万众一信。微不可挡，万众一信。
-      </p>
+      <p>微不可挡，万众一信。微不可挡，万众一信。微不可挡，万众一信。微不可挡，万众一信。</p>
     </el-alert>
   </div>
 </template>
@@ -50,16 +40,12 @@
     price: '100',
   })
   const rules = reactive<any>({
-    payAccount: [
-      { required: true, message: '请选择付款账户', trigger: 'blur' },
-    ],
+    payAccount: [{ required: true, message: '请选择付款账户', trigger: 'blur' }],
     gatheringAccount: [
       { required: true, message: '请输入收款账户', trigger: 'blur' },
       { required: true, message: '账户名应为邮箱格式', trigger: 'blur' },
     ],
-    gatheringName: [
-      { required: true, message: '请输入收款人姓名', trigger: 'blur' },
-    ],
+    gatheringName: [{ required: true, message: '请输入收款人姓名', trigger: 'blur' }],
     price: [
       { required: true, message: '请输入转账金额', trigger: 'blur' },
       { pattern: /^(\d+)((?:\.\d+)?)$/, message: '请输入合法金额数字' },

@@ -11,9 +11,7 @@
         <el-button type="primary" @click="closeLeftTabs">关闭左侧</el-button>
         <el-button type="primary" @click="closeRightTabs">关闭右侧</el-button>
         <el-button type="primary" @click="closeAllTabs">关闭全部</el-button>
-        <el-button type="primary" @click="handleTabRemove(route.path)">
-          关闭当前
-        </el-button>
+        <el-button type="primary" @click="handleTabRemove(route.path)">关闭当前</el-button>
         <el-button type="primary" @click="handleRefresh">刷新当前</el-button>
       </el-space>
     </vab-card>

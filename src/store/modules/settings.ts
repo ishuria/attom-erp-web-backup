@@ -2,8 +2,6 @@
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
 import {
-  logo as _logo,
-  title as _title,
   color,
   columnStyle,
   fixedHeader,
@@ -11,6 +9,7 @@ import {
   i18n,
   isFollow,
   layout,
+  logo as _logo,
   menuWidth,
   pageTransition,
   radius,
@@ -30,6 +29,7 @@ import {
   showThemeSetting,
   tabsBarStyle,
   themeName,
+  title as _title,
 } from '/@/config'
 import { lightenColor } from '/@/utils/lightenColor'
 import { isJson } from '/@/utils/validate'
@@ -110,9 +110,7 @@ export const useSettingsStore = defineStore('settings', {
         this[key] = obj[key]
         localStorage.setItem(
           key,
-          typeof obj[key] == 'string'
-            ? `{"${key}":"${obj[key]}"}`
-            : `{"${key}":${obj[key]}}`
+          typeof obj[key] == 'string' ? `{"${key}":"${obj[key]}"}` : `{"${key}":${obj[key]}}`
         )
       })
     },
@@ -124,15 +122,12 @@ export const useSettingsStore = defineStore('settings', {
     },
     resetTheme() {
       this.theme = { ...defaultTheme }
-      if (this.device === 'mobile')
-        this.theme = { ...defaultTheme, ...{ layout: 'vertical' } }
+      if (this.device === 'mobile') this.theme = { ...defaultTheme, ...{ layout: 'vertical' } }
       localStorage.removeItem('shop-vite-theme')
       this.updateTheme()
     },
     updateTheme() {
-      document.getElementsByTagName(
-        'body'
-      )[0].className = `vab-theme-${this.theme.themeName}`
+      document.getElementsByTagName('body')[0].className = `vab-theme-${this.theme.themeName}`
 
       if (this.theme.themeName !== 'default') {
         document.getElementsByTagName('html')[0].className = ''
@@ -147,25 +142,15 @@ export const useSettingsStore = defineStore('settings', {
       if (!this.theme.showTabs) useCssVar('--el-tabs-height', el).value = '0px'
       else useCssVar('--el-tabs-height', el).value = '50px'
 
-      if (!this.theme.showFooter)
-        useCssVar('--el-footer-height', el).value = '0px'
+      if (!this.theme.showFooter) useCssVar('--el-footer-height', el).value = '0px'
       else useCssVar('--el-footer-height', el).value = '58px'
 
-      if (!this.theme.isFollow)
-        useCssVar('--el-menu-background-color', el).value = '#282c34'
-      else
-        useCssVar('--el-menu-background-color', el).value = lightenColor(
-          this.color,
-          10
-        )
+      if (!this.theme.isFollow) useCssVar('--el-menu-background-color', el).value = '#282c34'
+      else useCssVar('--el-menu-background-color', el).value = lightenColor(this.color, 10)
 
       if (this.theme.radius)
-        useCssVar(
-          '--el-border-radius-base',
-          el
-        ).value = `${this.theme.radius}px`
-      else
-        useCssVar('--el-left-menu-width', el).value = `${this.theme.radius}px`
+        useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`
+      else useCssVar('--el-left-menu-width', el).value = `${this.theme.radius}px`
     },
     toggleCollapse() {
       this.collapse = !this.collapse

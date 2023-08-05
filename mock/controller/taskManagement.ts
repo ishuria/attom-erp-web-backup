@@ -18,13 +18,7 @@ for (let i = 0; i < count; i++) {
     taskName: '@account(1, 2)',
     'status|1': [0, 1],
     'account|1': ['admin', 'editor', 'test'],
-    'executeResult|1': [
-      '登录成功',
-      '登录成功',
-      '登录失败',
-      '接口异常',
-      'dos攻击',
-    ],
+    'executeResult|1': ['登录成功', '登录成功', '登录失败', '接口异常', 'dos攻击'],
     ip: '@ip',
     datetime: '@datetime',
   })
@@ -40,8 +34,7 @@ export default [
         (item: any) => !(taskName && item.taskName.indexOf(taskName) < 0)
       )
       const list = mockList.filter(
-        (item: any, index: any) =>
-          index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+        (item: any, index: any) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
       )
       return {
         code: 200,

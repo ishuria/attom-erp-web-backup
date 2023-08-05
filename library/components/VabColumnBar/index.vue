@@ -27,10 +27,7 @@
                 <span v-if="translate(item.meta.title).length < 4">
                   {{ translate(item.meta.title) }}
                 </span>
-                <span
-                  v-else
-                  style="font-size: var(--el-font-size-small); zoom: 0.88"
-                >
+                <span v-else style="font-size: var(--el-font-size-small); zoom: 0.88">
                   {{ translate(item.meta.title) }}
                 </span>
               </div>
@@ -56,12 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-  import {
-    defaultOpeneds,
-    isHashRouterMode,
-    openFirstMenu,
-    uniqueOpened,
-  } from '/@/config'
+  import { defaultOpeneds, isHashRouterMode, openFirstMenu, uniqueOpened } from '/@/config'
   import { translate } from '/@/i18n'
   import { VabRoute } from '/@/router/types'
   import { useRoutesStore } from '/@/store/modules/routes'
@@ -90,16 +82,13 @@
     nextTick(() => {
       if (tabMenu.value.meta.target === '_blank') {
         if (route.path !== tabMenu.value.path) {
-          isHashRouterMode
-            ? window.open(`#${tabMenu.value.path}`)
-            : window.open(tabMenu.value.path)
+          isHashRouterMode ? window.open(`#${tabMenu.value.path}`) : window.open(tabMenu.value.path)
           router.push('/redirect')
         }
       } else if (isExternal(tabMenu.value.path)) {
         window.open(tabMenu.value.path)
         router.push('/redirect')
-      } else if (openFirstMenu)
-        router.push(tabMenu.value.redirect || tabMenu.value)
+      } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
     })
   }
 
@@ -108,9 +97,7 @@
       watch(
         route,
         () => {
-          const foldUnfold: any = document.querySelector(
-            '.left-panel .fold-unfold'
-          )
+          const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
           const floatFold: any = document.querySelector('.float-fold')
           if (route.meta.noColumn && theme.value.layout === 'column') {
             if (device.value !== 'mobile') foldSideBar()
@@ -165,9 +152,7 @@
       :deep() {
         .el-tabs + .el-menu {
           left: var(--el-left-menu-width-min);
-          width: calc(
-            var(--el-left-menu-width) - var(--el-left-menu-width-min)
-          );
+          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min));
           border: 0;
         }
       }
@@ -184,18 +169,14 @@
           .title {
             left: calc(var(--el-left-menu-width-min) * 1.4) !important;
             width: calc(
-              var(--el-left-menu-width) - calc(
-                  var(--el-left-menu-width-min) * 1.4
-                ) - 1px
+              var(--el-left-menu-width) - calc(var(--el-left-menu-width-min) * 1.4) - 1px
             );
           }
         }
 
         .el-tabs + .el-menu {
           left: calc(var(--el-left-menu-width-min) * 1.4);
-          width: calc(
-            var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4
-          );
+          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4);
           border: 0;
         }
       }
@@ -229,9 +210,7 @@
 
         .el-tabs + .el-menu {
           left: calc(var(--el-left-menu-width-min) + 10px);
-          width: calc(
-            var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px
-          );
+          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
         }
 
         .el-sub-menu .el-sub-menu__title,
@@ -260,8 +239,7 @@
                   height: 0;
                   overflow: hidden;
                   content: '';
-                  border-color: transparent var(--el-color-white) transparent
-                    transparent;
+                  border-color: transparent var(--el-color-white) transparent transparent;
                   border-style: solid dashed dashed;
                   border-width: 8px;
                 }
@@ -272,9 +250,7 @@
 
         .el-tabs + .el-menu {
           left: calc(var(--el-left-menu-width-min) + 10px);
-          width: calc(
-            var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px
-          );
+          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
         }
 
         .el-sub-menu .el-sub-menu__title,

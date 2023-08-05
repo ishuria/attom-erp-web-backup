@@ -1,13 +1,7 @@
 <template>
   <div class="demo-progress">
     <el-progress :percentage="50" striped :stroke-width="15" />
-    <el-progress
-      :percentage="30"
-      status="warning"
-      striped
-      striped-flow
-      :stroke-width="15"
-    />
+    <el-progress :percentage="30" status="warning" striped striped-flow :stroke-width="15" />
     <el-progress
       :duration="10"
       :percentage="100"

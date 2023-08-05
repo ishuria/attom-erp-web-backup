@@ -34,14 +34,9 @@ function can(roleOrPermission: (string | boolean)[], target: any) {
   let hasRole = false
   const { permission, mode } = target
   if (mode === 'allOf')
-    hasRole = permission.every((item: string) =>
-      roleOrPermission.includes(item)
-    )
-  if (mode === 'oneOf')
-    hasRole = permission.some((item: string) => roleOrPermission.includes(item))
+    hasRole = permission.every((item: string) => roleOrPermission.includes(item))
+  if (mode === 'oneOf') hasRole = permission.some((item: string) => roleOrPermission.includes(item))
   if (mode === 'except')
-    hasRole = !permission.every((item: string) =>
-      roleOrPermission.includes(item)
-    )
+    hasRole = !permission.every((item: string) => roleOrPermission.includes(item))
   return hasRole
 }

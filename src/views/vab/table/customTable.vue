@@ -1,59 +1,28 @@
 <template>
-  <div
-    class="custom-table-container table-auto-height"
-    :class="{ 'vab-fullscreen': isFullscreen }"
-  >
+  <div class="custom-table-container table-auto-height" :class="{ 'vab-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
           <el-form-item label="标题">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item v-show="!fold" label="标题">
-            <el-input
-              v-model="queryForm.title"
-              clearable
-              placeholder="请输入标题"
-            />
+            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -65,12 +34,7 @@
             >
               查询
             </el-button>
-            <el-button
-              class="hidden-xs-only"
-              text
-              type="primary"
-              @click="handleFold"
-            >
+            <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
               <span v-if="fold">展开</span>
               <span v-else>合并</span>
               <vab-icon
@@ -83,18 +47,10 @@
         </el-form>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel>
-        <el-button :icon="Plus" type="primary" @click="handleAdd">
-          添加
-        </el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete">
-          删除
-        </el-button>
+        <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
+        <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
         <el-button type="primary" @click="handleDetail">详情</el-button>
-        <el-button
-          class="hidden-xs-only"
-          type="primary"
-          @click="handleDetailStayTable"
-        >
+        <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">
           后台打开详情
         </el-button>
       </vab-query-form-left-panel>
@@ -110,9 +66,7 @@
             <vab-icon icon="refresh-line" />
           </el-button>
           <el-button @click="clickFullScreen">
-            <vab-icon
-              :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-            />
+            <vab-icon :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
           </el-button>
           <el-popover trigger="hover" :width="162">
             <el-radio-group v-model="lineHeight">
@@ -133,17 +87,10 @@
               </el-button>
             </template>
             <el-checkbox-group v-model="checkList">
-              <vab-draggable
-                item-key="{ element }"
-                :list="columns"
-                v-bind="dragOptions"
-              >
+              <vab-draggable item-key="{ element }" :list="columns" v-bind="dragOptions">
                 <template #item="{ element }">
                   <div>
-                    <el-checkbox
-                      :disabled="element.disableCheck === true"
-                      :label="element.label"
-                    >
+                    <el-checkbox :disabled="element.disableCheck === true" :label="element.label">
                       {{ element.label }}
                     </el-checkbox>
                   </div>
@@ -183,11 +130,7 @@
           <span v-if="item.label === '评级'">
             <el-rate v-model="row.rate" disabled />
           </span>
-          <el-popover
-            v-if="item.label === '图片'"
-            placement="top-start"
-            trigger="hover"
-          >
+          <el-popover v-if="item.label === '图片'" placement="top-start" trigger="hover">
             <el-image :src="row.image" />
             <template #reference>
               <el-image :src="row.image" />
@@ -199,15 +142,9 @@
 
       <el-table-column align="center" label="操作" width="237">
         <template #default="{ row }">
-          <el-button text type="primary" @click="handleDetail(row)">
-            详情
-          </el-button>
-          <el-button text type="primary" @click="handleEdit(row)">
-            编辑
-          </el-button>
-          <el-button text type="danger" @click="handleDelete(row)">
-            删除
-          </el-button>
+          <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
+          <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+          <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
 
@@ -321,9 +258,7 @@
   })
 
   const finallyColumns = computed(() => {
-    return columns.value.filter((item: any) =>
-      checkList.value.includes(item.label)
-    )
+    return columns.value.filter((item: any) => checkList.value.includes(item.label))
   })
 
   const fetchData = async () => {
@@ -394,10 +329,7 @@
   const handleDetailStayTable = async () => {
     if (selectRows.value.length === 1)
       for (let i = 0; i < selectRows.value.length; i++) {
-        const matched = handleMatched(
-          allRoutes.value,
-          '/vab/table/defaultTableDetail'
-        )
+        const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
         const tab = handleTabs({
           ...matched[matched.length - 1],
           query: selectRows.value[i],

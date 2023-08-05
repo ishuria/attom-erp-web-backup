@@ -10,9 +10,7 @@ export default {
     app.directive('permissions', {
       mounted(el, binding: DirectiveBinding) {
         const { value } = binding
-        if (value)
-          if (!hasPermission(value))
-            el.parentNode && el.parentNode.removeChild(el)
+        if (value) if (!hasPermission(value)) el.parentNode && el.parentNode.removeChild(el)
       },
     })
     /**
