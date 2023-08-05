@@ -1,5 +1,5 @@
-/*!  build: Vue Shop Vite 
-     copyright: https://vue-admin-beautiful.com/shop-vite  
+/*!  build: Vue Shop Vite
+     copyright: https://vue-admin-beautiful.com/shop-vite
  */
 figure {
   position: absolute;
@@ -60,7 +60,7 @@ figure {
   right: 0;
   bottom: 0;
   left: 0;
-  background: #409eff;
+  background: #4e88f3;
   animation: dotsX 2.4s linear infinite;
 }
 

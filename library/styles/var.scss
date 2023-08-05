@@ -1,4 +1,4 @@
-/* stylelint-disable scss/operator-no-newline-after */
+@import './variables';
 :root {
   --el-border-radius-base: #{$base-border-radius};
   --el-left-menu-width: #{$base-left-menu-width};
@@ -28,21 +28,57 @@
   --el-color-success: #{$vab-color-success};
   --el-color-success-light: #{$vab-color-success-light};
   --el-color-success-lighter: #{$vab-color-success-lighter};
+  --el-color-success-light-1: #{$vab-color-success-light-1};
+  --el-color-success-light-2: #{$vab-color-success-light-2};
+  --el-color-success-light-3: #{$vab-color-success-light-3};
+  --el-color-success-light-4: #{$vab-color-success-light-4};
+  --el-color-success-light-5: #{$vab-color-success-light-5};
+  --el-color-success-light-6: #{$vab-color-success-light-6};
+  --el-color-success-light-7: #{$vab-color-success-light-7};
+  --el-color-success-light-8: #{$vab-color-success-light-8};
+  --el-color-success-light-9: #{$vab-color-success-light-9};
   --el-color-success-dark-2: #{$vab-color-success};
 
   --el-color-warning: #{$vab-color-warning};
   --el-color-warning-light: #{$vab-color-warning-light};
   --el-color-warning-lighter: #{$vab-color-warning-lighter};
+  --el-color-warning-light-1: #{$vab-color-warning-light-1};
+  --el-color-warning-light-2: #{$vab-color-warning-light-2};
+  --el-color-warning-light-3: #{$vab-color-warning-light-3};
+  --el-color-warning-light-4: #{$vab-color-warning-light-4};
+  --el-color-warning-light-5: #{$vab-color-warning-light-5};
+  --el-color-warning-light-6: #{$vab-color-warning-light-6};
+  --el-color-warning-light-7: #{$vab-color-warning-light-7};
+  --el-color-warning-light-8: #{$vab-color-warning-light-8};
+  --el-color-warning-light-9: #{$vab-color-warning-light-9};
   --el-color-warning-dark-2: #{$vab-color-warning};
 
   --el-color-danger: #{$vab-color-danger};
   --el-color-danger-light: #{$vab-color-danger-light};
   --el-color-danger-lighter: #{$vab-color-danger-lighter};
+  --el-color-danger-light-1: #{$vab-color-danger-light-1};
+  --el-color-danger-light-2: #{$vab-color-danger-light-2};
+  --el-color-danger-light-3: #{$vab-color-danger-light-3};
+  --el-color-danger-light-4: #{$vab-color-danger-light-4};
+  --el-color-danger-light-5: #{$vab-color-danger-light-5};
+  --el-color-danger-light-6: #{$vab-color-danger-light-6};
+  --el-color-danger-light-7: #{$vab-color-danger-light-7};
+  --el-color-danger-light-8: #{$vab-color-danger-light-8};
+  --el-color-danger-light-9: #{$vab-color-danger-light-9};
   --el-color-danger-dark-2: #{$vab-color-danger};
 
   --el-color-error: #{$vab-color-error};
   --el-color-error-light: #{$vab-color-error-light};
   --el-color-error-lighter: #{$vab-color-error-lighter};
+  --el-color-error-light-1: #{$vab-color-error-light-1};
+  --el-color-error-light-2: #{$vab-color-error-light-2};
+  --el-color-error-light-3: #{$vab-color-error-light-3};
+  --el-color-error-light-4: #{$vab-color-error-light-4};
+  --el-color-error-light-5: #{$vab-color-error-light-5};
+  --el-color-error-light-6: #{$vab-color-error-light-6};
+  --el-color-error-light-7: #{$vab-color-error-light-7};
+  --el-color-error-light-8: #{$vab-color-error-light-8};
+  --el-color-error-light-9: #{$vab-color-error-light-9};
   --el-color-error-dark-2: #{$vab-color-error};
 
   --el-color-info: #{$vab-color-info};

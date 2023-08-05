@@ -1,6 +1,6 @@
 import autoprefixer from 'autoprefixer'
 import dayjs from 'dayjs'
-import { basename, resolve } from 'path'
+import { resolve } from 'path'
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import { dependencies, devDependencies, name, version } from './package.json'
@@ -87,11 +87,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       preprocessorOptions: {
         scss: {
           sassOptions: { outputStyle: 'expanded' },
-          additionalData(content: string, loaderContext: string) {
-            return ['variables.scss'].includes(basename(loaderContext))
-              ? content
-              : `@use "~/library/styles/variables.scss" as *;${content}`
-          },
+          // additionalData(content: string, loaderContext: string) {
+          //   return ['variables.scss'].includes(basename(loaderContext))
+          //     ? content
+          //     : `@use "~/library/styles/variables.scss" as *;${content}`
+          // },
         },
       },
       devSourcemap: true,
