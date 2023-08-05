@@ -259,9 +259,7 @@
 
   const _updateTheme = (value: any = '') => {
     if (value == 'default') $pub('shop-vite-reset-dark')
-    if (theme.value.themeName == 'technology') {
-      $pub('shop-vite-reset-color')
-    }
+    if (theme.value.themeName == 'technology') $pub('shop-vite-reset-color')
 
     const loading = $baseLoading()
     setTimeout(() => {

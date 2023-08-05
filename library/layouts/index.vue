@@ -33,7 +33,6 @@
       const { device, collapse, theme } = storeToRefs(settingsStore)
       const { toggleDevice, foldSideBar, openSideBar, updateTheme } =
         settingsStore
-
       const mobile = ref(false)
       let oldLayout = theme.value.layout
 
@@ -50,10 +49,13 @@
         toggleDevice(value ? 'mobile' : 'desktop')
       })
 
-      onBeforeMount(() => {
+      onMounted(() => {
         resizeBody()
-        updateTheme()
         window.addEventListener('resize', resizeBody)
+      })
+
+      onBeforeMount(() => {
+        updateTheme()
       })
 
       onBeforeUnmount(() => {
