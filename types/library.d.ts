@@ -10,11 +10,7 @@ declare interface globalPropertiesType {
     dangerouslyUseHTMLString?: boolean
   ): any
 
-  $baseAlert(
-    content: string | VNode,
-    title: string,
-    callback: (() => unknown) | undefined
-  ): any
+  $baseAlert(content: string | VNode, title: string, callback: (() => unknown) | undefined): any
 
   $baseConfirm(
     content: string | VNode,

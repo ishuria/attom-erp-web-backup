@@ -4,8 +4,7 @@ import { RouteRecordNormalized } from 'vue-router'
 /**
  * 路由记录
  */
-declare interface VabRouteRecord
-  extends Omit<RouteRecordRaw, 'name' | 'meta' | 'children'> {
+declare interface VabRouteRecord extends Omit<RouteRecordRaw, 'name' | 'meta' | 'children'> {
   name: string
   meta: VabRouteMeta
   children?: VabRouteRecord[]
@@ -14,8 +13,7 @@ declare interface VabRouteRecord
   redirect?: string
 }
 
-declare interface VabRouteRecordRaw
-  extends Omit<RouteRecordNormalized, 'meta'> {
+declare interface VabRouteRecordRaw extends Omit<RouteRecordNormalized, 'meta'> {
   meta: VabRouteMeta
 }
 
