@@ -11,22 +11,22 @@ html.dark > body[class*='vab-theme-'] {
   --el-menu-background-color: #1d1e1f;
   --el-mask-color: rgba(0, 0, 0, 0.6);
 
-  --w-e-textarea-bg-color: #1d1e1f;
+  --w-e-textarea-bg-color: #333;
   --w-e-textarea-color: #fff;
-  --w-e-textarea-border-color: #1d1e1f;
-  --w-e-textarea-slight-border-color: #1d1e1f;
-  --w-e-textarea-slight-color: #1d1e1f;
-  --w-e-textarea-slight-bg-color: #1d1e1f;
-  --w-e-textarea-selected-border-color: #1d1e1f;
-  --w-e-textarea-handler-bg-color: #1d1e1f;
+  --w-e-textarea-border-color: var(--el-border-color);
+  --w-e-textarea-slight-border-color: var(--el-border-color);
+  --w-e-textarea-slight-color: var(--el-border-color);
+  --w-e-textarea-slight-bg-color: var(--el-border-color);
+  --w-e-textarea-selected-border-color: var(--el-color-primary);
+  --w-e-textarea-handler-bg-color: var(--el-color-primary);
   --w-e-toolbar-color: #fff;
-  --w-e-toolbar-bg-color: #1d1e1f;
+  --w-e-toolbar-bg-color: #333;
   --w-e-toolbar-active-color: #fff;
-  --w-e-toolbar-active-bg-color: #1d1e1f;
-  --w-e-toolbar-disabled-color: #fff;
-  --w-e-toolbar-border-color: #1d1e1f;
-  --w-e-modal-button-bg-color: #1d1e1f;
-  --w-e-modal-button-border-color: #1d1e1f;
+  --w-e-toolbar-active-bg-color: #333;
+  --w-e-toolbar-disabled-color: #999;
+  --w-e-toolbar-border-color: #333;
+  --w-e-modal-button-bg-color: #333;
+  --w-e-modal-button-border-color: #d9d9d9;
 
   color: #cfd3dc !important;
   background-color: var(--el-color-white) !important;
