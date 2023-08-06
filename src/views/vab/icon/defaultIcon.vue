@@ -46,6 +46,7 @@
               :style="{
                 color: queryForm.colorful ? item.color : 'var(--el-color-grey)',
                 fontSize: queryForm.num + 'px',
+                transition: 'var(--el-transition)',
               }"
             />
           </vab-card>
