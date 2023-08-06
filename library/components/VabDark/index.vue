@@ -103,7 +103,6 @@
 </script>
 
 <style lang="scss">
-  /* stylelint-disable selector-pseudo-element-no-unknown */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     mix-blend-mode: normal;

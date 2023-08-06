@@ -117,7 +117,6 @@
 </script>
 
 <style lang="scss" scoped>
-  /* stylelint-disable scss/operator-no-newline-after */
   @mixin active {
     &:hover {
       color: var(--el-color-primary);
