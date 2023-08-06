@@ -1,7 +1,7 @@
 declare interface AclModuleType {
   admin: boolean
-  role: string[]
   permission: string[]
+  role: string[]
 }
 
 declare interface ErrorLogModuleType {
@@ -24,24 +24,25 @@ declare type DeviceType = 'mobile' | 'desktop'
 declare type LanguageType = 'zh' | 'en'
 
 declare interface SettingsModuleType {
-  theme: ThemeType
-  device: DeviceType
   collapse: boolean
+  color: string
+  device: DeviceType
+  isCatchedTabs: boolean
   language: LanguageType
   lock: boolean
   logo: string
-  title: string
-  color: string
   mode: string
+  theme: ThemeType
+  title: string
 }
 
 declare interface TabsModuleType {
-  visitedRoutes: any[]
   catchedRoutes: []
+  visitedRoutes: any[]
 }
 
 declare interface UserModuleType {
+  avatar: string
   token: string | boolean
   username: string
-  avatar: string
 }

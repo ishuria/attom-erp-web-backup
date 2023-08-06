@@ -2,6 +2,7 @@
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
 import {
+  isCatchedTabs as _isCatchedTabs,
   color,
   columnStyle,
   fixedHeader,
@@ -71,30 +72,35 @@ const getLocalStorage = (key: string) => {
   }
 }
 
+const { collapse = foldSidebar } = getLocalStorage('collapse')
+const { isCatchedTabs = _isCatchedTabs } = getLocalStorage('isCatchedTabs')
+
 export const useSettingsStore = defineStore('settings', {
   state: (): SettingsModuleType => ({
-    theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
-      ...defaultTheme,
-    },
-    device: 'desktop',
-    collapse: getLocalStorage('collapse').collapse || foldSidebar,
+    collapse,
     color: getLocalStorage('color').color || color,
+    device: 'desktop',
+    isCatchedTabs,
     language: getLocalStorage('language').language || i18n,
     lock: getLocalStorage('lock').lock || false,
     logo: getLocalStorage('logo').logo || logo,
-    title: getLocalStorage('title').title || title,
     mode: localStorage.getItem('vueuse-color-scheme') || 'light',
+    theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
+      ...defaultTheme,
+    },
+    title: getLocalStorage('title').title || title,
   }),
   getters: {
-    getTheme: (state) => state.theme,
-    getDevice: (state) => state.device,
     getCollapse: (state) => state.collapse,
     getColor: (state) => state.color,
-    getLock: (state) => state.lock,
+    getDevice: (state) => state.device,
+    getIsCatchedTabs: (state) => state.isCatchedTabs,
     getLanguage: (state) => state.language,
+    getLock: (state) => state.lock,
     getLogo: (state) => state.logo,
-    getTitle: (state) => state.title,
     getMode: (state) => state.mode,
+    getTheme: (state) => state.theme,
+    getTitle: (state) => state.title,
   },
   actions: {
     updateState(obj: any) {
@@ -166,6 +172,10 @@ export const useSettingsStore = defineStore('settings', {
     },
     handleUnLock() {
       this.updateState({ lock: false })
+    },
+    updateCatchedTabs(value: any) {
+      this.updateState({ isCatchedTabs: value })
+      if (!value) localStorage.removeItem('catchedRoutes')
     },
     changeLogo(logo: string) {
       this.updateState({ logo })

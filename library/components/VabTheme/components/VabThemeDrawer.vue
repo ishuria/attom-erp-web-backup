@@ -53,6 +53,12 @@
         </el-form-item>
         <el-form-item v-if="theme.showTabs">
           <template #label>
+            {{ translate('持久化标签') }}
+          </template>
+          <el-switch v-model="isCatchedTabs" @change="handleIsCatchedTabs" />
+        </el-form-item>
+        <el-form-item v-if="theme.showTabs">
+          <template #label>
             {{ translate('标签图标') }}
           </template>
           <el-switch v-model="theme.showTabsIcon" />
@@ -160,8 +166,8 @@
   const $baseLoading = inject<any>('$baseLoading')
   const $baseMessage = inject<any>('$baseMessage')
   const settingsStore = useSettingsStore()
-  const { theme, device, color, mode } = storeToRefs<any>(settingsStore)
-  const { saveTheme, resetTheme, updateTheme } = settingsStore
+  const { theme, device, color, mode, isCatchedTabs } = storeToRefs<any>(settingsStore)
+  const { saveTheme, resetTheme, updateTheme, updateCatchedTabs } = settingsStore
   const drawerVisible = ref<boolean>(false)
 
   const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
@@ -222,6 +228,10 @@
     const el = ref<any>(null)
     if (!value) useCssVar('--el-tabs-height', el).value = '0px'
     else useCssVar('--el-tabs-height', el).value = '50px'
+  }
+
+  const handleIsCatchedTabs = (value: any) => {
+    updateCatchedTabs(value)
   }
 
   const _updateTheme = (value: any = '') => {

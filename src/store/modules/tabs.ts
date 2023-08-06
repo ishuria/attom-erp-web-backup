@@ -1,4 +1,4 @@
-import { isCatchedTabs } from '/@/config'
+import { useSettingsStore } from './settings'
 
 /**
  * @description tabsBar标签页逻辑，如无必要请勿修改
@@ -104,7 +104,13 @@ export const useTabsStore = defineStore('tabs', {
      */
 
     handleCatchedRoutes() {
-      if (isCatchedTabs) localStorage.setItem('catchedRoutes', JSON.stringify(this.visitedRoutes))
+      const settingsStore = useSettingsStore()
+      if (settingsStore.isCatchedTabs)
+        localStorage.setItem('catchedRoutes', JSON.stringify(this.visitedRoutes))
+      else {
+        this.catchedRoutes = []
+        localStorage.removeItem('catchedRoutes')
+      }
     },
   },
 })
