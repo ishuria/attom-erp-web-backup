@@ -106,63 +106,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     ],
   },
   {
-    path: '/chat',
-    name: 'Chat',
-    component: Layout,
-    meta: {
-      title: 'GPT',
-      icon: 'chat-1-line',
-    },
-    children: [
-      {
-        path: 'chatGPT',
-        name: 'ChatGPT',
-        component: () => import('/@/views/chatGPT/ChatGPT.vue'),
-        meta: {
-          title: 'ChatGPT',
-          icon: 'openai-line',
-          dot: true,
-        },
-      },
-      {
-        path: 'speechSynthesis',
-        name: 'SpeechSynthesis',
-        component: () => import('/@/views/chatGPT/SpeechSynthesis.vue'),
-        meta: {
-          title: '语音合成',
-          icon: 'customer-service-line',
-        },
-      },
-      {
-        path: '//claude.ai/chat',
-        name: 'Claude',
-        meta: {
-          title: 'Claude',
-          target: '_blank',
-          icon: 'brain-line',
-        },
-      },
-      {
-        path: '//yiyan.baidu.com',
-        name: 'Yiyan',
-        meta: {
-          title: '文心一言',
-          target: '_blank',
-          icon: 'baidu-line',
-        },
-      },
-      {
-        path: '//qianwen.aliyun.com/chat',
-        name: 'Qianwen',
-        meta: {
-          title: '通义千问',
-          target: '_blank',
-          icon: 'taobao-line',
-        },
-      },
-    ],
-  },
-  {
     path: '/vab',
     name: 'Vab',
     component: Layout,
@@ -1169,6 +1112,63 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '商品分组',
           icon: 'shopping-basket-2-line',
+        },
+      },
+    ],
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: Layout,
+    meta: {
+      title: 'GPT',
+      icon: 'chat-1-line',
+    },
+    children: [
+      {
+        path: 'chatGPT',
+        name: 'ChatGPT',
+        component: () => import('/@/views/chatGPT/ChatGPT.vue'),
+        meta: {
+          title: 'ChatGPT',
+          icon: 'openai-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'speechSynthesis',
+        name: 'SpeechSynthesis',
+        component: () => import('/@/views/chatGPT/SpeechSynthesis.vue'),
+        meta: {
+          title: '语音合成',
+          icon: 'customer-service-line',
+        },
+      },
+      {
+        path: '//claude.ai/chat',
+        name: 'Claude',
+        meta: {
+          title: 'Claude',
+          target: '_blank',
+          icon: 'brain-line',
+        },
+      },
+      {
+        path: '//yiyan.baidu.com',
+        name: 'Yiyan',
+        meta: {
+          title: '文心一言',
+          target: '_blank',
+          icon: 'baidu-line',
+        },
+      },
+      {
+        path: '//qianwen.aliyun.com/chat',
+        name: 'Qianwen',
+        meta: {
+          title: '通义千问',
+          target: '_blank',
+          icon: 'taobao-line',
         },
       },
     ],

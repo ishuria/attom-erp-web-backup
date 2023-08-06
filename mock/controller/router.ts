@@ -40,61 +40,15 @@ const list = [
           badge: 'Hot',
         },
       },
-    ],
-  },
-  {
-    path: '/chat',
-    name: 'Chat',
-    component: 'Layout',
-    meta: {
-      title: 'GPT',
-      icon: 'chat-1-line',
-    },
-    children: [
       {
-        path: 'chatGPT',
-        name: 'ChatGPT',
-        component: '/@/views/chatGPT/ChatGPT.vue',
+        path: 'application',
+        name: 'Application',
+        component: '/@/views/index/application.vue',
         meta: {
-          title: 'ChatGPT',
-          icon: 'openai-line',
+          title: '客户端',
+          icon: 'apps-2-line',
+          noKeepAlive: true,
           dot: true,
-        },
-      },
-      {
-        path: 'speechSynthesis',
-        name: 'SpeechSynthesis',
-        component: '/@/views/chatGPT/SpeechSynthesis.vue',
-        meta: {
-          title: '语音合成',
-          icon: 'customer-service-line',
-        },
-      },
-      {
-        path: '//claude.ai/chat',
-        name: 'Claude',
-        meta: {
-          title: 'Claude',
-          target: '_blank',
-          icon: 'brain-line',
-        },
-      },
-      {
-        path: '//yiyan.baidu.com',
-        name: 'Yiyan',
-        meta: {
-          title: '文心一言',
-          target: '_blank',
-          icon: 'baidu-line',
-        },
-      },
-      {
-        path: '//qianwen.aliyun.com/chat',
-        name: 'Qianwen',
-        meta: {
-          title: '通义千问',
-          target: '_blank',
-          icon: 'taobao-line',
         },
       },
     ],
@@ -481,7 +435,6 @@ const list = [
           title: '图表',
           guard: ['Admin'],
           icon: 'bubble-chart-line',
-          noKeepAlive: true,
         },
       },
       {
@@ -514,7 +467,6 @@ const list = [
           },
         ],
       },
-
       {
         path: 'video',
         name: 'Video',
@@ -524,6 +476,16 @@ const list = [
           guard: ['Admin'],
           icon: 'video-line',
           dot: true,
+        },
+      },
+      {
+        path: 'workflow',
+        name: 'Workflow',
+        component: '/@/views/other/workflow/index.vue',
+        meta: {
+          title: '工作流',
+          guard: ['Admin'],
+          icon: 'flow-chart',
         },
       },
       {
@@ -777,6 +739,26 @@ const list = [
         },
       },
       {
+        path: 'randomTheme',
+        name: 'RandomTheme',
+        component: '/@/views/operate/randomTheme/index.vue',
+        meta: {
+          title: '随机换肤',
+          guard: ['Admin'],
+          icon: 'ai-generate',
+        },
+      },
+      {
+        path: 'log',
+        name: 'Log',
+        component: '/@/views/operate/errorLog/index.vue',
+        meta: {
+          title: '错误日志',
+          guard: ['Admin'],
+          icon: 'error-warning-line',
+        },
+      },
+      {
         path: 'dynamicSegment',
         name: 'DynamicSegment',
         meta: {
@@ -818,16 +800,6 @@ const list = [
             meta: { title: 'Query id=1' },
           },
         ],
-      },
-      {
-        path: 'log',
-        name: 'Log',
-        component: '/@/views/operate/errorLog/index.vue',
-        meta: {
-          title: '错误日志',
-          guard: ['Admin'],
-          icon: 'error-warning-line',
-        },
       },
       {
         path: 'menu1',
@@ -1087,6 +1059,63 @@ const list = [
         meta: {
           title: '商品分组',
           icon: 'shopping-basket-2-line',
+        },
+      },
+    ],
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: 'Layout',
+    meta: {
+      title: 'GPT',
+      icon: 'chat-1-line',
+    },
+    children: [
+      {
+        path: 'chatGPT',
+        name: 'ChatGPT',
+        component: '/@/views/chatGPT/ChatGPT.vue',
+        meta: {
+          title: 'ChatGPT',
+          icon: 'openai-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'speechSynthesis',
+        name: 'SpeechSynthesis',
+        component: '/@/views/chatGPT/SpeechSynthesis.vue',
+        meta: {
+          title: '语音合成',
+          icon: 'customer-service-line',
+        },
+      },
+      {
+        path: '//claude.ai/chat',
+        name: 'Claude',
+        meta: {
+          title: 'Claude',
+          target: '_blank',
+          icon: 'brain-line',
+        },
+      },
+      {
+        path: '//yiyan.baidu.com',
+        name: 'Yiyan',
+        meta: {
+          title: '文心一言',
+          target: '_blank',
+          icon: 'baidu-line',
+        },
+      },
+      {
+        path: '//qianwen.aliyun.com/chat',
+        name: 'Qianwen',
+        meta: {
+          title: '通义千问',
+          target: '_blank',
+          icon: 'taobao-line',
         },
       },
     ],

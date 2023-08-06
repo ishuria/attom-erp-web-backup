@@ -58,6 +58,7 @@
   "vue.codeActions.savingTimeLimit": 100000,
   "editor.formatOnType": true,
   "cSpell.words": [
+    "aliyun",
     "axios",
     "catched",
     "chuzhixin",
@@ -68,21 +69,28 @@
     "globle",
     "jsencrypt",
     "kangc",
+    "lllustration",
     "logicflow",
     "mockjs",
     "nprogress",
+    "openai",
     "Openeds",
     "picocolors",
     "pinia",
+    "qianwen",
+    "remixicon",
     "stylelint",
+    "taobao",
     "textareas",
     "typeit",
     "unplugin",
     "unsub",
     "vite",
     "vitebar",
+    "vuejs",
     "vueuse",
     "wangeditor",
-    "xgplayer"
+    "xgplayer",
+    "yiyan"
   ]
 }
