@@ -183,7 +183,7 @@
     formName.value.resetFields()
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

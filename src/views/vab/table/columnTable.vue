@@ -363,7 +363,7 @@
     }
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

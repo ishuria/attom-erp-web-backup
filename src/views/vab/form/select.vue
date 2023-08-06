@@ -208,7 +208,7 @@
     areaOptions.value = list
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

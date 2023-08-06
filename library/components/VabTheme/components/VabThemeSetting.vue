@@ -70,7 +70,7 @@
 
   const $pub = inject<any>('$pub')
   const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
+  const { device, theme } = storeToRefs(settingsStore)
   const show = ref<boolean>(true)
 
   const handleOpenTheme = () => {
@@ -86,14 +86,16 @@
     location.reload()
   }
 
-  const resetTheme = () => {
-    $pub('shop-vite-reset-theme')
-    $pub('shop-vite-save-theme')
+  const resetTheme = async () => {
+    await $pub('shop-vite-reset-theme')
+    await $pub('shop-vite-save-theme')
+    if (device.value === 'mobile') await location.reload()
   }
 
-  const changeTheme = (value: string) => {
-    $pub('shop-vite-change-theme', value)
-    $pub('shop-vite-save-theme')
+  const changeTheme = async (value: string) => {
+    await $pub('shop-vite-change-theme', value)
+    await $pub('shop-vite-save-theme')
+    if (device.value === 'mobile') await location.reload()
   }
 
   const toggleShowHide = () => {

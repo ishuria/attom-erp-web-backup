@@ -81,7 +81,7 @@
     emit('handle-icon', item)
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

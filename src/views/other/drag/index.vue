@@ -31,9 +31,11 @@
   })
 
   const iconList = ref<any>([])
+
   const randomHexColor = () => {
     return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
   }
+
   const fetchData = async () => {
     const { data } = await getIconList({
       pageNo: 1,
@@ -45,9 +47,11 @@
         return { icon, color: randomHexColor(), order: index + 1 }
       })
   }
+
   const sort = () => {
     iconList.value = iconList.value.sort((a: any, b: any) => a.order - b.order)
   }
+
   const dragOptions = computed(() => {
     return {
       animation: 600,
@@ -57,7 +61,7 @@
     }
   })
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

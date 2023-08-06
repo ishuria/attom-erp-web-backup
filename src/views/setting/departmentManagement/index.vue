@@ -138,7 +138,7 @@
     listLoading.value = false
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

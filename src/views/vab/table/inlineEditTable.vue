@@ -69,8 +69,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/table'
   import { Search } from '@element-plus/icons-vue'
+  import { getList } from '/@/api/table'
 
   defineOptions({
     name: 'InlineEditTable',
@@ -127,7 +127,7 @@
     row.originalAuthor = row.author
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

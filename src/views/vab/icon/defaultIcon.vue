@@ -69,10 +69,10 @@
 </template>
 
 <script lang="ts" setup>
+  import { Search } from '@element-plus/icons-vue'
   import { shuffle } from 'lodash-es'
   import { getIconList } from '/@/api/icon'
   import clip from '/@/utils/clipboard'
-  import { Search } from '@element-plus/icons-vue'
 
   defineOptions({
     name: 'DefaultIcon',
@@ -128,7 +128,7 @@
     return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

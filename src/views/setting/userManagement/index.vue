@@ -63,8 +63,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { doDelete, getList } from '/@/api/userManagement'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
+  import { doDelete, getList } from '/@/api/userManagement'
 
   defineOptions({
     name: 'UserManagement',
@@ -142,7 +142,7 @@
     listLoading.value = false
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

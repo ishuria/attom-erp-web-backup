@@ -90,8 +90,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/systemLog'
   import { Search } from '@element-plus/icons-vue'
+  import { getList } from '/@/api/systemLog'
 
   defineOptions({
     name: 'SystemLog',
@@ -131,7 +131,7 @@
     listLoading.value = false
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

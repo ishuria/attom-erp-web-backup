@@ -88,8 +88,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { doDelete, getList } from '/@/api/goodsManagement'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
+  import { doDelete, getList } from '/@/api/goodsManagement'
 
   defineOptions({
     name: 'GoodsManagement',
@@ -171,7 +171,7 @@
     }
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

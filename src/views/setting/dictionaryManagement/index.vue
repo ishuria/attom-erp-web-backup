@@ -60,8 +60,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { doDelete, getList, getTree } from '/@/api/dictionaryManagement'
   import { Plus } from '@element-plus/icons-vue'
+  import { doDelete, getList, getTree } from '/@/api/dictionaryManagement'
 
   defineOptions({
     name: 'DictionaryManagement',
@@ -135,7 +135,7 @@
     treeList.value = [...treeList.value]
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

@@ -59,8 +59,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { doDelete, getList } from '/@/api/roleManagement'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
+  import { doDelete, getList } from '/@/api/roleManagement'
 
   defineOptions({
     name: 'RoleManagement',
@@ -136,7 +136,7 @@
     listLoading.value = false
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

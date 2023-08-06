@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { useUserStore } from '/@/store/modules/user'
   import { getList } from '/@/api/description'
+  import { useUserStore } from '/@/store/modules/user'
 
   const userStore = useUserStore()
   const { avatar, username } = storeToRefs(userStore)
@@ -36,7 +36,7 @@
     description.value = data.description
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 

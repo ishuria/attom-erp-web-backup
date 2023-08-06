@@ -101,7 +101,7 @@
       }
     })
   }
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

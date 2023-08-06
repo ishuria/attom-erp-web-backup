@@ -74,7 +74,7 @@
     $baseMessage('清空消息成功', 'success', 'hey')
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     if (theme.value.showNotice) fetchData()
   })
 </script>

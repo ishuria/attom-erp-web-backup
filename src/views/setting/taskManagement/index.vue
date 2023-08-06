@@ -57,8 +57,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/taskManagement'
   import { Search } from '@element-plus/icons-vue'
+  import { getList } from '/@/api/taskManagement'
   import { getImageUrl } from '/@/utils/imageUrl'
 
   defineOptions({
@@ -93,7 +93,7 @@
   const handleAdd = () => {
     $baseMessage('模拟添加成功', 'success', 'hey')
   }
-  onMounted(() => {
+  onBeforeMount(() => {
     fetchData()
   })
 </script>

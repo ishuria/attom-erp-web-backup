@@ -94,9 +94,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/router'
-  import { doDelete, getTree } from '/@/api/menuManagement'
   import { Plus } from '@element-plus/icons-vue'
+  import { doDelete, getTree } from '/@/api/menuManagement'
+  import { getList } from '/@/api/router'
 
   defineOptions({
     name: 'MenuManagement',
@@ -142,7 +142,7 @@
     fetchData(role)
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     getTree().then(({ data }) => {
       treeList.value = data.list
     })

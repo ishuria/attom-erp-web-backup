@@ -166,12 +166,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { doDelete, getList } from '/@/api/table'
-  import { handleMatched, handleTabs } from '/@/utils/routes'
-  import VabDraggable from 'vuedraggable'
   import { Delete, Plus, Search } from '@element-plus/icons-vue'
+  import VabDraggable from 'vuedraggable'
+  import { doDelete, getList } from '/@/api/table'
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { handleMatched, handleTabs } from '/@/utils/routes'
 
   defineOptions({
     name: 'CustomTable',
@@ -369,11 +369,10 @@
     }
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     columns.value.forEach((item: any) => {
       if (item.checked) checkList.value.push(item.label)
     })
-
     fetchData()
   })
 </script>
