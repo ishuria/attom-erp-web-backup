@@ -152,7 +152,7 @@
     ]
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     getMap()
   })
 </script>

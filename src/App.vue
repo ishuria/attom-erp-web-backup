@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-  onMounted(() => {
+  onBeforeMount(() => {
     if (
       location.hostname === 'vue-admin-beautiful.com' ||
       location.hostname === 'chu1204505056.gitee.io'

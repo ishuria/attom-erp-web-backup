@@ -87,7 +87,7 @@
     value.value = color
   })
 
-  onMounted(() => {
+  onBeforeMount(() => {
     handleUseDark()
     if (handleGetScheme('auto')) handleSetScheme('light')
     value.value = handleGetScheme('dark')

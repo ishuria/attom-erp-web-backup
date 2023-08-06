@@ -42,7 +42,7 @@
     clip(form.url)
   }
 
-  onMounted(() => {
+  onBeforeMount(() => {
     form.url = 'https://vue-admin-beautiful.com/shop-vite'
   })
 </script>

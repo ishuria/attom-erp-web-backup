@@ -72,7 +72,7 @@
   const rightCardHeight3 = ref<any>('calc((100vh - 165px) / 3.5)')
   const $baseMessage = inject<any>('$baseMessage')
 
-  onMounted(() => {
+  onBeforeMount(() => {
     $baseMessage('点击右上角【全屏】按钮使用效果更佳', 'success', 'hey')
 
     if (

@@ -7,7 +7,7 @@
     name: 'Redirect',
   })
 
-  onMounted(() => {
+  onBeforeMount(() => {
     setTimeout(() => {
       history.back()
     }, 500)
