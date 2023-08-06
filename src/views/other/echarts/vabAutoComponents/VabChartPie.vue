@@ -47,12 +47,6 @@
         borderColor: '#fff',
         borderWidth: 2,
       },
-      emphasis: {
-        label: {
-          show: true,
-          fontSize: '14',
-        },
-      },
       data: [
         { value: random(0, 100), name: '搜索引擎' },
         { value: random(0, 100), name: '直接访问' },

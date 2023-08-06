@@ -35,6 +35,9 @@
       bottom: 40,
       left: 40,
     },
+    tooltip: {
+      trigger: 'item',
+    },
     radar: {
       indicator: [
         { name: '销售' },

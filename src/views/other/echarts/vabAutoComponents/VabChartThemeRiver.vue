@@ -49,32 +49,11 @@
     singleAxis: {
       top: 20,
       bottom: 20,
-      axisTick: {},
-      axisLabel: {},
       type: 'time',
-      axisPointer: {
-        animation: true,
-        label: {
-          show: true,
-        },
-      },
-      splitLine: {
-        show: true,
-        lineStyle: {
-          type: 'dashed',
-          opacity: 0.2,
-        },
-      },
     },
 
     series: {
       type: 'themeRiver',
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 20,
-          shadowColor: 'rgba(0, 0, 0, 0.8)',
-        },
-      },
       data: [
         ['2015/11/08', random(0, 100), 'DQ'],
         ['2015/11/09', random(0, 100), 'DQ'],

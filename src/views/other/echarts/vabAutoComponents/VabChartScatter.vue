@@ -37,6 +37,9 @@
     },
     xAxis: {},
     yAxis: {},
+    tooltip: {
+      trigger: 'item',
+    },
     series: {
       symbolSize: 10,
       data: [

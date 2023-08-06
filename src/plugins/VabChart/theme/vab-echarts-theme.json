@@ -3,7 +3,7 @@
   "textStyle": {},
   "title": {
     "textStyle": {
-      "color": "#333333"
+      "color": "#99999"
     },
     "subtextStyle": {
       "color": "#aaaaaa"
@@ -149,23 +149,23 @@
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#ccc"
+        "color": "#999"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#ccc"
+        "color": "#999"
       }
     },
     "axisLabel": {
       "show": true,
-      "color": "#333"
+      "color": "#999"
     },
     "splitLine": {
       "show": false,
       "lineStyle": {
-        "color": ["#ccc"]
+        "color": ["#999"]
       }
     },
     "splitArea": {
@@ -179,23 +179,23 @@
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#ccc"
+        "color": "#999"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#ccc"
+        "color": "#999"
       }
     },
     "axisLabel": {
       "show": true,
-      "color": "#333"
+      "color": "#999"
     },
     "splitLine": {
       "show": false,
       "lineStyle": {
-        "color": ["#ccc"]
+        "color": ["#999"]
       }
     },
     "splitArea": {
@@ -239,23 +239,23 @@
     "axisLine": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#999"
       }
     },
     "axisTick": {
       "show": true,
       "lineStyle": {
-        "color": "#333"
+        "color": "#999"
       }
     },
     "axisLabel": {
       "show": true,
-      "color": "#333"
+      "color": "#999"
     },
     "splitLine": {
       "show": true,
       "lineStyle": {
-        "color": ["#ccc"]
+        "color": ["#999"]
       }
     },
     "splitArea": {
@@ -277,7 +277,7 @@
   },
   "legend": {
     "textStyle": {
-      "color": "#333333"
+      "color": "#99999"
     }
   },
   "tooltip": {
@@ -337,7 +337,7 @@
     "handleColor": "#a7b7cc",
     "handleSize": "100%",
     "textStyle": {
-      "color": "#333333"
+      "color": "#99999"
     }
   },
   "markPoint": {

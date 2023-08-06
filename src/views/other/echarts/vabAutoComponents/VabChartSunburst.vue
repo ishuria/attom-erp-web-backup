@@ -32,6 +32,9 @@
       bottom: 20,
       left: 20,
     },
+    tooltip: {
+      trigger: 'item',
+    },
     series: {
       type: 'sunburst',
       data: [

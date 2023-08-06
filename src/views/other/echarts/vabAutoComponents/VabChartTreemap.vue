@@ -35,6 +35,9 @@
       bottom: 60,
       left: 40,
     },
+    tooltip: {
+      trigger: 'item',
+    },
     series: {
       type: 'treemap',
       data: [
