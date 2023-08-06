@@ -289,6 +289,7 @@ html {
 
       &.is-fullscreen {
         z-index: calc(var(--el-z-index) + 99) !important;
+        transition: none;
       }
     }
 

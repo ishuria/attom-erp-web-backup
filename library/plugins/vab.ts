@@ -1,8 +1,8 @@
+import { ElLoading, ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import { head, toArray } from 'lodash-es'
+import mitt from 'mitt'
 import type { App, VNode } from 'vue'
 import { loadingText, messageDuration } from '/@/config'
-import { ElLoading, ElMessage, ElMessageBox, ElNotification } from 'element-plus'
-import mitt from 'mitt'
-import { head, toArray } from 'lodash-es'
 
 export let gp: Record<string, any>
 
@@ -44,7 +44,7 @@ export default {
      * @description 全局加载层
      * @param {string} text 显示在加载图标下方的加载文案
      */
-    const $baseLoading = (text = loadingText, background = '#fff') => {
+    const $baseLoading = (text = loadingText, background = 'var(--el-color-white)') => {
       return ElLoading.service({
         lock: true,
         text: text,

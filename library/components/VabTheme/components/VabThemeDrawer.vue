@@ -249,12 +249,16 @@
     }, 1000)
   }
 
-  const setDefaultTheme = async () => {
-    const loading = $baseLoading()
-    await resetTheme()
-    await $pub('shop-vite-reset-color')
-    await $pub('shop-vite-reset-dark')
+  const setDefaultTheme = () => {
     drawerVisible.value = false
+    const loading = $baseLoading()
+
+    setTimeout(async () => {
+      await resetTheme()
+      await $pub('shop-vite-reset-color')
+      await $pub('shop-vite-reset-dark')
+    }, 500)
+
     setTimeout(() => {
       loading.close()
       $baseMessage('切换成功', 'success', 'hey')
