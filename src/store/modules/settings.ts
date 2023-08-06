@@ -9,7 +9,7 @@ import {
   i18n,
   isFollow,
   layout,
-  logo as _logo,
+  logo,
   menuWidth,
   pageTransition,
   radius,
@@ -29,7 +29,7 @@ import {
   showThemeSetting,
   tabsBarStyle,
   themeName,
-  title as _title,
+  title,
 } from '/@/config'
 import { lightenColor } from '/@/utils/lightenColor'
 import { isJson } from '/@/utils/validate'
@@ -64,32 +64,25 @@ const defaultTheme: ThemeType = {
 
 const getLocalStorage = (key: string) => {
   const value: any = localStorage.getItem(key)
-  if (isJson(value)) {
+  if (value && isJson(value)) {
     return JSON.parse(value)
   } else {
     return false
   }
 }
 
-const theme = { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
-  ...defaultTheme,
-}
-const { collapse = foldSidebar } = getLocalStorage('collapse')
-const { language = i18n } = getLocalStorage('language')
-const { lock = false } = getLocalStorage('lock')
-const { logo = _logo } = getLocalStorage('logo')
-const { title = _title } = getLocalStorage('title')
-
 export const useSettingsStore = defineStore('settings', {
   state: (): SettingsModuleType => ({
-    theme,
+    theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
+      ...defaultTheme,
+    },
     device: 'desktop',
-    collapse,
+    collapse: getLocalStorage('collapse').collapse || foldSidebar,
     color: getLocalStorage('color').color || color,
-    language,
-    lock,
-    logo,
-    title,
+    language: getLocalStorage('language').language || i18n,
+    lock: getLocalStorage('lock').lock || false,
+    logo: getLocalStorage('logo').logo || logo,
+    title: getLocalStorage('title').title || title,
     mode: localStorage.getItem('vueuse-color-scheme') || 'light',
   }),
   getters: {
