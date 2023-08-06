@@ -1,5 +1,5 @@
 <template>
-  <vab-card class="Develop">
+  <vab-card :body-style="{ height: '222px' }" skeleton>
     <template #header>
       <vab-icon icon="line-chart-line" />
       流量概况

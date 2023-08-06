@@ -4,19 +4,19 @@
       <vab-count
         :decimals="form.decimals"
         :duration="form.duration"
-        :end-value="form.endVal"
+        :end-value="form.endValue"
         :prefix="form.prefix"
         :separator="form.separator"
-        :start-value="form.startVal"
+        :start-value="form.startValue"
         :suffix="form.suffix"
       />
     </div>
     <el-form inline label-width="80px" :model="form">
       <el-form-item label="起始值">
-        <el-input-number v-model="form.startVal" :min="0" />
+        <el-input-number v-model="form.startValue" :min="0" />
       </el-form-item>
       <el-form-item label="最终值">
-        <el-input-number v-model="form.endVal" :min="0" />
+        <el-input-number v-model="form.endValue" :min="0" />
       </el-form-item>
       <el-form-item label="持续时间">
         <el-input-number v-model="form.duration" :min="0" />
@@ -40,8 +40,8 @@
   })
 
   const form = reactive<any>({
-    startVal: 0,
-    endVal: 999,
+    startValue: 0,
+    endValue: 999,
     decimals: 0,
     prefix: '',
     suffix: '',

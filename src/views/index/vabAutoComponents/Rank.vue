@@ -1,12 +1,10 @@
 <template>
-  <vab-card class="rank">
+  <vab-card :body-style="{ height: '210px' }" skeleton>
     <template #header>
-      <span>
-        <vab-icon icon="align-top" />
-        消費排行
-      </span>
+      <vab-icon icon="align-top" />
+      消費排行
     </template>
-    <vab-chart class="rank-echart" :option="option" />
+    <vab-chart :option="option" />
   </vab-card>
 </template>
 

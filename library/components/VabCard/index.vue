@@ -13,23 +13,18 @@
 </template>
 
 <script lang="ts" setup>
+  import { ElCard } from 'element-plus'
+
   defineOptions({
     name: 'VabCard',
   })
 
   defineProps({
-    header: {
-      type: String,
-      default: '',
-    },
-    bodyStyle: {
-      type: [String, Object, Array],
-      default: '',
-    } as any,
+    ...ElCard.props,
     shadow: {
       type: String,
       default: 'never',
-    } as any,
+    },
     skeleton: {
       type: Boolean,
       default: false,

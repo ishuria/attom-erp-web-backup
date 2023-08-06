@@ -57,8 +57,8 @@
   })
 
   const countConfig1 = reactive<any>({
-    startVal: 0,
-    endVal: random(1000, 20000),
+    startValue: 0,
+    endValue: random(1000, 20000),
     decimals: 2,
     prefix: '￥',
     suffix: '',

@@ -8,10 +8,10 @@
       <vab-count
         :decimals="countConfig.decimals"
         :duration="countConfig.duration"
-        :end-value="countConfig.endVal"
+        :end-value="countConfig.endValue"
         :prefix="countConfig.prefix"
         :separator="countConfig.separator"
-        :start-value="countConfig.startVal"
+        :start-value="countConfig.startValue"
         :suffix="countConfig.suffix"
       />
     </p>
@@ -58,8 +58,8 @@
       type: Object,
       default: () => {
         return {
-          startVal: 0,
-          endVal: random(1000, 20000),
+          startValue: 0,
+          endValue: random(1000, 20000),
           decimals: 0,
           prefix: '',
           suffix: '',

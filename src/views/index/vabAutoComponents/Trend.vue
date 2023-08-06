@@ -1,10 +1,10 @@
 <template>
-  <vab-card class="trend">
+  <vab-card :body-style="{ height: '210px' }" skeleton>
     <template #header>
       <vab-icon icon="line-chart-fill" />
       趋势
     </template>
-    <vab-chart class="trend-echart" :option="option" />
+    <vab-chart :option="option" />
   </vab-card>
 </template>
 

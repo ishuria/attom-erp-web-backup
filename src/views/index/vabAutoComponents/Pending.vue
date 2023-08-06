@@ -7,7 +7,7 @@
     </template>
     <el-row :gutter="20">
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <vab-colorful-card :style="style1">
+        <vab-colorful-card :body-style="{ height: '100px' }" :style="style1">
           <template #header></template>
           <div class="parting-line parting-line-danger"></div>
           <span class="pending-title pending-title-danger">
@@ -19,7 +19,7 @@
         </vab-colorful-card>
       </el-col>
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <vab-colorful-card :style="style2">
+        <vab-colorful-card :body-style="{ height: '100px' }" :style="style2">
           <template #header></template>
           <div class="parting-line parting-line-primary"></div>
           <span class="pending-title pending-title-primary">
@@ -60,10 +60,14 @@
         margin-right: 5px;
       }
 
+      .el-card__body {
+        padding-bottom: 0;
+      }
+
       .parting-line {
         float: left;
         width: 10px;
-        height: 50px;
+        height: calc(100% - 30px);
         margin-right: 20px;
         border-radius: 10px;
 
@@ -80,7 +84,7 @@
         display: block;
         font-size: var(--el-font-size-big);
         font-weight: bold;
-        line-height: 28px;
+        line-height: 38px;
 
         span {
           font-size: var(--el-font-size-small);

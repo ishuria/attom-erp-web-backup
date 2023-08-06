@@ -22,7 +22,6 @@
     transition: var(--el-transition-duration) background-color;
 
     &:hover {
-      background-color: var(--el-scrollbar-hover-bg-color);
       background-color: rgba(#909399, 0.5);
     }
   }

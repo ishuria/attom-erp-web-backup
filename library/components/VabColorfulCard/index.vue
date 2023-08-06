@@ -1,5 +1,6 @@
 <template>
   <el-card
+    :body-style="bodyStyle"
     class="vab-colorful-card"
     :shadow="shadow"
     :style="
@@ -19,15 +20,18 @@
 </template>
 
 <script lang="ts" setup>
+  import { ElCard } from 'element-plus'
+
   defineOptions({
     name: 'VabColorfulCard',
   })
 
   defineProps({
+    ...ElCard.props,
     shadow: {
       type: String,
       default: 'never',
-    } as any,
+    },
     colorFrom: {
       type: String,
       default: '',

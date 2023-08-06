@@ -51,8 +51,8 @@
   })
 
   const countConfig1 = {
-    startVal: 0,
-    endVal: random(1000, 2000),
+    startValue: 0,
+    endValue: random(1000, 2000),
     decimals: 0,
     prefix: '',
     suffix: ' KB',
@@ -61,8 +61,8 @@
   }
 
   const countConfig2 = {
-    startVal: 0,
-    endVal: random(1000, 2000),
+    startValue: 0,
+    endValue: random(1000, 2000),
     decimals: 0,
     prefix: '',
     suffix: ' GB',

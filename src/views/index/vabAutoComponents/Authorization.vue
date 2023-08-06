@@ -1,5 +1,5 @@
 <template>
-  <vab-card class="authorization">
+  <vab-card :body-style="{ height: '222px' }" skeleton>
     <template #header>
       <vab-icon icon="bar-chart-2-line" />
       授权数
@@ -12,10 +12,10 @@
         <vab-count
           :decimals="countConfig.decimals"
           :duration="countConfig.duration"
-          :end-val="countConfig.endVal"
+          :end-value="countConfig.endValue"
           :prefix="countConfig.prefix"
           :separator="countConfig.separator"
-          :start-val="countConfig.startVal"
+          :start-value="countConfig.startValue"
           :suffix="countConfig.suffix"
         />
         <el-tag class="card-footer-tag" type="success">倒计时 {{ n }}s</el-tag>
@@ -37,8 +37,8 @@
   let timer: any
   const n = ref<number>(5)
   const countConfig = reactive<any>({
-    startVal: 0,
-    endVal: random(1000, 20000),
+    startValue: 0,
+    endValue: random(1000, 20000),
     decimals: 0,
     prefix: '',
     suffix: '',

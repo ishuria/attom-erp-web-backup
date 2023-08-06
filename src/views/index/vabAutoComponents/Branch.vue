@@ -1,10 +1,10 @@
 <template>
-  <vab-card class="branch">
+  <vab-card :body-style="{ height: '210px' }" skeleton>
     <template #header>
       <vab-icon icon="donut-chart-fill" />
       分布
     </template>
-    <vab-chart class="branch-echart" :option="option" />
+    <vab-chart :option="option" />
   </vab-card>
 </template>
 
