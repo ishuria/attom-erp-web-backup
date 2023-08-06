@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar>
+  <el-scrollbar wrap-class="scroll-wrap-portal">
     <div class="portal-main-mobile hidden-sm-and-up">
       <el-alert :closable="false" title="手机端不支持门户演示" type="error" />
     </div>
@@ -7,14 +7,16 @@
       <header>
         <div class="index-nav">
           <div class="logo">
-            <a href="/"></a>
+            <a href="#/portal"></a>
+            <span class="logo-title">Vue Shop Vite</span>
           </div>
+
           <ul class="nav-item">
             <li>
               <a href="#/portal">门户页</a>
             </li>
             <li>
-              <a href="#/index">管理页</a>
+              <a href="#/index" target="_blank">管理页</a>
             </li>
             <li><a href="#/portal">页面3</a></li>
             <li><a href="#/portal">页面4</a></li>
@@ -23,7 +25,7 @@
         </div>
       </header>
       <div class="carousel-background" :style="{ background: background }"></div>
-      <main>
+      <main style="margin-top: 100px">
         <el-row :gutter="0">
           <el-col :span="6">
             <div class="left-tab">
@@ -109,17 +111,7 @@
           </el-col>
         </el-row>
       </main>
-
-      <div
-        style="
-          width: 100%;
-          height: 40px;
-          margin-bottom: 10px;
-          box-shadow: rgb(7 17 27 / 6%) 6px 5px 8px 0;
-        "
-      ></div>
-
-      <main style="background: #f5f7fa">
+      <main style="margin-top: 30px">
         <el-row :gutter="20">
           <el-col :span="8">
             <div class="news-tit"><h2>今日要闻</h2></div>
@@ -131,8 +123,7 @@
           </el-col>
         </el-row>
       </main>
-
-      <main style="background: #f5f7fa">
+      <main>
         <el-row :gutter="20">
           <el-col :span="8">
             <div class="news-tit"><h2>工作日程</h2></div>
@@ -151,6 +142,7 @@
 
       <vab-footer />
     </div>
+    <el-backtop target="#app .scroll-wrap-portal" />
   </el-scrollbar>
 </template>
 
@@ -226,46 +218,64 @@
     }
 
     header {
-      position: relative;
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
       z-index: 999;
-      height: 71px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 70px;
       margin: 0;
-      background: rgba(var(--el-color-white), 0.5);
+      background: rgba(251, 251, 253, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
 
       .index-nav {
         min-width: 1152px;
         max-width: 1366px;
-        margin: 0 auto;
-      }
+        padding: 0;
+        margin: auto;
 
-      .logo {
-        float: left;
-        margin: 0 20px;
-
-        a {
-          display: block;
-          width: 140px;
-          height: 71px;
-          background: url('/@/assets/avatar.svg') center center no-repeat;
-          transition: background-color 0.2s;
-        }
-      }
-
-      .nav-item {
-        li {
+        .logo {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          justify-content: center;
           float: left;
-          list-style: none;
-
+          height: 70px;
+          font-size: 20px;
+          line-height: 70px;
           a {
-            position: relative;
-            display: block;
-            height: 71px;
-            padding: 0 16px;
-            font-size: var(--el-font-size-big);
-            line-height: 71px;
-            color: #545c63;
-            text-align: center;
-            transition: background-color 0.3s;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            background: url('/@/assets/avatar.svg') center center no-repeat;
+            background-size: 100% 100%;
+          }
+          span {
+            margin-right: 40px;
+          }
+        }
+
+        .nav-item {
+          margin: auto;
+          li {
+            float: left;
+            list-style: none;
+
+            a {
+              position: relative;
+              display: block;
+              height: 100%;
+              padding: 0 16px;
+              font-size: var(--el-font-size-big);
+              line-height: 71px;
+              color: #545c63;
+              text-align: center;
+              transition: background-color 0.3s;
+            }
           }
         }
       }
@@ -273,6 +283,7 @@
 
     .carousel-background {
       position: absolute;
+      top: 0;
       width: 100%;
       height: 180px;
       background: url('/@/assets/portal_images/carousel_1.jpg');
@@ -282,7 +293,7 @@
 
     main {
       width: 1152px;
-      padding: 32px 0 0 0;
+      padding: 10px 0 0 0;
       margin-right: auto;
       margin-left: auto;
       border-top: 1px solid #f3f5f6;
@@ -324,6 +335,7 @@
         width: 100%;
         height: 120px;
         padding: 10px 20px 20px 20px;
+        border: 1px solid #dedede;
         border-bottom-right-radius: 15px;
         border-bottom-left-radius: 15px;
         box-shadow: 0 5px 20px 0 rgb(0 0 0 / 30%);
@@ -331,7 +343,7 @@
         :deep() {
           .el-divider--vertical {
             float: right;
-            height: 7em;
+            height: 6.5em;
             margin-top: -20px;
           }
         }
@@ -395,10 +407,10 @@
 
         h2 {
           float: left;
-          font-size: 20px;
+          font-size: 16px;
           line-height: 36px;
           color: #5184eb;
-          border-bottom: 4px solid #5184eb;
+          border-bottom: 2px solid #5184eb;
         }
       }
 
