@@ -5,8 +5,10 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
+  import { graphic } from 'echarts/core'
+  import { pull, random, sample } from 'lodash-es'
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { lightenColor } from '/@/utils/lightenColor'
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
@@ -14,9 +16,9 @@
 
   const option = reactive<any>({
     grid: {
-      left: '10%',
-      top: 0,
-      right: '10%',
+      left: '20px',
+      top: '5px',
+      right: '20px',
       bottom: 0,
     },
     xAxis: {
@@ -52,7 +54,10 @@
         random(50, 100),
       ],
       itemStyle: {
-        color: color.value,
+        color: new graphic.LinearGradient(0, 0, 1, 0, [
+          { offset: 0, color: lightenColor(color.value, 20) },
+          { offset: 1, color: color.value },
+        ]),
       },
     },
   })
@@ -60,7 +65,10 @@
   watch(
     color,
     () => {
-      option.series.itemStyle.color = color.value
+      option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
+        { offset: 0, color: lightenColor(color.value, 20) },
+        { offset: 1, color: color.value },
+      ])
     },
     { immediate: true }
   )
@@ -75,6 +83,7 @@
         random(10, 100),
         random(50, 100),
       ]
+      option.series.type = sample(pull(['bar', 'line'], option.series.type))
     }, 3000)
   })
 

@@ -25,8 +25,10 @@
 </template>
 
 <script lang="ts" setup>
+  import { graphic } from 'echarts/core'
   import { pull, random, sample } from 'lodash-es'
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { lightenColor } from '/@/utils/lightenColor'
 
   defineOptions({
     name: 'Authorization',
@@ -76,7 +78,10 @@
       data: [10, 52, 20, 33, 39, 33, 22],
       itemStyle: {
         borderRadius: [2, 2, 0, 0],
-        color: color.value,
+        color: new graphic.LinearGradient(0, 0, 1, 0, [
+          { offset: 0, color: lightenColor(color.value, 50) },
+          { offset: 1, color: color.value },
+        ]),
       },
     },
   })
@@ -84,7 +89,10 @@
   watch(
     color,
     () => {
-      option.series.itemStyle.color = color.value
+      option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
+        { offset: 0, color: lightenColor(color.value, 50) },
+        { offset: 1, color: color.value },
+      ])
     },
     { immediate: true }
   )

@@ -20,6 +20,7 @@
   import { graphic } from 'echarts/core'
   import { random } from 'lodash-es'
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { lightenColor } from '/@/utils/lightenColor'
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
@@ -60,7 +61,7 @@
       itemStyle: {
         borderRadius: [0, 5, 5, 0],
         color: new graphic.LinearGradient(0, 0, 1, 0, [
-          { offset: 0, color: '#74df9f' },
+          { offset: 0, color: lightenColor(color.value, 50) },
           { offset: 1, color: color.value },
         ]),
       },
@@ -71,7 +72,7 @@
     color,
     () => {
       option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
-        { offset: 0, color: '#74df9f' },
+        { offset: 0, color: lightenColor(color.value, 50) },
         { offset: 1, color: color.value },
       ])
     },
