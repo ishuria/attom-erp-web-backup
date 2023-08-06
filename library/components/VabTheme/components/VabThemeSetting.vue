@@ -74,7 +74,7 @@
   const show = ref<boolean>(true)
 
   const handleOpenTheme = () => {
-    $pub('shop-vite-theme')
+    $pub('shop-vite-open-theme')
   }
 
   const buy = () => {
@@ -88,10 +88,12 @@
 
   const resetTheme = () => {
     $pub('shop-vite-reset-theme')
+    $pub('shop-vite-save-theme')
   }
 
   const changeTheme = (value: string) => {
     $pub('shop-vite-change-theme', value)
+    $pub('shop-vite-save-theme')
   }
 
   const toggleShowHide = () => {

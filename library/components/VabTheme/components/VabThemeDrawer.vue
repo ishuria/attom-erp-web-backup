@@ -267,12 +267,16 @@
     if (device.value === 'mobile') location.reload()
   }
 
-  $sub('shop-vite-theme', () => {
+  $sub('shop-vite-open-theme', () => {
     handleOpenTheme()
   })
 
   $sub('shop-vite-reset-theme', () => {
     setDefaultTheme()
+  })
+
+  $sub('shop-vite-save-theme', () => {
+    handleSaveTheme()
   })
 
   $sub('shop-vite-change-theme', (value: string) => {
@@ -281,9 +285,10 @@
   })
 
   onBeforeUnmount(() => {
-    $unsub('shop-vite-theme')
-    $unsub('shop-vite-reset-theme')
     $unsub('shop-vite-change-theme')
+    $unsub('shop-vite-open-theme')
+    $unsub('shop-vite-reset-theme')
+    $unsub('shop-vite-save-theme')
   })
 </script>
 

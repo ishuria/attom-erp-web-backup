@@ -16,6 +16,6 @@
   const { theme } = storeToRefs(settingsStore)
 
   const handleOpenTheme = () => {
-    $pub('shop-vite-theme')
+    $pub('shop-vite-open-theme')
   }
 </script>
