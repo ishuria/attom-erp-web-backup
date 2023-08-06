@@ -254,6 +254,7 @@
   const handleSaveTheme = async () => {
     await saveTheme()
     drawerVisible.value = false
+    if (device.value === 'mobile') location.reload()
   }
 
   $sub('shop-vite-theme', () => {

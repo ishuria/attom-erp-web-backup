@@ -37,6 +37,7 @@ declare interface SettingsModuleType {
 
 declare interface TabsModuleType {
   visitedRoutes: any[]
+  catchedRoutes: []
 }
 
 declare interface UserModuleType {
