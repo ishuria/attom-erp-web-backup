@@ -4,9 +4,8 @@
 
 @import './var';
 @import 'normalize.css';
-@import './transition';
-@import 'element-plus/theme-chalk/display.css';
-@import 'element-plus/dist/index.css';
+@import 'element-plus/theme-chalk/src/display';
+@import 'element-plus/theme-chalk/src/index';
 @import './dark';
 @import './plain';
 @import './technology';
@@ -48,7 +47,10 @@ html {
 
       .vue-shop-vite-box {
         * {
+          text-shadow: none;
           transition: var(--el-transition);
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
 
         [class*='-container'] {
@@ -641,6 +643,20 @@ html {
     .vab-side-bar {
       margin-left: -1px !important;
       border-right: 1px solid var(--el-menu-background-color) !important;
+    }
+
+    /* 旋转动画 */
+    .rotate {
+      @keyframes rotate {
+        0% {
+          transform: rotate(0);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      animation: rotate 1s linear infinite;
     }
   }
 }

@@ -1,9 +1,9 @@
+import enLocale from 'element-plus/dist/locale/en'
+import zhLocale from 'element-plus/dist/locale/zh-cn'
+import { createI18n } from 'vue-i18n'
+import en from './en.json'
 import pinia from '/@/store'
 import { useSettingsStore } from '/@/store/modules/settings'
-import { createI18n } from 'vue-i18n'
-import enLocale from 'element-plus/dist/locale/en.mjs'
-import zhLocale from 'element-plus/dist/locale/zh-cn.mjs'
-import en from './en.json'
 
 export { enLocale, zhLocale }
 

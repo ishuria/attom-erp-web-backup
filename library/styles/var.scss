@@ -7,10 +7,8 @@
   --el-menu-background-color: #{$base-menu-background};
   --el-menu-background-color-second: #fff;
   --el-menu-color-text: #fff;
-
   --el-menu-horizontal-sub-item-height: #{$base-menu-item-height - 4px};
   --el-menu-item-height: #{$base-menu-item-height};
-
   --el-color-grey: #{$base-color-grey};
   --el-color-black: #{$base-color-black};
 
@@ -92,22 +90,13 @@
   --el-font-size-big: #{$base-font-size-big};
   --el-font-size-bigger: #{$base-font-size-bigger};
   --el-font-size-max: #{$base-font-size-max};
-
   --el-transition: #{$base-transition};
   --el-left-menu-width-min: #{$base-left-menu-width-min};
-
   --el-padding: #{$base-padding};
   --el-margin: #{$base-margin};
   --el-nav-height: #{$base-nav-height};
   --el-tabs-height: #{$base-tabs-height};
   --el-footer-height: 58px;
-
-  --el-keep-alive-height: calc(
-    100vh - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 2 - var(
-        --el-footer-height
-      )
-  );
-
   --el-mask-color: rgba(255, 255, 255, 0.6);
   --el-z-index: #{$base-z-index};
   --el-header-height: #{$base-header-height};
@@ -116,4 +105,9 @@
   --el-title-color: #{$base-title-color};
   --el-input-height: #{$base-input-height};
   --el-right-content-width-min: #{$base-right-content-width-min};
+  --el-keep-alive-height: calc(
+    100vh - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 2 - var(
+        --el-footer-height
+      )
+  );
 }

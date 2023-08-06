@@ -7,7 +7,7 @@
 <script lang="ts" setup>
   import VMdEditor from '@kangc/v-md-editor'
   import '@kangc/v-md-editor/lib/style/base-editor.css'
-  import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
+  import githubTheme from '@kangc/v-md-editor/lib/theme/github'
   import '@kangc/v-md-editor/lib/theme/style/github.css'
 
   defineOptions({
@@ -50,7 +50,6 @@
     :deep() {
       .v-md-editor {
         min-height: calc(var(--el-keep-alive-height) - var(--el-margin));
-        padding: var(--el-padding);
         background: var(--el-color-white);
         border: 1px solid var(--el-border-color);
         border-radius: var(--el-border-radius-base);
@@ -70,12 +69,12 @@
           }
 
           &-item {
-            color: var(--el-color-black);
+            color: var(--el-color-grey);
 
             &--active,
             &:hover {
               color: var(--el-color-white);
-              background: var(--el-color-black);
+              background: var(--el-color-grey);
             }
           }
         }
