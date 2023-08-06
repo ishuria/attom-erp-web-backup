@@ -45,7 +45,6 @@ declare module 'vue' {
     InfiniteScrollDisableLoading: typeof import('./../../../src/views/vab/infiniteScroll/vabAutoComponents/InfiniteScrollDisableLoading.vue')['default']
     MenuManagementEdit: typeof import('./../../../src/views/setting/menuManagement/vabAutoComponents/MenuManagementEdit.vue')['default']
     NodePanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/NodePanel.vue')['default']
-    PageBanner: typeof import('./../../../src/views/index/vabAutoComponents/PageBanner.vue')['default']
     PageHeader: typeof import('./../../../src/views/index/vabAutoComponents/PageHeader.vue')['default']
     Pending: typeof import('./../../../src/views/index/vabAutoComponents/Pending.vue')['default']
     ProgressCircularProgressBar: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressCircularProgressBar.vue')['default']
