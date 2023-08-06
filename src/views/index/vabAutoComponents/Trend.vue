@@ -10,6 +10,7 @@
 
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { lightenColor } from '/@/utils/lightenColor'
 
   const settingsStore = useSettingsStore()
   const { color } = storeToRefs(settingsStore)
@@ -81,7 +82,7 @@
   watch(
     color,
     () => {
-      option.color = [color.value]
+      option.color = [color.value, lightenColor(color.value, 50)]
     },
     { immediate: true }
   )
