@@ -22,7 +22,6 @@
 
   const route = useRoute()
   const $sub = inject<any>('$sub')
-  // const $unsub = inject<any>('$unsub')
   const settingsStore = useSettingsStore()
   const { theme } = storeToRefs(settingsStore)
   const tabsStore = useTabsStore()
@@ -71,8 +70,4 @@
       if (theme.value.showProgressBar) VabProgress.done()
     }, 200)
   })
-
-  // onUnmounted(() => {
-  //   $unsub('reload-router-view')
-  // })
 </script>
