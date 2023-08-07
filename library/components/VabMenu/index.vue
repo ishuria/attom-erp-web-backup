@@ -6,39 +6,38 @@
   </component>
 </template>
 
-<script>
-  const imports = import.meta.glob('./**/*.vue', { eager: true })
-  const Components = {}
+<script lang="ts" setup>
+  defineOptions({
+    name: 'VabMenu',
+  })
+
+  interface ComponentType {
+    default: Component
+  }
+
+  const imports = import.meta.glob<ComponentType>('./**/*.vue', { eager: true })
+  const Components: Record<string, Component> = {}
   Object.getOwnPropertyNames(imports).forEach((key) => {
     Components[key.replace(/(\/|components|\.|vue)/g, '')] = imports[key].default
   })
 
-  export default defineComponent({
-    name: 'VabMenu',
-    components: Components,
-    props: {
-      item: {
-        type: Object,
-        required: true,
-      },
-      layout: {
-        type: String,
-        default: '',
-      },
+  const props = defineProps({
+    item: {
+      type: Object,
+      required: true,
     },
-    setup(props) {
-      const menuComponent = computed(() =>
-        props.item.children &&
-        props.item.children.some((route) => {
-          return route.meta && route.meta.hidden !== true
-        })
-          ? 'VabSubMenu'
-          : 'VabMenuItem'
-      )
-
-      return {
-        menuComponent,
-      }
+    layout: {
+      type: String,
+      default: '',
     },
   })
+
+  const menuComponent = computed(() =>
+    props.item.children &&
+    props.item.children.some((route: any) => {
+      return route.meta && route.meta.hidden !== true
+    })
+      ? Components['VabSubMenu']
+      : Components['VabMenuItem']
+  )
 </script>

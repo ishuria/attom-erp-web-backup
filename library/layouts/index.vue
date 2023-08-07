@@ -2,7 +2,7 @@
   <el-scrollbar wrap-class="scroll-wrap">
     <div class="vue-shop-vite-box" :class="{ mobile }">
       <component
-        :is="'vab-layout-' + theme.layout"
+        :is="layout"
         :collapse="collapse"
         :device="device"
         :fixed-header="theme.fixedHeader"
@@ -16,59 +16,55 @@
   </el-scrollbar>
 </template>
 
-<script>
+<script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
+  import { convertToCamelCase } from '/@/utils/convertToCamelCase'
 
-  const imports = import.meta.glob('./**/*.vue', { eager: true })
-  const Components = {}
-  Object.getOwnPropertyNames(imports).forEach((key) => {
+  defineOptions({
+    name: 'Layout',
+  })
+
+  interface ComponentType {
+    default: Component
+  }
+
+  const settingsStore = useSettingsStore()
+  const { device, collapse, theme } = storeToRefs(settingsStore)
+  const { toggleDevice, foldSideBar, openSideBar, updateTheme } = settingsStore
+  const mobile = ref(false)
+  let oldLayout = theme.value.layout
+  const imports = import.meta.glob<ComponentType>('./**/*.vue', { eager: true })
+  const Components: Record<string, Component> = {}
+  Object.getOwnPropertyNames(imports).forEach((key: any) => {
     Components[key.replace(/(\/|\.|index.vue)/g, '')] = imports[key].default
   })
 
-  export default defineComponent({
-    name: 'Layouts',
-    components: Components,
-    setup() {
-      const settingsStore = useSettingsStore()
-      const { device, collapse, theme } = storeToRefs(settingsStore)
-      const { toggleDevice, foldSideBar, openSideBar, updateTheme } = settingsStore
-      const mobile = ref(false)
-      let oldLayout = theme.value.layout
+  const layout = computed(() => {
+    return Components[convertToCamelCase(`vab-layout-${theme.value.layout}`)]
+  })
 
-      const resizeBody = () => {
-        mobile.value = document.body.getBoundingClientRect().width - 1 < 992
-      }
+  const resizeBody = () => {
+    mobile.value = document.body.getBoundingClientRect().width - 1 < 992
+  }
 
-      watch(mobile, (value) => {
-        if (value) {
-          oldLayout = theme.value.layout
-          foldSideBar()
-        } else openSideBar()
-        theme.value.layout = value ? 'vertical' : oldLayout
-        toggleDevice(value ? 'mobile' : 'desktop')
-      })
+  watch(mobile, (value) => {
+    if (value) {
+      oldLayout = theme.value.layout
+      foldSideBar()
+    } else openSideBar()
+    theme.value.layout = value ? 'vertical' : oldLayout
+    toggleDevice(value ? 'mobile' : 'desktop')
+  })
 
-      onBeforeMount(() => {
-        resizeBody()
-        window.addEventListener('resize', resizeBody)
-        updateTheme()
-      })
+  onBeforeMount(() => {
+    resizeBody()
+    window.addEventListener('resize', resizeBody)
+    updateTheme()
+  })
 
-      onBeforeUnmount(() => {
-        if (mobile) theme.value.layout = oldLayout
-        window.removeEventListener('resize', resizeBody)
-      })
-
-      return {
-        theme,
-        device,
-        mobile,
-        collapse,
-        foldSideBar,
-        openSideBar,
-        toggleDevice,
-      }
-    },
+  onBeforeUnmount(() => {
+    if (mobile) theme.value.layout = oldLayout
+    window.removeEventListener('resize', resizeBody)
   })
 </script>
 

@@ -97,5 +97,5 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       devSourcemap: true,
     },
     plugins: createVitePlugin(env),
-  }
+  } as any
 })
