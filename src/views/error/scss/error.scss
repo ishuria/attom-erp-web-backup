@@ -20,7 +20,7 @@
     margin: auto;
 
     .pic-error {
-      flex-basis: 50%;
+      flex-basis: 60%;
       height: 300px;
 
       .error-svg {
@@ -30,8 +30,7 @@
     }
 
     .bullshit {
-      flex: 1;
-      flex-basis: 50%;
+      flex-basis: 40%;
 
       &-oops {
         margin-bottom: 20px;
@@ -100,6 +99,14 @@
           transform: translateY(0);
         }
       }
+    }
+  }
+}
+
+#app {
+  > .error-container {
+    > .error-content {
+      height: 100vh;
     }
   }
 }
