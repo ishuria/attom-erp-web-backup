@@ -88,7 +88,6 @@
 
   const resetTheme = async () => {
     await $pub('shop-vite-reset-theme')
-    await $pub('shop-vite-save-theme')
     if (device.value === 'mobile') await location.reload()
   }
 

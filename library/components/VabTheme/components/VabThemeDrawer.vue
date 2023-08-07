@@ -250,10 +250,10 @@
     drawerVisible.value = false
     const loading = $baseLoading()
 
-    setTimeout(async () => {
-      await resetTheme()
-      await $pub('shop-vite-reset-color')
-      await $pub('shop-vite-reset-dark')
+    setTimeout(() => {
+      resetTheme()
+      $pub('shop-vite-reset-color')
+      $pub('shop-vite-reset-dark')
     }, 500)
 
     setTimeout(() => {
