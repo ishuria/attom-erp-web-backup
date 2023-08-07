@@ -43,9 +43,9 @@ html > body.vab-theme-plain {
     border-radius: var(--el-border-radius-base) !important;
   }
 
-  .logo-container-common,
-  .logo-container-vertical,
-  .logo-container-horizontal {
+  .vab-logo-common,
+  .vab-logo-vertical,
+  .vab-logo-horizontal {
     @include container;
 
     .title,
@@ -54,8 +54,8 @@ html > body.vab-theme-plain {
     }
   }
 
-  .logo-container-column,
-  .logo-container-comprehensive {
+  .vab-logo-column,
+  .vab-logo-comprehensive {
     @include container;
 
     .logo {
@@ -72,7 +72,7 @@ html > body.vab-theme-plain {
     }
   }
 
-  .vab-column-bar-container {
+  .vab-column-bar {
     border-right: 1px solid var(--el-border-color) !important;
 
     .el-tabs {
@@ -149,7 +149,7 @@ html > body.vab-theme-plain {
     border: 1px solid var(--el-border-color) !important;
   }
 
-  .logo-container-column .logo {
+  .vab-logo-column .logo {
     background: var(--el-color-black) !important;
     border-right: 1px solid var(--el-border-color) !important;
   }

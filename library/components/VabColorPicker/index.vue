@@ -17,7 +17,6 @@
   import { round } from 'lodash-es'
   import { color as _color } from '/@/config/'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { lightenColor } from '/@/utils/lightenColor'
 
   defineOptions({
     name: 'VabColorPicker',
@@ -38,11 +37,10 @@
     '#009688',
     '#6954f0',
     '#7b40f2',
-
     '#f01414',
   ])
   const settingsStore = useSettingsStore()
-  const { changeColor, getColor } = settingsStore
+  const { changeColor, getColor, setCssVar } = settingsStore
   const { theme } = storeToRefs(settingsStore)
 
   const getRgbNum = (sColor: string) => {
@@ -76,10 +74,7 @@
       useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(value, 1 - index * 0.1)
     }
 
-    if (theme.value.isFollow)
-      useCssVar('--el-menu-background-color', el).value = lightenColor(value, 15)
-    else useCssVar('--el-menu-background-color', el).value = '#282c34'
-
+    setCssVar()
     changeColor(value)
     color.value = value
   }

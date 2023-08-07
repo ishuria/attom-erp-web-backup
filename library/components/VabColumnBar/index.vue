@@ -1,9 +1,9 @@
 <template>
   <el-scrollbar
-    class="vab-column-bar-container"
+    class="vab-column-bar"
     :class="{
       'is-collapse': collapse,
-      ['vab-column-bar-container-' + theme.columnStyle]: true,
+      ['vab-column-bar-' + theme.columnStyle]: true,
     }"
   >
     <vab-logo style="z-index: 999" />
@@ -134,7 +134,7 @@
     }
   }
 
-  .vab-column-bar-container {
+  .vab-column-bar {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -160,7 +160,7 @@
     &-horizontal,
     &-semicircle {
       :deep() {
-        .logo-container-column {
+        .vab-logo-column {
           .logo {
             width: calc(var(--el-left-menu-width-min) * 1.4) !important;
           }

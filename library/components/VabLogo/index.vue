@@ -1,8 +1,8 @@
 <template>
   <div
-    class="logo-container"
+    class="vab-logo"
     :class="{
-      ['logo-container-' + theme.layout]: true,
+      ['vab-logo-' + theme.layout]: true,
     }"
   >
     <router-link to="/">
@@ -58,7 +58,7 @@
     vertical-align: middle;
   }
 
-  .logo-container {
+  .vab-logo {
     &-horizontal {
       @include container;
 

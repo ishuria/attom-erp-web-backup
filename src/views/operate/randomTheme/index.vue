@@ -7,7 +7,6 @@
 
 <script lang="ts" setup>
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { lightenColor } from '/@/utils/lightenColor'
 
   defineOptions({
     name: 'RandomTheme',
@@ -15,7 +14,7 @@
 
   const settingsStore = useSettingsStore()
   const { theme, device, color } = storeToRefs(settingsStore)
-  const { saveTheme, updateTheme } = settingsStore
+  const { saveTheme, updateTheme, setCssVar } = settingsStore
   const $pub = inject<any>('$pub')
   const $baseLoading = inject<any>('$baseLoading')
   const $baseMessage = inject<any>('$baseMessage')
@@ -52,7 +51,6 @@
           '#009688',
           '#6954f0',
           '#7b40f2',
-
           '#f01414',
         ])
         const isFollow = shuffle(theme.value.isFollow, [true, false])
@@ -67,14 +65,9 @@
         else color.value = '#4e88f3'
 
         if (themeName === 'default') theme.value.isFollow = isFollow
-        else {
-          theme.value.isFollow = false
-          const el = ref<any>(null)
-          if (theme.value.isFollow)
-            useCssVar('--el-menu-background-color', el).value = lightenColor(color.value, 15)
-          else useCssVar('--el-menu-background-color', el).value = '#282c34'
-        }
+        else theme.value.isFollow = false
 
+        setCssVar()
         updateTheme()
         saveTheme()
       } finally {

@@ -67,7 +67,7 @@
         height: var(--el-header-height);
 
         :deep() {
-          .logo-container {
+          .vab-logo {
             width: 360px;
           }
 

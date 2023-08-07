@@ -133,7 +133,11 @@ export const useSettingsStore = defineStore('settings', {
         localStorage.setItem('vueuse-color-scheme', 'light')
       }
 
+      this.setCssVar()
+    },
+    setCssVar() {
       const el = ref<any>(null)
+
       if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px'))
         useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'
@@ -144,12 +148,11 @@ export const useSettingsStore = defineStore('settings', {
       if (!this.theme.showFooter) useCssVar('--el-footer-height', el).value = '0px'
       else useCssVar('--el-footer-height', el).value = '58px'
 
-      if (!this.theme.isFollow) useCssVar('--el-menu-background-color', el).value = '#282c34'
-      else useCssVar('--el-menu-background-color', el).value = lightenColor(this.color, 10)
+      if (!this.theme.radius) useCssVar('--el-border-radius-base', el).value = '5px'
+      else useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`
 
-      if (this.theme.radius)
-        useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`
-      else useCssVar('--el-left-menu-width', el).value = `${this.theme.radius}px`
+      if (!this.theme.isFollow) useCssVar('--el-menu-background-color', el).value = '#282c34'
+      else useCssVar('--el-menu-background-color', el).value = lightenColor(this.color, 18)
     },
     toggleCollapse() {
       this.collapse = !this.collapse

@@ -154,7 +154,6 @@
 <script lang="ts" setup>
   import { translate } from '/@/i18n'
   import { useSettingsStore } from '/@/store/modules/settings'
-  import { lightenColor } from '/@/utils/lightenColor'
 
   defineOptions({
     name: 'VabThemeDrawer',
@@ -166,8 +165,8 @@
   const $baseLoading = inject<any>('$baseLoading')
   const $baseMessage = inject<any>('$baseMessage')
   const settingsStore = useSettingsStore()
-  const { theme, device, color, mode, isCatchedTabs } = storeToRefs<any>(settingsStore)
-  const { saveTheme, resetTheme, updateTheme, updateCatchedTabs } = settingsStore
+  const { theme, device, mode, isCatchedTabs } = storeToRefs<any>(settingsStore)
+  const { saveTheme, resetTheme, updateTheme, updateCatchedTabs, setCssVar } = settingsStore
   const drawerVisible = ref<boolean>(false)
 
   const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
@@ -202,26 +201,24 @@
     drawerVisible.value = true
   }
 
-  const updateMenuWidth = () => {
-    const el = ref<any>(null)
-    useCssVar('--el-left-menu-width', el).value = theme.value.menuWidth
+  const updateMenuWidth = (value: any) => {
+    theme.value.menuWidth = value
+    setCssVar()
   }
 
   const updateIsFollow = (value: any) => {
-    const el = ref<any>(null)
-    if (value) useCssVar('--el-menu-background-color', el).value = lightenColor(color.value, 15)
-    else useCssVar('--el-menu-background-color', el).value = '#282c34'
+    theme.value.isFollow = value
+    setCssVar()
   }
 
   const handleShowFooter = (value: any) => {
-    const el = ref<any>(null)
-    if (!value) useCssVar('--el-footer-height', el).value = '0px'
-    else useCssVar('--el-footer-height', el).value = '58px'
+    theme.value.showFooter = value
+    setCssVar()
   }
 
   const handleRadius = (value: any) => {
-    const el = ref<any>(null)
-    useCssVar('--el-border-radius-base', el).value = `${value}px`
+    theme.value.radius = value
+    setCssVar()
   }
 
   const handleShowTabs = (value: any) => {
