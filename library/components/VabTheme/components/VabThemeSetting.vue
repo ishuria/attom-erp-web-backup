@@ -86,15 +86,13 @@
     location.reload()
   }
 
-  const resetTheme = async () => {
-    await $pub('shop-vite-reset-theme')
-    if (device.value === 'mobile') await location.reload()
+  const resetTheme = () => {
+    $pub('shop-vite-reset-theme')
   }
 
-  const changeTheme = async (value: string) => {
-    await $pub('shop-vite-change-theme', value)
-    await $pub('shop-vite-save-theme')
-    if (device.value === 'mobile') await location.reload()
+  const changeTheme = (value: string) => {
+    $pub('shop-vite-change-theme', value)
+    $pub('shop-vite-save-theme')
   }
 
   const toggleShowHide = () => {

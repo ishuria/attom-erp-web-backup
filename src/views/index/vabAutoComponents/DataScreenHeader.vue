@@ -20,11 +20,12 @@
       position: fixed;
       top: 15px;
       right: 40px;
+      z-index: 999;
       width: 60px;
       height: 60px;
-      background: #2ba3ff;
+      background: #395dfe;
       border-radius: 50%;
-      box-shadow: 0 2px 12px 0 #2ba3ff;
+      box-shadow: 0 2px 12px 0#395dfe;
 
       :deep() {
         [class*='ri-'] {

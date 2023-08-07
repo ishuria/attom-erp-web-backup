@@ -259,6 +259,7 @@
     setTimeout(() => {
       loading.close()
       $baseMessage('切换成功', 'success', 'hey')
+      if (device.value === 'mobile') location.reload()
     }, 1000)
   }
 
