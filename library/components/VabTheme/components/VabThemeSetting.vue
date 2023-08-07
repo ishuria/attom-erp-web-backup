@@ -61,168 +61,168 @@
 </template>
 
 <script lang="ts" setup>
-  import { translate } from '/@/i18n'
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { translate } from '/@/i18n'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabThemeSetting',
-  })
+defineOptions({
+  name: 'VabThemeSetting',
+})
 
-  const $pub = inject<any>('$pub')
-  const settingsStore = useSettingsStore()
-  const { device, theme } = storeToRefs(settingsStore)
-  const show = ref<boolean>(true)
+const $pub = inject<any>('$pub')
+const settingsStore = useSettingsStore()
+const { device, theme } = storeToRefs(settingsStore)
+const show = ref<boolean>(true)
 
-  const handleOpenTheme = () => {
-    $pub('shop-vite-open-theme')
-  }
+const handleOpenTheme = () => {
+  $pub('shop-vite-open-theme')
+}
 
-  const buy = () => {
-    window.open('https://vue-admin-beautiful.com/authorization/shop-vite.html')
-  }
+const buy = () => {
+  window.open('https://vue-admin-beautiful.com/authorization/shop-vite.html')
+}
 
-  const removeLocalStorage = () => {
-    localStorage.clear()
-    location.reload()
-  }
+const removeLocalStorage = () => {
+  localStorage.clear()
+  location.reload()
+}
 
-  const resetTheme = () => {
-    $pub('shop-vite-reset-theme')
-  }
+const resetTheme = () => {
+  $pub('shop-vite-reset-theme')
+}
 
-  const changeTheme = (value: string) => {
-    $pub('shop-vite-change-theme', value)
-    $pub('shop-vite-save-theme')
-  }
+const changeTheme = (value: string) => {
+  $pub('shop-vite-change-theme', value)
+  $pub('shop-vite-save-theme')
+}
 
-  const toggleShowHide = () => {
-    show.value = !show.value
-  }
+const toggleShowHide = () => {
+  show.value = !show.value
+}
 </script>
 
 <style lang="scss" scoped>
-  .vab-theme-setting {
-    position: fixed;
-    top: 50%;
-    right: 0;
-    z-index: calc(var(--el-z-index) - 2);
-    padding: 10px 0 0 0;
+.vab-theme-setting {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: calc(var(--el-z-index) - 2);
+  padding: 10px 0 0 0;
+  margin: 0;
+  text-align: center;
+  cursor: pointer;
+  background: var(--el-color-white);
+  border-top: 1px solid var(--el-border-color);
+  border-bottom: 1px solid var(--el-border-color);
+  border-left: 1px solid var(--el-border-color);
+  border-top-left-radius: var(--el-border-radius-base);
+  border-bottom-left-radius: var(--el-border-radius-base);
+  box-shadow: 0 0 50px 0 rgb(82 63 105 / 15%);
+  transform: translateY(-50%);
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px 10px 10px;
     margin: 0;
-    text-align: center;
-    cursor: pointer;
-    background: var(--el-color-white);
-    border-top: 1px solid var(--el-border-color);
-    border-bottom: 1px solid var(--el-border-color);
-    border-left: 1px solid var(--el-border-color);
-    border-top-left-radius: var(--el-border-radius-base);
-    border-bottom-left-radius: var(--el-border-radius-base);
-    box-shadow: 0 0 50px 0 rgb(82 63 105 / 15%);
-    transform: translateY(-50%);
+    list-style: none;
 
-    div {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 8px 10px 10px;
-      margin: 0;
-      list-style: none;
-
-      &:nth-child(n) {
-        a {
-          &:hover {
-            color: var(--el-color-white);
-          }
-        }
-      }
-
-      &:nth-child(1),
-      &:nth-child(4) {
-        a {
-          color: var(--el-color-primary);
-          background: var(--el-color-primary-light-9);
-
-          &:hover {
-            background: var(--el-color-primary);
-          }
-        }
-      }
-
-      &:nth-child(2) {
-        a {
-          color: var(--el-color-success);
-          background: var(--el-color-success-lighter);
-
-          &:hover {
-            background: var(--el-color-success);
-          }
-        }
-      }
-
-      &:nth-child(3) {
-        a {
-          color: var(--el-color-info);
-          background: var(--el-color-info-lighter);
-
-          &:hover {
-            background: var(--el-color-info);
-          }
-        }
-      }
-
-      &:nth-child(5) {
-        a {
-          color: var(--el-color-danger);
-          background: var(--el-color-danger-lighter);
-
-          &:hover {
-            background: var(--el-color-danger);
-          }
-        }
-      }
-
+    &:nth-child(n) {
       a {
-        display: inline-block;
-        width: 58px;
-        height: 58px;
-        padding-top: 10px;
-        text-align: center;
-        background: var(--el-color-white);
-        border-radius: var(--el-border-radius-base);
-
-        p {
-          padding: 0;
-          margin: 0;
-          overflow: hidden;
-          font-size: var(--el-font-size-small);
-          line-height: 25px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+        &:hover {
+          color: var(--el-color-white);
         }
       }
     }
 
-    .vab-buy-box {
+    &:nth-child(1),
+    &:nth-child(4) {
       a {
-        color: var(--el-color-warning) !important;
-        background: var(--el-color-warning-lighter) !important;
+        color: var(--el-color-primary);
+        background: var(--el-color-primary-light-9);
 
         &:hover {
-          color: var(--el-color-white) !important;
-          background: var(--el-color-warning) !important;
+          background: var(--el-color-primary);
         }
       }
     }
 
-    .vab-show-hide-box {
+    &:nth-child(2) {
       a {
-        color: var(--el-color-primary) !important;
-        background: var(--el-color-primary-light-9) !important;
+        color: var(--el-color-success);
+        background: var(--el-color-success-lighter);
 
         &:hover {
-          color: var(--el-color-white) !important;
-          background: var(--el-color-primary) !important;
+          background: var(--el-color-success);
         }
+      }
+    }
+
+    &:nth-child(3) {
+      a {
+        color: var(--el-color-info);
+        background: var(--el-color-info-lighter);
+
+        &:hover {
+          background: var(--el-color-info);
+        }
+      }
+    }
+
+    &:nth-child(5) {
+      a {
+        color: var(--el-color-danger);
+        background: var(--el-color-danger-lighter);
+
+        &:hover {
+          background: var(--el-color-danger);
+        }
+      }
+    }
+
+    a {
+      display: inline-block;
+      width: 58px;
+      height: 58px;
+      padding-top: 10px;
+      text-align: center;
+      background: var(--el-color-white);
+      border-radius: var(--el-border-radius-base);
+
+      p {
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        font-size: var(--el-font-size-small);
+        line-height: 25px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
+
+  .vab-buy-box {
+    a {
+      color: var(--el-color-warning) !important;
+      background: var(--el-color-warning-lighter) !important;
+
+      &:hover {
+        color: var(--el-color-white) !important;
+        background: var(--el-color-warning) !important;
+      }
+    }
+  }
+
+  .vab-show-hide-box {
+    a {
+      color: var(--el-color-primary) !important;
+      background: var(--el-color-primary-light-9) !important;
+
+      &:hover {
+        color: var(--el-color-white) !important;
+        background: var(--el-color-primary) !important;
+      }
+    }
+  }
+}
 </style>

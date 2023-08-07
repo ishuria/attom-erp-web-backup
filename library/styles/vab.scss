@@ -65,7 +65,7 @@ html {
 
             > section {
               > [class*='-container'] {
-                min-height: var(--el-keep-alive-height);
+                min-height: var(--el-container-height);
                 padding: var(--el-padding);
                 background: var(--el-color-white);
                 border: 1px solid var(--el-border-color);
@@ -218,7 +218,7 @@ html {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: calc(var(--el-keep-alive-height) - 250px);
+      min-height: calc(var(--el-container-height) - 250px);
       margin: auto;
     }
 
@@ -602,7 +602,7 @@ html {
     :not(.no-background-container).table-auto-height {
       display: flex;
       flex-direction: column;
-      height: var(--el-keep-alive-height);
+      height: var(--el-container-height);
 
       .el-table {
         flex: 1;
@@ -619,7 +619,7 @@ html {
       .el-card__body {
         display: flex;
         flex-direction: column;
-        height: calc(var(--el-keep-alive-height) - var(--el-padding) - 2px);
+        height: calc(var(--el-container-height) - var(--el-padding) - 2px);
 
         .el-table {
           flex: 1;

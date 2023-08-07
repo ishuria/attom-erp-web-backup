@@ -1,10 +1,7 @@
 <template>
   <div class="vab-right-tools">
     <vab-search v-if="!isHorizontal" class="hidden-xs-only" />
-    <vab-dark
-      v-show="theme.showDark"
-      :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }"
-    />
+    <vab-dark v-show="theme.showDark" :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }" />
     <vab-color-picker v-show="theme.showColorPicker" />
     <vab-theme />
     <vab-error-log class="hidden-xs-only" />
@@ -19,27 +16,27 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabRightTools',
-  })
+defineOptions({
+  name: 'VabRightTools',
+})
 
-  defineProps({
-    isHorizontal: {
-      type: Boolean,
-      default: false,
-    },
-  })
+defineProps({
+  isHorizontal: {
+    type: Boolean,
+    default: false,
+  },
+})
 
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
+const settingsStore = useSettingsStore()
+const { theme } = storeToRefs(settingsStore)
 </script>
 
 <style lang="scss" scoped>
-  .vab-right-tools {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
+.vab-right-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 </style>

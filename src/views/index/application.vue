@@ -11,33 +11,33 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Application',
+defineOptions({
+  name: 'Application',
+})
+
+const $baseMessage = inject<any>('$baseMessage')
+// @ts-ignore
+let deferredPrompt: BeforeInstallPromptEvent = 'init'
+
+const PWAInstallationGuide = () => {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault()
+    if (deferredPrompt === 'init') deferredPrompt = e
   })
+}
 
-  const $baseMessage = inject<any>('$baseMessage')
-  // @ts-ignore
-  let deferredPrompt: BeforeInstallPromptEvent = 'init'
+PWAInstallationGuide()
 
-  const PWAInstallationGuide = () => {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault()
-      if (deferredPrompt === 'init') deferredPrompt = e
+const handleInstall = () => {
+  if (deferredPrompt && deferredPrompt !== 'init') {
+    deferredPrompt.prompt()
+    deferredPrompt.userChoice.then((choiceResult: any) => {
+      if (choiceResult.outcome === 'dismissed') {
+        $baseMessage('检测到您已取消安装需为您重载网页', 'error', 'hey', () => {
+          location.reload()
+        })
+      }
     })
   }
-
-  PWAInstallationGuide()
-
-  const handleInstall = () => {
-    if (deferredPrompt && deferredPrompt !== 'init') {
-      deferredPrompt.prompt()
-      deferredPrompt.userChoice.then((choiceResult: any) => {
-        if (choiceResult.outcome === 'dismissed') {
-          $baseMessage('检测到您已取消安装需为您重载网页', 'error', 'hey', () => {
-            location.reload()
-          })
-        }
-      })
-    }
-  }
+}
 </script>

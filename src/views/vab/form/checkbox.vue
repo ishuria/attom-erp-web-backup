@@ -44,17 +44,17 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Checkbox',
-  })
+defineOptions({
+  name: 'Checkbox',
+})
 
-  const checked = ref<boolean>(true)
-  const checked1 = ref<boolean>(false)
-  const checked2 = ref<boolean>(true)
-  const checkList = ref<any>(['选中且禁用', '复选框 A'])
-  const checkedCities = ref<any>(['上海', '北京'])
-  const cities = ref<any>(['上海', '北京', '广州', '深圳'])
-  const checkboxGroup1 = ref<any>(['上海'])
-  const checked3 = ref<boolean>(true)
-  const checked4 = ref<boolean>(false)
+const checked = ref<boolean>(true)
+const checked1 = ref<boolean>(false)
+const checked2 = ref<boolean>(true)
+const checkList = ref<any>(['选中且禁用', '复选框 A'])
+const checkedCities = ref<any>(['上海', '北京'])
+const cities = ref<any>(['上海', '北京', '广州', '深圳'])
+const checkboxGroup1 = ref<any>(['上海'])
+const checked3 = ref<boolean>(true)
+const checked4 = ref<boolean>(false)
 </script>

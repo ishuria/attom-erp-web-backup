@@ -6,31 +6,31 @@
 </template>
 
 <script>
-  export default defineComponent({
-    name: 'PropertyDialog',
-    props: {
-      nodeData: {
-        type: Object,
-        default: () => {},
-      },
-      lf: {
-        type: Object,
-        default: () => {},
-      },
+export default defineComponent({
+  name: 'PropertyDialog',
+  props: {
+    nodeData: {
+      type: Object,
+      default: () => {},
     },
-    emits: ['setPropertiesFinish'],
-    data() {
-      return {}
+    lf: {
+      type: Object,
+      default: () => {},
     },
-    methods: {
-      handleClose() {
-        this.$emit('setPropertiesFinish')
-      },
+  },
+  emits: ['setPropertiesFinish'],
+  data() {
+    return {}
+  },
+  methods: {
+    handleClose() {
+      this.$emit('setPropertiesFinish')
     },
-  })
+  },
+})
 </script>
 <style>
-  .property-dialog {
-    padding: 20px;
-  }
+.property-dialog {
+  padding: 20px;
+}
 </style>

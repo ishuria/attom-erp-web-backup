@@ -3,9 +3,7 @@
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card>
-          <el-button class="tree-button" :icon="Plus" type="primary" @click="handleAdd">
-            添加字典分类
-          </el-button>
+          <el-button class="tree-button" :icon="Plus" type="primary" @click="handleAdd">添加字典分类</el-button>
           <el-input v-model="filterText" clearable placeholder="请输入字典名称" />
           <el-tree
             ref="treeRef"
@@ -28,14 +26,7 @@
         <vab-card>
           <vab-query-form>
             <vab-query-form-top-panel :span="12">
-              <el-button
-                :disabled="isRoot"
-                :icon="Plus"
-                type="primary"
-                @click="handleEdit({ parentKey })"
-              >
-                添加
-              </el-button>
+              <el-button :disabled="isRoot" :icon="Plus" type="primary" @click="handleEdit({ parentKey })">添加</el-button>
             </vab-query-form-top-panel>
           </vab-query-form>
           <el-table v-loading="listLoading" border :data="list">
@@ -60,109 +51,109 @@
 </template>
 
 <script lang="ts" setup>
-  import { Plus } from '@element-plus/icons-vue'
-  import { doDelete, getList, getTree } from '/@/api/dictionaryManagement'
+import { Plus } from '@element-plus/icons-vue'
+import { doDelete, getList, getTree } from '/@/api/dictionaryManagement'
 
-  defineOptions({
-    name: 'DictionaryManagement',
-  })
+defineOptions({
+  name: 'DictionaryManagement',
+})
 
-  const $baseConfirm: any = inject('$baseConfirm')
-  const $baseMessage = inject<any>('$baseMessage')
+const $baseConfirm: any = inject('$baseConfirm')
+const $baseMessage = inject<any>('$baseMessage')
 
-  const treeRef = ref<any>(null)
-  const editRef = ref<any>(null)
-  const treeList = ref<any>([])
-  const defaultProps = reactive<any>({
-    children: 'children',
-    label: 'label',
-  })
-  let list = ref<any>([])
-  const listLoading = ref<boolean>(true)
-  const isRoot = ref<boolean>(true)
-  const parentKey = ref<string>('')
+const treeRef = ref<any>(null)
+const editRef = ref<any>(null)
+const treeList = ref<any>([])
+const defaultProps = reactive<any>({
+  children: 'children',
+  label: 'label',
+})
+let list = ref<any>([])
+const listLoading = ref<boolean>(true)
+const isRoot = ref<boolean>(true)
+const parentKey = ref<string>('')
 
-  const handleAdd = () => {
-    editRef.value.showEdit()
+const handleAdd = () => {
+  editRef.value.showEdit()
+}
+
+const handleEdit = (row: any) => {
+  editRef.value.showEdit(row)
+}
+
+const handleDelete = (row: { id: any }) => {
+  if (row.id) {
+    $baseConfirm('您确定要删除当前项吗', null, async () => {
+      const { msg }: any = await doDelete({ paths: row.id })
+      $baseMessage(msg, 'success', 'hey')
+      await fetchData()
+    })
   }
+}
 
-  const handleEdit = (row: any) => {
-    editRef.value.showEdit(row)
-  }
+const fetchData = async (data = { key: 'root' }) => {
+  data.key !== 'root' ? (isRoot.value = false) : (isRoot.value = true)
+  parentKey.value = data.key
 
-  const handleDelete = (row: { id: any }) => {
-    if (row.id) {
-      $baseConfirm('您确定要删除当前项吗', null, async () => {
-        const { msg }: any = await doDelete({ paths: row.id })
-        $baseMessage(msg, 'success', 'hey')
-        await fetchData()
-      })
-    }
-  }
+  listLoading.value = true
+  const res = await getList(data)
+  list = res.data.list
+  listLoading.value = false
+}
+const handleNodeClick = (data: { key: string } | undefined) => {
+  fetchData(data)
+}
 
-  const fetchData = async (data = { key: 'root' }) => {
-    data.key !== 'root' ? (isRoot.value = false) : (isRoot.value = true)
-    parentKey.value = data.key
+const filterText = ref<string>('')
+watch(filterText, (value) => {
+  treeRef.value.filter(value)
+})
 
-    listLoading.value = true
-    const res = await getList(data)
-    list = res.data.list
-    listLoading.value = false
-  }
-  const handleNodeClick = (data: { key: string } | undefined) => {
-    fetchData(data)
-  }
+const filterNode: any = (value: any, data: any) => {
+  if (!value) return true
+  return data.label.includes(value)
+}
 
-  const filterText = ref<string>('')
-  watch(filterText, (value) => {
-    treeRef.value.filter(value)
-  })
+getTree().then(({ data }) => {
+  const { list } = data
+  treeList.value = list
+})
+const remove = (node: { parent: any }, data: any) => {
+  const parent = node.parent
+  const children = parent.data.children || parent.data
+  const index = children.findIndex((d: { id: any }) => d.id === data.id)
+  children.splice(index, 1)
+  treeList.value = [...treeList.value]
+}
 
-  const filterNode: any = (value: any, data: any) => {
-    if (!value) return true
-    return data.label.includes(value)
-  }
-
-  getTree().then(({ data }) => {
-    const { list } = data
-    treeList.value = list
-  })
-  const remove = (node: { parent: any }, data: any) => {
-    const parent = node.parent
-    const children = parent.data.children || parent.data
-    const index = children.findIndex((d: { id: any }) => d.id === data.id)
-    children.splice(index, 1)
-    treeList.value = [...treeList.value]
-  }
-
-  onBeforeMount(() => {
-    fetchData()
-  })
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-  .dictionary-management-container {
-    .tree-button {
-      width: 100%;
-      margin-bottom: var(--el-margin);
-    }
+.dictionary-management-container {
+  .tree-button {
+    width: 100%;
+    margin-bottom: var(--el-margin);
+  }
 
-    :deep() {
-      .el-tree {
-        margin-top: var(--el-margin);
+  :deep() {
+    .el-tree {
+      margin-top: var(--el-margin);
 
-        &-node__label {
-          display: block;
-          width: 100%;
-        }
+      &-node__label {
+        display: block;
+        width: 100%;
+      }
 
-        &-node__content {
-          a {
-            position: absolute;
-            right: 5px;
-          }
+      &-node__content {
+        a {
+          position: absolute;
+          right: 5px;
         }
       }
     }
   }
+}
 </style>

@@ -18,39 +18,39 @@
 </template>
 
 <script>
-  export default defineComponent({
-    props: {
-      nodeData: {
-        type: Object,
-        default: () => {},
+export default defineComponent({
+  props: {
+    nodeData: {
+      type: Object,
+      default: () => {},
+    },
+    lf: {
+      type: Object || String,
+      default: () => {},
+    },
+  },
+  emits: ['onClose'],
+  data() {
+    return {
+      formData: {
+        name: '',
+        region: '',
+        type: '',
       },
-      lf: {
-        type: Object || String,
-        default: () => {},
-      },
+    }
+  },
+  mounted() {
+    const { properties } = this.$props.nodeData
+    if (properties) {
+      this.$data.formData = Object.assign({}, this.$data.formData, properties)
+    }
+  },
+  methods: {
+    onSubmit() {
+      const { id } = this.$props.nodeData
+      this.$props.lf.setProperties(id, this.$data.formData)
+      this.$emit('onClose')
     },
-    emits: ['onClose'],
-    data() {
-      return {
-        formData: {
-          name: '',
-          region: '',
-          type: '',
-        },
-      }
-    },
-    mounted() {
-      const { properties } = this.$props.nodeData
-      if (properties) {
-        this.$data.formData = Object.assign({}, this.$data.formData, properties)
-      }
-    },
-    methods: {
-      onSubmit() {
-        const { id } = this.$props.nodeData
-        this.$props.lf.setProperties(id, this.$data.formData)
-        this.$emit('onClose')
-      },
-    },
-  })
+  },
+})
 </script>

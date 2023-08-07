@@ -4,13 +4,7 @@
       <vab-icon icon="bug-line" />
     </el-badge>
 
-    <el-dialog
-      v-model="dialogVisible"
-      append-to-body
-      draggable
-      title="shop-vite 异常捕获"
-      width="60%"
-    >
+    <el-dialog v-model="dialogVisible" append-to-body draggable title="shop-vite 异常捕获" width="60%">
       <vab-error-log-content />
       <template #footer>
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -21,19 +15,19 @@
 </template>
 
 <script lang="ts" setup>
-  import { useErrorLogStore } from '/@/store/modules/errorLog'
+import { useErrorLogStore } from '/@/store/modules/errorLog'
 
-  defineOptions({
-    name: 'VabErrorLog',
-  })
+defineOptions({
+  name: 'VabErrorLog',
+})
 
-  const errorLogStore = useErrorLogStore()
-  const { errorLogs } = storeToRefs(errorLogStore)
-  const { clearErrorLog } = errorLogStore
-  const dialogVisible = ref<boolean>(false)
+const errorLogStore = useErrorLogStore()
+const { errorLogs } = storeToRefs(errorLogStore)
+const { clearErrorLog } = errorLogStore
+const dialogVisible = ref<boolean>(false)
 
-  const clearAll = () => {
-    dialogVisible.value = false
-    clearErrorLog()
-  }
+const clearAll = () => {
+  dialogVisible.value = false
+  clearErrorLog()
+}
 </script>

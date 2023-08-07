@@ -5,11 +5,11 @@
 </template>
 
 <script lang="ts" setup>
-  import VabPdf from '/@/plugins/VabPdf'
+import VabPdf from '/@/plugins/VabPdf'
 
-  defineOptions({
-    name: 'PDF',
-  })
+defineOptions({
+  name: 'PDF',
+})
 
-  const source = ref<any>('https://cdn.jsdelivr.net/gh/chuzhixin/image/demo.pdf')
+const source = ref<any>('https://cdn.jsdelivr.net/gh/chuzhixin/image/demo.pdf')
 </script>

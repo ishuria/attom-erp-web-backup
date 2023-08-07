@@ -16,7 +16,7 @@
     align-items: center;
     justify-content: center;
     max-width: 1000px;
-    height: calc(var(--el-keep-alive-height) - 40px);
+    height: calc(var(--el-container-height) - 40px);
     margin: auto;
 
     .pic-error {

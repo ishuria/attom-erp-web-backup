@@ -28,16 +28,16 @@
 </template>
 
 <script lang="ts" setup>
-  import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 
-  import type { UploadFile } from 'element-plus'
+import type { UploadFile } from 'element-plus'
 
-  const dialogImageUrl = ref<string | undefined>('')
-  const dialogVisible = ref<boolean>(false)
-  const disabled = ref<boolean>(false)
+const dialogImageUrl = ref<string | undefined>('')
+const dialogVisible = ref<boolean>(false)
+const disabled = ref<boolean>(false)
 
-  const handlePictureCardPreview = (file: UploadFile) => {
-    dialogImageUrl.value = file.url
-    dialogVisible.value = true
-  }
+const handlePictureCardPreview = (file: UploadFile) => {
+  dialogImageUrl.value = file.url
+  dialogVisible.value = true
+}
 </script>

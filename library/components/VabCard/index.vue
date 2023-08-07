@@ -13,47 +13,47 @@
 </template>
 
 <script lang="ts" setup>
-  import { ElCard } from 'element-plus'
+import { ElCard } from 'element-plus'
 
-  defineOptions({
-    name: 'VabCard',
-  })
+defineOptions({
+  name: 'VabCard',
+})
 
-  defineProps({
-    ...ElCard.props,
-    shadow: {
-      type: String,
-      default: 'never',
-    },
-    skeleton: {
-      type: Boolean,
-      default: false,
-    },
-    skeletonRows: {
-      type: Number,
-      default: 4, //显示的数量会比传入的数量多 1
-    },
-  })
+defineProps({
+  ...ElCard.props,
+  shadow: {
+    type: String,
+    default: 'never',
+  },
+  skeleton: {
+    type: Boolean,
+    default: false,
+  },
+  skeletonRows: {
+    type: Number,
+    default: 4, //显示的数量会比传入的数量多 1
+  },
+})
 
-  const skeletonShow = ref<boolean>(true)
+const skeletonShow = ref<boolean>(true)
 
-  setTimeout(() => {
-    skeletonShow.value = false
-  }, 500)
+setTimeout(() => {
+  skeletonShow.value = false
+}, 500)
 </script>
 
 <style lang="scss" scoped>
-  .vab-card {
-    :deep() {
-      .el-card__header {
-        font-weight: 500;
+.vab-card {
+  :deep() {
+    .el-card__header {
+      font-weight: 500;
 
-        [class*='ri-'] {
-          background: linear-gradient(120deg, #bd34fe 30%, var(--el-color-primary));
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
+      [class*='ri-'] {
+        background: linear-gradient(120deg, #bd34fe 30%, var(--el-color-primary));
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     }
   }
+}
 </style>

@@ -27,44 +27,44 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Step1',
-  })
-  const emit = defineEmits(['change-step'])
+defineOptions({
+  name: 'Step1',
+})
+const emit = defineEmits(['change-step'])
 
-  const formRef = ref<any>(null)
-  const form = reactive<any>({
-    payAccount: '****************',
-    gatheringAccount: '****************',
-    gatheringName: '***',
-    price: '100',
-  })
-  const rules = reactive<any>({
-    payAccount: [{ required: true, message: '请选择付款账户', trigger: 'blur' }],
-    gatheringAccount: [
-      { required: true, message: '请输入收款账户', trigger: 'blur' },
-      { required: true, message: '账户名应为邮箱格式', trigger: 'blur' },
-    ],
-    gatheringName: [{ required: true, message: '请输入收款人姓名', trigger: 'blur' }],
-    price: [
-      { required: true, message: '请输入转账金额', trigger: 'blur' },
-      { pattern: /^(\d+)((?:\.\d+)?)$/, message: '请输入合法金额数字' },
-    ],
-  })
+const formRef = ref<any>(null)
+const form = reactive<any>({
+  payAccount: '****************',
+  gatheringAccount: '****************',
+  gatheringName: '***',
+  price: '100',
+})
+const rules = reactive<any>({
+  payAccount: [{ required: true, message: '请选择付款账户', trigger: 'blur' }],
+  gatheringAccount: [
+    { required: true, message: '请输入收款账户', trigger: 'blur' },
+    { required: true, message: '账户名应为邮箱格式', trigger: 'blur' },
+  ],
+  gatheringName: [{ required: true, message: '请输入收款人姓名', trigger: 'blur' }],
+  price: [
+    { required: true, message: '请输入转账金额', trigger: 'blur' },
+    { pattern: /^(\d+)((?:\.\d+)?)$/, message: '请输入合法金额数字' },
+  ],
+})
 
-  const handleSubmit = () => {
-    formRef.value.validate((valid: any) => {
-      if (valid) {
-        emit('change-step', 1, form)
-      }
-    })
-  }
+const handleSubmit = () => {
+  formRef.value.validate((valid: any) => {
+    if (valid) {
+      emit('change-step', 1, form)
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>
-  .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
-  }
+.pay-button-group {
+  display: block;
+  margin: 20px auto;
+  text-align: center;
+}
 </style>

@@ -78,33 +78,33 @@
 </template>
 
 <script lang="ts" setup>
-  import { Search } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 
-  defineOptions({
-    name: 'Input',
-  })
+defineOptions({
+  name: 'Input',
+})
 
-  const input1 = ref<string>('')
-  const input2 = ref<string>('')
-  const input3 = ref<string>('')
-  const input4 = ref<string>('')
-  const input5 = ref<string>('')
-  const input6 = ref<string>('')
-  const input7 = ref<string>('')
-  const input8 = ref<string>('')
-  const input9 = ref<string>('')
-  const select = ref<any>(1)
-  const textarea = ref<string>('')
+const input1 = ref<string>('')
+const input2 = ref<string>('')
+const input3 = ref<string>('')
+const input4 = ref<string>('')
+const input5 = ref<string>('')
+const input6 = ref<string>('')
+const input7 = ref<string>('')
+const input8 = ref<string>('')
+const input9 = ref<string>('')
+const select = ref<any>(1)
+const textarea = ref<string>('')
 </script>
 
 <style lang="scss" scoped>
-  .input-container {
-    :deep() {
-      .el-select {
-        .el-input__wrapper {
-          width: 80px;
-        }
+.input-container {
+  :deep() {
+    .el-select {
+      .el-input__wrapper {
+        width: 80px;
       }
     }
   }
+}
 </style>

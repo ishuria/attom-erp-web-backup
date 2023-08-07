@@ -33,37 +33,37 @@
 </template>
 
 <script lang="ts" setup>
-  import { ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 
-  const drawer = ref<boolean>(false)
-  const drawer2 = ref<boolean>(false)
-  const direction = ref<any>('rtl')
-  const radio1 = ref<any>('Option 1')
-  const handleClose = (done: () => void) => {
-    ElMessageBox.confirm('您确定要关闭抽屉吗？', {
-      draggable: true,
+const drawer = ref<boolean>(false)
+const drawer2 = ref<boolean>(false)
+const direction = ref<any>('rtl')
+const radio1 = ref<any>('Option 1')
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm('您确定要关闭抽屉吗？', {
+    draggable: true,
+  })
+    .then(() => {
+      done()
     })
-      .then(() => {
-        done()
-      })
-      .catch(() => {
-        // catch error
-      })
-  }
-
-  function cancelClick() {
-    drawer2.value = false
-  }
-
-  function confirmClick() {
-    ElMessageBox.confirm(`您确认选择${radio1.value}吗？`, {
-      draggable: true,
+    .catch(() => {
+      // catch error
     })
-      .then(() => {
-        drawer2.value = false
-      })
-      .catch(() => {
-        // catch error
-      })
-  }
+}
+
+function cancelClick() {
+  drawer2.value = false
+}
+
+function confirmClick() {
+  ElMessageBox.confirm(`您确认选择${radio1.value}吗？`, {
+    draggable: true,
+  })
+    .then(() => {
+      drawer2.value = false
+    })
+    .catch(() => {
+      // catch error
+    })
+}
 </script>

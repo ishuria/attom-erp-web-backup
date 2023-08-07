@@ -10,15 +10,7 @@
           </el-form>
         </vab-card>
       </el-col>
-      <el-col
-        v-for="(item, index) in lllustrationsArray"
-        :key="index"
-        :lg="4"
-        :md="8"
-        :sm="8"
-        :xl="4"
-        :xs="12"
-      >
+      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="4" :md="8" :sm="8" :xl="4" :xs="12">
         <vab-card @click="handleCopyIcon(item)">
           <vab-icon class="vab-lllustration" :icon="item" is-custom-svg />
         </vab-card>
@@ -28,36 +20,36 @@
 </template>
 
 <script lang="ts" setup>
-  import clip from '/@/utils/clipboard'
+import clip from '/@/utils/clipboard'
 
-  const lllustrationsArray: string[] = []
+const lllustrationsArray: string[] = []
 
-  const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
-    eager: true,
-  })
+const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
+  eager: true,
+})
 
-  for (const key in files) {
-    const _key = key.slice(11)
-    lllustrationsArray.push(_key.substring(0, _key.length - 4))
-  }
+for (const key in files) {
+  const _key = key.slice(11)
+  lllustrationsArray.push(_key.substring(0, _key.length - 4))
+}
 
-  const handleCopyIcon = (item: any) => {
-    clip(`<vab-icon style="width:100%;height:300px" icon="${item}" is-custom-svg/>`)
-  }
+const handleCopyIcon = (item: any) => {
+  clip(`<vab-icon style="width:100%;height:300px" icon="${item}" is-custom-svg/>`)
+}
 </script>
 
 <style lang="scss" scoped>
-  .lllustration-container {
-    .vab-lllustration {
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
+.lllustration-container {
+  .vab-lllustration {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
 
-    :deep() {
-      .el-form-item {
-        margin-bottom: 0;
-      }
+  :deep() {
+    .el-form-item {
+      margin-bottom: 0;
     }
   }
+}
 </style>

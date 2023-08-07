@@ -25,47 +25,47 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Step3',
-  })
-  defineProps({
-    infoData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
+defineOptions({
+  name: 'Step3',
+})
+defineProps({
+  infoData: {
+    type: Object,
+    default: () => {
+      return {}
     },
-  })
-  const emit = defineEmits(['change-step'])
+  },
+})
+const emit = defineEmits(['change-step'])
 
-  const handlePrev = () => {
-    emit('change-step', 0)
-  }
+const handlePrev = () => {
+  emit('change-step', 0)
+}
 </script>
 
 <style lang="scss" scoped>
-  .pay-top-content {
-    text-align: center;
+.pay-top-content {
+  text-align: center;
 
-    .pay-success {
-      display: block;
-      margin: var(--el-margin) auto 5px auto;
-      font-size: 40px;
-      color: var(--el-color-success);
-    }
-  }
-
-  .pay-bottom {
-    padding: var(--el-padding);
-    margin-top: var(--el-margin);
-    background-color: var(--el-color-primary-light-9);
-    border: 1px dashed var(--el-border-color);
-    border-radius: var(--el-border-radius-base);
-  }
-
-  .pay-button-group {
+  .pay-success {
     display: block;
-    margin: var(--el-margin) auto;
-    text-align: center;
+    margin: var(--el-margin) auto 5px auto;
+    font-size: 40px;
+    color: var(--el-color-success);
   }
+}
+
+.pay-bottom {
+  padding: var(--el-padding);
+  margin-top: var(--el-margin);
+  background-color: var(--el-color-primary-light-9);
+  border: 1px dashed var(--el-border-color);
+  border-radius: var(--el-border-radius-base);
+}
+
+.pay-button-group {
+  display: block;
+  margin: var(--el-margin) auto;
+  text-align: center;
+}
 </style>

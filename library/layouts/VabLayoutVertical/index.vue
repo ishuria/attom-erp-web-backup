@@ -31,39 +31,39 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabLayoutVertical',
-  })
+defineOptions({
+  name: 'VabLayoutVertical',
+})
 
-  defineProps({
-    collapse: {
-      type: Boolean,
-      default() {
-        return false
-      },
+defineProps({
+  collapse: {
+    type: Boolean,
+    default() {
+      return false
     },
-    fixedHeader: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  fixedHeader: {
+    type: Boolean,
+    default() {
+      return true
     },
-    showTabs: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  showTabs: {
+    type: Boolean,
+    default() {
+      return true
     },
-    device: {
-      type: String,
-      default() {
-        return 'desktop'
-      },
+  },
+  device: {
+    type: String,
+    default() {
+      return 'desktop'
     },
-  })
+  },
+})
 
-  const settingsStore = useSettingsStore()
-  const { foldSideBar } = settingsStore
+const settingsStore = useSettingsStore()
+const { foldSideBar } = settingsStore
 </script>

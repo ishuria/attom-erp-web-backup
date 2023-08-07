@@ -5,13 +5,7 @@
         <page-header />
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-        <top-card
-          background="blue"
-          :count-config="countConfig1"
-          icon="money-cny-circle-line"
-          percentage="10%"
-          title="总销量"
-        />
+        <top-card background="blue" :count-config="countConfig1" icon="money-cny-circle-line" percentage="10%" title="总销量" />
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <top-card background="white" percentage="30%" title="活跃用户">
@@ -50,61 +44,61 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
+import { random } from 'lodash-es'
 
-  defineOptions({
-    name: 'Index',
-  })
+defineOptions({
+  name: 'Index',
+})
 
-  const countConfig1 = reactive<any>({
-    startValue: 0,
-    endValue: random(1000, 20000),
-    decimals: 2,
-    prefix: '￥',
-    suffix: '',
-    separator: ',',
-    duration: 8000,
-  })
+const countConfig1 = reactive<any>({
+  startValue: 0,
+  endValue: random(1000, 20000),
+  decimals: 2,
+  prefix: '￥',
+  suffix: '',
+  separator: ',',
+  duration: 8000,
+})
 </script>
 
 <style lang="scss" scoped>
-  .index-container {
-    :deep() {
-      .el-card {
-        .el-card__header {
-          position: relative;
+.index-container {
+  :deep() {
+    .el-card {
+      .el-card__header {
+        position: relative;
 
-          .card-header-tag {
-            position: absolute;
-            top: 15px;
-            right: var(--el-margin);
-          }
-
-          > div > span {
-            display: flex;
-            align-items: center;
-
-            i {
-              margin-right: 3px;
-            }
-          }
+        .card-header-tag {
+          position: absolute;
+          top: 15px;
+          right: var(--el-margin);
         }
 
-        .el-card__body {
-          position: relative;
+        > div > span {
+          display: flex;
+          align-items: center;
 
-          .echarts {
-            width: 100%;
-            height: 127px;
+          i {
+            margin-right: 3px;
           }
+        }
+      }
 
-          .card-footer-tag {
-            position: absolute;
-            right: var(--el-margin);
-            bottom: 15px;
-          }
+      .el-card__body {
+        position: relative;
+
+        .echarts {
+          width: 100%;
+          height: 127px;
+        }
+
+        .card-footer-tag {
+          position: absolute;
+          right: var(--el-margin);
+          bottom: 15px;
         }
       }
     }
   }
+}
 </style>

@@ -46,13 +46,13 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Radio',
-  })
+defineOptions({
+  name: 'Radio',
+})
 
-  const radio = ref<string>('1')
-  const radio2 = ref<string>('选中且禁用')
-  const radio3 = ref<any>(3)
-  const radio4 = ref<string>('上海')
-  const radio5 = ref<string>('1')
+const radio = ref<string>('1')
+const radio2 = ref<string>('选中且禁用')
+const radio3 = ref<any>(3)
+const radio4 = ref<string>('上海')
+const radio5 = ref<string>('1')
 </script>

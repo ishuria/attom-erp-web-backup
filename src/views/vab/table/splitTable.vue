@@ -45,23 +45,11 @@
                   <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button
-                    :icon="Search"
-                    :loading="listLoading"
-                    native-type="submit"
-                    type="primary"
-                    @click="queryData"
-                  >
-                    查询
-                  </el-button>
+                  <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
                   <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
                     <span v-if="fold">展开</span>
                     <span v-else>合并</span>
-                    <vab-icon
-                      class="vab-dropdown"
-                      :class="{ 'vab-dropdown-active': fold }"
-                      icon="arrow-up-s-line"
-                    />
+                    <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': fold }" icon="arrow-up-s-line" />
                   </el-button>
                 </el-form-item>
               </el-form>
@@ -70,18 +58,10 @@
               <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
               <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
               <el-button type="primary" @click="handleDetail">详情</el-button>
-              <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">
-                后台打开详情
-              </el-button>
+              <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
             </vab-query-form-left-panel>
           </vab-query-form>
-          <el-table
-            ref="tableSortRef"
-            v-loading="listLoading"
-            border
-            :data="list"
-            @selection-change="setSelectRows"
-          >
+          <el-table ref="tableSortRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
             <el-table-column type="selection" width="38" />
             <el-table-column align="center" label="序号" width="55">
               <template #default="{ $index }">
@@ -141,250 +121,250 @@
 </template>
 
 <script lang="ts" setup>
-  import { Delete, Plus, Search } from '@element-plus/icons-vue'
-  import { ElTree } from 'element-plus'
-  import { doDelete, getList } from '/@/api/table'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { handleMatched, handleTabs } from '/@/utils/routes'
+import { Delete, Plus, Search } from '@element-plus/icons-vue'
+import { ElTree } from 'element-plus'
+import { doDelete, getList } from '/@/api/table'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleMatched, handleTabs } from '/@/utils/routes'
 
-  defineOptions({
-    name: 'SplitTable',
-  })
+defineOptions({
+  name: 'SplitTable',
+})
 
-  const router = useRouter()
-  const $baseConfirm = inject<any>('$baseConfirm')
-  const $baseMessage = inject<any>('$baseMessage')
-  const routesStore = useRoutesStore()
-  const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-  const tabsStore = useTabsStore()
-  const { changeTabsMeta, addVisitedRoute } = tabsStore
-  const editRef = ref<any>(null)
-  const tableSortRef = ref<any>(null)
-  const fold = ref<boolean>(true)
-  const list = ref<any>([])
-  const listLoading = ref<boolean>(true)
-  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-  const total = ref<any>(0)
-  const selectRows = ref<any>([])
-  const queryForm = reactive<any>({
-    pageNo: 1,
-    pageSize: 20,
-  })
+const router = useRouter()
+const $baseConfirm = inject<any>('$baseConfirm')
+const $baseMessage = inject<any>('$baseMessage')
+const routesStore = useRoutesStore()
+const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
+const tabsStore = useTabsStore()
+const { changeTabsMeta, addVisitedRoute } = tabsStore
+const editRef = ref<any>(null)
+const tableSortRef = ref<any>(null)
+const fold = ref<boolean>(true)
+const list = ref<any>([])
+const listLoading = ref<boolean>(true)
+const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+const total = ref<any>(0)
+const selectRows = ref<any>([])
+const queryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 20,
+})
 
-  const filterText = ref<string>('')
-  const treeRef = ref<InstanceType<typeof ElTree>>()
+const filterText = ref<string>('')
+const treeRef = ref<InstanceType<typeof ElTree>>()
 
-  watch(filterText, (value) => {
-    treeRef.value?.filter(value)
-  })
+watch(filterText, (value) => {
+  treeRef.value?.filter(value)
+})
 
-  const filterNode: any = (value: string, data: Tree) => {
-    if (!value) return true
-    return data.label.includes(value)
+const filterNode: any = (value: string, data: Tree) => {
+  if (!value) return true
+  return data.label.includes(value)
+}
+
+interface Tree {
+  id: number
+  label: string
+  children?: Tree[]
+}
+
+const data: Tree[] = [
+  {
+    id: 1,
+    label: '一级 1',
+    children: [
+      {
+        id: 4,
+        label: '二级 1-1',
+        children: [
+          {
+            id: 9,
+            label: '三级 1-1-1',
+          },
+          {
+            id: 10,
+            label: '三级 1-1-2',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: '一级 2',
+    children: [
+      {
+        id: 5,
+        label: '二级 2-1',
+      },
+      {
+        id: 6,
+        label: '二级 2-2',
+      },
+    ],
+  },
+  {
+    id: 3,
+    label: '一级 3',
+    children: [
+      {
+        id: 7,
+        label: '二级 3-1',
+      },
+      {
+        id: 8,
+        label: '二级 3-2',
+      },
+    ],
+  },
+]
+const handleNodeClick = () => {
+  fetchData()
+}
+
+const defaultProps = {
+  children: 'children',
+  label: 'label',
+}
+
+onActivated(() => {
+  tableSortRef.value.doLayout()
+  fetchData()
+})
+
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getList(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
+}
+
+const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = value
+  fetchData()
+}
+
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchData()
+}
+
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+
+const statusFilter = (status: string | number) => {
+  const statusMap: any = {
+    published: 'success',
+    draft: '',
+    deleted: 'danger',
   }
+  return statusMap[status]
+}
 
-  interface Tree {
-    id: number
-    label: string
-    children?: Tree[]
-  }
+const handleFold = () => {
+  fold.value = !fold.value
+}
 
-  const data: Tree[] = [
-    {
-      id: 1,
-      label: '一级 1',
-      children: [
-        {
-          id: 4,
-          label: '二级 1-1',
-          children: [
-            {
-              id: 9,
-              label: '三级 1-1-1',
-            },
-            {
-              id: 10,
-              label: '三级 1-1-2',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 2,
-      label: '一级 2',
-      children: [
-        {
-          id: 5,
-          label: '二级 2-1',
-        },
-        {
-          id: 6,
-          label: '二级 2-2',
-        },
-      ],
-    },
-    {
-      id: 3,
-      label: '一级 3',
-      children: [
-        {
-          id: 7,
-          label: '二级 3-1',
-        },
-        {
-          id: 8,
-          label: '二级 3-2',
-        },
-      ],
-    },
-  ]
-  const handleNodeClick = () => {
-    fetchData()
-  }
+const setSelectRows = (value: string) => {
+  selectRows.value = value
+}
 
-  const defaultProps = {
-    children: 'children',
-    label: 'label',
-  }
+const handleAdd = () => {
+  editRef.value.showEdit()
+}
 
-  onActivated(() => {
-    tableSortRef.value.doLayout()
-    fetchData()
-  })
+const handleEdit = (row = {}) => {
+  editRef.value.showEdit(row)
+}
 
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
-  }
-
-  const handleSizeChange = (value: number) => {
-    queryForm.pageNo = 1
-    queryForm.pageSize = value
-    fetchData()
-  }
-
-  const handleCurrentChange = (value: number) => {
-    queryForm.pageNo = value
-    fetchData()
-  }
-
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
-
-  const statusFilter = (status: string | number) => {
-    const statusMap: any = {
-      published: 'success',
-      draft: '',
-      deleted: 'danger',
-    }
-    return statusMap[status]
-  }
-
-  const handleFold = () => {
-    fold.value = !fold.value
-  }
-
-  const setSelectRows = (value: string) => {
-    selectRows.value = value
-  }
-
-  const handleAdd = () => {
-    editRef.value.showEdit()
-  }
-
-  const handleEdit = (row = {}) => {
-    editRef.value.showEdit(row)
-  }
-
-  const handleDelete = (row: any) => {
-    if (row.id) {
-      $baseConfirm('您确定要删除当前项吗', null, async () => {
-        const { msg }: any = await doDelete({ ids: row.id })
+const handleDelete = (row: any) => {
+  if (row.id) {
+    $baseConfirm('您确定要删除当前项吗', null, async () => {
+      const { msg }: any = await doDelete({ ids: row.id })
+      $baseMessage(msg, 'success', 'hey')
+      await fetchData()
+    })
+  } else {
+    if (selectRows.value.length > 0) {
+      const ids = selectRows.value.map((item: { id: any }) => item.id).join()
+      $baseConfirm('您确定要删除选中项吗', null, async () => {
+        const { msg }: any = await doDelete({ ids: ids })
         $baseMessage(msg, 'success', 'hey')
         await fetchData()
       })
     } else {
-      if (selectRows.value.length > 0) {
-        const ids = selectRows.value.map((item: { id: any }) => item.id).join()
-        $baseConfirm('您确定要删除选中项吗', null, async () => {
-          const { msg }: any = await doDelete({ ids: ids })
-          $baseMessage(msg, 'success', 'hey')
-          await fetchData()
-        })
-      } else {
-        $baseMessage('您未选中任何行', 'warning', 'hey')
-      }
+      $baseMessage('您未选中任何行', 'warning', 'hey')
     }
   }
+}
 
-  const handleDetailStayTable = async () => {
-    if (selectRows.value.length === 1)
-      for (let i = 0; i < selectRows.value.length; i++) {
-        const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
-        const tab = handleTabs({
-          ...matched[matched.length - 1],
-          query: selectRows.value[i],
+const handleDetailStayTable = async () => {
+  if (selectRows.value.length === 1)
+    for (let i = 0; i < selectRows.value.length; i++) {
+      const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
+      const tab = handleTabs({
+        ...matched[matched.length - 1],
+        query: selectRows.value[i],
+      })
+      if (tab) {
+        await addVisitedRoute(tab)
+        await changeTabsMeta({
+          title: '详情页',
+          meta: {
+            title: `${tab.query.title} 详情页`,
+          },
         })
-        if (tab) {
-          await addVisitedRoute(tab)
-          await changeTabsMeta({
-            title: '详情页',
-            meta: {
-              title: `${tab.query.title} 详情页`,
-            },
-          })
-        }
       }
-    else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
-  }
+    }
+  else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
+}
 
-  const handleDetail = (row: any) => {
-    if (row.id)
+const handleDetail = (row: any) => {
+  if (row.id)
+    router.push({
+      path: '/vab/table/defaultTableDetail',
+      query: {
+        ...row,
+        timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+      },
+    })
+  else {
+    if (selectRows.value.length === 1)
       router.push({
         path: '/vab/table/defaultTableDetail',
         query: {
-          ...row,
+          ...selectRows.value[0],
           timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
         },
       })
-    else {
-      if (selectRows.value.length === 1)
-        router.push({
-          path: '/vab/table/defaultTableDetail',
-          query: {
-            ...selectRows.value[0],
-            timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
-          },
-        })
-      else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
-    }
+    else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
   }
+}
 
-  onBeforeMount(() => {
-    fetchData()
-  })
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-  .split-table-container {
-    width: 100%;
-    height: calc(var(--el-keep-alive-height) - var(--el-padding)) !important;
+.split-table-container {
+  width: 100%;
+  height: calc(var(--el-container-height) - var(--el-padding)) !important;
 
-    :deep() {
-      .split {
-        .resizer {
-          height: calc(var(--el-keep-alive-height) - var(--el-padding)) !important;
-          margin-right: calc(var(--el-margin) / 2);
-          margin-left: calc(var(--el-margin) / 2);
-        }
+  :deep() {
+    .split {
+      .resizer {
+        height: calc(var(--el-container-height) - var(--el-padding)) !important;
+        margin-right: calc(var(--el-margin) / 2);
+        margin-left: calc(var(--el-margin) / 2);
       }
     }
   }
+}
 </style>

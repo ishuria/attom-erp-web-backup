@@ -5,16 +5,16 @@
 </template>
 
 <script lang="ts" setup>
-  import VMdEditor from '@kangc/v-md-editor'
-  import '@kangc/v-md-editor/lib/style/base-editor.css'
-  import githubTheme from '@kangc/v-md-editor/lib/theme/github'
-  import '@kangc/v-md-editor/lib/theme/style/github.css'
+import VMdEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
 
-  defineOptions({
-    name: 'MdEditor',
-  })
+defineOptions({
+  name: 'MdEditor',
+})
 
-  const markdownContent = ref<any>(`
+const markdownContent = ref<any>(`
 <div align="center">
   <img width="200" src="https://cdn.jsdelivr.net/gh/chuzhixin/image/logo/vab.png"/>
   <h1> vue-admin-better
@@ -42,85 +42,85 @@
 
 `)
 
-  VMdEditor.use(githubTheme)
+VMdEditor.use(githubTheme)
 </script>
 
 <style lang="scss" scoped>
-  .md-editor-container {
-    :deep() {
-      .v-md-editor {
-        min-height: calc(var(--el-keep-alive-height) - var(--el-margin));
-        background: var(--el-color-white);
-        border: 1px solid var(--el-border-color);
-        border-radius: var(--el-border-radius-base);
-        box-shadow: none;
-        transition: var(--el-transition);
+.md-editor-container {
+  :deep() {
+    .v-md-editor {
+      min-height: calc(var(--el-container-height) - var(--el-margin));
+      background: var(--el-color-white);
+      border: 1px solid var(--el-border-color);
+      border-radius: var(--el-border-radius-base);
+      box-shadow: none;
+      transition: var(--el-transition);
 
-        &--fullscreen {
-          z-index: 9999;
-          border-radius: 0;
+      &--fullscreen {
+        z-index: 9999;
+        border-radius: 0;
+      }
+
+      &__toolbar {
+        border-bottom: 1px solid var(--el-border-color);
+
+        &-divider:before {
+          border-left: 1px solid var(--el-border-color);
         }
 
-        &__toolbar {
-          border-bottom: 1px solid var(--el-border-color);
+        &-item {
+          color: var(--el-color-grey);
 
-          &-divider:before {
-            border-left: 1px solid var(--el-border-color);
+          &--active,
+          &:hover {
+            color: var(--el-color-white);
+            background: var(--el-color-grey);
           }
-
-          &-item {
-            color: var(--el-color-grey);
-
-            &--active,
-            &:hover {
-              color: var(--el-color-white);
-              background: var(--el-color-grey);
-            }
-          }
-        }
-
-        &__editor-wrapper {
-          border-right: 1px solid var(--el-border-color);
-        }
-
-        .v-md-textarea-editor pre,
-        .v-md-textarea-editor textarea {
-          color: var(--el-color-black);
-          background-color: var(--el-color-white);
-        }
-
-        .github-markdown-body h1,
-        .github-markdown-body h2 {
-          border-bottom: 1px solid var(--el-border-color);
         }
       }
 
-      @media (max-width: 576px) {
-        .v-md-editor {
-          &__toolbar-right,
-          &__toolbar-divider {
-            display: none;
-          }
+      &__editor-wrapper {
+        border-right: 1px solid var(--el-border-color);
+      }
 
-          &__main {
-            flex-direction: column !important;
-            overflow-y: auto;
-          }
+      .v-md-textarea-editor pre,
+      .v-md-textarea-editor textarea {
+        color: var(--el-color-black);
+        background-color: var(--el-color-white);
+      }
 
-          &__preview-wrapper {
-            border-top: 1px solid var(--el-border-color);
-          }
+      .github-markdown-body h1,
+      .github-markdown-body h2 {
+        border-bottom: 1px solid var(--el-border-color);
+      }
+    }
 
-          &__editor-wrapper,
-          &__preview-wrapper {
-            display: flex;
-            flex-direction: column;
-            height: auto;
-            min-height: 100vh;
-            overflow: hidden;
-          }
+    @media (max-width: 576px) {
+      .v-md-editor {
+        &__toolbar-right,
+        &__toolbar-divider {
+          display: none;
+        }
+
+        &__main {
+          flex-direction: column !important;
+          overflow-y: auto;
+        }
+
+        &__preview-wrapper {
+          border-top: 1px solid var(--el-border-color);
+        }
+
+        &__editor-wrapper,
+        &__preview-wrapper {
+          display: flex;
+          flex-direction: column;
+          height: auto;
+          min-height: 100vh;
+          overflow: hidden;
         }
       }
     }
   }
+}
 </style>

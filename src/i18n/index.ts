@@ -35,7 +35,5 @@ export function translate(message: string | undefined) {
   if (!message) {
     return ''
   }
-  return (
-    [getLanguage(), 'vabI18n', message].reduce((o, k) => (o || {})[k], messages as any) || message
-  )
+  return [getLanguage(), 'vabI18n', message].reduce((o, k) => (o || {})[k], messages as any) || message
 }

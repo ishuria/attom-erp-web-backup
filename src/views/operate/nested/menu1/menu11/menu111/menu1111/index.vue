@@ -9,18 +9,18 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Menu1111',
-  })
+defineOptions({
+  name: 'Menu1111',
+})
 
-  const value = ref<string>('')
-  const $pub = inject<any>('$pub')
+const value = ref<string>('')
+const $pub = inject<any>('$pub')
 
-  const handleAdd = () => {
-    value.value = '这是模拟填充的缓存数据，点击[刷新当前标签页]按钮可清除'
-  }
+const handleAdd = () => {
+  value.value = '这是模拟填充的缓存数据，点击[刷新当前标签页]按钮可清除'
+}
 
-  const handleRefresh = () => {
-    $pub('reload-router-view', 'Menu1111')
-  }
+const handleRefresh = () => {
+  $pub('reload-router-view', 'Menu1111')
+}
 </script>

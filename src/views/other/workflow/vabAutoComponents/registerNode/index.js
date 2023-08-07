@@ -8,11 +8,4 @@ import registerPush from './registerPush'
 import registerDownload from './registerDownload'
 import registerPolyline from './registerPolyline'
 
-export {
-  registerStart,
-  registerUser,
-  registerEnd,
-  registerPush,
-  registerDownload,
-  registerPolyline,
-}
+export { registerStart, registerUser, registerEnd, registerPush, registerDownload, registerPolyline }

@@ -7,37 +7,37 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'VabMenu',
+defineOptions({
+  name: 'VabMenu',
+})
+
+interface ComponentType {
+  default: Component
+}
+
+const imports = import.meta.glob<ComponentType>('./**/*.vue', { eager: true })
+const Components: Record<string, Component> = {}
+Object.getOwnPropertyNames(imports).forEach((key) => {
+  Components[key.replace(/(\/|components|\.|vue)/g, '')] = imports[key].default
+})
+
+const props = defineProps({
+  item: {
+    type: Object,
+    required: true,
+  },
+  layout: {
+    type: String,
+    default: '',
+  },
+})
+
+const menuComponent = computed(() =>
+  props.item.children &&
+  props.item.children.some((route: any) => {
+    return route.meta && route.meta.hidden !== true
   })
-
-  interface ComponentType {
-    default: Component
-  }
-
-  const imports = import.meta.glob<ComponentType>('./**/*.vue', { eager: true })
-  const Components: Record<string, Component> = {}
-  Object.getOwnPropertyNames(imports).forEach((key) => {
-    Components[key.replace(/(\/|components|\.|vue)/g, '')] = imports[key].default
-  })
-
-  const props = defineProps({
-    item: {
-      type: Object,
-      required: true,
-    },
-    layout: {
-      type: String,
-      default: '',
-    },
-  })
-
-  const menuComponent = computed(() =>
-    props.item.children &&
-    props.item.children.some((route: any) => {
-      return route.meta && route.meta.hidden !== true
-    })
-      ? Components['VabSubMenu']
-      : Components['VabMenuItem']
-  )
+    ? Components['VabSubMenu']
+    : Components['VabMenuItem']
+)
 </script>

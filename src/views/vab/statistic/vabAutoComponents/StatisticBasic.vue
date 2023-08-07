@@ -32,11 +32,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { ChatLineRound, Male } from '@element-plus/icons-vue'
+import { ChatLineRound, Male } from '@element-plus/icons-vue'
 </script>
 
 <style scoped>
-  .el-col {
-    text-align: center;
-  }
+.el-col {
+  text-align: center;
+}
 </style>

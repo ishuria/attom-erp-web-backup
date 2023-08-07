@@ -21,13 +21,7 @@
           <div class="vab-screen-lock-content-form">
             <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
               <el-form-item label="" :label-width="0" prop="password">
-                <el-input
-                  v-model="form.password"
-                  v-focus
-                  autocomplete="off"
-                  :placeholder="translate('请输入密码123456')"
-                  type="password"
-                >
+                <el-input v-model="form.password" v-focus autocomplete="off" :placeholder="translate('请输入密码123456')" type="password">
                   <template #suffix>
                     <el-button native-type="submit" type="primary" @click="handleUnLock">
                       <vab-icon icon="lock-line" />
@@ -46,161 +40,161 @@
 </template>
 
 <script lang="ts" setup>
-  import { translate } from '/@/i18n'
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { useUserStore } from '/@/store/modules/user'
+import { translate } from '/@/i18n'
+import { useSettingsStore } from '/@/store/modules/settings'
+import { useUserStore } from '/@/store/modules/user'
 
-  defineOptions({
-    name: 'VabLock',
-  })
+defineOptions({
+  name: 'VabLock',
+})
 
-  const userStore = useUserStore()
-  const { avatar } = storeToRefs(userStore)
-  const settingsStore = useSettingsStore()
-  const { lock, title } = storeToRefs(settingsStore)
-  const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
-  const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
+const userStore = useUserStore()
+const { avatar } = storeToRefs(userStore)
+const settingsStore = useSettingsStore()
+const { lock, title } = storeToRefs(settingsStore)
+const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
+const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
 
-  const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
-  const randomBackground = () => {
-    background.value = `${url}${Math.round(Math.random() * 31)}.jpg`
+const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
+const randomBackground = () => {
+  background.value = `${url}${Math.round(Math.random() * 31)}.jpg`
+}
+
+const validatePass = (rule: any, value: string, callback: any) => {
+  if (value === '' || value !== '123456') {
+    callback(new Error('请输入正确的密码'))
+  } else {
+    callback()
   }
+}
 
-  const validatePass = (rule: any, value: string, callback: any) => {
-    if (value === '' || value !== '123456') {
-      callback(new Error('请输入正确的密码'))
-    } else {
-      callback()
+const formRef = ref()
+const form = ref({
+  password: '123456',
+})
+const rules = {
+  password: [{ validator: validatePass, trigger: 'blur' }],
+}
+
+const handleUnLock = () => {
+  formRef.value.validate(async (valid: boolean) => {
+    if (valid) {
+      setTimeout(async () => {
+        await _handleUnLock()
+      }, 500)
     }
-  }
-
-  const formRef = ref()
-  const form = ref({
-    password: '123456',
   })
-  const rules = {
-    password: [{ validator: validatePass, trigger: 'blur' }],
-  }
+}
 
-  const handleUnLock = () => {
-    formRef.value.validate(async (valid: boolean) => {
-      if (valid) {
-        setTimeout(async () => {
-          await _handleUnLock()
-        }, 500)
-      }
-    })
-  }
-
-  const handleLock = () => {
-    _handleLock()
-  }
+const handleLock = () => {
+  _handleLock()
+}
 </script>
 
 <style lang="scss" scoped>
-  .vab-screen-lock {
-    position: fixed;
+.vab-screen-lock {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: var(--el-z-index);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background: var(--el-mask-color);
+  backdrop-filter: blur(10px);
+  opacity: var(--opacity-value);
+
+  &-background {
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
+    z-index: calc(var(--el-z-index) - 1);
+  }
+
+  &-content {
     z-index: var(--el-z-index);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+    width: 400px;
+    padding: 40px 55px 40px 55px;
+    color: var(--el-color-grey);
+    text-align: center;
     background: var(--el-mask-color);
     backdrop-filter: blur(10px);
-    opacity: var(--opacity-value);
+    border-radius: 15px;
 
-    &-background {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: calc(var(--el-z-index) - 1);
+    > span {
+      font-size: var(--el-font-size-small);
+      cursor: pointer;
     }
 
-    &-content {
-      z-index: var(--el-z-index);
-      width: 400px;
-      padding: 40px 55px 40px 55px;
+    &-title {
+      line-height: 50px;
       color: var(--el-color-grey);
       text-align: center;
-      background: var(--el-mask-color);
-      backdrop-filter: blur(10px);
-      border-radius: 15px;
 
-      > span {
-        font-size: var(--el-font-size-small);
-        cursor: pointer;
-      }
+      :deep() {
+        .el-avatar {
+          width: 150px;
+          height: 150px;
 
-      &-title {
-        line-height: 50px;
-        color: var(--el-color-grey);
-        text-align: center;
-
-        :deep() {
-          .el-avatar {
-            width: 150px;
-            height: 150px;
-
-            img {
-              padding: 30px;
-              cursor: pointer;
-            }
-          }
-
-          .ri-lock-line {
-            display: block;
-            margin: auto !important;
-            font-size: 30px;
-            color: var(--el-color-grey) !important;
+          img {
+            padding: 30px;
+            cursor: pointer;
           }
         }
+
+        .ri-lock-line {
+          display: block;
+          margin: auto !important;
+          font-size: 30px;
+          color: var(--el-color-grey) !important;
+        }
       }
+    }
 
-      &-form {
-        :deep() {
-          .el-input {
-            position: relative;
-            width: 100%;
-            height: 40px;
-            line-height: 40px;
+    &-form {
+      :deep() {
+        .el-input {
+          position: relative;
+          width: 100%;
+          height: 40px;
+          line-height: 40px;
 
-            .el-input__wrapper {
-              padding-right: 0;
-              border: 1px solid var(--el-color-primary);
-              box-shadow: none;
+          .el-input__wrapper {
+            padding-right: 0;
+            border: 1px solid var(--el-color-primary);
+            box-shadow: none;
 
-              .el-input__suffix {
-                .el-button {
-                  position: absolute;
-                  right: -1px;
-                  height: 40px;
-                  line-height: 40px;
-                  border-top-left-radius: 0;
-                  border-bottom-left-radius: 0;
-                }
+            .el-input__suffix {
+              .el-button {
+                position: absolute;
+                right: -1px;
+                height: 40px;
+                line-height: 40px;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+              }
 
-                .el-input__validateIcon {
-                  display: none;
-                }
+              .el-input__validateIcon {
+                display: none;
               }
             }
           }
         }
       }
     }
+  }
 
-    @media (max-width: 576px) {
-      .vab-screen-lock-content {
-        width: 100% !important;
-        margin: 5vw;
-      }
+  @media (max-width: 576px) {
+    .vab-screen-lock-content {
+      width: 100% !important;
+      margin: 5vw;
     }
   }
+}
 </style>

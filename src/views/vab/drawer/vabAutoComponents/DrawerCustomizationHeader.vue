@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { CircleCloseFilled } from '@element-plus/icons-vue'
+import { CircleCloseFilled } from '@element-plus/icons-vue'
 
-  const visible = ref<boolean>(false)
+const visible = ref<boolean>(false)
 </script>

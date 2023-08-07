@@ -4,11 +4,7 @@
       <template #header>
         <span>基础用法</span>
       </template>
-      <el-switch
-        v-model="value"
-        active-color="var(--el-color-success)"
-        inactive-color="var(--el-color-warning)"
-      />
+      <el-switch v-model="value" active-color="var(--el-color-success)" inactive-color="var(--el-color-warning)" />
     </vab-card>
     <vab-card>
       <template #header>
@@ -27,12 +23,12 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Switch',
-  })
+defineOptions({
+  name: 'Switch',
+})
 
-  const value = ref<boolean>(true)
-  const value1 = ref<boolean>(true)
-  const value2 = ref<boolean>(true)
-  const value3 = ref<boolean>(false)
+const value = ref<boolean>(true)
+const value1 = ref<boolean>(true)
+const value2 = ref<boolean>(true)
+const value3 = ref<boolean>(false)
 </script>

@@ -22,71 +22,71 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'StepForm',
-  })
+defineOptions({
+  name: 'StepForm',
+})
 
-  const active = ref<any>(0)
-  let form = reactive<any>({})
+const active = ref<any>(0)
+let form = reactive<any>({})
 
-  const handleSetStep = (_active: any, _form: any) => {
-    active.value = _active
-    if (_form) form = Object.assign(form, _form)
-  }
+const handleSetStep = (_active: any, _form: any) => {
+  active.value = _active
+  if (_form) form = Object.assign(form, _form)
+}
 </script>
 
 <style lang="scss" scoped>
-  .step-form-container {
-    :deep() {
-      .el-steps {
-        margin: var(--el-margin) auto calc(var(--el-margin) * 2) auto;
+.step-form-container {
+  :deep() {
+    .el-steps {
+      margin: var(--el-margin) auto calc(var(--el-margin) * 2) auto;
 
-        .el-step__title.is-process {
+      .el-step__title.is-process {
+        color: var(--el-color-primary);
+      }
+
+      .el-step__description.is-process {
+        color: var(--el-color-primary);
+      }
+
+      .el-step__head {
+        &.is-process {
           color: var(--el-color-primary);
-        }
+          border-color: var(--el-color-primary);
 
-        .el-step__description.is-process {
-          color: var(--el-color-primary);
-        }
-
-        .el-step__head {
-          &.is-process {
+          .el-step__icon.is-text {
             color: var(--el-color-primary);
-            border-color: var(--el-color-primary);
-
-            .el-step__icon.is-text {
-              color: var(--el-color-primary);
-              border: 1px solid;
-            }
-
-            .el-step__line {
-              height: 1px;
-            }
+            border: 1px solid;
           }
 
-          &.is-wait {
-            .el-step__icon.is-text {
-              border: 1px solid;
-            }
+          .el-step__line {
+            height: 1px;
+          }
+        }
 
-            .el-step__line {
-              height: 1px;
-            }
+        &.is-wait {
+          .el-step__icon.is-text {
+            border: 1px solid;
           }
 
-          &.is-finish {
-            .el-step__icon.is-text {
-              color: var(--el-color-white);
-              background: var(--el-color-primary);
-            }
+          .el-step__line {
+            height: 1px;
+          }
+        }
 
-            .el-step__line {
-              height: 1px;
-              background: var(--el-color-primary);
-            }
+        &.is-finish {
+          .el-step__icon.is-text {
+            color: var(--el-color-white);
+            background: var(--el-color-primary);
+          }
+
+          .el-step__line {
+            height: 1px;
+            background: var(--el-color-primary);
           }
         }
       }
     }
   }
+}
 </style>

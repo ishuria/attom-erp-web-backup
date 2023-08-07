@@ -6,39 +6,39 @@
 </template>
 
 <script lang="ts" setup>
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import VabJsonViewer from 'vue-json-viewer'
+import { useTabsStore } from '/@/store/modules/tabs'
+import VabJsonViewer from 'vue-json-viewer'
 
-  defineOptions({
-    name: 'Test2',
-  })
+defineOptions({
+  name: 'Test2',
+})
 
-  const route = useRoute()
-  const tabsStore = useTabsStore()
-  const { changeTabsMeta } = tabsStore
-  let finalRoute = reactive({})
+const route = useRoute()
+const tabsStore = useTabsStore()
+const { changeTabsMeta } = tabsStore
+let finalRoute = reactive({})
 
-  const handleQuery = () => {
-    finalRoute = {
-      name: route.name,
-      path: route.path,
-      query: route.query,
-    }
-    changeTabsMeta({
-      title: 'Query',
-      meta: {
-        title: `Query Id=${route.query.id}`,
-      },
-    })
+const handleQuery = () => {
+  finalRoute = {
+    name: route.name,
+    path: route.path,
+    query: route.query,
   }
-
-  watch(
-    finalRoute,
-    () => {
-      handleQuery()
+  changeTabsMeta({
+    title: 'Query',
+    meta: {
+      title: `Query Id=${route.query.id}`,
     },
-    {
-      immediate: true,
-    }
-  )
+  })
+}
+
+watch(
+  finalRoute,
+  () => {
+    handleQuery()
+  },
+  {
+    immediate: true,
+  }
+)
 </script>

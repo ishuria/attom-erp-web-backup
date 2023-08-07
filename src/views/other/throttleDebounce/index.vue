@@ -6,17 +6,17 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'ThrottleDebounce',
-  })
+defineOptions({
+  name: 'ThrottleDebounce',
+})
 
-  const $baseMessage = inject<any>('$baseMessage')
+const $baseMessage = inject<any>('$baseMessage')
 
-  const throttleClick = () => {
-    $baseMessage(`节流函数，2秒后允许再次触发`, 'success', 'hey')
-  }
+const throttleClick = () => {
+  $baseMessage(`节流函数，2秒后允许再次触发`, 'success', 'hey')
+}
 
-  const debounceClick = () => {
-    $baseMessage(`防抖函数，每隔1秒允许触发一次`, 'success', 'hey')
-  }
+const debounceClick = () => {
+  $baseMessage(`防抖函数，每隔1秒允许触发一次`, 'success', 'hey')
+}
 </script>

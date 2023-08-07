@@ -107,10 +107,7 @@ export const useSettingsStore = defineStore('settings', {
       Object.getOwnPropertyNames(obj).forEach((key) => {
         // @ts-ignore
         this[key] = obj[key]
-        localStorage.setItem(
-          key,
-          typeof obj[key] == 'string' ? `{"${key}":"${obj[key]}"}` : `{"${key}":${obj[key]}}`
-        )
+        localStorage.setItem(key, typeof obj[key] == 'string' ? `{"${key}":"${obj[key]}"}` : `{"${key}":${obj[key]}}`)
       })
     },
     updateMode(value: any) {
@@ -138,8 +135,7 @@ export const useSettingsStore = defineStore('settings', {
     setCssVar() {
       const el = ref<any>(null)
 
-      if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px'))
-        useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
+      if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px')) useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'
 
       if (!this.theme.showTabs) useCssVar('--el-tabs-height', el).value = '0px'

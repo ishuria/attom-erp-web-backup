@@ -1,5 +1,5 @@
 export default {
-  printWidth: 100,
+  printWidth: 140,
   tabWidth: 2,
   useTabs: false,
   semi: false,
@@ -11,6 +11,6 @@ export default {
   bracketSameLine: false,
   arrowParens: 'always',
   htmlWhitespaceSensitivity: 'ignore',
-  vueIndentScriptAndStyle: true,
+  vueIndentScriptAndStyle: false,
   endOfLine: 'lf',
 }

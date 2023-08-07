@@ -8,8 +8,8 @@
 </template>
 
 <style scoped>
-  .demo-progress .el-progress--line {
-    width: 350px;
-    margin-bottom: 15px;
-  }
+.demo-progress .el-progress--line {
+  width: 350px;
+  margin-bottom: 15px;
+}
 </style>

@@ -10,91 +10,91 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { random } from 'lodash-es'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabChartFunnel',
-  })
+defineOptions({
+  name: 'VabChartFunnel',
+})
 
-  defineProps({
-    title: {
-      type: String,
-      default: '',
-    },
-  })
+defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+})
 
-  const settingsStore = useSettingsStore()
-  const { color } = storeToRefs(settingsStore)
-  let timer: any
+const settingsStore = useSettingsStore()
+const { color } = storeToRefs(settingsStore)
+let timer: any
 
-  const option = reactive<any>({
-    grid: {
-      top: 20,
-      right: 20,
-      bottom: 20,
-      left: 20,
-    },
-    tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b} : {c}%',
-    },
-    series: {
-      name: '漏斗图',
-      type: 'funnel',
-      left: '20%',
-      top: 20,
-      bottom: 20,
-      width: '60%',
-      min: 0,
-      max: 100,
-      minSize: '0%',
-      maxSize: '100%',
-      sort: 'descending',
-      gap: 2,
-      labelLine: {
-        length: 10,
-        lineStyle: {
-          width: 1,
-          type: 'solid',
-        },
+const option = reactive<any>({
+  grid: {
+    top: 20,
+    right: 20,
+    bottom: 20,
+    left: 20,
+  },
+  tooltip: {
+    trigger: 'item',
+    formatter: '{a} <br/>{b} : {c}%',
+  },
+  series: {
+    name: '漏斗图',
+    type: 'funnel',
+    left: '20%',
+    top: 20,
+    bottom: 20,
+    width: '60%',
+    min: 0,
+    max: 100,
+    minSize: '0%',
+    maxSize: '100%',
+    sort: 'descending',
+    gap: 2,
+    labelLine: {
+      length: 10,
+      lineStyle: {
+        width: 1,
+        type: 'solid',
       },
-      emphasis: {
-        label: {
-          fontSize: 12,
-        },
+    },
+    emphasis: {
+      label: {
+        fontSize: 12,
       },
-      data: [
-        { value: random(0, 100), name: '访问' },
-        { value: random(20, 100), name: '咨询' },
-        { value: random(40, 100), name: '订单' },
-        { value: random(60, 100), name: '点击' },
-        { value: random(80, 100), name: '展现' },
-      ],
     },
-  })
+    data: [
+      { value: random(0, 100), name: '访问' },
+      { value: random(20, 100), name: '咨询' },
+      { value: random(40, 100), name: '订单' },
+      { value: random(60, 100), name: '点击' },
+      { value: random(80, 100), name: '展现' },
+    ],
+  },
+})
 
-  watch(
-    color,
-    () => {
-      option.color = [color.value]
-    },
-    { immediate: true }
-  )
+watch(
+  color,
+  () => {
+    option.color = [color.value]
+  },
+  { immediate: true }
+)
 
-  onActivated(() => {
-    timer = setInterval(() => {
-      option.series.data = [
-        { value: random(0, 100), name: '访问' },
-        { value: random(20, 100), name: '咨询' },
-        { value: random(40, 100), name: '订单' },
-        { value: random(60, 100), name: '点击' },
-        { value: random(80, 100), name: '展现' },
-      ]
-    }, 3000)
-  })
+onActivated(() => {
+  timer = setInterval(() => {
+    option.series.data = [
+      { value: random(0, 100), name: '访问' },
+      { value: random(20, 100), name: '咨询' },
+      { value: random(40, 100), name: '订单' },
+      { value: random(60, 100), name: '点击' },
+      { value: random(80, 100), name: '展现' },
+    ]
+  }, 3000)
+})
 
-  onDeactivated(() => {
-    clearInterval(timer)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>

@@ -19,11 +19,7 @@
               :title="translate(item.meta.title)"
             >
               <div>
-                <vab-icon
-                  v-if="item.meta.icon"
-                  :icon="item.meta.icon"
-                  :is-custom-svg="item.meta.isCustomSvg"
-                />
+                <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
                 <span v-if="translate(item.meta.title).length < 4">
                   {{ translate(item.meta.title) }}
                 </span>
@@ -53,368 +49,366 @@
 </template>
 
 <script lang="ts" setup>
-  import { defaultOpeneds, isHashRouterMode, openFirstMenu, uniqueOpened } from '/@/config'
-  import { translate } from '/@/i18n'
-  import { VabRoute } from '/@/router/types'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { isExternal } from '/@/utils/validate'
+import { defaultOpeneds, isHashRouterMode, openFirstMenu, uniqueOpened } from '/@/config'
+import { translate } from '/@/i18n'
+import { VabRoute } from '/@/router/types'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useSettingsStore } from '/@/store/modules/settings'
+import { isExternal } from '/@/utils/validate'
 
-  defineOptions({
-    name: 'VabColumnBar',
-  })
+defineOptions({
+  name: 'VabColumnBar',
+})
 
-  const route: VabRoute = useRoute()
-  const router = useRouter()
-  const settingsStore = useSettingsStore()
-  const { collapse, device, theme } = storeToRefs(settingsStore)
-  const { foldSideBar, openSideBar } = settingsStore
-  const routesStore = useRoutesStore()
-  const {
-    getTab: tab,
-    getTabMenu: tabMenu,
-    getActiveMenu: activeMenu,
-    getRoutes: routes,
-    getPartialRoutes: partialRoutes,
-  }: any = storeToRefs(routesStore)
+const route: VabRoute = useRoute()
+const router = useRouter()
+const settingsStore = useSettingsStore()
+const { collapse, device, theme } = storeToRefs(settingsStore)
+const { foldSideBar, openSideBar } = settingsStore
+const routesStore = useRoutesStore()
+const {
+  getTab: tab,
+  getTabMenu: tabMenu,
+  getActiveMenu: activeMenu,
+  getRoutes: routes,
+  getPartialRoutes: partialRoutes,
+}: any = storeToRefs(routesStore)
 
-  const handleTabClick = () => {
-    nextTick(() => {
-      if (tabMenu.value.meta.target === '_blank') {
-        if (route.path !== tabMenu.value.path) {
-          isHashRouterMode ? window.open(`#${tabMenu.value.path}`) : window.open(tabMenu.value.path)
-          router.push('/redirect')
-        }
-      } else if (isExternal(tabMenu.value.path)) {
-        window.open(tabMenu.value.path)
-        router.push('/redirect')
-      } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
-    })
-  }
-
+const handleTabClick = () => {
   nextTick(() => {
-    if (theme.value.layout === 'column')
-      watch(
-        route,
-        () => {
-          const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
-          const floatFold: any = document.querySelector('.float-fold')
-          if (route.meta.noColumn && theme.value.layout === 'column') {
-            if (device.value !== 'mobile') foldSideBar()
-            if (foldUnfold) foldUnfold.style = 'display:none'
-            if (floatFold) floatFold.style = 'display:none'
-          } else {
-            if (device.value !== 'mobile') openSideBar()
-            if (foldUnfold) foldUnfold.style = ''
-            if (floatFold) floatFold.style = ''
-          }
-        },
-        {
-          immediate: true,
-        }
-      )
+    if (tabMenu.value.meta.target === '_blank') {
+      if (route.path !== tabMenu.value.path) {
+        isHashRouterMode ? window.open(`#${tabMenu.value.path}`) : window.open(tabMenu.value.path)
+        router.push('/redirect')
+      }
+    } else if (isExternal(tabMenu.value.path)) {
+      window.open(tabMenu.value.path)
+      router.push('/redirect')
+    } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
   })
+}
+
+nextTick(() => {
+  if (theme.value.layout === 'column')
+    watch(
+      route,
+      () => {
+        const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
+        const floatFold: any = document.querySelector('.float-fold')
+        if (route.meta.noColumn && theme.value.layout === 'column') {
+          if (device.value !== 'mobile') foldSideBar()
+          if (foldUnfold) foldUnfold.style = 'display:none'
+          if (floatFold) floatFold.style = 'display:none'
+        } else {
+          if (device.value !== 'mobile') openSideBar()
+          if (foldUnfold) foldUnfold.style = ''
+          if (floatFold) floatFold.style = ''
+        }
+      },
+      {
+        immediate: true,
+      }
+    )
+})
 </script>
 
 <style lang="scss" scoped>
-  @mixin active {
-    &:hover {
-      color: var(--el-color-primary);
-      background-color: var(--el-color-primary-light-9);
+@mixin active {
+  &:hover {
+    color: var(--el-color-primary);
+    background-color: var(--el-color-primary-light-9);
 
-      i,
-      svg {
-        color: var(--el-color-primary);
-      }
-    }
-
-    &.is-active {
+    i,
+    svg {
       color: var(--el-color-primary);
-      background-color: var(--el-color-primary-light-9);
     }
   }
 
-  .vab-column-bar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: var(--el-left-menu-width);
-    height: 100vh;
+  &.is-active {
+    color: var(--el-color-primary);
+    background-color: var(--el-color-primary-light-9);
+  }
+}
+
+.vab-column-bar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--el-left-menu-width);
+  height: 100vh;
+  overflow: hidden;
+  background: var(--el-color-white);
+  border-right: 1px solid var(--el-border-color);
+
+  &-vertical,
+  &-card,
+  &-arrow {
+    :deep() {
+      .el-tabs + .el-menu {
+        left: var(--el-left-menu-width-min);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min));
+        border: 0;
+      }
+    }
+  }
+
+  &-horizontal,
+  &-semicircle {
+    :deep() {
+      .vab-logo-column {
+        .logo {
+          width: calc(var(--el-left-menu-width-min) * 1.4) !important;
+        }
+
+        .title {
+          left: calc(var(--el-left-menu-width-min) * 1.4) !important;
+          width: calc(var(--el-left-menu-width) - calc(var(--el-left-menu-width-min) * 1.4) - 1px);
+        }
+      }
+
+      .el-tabs + .el-menu {
+        left: calc(var(--el-left-menu-width-min) * 1.4);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4);
+        border: 0;
+      }
+    }
+  }
+
+  &-card {
+    :deep() {
+      .el-tabs {
+        .el-tabs__item {
+          padding: 5px !important;
+
+          .vab-column-grid {
+            width: calc(var(--el-left-menu-width-min) - 10px) !important;
+            height: calc(var(--el-left-menu-width-min) - 10px) !important;
+            border-radius: var(--el-border-radius-base);
+
+            &:hover {
+              background: var(--el-color-primary);
+            }
+          }
+
+          &.is-active {
+            background: transparent !important;
+
+            .vab-column-grid {
+              background: var(--el-color-primary);
+            }
+          }
+        }
+      }
+
+      .el-tabs + .el-menu {
+        left: calc(var(--el-left-menu-width-min) + 10px);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
+      }
+
+      .el-sub-menu .el-sub-menu__title,
+      .el-menu-item {
+        min-width: 180px;
+        margin-bottom: 5px;
+        border-radius: var(--el-border-radius-base);
+      }
+    }
+  }
+
+  &-arrow {
+    :deep() {
+      .el-tabs {
+        .el-tabs__item {
+          &.is-active {
+            background: transparent !important;
+
+            .vab-column-grid {
+              background: transparent !important;
+
+              &:after {
+                position: absolute;
+                right: -1px;
+                width: 0;
+                height: 0;
+                overflow: hidden;
+                content: '';
+                border-color: transparent var(--el-color-white) transparent transparent;
+                border-style: solid dashed dashed;
+                border-width: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      .el-tabs + .el-menu {
+        left: calc(var(--el-left-menu-width-min) + 10px);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
+      }
+
+      .el-sub-menu .el-sub-menu__title,
+      .el-menu-item {
+        min-width: 180px;
+        margin-bottom: 5px;
+        border-radius: var(--el-border-radius-base);
+      }
+    }
+  }
+
+  &-semicircle {
+    :deep() {
+      .el-tabs {
+        .el-tabs__item {
+          &.is-active {
+            border-top-left-radius: 99px;
+            border-bottom-left-radius: 99px;
+          }
+        }
+      }
+    }
+  }
+
+  .vab-column-grid {
+    display: flex;
+    align-items: center;
+    width: var(--el-left-menu-width-min);
     overflow: hidden;
-    background: var(--el-color-white);
-    border-right: 1px solid var(--el-border-color);
+    text-align: center;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
 
     &-vertical,
     &-card,
     &-arrow {
-      :deep() {
-        .el-tabs + .el-menu {
-          left: var(--el-left-menu-width-min);
-          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min));
-          border: 0;
+      justify-content: center;
+      height: var(--el-left-menu-width-min);
+
+      > div {
+        svg {
+          position: relative;
+          top: 8px;
+          display: block;
+          width: var(--el-font-size-bigger);
+          height: var(--el-font-size-bigger);
+        }
+
+        [class*='ri-'] {
+          display: block;
+          height: 20px;
         }
       }
     }
 
     &-horizontal,
     &-semicircle {
-      :deep() {
-        .vab-logo-column {
-          .logo {
-            width: calc(var(--el-left-menu-width-min) * 1.4) !important;
-          }
+      justify-content: left;
+      width: calc(var(--el-left-menu-width-min) * 1.4);
+      height: calc(var(--el-left-menu-width-min) / 1.4);
+      padding-left: var(--el-padding);
 
-          .title {
-            left: calc(var(--el-left-menu-width-min) * 1.4) !important;
-            width: calc(
-              var(--el-left-menu-width) - calc(var(--el-left-menu-width-min) * 1.4) - 1px
-            );
-          }
-        }
-
-        .el-tabs + .el-menu {
-          left: calc(var(--el-left-menu-width-min) * 1.4);
-          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4);
-          border: 0;
-        }
+      [class*='ri-'] {
+        margin-right: 3px;
       }
     }
+  }
 
-    &-card {
-      :deep() {
-        .el-tabs {
-          .el-tabs__item {
-            padding: 5px !important;
-
-            .vab-column-grid {
-              width: calc(var(--el-left-menu-width-min) - 10px) !important;
-              height: calc(var(--el-left-menu-width-min) - 10px) !important;
-              border-radius: var(--el-border-radius-base);
-
-              &:hover {
-                background: var(--el-color-primary);
-              }
-            }
-
-            &.is-active {
-              background: transparent !important;
-
-              .vab-column-grid {
-                background: var(--el-color-primary);
-              }
-            }
-          }
-        }
-
-        .el-tabs + .el-menu {
-          left: calc(var(--el-left-menu-width-min) + 10px);
-          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
-        }
-
-        .el-sub-menu .el-sub-menu__title,
-        .el-menu-item {
-          min-width: 180px;
-          margin-bottom: 5px;
-          border-radius: var(--el-border-radius-base);
-        }
-      }
+  :deep() {
+    * {
+      transition: var(--el-transition);
     }
 
-    &-arrow {
-      :deep() {
-        .el-tabs {
-          .el-tabs__item {
-            &.is-active {
-              background: transparent !important;
-
-              .vab-column-grid {
-                background: transparent !important;
-
-                &:after {
-                  position: absolute;
-                  right: -1px;
-                  width: 0;
-                  height: 0;
-                  overflow: hidden;
-                  content: '';
-                  border-color: transparent var(--el-color-white) transparent transparent;
-                  border-style: solid dashed dashed;
-                  border-width: 8px;
-                }
-              }
-            }
-          }
-        }
-
-        .el-tabs + .el-menu {
-          left: calc(var(--el-left-menu-width-min) + 10px);
-          width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
-        }
-
-        .el-sub-menu .el-sub-menu__title,
-        .el-menu-item {
-          min-width: 180px;
-          margin-bottom: 5px;
-          border-radius: var(--el-border-radius-base);
-        }
-      }
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
     }
 
-    &-semicircle {
-      :deep() {
-        .el-tabs {
-          .el-tabs__item {
-            &.is-active {
-              border-top-left-radius: 99px;
-              border-bottom-left-radius: 99px;
-            }
-          }
-        }
-      }
-    }
+    .el-tabs {
+      position: fixed;
+      z-index: 9999;
 
-    .vab-column-grid {
-      display: flex;
-      align-items: center;
-      width: var(--el-left-menu-width-min);
-      overflow: hidden;
-      text-align: center;
-      text-overflow: ellipsis;
-      word-break: break-all;
-      white-space: nowrap;
+      .el-tabs__header.is-left {
+        margin-right: 0 !important;
 
-      &-vertical,
-      &-card,
-      &-arrow {
-        justify-content: center;
-        height: var(--el-left-menu-width-min);
-
-        > div {
-          svg {
-            position: relative;
-            top: 8px;
-            display: block;
-            width: var(--el-font-size-bigger);
-            height: var(--el-font-size-bigger);
-          }
-
-          [class*='ri-'] {
-            display: block;
-            height: 20px;
-          }
-        }
-      }
-
-      &-horizontal,
-      &-semicircle {
-        justify-content: left;
-        width: calc(var(--el-left-menu-width-min) * 1.4);
-        height: calc(var(--el-left-menu-width-min) / 1.4);
-        padding-left: var(--el-padding);
-
-        [class*='ri-'] {
-          margin-right: 3px;
-        }
-      }
-    }
-
-    :deep() {
-      * {
-        transition: var(--el-transition);
-      }
-
-      .el-scrollbar__wrap {
-        overflow-x: hidden;
-      }
-
-      .el-tabs {
-        position: fixed;
-        z-index: 9999;
-
-        .el-tabs__header.is-left {
+        .el-tabs__nav-wrap.is-left {
           margin-right: 0 !important;
+          background: var(--el-menu-background-color);
 
-          .el-tabs__nav-wrap.is-left {
-            margin-right: 0 !important;
-            background: var(--el-menu-background-color);
+          .el-tabs__nav-scroll {
+            height: 100%;
+            overflow-y: auto;
 
-            .el-tabs__nav-scroll {
-              height: 100%;
-              overflow-y: auto;
-
-              &::-webkit-scrollbar {
-                width: 0;
-                height: 0;
-              }
+            &::-webkit-scrollbar {
+              width: 0;
+              height: 0;
             }
           }
         }
-
-        .el-tabs__nav {
-          height: calc(100vh - var(--el-logo-height));
-          background: var(--el-menu-background-color);
-        }
-
-        .el-tabs__item {
-          height: auto;
-          padding: 0;
-          color: var(--el-color-white);
-
-          &.is-active {
-            background: var(--el-color-primary);
-          }
-        }
       }
 
-      .el-tabs__active-bar.is-left,
-      .el-tabs--left .el-tabs__nav-wrap.is-left::after {
-        display: none;
+      .el-tabs__nav {
+        height: calc(100vh - var(--el-logo-height));
+        background: var(--el-menu-background-color);
       }
 
-      .el-menu {
-        margin-top: 10px;
-        border: 0;
-
-        .el-menu-item,
-        .el-sub-menu__title {
-          height: var(--el-menu-item-height);
-          overflow: hidden;
-          line-height: var(--el-menu-item-height);
-          text-overflow: ellipsis;
-          white-space: nowrap;
-
-          @include active;
-        }
-      }
-    }
-
-    &.is-collapse {
-      :deep() {
-        width: 0;
-      }
-    }
-  }
-
-  .float-fold {
-    position: fixed;
-    bottom: 13px;
-    left: 14px;
-    z-index: 9999;
-    width: 34px;
-    height: 34px;
-    line-height: 34px;
-    text-align: center;
-    background: var(--el-color-primary-light-5);
-    border-radius: var(--el-border-radius-base);
-
-    :deep() {
-      .fold-unfold,
-      .ri-user-heart-line {
-        font-size: 20px;
+      .el-tabs__item {
+        height: auto;
+        padding: 0;
         color: var(--el-color-white);
-        cursor: pointer;
+
+        &.is-active {
+          background: var(--el-color-primary);
+        }
+      }
+    }
+
+    .el-tabs__active-bar.is-left,
+    .el-tabs--left .el-tabs__nav-wrap.is-left::after {
+      display: none;
+    }
+
+    .el-menu {
+      margin-top: 10px;
+      border: 0;
+
+      .el-menu-item,
+      .el-sub-menu__title {
+        height: var(--el-menu-item-height);
+        overflow: hidden;
+        line-height: var(--el-menu-item-height);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        @include active;
       }
     }
   }
+
+  &.is-collapse {
+    :deep() {
+      width: 0;
+    }
+  }
+}
+
+.float-fold {
+  position: fixed;
+  bottom: 13px;
+  left: 14px;
+  z-index: 9999;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  background: var(--el-color-primary-light-5);
+  border-radius: var(--el-border-radius-base);
+
+  :deep() {
+    .fold-unfold,
+    .ri-user-heart-line {
+      font-size: 20px;
+      color: var(--el-color-white);
+      cursor: pointer;
+    }
+  }
+}
 </style>

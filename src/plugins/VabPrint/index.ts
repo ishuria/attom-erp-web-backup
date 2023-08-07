@@ -41,9 +41,7 @@ Print.prototype = {
     for (let i = 0; i < styles.length; i++) {
       str += styles[i].outerHTML
     }
-    str += `<style>${
-      this.options.noPrint ? this.options.noPrint : '.no-print'
-    }{display:none;}</style>`
+    str += `<style>${this.options.noPrint ? this.options.noPrint : '.no-print'}{display:none;}</style>`
     str += '<style>html,body{background-color:#fff;}</style>'
     return str
   },
@@ -131,9 +129,7 @@ Print.prototype = {
           return obj instanceof HTMLElement
         }
       : function (obj: { nodeType: number; nodeName: any }) {
-          return (
-            obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string'
-          )
+          return obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string'
         },
 }
 

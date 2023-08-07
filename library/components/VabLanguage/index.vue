@@ -11,17 +11,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import getPageTitle from '/@/utils/pageTitle'
+import { useSettingsStore } from '/@/store/modules/settings'
+import getPageTitle from '/@/utils/pageTitle'
 
-  const { locale } = useI18n()
-  const route = useRoute()
-  const settingsStore = useSettingsStore()
-  const { changeLanguage } = settingsStore
+const { locale } = useI18n()
+const route = useRoute()
+const settingsStore = useSettingsStore()
+const { changeLanguage } = settingsStore
 
-  const handleCommand = (language: string) => {
-    changeLanguage(language)
-    locale.value = language
-    document.title = getPageTitle(route.meta.title)
-  }
+const handleCommand = (language: string) => {
+  changeLanguage(language)
+  locale.value = language
+  document.title = getPageTitle(route.meta.title)
+}
 </script>

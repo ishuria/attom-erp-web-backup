@@ -35,32 +35,32 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Count',
-  })
+defineOptions({
+  name: 'Count',
+})
 
-  const form = reactive<any>({
-    startValue: 0,
-    endValue: 999,
-    decimals: 0,
-    prefix: '',
-    suffix: '',
-    separator: ',',
-    duration: 5000,
-  })
+const form = reactive<any>({
+  startValue: 0,
+  endValue: 999,
+  decimals: 0,
+  prefix: '',
+  suffix: '',
+  separator: ',',
+  duration: 5000,
+})
 </script>
 
 <style lang="scss" scoped>
-  .count-container {
-    .count-text {
-      height: 80px;
-      margin-bottom: calc(var(--el-margin) / 2);
-      font-size: 60px;
-      font-weight: bold;
-      text-align: center;
-      background: linear-gradient(to top, #77e0a0, var(--el-color-primary));
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+.count-container {
+  .count-text {
+    height: 80px;
+    margin-bottom: calc(var(--el-margin) / 2);
+    font-size: 60px;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(to top, #77e0a0, var(--el-color-primary));
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
+}
 </style>

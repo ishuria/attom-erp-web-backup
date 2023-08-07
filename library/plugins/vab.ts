@@ -9,9 +9,8 @@ export let gp: Record<string, any>
 const isCheck = () => {
   if (
     import.meta.env.MODE !== '\u0064\u0065\u0076\u0065\u006c\u006f\u0070\u006d\u0065\u006e\u0074' &&
-    import.meta.env[
-      '\u0056\u0049\u0054\u0045\u005f\u0041\u0050\u0050\u005f\u0053\u0045\u0043\u0052\u0045\u0054\u005f\u004b\u0045\u0059'
-    ].length < 50
+    import.meta.env['\u0056\u0049\u0054\u0045\u005f\u0041\u0050\u0050\u005f\u0053\u0045\u0043\u0052\u0045\u0054\u005f\u004b\u0045\u0059']
+      .length < 50
   ) {
     setInterval(() => {
       localStorage.clear()

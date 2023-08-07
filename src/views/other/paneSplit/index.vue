@@ -24,42 +24,42 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'PaneSplit',
-  })
+defineOptions({
+  name: 'PaneSplit',
+})
 </script>
 
 <style lang="scss" scoped>
-  .pane-split-container {
-    width: 100%;
-    height: calc(var(--el-keep-alive-height) - var(--el-padding)) !important;
+.pane-split-container {
+  width: 100%;
+  height: calc(var(--el-container-height) - var(--el-padding)) !important;
 
-    @mixin panel {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      font-size: var(--el-font-size-max);
-      font-weight: bold;
-      color: var(--el-color-white);
-      user-select: none;
-    }
+  @mixin panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: var(--el-font-size-max);
+    font-weight: bold;
+    color: var(--el-color-white);
+    user-select: none;
+  }
 
-    .pane-split-left {
-      background-color: var(--el-color-primary);
+  .pane-split-left {
+    background-color: var(--el-color-primary);
+    @include panel;
+  }
+
+  .pane-split-right {
+    .pane-split-up {
       @include panel;
+      background-color: var(--el-color-warning);
     }
 
-    .pane-split-right {
-      .pane-split-up {
-        @include panel;
-        background-color: var(--el-color-warning);
-      }
-
-      .pane-split-down {
-        @include panel;
-        background-color: var(--el-color-success);
-      }
+    .pane-split-down {
+      @include panel;
+      background-color: var(--el-color-success);
     }
   }
+}
 </style>

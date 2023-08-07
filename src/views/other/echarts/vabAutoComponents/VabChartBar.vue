@@ -10,78 +10,70 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { random } from 'lodash-es'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabChartBar',
-  })
+defineOptions({
+  name: 'VabChartBar',
+})
 
-  defineProps({
-    title: {
-      type: String,
-      default: '',
-    },
-  })
+defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+})
 
-  const settingsStore = useSettingsStore()
-  const { color } = storeToRefs(settingsStore)
-  let timer: any
+const settingsStore = useSettingsStore()
+const { color } = storeToRefs(settingsStore)
+let timer: any
 
-  const option = reactive<any>({
-    grid: {
-      top: 20,
-      right: 20,
-      bottom: 40,
-      left: 40,
-    },
-    tooltip: {
-      trigger: 'item',
-    },
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    },
-    yAxis: {
-      type: 'value',
-    },
-    series: {
-      data: [
-        random(50, 200),
-        random(50, 200),
-        random(50, 200),
-        random(50, 200),
-        random(50, 200),
-        random(50, 200),
-        random(50, 200),
-      ],
-      type: 'bar',
-    },
-  })
+const option = reactive<any>({
+  grid: {
+    top: 20,
+    right: 20,
+    bottom: 40,
+    left: 40,
+  },
+  tooltip: {
+    trigger: 'item',
+  },
+  xAxis: {
+    type: 'category',
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  },
+  yAxis: {
+    type: 'value',
+  },
+  series: {
+    data: [random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200)],
+    type: 'bar',
+  },
+})
 
-  watch(
-    color,
-    () => {
-      option.color = [color.value]
-    },
-    { immediate: true }
-  )
+watch(
+  color,
+  () => {
+    option.color = [color.value]
+  },
+  { immediate: true }
+)
 
-  onActivated(() => {
-    timer = setInterval(() => {
-      option.series.data = [
-        random(50, 100),
-        random(10, 100),
-        random(10, 100),
-        random(10, 100),
-        random(10, 100),
-        random(50, 100),
-        random(50, 200),
-      ]
-    }, 3000)
-  })
+onActivated(() => {
+  timer = setInterval(() => {
+    option.series.data = [
+      random(50, 100),
+      random(10, 100),
+      random(10, 100),
+      random(10, 100),
+      random(10, 100),
+      random(50, 100),
+      random(50, 200),
+    ]
+  }, 3000)
+})
 
-  onDeactivated(() => {
-    clearInterval(timer)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>

@@ -4,11 +4,7 @@
       <el-avatar class="user-avatar" :src="avatar" />
       <div class="username">
         <span class="hidden-xs-only">{{ username }}</span>
-        <vab-icon
-          class="vab-dropdown"
-          :class="{ 'vab-dropdown-active': active }"
-          icon="arrow-down-s-line"
-        />
+        <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': active }" icon="arrow-down-s-line" />
       </div>
     </span>
     <template #dropdown>
@@ -23,66 +19,66 @@
 </template>
 
 <script lang="ts" setup>
-  import { translate } from '/@/i18n'
-  import { useUserStore } from '/@/store/modules/user'
-  import { toLoginRoute } from '/@/utils/routes'
+import { translate } from '/@/i18n'
+import { useUserStore } from '/@/store/modules/user'
+import { toLoginRoute } from '/@/utils/routes'
 
-  defineOptions({
-    name: 'VabAvatar',
-  })
+defineOptions({
+  name: 'VabAvatar',
+})
 
-  const route = useRoute()
-  const router = useRouter()
-  const userStore = useUserStore()
-  const { avatar, username } = storeToRefs(userStore)
-  const { logout } = userStore
-  const active = ref<boolean>(false)
+const route = useRoute()
+const router = useRouter()
+const userStore = useUserStore()
+const { avatar, username } = storeToRefs(userStore)
+const { logout } = userStore
+const active = ref<boolean>(false)
 
-  const handleVisibleChange = (value: boolean) => {
-    active.value = value
+const handleVisibleChange = (value: boolean) => {
+  active.value = value
+}
+const handleCommand = async (command: any) => {
+  switch (command) {
+    case 'logout':
+      await logout()
+      await router.push(toLoginRoute(route.fullPath))
+      break
   }
-  const handleCommand = async (command: any) => {
-    switch (command) {
-      case 'logout':
-        await logout()
-        await router.push(toLoginRoute(route.fullPath))
-        break
-    }
-  }
+}
 </script>
 
 <style lang="scss" scoped>
-  .avatar-dropdown {
+.avatar-dropdown {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+
+  .user-avatar {
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    margin-left: 15px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .username {
+    position: relative;
     display: flex;
     align-content: center;
     align-items: center;
-    justify-content: center;
-    justify-items: center;
+    width: max-content;
+    height: 40px;
+    margin-left: 6px;
+    line-height: 40px;
+    cursor: pointer;
 
-    .user-avatar {
-      box-sizing: border-box;
-      width: 40px;
-      height: 40px;
-      padding: 8px;
-      margin-left: 15px;
-      cursor: pointer;
-      border-radius: 50%;
-    }
-
-    .username {
-      position: relative;
-      display: flex;
-      align-content: center;
-      align-items: center;
-      width: max-content;
-      height: 40px;
-      margin-left: 6px;
-      line-height: 40px;
-      cursor: pointer;
-
-      [class*='ri-'] {
-        margin-left: 0 !important;
-      }
+    [class*='ri-'] {
+      margin-left: 0 !important;
     }
   }
+}
 </style>

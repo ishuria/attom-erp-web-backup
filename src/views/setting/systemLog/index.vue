@@ -7,17 +7,10 @@
             <el-input v-model.trim="queryForm.account" clearable placeholder="请输入账号" />
           </el-form-item>
           <el-form-item label="周期">
-            <el-date-picker
-              v-model="queryForm.searchDate"
-              end-placeholder="结束日期"
-              start-placeholder="开始日期"
-              type="daterange"
-            />
+            <el-date-picker v-model="queryForm.searchDate" end-placeholder="结束日期" start-placeholder="开始日期" type="daterange" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
-              查询
-            </el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
@@ -90,48 +83,48 @@
 </template>
 
 <script lang="ts" setup>
-  import { Search } from '@element-plus/icons-vue'
-  import { getList } from '/@/api/systemLog'
+import { Search } from '@element-plus/icons-vue'
+import { getList } from '/@/api/systemLog'
 
-  defineOptions({
-    name: 'SystemLog',
-  })
+defineOptions({
+  name: 'SystemLog',
+})
 
-  const list = ref<any>([])
-  const listLoading = ref<boolean>(true)
-  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-  const total = ref<any>(0)
-  const queryForm = reactive<any>({
-    account: '',
-    searchDate: '',
-    pageNo: 1,
-    pageSize: 20,
-  })
+const list = ref<any>([])
+const listLoading = ref<boolean>(true)
+const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+const total = ref<any>(0)
+const queryForm = reactive<any>({
+  account: '',
+  searchDate: '',
+  pageNo: 1,
+  pageSize: 20,
+})
 
-  const handleSizeChange = (value: number) => {
-    queryForm.pageSize = value
-    fetchData()
-  }
+const handleSizeChange = (value: number) => {
+  queryForm.pageSize = value
+  fetchData()
+}
 
-  const handleCurrentChange = (value: any) => {
-    queryForm.pageNo = value
-    fetchData()
-  }
+const handleCurrentChange = (value: any) => {
+  queryForm.pageNo = value
+  fetchData()
+}
 
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
 
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
-  }
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getList(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
+}
 
-  onBeforeMount(() => {
-    fetchData()
-  })
+onBeforeMount(() => {
+  fetchData()
+})
 </script>

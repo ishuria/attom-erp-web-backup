@@ -5,31 +5,31 @@
 </template>
 
 <script lang="ts" setup>
-  import { isExternal } from '/@/utils/validate'
+import { isExternal } from '/@/utils/validate'
 
-  defineOptions({
-    name: 'VabLink',
-  })
+defineOptions({
+  name: 'VabLink',
+})
 
-  const props = defineProps({
-    to: {
-      type: String,
-      required: true,
-    },
-    target: {
-      type: String,
-      default: '',
-    },
-  })
+const props = defineProps({
+  to: {
+    type: String,
+    required: true,
+  },
+  target: {
+    type: String,
+    default: '',
+  },
+})
 
-  const type = computed(() => (isExternal(props.to) ? 'a' : 'router-link'))
+const type = computed(() => (isExternal(props.to) ? 'a' : 'router-link'))
 
-  const linkProps = () =>
-    isExternal(props.to)
-      ? {
-          href: props.to,
-          target: '_blank',
-          rel: 'noopener',
-        }
-      : { to: props.to, target: props.target }
+const linkProps = () =>
+  isExternal(props.to)
+    ? {
+        href: props.to,
+        target: '_blank',
+        rel: 'noopener',
+      }
+    : { to: props.to, target: props.target }
 </script>

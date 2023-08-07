@@ -17,14 +17,7 @@
             </el-radio-group>
           </vab-query-form-left-panel>
         </vab-query-form>
-        <el-form
-          ref="formRef"
-          class="demo-form"
-          :label-position="labelPosition"
-          label-width="100px"
-          :model="form"
-          :rules="rules"
-        >
+        <el-form ref="formRef" class="demo-form" :label-position="labelPosition" label-width="100px" :model="form" :rules="rules">
           <el-form-item label="活动名称" prop="name">
             <el-input v-model="form.name" clearable />
           </el-form-item>
@@ -61,13 +54,7 @@
             <el-rate v-model="form.rate" show-text />
           </el-form-item>
           <el-form-item label="行政区划">
-            <el-cascader
-              v-model="form.area"
-              clearable
-              filterable
-              :options="areaOptions"
-              :props="{ label: 'name', value: 'code' }"
-            />
+            <el-cascader v-model="form.area" clearable filterable :options="areaOptions" :props="{ label: 'name', value: 'code' }" />
           </el-form-item>
           <el-form-item label="穿梭框">
             <el-transfer
@@ -89,124 +76,124 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/area'
+import { getList } from '/@/api/area'
 
-  defineOptions({
-    name: 'ComprehensiveForm',
-  })
+defineOptions({
+  name: 'ComprehensiveForm',
+})
 
-  const generateData = () => {
-    const data: any[] = []
-    const cities = ['上海', '北京', '广州']
-    const pinyin = ['shanghai', 'beijing', 'guangzhou']
-    cities.forEach((city, index) => {
-      data.push({
-        label: city,
-        key: index,
-        pinyin: pinyin[index],
-      })
+const generateData = () => {
+  const data: any[] = []
+  const cities = ['上海', '北京', '广州']
+  const pinyin = ['shanghai', 'beijing', 'guangzhou']
+  cities.forEach((city, index) => {
+    data.push({
+      label: city,
+      key: index,
+      pinyin: pinyin[index],
     })
-    return data
-  }
-
-  const formRef = ref<any>(null)
-  const labelPosition = ref<any>('right')
-  const form = reactive<any>({
-    name: '',
-    region: '',
-    date: '',
-    date2: '',
-    delivery: false,
-    type: [],
-    resource: '',
-    description: '',
-    rate: 0,
-    area: [],
-    transfer: [],
   })
-  const areaOptions = ref<any>([])
-  const rules = reactive<any>({
-    name: [
-      { required: true, message: '请输入活动名称', trigger: 'blur' },
-      {
-        min: 3,
-        max: 5,
-        message: '长度在 3 到 5 个字符',
-        trigger: 'blur',
-      },
-    ],
-    region: [{ required: true, message: '请选择活动区域', trigger: 'change' }],
-    date: [
-      {
-        type: 'date',
-        required: true,
-        message: '请选择日期',
-        trigger: 'change',
-      },
-    ],
-    type: [
-      {
-        type: 'array',
-        required: true,
-        message: '请至少选择一个活动性质',
-        trigger: 'change',
-      },
-    ],
-    resource: [{ required: true, message: '请选择活动资源', trigger: 'change' }],
-    description: [{ required: true, message: '请填写活动形式', trigger: 'blur' }],
+  return data
+}
+
+const formRef = ref<any>(null)
+const labelPosition = ref<any>('right')
+const form = reactive<any>({
+  name: '',
+  region: '',
+  date: '',
+  date2: '',
+  delivery: false,
+  type: [],
+  resource: '',
+  description: '',
+  rate: 0,
+  area: [],
+  transfer: [],
+})
+const areaOptions = ref<any>([])
+const rules = reactive<any>({
+  name: [
+    { required: true, message: '请输入活动名称', trigger: 'blur' },
+    {
+      min: 3,
+      max: 5,
+      message: '长度在 3 到 5 个字符',
+      trigger: 'blur',
+    },
+  ],
+  region: [{ required: true, message: '请选择活动区域', trigger: 'change' }],
+  date: [
+    {
+      type: 'date',
+      required: true,
+      message: '请选择日期',
+      trigger: 'change',
+    },
+  ],
+  type: [
+    {
+      type: 'array',
+      required: true,
+      message: '请至少选择一个活动性质',
+      trigger: 'change',
+    },
+  ],
+  resource: [{ required: true, message: '请选择活动资源', trigger: 'change' }],
+  description: [{ required: true, message: '请填写活动形式', trigger: 'blur' }],
+})
+const data = ref<any>(generateData())
+const $baseMessage = inject<any>('$baseMessage')
+
+const filterMethod = (query: any, item: any) => {
+  return item.pinyin.indexOf(query) > -1
+}
+
+const fetchData = async () => {
+  const {
+    data: { list },
+  } = await getList()
+  areaOptions.value = list
+}
+
+const submitForm = (formName: any) => {
+  formName.value.validate((valid: any) => {
+    if (valid) {
+      $baseMessage('表单提交成功', 'success', 'hey')
+    } else {
+      $baseMessage('表单提交失败', 'error', 'hey')
+    }
   })
-  const data = ref<any>(generateData())
-  const $baseMessage = inject<any>('$baseMessage')
+}
 
-  const filterMethod = (query: any, item: any) => {
-    return item.pinyin.indexOf(query) > -1
-  }
+const resetForm = (formName: any) => {
+  formName.value.resetFields()
+}
 
-  const fetchData = async () => {
-    const {
-      data: { list },
-    } = await getList()
-    areaOptions.value = list
-  }
-
-  const submitForm = (formName: any) => {
-    formName.value.validate((valid: any) => {
-      if (valid) {
-        $baseMessage('表单提交成功', 'success', 'hey')
-      } else {
-        $baseMessage('表单提交失败', 'error', 'hey')
-      }
-    })
-  }
-
-  const resetForm = (formName: any) => {
-    formName.value.resetFields()
-  }
-
-  onBeforeMount(() => {
-    fetchData()
-  })
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-  .comprehensive-form-container {
-    .demo-form {
-      margin-top: 10px;
-    }
+.comprehensive-form-container {
+  .demo-form {
+    margin-top: 10px;
+  }
 
-    :deep() {
-      .el-form-item__content {
-        .el-rate {
-          display: inline-block;
-          font-size: 0;
-          line-height: 1;
-          vertical-align: middle;
-        }
+  :deep() {
+    .el-form-item__content {
+      .el-rate {
+        display: inline-block;
+        font-size: 0;
+        line-height: 1;
+        vertical-align: middle;
+      }
 
-        .el-transfer__buttons {
-          padding: 10px 10px 0 10px;
-        }
+      .el-transfer__buttons {
+        padding: 10px 10px 0 10px;
       }
     }
   }
+}
 </style>

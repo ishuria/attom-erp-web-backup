@@ -7,12 +7,7 @@
             <el-input v-model.trim="queryForm.taskName" clearable placeholder="请输入任务名" />
           </el-form-item>
           <el-form-item label="周期">
-            <el-date-picker
-              v-model="queryForm.date"
-              end-placeholder="结束日期"
-              start-placeholder="开始日期"
-              type="daterange"
-            />
+            <el-date-picker v-model="queryForm.date" end-placeholder="结束日期" start-placeholder="开始日期" type="daterange" />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" type="primary" @click="queryData">查询</el-button>
@@ -57,142 +52,142 @@
 </template>
 
 <script lang="ts" setup>
-  import { Search } from '@element-plus/icons-vue'
-  import { getList } from '/@/api/taskManagement'
-  import { getImageUrl } from '/@/utils/imageUrl'
+import { Search } from '@element-plus/icons-vue'
+import { getList } from '/@/api/taskManagement'
+import { getImageUrl } from '/@/utils/imageUrl'
 
-  defineOptions({
-    name: 'TaskManagement',
-  })
+defineOptions({
+  name: 'TaskManagement',
+})
 
-  const $baseMessage = inject<any>('$baseMessage')
+const $baseMessage = inject<any>('$baseMessage')
 
-  const list = ref<any>([])
-  const listLoading = ref<boolean>(true)
-  const queryForm = reactive<any>({
-    taskName: '',
-    date: '',
-    pageNo: 1,
-    pageSize: 5,
-  })
+const list = ref<any>([])
+const listLoading = ref<boolean>(true)
+const queryForm = reactive<any>({
+  taskName: '',
+  date: '',
+  pageNo: 1,
+  pageSize: 5,
+})
 
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    listLoading.value = false
-  }
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
-  const handlePlay = (status: any) => {
-    if (status) $baseMessage('模拟停用成功', 'success', 'hey')
-    else $baseMessage('模拟开启成功', 'success', 'hey')
-  }
-  const handleAdd = () => {
-    $baseMessage('模拟添加成功', 'success', 'hey')
-  }
-  onBeforeMount(() => {
-    fetchData()
-  })
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getList(queryForm)
+  list.value = data.list
+  listLoading.value = false
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+const handlePlay = (status: any) => {
+  if (status) $baseMessage('模拟停用成功', 'success', 'hey')
+  else $baseMessage('模拟开启成功', 'success', 'hey')
+}
+const handleAdd = () => {
+  $baseMessage('模拟添加成功', 'success', 'hey')
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-  .task-management-container {
-    .page-header {
-      display: flex;
-      align-items: center;
-      padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
-      margin-bottom: var(--el-margin);
-      background: var(--el-color-white);
-      border: 1px solid var(--el-border-color);
-
-      :deep() {
-        .el-form-item__content {
-          width: 221px !important;
-
-          .el-select,
-          .el-input,
-          .el-date-editor,
-          .el-checkbox-group {
-            width: 100%;
-          }
-        }
-      }
-    }
+.task-management-container {
+  .page-header {
+    display: flex;
+    align-items: center;
+    padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
+    margin-bottom: var(--el-margin);
+    background: var(--el-color-white);
+    border: 1px solid var(--el-border-color);
 
     :deep() {
-      .el-card {
-        .el-card__header {
-          position: relative;
+      .el-form-item__content {
+        width: 221px !important;
 
-          .card-header-tag {
-            position: absolute;
-            top: 15px;
-            right: var(--el-margin);
-          }
-
-          > div > span {
-            display: flex;
-            align-items: center;
-
-            i {
-              margin-right: 3px;
-            }
-          }
+        .el-select,
+        .el-input,
+        .el-date-editor,
+        .el-checkbox-group {
+          width: 100%;
         }
-
-        .el-card__body {
-          position: relative;
-
-          .card-footer-tag {
-            position: absolute;
-            right: var(--el-margin);
-            bottom: 15px;
-          }
-        }
-      }
-    }
-
-    .task-item {
-      min-height: 255px;
-      max-height: 255px;
-
-      &-image {
-        display: block;
-        width: 150px;
-        margin: 0 auto 20px;
-      }
-
-      &-bottom {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-top: 20px;
-        border-top: 1px solid var(--el-border-color);
-      }
-    }
-
-    .task-add {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 255px;
-      max-height: 255px;
-      color: var(--el-color-primary);
-      text-align: center;
-      cursor: pointer;
-
-      [class*='ri-'] {
-        font-size: 30px;
-      }
-
-      p {
-        margin-top: var(--el-margin);
-        font-size: var(--el-font-size-small);
       }
     }
   }
+
+  :deep() {
+    .el-card {
+      .el-card__header {
+        position: relative;
+
+        .card-header-tag {
+          position: absolute;
+          top: 15px;
+          right: var(--el-margin);
+        }
+
+        > div > span {
+          display: flex;
+          align-items: center;
+
+          i {
+            margin-right: 3px;
+          }
+        }
+      }
+
+      .el-card__body {
+        position: relative;
+
+        .card-footer-tag {
+          position: absolute;
+          right: var(--el-margin);
+          bottom: 15px;
+        }
+      }
+    }
+  }
+
+  .task-item {
+    min-height: 255px;
+    max-height: 255px;
+
+    &-image {
+      display: block;
+      width: 150px;
+      margin: 0 auto 20px;
+    }
+
+    &-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 20px;
+      border-top: 1px solid var(--el-border-color);
+    }
+  }
+
+  .task-add {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 255px;
+    max-height: 255px;
+    color: var(--el-color-primary);
+    text-align: center;
+    cursor: pointer;
+
+    [class*='ri-'] {
+      font-size: 30px;
+    }
+
+    p {
+      margin-top: var(--el-margin);
+      font-size: var(--el-font-size-small);
+    }
+  }
+}
 </style>

@@ -1,11 +1,5 @@
 <template>
-  <el-upload
-    ref="upload"
-    action="/uploadFlie"
-    :auto-upload="false"
-    :limit="1"
-    :on-exceed="handleExceed"
-  >
+  <el-upload ref="upload" action="/uploadFlie" :auto-upload="false" :limit="1" :on-exceed="handleExceed">
     <template #trigger>
       <el-button type="primary">选择文件</el-button>
     </template>
@@ -17,19 +11,19 @@
 </template>
 
 <script lang="ts" setup>
-  import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
-  import { genFileId } from 'element-plus'
+import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
+import { genFileId } from 'element-plus'
 
-  const upload = ref<UploadInstance>()
+const upload = ref<UploadInstance>()
 
-  const handleExceed: UploadProps['onExceed'] = (files) => {
-    upload.value?.clearFiles()
-    const file = files[0] as UploadRawFile
-    file.uid = genFileId()
-    upload.value?.handleStart(file)
-  }
+const handleExceed: UploadProps['onExceed'] = (files) => {
+  upload.value?.clearFiles()
+  const file = files[0] as UploadRawFile
+  file.uid = genFileId()
+  upload.value?.handleStart(file)
+}
 
-  const submitUpload = () => {
-    upload.value?.submit()
-  }
+const submitUpload = () => {
+  upload.value?.submit()
+}
 </script>

@@ -12,12 +12,7 @@
       </el-form-item>
       <el-form-item label="活动时间">
         <el-col :span="11">
-          <el-date-picker
-            v-model="form.date1"
-            placeholder="选择日期"
-            style="width: 100%"
-            type="date"
-          />
+          <el-date-picker v-model="form.date1" placeholder="选择日期" style="width: 100%" type="date" />
         </el-col>
         <el-col class="line" :span="2">-</el-col>
         <el-col :span="11">
@@ -52,44 +47,44 @@
 </template>
 
 <script>
-  export default defineComponent({
-    props: {
-      nodeData: {
-        type: Object,
-        default: () => {},
+export default defineComponent({
+  props: {
+    nodeData: {
+      type: Object,
+      default: () => {},
+    },
+    lf: {
+      type: Object || String,
+      default: () => {},
+    },
+  },
+  emits: ['onClose'],
+  data() {
+    return {
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: '',
       },
-      lf: {
-        type: Object || String,
-        default: () => {},
-      },
+    }
+  },
+  mounted() {
+    const { properties } = this.$props.nodeData
+    if (properties) {
+      this.$data.form = Object.assign({}, this.$data.form, properties)
+    }
+  },
+  methods: {
+    onSubmit() {
+      const { id } = this.$props.nodeData
+      this.$props.lf.setProperties(id, this.$data.form)
+      this.$emit('onClose')
     },
-    emits: ['onClose'],
-    data() {
-      return {
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: '',
-        },
-      }
-    },
-    mounted() {
-      const { properties } = this.$props.nodeData
-      if (properties) {
-        this.$data.form = Object.assign({}, this.$data.form, properties)
-      }
-    },
-    methods: {
-      onSubmit() {
-        const { id } = this.$props.nodeData
-        this.$props.lf.setProperties(id, this.$data.form)
-        this.$emit('onClose')
-      },
-    },
-  })
+  },
+})
 </script>

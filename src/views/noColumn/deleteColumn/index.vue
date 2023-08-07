@@ -6,12 +6,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'DeleteColumn',
-  })
+defineOptions({
+  name: 'DeleteColumn',
+})
 
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
+const settingsStore = useSettingsStore()
+const { theme } = storeToRefs(settingsStore)
 </script>

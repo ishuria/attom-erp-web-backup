@@ -15,58 +15,58 @@
 </template>
 
 <script>
-  export default defineComponent({
-    name: 'Control',
-    props: {
-      lf: {
-        type: Object || String,
-        default: () => {},
-      },
+export default defineComponent({
+  name: 'Control',
+  props: {
+    lf: {
+      type: Object || String,
+      default: () => {},
     },
-    emits: ['cat-data'],
-    data() {
-      return {
-        undoDisable: true,
-        redoDisable: true,
-        graphData: null,
-        dataVisible: false,
-      }
+  },
+  emits: ['cat-data'],
+  data() {
+    return {
+      undoDisable: true,
+      redoDisable: true,
+      graphData: null,
+      dataVisible: false,
+    }
+  },
+  mounted() {
+    this.$props.lf.on('history:change', ({ data: { undoAble, redoAble } }) => {
+      this.$data.undoDisable = !undoAble
+      this.$data.redoDisable = !redoAble
+    })
+  },
+  methods: {
+    $_zoomIn() {
+      this.$props.lf.zoom(true)
     },
-    mounted() {
-      this.$props.lf.on('history:change', ({ data: { undoAble, redoAble } }) => {
-        this.$data.undoDisable = !undoAble
-        this.$data.redoDisable = !redoAble
-      })
+    $_zoomOut() {
+      this.$props.lf.zoom(false)
     },
-    methods: {
-      $_zoomIn() {
-        this.$props.lf.zoom(true)
-      },
-      $_zoomOut() {
-        this.$props.lf.zoom(false)
-      },
-      $_zoomReset() {
-        this.$props.lf.resetZoom()
-      },
-      $_translateRest() {
-        this.$props.lf.resetTranslate()
-      },
-      $_reset() {
-        this.$props.lf.resetZoom()
-        this.$props.lf.resetTranslate()
-      },
-      $_undo() {
-        this.$props.lf.undo()
-      },
-      $_redo() {
-        this.$props.lf.redo()
-      },
-      $_download() {
-        this.$props.lf.getSnapshot()
-      },
-      $_catData() {
-        this.$emit('cat-data')
-      },
+    $_zoomReset() {
+      this.$props.lf.resetZoom()
     },
-  })
+    $_translateRest() {
+      this.$props.lf.resetTranslate()
+    },
+    $_reset() {
+      this.$props.lf.resetZoom()
+      this.$props.lf.resetTranslate()
+    },
+    $_undo() {
+      this.$props.lf.undo()
+    },
+    $_redo() {
+      this.$props.lf.redo()
+    },
+    $_download() {
+      this.$props.lf.getSnapshot()
+    },
+    $_catData() {
+      this.$emit('cat-data')
+    },
+  },
+})
 </script>

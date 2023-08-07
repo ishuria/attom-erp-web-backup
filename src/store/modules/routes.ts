@@ -31,15 +31,10 @@ export const useRoutesStore = defineStore('routes', {
   }),
   getters: {
     getTab: (state) => state.tab,
-    getTabMenu: (state) =>
-      state.tab.data
-        ? state.routes.find((route) => route.name === state.tab.data)
-        : { meta: { title: '' } },
+    getTabMenu: (state) => (state.tab.data ? state.routes.find((route) => route.name === state.tab.data) : { meta: { title: '' } }),
     getActiveMenu: (state) => state.activeMenu,
-    getRoutes: (state) =>
-      state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
-    getAllRoutes: (state) =>
-      state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
+    getRoutes: (state) => state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
+    getAllRoutes: (state) => state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getPartialRoutes: (state) =>
       state.tab.data
         ? state.routes.find((route) => route.name === state.tab.data) &&

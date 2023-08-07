@@ -35,80 +35,72 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
-  import { handleActivePath } from '/@/utils/routes'
-  import { useTabsStore } from '/@/store/modules/tabs'
+import { random } from 'lodash-es'
+import { handleActivePath } from '/@/utils/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
 
-  defineOptions({
-    name: 'Tabs',
-  })
+defineOptions({
+  name: 'Tabs',
+})
 
-  const route = useRoute()
-  const router = useRouter()
-  const tabStore = useTabsStore()
-  const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabStore)
-  const {
-    delVisitedRoute,
-    delOthersVisitedRoutes,
-    delLeftVisitedRoutes,
-    delRightVisitedRoutes,
-    delAllVisitedRoutes,
-  } = tabStore
-  const hoverRoute = ref<any>(null)
-  const $pub = inject<any>('$pub')
+const route = useRoute()
+const router = useRouter()
+const tabStore = useTabsStore()
+const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabStore)
+const { delVisitedRoute, delOthersVisitedRoutes, delLeftVisitedRoutes, delRightVisitedRoutes, delAllVisitedRoutes } = tabStore
+const hoverRoute = ref<any>(null)
+const $pub = inject<any>('$pub')
 
-  const handleTabRemove = async (rawPath: string) => {
-    if (isActive(rawPath)) await toLastTab()
-    await delVisitedRoute(rawPath)
-  }
+const handleTabRemove = async (rawPath: string) => {
+  if (isActive(rawPath)) await toLastTab()
+  await delVisitedRoute(rawPath)
+}
 
-  const closeOthersTabs = async () => {
-    if (hoverRoute.value) {
-      await router.push(hoverRoute.value)
-      await delOthersVisitedRoutes(hoverRoute.value.path)
-    } else await delOthersVisitedRoutes(handleActivePath(route, true))
-  }
+const closeOthersTabs = async () => {
+  if (hoverRoute.value) {
+    await router.push(hoverRoute.value)
+    await delOthersVisitedRoutes(hoverRoute.value.path)
+  } else await delOthersVisitedRoutes(handleActivePath(route, true))
+}
 
-  const closeLeftTabs = async () => {
-    if (hoverRoute.value) {
-      await router.push(hoverRoute.value)
-      await delLeftVisitedRoutes(hoverRoute.value.path)
-    } else await delLeftVisitedRoutes(handleActivePath(route, true))
-  }
+const closeLeftTabs = async () => {
+  if (hoverRoute.value) {
+    await router.push(hoverRoute.value)
+    await delLeftVisitedRoutes(hoverRoute.value.path)
+  } else await delLeftVisitedRoutes(handleActivePath(route, true))
+}
 
-  const closeRightTabs = async () => {
-    if (hoverRoute.value) {
-      await router.push(hoverRoute.value)
-      await delRightVisitedRoutes(hoverRoute.value.path)
-    } else await delRightVisitedRoutes(handleActivePath(route, true))
-  }
+const closeRightTabs = async () => {
+  if (hoverRoute.value) {
+    await router.push(hoverRoute.value)
+    await delRightVisitedRoutes(hoverRoute.value.path)
+  } else await delRightVisitedRoutes(handleActivePath(route, true))
+}
 
-  const closeAllTabs = async () => {
-    await delAllVisitedRoutes()
-    await toLastTab()
-  }
+const closeAllTabs = async () => {
+  await delAllVisitedRoutes()
+  await toLastTab()
+}
 
-  const toLastTab = async () => {
-    const latestView = visitedRoutes.value
-      .filter((item) => item.path !== handleActivePath(route, true))
-      .slice(-1)[0]
-    if (latestView) await router.push(latestView)
-    else await router.push('/')
-  }
+const toLastTab = async () => {
+  const latestView = visitedRoutes.value.filter((item) => item.path !== handleActivePath(route, true)).slice(-1)[0]
+  if (latestView) await router.push(latestView)
+  else await router.push('/')
+}
 
-  const isActive = (path: any) => {
-    return path === handleActivePath(route, true)
-  }
+const isActive = (path: any) => {
+  return path === handleActivePath(route, true)
+}
 
-  const handleRefresh = () => {
-    $pub('reload-router-view', 'Tabs')
-  }
+const handleRefresh = () => {
+  $pub('reload-router-view', 'Tabs')
+}
 
-  const handleOpenParams = () => {
-    router.push(`/operate/dynamicSegment/test1/${random(0, 100)}`)
-  }
+const handleOpenParams = () => {
+  router.push(`/operate/dynamicSegment/test1/${random(0, 100)}`)
+}
 
-  const handleOpenQuery = () => {
-    router.push(`/operate/dynamicSegment/test2?id=${random(0, 100)}`)
-  }
+const handleOpenQuery = () => {
+  router.push(`/operate/dynamicSegment/test2?id=${random(0, 100)}`)
+}
 </script>

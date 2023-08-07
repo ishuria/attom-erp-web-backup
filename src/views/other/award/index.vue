@@ -24,19 +24,19 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Award',
-  })
+defineOptions({
+  name: 'Award',
+})
 </script>
 
 <style lang="scss" scoped>
-  .award-container {
-    :deep() {
-      .el-card__body {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+.award-container {
+  :deep() {
+    .el-card__body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
+}
 </style>

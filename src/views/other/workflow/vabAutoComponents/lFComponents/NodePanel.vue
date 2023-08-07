@@ -10,95 +10,95 @@
 </template>
 
 <script>
-  export default defineComponent({
-    name: 'NodePanel',
-    props: {
-      lf: {
-        type: Object,
-        default: () => {},
-      },
+export default defineComponent({
+  name: 'NodePanel',
+  props: {
+    lf: {
+      type: Object,
+      default: () => {},
     },
-    data() {
-      return {
-        nodeList: [
-          {
-            text: '开始',
-            type: 'start',
-            icon: 'play-circle-line',
-          },
-          {
-            text: '矩形',
-            type: 'rect',
-            icon: 'shape-line',
-          },
-          {
-            type: 'user',
-            text: '用户',
-            icon: 'user-3-line',
-          },
-          {
-            type: 'push',
-            text: '推送',
-            icon: 'share-line',
-          },
-          {
-            type: 'download',
-            text: '位置',
-            icon: 'user-location-line',
-          },
-          {
-            type: 'end',
-            text: '结束',
-            icon: 'stop-circle-line',
-          },
-        ],
-      }
+  },
+  data() {
+    return {
+      nodeList: [
+        {
+          text: '开始',
+          type: 'start',
+          icon: 'play-circle-line',
+        },
+        {
+          text: '矩形',
+          type: 'rect',
+          icon: 'shape-line',
+        },
+        {
+          type: 'user',
+          text: '用户',
+          icon: 'user-3-line',
+        },
+        {
+          type: 'push',
+          text: '推送',
+          icon: 'share-line',
+        },
+        {
+          type: 'download',
+          text: '位置',
+          icon: 'user-location-line',
+        },
+        {
+          type: 'end',
+          text: '结束',
+          icon: 'stop-circle-line',
+        },
+      ],
+    }
+  },
+  methods: {
+    $_dragNode(item) {
+      this.$props.lf.dnd.startDrag({
+        type: item.type,
+        text: item.label,
+      })
     },
-    methods: {
-      $_dragNode(item) {
-        this.$props.lf.dnd.startDrag({
-          type: item.type,
-          text: item.label,
-        })
-      },
-    },
-  })
+  },
+})
 </script>
 
 <style lang="scss" scoped>
-  .node-panel {
-    position: absolute;
-    top: 100px;
-    left: var(--el-margin);
-    z-index: 101;
-    width: 70px;
-    padding: 20px 10px;
-    text-align: center;
-    background-color: var(--el-color-white);
-    border: 1px solid var(--el-border-color);
-    border-radius: 6px;
-  }
+.node-panel {
+  position: absolute;
+  top: 100px;
+  left: var(--el-margin);
+  z-index: 101;
+  width: 70px;
+  padding: 20px 10px;
+  text-align: center;
+  background-color: var(--el-color-white);
+  border: 1px solid var(--el-border-color);
+  border-radius: 6px;
+}
 
-  .node-item {
-    margin-bottom: 20px;
-  }
+.node-item {
+  margin-bottom: 20px;
+}
 
-  .node-item-icon {
-    display: block;
-    width: 30px;
-    height: 30px;
-    margin: auto;
+.node-item-icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: auto;
 
-    :deep() {
-      [class*='ri-'] {
-        font-size: 25px;
-      }
+  :deep() {
+    [class*='ri-'] {
+      font-size: 25px;
     }
   }
+}
 
-  .node-label {
-    font-size: 12px;
-    line-height: 30px;
-    user-select: none;
-  }
+.node-label {
+  font-size: 12px;
+  line-height: 30px;
+  user-select: none;
+}
 </style>

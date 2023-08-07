@@ -5,9 +5,7 @@
         <vab-card>
           <template #header>
             密码生成器
-            <el-button class="password-generator-button" type="primary" @click="generatePassword">
-              生成密码
-            </el-button>
+            <el-button class="password-generator-button" type="primary" @click="generatePassword">生成密码</el-button>
           </template>
           <el-form :model="form">
             <el-form-item label="密码长度">
@@ -42,64 +40,64 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'PasswordGenerator',
-  })
+defineOptions({
+  name: 'PasswordGenerator',
+})
 
-  const form = reactive<any>({
-    length: 16,
-    includeUppercase: true,
-    includeLowercase: true,
-    includeNumbers: true,
-    includeSymbols: false,
-  })
+const form = reactive<any>({
+  length: 16,
+  includeUppercase: true,
+  includeLowercase: true,
+  includeNumbers: true,
+  includeSymbols: false,
+})
 
-  const generatedPassword = ref<string>('')
+const generatedPassword = ref<string>('')
 
-  const generatePassword = () => {
-    let characters = ''
-    let password = ''
+const generatePassword = () => {
+  let characters = ''
+  let password = ''
 
-    if (form.includeUppercase) {
-      characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    }
-    if (form.includeLowercase) {
-      characters += 'abcdefghijklmnopqrstuvwxyz'
-    }
-    if (form.includeNumbers) {
-      characters += '0123456789'
-    }
-    if (form.includeSymbols) {
-      characters += '!@#$%^&*()_+~`|}{[]:;?><,./-='
-    }
-
-    for (let i = 0; i < form.length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length)
-      password += characters.charAt(randomIndex)
-    }
-
-    generatedPassword.value = password
+  if (form.includeUppercase) {
+    characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   }
+  if (form.includeLowercase) {
+    characters += 'abcdefghijklmnopqrstuvwxyz'
+  }
+  if (form.includeNumbers) {
+    characters += '0123456789'
+  }
+  if (form.includeSymbols) {
+    characters += '!@#$%^&*()_+~`|}{[]:;?><,./-='
+  }
+
+  for (let i = 0; i < form.length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    password += characters.charAt(randomIndex)
+  }
+
+  generatedPassword.value = password
+}
 </script>
 
 <style lang="scss" scoped>
-  .password-generator-container {
-    .password-generator-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-    }
+.password-generator-container {
+  .password-generator-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
 
-    :deep() {
-      .el-form-item {
-        display: flex;
-        align-items: center; /* 垂直居中 */
-        justify-content: space-between; /* 左右对齐 */
+  :deep() {
+    .el-form-item {
+      display: flex;
+      align-items: center; /* 垂直居中 */
+      justify-content: space-between; /* 左右对齐 */
 
-        &__content {
-          flex: 0 0 auto;
-        }
+      &__content {
+        flex: 0 0 auto;
       }
     }
   }
+}
 </style>

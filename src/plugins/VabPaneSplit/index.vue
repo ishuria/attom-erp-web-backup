@@ -11,127 +11,127 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'VabPaneSplit',
-  })
+defineOptions({
+  name: 'VabPaneSplit',
+})
 
-  export interface Props {
-    horizontal?: boolean
-    ratio?: string
+export interface Props {
+  horizontal?: boolean
+  ratio?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  horizontal: false,
+})
+
+const one = ref<HTMLElement>()
+const two = ref<HTMLElement>()
+const [initGrow1, initGrow2] = parseRatio(props.ratio as string)
+
+const grow1 = ref<any>(initGrow1)
+const grow2 = ref<any>(initGrow2)
+
+function parseRatio(ratio: string): [number, number] {
+  const rn = ratio
+    ?.split('/')
+    ?.map(Number)
+    ?.filter((value) => !isNaN(value))
+
+  if (!rn || rn.length !== 2) {
+    return [1, 1]
   }
 
-  const props = withDefaults(defineProps<Props>(), {
-    horizontal: false,
-  })
+  return rn as [number, number]
+}
 
-  const one = ref<HTMLElement>()
-  const two = ref<HTMLElement>()
-  const [initGrow1, initGrow2] = parseRatio(props.ratio as string)
+function startResize(mde: MouseEvent) {
+  one.value?.classList.add('forbid-select')
+  two.value?.classList.add('forbid-select')
 
-  const grow1 = ref<any>(initGrow1)
-  const grow2 = ref<any>(initGrow2)
+  const initialPos = props.horizontal ? mde.clientY : mde?.clientX
+  const sizeOne = props.horizontal ? one?.value?.offsetHeight : one?.value?.offsetWidth
+  const sizeTwo = props.horizontal ? two?.value?.offsetHeight : two?.value?.offsetWidth
 
-  function parseRatio(ratio: string): [number, number] {
-    const rn = ratio
-      ?.split('/')
-      ?.map(Number)
-      ?.filter((value) => !isNaN(value))
+  function handleMouseMove(mme: MouseEvent) {
+    const pos = props.horizontal ? mme.clientY : mme?.clientX
+    const newSizeOne = sizeOne! + pos - initialPos
 
-    if (!rn || rn.length !== 2) {
-      return [1, 1]
-    }
-
-    return rn as [number, number]
+    const totalGrow = grow1.value + grow2.value
+    grow1.value = totalGrow * (newSizeOne / (sizeOne! + sizeTwo!))
+    grow2.value = totalGrow - grow1.value
   }
 
-  function startResize(mde: MouseEvent) {
-    one.value?.classList.add('forbid-select')
-    two.value?.classList.add('forbid-select')
+  function handleMouseUp() {
+    one.value?.classList.remove('forbid-select')
+    two.value?.classList.remove('forbid-select')
 
-    const initialPos = props.horizontal ? mde.clientY : mde?.clientX
-    const sizeOne = props.horizontal ? one?.value?.offsetHeight : one?.value?.offsetWidth
-    const sizeTwo = props.horizontal ? two?.value?.offsetHeight : two?.value?.offsetWidth
-
-    function handleMouseMove(mme: MouseEvent) {
-      const pos = props.horizontal ? mme.clientY : mme?.clientX
-      const newSizeOne = sizeOne! + pos - initialPos
-
-      const totalGrow = grow1.value + grow2.value
-      grow1.value = totalGrow * (newSizeOne / (sizeOne! + sizeTwo!))
-      grow2.value = totalGrow - grow1.value
-    }
-
-    function handleMouseUp() {
-      one.value?.classList.remove('forbid-select')
-      two.value?.classList.remove('forbid-select')
-
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
   }
+
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', handleMouseUp)
+}
 </script>
 
 <style lang="scss" scoped>
-  .forbid-select {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+.forbid-select {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.split {
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  .resizer {
+    width: 5px;
+    cursor: w-resize;
+    background-color: var(--el-border-color);
+    transition: 0.3s;
+
+    &:hover {
+      background-color: var(--el-border-color);
+    }
   }
 
-  .split {
-    display: flex;
+  .sub {
+    flex-basis: 0%;
+    flex-grow: 1;
+    align-content: stretch;
+    align-items: stretch;
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
 
-    .resizer {
-      width: 5px;
-      cursor: w-resize;
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--el-color-white);
+    }
+
+    &::-webkit-scrollbar-thumb {
       background-color: var(--el-border-color);
-      transition: 0.3s;
-
-      &:hover {
-        background-color: var(--el-border-color);
-      }
-    }
-
-    .sub {
-      flex-basis: 0%;
-      flex-grow: 1;
-      align-content: stretch;
-      align-items: stretch;
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
-
-      overflow-y: auto;
-
-      scrollbar-width: thin;
-
-      &::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-color: var(--el-color-white);
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: var(--el-border-color);
-      }
-    }
-
-    &.horizontal {
-      flex-direction: column;
-
-      .resizer {
-        width: 100%;
-        height: 5px;
-        cursor: n-resize;
-      }
     }
   }
+
+  &.horizontal {
+    flex-direction: column;
+
+    .resizer {
+      width: 100%;
+      height: 5px;
+      cursor: n-resize;
+    }
+  }
+}
 </style>

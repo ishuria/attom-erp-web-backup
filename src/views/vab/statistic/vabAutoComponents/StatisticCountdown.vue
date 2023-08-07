@@ -24,24 +24,24 @@
 </template>
 
 <script lang="ts" setup>
-  import dayjs from 'dayjs'
-  import { Calendar } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
+import { Calendar } from '@element-plus/icons-vue'
 
-  const value = ref<any>(Date.now() + 1000 * 60 * 60 * 7)
-  const value1 = ref<any>(Date.now() + 1000 * 60 * 60 * 24 * 2)
-  const value2 = ref<any>(dayjs().add(1, 'month').startOf('month'))
+const value = ref<any>(Date.now() + 1000 * 60 * 60 * 7)
+const value1 = ref<any>(Date.now() + 1000 * 60 * 60 * 24 * 2)
+const value2 = ref<any>(dayjs().add(1, 'month').startOf('month'))
 
-  function reset() {
-    value1.value = Date.now() + 1000 * 60 * 60 * 24 * 2
-  }
+function reset() {
+  value1.value = Date.now() + 1000 * 60 * 60 * 24 * 2
+}
 </script>
 
 <style scoped>
-  .el-col {
-    text-align: center;
-  }
+.el-col {
+  text-align: center;
+}
 
-  .countdown-footer {
-    margin-top: 8px;
-  }
+.countdown-footer {
+  margin-top: 8px;
+}
 </style>

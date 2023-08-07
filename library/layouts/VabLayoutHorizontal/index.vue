@@ -31,55 +31,55 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'VabLayoutHorizontal',
-  })
+defineOptions({
+  name: 'VabLayoutHorizontal',
+})
 
-  defineProps({
-    collapse: {
-      type: Boolean,
-      default() {
-        return false
-      },
+defineProps({
+  collapse: {
+    type: Boolean,
+    default() {
+      return false
     },
-    fixedHeader: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  fixedHeader: {
+    type: Boolean,
+    default() {
+      return true
     },
-    showTabs: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  showTabs: {
+    type: Boolean,
+    default() {
+      return true
     },
-    device: {
-      type: String,
-      default() {
-        return 'desktop'
-      },
+  },
+  device: {
+    type: String,
+    default() {
+      return 'desktop'
     },
-  })
+  },
+})
 </script>
 
 <style lang="scss" scoped>
-  .vab-layout-horizontal {
-    :deep() {
-      .vab-main {
-        width: 92% !important;
-        margin: auto !important;
-      }
-    }
-
-    .vab-tabs-horizontal {
-      background: var(--el-color-white);
-    }
-
-    .vab-nav {
-      .fold-unfold {
-        display: none;
-      }
+.vab-layout-horizontal {
+  :deep() {
+    .vab-main {
+      width: 92% !important;
+      margin: auto !important;
     }
   }
+
+  .vab-tabs-horizontal {
+    background: var(--el-color-white);
+  }
+
+  .vab-nav {
+    .fold-unfold {
+      display: none;
+    }
+  }
+}
 </style>

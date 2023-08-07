@@ -35,75 +35,75 @@
 </template>
 
 <script lang="ts" setup>
-  const colorFrom1 = ref<string>('rgba(240,2,20,0.098)')
-  const colorTo1 = ref<string>('var(--el-color-white)')
-  const colorFrom2 = ref<string>('var(--el-color-primary-light-9)')
-  const colorTo2 = ref<string>('var(--el-color-white)')
-  const style1 = {
-    background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
-    border: 0,
-  }
-  const style2 = {
-    background: `linear-gradient(to right,${colorFrom2.value}, ${colorTo2.value}) no-repeat`,
-    border: 0,
-  }
+const colorFrom1 = ref<string>('rgba(240,2,20,0.098)')
+const colorTo1 = ref<string>('var(--el-color-white)')
+const colorFrom2 = ref<string>('var(--el-color-primary-light-9)')
+const colorTo2 = ref<string>('var(--el-color-white)')
+const style1 = {
+  background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
+  border: 0,
+}
+const style2 = {
+  background: `linear-gradient(to right,${colorFrom2.value}, ${colorTo2.value}) no-repeat`,
+  border: 0,
+}
 </script>
 
 <style lang="scss" scoped>
-  .pending {
-    :deep() {
-      sup {
-        top: -1px;
+.pending {
+  :deep() {
+    sup {
+      top: -1px;
+    }
+
+    .el-tag {
+      margin-right: 5px;
+    }
+
+    .el-card__body {
+      padding-bottom: 0;
+    }
+
+    .parting-line {
+      float: left;
+      width: 10px;
+      height: calc(100% - 30px);
+      margin-right: 20px;
+      border-radius: 10px;
+
+      &-danger {
+        background: var(--el-color-danger);
       }
 
-      .el-tag {
-        margin-right: 5px;
-      }
-
-      .el-card__body {
-        padding-bottom: 0;
-      }
-
-      .parting-line {
-        float: left;
-        width: 10px;
-        height: calc(100% - 30px);
-        margin-right: 20px;
-        border-radius: 10px;
-
-        &-danger {
-          background: var(--el-color-danger);
-        }
-
-        &-primary {
-          background: var(--el-color-primary);
-        }
-      }
-
-      .pending-title {
-        display: block;
-        font-size: var(--el-font-size-big);
-        font-weight: bold;
-        line-height: 38px;
-
-        span {
-          font-size: var(--el-font-size-small);
-          font-weight: normal;
-        }
-
-        &-danger {
-          color: var(--el-color-danger);
-        }
-
-        &-primary {
-          color: var(--el-color-primary);
-        }
-      }
-
-      .pending-tips {
-        font-size: var(--el-font-size-small);
-        color: var(--el-color-grey);
+      &-primary {
+        background: var(--el-color-primary);
       }
     }
+
+    .pending-title {
+      display: block;
+      font-size: var(--el-font-size-big);
+      font-weight: bold;
+      line-height: 38px;
+
+      span {
+        font-size: var(--el-font-size-small);
+        font-weight: normal;
+      }
+
+      &-danger {
+        color: var(--el-color-danger);
+      }
+
+      &-primary {
+        color: var(--el-color-primary);
+      }
+    }
+
+    .pending-tips {
+      font-size: var(--el-font-size-small);
+      color: var(--el-color-grey);
+    }
   }
+}
 </style>

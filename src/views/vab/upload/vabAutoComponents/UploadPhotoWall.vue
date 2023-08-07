@@ -1,10 +1,5 @@
 <template>
-  <el-upload
-    v-model:file-list="fileList"
-    action="/uploadFlie"
-    list-type="picture-card"
-    :on-preview="handlePictureCardPreview"
-  >
+  <el-upload v-model:file-list="fileList" action="/uploadFlie" list-type="picture-card" :on-preview="handlePictureCardPreview">
     <el-icon>
       <plus />
     </el-icon>
@@ -16,34 +11,34 @@
 </template>
 
 <script lang="ts" setup>
-  import { Plus } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 
-  import type { UploadProps, UploadUserFile } from 'element-plus'
+import type { UploadProps, UploadUserFile } from 'element-plus'
 
-  const fileList = ref<UploadUserFile[]>([
-    {
-      name: 'food.jpeg',
-      url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-    },
-    {
-      name: 'food.jpeg',
-      url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-    },
-    {
-      name: 'food.jpeg',
-      url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-    },
-    {
-      name: 'food.jpeg',
-      url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-    },
-  ])
+const fileList = ref<UploadUserFile[]>([
+  {
+    name: 'food.jpeg',
+    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+  },
+  {
+    name: 'food.jpeg',
+    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+  },
+  {
+    name: 'food.jpeg',
+    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+  },
+  {
+    name: 'food.jpeg',
+    url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+  },
+])
 
-  const dialogImageUrl = ref<string | undefined>('')
-  const dialogVisible = ref<boolean>(false)
+const dialogImageUrl = ref<string | undefined>('')
+const dialogVisible = ref<boolean>(false)
 
-  const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
-    dialogImageUrl.value = uploadFile.url
-    dialogVisible.value = true
-  }
+const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url
+  dialogVisible.value = true
+}
 </script>

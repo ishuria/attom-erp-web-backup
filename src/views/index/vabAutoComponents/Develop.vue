@@ -17,124 +17,124 @@
 </template>
 
 <script lang="ts" setup>
-  import { graphic } from 'echarts/core'
-  import { random } from 'lodash-es'
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { lightenColor } from '/@/utils/lightenColor'
+import { graphic } from 'echarts/core'
+import { random } from 'lodash-es'
+import { useSettingsStore } from '/@/store/modules/settings'
+import { lightenColor } from '/@/utils/lightenColor'
 
-  const settingsStore = useSettingsStore()
-  const { color } = storeToRefs(settingsStore)
-  let timer: any
-  const updateTime = ref<any>()
+const settingsStore = useSettingsStore()
+const { color } = storeToRefs(settingsStore)
+let timer: any
+const updateTime = ref<any>()
 
-  const option = reactive<any>({
-    tooltip: {
-      trigger: 'axis',
-      extraCssText: 'z-index:1',
+const option = reactive<any>({
+  tooltip: {
+    trigger: 'axis',
+    extraCssText: 'z-index:1',
+  },
+  grid: {
+    top: '5%',
+    left: '2%',
+    right: '4%',
+    bottom: '0%',
+    containLabel: true,
+  },
+  xAxis: {
+    type: 'category',
+    boundaryGap: false,
+    data: [],
+    axisTick: {
+      alignWithLabel: true,
     },
-    grid: {
-      top: '5%',
-      left: '2%',
-      right: '4%',
-      bottom: '0%',
-      containLabel: true,
-    },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: [],
-      axisTick: {
-        alignWithLabel: true,
-      },
-    },
+  },
 
-    yAxis: {
-      type: 'value',
-    },
+  yAxis: {
+    type: 'value',
+  },
 
-    series: {
-      name: '浏览量',
-      type: 'line',
-      data: [],
-      smooth: true,
-      areaStyle: {},
-      itemStyle: {
-        borderRadius: [0, 5, 5, 0],
-        color: new graphic.LinearGradient(0, 0, 1, 0, [
-          { offset: 0, color: lightenColor(color.value, 50) },
-          { offset: 1, color: color.value },
-        ]),
-      },
-    },
-  })
-
-  watch(
-    color,
-    () => {
-      option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
+  series: {
+    name: '浏览量',
+    type: 'line',
+    data: [],
+    smooth: true,
+    areaStyle: {},
+    itemStyle: {
+      borderRadius: [0, 5, 5, 0],
+      color: new graphic.LinearGradient(0, 0, 1, 0, [
         { offset: 0, color: lightenColor(color.value, 50) },
         { offset: 1, color: color.value },
-      ])
+      ]),
     },
-    { immediate: true }
-  )
+  },
+})
 
-  onActivated(() => {
-    const base = +new Date(2022, 10, 1)
-    const oneDay = 24 * 3600 * 1000
-    const date: any = []
+watch(
+  color,
+  () => {
+    option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
+      { offset: 0, color: lightenColor(color.value, 50) },
+      { offset: 1, color: color.value },
+    ])
+  },
+  { immediate: true }
+)
 
-    const data = [Math.random() * 1500]
-    let now: any = new Date(base)
-    updateTime.value = now
+onActivated(() => {
+  const base = +new Date(2022, 10, 1)
+  const oneDay = 24 * 3600 * 1000
+  const date: any = []
 
-    const addData = (shift: boolean) => {
-      now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
-      date.push(now)
-      data.push(random(2000, 4000))
+  const data = [Math.random() * 1500]
+  let now: any = new Date(base)
+  updateTime.value = now
 
-      if (shift) {
-        date.shift()
-        data.shift()
-      }
-      now = new Date(+new Date(now) + oneDay)
-      option.xAxis.data = []
-      option.series.data = []
-      option.xAxis.data = date
-      option.series.data = data
+  const addData = (shift: boolean) => {
+    now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
+    date.push(now)
+    data.push(random(2000, 4000))
+
+    if (shift) {
+      date.shift()
+      data.shift()
     }
+    now = new Date(+new Date(now) + oneDay)
+    option.xAxis.data = []
+    option.series.data = []
+    option.xAxis.data = date
+    option.series.data = data
+  }
 
-    for (let i = 1; i < 6; i++) {
-      addData(false)
-    }
+  for (let i = 1; i < 6; i++) {
+    addData(false)
+  }
 
-    timer = setInterval(() => {
-      addData(true)
-    }, 5000)
-  })
+  timer = setInterval(() => {
+    addData(true)
+  }, 5000)
+})
 
-  onDeactivated(() => {
-    clearInterval(timer)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>
 
 <style lang="scss" scoped>
-  :deep() {
-    .echarts {
-      height: 140px !important;
-    }
+:deep() {
+  .echarts {
+    height: 140px !important;
   }
+}
 
-  .bottom {
-    padding-top: 20px;
-    margin-top: 5px;
-    text-align: left;
-    border-top: 1px solid var(--el-border-color);
-  }
+.bottom {
+  padding-top: 20px;
+  margin-top: 5px;
+  text-align: left;
+  border-top: 1px solid var(--el-border-color);
+}
 
-  .line-two {
-    span {
-      color: var(--el-color-success);
-    }
+.line-two {
+  span {
+    color: var(--el-color-success);
   }
+}
 </style>

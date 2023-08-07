@@ -3,13 +3,7 @@
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card>
-          <el-tree
-            :data="treeList"
-            :default-expanded-keys="['root']"
-            node-key="id"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
-          />
+          <el-tree :data="treeList" :default-expanded-keys="['root']" node-key="id" :props="defaultProps" @node-click="handleNodeClick" />
         </vab-card>
       </el-col>
       <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
@@ -94,58 +88,58 @@
 </template>
 
 <script lang="ts" setup>
-  import { Plus } from '@element-plus/icons-vue'
-  import { doDelete, getTree } from '/@/api/menuManagement'
-  import { getList } from '/@/api/router'
+import { Plus } from '@element-plus/icons-vue'
+import { doDelete, getTree } from '/@/api/menuManagement'
+import { getList } from '/@/api/router'
 
-  defineOptions({
-    name: 'MenuManagement',
-  })
+defineOptions({
+  name: 'MenuManagement',
+})
 
-  const $baseConfirm: any = inject('$baseConfirm')
-  const $baseMessage = inject<any>('$baseMessage')
-  const editRef = ref<any>(null)
-  const treeList = ref<any>([])
-  const defaultProps = reactive<any>({
-    children: 'children',
-    label: 'label',
-  })
-  const list = ref<any>([])
-  const listLoading = ref<boolean>(true)
+const $baseConfirm: any = inject('$baseConfirm')
+const $baseMessage = inject<any>('$baseMessage')
+const editRef = ref<any>(null)
+const treeList = ref<any>([])
+const defaultProps = reactive<any>({
+  children: 'children',
+  label: 'label',
+})
+const list = ref<any>([])
+const listLoading = ref<boolean>(true)
 
-  const handleAdd = () => {
-    editRef.value.showEdit()
-  }
+const handleAdd = () => {
+  editRef.value.showEdit()
+}
 
-  const handleEdit = (row: any = {}) => {
-    editRef.value.showEdit(row)
-  }
+const handleEdit = (row: any = {}) => {
+  editRef.value.showEdit(row)
+}
 
-  const handleDelete = (row: any = {}) => {
-    if (row.path) {
-      $baseConfirm('您确定要删除当前项吗', null, async () => {
-        const { msg }: any = await doDelete({ paths: row.path })
-        $baseMessage(msg, 'success', 'hey')
-        await fetchData()
-      })
-    }
-  }
-
-  const fetchData = async (role: any = {}) => {
-    listLoading.value = true
-    const { data } = await getList({ role })
-    list.value = data.list
-    listLoading.value = false
-  }
-
-  const handleNodeClick = ({ role }: any) => {
-    fetchData(role)
-  }
-
-  onBeforeMount(() => {
-    getTree().then(({ data }) => {
-      treeList.value = data.list
+const handleDelete = (row: any = {}) => {
+  if (row.path) {
+    $baseConfirm('您确定要删除当前项吗', null, async () => {
+      const { msg }: any = await doDelete({ paths: row.path })
+      $baseMessage(msg, 'success', 'hey')
+      await fetchData()
     })
-    fetchData()
+  }
+}
+
+const fetchData = async (role: any = {}) => {
+  listLoading.value = true
+  const { data } = await getList({ role })
+  list.value = data.list
+  listLoading.value = false
+}
+
+const handleNodeClick = ({ role }: any) => {
+  fetchData(role)
+}
+
+onBeforeMount(() => {
+  getTree().then(({ data }) => {
+    treeList.value = data.list
   })
+  fetchData()
+})
 </script>

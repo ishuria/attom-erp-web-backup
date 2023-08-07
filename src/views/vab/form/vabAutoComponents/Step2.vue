@@ -25,50 +25,50 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Step2',
-  })
-  defineProps({
-    infoData: {
-      type: Object,
-      default: () => {
-        return {}
-      },
+defineOptions({
+  name: 'Step2',
+})
+defineProps({
+  infoData: {
+    type: Object,
+    default: () => {
+      return {}
     },
-  })
-  const emit = defineEmits(['change-step'])
+  },
+})
+const emit = defineEmits(['change-step'])
 
-  const formRef = ref<any>(null)
-  const form = reactive<any>({
-    password: '123456',
-  })
-  const rules = reactive<any>({
-    password: [{ required: true, message: '请输入支付密码', trigger: 'blur' }],
-  })
-  const loading = ref<boolean>(false)
+const formRef = ref<any>(null)
+const form = reactive<any>({
+  password: '123456',
+})
+const rules = reactive<any>({
+  password: [{ required: true, message: '请输入支付密码', trigger: 'blur' }],
+})
+const loading = ref<boolean>(false)
 
-  const handleSubmit = () => {
-    formRef.value.validate((valid: any) => {
-      if (valid) {
-        loading.value = true
-        setTimeout(() => {
-          emit('change-step', 2)
-          loading.value = false
-        }, 2000)
-      } else {
+const handleSubmit = () => {
+  formRef.value.validate((valid: any) => {
+    if (valid) {
+      loading.value = true
+      setTimeout(() => {
+        emit('change-step', 2)
         loading.value = false
-      }
-    })
-  }
-  const handlePrev = () => {
-    emit('change-step', 0)
-  }
+      }, 2000)
+    } else {
+      loading.value = false
+    }
+  })
+}
+const handlePrev = () => {
+  emit('change-step', 0)
+}
 </script>
 
 <style lang="scss" scoped>
-  .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
-  }
+.pay-button-group {
+  display: block;
+  margin: 20px auto;
+  text-align: center;
+}
 </style>

@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Image',
-  })
+defineOptions({
+  name: 'Image',
+})
 </script>

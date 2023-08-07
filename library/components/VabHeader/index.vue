@@ -12,12 +12,7 @@
           mode="horizontal"
           text-color="var(--el-menu-color-text)"
         >
-          <vab-menu
-            v-for="(item, index) in handleRoutes"
-            :key="index + item['name']"
-            :item="item"
-            :layout="layout"
-          />
+          <vab-menu v-for="(item, index) in handleRoutes" :key="index + item['name']" :item="item" :layout="layout" />
         </el-menu>
         <vab-right-tools is-horizontal />
       </div>
@@ -26,100 +21,98 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRoutesStore } from '/@/store/modules/routes'
+import { useRoutesStore } from '/@/store/modules/routes'
 
-  defineOptions({
-    name: 'VabHeader',
-  })
+defineOptions({
+  name: 'VabHeader',
+})
 
-  defineProps({
-    layout: {
-      type: String,
-      default: 'horizontal',
-    },
-  })
+defineProps({
+  layout: {
+    type: String,
+    default: 'horizontal',
+  },
+})
 
-  const routesStore = useRoutesStore()
-  const { getActiveMenu: activeMenu, getRoutes: routes } = storeToRefs(routesStore)
+const routesStore = useRoutesStore()
+const { getActiveMenu: activeMenu, getRoutes: routes } = storeToRefs(routesStore)
 
-  const handleRoutes = computed(() => {
-    return routes.value.flatMap((route) =>
-      route.meta && route.meta.levelHidden && route.children ? [...route.children] : route
-    )
-  })
+const handleRoutes = computed(() => {
+  return routes.value.flatMap((route) => (route.meta && route.meta.levelHidden && route.children ? [...route.children] : route))
+})
 </script>
 
 <style lang="scss" scoped>
-  .vab-header {
-    display: flex;
-    align-items: center;
-    justify-items: flex-end;
-    height: var(--el-header-height);
-    background: var(--el-menu-background-color);
+.vab-header {
+  display: flex;
+  align-items: center;
+  justify-items: flex-end;
+  height: var(--el-header-height);
+  background: var(--el-menu-background-color);
 
-    .vab-main {
-      padding: 0 var(--el-padding) 0 var(--el-padding);
+  .vab-main {
+    padding: 0 var(--el-padding) 0 var(--el-padding);
 
-      .right-panel {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: var(--el-header-height);
+    .right-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--el-header-height);
 
-        :deep() {
-          .vab-logo {
-            width: 360px;
-          }
+      :deep() {
+        .vab-logo {
+          width: 360px;
+        }
 
-          .el-sub-menu__icon-more {
-            margin-right: var(--el-margin) !important;
-          }
+        .el-sub-menu__icon-more {
+          margin-right: var(--el-margin) !important;
+        }
 
-          .el-menu {
-            &.el-menu--horizontal {
-              width: 100%;
-              height: 40px;
+        .el-menu {
+          &.el-menu--horizontal {
+            width: 100%;
+            height: 40px;
+            border: 0;
+
+            * {
               border: 0;
-
-              * {
-                border: 0;
-              }
-
-              > .el-menu-item {
-                border-radius: var(--el-border-radius-base);
-
-                &.is-active {
-                  background: var(--el-color-primary) !important;
-                }
-              }
             }
 
-            [class*='ri-'] {
-              margin-left: 0;
-            }
-          }
+            > .el-menu-item {
+              border-radius: var(--el-border-radius-base);
 
-          .username,
-          .username + i {
-            color: var(--el-color-white);
+              &.is-active {
+                background: var(--el-color-primary) !important;
+              }
+            }
           }
 
           [class*='ri-'] {
-            margin-left: var(--el-margin);
-            color: var(--el-color-white);
+            margin-left: 0;
           }
+        }
+
+        .username,
+        .username + i {
+          color: var(--el-color-white);
+        }
+
+        [class*='ri-'] {
+          margin-left: var(--el-margin);
+          color: var(--el-color-white);
         }
       }
     }
   }
+}
 </style>
 
 <style>
-  .el-popper.is-pure.is-light:has(.el-menu--horizontal, .el-menu--popup-container) {
-    margin-top: calc(var(--el-margin) * 0.4);
-  }
+.el-popper.is-pure.is-light:has(.el-menu--horizontal, .el-menu--popup-container) {
+  margin-top: calc(var(--el-margin) * 0.4);
+}
 
-  .el-menu--horizontal {
-    border: 0;
-  }
+.el-menu--horizontal {
+  border: 0;
+}
 </style>

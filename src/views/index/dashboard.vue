@@ -10,22 +10,10 @@
         <top-card background="white" icon="bard-line" percentage="14%" title="数据挖掘" />
       </el-col>
       <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
-        <top-card
-          background="white"
-          :count-config="countConfig1"
-          icon="compass-2-line"
-          percentage="32%"
-          title="内存占用"
-        />
+        <top-card background="white" :count-config="countConfig1" icon="compass-2-line" percentage="32%" title="内存占用" />
       </el-col>
       <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
-        <top-card
-          background="white"
-          :count-config="countConfig2"
-          icon="u-disk-line"
-          percentage="13%"
-          title="硬盘占用"
-        />
+        <top-card background="white" :count-config="countConfig2" icon="u-disk-line" percentage="13%" title="硬盘占用" />
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <branch />
@@ -44,58 +32,58 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
+import { random } from 'lodash-es'
 
-  defineOptions({
-    name: 'Dashboard',
-  })
+defineOptions({
+  name: 'Dashboard',
+})
 
-  const countConfig1 = {
-    startValue: 0,
-    endValue: random(1000, 2000),
-    decimals: 0,
-    prefix: '',
-    suffix: ' KB',
-    separator: ',',
-    duration: 8000,
-  }
+const countConfig1 = {
+  startValue: 0,
+  endValue: random(1000, 2000),
+  decimals: 0,
+  prefix: '',
+  suffix: ' KB',
+  separator: ',',
+  duration: 8000,
+}
 
-  const countConfig2 = {
-    startValue: 0,
-    endValue: random(1000, 2000),
-    decimals: 0,
-    prefix: '',
-    suffix: ' GB',
-    separator: ',',
-    duration: 8000,
-  }
+const countConfig2 = {
+  startValue: 0,
+  endValue: random(1000, 2000),
+  decimals: 0,
+  prefix: '',
+  suffix: ' GB',
+  separator: ',',
+  duration: 8000,
+}
 </script>
 
 <style lang="scss" scoped>
-  .dashboard-container {
-    :deep() {
-      .dashboard-user {
-        height: 168px !important;
+.dashboard-container {
+  :deep() {
+    .dashboard-user {
+      height: 168px !important;
 
-        .el-card__body {
-          display: flex;
-          align-items: center;
-          justify-content: center;
+      .el-card__body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-          .vab-icon {
-            width: 100%;
-            height: 130px;
-            text-align: left;
-          }
-        }
-      }
-
-      .el-card {
-        [class*='-echart'] {
+        .vab-icon {
           width: 100%;
-          height: 170px;
+          height: 130px;
+          text-align: left;
         }
       }
     }
+
+    .el-card {
+      [class*='-echart'] {
+        width: 100%;
+        height: 170px;
+      }
+    }
   }
+}
 </style>

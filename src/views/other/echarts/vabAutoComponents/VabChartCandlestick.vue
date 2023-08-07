@@ -10,76 +10,76 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { random } from 'lodash-es'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabChartCandlestick',
-  })
+defineOptions({
+  name: 'VabChartCandlestick',
+})
 
-  defineProps({
-    title: {
-      type: String,
-      default: '',
+defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+})
+
+const settingsStore = useSettingsStore()
+const { color } = storeToRefs(settingsStore)
+let timer: any
+
+const option = reactive<any>({
+  grid: {
+    top: 20,
+    right: 20,
+    bottom: 40,
+    left: 40,
+  },
+  tooltip: {
+    trigger: 'item',
+  },
+  xAxis: {
+    data: ['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27'],
+  },
+  yAxis: {},
+  series: {
+    type: 'candlestick',
+    data: [
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+    ],
+    itemStyle: {
+      color: color.value,
+      borderColor: color.value,
+      color0: '#f2637b',
+      borderColor0: '#f2637b',
     },
-  })
+  },
+})
 
-  const settingsStore = useSettingsStore()
-  const { color } = storeToRefs(settingsStore)
-  let timer: any
+watch(
+  color,
+  () => {
+    option.series.itemStyle.color = color.value
+    option.series.itemStyle.borderColor = color.value
+  },
+  { immediate: true }
+)
 
-  const option = reactive<any>({
-    grid: {
-      top: 20,
-      right: 20,
-      bottom: 40,
-      left: 40,
-    },
-    tooltip: {
-      trigger: 'item',
-    },
-    xAxis: {
-      data: ['2017-10-24', '2017-10-25', '2017-10-26', '2017-10-27'],
-    },
-    yAxis: {},
-    series: {
-      type: 'candlestick',
-      data: [
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-      ],
-      itemStyle: {
-        color: color.value,
-        borderColor: color.value,
-        color0: '#f2637b',
-        borderColor0: '#f2637b',
-      },
-    },
-  })
+onActivated(() => {
+  timer = setInterval(() => {
+    option.series.data = [
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+      [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
+    ]
+  }, 3000)
+})
 
-  watch(
-    color,
-    () => {
-      option.series.itemStyle.color = color.value
-      option.series.itemStyle.borderColor = color.value
-    },
-    { immediate: true }
-  )
-
-  onActivated(() => {
-    timer = setInterval(() => {
-      option.series.data = [
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-        [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
-      ]
-    }, 3000)
-  })
-
-  onDeactivated(() => {
-    clearInterval(timer)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>

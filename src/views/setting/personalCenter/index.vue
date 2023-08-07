@@ -100,14 +100,10 @@
                       style="margin-bottom: 10px"
                       @blur="handleInputConfirm"
                     />
-                    <el-button v-else size="small" style="margin-bottom: 10px" @click="showInput">
-                      添加
-                    </el-button>
+                    <el-button v-else size="small" style="margin-bottom: 10px" @click="showInput">添加</el-button>
                   </el-form-item>
                   <el-form-item>
-                    <el-button native-type="submit" type="primary" @click="onSubmit">
-                      保存
-                    </el-button>
+                    <el-button native-type="submit" type="primary" @click="onSubmit">保存</el-button>
                   </el-form-item>
                 </el-form>
               </el-col>
@@ -176,117 +172,117 @@
 </template>
 
 <script lang="ts" setup>
-  import { useUserStore } from '/@/store/modules/user'
+import { useUserStore } from '/@/store/modules/user'
 
-  defineOptions({
-    name: 'PersonalCenter',
+defineOptions({
+  name: 'PersonalCenter',
+})
+
+const $baseMessage = inject<any>('$baseMessage')
+
+const userStore = useUserStore()
+const { avatar } = storeToRefs(userStore)
+
+const _description = decodeURI(
+  '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
+)
+
+const activeName = ref<string>('first')
+
+const form = reactive<any>({
+  fullName: 'admin',
+  nickname: 'good luck',
+  sex: 2,
+  description: _description,
+})
+
+const inputRef = ref<any>(null)
+const dynamicTags = ref<any>(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
+const inputVisible = ref<boolean>(false)
+const inputValue = ref<string>('')
+
+const onSubmit = () => {
+  $baseMessage('模拟保存成功', 'success', 'hey')
+}
+
+const handleClose = (tag: string) => {
+  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+}
+
+const showInput = () => {
+  inputVisible.value = true
+  nextTick(() => {
+    inputRef.value.focus()
   })
+}
 
-  const $baseMessage = inject<any>('$baseMessage')
-
-  const userStore = useUserStore()
-  const { avatar } = storeToRefs(userStore)
-
-  const _description = decodeURI(
-    '\u5bcc\u5728\u672f\u6570\uff0c\u4e0d\u5728\u52b3\u8eab\uff1b\u5229\u5728\u52bf\u5c45\uff0c\u4e0d\u5728\u529b\u8015\u3002'
-  )
-
-  const activeName = ref<string>('first')
-
-  const form = reactive<any>({
-    fullName: 'admin',
-    nickname: 'good luck',
-    sex: 2,
-    description: _description,
-  })
-
-  const inputRef = ref<any>(null)
-  const dynamicTags = ref<any>(['腹黑', '怕麻烦', '小仙女', '仙气飘飘'])
-  const inputVisible = ref<boolean>(false)
-  const inputValue = ref<string>('')
-
-  const onSubmit = () => {
-    $baseMessage('模拟保存成功', 'success', 'hey')
+const handleInputConfirm = () => {
+  if (inputValue.value) {
+    dynamicTags.value.push(inputValue.value)
   }
-
-  const handleClose = (tag: string) => {
-    dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
-  }
-
-  const showInput = () => {
-    inputVisible.value = true
-    nextTick(() => {
-      inputRef.value.focus()
-    })
-  }
-
-  const handleInputConfirm = () => {
-    if (inputValue.value) {
-      dynamicTags.value.push(inputValue.value)
-    }
-    inputVisible.value = false
-    inputValue.value = ''
-  }
+  inputVisible.value = false
+  inputValue.value = ''
+}
 </script>
 
 <style lang="scss" scoped>
-  .personal-center-container {
-    .user-info {
-      padding: var(--el-padding);
-      text-align: center;
+.personal-center-container {
+  .user-info {
+    padding: var(--el-padding);
+    text-align: center;
 
-      :deep() {
-        .el-avatar {
-          img {
-            padding: 20px;
-            cursor: pointer;
-          }
-        }
-      }
-
-      &-full-name {
-        margin-top: 15px;
-        font-size: 24px;
-        font-weight: 500;
-        color: var(--el-color-grey);
-      }
-
-      &-description {
-        margin-top: 8px;
-      }
-
-      &-follow {
-        margin-top: 15px;
-      }
-
-      &-list {
-        margin-top: 18px;
-        line-height: 30px;
-        text-align: left;
-        list-style: none;
-
-        h5 {
-          margin: -20px 0 5px;
+    :deep() {
+      .el-avatar {
+        img {
+          padding: 20px;
+          cursor: pointer;
         }
       }
     }
 
-    .item {
-      display: flex;
+    &-full-name {
+      margin-top: 15px;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--el-color-grey);
+    }
 
-      i {
-        font-size: 40px;
-      }
+    &-description {
+      margin-top: 8px;
+    }
 
-      &-content {
-        box-sizing: border-box;
-        flex: 1;
-        margin-left: var(--el-margin);
+    &-follow {
+      margin-top: 15px;
+    }
 
-        &-second {
-          margin-top: 8px;
-        }
+    &-list {
+      margin-top: 18px;
+      line-height: 30px;
+      text-align: left;
+      list-style: none;
+
+      h5 {
+        margin: -20px 0 5px;
       }
     }
   }
+
+  .item {
+    display: flex;
+
+    i {
+      font-size: 40px;
+    }
+
+    &-content {
+      box-sizing: border-box;
+      flex: 1;
+      margin-left: var(--el-margin);
+
+      &-second {
+        margin-top: 8px;
+      }
+    }
+  }
+}
 </style>

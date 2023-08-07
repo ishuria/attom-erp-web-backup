@@ -28,34 +28,34 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'VabLayoutComprehensive',
-  })
+defineOptions({
+  name: 'VabLayoutComprehensive',
+})
 
-  defineProps({
-    collapse: {
-      type: Boolean,
-      default() {
-        return false
-      },
+defineProps({
+  collapse: {
+    type: Boolean,
+    default() {
+      return false
     },
-    fixedHeader: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  fixedHeader: {
+    type: Boolean,
+    default() {
+      return true
     },
-    showTabs: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  showTabs: {
+    type: Boolean,
+    default() {
+      return true
     },
-    device: {
-      type: String,
-      default() {
-        return 'desktop'
-      },
+  },
+  device: {
+    type: String,
+    default() {
+      return 'desktop'
     },
-  })
+  },
+})
 </script>

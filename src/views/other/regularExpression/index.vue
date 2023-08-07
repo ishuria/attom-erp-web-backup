@@ -38,109 +38,101 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'RegularExpression',
+defineOptions({
+  name: 'RegularExpression',
+})
+
+import { isChinese, isEmail, isEnglish, isIdCard, isNumber, isPhone, isUrl } from '/@/utils/validate'
+
+const $baseMessage = inject<any>('$baseMessage')
+const formRef: Ref<any> = ref(null)
+const form = reactive<any>({
+  email: '',
+  phone: '',
+  idCard: '',
+  number: '',
+  english: '',
+  chinese: '',
+  url: '',
+})
+
+const validateEmail = (rule: any, value: any, callback: any) => {
+  if (!isEmail(value)) callback(new Error('请输入有效的邮箱地址'))
+  else callback()
+}
+
+const validatePhone = (rule: any, value: any, callback: any) => {
+  if (!isPhone(value)) callback(new Error('请输入有效的手机号'))
+  else callback()
+}
+
+const validateIdCard = (rule: any, value: any, callback: any) => {
+  if (!isIdCard(value)) callback(new Error('请输入有效的身份证号'))
+  else callback()
+}
+
+const validateNumber = (rule: any, value: any, callback: any) => {
+  if (!isNumber(value)) callback(new Error('请输入有效的数字'))
+  else callback()
+}
+
+const validateEnglish = (rule: any, value: any, callback: any) => {
+  if (!isEnglish(value)) callback(new Error('请输入有效的英文字符'))
+  else callback()
+}
+
+const validateChinese = (rule: any, value: any, callback: any) => {
+  if (!isChinese(value)) callback(new Error('请输入有效的中文字符'))
+  else callback()
+}
+
+const validateUrl = (rule: any, value: any, callback: any) => {
+  if (!isUrl(value)) callback(new Error('请输入有效的URL'))
+  else callback()
+}
+
+const rules = reactive<any>({
+  email: [
+    { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+    { validator: validateEmail, trigger: 'blur' },
+  ],
+  phone: [
+    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    { validator: validatePhone, trigger: 'blur' },
+  ],
+  idCard: [
+    { required: true, message: '请输入身份证号码', trigger: 'blur' },
+    { validator: validateIdCard, trigger: 'blur' },
+  ],
+  number: [
+    { required: true, message: '请输入数字', trigger: 'blur' },
+    { validator: validateNumber, trigger: 'blur' },
+  ],
+  english: [
+    { required: true, message: '请输入英文字符', trigger: 'blur' },
+    { validator: validateEnglish, trigger: 'blur' },
+  ],
+  chinese: [
+    { required: true, message: '请输入中文字符', trigger: 'blur' },
+    { validator: validateChinese, trigger: 'blur' },
+  ],
+  url: [
+    { required: true, message: '请输入URL', trigger: 'blur' },
+    { validator: validateUrl, trigger: 'blur' },
+  ],
+})
+
+const submitForm = () => {
+  formRef.value.validate((valid: boolean) => {
+    if (valid) {
+      $baseMessage('表单校验通过', 'success', 'hey')
+    } else {
+      $baseMessage(`表单校验失败，校验失败的字段如下`, 'error', 'hey')
+    }
   })
+}
 
-  import {
-    isChinese,
-    isEmail,
-    isEnglish,
-    isIdCard,
-    isNumber,
-    isPhone,
-    isUrl,
-  } from '/@/utils/validate'
-
-  const $baseMessage = inject<any>('$baseMessage')
-  const formRef: Ref<any> = ref(null)
-  const form = reactive<any>({
-    email: '',
-    phone: '',
-    idCard: '',
-    number: '',
-    english: '',
-    chinese: '',
-    url: '',
-  })
-
-  const validateEmail = (rule: any, value: any, callback: any) => {
-    if (!isEmail(value)) callback(new Error('请输入有效的邮箱地址'))
-    else callback()
-  }
-
-  const validatePhone = (rule: any, value: any, callback: any) => {
-    if (!isPhone(value)) callback(new Error('请输入有效的手机号'))
-    else callback()
-  }
-
-  const validateIdCard = (rule: any, value: any, callback: any) => {
-    if (!isIdCard(value)) callback(new Error('请输入有效的身份证号'))
-    else callback()
-  }
-
-  const validateNumber = (rule: any, value: any, callback: any) => {
-    if (!isNumber(value)) callback(new Error('请输入有效的数字'))
-    else callback()
-  }
-
-  const validateEnglish = (rule: any, value: any, callback: any) => {
-    if (!isEnglish(value)) callback(new Error('请输入有效的英文字符'))
-    else callback()
-  }
-
-  const validateChinese = (rule: any, value: any, callback: any) => {
-    if (!isChinese(value)) callback(new Error('请输入有效的中文字符'))
-    else callback()
-  }
-
-  const validateUrl = (rule: any, value: any, callback: any) => {
-    if (!isUrl(value)) callback(new Error('请输入有效的URL'))
-    else callback()
-  }
-
-  const rules = reactive<any>({
-    email: [
-      { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-      { validator: validateEmail, trigger: 'blur' },
-    ],
-    phone: [
-      { required: true, message: '请输入手机号码', trigger: 'blur' },
-      { validator: validatePhone, trigger: 'blur' },
-    ],
-    idCard: [
-      { required: true, message: '请输入身份证号码', trigger: 'blur' },
-      { validator: validateIdCard, trigger: 'blur' },
-    ],
-    number: [
-      { required: true, message: '请输入数字', trigger: 'blur' },
-      { validator: validateNumber, trigger: 'blur' },
-    ],
-    english: [
-      { required: true, message: '请输入英文字符', trigger: 'blur' },
-      { validator: validateEnglish, trigger: 'blur' },
-    ],
-    chinese: [
-      { required: true, message: '请输入中文字符', trigger: 'blur' },
-      { validator: validateChinese, trigger: 'blur' },
-    ],
-    url: [
-      { required: true, message: '请输入URL', trigger: 'blur' },
-      { validator: validateUrl, trigger: 'blur' },
-    ],
-  })
-
-  const submitForm = () => {
-    formRef.value.validate((valid: boolean) => {
-      if (valid) {
-        $baseMessage('表单校验通过', 'success', 'hey')
-      } else {
-        $baseMessage(`表单校验失败，校验失败的字段如下`, 'error', 'hey')
-      }
-    })
-  }
-
-  const resetForm = () => {
-    formRef.value.resetFields()
-  }
+const resetForm = () => {
+  formRef.value.resetFields()
+}
 </script>

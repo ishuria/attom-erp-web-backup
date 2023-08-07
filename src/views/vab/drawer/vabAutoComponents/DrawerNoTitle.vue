@@ -7,5 +7,5 @@
 </template>
 
 <script lang="ts" setup>
-  const drawer = ref<boolean>(false)
+const drawer = ref<boolean>(false)
 </script>

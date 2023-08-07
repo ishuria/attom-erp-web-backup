@@ -10,13 +10,7 @@
       <template #header>
         <span>日期和时间范围</span>
       </template>
-      <el-date-picker
-        v-model="value2"
-        end-placeholder="结束日期"
-        range-separator="至"
-        start-placeholder="开始日期"
-        type="datetimerange"
-      />
+      <el-date-picker v-model="value2" end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="datetimerange" />
     </vab-card>
     <vab-card>
       <template #header>
@@ -34,10 +28,10 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'DateTimePicker',
-  })
-  const value1 = ref<string>('')
-  const value2 = ref<any>([new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)])
-  const value3 = ref<string>('')
+defineOptions({
+  name: 'DateTimePicker',
+})
+const value1 = ref<string>('')
+const value2 = ref<any>([new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)])
+const value3 = ref<string>('')
 </script>

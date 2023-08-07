@@ -3,10 +3,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image
-            class="data-screen-bottom-icon"
-            :src="getImageUrl('assets/data_screen_images/bottom_01.png')"
-          />
+          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_01.png')" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -19,10 +16,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image
-            class="data-screen-bottom-icon"
-            :src="getImageUrl('assets/data_screen_images/bottom_02.png')"
-          />
+          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_02.png')" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -35,10 +29,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image
-            class="data-screen-bottom-icon"
-            :src="getImageUrl('assets/data_screen_images/bottom_03.png')"
-          />
+          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_03.png')" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -51,10 +42,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image
-            class="data-screen-bottom-icon"
-            :src="getImageUrl('assets/data_screen_images/bottom_04.png')"
-          />
+          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_04.png')" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -68,69 +56,69 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
-  import { getImageUrl } from '/@/utils/imageUrl'
+import { random } from 'lodash-es'
+import { getImageUrl } from '/@/utils/imageUrl'
 
-  defineOptions({
-    name: 'DataScreenBottom',
-  })
+defineOptions({
+  name: 'DataScreenBottom',
+})
 
-  const countConfig1 = reactive({
-    startValue: 0,
-    endValue: random(1000, 2000),
-  })
+const countConfig1 = reactive({
+  startValue: 0,
+  endValue: random(1000, 2000),
+})
 
-  const countConfig2 = reactive({
-    startValue: 0,
-    endValue: random(1000, 2000),
-  })
+const countConfig2 = reactive({
+  startValue: 0,
+  endValue: random(1000, 2000),
+})
 
-  const countConfig3 = reactive({
-    startValue: 0,
-    endValue: random(1000, 2000),
-  })
+const countConfig3 = reactive({
+  startValue: 0,
+  endValue: random(1000, 2000),
+})
 
-  const countConfig4 = reactive({
-    startValue: 0,
-    endValue: random(1000, 2000),
-  })
+const countConfig4 = reactive({
+  startValue: 0,
+  endValue: random(1000, 2000),
+})
 
-  setInterval(() => {
-    countConfig1.endValue = countConfig1.endValue + random(0, 100)
-    countConfig2.endValue = countConfig2.endValue + random(0, 100)
-    countConfig3.endValue = countConfig3.endValue + random(0, 100)
-    countConfig4.endValue = countConfig4.endValue + random(0, 100)
-  }, 1000 * 5)
+setInterval(() => {
+  countConfig1.endValue = countConfig1.endValue + random(0, 100)
+  countConfig2.endValue = countConfig2.endValue + random(0, 100)
+  countConfig3.endValue = countConfig3.endValue + random(0, 100)
+  countConfig4.endValue = countConfig4.endValue + random(0, 100)
+}, 1000 * 5)
 </script>
 
 <style lang="scss" scoped>
-  .data-screen-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+.data-screen-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 
-    &-icon {
-      display: block;
-      width: 70px;
-      height: 70px;
-      padding: 20px;
-      margin: 8px auto 0 auto;
-      background: #101f58;
-      border-radius: 50%;
-      animation: twink 3s linear infinite;
-    }
+  &-icon {
+    display: block;
+    width: 70px;
+    height: 70px;
+    padding: 20px;
+    margin: 8px auto 0 auto;
+    background: #101f58;
+    border-radius: 50%;
+    animation: twink 3s linear infinite;
+  }
 
-    &-text {
-      margin-top: 10px;
-      font-size: 30px;
-      color: #64c5d9;
-      text-align: left;
+  &-text {
+    margin-top: 10px;
+    font-size: 30px;
+    color: #64c5d9;
+    text-align: left;
 
-      p {
-        font-size: 14px;
-        color: #fff;
-      }
+    p {
+      font-size: 14px;
+      color: #fff;
     }
   }
+}
 </style>

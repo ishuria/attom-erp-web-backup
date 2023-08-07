@@ -47,9 +47,9 @@
 </template>
 
 <script lang="ts" setup>
-  import { Edit } from '@element-plus/icons-vue'
+import { Edit } from '@element-plus/icons-vue'
 
-  defineOptions({
-    name: 'Link',
-  })
+defineOptions({
+  name: 'Link',
+})
 </script>

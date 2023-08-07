@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts" setup>
-  import type { UploadInstance } from 'element-plus'
+import type { UploadInstance } from 'element-plus'
 
-  const uploadRef = ref<UploadInstance>()
+const uploadRef = ref<UploadInstance>()
 
-  const submitUpload = () => {
-    uploadRef.value?.submit()
-  }
+const submitUpload = () => {
+  uploadRef.value?.submit()
+}
 </script>

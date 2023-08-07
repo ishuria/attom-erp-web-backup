@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'InfiniteScroll',
-  })
+defineOptions({
+  name: 'InfiniteScroll',
+})
 </script>

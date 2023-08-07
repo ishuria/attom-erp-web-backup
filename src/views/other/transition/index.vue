@@ -31,33 +31,33 @@
 </template>
 
 <script lang="ts" setup>
-  const show = ref<boolean>(true)
-  const checked = ref<boolean>(false)
-  let timer: any
+const show = ref<boolean>(true)
+const checked = ref<boolean>(false)
+let timer: any
 
-  const handleChange = (value: any) => {
-    if (value)
-      timer = setInterval(() => {
-        show.value = !show.value
-      }, 1500)
-    else clearInterval(timer)
-  }
+const handleChange = (value: any) => {
+  if (value)
+    timer = setInterval(() => {
+      show.value = !show.value
+    }, 1500)
+  else clearInterval(timer)
+}
 
-  onDeactivated(() => {
-    clearInterval(timer)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>
 
 <style>
-  .transition-box {
-    width: 200px;
-    height: 100px;
-    padding: 40px 20px;
-    margin-right: 20px;
-    margin-bottom: 10px;
-    color: var(--el-color-white);
-    text-align: center;
-    background-color: var(--el-color-primary);
-    border-radius: var(--el-border-radius-base);
-  }
+.transition-box {
+  width: 200px;
+  height: 100px;
+  padding: 40px 20px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  color: var(--el-color-white);
+  text-align: center;
+  background-color: var(--el-color-primary);
+  border-radius: var(--el-border-radius-base);
+}
 </style>

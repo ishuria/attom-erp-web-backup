@@ -3,30 +3,30 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabFold',
-  })
+defineOptions({
+  name: 'VabFold',
+})
 
-  defineProps({
-    unfold: {
-      type: String,
-      default: 'menu-unfold-line',
-    },
-    fold: {
-      type: String,
-      default: 'menu-fold-line',
-    },
-  })
-  const settingsStore = useSettingsStore()
-  const { collapse } = storeToRefs(settingsStore)
-  const { toggleCollapse } = settingsStore
+defineProps({
+  unfold: {
+    type: String,
+    default: 'menu-unfold-line',
+  },
+  fold: {
+    type: String,
+    default: 'menu-fold-line',
+  },
+})
+const settingsStore = useSettingsStore()
+const { collapse } = storeToRefs(settingsStore)
+const { toggleCollapse } = settingsStore
 </script>
 
 <style lang="scss" scoped>
-  .fold-unfold {
-    color: var(--el-color-grey);
-    cursor: pointer;
-  }
+.fold-unfold {
+  color: var(--el-color-grey);
+  cursor: pointer;
+}
 </style>

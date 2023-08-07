@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Drawer',
-  })
+defineOptions({
+  name: 'Drawer',
+})
 </script>

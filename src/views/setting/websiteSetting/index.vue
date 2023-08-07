@@ -4,13 +4,7 @@
       <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
         <vab-card>
           <template #header>网站设置</template>
-          <el-form
-            ref="formRef"
-            label-width="100px"
-            :model="form"
-            :rules="formRules"
-            @submit="submitForm"
-          >
+          <el-form ref="formRef" label-width="100px" :model="form" :rules="formRules" @submit="submitForm">
             <el-form-item label="网站名称" prop="siteName">
               <el-input v-model="form.siteName" clearable />
             </el-form-item>
@@ -37,48 +31,48 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'WebsiteSetting',
+defineOptions({
+  name: 'WebsiteSetting',
+})
+
+interface formType {
+  siteName: string
+  siteUrl: string
+  metaKeywords: string
+  metaDesc: string
+  copyright: string
+}
+
+const $baseMessage = inject<any>('$baseMessage')
+
+const form = reactive<formType>({
+  siteName: 'Vue Shop Vite',
+  siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
+  metaKeywords: '',
+  metaDesc: '',
+  copyright: '',
+})
+const formRef = ref<any>(null)
+const formRules = reactive<any>({
+  siteName: [{ required: true, message: '请输入网站名称', trigger: 'blur' }],
+  siteUrl: [
+    { required: true, message: '请输入网址', trigger: 'blur' },
+    {
+      pattern: /^https?:\/\/.*/,
+      message: '请输入正确的网址',
+      trigger: 'blur',
+    },
+  ],
+  metaKeywords: [{ required: true, message: '请输入META关键词', trigger: 'blur' }],
+  metaDesc: [{ required: true, message: '请输入META描述', trigger: 'blur' }],
+  copyright: [{ required: true, message: '请输入版权信息', trigger: 'blur' }],
+})
+
+const submitForm = () => {
+  formRef.value.validate((valid: boolean) => {
+    if (valid) {
+      $baseMessage('表单提交成功', 'success', 'hey')
+    }
   })
-
-  interface formType {
-    siteName: string
-    siteUrl: string
-    metaKeywords: string
-    metaDesc: string
-    copyright: string
-  }
-
-  const $baseMessage = inject<any>('$baseMessage')
-
-  const form = reactive<formType>({
-    siteName: 'Vue Shop Vite',
-    siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
-    metaKeywords: '',
-    metaDesc: '',
-    copyright: '',
-  })
-  const formRef = ref<any>(null)
-  const formRules = reactive<any>({
-    siteName: [{ required: true, message: '请输入网站名称', trigger: 'blur' }],
-    siteUrl: [
-      { required: true, message: '请输入网址', trigger: 'blur' },
-      {
-        pattern: /^https?:\/\/.*/,
-        message: '请输入正确的网址',
-        trigger: 'blur',
-      },
-    ],
-    metaKeywords: [{ required: true, message: '请输入META关键词', trigger: 'blur' }],
-    metaDesc: [{ required: true, message: '请输入META描述', trigger: 'blur' }],
-    copyright: [{ required: true, message: '请输入版权信息', trigger: 'blur' }],
-  })
-
-  const submitForm = () => {
-    formRef.value.validate((valid: boolean) => {
-      if (valid) {
-        $baseMessage('表单提交成功', 'success', 'hey')
-      }
-    })
-  }
+}
 </script>

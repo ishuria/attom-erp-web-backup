@@ -10,87 +10,87 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { random } from 'lodash-es'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabChartTreemap',
-  })
+defineOptions({
+  name: 'VabChartTreemap',
+})
 
-  defineProps({
-    title: {
-      type: String,
-      default: '',
-    },
-  })
+defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+})
 
-  const settingsStore = useSettingsStore()
-  const { color } = storeToRefs(settingsStore)
-  let timer: any
+const settingsStore = useSettingsStore()
+const { color } = storeToRefs(settingsStore)
+let timer: any
 
-  const option = reactive<any>({
-    grid: {
-      top: 20,
-      right: 20,
-      bottom: 60,
-      left: 40,
-    },
-    tooltip: {
-      trigger: 'item',
-    },
-    series: {
-      type: 'treemap',
-      data: [
-        {
-          name: 'nodeA',
-          value: random(0, 10),
-          children: [
-            {
-              name: 'nodeAa',
-              value: random(0, 10),
-            },
-            {
-              name: 'nodeAb',
-              value: random(0, 10),
-            },
-          ],
-        },
-      ],
-    },
-  })
+const option = reactive<any>({
+  grid: {
+    top: 20,
+    right: 20,
+    bottom: 60,
+    left: 40,
+  },
+  tooltip: {
+    trigger: 'item',
+  },
+  series: {
+    type: 'treemap',
+    data: [
+      {
+        name: 'nodeA',
+        value: random(0, 10),
+        children: [
+          {
+            name: 'nodeAa',
+            value: random(0, 10),
+          },
+          {
+            name: 'nodeAb',
+            value: random(0, 10),
+          },
+        ],
+      },
+    ],
+  },
+})
 
-  watch(
-    color,
-    () => {
-      setTimeout(() => {
-        option.color = [color.value]
-      })
-    },
-    { immediate: true }
-  )
+watch(
+  color,
+  () => {
+    setTimeout(() => {
+      option.color = [color.value]
+    })
+  },
+  { immediate: true }
+)
 
-  onActivated(() => {
-    timer = setInterval(() => {
-      option.series.data = [
-        {
-          name: 'nodeA',
-          value: random(0, 10),
-          children: [
-            {
-              name: 'nodeAa',
-              value: random(0, 10),
-            },
-            {
-              name: 'nodeAb',
-              value: random(0, 10),
-            },
-          ],
-        },
-      ]
-    }, 3000)
-  })
+onActivated(() => {
+  timer = setInterval(() => {
+    option.series.data = [
+      {
+        name: 'nodeA',
+        value: random(0, 10),
+        children: [
+          {
+            name: 'nodeAa',
+            value: random(0, 10),
+          },
+          {
+            name: 'nodeAb',
+            value: random(0, 10),
+          },
+        ],
+      },
+    ]
+  }, 3000)
+})
 
-  onDeactivated(() => {
-    clearInterval(timer)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>

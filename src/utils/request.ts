@@ -48,14 +48,10 @@ const requestConf = (config: any) => {
   // 规范写法 不可随意自定义
   if (token) config.headers['Authorization'] = `Bearer ${token}`
 
-  if (
-    config.data &&
-    config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8'
-  )
+  if (config.data && config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8')
     config.data = stringify(config.data)
 
-  if (debounce.some((item: string) => config.url.includes(item)))
-    loadingInstance = gp.$baseLoading()
+  if (debounce.some((item: string) => config.url.includes(item))) loadingInstance = gp.$baseLoading()
   return config
 }
 
@@ -103,17 +99,7 @@ const tryRefreshToken = async (config: any) => {
  * @param statusText {any} HTTP status text
  * @returns {Promise<*|*>}
  */
-const handleData = async ({
-  config,
-  data,
-  status,
-  statusText,
-}: {
-  config: any
-  data: any
-  status: any
-  statusText: any
-}) => {
+const handleData = async ({ config, data, status, statusText }: { config: any; data: any; status: any; statusText: any }) => {
   const { resetAll } = useUserStore()
   if (loadingInstance) loadingInstance.close()
   // 若data.code存在，覆盖默认code
@@ -141,13 +127,7 @@ const handleData = async ({
   }
   // 异常处理
   // 若data.msg存在，覆盖默认提醒消息
-  const errMsg = `${
-    data && data[messageName]
-      ? data[messageName]
-      : CODE_MESSAGE[code]
-      ? CODE_MESSAGE[code]
-      : statusText
-  }`
+  const errMsg = `${data && data[messageName] ? data[messageName] : CODE_MESSAGE[code] ? CODE_MESSAGE[code] : statusText}`
   // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
   gp.$baseMessage(errMsg, 'error', 'hey')
   if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })

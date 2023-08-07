@@ -9,13 +9,7 @@
     </el-table>
   </el-drawer>
 
-  <el-drawer
-    ref="drawerRef"
-    v-model="dialog"
-    :before-close="handleClose"
-    direction="ltr"
-    title="我有一个嵌套的表单！"
-  >
+  <el-drawer ref="drawerRef" v-model="dialog" :before-close="handleClose" direction="ltr" title="我有一个嵌套的表单！">
     <div>
       <el-form :model="form">
         <el-form-item label="姓名" :label-width="formLabelWidth">
@@ -39,79 +33,79 @@
 </template>
 
 <script lang="ts" setup>
-  import { ElDrawer, ElMessageBox } from 'element-plus'
+import { ElDrawer, ElMessageBox } from 'element-plus'
 
-  const formLabelWidth = '80px'
-  let timer: any
+const formLabelWidth = '80px'
+let timer: any
 
-  const table = ref<boolean>(false)
-  const dialog = ref<boolean>(false)
-  const loading = ref<boolean>(false)
+const table = ref<boolean>(false)
+const dialog = ref<boolean>(false)
+const loading = ref<boolean>(false)
 
-  const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: false,
-    type: [],
-    resource: '',
-    desc: '',
+const form = reactive({
+  name: '',
+  region: '',
+  date1: '',
+  date2: '',
+  delivery: false,
+  type: [],
+  resource: '',
+  desc: '',
+})
+
+const gridData = [
+  {
+    date: '2016-05-02',
+    name: 'Peter Parker',
+    address: 'Queens, New York City',
+  },
+  {
+    date: '2016-05-04',
+    name: 'Peter Parker',
+    address: 'Queens, New York City',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Peter Parker',
+    address: 'Queens, New York City',
+  },
+  {
+    date: '2016-05-03',
+    name: 'Peter Parker',
+    address: 'Queens, New York City',
+  },
+]
+
+const drawerRef = ref<InstanceType<typeof ElDrawer>>()
+const onClick = () => {
+  drawerRef.value?.close()
+}
+
+const handleClose = (done: () => void) => {
+  if (loading.value) {
+    return
+  }
+  ElMessageBox.confirm('您确定要提交吗？', {
+    draggable: true,
   })
-
-  const gridData = [
-    {
-      date: '2016-05-02',
-      name: 'Peter Parker',
-      address: 'Queens, New York City',
-    },
-    {
-      date: '2016-05-04',
-      name: 'Peter Parker',
-      address: 'Queens, New York City',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Peter Parker',
-      address: 'Queens, New York City',
-    },
-    {
-      date: '2016-05-03',
-      name: 'Peter Parker',
-      address: 'Queens, New York City',
-    },
-  ]
-
-  const drawerRef = ref<InstanceType<typeof ElDrawer>>()
-  const onClick = () => {
-    drawerRef.value?.close()
-  }
-
-  const handleClose = (done: () => void) => {
-    if (loading.value) {
-      return
-    }
-    ElMessageBox.confirm('您确定要提交吗？', {
-      draggable: true,
+    .then(() => {
+      loading.value = true
+      timer = setTimeout(() => {
+        done()
+        // 动画关闭需要一定的时间
+        setTimeout(() => {
+          loading.value = false
+        }, 400)
+      }, 2000)
     })
-      .then(() => {
-        loading.value = true
-        timer = setTimeout(() => {
-          done()
-          // 动画关闭需要一定的时间
-          setTimeout(() => {
-            loading.value = false
-          }, 400)
-        }, 2000)
-      })
-      .catch(() => {
-        // catch error
-      })
-  }
+    .catch(() => {
+      // catch error
+    })
+}
 
-  const cancelForm = () => {
-    loading.value = false
-    dialog.value = false
-    clearTimeout(timer)
-  }
+const cancelForm = () => {
+  loading.value = false
+  dialog.value = false
+  clearTimeout(timer)
+}
 </script>

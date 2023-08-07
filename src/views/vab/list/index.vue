@@ -7,9 +7,7 @@
             <el-input v-model.trim="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
-              查询
-            </el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
@@ -54,126 +52,126 @@
 </template>
 
 <script lang="ts" setup>
-  import { Search } from '@element-plus/icons-vue'
-  import { getList } from '/@/api/table'
+import { Search } from '@element-plus/icons-vue'
+import { getList } from '/@/api/table'
 
-  defineOptions({
-    name: 'List',
-  })
+defineOptions({
+  name: 'List',
+})
 
-  const list = ref<any>([])
-  const total = ref<any>(0)
-  const queryForm = reactive<any>({
-    pageNo: 1,
-    pageSize: 20,
-    title: '',
-  })
-  const layout = ref<string>('total, sizes, prev, pager, next, jumper')
-  const listLoading = ref<boolean>(true)
-  const emptyShow = ref<boolean>(true)
+const list = ref<any>([])
+const total = ref<any>(0)
+const queryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 20,
+  title: '',
+})
+const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+const listLoading = ref<boolean>(true)
+const emptyShow = ref<boolean>(true)
 
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
-    if (data.total > 0) emptyShow.value = false
-    else emptyShow.value = true
-  }
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getList(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
+  if (data.total > 0) emptyShow.value = false
+  else emptyShow.value = true
+}
 
-  const handleSizeChange = (value: number) => {
-    queryForm.pageNo = 1
-    queryForm.pageSize = value
-    fetchData()
-  }
+const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = value
+  fetchData()
+}
 
-  const handleCurrentChange = (value: number) => {
-    queryForm.pageNo = value
-    fetchData()
-  }
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchData()
+}
 
-  const queryData = () => {
-    queryForm.pageNo = 1
-    fetchData()
-  }
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
 
-  onBeforeMount(() => {
-    fetchData()
-  })
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-  .list-container {
-    ul {
-      padding: 0;
-      margin: 0;
-      list-style: none;
-      outline: none;
+.list-container {
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    outline: none;
 
-      .list-item {
-        padding: var(--el-padding);
-        border-bottom: 1px solid var(--el-border-color);
+    .list-item {
+      padding: var(--el-padding);
+      border-bottom: 1px solid var(--el-border-color);
 
-        &-meta {
-          display: flex;
-          flex: 1 1;
-          align-items: flex-start;
+      &-meta {
+        display: flex;
+        flex: 1 1;
+        align-items: flex-start;
 
-          &-avatar {
-            margin-right: 16px;
-
-            :deep() {
-              .el-image {
-                width: 61px;
-                height: 61px;
-              }
-            }
-          }
-
-          &-content {
-            flex: 1 0;
-            width: 0;
-            color: rgba(0, 0, 0, 0.85);
-          }
-
-          &-title {
-            margin-top: 11px;
-            margin-bottom: 4px;
-            font-size: var(--el-font-size-default);
-            color: var(--el-color-black);
-          }
-
-          &-description {
-            font-size: var(--el-font-size-default);
-            color: var(--el-color-grey);
-          }
-
-          &-item {
-            display: inline-block;
-            height: 61px;
-            margin-left: 40px;
-            font-size: var(--el-font-size-default);
-            color: var(--el-color-grey);
-            vertical-align: middle;
-
-            > span {
-              line-height: 30px;
-            }
-
-            > p {
-              margin-top: 4px;
-              margin-bottom: 0;
-            }
-          }
+        &-avatar {
+          margin-right: 16px;
 
           :deep() {
-            .el-progress {
-              margin-top: 21px;
+            .el-image {
+              width: 61px;
+              height: 61px;
             }
+          }
+        }
+
+        &-content {
+          flex: 1 0;
+          width: 0;
+          color: rgba(0, 0, 0, 0.85);
+        }
+
+        &-title {
+          margin-top: 11px;
+          margin-bottom: 4px;
+          font-size: var(--el-font-size-default);
+          color: var(--el-color-black);
+        }
+
+        &-description {
+          font-size: var(--el-font-size-default);
+          color: var(--el-color-grey);
+        }
+
+        &-item {
+          display: inline-block;
+          height: 61px;
+          margin-left: 40px;
+          font-size: var(--el-font-size-default);
+          color: var(--el-color-grey);
+          vertical-align: middle;
+
+          > span {
+            line-height: 30px;
+          }
+
+          > p {
+            margin-top: 4px;
+            margin-bottom: 0;
+          }
+        }
+
+        :deep() {
+          .el-progress {
+            margin-top: 21px;
           }
         }
       }
     }
   }
+}
 </style>

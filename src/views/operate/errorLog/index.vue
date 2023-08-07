@@ -5,15 +5,15 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'ErrorLog',
-  })
+defineOptions({
+  name: 'ErrorLog',
+})
 </script>
 
 <style lang="scss" scoped>
-  :deep() {
-    .vab-data-empty {
-      min-height: calc(var(--el-keep-alive-height) - 105px) !important;
-    }
+:deep() {
+  .vab-data-empty {
+    min-height: calc(var(--el-container-height) - 105px) !important;
   }
+}
 </style>

@@ -21,18 +21,18 @@
 </template>
 
 <script lang="ts" setup>
-  import { translate } from '/@/i18n'
+import { translate } from '/@/i18n'
 
-  defineOptions({
-    name: 'VabSubMenu',
-  })
+defineOptions({
+  name: 'VabSubMenu',
+})
 
-  defineProps({
-    itemOrMenu: {
-      type: Object,
-      default() {
-        return null
-      },
+defineProps({
+  itemOrMenu: {
+    type: Object,
+    default() {
+      return null
     },
-  })
+  },
+})
 </script>

@@ -20,67 +20,67 @@
 </template>
 
 <script lang="ts" setup>
-  import { ElCard } from 'element-plus'
+import { ElCard } from 'element-plus'
 
-  defineOptions({
-    name: 'VabColorfulCard',
-  })
+defineOptions({
+  name: 'VabColorfulCard',
+})
 
-  defineProps({
-    ...ElCard.props,
-    shadow: {
-      type: String,
-      default: 'never',
-    },
-    colorFrom: {
-      type: String,
-      default: '',
-    },
-    colorTo: {
-      type: String,
-      default: '',
-    },
-    title: {
-      type: String,
-      default: '',
-    },
-    icon: {
-      type: String,
-      default: '',
-    },
-    style: {
-      type: Object,
-      default: () => {},
-    },
-  })
+defineProps({
+  ...ElCard.props,
+  shadow: {
+    type: String,
+    default: 'never',
+  },
+  colorFrom: {
+    type: String,
+    default: '',
+  },
+  colorTo: {
+    type: String,
+    default: '',
+  },
+  title: {
+    type: String,
+    default: '',
+  },
+  icon: {
+    type: String,
+    default: '',
+  },
+  style: {
+    type: Object,
+    default: () => {},
+  },
+})
 </script>
 
 <style lang="scss" scoped>
-  .vab-colorful-card {
-    position: relative;
-    min-height: 120px;
-    cursor: pointer;
+.vab-colorful-card {
+  position: relative;
+  min-height: 120px;
+  cursor: pointer;
 
-    * {
+  * {
+    color: var(--el-color-white);
+  }
+
+  :deep() {
+    .el-card__header {
       color: var(--el-color-white);
+      border-bottom: 0;
     }
 
-    :deep() {
-      .el-card__header {
-        color: var(--el-color-white);
-        border-bottom: 0;
-      }
-
-      .el-card__body {
-        padding-top: 0;
-      }
-    }
-
-    i {
-      position: absolute;
-      right: 20px;
-      font-size: 60px;
-      transform: rotate(15deg);
+    .el-card__body {
+      padding-top: 0;
     }
   }
+
+  i {
+    position: absolute;
+    right: 20px;
+    font-size: 60px;
+    transform: rotate(15deg);
+  }
+}
 </style>

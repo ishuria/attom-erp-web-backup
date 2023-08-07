@@ -1,12 +1,5 @@
 <template>
-  <el-dialog
-    v-model="dialogFormVisible"
-    append-to-body
-    draggable
-    :title="title"
-    width="500px"
-    @close="close"
-  >
+  <el-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="500px" @close="close">
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="标题" prop="title" show-overflow-tooltip>
         <el-input v-model.trim="form.title" clearable />
@@ -23,54 +16,54 @@
 </template>
 
 <script lang="ts" setup>
-  import { doEdit } from '/@/api/table'
+import { doEdit } from '/@/api/table'
 
-  defineOptions({
-    name: 'DefaultTableEdit',
-  })
+defineOptions({
+  name: 'DefaultTableEdit',
+})
 
-  const emit = defineEmits(['fetch-data'])
-  const $baseMessage = inject<any>('$baseMessage')
-  const formRef = ref<any>(null)
-  const title = ref<string>('')
-  const dialogFormVisible = ref<boolean>(false)
-  let form = reactive<any>({
-    title: '',
-    author: '',
-  })
-  const rules = reactive<any>({
-    title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
-    author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
-  })
+const emit = defineEmits(['fetch-data'])
+const $baseMessage = inject<any>('$baseMessage')
+const formRef = ref<any>(null)
+const title = ref<string>('')
+const dialogFormVisible = ref<boolean>(false)
+let form = reactive<any>({
+  title: '',
+  author: '',
+})
+const rules = reactive<any>({
+  title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
+  author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
+})
 
-  const showEdit = (row: any) => {
-    if (!row) {
-      title.value = '添加'
-      form = reactive<any>({})
-    } else {
-      title.value = '编辑'
-      form = reactive<any>({ ...row })
+const showEdit = (row: any) => {
+  if (!row) {
+    title.value = '添加'
+    form = reactive<any>({})
+  } else {
+    title.value = '编辑'
+    form = reactive<any>({ ...row })
+  }
+  dialogFormVisible.value = true
+}
+
+defineExpose({
+  showEdit,
+})
+
+const close = () => {
+  formRef.value.resetFields()
+  dialogFormVisible.value = false
+}
+
+const save = () => {
+  formRef.value.validate(async (valid: any) => {
+    if (valid) {
+      const { msg }: any = await doEdit(form)
+      $baseMessage(msg, 'success', 'hey')
+      emit('fetch-data')
+      close()
     }
-    dialogFormVisible.value = true
-  }
-
-  defineExpose({
-    showEdit,
   })
-
-  const close = () => {
-    formRef.value.resetFields()
-    dialogFormVisible.value = false
-  }
-
-  const save = () => {
-    formRef.value.validate(async (valid: any) => {
-      if (valid) {
-        const { msg }: any = await doEdit(form)
-        $baseMessage(msg, 'success', 'hey')
-        emit('fetch-data')
-        close()
-      }
-    })
-  }
+}
 </script>

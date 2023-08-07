@@ -31,51 +31,51 @@
 </template>
 
 <script lang="ts" setup>
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabLayoutColumn',
-  })
+defineOptions({
+  name: 'VabLayoutColumn',
+})
 
-  defineProps({
-    collapse: {
-      type: Boolean,
-      default() {
-        return false
-      },
+defineProps({
+  collapse: {
+    type: Boolean,
+    default() {
+      return false
     },
-    fixedHeader: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  fixedHeader: {
+    type: Boolean,
+    default() {
+      return true
     },
-    showTabs: {
-      type: Boolean,
-      default() {
-        return true
-      },
+  },
+  showTabs: {
+    type: Boolean,
+    default() {
+      return true
     },
-  })
+  },
+})
 
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
+const settingsStore = useSettingsStore()
+const { theme } = storeToRefs(settingsStore)
 </script>
 
 <style lang="scss" scoped>
-  .vab-layout-column {
-    .vab-main {
-      &.is-collapse-main {
-        &.vab-main-horizontal {
-          margin-left: calc(var(--el-left-menu-width-min) * 1.3);
+.vab-layout-column {
+  .vab-main {
+    &.is-collapse-main {
+      &.vab-main-horizontal {
+        margin-left: calc(var(--el-left-menu-width-min) * 1.3);
 
-          :deep() {
-            .fixed-header {
-              width: calc(100% - var(--el-left-menu-width-min) * 1.3);
-            }
+        :deep() {
+          .fixed-header {
+            width: calc(100% - var(--el-left-menu-width-min) * 1.3);
           }
         }
       }
     }
   }
+}
 </style>

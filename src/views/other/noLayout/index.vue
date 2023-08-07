@@ -11,26 +11,26 @@
 </template>
 
 <script lang="ts" setup>
-  import { VabRoute } from '/@/router/types'
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { handleActivePath } from '/@/utils/routes'
+import { VabRoute } from '/@/router/types'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 
-  defineOptions({
-    name: 'NoLayout',
-  })
+defineOptions({
+  name: 'NoLayout',
+})
 
-  const tabsStore = useTabsStore()
-  const route = useRoute()
-  const { delVisitedRoute } = tabsStore
+const tabsStore = useTabsStore()
+const route = useRoute()
+const { delVisitedRoute } = tabsStore
 
-  const goBack = async () => {
-    await delVisitedRoute(handleActivePath(route as VabRoute, true))
-    await history.back()
-  }
+const goBack = async () => {
+  await delVisitedRoute(handleActivePath(route as VabRoute, true))
+  await history.back()
+}
 </script>
 
 <style lang="scss" scoped>
-  .no-layout-container {
-    padding: var(--el-padding) !important;
-  }
+.no-layout-container {
+  padding: var(--el-padding) !important;
+}
 </style>

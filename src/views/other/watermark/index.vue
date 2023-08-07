@@ -7,45 +7,45 @@
 </template>
 
 <script lang="ts" setup>
-  import Watermark from '/@/utils/watermark'
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { ElMessageBox } from 'element-plus'
+import Watermark from '/@/utils/watermark'
+import { useSettingsStore } from '/@/store/modules/settings'
+import { ElMessageBox } from 'element-plus'
 
-  defineOptions({
-    value: 'Watermark',
+defineOptions({
+  value: 'Watermark',
+})
+const settingsStore = useSettingsStore()
+const { title } = storeToRefs(settingsStore)
+
+const setWatermark = (value: string) => {
+  //@ts-ignore
+  Watermark.set(value)
+}
+const setCustomWatermark = () => {
+  ElMessageBox.prompt('请输入自定义水印', '温馨提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    draggable: true,
   })
-  const settingsStore = useSettingsStore()
-  const { title } = storeToRefs(settingsStore)
-
-  const setWatermark = (value: string) => {
-    //@ts-ignore
-    Watermark.set(value)
-  }
-  const setCustomWatermark = () => {
-    ElMessageBox.prompt('请输入自定义水印', '温馨提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      draggable: true,
+    .then(({ value }) => {
+      if (value) setWatermark(value)
     })
-      .then(({ value }) => {
-        if (value) setWatermark(value)
-      })
-      .catch(() => {})
-  }
+    .catch(() => {})
+}
 </script>
 
 <style lang="scss" scoped>
-  .watermark-container {
-    :deep() {
-      .el-button {
-        margin-right: 10px;
-        margin-bottom: 10px;
-      }
+.watermark-container {
+  :deep() {
+    .el-button {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
 
-      .el-button + .el-button {
-        margin-right: 10px;
-        margin-left: 0;
-      }
+    .el-button + .el-button {
+      margin-right: 10px;
+      margin-left: 0;
     }
   }
+}
 </style>

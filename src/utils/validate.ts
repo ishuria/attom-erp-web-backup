@@ -113,8 +113,7 @@ export function isArray(arg: any) {
  * @returns {boolean}
  */
 export function isPort(value: string) {
-  const reg =
-    /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
+  const reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
   return reg.test(value)
 }
 
@@ -164,13 +163,7 @@ export function isChina(value: string) {
  * @returns {boolean}
  */
 export function isBlank(value: string) {
-  return (
-    value === null ||
-    false ||
-    value === '' ||
-    value.trim() === '' ||
-    value.toLocaleLowerCase().trim() === 'null'
-  )
+  return value === null || false || value === '' || value.trim() === '' || value.toLocaleLowerCase().trim() === 'null'
 }
 
 /**
@@ -179,8 +172,7 @@ export function isBlank(value: string) {
  * @returns {boolean}
  */
 export function isTel(value: string) {
-  const reg =
-    /^(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})([- ])?)?([0-9]{7,8})(([- 转])*([0-9]{1,4}))?$/
+  const reg = /^(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})([- ])?)?([0-9]{7,8})(([- 转])*([0-9]{1,4}))?$/
   return reg.test(value)
 }
 

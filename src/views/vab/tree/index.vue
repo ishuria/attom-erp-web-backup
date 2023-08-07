@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'Tree',
-  })
+defineOptions({
+  name: 'Tree',
+})
 </script>

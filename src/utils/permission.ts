@@ -16,10 +16,7 @@ export function hasPermission(target: any) {
     })
   const { role, permission, mode = 'oneOf' } = target
   return can([mode !== 'except'], {
-    permission: [
-      role ? can(getRole, { permission: role, mode }) : false,
-      permission ? can(getPermission, { permission, mode }) : false,
-    ],
+    permission: [role ? can(getRole, { permission: role, mode }) : false, permission ? can(getPermission, { permission, mode }) : false],
     mode,
   })
 }
@@ -33,10 +30,8 @@ export function hasPermission(target: any) {
 function can(roleOrPermission: (string | boolean)[], target: any) {
   let hasRole = false
   const { permission, mode } = target
-  if (mode === 'allOf')
-    hasRole = permission.every((item: string) => roleOrPermission.includes(item))
+  if (mode === 'allOf') hasRole = permission.every((item: string) => roleOrPermission.includes(item))
   if (mode === 'oneOf') hasRole = permission.some((item: string) => roleOrPermission.includes(item))
-  if (mode === 'except')
-    hasRole = !permission.every((item: string) => roleOrPermission.includes(item))
+  if (mode === 'except') hasRole = !permission.every((item: string) => roleOrPermission.includes(item))
   return hasRole
 }

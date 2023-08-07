@@ -31,10 +31,7 @@ export default {
     }
     if (import.meta.env.MODE !== 'development') {
       const _devDependencies: any = devDependencies
-      if (
-        !_devDependencies['vite-plu' + 'gin-vit' + 'ebar'] ||
-        !_devDependencies['vite-plu' + 'gin-unpl' + 'ugin']
-      )
+      if (!_devDependencies['vite-plu' + 'gin-vit' + 'ebar'] || !_devDependencies['vite-plu' + 'gin-unpl' + 'ugin'])
         document.body.innerHTML = ''
     }
   },

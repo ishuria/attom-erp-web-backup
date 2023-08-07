@@ -22,89 +22,89 @@
 </template>
 
 <script lang="ts" setup>
-  import { shuffle } from 'lodash-es'
-  import VabDraggable from 'vuedraggable'
-  import { getIconList } from '/@/api/icon'
+import { shuffle } from 'lodash-es'
+import VabDraggable from 'vuedraggable'
+import { getIconList } from '/@/api/icon'
 
-  defineOptions({
-    name: 'Drag',
+defineOptions({
+  name: 'Drag',
+})
+
+const iconList = ref<any>([])
+
+const randomHexColor = () => {
+  return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
+}
+
+const fetchData = async () => {
+  const { data } = await getIconList({
+    pageNo: 1,
+    pageSize: 89,
   })
-
-  const iconList = ref<any>([])
-
-  const randomHexColor = () => {
-    return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
-  }
-
-  const fetchData = async () => {
-    const { data } = await getIconList({
-      pageNo: 1,
-      pageSize: 89,
+  iconList.value = data.list
+    .filter((icon: any) => icon.includes('-line'))
+    .map((icon: any, index: any) => {
+      return { icon, color: randomHexColor(), order: index + 1 }
     })
-    iconList.value = data.list
-      .filter((icon: any) => icon.includes('-line'))
-      .map((icon: any, index: any) => {
-        return { icon, color: randomHexColor(), order: index + 1 }
-      })
+}
+
+const sort = () => {
+  iconList.value = iconList.value.sort((a: any, b: any) => a.order - b.order)
+}
+
+const dragOptions = computed(() => {
+  return {
+    animation: 600,
+    group: 'description',
+    disabled: false,
+    ghostClass: 'ghost',
   }
+})
 
-  const sort = () => {
-    iconList.value = iconList.value.sort((a: any, b: any) => a.order - b.order)
-  }
-
-  const dragOptions = computed(() => {
-    return {
-      animation: 600,
-      group: 'description',
-      disabled: false,
-      ghostClass: 'ghost',
-    }
-  })
-
-  onBeforeMount(() => {
-    fetchData()
-  })
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-  .card-drag-container {
-    :deep() {
-      .el-row {
-        display: block;
+.card-drag-container {
+  :deep() {
+    .el-row {
+      display: block;
 
-        > div {
-          position: relative;
-          display: flex;
-          flex-wrap: wrap;
-          width: 100%;
-        }
-      }
-    }
-
-    .icon-panel {
-      height: 120px;
-      text-align: center;
-      cursor: move;
-      user-select: none;
-
-      &:hover {
-        i {
-          transform: scale(1.15);
-        }
-      }
-
-      i {
-        display: block;
-        width: 50px;
-        height: 50px;
-        margin: auto;
-        font-size: 40px;
-        transition: all ease-in-out 0.3s;
-      }
-
-      p {
-        margin-top: 10px;
+      > div {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
       }
     }
   }
+
+  .icon-panel {
+    height: 120px;
+    text-align: center;
+    cursor: move;
+    user-select: none;
+
+    &:hover {
+      i {
+        transform: scale(1.15);
+      }
+    }
+
+    i {
+      display: block;
+      width: 50px;
+      height: 50px;
+      margin: auto;
+      font-size: 40px;
+      transition: all ease-in-out 0.3s;
+    }
+
+    p {
+      margin-top: 10px;
+    }
+  }
+}
 </style>

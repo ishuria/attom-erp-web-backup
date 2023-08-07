@@ -25,12 +25,8 @@ export default [
     method: 'get',
     response({ query }: any) {
       const { name, pageNo = 1, pageSize = 20 } = query
-      const mockList = List.filter(
-        (item: { name: string | any[] }) => !(name && item.name.indexOf(name) < 0)
-      )
-      const list = mockList.filter(
-        (item: any, index: number) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
-      )
+      const mockList = List.filter((item: { name: string | any[] }) => !(name && item.name.indexOf(name) < 0))
+      const list = mockList.filter((item: any, index: number) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
       return {
         code: 200,
         msg: 'success',

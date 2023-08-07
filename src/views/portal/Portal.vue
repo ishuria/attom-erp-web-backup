@@ -29,27 +29,14 @@
         <el-row :gutter="0">
           <el-col :span="6">
             <div class="left-tab">
-              <el-menu
-                active-text-color="var(--el-color-white)"
-                background-color="#39364d"
-                text-color="var(--el-color-white)"
-              >
-                <el-menu-item
-                  index="1"
-                  @click="openWindow('https://vue-admin-beautiful.com/admin-pro>')"
-                >
+              <el-menu active-text-color="var(--el-color-white)" background-color="#39364d" text-color="var(--el-color-white)">
+                <el-menu-item index="1" @click="openWindow('https://vue-admin-beautiful.com/admin-pro>')">
                   <template #title>Vue Admin Pro：企业级中后台前端框架</template>
                 </el-menu-item>
-                <el-menu-item
-                  index="2"
-                  @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')"
-                >
+                <el-menu-item index="2" @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')">
                   <template #title>Vue Admin Plus：企业级中后台前端框架</template>
                 </el-menu-item>
-                <el-menu-item
-                  index="3"
-                  @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')"
-                >
+                <el-menu-item index="3" @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')">
                   <template #title>Vue Shop Vite：全新一代前端模板</template>
                 </el-menu-item>
               </el-menu>
@@ -57,9 +44,7 @@
           </el-col>
           <el-col :span="18">
             <el-carousel arrow="always" height="420px" :interval="3000" @change="handleChange">
-              <el-carousel-item
-                @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')"
-              />
+              <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')" />
               <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')" />
               <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/admin-pro')" />
             </el-carousel>
@@ -147,298 +132,298 @@
 </template>
 
 <script lang="ts" setup>
-  import { getImageUrl } from '/@/utils/imageUrl'
+import { getImageUrl } from '/@/utils/imageUrl'
 
-  const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
+const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
 
-  const background = ref<string>('')
+const background = ref<string>('')
 
-  const handleChange = (value: any) => {
-    const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
-    background.value = `url('${img}')`
-  }
+const handleChange = (value: any) => {
+  const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
+  background.value = `url('${img}')`
+}
 
-  const openWindow = (url: string) => {
-    window.open(url)
-  }
+const openWindow = (url: string) => {
+  window.open(url)
+}
 
-  const date = ref<any>(new Date())
-  const tableData = [
-    {
-      date: '2016-05-03',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-02',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-04',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-      date: '2016-05-01',
-      name: 'Tom',
-      address: 'No. 189, Grove St, Los Angeles',
-    },
-  ]
+const date = ref<any>(new Date())
+const tableData = [
+  {
+    date: '2016-05-03',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-02',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-04',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+]
 </script>
 
 <style lang="scss" scoped>
-  .portal-main {
-    margin-top: -15px;
+.portal-main {
+  margin-top: -15px;
 
-    &-mobile {
-      height: 100vh;
-      padding: var(--el-padding);
-      background: var(--el-color-white);
-    }
+  &-mobile {
+    height: 100vh;
+    padding: var(--el-padding);
+    background: var(--el-color-white);
+  }
 
-    header {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 70px;
-      margin: 0;
-      background: rgba(251, 251, 253, 0.8);
-      backdrop-filter: saturate(180%) blur(20px);
+  header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    margin: 0;
+    background: rgba(251, 251, 253, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
 
-      .index-nav {
-        min-width: 1152px;
-        max-width: 1366px;
-        padding: 0;
+    .index-nav {
+      min-width: 1152px;
+      max-width: 1366px;
+      padding: 0;
+      margin: auto;
+
+      .logo {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        float: left;
+        height: 70px;
+        font-size: 20px;
+        line-height: 70px;
+        a {
+          display: inline-block;
+          width: 40px;
+          height: 40px;
+          margin-right: 15px;
+          background: url('/@/assets/avatar.svg') center center no-repeat;
+          background-size: 100% 100%;
+        }
+        span {
+          margin-right: 40px;
+        }
+      }
+
+      .nav-item {
         margin: auto;
-
-        .logo {
-          display: flex;
-          flex: 1;
-          align-items: center;
-          justify-content: center;
+        li {
           float: left;
-          height: 70px;
-          font-size: 20px;
-          line-height: 70px;
+          list-style: none;
+
           a {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
-            background: url('/@/assets/avatar.svg') center center no-repeat;
-            background-size: 100% 100%;
-          }
-          span {
-            margin-right: 40px;
-          }
-        }
-
-        .nav-item {
-          margin: auto;
-          li {
-            float: left;
-            list-style: none;
-
-            a {
-              position: relative;
-              display: block;
-              height: 100%;
-              padding: 0 16px;
-              font-size: var(--el-font-size-big);
-              line-height: 71px;
-              color: #545c63;
-              text-align: center;
-              transition: background-color 0.3s;
-            }
-          }
-        }
-      }
-    }
-
-    .carousel-background {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      height: 180px;
-      background: url('/@/assets/portal_images/carousel_1.jpg');
-      filter: blur(100px);
-      opacity: 0.5;
-    }
-
-    main {
-      width: 1152px;
-      padding: 10px 0 0 0;
-      margin-right: auto;
-      margin-left: auto;
-      border-top: 1px solid #f3f5f6;
-
-      .left-tab {
-        width: 100%;
-        height: 420px;
-        padding-top: 15px;
-        background: #39364d;
-        border-top-left-radius: 15px;
-
-        :deep() {
-          .el-menu-item.is-active {
-            background-color: rgba(255, 255, 255, 0.1);
-          }
-        }
-      }
-
-      .el-carousel--horizontal {
-        border-top-right-radius: 15px;
-      }
-
-      .el-carousel__item:nth-of-type(1) {
-        background: url('/@/assets/portal_images/carousel_1.jpg');
-        background-size: cover;
-      }
-
-      .el-carousel__item:nth-of-type(2) {
-        background: url('/@/assets/portal_images/carousel_2.jpg');
-        background-size: cover;
-      }
-
-      .el-carousel__item:nth-of-type(3) {
-        background: url('/@/assets/portal_images/carousel_3.jpg');
-        background-size: cover;
-      }
-
-      .description-box {
-        width: 100%;
-        height: 120px;
-        padding: 10px 20px 20px 20px;
-        border: 1px solid #dedede;
-        border-bottom-right-radius: 15px;
-        border-bottom-left-radius: 15px;
-        box-shadow: 0 5px 20px 0 rgb(0 0 0 / 30%);
-
-        :deep() {
-          .el-divider--vertical {
-            float: right;
-            height: 6.5em;
-            margin-top: -20px;
-          }
-        }
-
-        h1 {
-          margin-top: -10px;
-
-          .clip {
-            font-size: 32px;
-            line-height: 0;
-            background: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-          }
-        }
-
-        .text {
-          margin-top: -10px;
-          font-size: 24px;
-          font-weight: bold;
-        }
-
-        .show-box {
-          padding-top: 25px;
-          padding-left: 20px;
-
-          .system-class-icon {
-            float: left;
-            width: 50px;
-            height: 50px;
-            line-height: 50px;
-            color: var(--el-color-white);
-            text-align: center;
-            border-radius: 100%;
-
-            [class*='ri'] {
-              font-size: 24px;
-            }
-          }
-
-          .describe {
-            float: left;
-            margin-top: 15px;
-            margin-left: 20px;
-            font-family: PingFangSC-Medium, serif;
+            position: relative;
+            display: block;
+            height: 100%;
+            padding: 0 16px;
             font-size: var(--el-font-size-big);
-            line-height: 22px;
-            color: var(--el-color-grey);
-            letter-spacing: 0.76px;
-            white-space: nowrap;
-          }
-        }
-      }
-
-      .news-tit {
-        position: relative;
-        width: 100%;
-        height: 78px;
-        margin-top: -30px;
-        line-height: 36px;
-
-        h2 {
-          float: left;
-          font-size: 16px;
-          line-height: 36px;
-          color: #5184eb;
-          border-bottom: 2px solid #5184eb;
-        }
-      }
-
-      .news-img {
-        border-radius: 15px;
-      }
-
-      :deep() {
-        .el-calendar {
-          padding: 0;
-          margin-bottom: 20px;
-          border-radius: 15px;
-
-          &-table {
-            padding: 0;
-          }
-
-          &-day {
-            height: 42px;
-            line-height: 42px;
+            line-height: 71px;
+            color: #545c63;
             text-align: center;
+            transition: background-color 0.3s;
           }
-        }
-
-        .el-table {
-          border-radius: 15px;
         }
       }
     }
   }
+
+  .carousel-background {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 180px;
+    background: url('/@/assets/portal_images/carousel_1.jpg');
+    filter: blur(100px);
+    opacity: 0.5;
+  }
+
+  main {
+    width: 1152px;
+    padding: 10px 0 0 0;
+    margin-right: auto;
+    margin-left: auto;
+    border-top: 1px solid #f3f5f6;
+
+    .left-tab {
+      width: 100%;
+      height: 420px;
+      padding-top: 15px;
+      background: #39364d;
+      border-top-left-radius: 15px;
+
+      :deep() {
+        .el-menu-item.is-active {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+
+    .el-carousel--horizontal {
+      border-top-right-radius: 15px;
+    }
+
+    .el-carousel__item:nth-of-type(1) {
+      background: url('/@/assets/portal_images/carousel_1.jpg');
+      background-size: cover;
+    }
+
+    .el-carousel__item:nth-of-type(2) {
+      background: url('/@/assets/portal_images/carousel_2.jpg');
+      background-size: cover;
+    }
+
+    .el-carousel__item:nth-of-type(3) {
+      background: url('/@/assets/portal_images/carousel_3.jpg');
+      background-size: cover;
+    }
+
+    .description-box {
+      width: 100%;
+      height: 120px;
+      padding: 10px 20px 20px 20px;
+      border: 1px solid #dedede;
+      border-bottom-right-radius: 15px;
+      border-bottom-left-radius: 15px;
+      box-shadow: 0 5px 20px 0 rgb(0 0 0 / 30%);
+
+      :deep() {
+        .el-divider--vertical {
+          float: right;
+          height: 6.5em;
+          margin-top: -20px;
+        }
+      }
+
+      h1 {
+        margin-top: -10px;
+
+        .clip {
+          font-size: 32px;
+          line-height: 0;
+          background: linear-gradient(120deg, #bd34fe 30%, #41d1ff);
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+      }
+
+      .text {
+        margin-top: -10px;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .show-box {
+        padding-top: 25px;
+        padding-left: 20px;
+
+        .system-class-icon {
+          float: left;
+          width: 50px;
+          height: 50px;
+          line-height: 50px;
+          color: var(--el-color-white);
+          text-align: center;
+          border-radius: 100%;
+
+          [class*='ri'] {
+            font-size: 24px;
+          }
+        }
+
+        .describe {
+          float: left;
+          margin-top: 15px;
+          margin-left: 20px;
+          font-family: PingFangSC-Medium, serif;
+          font-size: var(--el-font-size-big);
+          line-height: 22px;
+          color: var(--el-color-grey);
+          letter-spacing: 0.76px;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .news-tit {
+      position: relative;
+      width: 100%;
+      height: 78px;
+      margin-top: -30px;
+      line-height: 36px;
+
+      h2 {
+        float: left;
+        font-size: 16px;
+        line-height: 36px;
+        color: #5184eb;
+        border-bottom: 2px solid #5184eb;
+      }
+    }
+
+    .news-img {
+      border-radius: 15px;
+    }
+
+    :deep() {
+      .el-calendar {
+        padding: 0;
+        margin-bottom: 20px;
+        border-radius: 15px;
+
+        &-table {
+          padding: 0;
+        }
+
+        &-day {
+          height: 42px;
+          line-height: 42px;
+          text-align: center;
+        }
+      }
+
+      .el-table {
+        border-radius: 15px;
+      }
+    }
+  }
+}
 </style>

@@ -26,24 +26,24 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'ECharts',
-  })
+defineOptions({
+  name: 'ECharts',
+})
 </script>
 
 <style lang="scss" scoped>
-  .echarts-container {
-    :deep() {
-      .el-form-item {
-        margin-bottom: 0;
-      }
+.echarts-container {
+  :deep() {
+    .el-form-item {
+      margin-bottom: 0;
+    }
 
-      .vab-card {
-        .echarts {
-          width: 100%;
-          height: 200px;
-        }
+    .vab-card {
+      .echarts {
+        width: 100%;
+        height: 200px;
       }
     }
   }
+}
 </style>

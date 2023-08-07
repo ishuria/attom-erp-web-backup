@@ -28,12 +28,9 @@ export default [
     response(request) {
       const authorization = request.headers.authorization || request.headers.Authorization
       let token = ''
-      if (authorization.includes('admin-token'))
-        token = `admin-token-${Random.guid()}-${new Date().getTime()}`
-      if (authorization.includes('editor-token'))
-        token = `editor-token-${Random.guid()}-${new Date().getTime()}`
-      if (authorization.includes('test-token'))
-        token = `test-token-${Random.guid()}-${new Date().getTime()}`
+      if (authorization.includes('admin-token')) token = `admin-token-${Random.guid()}-${new Date().getTime()}`
+      if (authorization.includes('editor-token')) token = `editor-token-${Random.guid()}-${new Date().getTime()}`
+      if (authorization.includes('test-token')) token = `test-token-${Random.guid()}-${new Date().getTime()}`
 
       return {
         code: 200,

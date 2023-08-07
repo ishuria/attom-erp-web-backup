@@ -17,12 +17,7 @@
         <el-tooltip :content="row.err.stack" effect="light">
           <el-button text type="primary">错误详情</el-button>
         </el-tooltip>
-        <a
-          v-for="(item, index) in searchList"
-          :key="index"
-          :href="item.url + row.err.message"
-          target="_blank"
-        >
+        <a v-for="(item, index) in searchList" :key="index" :href="item.url + row.err.message" target="_blank">
           <el-button text type="primary">
             {{ item.title }}
           </el-button>
@@ -36,25 +31,25 @@
 </template>
 
 <script lang="ts" setup>
-  import { useErrorLogStore } from '/@/store/modules/errorLog'
+import { useErrorLogStore } from '/@/store/modules/errorLog'
 
-  defineOptions({
-    name: 'VabErrorLogContent',
-  })
+defineOptions({
+  name: 'VabErrorLogContent',
+})
 
-  const errorLogStore = useErrorLogStore()
-  const { errorLogs } = storeToRefs(errorLogStore)
+const errorLogStore = useErrorLogStore()
+const { errorLogs } = storeToRefs(errorLogStore)
 
-  const searchList = ref<any>([
-    {
-      title: '百度搜索',
-      url: 'https://www.baidu.com/baidu?wd=',
-      icon: 'baidu-line',
-    },
-    {
-      title: '谷歌搜索',
-      url: 'https://www.google.com/search?q=',
-      icon: 'google-line',
-    },
-  ])
+const searchList = ref<any>([
+  {
+    title: '百度搜索',
+    url: 'https://www.baidu.com/baidu?wd=',
+    icon: 'baidu-line',
+  },
+  {
+    title: '谷歌搜索',
+    url: 'https://www.google.com/search?q=',
+    icon: 'google-line',
+  },
+])
 </script>

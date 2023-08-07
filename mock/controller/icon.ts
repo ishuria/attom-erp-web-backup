@@ -2508,9 +2508,7 @@ export default [
     response({ query }: any) {
       const { title, pageNo = 1, pageSize = 72 } = query
       const mockList = List.filter((item) => !(title && item.indexOf(title) < 0))
-      const list = mockList.filter(
-        (item, index) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
-      )
+      const list = mockList.filter((item, index) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
       return {
         code: 200,
         msg: 'success',

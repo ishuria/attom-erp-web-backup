@@ -1,12 +1,5 @@
 <template>
-  <el-dialog
-    v-model="dialogFormVisible"
-    append-to-body
-    draggable
-    :title="title"
-    width="830px"
-    @close="close"
-  >
+  <el-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="830px" @close="close">
     <el-form ref="formRef" inline label-width="140px" :model="form" :rules="rules">
       <el-form-item label="父级Id" prop="parentId">
         <el-input v-model="form.parentId" clearable />
@@ -67,101 +60,101 @@
 </template>
 
 <script lang="ts" setup>
-  import { doEdit } from '/@/api/menuManagement'
+import { doEdit } from '/@/api/menuManagement'
 
-  defineOptions({
-    name: 'MenuManagementEdit',
-  })
+defineOptions({
+  name: 'MenuManagementEdit',
+})
 
-  const emit = defineEmits(['fetch-data'])
-  const $baseMessage = inject<any>('$baseMessage')
-  const formRef = ref<any>(null)
-  let form = reactive<any>({
-    parentId: '',
-    name: '',
-    path: '',
-    component: '',
-    redirect: '',
-    meta: {
-      title: '',
-      icon: '',
-      badge: '',
-      dot: false,
-      hidden: false,
-      levelHidden: false,
-      isCustomSvg: false,
-      noClosable: false,
-      noKeepAlive: false,
-      tabHidden: false,
-    },
-  })
-  const rules = reactive<any>({
-    parentId: [{ required: true, trigger: 'blur', message: '请输入父级id' }],
-    name: [{ required: true, trigger: 'blur', message: '请输入name' }],
-    path: [{ required: true, trigger: 'blur', message: '请输入path' }],
-    component: [{ required: true, trigger: 'blur', message: '请输入component' }],
-    'meta.title': [{ required: true, trigger: 'blur', message: '请输入标题' }],
-  })
-  const title = ref<string>('')
-  const dialogFormVisible = ref<boolean>(false)
+const emit = defineEmits(['fetch-data'])
+const $baseMessage = inject<any>('$baseMessage')
+const formRef = ref<any>(null)
+let form = reactive<any>({
+  parentId: '',
+  name: '',
+  path: '',
+  component: '',
+  redirect: '',
+  meta: {
+    title: '',
+    icon: '',
+    badge: '',
+    dot: false,
+    hidden: false,
+    levelHidden: false,
+    isCustomSvg: false,
+    noClosable: false,
+    noKeepAlive: false,
+    tabHidden: false,
+  },
+})
+const rules = reactive<any>({
+  parentId: [{ required: true, trigger: 'blur', message: '请输入父级id' }],
+  name: [{ required: true, trigger: 'blur', message: '请输入name' }],
+  path: [{ required: true, trigger: 'blur', message: '请输入path' }],
+  component: [{ required: true, trigger: 'blur', message: '请输入component' }],
+  'meta.title': [{ required: true, trigger: 'blur', message: '请输入标题' }],
+})
+const title = ref<string>('')
+const dialogFormVisible = ref<boolean>(false)
 
-  const handleIcon = (item: string) => {
-    form.meta.icon = item
-  }
+const handleIcon = (item: string) => {
+  form.meta.icon = item
+}
 
-  const showEdit = (row: any) => {
-    if (!row) {
-      title.value = '添加'
-      form = reactive<any>({
-        parentId: '',
-        name: '',
-        path: '',
-        component: '',
-        redirect: '',
-        meta: {
-          title: '',
-          icon: '',
-          badge: '',
-          dot: false,
-          hidden: false,
-          levelHidden: false,
-          isCustomSvg: false,
-          noClosable: false,
-          noKeepAlive: false,
-          tabHidden: false,
-        },
-      })
-    } else {
-      title.value = '编辑'
-      form = reactive<any>({ ...row })
-    }
-    dialogFormVisible.value = true
-  }
-
-  defineExpose({
-    showEdit,
-  })
-
-  const close = () => {
-    formRef.value.resetFields()
-    dialogFormVisible.value = false
-    emit('fetch-data')
-  }
-
-  const save = () => {
-    formRef.value.validate(async (valid: any) => {
-      if (valid) {
-        const { msg }: any = await doEdit(form)
-        $baseMessage(msg, 'success', 'hey')
-        emit('fetch-data')
-        close()
-      }
+const showEdit = (row: any) => {
+  if (!row) {
+    title.value = '添加'
+    form = reactive<any>({
+      parentId: '',
+      name: '',
+      path: '',
+      component: '',
+      redirect: '',
+      meta: {
+        title: '',
+        icon: '',
+        badge: '',
+        dot: false,
+        hidden: false,
+        levelHidden: false,
+        isCustomSvg: false,
+        noClosable: false,
+        noKeepAlive: false,
+        tabHidden: false,
+      },
     })
+  } else {
+    title.value = '编辑'
+    form = reactive<any>({ ...row })
   }
+  dialogFormVisible.value = true
+}
+
+defineExpose({
+  showEdit,
+})
+
+const close = () => {
+  formRef.value.resetFields()
+  dialogFormVisible.value = false
+  emit('fetch-data')
+}
+
+const save = () => {
+  formRef.value.validate(async (valid: any) => {
+    if (valid) {
+      const { msg }: any = await doEdit(form)
+      $baseMessage(msg, 'success', 'hey')
+      emit('fetch-data')
+      close()
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>
-  .el-input {
-    width: 200px;
-  }
+.el-input {
+  width: 200px;
+}
 </style>

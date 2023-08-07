@@ -5,30 +5,30 @@
 </template>
 
 <script>
-  import VabJsonViewer from 'vue-json-viewer'
+import VabJsonViewer from 'vue-json-viewer'
 
-  export default defineComponent({
-    components: { VabJsonViewer },
-    props: {
-      graphData: {
-        type: Object,
-        default: () => {},
-      },
+export default defineComponent({
+  components: { VabJsonViewer },
+  props: {
+    graphData: {
+      type: Object,
+      default: () => {},
     },
-    data() {
-      return {
-        data: [],
-      }
-    },
-    created() {
-      this.data = JSON.parse(
-        JSON.stringify([
-          {
-            edges: this.graphData.edges,
-            nodes: this.graphData.nodes,
-          },
-        ])
-      )
-    },
-  })
+  },
+  data() {
+    return {
+      data: [],
+    }
+  },
+  created() {
+    this.data = JSON.parse(
+      JSON.stringify([
+        {
+          edges: this.graphData.edges,
+          nodes: this.graphData.nodes,
+        },
+      ])
+    )
+  },
+})
 </script>

@@ -24,35 +24,35 @@
 </template>
 
 <script lang="ts" setup>
-  import VabQrCode from '/@/plugins/VabQrCode'
-  import clip from '/@/utils/clipboard'
-  import { getImageUrl } from '/@/utils/imageUrl'
+import VabQrCode from '/@/plugins/VabQrCode'
+import clip from '/@/utils/clipboard'
+import { getImageUrl } from '/@/utils/imageUrl'
 
-  const logoUrl = getImageUrl('assets/avatar.svg')
+const logoUrl = getImageUrl('assets/avatar.svg')
 
-  defineOptions({
-    name: 'Share',
-  })
+defineOptions({
+  name: 'Share',
+})
 
-  const form = reactive<any>({
-    url: '',
-  })
+const form = reactive<any>({
+  url: '',
+})
 
-  const copy = () => {
-    clip(form.url)
-  }
+const copy = () => {
+  clip(form.url)
+}
 
-  onBeforeMount(() => {
-    form.url = 'https://vue-admin-beautiful.com/shop-vite'
-  })
+onBeforeMount(() => {
+  form.url = 'https://vue-admin-beautiful.com/shop-vite'
+})
 </script>
 
 <style lang="scss" scoped>
-  .share-container {
-    :deep() {
-      .el-input {
-        width: 320px;
-      }
+.share-container {
+  :deep() {
+    .el-input {
+      width: 320px;
     }
   }
+}
 </style>

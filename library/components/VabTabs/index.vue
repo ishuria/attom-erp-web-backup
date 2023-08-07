@@ -9,20 +9,11 @@
       @tab-click="handleTabClick"
       @tab-remove="handleTabRemove"
     >
-      <el-tab-pane
-        v-for="item in visitedRoutes"
-        :key="item.path"
-        :closable="!isNoCLosable(item)"
-        :name="item.path"
-      >
+      <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoCLosable(item)" :name="item.path">
         <template #label>
           <span class="vab-tabs-title" @contextmenu.prevent="openMenu">
             <template v-if="theme.showTabsIcon">
-              <vab-icon
-                v-if="item.meta && item.meta.icon"
-                :icon="item.meta.icon"
-                :is-custom-svg="item.meta.isCustomSvg"
-              />
+              <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
               <!--  如果没有图标那么取第二级的图标 -->
               <vab-icon v-else :icon="item.parentIcon" />
             </template>
@@ -75,24 +66,12 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <ul
-      v-if="visible"
-      class="contextmenu el-dropdown-menu"
-      :style="{ left: left + 'px', top: top + 'px' }"
-    >
-      <li
-        class="el-dropdown-menu__item"
-        :class="{ 'is-disabled': visitedRoutes.length === 1 }"
-        @click="closeOthersTabs"
-      >
+    <ul v-if="visible" class="contextmenu el-dropdown-menu" :style="{ left: left + 'px', top: top + 'px' }">
+      <li class="el-dropdown-menu__item" :class="{ 'is-disabled': visitedRoutes.length === 1 }" @click="closeOthersTabs">
         <vab-icon icon="close-line" />
         <span>{{ translate('关闭其他') }}</span>
       </li>
-      <li
-        class="el-dropdown-menu__item"
-        :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
-        @click="closeLeftTabs"
-      >
+      <li class="el-dropdown-menu__item" :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }" @click="closeLeftTabs">
         <vab-icon icon="arrow-left-line" />
         <span>{{ translate('关闭左侧') }}</span>
       </li>
@@ -115,452 +94,444 @@
 </template>
 
 <script lang="ts" setup>
-  import { RouteLocationNormalizedLoaded } from 'vue-router'
-  import { translate } from '/@/i18n'
-  import { VabRoute } from '/@/router/types'
-  import { useRoutesStore } from '/@/store/modules/routes'
-  import { useSettingsStore } from '/@/store/modules/settings'
-  import { useTabsStore } from '/@/store/modules/tabs'
-  import { handleActivePath, handleTabs } from '/@/utils/routes'
+import { RouteLocationNormalizedLoaded } from 'vue-router'
+import { translate } from '/@/i18n'
+import { VabRoute } from '/@/router/types'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useSettingsStore } from '/@/store/modules/settings'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath, handleTabs } from '/@/utils/routes'
 
-  defineOptions({
-    name: 'VabTabs',
+defineOptions({
+  name: 'VabTabs',
+})
+
+defineProps({
+  layout: {
+    type: String,
+    default: '',
+  },
+})
+
+const route = useRoute()
+const router = useRouter()
+const settingsStore = useSettingsStore()
+const { theme } = storeToRefs(settingsStore)
+const routesStore = useRoutesStore()
+const { getRoutes: routes } = storeToRefs(routesStore)
+const tabsStore = useTabsStore()
+const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabsStore)
+const { addVisitedRoute, delVisitedRoute, delOthersVisitedRoutes, delLeftVisitedRoutes, delRightVisitedRoutes, delAllVisitedRoutes } =
+  tabsStore
+const tabActive = ref<string>('')
+const active = ref<boolean>(false)
+const hoverRoute = ref<any>()
+const visible = ref<boolean>(false)
+const top = ref<any>(0)
+const left = ref<any>(0)
+
+const isActive = (path: any) => path === handleActivePath(route, true)
+const isNoCLosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
+const handleTabClick: any = (tab: any) => {
+  if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
+}
+const handleVisibleChange = (value: boolean) => {
+  active.value = value
+}
+const initNoCLosableTabs = (routes: any[]) => {
+  routes.forEach((_route: { meta: { noClosable: any }; children: any }) => {
+    if (_route.meta && _route.meta.noClosable) addTabs(_route)
+    if (_route.children) initNoCLosableTabs(_route.children)
   })
+}
+/**
+ * 添加标签页
+ * @param tag route
+ * @returns {Promise<void>}
+ */
+const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
+  const tab = handleTabs(tag)
+  if (tab) {
+    await addVisitedRoute(tab)
+    tabActive.value = tab.path
+  }
+}
+/**
+ * 根据原生路径删除标签中的标签
+ * @param rawPath 原生路径
+ * @returns {Promise<void>}
+ */
+const handleTabRemove: any = async (rawPath: string) => {
+  if (isActive(rawPath)) await toLastTab()
+  await delVisitedRoute(rawPath)
+}
+const handleCommand = (command: any) => {
+  switch (command) {
+    case 'closeOthersTabs':
+      closeOthersTabs()
+      break
+    case 'closeLeftTabs':
+      closeLeftTabs()
+      break
+    case 'closeRightTabs':
+      closeRightTabs()
+      break
+    case 'closeAllTabs':
+      closeAllTabs()
+      break
+  }
+}
+/**
+ * 删除其他标签页
+ * @returns {Promise<void>}
+ */
+const closeOthersTabs = async () => {
+  if (hoverRoute.value) {
+    await router.push(hoverRoute.value)
+    await delOthersVisitedRoutes(hoverRoute.value.path)
+  } else await delOthersVisitedRoutes(handleActivePath(route, true))
+  await closeMenu()
+}
+/**
+ * 删除左侧标签页
+ * @returns {Promise<void>}
+ */
+const closeLeftTabs = async () => {
+  if (hoverRoute.value) {
+    await router.push(hoverRoute.value)
+    await delLeftVisitedRoutes(hoverRoute.value.path)
+  } else await delLeftVisitedRoutes(handleActivePath(route, true))
+  await closeMenu()
+}
+/**
+ * 删除右侧标签页
+ * @returns {Promise<void>}
+ */
+const closeRightTabs = async () => {
+  if (hoverRoute.value) {
+    await router.push(hoverRoute.value)
+    await delRightVisitedRoutes(hoverRoute.value.path)
+  } else await delRightVisitedRoutes(handleActivePath(route, true))
+  await closeMenu()
+}
+/**
+ * 删除所有标签页
+ * @returns {Promise<void>}
+ */
+const closeAllTabs = async () => {
+  await delAllVisitedRoutes()
+  await toLastTab()
+  await closeMenu()
+}
+/**
+ * 跳转最后一个标签页
+ */
+const toLastTab = async () => {
+  const latestView = visitedRoutes.value.filter((item) => item.path !== handleActivePath(route, true)).slice(-1)[0]
+  if (latestView) await router.push(latestView)
+  else await router.push('/')
+}
 
-  defineProps({
-    layout: {
-      type: String,
-      default: '',
-    },
-  })
+const { x, y } = useMouse()
+const openMenu = () => {
+  left.value = x.value
+  top.value = y.value
+  visible.value = true
+}
+const closeMenu = () => {
+  visible.value = false
+  hoverRoute.value = null
+}
 
-  const route = useRoute()
-  const router = useRouter()
-  const settingsStore = useSettingsStore()
-  const { theme } = storeToRefs(settingsStore)
-  const routesStore = useRoutesStore()
-  const { getRoutes: routes } = storeToRefs(routesStore)
-  const tabsStore = useTabsStore()
-  const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabsStore)
-  const {
-    addVisitedRoute,
-    delVisitedRoute,
-    delOthersVisitedRoutes,
-    delLeftVisitedRoutes,
-    delRightVisitedRoutes,
-    delAllVisitedRoutes,
-  } = tabsStore
-  const tabActive = ref<string>('')
-  const active = ref<boolean>(false)
-  const hoverRoute = ref<any>()
-  const visible = ref<boolean>(false)
-  const top = ref<any>(0)
-  const left = ref<any>(0)
+initNoCLosableTabs(routes.value)
 
-  const isActive = (path: any) => path === handleActivePath(route, true)
-  const isNoCLosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
-  const handleTabClick: any = (tab: any) => {
-    if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
+watch(
+  () => route.fullPath,
+  () => {
+    addTabs(route)
+  },
+  {
+    immediate: true,
   }
-  const handleVisibleChange = (value: boolean) => {
-    active.value = value
-  }
-  const initNoCLosableTabs = (routes: any[]) => {
-    routes.forEach((_route: { meta: { noClosable: any }; children: any }) => {
-      if (_route.meta && _route.meta.noClosable) addTabs(_route)
-      if (_route.children) initNoCLosableTabs(_route.children)
-    })
-  }
-  /**
-   * 添加标签页
-   * @param tag route
-   * @returns {Promise<void>}
-   */
-  const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
-    const tab = handleTabs(tag)
-    if (tab) {
-      await addVisitedRoute(tab)
-      tabActive.value = tab.path
-    }
-  }
-  /**
-   * 根据原生路径删除标签中的标签
-   * @param rawPath 原生路径
-   * @returns {Promise<void>}
-   */
-  const handleTabRemove: any = async (rawPath: string) => {
-    if (isActive(rawPath)) await toLastTab()
-    await delVisitedRoute(rawPath)
-  }
-  const handleCommand = (command: any) => {
-    switch (command) {
-      case 'closeOthersTabs':
-        closeOthersTabs()
-        break
-      case 'closeLeftTabs':
-        closeLeftTabs()
-        break
-      case 'closeRightTabs':
-        closeRightTabs()
-        break
-      case 'closeAllTabs':
-        closeAllTabs()
-        break
-    }
-  }
-  /**
-   * 删除其他标签页
-   * @returns {Promise<void>}
-   */
-  const closeOthersTabs = async () => {
-    if (hoverRoute.value) {
-      await router.push(hoverRoute.value)
-      await delOthersVisitedRoutes(hoverRoute.value.path)
-    } else await delOthersVisitedRoutes(handleActivePath(route, true))
-    await closeMenu()
-  }
-  /**
-   * 删除左侧标签页
-   * @returns {Promise<void>}
-   */
-  const closeLeftTabs = async () => {
-    if (hoverRoute.value) {
-      await router.push(hoverRoute.value)
-      await delLeftVisitedRoutes(hoverRoute.value.path)
-    } else await delLeftVisitedRoutes(handleActivePath(route, true))
-    await closeMenu()
-  }
-  /**
-   * 删除右侧标签页
-   * @returns {Promise<void>}
-   */
-  const closeRightTabs = async () => {
-    if (hoverRoute.value) {
-      await router.push(hoverRoute.value)
-      await delRightVisitedRoutes(hoverRoute.value.path)
-    } else await delRightVisitedRoutes(handleActivePath(route, true))
-    await closeMenu()
-  }
-  /**
-   * 删除所有标签页
-   * @returns {Promise<void>}
-   */
-  const closeAllTabs = async () => {
-    await delAllVisitedRoutes()
-    await toLastTab()
-    await closeMenu()
-  }
-  /**
-   * 跳转最后一个标签页
-   */
-  const toLastTab = async () => {
-    const latestView = visitedRoutes.value
-      .filter((item) => item.path !== handleActivePath(route, true))
-      .slice(-1)[0]
-    if (latestView) await router.push(latestView)
-    else await router.push('/')
-  }
+)
 
-  const { x, y } = useMouse()
-  const openMenu = () => {
-    left.value = x.value
-    top.value = y.value
-    visible.value = true
-  }
-  const closeMenu = () => {
-    visible.value = false
-    hoverRoute.value = null
-  }
-
-  initNoCLosableTabs(routes.value)
-
-  watch(
-    () => route.fullPath,
-    () => {
-      addTabs(route)
-    },
-    {
-      immediate: true,
-    }
-  )
-
-  watchEffect(() => {
-    if (visible.value) document.body.addEventListener('click', closeMenu)
-    else document.body.removeEventListener('click', closeMenu)
-  })
+watchEffect(() => {
+  if (visible.value) document.body.addEventListener('click', closeMenu)
+  else document.body.removeEventListener('click', closeMenu)
+})
 </script>
 
 <style lang="scss">
-  .vab-tabs-more-dropdown {
-    width: 115px;
+.vab-tabs-more-dropdown {
+  width: 115px;
 
-    &[data-popper-placement='bottom-end'] {
-      .el-popper__arrow {
-        left: 95px !important;
-      }
+  &[data-popper-placement='bottom-end'] {
+    .el-popper__arrow {
+      left: 95px !important;
     }
   }
+}
 </style>
 
 <style lang="scss" scoped>
-  .vab-tabs {
-    position: relative;
-    box-sizing: border-box;
-    display: flex;
-    align-content: center;
-    align-items: center;
-    justify-content: space-between;
-    min-height: var(--el-tabs-height);
-    padding-right: var(--el-padding);
-    padding-left: var(--el-padding);
-    user-select: none;
-    background: var(--el-color-white);
+.vab-tabs {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--el-tabs-height);
+  padding-right: var(--el-padding);
+  padding-left: var(--el-padding);
+  user-select: none;
+  background: var(--el-color-white);
 
-    :deep() {
-      .fold-unfold {
-        margin-right: var(--el-margin);
-      }
-
-      .el-tabs {
-        &__nav-wrap::after {
-          background: none;
-        }
-
-        &__active-bar {
-          display: none;
-        }
-
-        &__nav-next,
-        &__nav-prev {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: var(--el-tag-item-height);
-        }
-      }
+  :deep() {
+    .fold-unfold {
+      margin-right: var(--el-margin);
     }
 
-    &-content {
-      width: calc(100% - 20px);
+    .el-tabs {
+      &__nav-wrap::after {
+        background: none;
+      }
 
-      &-card {
+      &__active-bar {
+        display: none;
+      }
+
+      &__nav-next,
+      &__nav-prev {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: var(--el-tag-item-height);
+      }
+    }
+  }
 
-        :deep() {
-          .el-tabs__header {
-            .el-tabs__item {
-              box-sizing: border-box;
-              height: var(--el-tag-item-height);
-              padding-right: var(--el-padding) !important;
-              padding-left: var(--el-padding) !important;
-              margin-right: 5px;
-              line-height: var(--el-tag-item-height);
-              border: 1px solid var(--el-border-color) !important;
-              border-radius: var(--el-border-radius-base) !important;
+  &-content {
+    width: calc(100% - 20px);
 
-              .is-icon-close {
-                width: 14px !important;
-              }
+    &-card {
+      height: var(--el-tag-item-height);
 
-              &.is-active {
-                color: var(--el-color-primary);
-                background: var(--el-color-primary-light-9);
-              }
+      :deep() {
+        .el-tabs__header {
+          .el-tabs__item {
+            box-sizing: border-box;
+            height: var(--el-tag-item-height);
+            padding-right: var(--el-padding) !important;
+            padding-left: var(--el-padding) !important;
+            margin-right: 5px;
+            line-height: var(--el-tag-item-height);
+            border: 1px solid var(--el-border-color) !important;
+            border-radius: var(--el-border-radius-base) !important;
+
+            .is-icon-close {
+              width: 14px !important;
+            }
+
+            &.is-active {
+              color: var(--el-color-primary);
+              background: var(--el-color-primary-light-9);
             }
           }
         }
       }
+    }
 
-      &-smart {
-        height: var(--el-tag-item-height);
+    &-smart {
+      height: var(--el-tag-item-height);
 
-        :deep() {
-          .el-tabs__header {
-            .el-tabs__item {
-              height: var(--el-tag-item-height);
-              padding-right: var(--el-padding) !important;
-              padding-left: var(--el-padding) !important;
-              margin-right: 5px;
-              line-height: var(--el-tag-item-height);
-              border: 0;
-              border-top-left-radius: var(--el-border-radius-base);
-              border-top-right-radius: var(--el-border-radius-base);
+      :deep() {
+        .el-tabs__header {
+          .el-tabs__item {
+            height: var(--el-tag-item-height);
+            padding-right: var(--el-padding) !important;
+            padding-left: var(--el-padding) !important;
+            margin-right: 5px;
+            line-height: var(--el-tag-item-height);
+            border: 0;
+            border-top-left-radius: var(--el-border-radius-base);
+            border-top-right-radius: var(--el-border-radius-base);
+            outline: none;
+
+            .is-icon-close {
+              width: 14px !important;
+            }
+
+            &.is-active {
+              background: var(--el-color-primary-light-9);
               outline: none;
 
-              .is-icon-close {
-                width: 14px !important;
-              }
-
-              &.is-active {
-                background: var(--el-color-primary-light-9);
-                outline: none;
-
-                &:after {
-                  width: 100%;
-                  transition: var(--el-transition);
-                }
-              }
-
               &:after {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 0;
-                height: 2px;
-                content: '';
-                background-color: var(--el-color-primary);
+                width: 100%;
                 transition: var(--el-transition);
               }
+            }
 
-              &:hover {
-                background: var(--el-color-primary-light-9);
+            &:after {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 0;
+              height: 2px;
+              content: '';
+              background-color: var(--el-color-primary);
+              transition: var(--el-transition);
+            }
 
-                &:after {
-                  width: 100%;
-                  transition: var(--el-transition);
-                }
+            &:hover {
+              background: var(--el-color-primary-light-9);
+
+              &:after {
+                width: 100%;
+                transition: var(--el-transition);
               }
             }
           }
         }
       }
+    }
 
-      &-smooth {
-        height: var(--el-tag-item-height);
+    &-smooth {
+      height: var(--el-tag-item-height);
 
-        :deep() {
-          .el-tabs__nav {
-            margin-top: 3.5px;
-          }
+      :deep() {
+        .el-tabs__nav {
+          margin-top: 3.5px;
+        }
 
-          .el-tabs__header {
-            .el-tabs__item {
-              display: flex;
-              height: calc(var(--el-tag-item-height) + 4px);
-              padding-right: var(--el-margin) !important;
-              padding-left: var(--el-margin) !important;
-              margin-right: -18px;
-              text-align: center;
+        .el-tabs__header {
+          .el-tabs__item {
+            display: flex;
+            height: calc(var(--el-tag-item-height) + 4px);
+            padding-right: var(--el-margin) !important;
+            padding-left: var(--el-margin) !important;
+            margin-right: -18px;
+            text-align: center;
+
+            &:hover {
+              z-index: 999;
+              color: var(--el-color-black);
+              background: var(--el-border-color);
+              mask: url('/@/assets/tabs_images/vab-tab.png');
+              mask-size: 100% 100%;
+            }
+
+            .vab-tabs-title {
+              flex: 1;
+              margin: 0 calc(var(--el-margin) / 2) 0 calc(var(--el-margin) / 2);
+            }
+
+            .is-icon-close {
+              width: 14px !important;
+            }
+
+            &.is-active {
+              color: var(--el-color-primary);
+              background: var(--el-color-primary-light-9);
+              mask: url('/@/assets/tabs_images/vab-tab.png');
+              mask-size: 100% 100%;
 
               &:hover {
-                z-index: 999;
-                color: var(--el-color-black);
-                background: var(--el-border-color);
-                mask: url('/@/assets/tabs_images/vab-tab.png');
-                mask-size: 100% 100%;
-              }
-
-              .vab-tabs-title {
-                flex: 1;
-                margin: 0 calc(var(--el-margin) / 2) 0 calc(var(--el-margin) / 2);
-              }
-
-              .is-icon-close {
-                width: 14px !important;
-              }
-
-              &.is-active {
                 color: var(--el-color-primary);
                 background: var(--el-color-primary-light-9);
                 mask: url('/@/assets/tabs_images/vab-tab.png');
                 mask-size: 100% 100%;
-
-                &:hover {
-                  color: var(--el-color-primary);
-                  background: var(--el-color-primary-light-9);
-                  mask: url('/@/assets/tabs_images/vab-tab.png');
-                  mask-size: 100% 100%;
-                }
               }
             }
-          }
-        }
-      }
-    }
-
-    .contextmenu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10;
-
-      .el-dropdown-menu__item:hover {
-        color: var(--el-color-primary);
-        background-color: var(--el-color-primary-light-9);
-      }
-    }
-
-    &-more {
-      position: relative;
-      box-sizing: border-box;
-      display: block;
-      text-align: left;
-
-      &-active,
-      &:hover {
-        &:after {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          height: 0;
-          content: '';
-        }
-
-        .vab-tabs-more-icon {
-          transform: rotate(90deg);
-
-          .box-t {
-            &:before {
-              transform: rotate(45deg);
-            }
-          }
-
-          .box:before,
-          .box:after {
-            background: var(--el-color-primary);
-          }
-        }
-      }
-
-      &-icon {
-        display: inline-block;
-        color: var(--el-color-grey);
-        cursor: pointer;
-        transition: transform 0.3s ease-out;
-
-        .box {
-          position: relative;
-          display: block;
-          width: 14px;
-          height: 8px;
-
-          &:before {
-            position: absolute;
-            top: 2px;
-            left: 0;
-            width: 6px;
-            height: 6px;
-            content: '';
-            background: var(--el-color-grey);
-          }
-
-          &:after {
-            position: absolute;
-            top: 2px;
-            left: 8px;
-            width: 6px;
-            height: 6px;
-            content: '';
-            background: var(--el-color-grey);
-          }
-        }
-
-        .box-t {
-          &:before {
-            transition: transform 0.3s ease-out 0.3s;
           }
         }
       }
     }
   }
+
+  .contextmenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+
+    .el-dropdown-menu__item:hover {
+      color: var(--el-color-primary);
+      background-color: var(--el-color-primary-light-9);
+    }
+  }
+
+  &-more {
+    position: relative;
+    box-sizing: border-box;
+    display: block;
+    text-align: left;
+
+    &-active,
+    &:hover {
+      &:after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 0;
+        content: '';
+      }
+
+      .vab-tabs-more-icon {
+        transform: rotate(90deg);
+
+        .box-t {
+          &:before {
+            transform: rotate(45deg);
+          }
+        }
+
+        .box:before,
+        .box:after {
+          background: var(--el-color-primary);
+        }
+      }
+    }
+
+    &-icon {
+      display: inline-block;
+      color: var(--el-color-grey);
+      cursor: pointer;
+      transition: transform 0.3s ease-out;
+
+      .box {
+        position: relative;
+        display: block;
+        width: 14px;
+        height: 8px;
+
+        &:before {
+          position: absolute;
+          top: 2px;
+          left: 0;
+          width: 6px;
+          height: 6px;
+          content: '';
+          background: var(--el-color-grey);
+        }
+
+        &:after {
+          position: absolute;
+          top: 2px;
+          left: 8px;
+          width: 6px;
+          height: 6px;
+          content: '';
+          background: var(--el-color-grey);
+        }
+      }
+
+      .box-t {
+        &:before {
+          transition: transform 0.3s ease-out 0.3s;
+        }
+      }
+    }
+  }
+}
 </style>

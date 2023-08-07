@@ -1,7 +1,7 @@
 import type { App } from 'vue'
+import { errorLog } from '/@/config'
 import pinia from '/@/store'
 import { useErrorLogStore } from '/@/store/modules/errorLog'
-import { errorLog } from '/@/config'
 import { isArray } from '/@/utils/validate'
 
 export const needErrorLog = () => {
@@ -10,8 +10,7 @@ export const needErrorLog = () => {
 }
 
 export const addErrorLog = (err: any) => {
-  // eslint-disable-next-line no-console
-  if (!err.isRequest) console.error('vue-admin-better错误拦截:', err)
+  if (!err.isRequest) console.error('vue-shop-vite 错误拦截:', err)
   const url = window.location.href
   const { addErrorLog } = useErrorLogStore(pinia)
   addErrorLog({ err, url })
@@ -19,8 +18,6 @@ export const addErrorLog = (err: any) => {
 
 export default {
   install: (app: App<Element>) => {
-    if (needErrorLog()) {
-      app.config.errorHandler = addErrorLog
-    }
+    if (needErrorLog()) app.config.errorHandler = addErrorLog
   },
 }

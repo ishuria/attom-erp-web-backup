@@ -20,7 +20,9 @@
   "liveServer.settings.donotShowInfoMsg": true,
   "explorer.confirmDelete": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.format.semicolons": "remove",
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.format.semicolons": "remove",
   "files.exclude": {
     "**/.idea": true
   },

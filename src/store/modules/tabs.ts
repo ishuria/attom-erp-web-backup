@@ -23,8 +23,7 @@ export const useTabsStore = defineStore('tabs', {
       else if (!target) this.visitedRoutes.push(Object.assign({}, route))
 
       //应对极特殊情况：没有配置noClosable的情况，默认使当前tab不可关闭
-      if (!this.visitedRoutes.find((route) => route.meta.noClosable))
-        this.visitedRoutes[0].meta.noClosable = true
+      if (!this.visitedRoutes.find((route) => route.meta.noClosable)) this.visitedRoutes[0].meta.noClosable = true
       this.handleCatchedRoutes()
     },
     /**
@@ -42,9 +41,7 @@ export const useTabsStore = defineStore('tabs', {
      * @returns
      */
     delOthersVisitedRoutes(path: string) {
-      this.visitedRoutes = this.visitedRoutes.filter(
-        (route) => route.meta.noClosable || route.path === path
-      )
+      this.visitedRoutes = this.visitedRoutes.filter((route) => route.meta.noClosable || route.path === path)
       this.handleCatchedRoutes()
     },
     /**
@@ -89,10 +86,8 @@ export const useTabsStore = defineStore('tabs', {
     changeTabsMeta(options: any) {
       const handleVisitedRoutes = (visitedRoutes: any[]) => {
         return visitedRoutes.map((route: any) => {
-          if (route.name === options.name || route.meta.title === options.title)
-            Object.assign(route.meta, options.meta)
-          if (route.children && route.children.length)
-            route.children = handleVisitedRoutes(route.children)
+          if (route.name === options.name || route.meta.title === options.title) Object.assign(route.meta, options.meta)
+          if (route.children && route.children.length) route.children = handleVisitedRoutes(route.children)
           return route
         })
       }
@@ -105,8 +100,7 @@ export const useTabsStore = defineStore('tabs', {
 
     handleCatchedRoutes() {
       const settingsStore = useSettingsStore()
-      if (settingsStore.isCatchedTabs)
-        localStorage.setItem('catchedRoutes', JSON.stringify(this.visitedRoutes))
+      if (settingsStore.isCatchedTabs) localStorage.setItem('catchedRoutes', JSON.stringify(this.visitedRoutes))
       else {
         this.catchedRoutes = []
         localStorage.removeItem('catchedRoutes')

@@ -10,76 +10,76 @@
 </template>
 
 <script lang="ts" setup>
-  import { random } from 'lodash-es'
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { random } from 'lodash-es'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabChartGauge',
-  })
+defineOptions({
+  name: 'VabChartGauge',
+})
 
-  defineProps({
-    title: {
-      type: String,
-      default: '',
+defineProps({
+  title: {
+    type: String,
+    default: '',
+  },
+})
+
+const settingsStore = useSettingsStore()
+const { color } = storeToRefs(settingsStore)
+let timer: any
+
+const option = reactive<any>({
+  grid: {
+    top: 20,
+    right: 20,
+    bottom: 20,
+    left: 20,
+  },
+  tooltip: {
+    formatter: '{a} <br/>{b} : {c}%',
+  },
+  series: {
+    name: 'Pressure',
+    type: 'gauge',
+    radius: '100%',
+    progress: {
+      show: true,
     },
-  })
-
-  const settingsStore = useSettingsStore()
-  const { color } = storeToRefs(settingsStore)
-  let timer: any
-
-  const option = reactive<any>({
-    grid: {
-      top: 20,
-      right: 20,
-      bottom: 20,
-      left: 20,
+    detail: {
+      formatter: '{value}',
+      valueAnimation: true,
+      fontSize: 14,
+      offsetCenter: [0, '70%'],
     },
-    tooltip: {
-      formatter: '{a} <br/>{b} : {c}%',
-    },
-    series: {
-      name: 'Pressure',
-      type: 'gauge',
-      radius: '100%',
-      progress: {
-        show: true,
+    data: [
+      {
+        value: random(0, 100),
+        name: 'SCORE',
       },
-      detail: {
-        formatter: '{value}',
-        valueAnimation: true,
-        fontSize: 14,
-        offsetCenter: [0, '70%'],
+    ],
+  },
+})
+
+watch(
+  color,
+  () => {
+    option.color = color.value
+  },
+  { immediate: true }
+)
+
+onActivated(() => {
+  timer = setInterval(() => {
+    option.series.data = [
+      {
+        value: random(0, 100),
+        name: 'SCORE',
       },
-      data: [
-        {
-          value: random(0, 100),
-          name: 'SCORE',
-        },
-      ],
-    },
-  })
+    ]
+  }, 3000)
+})
 
-  watch(
-    color,
-    () => {
-      option.color = color.value
-    },
-    { immediate: true }
-  )
-
-  onActivated(() => {
-    timer = setInterval(() => {
-      option.series.data = [
-        {
-          value: random(0, 100),
-          name: 'SCORE',
-        },
-      ]
-    }, 3000)
-  })
-
-  onDeactivated(() => {
-    clearInterval(timer)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>

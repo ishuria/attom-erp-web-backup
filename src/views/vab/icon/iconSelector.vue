@@ -14,12 +14,12 @@
 </template>
 
 <script lang="ts" setup>
-  defineOptions({
-    name: 'IconSelector',
-  })
-  const icon = ref<string>('24-hours-fill')
+defineOptions({
+  name: 'IconSelector',
+})
+const icon = ref<string>('24-hours-fill')
 
-  const handleIcon = (item: string) => {
-    icon.value = item
-  }
+const handleIcon = (item: string) => {
+  icon.value = item
+}
 </script>

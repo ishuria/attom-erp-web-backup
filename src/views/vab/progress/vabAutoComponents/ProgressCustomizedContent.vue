@@ -19,28 +19,28 @@
 </template>
 
 <script lang="ts" setup>
-  import { Check } from '@element-plus/icons-vue'
+import { Check } from '@element-plus/icons-vue'
 </script>
 
 <style scoped>
-  .percentage-value {
-    display: block;
-    margin-top: 10px;
-    font-size: 28px;
-  }
+.percentage-value {
+  display: block;
+  margin-top: 10px;
+  font-size: 28px;
+}
 
-  .percentage-label {
-    display: block;
-    margin-top: 10px;
-    font-size: var(--el-font-size-small);
-  }
+.percentage-label {
+  display: block;
+  margin-top: 10px;
+  font-size: var(--el-font-size-small);
+}
 
-  .demo-progress .el-progress--line {
-    width: 350px;
-    margin-bottom: 15px;
-  }
+.demo-progress .el-progress--line {
+  width: 350px;
+  margin-bottom: 15px;
+}
 
-  .demo-progress .el-progress--circle {
-    margin-right: 15px;
-  }
+.demo-progress .el-progress--circle {
+  margin-right: 15px;
+}
 </style>

@@ -9,24 +9,15 @@
             </el-form-item>
             <el-form-item label="语言">
               <el-select v-model="voice">
-                <el-option
-                  v-for="item in voices"
-                  :key="item.name"
-                  :label="item.name"
-                  :value="item"
-                />
+                <el-option v-for="item in voices" :key="item.name" :label="item.name" :value="item" />
               </el-select>
             </el-form-item>
             <el-form-item label="操作">
               <el-button :disabled="speech.isPlaying.value" type="primary" @click="play">
                 {{ speech.status.value === 'pause' ? '继续' : '播放' }}
               </el-button>
-              <el-button :disabled="!speech.isPlaying.value" type="warning" @click="pause">
-                暂停
-              </el-button>
-              <el-button :disabled="!speech.isPlaying.value" type="danger" @click="stop">
-                结束
-              </el-button>
+              <el-button :disabled="!speech.isPlaying.value" type="warning" @click="pause">暂停</el-button>
+              <el-button :disabled="!speech.isPlaying.value" type="danger" @click="stop">结束</el-button>
             </el-form-item>
           </el-form>
         </vab-card>
@@ -37,62 +28,62 @@
 </template>
 
 <script lang="ts" setup>
-  import { getList } from '/@/api/description'
+import { getList } from '/@/api/description'
 
-  defineOptions({
-    name: 'SpeechSynthesis',
-  })
+defineOptions({
+  name: 'SpeechSynthesis',
+})
 
-  const voice = ref<SpeechSynthesisVoice>(undefined as unknown as SpeechSynthesisVoice)
+const voice = ref<SpeechSynthesisVoice>(undefined as unknown as SpeechSynthesisVoice)
 
-  const text = ref<string>('')
-  const speech = useSpeechSynthesis(text, {
-    voice,
-  })
+const text = ref<string>('')
+const speech = useSpeechSynthesis(text, {
+  voice,
+})
 
-  const fetchData = async () => {
-    const { data } = await getList()
-    text.value = data.description
-      .replace(/\n/g, '')
-      .replace(/<[^>]*>/g, '')
-      .replace(/\s/g, '')
-      .replace(/([。；：])\s*/g, '$1\n')
+const fetchData = async () => {
+  const { data } = await getList()
+  text.value = data.description
+    .replace(/\n/g, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s/g, '')
+    .replace(/([。；：])\s*/g, '$1\n')
+}
+
+let synth: SpeechSynthesis
+const voices = ref<SpeechSynthesisVoice[]>([])
+
+onMounted(() => {
+  if (speech.isSupported.value) {
+    setTimeout(() => {
+      synth = window.speechSynthesis
+      voices.value = synth.getVoices()
+      voice.value = voices.value[0]
+    })
+    fetchData()
   }
+})
 
-  let synth: SpeechSynthesis
-  const voices = ref<SpeechSynthesisVoice[]>([])
+const play = () => {
+  if (speech.status.value === 'pause') window.speechSynthesis.resume()
+  else speech.speak()
+}
 
-  onMounted(() => {
-    if (speech.isSupported.value) {
-      setTimeout(() => {
-        synth = window.speechSynthesis
-        voices.value = synth.getVoices()
-        voice.value = voices.value[0]
-      })
-      fetchData()
-    }
-  })
+const pause = () => {
+  window.speechSynthesis.pause()
+}
 
-  const play = () => {
-    if (speech.status.value === 'pause') window.speechSynthesis.resume()
-    else speech.speak()
-  }
-
-  const pause = () => {
-    window.speechSynthesis.pause()
-  }
-
-  const stop = () => {
-    speech.stop()
-  }
+const stop = () => {
+  speech.stop()
+}
 </script>
 
 <style lang="scss" scoped>
-  .speech-synthesis-container {
-    :deep() {
-      .el-select {
-        width: 50%;
-      }
+.speech-synthesis-container {
+  :deep() {
+    .el-select {
+      width: 50%;
     }
   }
+}
 </style>

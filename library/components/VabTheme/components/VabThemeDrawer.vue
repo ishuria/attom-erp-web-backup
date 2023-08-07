@@ -1,12 +1,5 @@
 <template>
-  <el-drawer
-    v-model="drawerVisible"
-    append-to-body
-    class="vab-drawer"
-    direction="rtl"
-    size="288px"
-    :title="translate('主题配置')"
-  >
+  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="288px" :title="translate('主题配置')">
     <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
@@ -28,19 +21,13 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item
-          v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
-          :label="translate('暗黑模式')"
-        >
+        <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('暗黑模式')">
           <vab-dark />
         </el-form-item>
         <el-form-item v-if="'technology' != theme.themeName" :label="translate('配色')">
           <vab-color-picker />
         </el-form-item>
-        <el-form-item
-          v-if="'default' === theme.themeName && mode !== 'dark'"
-          :label="translate('菜单背景跟随配色')"
-        >
+        <el-form-item v-if="'default' === theme.themeName && mode !== 'dark'" :label="translate('菜单背景跟随配色')">
           <el-switch v-model="theme.isFollow" @change="updateIsFollow" />
         </el-form-item>
         <el-form-item v-if="theme.layout !== 'horizontal'" :label="translate('菜单宽度')">
@@ -68,12 +55,7 @@
             {{ translate('标签风格') }}
           </template>
           <el-select v-model="theme.tabsBarStyle">
-            <el-option
-              v-for="item in tabsBarStyleList"
-              :key="item.value"
-              :label="translate(item.label)"
-              :value="item.value"
-            />
+            <el-option v-for="item in tabsBarStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item :label="translate('页脚')">
@@ -87,12 +69,7 @@
             {{ translate('分栏风格') }}
           </template>
           <el-select v-model="theme.columnStyle">
-            <el-option
-              v-for="item in columnStyleList"
-              :key="item.value"
-              :label="translate(item.label)"
-              :value="item.value"
-            />
+            <el-option v-for="item in columnStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item :label="translate('圆角')">
@@ -130,12 +107,7 @@
         </el-form-item>
         <el-form-item :label="translate('页面动画')">
           <el-select v-model="theme.pageTransition">
-            <el-option
-              v-for="item in pageTransitionList"
-              :key="item.value"
-              :label="translate(item.label)"
-              :value="item.value"
-            />
+            <el-option v-for="item in pageTransitionList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -152,266 +124,266 @@
 </template>
 
 <script lang="ts" setup>
-  import { translate } from '/@/i18n'
-  import { useSettingsStore } from '/@/store/modules/settings'
+import { translate } from '/@/i18n'
+import { useSettingsStore } from '/@/store/modules/settings'
 
-  defineOptions({
-    name: 'VabThemeDrawer',
-  })
+defineOptions({
+  name: 'VabThemeDrawer',
+})
 
-  const $sub = inject<any>('$sub')
-  const $pub = inject<any>('$pub')
-  const $unsub = inject<any>('$unsub')
-  const $baseLoading = inject<any>('$baseLoading')
-  const $baseMessage = inject<any>('$baseMessage')
-  const settingsStore = useSettingsStore()
-  const { theme, device, mode, isCatchedTabs } = storeToRefs<any>(settingsStore)
-  const { saveTheme, resetTheme, updateTheme, updateCatchedTabs, setCssVar } = settingsStore
-  const drawerVisible = ref<boolean>(false)
+const $sub = inject<any>('$sub')
+const $pub = inject<any>('$pub')
+const $unsub = inject<any>('$unsub')
+const $baseLoading = inject<any>('$baseLoading')
+const $baseMessage = inject<any>('$baseMessage')
+const settingsStore = useSettingsStore()
+const { theme, device, mode, isCatchedTabs } = storeToRefs<any>(settingsStore)
+const { saveTheme, resetTheme, updateTheme, updateCatchedTabs, setCssVar } = settingsStore
+const drawerVisible = ref<boolean>(false)
 
-  const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
-  const tabsBarStyleList = ref<any>([
-    { label: '卡片', value: 'card' },
-    { label: '灵动', value: 'smart' },
-    { label: '圆滑', value: 'smooth' },
-  ])
-  const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
-  const themeNameList = ref<any>([
-    { label: 'default', title: '默认' },
-    { label: 'plain', title: '简洁' },
-    { label: 'technology', title: '科技' },
-  ])
-  const columnStyleList = ref<any>([
-    { value: 'vertical', label: '纵向' },
-    { value: 'horizontal', label: '横向' },
-    { value: 'card', label: '卡片' },
-    { value: 'arrow', label: '箭头' },
-    { value: 'semicircle', label: '半圆' },
-  ])
-  const pageTransitionList = ref<any>([
-    { value: '', label: '无动画' },
-    { value: 'el-fade-in-linear', label: 'fade-in-linear' },
-    { value: 'el-fade-in', label: 'fade-in' },
-    { value: 'el-zoom-in-center', label: 'zoom-in-center' },
-    { value: 'el-zoom-in-top', label: 'zoom-in-top' },
-    { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
-  ])
+const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
+const tabsBarStyleList = ref<any>([
+  { label: '卡片', value: 'card' },
+  { label: '灵动', value: 'smart' },
+  { label: '圆滑', value: 'smooth' },
+])
+const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
+const themeNameList = ref<any>([
+  { label: 'default', title: '默认' },
+  { label: 'plain', title: '简洁' },
+  { label: 'technology', title: '科技' },
+])
+const columnStyleList = ref<any>([
+  { value: 'vertical', label: '纵向' },
+  { value: 'horizontal', label: '横向' },
+  { value: 'card', label: '卡片' },
+  { value: 'arrow', label: '箭头' },
+  { value: 'semicircle', label: '半圆' },
+])
+const pageTransitionList = ref<any>([
+  { value: '', label: '无动画' },
+  { value: 'el-fade-in-linear', label: 'fade-in-linear' },
+  { value: 'el-fade-in', label: 'fade-in' },
+  { value: 'el-zoom-in-center', label: 'zoom-in-center' },
+  { value: 'el-zoom-in-top', label: 'zoom-in-top' },
+  { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
+])
 
-  const handleOpenTheme = () => {
-    drawerVisible.value = true
-  }
+const handleOpenTheme = () => {
+  drawerVisible.value = true
+}
 
-  const updateMenuWidth = (value: any) => {
-    theme.value.menuWidth = value
-    setCssVar()
-  }
+const updateMenuWidth = (value: any) => {
+  theme.value.menuWidth = value
+  setCssVar()
+}
 
-  const updateIsFollow = (value: any) => {
-    theme.value.isFollow = value
-    setCssVar()
-  }
+const updateIsFollow = (value: any) => {
+  theme.value.isFollow = value
+  setCssVar()
+}
 
-  const handleShowFooter = (value: any) => {
-    theme.value.showFooter = value
-    setCssVar()
-  }
+const handleShowFooter = (value: any) => {
+  theme.value.showFooter = value
+  setCssVar()
+}
 
-  const handleRadius = (value: any) => {
-    theme.value.radius = value
-    setCssVar()
-  }
+const handleRadius = (value: any) => {
+  theme.value.radius = value
+  setCssVar()
+}
 
-  const handleShowTabs = (value: any) => {
-    const el = ref<any>(null)
-    if (!value) useCssVar('--el-tabs-height', el).value = '0px'
-    else useCssVar('--el-tabs-height', el).value = '50px'
-  }
+const handleShowTabs = (value: any) => {
+  const el = ref<any>(null)
+  if (!value) useCssVar('--el-tabs-height', el).value = '0px'
+  else useCssVar('--el-tabs-height', el).value = '50px'
+}
 
-  const handleIsCatchedTabs = (value: any) => {
-    updateCatchedTabs(value)
-  }
+const handleIsCatchedTabs = (value: any) => {
+  updateCatchedTabs(value)
+}
 
-  const _updateTheme = (value: any = '') => {
-    if (value == 'default') $pub('shop-vite-reset-dark')
-    if (theme.value.themeName == 'technology') $pub('shop-vite-reset-color')
+const _updateTheme = (value: any = '') => {
+  if (value == 'default') $pub('shop-vite-reset-dark')
+  if (theme.value.themeName == 'technology') $pub('shop-vite-reset-color')
 
-    const loading = $baseLoading()
-    setTimeout(() => {
-      updateTheme()
-    }, 500)
+  const loading = $baseLoading()
+  setTimeout(() => {
+    updateTheme()
+  }, 500)
 
-    setTimeout(() => {
-      loading.close()
-      $baseMessage('切换成功', 'success', 'hey')
-    }, 1000)
-  }
+  setTimeout(() => {
+    loading.close()
+    $baseMessage('切换成功', 'success', 'hey')
+  }, 1000)
+}
 
-  const setDefaultTheme = () => {
-    drawerVisible.value = false
-    const loading = $baseLoading()
+const setDefaultTheme = () => {
+  drawerVisible.value = false
+  const loading = $baseLoading()
 
-    setTimeout(() => {
-      resetTheme()
-      $pub('shop-vite-reset-color')
-      $pub('shop-vite-reset-dark')
-    }, 500)
+  setTimeout(() => {
+    resetTheme()
+    $pub('shop-vite-reset-color')
+    $pub('shop-vite-reset-dark')
+  }, 500)
 
-    setTimeout(() => {
-      loading.close()
-      $baseMessage('切换成功', 'success', 'hey')
-      if (device.value === 'mobile') location.reload()
-    }, 1000)
-  }
-
-  const handleSaveTheme = async () => {
-    await saveTheme()
-    drawerVisible.value = false
+  setTimeout(() => {
+    loading.close()
+    $baseMessage('切换成功', 'success', 'hey')
     if (device.value === 'mobile') location.reload()
-  }
+  }, 1000)
+}
 
-  $sub('shop-vite-open-theme', () => {
-    handleOpenTheme()
-  })
+const handleSaveTheme = async () => {
+  await saveTheme()
+  drawerVisible.value = false
+  if (device.value === 'mobile') location.reload()
+}
 
-  $sub('shop-vite-reset-theme', () => {
-    setDefaultTheme()
-  })
+$sub('shop-vite-open-theme', () => {
+  handleOpenTheme()
+})
 
-  $sub('shop-vite-save-theme', () => {
-    handleSaveTheme()
-  })
+$sub('shop-vite-reset-theme', () => {
+  setDefaultTheme()
+})
 
-  $sub('shop-vite-change-theme', (value: string) => {
-    theme.value.themeName = value
-    _updateTheme()
-  })
+$sub('shop-vite-save-theme', () => {
+  handleSaveTheme()
+})
 
-  onBeforeUnmount(() => {
-    $unsub('shop-vite-change-theme')
-    $unsub('shop-vite-open-theme')
-    $unsub('shop-vite-reset-theme')
-    $unsub('shop-vite-save-theme')
-  })
+$sub('shop-vite-change-theme', (value: string) => {
+  theme.value.themeName = value
+  _updateTheme()
+})
+
+onBeforeUnmount(() => {
+  $unsub('shop-vite-change-theme')
+  $unsub('shop-vite-open-theme')
+  $unsub('shop-vite-reset-theme')
+  $unsub('shop-vite-save-theme')
+})
 </script>
 
 <style lang="scss">
-  .vab-drawer {
-    .el-drawer__header {
-      padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
-      margin-bottom: 0;
-    }
+.vab-drawer {
+  .el-drawer__header {
+    padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
+    margin-bottom: 0;
+  }
 
-    .el-drawer__body {
-      padding-right: 0;
+  .el-drawer__body {
+    padding-right: 0;
 
-      .el-scrollbar__wrap {
-        height: calc(100vh - 80px);
-        padding-right: var(--el-padding);
+    .el-scrollbar__wrap {
+      height: calc(100vh - 80px);
+      padding-right: var(--el-padding);
 
-        .el-form-item {
-          display: flex;
-          align-items: center;
-          margin-bottom: 17.5px;
+      .el-form-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 17.5px;
 
-          &__label {
-            flex: 1 1;
+        &__label {
+          flex: 1 1;
 
-            i {
-              cursor: pointer;
-            }
+          i {
+            cursor: pointer;
           }
+        }
 
-          &__content {
-            flex: 0 0 auto;
-          }
+        &__content {
+          flex: 0 0 auto;
+        }
 
-          &.vab-item-custom {
-            display: block !important;
-            height: 130px;
-          }
+        &.vab-item-custom {
+          display: block !important;
+          height: 130px;
+        }
 
-          &.vab-shop-item1 {
-            display: block !important;
+        &.vab-shop-item1 {
+          display: block !important;
 
-            .el-form-item__content {
-              .vab-shop-layout {
-                .el-radio-button {
-                  position: relative;
+          .el-form-item__content {
+            .vab-shop-layout {
+              .el-radio-button {
+                position: relative;
+                display: block;
+                float: left;
+                width: 50px;
+                height: 50px;
+                padding: 0;
+                margin: 10px 10px 5px 4px;
+                cursor: pointer;
+                background: transparent;
+                border: 0;
+                box-shadow: none;
+
+                &.is-disabled {
+                  cursor: not-allowed;
+                  opacity: 0.6;
+                }
+
+                .el-radio-button__orig-radio {
+                  display: none;
+                }
+
+                .el-radio-button__original-radio:checked + .el-radio-button__inner {
+                  background: transparent;
+
+                  .vab-icon {
+                    box-shadow: 0 0 2px 2px var(--el-color-primary);
+                  }
+                }
+
+                .el-radio-button__inner {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
                   display: block;
-                  float: left;
                   width: 50px;
                   height: 50px;
                   padding: 0;
-                  margin: 10px 10px 5px 4px;
-                  cursor: pointer;
-                  background: transparent;
+                  margin: 0;
                   border: 0;
                   box-shadow: none;
 
-                  &.is-disabled {
-                    cursor: not-allowed;
-                    opacity: 0.6;
-                  }
-
-                  .el-radio-button__orig-radio {
-                    display: none;
-                  }
-
-                  .el-radio-button__original-radio:checked + .el-radio-button__inner {
-                    background: transparent;
-
-                    .vab-icon {
-                      box-shadow: 0 0 2px 2px var(--el-color-primary);
-                    }
-                  }
-
-                  .el-radio-button__inner {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    display: block;
+                  .vab-icon {
                     width: 50px;
                     height: 50px;
                     padding: 0;
                     margin: 0;
-                    border: 0;
-                    box-shadow: none;
-
-                    .vab-icon {
-                      width: 50px;
-                      height: 50px;
-                      padding: 0;
-                      margin: 0;
-                      border: 1px solid var(--el-border-color);
-                      border-radius: var(--el-border-radius-base);
-                    }
+                    border: 1px solid var(--el-border-color);
+                    border-radius: var(--el-border-radius-base);
                   }
                 }
+              }
 
-                .el-radio-button:last-child {
-                  margin-right: 0;
-                }
+              .el-radio-button:last-child {
+                margin-right: 0;
               }
             }
           }
+        }
 
-          .el-input,
-          .el-input-number {
-            width: 105px;
-          }
+        .el-input,
+        .el-input-number {
+          width: 105px;
         }
       }
     }
-
-    .el-drawer__footer {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: calc(var(--el-z-index) + 1);
-      padding: calc(var(--el-padding) / 2);
-      background: var(--el-color-white);
-      border-top: 1px solid var(--el-border-color);
-    }
   }
+
+  .el-drawer__footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: calc(var(--el-z-index) + 1);
+    padding: calc(var(--el-padding) / 2);
+    background: var(--el-color-white);
+    border-top: 1px solid var(--el-border-color);
+  }
+}
 </style>

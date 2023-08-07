@@ -33,11 +33,7 @@
           <template #title>
             <div style="display: inline-flex; align-items: center">
               每月活跃用户
-              <el-tooltip
-                content="Number of users who logged into the product in one month"
-                effect="light"
-                placement="top"
-              >
+              <el-tooltip content="Number of users who logged into the product in one month" effect="light" placement="top">
                 <el-icon :size="12" style="margin-left: 4px">
                   <warning />
                 </el-icon>
@@ -87,52 +83,52 @@
 </template>
 
 <script lang="ts" setup>
-  import { ArrowRight, CaretBottom, CaretTop, Warning } from '@element-plus/icons-vue'
+import { ArrowRight, CaretBottom, CaretTop, Warning } from '@element-plus/icons-vue'
 </script>
 
 <style scoped>
-  :global(h2#card-usage ~ .example .example-showcase) {
-    background-color: var(--el-fill-color) !important;
-  }
+:global(h2#card-usage ~ .example .example-showcase) {
+  background-color: var(--el-fill-color) !important;
+}
 
-  .el-statistic {
-    --el-statistic-content-font-size: 28px;
-  }
+.el-statistic {
+  --el-statistic-content-font-size: 28px;
+}
 
-  .statistic-card {
-    height: 100%;
-    padding: 20px;
-    background-color: var(--el-bg-color-overlay);
-    border-radius: 4px;
-  }
+.statistic-card {
+  height: 100%;
+  padding: 20px;
+  background-color: var(--el-bg-color-overlay);
+  border-radius: 4px;
+}
 
-  .statistic-footer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: var(--el-font-size-big);
-    font-size: var(--el-font-size-small);
-    color: var(--el-text-color-regular);
-  }
+.statistic-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--el-font-size-big);
+  font-size: var(--el-font-size-small);
+  color: var(--el-text-color-regular);
+}
 
-  .statistic-footer .footer-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+.statistic-footer .footer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-  .statistic-footer .footer-item span:last-child {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 4px;
-  }
+.statistic-footer .footer-item span:last-child {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+}
 
-  .green {
-    color: var(--el-color-success);
-  }
+.green {
+  color: var(--el-color-success);
+}
 
-  .red {
-    color: var(--el-color-error);
-  }
+.red {
+  color: var(--el-color-error);
+}
 </style>

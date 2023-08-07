@@ -23,79 +23,79 @@
 </template>
 
 <script lang="ts" setup>
-  import { getImageUrl } from '/@/utils/imageUrl'
+import { getImageUrl } from '/@/utils/imageUrl'
 
-  const QR = getImageUrl('assets/qr_images/QR.png')
-  const scan = ref<string>('')
-  const dialogVisible = ref<boolean>(false)
-  let timer: any
-  let timer2: any
+const QR = getImageUrl('assets/qr_images/QR.png')
+const scan = ref<string>('')
+const dialogVisible = ref<boolean>(false)
+let timer: any
+let timer2: any
 
-  scan.value = getImageUrl('assets/qr_images/scan.png')
+scan.value = getImageUrl('assets/qr_images/scan.png')
 
-  onActivated(() => {
-    timer = setInterval(() => {
-      scan.value = ''
-      nextTick(() => {
-        scan.value = getImageUrl('assets/qr_images/scan.png')
-      })
-    }, 10000)
+onActivated(() => {
+  timer = setInterval(() => {
+    scan.value = ''
+    nextTick(() => {
+      scan.value = getImageUrl('assets/qr_images/scan.png')
+    })
+  }, 10000)
 
-    timer2 = setTimeout(() => {
-      dialogVisible.value = true
-    }, 1000)
-  })
+  timer2 = setTimeout(() => {
+    dialogVisible.value = true
+  }, 1000)
+})
 
-  onDeactivated(() => {
-    clearInterval(timer)
-    clearInterval(timer2)
-  })
+onDeactivated(() => {
+  clearInterval(timer)
+  clearInterval(timer2)
+})
 </script>
 
 <style lang="scss" scoped>
-  .qr-login-container {
-    .qr-box {
-      position: relative;
-      padding: 0px 50px 0px 50px;
+.qr-login-container {
+  .qr-box {
+    position: relative;
+    padding: 0px 50px 0px 50px;
+    text-align: center;
+
+    .qr-image {
+      width: 210px;
+      height: 210px;
+    }
+
+    .scan-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 999;
+      width: 250px;
+      height: 180px;
+      transform: translate(-50%, -80%);
+    }
+
+    .wechat-title {
       text-align: center;
 
-      .qr-image {
-        width: 210px;
-        height: 210px;
+      p {
+        height: 24px;
+        margin-bottom: 8px;
+        font-size: var(--el-font-size-small);
+        font-weight: 400;
+        line-height: 24px;
+        color: #999aaa;
       }
+    }
 
-      .scan-image {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 999;
-        width: 250px;
-        height: 180px;
-        transform: translate(-50%, -80%);
-      }
+    .qr-box-bottom {
+      text-align: center;
+      cursor: pointer;
 
-      .wechat-title {
-        text-align: center;
-
-        p {
-          height: 24px;
-          margin-bottom: 8px;
-          font-size: var(--el-font-size-small);
-          font-weight: 400;
-          line-height: 24px;
-          color: #999aaa;
-        }
-      }
-
-      .qr-box-bottom {
-        text-align: center;
-        cursor: pointer;
-
-        [class*='ri-'] {
-          margin: 10px;
-          font-size: 20px;
-        }
+      [class*='ri-'] {
+        margin: 10px;
+        font-size: 20px;
       }
     }
   }
+}
 </style>
