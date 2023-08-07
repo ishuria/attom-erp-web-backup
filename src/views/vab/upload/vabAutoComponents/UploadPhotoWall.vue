@@ -10,7 +10,7 @@
     </el-icon>
   </el-upload>
 
-  <el-dialog v-model="dialogVisible" draggable>
+  <el-dialog v-model="dialogVisible" append-to-body draggable>
     <img alt="Preview Image" :src="dialogImageUrl" w-full />
   </el-dialog>
 </template>
