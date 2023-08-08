@@ -10,6 +10,7 @@
           </el-form>
         </vab-card>
       </el-col>
+      <vab-graphic-stroke-animation title="文字描边" />
       <vab-chart-line title="折线图" />
       <vab-chart-bar title="柱状图" />
       <vab-chart-pie title="饼状图" />
