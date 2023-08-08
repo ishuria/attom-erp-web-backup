@@ -181,6 +181,7 @@ const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
  * @returns {Promise<void>}
  */
 const handleTabRemove: any = async (rawPath: string) => {
+  if (route.meta.noClosable) return false
   if (isActive(rawPath)) await toLastTab()
   await delVisitedRoute(rawPath)
 }
