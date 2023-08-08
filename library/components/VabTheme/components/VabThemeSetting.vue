@@ -70,7 +70,7 @@ defineOptions({
 
 const $pub = inject<any>('$pub')
 const settingsStore = useSettingsStore()
-const { device, theme } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 const show = ref<boolean>(true)
 
 const handleOpenTheme = () => {
