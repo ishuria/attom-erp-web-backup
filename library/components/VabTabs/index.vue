@@ -3,15 +3,13 @@
     <el-tabs
       v-model="tabActive"
       class="vab-tabs-content"
-      :class="{
-        ['vab-tabs-content-' + theme.tabsBarStyle]: true,
-      }"
+      :class="{ ['vab-tabs-content-' + theme.tabsBarStyle]: true }"
       @tab-click="handleTabClick"
       @tab-remove="handleTabRemove"
     >
-      <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoCLosable(item)" :name="item.path">
+      <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoCLosable(item)" lazy :name="item.path">
         <template #label>
-          <span class="vab-tabs-title" @contextmenu.prevent="openMenu">
+          <span class="vab-tabs-title" @contextmenu.prevent="openMenu" @dblclick="handleTabRemove(route.fullPath)">
             <template v-if="theme.showTabsIcon">
               <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
               <!--  如果没有图标那么取第二级的图标 -->
@@ -132,39 +130,21 @@ const left = ref<any>(0)
 
 const isActive = (path: any) => path === handleActivePath(route, true)
 const isNoCLosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
+
 const handleTabClick: any = (tab: any) => {
   if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
 }
 const handleVisibleChange = (value: boolean) => {
   active.value = value
 }
+
 const initNoCLosableTabs = (routes: any[]) => {
   routes.forEach((_route: { meta: { noClosable: any }; children: any }) => {
     if (_route.meta && _route.meta.noClosable) addTabs(_route)
     if (_route.children) initNoCLosableTabs(_route.children)
   })
 }
-/**
- * 添加标签页
- * @param tag route
- * @returns {Promise<void>}
- */
-const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
-  const tab = handleTabs(tag)
-  if (tab) {
-    await addVisitedRoute(tab)
-    tabActive.value = tab.path
-  }
-}
-/**
- * 根据原生路径删除标签中的标签
- * @param rawPath 原生路径
- * @returns {Promise<void>}
- */
-const handleTabRemove: any = async (rawPath: string) => {
-  if (isActive(rawPath)) await toLastTab()
-  await delVisitedRoute(rawPath)
-}
+
 const handleCommand = (command: any) => {
   switch (command) {
     case 'closeOthersTabs':
@@ -181,6 +161,30 @@ const handleCommand = (command: any) => {
       break
   }
 }
+
+/**
+ * 添加标签页
+ * @param tag route
+ * @returns {Promise<void>}
+ */
+const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
+  const tab = handleTabs(tag)
+  if (tab) {
+    await addVisitedRoute(tab)
+    tabActive.value = tab.path
+  }
+}
+
+/**
+ * 根据原生路径删除标签中的标签
+ * @param rawPath 原生路径
+ * @returns {Promise<void>}
+ */
+const handleTabRemove: any = async (rawPath: string) => {
+  if (isActive(rawPath)) await toLastTab()
+  await delVisitedRoute(rawPath)
+}
+
 /**
  * 删除其他标签页
  * @returns {Promise<void>}
@@ -203,6 +207,7 @@ const closeLeftTabs = async () => {
   } else await delLeftVisitedRoutes(handleActivePath(route, true))
   await closeMenu()
 }
+
 /**
  * 删除右侧标签页
  * @returns {Promise<void>}
@@ -214,6 +219,7 @@ const closeRightTabs = async () => {
   } else await delRightVisitedRoutes(handleActivePath(route, true))
   await closeMenu()
 }
+
 /**
  * 删除所有标签页
  * @returns {Promise<void>}
@@ -223,6 +229,7 @@ const closeAllTabs = async () => {
   await toLastTab()
   await closeMenu()
 }
+
 /**
  * 跳转最后一个标签页
  */
@@ -233,11 +240,13 @@ const toLastTab = async () => {
 }
 
 const { x, y } = useMouse()
+
 const openMenu = () => {
   left.value = x.value
   top.value = y.value
   visible.value = true
 }
+
 const closeMenu = () => {
   visible.value = false
   hoverRoute.value = null
