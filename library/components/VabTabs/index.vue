@@ -307,6 +307,12 @@ watchEffect(() => {
         background: none;
       }
 
+      &__item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
       &__active-bar {
         display: none;
       }
@@ -330,7 +336,6 @@ watchEffect(() => {
       :deep() {
         .el-tabs__header {
           .el-tabs__item {
-            box-sizing: border-box;
             height: var(--el-tab-item-height);
             padding-right: var(--el-padding) !important;
             padding-left: var(--el-padding) !important;
@@ -364,7 +369,6 @@ watchEffect(() => {
             border: 0;
             border-top-left-radius: var(--el-border-radius-base);
             border-top-right-radius: var(--el-border-radius-base);
-            outline: none;
 
             .is-icon-close {
               width: 14px !important;
@@ -414,12 +418,10 @@ watchEffect(() => {
 
         .el-tabs__header {
           .el-tabs__item {
-            display: flex;
             height: calc(var(--el-tab-item-height) + 4px);
             padding-right: var(--el-margin) !important;
             padding-left: var(--el-margin) !important;
             margin-right: -18px;
-            text-align: center;
 
             &:hover {
               z-index: 999;
@@ -473,7 +475,6 @@ watchEffect(() => {
 
             &.is-active {
               background: var(--el-color-primary-light-9);
-              outline: none;
             }
           }
         }
