@@ -316,7 +316,7 @@ watchEffect(() => {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: var(--el-tag-item-height);
+        height: var(--el-tab-item-height);
       }
     }
   }
@@ -325,17 +325,16 @@ watchEffect(() => {
     width: calc(100% - 20px);
 
     &-card {
-      height: var(--el-tag-item-height);
+      height: var(--el-tab-item-height);
 
       :deep() {
         .el-tabs__header {
           .el-tabs__item {
             box-sizing: border-box;
-            height: var(--el-tag-item-height);
+            height: var(--el-tab-item-height);
             padding-right: var(--el-padding) !important;
             padding-left: var(--el-padding) !important;
             margin-right: 5px;
-            line-height: var(--el-tag-item-height);
             border: 1px solid var(--el-border-color) !important;
             border-radius: var(--el-border-radius-base) !important;
 
@@ -353,16 +352,15 @@ watchEffect(() => {
     }
 
     &-smart {
-      height: var(--el-tag-item-height);
+      height: var(--el-tab-item-height);
 
       :deep() {
         .el-tabs__header {
           .el-tabs__item {
-            height: var(--el-tag-item-height);
+            height: var(--el-tab-item-height);
             padding-right: var(--el-padding) !important;
             padding-left: var(--el-padding) !important;
             margin-right: 5px;
-            line-height: var(--el-tag-item-height);
             border: 0;
             border-top-left-radius: var(--el-border-radius-base);
             border-top-right-radius: var(--el-border-radius-base);
@@ -407,7 +405,7 @@ watchEffect(() => {
     }
 
     &-smooth {
-      height: var(--el-tag-item-height);
+      height: var(--el-tab-item-height);
 
       :deep() {
         .el-tabs__nav {
@@ -417,7 +415,7 @@ watchEffect(() => {
         .el-tabs__header {
           .el-tabs__item {
             display: flex;
-            height: calc(var(--el-tag-item-height) + 4px);
+            height: calc(var(--el-tab-item-height) + 4px);
             padding-right: var(--el-margin) !important;
             padding-left: var(--el-margin) !important;
             margin-right: -18px;
@@ -452,6 +450,30 @@ watchEffect(() => {
                 mask: url('/@/assets/tabs_images/vab-tab.png');
                 mask-size: 100% 100%;
               }
+            }
+          }
+        }
+      }
+    }
+
+    &-rect {
+      height: var(--el-tags-height);
+
+      :deep() {
+        .el-tabs__header {
+          margin: -1px 0 0 0;
+          .el-tabs__item {
+            height: var(--el-tabs-height);
+            padding-right: var(--el-padding) !important;
+            padding-left: var(--el-padding) !important;
+
+            .is-icon-close {
+              width: 14px !important;
+            }
+
+            &.is-active {
+              background: var(--el-color-primary-light-9);
+              outline: none;
             }
           }
         }

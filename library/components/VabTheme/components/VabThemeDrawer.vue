@@ -146,6 +146,7 @@ const tabsBarStyleList = ref<any>([
   { label: '卡片', value: 'card' },
   { label: '灵动', value: 'smart' },
   { label: '圆滑', value: 'smooth' },
+  { label: '矩形', value: 'rect' },
 ])
 const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
 const themeNameList = ref<any>([

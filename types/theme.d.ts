@@ -68,9 +68,13 @@ declare type TabsBarStyle =
    */
   | 'smart'
   /**
-   * smooth
+   * 圆滑风格
    */
   | 'smooth'
+  /**
+   * 矩形风格
+   */
+  | 'rect'
 
 declare type pageTransitionStyle =
   /**

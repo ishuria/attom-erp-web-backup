@@ -22,7 +22,7 @@ export const themeConfig: ThemeType = {
   showFooter: true,
   //是否开启标签页
   showTabs: true,
-  //显示标签页时标签页样式：卡片风格card、灵动风格smart、圆滑风格smooth
+  //显示标签页时标签页样式：卡片风格card、灵动风格smart、圆滑风格smooth、矩形风格rect
   tabsBarStyle: 'card',
   //是否显示标签页图标
   showTabsIcon: true,
