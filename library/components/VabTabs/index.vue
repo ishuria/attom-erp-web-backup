@@ -311,6 +311,13 @@ watchEffect(() => {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding-right: var(--el-padding) !important;
+        padding-left: var(--el-padding) !important;
+
+        .is-icon-close {
+          width: 14px !important;
+          margin-top: 1px;
+        }
       }
 
       &__active-bar {
@@ -337,15 +344,9 @@ watchEffect(() => {
         .el-tabs__header {
           .el-tabs__item {
             height: var(--el-tab-item-height);
-            padding-right: var(--el-padding) !important;
-            padding-left: var(--el-padding) !important;
             margin-right: 5px;
             border: 1px solid var(--el-border-color) !important;
             border-radius: var(--el-border-radius-base) !important;
-
-            .is-icon-close {
-              width: 14px !important;
-            }
 
             &.is-active {
               color: var(--el-color-primary);
@@ -363,16 +364,10 @@ watchEffect(() => {
         .el-tabs__header {
           .el-tabs__item {
             height: var(--el-tab-item-height);
-            padding-right: var(--el-padding) !important;
-            padding-left: var(--el-padding) !important;
             margin-right: 5px;
             border: 0;
             border-top-left-radius: var(--el-border-radius-base);
             border-top-right-radius: var(--el-border-radius-base);
-
-            .is-icon-close {
-              width: 14px !important;
-            }
 
             &.is-active {
               background: var(--el-color-primary-light-9);
@@ -419,8 +414,6 @@ watchEffect(() => {
         .el-tabs__header {
           .el-tabs__item {
             height: calc(var(--el-tab-item-height) + 4px);
-            padding-right: var(--el-margin) !important;
-            padding-left: var(--el-margin) !important;
             margin-right: -18px;
 
             &:hover {
@@ -434,10 +427,6 @@ watchEffect(() => {
             .vab-tabs-title {
               flex: 1;
               margin: 0 calc(var(--el-margin) / 2) 0 calc(var(--el-margin) / 2);
-            }
-
-            .is-icon-close {
-              width: 14px !important;
             }
 
             &.is-active {
@@ -466,12 +455,6 @@ watchEffect(() => {
           margin: -1px 0 0 0;
           .el-tabs__item {
             height: var(--el-tabs-height);
-            padding-right: var(--el-padding) !important;
-            padding-left: var(--el-padding) !important;
-
-            .is-icon-close {
-              width: 14px !important;
-            }
 
             &.is-active {
               background: var(--el-color-primary-light-9);
