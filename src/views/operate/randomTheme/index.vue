@@ -28,7 +28,7 @@ const randomTheme = async () => {
     try {
       const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
       const columnStyle = shuffle(theme.value.columnStyle, ['vertical', 'horizontal', 'card', 'arrow', 'semicircle'])
-      const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth'])
+      const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect'])
       const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
       const layout =
         device.value === 'desktop' ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive']) : 'vertical'
