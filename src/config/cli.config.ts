@@ -21,4 +21,6 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   cssCodeSplit: false,
   // 启用/禁用 gzip 压缩大小报告
   reportCompressedSize: false,
+  // 混淆器 boolean | 'terser' | 'esbuild'
+  minify: 'terser',
 }

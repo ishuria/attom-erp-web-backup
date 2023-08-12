@@ -4,16 +4,7 @@ import { resolve } from 'path'
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import { dependencies, devDependencies, name, version } from './package.json'
-import {
-  assetsDir,
-  base,
-  chunkSizeWarningLimit,
-  cssCodeSplit,
-  open,
-  outDir,
-  port,
-  reportCompressedSize,
-} from '/@/config'
+import { assetsDir, base, chunkSizeWarningLimit, cssCodeSplit, minify, open, outDir, port, reportCompressedSize } from '/@/config'
 import { createVitePlugin, createWatch } from '/@vab/build'
 
 const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
@@ -69,6 +60,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
         },
       },
+      minify,
     },
     css: {
       postcss: {
@@ -97,5 +89,5 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       devSourcemap: true,
     },
     plugins: createVitePlugin(env),
-  } as any
+  }
 })
