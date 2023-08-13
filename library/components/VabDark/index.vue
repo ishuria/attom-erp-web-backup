@@ -1,7 +1,7 @@
 <template>
   <el-switch
     v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
-    v-model="value"
+    v-model="mode"
     :active-icon="Moon"
     class="vab-dark"
     :inactive-icon="Sunny"
@@ -23,9 +23,8 @@ const $sub = inject<any>('$sub')
 const $unsub = inject<any>('$unsub')
 const $pub = inject<any>('$pub')
 const settingsStore = useSettingsStore()
-const { theme } = storeToRefs(settingsStore)
+const { theme, mode } = storeToRefs(settingsStore)
 const { updateMode } = settingsStore
-const value = ref<boolean>(false)
 
 const _toggleDark = async (event: MouseEvent) => {
   if (typeof document.startViewTransition === 'function') {
@@ -74,26 +73,26 @@ const handleSetScheme = (value: string) => {
 
 // 还原默认
 $sub('shop-vite-reset-dark', () => {
-  value.value = handleGetScheme('dark')
+  mode.value = handleGetScheme('dark')
 
   if (handleGetScheme('dark')) {
     handleSetScheme('light')
     handleUseDark()
-    value.value = false
+    mode.value = false
   }
 })
 
 $sub('reload-dark', (color: any) => {
-  value.value = color
+  mode.value = color
 })
 
 onBeforeMount(() => {
   handleUseDark()
   if (handleGetScheme('auto')) handleSetScheme('light')
-  value.value = handleGetScheme('dark')
+  mode.value = handleGetScheme('dark')
 })
 
-watch(value, (newVal) => {
+watch(mode, (newVal) => {
   $pub('reload-dark', newVal)
 })
 

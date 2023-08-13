@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import { round } from 'lodash-es'
 import { color as _color } from '/@/config/'
 import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -13,7 +12,6 @@ defineOptions({
   name: 'VabColorPicker',
 })
 
-const color = ref<any>(_color)
 const $sub = inject<any>('$sub')
 const $unsub = inject<any>('$unsub')
 const $pub = inject<any>('$pub')
@@ -31,43 +29,12 @@ const predefineColors = ref<any>([
   '#f01414',
 ])
 const settingsStore = useSettingsStore()
-const { changeColor, getColor, setCssVar } = settingsStore
-const { theme } = storeToRefs(settingsStore)
-
-const getRgbNum = (sColor: string) => {
-  if (sColor.length === 4) {
-    let sColorNew = '#'
-    for (let i = 1; i < 4; i += 1) {
-      sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1))
-    }
-    sColor = sColorNew
-  }
-  const sColorChange = []
-  for (let i = 1; i < 7; i += 2) {
-    sColorChange.push(parseInt(`0x${sColor.slice(i, i + 2)}`))
-  }
-  return sColorChange
-}
-
-const colorRgba = (str: any, n = 1) => {
-  const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
-  const sColor = str.toLowerCase()
-  if (sColor && reg.test(sColor)) return `rgba(${getRgbNum(sColor).join(',')},${round(n, 1)})`
-  else return sColor
-}
+const { changeColor, getColor } = settingsStore
+const { color, theme } = storeToRefs(settingsStore)
 
 const handleChange = (value: any) => {
-  const el = ref<any>(null)
-  useCssVar('--el-color-primary-dark-2', el).value = value
-  useCssVar('--el-color-primary', el).value = value
-
-  for (let index = 1; index < 10; index++) {
-    useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(value, 1 - index * 0.1)
-  }
-
-  setCssVar()
-  changeColor(value)
   color.value = value
+  changeColor()
 }
 
 // 还原默认
@@ -75,7 +42,11 @@ $sub('shop-vite-reset-color', () => {
   handleChange(_color)
 })
 
-$sub('reload-color', (color: any) => {
+$sub('shop-vite-reload-color', (color: any) => {
+  handleChange(color)
+})
+
+$sub('shop-vite-change-color', () => {
   handleChange(color)
 })
 
@@ -84,11 +55,13 @@ onBeforeMount(() => {
 })
 
 watch(color, (newVal) => {
-  $pub('reload-color', newVal)
+  $pub('shop-vite-reload-color', newVal)
 })
 
 onBeforeUnmount(() => {
-  $unsub('shop-vite-reset-dark')
+  $unsub('shop-vite-reset-color')
+  $unsub('shop-vite-reload-color')
+  $unsub('shop-vite-change-color')
 })
 </script>
 

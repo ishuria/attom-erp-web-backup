@@ -34,6 +34,7 @@ import {
 } from '/@/config'
 import { lightenColor } from '/@/utils/lightenColor'
 import { isJson } from '/@/utils/validate'
+import { round } from 'lodash-es'
 
 const defaultTheme: ThemeType = {
   color,
@@ -70,6 +71,28 @@ const getLocalStorage = (key: string) => {
   } else {
     return false
   }
+}
+
+const getRgbNum = (sColor: string) => {
+  if (sColor.length === 4) {
+    let sColorNew = '#'
+    for (let i = 1; i < 4; i += 1) {
+      sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1))
+    }
+    sColor = sColorNew
+  }
+  const sColorChange = []
+  for (let i = 1; i < 7; i += 2) {
+    sColorChange.push(parseInt(`0x${sColor.slice(i, i + 2)}`))
+  }
+  return sColorChange
+}
+
+const colorRgba = (str: any, n = 1) => {
+  const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
+  const sColor = str.toLowerCase()
+  if (sColor && reg.test(sColor)) return `rgba(${getRgbNum(sColor).join(',')},${round(n, 1)})`
+  else return sColor
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
@@ -128,6 +151,12 @@ export const useSettingsStore = defineStore('settings', {
       if (this.theme.themeName !== 'default') {
         document.getElementsByTagName('html')[0].className = ''
         localStorage.setItem('vueuse-color-scheme', 'light')
+        this.mode = 'light'
+      } else {
+        const colorScheme = localStorage.getItem('vueuse-color-scheme')
+        const htmlElement = document.getElementsByTagName('html')[0]
+        htmlElement.className += ` ${colorScheme}`
+        this.mode = colorScheme
       }
 
       this.setCssVar()
@@ -182,8 +211,15 @@ export const useSettingsStore = defineStore('settings', {
     changeTitle(title: string) {
       this.updateState({ title })
     },
-    changeColor(color: string) {
-      this.updateState({ color })
+    changeColor() {
+      this.setCssVar()
+      const el = ref<any>(null)
+      useCssVar('--el-color-primary-dark-2', el).value = this.color
+      useCssVar('--el-color-primary', el).value = this.color
+      for (let index = 1; index < 10; index++) {
+        useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(this.color, 1 - index * 0.1)
+      }
+      this.updateState({ color: this.color })
     },
   },
 })

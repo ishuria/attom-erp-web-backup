@@ -56,11 +56,11 @@
 </template>
 
 <script lang="ts" setup>
-import { translate } from '/@/i18n'
-import { isPassword, isPhone } from '/@/utils/validate'
 import { register } from '/@/api/user'
+import { translate } from '/@/i18n'
 import { useUserStore } from '/@/store/modules/user'
 import { getImageUrl } from '/@/utils/imageUrl'
+import { isPassword, isPhone } from '/@/utils/validate'
 
 defineOptions({
   name: 'Register',
@@ -215,6 +215,7 @@ onUnmounted(() => {
     overflow: hidden;
     background: var(--el-color-white);
     background-size: 100% 100%;
+    border: 1px solid var(--el-border-color);
     border-radius: 15px;
 
     .left-img {

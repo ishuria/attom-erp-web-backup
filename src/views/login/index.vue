@@ -159,93 +159,94 @@ onBeforeRouteLeave((to, from, next) => {
   padding-top: 20vh;
   background: url('/@/assets/login_images/background.jpg') center center fixed no-repeat;
   background-size: cover;
-}
 
-@media (max-width: 576px) {
+  @media (max-width: 576px) {
+    .login-form {
+      width: 85vw !important;
+      margin: auto !important;
+
+      .left-img {
+        display: none !important;
+      }
+
+      :deep() {
+        .el-form--default {
+          width: 94% !important;
+        }
+      }
+    }
+  }
+
   .login-form {
-    width: 85vw !important;
-    margin: auto !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 1000px;
+    height: 550px;
+    padding: 4.5vh;
+    margin: auto;
+    overflow: hidden;
+    background: var(--el-color-white);
+    background-size: 100% 100%;
+    border: 1px solid var(--el-border-color);
+    border-radius: 15px;
 
     .left-img {
-      display: none !important;
+      float: left;
+      width: 50%;
     }
 
     :deep() {
       .el-form--default {
-        width: 94% !important;
-      }
-    }
-  }
-}
-
-.login-form {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 1000px;
-  height: 550px;
-  padding: 4.5vh;
-  margin: auto;
-  overflow: hidden;
-  background: var(--el-color-white);
-  background-size: 100% 100%;
-  border-radius: 15px;
-
-  .left-img {
-    float: left;
-    width: 50%;
-  }
-
-  :deep() {
-    .el-form--default {
-      float: left;
-      width: 44%;
-      margin-left: 5.8%;
-    }
-
-    .title {
-      font-size: 54px;
-      font-weight: 500;
-      color: var(--el-color-black);
-    }
-
-    .title-tips {
-      margin-top: 29px;
-      font-size: 26px;
-      font-weight: 400;
-      color: var(--el-color-black);
-    }
-
-    .login-btn {
-      width: 100%;
-      height: 50px;
-    }
-
-    .el-form-item {
-      margin: 20px 0;
-
-      &__error {
-        position: absolute;
-        font-size: var(--el-font-size-small);
-        line-height: 18px;
-        color: var(--el-color-error);
+        float: left;
+        width: 44%;
+        margin-left: 5.8%;
       }
 
-      .el-input {
+      .title {
+        font-size: 54px;
+        font-weight: 500;
+        color: var(--el-color-black);
+      }
+
+      .title-tips {
+        margin-top: 29px;
+        font-size: 26px;
+        font-weight: 400;
+        color: var(--el-color-black);
+      }
+
+      .login-btn {
         width: 100%;
-        height: 48px;
-        line-height: 48px;
+        height: 50px;
       }
-    }
 
-    .code {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      cursor: pointer;
-      border-radius: var(--el-border-radius-base);
+      .el-form-item {
+        margin: 20px 0;
+
+        &__error {
+          position: absolute;
+          font-size: var(--el-font-size-small);
+          line-height: 18px;
+          color: var(--el-color-error);
+        }
+
+        .el-input {
+          width: 100%;
+          height: 48px;
+          line-height: 48px;
+        }
+      }
+
+      .code {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        cursor: pointer;
+        border-radius: var(--el-border-radius-base);
+      }
     }
   }
 }

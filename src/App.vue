@@ -3,7 +3,19 @@
 </template>
 
 <script lang="ts" setup>
+import { useSettingsStore } from '/@/store/modules/settings'
+
+defineOptions({
+  name: 'App',
+})
+
+const settingsStore = useSettingsStore()
+const { updateTheme, changeColor } = settingsStore
+
 onBeforeMount(() => {
+  changeColor()
+  updateTheme()
+
   if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io') {
     ;(() => {
       const block = () => {
