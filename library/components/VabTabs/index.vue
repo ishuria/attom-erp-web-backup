@@ -9,7 +9,7 @@
     >
       <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoCLosable(item)" lazy :name="item.path">
         <template #label>
-          <span class="vab-tabs-title" @contextmenu.prevent="openMenu" @dblclick="handleTabRemove(route.fullPath)">
+          <span class="vab-tabs-title" @contextmenu.prevent="openMenu">
             <template v-if="theme.showTabsIcon">
               <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
               <!--  如果没有图标那么取第二级的图标 -->
@@ -181,7 +181,6 @@ const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
  * @returns {Promise<void>}
  */
 const handleTabRemove: any = async (rawPath: string) => {
-  if (route.meta.noClosable) return false
   if (isActive(rawPath)) await toLastTab()
   await delVisitedRoute(rawPath)
 }

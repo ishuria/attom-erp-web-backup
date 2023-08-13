@@ -93,12 +93,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
-.el-color-picker__trigger {
-  width: 20px;
-  height: 20px;
-  padding: 0;
-}
-
 .vab-color-picker-popper {
   box-sizing: content-box !important;
   padding: calc(var(--el-padding) / 2);

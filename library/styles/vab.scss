@@ -561,6 +561,19 @@ html {
       }
     }
 
+    /* el-color-picker */
+    .el-color-picker {
+      &__trigger {
+        width: 20px;
+        height: 20px;
+        padding: 0;
+      }
+
+      &__color {
+        border: 0;
+      }
+    }
+
     /* svg */
     [fill='#6c63ff'],
     [fill='#7CADF6'] {
