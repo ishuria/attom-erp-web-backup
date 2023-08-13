@@ -60,7 +60,6 @@ const style = {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--el-padding);
     }
   }
 
@@ -83,7 +82,7 @@ const style = {
     }
 
     &-description {
-      line-height: 25px;
+      line-height: 22px;
     }
   }
 }
