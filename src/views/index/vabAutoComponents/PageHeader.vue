@@ -49,7 +49,6 @@ const style = {
 
 <style lang="scss" scoped>
 .page-header {
-  min-height: 135px;
   transition: none;
 
   :deep() {
@@ -60,15 +59,16 @@ const style = {
     .el-card__body {
       display: flex;
       align-items: center;
-      padding-top: 10px;
+      justify-content: center;
+      padding: var(--el-padding);
     }
   }
 
   &-avatar {
-    width: 60px;
-    height: 60px;
-    padding: 12px;
-    margin-right: 20px;
+    width: 80px;
+    height: 80px;
+    padding: var(--el-padding);
+    margin-right: var(--el-margin);
     border-radius: 50%;
   }
 
@@ -78,16 +78,12 @@ const style = {
     min-width: 300px;
 
     &-title {
-      margin-bottom: 12px;
-      font-size: 20px;
+      font-size: var(--el-font-size-bigger);
       font-weight: bold;
-      color: #3c4a54;
     }
 
     &-description {
-      min-height: 20px;
-      font-size: var(--el-font-size-default);
-      color: #808695;
+      line-height: 25px;
     }
   }
 }
