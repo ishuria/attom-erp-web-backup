@@ -1,11 +1,7 @@
 <template>
   <div class="tabs-container no-background-container">
     <vab-card>
-      <template #header>
-        <div>
-          <span>标签页操作</span>
-        </div>
-      </template>
+      <template #header>标签页操作</template>
       <el-space wrap>
         <el-button type="primary" @click="closeOthersTabs">关闭其他</el-button>
         <el-button type="primary" @click="closeLeftTabs">关闭左侧</el-button>
@@ -16,19 +12,11 @@
       </el-space>
     </vab-card>
     <vab-card>
-      <template #header>
-        <div>
-          <span>params传参(支持多开)</span>
-        </div>
-      </template>
+      <template #header>params传参(支持多开)</template>
       <el-button type="primary" @click="handleOpenParams">点击跳转</el-button>
     </vab-card>
     <vab-card>
-      <template #header>
-        <div>
-          <span>query传参(支持多开)</span>
-        </div>
-      </template>
+      <template #header>query传参(支持多开)</template>
       <el-button type="primary" @click="handleOpenQuery">点击跳转</el-button>
     </vab-card>
   </div>
@@ -36,8 +24,8 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { handleActivePath } from '/@/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 
 defineOptions({
   name: 'Tabs',

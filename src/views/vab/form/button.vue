@@ -1,9 +1,7 @@
 <template>
   <div class="button-container no-background-container">
     <vab-card>
-      <template #header>
-        <span>基础用法</span>
-      </template>
+      <template #header>基础用法</template>
       <el-space wrap>
         <el-button>默认按钮</el-button>
         <el-button type="primary">主要按钮</el-button>
@@ -31,11 +29,8 @@
         <el-button circle :icon="Delete" type="danger" />
       </el-space>
     </vab-card>
-
     <vab-card>
-      <template #header>
-        <span>禁用状态</span>
-      </template>
+      <template #header>禁用状态</template>
       <el-space wrap>
         <el-button disabled>默认按钮</el-button>
         <el-button disabled type="primary">主要按钮</el-button>
@@ -51,21 +46,15 @@
         <el-button disabled plain type="danger">危险按钮</el-button>
       </el-space>
     </vab-card>
-
     <vab-card>
-      <template #header>
-        <span>文字按钮</span>
-      </template>
+      <template #header>文字按钮</template>
       <el-space wrap>
         <el-button text type="primary">文字按钮</el-button>
         <el-button disabled text>文字按钮</el-button>
       </el-space>
     </vab-card>
-
     <vab-card>
-      <template #header>
-        <span>element内置图标按钮</span>
-      </template>
+      <template #header>element内置图标按钮</template>
       <el-space wrap>
         <el-button :icon="Edit" type="primary" />
         <el-button :icon="Share" type="primary" />
@@ -79,11 +68,8 @@
         </el-button>
       </el-space>
     </vab-card>
-
     <vab-card>
-      <template #header>
-        <span>自定义图标按钮</span>
-      </template>
+      <template #header>自定义图标按钮</template>
       <el-space wrap>
         <el-button type="primary">
           <vab-icon icon="24-hours-line" />
@@ -100,11 +86,8 @@
         </el-button>
       </el-space>
     </vab-card>
-
     <vab-card>
-      <template #header>
-        <span>按钮组</span>
-      </template>
+      <template #header>按钮组</template>
       <el-space wrap>
         <el-button-group>
           <el-button :icon="ArrowLeft" type="primary">上一页</el-button>
@@ -123,17 +106,13 @@
       </el-space>
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>加载中</span>
-      </template>
+      <template #header>加载中</template>
       <el-space wrap>
         <el-button :loading="true" type="primary">加载中</el-button>
       </el-space>
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>不同尺寸</span>
-      </template>
+      <template #header>不同尺寸</template>
       <el-space wrap>
         <el-button>默认按钮</el-button>
         <el-button size="small">小型按钮</el-button>

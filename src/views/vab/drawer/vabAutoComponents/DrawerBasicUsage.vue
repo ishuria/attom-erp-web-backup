@@ -14,9 +14,7 @@
     <span>我是内容</span>
   </el-drawer>
   <el-drawer v-model="drawer2" append-to-body :direction="direction" size="288px">
-    <template #header>
-      <h4>按时段设置标题</h4>
-    </template>
+    <template #header>按时段设置标题</template>
     <template #default>
       <div>
         <el-radio v-model="radio1" label="Option 1">选项1</el-radio>

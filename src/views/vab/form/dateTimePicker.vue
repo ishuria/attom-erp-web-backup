@@ -1,21 +1,15 @@
 <template>
   <div class="date-time-picker-container no-background-container">
     <vab-card>
-      <template #header>
-        <span>日期和时间点</span>
-      </template>
+      <template #header>日期和时间点</template>
       <el-date-picker v-model="value1" placeholder="选择日期时间" type="datetime" />
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>日期和时间范围</span>
-      </template>
+      <template #header>日期和时间范围</template>
       <el-date-picker v-model="value2" end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="datetimerange" />
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>默认的起始与结束时刻</span>
-      </template>
+      <template #header>默认的起始与结束时刻</template>
       <el-date-picker
         v-model="value3"
         :default-time="value2"

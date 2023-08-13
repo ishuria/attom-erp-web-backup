@@ -1,9 +1,7 @@
 <template>
   <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
     <vab-card :body-style="{ height: '240px' }" skeleton>
-      <template #header>
-        <span>{{ title }}</span>
-      </template>
+      <template #header>{{ title }}</template>
       <vab-chart :option="option" />
     </vab-card>
   </el-col>

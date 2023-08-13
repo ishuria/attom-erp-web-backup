@@ -1,16 +1,16 @@
 <template>
   <div class="checkbox-container no-background-container">
     <vab-card>
-      <template #header><span>基础用法</span></template>
+      <template #header>基础用法</template>
       <el-checkbox v-model="checked">备选项</el-checkbox>
     </vab-card>
     <vab-card>
-      <template #header><span>禁用状态</span></template>
+      <template #header>禁用状态</template>
       <el-checkbox v-model="checked1" disabled>备选项1</el-checkbox>
       <el-checkbox v-model="checked2" disabled>备选项</el-checkbox>
     </vab-card>
     <vab-card>
-      <template #header><span>多选框组</span></template>
+      <template #header>多选框组</template>
       <el-checkbox-group v-model="checkList">
         <el-checkbox label="复选框 A" />
         <el-checkbox label="复选框 B" />
@@ -20,7 +20,7 @@
       </el-checkbox-group>
     </vab-card>
     <vab-card>
-      <template #header><span>可选项目数量的限制</span></template>
+      <template #header>可选项目数量的限制</template>
       <el-checkbox-group v-model="checkedCities" :max="2" :min="1">
         <el-checkbox v-for="city in cities" :key="city" :label="city">
           {{ city }}
@@ -28,7 +28,7 @@
       </el-checkbox-group>
     </vab-card>
     <vab-card>
-      <template #header><span>按钮样式</span></template>
+      <template #header>按钮样式</template>
       <el-checkbox-group v-model="checkboxGroup1">
         <el-checkbox-button v-for="city in cities" :key="city" :label="city">
           {{ city }}
@@ -36,7 +36,7 @@
       </el-checkbox-group>
     </vab-card>
     <vab-card>
-      <template #header><span>带有边框</span></template>
+      <template #header>带有边框</template>
       <el-checkbox v-model="checked3" border label="备选项1" />
       <el-checkbox v-model="checked4" border label="备选项2" />
     </vab-card>

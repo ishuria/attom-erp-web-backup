@@ -1,23 +1,17 @@
 <template>
   <div class="radio-container no-background-container">
     <vab-card>
-      <template #header>
-        <span>基础用法</span>
-      </template>
+      <template #header>基础用法</template>
       <el-radio v-model="radio" label="1">备选项</el-radio>
       <el-radio v-model="radio" label="2">备选项</el-radio>
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>禁用状态</span>
-      </template>
+      <template #header>禁用状态</template>
       <el-radio v-model="radio2" disabled label="禁用">备选项</el-radio>
       <el-radio v-model="radio2" disabled label="选中且禁用">备选项</el-radio>
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>单选框组</span>
-      </template>
+      <template #header>单选框组</template>
       <el-radio-group v-model="radio3">
         <el-radio :label="3">备选项</el-radio>
         <el-radio :label="6">备选项</el-radio>
@@ -25,9 +19,7 @@
       </el-radio-group>
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>按钮样式</span>
-      </template>
+      <template #header>按钮样式</template>
       <el-radio-group v-model="radio4">
         <el-radio-button label="上海" />
         <el-radio-button label="北京" />
@@ -36,9 +28,7 @@
       </el-radio-group>
     </vab-card>
     <vab-card>
-      <template #header>
-        <span>带有边框</span>
-      </template>
+      <template #header>带有边框</template>
       <el-radio v-model="radio5" border label="1">备选项1</el-radio>
       <el-radio v-model="radio5" border label="2">备选项2</el-radio>
     </vab-card>

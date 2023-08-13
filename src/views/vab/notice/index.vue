@@ -3,9 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="24">
         <vab-card>
-          <template #header>
-            <span>element-plus风格 Message 消息提示</span>
-          </template>
+          <template #header>element-plus风格 Message 消息提示</template>
           <el-button type="primary" @click="open1">消息</el-button>
           <el-button type="success" @click="open2">成功</el-button>
           <el-button type="warning" @click="open3">警告</el-button>
@@ -14,9 +12,7 @@
       </el-col>
       <el-col :span="24">
         <vab-card>
-          <template #header>
-            <span>element-plus风格 Message 消息提示</span>
-          </template>
+          <template #header>element-plus风格 Message 消息提示</template>
           <el-button type="primary" @click="open5">消息</el-button>
           <el-button type="success" @click="open6">成功</el-button>
           <el-button type="warning" @click="open7">警告</el-button>
@@ -25,9 +21,7 @@
       </el-col>
       <el-col :span="24">
         <vab-card>
-          <template #header>
-            <span>Notification 消息提示</span>
-          </template>
+          <template #header>Notification 消息提示</template>
           <el-button type="info" @click="open9">消息</el-button>
           <el-button type="success" @click="open10">成功</el-button>
           <el-button type="warning" @click="open11">警告</el-button>
@@ -36,9 +30,7 @@
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <vab-card>
-          <template #header>
-            <span>成功提示</span>
-          </template>
+          <template #header>成功提示</template>
           <el-result icon="success" sub-title="请根据提示进行操作" title="成功提示">
             <template #extra>
               <el-button type="primary" @click="open13('成功提示')">确认</el-button>
@@ -48,9 +40,7 @@
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <vab-card>
-          <template #header>
-            <span>警告提示</span>
-          </template>
+          <template #header>警告提示</template>
           <el-result icon="warning" sub-title="请根据提示进行操作" title="警告提示">
             <template #extra>
               <el-button type="primary" @click="open13('警告提示')">确认</el-button>
@@ -60,9 +50,7 @@
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <vab-card>
-          <template #header>
-            <span>错误提示</span>
-          </template>
+          <template #header>错误提示</template>
           <el-result icon="error" sub-title="请根据提示进行操作" title="错误提示">
             <template #extra>
               <el-button type="primary" @click="open13('错误提示')">确认</el-button>
@@ -72,9 +60,7 @@
       </el-col>
       <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
         <vab-card>
-          <template #header>
-            <span>信息提示</span>
-          </template>
+          <template #header>信息提示</template>
           <el-result icon="info" sub-title="请根据提示进行操作" title="信息提示">
             <template #extra>
               <el-button type="primary" @click="open13('信息提示')">确认</el-button>
@@ -84,9 +70,7 @@
       </el-col>
       <el-col :span="24">
         <vab-card>
-          <template #header>
-            <span>Alert 警告</span>
-          </template>
+          <template #header>Alert 警告</template>
           <el-alert show-icon title="成功提示的文案" type="success" />
           <el-alert show-icon title="消息提示的文案" type="info" />
           <el-alert show-icon title="警告提示的文案" type="warning" />
