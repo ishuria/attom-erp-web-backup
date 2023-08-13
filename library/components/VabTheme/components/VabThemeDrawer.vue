@@ -218,7 +218,7 @@ const _updateTheme = (value: any = '') => {
     $baseMessage('切换成功', 'success', 'hey')
   }, 1000)
 
-  handleSaveTheme()
+  saveTheme()
 }
 
 const setDefaultTheme = () => {
@@ -238,10 +238,10 @@ const setDefaultTheme = () => {
   }, 1000)
 }
 
-const handleSaveTheme = async () => {
-  await saveTheme()
+const handleSaveTheme = () => {
+  saveTheme()
   drawerVisible.value = false
-  if (device.value === 'mobile') location.reload()
+  //if (device.value === 'mobile') location.reload()
 }
 
 $sub('shop-vite-open-theme', () => {
@@ -253,7 +253,7 @@ $sub('shop-vite-reset-theme', () => {
 })
 
 $sub('shop-vite-save-theme', () => {
-  handleSaveTheme()
+  saveTheme()
 })
 
 $sub('shop-vite-change-theme', (value: string) => {
