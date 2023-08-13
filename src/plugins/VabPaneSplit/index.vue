@@ -91,6 +91,7 @@ function startResize(mde: MouseEvent) {
     width: 5px;
     cursor: w-resize;
     background-color: var(--el-border-color);
+    border-radius: var(--el-border-radius-base);
     transition: 0.3s;
 
     &:hover {
@@ -131,6 +132,7 @@ function startResize(mde: MouseEvent) {
       width: 100%;
       height: 5px;
       cursor: n-resize;
+      border-radius: var(--el-border-radius-base);
     }
   }
 }
