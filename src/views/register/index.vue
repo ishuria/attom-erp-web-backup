@@ -202,6 +202,11 @@ onUnmounted(() => {
   }
 
   @media (max-width: 576px) {
+    .login-right-tools {
+      top: 5vw !important;
+      right: 5vw !important;
+    }
+
     .register-form {
       width: 90vw !important;
       margin: auto !important;

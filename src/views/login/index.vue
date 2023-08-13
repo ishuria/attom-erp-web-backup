@@ -177,6 +177,11 @@ onBeforeRouteLeave((to, from, next) => {
   }
 
   @media (max-width: 576px) {
+    .login-right-tools {
+      top: 5vw !important;
+      right: 5vw !important;
+    }
+
     .login-form {
       width: 90vw !important;
       margin: auto !important;
