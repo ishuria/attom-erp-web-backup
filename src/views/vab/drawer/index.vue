@@ -5,7 +5,7 @@
       <drawer-basic-usage />
     </vab-card>
     <vab-card>
-      <template #header>不添加 title</template>
+      <template #header>不添加标题</template>
       <drawer-no-title />
     </vab-card>
     <vab-card>

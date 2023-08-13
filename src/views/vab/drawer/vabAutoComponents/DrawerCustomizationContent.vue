@@ -1,7 +1,7 @@
 <template>
-  <el-button type="primary" @click="table = true">带表格的的抽屉</el-button>
-  <el-button type="primary" @click="dialog = true">带表单的的抽屉</el-button>
-  <el-drawer v-model="table" direction="rtl" size="50%" title="我有一个嵌套表！">
+  <el-button type="primary" @click="table = true">嵌套表格</el-button>
+  <el-button type="primary" @click="dialog = true">嵌套表单</el-button>
+  <el-drawer v-model="table" append-to-body direction="rtl" size="288px" title="我有一个嵌套表格">
     <el-table :data="gridData">
       <el-table-column label="日期" property="date" width="150" />
       <el-table-column label="姓名" property="name" width="200" />
@@ -9,7 +9,15 @@
     </el-table>
   </el-drawer>
 
-  <el-drawer ref="drawerRef" v-model="dialog" :before-close="handleClose" direction="ltr" title="我有一个嵌套的表单！">
+  <el-drawer
+    ref="drawerRef"
+    v-model="dialog"
+    append-to-body
+    :before-close="handleClose"
+    direction="ltr"
+    size="288px"
+    title="我有一个嵌套的表单！"
+  >
     <div>
       <el-form :model="form">
         <el-form-item label="姓名" :label-width="formLabelWidth">
