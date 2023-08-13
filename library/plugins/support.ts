@@ -1,7 +1,7 @@
-import pinia from '/@/store'
-import { useSettingsStore } from '/@/store/modules/settings'
 import { ElMessageBox } from 'element-plus'
 import { devDependencies, version } from '~/package.json'
+import pinia from '/@/store'
+import { useSettingsStore } from '/@/store/modules/settings'
 
 export default {
   install: () => {

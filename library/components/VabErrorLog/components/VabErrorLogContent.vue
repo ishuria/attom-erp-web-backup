@@ -2,9 +2,7 @@
   <el-table border :data="errorLogs">
     <el-table-column label="报错路由">
       <template #default="{ row }">
-        <a :href="row.url" target="_blank">
-          <el-tag type="success">{{ row.url }}</el-tag>
-        </a>
+        <el-button :href="row.url" rel="noopener noreferrer" tag="a" target="_blank" text type="success">{{ row.url }}</el-button>
       </template>
     </el-table-column>
     <el-table-column label="错误信息">
@@ -17,8 +15,17 @@
         <el-tooltip :content="row.err.stack" effect="light">
           <el-button text type="primary">错误详情</el-button>
         </el-tooltip>
-        <a v-for="(item, index) in searchList" :key="index" :href="item.url + row.err.message" target="_blank">
-          <el-button text type="primary">
+        <a>
+          <el-button
+            v-for="(item, index) in searchList"
+            :key="index"
+            :href="item.url + row.err.message"
+            rel="noopener noreferrer"
+            tag="a"
+            target="_blank"
+            text
+            type="primary"
+          >
             {{ item.title }}
           </el-button>
         </a>

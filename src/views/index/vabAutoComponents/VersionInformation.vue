@@ -46,18 +46,20 @@
         </tr>
       </table>
       <div class="version-information-rely">
-        <a href="https://vue-admin-beautiful.com/authorization/shop-vite.html" target="_blank">
-          <el-button type="primary">
-            <vab-icon icon="vip-diamond-line" />
-            <span>Vue Shop Vite ￥1399</span>
-          </el-button>
-        </a>
-        <a href="https://vue-admin-beautiful.com/admin-plus" target="_blank">
-          <el-button type="warning">
-            <vab-icon icon="vip-diamond-line" />
-            <span>admin-plus ￥799</span>
-          </el-button>
-        </a>
+        <el-button
+          href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
+          rel="noopener noreferrer"
+          tag="a"
+          target="_blank"
+          type="primary"
+        >
+          <vab-icon icon="vip-diamond-line" />
+          <span>Vue Shop Vite ￥1399</span>
+        </el-button>
+        <el-button href="https://vue-admin-beautiful.com/admin-plus" rel="noopener noreferrer" tag="a" target="_blank" type="warning">
+          <vab-icon icon="vip-diamond-line" />
+          <span>admin-plus ￥799</span>
+        </el-button>
       </div>
     </el-scrollbar>
   </vab-card>

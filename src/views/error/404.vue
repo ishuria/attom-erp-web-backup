@@ -9,9 +9,7 @@
         <div class="bullshit-headline">{{ headline }}</div>
         <div class="bullshit-info">{{ info }}</div>
         <router-link v-slot="{ navigate }" custom to="/">
-          <a class="bullshit-return-home" @click="navigate">
-            {{ btn }}
-          </a>
+          <el-button type="primary" @click="navigate">{{ btn }}</el-button>
         </router-link>
       </div>
     </div>
