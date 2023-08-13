@@ -18,6 +18,7 @@ html > body.vab-theme-technology {
   --el-border-color-darker: #{mix($base-color-white, #2c6191, 10%)};
   --el-border-color-dark: #{mix($base-color-white, #2c6191, 20%)};
   --el-border-color: #{mix($base-color-white, #2c6191, 10%)};
+  --el-border: 1px solid #{mix($base-color-white, #2c6191, 10%)};
   --el-border-color-light: #{mix($base-color-white, #2c6191, 20%)};
   --el-border-color-lighter: #{mix($base-color-white, #2c6191, 30%)};
   --el-border-color-extra-light: #2c6191;
@@ -50,15 +51,6 @@ html > body.vab-theme-technology {
   color: var(--el-color-black) !important;
   background-color: var(--el-color-white) !important;
 
-  #app {
-    border: 1px solid var(--el-border-color) !important;
-  }
-
-  .vab-layout-header {
-    border-top: 1px solid var(--el-border-color) !important;
-    border-right: 1px solid var(--el-border-color) !important;
-  }
-
   .vab-side-bar {
     border-top: 1px solid var(--el-border-color) !important;
     border-right: 1px solid var(--el-border-color) !important;
@@ -72,13 +64,6 @@ html > body.vab-theme-technology {
   .mobile {
     .vab-side-bar {
       border-left: 0 solid var(--el-border-color) !important;
-    }
-  }
-
-  .vab-layout-horizontal {
-    .vab-layout-header {
-      border-top: 1px solid var(--el-border-color) !important;
-      border-left: 1px solid var(--el-border-color) !important;
     }
   }
 
@@ -267,5 +252,11 @@ html > body.vab-theme-technology {
   [fill='#f2f2f2'],
   [fill='#d0d2d5'] {
     fill: var(--el-bg-color) !important;
+  }
+
+  .login-container,
+  .register-container {
+    background: url('/@/assets/login_images/background.png') center center fixed no-repeat;
+    background-size: cover;
   }
 }
