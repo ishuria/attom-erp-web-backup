@@ -320,4 +320,9 @@ html > body.vab-theme-plain {
       color: var(--el-menu-color-text) !important;
     }
   }
+
+  .login-container,
+  .register-container {
+    --el-color-black: var(--el-menu-color-text) !important;
+  }
 }

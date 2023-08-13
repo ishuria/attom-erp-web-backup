@@ -178,7 +178,7 @@ onBeforeRouteLeave((to, from, next) => {
 
   @media (max-width: 576px) {
     .login-form {
-      width: 85vw !important;
+      width: 90vw !important;
       margin: auto !important;
 
       .left-img {
@@ -187,7 +187,9 @@ onBeforeRouteLeave((to, from, next) => {
 
       :deep() {
         .el-form--default {
-          width: 94% !important;
+          width: 100% !important;
+          margin-right: auto !important;
+          margin-left: auto !important;
         }
       }
     }

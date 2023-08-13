@@ -203,7 +203,7 @@ onUnmounted(() => {
 
   @media (max-width: 576px) {
     .register-form {
-      width: 85vw !important;
+      width: 90vw !important;
       margin: auto !important;
 
       .left-img {
@@ -212,7 +212,9 @@ onUnmounted(() => {
 
       :deep() {
         .el-form--default {
-          width: 94% !important;
+          width: 100% !important;
+          margin-right: auto !important;
+          margin-left: auto !important;
         }
       }
     }

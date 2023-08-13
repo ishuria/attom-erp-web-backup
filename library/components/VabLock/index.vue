@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="vab-lock">
     <vab-icon icon="lock-line" @click="handleLock" />
     <el-collapse-transition>
       <div v-show="lock" class="vab-screen-lock">
