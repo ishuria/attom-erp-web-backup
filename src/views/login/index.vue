@@ -1,5 +1,10 @@
 <template>
   <div class="login-container">
+    <div class="login-right-tools">
+      <vab-language />
+      <vab-color-picker />
+      <vab-dark />
+    </div>
     <div class="login-form">
       <img class="left-img" :src="leftImg" />
       <el-form ref="formRef" label-position="left" :model="form" :rules="rules" @submit.prevent>
@@ -157,6 +162,19 @@ onBeforeRouteLeave((to, from, next) => {
   position: relative;
   height: 100vh;
   background: linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3));
+
+  .login-right-tools {
+    position: fixed;
+    top: var(--el-margin);
+    right: var(--el-margin);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--el-padding) / 2) var(--el-padding) calc(var(--el-padding) / 2) var(--el-padding);
+    background: var(--el-color-white);
+    border: 1px solid var(--el-border-color);
+    border-radius: var(--el-border-radius-base);
+  }
 
   @media (max-width: 576px) {
     .login-form {
