@@ -156,7 +156,7 @@ export const useSettingsStore = defineStore('settings', {
         const colorScheme = localStorage.getItem('vueuse-color-scheme')
         const htmlElement = document.getElementsByTagName('html')[0]
         htmlElement.className += ` ${colorScheme}`
-        this.mode = colorScheme
+        this.mode = colorScheme as string
       }
 
       this.setCssVar()
