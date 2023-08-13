@@ -181,9 +181,7 @@ onUnmounted(() => {
 .register-container {
   position: relative;
   height: 100vh;
-  min-height: 700px;
-  background: url('/@/assets/login_images/background.jpg') center center fixed no-repeat;
-  background-size: cover;
+  background: linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3));
 
   @media (max-width: 576px) {
     .register-form {
