@@ -217,6 +217,8 @@ const _updateTheme = (value: any = '') => {
     loading.close()
     $baseMessage('切换成功', 'success', 'hey')
   }, 1000)
+
+  handleSaveTheme()
 }
 
 const setDefaultTheme = () => {
