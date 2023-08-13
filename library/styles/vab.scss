@@ -85,6 +85,7 @@ html {
         position: fixed;
         bottom: var(--el-margin);
         left: var(--el-margin);
+        z-index: calc(var(--el-z-index) + 10);
         display: flex;
         align-items: center;
         justify-content: center;
