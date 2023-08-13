@@ -1,9 +1,5 @@
 module.exports = {
-  extends: [
-    'stylelint-config-recommended-scss',
-    'stylelint-config-recommended-vue',
-    'stylelint-config-recess-order',
-  ],
+  extends: ['stylelint-config-recommended-scss', 'stylelint-config-recommended-vue', 'stylelint-config-recess-order'],
   rules: {
     'no-empty-source': null,
     'at-rule-no-unknown': null,
