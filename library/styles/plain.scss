@@ -1,11 +1,10 @@
 html > body.vab-theme-plain {
-  --el-color-black: #fff;
-  --el-menu-background-color: #fff;
+  --el-menu-background-color: #ffffff;
   --el-menu-color-text: #515a6e;
 
   @mixin container {
     color: var(--el-menu-color-text) !important;
-    background: var(--el-color-black) !important;
+    background: #ffffff !important;
   }
 
   @mixin active {
@@ -92,7 +91,7 @@ html > body.vab-theme-plain {
       }
 
       .el-tabs__item.is-active {
-        color: var(--el-color-black) !important;
+        color: #ffffff !important;
         background: var(--el-color-primary) !important;
       }
     }
@@ -115,7 +114,7 @@ html > body.vab-theme-plain {
       .el-tabs {
         .el-tabs__item {
           .vab-column-grid:hover {
-            color: var(--el-color-black) !important;
+            color: #ffffff !important;
           }
 
           &.is-active {
@@ -150,7 +149,7 @@ html > body.vab-theme-plain {
   }
 
   .vab-logo-column .logo {
-    background: var(--el-color-black) !important;
+    background: #ffffff !important;
     border-right: 1px solid var(--el-border-color) !important;
   }
 
@@ -319,10 +318,5 @@ html > body.vab-theme-plain {
     .jv-item.jv-object {
       color: var(--el-menu-color-text) !important;
     }
-  }
-
-  .login-container,
-  .register-container {
-    --el-color-black: var(--el-menu-color-text) !important;
   }
 }
