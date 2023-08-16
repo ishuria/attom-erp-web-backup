@@ -175,9 +175,14 @@ const handleLock = () => {
                 position: absolute;
                 right: -1px;
                 height: 40px;
+                margin-left: 0 !important;
                 line-height: 40px;
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
+
+                .ri-lock-line {
+                  margin-left: 0 !important;
+                }
               }
 
               .el-input__validateIcon {

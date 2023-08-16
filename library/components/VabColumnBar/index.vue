@@ -285,14 +285,7 @@ nextTick(() => {
       height: var(--el-left-menu-width-min);
 
       > div {
-        svg {
-          position: relative;
-          top: 8px;
-          display: block;
-          width: var(--el-font-size-bigger);
-          height: var(--el-font-size-bigger);
-        }
-
+        svg,
         [class*='ri-'] {
           display: block;
           height: 20px;
@@ -307,6 +300,7 @@ nextTick(() => {
       height: calc(var(--el-left-menu-width-min) / 1.4);
       padding-left: var(--el-padding);
 
+      svg,
       [class*='ri-'] {
         margin-right: 3px;
       }

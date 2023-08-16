@@ -150,14 +150,6 @@ html {
       border-radius: 0 !important;
     }
 
-    /* plus处理图标间距 */
-    li,
-    span {
-      i + span {
-        margin-left: 3px;
-      }
-    }
-
     /* vab-dropdown下拉动画 */
     .vab-dropdown {
       &-active {
@@ -453,6 +445,35 @@ html {
     /* el-menu菜单 */
     .el-menu {
       user-select: none;
+
+      .el-sub-menu__title,
+      .el-menu-item {
+        svg,
+        [class*='ri-'] {
+          margin-right: 3px;
+          margin-left: 0;
+        }
+      }
+    }
+
+    /* el-tabs--top */
+    .el-tabs.el-tabs--top {
+      svg,
+      [class*='ri-'] {
+        margin-right: 3px;
+      }
+    }
+
+    /* el-breadcrumb */
+    .el-breadcrumb__inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg,
+      [class*='ri-'] {
+        margin-right: 3px;
+      }
     }
 
     /* el-dialog */
@@ -567,6 +588,7 @@ html {
         width: 20px;
         height: 20px;
         padding: 0;
+        border-radius: 0;
       }
 
       &__color {

@@ -29,9 +29,10 @@ const handleTo = (path: any) => {
 
 <style lang="scss" scoped>
 .vab-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: var(--el-nav-height);
-  font-size: var(--el-font-size-default);
-  line-height: var(--el-nav-height);
 
   :deep() {
     .el-breadcrumb__item {
