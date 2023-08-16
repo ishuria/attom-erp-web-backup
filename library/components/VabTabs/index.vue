@@ -316,6 +316,11 @@ watchEffect(() => {
         .is-icon-close {
           width: 14px !important;
           margin-top: 1px;
+          margin-right: 0 !important;
+
+          svg {
+            margin-right: 0 !important;
+          }
         }
       }
 
