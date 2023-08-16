@@ -69,6 +69,7 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
+const { title } = storeToRefs(settingsStore)
 const leftImg = ref<string>(getImageUrl(`assets/login_images/left_img.png`))
 const login = (form: any) => userStore.login(form)
 const loading = ref<boolean>(false)
@@ -77,7 +78,6 @@ const redirect = ref<any>(undefined)
 let timer: any
 const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
 const previewText = ref<string>('')
-const title = settingsStore.getTitle
 const formRef = ref<any>(null)
 const passwordRef = ref<any>(null)
 const form = reactive<any>({
