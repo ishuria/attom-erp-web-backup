@@ -3,8 +3,10 @@
     v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
     v-model="mode"
     :active-icon="Moon"
+    active-value="dark"
     class="vab-dark"
     :inactive-icon="Sunny"
+    inactive-value="light"
     inline-prompt
     @click="_toggleDark($event)"
   />
@@ -63,8 +65,8 @@ const handleUseDark = () => {
   return useDark()
 }
 
-const handleGetScheme = (value: string) => {
-  return localStorage.getItem('vueuse-color-scheme') === value
+const handleGetScheme = () => {
+  return localStorage.getItem('vueuse-color-scheme')
 }
 
 const handleSetScheme = (value: string) => {
@@ -73,27 +75,19 @@ const handleSetScheme = (value: string) => {
 
 // 还原默认
 $sub('shop-vite-reset-dark', () => {
-  mode.value = handleGetScheme('dark')
+  mode.value = handleGetScheme()
 
-  if (handleGetScheme('dark')) {
+  if (handleGetScheme() === 'dark') {
     handleSetScheme('light')
     handleUseDark()
-    mode.value = false
+    mode.value = 'light'
   }
-})
-
-$sub('reload-dark', (color: any) => {
-  mode.value = color
 })
 
 onBeforeMount(() => {
   handleUseDark()
-  if (handleGetScheme('auto')) handleSetScheme('light')
-  mode.value = handleGetScheme('dark')
-})
-
-watch(mode, (newVal) => {
-  $pub('reload-dark', newVal)
+  if (handleGetScheme() === 'auto') handleSetScheme('light')
+  mode.value = handleGetScheme()
 })
 
 onBeforeUnmount(() => {
