@@ -23,7 +23,6 @@ defineOptions({
 
 const $sub = inject<any>('$sub')
 const $unsub = inject<any>('$unsub')
-const $pub = inject<any>('$pub')
 const settingsStore = useSettingsStore()
 const { theme, mode } = storeToRefs(settingsStore)
 const { updateMode } = settingsStore
