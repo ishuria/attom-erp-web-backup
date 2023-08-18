@@ -490,6 +490,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'gantt',
+        name: 'Gantt',
+        component: () => import('/@/views/other/gantt/index.vue'),
+        meta: {
+          title: '甘特图',
+          guard: ['Admin'],
+          icon: 'organization-chart',
+        },
+      },
+      {
         path: 'editor',
         name: 'Editor',
         component: Layout,

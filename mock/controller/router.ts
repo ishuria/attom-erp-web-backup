@@ -438,6 +438,16 @@ const list = [
         },
       },
       {
+        path: 'gantt',
+        name: 'Gantt',
+        component: '/@/views/other/gantt/index.vue',
+        meta: {
+          title: '甘特图',
+          guard: ['Admin'],
+          icon: 'organization-chart',
+        },
+      },
+      {
         path: 'editor',
         name: 'Editor',
         component: 'Layout',
