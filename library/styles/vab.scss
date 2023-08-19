@@ -668,7 +668,7 @@ html {
     }
 
     :not(.table-auto-height).no-background-container {
-      .el-row {
+      > .el-row {
         margin-bottom: calc(0px - var(--el-margin));
       }
     }
