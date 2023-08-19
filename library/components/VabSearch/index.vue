@@ -13,7 +13,7 @@
   >
     <template #default="{ data }">
       <vab-icon v-if="data.meta && data.meta.icon" :icon="data.meta.icon" />
-      <span>{{ translate(data.meta.title) }}</span>
+      <span style="margin-left: 3px">{{ translate(data.meta.title) }}</span>
     </template>
   </el-tree-select>
 </template>

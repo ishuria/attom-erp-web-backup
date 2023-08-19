@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="288px" :title="translate('主题配置')">
+  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="300px" :title="translate('主题配置')">
     <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
