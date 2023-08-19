@@ -1,5 +1,6 @@
 import enLocale from 'element-plus/dist/locale/en'
 import zhLocale from 'element-plus/dist/locale/zh-cn'
+import { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import en from './en.json'
 import pinia from '/@/store'
@@ -14,7 +15,7 @@ const messages: Record<LanguageType, any> = {
   zh: {},
 }
 
-function getLanguage() {
+const getLanguage = () => {
   const { getLanguage } = useSettingsStore(pinia)
   return getLanguage
 }
@@ -26,14 +27,12 @@ export const i18n = createI18n({
   messages,
 })
 
-export function setupI18n(app: any) {
+export const setupI18n = (app: App<Element>) => {
   app.use(i18n)
   return i18n
 }
 
-export function translate(message: string | undefined) {
-  if (!message) {
-    return ''
-  }
+export const translate = (message: string | undefined) => {
+  if (!message) return ''
   return [getLanguage(), 'vabI18n', message].reduce((o, k) => (o || {})[k], messages as any) || message
 }
