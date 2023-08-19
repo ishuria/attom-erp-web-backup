@@ -1,6 +1,6 @@
 <template>
   <div class="gantt-container">
-    <gantt :data="data" :date-range-list="dateRangeList" date-text="日期" item-text="项目" @scheduleClick="scheduleClick" />
+    <gantt :data="data" :date-range-list="dateRangeList" date-text="日期" item-text="项目" @schedule-click="scheduleClick" />
   </div>
 </template>
 

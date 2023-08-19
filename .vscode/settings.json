@@ -1,66 +1,45 @@
 {
-  "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.quickSuggestions": {
-    "strings": true
-  },
-  "workbench.colorTheme": "One Monokai",
-  "editor.tabSize": 2,
-  "editor.detectIndentation": false,
-  "emmet.triggerExpansionOnTab": true,
-  "editor.formatOnSave": true,
-  "javascript.format.enable": true,
-  "git.enableSmartCommit": true,
-  "git.autofetch": true,
-  "git.confirmSync": false,
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "liveServer.settings.donotShowInfoMsg": true,
-  "explorer.confirmDelete": false,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.format.semicolons": "remove",
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.format.semicolons": "remove",
-  "files.exclude": {
-    "**/.idea": true
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.stylelint": true,
-    "source.fixAll.eslint": true,
-    "source.organizeImports": true
-  },
-  "stylelint.validate": ["vue", "scss"],
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.suggest.snippetsPreventQuickSuggestions": false,
-  "prettier.htmlWhitespaceSensitivity": "ignore",
-  "prettier.vueIndentScriptAndStyle": true,
+  "[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[vue]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
   "docthis.authorName": "chuzhixin 1204505056@qq.com",
+  "docthis.enableHungarianNotationEvaluation": true,
   "docthis.includeAuthorTag": true,
   "docthis.includeDescriptionTag": true,
-  "docthis.enableHungarianNotationEvaluation": true,
   "docthis.inferTypesFromNames": true,
-  "files.autoSave": "onFocusChange",
-  "path-intellisense.mappings": {
-    "@": "${workspaceRoot}/src"
-  },
-  "files.eol": "\n",
-  "vue.codeActions.savingTimeLimit": 100000,
+  "editor.codeActionsOnSave": { "source.fixAll.stylelint": true, "source.fixAll.eslint": true, "source.organizeImports": true },
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
   "editor.formatOnType": true,
+  "editor.quickSuggestions": { "strings": true },
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.tabSize": 2,
+  "emmet.triggerExpansionOnTab": true,
+  "explorer.confirmDelete": false,
+  "files.autoSave": "onFocusChange",
+  "files.eol": "\n",
+  "files.exclude": { "**/.idea": true },
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "javascript.format.enable": true,
+  "javascript.format.semicolons": "remove",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "path-intellisense.mappings": { "@": "${workspaceRoot}/src" },
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "prettier.vueIndentScriptAndStyle": true,
+  "stylelint.validate": ["vue", "scss"],
+  "typescript.format.semicolons": "remove",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "vue.codeActions.savingTimeLimit": 100000,
+  "workbench.colorTheme": "One Monokai",
   "cSpell.words": [
     "aliyun",
+    "autofix",
     "axios",
     "backtop",
     "cascader",

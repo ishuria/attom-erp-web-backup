@@ -8,13 +8,7 @@ import { assetsDir, base, chunkSizeWarningLimit, cssCodeSplit, minify, open, out
 import { createVitePlugin, createWatch } from '/@vab/build'
 
 const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
-const info = {
-  dependencies,
-  devDependencies,
-  lastBuildTime,
-  name,
-  version,
-}
+const info = { dependencies, devDependencies, lastBuildTime, name, version }
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   process.env['VITE_APP_UPDATE_TIME'] = info.lastBuildTime
@@ -57,7 +51,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         output: {
           chunkFileNames: 'static/js/[name]-[hash].js',
           entryFileNames: 'static/js/[name]-[hash].js',
-          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+          assetFileNames: 'static/[ext]/[name].[ext]',
         },
       },
       minify,
