@@ -652,14 +652,24 @@ html {
     }
 
     .no-background-container.table-auto-height {
-      .el-card__body {
-        display: flex;
-        flex-direction: column;
-        height: calc(var(--el-container-height) - var(--el-padding) - 2px);
+      .el-card {
+        margin-bottom: 0;
 
-        .el-table {
-          flex: 1;
+        .el-card__body {
+          display: flex;
+          flex-direction: column;
+          height: calc(var(--el-container-height) - 2px);
+
+          .el-table {
+            flex: 1;
+          }
         }
+      }
+    }
+
+    :not(.table-auto-height).no-background-container {
+      .el-row {
+        margin-bottom: calc(0px - var(--el-margin));
       }
     }
 

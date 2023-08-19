@@ -1,6 +1,6 @@
-import pinia from '/@/store'
-import { translate } from '/@/i18n'
 import { titleReverse, titleSeparator } from '/@/config'
+import { translate } from '/@/i18n'
+import pinia from '/@/store'
 import { useSettingsStore } from '/@/store/modules/settings'
 
 /**

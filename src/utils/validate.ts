@@ -3,8 +3,8 @@
  * @param path
  * @returns {boolean}
  */
-export function isExternal(path: string) {
-  return /^(https?:|mailto:|tel:|\/\/)/.test(path)
+export const isExternal = (value: string) => {
+  return /^(https?:|mailto:|tel:|\/\/)/.test(value)
 }
 
 /**
@@ -12,7 +12,7 @@ export function isExternal(path: string) {
  * @param value
  * @returns {boolean}
  */
-export function isPassword(value: string) {
+export const isPassword = (value: string) => {
   return value.length >= 6
 }
 
@@ -21,7 +21,7 @@ export function isPassword(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isNumber(value: string) {
+export const isNumber = (value: string) => {
   const reg = /^-?\d+(\.\d+)?$/
   return reg.test(value)
 }
@@ -31,7 +31,7 @@ export function isNumber(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isName(value: string) {
+export const isName = (value: string) => {
   const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/
   return reg.test(value)
 }
@@ -41,10 +41,10 @@ export function isName(value: string) {
  * @param ip
  * @returns {boolean}
  */
-export function isIP(ip: string) {
+export const isIP = (value: string) => {
   const reg =
     /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-  return reg.test(ip)
+  return reg.test(value)
 }
 
 /**
@@ -52,9 +52,9 @@ export function isIP(ip: string) {
  * @param url
  * @returns {boolean}
  */
-export function isUrl(url: string) {
+export const isUrl = (value: string) => {
   const reg = /^(http|https):\/\/[a-zA-Z-9]+([-.]\w+)*\.[a-zA-Z]{2,20}(:[-\d]{1,5})?(\/.*)?$/
-  return reg.test(url)
+  return reg.test(value)
 }
 
 /**
@@ -62,7 +62,7 @@ export function isUrl(url: string) {
  * @param value
  * @returns {boolean}
  */
-export function isLowerCase(value: string) {
+export const isLowerCase = (value: string) => {
   const reg = /^[a-z]+$/
   return reg.test(value)
 }
@@ -72,7 +72,7 @@ export function isLowerCase(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isUpperCase(value: string) {
+export const isUpperCase = (value: string) => {
   const reg = /^[A-Z]+$/
   return reg.test(value)
 }
@@ -82,7 +82,7 @@ export function isUpperCase(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isAlphabets(value: string) {
+export const isAlphabets = (value: string) => {
   const reg = /^[A-Za-z]+$/
   return reg.test(value)
 }
@@ -92,7 +92,7 @@ export function isAlphabets(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isString(value: any) {
+export const isString = (value: any) => {
   return typeof value === 'string' || value instanceof String
 }
 
@@ -100,11 +100,9 @@ export function isString(value: any) {
  * @description 判断是否是数组
  * @param arg
  */
-export function isArray(arg: any) {
-  if (typeof Array.isArray === 'undefined') {
-    return Object.prototype.toString.call(arg) === '[object Array]'
-  }
-  return Array.isArray(arg)
+export const isArray = (value: any) => {
+  if (typeof Array.isArray === 'undefined') return Object.prototype.toString.call(value) === '[object Array]'
+  return Array.isArray(value)
 }
 
 /**
@@ -112,7 +110,7 @@ export function isArray(arg: any) {
  * @param value
  * @returns {boolean}
  */
-export function isPort(value: string) {
+export const isPort = (value: string) => {
   const reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
   return reg.test(value)
 }
@@ -122,7 +120,7 @@ export function isPort(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isPhone(value: string) {
+export const isPhone = (value: string) => {
   const reg = /^1[3456789]\d{9}$/
   return reg.test(value)
 }
@@ -132,7 +130,7 @@ export function isPhone(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isIdCard(value: string) {
+export const isIdCard = (value: string) => {
   const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
   return reg.test(value)
 }
@@ -142,7 +140,7 @@ export function isIdCard(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isEmail(value: string) {
+export const isEmail = (value: string) => {
   const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
   return reg.test(value)
 }
@@ -152,7 +150,7 @@ export function isEmail(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isChina(value: string) {
+export const isChina = (value: string) => {
   const reg = /^[\u4E00-\u9FA5]{2,4}$/
   return reg.test(value)
 }
@@ -162,7 +160,7 @@ export function isChina(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isBlank(value: string) {
+export const isBlank = (value: string) => {
   return value === null || false || value === '' || value.trim() === '' || value.toLocaleLowerCase().trim() === 'null'
 }
 
@@ -171,7 +169,7 @@ export function isBlank(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isTel(value: string) {
+export const isTel = (value: string) => {
   const reg = /^(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})([- ])?)?([0-9]{7,8})(([- 转])*([0-9]{1,4}))?$/
   return reg.test(value)
 }
@@ -181,7 +179,7 @@ export function isTel(value: string) {
  * @param value
  * @returns {boolean}
  */
-export function isJson(value: any) {
+export const isJson = (value: any) => {
   if (typeof value === 'string') {
     const obj = JSON.parse(value)
     return !!(typeof obj === 'object' && obj)
@@ -190,11 +188,11 @@ export function isJson(value: any) {
 }
 
 /**
- * @description 判断是否为json
+ * @description 判断是否为中文
  * @param value
  * @returns {boolean}
  */
-export function isChinese(value: any) {
+export const isChinese = (value: string) => {
   const reg = /^[\u4e00-\u9fa5]+$/
   return reg.test(value)
 }
@@ -204,7 +202,7 @@ export function isChinese(value: any) {
  * @param value
  * @returns {boolean}
  */
-export function isEnglish(value: any) {
+export const isEnglish = (value: string) => {
   const reg = /^[a-zA-Z]+$/
   return reg.test(value)
 }

@@ -1,6 +1,7 @@
 /**
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
+import { round } from 'lodash-es'
 import {
   isCatchedTabs as _isCatchedTabs,
   color,
@@ -34,7 +35,6 @@ import {
 } from '/@/config'
 import { lightenColor } from '/@/utils/lightenColor'
 import { isJson } from '/@/utils/validate'
-import { round } from 'lodash-es'
 
 const defaultTheme: ThemeType = {
   color,
@@ -170,8 +170,8 @@ export const useSettingsStore = defineStore('settings', {
       if (!this.theme.showTabs) useCssVar('--el-tabs-height', el).value = '0px'
       else useCssVar('--el-tabs-height', el).value = '50px'
 
-      if (!this.theme.showFooter) useCssVar('--el-footer-height', el).value = '0px'
-      else useCssVar('--el-footer-height', el).value = '58px'
+      if (!this.theme.showFooter) useCssVar('--el-footer-height', el).value = '-20px'
+      else useCssVar('--el-footer-height', el).value = '50px'
 
       if (!this.theme.radius) useCssVar('--el-border-radius-base', el).value = '5px'
       else useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`

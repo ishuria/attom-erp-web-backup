@@ -12,15 +12,13 @@ import { isExternal } from '/@/utils/validate'
 export function convertRouter(asyncRoutes: VabRouteRecordRaw[]) {
   const routeAllPathToCompMap = import.meta.glob(`../**/*.vue`)
   return asyncRoutes.map((route: VabRouteRecordRaw) => {
-    if (route.component) {
-      if (route.component === 'Layout') {
-        route.component = () => import('/@vab/layouts/index.vue')
-      } else {
+    if (route.component)
+      if (route.component === 'Layout') route.component = () => import('/@vab/layouts/index.vue')
+      else {
         const index = route.component.indexOf('views')
         const path = index > 0 ? route.component.slice(index) : `${route.component}`
         route.component = routeAllPathToCompMap[`../${path}`]
       }
-    }
     if (route.children && route.children.length) route.children = convertRouter(route.children)
     if (route.children && route.children.length === 0) delete route.children
     return route

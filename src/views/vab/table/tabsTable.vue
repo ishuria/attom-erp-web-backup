@@ -268,7 +268,7 @@ onBeforeMount(() => {
       .el-tab-pane {
         display: flex;
         flex-direction: column;
-        height: calc(var(--el-container-height) - var(--el-padding) - 70px) !important;
+        height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
 
         .vab-query-form {
           .el-form {

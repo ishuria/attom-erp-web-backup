@@ -23,16 +23,16 @@ const { title, theme } = storeToRefs(settingsStore)
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 55px;
+  min-height: var(--el-footer-height);
   padding: 0 var(--el-padding) 0 var(--el-padding);
-  margin-top: -1px;
+  margin-top: var(--el-margin);
   color: var(--el-color-grey);
   background: var(--el-color-white);
   border: 1px solid var(--el-border-color);
   border-radius: var(--el-border-radius-base);
 
   i {
-    margin: 0 5px;
+    margin: 0 3px;
   }
 }
 </style>

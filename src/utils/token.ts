@@ -5,7 +5,7 @@ const storage = _storage || 'localStorage'
 /**
  * @description 获取token
  */
-export function getToken() {
+export const getToken = () => {
   if ('localStorage' === storage) return localStorage.getItem(tokenTableName)
   else if ('sessionStorage' === storage) return sessionStorage.getItem(tokenTableName)
 }
@@ -14,7 +14,7 @@ export function getToken() {
  * @description 存储token
  * @param token
  */
-export function setToken(token: string) {
+export const setToken = (token: string) => {
   if ('localStorage' === storage) return localStorage.setItem(tokenTableName, token)
   else if ('sessionStorage' === storage) return sessionStorage.setItem(tokenTableName, token)
 }
@@ -22,7 +22,7 @@ export function setToken(token: string) {
 /**
  * @description 移除token
  */
-export function removeToken(storage = 'localStorage') {
+export const removeToken = (storage = 'localStorage') => {
   if ('localStorage' === storage) return localStorage.removeItem(tokenTableName)
   else if ('sessionStorage' === storage) return sessionStorage.clear()
 }
