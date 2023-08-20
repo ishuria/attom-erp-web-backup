@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "3.6.0",
+  "version": "3.6.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -63,7 +63,7 @@
     "@types/mockjs": "^1.0.7",
     "@types/nprogress": "^0.2.0",
     "@types/qs": "^6.9.7",
-    "@vite-pwa/assets-generator": "^0.0.4",
+    "@vite-pwa/assets-generator": "^0.0.5",
     "@vitejs/plugin-vue": "^4.3.1",
     "@vue/compiler-sfc": "^3.3.4",
     "@vue/eslint-config-prettier": "^8.0.0",
