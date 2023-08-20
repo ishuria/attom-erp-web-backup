@@ -5,7 +5,7 @@ import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordName } from 'vue-router'
 import type { VabRouteRecordRaw } from './types'
-import { base, isHashRouterMode } from '/@/config'
+import { authentication, base, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
 import Layout from '/@vab/layouts/index.vue'
 
@@ -1234,8 +1234,8 @@ export const resetRouter = (routes: VabRouteRecordRaw[] = constantRoutes) => {
 }
 
 export const setupRouter = (app: App<Element>) => {
+  if (authentication === 'intelligence') addRouter(asyncRoutes)
   setupPermissions(router)
-  addRouter(asyncRoutes)
   app.use(router)
   return router
 }
