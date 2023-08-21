@@ -1,5 +1,5 @@
 <template>
-  <div id="data-screen-container" class="data-screen-container no-layout-container">
+  <div id="data-screen-container" class="data-screen-container vab-data-fullscreen">
     <div class="hidden-sm-and-up" style="width: 100vw; padding: 20px">
       <el-alert :closable="false" title="手机端不支持数据大屏演示" type="error" />
     </div>
@@ -88,7 +88,7 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-#data-screen-container.data-screen-container.no-layout-container {
+#data-screen-container.data-screen-container.vab-data-fullscreen {
   overflow: auto;
   color: #fff;
   background: #01022e !important;

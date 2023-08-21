@@ -1,12 +1,12 @@
 <template>
   <div class="no-layout-container">
-    <el-page-header content="无框" title="返回上一页" @back="goBack">
+    <el-page-header content="全屏" title="返回上一页" @back="goBack">
       <template #extra>
         <vab-full-screen />
       </template>
     </el-page-header>
 
-    <el-alert :closable="false" title="无框示例" type="success" />
+    <el-alert :closable="false" title="全屏示例" type="success" />
   </div>
 </template>
 
@@ -31,6 +31,12 @@ const goBack = async () => {
 
 <style lang="scss" scoped>
 .no-layout-container {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: calc(var(--el-z-index) + 3) !important;
   padding: var(--el-padding) !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
 }
 </style>

@@ -705,7 +705,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         name: 'NoLayout',
         component: () => import('/@/views/other/noLayout/index.vue'),
         meta: {
-          title: '无框',
+          title: '全屏',
           guard: ['Admin'],
           icon: 'aspect-ratio-line',
           dot: true,

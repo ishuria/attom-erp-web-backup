@@ -135,21 +135,6 @@ html {
       }
     }
 
-    /* vab-fullscreen全屏 */
-    .vab-fullscreen {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      z-index: calc(var(--el-z-index) + 3) !important;
-      box-sizing: border-box !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      padding-bottom: 15px !important;
-      overflow: auto !important;
-      border: 0 !important;
-      border-radius: 0 !important;
-    }
-
     /* vab-dropdown下拉动画 */
     .vab-dropdown {
       &-active {
@@ -617,12 +602,23 @@ html {
       border: 0 !important;
     }
 
-    .no-layout-container {
+    /* 表格全屏 */
+    .vab-table-fullscreen {
       position: fixed !important;
-      top: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      left: 0 !important;
+      inset: 0 !important;
+      z-index: calc(var(--el-z-index) + 3) !important;
+      box-sizing: border-box !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      overflow: auto !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    /* 数据大屏全屏 */
+    .vab-data-fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
       z-index: calc(var(--el-z-index) + 3) !important;
       padding: 0 !important;
       margin: 0 !important;
