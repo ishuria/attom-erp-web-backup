@@ -22,6 +22,8 @@
       <vab-chart-candlestick title="K线图" />
       <vab-chart-treemap title="矩形树图" />
       <vab-chart-sunburst title="旭日图" />
+      <vab-chart-china-map title="中国地图" />
+      <vab-chart-world-map title="世界地图" />
     </el-row>
   </div>
 </template>
