@@ -663,10 +663,8 @@ html {
       }
     }
 
-    :not(.table-auto-height).no-background-container {
-      > .el-row {
-        margin-bottom: calc(0px - var(--el-margin));
-      }
+    :not(.table-auto-height).no-background-container + .vab-footer {
+      margin-top: var(--el-margin);
     }
 
     .jv-container.jv-light {
