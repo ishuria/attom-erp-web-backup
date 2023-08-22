@@ -23,12 +23,6 @@ const guide = () => {
           position: 'left',
         },
         {
-          element: document.querySelector('.vab-search'),
-          title: '搜索',
-          intro: '这里是搜索',
-          position: 'left',
-        },
-        {
           element: document.querySelector('.vab-dark'),
           title: '暗黑模式',
           intro: '这里是暗黑模式',
