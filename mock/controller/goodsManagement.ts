@@ -8,6 +8,7 @@ for (let i = 0; i < count; i++) {
     uuid: '@uuid',
     id: '@id',
     title: '@ctitle(5, 10)',
+    description: '@ctitle(10, 20)',
     name: '@ctitle(3, 6)',
     'type|1': ['视频饮料', '家用电器', '其他'],
     price: '￥' + '@integer(0,100)',
@@ -16,6 +17,8 @@ for (let i = 0; i < count; i++) {
     'status|1': ['已上架', '已下架', '待上架'],
     datetime: '@datetime',
     image: handleRandomImage(),
+    link: 'https://www.baidu.com',
+    'isRecommend|1': [1, 0],
   })
 }
 

@@ -72,12 +72,6 @@ const handleMore = () => {
       max-height: 55px;
       padding: 10px !important;
 
-      b &:hover {
-        i {
-          transform: scale(1.15);
-        }
-      }
-
       i {
         display: block;
         float: left;

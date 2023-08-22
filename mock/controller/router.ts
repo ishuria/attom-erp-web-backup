@@ -1063,6 +1063,15 @@ const list = [
         },
       },
       {
+        path: 'goodsList',
+        name: 'GoodsList',
+        component: '/@/views/goods/GoodsList.vue',
+        meta: {
+          title: '商品列表',
+          icon: 'list-check-3',
+        },
+      },
+      {
         path: 'goodsTag',
         name: 'GoodsTag',
         component: '/@/views/goods/GoodsTag.vue',
