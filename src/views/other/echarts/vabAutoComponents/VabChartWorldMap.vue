@@ -45,7 +45,7 @@ const getMap = async () => {
       zoom: 1.2,
       roam: true,
     }
-  }, 200)
+  }, 500)
 }
 
 onBeforeMount(() => {
