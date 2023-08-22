@@ -59,18 +59,14 @@
       <el-table-column align="center" label="点击量" prop="pageViews" sortable />
       <el-table-column align="center" label="开关" prop="switch">
         <template #default="{ row }">
-          <el-tooltip :content="row.switch === 0 ? '点击开启' : '点击关闭'" effect="light">
-            <el-switch v-model="row.switch" />
-          </el-tooltip>
+          <el-switch v-model="row.switch" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="状态">
         <template #default="{ row }">
-          <el-tooltip :content="row.status" effect="light">
-            <el-tag :type="statusFilter(row.status)">
-              {{ row.status }}
-            </el-tag>
-          </el-tooltip>
+          <el-tag :type="statusFilter(row.status)">
+            {{ row.status }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="时间" prop="datetime" width="200" />

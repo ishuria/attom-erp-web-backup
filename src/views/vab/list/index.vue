@@ -1,7 +1,7 @@
 <template>
   <div class="list-container table-auto-height">
     <vab-query-form>
-      <vab-query-form-top-panel :span="24">
+      <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input v-model.trim="queryForm.title" clearable placeholder="请输入标题" />
@@ -10,14 +10,19 @@
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
+      </vab-query-form-right-panel>
     </vab-query-form>
     <el-empty v-if="emptyShow" class="vab-data-empty el-table" description="暂无数据" />
     <ul v-loading="listLoading" class="vab-auto-box">
       <li v-for="(item, index) in list" :key="index" class="list-item">
         <div class="list-item-meta">
           <div class="list-item-meta-avatar">
-            <el-image :src="item.image" />
+            <el-popover placement="top-start" trigger="hover">
+              <el-image :src="item.image" />
+              <template #reference>
+                <el-image :src="item.image" />
+              </template>
+            </el-popover>
           </div>
           <div class="list-item-meta-content hidden-xs-only">
             <div class="list-item-meta-title">
@@ -27,14 +32,20 @@
               {{ item.description }}
             </div>
           </div>
-          <div class="list-item-meta-content">
+          <div class="list-item-meta-content2 hidden-xs-only">
             <el-progress :percentage="item.percentage" />
           </div>
-          <div class="list-item-meta-content">
-            <div class="list-item-meta-item">
-              <span>时间</span>
-              <p>{{ item.datetime }}</p>
-            </div>
+          <div class="list-item-meta-content2">
+            <p>开始时间</p>
+            <p>{{ item.datetime }}</p>
+          </div>
+          <div class="list-item-meta-content2">
+            <p>状态</p>
+            <p>
+              <el-tag :type="statusFilter(item.status)">
+                {{ item.status }}
+              </el-tag>
+            </p>
           </div>
         </div>
       </li>
@@ -91,6 +102,15 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 
+const statusFilter = (status: string | number) => {
+  const statusMap: any = {
+    published: 'success',
+    draft: '',
+    deleted: 'danger',
+  }
+  return statusMap[status]
+}
+
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
@@ -115,29 +135,32 @@ onBeforeMount(() => {
 
       &-meta {
         display: flex;
-        flex: 1 1;
-        align-items: flex-start;
+        align-items: center;
+        justify-content: center;
 
         &-avatar {
-          margin-right: 16px;
-
           :deep() {
             .el-image {
-              width: 61px;
-              height: 61px;
+              width: 50px;
+              height: 50px;
+              cursor: pointer;
+              border-radius: var(--el-border-radius-base);
             }
           }
         }
 
         &-content {
+          flex: 2 0;
+          margin-left: var(--el-margin);
+        }
+
+        &-content2 {
           flex: 1 0;
-          width: 0;
-          color: rgba(0, 0, 0, 0.85);
+          margin-left: var(--el-margin);
+          text-align: center;
         }
 
         &-title {
-          margin-top: 11px;
-          margin-bottom: 4px;
           font-size: var(--el-font-size-default);
           color: var(--el-color-black);
         }
@@ -147,27 +170,11 @@ onBeforeMount(() => {
           color: var(--el-color-grey);
         }
 
-        &-item {
-          display: inline-block;
-          height: 61px;
-          margin-left: 40px;
-          font-size: var(--el-font-size-default);
-          color: var(--el-color-grey);
-          vertical-align: middle;
-
-          > span {
-            line-height: 30px;
-          }
-
-          > p {
-            margin-top: 4px;
-            margin-bottom: 0;
-          }
-        }
-
         :deep() {
           .el-progress {
-            margin-top: 21px;
+            width: 300px;
+            margin: auto;
+            margin-left: 40px;
           }
         }
       }

@@ -173,6 +173,16 @@ const list = [
         ],
       },
       {
+        path: 'list',
+        name: 'List',
+        component: '/@/views/vab/list/index.vue',
+        meta: {
+          title: '列表',
+          guard: ['Admin'],
+          icon: 'list-check-2',
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
@@ -303,16 +313,6 @@ const list = [
             },
           },
         ],
-      },
-      {
-        path: 'list',
-        name: 'List',
-        component: '/@/views/vab/list/index.vue',
-        meta: {
-          title: '列表',
-          guard: ['Admin'],
-          icon: 'list-check-2',
-        },
       },
       {
         path: 'description',

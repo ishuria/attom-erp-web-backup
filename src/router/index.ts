@@ -225,6 +225,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         ],
       },
       {
+        path: 'list',
+        name: 'List',
+        component: () => import('/@/views/vab/list/index.vue'),
+        meta: {
+          title: '列表',
+          guard: ['Admin'],
+          icon: 'list-check-2',
+        },
+      },
+      {
         path: 'form',
         name: 'Form',
         meta: {
@@ -355,16 +365,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             },
           },
         ],
-      },
-      {
-        path: 'list',
-        name: 'List',
-        component: () => import('/@/views/vab/list/index.vue'),
-        meta: {
-          title: '列表',
-          guard: ['Admin'],
-          icon: 'list-check-2',
-        },
       },
       {
         path: 'description',

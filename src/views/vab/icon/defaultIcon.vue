@@ -23,7 +23,7 @@
     </vab-query-form>
     <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
     <div class="vab-auto-box">
-      <el-row :gutter="20" style="margin-top: calc(0px - var(--el-margin))">
+      <el-row :gutter="20">
         <el-col v-for="(item, index) in queryIcon" :key="index" :lg="2" :md="3" :sm="8" :xl="2" :xs="6">
           <vab-card @click="handleCopyIcon(item.icon)">
             <vab-icon
