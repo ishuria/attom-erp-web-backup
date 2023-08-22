@@ -28,9 +28,11 @@
       <el-table-column align="center" label="角色码" prop="role" />
       <el-table-column align="center" label="按钮权限">
         <template #default="{ row }">
-          <el-tag v-for="(item, index) in row.btnRolesCheckedList" :key="index">
-            {{ item }}
-          </el-tag>
+          <el-space wrap>
+            <el-tag v-for="(item, index) in row.btnRolesCheckedList" :key="index">
+              {{ item }}
+            </el-tag>
+          </el-space>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="162">

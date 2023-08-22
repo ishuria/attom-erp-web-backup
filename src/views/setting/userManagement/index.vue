@@ -30,13 +30,15 @@
 
       <el-table-column align="center" label="角色">
         <template #default="{ row }">
-          <el-tag v-for="(item, index) in row.roles" :key="index">
-            {{ item }}
-          </el-tag>
+          <el-space wrap>
+            <el-tag v-for="(item, index) in row.roles" :key="index">
+              {{ item }}
+            </el-tag>
+          </el-space>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="修改时间" prop="datatime" />
+      <el-table-column align="center" label="修改时间" prop="datetime" />
       <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>

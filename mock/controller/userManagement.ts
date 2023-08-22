@@ -7,7 +7,7 @@ const List = [
     password: 'admin',
     email: '@email',
     roles: ['admin'],
-    datatime: '@datetime',
+    datetime: '@datetime',
   },
   {
     id: '@id',
@@ -15,7 +15,7 @@ const List = [
     password: 'editor',
     email: '@email',
     roles: ['editor'],
-    datatime: '@datetime',
+    datetime: '@datetime',
   },
   {
     id: '@id',
@@ -23,7 +23,7 @@ const List = [
     password: 'test',
     email: '@email',
     roles: ['admin', 'editor'],
-    datatime: '@datetime',
+    datetime: '@datetime',
   },
 ]
 

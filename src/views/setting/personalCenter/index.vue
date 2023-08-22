@@ -48,9 +48,11 @@
               <li>
                 <el-divider />
                 <h5>个性标签</h5>
-                <el-tag v-for="tag in dynamicTags" :key="tag">
-                  {{ tag }}
-                </el-tag>
+                <el-space wrap>
+                  <el-tag v-for="tag in dynamicTags" :key="tag">
+                    {{ tag }}
+                  </el-tag>
+                </el-space>
               </li>
             </ul>
           </div>
@@ -82,25 +84,13 @@
                     <template #label>
                       <div style="margin-bottom: 10px">标签</div>
                     </template>
-                    <el-tag
-                      v-for="tag in dynamicTags"
-                      :key="tag"
-                      closable
-                      :disable-transitions="false"
-                      style="margin-bottom: 10px"
-                      @close="handleClose(tag)"
-                    >
-                      {{ tag }}
-                    </el-tag>
-                    <el-input
-                      v-if="inputVisible"
-                      ref="inputRef"
-                      v-model="inputValue"
-                      size="small"
-                      style="margin-bottom: 10px"
-                      @blur="handleInputConfirm"
-                    />
-                    <el-button v-else size="small" style="margin-bottom: 10px" @click="showInput">添加</el-button>
+                    <el-space wrap>
+                      <el-tag v-for="tag in dynamicTags" :key="tag" closable :disable-transitions="false" @close="handleClose(tag)">
+                        {{ tag }}
+                      </el-tag>
+                      <el-input v-if="inputVisible" ref="inputRef" v-model="inputValue" size="small" @blur="handleInputConfirm" />
+                      <el-button v-else size="small" @click="showInput">添加</el-button>
+                    </el-space>
                   </el-form-item>
                   <el-form-item>
                     <el-button native-type="submit" type="primary" @click="onSubmit">保存</el-button>
