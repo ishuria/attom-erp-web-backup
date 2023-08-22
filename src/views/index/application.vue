@@ -17,19 +17,17 @@ defineOptions({
 
 const $baseMessage = inject<any>('$baseMessage')
 // @ts-ignore
-let deferredPrompt: BeforeInstallPromptEvent = 'init'
+let deferredPrompt: BeforeInstallPromptEvent
 
-const PWAInstallationGuide = () => {
+onMounted(() => {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault()
-    if (deferredPrompt === 'init') deferredPrompt = e
+    deferredPrompt = e
   })
-}
-
-PWAInstallationGuide()
+})
 
 const handleInstall = () => {
-  if (deferredPrompt && deferredPrompt !== 'init') {
+  if (deferredPrompt) {
     deferredPrompt.prompt()
     deferredPrompt.userChoice.then((choiceResult: any) => {
       if (choiceResult.outcome === 'dismissed') {
