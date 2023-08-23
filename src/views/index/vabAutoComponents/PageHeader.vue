@@ -49,17 +49,12 @@ const style = {
 
 <style lang="scss" scoped>
 .page-header {
-  transition: none;
-
   :deep() {
-    * {
-      transition: none;
-    }
-
     .el-card__body {
       display: flex;
       align-items: center;
       justify-content: center;
+      min-height: 160px;
     }
   }
 
