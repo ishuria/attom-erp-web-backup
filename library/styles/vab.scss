@@ -668,8 +668,10 @@ html {
       }
     }
 
-    :not(.table-auto-height).no-background-container:has(> .el-row) + .vab-footer {
-      margin-top: 0;
+    :not(.table-auto-height).no-background-container {
+      > .el-row:has(.el-card) {
+        margin-bottom: calc(0px - var(--el-margin));
+      }
     }
 
     .jv-container.jv-light {
