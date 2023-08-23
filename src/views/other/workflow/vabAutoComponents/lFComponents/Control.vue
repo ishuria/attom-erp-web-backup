@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <el-button-group>
-      <el-button plain @click="$_zoomIn">放大</el-button>
-      <el-button plain @click="$_zoomOut">缩小</el-button>
-      <el-button plain @click="$_zoomReset">大小适应</el-button>
-      <el-button plain @click="$_translateRest">定位还原</el-button>
-      <el-button plain @click="$_reset">还原(大小&定位)</el-button>
-      <el-button :disabled="undoDisable" plain @click="$_undo">上一步(ctrl+z)</el-button>
-      <el-button :disabled="redoDisable" plain @click="$_redo">下一步(ctrl+y)</el-button>
-      <el-button plain @click="$_download">下载图片</el-button>
-      <el-button plain @click="$_catData">查看数据</el-button>
-    </el-button-group>
-  </div>
+  <el-space wrap>
+    <el-button plain @click="$_zoomIn">放大</el-button>
+    <el-button plain @click="$_zoomOut">缩小</el-button>
+    <el-button plain @click="$_zoomReset">大小适应</el-button>
+    <el-button plain @click="$_translateRest">定位还原</el-button>
+    <el-button plain @click="$_reset">还原(大小&定位)</el-button>
+    <el-button :disabled="undoDisable" plain @click="$_undo">上一步(ctrl+z)</el-button>
+    <el-button :disabled="redoDisable" plain @click="$_redo">下一步(ctrl+y)</el-button>
+    <el-button plain @click="$_download">下载图片</el-button>
+    <el-button plain @click="$_catData">查看数据</el-button>
+  </el-space>
 </template>
 
 <script>

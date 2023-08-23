@@ -68,11 +68,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 .node-panel {
   position: absolute;
-  top: 100px;
+  top: 50%;
   left: var(--el-margin);
   z-index: 101;
   width: 70px;
-  padding: 20px 10px;
+  padding-top: 25px;
+  margin-top: -254px;
   text-align: center;
   background-color: var(--el-color-white);
   border: 1px solid var(--el-border-color);
