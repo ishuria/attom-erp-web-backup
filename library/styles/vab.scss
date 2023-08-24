@@ -634,9 +634,11 @@ html {
     }
 
     .no-background-container.table-auto-height {
-      .el-card {
-        margin-bottom: 0;
+      > .el-row {
+        margin-bottom: calc(0px - var(--el-margin));
+      }
 
+      .el-card {
         .el-card__body {
           display: flex;
           flex-direction: column;

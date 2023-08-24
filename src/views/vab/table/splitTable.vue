@@ -351,12 +351,15 @@ onBeforeMount(() => {
 <style lang="scss" scoped>
 .split-table-container {
   width: 100%;
-  height: calc(var(--el-container-height) - var(--el-padding)) !important;
 
   :deep() {
+    .el-card {
+      margin-bottom: 0;
+    }
+
     .split {
       .resizer {
-        height: calc(var(--el-container-height) - var(--el-padding)) !important;
+        height: var(--el-container-height) !important;
         margin-right: calc(var(--el-margin) / 2);
         margin-left: calc(var(--el-margin) / 2);
       }
