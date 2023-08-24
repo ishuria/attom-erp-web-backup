@@ -1,4 +1,5 @@
 import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import chokidar from 'chokidar'
 import dayjs from 'dayjs'
 import pc from 'picocolors'
@@ -24,6 +25,7 @@ export const createVitePlugin = (env: Record<string, string>) => {
   }
   if (isEmpty(userName) || isEmpty(secretKey)) return
   if (nodeEnv !== 'development') if (isEmpty(userName) || isEmpty(secretKey)) return
+  vitePlugins.push(vueJsx())
   vitePlugins.push(createProgress(env) as any)
   vitePlugins.push(createUnPlugin(env))
   vitePlugins.push(createPwa())

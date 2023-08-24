@@ -160,6 +160,14 @@ const list = [
             },
           },
           {
+            path: 'bigDataTable',
+            name: 'BigDataTable',
+            component: '/@/views/vab/table/bigDataTable.vue',
+            meta: {
+              title: '大数据表格',
+            },
+          },
+          {
             path: 'defaultTableDetail',
             name: 'DefaultTableDetail',
             component: '/@/views/vab/table/defaultTableDetail.vue',

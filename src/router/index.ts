@@ -212,6 +212,14 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             },
           },
           {
+            path: 'bigDataTable',
+            name: 'BigDataTable',
+            component: () => import('/@/views/vab/table/bigDataTable.vue'),
+            meta: {
+              title: '大数据表格',
+            },
+          },
+          {
             path: 'defaultTableDetail',
             name: 'DefaultTableDetail',
             component: () => import('/@/views/vab/table/defaultTableDetail.vue'),
