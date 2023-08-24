@@ -390,19 +390,8 @@ html {
 
     /* el-table表格 */
     .el-table {
-      th {
-        background: #f5f7fa;
-      }
-
-      td,
-      th {
-        position: relative;
-        box-sizing: border-box;
-
+      td {
         .cell {
-          font-size: var(--el-font-size-default);
-          font-weight: normal;
-
           .el-image {
             width: 50px;
             height: 50px;
@@ -411,21 +400,13 @@ html {
           }
         }
       }
-
-      th.el-table-fixed-column--left,
-      th.el-table-fixed-column--right {
-        background: #f5f7fa;
-      }
     }
 
     /* el-pagination分页 */
     .el-pagination {
       --el-pagination-border-radius: var(--el-border-radius-base);
-
       justify-content: center;
-      margin: var(--el-margin) 0 0 0;
-      font-weight: normal;
-      color: var(--el-color-black);
+      margin-top: var(--el-margin);
     }
 
     /* el-menu菜单 */

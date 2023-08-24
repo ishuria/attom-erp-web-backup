@@ -195,18 +195,6 @@ html > body.vab-theme-technology {
     color: var(--el-color-black);
   }
 
-  .el-table {
-    td {
-      background: var(--el-color-white) !important;
-    }
-
-    th,
-    th.el-table-fixed-column--left,
-    th.el-table-fixed-column--right {
-      background: #123172 !important;
-    }
-  }
-
   .el-radio-button {
     &__inner {
       border: 1px solid var(--el-border-color) !important;
