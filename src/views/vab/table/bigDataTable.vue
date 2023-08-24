@@ -1,6 +1,7 @@
 <template>
   <div class="big-data-table-container table-auto-height">
-    <el-auto-resizer>
+    <el-alert class="hidden-sm-and-up" :closable="false" title="手机端不支持大数据表格演示" type="error" />
+    <el-auto-resizer class="hidden-xs-only">
       <template #default="{ height, width }">
         <el-table-v2 :columns="columns" :data="data" fixed :height="height" :width="width" />
       </template>
