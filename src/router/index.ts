@@ -82,6 +82,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'tile',
+        name: 'Tile',
+        component: () => import('/@/views/index/tile.vue'),
+        meta: {
+          title: '磁贴',
+          icon: 'collage-line',
+        },
+      },
+      {
         path: 'dataScreen',
         name: 'DataScreen',
         component: () => import('/@/views/index/dataScreen.vue'),

@@ -30,6 +30,15 @@ const list = [
         },
       },
       {
+        path: 'tile',
+        name: 'Tile',
+        component: '/@/views/index/tile.vue',
+        meta: {
+          title: '磁贴',
+          icon: 'collage-line',
+        },
+      },
+      {
         path: 'dataScreen',
         name: 'DataScreen',
         component: '/@/views/index/dataScreen.vue',

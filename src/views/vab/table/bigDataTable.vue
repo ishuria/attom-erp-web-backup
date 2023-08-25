@@ -79,5 +79,3 @@ columns.unshift({
 
 const data = ref(generateData(columns, 200))
 </script>
-
-<style lang="scss" scoped></style>
