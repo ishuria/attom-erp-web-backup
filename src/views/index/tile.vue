@@ -224,10 +224,13 @@ defineOptions({
     }
 
     .icon-panel {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
       margin-top: 10px;
 
       i {
-        float: left;
+        flex-shrink: 0;
         width: 60px;
         height: 60px;
         font-size: 30px;
@@ -239,12 +242,14 @@ defineOptions({
 
       .icon-panel-title {
         display: inline-block;
-        margin-top: 12px;
         margin-left: 10px;
+        overflow: hidden;
+        line-height: 20px;
         color: var(--el-color-black);
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         .icon-panel-tips {
-          margin-top: 5px;
           font-size: var(--el-font-size-small);
           color: var(--el-color-grey);
         }
@@ -325,7 +330,7 @@ defineOptions({
 
   @media only screen and (min-width: 1200px) {
     .tile-box {
-      width: 80%;
+      width: 90%;
     }
   }
 
