@@ -72,8 +72,9 @@ const rightCardHeight2 = ref<any>('calc((100vh - 165px) / 2.63)')
 const rightCardHeight3 = ref<any>('calc((100vh - 165px) / 3.5)')
 const $baseMessage = inject<any>('$baseMessage')
 
-onBeforeMount(() => {
+onMounted(() => {
   $baseMessage('点击右上角【全屏】按钮使用效果更佳', 'success', 'hey')
+  document.getElementsByTagName('body')[0].className = ''
 
   if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io') {
     // 数据大屏占用内存较大，演示地址每隔3分钟刷新一次页面缓解浏览器压力
