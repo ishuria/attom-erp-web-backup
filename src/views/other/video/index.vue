@@ -43,7 +43,7 @@ defineOptions({
 // const route = useRoute()
 // const isLeft = usePageLeave()
 const configMp4 = reactive<any>({
-  url: 'https://cdn.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
+  url: 'https://gcore.jsdelivr.net/gh/chuzhixin/videos@master/video.mp4',
   id: uniqueId('uuid_mp4_'),
   lang: 'zh',
   volume: 0,

@@ -7,5 +7,5 @@ export const { mock, Random } = mockjs
  * @returns {string}
  */
 export const handleRandomImage = () => {
-  return `https://cdn.jsdelivr.net/gh/chuzhixin/image/table/vab-image-${Random.integer(1, 38)}.jpg`
+  return `https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-${Random.integer(1, 38)}.jpg`
 }

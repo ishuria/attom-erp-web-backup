@@ -53,7 +53,7 @@ const { avatar } = storeToRefs(userStore)
 const settingsStore = useSettingsStore()
 const { lock, title } = storeToRefs(settingsStore)
 const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
-const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
+const url = 'https://gcore.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
 
 const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
 const randomBackground = () => {
