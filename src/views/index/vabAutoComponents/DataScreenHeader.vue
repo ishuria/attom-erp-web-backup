@@ -25,7 +25,7 @@
     height: 60px;
     background: #395dfe;
     border-radius: 50%;
-    box-shadow: 0 2px 12px 0#395dfe;
+    box-shadow: 0 2px 12px 0 #395dfe;
 
     :deep() {
       [class*='ri-'] {

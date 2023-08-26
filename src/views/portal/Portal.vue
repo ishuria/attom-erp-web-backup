@@ -235,6 +235,7 @@ onMounted(() => {
         height: 70px;
         font-size: 20px;
         line-height: 70px;
+
         a {
           display: inline-block;
           width: 40px;
@@ -243,6 +244,7 @@ onMounted(() => {
           background: url('/@/assets/avatar.svg') center center no-repeat;
           background-size: 100% 100%;
         }
+
         span {
           margin-right: 40px;
         }
@@ -250,6 +252,7 @@ onMounted(() => {
 
       .nav-item {
         margin: auto;
+
         li {
           float: left;
           list-style: none;

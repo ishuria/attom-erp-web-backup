@@ -10,15 +10,14 @@
 </template>
 
 <script lang="tsx" setup>
+import type { CheckboxValueType, Column } from 'element-plus'
+import { ElCheckbox } from 'element-plus'
+import type { FunctionalComponent } from 'vue'
+import { ref, unref } from 'vue'
+
 defineOptions({
   name: 'BigDataTable',
 })
-
-import { ElCheckbox } from 'element-plus'
-import { ref, unref } from 'vue'
-
-import type { CheckboxValueType, Column } from 'element-plus'
-import type { FunctionalComponent } from 'vue'
 
 type SelectionCellProps = {
   value: boolean

@@ -457,6 +457,7 @@ watchEffect(() => {
       :deep() {
         .el-tabs__header {
           margin: -1px 0 0 0;
+
           .el-tabs__item {
             height: var(--el-tabs-height);
 
