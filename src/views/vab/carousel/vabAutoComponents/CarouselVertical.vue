@@ -1,11 +1,11 @@
 <template>
   <el-carousel :autoplay="false" direction="vertical" height="180px">
-    <el-carousel-item v-for="item in 4" :key="item">
+    <el-carousel-item v-for="item in 3" :key="item">
       <h3>{{ item }}</h3>
     </el-carousel-item>
   </el-carousel>
   <el-carousel :autoplay="false" direction="vertical" height="180px" style="margin-top: var(--el-margin)" type="card">
-    <el-carousel-item v-for="item in 4" :key="item">
+    <el-carousel-item v-for="item in 3" :key="item">
       <h3>{{ item }}</h3>
     </el-carousel-item>
   </el-carousel>

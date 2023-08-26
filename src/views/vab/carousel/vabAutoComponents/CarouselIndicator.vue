@@ -1,6 +1,6 @@
 <template>
   <el-carousel height="180px" indicator-position="outside">
-    <el-carousel-item v-for="item in 4" :key="item">
+    <el-carousel-item v-for="item in 3" :key="item">
       <h3>{{ item }}</h3>
     </el-carousel-item>
   </el-carousel>
