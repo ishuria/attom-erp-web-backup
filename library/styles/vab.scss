@@ -45,7 +45,21 @@ html {
       @include base-scrollbar;
 
       .vue-shop-vite-box {
-        *:not(.el-dialog, .el-table, .el-carousel) {
+        section,
+        div:not(
+            .el-drawer,
+            .el-drawer *,
+            .el-dialog,
+            .el-dialog *,
+            .el-table,
+            .el-table *,
+            .el-carousel,
+            .el-carousel *,
+            .el-pagination,
+            .el-pagination *,
+            .split,
+            .split *
+          ) {
           text-shadow: none;
           transition: var(--el-transition);
           -webkit-font-smoothing: antialiased;
