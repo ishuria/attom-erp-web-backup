@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "3.8.0",
+  "version": "3.8.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -34,7 +34,7 @@
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
     "echarts": "^5.4.3",
-    "element-plus": "^2.3.10",
+    "element-plus": "^2.3.12",
     "intro.js": "^7.2.0",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
