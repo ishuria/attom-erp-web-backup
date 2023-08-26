@@ -23,4 +23,6 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   reportCompressedSize: false,
   // 混淆器 boolean | 'terser' | 'esbuild'
   minify: 'terser',
+  // 打包后的文件是否开启hash
+  outputHash: false,
 }

@@ -4,7 +4,18 @@ import { resolve } from 'path'
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import { dependencies, devDependencies, name, version } from './package.json'
-import { assetsDir, base, chunkSizeWarningLimit, cssCodeSplit, minify, open, outDir, port, reportCompressedSize } from '/@/config'
+import {
+  assetsDir,
+  base,
+  chunkSizeWarningLimit,
+  cssCodeSplit,
+  minify,
+  open,
+  outDir,
+  outputHash,
+  port,
+  reportCompressedSize,
+} from '/@/config'
 import { createVitePlugin, createWatch } from '/@vab/build'
 
 const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
@@ -49,9 +60,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           return
         },
         output: {
-          chunkFileNames: 'static/js/[name]-[hash].js',
-          entryFileNames: 'static/js/[name]-[hash].js',
-          assetFileNames: 'static/[ext]/[name].[ext]',
+          chunkFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
+          entryFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
+          assetFileNames: outputHash ? 'static/[ext]/[name]-[hash].[ext]' : 'static/[ext]/[name].[ext]',
         },
       },
       minify,

@@ -48,6 +48,7 @@ export const {
   open,
   openFirstMenu,
   outDir,
+  outputHash,
   pageTransition,
   port,
   pwa,
