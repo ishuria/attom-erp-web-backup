@@ -44,7 +44,7 @@ export default [
   },
   {
     url: '/userManagement/doEdit',
-    type: 'post',
+    method: 'post',
     response() {
       return {
         code: 200,
@@ -54,7 +54,7 @@ export default [
   },
   {
     url: '/userManagement/doDelete',
-    type: 'post',
+    method: 'post',
     response() {
       return {
         code: 200,

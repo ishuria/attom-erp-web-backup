@@ -30,7 +30,7 @@ export default [
   },
   {
     url: '/roleManagement/doEdit',
-    type: 'post',
+    method: 'post',
     response() {
       return {
         code: 200,
@@ -40,7 +40,7 @@ export default [
   },
   {
     url: '/roleManagement/doDelete',
-    type: 'post',
+    method: 'post',
     response() {
       return {
         code: 200,

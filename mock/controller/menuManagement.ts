@@ -34,7 +34,7 @@ export default [
   },
   {
     url: '/menuManagement/doEdit',
-    type: 'post',
+    method: 'post',
     response() {
       return {
         code: 200,
@@ -44,7 +44,7 @@ export default [
   },
   {
     url: '/menuManagement/doDelete',
-    type: 'post',
+    method: 'post',
     response() {
       return {
         code: 200,
