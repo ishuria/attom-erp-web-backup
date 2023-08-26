@@ -41,7 +41,7 @@
           </el-descriptions-item>
         </el-descriptions>
       </el-form-item>
-      <el-form-item label="RABC 角色控制">
+      <el-form-item label="RBAC 角色控制">
         <el-space wrap>
           <el-button v-permissions="['Admin']" type="primary">拥有["Admin"]的按钮</el-button>
           <el-button v-permissions="{ role: ['Admin'], mode: 'except' }" type="danger">未拥有["Admin"]的按钮</el-button>
@@ -54,7 +54,7 @@
         </el-space>
       </el-form-item>
       <!--  注意其中roles-代表组件name，这样可以区分到具体页面 -->
-      <el-form-item label="RABC 权限点控制">
+      <el-form-item label="RBAC 权限点控制">
         <el-space wrap>
           <el-button v-permissions="{ permission: ['read:system'] }" type="primary">拥有["read:system"]的按钮</el-button>
           <el-button v-permissions="{ permission: ['read:system'], mode: 'except' }" type="danger">未拥有["'read:system'"]的按钮</el-button>
@@ -66,7 +66,7 @@
           </el-button>
         </el-space>
       </el-form-item>
-      <el-form-item label="RABC 角色&权限点控制">
+      <el-form-item label="RBAC 角色&权限点控制">
         <el-space wrap>
           <el-button v-permissions="{ role: ['Admin'], permission: ['delete:system'] }" type="primary">
             拥有["Admin"]或["delete:system"]的按钮
