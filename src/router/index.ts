@@ -484,6 +484,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'archive-drawer-line',
         },
       },
+      {
+        path: 'carousel',
+        name: 'Carousel',
+        component: () => import('/@/views/vab/carousel/index.vue'),
+        meta: {
+          title: '走马灯',
+          guard: ['Admin'],
+          icon: 'switch-fill',
+        },
+      },
     ],
   },
   {

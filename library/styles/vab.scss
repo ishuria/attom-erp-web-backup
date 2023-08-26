@@ -45,16 +45,10 @@ html {
       @include base-scrollbar;
 
       .vue-shop-vite-box {
-        * {
+        *:not(.el-dialog, .el-table, .el-carousel) {
           text-shadow: none;
           transition: var(--el-transition);
           -webkit-font-smoothing: antialiased;
-        }
-
-        [class*='-container'] {
-          * {
-            transition: none;
-          }
         }
 
         .vab-main {
