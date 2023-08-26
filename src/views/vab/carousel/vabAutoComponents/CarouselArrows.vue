@@ -1,5 +1,5 @@
 <template>
-  <el-carousel arrow="always" height="200px" :interval="5000">
+  <el-carousel arrow="always" height="180px" :interval="5000">
     <el-carousel-item v-for="item in 4" :key="item">
       <h3>{{ item }}</h3>
     </el-carousel-item>
