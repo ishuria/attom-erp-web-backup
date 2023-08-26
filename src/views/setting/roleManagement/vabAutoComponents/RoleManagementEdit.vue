@@ -73,6 +73,7 @@ defineExpose({
 
 const close = () => {
   formRef.value.resetFields()
+  emit('fetch-data')
   dialogFormVisible.value = false
 }
 const fetchData = async () => {

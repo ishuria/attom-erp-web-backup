@@ -137,8 +137,8 @@ defineExpose({
 
 const close = () => {
   formRef.value.resetFields()
-  dialogFormVisible.value = false
   emit('fetch-data')
+  dialogFormVisible.value = false
 }
 
 const save = () => {
