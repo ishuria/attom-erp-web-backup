@@ -36,7 +36,7 @@ interface Tree {
 let id = 1000
 
 const append = (data: Tree) => {
-  const newChild = { id: id++, label: 'testtest', children: [] }
+  const newChild = { id: id++, label: 'test', children: [] }
   if (!data.children) {
     data.children = []
   }

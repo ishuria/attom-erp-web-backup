@@ -8,7 +8,7 @@
       </div>
     </el-tab-pane>
     <el-tab-pane label="添加组">
-      <el-button class="add-node-btn" type="primary" @click="$_addTempalte">模板</el-button>
+      <el-button class="add-node-btn" type="primary" @click="$_addTemplate">模板</el-button>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -54,7 +54,7 @@ export default defineComponent({
       lf.createEdge({ sourceNodeId: id, targetNodeId: nextId })
       this.$emit('addNodeFinish')
     },
-    $_addTempalte() {
+    $_addTemplate() {
       const { lf, nodeData } = this.$props
       const { id, x, y } = nodeData
       const timeNode = lf.addNode({

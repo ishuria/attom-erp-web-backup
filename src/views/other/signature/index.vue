@@ -12,7 +12,7 @@
         @touchmove.stop.prevent="onEventMove"
         @touchstart="onEventStart"
       ></canvas>
-      <img :src="catUrl" />
+      <img alt="" :src="catUrl" />
     </div>
     <el-button type="primary" @click="handleSaveImg">
       <vab-icon icon="save-line" />

@@ -76,9 +76,6 @@ function startResize(mde: MouseEvent) {
 
 <style lang="scss" scoped>
 .forbid-select {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -100,7 +97,7 @@ function startResize(mde: MouseEvent) {
   }
 
   .sub {
-    flex-basis: 0%;
+    flex-basis: 0;
     flex-grow: 1;
     align-content: stretch;
     align-items: stretch;

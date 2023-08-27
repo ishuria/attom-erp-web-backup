@@ -7,23 +7,25 @@
 </template>
 
 <style lang="scss" scoped>
-.el-carousel__item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+:deep() {
+  .el-carousel__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  h3 {
-    color: var(--el-color-white);
-    text-align: center;
-    opacity: 0.75;
-  }
+    h3 {
+      color: var(--el-color-white);
+      text-align: center;
+      opacity: 0.75;
+    }
 
-  &:nth-child(2n) {
-    background-color: var(--el-color-primary);
-  }
+    &:nth-child(2n) {
+      background-color: var(--el-color-primary);
+    }
 
-  &:nth-child(2n + 1) {
-    background-color: var(--el-color-success);
+    &:nth-child(2n + 1) {
+      background-color: var(--el-color-success);
+    }
   }
 }
 </style>

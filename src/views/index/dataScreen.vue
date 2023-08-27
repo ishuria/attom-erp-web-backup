@@ -10,7 +10,7 @@
           'line-height': headerContentHeight,
         }"
       />
-      <div style="padding: 30px 40px 0px 40px">
+      <div style="padding: 30px 40px 0 40px">
         <el-row :gutter="20">
           <el-col :span="6">
             <div class="data-screen-card" :style="{ height: leftCardHeight1 }">

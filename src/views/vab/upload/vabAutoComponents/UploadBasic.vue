@@ -1,5 +1,5 @@
 <template>
-  <el-upload v-model:file-list="fileList" action="/uploadFlie" :before-remove="beforeRemove" :limit="3" multiple :on-exceed="handleExceed">
+  <el-upload v-model:file-list="fileList" action="/uploadFile" :before-remove="beforeRemove" :limit="3" multiple :on-exceed="handleExceed">
     <el-button type="primary">点击上传</el-button>
     <template #tip>
       <div class="el-upload__tip">jpg/png 文件需小于500kb</div>

@@ -23,7 +23,7 @@
                 <el-tag v-if="item.status === '已下架'" type="danger">缺货</el-tag>
               </div>
               <div class="image-group">
-                <img class="image" :src="item.image" />
+                <img alt="" class="image" :src="item.image" />
               </div>
               <div class="title">
                 {{ item.title }}

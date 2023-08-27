@@ -1,5 +1,5 @@
 <template>
-  <el-upload ref="uploadRef" action="/uploadFlie" :auto-upload="false">
+  <el-upload ref="uploadRef" action="/uploadFile" :auto-upload="false">
     <template #trigger>
       <el-button type="primary">选择文件</el-button>
     </template>

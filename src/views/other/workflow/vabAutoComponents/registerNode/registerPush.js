@@ -89,12 +89,12 @@ export default function registerPush(lf, clickPlus, mouseDownPlus) {
           y: data.y + 50,
         }
         super(data, graphModel)
-        const lenght = 35
+        const length = 35
         this.points = [
-          [lenght, 0],
-          [lenght * 2, lenght],
-          [lenght, lenght * 2],
-          [0, lenght],
+          [length, 0],
+          [length * 2, length],
+          [length, length * 2],
+          [0, length],
         ]
       }
     }

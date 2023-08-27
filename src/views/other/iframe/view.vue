@@ -1,6 +1,6 @@
 <template>
   <div class="iframe-container">
-    <iframe frameborder="0" :src="url" />
+    <iframe :src="url" />
   </div>
 </template>
 
@@ -42,6 +42,7 @@ watch(
   iframe {
     width: 100%;
     height: var(--el-container-height);
+    border: 0;
   }
 }
 </style>

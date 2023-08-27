@@ -173,8 +173,7 @@ onBeforeMount(() => {
         :deep() {
           .el-progress {
             width: 300px;
-            margin: auto;
-            margin-left: 40px;
+            margin: auto auto auto 40px;
           }
         }
       }

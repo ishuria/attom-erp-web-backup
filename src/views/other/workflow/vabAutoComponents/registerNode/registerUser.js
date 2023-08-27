@@ -51,12 +51,12 @@ export default function registerUser(lf) {
           y: data.y + 50,
         }
         super(data, graphModel)
-        const lenght = 35
+        const length = 35
         this.points = [
-          [lenght, 0],
-          [lenght * 2, lenght],
-          [lenght, lenght * 2],
-          [0, lenght],
+          [length, 0],
+          [length * 2, length],
+          [length, length * 2],
+          [0, length],
         ]
         // 右键菜单自由配置，也可以通过边的properties或者其他属性条件更换不同菜单
         this.menu = [
@@ -65,8 +65,8 @@ export default function registerUser(lf) {
             className: 'lf-menu-delete',
             icon: true,
             callback(node) {
-              const comfirm = window.confirm('您确定要删除吗？')
-              comfirm && lf.deleteNode(node.id)
+              const confirm = window.confirm('您确定要删除吗？')
+              confirm && lf.deleteNode(node.id)
             },
           },
           {

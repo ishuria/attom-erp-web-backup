@@ -2,7 +2,7 @@
   <div class="resume-container no-background-container">
     <div class="resume-box">
       <div class="resume-left">
-        <img class="user-avatar" :src="avatar" />
+        <img alt="" class="user-avatar" :src="avatar" />
         <div class="content">
           <ul>
             <li>

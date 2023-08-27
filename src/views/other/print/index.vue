@@ -14,6 +14,7 @@
     </el-button>
     <img
       ref="imageRef"
+      alt=""
       src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg"
       style="display: block; width: 520px; margin-top: 15px"
     />

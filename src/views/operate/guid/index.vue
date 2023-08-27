@@ -141,7 +141,7 @@ const guide = () => {
 .introjs-helperLayer.introjs-fixedTooltip {
   pointer-events: none;
   box-shadow:
-    var(--el-color-primary) 0px 0px 1px 1px,
+    var(--el-color-primary) 0 0 1px 1px,
     rgba(0, 0, 0, 0.25) 0px 0px 0px 5000px !important;
 }
 

@@ -1,12 +1,12 @@
 <template>
-  <el-upload v-model:file-list="fileList" action="/uploadFlie" list-type="picture-card" :on-preview="handlePictureCardPreview">
+  <el-upload v-model:file-list="fileList" action="/uploadFile" list-type="picture-card" :on-preview="handlePictureCardPreview">
     <el-icon>
       <plus />
     </el-icon>
   </el-upload>
 
   <el-dialog v-model="dialogVisible" append-to-body draggable>
-    <img alt="Preview Image" :src="dialogImageUrl" w-full />
+    <img alt="Preview Image" :src="dialogImageUrl" />
   </el-dialog>
 </template>
 

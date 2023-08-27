@@ -6,7 +6,7 @@
       <vab-dark />
     </div>
     <div class="login-form">
-      <img class="left-img" :src="leftImg" />
+      <img alt="" class="left-img" :src="leftImg" />
       <el-form ref="formRef" label-position="left" :model="form" :rules="rules" @submit.prevent>
         <div class="title">hello !</div>
         <div class="title-tips">{{ translate('欢迎来到') }}{{ title }}！</div>

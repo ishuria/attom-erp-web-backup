@@ -1,5 +1,5 @@
 <template>
-  <el-upload action="/uploadFlie" drag multiple>
+  <el-upload action="/uploadFile" drag multiple>
     <el-icon class="el-icon--upload">
       <upload-filled />
     </el-icon>

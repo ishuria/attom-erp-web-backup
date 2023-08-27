@@ -2,7 +2,7 @@ import { MockMethod } from 'vite-plugin-mock'
 
 export default [
   {
-    url: '/uploadFlie',
+    url: '/uploadFile',
     method: 'post',
     response: () => {
       return {

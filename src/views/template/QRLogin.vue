@@ -4,8 +4,8 @@
 
     <el-dialog v-model="dialogVisible" draggable title="扫码登录" width="350px">
       <div class="qr-box">
-        <img class="qr-image" :src="QR" />
-        <img class="scan-image" :src="scan" />
+        <img alt="" class="qr-image" :src="QR" />
+        <img alt="" class="scan-image" :src="scan" />
         <div class="wechat-title">
           打开微信扫一扫，快速登录/注册
           <p>其他登录方式</p>
@@ -56,7 +56,7 @@ onDeactivated(() => {
 .qr-login-container {
   .qr-box {
     position: relative;
-    padding: 0px 50px 0px 50px;
+    padding: 0 50px 0 50px;
     text-align: center;
 
     .qr-image {

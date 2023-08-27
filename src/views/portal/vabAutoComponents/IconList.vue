@@ -77,8 +77,7 @@ const handleMore = () => {
         float: left;
         width: 46px;
         height: 46px;
-        margin: auto;
-        margin-bottom: 10px;
+        margin: auto auto 10px auto;
         font-size: 28px;
         line-height: 46px;
         color: var(--el-color-white);

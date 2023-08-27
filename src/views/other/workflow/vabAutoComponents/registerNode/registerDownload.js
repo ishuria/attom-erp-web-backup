@@ -55,12 +55,12 @@ export default function registerDownload(lf) {
           y: data.y + 50,
         }
         super(data, graphModel)
-        const lenght = 25
+        const length = 25
         this.points = [
-          [lenght, 0],
-          [lenght * 2, lenght],
-          [lenght, lenght * 2],
-          [0, lenght],
+          [length, 0],
+          [length * 2, length],
+          [length, length * 2],
+          [0, length],
         ]
         this.stroke = NODE_COLOR
       }
