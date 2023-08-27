@@ -3,12 +3,12 @@
  */
 import { round } from 'lodash-es'
 import {
+  isCatchedTabs as _isCatchedTabs,
   color,
   columnStyle,
   fixedHeader,
   foldSidebar,
   i18n,
-  isCatchedTabs as _isCatchedTabs,
   isFollow,
   layout,
   logo,

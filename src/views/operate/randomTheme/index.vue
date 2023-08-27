@@ -14,7 +14,7 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { theme, device, color } = storeToRefs(settingsStore)
-const { saveTheme, updateTheme, setCssVar } = settingsStore
+const { changeColor, saveTheme, updateTheme, setCssVar } = settingsStore
 const $pub = inject<any>('$pub')
 const $baseLoading = inject<any>('$baseLoading')
 const $baseMessage = inject<any>('$baseMessage')
@@ -25,48 +25,46 @@ const randomTheme = async () => {
   const loading = $baseLoading()
 
   setTimeout(() => {
-    try {
-      const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
-      const columnStyle = shuffle(theme.value.columnStyle, ['vertical', 'horizontal', 'card', 'arrow', 'semicircle'])
-      const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect'])
-      const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
-      const layout =
-        device.value === 'desktop' ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive']) : 'vertical'
-      const _color = shuffle(color.value, [
-        '#1e90ff',
-        '#4e88f3',
-        '#0052d9',
-        '#3fb884',
-        '#16baa9',
-        '#07c160',
-        '#009688',
-        '#6954f0',
-        '#7b40f2',
-        '#f01414',
-      ])
-      const isFollow = shuffle(theme.value.isFollow, [true, false])
+    const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
+    const columnStyle = shuffle(theme.value.columnStyle, ['vertical', 'horizontal', 'card', 'arrow', 'semicircle'])
+    const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect'])
+    const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
+    const layout =
+      device.value === 'desktop' ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive']) : 'vertical'
+    const _color = shuffle(color.value, [
+      '#1e90ff',
+      '#4e88f3',
+      '#0052d9',
+      '#3fb884',
+      '#16baa9',
+      '#07c160',
+      '#009688',
+      '#6954f0',
+      '#7b40f2',
+      '#f01414',
+    ])
+    const isFollow = shuffle(theme.value.isFollow, [true, false])
 
-      theme.value.themeName = themeName
-      theme.value.columnStyle = columnStyle
-      theme.value.tabsBarStyle = tabsBarStyle
-      theme.value.showTabsIcon = showTabsIcon
-      theme.value.layout = layout
+    theme.value.themeName = themeName
+    theme.value.columnStyle = columnStyle
+    theme.value.tabsBarStyle = tabsBarStyle
+    theme.value.showTabsIcon = showTabsIcon
+    theme.value.layout = layout
 
-      if (themeName !== 'technology') color.value = _color
-      else color.value = '#4e88f3'
+    if (themeName !== 'technology') color.value = _color
+    else color.value = '#4e88f3'
 
-      if (themeName === 'default') theme.value.isFollow = isFollow
-      else theme.value.isFollow = false
+    if (themeName === 'default') theme.value.isFollow = isFollow
+    else theme.value.isFollow = false
 
-      setCssVar()
-      updateTheme()
-      saveTheme()
-    } finally {
-      setTimeout(() => {
-        loading.close()
-        $baseMessage('切换成功', 'success', 'hey')
-      }, 1000)
-    }
+    changeColor()
+    setCssVar()
+    updateTheme()
+    saveTheme()
+    setTimeout(() => {
+      loading.close()
+      $baseMessage('切换成功', 'success', 'hey')
+    }, 1000)
   }, 100)
 }
 
