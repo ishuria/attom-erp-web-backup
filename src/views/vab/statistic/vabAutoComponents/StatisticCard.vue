@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="16">
+  <el-row :gutter="20">
     <el-col :span="8">
       <div class="statistic-card">
         <el-statistic :value="98500">
@@ -86,11 +86,7 @@
 import { ArrowRight, CaretBottom, CaretTop, Warning } from '@element-plus/icons-vue'
 </script>
 
-<style scoped>
-:global(h2#card-usage ~ .example .example-showcase) {
-  background-color: var(--el-fill-color) !important;
-}
-
+<style lang="scss" scoped>
 .el-statistic {
   --el-statistic-content-font-size: 28px;
 }
@@ -100,35 +96,45 @@ import { ArrowRight, CaretBottom, CaretTop, Warning } from '@element-plus/icons-
   padding: 20px;
   background-color: var(--el-bg-color-overlay);
   border-radius: 4px;
-}
 
-.statistic-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: var(--el-font-size-big);
-  font-size: var(--el-font-size-small);
-  color: var(--el-text-color-regular);
-}
+  :deep() {
+    .el-statistic__head,
+    .el-statistic__content {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 
-.statistic-footer .footer-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  .statistic-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--el-font-size-big);
+    font-size: var(--el-font-size-small);
+    color: var(--el-text-color-regular);
 
-.statistic-footer .footer-item span:last-child {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 4px;
-}
+    .footer-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-.green {
-  color: var(--el-color-success);
-}
+      span:last-child {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 4px;
+      }
+    }
 
-.red {
-  color: var(--el-color-error);
+    .green {
+      color: var(--el-color-success);
+    }
+
+    .red {
+      color: var(--el-color-error);
+    }
+  }
 }
 </style>
