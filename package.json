@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "3.8.5",
+  "version": "3.9.0",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -31,7 +31,7 @@
     "@vueuse/head": "^1.3.1",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
-    "axios": "^1.4.0",
+    "axios": "^1.5.0",
     "dayjs": "^1.11.9",
     "echarts": "^5.4.3",
     "element-plus": "^2.3.12",
