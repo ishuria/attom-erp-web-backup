@@ -32,5 +32,3 @@ defineOptions({
   name: 'Carousel',
 })
 </script>
-
-<style lang="scss" scoped></style>

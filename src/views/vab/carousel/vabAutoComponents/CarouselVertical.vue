@@ -25,11 +25,11 @@
     }
 
     &:nth-child(2n) {
-      background-color: var(--el-color-primary);
+      background-color: var(--el-color-success);
     }
 
     &:nth-child(2n + 1) {
-      background-color: var(--el-color-success);
+      background-color: var(--el-color-primary);
     }
   }
 }
