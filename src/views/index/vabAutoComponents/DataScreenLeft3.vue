@@ -102,7 +102,9 @@ onUnmounted(() => {
         height: 50px;
         border-bottom: 1px solid #101f58;
 
-        .name,
+        .name {
+          margin-left: 10px;
+        }
         .address {
           margin-left: var(--el-margin);
         }
