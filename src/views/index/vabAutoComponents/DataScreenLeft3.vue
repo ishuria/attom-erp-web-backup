@@ -1,9 +1,14 @@
 <template>
   <div class="data-screen-left3">
-    <el-table :data="tableData">
-      <el-table-column label="Name" prop="name" show-overflow-tooltip width="130px" />
-      <el-table-column label="Address" prop="address" show-overflow-tooltip />
-    </el-table>
+    <div class="scroll" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+      <div ref="scrollRef" class="scroll-box">
+        <div v-for="item in listData" :key="item.id" class="scroll-item">
+          <el-avatar fit="fill" :size="25" src="https://i.gtimg.cn/club/item/face/img/2/16022_100.gif" />
+          <span class="name">{{ item.name }}</span>
+          <span class="address">{{ item.address }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -12,48 +17,68 @@ defineOptions({
   name: 'DataScreenLeft3',
 })
 
-const tableData = [
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+const speed = ref(30)
+const timer = ref<any>(null)
+const scrollRef = ref<any>(null)
+const listData = reactive<any>([
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+])
+
+const handleMouseEnter = () => {
+  clearTimeout(timer.value)
+}
+
+const handleMouseLeave = () => {
+  start()
+}
+
+const start = () => {
+  clearTimeout(timer.value)
+  timer.value = setInterval(ListScroll, speed.value)
+}
+
+const ListScroll = () => {
+  let scrollDom = scrollRef.value
+  if (scrollDom.offsetHeight == 0) {
+    scrollDom = scrollRef.value
+  } else {
+    if (scrollDom.children.length < 4) {
+      clearTimeout(timer.value)
+      return
+    }
+    scrollDom.scrollTop += 1
+    if (scrollDom.scrollTop == scrollDom.scrollHeight - scrollDom.clientHeight) {
+      const first = scrollDom.children[0]
+      scrollDom.removeChild(first)
+      scrollDom.append(first)
+    }
+  }
+}
+
+onMounted(() => {
+  start()
+})
+
+onBeforeUnmount(() => {
+  clearTimeout(timer.value)
+})
+
+onUnmounted(() => {
+  clearTimeout(timer.value)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -64,24 +89,23 @@ const tableData = [
   margin-top: 20px;
   overflow: hidden;
 
-  :deep() {
-    .el-table {
-      --el-table-border-color: #101f58;
-      --el-table-border: 1px solid #101f58;
-      --el-table-text-color: #fff;
-      --el-table-header-text-color: : #fff;
-      --el-table-row-hover-bg-color: transparent;
-      --el-table-current-row-bg-color: transparent;
-      --el-table-header-bg-color: transparent;
-      --el-table-fixed-box-shadow: transparent;
-      --el-table-bg-color: transparent;
-      --el-table-tr-bg-color: transparent;
-      --el-table-expanded-cell-bg-color: transparent;
-      flex: 1;
+  .scroll {
+    width: 100%;
+    height: 100%;
+    .scroll-box {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      .scroll-item {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        border-bottom: 1px solid #101f58;
 
-      th {
-        background: #101f58 !important;
-        border-radius: 5px;
+        .name,
+        .address {
+          margin-left: var(--el-margin);
+        }
       }
     }
   }
