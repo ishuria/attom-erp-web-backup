@@ -433,9 +433,11 @@ html {
 
     /* el-tabs--top */
     .el-tabs.el-tabs--top {
-      svg,
-      [class*='ri-'] {
-        margin-right: 3px;
+      .el-tabs__item {
+        svg,
+        [class*='ri-'] {
+          margin-right: 3px;
+        }
       }
     }
 
