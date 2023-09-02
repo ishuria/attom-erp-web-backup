@@ -52,7 +52,7 @@ export const createWatch = (env: Record<string, string>) => {
     }
   }
 
-  if (nodeEnv !== 'production') {
+  if (nodeEnv === 'development') {
     chokidar.watch('./src/views').on('change', (path) => {
       if (path.endsWith('vue')) {
         console.log(
