@@ -1,5 +1,5 @@
 <template>
-  <div class="work-order-container">
+  <div class="work-order-container table-auto-height">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -32,7 +32,7 @@
       </el-table-column>
       <el-table-column align="center" label="提交者" prop="submit" />
       <el-table-column align="center" label="受理人员" prop="accept" />
-      <el-table-column align="center" label="工单状态" width="90">
+      <el-table-column align="center" label="工单状态" min-width="90">
         <template #default="{ row }">
           <el-tag effect="dark" :type="row.status == '处理中' ? 'warning' : row.status == '已处理' ? 'success' : ''">
             {{ row.status }}
