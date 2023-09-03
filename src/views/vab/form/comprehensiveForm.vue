@@ -66,8 +66,8 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('formRef')">立即创建</el-button>
-            <el-button type="danger" @click="resetForm('formRef')">重置</el-button>
+            <el-button type="primary" @click="submitForm()">立即创建</el-button>
+            <el-button type="danger" @click="resetForm()">重置</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -150,24 +150,19 @@ const filterMethod = (query: any, item: any) => {
 }
 
 const fetchData = async () => {
-  const {
-    data: { list },
-  } = await getList()
-  areaOptions.value = list
+  const { data } = await getList()
+  areaOptions.value = data.list
 }
 
-const submitForm = (formName: any) => {
-  formName.value.validate((valid: any) => {
-    if (valid) {
-      $baseMessage('表单提交成功', 'success', 'hey')
-    } else {
-      $baseMessage('表单提交失败', 'error', 'hey')
-    }
+const submitForm = () => {
+  formRef.value.validate((valid: any) => {
+    if (valid) $baseMessage('表单提交成功', 'success', 'hey')
+    else $baseMessage('表单提交失败', 'error', 'hey')
   })
 }
 
-const resetForm = (formName: any) => {
-  formName.value.resetFields()
+const resetForm = () => {
+  formRef.value.resetFields()
 }
 
 onBeforeMount(() => {
