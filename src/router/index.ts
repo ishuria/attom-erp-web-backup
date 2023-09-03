@@ -1151,6 +1151,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'workOrder',
+        name: 'WorkOrder',
+        component: () => import('/@/views/goods/WorkOrder.vue'),
+        meta: {
+          title: '工单管理',
+          icon: 'list-ordered-2',
+        },
+      },
+      {
         path: 'goodsTag',
         name: 'GoodsTag',
         component: () => import('/@/views/goods/GoodsTag.vue'),

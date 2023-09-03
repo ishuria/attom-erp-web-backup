@@ -19,8 +19,8 @@
           <vab-card :body-style="{ padding: '0px' }">
             <div class="card-body">
               <div class="tag-group">
-                <el-tag v-if="item.isRecommend" type="success">推荐</el-tag>
-                <el-tag v-if="item.status === '已下架'" type="danger">缺货</el-tag>
+                <el-tag v-if="item.isRecommend" effect="dark" type="success">推荐</el-tag>
+                <el-tag v-if="item.status === '已下架'" effect="dark" type="danger">缺货</el-tag>
               </div>
               <div class="image-group">
                 <img alt="" class="image" :src="item.image" />
