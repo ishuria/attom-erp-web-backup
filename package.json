@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "4.2.5",
+  "version": "4.3.0",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -85,7 +85,7 @@
     "stylelint-config-recess-order": "^4.3.0",
     "stylelint-config-recommended-scss": "^13.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",
-    "terser": "^5.19.3",
+    "terser": "^5.19.4",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",

@@ -22,7 +22,7 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   // 启用/禁用 gzip 压缩大小报告
   reportCompressedSize: false,
   // 混淆器 boolean | 'terser' | 'esbuild'
-  minify: 'terser',
+  minify: 'esbuild',
   // 打包后的文件是否开启hash
   outputHash: false,
 }
