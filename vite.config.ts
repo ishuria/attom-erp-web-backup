@@ -46,7 +46,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         '/@/': `/${resolve(__dirname, 'src')}/`,
         '/@vab/': `/${resolve(__dirname, 'library')}/`,
         '/@types/': `/${resolve(__dirname, 'src/types')}/`,
-        'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
       },
     },
     build: {

@@ -1,10 +1,11 @@
 import { MockMethod } from 'vite-plugin-mock'
 
+const Layout = 'Layout'
 const list = [
   {
     path: '/',
     name: 'Root',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '首页',
       icon: 'home-2-line',
@@ -65,7 +66,7 @@ const list = [
   {
     path: '/vab',
     name: 'Vab',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '组件',
       icon: 'code-box-line',
@@ -447,7 +448,7 @@ const list = [
   {
     path: '/other',
     name: 'Other',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '其他',
       icon: 'archive-line',
@@ -477,7 +478,7 @@ const list = [
       {
         path: 'editor',
         name: 'Editor',
-        component: 'Layout',
+        component: Layout,
         meta: {
           title: '编辑器',
           icon: 'edit-box-line',
@@ -727,7 +728,7 @@ const list = [
   {
     path: '/operate',
     name: 'Operate',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '操作',
       icon: 'microscope-line',
@@ -880,7 +881,7 @@ const list = [
   {
     path: '/template',
     name: 'Template',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '模板',
       icon: 'clipboard-line',
@@ -955,7 +956,7 @@ const list = [
   {
     path: '/setting',
     name: 'PersonnelManagement',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '配置',
       icon: 'user-settings-line',
@@ -1050,7 +1051,7 @@ const list = [
   {
     path: '/noColumn',
     name: 'NoColumn',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '单栏',
       icon: 'delete-column',
@@ -1074,7 +1075,7 @@ const list = [
   {
     path: '/goods',
     name: 'Goods',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: '商品',
       icon: 'shopping-bag-3-line',
@@ -1099,6 +1100,15 @@ const list = [
         },
       },
       {
+        path: 'workOrder',
+        name: 'WorkOrder',
+        component: '/@/views/goods/WorkOrder.vue',
+        meta: {
+          title: '工单管理',
+          icon: 'list-ordered-2',
+        },
+      },
+      {
         path: 'goodsTag',
         name: 'GoodsTag',
         component: '/@/views/goods/GoodsTag.vue',
@@ -1112,7 +1122,7 @@ const list = [
   {
     path: '/chat',
     name: 'Chat',
-    component: 'Layout',
+    component: Layout,
     meta: {
       title: 'GPT',
       icon: 'chat-1-line',
