@@ -32,7 +32,7 @@ const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
   }
 
   setTimeout(() => {
-    let data: Tree[] = []
+    let data: Tree[]
     if (hasChild) {
       data = [
         {

@@ -87,8 +87,7 @@ const fetchData = async () => {
   list.value = data.list
   total.value = data.total
   listLoading.value = false
-  if (data.total > 0) emptyShow.value = false
-  else emptyShow.value = true
+  emptyShow.value = data.total <= 0
 }
 
 const handleSizeChange = (value: number) => {

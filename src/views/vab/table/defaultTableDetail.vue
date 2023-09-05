@@ -75,10 +75,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useTabsStore } from '/@/store/modules/tabs'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { handleActivePath } from '/@/utils/routes'
 import { ArrowDown, Refresh } from '@element-plus/icons-vue'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 
 defineOptions({
   name: 'DefaultTableDetail',

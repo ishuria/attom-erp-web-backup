@@ -86,15 +86,12 @@ const getMap = async () => {
     method: 'get',
   })
   chinaData.value = data
+  registerMap('china', chinaData.value)
 }
 
 onBeforeMount(() => {
   getMap()
-})
-
-onMounted(() => {
   setTimeout(() => {
-    registerMap('china', chinaData.value)
     option.geo = {
       map: 'china',
       type: 'map',
@@ -158,6 +155,6 @@ onMounted(() => {
         data: coordsData,
       },
     ]
-  }, 500)
+  }, 1000)
 })
 </script>

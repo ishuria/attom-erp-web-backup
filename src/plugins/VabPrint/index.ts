@@ -53,7 +53,7 @@ Print.prototype = {
 
     for (let k = 0; k < inputs.length; k++) {
       if (inputs[k].type == 'checkbox' || inputs[k].type == 'radio') {
-        if (inputs[k].checked == true) {
+        if (inputs[k].checked) {
           inputs[k].setAttribute('checked', 'checked')
         } else {
           inputs[k].removeAttribute('checked')

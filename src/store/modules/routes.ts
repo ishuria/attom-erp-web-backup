@@ -1,12 +1,12 @@
 /**
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
-import { authentication, rolesControl } from '/@/config'
-import { convertRouter, filterRoutes } from '/@/utils/routes'
-import { asyncRoutes, constantRoutes, resetRouter } from '/@/router'
-import { gp } from '/@vab/plugins/vab'
 import { getList } from '/@/api/router'
+import { authentication, rolesControl } from '/@/config'
+import { asyncRoutes, constantRoutes, resetRouter } from '/@/router'
+import { convertRouter, filterRoutes } from '/@/utils/routes'
 import { isArray } from '/@/utils/validate'
+import { gp } from '/@vab/plugins/vab'
 
 const filterHidden = (data: any) => {
   return data.reduce((acc: any, item: any) => {
@@ -42,9 +42,6 @@ export const useRoutesStore = defineStore('routes', {
         : [],
   },
   actions: {
-    clearRoutes() {
-      this.routes = []
-    },
     /**
      * @description 多模式设置路由
      * @param mode

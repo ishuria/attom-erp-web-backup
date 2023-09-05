@@ -46,7 +46,7 @@ const onSubmit = () => {
 
 onBeforeUnmount(() => {
   const editor = editorRef.value
-  if (editor == null) return
+  if (!editor) return
   editor.destroy()
 })
 </script>

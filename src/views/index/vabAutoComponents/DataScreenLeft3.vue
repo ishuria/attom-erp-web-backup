@@ -51,10 +51,8 @@ const start = () => {
 }
 
 const ListScroll = () => {
-  let scrollDom = scrollRef.value
-  if (scrollDom.offsetHeight == 0) {
-    scrollDom = scrollRef.value
-  } else {
+  const scrollDom = scrollRef.value
+  if (scrollDom.offsetHeight !== 0) {
     if (scrollDom.children.length < 4) {
       clearTimeout(timer.value)
       return

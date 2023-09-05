@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts" setup>
-import Watermark from '/@/utils/watermark'
-import { useSettingsStore } from '/@/store/modules/settings'
 import { ElMessageBox } from 'element-plus'
+import { useSettingsStore } from '/@/store/modules/settings'
+import Watermark from '/@/utils/watermark'
 
 defineOptions({
   value: 'Watermark',

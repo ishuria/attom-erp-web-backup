@@ -165,7 +165,7 @@ export function tenBitTimestamp(time: number) {
  * @returns {string}
  */
 export function thirteenBitTimestamp(time: number) {
-  const date = new Date(time / 1)
+  const date = new Date(time)
   const y = date.getFullYear()
   let m: string | number = date.getMonth() + 1
   m = m < 10 ? `${m}` : m

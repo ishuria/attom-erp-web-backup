@@ -76,7 +76,7 @@
               <vab-draggable item-key="{ element }" :list="columns" v-bind="dragOptions">
                 <template #item="{ element }">
                   <div>
-                    <el-checkbox :disabled="element.disableCheck === true" :label="element.label">
+                    <el-checkbox :disabled="element.disableCheck" :label="element.label">
                       {{ element.label }}
                     </el-checkbox>
                   </div>

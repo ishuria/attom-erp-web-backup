@@ -1,6 +1,6 @@
 /**
  * @description 判读是否为外链
- * @param path
+ * @param value
  * @returns {boolean}
  */
 export const isExternal = (value: string) => {
@@ -38,7 +38,7 @@ export const isName = (value: string) => {
 
 /**
  * @description 判断是否为IP
- * @param ip
+ * @param value
  * @returns {boolean}
  */
 export const isIP = (value: string) => {
@@ -49,7 +49,7 @@ export const isIP = (value: string) => {
 
 /**
  * @description 判断是否是为URL
- * @param url
+ * @param value
  * @returns {boolean}
  */
 export const isUrl = (value: string) => {
@@ -98,7 +98,7 @@ export const isString = (value: any) => {
 
 /**
  * @description 判断是否是数组
- * @param arg
+ * @param value
  */
 export const isArray = (value: any) => {
   if (typeof Array.isArray === 'undefined') return Object.prototype.toString.call(value) === '[object Array]'

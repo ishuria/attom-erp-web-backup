@@ -82,8 +82,7 @@ const fetchData = async () => {
     return { icon, color: randomHexColor() }
   })
   total.value = data.total
-  if (data.total > 0) emptyShow.value = false
-  else emptyShow.value = true
+  emptyShow.value = data.total <= 0
 }
 
 const handleSizeChange = (value: number) => {
