@@ -958,6 +958,26 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'news',
+        name: 'News',
+        component: () => import('/@/views/template/News.vue'),
+        meta: {
+          title: '新闻',
+          icon: 'newspaper-line',
+          badge: 'New',
+        },
+      },
+      {
+        path: 'newsDetail',
+        name: 'NewsDetail',
+        component: () => import('/@/views/template/NewsDetail.vue'),
+        meta: {
+          title: '新闻详情',
+          icon: 'newspaper-line',
+          hidden: true,
+        },
+      },
+      {
         path: 'resume',
         name: 'Resume',
         component: () => import('/@/views/template/Resume.vue'),

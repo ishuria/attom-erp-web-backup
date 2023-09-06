@@ -1,5 +1,5 @@
 <template>
-  <div class="{{ dashCase name }}-container table-auto-height">
+  <div class="news-container table-auto-height">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
@@ -48,16 +48,16 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <{{ dashCase name }}-edit ref="editRef" @fetch-data="fetchData" />
+    <news-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, Search } from '@element-plus/icons-vue'
-import { doDelete, getList } from '/@/api/{{ camelCase name }}'
+import { doDelete, getList } from '/@/api/news'
 
 defineOptions({
-  name: '{{ properCase name }}',
+  name: 'News',
 })
 
 const $baseConfirm = inject<any>('$baseConfirm')
@@ -103,7 +103,6 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-
 
 const handleFold = () => {
   fold.value = !fold.value

@@ -907,6 +907,26 @@ const list = [
         },
       },
       {
+        path: 'news',
+        name: 'News',
+        component: '/@/views/template/News.vue',
+        meta: {
+          title: '新闻',
+          icon: 'newspaper-line',
+          badge: 'New',
+        },
+      },
+      {
+        path: 'newsDetail',
+        name: 'NewsDetail',
+        component: '/@/views/template/NewsDetail.vue',
+        meta: {
+          title: '新闻详情',
+          icon: 'newspaper-line',
+          hidden: true,
+        },
+      },
+      {
         path: 'resume',
         name: 'Resume',
         component: '/@/views/template/Resume.vue',
