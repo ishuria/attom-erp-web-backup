@@ -19,14 +19,14 @@
 
     <el-table v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
       <el-table-column type="selection" width="38" />
-      <el-table-column align="center" label="序号" width="55">
+      <el-table-column align="center" label="序号" show-overflow-tooltip width="55">
         <template #default="{ $index }">
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="id" prop="id" />
-      <el-table-column align="center" label="角色码" prop="role" />
-      <el-table-column align="center" label="按钮权限">
+      <el-table-column align="center" label="id" prop="id" show-overflow-tooltip />
+      <el-table-column align="center" label="角色码" prop="role" show-overflow-tooltip />
+      <el-table-column align="center" label="按钮权限" min-width="300">
         <template #default="{ row }">
           <el-space wrap>
             <el-tag v-for="(item, index) in row.btnRolesCheckedList" :key="index">

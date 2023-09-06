@@ -50,9 +50,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="日志类型" prop="type" width="230px" />
-      <el-table-column label="账号" prop="account" />
-      <el-table-column label="执行结果" prop="executeResult">
+      <el-table-column align="center" label="日志类型" min-width="120" prop="type" />
+      <el-table-column align="center" label="账号" min-width="120" prop="account" />
+      <el-table-column align="center" label="执行结果" min-width="120" prop="executeResult">
         <template #default="{ row }">
           <span v-if="row.executeResult === '登录成功'">
             <span class="vab-dot vab-dot-success"><span></span></span>
@@ -64,8 +64,8 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="登录IP" prop="ip" />
-      <el-table-column label="访问时间" prop="datetime" />
+      <el-table-column align="center" label="登录IP" min-width="130" prop="ip" />
+      <el-table-column align="center" label="访问时间" min-width="170" prop="datetime" />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>

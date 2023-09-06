@@ -20,9 +20,9 @@
             row-key="path"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
-            <el-table-column align="center" label="标题" prop="meta.title" />
-            <el-table-column align="center" label="name" prop="name" />
-            <el-table-column align="center" label="路径" prop="path" />
+            <el-table-column align="center" label="标题" min-width="140" prop="meta.title" show-overflow-tooltip />
+            <el-table-column align="center" label="name" min-width="120" prop="name" show-overflow-tooltip />
+            <el-table-column align="center" label="路径" min-width="140" prop="path" show-overflow-tooltip />
             <!-- <el-table-column align="center" label="是否隐藏">
                 <template #default="{ row }">
                   {{ row.meta.hidden ? '是' : '否' }}
@@ -37,7 +37,7 @@
                     {{ row.meta.levelHidden ? '是' : '否' }}
                   </template>
                 </el-table-column> -->
-            <el-table-column align="center" label="vue文件路径" prop="component" />
+            <el-table-column align="center" label="vue文件路径" min-width="120" prop="component" show-overflow-tooltip />
             <!-- <el-table-column align="center" label="重定向">
                 <template #default="{ row }">
                   {{ row.redirect || '无' }}

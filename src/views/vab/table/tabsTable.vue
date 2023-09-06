@@ -28,27 +28,32 @@
               {{ $index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column align="center" label="标题" prop="title" show-overflow-tooltip />
+          <el-table-column align="center" label="序号" width="55">
+            <template #default="{ $index }">
+              {{ $index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="标题" min-width="200" prop="title" show-overflow-tooltip />
           <el-table-column align="center" label="作者" prop="author" />
-          <el-table-column align="center" label="评级">
+          <el-table-column align="center" label="评级" min-width="200">
             <template #default="{ row }">
               <el-rate v-model="row.rate" disabled />
             </template>
           </el-table-column>
-          <el-table-column align="center" label="点击量" prop="pageViews" sortable />
+          <el-table-column align="center" label="点击量" min-width="100" prop="pageViews" sortable />
           <el-table-column align="center" label="开关" prop="switch">
             <template #default="{ row }">
               <el-switch v-model="row.switch" />
             </template>
           </el-table-column>
-          <el-table-column align="center" label="状态">
+          <el-table-column align="center" label="状态" min-width="100">
             <template #default="{ row }">
               <el-tag :type="statusFilter(row.status)">
                 {{ row.status }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="时间" prop="datetime" width="200" />
+          <el-table-column align="center" label="时间" min-width="200" prop="datetime" />
           <el-table-column align="center" label="操作" width="237">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
