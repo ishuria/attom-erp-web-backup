@@ -939,25 +939,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     },
     children: [
       {
-        path: 'lllustration',
-        name: 'Lllustration',
-        component: () => import('/@/views/template/Lllustration.vue'),
-        meta: {
-          title: '插画',
-          icon: 'brush-3-line',
-          dot: true,
-        },
-      },
-      {
-        path: 'qRLogin',
-        name: 'QRLogin',
-        component: () => import('/@/views/template/QRLogin.vue'),
-        meta: {
-          title: '二维码登录',
-          icon: 'qr-scan-2-line',
-        },
-      },
-      {
         path: 'news',
         name: 'News',
         component: () => import('/@/views/template/News.vue'),
@@ -975,6 +956,25 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '新闻详情',
           icon: 'newspaper-line',
           hidden: true,
+        },
+      },
+      {
+        path: 'lllustration',
+        name: 'Lllustration',
+        component: () => import('/@/views/template/Lllustration.vue'),
+        meta: {
+          title: '插画',
+          icon: 'brush-3-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'qRLogin',
+        name: 'QRLogin',
+        component: () => import('/@/views/template/QRLogin.vue'),
+        meta: {
+          title: '二维码登录',
+          icon: 'qr-scan-2-line',
         },
       },
       {

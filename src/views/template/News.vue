@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col v-for="(item, index) in list" :key="index" :lg="item.span" :md="12" :sm="12" :xl="item.span" :xs="24">
         <vab-card :body-style="{ padding: 0 }">
-          <div class="card-body">
+          <div class="card-body" @click="handleDetail(item)">
             <div class="image-group">
               <img
                 alt=""
@@ -28,7 +28,7 @@
                 <vab-icon icon="time-line" />
                 <div class="time">{{ item.time }}</div>
               </div>
-              <div class="title" @click="handleDetail(item)">{{ item.title }}</div>
+              <div class="title">{{ item.title }}</div>
             </div>
           </div>
         </vab-card>

@@ -888,25 +888,6 @@ const list = [
     },
     children: [
       {
-        path: 'lllustration',
-        name: 'Lllustration',
-        component: '/@/views/template/Lllustration.vue',
-        meta: {
-          title: '插画',
-          icon: 'brush-3-line',
-          dot: true,
-        },
-      },
-      {
-        path: 'qRLogin',
-        name: 'QRLogin',
-        component: '/@/views/template/QRLogin.vue',
-        meta: {
-          title: '二维码登录',
-          icon: 'qr-scan-2-line',
-        },
-      },
-      {
         path: 'news',
         name: 'News',
         component: '/@/views/template/News.vue',
@@ -924,6 +905,25 @@ const list = [
           title: '新闻详情',
           icon: 'newspaper-line',
           hidden: true,
+        },
+      },
+      {
+        path: 'lllustration',
+        name: 'Lllustration',
+        component: '/@/views/template/Lllustration.vue',
+        meta: {
+          title: '插画',
+          icon: 'brush-3-line',
+          dot: true,
+        },
+      },
+      {
+        path: 'qRLogin',
+        name: 'QRLogin',
+        component: '/@/views/template/QRLogin.vue',
+        meta: {
+          title: '二维码登录',
+          icon: 'qr-scan-2-line',
         },
       },
       {
