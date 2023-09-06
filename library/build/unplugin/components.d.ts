@@ -49,8 +49,6 @@ declare module 'vue' {
     InfiniteScrollBasic: typeof import('./../../../src/views/vab/infiniteScroll/vabAutoComponents/InfiniteScrollBasic.vue')['default']
     InfiniteScrollDisableLoading: typeof import('./../../../src/views/vab/infiniteScroll/vabAutoComponents/InfiniteScrollDisableLoading.vue')['default']
     MenuManagementEdit: typeof import('./../../../src/views/setting/menuManagement/vabAutoComponents/MenuManagementEdit.vue')['default']
-    NewsDetail: (typeof import('../../../src/views/template/NewsDetail.vue'))['default']
-    NewsEdit: (typeof import('./../../../src/views/news/vabAutoComponents/NewsEdit.vue'))['default']
     NodePanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/NodePanel.vue')['default']
     PageHeader: typeof import('./../../../src/views/index/vabAutoComponents/PageHeader.vue')['default']
     Pending: typeof import('./../../../src/views/index/vabAutoComponents/Pending.vue')['default']

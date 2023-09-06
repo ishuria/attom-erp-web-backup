@@ -9,13 +9,13 @@
       {{ route.query.title }}
     </div>
     <div class="logo">
-      <el-avatar :size="18" :src="route.query.logo" />
+      <el-avatar :size="18" :src="route.query.logo as string" />
       <div class="user">{{ route.query.user }}</div>
       <vab-icon icon="time-line" />
       <div class="time">{{ route.query.time }}</div>
     </div>
 
-    <img alt="" class="image" :src="route.query.image" />
+    <img alt="" class="image" :src="route.query.image as string" />
     <article class="article">
       {{ route.query.content }}
     </article>
