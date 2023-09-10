@@ -13,7 +13,7 @@
     "lint:eslint": "eslint {src,mock,library,types}/**/*.{vue,js,ts} --fix",
     "lint:prettier": "prettier {src,mock,library,types}/**/*.{html,vue,css,sass,scss,js,ts,md} --write",
     "lint:stylelint": "stylelint {src,mock,library}/**/*.{vue,css,sass,scss} --fix --cache --cache-location node_modules/.cache/stylelint/",
-    "global:install": "npm install -g nrm,cnpm@8.2.0,npm-check-updates",
+    "global:install": "cnpm i -g nrm cnpm@8.2.0 npm-check-updates pnpm",
     "globle:update": "ncu -g",
     "module:install": "pnpm install",
     "module:update": "ncu -u --reject vite-plugin-mock --registry https://registry.npmmirror.com&&npm run module:install",
