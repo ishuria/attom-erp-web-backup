@@ -959,6 +959,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'creditCard',
+        name: 'CreditCard',
+        component: () => import('/@/views/template/CreditCard.vue'),
+        meta: {
+          title: '信用卡',
+          icon: 'bank-card-line',
+          dot: true,
+        },
+      },
+      {
         path: 'lllustration',
         name: 'Lllustration',
         component: () => import('/@/views/template/Lllustration.vue'),
