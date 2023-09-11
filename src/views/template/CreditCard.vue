@@ -15,7 +15,7 @@ const $baseMessage = inject<any>('$baseMessage')
 const backgroundImage = ref(`https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png`)
 const formData = ref({
   cardName: '',
-  cardNumber: '',
+  cardNumber: '6288888888888888888',
   cardMonth: '',
   cardYear: '',
   cardCvv: '',
