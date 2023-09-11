@@ -1,4 +1,4 @@
-import JSEncrypt from 'jsencrypt/bin/jsencrypt'
+import JSEncrypt from 'jsencrypt'
 import { getPublicKey } from '/@/api/publicKey'
 import { isJson } from '/@/utils/validate.ts'
 
@@ -10,7 +10,7 @@ const privateKey =
  * @param data
  * @returns {Promise<{param: PromiseLike<ArrayBuffer>}|*>}
  */
-export async function encryptedData(data: string | object) {
+export const encryptedData = async (data: string | object) => {
   const {
     data: { publicKey },
   } = await getPublicKey()
@@ -25,7 +25,7 @@ export async function encryptedData(data: string | object) {
  * @param data
  * @returns {PromiseLike<ArrayBuffer>}
  */
-export function decryptedData(data: string) {
+export const decryptedData = (data: string) => {
   const decrypt = new JSEncrypt()
   decrypt.setPrivateKey(`-----BEGIN RSA PRIVATE KEY-----${privateKey}-----END RSA PRIVATE KEY-----`)
   const decrypted = decrypt.decrypt(data)

@@ -1,1 +1,1 @@
-declare module 'jsencrypt/bin/jsencrypt'
+declare module 'jsencrypt'
