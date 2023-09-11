@@ -17,7 +17,7 @@ const backgroundImage = ref(`https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.2023
 const formData = ref({
   cardName: 'FULL NAME',
   cardNumber: '6288888888888888888',
-  cardMonth: date.getMonth() + 1,
+  cardMonth: date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1,
   cardYear: date.getFullYear(),
   cardCvv: '',
 })
