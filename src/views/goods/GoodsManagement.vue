@@ -24,7 +24,7 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品ID" prop="id" />
+      <el-table-column align="center" label="商品ID" min-width="120" prop="id" show-overflow-tooltip />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
           <el-popover placement="top-start" trigger="hover">
@@ -35,19 +35,19 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品名称" prop="name" sortable />
-      <el-table-column align="center" label="商品类型" prop="type" sortable />
-      <el-table-column align="center" label="商品售价" prop="price" sortable />
+      <el-table-column align="center" label="商品名称" min-width="120" prop="name" sortable />
+      <el-table-column align="center" label="商品类型" min-width="120" prop="type" sortable />
+      <el-table-column align="center" label="商品售价" min-width="120" prop="price" sortable />
       <el-table-column align="center" label="销量" prop="sales" sortable />
       <el-table-column align="center" label="库存" prop="stock" sortable />
-      <el-table-column align="center" label="状态" prop="status" sortable>
+      <el-table-column align="center" label="状态" min-width="100" prop="status" sortable>
         <template #default="{ row }">
           <el-tag :type="row.status == '已上架' ? 'success' : row.status == '待上架' ? 'warning' : 'info'">
             {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="时间" prop="datetime" width="200" />
+      <el-table-column align="center" label="时间" min-width="160" prop="datetime" />
       <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
