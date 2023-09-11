@@ -11,13 +11,14 @@ defineOptions({
   name: 'CreditCard',
 })
 
+const date = new Date()
 const $baseMessage = inject<any>('$baseMessage')
 const backgroundImage = ref(`https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png`)
 const formData = ref({
-  cardName: '',
+  cardName: 'FULL NAME',
   cardNumber: '6288888888888888888',
-  cardMonth: '',
-  cardYear: '',
+  cardMonth: date.getMonth() + 1,
+  cardYear: date.getFullYear(),
   cardCvv: '',
 })
 
