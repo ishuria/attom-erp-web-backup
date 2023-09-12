@@ -1196,6 +1196,15 @@ const list = [
         },
       },
       {
+        path: '//xinghuo.xfyun.cn/desk',
+        name: 'Xinghuo',
+        meta: {
+          title: '讯飞星火',
+          target: '_blank',
+          icon: 'fire-line',
+        },
+      },
+      {
         path: '//qianwen.aliyun.com/chat',
         name: 'Qianwen',
         meta: {
