@@ -104,13 +104,19 @@ const handleChange = (value: any) => {
         border-radius: var(--el-border-radius-base);
       }
     }
+
+    @media (max-width: 576px) {
+      .tiny-crop__dialog {
+        transform: scale(0.7);
+      }
+    }
     .tiny-crop {
       z-index: calc(var(--el-z-index) + 2);
       background-color: rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(2.5px);
       opacity: 1;
 
-      .tiny-crop__dialog {
+      &__dialog {
         background: var(--el-color-white);
         border-radius: var(--el-border-radius-base);
 
