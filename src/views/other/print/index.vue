@@ -1,15 +1,9 @@
 <template>
   <div class="print-container">
     <el-space wrap>
-      <el-button type="primary" @click="print('imageRef')">
-        <span>打印图片</span>
-      </el-button>
-      <el-button type="primary" @click="print('tableRef')">
-        <span>打印表格</span>
-      </el-button>
-      <el-button type="primary" @click="remotePrint">
-        <span>自定义打印</span>
-      </el-button>
+      <el-button type="primary" @click="print('imageRef')">打印图片</el-button>
+      <el-button type="primary" @click="print('tableRef')">打印表格</el-button>
+      <el-button type="primary" @click="remotePrint">自定义打印</el-button>
     </el-space>
     <img
       ref="imageRef"

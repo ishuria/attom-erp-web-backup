@@ -14,14 +14,8 @@
       ></canvas>
       <img alt="" :src="catUrl" />
     </div>
-    <el-button type="primary" @click="handleSaveImg">
-      <vab-icon icon="save-line" />
-      <span>存为图片</span>
-    </el-button>
-    <el-button type="danger" @click="handleClearSign">
-      <vab-icon icon="delete-bin-5-line" />
-      <span>清空签名</span>
-    </el-button>
+    <el-button type="primary" @click="handleSaveImg">存为图片</el-button>
+    <el-button type="danger" @click="handleClearSign">清空签名</el-button>
   </div>
 </template>
 
