@@ -25,4 +25,8 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   minify: 'esbuild',
   // 打包后的文件是否开启hash
   outputHash: false,
+  // 开发环境是否启用mock
+  localEnabled: true,
+  // 生产环境是否启用mock
+  prodEnabled: true,
 }

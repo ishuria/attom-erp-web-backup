@@ -5,7 +5,7 @@ const createProdMockServer = async (mockList: any[]) => {
   const { pathToRegexp } = await import('path-to-regexp')
   Mock.XHR.prototype.__send = Mock.XHR.prototype.send
   Mock.XHR.prototype.send = function () {
-    if (!isCheck) this.custom.xhr.responseType = ''
+    if (!isCheck()) this.custom.xhr.responseType = ''
     if (this.custom.xhr) {
       this.custom.xhr.withCredentials = this.withCredentials || false
       if (this.responseType === 'arraybuffer') return
