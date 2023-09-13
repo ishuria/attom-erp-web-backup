@@ -90,6 +90,10 @@ const handleReset = () => {
 
 const handleChange = (value: any) => {
   cropRef.value.setAspectRatio(value)
+  $baseConfirm('裁剪比例已修改，您是否要打开弹窗？', null, () => {
+    cropData.value = ''
+    visible.value = true
+  })
 }
 </script>
 
