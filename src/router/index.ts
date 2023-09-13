@@ -679,6 +679,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'scrollText',
+        name: 'ScrollText',
+        component: () => import('/@/views/other/scrollText/index.vue'),
+        meta: {
+          title: '文字滚动',
+          icon: 'exchange-line',
+        },
+      },
+      {
         path: 'transition',
         name: 'Transition',
         component: () => import('/@/views/other/transition/index.vue'),

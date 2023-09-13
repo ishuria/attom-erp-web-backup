@@ -628,6 +628,15 @@ const list = [
         },
       },
       {
+        path: 'scrollText',
+        name: 'ScrollText',
+        component: '/@/views/other/scrollText/index.vue',
+        meta: {
+          title: '文字滚动',
+          icon: 'exchange-line',
+        },
+      },
+      {
         path: 'transition',
         name: 'Transition',
         component: '/@/views/other/transition/index.vue',
