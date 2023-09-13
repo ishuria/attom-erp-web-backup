@@ -1,11 +1,12 @@
 <template>
   <div class="workflow-container">
-    <control v-if="lf" class="vab-control" :lf="lf" @cat-data="catData" />
-    <node-panel :lf="lf" />
-    <div id="container" ref="container"></div>
+    <el-alert class="hidden-sm-and-up" :closable="false" title="手机端不支持工作流演示" type="error" />
+    <control v-if="lf" class="vab-control hidden-xs-only" :lf="lf" @cat-data="catData" />
+    <node-panel class="hidden-xs-only" :lf="lf" />
+    <div id="container" ref="container" class="hidden-xs-only"></div>
     <add-panel
       v-if="showAddPanel"
-      class="add-panel"
+      class="add-panel hidden-xs-only"
       :lf="lf"
       :node-data="addClickNode"
       :style="addPanelStyle"
