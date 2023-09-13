@@ -20,7 +20,7 @@ const statusMap = ref({
 const milestoneData = ref([
   {
     name: 'POR1',
-    time: '2018-9-7',
+    time: '2023-9-7',
     status: 'completed',
     flags: [
       {
@@ -32,41 +32,41 @@ const milestoneData = ref([
   },
   {
     name: 'POR2',
-    time: '2018-9-8',
+    time: '2023-9-8',
     status: 'completed',
     flags: [
       {
         status: 'back',
-        content: '引导用户按照流程完成任务',
+        content: 'test2',
       },
     ],
   },
-  { name: 'POR3', time: '2018-9-10', status: 'doing', content: null },
+  { name: 'POR3', time: '2023-9-10', status: 'doing', content: null },
   {
     name: 'POR4',
-    time: '2018-9-9',
+    time: '2023-9-9',
     status: 'cancel',
     flags: [
       {
         status: 'back',
         content: '',
-        name: 'test7',
+        name: 'test3',
       },
       {
         status: 'doing',
-        content: 'test8',
+        content: 'test4',
       },
     ],
   },
-  { name: 'POR5', time: '2018-9-11', status: 'back' },
+  { name: 'POR5', time: '2023-9-11', status: 'back' },
   {
     name: 'POR6',
-    time: '2018-9-9',
+    time: '2023-9-9',
     status: 'end',
     flags: [
       {
         status: 'completed',
-        content: 'test6',
+        content: 'test4',
       },
     ],
   },
