@@ -1,11 +1,11 @@
 <template>
   <div class="credit-card-container">
-    <credit-card-form :background-image="backgroundImage" :form-data="formData" @submit="handleSubmit" />
+    <tiny-credit-card-form :background-image="backgroundImage" :form-data="formData" @submit="handleSubmit" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { CreditCardForm } from '@opentiny/vue'
+import { CreditCardForm as TinyCreditCardForm } from '@opentiny/vue'
 
 defineOptions({
   name: 'CreditCard',
@@ -13,8 +13,8 @@ defineOptions({
 
 const date = new Date()
 const $baseMessage = inject<any>('$baseMessage')
-const backgroundImage = ref(`https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png`)
-const formData = ref({
+const backgroundImage = ref<string>(`https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png`)
+const formData = ref<any>({
   cardName: 'FULL NAME',
   cardNumber: '6288888888888888888',
   cardMonth: date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1,

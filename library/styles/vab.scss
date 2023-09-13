@@ -58,7 +58,11 @@ html {
             .el-pagination,
             .el-pagination *,
             .split,
-            .split *
+            .split *,
+            .card-drag,
+            .card-drag *,
+            .global-animation-disabled,
+            .global-animation-disabled *
           ) {
           text-shadow: none;
           transition: var(--el-transition);

@@ -527,13 +527,44 @@ const list = [
         },
       },
       {
+        path: 'pdf',
+        name: 'PDF',
+        component: '/@/views/other/pdf/index.vue',
+        meta: {
+          title: 'Pdf',
+          guard: ['Admin'],
+          icon: 'file-pdf-line',
+        },
+      },
+      {
+        path: 'print',
+        name: 'Print',
+        component: '/@/views/other/print/index.vue',
+        meta: {
+          title: '打印',
+          guard: ['Admin'],
+          icon: 'printer-line',
+        },
+      },
+      {
+        path: 'crop',
+        name: 'Crop',
+        component: '/@/views/other/crop/index.vue',
+        meta: {
+          title: '裁剪',
+          guard: ['Admin'],
+          icon: 'crop-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'award',
         name: 'Award',
         component: '/@/views/other/award/index.vue',
         meta: {
           title: '抽奖',
           icon: 'award-line',
-          badge: 'New',
+          dot: true,
         },
       },
       {
@@ -566,27 +597,6 @@ const list = [
           icon: 'water-flash-line',
         },
       },
-
-      {
-        path: 'pdf',
-        name: 'PDF',
-        component: '/@/views/other/pdf/index.vue',
-        meta: {
-          title: 'Pdf',
-          guard: ['Admin'],
-          icon: 'file-pdf-line',
-        },
-      },
-      {
-        path: 'print',
-        name: 'Print',
-        component: '/@/views/other/print/index.vue',
-        meta: {
-          title: '打印',
-          guard: ['Admin'],
-          icon: 'printer-line',
-        },
-      },
       {
         path: 'share',
         name: 'Share',
@@ -596,56 +606,6 @@ const list = [
           guard: ['Admin'],
           icon: 'share-line',
           dot: true,
-        },
-      },
-      {
-        path: 'passwordGenerator',
-        name: 'PasswordGenerator',
-        component: '/@/views/other/passwordGenerator/index.vue',
-        meta: {
-          title: '密码生成器',
-          guard: ['Admin'],
-          icon: 'lock-password-line',
-        },
-      },
-      {
-        path: 'amount',
-        name: 'Amount',
-        component: '/@/views/other/amount/index.vue',
-        meta: {
-          title: '大写金额转换',
-          guard: ['Admin'],
-          icon: 'money-cny-box-line',
-        },
-      },
-      {
-        path: 'regularExpression',
-        name: 'RegularExpression',
-        component: '/@/views/other/regularExpression/index.vue',
-        meta: {
-          title: '正则表达式',
-          guard: ['Admin'],
-          icon: 'file-copy-2-line',
-        },
-      },
-      {
-        path: 'throttleDebounce',
-        name: 'ThrottleDebounce',
-        component: '/@/views/other/throttleDebounce/index.vue',
-        meta: {
-          title: '节流防抖',
-          guard: ['Admin'],
-          icon: 'water-percent-line',
-        },
-      },
-      {
-        path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
-        name: 'ExternalLink',
-        meta: {
-          title: '外链',
-          target: '_blank',
-          guard: ['Admin', 'Editor'],
-          icon: 'external-link-line',
         },
       },
       {
@@ -685,6 +645,16 @@ const list = [
           guard: ['Admin'],
           icon: 'aspect-ratio-line',
           dot: true,
+        },
+      },
+      {
+        path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
+        name: 'ExternalLink',
+        meta: {
+          title: '外链',
+          target: '_blank',
+          guard: ['Admin', 'Editor'],
+          icon: 'external-link-line',
         },
       },
       {
@@ -784,6 +754,16 @@ const list = [
           title: '随机换肤',
           guard: ['Admin'],
           icon: 'ai-generate',
+        },
+      },
+      {
+        path: 'throttleDebounce',
+        name: 'ThrottleDebounce',
+        component: '/@/views/operate/throttleDebounce/index.vue',
+        meta: {
+          title: '节流防抖',
+          guard: ['Admin'],
+          icon: 'water-percent-line',
         },
       },
       {
@@ -898,16 +878,6 @@ const list = [
         },
       },
       {
-        path: 'creditCard',
-        name: 'CreditCard',
-        component: '/@/views/template/CreditCard.vue',
-        meta: {
-          title: '信用卡',
-          icon: 'bank-card-line',
-          dot: true,
-        },
-      },
-      {
         path: 'newsDetail',
         name: 'NewsDetail',
         component: '/@/views/template/NewsDetail.vue',
@@ -915,6 +885,16 @@ const list = [
           title: '新闻详情',
           icon: 'newspaper-line',
           hidden: true,
+        },
+      },
+      {
+        path: 'creditCard',
+        name: 'CreditCard',
+        component: '/@/views/template/CreditCard.vue',
+        meta: {
+          title: '信用卡',
+          icon: 'bank-card-line',
+          dot: true,
         },
       },
       {
@@ -943,6 +923,36 @@ const list = [
         meta: {
           title: '简历',
           icon: 'folder-user-line',
+        },
+      },
+      {
+        path: 'passwordGenerator',
+        name: 'PasswordGenerator',
+        component: '/@/views/template/PasswordGenerator.vue',
+        meta: {
+          title: '密码生成器',
+          guard: ['Admin'],
+          icon: 'lock-password-line',
+        },
+      },
+      {
+        path: 'amount',
+        name: 'Amount',
+        component: '/@/views/template/Amount.vue',
+        meta: {
+          title: '大写金额转换',
+          guard: ['Admin'],
+          icon: 'money-cny-box-line',
+        },
+      },
+      {
+        path: 'regularExpression',
+        name: 'RegularExpression',
+        component: '/@/views/template/RegularExpression.vue',
+        meta: {
+          title: '正则表达式',
+          guard: ['Admin'],
+          icon: 'file-copy-2-line',
         },
       },
       {

@@ -578,13 +578,44 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'pdf',
+        name: 'PDF',
+        component: () => import('/@/views/other/pdf/index.vue'),
+        meta: {
+          title: 'Pdf',
+          guard: ['Admin'],
+          icon: 'file-pdf-line',
+        },
+      },
+      {
+        path: 'print',
+        name: 'Print',
+        component: () => import('/@/views/other/print/index.vue'),
+        meta: {
+          title: '打印',
+          guard: ['Admin'],
+          icon: 'printer-line',
+        },
+      },
+      {
+        path: 'crop',
+        name: 'Crop',
+        component: () => import('/@/views/other/crop/index.vue'),
+        meta: {
+          title: '裁剪',
+          guard: ['Admin'],
+          icon: 'crop-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'award',
         name: 'Award',
         component: () => import('/@/views/other/award/index.vue'),
         meta: {
           title: '抽奖',
           icon: 'award-line',
-          badge: 'New',
+          dot: true,
         },
       },
       {
@@ -617,27 +648,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'water-flash-line',
         },
       },
-
-      {
-        path: 'pdf',
-        name: 'PDF',
-        component: () => import('/@/views/other/pdf/index.vue'),
-        meta: {
-          title: 'Pdf',
-          guard: ['Admin'],
-          icon: 'file-pdf-line',
-        },
-      },
-      {
-        path: 'print',
-        name: 'Print',
-        component: () => import('/@/views/other/print/index.vue'),
-        meta: {
-          title: '打印',
-          guard: ['Admin'],
-          icon: 'printer-line',
-        },
-      },
       {
         path: 'share',
         name: 'Share',
@@ -647,56 +657,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'share-line',
           dot: true,
-        },
-      },
-      {
-        path: 'passwordGenerator',
-        name: 'PasswordGenerator',
-        component: () => import('/@/views/other/passwordGenerator/index.vue'),
-        meta: {
-          title: '密码生成器',
-          guard: ['Admin'],
-          icon: 'lock-password-line',
-        },
-      },
-      {
-        path: 'amount',
-        name: 'Amount',
-        component: () => import('/@/views/other/amount/index.vue'),
-        meta: {
-          title: '大写金额转换',
-          guard: ['Admin'],
-          icon: 'money-cny-box-line',
-        },
-      },
-      {
-        path: 'regularExpression',
-        name: 'RegularExpression',
-        component: () => import('/@/views/other/regularExpression/index.vue'),
-        meta: {
-          title: '正则表达式',
-          guard: ['Admin'],
-          icon: 'file-copy-2-line',
-        },
-      },
-      {
-        path: 'throttleDebounce',
-        name: 'ThrottleDebounce',
-        component: () => import('/@/views/other/throttleDebounce/index.vue'),
-        meta: {
-          title: '节流防抖',
-          guard: ['Admin'],
-          icon: 'water-percent-line',
-        },
-      },
-      {
-        path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
-        name: 'ExternalLink',
-        meta: {
-          title: '外链',
-          target: '_blank',
-          guard: ['Admin', 'Editor'],
-          icon: 'external-link-line',
         },
       },
       {
@@ -736,6 +696,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'aspect-ratio-line',
           dot: true,
+        },
+      },
+      {
+        path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
+        name: 'ExternalLink',
+        meta: {
+          title: '外链',
+          target: '_blank',
+          guard: ['Admin', 'Editor'],
+          icon: 'external-link-line',
         },
       },
       {
@@ -835,6 +805,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '随机换肤',
           guard: ['Admin'],
           icon: 'ai-generate',
+        },
+      },
+      {
+        path: 'throttleDebounce',
+        name: 'ThrottleDebounce',
+        component: () => import('/@/views/operate/throttleDebounce/index.vue'),
+        meta: {
+          title: '节流防抖',
+          guard: ['Admin'],
+          icon: 'water-percent-line',
         },
       },
       {
@@ -994,6 +974,36 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '简历',
           icon: 'folder-user-line',
+        },
+      },
+      {
+        path: 'passwordGenerator',
+        name: 'PasswordGenerator',
+        component: () => import('/@/views/template/PasswordGenerator.vue'),
+        meta: {
+          title: '密码生成器',
+          guard: ['Admin'],
+          icon: 'lock-password-line',
+        },
+      },
+      {
+        path: 'amount',
+        name: 'Amount',
+        component: () => import('/@/views/template/Amount.vue'),
+        meta: {
+          title: '大写金额转换',
+          guard: ['Admin'],
+          icon: 'money-cny-box-line',
+        },
+      },
+      {
+        path: 'regularExpression',
+        name: 'RegularExpression',
+        component: () => import('/@/views/template/RegularExpression.vue'),
+        meta: {
+          title: '正则表达式',
+          guard: ['Admin'],
+          icon: 'file-copy-2-line',
         },
       },
       {
