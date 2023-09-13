@@ -1,17 +1,16 @@
 <template>
   <div class="print-container">
-    <el-button type="primary" @click="print('imageRef')">
-      <vab-icon icon="printer-line" />
-      <span>打印图片</span>
-    </el-button>
-    <el-button type="primary" @click="print('tableRef')">
-      <vab-icon icon="printer-line" />
-      <span>打印表格</span>
-    </el-button>
-    <el-button type="primary" @click="remotePrint">
-      <vab-icon icon="printer-line" />
-      <span>自定义打印</span>
-    </el-button>
+    <el-space wrap>
+      <el-button type="primary" @click="print('imageRef')">
+        <span>打印图片</span>
+      </el-button>
+      <el-button type="primary" @click="print('tableRef')">
+        <span>打印表格</span>
+      </el-button>
+      <el-button type="primary" @click="remotePrint">
+        <span>自定义打印</span>
+      </el-button>
+    </el-space>
     <img
       ref="imageRef"
       alt=""
