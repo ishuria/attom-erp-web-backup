@@ -688,6 +688,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'milestone',
+        name: 'Milestone',
+        component: () => import('/@/views/other/milestone/index.vue'),
+        meta: {
+          title: '里程碑',
+          icon: 'presentation-line',
+        },
+      },
+      {
         path: 'transition',
         name: 'Transition',
         component: () => import('/@/views/other/transition/index.vue'),

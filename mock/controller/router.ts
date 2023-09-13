@@ -637,6 +637,15 @@ const list = [
         },
       },
       {
+        path: 'milestone',
+        name: 'Milestone',
+        component: '/@/views/other/milestone/index.vue',
+        meta: {
+          title: '里程碑',
+          icon: 'presentation-line',
+        },
+      },
+      {
         path: 'transition',
         name: 'Transition',
         component: '/@/views/other/transition/index.vue',
