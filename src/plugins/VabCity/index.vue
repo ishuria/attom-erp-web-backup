@@ -67,7 +67,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['on-change', 'update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 const value = ref<any>('')
 const currentValue = ref<any>()
 const codeToName = ref<any>('')
@@ -81,8 +81,8 @@ const scrollbarRef = ref<any>(null)
 const listRef = ref<any>(null)
 
 const handleGetCities = () => {
-  const cData = cityData
-  const cities = []
+  const cData: any = cityData
+  const cities: any = []
   for (const cid in cData) {
     const city = cData[cid]
     cities.push(city)
@@ -90,15 +90,14 @@ const handleGetCities = () => {
   return cities
 }
 
-const handleChangeValue = (val) => {
+const handleChangeValue = (val: any) => {
   currentValue.value = val
   visible.value = false
   const value = val
   emit('update:modelValue', value)
-  emit('on-change', cityData[val])
 }
 
-const handleClickLetter = (letter) => {
+const handleClickLetter = (letter: any) => {
   if (letter === '直辖市') letter = 'Z1'
   else if (letter === '港澳') letter = 'Z2'
   const className = `.el-city-${letter}`
@@ -108,7 +107,7 @@ const handleClickLetter = (letter) => {
 }
 
 const handleGetProvinceByLetter = () => {
-  const provinces = {
+  const provinces: any = {
     A: { n: 'A', p: [], c: [] },
     F: { n: 'F', p: [], c: [] },
     G: { n: 'G', p: [], c: [] },
@@ -134,10 +133,10 @@ const handleGetProvinceByLetter = () => {
 
 const handleGetCityByProvince = () => {
   const _provinceList = provinceList.value
-  const _cityListByProvince = []
-  const cData = cityData
+  const _cityListByProvince: any = []
+  const cData: any = cityData
 
-  const otherCities = [
+  const otherCities: any = [
     { p: { n: '直辖市', p: '86', l: 'Z1' }, c: [] },
     { p: { n: '港澳', p: '86', l: 'Z2' }, c: [] },
   ]
@@ -149,13 +148,13 @@ const handleGetCityByProvince = () => {
       const province = letterProvince.p[i]
       const pid = province.c
 
-      const provinceCities = {
+      const provinceCities: any = {
         p: province,
         c: [],
       }
 
       for (const cid in cData) {
-        const city = cData[cid]
+        const city: any = cData[cid]
         if (pid === city.p) provinceCities.c.push(city)
       }
 
@@ -169,8 +168,8 @@ const handleGetCityByProvince = () => {
 }
 
 const handleGetCityByLetter = () => {
-  const cData = cityData
-  const _cityListByLetter = {
+  const cData: any = cityData
+  const _cityListByLetter: any = {
     A: [],
     B: [],
     C: [],
