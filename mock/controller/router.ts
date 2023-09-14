@@ -283,6 +283,15 @@ const list = [
             },
           },
           {
+            path: 'city',
+            name: 'City',
+            component: '/@/views/vab/form/city.vue',
+            meta: {
+              title: '城市选择器',
+              badge: 'Hot',
+            },
+          },
+          {
             path: 'switch',
             name: 'Switch',
             component: '/@/views/vab/form/switch.vue',

@@ -334,6 +334,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             },
           },
           {
+            path: 'city',
+            name: 'City',
+            component: () => import('/@/views/vab/form/city.vue'),
+            meta: {
+              title: '城市选择器',
+              badge: 'Hot',
+            },
+          },
+          {
             path: 'switch',
             name: 'Switch',
             component: () => import('/@/views/vab/form/switch.vue'),

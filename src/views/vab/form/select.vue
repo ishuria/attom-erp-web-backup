@@ -2,13 +2,6 @@
   <div class="select-container no-background-container">
     <vab-card>
       <template #header>
-        行政区划
-        <el-tag class="card-header-tag" type="danger">New</el-tag>
-      </template>
-      <el-cascader v-model="area" clearable filterable :options="areaOptions" :props="{ label: 'name', value: 'code' }" />
-    </vab-card>
-    <vab-card>
-      <template #header>
         树选择
         <el-tag class="card-header-tag" type="danger">New</el-tag>
       </template>
@@ -54,8 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import { getList } from '/@/api/area'
-
 defineOptions({
   name: 'Select',
 })
@@ -67,7 +58,6 @@ const options1 = ref<any>([
   { value: '选项4', label: '龙须面' },
   { value: '选项5', label: '北京烤鸭' },
 ])
-
 const value1 = ref<string>('')
 const options2 = ref<any>([
   { value: '选项1', label: '黄金糕' },
@@ -78,9 +68,7 @@ const options2 = ref<any>([
 ])
 const value2 = ref<string>('')
 const value3 = ref<any>([])
-const area = ref<any>([])
 const treeValue = ref<string>('')
-const areaOptions = ref<any>([])
 const treeData = ref<any>([
   {
     value: '1',
@@ -151,15 +139,4 @@ const treeData = ref<any>([
     ],
   },
 ])
-
-const fetchData = async () => {
-  const {
-    data: { list },
-  } = await getList()
-  areaOptions.value = list
-}
-
-onBeforeMount(() => {
-  fetchData()
-})
 </script>

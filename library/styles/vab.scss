@@ -371,19 +371,6 @@ html {
       }
     }
 
-    /* el-divider间隔线 */
-    .el-divider--horizontal {
-      margin: 8px 0 calc(var(--el-margin) + 8px) 0;
-
-      .el-divider__text {
-        display: -webkit-box;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-      }
-    }
-
     /* nprogress进度条 */
     #nprogress {
       position: fixed;

@@ -77,11 +77,6 @@ const milestoneData = ref([
 .milestone-container {
   :deep() {
     .tiny-milestone {
-      &__flag-content {
-        p {
-        }
-      }
-
       &__description-name {
         color: var(--el-color-black);
       }
