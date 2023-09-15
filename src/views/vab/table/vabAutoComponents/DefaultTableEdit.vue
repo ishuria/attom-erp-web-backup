@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="500px" @close="close">
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
-      <el-form-item label="标题" prop="title" show-overflow-tooltip>
+      <el-form-item label="标题" prop="title">
         <el-input v-model.trim="form.title" clearable />
       </el-form-item>
       <el-form-item label="作者" prop="author">
@@ -27,7 +27,7 @@ const $baseMessage = inject<any>('$baseMessage')
 const formRef = ref<any>(null)
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
-let form = reactive<any>({
+const form = reactive<any>({
   title: '',
   author: '',
 })
@@ -39,10 +39,10 @@ const rules = reactive<any>({
 const showEdit = (row: any) => {
   if (!row) {
     title.value = '添加'
-    form = reactive<any>({})
+    form.value = {}
   } else {
     title.value = '编辑'
-    form = reactive<any>({ ...row })
+    form.value = { ...row }
   }
   dialogFormVisible.value = true
 }

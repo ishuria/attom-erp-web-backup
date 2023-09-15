@@ -10,7 +10,7 @@ for (let i = 0; i < count; i++) {
     title: '@ctitle(5, 10)',
     description: '@ctitle(10, 20)',
     name: '@ctitle(3, 6)',
-    'type|1': ['视频饮料', '家用电器', '其他'],
+    'type|1': ['食品饮料', '家用电器', '其他'],
     price: '￥' + '@integer(0,100)',
     sales: '@integer(0,100)',
     stock: '@integer(0,100)',

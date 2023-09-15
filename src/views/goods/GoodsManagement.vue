@@ -25,6 +25,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="商品ID" min-width="120" prop="id" show-overflow-tooltip />
+      <el-table-column align="center" label="商品名称" min-width="120" prop="name" sortable />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
           <el-popover placement="top-start" trigger="hover">
@@ -35,7 +36,6 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品名称" min-width="120" prop="name" sortable />
       <el-table-column align="center" label="商品类型" min-width="120" prop="type" sortable />
       <el-table-column align="center" label="商品售价" min-width="120" prop="price" sortable />
       <el-table-column align="center" label="销量" prop="sales" sortable />
@@ -67,7 +67,7 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <default-table-edit ref="editRef" @fetch-data="fetchData" />
+    <goods-management-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 

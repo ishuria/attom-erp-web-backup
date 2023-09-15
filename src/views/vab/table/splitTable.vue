@@ -73,7 +73,7 @@
                 {{ $index + 1 }}
               </template>
             </el-table-column>
-            <el-table-column align="center" label="标题" min-width="200" prop="title" show-overflow-tooltip />
+            <el-table-column align="center" label="标题" min-width="200" prop="title" />
             <el-table-column align="center" label="作者" prop="author" />
             <el-table-column align="center" label="评级" min-width="200">
               <template #default="{ row }">

@@ -1226,15 +1226,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'list-ordered-2',
         },
       },
-      {
-        path: 'goodsTag',
-        name: 'GoodsTag',
-        component: () => import('/@/views/goods/GoodsTag.vue'),
-        meta: {
-          title: '商品分组',
-          icon: 'shopping-basket-2-line',
-        },
-      },
     ],
   },
   {

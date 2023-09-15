@@ -24,7 +24,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="工单号" min-width="200" prop="uuid" show-overflow-tooltip />
-      <el-table-column align="center" label="标题" prop="title" show-overflow-tooltip />
+      <el-table-column align="center" label="标题" prop="title" />
       <el-table-column align="center" label="进度" min-width="180">
         <template #default="{ row }">
           <el-progress :percentage="row.progress" :status="row.progress == '100' ? 'success' : ''" />

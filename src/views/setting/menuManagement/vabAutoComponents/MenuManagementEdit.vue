@@ -69,7 +69,7 @@ defineOptions({
 const emit = defineEmits(['fetch-data'])
 const $baseMessage = inject<any>('$baseMessage')
 const formRef = ref<any>(null)
-let form = reactive<any>({
+const form = reactive<any>({
   parentId: '',
   name: '',
   path: '',
@@ -105,7 +105,7 @@ const handleIcon = (item: string) => {
 const showEdit = (row: any) => {
   if (!row) {
     title.value = '添加'
-    form = reactive<any>({
+    form.value = {
       parentId: '',
       name: '',
       path: '',
@@ -123,10 +123,10 @@ const showEdit = (row: any) => {
         noKeepAlive: false,
         tabHidden: false,
       },
-    })
+    }
   } else {
     title.value = '编辑'
-    form = reactive<any>({ ...row })
+    form.value = { ...row }
   }
   dialogFormVisible.value = true
 }

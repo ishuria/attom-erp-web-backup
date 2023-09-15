@@ -1175,15 +1175,6 @@ const list = [
           icon: 'list-ordered-2',
         },
       },
-      {
-        path: 'goodsTag',
-        name: 'GoodsTag',
-        component: '/@/views/goods/GoodsTag.vue',
-        meta: {
-          title: '商品分组',
-          icon: 'shopping-basket-2-line',
-        },
-      },
     ],
   },
   {

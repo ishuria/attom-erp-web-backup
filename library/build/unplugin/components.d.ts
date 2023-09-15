@@ -40,6 +40,7 @@ declare module 'vue' {
     DrawerCustomizationHeader: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerCustomizationHeader.vue')['default']
     DrawerNestedDrawer: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNestedDrawer.vue')['default']
     DrawerNoTitle: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNoTitle.vue')['default']
+    GoodsManagementEdit: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsManagementEdit.vue')['default']
     IconList: typeof import('./../../../src/views/portal/vabAutoComponents/IconList.vue')['default']
     ImageBasicUsage: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageBasicUsage.vue')['default']
     ImageLazyLoad: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageLazyLoad.vue')['default']
@@ -158,6 +159,5 @@ declare module 'vue' {
     VabThemeSetting: typeof import('./../../components/VabTheme/components/VabThemeSetting.vue')['default']
     VabUpdate: typeof import('./../../../src/plugins/VabUpdate/index.vue')['default']
     VersionInformation: typeof import('./../../../src/views/index/vabAutoComponents/VersionInformation.vue')['default']
-    WorkOrderEdit: typeof import('./../../../src/views/goods/vabAutoComponents/WorkOrderEdit.vue')['default']
   }
 }
