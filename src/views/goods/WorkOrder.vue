@@ -27,7 +27,7 @@
       <el-table-column align="center" label="标题" prop="title" />
       <el-table-column align="center" label="进度" min-width="180">
         <template #default="{ row }">
-          <el-progress :percentage="row.progress" :status="row.progress == '100' ? 'success' : ''" />
+          <el-progress :percentage="parseInt(row.progress)" :status="row.progress == '100' ? 'success' : ''" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="提交者" prop="submit" />
@@ -58,7 +58,6 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <work-order-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 

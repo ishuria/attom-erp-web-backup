@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class="list-item-meta-content2 hidden-xs-only">
-            <el-progress :percentage="item.percentage" />
+            <el-progress :percentage="parseInt(item.percentage)" />
           </div>
           <div class="list-item-meta-content2">
             <p>开始时间</p>
