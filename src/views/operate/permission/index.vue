@@ -1,11 +1,16 @@
 <template>
   <div class="permission-container">
     <el-alert
+      v-if="showAlert"
+      :closable="false"
+      title="温馨提示：当前登录的账号非admin，如需查看演示地址全部功能，请使用admin账号登录。"
+      type="error"
+    />
+    <el-alert
       v-if="!loginInterception"
       :closable="false"
-      show-icon
       title="检测到您当前的登录拦截已关闭，无法模拟切换角色功能，请在src/config/setting.config.js中配置loginInterception为true，开启登录拦截"
-      type="success"
+      type="error"
     />
     <el-alert
       :closable="false"
@@ -53,7 +58,7 @@
           <el-button v-permissions="['Test']" type="primary">拥有["Test"]的按钮</el-button>
         </el-space>
       </el-form-item>
-      <!--  注意其中roles-代表组件name，这样可以区分到具体页面 -->
+      <!--  注意其中:后面的单词为你要控制页面权限的页面name，这样可以区分到具体页面 -->
       <el-form-item label="RBAC 权限点控制">
         <el-space wrap>
           <el-button v-permissions="{ permission: ['read:system'] }" type="primary">拥有["read:system"]的按钮</el-button>
@@ -93,6 +98,16 @@
           </el-button>
         </el-space>
       </el-form-item>
+
+      <el-form-item label="RBAC 自定义按钮&表格列权限控制">
+        <!-- hasPermission()是更加底层的方法，它可以使用 v-permissions 自定义指令中的所有格式的参数，非必要不建议使用，表格列隐藏展示可能用到下述代码 -->
+        <el-button v-if="hasPermission(['Admin'])" type="primary">拥有["Admin"]的按钮</el-button>
+        <el-button v-if="hasPermission({ role: ['Admin'], mode: 'except' })" type="danger">未拥有["Admin"]的按钮</el-button>
+        <el-table border :data="tableData" style="display: block; margin-top: var(--el-margin)">
+          <el-table-column v-if="hasPermission(['Admin'])" label="拥有['Admin']的表格列" prop="yes" />
+          <el-table-column v-if="hasPermission({ role: ['Admin'], mode: 'except' })" label="未拥有['Admin']的表格列" prop="no" />
+        </el-table>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -103,6 +118,7 @@ import { authentication, loginInterception, rolesControl, tokenTableName } from 
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import { uuid } from '/@/utils'
+import { hasPermission } from '/@/utils/permission'
 
 defineOptions({
   name: 'Permission',
@@ -114,10 +130,18 @@ const { role, permission } = storeToRefs(aclStore)
 const userStore = useUserStore()
 const { username, token } = storeToRefs(userStore)
 const $baseMessage = inject<any>('$baseMessage')
-
-const form = reactive<any>({
-  account: username.value,
-})
+const form = reactive<any>({ account: username.value })
+const showAlert = ref<boolean>(false)
+const tableData = [
+  {
+    yes: 'yes-1',
+    no: 'no-1',
+  },
+  {
+    yes: 'yes-2',
+    no: 'no-2',
+  },
+]
 
 const handleChangeRole = async () => {
   $baseLoading('正在切换账号请稍后...')
@@ -131,5 +155,10 @@ const handleRefreshToken = async () => {
 
 watch(token, (value) => {
   $baseMessage(`token：${value}，刷新成功！`, 'success', 'hey')
+})
+
+onActivated(() => {
+  if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io')
+    if (username.value !== 'admin') showAlert.value = true
 })
 </script>
