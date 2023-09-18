@@ -56,6 +56,7 @@
     "vue-qr": "^4.0.9",
     "vue-router": "^4.2.4",
     "vue3-gantt": "1.1.8-6",
+    "vue3-puzzle-vcode": "^1.0.16",
     "vuedraggable": "^4.1.0",
     "xgplayer": "^3.0.9",
     "xgplayer-hls.js": "^3.0.9"

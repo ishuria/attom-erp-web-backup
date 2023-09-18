@@ -587,6 +587,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'sliderVerify',
+        name: 'SliderVerify',
+        component: () => import('/@/views/other/sliderVerify/index.vue'),
+        meta: {
+          title: '滑块验证码',
+          guard: ['Admin'],
+          icon: 'shield-check-line',
+        },
+      },
+      {
         path: 'pdf',
         name: 'PDF',
         component: () => import('/@/views/other/pdf/index.vue'),

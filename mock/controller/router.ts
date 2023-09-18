@@ -536,6 +536,16 @@ const list = [
         },
       },
       {
+        path: 'sliderVerify',
+        name: 'SliderVerify',
+        component: '/@/views/other/sliderVerify/index.vue',
+        meta: {
+          title: '滑块验证码',
+          guard: ['Admin'],
+          icon: 'shield-check-line',
+        },
+      },
+      {
         path: 'pdf',
         name: 'PDF',
         component: '/@/views/other/pdf/index.vue',
