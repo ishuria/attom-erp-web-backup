@@ -149,19 +149,23 @@ const experiences = ref<any>([
     .resume-left {
       text-align: center;
     }
-  }
 
+    .resume-right {
+      margin-top: 15px;
+      margin-left: 0 !important;
+    }
+  }
   .resume-box {
     display: flex;
     flex-direction: row;
     max-width: 800px;
     margin-bottom: var(--el-margin);
-    border: 1px solid var(--el-border-color) !important;
 
     .resume-left {
       flex: 1;
       flex-basis: 30%;
-      background: var(--el-color-primary);
+      background: linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3));
+      border-radius: var(--el-border-radius-base);
 
       .user-avatar {
         display: block;
@@ -200,7 +204,10 @@ const experiences = ref<any>([
       flex: 1;
       flex-basis: 70%;
       padding: var(--el-padding);
+      margin-left: 15px;
       background: var(--el-color-white);
+      border: 1px solid var(--el-border-color) !important;
+      border-radius: var(--el-border-radius-base);
 
       .header {
         padding: 10px 10px 0 5px;
