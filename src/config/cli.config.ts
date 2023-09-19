@@ -18,7 +18,7 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   // 开发服务器启动时，自动在浏览器中打开应用程序
   open: true,
   // build时启用/禁用 CSS 代码拆分
-  cssCodeSplit: false,
+  cssCodeSplit: true,
   // 启用/禁用 gzip 压缩大小报告
   reportCompressedSize: false,
   // 混淆器 boolean | 'terser' | 'esbuild'
