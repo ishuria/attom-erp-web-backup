@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "4.7.0",
+  "version": "4.7.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -72,7 +72,7 @@
     "@vue/compiler-sfc": "^3.3.4",
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
-    "autoprefixer": "^10.4.15",
+    "autoprefixer": "^10.4.16",
     "chokidar": "^3.5.3",
     "eslint": "^8.49.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -87,7 +87,7 @@
     "stylelint-config-recess-order": "^4.3.0",
     "stylelint-config-recommended-scss": "^13.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",
-    "terser": "^5.19.4",
+    "terser": "^5.20.0",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",
@@ -99,7 +99,7 @@
     "vite-plugin-unplugin": "^1.6.9",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^1.8.12"
+    "vue-tsc": "^1.8.13"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
