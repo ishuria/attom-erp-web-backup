@@ -70,7 +70,6 @@ defineOptions({
 
 const $baseConfirm = inject<any>('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
-const editRef = ref<any>(null)
 const tableSortRef = ref<any>(null)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -113,10 +112,6 @@ const queryData = () => {
 
 const setSelectRows = (value: string) => {
   selectRows.value = value
-}
-
-const handleEdit = (row = {}) => {
-  editRef.value.showEdit(row)
 }
 
 const handleDelete = (row: any) => {
