@@ -390,6 +390,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
               title: '评分',
             },
           },
+          {
+            path: 'transfer',
+            name: 'Transfer',
+            component: () => import('/@/views/vab/form/transfer.vue'),
+            meta: {
+              title: '穿梭框',
+              dot: true,
+            },
+          },
         ],
       },
       {

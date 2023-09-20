@@ -339,6 +339,15 @@ const list = [
               title: '评分',
             },
           },
+          {
+            path: 'transfer',
+            name: 'Transfer',
+            component: '/@/views/vab/form/transfer.vue',
+            meta: {
+              title: '穿梭框',
+              dot: true,
+            },
+          },
         ],
       },
       {
