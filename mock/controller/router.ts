@@ -40,6 +40,15 @@ const list = [
         },
       },
       {
+        path: 'separateLayout',
+        name: 'SeparateLayout',
+        component: '/@/views/index/separateLayout.vue',
+        meta: {
+          title: '独立布局',
+          icon: 'layout-masonry-line',
+        },
+      },
+      {
         path: 'dataScreen',
         name: 'DataScreen',
         component: '/@/views/index/dataScreen.vue',
@@ -199,6 +208,36 @@ const list = [
           guard: ['Admin'],
           icon: 'list-check-2',
         },
+      },
+      {
+        path: 'editor',
+        name: 'Editor',
+        component: Layout,
+        meta: {
+          title: '编辑器',
+          icon: 'edit-box-line',
+          guard: ['Admin'],
+        },
+        children: [
+          {
+            path: 'wangEditor',
+            name: 'WangEditor',
+            component: '/@/views/vab/editor/wangEditor.vue',
+            meta: {
+              title: '富文本',
+              guard: ['Admin'],
+            },
+          },
+          {
+            path: 'mdEditor',
+            name: 'MdEditor',
+            component: '/@/views/vab/editor/mdEditor.vue',
+            meta: {
+              title: 'Markdown',
+              guard: ['Admin'],
+            },
+          },
+        ],
       },
       {
         path: 'form',
@@ -461,6 +500,15 @@ const list = [
           icon: 'switch-fill',
         },
       },
+      {
+        path: 'transition',
+        name: 'Transition',
+        component: '/@/views/vab/transition/index.vue',
+        meta: {
+          title: '过渡动画',
+          icon: 'hand-heart-line',
+        },
+      },
     ],
   },
   {
@@ -492,36 +540,6 @@ const list = [
           guard: ['Admin'],
           icon: 'organization-chart',
         },
-      },
-      {
-        path: 'editor',
-        name: 'Editor',
-        component: Layout,
-        meta: {
-          title: '编辑器',
-          icon: 'edit-box-line',
-          guard: ['Admin'],
-        },
-        children: [
-          {
-            path: 'wangEditor',
-            name: 'WangEditor',
-            component: '/@/views/other/editor/wangEditor.vue',
-            meta: {
-              title: '富文本',
-              guard: ['Admin'],
-            },
-          },
-          {
-            path: 'mdEditor',
-            name: 'MdEditor',
-            component: '/@/views/other/editor/mdEditor.vue',
-            meta: {
-              title: 'Markdown',
-              guard: ['Admin'],
-            },
-          },
-        ],
       },
       {
         path: 'video',
@@ -671,15 +689,6 @@ const list = [
         meta: {
           title: '里程碑',
           icon: 'presentation-line',
-        },
-      },
-      {
-        path: 'transition',
-        name: 'Transition',
-        component: '/@/views/other/transition/index.vue',
-        meta: {
-          title: '过渡动画',
-          icon: 'hand-heart-line',
         },
       },
       {

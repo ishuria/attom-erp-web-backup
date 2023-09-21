@@ -91,6 +91,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'separateLayout',
+        name: 'SeparateLayout',
+        component: () => import('/@/views/index/separateLayout.vue'),
+        meta: {
+          title: '独立布局',
+          icon: 'layout-masonry-line',
+        },
+      },
+      {
         path: 'dataScreen',
         name: 'DataScreen',
         component: () => import('/@/views/index/dataScreen.vue'),
@@ -250,6 +259,36 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'list-check-2',
         },
+      },
+      {
+        path: 'editor',
+        name: 'Editor',
+        component: Layout,
+        meta: {
+          title: '编辑器',
+          icon: 'edit-box-line',
+          guard: ['Admin'],
+        },
+        children: [
+          {
+            path: 'wangEditor',
+            name: 'WangEditor',
+            component: () => import('/@/views/vab/editor/wangEditor.vue'),
+            meta: {
+              title: '富文本',
+              guard: ['Admin'],
+            },
+          },
+          {
+            path: 'mdEditor',
+            name: 'MdEditor',
+            component: () => import('/@/views/vab/editor/mdEditor.vue'),
+            meta: {
+              title: 'Markdown',
+              guard: ['Admin'],
+            },
+          },
+        ],
       },
       {
         path: 'form',
@@ -512,6 +551,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'switch-fill',
         },
       },
+      {
+        path: 'transition',
+        name: 'Transition',
+        component: () => import('/@/views/vab/transition/index.vue'),
+        meta: {
+          title: '过渡动画',
+          icon: 'hand-heart-line',
+        },
+      },
     ],
   },
   {
@@ -543,36 +591,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           guard: ['Admin'],
           icon: 'organization-chart',
         },
-      },
-      {
-        path: 'editor',
-        name: 'Editor',
-        component: Layout,
-        meta: {
-          title: '编辑器',
-          icon: 'edit-box-line',
-          guard: ['Admin'],
-        },
-        children: [
-          {
-            path: 'wangEditor',
-            name: 'WangEditor',
-            component: () => import('/@/views/other/editor/wangEditor.vue'),
-            meta: {
-              title: '富文本',
-              guard: ['Admin'],
-            },
-          },
-          {
-            path: 'mdEditor',
-            name: 'MdEditor',
-            component: () => import('/@/views/other/editor/mdEditor.vue'),
-            meta: {
-              title: 'Markdown',
-              guard: ['Admin'],
-            },
-          },
-        ],
       },
       {
         path: 'video',
@@ -722,15 +740,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '里程碑',
           icon: 'presentation-line',
-        },
-      },
-      {
-        path: 'transition',
-        name: 'Transition',
-        component: () => import('/@/views/other/transition/index.vue'),
-        meta: {
-          title: '过渡动画',
-          icon: 'hand-heart-line',
         },
       },
       {
