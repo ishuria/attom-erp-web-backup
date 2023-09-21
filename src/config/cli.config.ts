@@ -24,7 +24,7 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   // 混淆器 boolean | 'terser' | 'esbuild'
   minify: 'esbuild',
   // 打包后的文件是否开启hash
-  outputHash: false,
+  outputHash: true,
   // 开发环境是否启用mock
   localEnabled: true,
   // 生产环境是否启用mock
