@@ -282,31 +282,16 @@ html {
       }
     }
 
-    /* el-form表单 */
-    .el-form--label-top {
-      .el-form-item__label {
-        padding: 0;
-      }
-    }
-
-    .el-form-item__label {
-      padding: 0 10px 0 0;
-    }
-
-    .el-range-editor--small {
-      .el-range__icon,
-      .el-range__close-icon {
-        line-height: 23.5px;
-      }
-    }
-
     /* el-tag */
     .el-tag {
-      margin-right: 10px;
       border-radius: var(--el-border-radius-base);
+    }
 
-      &:last-child {
-        margin-right: 0;
+    /* .el-badge */
+
+    .el-badge {
+      &__content {
+        border: 0;
       }
     }
 
@@ -319,47 +304,62 @@ html {
     .el-alert {
       margin: 0 0 var(--el-margin) 0;
 
-      &__closebtn {
-        position: absolute !important;
+      &.is-light {
+        .el-alert__icon,
+        .el-alert__close-btn {
+          color: currentColor;
+        }
       }
 
-      &--success.is-light {
-        color: var(--el-color-success);
-        background-color: var(--el-color-success-lighter);
-        border: 1px solid var(--el-color-success);
-
-        i {
+      &--success {
+        &.is-light {
           color: var(--el-color-success);
+          background-color: var(--el-color-success-lighter);
+          border: 1px solid var(--el-color-success);
+        }
+
+        &.is-dark {
+          background-color: var(--el-color-success);
+          border: 1px solid var(--el-color-success);
         }
       }
 
-      &--info.is-light {
-        color: var(--el-color-primary);
-        background-color: var(--el-color-primary-light-9);
-        border: 1px solid var(--el-color-primary);
-
-        i {
+      &--info {
+        &.is-light {
           color: var(--el-color-primary);
+          background-color: var(--el-color-primary-light-9);
+          border: 1px solid var(--el-color-primary);
+        }
+
+        &.is-dark {
+          background-color: var(--el-color-primary);
+          border: 1px solid var(--el-color-primary);
         }
       }
 
-      &--warning.is-light {
-        color: var(--el-color-warning);
-        background-color: var(--el-color-warning-lighter);
-        border: 1px solid var(--el-color-warning);
-
-        i {
+      &--warning {
+        &.is-light {
           color: var(--el-color-warning);
+          background-color: var(--el-color-warning-lighter);
+          border: 1px solid var(--el-color-warning);
+        }
+
+        &.is-dark {
+          background-color: var(--el-color-warning);
+          border: 1px solid var(--el-color-warning);
         }
       }
 
-      &--error.is-light {
-        color: var(--el-color-error);
-        background-color: var(--el-color-error-lighter);
-        border: 1px solid var(--el-color-error);
-
-        i {
+      &--error {
+        &.is-light {
           color: var(--el-color-error);
+          background-color: var(--el-color-error-lighter);
+          border: 1px solid var(--el-color-error);
+        }
+
+        &.is-dark {
+          background-color: var(--el-color-error);
+          border: 1px solid var(--el-color-error);
         }
       }
     }
