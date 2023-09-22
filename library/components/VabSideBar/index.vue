@@ -63,7 +63,6 @@ const handleRoutes = computed(() => {
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: calc(var(--el-z-index) + 1);
   width: var(--el-left-menu-width);
   height: 100vh;
   overflow: hidden;
@@ -76,6 +75,7 @@ const handleRoutes = computed(() => {
   }
 
   &.is-collapse {
+    z-index: calc(var(--el-z-index) + 1);
     width: var(--el-left-menu-width-min);
     border-right: 0;
 

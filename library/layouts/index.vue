@@ -127,8 +127,11 @@ onBeforeUnmount(() => {
   &.mobile {
     :deep() {
       .vab-layout-vertical {
-        .el-scrollbar.vab-side-bar.is-collapse {
-          width: 0;
+        .el-scrollbar.vab-side-bar {
+          z-index: calc(var(--el-z-index) + 1);
+          &.is-collapse {
+            width: 0;
+          }
         }
 
         .vab-main {
