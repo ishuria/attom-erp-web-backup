@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "4.8.0",
+  "version": "4.8.5",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -54,7 +54,7 @@
     "vue-json-viewer": "^3.0.4",
     "vue-pdf-embed": "^1.1.6",
     "vue-qr": "^4.0.9",
-    "vue-router": "^4.2.4",
+    "vue-router": "^4.2.5",
     "vue3-gantt": "1.1.8-6",
     "vue3-puzzle-vcode": "^1.0.16",
     "vuedraggable": "^4.1.0",
