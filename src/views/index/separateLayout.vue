@@ -1,12 +1,17 @@
 <template>
   <div class="separate-layout-container">
-    <el-page-header content="独立布局" title="返回上一页" @back="goBack">
-      <template #extra>
-        <vab-full-screen />
-      </template>
-    </el-page-header>
-    <el-alert :closable="false" title="当前页面允许独立于默认布局之外，当切换至其他页面时回到默认布局" />
-    <tile />
+    <div class="hidden-sm-and-up">
+      <el-alert :closable="false" title="手机端不支持独立布局演示" type="error" />
+    </div>
+    <div class="hidden-xs-only">
+      <el-page-header content="独立布局" title="返回上一页" @back="goBack">
+        <template #extra>
+          <vab-full-screen />
+        </template>
+      </el-page-header>
+      <el-alert :closable="false" title="当前页面允许独立于默认布局之外，当切换至其他页面时回到默认布局" />
+      <tile />
+    </div>
   </div>
 </template>
 
@@ -21,7 +26,7 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const route = useRoute()
-const { theme } = storeToRefs(settingsStore)
+const { device, theme } = storeToRefs(settingsStore)
 
 const goBack = async () => {
   await history.back()
@@ -30,8 +35,10 @@ const goBack = async () => {
 watch(
   route,
   () => {
-    if (route.path === '/separateLayout') theme.value.layout = 'horizontal'
-    else theme.value.layout = layout
+    if (device.value !== 'mobile')
+      if (route.path === '/separateLayout') theme.value.layout = 'horizontal'
+      else theme.value.layout = layout
+    else theme.value.layout = 'vertical'
   },
   { immediate: true }
 )

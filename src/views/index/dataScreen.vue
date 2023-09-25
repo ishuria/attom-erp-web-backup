@@ -1,6 +1,6 @@
 <template>
   <div id="data-screen-container" class="data-screen-container vab-data-fullscreen">
-    <div class="hidden-sm-and-up" style="width: 100vw; padding: 20px">
+    <div class="hidden-sm-and-up" style="padding: 20px">
       <el-alert :closable="false" title="手机端不支持数据大屏演示" type="error" />
     </div>
     <div class="hidden-xs-only">
