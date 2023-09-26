@@ -30,11 +30,9 @@ defineOptions({
 })
 
 const emit = defineEmits(['fetch-data'])
-
 const $baseMessage = inject<any>('$baseMessage')
-
 const formRef = ref<any>(null)
-const form = reactive<any>({
+let form = reactive<any>({
   parentKey: '',
   id: uuid(),
   key: '',
@@ -45,13 +43,13 @@ const dialogFormVisible = ref<boolean>(false)
 
 const showEdit = (row: any) => {
   title.value = '添加/编辑'
-  if (row) form.value = { ...row, id: uuid() }
+  if (row) form = reactive<any>({ ...row, id: uuid() })
   else
-    form.value = {
+    form = reactive<any>({
       ...row,
       id: uuid(),
       parentKey: 'root',
-    }
+    })
   dialogFormVisible.value = true
 }
 

@@ -56,7 +56,7 @@ const $baseMessage = inject<any>('$baseMessage')
 const formRef = ref<any>(null)
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
-const form = reactive<any>({})
+let form = reactive<any>({})
 const rules = reactive<any>({
   name: [{ required: true, trigger: 'blur', message: '请输入商品名称' }],
   type: [{ required: true, trigger: 'blur', message: '请输入商品类型' }],
@@ -79,11 +79,11 @@ const fileList = ref<UploadUserFile[]>([])
 const showEdit = (row: any) => {
   if (!row) {
     title.value = '添加'
-    form.value = {}
+    form = reactive<any>({})
     fileList.value = []
   } else {
     title.value = '编辑'
-    form.value = { ...row }
+    form = reactive<any>({ ...row })
     fileList.value = [
       {
         name: '商品图',

@@ -29,7 +29,7 @@ const emit = defineEmits(['fetch-data'])
 const $baseMessage = inject<any>('$baseMessage')
 const formRef = ref<any>(null)
 const treeData = ref<any>([])
-const form = ref<any>({
+let form = ref<any>({
   parentValue: '',
 })
 const rules = reactive<any>({
@@ -48,10 +48,10 @@ const fetchData = async () => {
 const showEdit = (row: any) => {
   if (!row) {
     title.value = '添加'
-    form.value = {}
+    form = reactive<any>({})
   } else {
     title.value = '编辑'
-    form.value = { ...row }
+    form = reactive<any>({ ...row })
   }
   dialogFormVisible.value = true
 }
