@@ -35,7 +35,7 @@ const iconList = [
   {
     icon: 'copyright-line',
     title: '商标管理',
-    tips: '工商管理快捷入口',
+    tips: '商标管理快捷入口',
     link: '',
   },
   {
@@ -71,7 +71,7 @@ const iconList = [
   {
     icon: 'apps-2-line',
     title: '全部应用',
-    tips: '全部原因快捷入口',
+    tips: '全部应用快捷入口',
     link: '',
   },
 ]
