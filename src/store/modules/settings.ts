@@ -5,6 +5,7 @@ import { round } from 'lodash-es'
 import {
   isCatchedTabs as _isCatchedTabs,
   color,
+  colorWeakness,
   columnStyle,
   fixedHeader,
   foldSidebar,
@@ -38,6 +39,7 @@ import { isJson } from '/@/utils/validate'
 
 const defaultTheme: ThemeType = {
   color,
+  colorWeakness,
   columnStyle,
   fixedHeader,
   foldSidebar,
@@ -178,6 +180,9 @@ export const useSettingsStore = defineStore('settings', {
 
       if (!this.theme.isFollow) useCssVar('--el-menu-background-color', el).value = '#282c34'
       else useCssVar('--el-menu-background-color', el).value = lightenColor(this.color, 18)
+
+      if (this.theme.colorWeakness) document.getElementsByTagName('body')[0].classList.add('color-weakness')
+      else document.getElementsByTagName('body')[0].classList.remove('color-weakness')
     },
     toggleCollapse() {
       this.collapse = !this.collapse

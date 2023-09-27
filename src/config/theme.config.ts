@@ -52,4 +52,6 @@ export const themeConfig: ThemeType = {
   showLock: true,
   // 是否开启颜色选择器组件
   showColorPicker: true,
+  // 色弱
+  colorWeakness: false,
 }

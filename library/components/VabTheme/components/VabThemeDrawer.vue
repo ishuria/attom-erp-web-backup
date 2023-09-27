@@ -75,6 +75,9 @@
         <el-form-item :label="translate('圆角')">
           <el-input-number v-model="theme.radius" :max="26" :min="3" @change="handleRadius" />
         </el-form-item>
+        <el-form-item :label="translate('色弱')">
+          <el-switch v-model="theme.colorWeakness" @change="handleColorWeakness" />
+        </el-form-item>
         <el-form-item :label="translate('头部固定')">
           <el-switch v-model="theme.fixedHeader" />
         </el-form-item>
@@ -191,6 +194,11 @@ const handleShowFooter = (value: any) => {
 
 const handleRadius = (value: any) => {
   theme.value.radius = value
+  setCssVar()
+}
+
+const handleColorWeakness = (value: any) => {
+  theme.value.colorWeakness = value
   setCssVar()
 }
 

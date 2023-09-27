@@ -33,11 +33,15 @@ html {
     height: 100vh;
     padding: 0;
     overflow: hidden;
-    font-family: 'PingFang SC', Arial, 'Microsoft YaHei', sans-serif;
+    font-family: Arial, sans-serif;
     font-size: var(--el-font-size-default);
     color: var(--el-color-black);
     background: var(--el-background-color);
     -webkit-font-smoothing: antialiased;
+
+    &.color-weakness {
+      filter: invert(80%);
+    }
 
     #app {
       height: 100vh;

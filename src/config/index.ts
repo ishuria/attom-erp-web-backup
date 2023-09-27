@@ -22,6 +22,7 @@ export const {
   base,
   chunkSizeWarningLimit,
   color,
+  colorWeakness,
   columnStyle,
   contentType,
   copyright,

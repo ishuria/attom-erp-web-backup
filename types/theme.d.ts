@@ -153,4 +153,6 @@ declare interface ThemeType {
   showLock: boolean
   // 是否开启颜色选择器组件
   showColorPicker: boolean
+  // 色弱
+  colorWeakness: boolean
 }
