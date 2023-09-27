@@ -1,6 +1,6 @@
 <template>
-  <div v-loading="loading" class="pdf-container">
-    <vab-pdf :source="source" @rendered="handleDocumentRender" />
+  <div class="pdf-container">
+    <vab-pdf :source="source" />
   </div>
 </template>
 
@@ -12,9 +12,4 @@ defineOptions({
 })
 
 const source = ref<any>('https://gcore.jsdelivr.net/gh/chuzhixin/image/demo.pdf')
-const loading = ref<boolean>(true)
-
-const handleDocumentRender = () => {
-  loading.value = false
-}
 </script>
