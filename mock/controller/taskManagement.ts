@@ -15,7 +15,7 @@ for (let i = 0; i < count; i++) {
   List.push({
     uuid: '@uuid',
     id: '@id',
-    taskName: '@account(1, 2)',
+    taskName: '@cTitle(1, 2)',
     'status|1': [0, 1],
     'account|1': ['admin', 'editor', 'test'],
     'executeResult|1': ['登录成功', '登录成功', '登录失败', '接口异常', 'dos攻击'],

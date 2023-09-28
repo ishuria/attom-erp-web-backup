@@ -69,7 +69,7 @@ onBeforeUnmount(() => {
 
   .wang-editor-content {
     width: 70%;
-    height: calc(var(--el-container-height) - 110px) !important;
+    min-height: calc(var(--el-container-height) - 110px) !important;
     margin: 20px auto 20px auto;
     background-color: var(--el-color-white);
     border: 0;

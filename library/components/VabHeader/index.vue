@@ -110,9 +110,6 @@ const handleRoutes = computed(() => {
 <style>
 .el-popper.is-pure.is-light:has(.el-menu--horizontal, .el-menu--popup-container) {
   margin-top: calc(var(--el-margin) * 0.4);
-}
-
-.el-menu--horizontal {
   border: 0;
 }
 </style>

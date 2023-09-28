@@ -48,7 +48,8 @@ watch(
 .separate-layout-container {
   :deep() {
     .tile-container {
-      height: calc(var(--el-container-height) - 150px);
+      min-height: calc(var(--el-container-height) - 150px);
+      padding: var(--el-padding) !important;
       border-radius: var(--el-border-radius-base);
     }
   }

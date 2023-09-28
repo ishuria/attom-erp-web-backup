@@ -21,8 +21,8 @@
           <template #header>
             <vab-icon icon="task-line" />
             任务编号 - {{ item.id }}
-            <el-tag v-if="item.status == 1" class="card-header-tag" type="success">已开启</el-tag>
-            <el-tag v-else class="card-header-tag" type="danger">已停用</el-tag>
+            <el-tag effect="dark" v-if="item.status == 1" class="card-header-tag" type="success">已开启</el-tag>
+            <el-tag effect="dark" v-else class="card-header-tag" type="danger">已停用</el-tag>
           </template>
           <el-image class="task-item-image" :src="getImageUrl('assets/task_image/task.png')" />
 
