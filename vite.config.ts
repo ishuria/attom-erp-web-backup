@@ -69,7 +69,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     css: {
       postcss: {
         plugins: [
-          autoprefixer({ grid: true }),
+          autoprefixer({ grid: true }) as any,
           {
             postcssPlugin: 'internal:charset-removal',
             AtRule: {
