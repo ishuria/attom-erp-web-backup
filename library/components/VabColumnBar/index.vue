@@ -76,6 +76,18 @@ const {
 } = storeToRefs<any>(routesStore)
 const menuRef = ref<any>(null)
 
+const setDefaultOpeneds = () => {
+  setTimeout(() => {
+    defaultOpeneds.forEach((item: string) => {
+      try {
+        menuRef.value.open(item)
+      } catch (e) {
+        /* empty */
+      }
+    })
+  }, 0)
+}
+
 const handleTabClick = () => {
   nextTick(() => {
     if (tabMenu.value.meta.target === '_blank') {
@@ -87,18 +99,13 @@ const handleTabClick = () => {
       window.open(tabMenu.value.path)
       router.push('/redirect')
     } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
+    setDefaultOpeneds()
   })
 }
 
 onMounted(() => {
   nextTick(() => {
-    defaultOpeneds.forEach((item: string) => {
-      try {
-        menuRef.value.open(item)
-      } catch (e) {
-        /* empty */
-      }
-    })
+    setDefaultOpeneds()
     if (theme.value.layout === 'column')
       watch(
         route,
