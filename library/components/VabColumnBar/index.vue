@@ -34,6 +34,7 @@
     </el-tabs>
 
     <el-menu
+      ref="menuRef"
       background-color="var(--el-menu-background-color-second)"
       :default-active="activeMenu.data"
       :default-openeds="defaultOpeneds"
@@ -72,7 +73,8 @@ const {
   getActiveMenu: activeMenu,
   getRoutes: routes,
   getPartialRoutes: partialRoutes,
-}: any = storeToRefs(routesStore)
+} = storeToRefs<any>(routesStore)
+const menuRef = ref<any>(null)
 
 const handleTabClick = () => {
   nextTick(() => {
@@ -88,27 +90,36 @@ const handleTabClick = () => {
   })
 }
 
-nextTick(() => {
-  if (theme.value.layout === 'column')
-    watch(
-      route,
-      () => {
-        const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
-        const floatFold: any = document.querySelector('.float-fold')
-        if (route.meta.noColumn && theme.value.layout === 'column') {
-          if (device.value !== 'mobile') foldSideBar()
-          if (foldUnfold) foldUnfold.style = 'display:none'
-          if (floatFold) floatFold.style = 'display:none'
-        } else {
-          if (device.value !== 'mobile') openSideBar()
-          if (foldUnfold) foldUnfold.style = ''
-          if (floatFold) floatFold.style = ''
-        }
-      },
-      {
-        immediate: true,
+onMounted(() => {
+  nextTick(() => {
+    defaultOpeneds.forEach((item: string) => {
+      try {
+        menuRef.value.open(item)
+      } catch (e) {
+        /* empty */
       }
-    )
+    })
+    if (theme.value.layout === 'column')
+      watch(
+        route,
+        () => {
+          const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
+          const floatFold: any = document.querySelector('.float-fold')
+          if (route.meta.noColumn && theme.value.layout === 'column') {
+            if (device.value !== 'mobile') foldSideBar()
+            if (foldUnfold) foldUnfold.style = 'display:none'
+            if (floatFold) floatFold.style = 'display:none'
+          } else {
+            if (device.value !== 'mobile') openSideBar()
+            if (foldUnfold) foldUnfold.style = ''
+            if (floatFold) floatFold.style = ''
+          }
+        },
+        {
+          immediate: true,
+        }
+      )
+  })
 })
 </script>
 

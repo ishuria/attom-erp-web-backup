@@ -54,7 +54,15 @@ export const settingConfig: {
   // vertical column comprehensive common布局时是否只保持一个子菜单的展开
   uniqueOpened: false,
   // vertical column comprehensive common布局时默认展开的菜单path，使用逗号隔开建议只展开一个
-  defaultOpeneds: ['/vab/icon', '/vab/table', '/vab/editor', '/vab/form', '/operate/dynamicSegment', '/other/iframe'],
+  defaultOpeneds: [
+    '/vab/icon',
+    '/vab/table',
+    '/vab/editor',
+    '/vab/form',
+    '/operate/dynamicSegment',
+    '/operate/menu1/menu11/menu111',
+    '/other/iframe',
+  ],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],
   // 分栏布局和综合布局时，是否点击一级菜单默认开启二级菜单(默认第一个，可通过redirect自定义)
