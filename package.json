@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "4.9.5",
+  "version": "5.0.0",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -47,7 +47,7 @@
     "pinia": "^2.1.6",
     "qs": "^6.11.2",
     "typeit": "^8.7.1",
-    "vsv-icon": "^1.0.5",
+    "vsv-icon": "^1.0.6",
     "vue": "^3.3.4",
     "vue-echarts": "^6.6.1",
     "vue-i18n": "^9.5.0",
