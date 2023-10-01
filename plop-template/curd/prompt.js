@@ -16,12 +16,12 @@ module.exports = {
     return [
       {
         type: 'add',
-        path: `src/views/${camelCaseName}/index.vue`,
+        path: `src/views/goods/${properCaseName}.vue`,
         templateFile: './plop-template/curd/index.hbs',
       },
       {
         type: 'add',
-        path: `src/views/${camelCaseName}/vabAutoComponents/${properCaseName}Edit.vue`,
+        path: `src/views/goods/vabAutoComponents/${properCaseName}Edit.vue`,
         templateFile: './plop-template/curd/edit.hbs',
       },
       {

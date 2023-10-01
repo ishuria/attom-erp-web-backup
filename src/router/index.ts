@@ -1263,6 +1263,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'list-ordered-2',
         },
       },
+      {
+        path: 'trade',
+        name: 'Trade',
+        component: () => import('/@/views/goods/Trade.vue'),
+        meta: {
+          title: '交易订单',
+          icon: 'archive-2-line',
+        },
+      },
     ],
   },
   {

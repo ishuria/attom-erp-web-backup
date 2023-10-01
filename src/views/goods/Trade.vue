@@ -1,20 +1,24 @@
 <template>
-  <div class="goods-management-container table-auto-height">
+  <div class="trade-container table-auto-height">
     <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      <vab-query-form-top-panel>
         <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item>
-            <el-input v-model="queryForm.name" clearable placeholder="请输入商品名称" />
+          <el-form-item label="商户订单号">
+            <el-input v-model="queryForm.merchantOrderId" clearable placeholder="商户订单号" />
+          </el-form-item>
+          <el-form-item v-show="!fold" label="微信支付单号" label-width="120px">
+            <el-input v-model="queryForm.wechatPaymentNo" clearable placeholder="微信支付单号" />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+            <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
+              <span v-if="fold">展开</span>
+              <span v-else>合并</span>
+              <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': fold }" icon="arrow-up-s-line" />
+            </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel>
+      </vab-query-form-top-panel>
     </vab-query-form>
 
     <el-table ref="tableSortRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
@@ -24,8 +28,6 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品ID" min-width="120" prop="id" show-overflow-tooltip />
-      <el-table-column align="center" label="商品名称" min-width="120" prop="image" />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
           <el-popover placement="top-start" trigger="hover">
@@ -36,22 +38,39 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品类型" min-width="120" prop="type" sortable />
-      <el-table-column align="center" label="商品售价" min-width="120" prop="price" sortable />
-      <el-table-column align="center" label="销量" prop="sales" sortable />
-      <el-table-column align="center" label="库存" prop="stock" sortable />
-      <el-table-column align="center" label="状态" min-width="100" prop="status" sortable>
+      <el-table-column align="center" label="交易时间" prop="transactionTime" show-overflow-tooltip sortable />
+      <el-table-column align="center" label="商户订单号" min-width="120" prop="merchantOrderId" show-overflow-tooltip />
+      <el-table-column align="center" label="微信支付单号" min-width="120" prop="wechatPaymentNo" show-overflow-tooltip />
+      <el-table-column align="center" label="支付场景" min-width="120" prop="paymentScene" sortable />
+      <el-table-column align="center" label="交易状态" min-width="100" prop="transactionStatus" sortable>
         <template #default="{ row }">
-          <el-tag effect="dark" :type="row.status == '已上架' ? 'success' : row.status == '待上架' ? 'warning' : 'info'">
-            {{ row.status }}
+          <el-tag
+            effect="dark"
+            :type="
+              row.transactionStatus == '已支付'
+                ? 'success'
+                : row.transactionStatus == '未支付'
+                ? 'warning'
+                : row.transactionStatus == '已退款'
+                ? 'danger'
+                : 'info'
+            "
+          >
+            {{ row.transactionStatus }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="时间" min-width="160" prop="datetime" />
-      <el-table-column align="center" label="操作" width="162">
+      <el-table-column align="center" label="订单金额(元)" min-width="100" prop="orderAmount" />
+      <el-table-column align="center" label="操作" width="80">
         <template #default="{ row }">
-          <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
-          <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
+          <el-button
+            :disabled="row.transactionStatus !== '已支付' && row.transactionStatus !== '申请退款中'"
+            text
+            type="danger"
+            @click="handleRefund(row)"
+          >
+            退款
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -67,22 +86,21 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <goods-management-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search } from '@element-plus/icons-vue'
-import { doDelete, getList } from '/@/api/goodsManagement'
+import { Search } from '@element-plus/icons-vue'
+import { doRefund, getList } from '/@/api/trade'
 
 defineOptions({
-  name: 'GoodsManagement',
+  name: 'Trade',
 })
 
 const $baseConfirm = inject<any>('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
-const editRef = ref<any>(null)
 const tableSortRef = ref<any>(null)
+const fold = ref<boolean>(true)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const layout = ref<string>('total, sizes, prev, pager, next, jumper')
@@ -122,36 +140,21 @@ const queryData = () => {
   fetchData()
 }
 
+const handleFold = () => {
+  fold.value = !fold.value
+}
+
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
 
-const handleAdd = () => {
-  editRef.value.showEdit()
-}
-
-const handleEdit = (row = {}) => {
-  editRef.value.showEdit(row)
-}
-
-const handleDelete = (row: any) => {
+const handleRefund = (row: any) => {
   if (row.id) {
-    $baseConfirm('您确定要删除当前项吗', null, async () => {
-      const { msg }: any = await doDelete({ ids: row.id })
+    $baseConfirm('您确定要退款吗', null, async () => {
+      const { msg }: any = await doRefund({ ids: row.id })
       $baseMessage(msg, 'success', 'hey')
       await fetchData()
     })
-  } else {
-    if (selectRows.value.length > 0) {
-      const ids = selectRows.value.map((item: { id: any }) => item.id).join()
-      $baseConfirm('您确定要删除选中项吗', null, async () => {
-        const { msg }: any = await doDelete({ ids: ids })
-        $baseMessage(msg, 'success', 'hey')
-        await fetchData()
-      })
-    } else {
-      $baseMessage('您未选中任何行', 'warning', 'hey')
-    }
   }
 }
 

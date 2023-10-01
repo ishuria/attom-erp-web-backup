@@ -1212,6 +1212,15 @@ const list = [
           icon: 'list-ordered-2',
         },
       },
+      {
+        path: 'trade',
+        name: 'Trade',
+        component: '/@/views/goods/Trade.vue',
+        meta: {
+          title: '交易订单',
+          icon: 'archive-2-line',
+        },
+      },
     ],
   },
   {
