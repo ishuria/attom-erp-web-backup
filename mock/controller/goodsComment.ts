@@ -5,8 +5,13 @@ const List: {
   uuid: string
   id: string
   title: string
+  name: string
+  username: string
   description: string
+  comment: string
+  reply: string
   'status|1': string[]
+  'replyStatus|1': string[]
   author: string
   datetime: string
   pageViews: string
@@ -48,7 +53,7 @@ export default [
     method: 'get',
     response: ({ query }: any) => {
       const { name, pageNo = 1, pageSize = 20 } = query
-      const mockList = List.filter((item: { title: string | any[] }) => !(name && item.name.indexOf(title) < 0))
+      const mockList = List.filter((item: { name: string | any[] }) => !(name && item.name.indexOf(name) < 0))
       const list = mockList.filter((item: any, index: number) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
       return {
         code: 200,
