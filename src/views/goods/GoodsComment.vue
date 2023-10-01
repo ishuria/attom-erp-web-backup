@@ -1,20 +1,19 @@
 <template>
-  <div class="goods-management-container table-auto-height">
+  <div class="goods-comment-container table-auto-height">
     <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      <vab-query-form-top-panel>
         <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item>
+          <el-form-item label="商品名称">
             <el-input v-model="queryForm.name" clearable placeholder="请输入商品名称" />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel>
+      </vab-query-form-top-panel>
+      <vab-query-form-left-panel :span="24">
+        <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
+      </vab-query-form-left-panel>
     </vab-query-form>
 
     <el-table ref="tableSortRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
@@ -36,21 +35,24 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品类型" min-width="120" prop="type" sortable />
-      <el-table-column align="center" label="商品售价" min-width="120" prop="price" sortable />
-      <el-table-column align="center" label="销量" prop="sales" sortable />
-      <el-table-column align="center" label="库存" prop="stock" sortable />
-      <el-table-column align="center" label="状态" min-width="100" prop="status" sortable>
+      <el-table-column align="center" label="评级" min-width="200">
         <template #default="{ row }">
-          <el-tag effect="dark" :type="row.status == '已上架' ? 'success' : row.status == '待上架' ? 'warning' : 'info'">
-            {{ row.status }}
+          <el-rate v-model="row.rate" disabled />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="评论内容" prop="comment" show-overflow-tooltip />
+      <el-table-column align="center" label="回复内容" prop="reply" show-overflow-tooltip />
+      <el-table-column align="center" label="回复状态" min-width="100">
+        <template #default="{ row }">
+          <el-tag effect="dark" :type="row.replyStatus == '已回复' ? 'success' : row.replyStatus == '未回复' ? 'warning' : 'info'">
+            {{ row.replyStatus }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="时间" min-width="160" prop="datetime" />
       <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
-          <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+          <el-button text type="primary" @click="handleEdit(row)">回复</el-button>
           <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
@@ -67,16 +69,16 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <goods-management-edit ref="editRef" @fetch-data="fetchData" />
+    <goods-comment-edit ref="editRef" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search } from '@element-plus/icons-vue'
-import { doDelete, getList } from '/@/api/goodsManagement'
+import { Delete, Search } from '@element-plus/icons-vue'
+import { doDelete, getList } from '/@/api/goodsComment'
 
 defineOptions({
-  name: 'GoodsManagement',
+  name: 'GoodsComment',
 })
 
 const $baseConfirm = inject<any>('$baseConfirm')
@@ -124,10 +126,6 @@ const queryData = () => {
 
 const setSelectRows = (value: string) => {
   selectRows.value = value
-}
-
-const handleAdd = () => {
-  editRef.value.showEdit()
 }
 
 const handleEdit = (row = {}) => {

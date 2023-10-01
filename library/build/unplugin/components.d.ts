@@ -40,6 +40,7 @@ declare module 'vue' {
     DrawerCustomizationHeader: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerCustomizationHeader.vue')['default']
     DrawerNestedDrawer: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNestedDrawer.vue')['default']
     DrawerNoTitle: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNoTitle.vue')['default']
+    GoodsCommentEdit: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsCommentEdit.vue')['default']
     GoodsManagementEdit: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsManagementEdit.vue')['default']
     IconList: typeof import('./../../../src/views/portal/vabAutoComponents/IconList.vue')['default']
     ImageBasicUsage: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageBasicUsage.vue')['default']

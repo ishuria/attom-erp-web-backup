@@ -10,18 +10,18 @@ module.exports = {
     },
   ],
   actions: () => {
-    const pathCaseName = '{{ pathCase name }}'
+    ///const pathCaseName = '{{ pathCase name }}'
     const properCaseName = '{{ properCase name }}'
     const camelCaseName = '{{ camelCase name }}'
     return [
       {
         type: 'add',
-        path: `src/views/${pathCaseName}/index.vue`,
+        path: `src/views/${camelCaseName}/index.vue`,
         templateFile: './plop-template/curd/index.hbs',
       },
       {
         type: 'add',
-        path: `src/views/${pathCaseName}/vabAutoComponents/${properCaseName}Edit.vue`,
+        path: `src/views/${camelCaseName}/vabAutoComponents/${properCaseName}Edit.vue`,
         templateFile: './plop-template/curd/edit.hbs',
       },
       {

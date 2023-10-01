@@ -1246,6 +1246,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'goodsComment',
+        name: 'GoodsComment',
+        component: () => import('/@/views/goods/GoodsComment.vue'),
+        meta: {
+          title: '商品评论',
+          icon: 'chat-smile-2-line',
+        },
+      },
+      {
         path: 'workOrder',
         name: 'WorkOrder',
         component: () => import('/@/views/goods/WorkOrder.vue'),

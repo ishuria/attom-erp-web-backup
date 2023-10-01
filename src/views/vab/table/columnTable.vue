@@ -79,7 +79,7 @@
             </el-table-column>
             <el-table-column align="center" label="状态" min-width="100">
               <template #default="{ row }">
-                <el-tag :type="statusFilter(row.status)">
+                <el-tag effect="dark" :type="statusFilter(row.status)">
                   {{ row.status }}
                 </el-tag>
               </template>

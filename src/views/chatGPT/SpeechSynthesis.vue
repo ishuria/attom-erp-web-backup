@@ -5,7 +5,7 @@
         <vab-card v-if="speech.isSupported">
           <el-form label-position="top">
             <el-form-item label="文本">
-              <el-input v-model="text" clearable rows="12" type="textarea" />
+              <el-input v-model="text" clearable :rows="12" type="textarea" />
             </el-form-item>
             <el-form-item label="语言">
               <el-select v-model="voice">
