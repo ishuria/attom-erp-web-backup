@@ -25,7 +25,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="商品ID" min-width="120" prop="id" show-overflow-tooltip />
-      <el-table-column align="center" label="商品名称" min-width="120" prop="image" />
+      <el-table-column align="center" label="商品名称" min-width="120" prop="name" />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
           <el-popover placement="top-start" trigger="hover">
