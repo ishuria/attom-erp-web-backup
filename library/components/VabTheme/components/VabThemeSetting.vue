@@ -2,7 +2,7 @@
   <div v-if="theme.showThemeSetting" class="vab-theme-setting">
     <el-collapse-transition>
       <section v-show="show">
-        <div @click="handleOpenTheme">
+        <div v-show="routeName !== 'SeparateLayout'" @click="handleOpenTheme">
           <a>
             <vab-icon icon="t-shirt-line" />
             <p>{{ translate('主题配置') }}</p>
@@ -72,6 +72,8 @@ const $pub = inject<any>('$pub')
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 const show = ref<boolean>(true)
+const route = useRoute()
+const routeName = ref<any>(route.name)
 
 const handleOpenTheme = () => {
   $pub('shop-vite-open-theme')
@@ -98,6 +100,14 @@ const changeTheme = (value: string) => {
 const toggleShowHide = () => {
   show.value = !show.value
 }
+
+watch(
+  route,
+  () => {
+    routeName.value = route.name
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>

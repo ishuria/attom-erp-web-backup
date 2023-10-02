@@ -1,9 +1,9 @@
 <template>
   <div class="vab-right-tools">
-    <vab-search v-if="!isHorizontal" class="hidden-xs-only" />
+    <vab-search v-show="!isHorizontal" class="hidden-xs-only" />
     <vab-dark v-show="theme.showDark" :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }" />
     <vab-color-picker v-show="theme.showColorPicker" />
-    <vab-theme />
+    <vab-theme v-show="theme.showTheme && routeName !== 'SeparateLayout'" />
     <vab-error-log class="hidden-xs-only" />
     <vab-lock v-show="theme.showLock" />
     <vab-notice v-show="theme.showNotice" />
@@ -28,9 +28,17 @@ defineProps({
     default: false,
   },
 })
-
+const route = useRoute()
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
+const routeName = ref<any>(route.name)
+watch(
+  route,
+  () => {
+    routeName.value = route.name
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>

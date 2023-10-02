@@ -2,7 +2,7 @@
   <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="300px" :title="translate('主题配置')">
     <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
-        <el-form-item v-if="device !== 'mobile'" class="vab-shop-item1">
+        <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-item1">
           <template #label>
             {{ translate('布局') }}
           </template>
@@ -134,16 +134,17 @@ defineOptions({
   name: 'VabThemeDrawer',
 })
 
+const route = useRoute()
 const $sub = inject<any>('$sub')
 const $pub = inject<any>('$pub')
 const $unsub = inject<any>('$unsub')
 const $baseLoading = inject<any>('$baseLoading')
 const $baseMessage = inject<any>('$baseMessage')
 const settingsStore = useSettingsStore()
+const routeName = ref<any>(route.name)
 const { theme, device, mode, isCatchedTabs } = storeToRefs<any>(settingsStore)
 const { saveTheme, resetTheme, updateTheme, updateCatchedTabs, setCssVar } = settingsStore
 const drawerVisible = ref<boolean>(false)
-
 const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
 const tabsBarStyleList = ref<any>([
   { label: '卡片', value: 'card' },
@@ -268,6 +269,14 @@ $sub('shop-vite-change-theme', (value: string) => {
   theme.value.themeName = value
   _updateTheme()
 })
+
+watch(
+  route,
+  () => {
+    routeName.value = route.name
+  },
+  { immediate: true }
+)
 
 onBeforeUnmount(() => {
   $unsub('shop-vite-change-theme')
