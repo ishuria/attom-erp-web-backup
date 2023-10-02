@@ -39,7 +39,7 @@ watch(
       if (route.path === '/separateLayout') theme.value.layout = 'horizontal'
       else {
         if (localStorage.getItem('shop-vite-theme'))
-          theme.value.layout = JSON.parse(localStorage.getItem('shop-vite-theme') as string) || layout
+          theme.value.layout = JSON.parse(localStorage.getItem('shop-vite-theme') as string).layout || layout
         else theme.value.layout = layout
       }
     else theme.value.layout = 'vertical'
