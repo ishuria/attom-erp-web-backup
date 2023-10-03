@@ -66,12 +66,13 @@ const { theme } = storeToRefs(settingsStore)
 .vab-layout-column {
   .vab-main {
     &.is-collapse-main {
-      &.vab-main-horizontal {
-        margin-left: calc(var(--el-left-menu-width-min) * 1.3);
+      &.vab-main-horizontal,
+      &.vab-main-semicircle {
+        margin-left: calc(var(--el-left-menu-width-min) * 1.4);
 
         :deep() {
           .fixed-header {
-            width: calc(100% - var(--el-left-menu-width-min) * 1.3);
+            width: calc(100% - var(--el-left-menu-width-min) * 1.4);
           }
         }
       }

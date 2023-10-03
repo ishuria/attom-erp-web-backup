@@ -200,8 +200,9 @@ onMounted(() => {
           padding: 5px !important;
 
           .vab-column-grid {
-            width: calc(var(--el-left-menu-width-min) - 10px) !important;
+            width: calc(var(--el-left-menu-width-min) - 12px) !important;
             height: calc(var(--el-left-menu-width-min) - 10px) !important;
+            margin-left: 2px;
             border-radius: var(--el-border-radius-base);
 
             &:hover {
@@ -368,7 +369,12 @@ onMounted(() => {
         color: var(--el-color-white);
 
         &.is-active {
+          margin-right: -1px;
           background: var(--el-color-primary);
+
+          > .vab-column-grid {
+            margin-right: 1px;
+          }
         }
       }
     }
