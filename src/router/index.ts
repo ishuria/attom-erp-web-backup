@@ -1237,6 +1237,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'goodsStatistics',
+        name: 'GoodsStatistics',
+        component: () => import('/@/views/goods/GoodsStatistics.vue'),
+        meta: {
+          title: '商品统计',
+          icon: 'line-chart-line',
+        },
+      },
+      {
         path: 'goodsList',
         name: 'GoodsList',
         component: () => import('/@/views/goods/GoodsList.vue'),

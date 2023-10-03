@@ -54,6 +54,7 @@
     "cropvisible",
     "ctitle",
     "datetime",
+    "datetimerange",
     "echarts",
     "gantt",
     "gitee",

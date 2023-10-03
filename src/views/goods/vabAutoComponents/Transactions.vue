@@ -1,19 +1,7 @@
 <template>
-  <vab-card :body-style="{ height: '222px' }" skeleton>
-    <template #header>
-      <vab-icon icon="line-chart-line" />
-      流量概况
-      <el-tag class="card-header-tag" type="success">日</el-tag>
-    </template>
-
+  <div>
     <vab-chart :option="option" />
-    <div class="bottom">
-      <div class="line-two">
-        自上周以来
-        <span>提升 44%</span>
-      </div>
-    </div>
-  </vab-card>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -34,8 +22,8 @@ const option = reactive<any>({
   },
   grid: {
     top: '5%',
-    left: '2%',
-    right: '4%',
+    left: '0%',
+    right: '0%',
     bottom: '0%',
     containLabel: true,
   },
@@ -47,13 +35,11 @@ const option = reactive<any>({
       alignWithLabel: true,
     },
   },
-
   yAxis: {
     type: 'value',
   },
-
   series: {
-    name: '浏览量',
+    name: '交易笔数',
     type: 'line',
     data: [],
     smooth: true,
@@ -91,7 +77,7 @@ onActivated(() => {
   const addData = (shift: boolean) => {
     now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
     date.push(now)
-    data.push(random(2000, 4000))
+    data.push(random(0, 4000))
 
     if (shift) {
       date.shift()
@@ -121,20 +107,8 @@ onDeactivated(() => {
 <style lang="scss" scoped>
 :deep() {
   .echarts {
-    height: 140px !important;
-  }
-}
-
-.bottom {
-  padding-top: 20px;
-  margin-top: 5px;
-  text-align: left;
-  border-top: 1px solid var(--el-border-color);
-}
-
-.line-two {
-  span {
-    color: var(--el-color-success);
+    height: 240px !important;
+    margin-top: var(--el-margin);
   }
 }
 </style>

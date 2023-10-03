@@ -1186,6 +1186,15 @@ const list = [
         },
       },
       {
+        path: 'goodsStatistics',
+        name: 'GoodsStatistics',
+        component: '/@/views/goods/GoodsStatistics.vue',
+        meta: {
+          title: '商品统计',
+          icon: 'line-chart-line',
+        },
+      },
+      {
         path: 'goodsList',
         name: 'GoodsList',
         component: '/@/views/goods/GoodsList.vue',
