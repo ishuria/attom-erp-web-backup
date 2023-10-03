@@ -1230,6 +1230,15 @@ const list = [
           icon: 'archive-2-line',
         },
       },
+      {
+        path: 'productCenter',
+        name: 'ProductCenter',
+        component: '/@/views/goods/ProductCenter.vue',
+        meta: {
+          title: '产品中心',
+          icon: 'presentation-line',
+        },
+      },
     ],
   },
   {

@@ -1281,6 +1281,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'archive-2-line',
         },
       },
+      {
+        path: 'productCenter',
+        name: 'ProductCenter',
+        component: () => import('/@/views/goods/ProductCenter.vue'),
+        meta: {
+          title: '产品中心',
+          icon: 'presentation-line',
+        },
+      },
     ],
   },
   {
