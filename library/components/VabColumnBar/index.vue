@@ -174,7 +174,7 @@ onMounted(() => {
   &-horizontal,
   &-semicircle {
     .float-fold {
-      left: 28px;
+      left: 26.5px;
     }
 
     :deep() {
