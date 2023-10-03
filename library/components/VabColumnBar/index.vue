@@ -173,6 +173,10 @@ onMounted(() => {
 
   &-horizontal,
   &-semicircle {
+    .float-fold {
+      left: 28px;
+    }
+
     :deep() {
       .vab-logo-column {
         .logo {
