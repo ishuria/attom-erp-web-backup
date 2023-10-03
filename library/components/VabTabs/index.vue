@@ -465,6 +465,12 @@ watchEffect(() => {
               background: var(--el-color-primary-light-9);
             }
           }
+
+          .el-tabs__nav-prev,
+          .el-tabs__nav-next {
+            height: var(--el-tabs-height);
+            line-height: var(--el-tabs-height);
+          }
         }
       }
     }
