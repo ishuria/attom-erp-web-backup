@@ -127,7 +127,7 @@ const submitForm = () => {
     if (valid) {
       $baseMessage('表单校验通过', 'success', 'hey')
     } else {
-      $baseMessage(`表单校验失败，校验失败的字段如下`, 'error', 'hey')
+      $baseMessage(`表单校验失败`, 'error', 'hey')
     }
   })
 }
