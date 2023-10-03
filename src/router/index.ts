@@ -1243,6 +1243,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '商品统计',
           icon: 'line-chart-line',
+          dot: true,
         },
       },
       {
@@ -1288,6 +1289,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '产品中心',
           icon: 'presentation-line',
+          badge: 'New',
         },
       },
     ],

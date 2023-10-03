@@ -1192,6 +1192,7 @@ const list = [
         meta: {
           title: '商品统计',
           icon: 'line-chart-line',
+          dot: true,
         },
       },
       {
@@ -1237,6 +1238,7 @@ const list = [
         meta: {
           title: '产品中心',
           icon: 'presentation-line',
+          badge: 'New',
         },
       },
     ],
