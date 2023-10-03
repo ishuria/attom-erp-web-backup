@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "5.0.5",
+  "version": "5.1.0",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -87,11 +87,11 @@
     "stylelint-config-recess-order": "^4.3.0",
     "stylelint-config-recommended-scss": "^13.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",
-    "terser": "^5.20.0",
+    "terser": "^5.21.0",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.2",
-    "vite": "^4.4.9",
+    "vite": "^4.4.10",
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-mock": "2.9.8",
     "vite-plugin-pwa": "^0.16.5",
