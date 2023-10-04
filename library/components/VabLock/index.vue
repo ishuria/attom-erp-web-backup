@@ -1,15 +1,25 @@
 <template>
   <div class="vab-lock">
     <vab-icon icon="lock-line" @click="handleLock" />
-    <el-collapse-transition>
-      <div v-show="lock" class="vab-screen-lock">
+    <el-drawer
+      v-model="lock"
+      append-to-body
+      class="vab-lock-drawer"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      direction="ttb"
+      :show-close="false"
+      size="100%"
+      :with-header="false"
+    >
+      <div class="vab-screen-lock">
         <div
           class="vab-screen-lock-background"
           :style="{
-            background: `fixed url(${background}) center`,
+            background: `var(--el-color-primary-light-7) fixed url(${background}) center`,
             backgroundSize: '100% 100%',
             filter: 'blur(10px)',
-            transform: 'scale(1.05)',
+            transform: 'scale(1.1)',
           }"
         ></div>
         <div class="vab-screen-lock-content">
@@ -35,7 +45,7 @@
           <span @click="randomBackground">{{ translate('切换壁纸') }}</span>
         </div>
       </div>
-    </el-collapse-transition>
+    </el-drawer>
   </div>
 </template>
 
@@ -91,114 +101,126 @@ const handleLock = () => {
 }
 </script>
 
-<style lang="scss" scoped>
-.vab-screen-lock {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: var(--el-z-index);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  background: var(--el-mask-color);
-  backdrop-filter: blur(10px);
-  opacity: var(--opacity-value);
-
-  &-background {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: calc(var(--el-z-index) - 1);
+<style lang="scss">
+.el-overlay:has(.vab-lock-drawer) {
+  backdrop-filter: none;
+}
+.vab-lock-drawer {
+  .el-drawer__body {
+    overflow: hidden;
   }
+}
+</style>
 
-  &-content {
+<style lang="scss" scoped>
+.vab-lock-drawer {
+  --el-drawer-padding-primary: 0;
+  .vab-screen-lock {
+    position: relative;
     z-index: var(--el-z-index);
-    width: 400px;
-    padding: 40px 55px 40px 55px;
-    color: var(--el-color-grey);
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    font-weight: bold;
     background: var(--el-mask-color);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
+    opacity: var(--opacity-value);
 
-    > span {
-      font-size: var(--el-font-size-small);
-      cursor: pointer;
+    &-background {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: calc(var(--el-z-index) - 1);
     }
 
-    &-title {
-      line-height: 50px;
+    &-content {
+      z-index: var(--el-z-index);
+      width: 400px;
+      padding: 40px 55px 40px 55px;
       color: var(--el-color-grey);
       text-align: center;
+      background: var(--el-mask-color);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--el-border-color);
+      border-radius: 15px;
 
-      :deep() {
-        .el-avatar {
-          width: 150px;
-          height: 150px;
+      > span {
+        font-size: var(--el-font-size-small);
+        cursor: pointer;
+      }
 
-          img {
-            padding: 30px;
-            cursor: pointer;
+      &-title {
+        line-height: 50px;
+        color: var(--el-color-grey);
+        text-align: center;
+
+        :deep() {
+          .el-avatar {
+            width: 150px;
+            height: 150px;
+
+            img {
+              padding: 30px;
+              cursor: pointer;
+            }
+          }
+
+          .ri-lock-line {
+            display: block;
+            margin: auto !important;
+            font-size: 30px;
+            color: var(--el-color-grey) !important;
           }
         }
-
-        .ri-lock-line {
-          display: block;
-          margin: auto !important;
-          font-size: 30px;
-          color: var(--el-color-grey) !important;
-        }
       }
-    }
 
-    &-form {
-      :deep() {
-        .el-input {
-          position: relative;
-          width: 100%;
-          height: 40px;
-          line-height: 40px;
+      &-form {
+        :deep() {
+          .el-input {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
 
-          .el-input__wrapper {
-            padding-right: 0;
-            border: 1px solid var(--el-color-primary);
-            box-shadow: none;
+            .el-input__wrapper {
+              padding-right: 0;
+              border: 1px solid var(--el-color-primary);
+              box-shadow: none;
 
-            .el-input__suffix {
-              .el-button {
-                position: absolute;
-                right: -1px;
-                height: 40px;
-                margin-left: 0 !important;
-                line-height: 40px;
-                border-top-left-radius: 0;
-                border-bottom-left-radius: 0;
-
-                .ri-lock-line {
+              .el-input__suffix {
+                .el-button {
+                  position: absolute;
+                  right: -1px;
+                  height: 40px;
                   margin-left: 0 !important;
-                }
-              }
+                  line-height: 40px;
+                  border-top-left-radius: 0;
+                  border-bottom-left-radius: 0;
 
-              .el-input__validateIcon {
-                display: none;
+                  .ri-lock-line {
+                    margin-left: 0 !important;
+                  }
+                }
+
+                .el-input__validateIcon {
+                  display: none;
+                }
               }
             }
           }
         }
       }
     }
-  }
 
-  @media (max-width: 576px) {
-    .vab-screen-lock-content {
-      width: 100% !important;
-      margin: 5vw;
+    @media (max-width: 576px) {
+      .vab-screen-lock-content {
+        width: 100% !important;
+        margin: 5vw;
+      }
     }
   }
 }
