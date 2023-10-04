@@ -54,7 +54,7 @@
           type="primary"
         >
           <vab-icon icon="vip-diamond-line" />
-          <span>shop-vite ￥1399</span>
+          <span>shop-vite ￥1899</span>
         </el-button>
         <el-button href="https://vue-admin-beautiful.com/admin-plus" rel="noopener noreferrer" tag="a" target="_blank" type="warning">
           <vab-icon icon="vip-diamond-line" />
