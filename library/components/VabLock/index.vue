@@ -104,17 +104,18 @@ const handleLock = () => {
 <style lang="scss">
 .el-overlay:has(.vab-lock-drawer) {
   backdrop-filter: none;
-}
-.vab-lock-drawer {
-  .el-drawer__body {
-    overflow: hidden;
+
+  .vab-lock-drawer {
+    .el-drawer__body {
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
   }
 }
 </style>
 
 <style lang="scss" scoped>
 .vab-lock-drawer {
-  --el-drawer-padding-primary: 0;
   .vab-screen-lock {
     position: relative;
     z-index: var(--el-z-index);
@@ -219,6 +220,7 @@ const handleLock = () => {
     @media (max-width: 576px) {
       .vab-screen-lock-content {
         width: 100% !important;
+        padding: 40px 35px 40px 35px;
         margin: 5vw;
       }
     }
