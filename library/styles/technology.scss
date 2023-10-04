@@ -52,13 +52,7 @@ html > body.vab-theme-technology {
   background-color: var(--el-color-white) !important;
 
   .vab-side-bar {
-    border-top: 1px solid var(--el-border-color) !important;
     border-right: 1px solid var(--el-border-color) !important;
-    border-left: 1px solid var(--el-border-color) !important;
-  }
-
-  .vab-layout-column {
-    border-top: 1px solid var(--el-border-color) !important;
   }
 
   .mobile {
@@ -117,10 +111,6 @@ html > body.vab-theme-technology {
     .logo {
       background: var(--el-color-white) !important;
       border-right: 1px solid var(--el-border-color) !important;
-    }
-
-    .title {
-      height: calc(var(--el-nav-height) + 1px) !important;
     }
   }
 
@@ -183,7 +173,7 @@ html > body.vab-theme-technology {
 
   /*el-drawer */
   .el-drawer.rtl {
-    border: 1px solid var(--el-border-color);
+    border-left: 1px solid var(--el-border-color);
   }
 
   .el-pagination.is-background .btn-prev:disabled,

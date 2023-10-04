@@ -115,7 +115,7 @@ watch(
   position: fixed;
   top: 50%;
   right: 0;
-  z-index: calc(var(--el-z-index) - 2);
+  z-index: calc(var(--el-z-index) - 1);
   padding: 10px 0 0 0;
   margin: 0;
   text-align: center;
@@ -192,8 +192,8 @@ watch(
 
     a {
       display: inline-block;
-      width: 58px;
-      height: 58px;
+      width: 55px;
+      height: 55px;
       padding-top: 10px;
       text-align: center;
       background: var(--el-color-white);

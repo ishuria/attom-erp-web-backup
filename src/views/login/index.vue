@@ -176,7 +176,7 @@ onBeforeRouteLeave((to, from, next) => {
     border-radius: var(--el-border-radius-base);
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 768px) {
     .login-right-tools {
       top: 5vw !important;
       right: 5vw !important;
