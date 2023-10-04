@@ -1,7 +1,10 @@
 <template>
   <div class="goods-comment-container table-auto-height">
     <vab-query-form>
-      <vab-query-form-top-panel>
+      <vab-query-form-left-panel>
+        <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item label="商品名称">
             <el-input v-model="queryForm.name" clearable placeholder="请输入商品名称" />
@@ -10,10 +13,7 @@
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-      <vab-query-form-left-panel :span="24">
-        <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
-      </vab-query-form-left-panel>
+      </vab-query-form-right-panel>
     </vab-query-form>
 
     <el-table ref="tableSortRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
