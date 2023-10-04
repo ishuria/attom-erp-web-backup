@@ -16,7 +16,7 @@
         <div
           class="vab-screen-lock-background"
           :style="{
-            background: `var(--el-color-primary-light-7) fixed url(${background}) center`,
+            background: `var(--el-color-primary-light-9) fixed url(${background}) center`,
             backgroundSize: '100% 100%',
             filter: 'blur(10px)',
             transform: 'scale(1.1)',
