@@ -129,6 +129,7 @@ onBeforeUnmount(() => {
       .vab-layout-vertical {
         .el-scrollbar.vab-side-bar {
           z-index: calc(var(--el-z-index) + 1);
+
           &.is-collapse {
             width: 0;
           }

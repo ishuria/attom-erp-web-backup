@@ -103,7 +103,9 @@
             <el-col :span="8">
               <el-statistic title="运营账户(元)" :value="random(100000, 200000)" />
             </el-col>
-            <el-col :span="24"><transactions /></el-col>
+            <el-col :span="24">
+              <transactions />
+            </el-col>
           </el-row>
         </vab-card>
       </el-col>

@@ -1,7 +1,11 @@
 <template>
   <div class="scroll-text-container global-animation-disabled">
-    <tiny-scroll-text direction="left" :time="25"><div v-html="text"></div></tiny-scroll-text>
-    <tiny-scroll-text direction="right" :time="25"><div v-html="text"></div></tiny-scroll-text>
+    <tiny-scroll-text direction="left" :time="25">
+      <div v-html="text"></div>
+    </tiny-scroll-text>
+    <tiny-scroll-text direction="right" :time="25">
+      <div v-html="text"></div>
+    </tiny-scroll-text>
     <tiny-scroll-text direction="up" :time="3">
       <div style="text-overflow: ellipsis; word-break: break-all; white-space: nowrap" v-html="text"></div>
     </tiny-scroll-text>

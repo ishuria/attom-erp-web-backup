@@ -13,6 +13,7 @@
 
 <script lang="ts" setup>
 import { getList } from '/@/api/area'
+
 defineOptions({
   name: 'City',
 })

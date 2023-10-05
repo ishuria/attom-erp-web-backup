@@ -56,6 +56,7 @@ const onFail = () => {
 
       .info-box_ {
         background-color: var(--el-color-success);
+
         &.fail {
           background-color: var(--el-color-danger);
         }

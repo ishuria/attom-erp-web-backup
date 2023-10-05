@@ -114,6 +114,7 @@ const handleChange = (value: any) => {
         transform: scale(0.6);
       }
     }
+
     .tiny-crop {
       z-index: calc(var(--el-z-index) + 2);
       background-color: rgba(0, 0, 0, 0.25);

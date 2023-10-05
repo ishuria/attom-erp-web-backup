@@ -141,6 +141,7 @@ const value3 = ref([1])
       }
     }
   }
+
   .transfer-avatar {
     display: inline-flex;
     align-items: center;

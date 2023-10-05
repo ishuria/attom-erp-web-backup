@@ -181,6 +181,7 @@ const handleOpen = () => {
       display: block;
       padding-left: 98px;
       cursor: pointer;
+
       .icon {
         position: absolute;
         left: var(--el-margin);

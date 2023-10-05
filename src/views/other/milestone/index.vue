@@ -1,5 +1,7 @@
 <template>
-  <div class="milestone-container"><tiny-milestone :data="milestoneData" :milestones-status="statusMap" /></div>
+  <div class="milestone-container">
+    <tiny-milestone :data="milestoneData" :milestones-status="statusMap" />
+  </div>
 </template>
 
 <script lang="ts" setup>

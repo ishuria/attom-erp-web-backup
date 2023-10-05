@@ -155,6 +155,7 @@ const experiences = ref<any>([
       margin-left: 0 !important;
     }
   }
+
   .resume-box {
     display: flex;
     flex-direction: row;

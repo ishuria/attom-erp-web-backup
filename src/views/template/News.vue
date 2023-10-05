@@ -110,6 +110,7 @@ onBeforeMount(() => {
         margin-left: 5px;
       }
     }
+
     .title {
       margin: 10px 15px;
       overflow: hidden;

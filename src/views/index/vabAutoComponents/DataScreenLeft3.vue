@@ -21,20 +21,76 @@ const speed = ref(30)
 const timer = ref<any>(null)
 const scrollRef = ref<any>(null)
 const listData = reactive<any>([
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
-  { avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    avatar: 'https://i.gtimg.cn/club/item/face/img/2/16022_100.gif',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
 ])
 
 const handleMouseEnter = () => {
@@ -90,10 +146,12 @@ onUnmounted(() => {
   .scroll {
     width: 100%;
     height: 100%;
+
     .scroll-box {
       width: 100%;
       height: 100%;
       overflow: hidden;
+
       .scroll-item {
         display: flex;
         align-items: center;
@@ -103,6 +161,7 @@ onUnmounted(() => {
         .name {
           margin-left: 10px;
         }
+
         .address {
           margin-left: var(--el-margin);
         }
