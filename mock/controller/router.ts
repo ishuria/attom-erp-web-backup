@@ -1124,6 +1124,16 @@ const list = [
         },
       },
       {
+        path: 'serverManagement',
+        name: 'ServerManagement',
+        component: '/@/views/setting/serverManagement/index.vue',
+        meta: {
+          title: '服务器管理',
+          icon: 'task-line',
+          dot: true,
+        },
+      },
+      {
         path: 'systemLog',
         name: 'SystemLog',
         component: '/@/views/setting/systemLog/index.vue',

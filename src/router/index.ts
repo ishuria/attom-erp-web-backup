@@ -1175,6 +1175,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'serverManagement',
+        name: 'ServerManagement',
+        component: () => import('/@/views/setting/serverManagement/index.vue'),
+        meta: {
+          title: '服务器管理',
+          icon: 'task-line',
+          dot: true,
+        },
+      },
+      {
         path: 'systemLog',
         name: 'SystemLog',
         component: () => import('/@/views/setting/systemLog/index.vue'),
