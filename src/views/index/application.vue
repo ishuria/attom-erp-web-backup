@@ -13,26 +13,25 @@ defineOptions({
   name: 'Application',
 })
 
-const $baseMessage = inject<any>('$baseMessage')
-// @ts-ignore
-let deferredPrompt: BeforeInstallPromptEvent
+let deferredPrompt: any
 
-onMounted(() => {
+const beforeinstallprompt = () => {
   window.addEventListener('beforeinstallprompt', (e) => {
-    //e.preventDefault()
+    e.preventDefault()
     deferredPrompt = e
   })
+}
+
+onBeforeMount(() => {
+  beforeinstallprompt()
 })
 
 const handleInstall = () => {
   if (deferredPrompt) {
     deferredPrompt.prompt()
-    deferredPrompt.userChoice.then((choiceResult: any) => {
-      if (choiceResult.outcome === 'dismissed') {
-        $baseMessage('检测到您已取消安装需为您重载网页', 'error', 'hey', () => {
-          location.reload()
-        })
-      }
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null
+      beforeinstallprompt()
     })
   }
 }

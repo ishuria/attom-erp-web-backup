@@ -1,11 +1,14 @@
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa'
 
 const pwaOptions: Partial<VitePWAOptions> = {
-  base: './',
+  base: './', // ./ 或 /
   registerType: 'autoUpdate', // prompt、autoUpdate
   workbox: {
     cleanupOutdatedCaches: true,
   },
+  // devOptions: {
+  //   enabled: true,
+  // },
   manifest: {
     lang: 'zh',
     name: 'Vue Shop Vite',
