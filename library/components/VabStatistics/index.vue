@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
+// @ts-nocheck
 defineOptions({
   name: 'VabStatistics',
 })
@@ -16,6 +17,19 @@ onBeforeMount(() => {
       const s: any = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
     })()
+    ;(function (c, l, a, r, i, t, y) {
+      c[a] =
+        c[a] ||
+        function () {
+          // eslint-disable-next-line prefer-rest-params
+          ;(c[a].q = c[a].q || []).push(arguments)
+        }
+      t = l.createElement(r)
+      t.async = 1
+      t.src = `https://www.clarity.ms/tag/${i}`
+      y = l.getElementsByTagName(r)[0]
+      y.parentNode.insertBefore(t, y)
+    })(window, document, 'clarity', 'script', 'j9de7dmm7n')
   }
 })
 </script>
