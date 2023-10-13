@@ -692,6 +692,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           title: '水印',
           guard: ['Admin'],
           icon: 'water-flash-line',
+          badge: 'New',
         },
       },
       {

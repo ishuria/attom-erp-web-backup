@@ -48,6 +48,10 @@ html {
 
       @include base-scrollbar;
 
+      &:not([class*='el-scrollbar']) {
+        transition: var(--el-transition);
+      }
+
       .vue-shop-vite-box {
         section,
         div:not(
@@ -61,6 +65,8 @@ html {
             .el-carousel *,
             .el-pagination,
             .el-pagination *,
+            .el-slider,
+            .el-slider *,
             .split,
             .split *,
             .card-drag,

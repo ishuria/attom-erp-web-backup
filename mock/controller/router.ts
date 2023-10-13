@@ -641,6 +641,7 @@ const list = [
           title: '水印',
           guard: ['Admin'],
           icon: 'water-flash-line',
+          badge: 'New',
         },
       },
       {
