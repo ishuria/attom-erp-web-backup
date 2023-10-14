@@ -82,6 +82,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'creativeCenter',
+        name: 'CreativeCenter',
+        component: () => import('/@/views/index/creativeCenter.vue'),
+        meta: {
+          title: '创作中心',
+          icon: 'ancient-gate-line',
+        },
+      },
+      {
         path: 'tile',
         name: 'Tile',
         component: () => import('/@/views/index/tile.vue'),

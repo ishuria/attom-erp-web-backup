@@ -31,6 +31,15 @@ const list = [
         },
       },
       {
+        path: 'creativeCenter',
+        name: 'CreativeCenter',
+        component: '/@/views/index/creativeCenter.vue',
+        meta: {
+          title: '创作中心',
+          icon: 'ancient-gate-line',
+        },
+      },
+      {
         path: 'tile',
         name: 'Tile',
         component: '/@/views/index/tile.vue',
