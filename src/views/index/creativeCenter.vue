@@ -1,8 +1,8 @@
 <template>
   <div class="creative-center-container no-background-container">
     <el-row :gutter="20">
-      <el-col :lg="16" :md="12" :sm="24" :xl="16" :xs="24">
-        <vab-card style="height: 580px">
+      <el-col :lg="17" :md="12" :sm="24" :xl="17" :xs="24">
+        <vab-card>
           <el-row :gutter="20">
             <el-col :span="8">
               <div class="statistic-card">
@@ -74,93 +74,91 @@
             </el-col>
 
             <el-col :span="24">
-              <el-scrollbar style="height: 410px">
-                <el-timeline>
-                  <el-timeline-item placement="top" timestamp="2023/10/14">
-                    <vab-card>
-                      <el-row :gutter="20">
-                        <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-                          <el-image src="https://element-plus.org/images/hamburger.png" />
-                          <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>6999</h3>
-                          <p>展现量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>899</h3>
-                          <p>阅读量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>19</h3>
-                          <p>评论量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>189</h3>
-                          <p>点赞</p>
-                        </el-col>
-                      </el-row>
-                    </vab-card>
-                  </el-timeline-item>
-                  <el-timeline-item placement="top" timestamp="2023/10/14">
-                    <vab-card>
-                      <el-row :gutter="20">
-                        <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-                          <el-image src="https://element-plus.org/images/hamburger.png" />
-                          <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>1999</h3>
-                          <p>展现量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>499</h3>
-                          <p>阅读量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>9</h3>
-                          <p>评论量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>29</h3>
-                          <p>点赞</p>
-                        </el-col>
-                      </el-row>
-                    </vab-card>
-                  </el-timeline-item>
-                  <el-timeline-item placement="top" timestamp="2023/10/14">
-                    <vab-card>
-                      <el-row :gutter="20">
-                        <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-                          <el-image src="https://element-plus.org/images/hamburger.png" />
-                          <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>1999</h3>
-                          <p>展现量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>499</h3>
-                          <p>阅读量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>9</h3>
-                          <p>评论量</p>
-                        </el-col>
-                        <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
-                          <h3>29</h3>
-                          <p>点赞</p>
-                        </el-col>
-                      </el-row>
-                    </vab-card>
-                  </el-timeline-item>
-                </el-timeline>
-              </el-scrollbar>
+              <el-timeline>
+                <el-timeline-item placement="top" timestamp="2023/10/14">
+                  <vab-card>
+                    <el-row :gutter="20">
+                      <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+                        <el-image src="https://element-plus.org/images/hamburger.png" />
+                        <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>6999</h3>
+                        <p>展现量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>899</h3>
+                        <p>阅读量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>19</h3>
+                        <p>评论量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>189</h3>
+                        <p>点赞</p>
+                      </el-col>
+                    </el-row>
+                  </vab-card>
+                </el-timeline-item>
+                <el-timeline-item placement="top" timestamp="2023/10/14">
+                  <vab-card>
+                    <el-row :gutter="20">
+                      <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+                        <el-image src="https://element-plus.org/images/hamburger.png" />
+                        <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>1999</h3>
+                        <p>展现量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>499</h3>
+                        <p>阅读量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>9</h3>
+                        <p>评论量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>29</h3>
+                        <p>点赞</p>
+                      </el-col>
+                    </el-row>
+                  </vab-card>
+                </el-timeline-item>
+                <el-timeline-item placement="top" timestamp="2023/10/14">
+                  <vab-card>
+                    <el-row :gutter="20">
+                      <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+                        <el-image src="https://element-plus.org/images/hamburger.png" />
+                        <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>1999</h3>
+                        <p>展现量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>499</h3>
+                        <p>阅读量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>9</h3>
+                        <p>评论量</p>
+                      </el-col>
+                      <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
+                        <h3>29</h3>
+                        <p>点赞</p>
+                      </el-col>
+                    </el-row>
+                  </vab-card>
+                </el-timeline-item>
+              </el-timeline>
             </el-col>
           </el-row>
         </vab-card>
       </el-col>
-      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
+      <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
         <vab-card style="height: 280px">
           <template #header>
             <el-tag effect="dark">公告</el-tag>
@@ -219,6 +217,11 @@
             </ul>
           </el-scrollbar>
         </vab-card>
+        <el-carousel height="180px" :interval="6000">
+          <el-carousel-item v-for="item in 4" :key="item">
+            <img src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg" />
+          </el-carousel-item>
+        </el-carousel>
         <vab-card style="height: 280px">
           <template #header>
             创做灵感
@@ -357,6 +360,31 @@ defineOptions({
           height: 24px;
           line-height: 24px;
           cursor: pointer;
+        }
+      }
+
+      .el-timeline-item {
+        &__content {
+          .vab-card {
+            .el-card__body {
+              padding-top: 0;
+              padding-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  :deep() {
+    .el-carousel {
+      margin-bottom: 20px;
+      border-radius: var(--el-border-radius-base);
+
+      &__item {
+        img {
+          width: 100%;
+          object-fit: fill;
         }
       }
     }
