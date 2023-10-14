@@ -65,6 +65,7 @@ declare module 'vue' {
     ProgressStripedProgress: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressStripedProgress.vue')['default']
     PropertyDialog: typeof import('./../../../src/views/other/workflow/vabAutoComponents/propertySetting/PropertyDialog.vue')['default']
     Rank: typeof import('./../../../src/views/index/vabAutoComponents/Rank.vue')['default']
+    RankList: typeof import('./../../../src/views/index/vabAutoComponents/RankList.vue')['default']
     Recommendation: typeof import('./../../../src/views/index/vabAutoComponents/Recommendation.vue')['default']
     RoleManagementEdit: typeof import('./../../../src/views/setting/roleManagement/vabAutoComponents/RoleManagementEdit.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
