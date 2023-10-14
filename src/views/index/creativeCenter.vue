@@ -30,7 +30,7 @@
                 <el-statistic :value="693700">
                   <template #title>
                     <vab-icon icon="contacts-book-2-line" />
-                    阅读量
+                    总阅读量
                   </template>
                 </el-statistic>
                 <div class="statistic-footer">
@@ -291,7 +291,7 @@ defineOptions({
 
     :deep() {
       .el-image {
-        width: 60px;
+        width: 80px;
         margin-right: 15px;
         border-radius: var(--el-border-radius-base);
       }
@@ -389,17 +389,6 @@ defineOptions({
           height: 24px;
           line-height: 24px;
           cursor: pointer;
-        }
-      }
-
-      .el-timeline-item {
-        &__content {
-          .vab-card {
-            .el-card__body {
-              padding-top: 0;
-              padding-bottom: 0;
-            }
-          }
         }
       }
     }
