@@ -693,8 +693,13 @@ html {
       border-right: 1px solid var(--el-menu-background-color) !important;
     }
 
-    .el-space__item:empty {
-      display: none;
+    .el-space {
+      &__item {
+        &:empty,
+        &:has([class*='hidden']) {
+          display: none;
+        }
+      }
     }
 
     /* 旋转动画 */
