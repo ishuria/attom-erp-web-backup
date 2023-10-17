@@ -1,7 +1,7 @@
 <template>
   <div class="magnifier-container">
     <el-row :gutter="20">
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col :lg="12" :md="18" :sm="18" :xl="12" :xs="24">
         <vab-magnifier
           :height="height"
           :out-zoomer="showType"
@@ -18,7 +18,7 @@
           </template>
         </vab-magnifier>
       </el-col>
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col :lg="12" :md="6" :sm="6" :xl="12" :xs="24">
         <p>当前放大倍数：{{ scale }}</p>
         <p>当前放大镜宽度：{{ width }}</p>
         <el-space wrap>
@@ -27,8 +27,8 @@
           <el-button type="primary" @click="addScale">增加放大倍数</el-button>
           <el-button type="warning" @click="subScale">减小放大倍数</el-button>
           <el-button type="primary" @click="changeType">更换放大镜类型</el-button>
-          <el-button type="primary" @click="changeShowType">更换放大方式</el-button>
-          <el-button type="primary" @click="changeToTaobao">淘宝放大镜</el-button>
+          <el-button class="hidden-xs-only" type="warning" @click="changeShowType">更换放大方式</el-button>
+          <el-button class="hidden-xs-only" type="primary" @click="changeToTaobao">淘宝放大镜</el-button>
           <el-button type="danger" @click="reset">重置</el-button>
         </el-space>
       </el-col>
@@ -39,7 +39,7 @@
 <script lang="ts" setup>
 const url = ref<any>('https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg')
 const scale = ref<any>(2)
-const type = ref<any>('square')
+const type = ref<any>('circle')
 const showType = ref<any>(false)
 const width = ref<any>(168)
 const taobao = ref<any>(false)
@@ -76,7 +76,7 @@ const changeToTaobao = () => {
 
 const reset = () => {
   scale.value = 2
-  type.value = 'square'
+  type.value = 'circle'
   showType.value = false
   width.value = 168
   taobao.value = false
