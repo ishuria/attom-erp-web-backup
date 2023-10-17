@@ -684,6 +684,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'magnifier',
+        name: 'Magnifier',
+        component: () => import('/@/views/other/magnifier/index.vue'),
+        meta: {
+          title: '放大镜',
+          guard: ['Admin'],
+          icon: 'search-2-line',
+        },
+      },
+      {
         path: 'signature',
         name: 'Signature',
         component: () => import('/@/views/other/signature/index.vue'),

@@ -633,6 +633,16 @@ const list = [
         },
       },
       {
+        path: 'magnifier',
+        name: 'Magnifier',
+        component: '/@/views/other/magnifier/index.vue',
+        meta: {
+          title: '放大镜',
+          guard: ['Admin'],
+          icon: 'search-2-line',
+        },
+      },
+      {
         path: 'signature',
         name: 'Signature',
         component: '/@/views/other/signature/index.vue',

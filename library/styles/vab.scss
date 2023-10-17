@@ -72,7 +72,9 @@ html {
             .card-drag,
             .card-drag *,
             .global-animation-disabled,
-            .global-animation-disabled *
+            .global-animation-disabled *,
+            .vab-magnifier,
+            .vab-magnifier *
           ) {
           text-shadow: none;
           transition: var(--el-transition);
