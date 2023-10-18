@@ -57,6 +57,8 @@
     "daterange",
     "datetime",
     "datetimerange",
+    "douban",
+    "doubao",
     "echarts",
     "gantt",
     "gitee",

@@ -1388,6 +1388,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'taobao-line',
         },
       },
+      {
+        path: '//www.doubao.com/chat/',
+        name: 'Doubao',
+        meta: {
+          title: '豆包',
+          target: '_blank',
+          icon: 'douban-line',
+        },
+      },
     ],
   },
   {
