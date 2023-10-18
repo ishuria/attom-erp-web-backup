@@ -3,7 +3,7 @@
     <vab-card class="hidden-sm-and-up">
       <el-alert :closable="false" title="手机端不支持面板分割演示" type="error" />
     </vab-card>
-    <vab-card class="hidden-xs-only">
+    <vab-card class="hidden-sm-and-down">
       <vab-pane-split ratio="2/3">
         <template #one>
           <div class="pane-split-left">A</div>

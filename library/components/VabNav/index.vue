@@ -14,7 +14,7 @@
               </el-tab-pane>
             </template>
           </el-tabs>
-          <vab-breadcrumb v-else class="hidden-xs-only" />
+          <vab-breadcrumb v-else class="hidden-sm-and-down" />
         </div>
       </el-col>
       <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="20">

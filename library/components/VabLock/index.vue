@@ -217,7 +217,7 @@ const handleLock = () => {
       }
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       .vab-screen-lock-content {
         width: 100% !important;
         padding: 40px 35px 40px 35px;

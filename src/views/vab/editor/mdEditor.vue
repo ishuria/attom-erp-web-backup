@@ -95,7 +95,7 @@ VMdEditor.use(githubTheme)
       }
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       .v-md-editor {
         &__toolbar-right,
         &__toolbar-divider {

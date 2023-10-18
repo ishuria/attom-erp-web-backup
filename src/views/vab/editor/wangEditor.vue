@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
     margin: auto;
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 768px) {
     .wang-editor-title,
     .wang-editor-content,
     .wang-editor-footer {

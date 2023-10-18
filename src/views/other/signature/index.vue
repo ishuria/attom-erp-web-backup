@@ -122,7 +122,7 @@ const paint = (startX: number, startY: number, endX: number, endY: number, ctx: 
     }
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 768px) {
     .signature-canvas-box {
       width: 100%;
       height: 250px;

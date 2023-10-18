@@ -3,7 +3,7 @@
     <span class="avatar-dropdown">
       <el-avatar class="user-avatar" :src="avatar" />
       <div class="username">
-        <span class="hidden-xs-only">{{ username }}</span>
+        <span class="hidden-sm-and-down">{{ username }}</span>
         <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': active }" icon="arrow-down-s-line" />
       </div>
     </span>

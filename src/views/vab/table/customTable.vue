@@ -26,7 +26,7 @@
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
-            <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
+            <el-button class="hidden-sm-and-down" text type="primary" @click="handleFold">
               <span v-if="fold">展开</span>
               <span v-else>合并</span>
               <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': fold }" icon="arrow-up-s-line" />
@@ -38,14 +38,14 @@
         <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
         <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
         <el-button type="primary" @click="handleDetail">详情</el-button>
-        <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
+        <el-button class="hidden-sm-and-down" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="custom-table-right-tools">
-          <el-button class="hidden-xs-only">
+          <el-button class="hidden-sm-and-down">
             <el-checkbox v-model="stripe" label="斑马纹" />
           </el-button>
-          <el-button class="hidden-xs-only">
+          <el-button class="hidden-sm-and-down">
             <el-checkbox v-model="border" label="边框" />
           </el-button>
           <el-button @click="queryData">

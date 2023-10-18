@@ -261,7 +261,7 @@ onDeactivated(() => {
       }
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       .el-card__body {
         flex-direction: column !important;
       }

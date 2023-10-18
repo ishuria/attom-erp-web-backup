@@ -3,7 +3,7 @@
     <div class="hidden-sm-and-up">
       <el-alert :closable="false" title="手机端不支持独立布局演示" type="error" />
     </div>
-    <div class="hidden-xs-only">
+    <div class="hidden-sm-and-down">
       <el-page-header content="独立布局" title="返回上一页" @back="goBack">
         <template #extra>
           <vab-full-screen />

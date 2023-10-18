@@ -142,7 +142,7 @@ const experiences = ref<any>([
 
 <style lang="scss" scoped>
 .resume-container {
-  @media (max-width: 576px) {
+  @media (max-width: 768px) {
     .resume-box {
       flex-direction: column !important;
     }

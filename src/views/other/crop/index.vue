@@ -109,7 +109,7 @@ const handleChange = (value: any) => {
       }
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       .tiny-crop__dialog {
         transform: scale(0.6);
       }

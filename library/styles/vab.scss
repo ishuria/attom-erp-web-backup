@@ -457,7 +457,7 @@ html {
     }
 
     /* el-dialog */
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       .el-dialog {
         width: auto !important;
         margin: 5vw;
@@ -695,9 +695,18 @@ html {
 
     .el-space {
       &__item {
-        &:empty,
-        &:has([class*='hidden']) {
+        &:empty {
           display: none;
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      .el-space {
+        &__item {
+          &:has([class*='hidden']) {
+            display: none;
+          }
         }
       }
     }

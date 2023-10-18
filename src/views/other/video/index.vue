@@ -171,7 +171,7 @@ onDeactivated(() => {
       margin-bottom: 0;
     }
 
-    @media (max-width: 576px) {
+    @media (max-width: 768px) {
       .el-row {
         margin-bottom: var(--el-margin);
 

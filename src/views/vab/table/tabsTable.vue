@@ -17,7 +17,7 @@
             <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
             <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
             <el-button type="primary" @click="handleDetail">详情</el-button>
-            <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
+            <el-button class="hidden-sm-and-down" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
           </vab-query-form-left-panel>
         </vab-query-form>
 
