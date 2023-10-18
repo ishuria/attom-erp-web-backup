@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "5.3.5",
+  "version": "5.4.0",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -36,7 +36,7 @@
     "axios": "^1.5.1",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
-    "element-plus": "^2.4.0",
+    "element-plus": "^2.4.1",
     "intro.js": "^7.2.0",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
@@ -62,7 +62,7 @@
     "xgplayer-hls.js": "^3.0.9"
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.9",
+    "@types/lodash-es": "^4.17.10",
     "@types/mockjs": "^1.0.8",
     "@types/nprogress": "^0.2.1",
     "@types/qs": "^6.9.8",
