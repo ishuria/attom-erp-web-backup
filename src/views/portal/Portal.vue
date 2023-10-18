@@ -3,7 +3,7 @@
     <div class="portal-main-mobile hidden-sm-and-up">
       <el-alert :closable="false" title="手机端不支持门户演示" type="error" />
     </div>
-    <div class="portal-main hidden-sm-and-down">
+    <div class="portal-main hidden-xs-only">
       <header>
         <div class="index-nav">
           <div class="logo">

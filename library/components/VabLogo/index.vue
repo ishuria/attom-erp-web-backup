@@ -10,7 +10,7 @@
         <!-- 使用自定义svg示例 -->
         <vab-icon v-if="logo" :icon="logo" is-custom-svg />
       </span>
-      <span class="title" :class="{ 'hidden-sm-and-down': theme.layout === 'horizontal' }">
+      <span class="title" :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }">
         {{ title }}
       </span>
     </router-link>

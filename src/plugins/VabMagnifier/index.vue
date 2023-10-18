@@ -5,7 +5,7 @@
     @mouseleave="!disabled && !leaveEvent && mouseLeave($event)"
     @mousemove="!disabled && !moveEvent && mouseMove($event)"
   >
-    <img ref="imgRef" class="origin-img" @load="imgLoaded($event)" />
+    <img ref="imgRef" class="origin-img" @load="imgLoaded()" />
     <div
       v-if="selector"
       v-show="!hideZoomer && imgLoadedFlag"
@@ -33,20 +33,7 @@
     <slot />
   </div>
 </template>
-<script>
-const getBoundingClientRect = (element) => {
-  const rect = element.getBoundingClientRect()
-  const isIE = navigator.userAgent.indexOf('MSIE') !== -1
-  const rectTop = isIE && element.tagName === 'HTML' ? -element.scrollTop : rect.top
-  return {
-    left: rect.left,
-    top: rectTop,
-    right: rect.right,
-    bottom: rect.bottom,
-    width: rect.right - rect.left,
-    height: rect.bottom - rectTop,
-  }
-}
+<script lang="ts">
 export default {
   name: 'VabMagnifier',
   props: {
@@ -70,6 +57,7 @@ export default {
       type: String,
       default: 'square',
       validator: function (value) {
+        //@ts-ignore
         return ['circle', 'square'].indexOf(value) !== -1
       },
     },
@@ -108,7 +96,7 @@ export default {
     outZoomer: {
       type: Boolean,
       default: false,
-    },
+    } as any,
     pointer: {
       type: Boolean,
       default: false,
@@ -212,21 +200,21 @@ export default {
         top: `${this.outZoomerTop}px`,
       }
     },
-    zoomerBgUrl() {
+    zoomerBgUrl(): any {
       return {
         backgroundImage: `url(${this.highUrl || this.url})`,
       }
     },
-    zoomerBgSize() {
+    zoomerBgSize(): any {
       const {
         scale,
         imgInfo: { height, width },
-      } = this
+      } = this as any
       return {
         backgroundSize: `${width * scale}px ${height * scale}px`,
       }
     },
-    zoomerBgPosition() {
+    zoomerBgPosition(): any {
       const { left, top } = this.zoomerBgRect
       return {
         backgroundPosition: `${left}px ${top}px`,
@@ -236,7 +224,7 @@ export default {
   watch: {
     scale() {
       this.initVZoomerPoint()
-      !this.outZoomer && this.mouseMove()
+      !this.outZoomer && this.mouseMove(event)
     },
     enterEvent: 'mouseEnter',
     moveEvent: 'mouseMove',
@@ -247,21 +235,35 @@ export default {
     vZoomerHalfWidth: 'initVZoomerPoint',
     vZoomerHalfHeight: 'initVZoomerPoint',
   },
-  created() {},
   mounted() {
     this.url && this.handlerUrlChange()
+    //@ts-ignore
     this.beforeReactivateMoveFns = []
-    this.$img = this.$refs['imgRef']
-    this.addResizeListener(this.$refs['imgRef'], (rect) => {
+    this.$img = this.$refs['imgRef'] as any
+    this.addResizeListener(this.$refs['imgRef'], (rect: any) => {
       this.imgInfo = rect
       this.handlerImgResize()
     })
   },
   methods: {
-    addResizeListener(dom, cb) {
+    getBoundingClientRect(element: any) {
+      const rect = element.getBoundingClientRect()
+      const isIE = navigator.userAgent.indexOf('MSIE') !== -1
+      const rectTop = isIE && element.tagName === 'HTML' ? -element.scrollTop : rect.top
+      return {
+        left: rect.left,
+        top: rectTop,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.right - rect.left,
+        height: rect.bottom - rectTop,
+      }
+    },
+    addResizeListener(dom: any, cb: any) {
       if (!this.disabledReactive) {
+        //@ts-ignore
         this.beforeReactivateMoveFns.push(() => {
-          const rect = getBoundingClientRect(dom)
+          const rect = this.getBoundingClientRect(dom)
           if (this.validImgResize(rect)) {
             cb && cb(rect)
           }
@@ -272,7 +274,7 @@ export default {
       this.imgLoadedFlag = false
       this.loadImg(this.url).then(this.imgLoaded)
     },
-    loadImg(url) {
+    loadImg(url: any) {
       return new Promise((resolve, reject) => {
         const img = document.createElement('img')
         img.addEventListener('load', resolve)
@@ -282,37 +284,36 @@ export default {
     },
     imgLoaded() {
       this.$nextTick(() => {
-        const $img = this.$refs['imgRef']
+        const $img: any = this.$refs['imgRef']
         if (!this.imgLoadedFlag) {
           this.imgLoadedFlag = true
           $img.src = this.url
           setTimeout(() => {
-            this.imgInfo = getBoundingClientRect($img)
+            this.imgInfo = this.getBoundingClientRect($img)
             this.handlerImgResize()
             this.$emit('created', $img, this.imgInfo)
           }, 500)
         }
       })
     },
-    validImgResize(imgInfo) {
+    validImgResize(imgInfo: any) {
       return JSON.stringify(this.imgInfo) !== JSON.stringify(imgInfo)
     },
     handlerImgResize() {
       this.initZoomerProperty()
       this.resetOutZoomPosition()
     },
-    mouseEnter(e) {
+    mouseEnter(e: any) {
       if (this.imgLoadedFlag) {
         this.hideZoomer = false
       }
       this.$emit('mouseenter', e)
     },
-    mouseMove(e) {
+    mouseMove(e: any) {
       if (this.hideZoomer) return
-      e = e || this.pointerInfo
       if (this.imgLoadedFlag && e) {
-        this.pointerInfo = e
-        this.beforeReactivateMoveFns.forEach((fn) => fn.call(this))
+        //@ts-ignore
+        this.beforeReactivateMoveFns.forEach((fn: any) => fn.call(this))
         const { pageX, pageY, clientY } = e
         const scrollTop = pageY - clientY
         const {
@@ -326,7 +327,7 @@ export default {
           zoomerHalfHeight,
           vZoomerHalfWidth,
           vZoomerHalfHeight,
-        } = this
+        }: any = this
         const { absoluteLeft, absoluteTop } = zoomerRect
         const { leftBound, topBound, rightBound, bottomBound } = zoomerPoint
         const {
@@ -348,6 +349,7 @@ export default {
         zoomerBgRect.top = -vZoomerY + vZoomerHalfHeight
         if (outZoomer) {
           if (!outZoomerInitTop) {
+            //@ts-ignore
             outZoomerInitTop = this.outZoomerInitTop = scrollTop + this.imgInfo.top
           }
           this.hideOutZoomer && (this.hideOutZoomer = false)
@@ -356,7 +358,7 @@ export default {
       }
       this.$emit('mousemove', e)
     },
-    mouseLeave(e) {
+    mouseLeave(e: any) {
       this.hideZoomer = true
       if (this.outZoomer) {
         this.hideOutZoomer = true
@@ -365,10 +367,10 @@ export default {
     },
     initZoomerProperty() {
       const zoomerRect = this.zoomerRect
-      const { left, top } = this.imgInfo
+      const { left, top } = this.imgInfo as any
       const { documentElement, body } = document
-      const scrollTop = documentElement.scrollTop || window.pageYOffset || body.scrollTop
-      const scrollLeft = documentElement.scrollLeft || window.pageXOffset || body.scrollLeft
+      const scrollTop = documentElement.scrollTop || body.scrollTop
+      const scrollLeft = documentElement.scrollLeft || body.scrollLeft
       zoomerRect.absoluteLeft = left + scrollLeft
       zoomerRect.absoluteTop = top + scrollTop
       this.initZoomerPoint()
@@ -377,25 +379,25 @@ export default {
     initZoomerPoint() {
       const zoomerHalfWidth = this.zoomerHalfWidth
       const zoomerHalfHeight = this.zoomerHalfHeight
-      const { width, height } = this.imgInfo
+      const { width, height } = this.imgInfo as any
       const zoomerPoint = this.zoomerPoint
       zoomerPoint.leftBound = zoomerHalfWidth
       zoomerPoint.topBound = zoomerHalfHeight
       zoomerPoint.rightBound = width - zoomerHalfWidth
       zoomerPoint.bottomBound = height - zoomerHalfHeight
-      this.mouseMove()
+      this.mouseMove(event)
     },
     initVZoomerPoint() {
       const vZoomerPoint = this.vZoomerPoint
       const vZoomerHalfWidth = this.vZoomerHalfWidth
       const vZoomerHalfHeight = this.vZoomerHalfHeight
-      const { width, height } = this.imgInfo
+      const { width, height } = this.imgInfo as any
       const scale = this.scale
       vZoomerPoint.leftBound = vZoomerHalfWidth
       vZoomerPoint.topBound = vZoomerHalfHeight
       vZoomerPoint.rightBound = width * scale - vZoomerHalfWidth
       vZoomerPoint.bottomBound = height * scale - vZoomerHalfHeight
-      this.mouseMove()
+      this.mouseMove(event)
     },
     reset() {
       this.initZoomerProperty()

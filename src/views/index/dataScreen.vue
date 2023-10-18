@@ -3,7 +3,7 @@
     <div class="hidden-sm-and-up" style="padding: 20px">
       <el-alert :closable="false" title="手机端不支持数据大屏演示" type="error" />
     </div>
-    <div class="hidden-sm-and-down">
+    <div class="hidden-xs-only">
       <data-screen-header
         :style="{
           height: headerContentHeight,

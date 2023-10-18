@@ -24,15 +24,15 @@
               </template>
             </el-popover>
           </div>
-          <div class="list-item-meta-content hidden-sm-and-down">
+          <div class="list-item-meta-content hidden-xs-only">
             <div class="list-item-meta-title">
               {{ item.title }}
             </div>
-            <div class="list-item-meta-description hidden-sm-and-down">
+            <div class="list-item-meta-description hidden-xs-only">
               {{ item.description }}
             </div>
           </div>
-          <div class="list-item-meta-content2 hidden-sm-and-down">
+          <div class="list-item-meta-content2 hidden-xs-only">
             <el-progress :percentage="parseInt(item.percentage)" />
           </div>
           <div class="list-item-meta-content2">

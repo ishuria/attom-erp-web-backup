@@ -1,38 +1,43 @@
 <template>
   <div class="magnifier-container">
-    <el-row :gutter="20">
-      <el-col :lg="12" :md="18" :sm="18" :xl="12" :xs="24">
-        <vab-magnifier
-          :height="height"
-          :out-zoomer="showType"
-          :scale="scale"
-          :type="type"
-          :url="url"
-          :width="width"
-          :zoomer-style="{
-            'background-color': taobao ? 'transparent' : 'rgba(0,0,0,0)',
-          }"
-        >
-          <template v-if="taobao" #zoomer>
-            <div class="image-zoom-wrap"></div>
-          </template>
-        </vab-magnifier>
-      </el-col>
-      <el-col :lg="12" :md="6" :sm="6" :xl="12" :xs="24">
-        <p>当前放大倍数：{{ scale }}</p>
-        <p>当前放大镜宽度：{{ width }}</p>
-        <el-space wrap>
-          <el-button type="primary" @click="addSelectorWidth">增加放大器宽度</el-button>
-          <el-button type="warning" @click="subSelectorWidth">减小放大器宽度</el-button>
-          <el-button type="primary" @click="addScale">增加放大倍数</el-button>
-          <el-button type="warning" @click="subScale">减小放大倍数</el-button>
-          <el-button type="primary" @click="changeType">更换放大镜类型</el-button>
-          <el-button class="hidden-sm-and-down" type="warning" @click="changeShowType">更换放大方式</el-button>
-          <el-button class="hidden-sm-and-down" type="primary" @click="changeToTaobao">淘宝放大镜</el-button>
-          <el-button type="danger" @click="reset">重置</el-button>
-        </el-space>
-      </el-col>
-    </el-row>
+    <div class="hidden-sm-and-up">
+      <el-alert :closable="false" title="手机端不支持放大镜演示" type="error" />
+    </div>
+    <div class="hidden-xs-only">
+      <el-row :gutter="20">
+        <el-col :lg="12" :md="18" :sm="18" :xl="12" :xs="24">
+          <vab-magnifier
+            :height="height"
+            :out-zoomer="showType"
+            :scale="scale"
+            :type="type"
+            :url="url"
+            :width="width"
+            :zoomer-style="{
+              'background-color': taobao ? 'transparent' : 'rgba(0,0,0,0)',
+            }"
+          >
+            <template v-if="taobao" #zoomer>
+              <div class="image-zoom-wrap"></div>
+            </template>
+          </vab-magnifier>
+        </el-col>
+        <el-col :lg="12" :md="6" :sm="6" :xl="12" :xs="24">
+          <p>当前放大倍数：{{ scale }}</p>
+          <p>当前放大镜宽度：{{ width }}</p>
+          <el-space wrap>
+            <el-button type="primary" @click="addSelectorWidth">增加放大器宽度</el-button>
+            <el-button type="warning" @click="subSelectorWidth">减小放大器宽度</el-button>
+            <el-button type="primary" @click="addScale">增加放大倍数</el-button>
+            <el-button type="warning" @click="subScale">减小放大倍数</el-button>
+            <el-button type="primary" @click="changeType">更换放大镜类型</el-button>
+            <el-button class="hidden-md-and-down" type="warning" @click="changeShowType">更换放大方式</el-button>
+            <el-button class="hidden-md-and-down" type="primary" @click="changeToTaobao">淘宝放大镜</el-button>
+            <el-button type="danger" @click="reset">重置</el-button>
+          </el-space>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 

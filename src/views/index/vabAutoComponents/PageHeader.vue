@@ -1,6 +1,6 @@
 <template>
   <vab-colorful-card class="page-header" :style="style">
-    <el-avatar class="page-header-avatar hidden-sm-and-down" :src="avatar" />
+    <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
     <div class="page-header-tip">
       <p class="page-header-tip-title">
         {{ handleTips() }}

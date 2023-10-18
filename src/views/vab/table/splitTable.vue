@@ -3,7 +3,7 @@
     <vab-card class="hidden-sm-and-up">
       <el-alert :closable="false" title="手机端不支持分割表格演示" type="error" />
     </vab-card>
-    <vab-pane-split class="hidden-sm-and-down" ratio="4/20">
+    <vab-pane-split class="hidden-xs-only" ratio="4/20">
       <template #one>
         <vab-card>
           <el-input v-model="filterText" placeholder="请输入查询条件" style="margin-bottom: 10px" />
@@ -46,7 +46,7 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
-                  <el-button class="hidden-sm-and-down" text type="primary" @click="handleFold">
+                  <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
                     <span v-if="fold">展开</span>
                     <span v-else>合并</span>
                     <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': fold }" icon="arrow-up-s-line" />
@@ -58,7 +58,7 @@
               <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
               <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
               <el-button type="primary" @click="handleDetail">详情</el-button>
-              <el-button class="hidden-sm-and-down" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
+              <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
             </vab-query-form-left-panel>
           </vab-query-form>
           <el-table ref="tableSortRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
