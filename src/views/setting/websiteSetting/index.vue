@@ -1,12 +1,26 @@
 <template>
   <div class="website-setting-container no-background-container">
     <el-row :gutter="20">
-      <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
+      <el-col :lg="12" :md="20" :sm="24" :xl="10" :xs="24">
         <vab-card>
           <template #header>网站设置</template>
-          <el-form ref="formRef" label-width="110px" :model="form" :rules="formRules" @submit="submitForm">
+          <el-form ref="formRef" label-position="top" :model="form" :rules="formRules" @submit="submitForm">
             <el-form-item label="网站名称" prop="siteName">
               <el-input v-model="form.siteName" clearable />
+            </el-form-item>
+            <el-form-item label="logo" prop="logo">
+              <el-upload v-model:file-list="fileList" action="/uploadFile" drag multiple style="width: 100%">
+                <el-icon class="el-icon--upload">
+                  <upload-filled />
+                </el-icon>
+                <div class="el-upload__text">
+                  将logo拽至此处或
+                  <em>点击上传</em>
+                </div>
+                <template #tip>
+                  <div class="el-upload__tip">jpg/png 文件需小于500kb</div>
+                </template>
+              </el-upload>
             </el-form-item>
             <el-form-item label="网址" prop="siteUrl">
               <el-input v-model="form.siteUrl" clearable />
@@ -31,6 +45,9 @@
 </template>
 
 <script lang="ts" setup>
+import { UploadFilled } from '@element-plus/icons-vue'
+import type { UploadUserFile } from 'element-plus'
+
 defineOptions({
   name: 'WebsiteSetting',
 })
@@ -52,6 +69,7 @@ const form = reactive<formType>({
   metaDesc: '',
   copyright: '',
 })
+const fileList = ref<UploadUserFile[]>([])
 const formRef = ref<any>(null)
 const formRules = reactive<any>({
   siteName: [{ required: true, message: '请输入网站名称', trigger: 'blur' }],
