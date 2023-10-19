@@ -51,6 +51,7 @@
         </el-row>
       </div>
     </div>
+    <vab-theme-setting />
   </div>
 </template>
 
@@ -93,6 +94,23 @@ onMounted(() => {
   overflow: auto;
   color: #fff;
   background: #01022e !important;
+
+  :deep() {
+    .vab-theme-setting {
+      background: #01022e;
+      border: 1px solid #101f58;
+      section {
+        > div {
+          &:nth-child(1),
+          &:nth-child(2),
+          &:nth-child(3),
+          &:nth-child(4) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 
   .data-screen-card {
     position: relative;

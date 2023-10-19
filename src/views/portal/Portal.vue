@@ -128,6 +128,7 @@
       <vab-footer />
     </div>
     <el-backtop target="#app .scroll-wrap-portal" />
+    <vab-theme-setting />
   </el-scrollbar>
 </template>
 
@@ -429,6 +430,21 @@ onMounted(() => {
 
       .el-table {
         border-radius: 15px;
+      }
+    }
+  }
+}
+
+:deep() {
+  .vab-theme-setting {
+    section {
+      > div {
+        &:nth-child(1),
+        &:nth-child(2),
+        &:nth-child(3),
+        &:nth-child(4) {
+          display: none;
+        }
       }
     }
   }

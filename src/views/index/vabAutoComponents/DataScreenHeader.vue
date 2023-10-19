@@ -2,6 +2,9 @@
   <el-row>
     <el-col :span="24">
       <div class="data-screen-header">
+        <vab-link target="_blank" to="/index">
+          <div class="data-go-home"><vab-icon icon="home-2-line" /></div>
+        </vab-link>
         <span>Vue Shop Vite 数据大屏</span>
         <vab-full-screen class="data-full-screen" />
       </div>
@@ -18,7 +21,7 @@
 
   .data-full-screen {
     position: fixed;
-    top: 15px;
+    top: 13px;
     right: 40px;
     z-index: 999;
     width: 60px;
@@ -30,6 +33,25 @@
     :deep() {
       [class*='ri-'] {
         font-size: 20px;
+      }
+    }
+  }
+
+  .data-go-home {
+    position: fixed;
+    top: 13px;
+    left: 40px;
+    z-index: 999;
+    width: 60px;
+    height: 60px;
+    background: #395dfe;
+    border-radius: 50%;
+    box-shadow: 0 2px 12px 0 #395dfe;
+
+    :deep() {
+      [class*='ri-'] {
+        font-size: 20px;
+        color: #fff;
       }
     }
   }
