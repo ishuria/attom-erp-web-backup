@@ -4,7 +4,7 @@
       <el-col :lg="6" :md="14" :sm="24" :xl="10" :xs="24">
         <vab-card>
           <template #header>网站设置</template>
-          <el-form ref="formRef" label-width="100px" :model="form" :rules="formRules" @submit="submitForm">
+          <el-form ref="formRef" label-width="110px" :model="form" :rules="formRules" @submit="submitForm">
             <el-form-item label="网站名称" prop="siteName">
               <el-input v-model="form.siteName" clearable />
             </el-form-item>
