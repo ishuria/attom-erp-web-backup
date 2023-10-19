@@ -31,14 +31,11 @@
           <div class="vab-screen-lock-content-form">
             <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
               <el-form-item label="" :label-width="0" prop="password">
-                <el-input v-model="form.password" v-focus autocomplete="off" :placeholder="translate('请输入密码123456')" type="password">
-                  <template #suffix>
-                    <el-button native-type="submit" type="primary" @click="handleUnLock">
-                      <vab-icon icon="lock-line" />
-                      <span>{{ translate('解锁') }}</span>
-                    </el-button>
-                  </template>
-                </el-input>
+                <el-input v-model="form.password" v-focus autocomplete="off" :placeholder="translate('请输入密码123456')" type="password" />
+                <el-button native-type="submit" type="primary" @click="handleUnLock">
+                  <vab-icon icon="lock-line" />
+                  <span>{{ translate('解锁') }}</span>
+                </el-button>
               </el-form-item>
             </el-form>
           </div>
@@ -187,30 +184,34 @@ const handleLock = () => {
             height: 40px;
             line-height: 40px;
 
-            .el-input__wrapper {
+            &__wrapper {
               padding-right: 0;
               border: 1px solid var(--el-color-primary);
               box-shadow: none;
+            }
 
-              .el-input__suffix {
-                .el-button {
-                  position: absolute;
-                  right: -1px;
-                  height: 40px;
-                  margin-left: 0 !important;
-                  line-height: 40px;
-                  border-top-left-radius: 0;
-                  border-bottom-left-radius: 0;
+            &__inner {
+              width: 180px;
+            }
 
-                  .ri-lock-line {
-                    margin-left: 0 !important;
-                  }
-                }
-
-                .el-input__validateIcon {
-                  display: none;
-                }
+            &__suffix {
+              .el-input__validateIcon {
+                display: none;
               }
+            }
+          }
+          .el-button {
+            position: absolute;
+            right: -1px;
+            z-index: 999;
+            height: 40px;
+            margin-left: 0 !important;
+            line-height: 40px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+
+            .ri-lock-line {
+              margin-left: 0 !important;
             }
           }
         }
