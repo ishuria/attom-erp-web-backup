@@ -1,23 +1,16 @@
 <template>
   <div class="share-container">
-    <el-form :model="form" @submit.prevent>
+    <el-form label-position="top" :model="form" @submit.prevent>
       <el-form-item label="URL">
         <el-input v-model="form.url" clearable />
       </el-form-item>
-      <el-form-item>
-        <el-button native-type="submit" type="primary" @click="copy">
-          <vab-icon icon="file-copy-line" />
-          <span>拷贝URL</span>
-        </el-button>
-        <el-popover placement="bottom-start" trigger="hover" :width="220">
-          <template #reference>
-            <el-button native-type="submit" type="primary">
-              <vab-icon icon="qr-code-line" />
-              <span>生成二维码</span>
-            </el-button>
-          </template>
-          <vab-qr-code :dot-scale="0.5" :logo-src="logoUrl" :text="form.url" />
-        </el-popover>
+      <el-form-item label="二维码">
+        <vab-qr-code :dot-scale="0.5" :logo-src="logoUrl" :text="form.url" />
+      </el-form-item>
+      <el-form-item label="操作">
+        <el-button native-type="submit" type="primary" @click="copy">拷贝</el-button>
+        <el-button type="warning" @click="reset">重置</el-button>
+        <el-button type="danger" @click="clear">清空</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -35,23 +28,34 @@ defineOptions({
 })
 
 const form = reactive<any>({
-  url: '',
+  url: 'https://vue-admin-beautiful.com/shop-vite',
 })
 
 const copy = () => {
   clip(form.url)
 }
 
-onBeforeMount(() => {
+const reset = () => {
   form.url = 'https://vue-admin-beautiful.com/shop-vite'
-})
+}
+
+const clear = () => {
+  form.url = ''
+}
 </script>
 
 <style lang="scss" scoped>
 .share-container {
   :deep() {
-    .el-input {
-      width: 320px;
+    .el-form-item__content {
+      .el-input {
+        width: 300px;
+      }
+
+      img {
+        border: 1px solid var(--el-border-color);
+        border-radius: var(--el-border-radius-base);
+      }
     }
   }
 }
