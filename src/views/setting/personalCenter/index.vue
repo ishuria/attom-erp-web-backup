@@ -12,12 +12,10 @@
               {{ form.description }}
             </div>
             <div class="user-info-follow">
-              <a href="https://github.com/chuzhixin" target="_blank">
-                <el-button round type="primary">
-                  <vab-icon icon="group-line" />
-                  <span>Follow me</span>
-                </el-button>
-              </a>
+              <el-button href="https://github.com/chuzhixin" rel="noopener noreferrer" round tag="a" target="_blank" type="primary">
+                <vab-icon icon="group-line" />
+                <span>Follow me</span>
+              </el-button>
             </div>
 
             <ul class="user-info-list">
