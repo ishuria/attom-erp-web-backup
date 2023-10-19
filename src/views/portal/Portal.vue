@@ -12,20 +12,20 @@
           </div>
 
           <ul class="nav-item">
-            <li>
-              <a href="#/portal">门户页</a>
+            <li class="is-active">
+              <a href="#/portal">主页</a>
             </li>
             <li>
-              <a href="#/index" target="_blank">管理页</a>
+              <a href="#/product">产品简介</a>
             </li>
-            <li><a href="#/portal">页面3</a></li>
-            <li><a href="#/portal">页面4</a></li>
-            <li><a href="#/portal">页面5</a></li>
+            <li>
+              <a href="#/index" target="_blank">后台管理</a>
+            </li>
           </ul>
         </div>
       </header>
       <div class="carousel-background" :style="{ background: background }"></div>
-      <main style="margin-top: 100px">
+      <main style="margin-top: 85px">
         <el-row :gutter="0">
           <el-col :span="6">
             <div class="left-tab">
@@ -112,11 +112,11 @@
         <el-row :gutter="20">
           <el-col :span="8">
             <div class="news-tit"><h2>工作日程</h2></div>
-            <el-calendar v-model="date" />
+            <el-calendar v-model="date" style="border: 1px solid var(--el-border-color)" />
           </el-col>
           <el-col :span="16">
             <div class="news-tit"><h2>互动留言</h2></div>
-            <el-table :data="tableData" max-height="355">
+            <el-table :data="tableData" max-height="355" style="border: 1px solid var(--el-border-color)">
               <el-table-column label="Date" prop="date" />
               <el-table-column label="Name" prop="name" />
               <el-table-column label="Address" prop="address" />
@@ -199,8 +199,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .portal-main {
-  margin-top: -15px;
-
   &-mobile {
     height: 100vh;
     padding: var(--el-padding);
@@ -255,8 +253,22 @@ onMounted(() => {
         margin: auto;
 
         li {
+          position: relative;
           float: left;
+          padding: 0 10px 0 10px;
           list-style: none;
+
+          &.is-active {
+            &::before {
+              position: absolute;
+              right: 8px;
+              bottom: 10px;
+              left: 8px;
+              height: 2px;
+              content: '';
+              background-color: var(--el-color-primary);
+            }
+          }
 
           a {
             position: relative;
@@ -328,10 +340,10 @@ onMounted(() => {
       width: 100%;
       height: 120px;
       padding: 10px 20px 20px 20px;
-      border: 1px solid #dedede;
+      background: #fff;
+      border: 1px solid var(--el-border-color);
       border-bottom-right-radius: 15px;
       border-bottom-left-radius: 15px;
-      box-shadow: 0 5px 20px 0 rgb(0 0 0 / 30%);
 
       :deep() {
         .el-divider--vertical {
@@ -408,6 +420,7 @@ onMounted(() => {
     }
 
     .news-img {
+      border: 1px solid var(--el-border-color);
       border-radius: 15px;
     }
 

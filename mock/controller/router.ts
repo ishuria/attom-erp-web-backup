@@ -1359,6 +1359,15 @@ const list = [
     },
   },
   {
+    path: '/product',
+    name: 'Product',
+    component: '/@/views/portal/Product.vue',
+    meta: {
+      title: '产品简介',
+      hidden: true,
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
     name: 'NotFound',
