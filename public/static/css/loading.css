@@ -1,47 +1,111 @@
 /*!  build: Vue Shop Vite
      copyright: https://vue-admin-beautiful.com/shop-vite
  */
-
 figure {
-  position: fixed;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 6.25em;
+  height: 6.25em;
+  margin: auto;
+  animation: rotate 2.4s linear infinite;
+}
+
+.white {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: white;
+  opacity: 0;
+  animation: flash 2.4s linear infinite;
+}
+
+.dot {
+  position: absolute;
+  width: 1.8em;
+  height: 1.8em;
+  margin: auto;
+  border-radius: 100%;
+  transition: all 1s ease;
+}
+
+.dot:nth-child(2) {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: #f56c6c;
+  animation: dotsY 2.4s linear infinite;
+}
+
+.dot:nth-child(3) {
   top: 0;
   right: 0;
   left: 0;
+  background: #e6a23c;
+  animation: dotsX 2.4s linear infinite;
+}
+
+.dot:nth-child(4) {
+  top: 0;
+  right: 0;
   bottom: 0;
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  background: #fff;
+  background: #67c23a;
+  animation: dotsY 2.4s linear infinite;
 }
 
-.loading {
-  --s: 8px;
-  width: calc(10 * var(--s));
-  display: grid;
-  aspect-ratio: 1;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 50%;
-  mask: radial-gradient(50% 50%, #0000 calc(99% - 2 * var(--s)), #000 calc(101% - 2 * var(--s)));
-  -webkit-mask: radial-gradient(50% 50%, #0000 calc(99% - 2 * var(--s)), #000 calc(101% - 2 * var(--s)));
-  animation: r 1.8s linear infinite;
+.dot:nth-child(5) {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #4e88f3;
+  animation: dotsX 2.4s linear infinite;
 }
 
-.loading:before {
-  content: '';
-  background: conic-gradient(from 25deg, #4e88f3 25%, #13ce66 0 50%, #e6a23c 0 75%, #fd4e4e 0);
-  mask:
-    repeating-conic-gradient(#0000 0 25deg, #000 23% 25%),
-    radial-gradient(var(--s) at var(--s) 50%, #000 97%, #0000) left/calc(100% - 2 * var(--s)) 100% repeat-x,
-    radial-gradient(var(--s) at 50% var(--s), #000 97%, #0000) top / 100% calc(100% - 2 * var(--s)) repeat-y;
-  -webkit-mask:
-    repeating-conic-gradient(#0000 0 25deg, #000 23% 25%),
-    radial-gradient(var(--s) at var(--s) 50%, #000 97%, #0000) left/calc(100% - 2 * var(--s)) 100% repeat-x,
-    radial-gradient(var(--s) at 50% var(--s), #000 97%, #0000) top / 100% calc(100% - 2 * var(--s)) repeat-y;
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  10% {
+    width: 6.25em;
+    height: 6.25em;
+  }
+  66% {
+    width: 1.8em;
+    height: 1.8em;
+  }
+  100% {
+    width: 6.25em;
+    height: 6.25em;
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes r {
-  to {
-    transform: rotate(1turn);
+@keyframes dotsY {
+  66% {
+    width: 1.8em;
+  }
+  77% {
+    width: 0;
+  }
+}
+
+@keyframes dotsX {
+  66% {
+    height: 1.8em;
+  }
+  77% {
+    height: 0;
+  }
+}
+
+@keyframes flash {
+  33% {
+    border-radius: 0;
+  }
+  55% {
+    border-radius: 100%;
   }
 }
