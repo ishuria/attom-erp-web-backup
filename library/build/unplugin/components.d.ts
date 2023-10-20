@@ -55,6 +55,7 @@ declare module 'vue' {
     NodePanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/NodePanel.vue')['default']
     PageHeader: typeof import('./../../../src/views/index/vabAutoComponents/PageHeader.vue')['default']
     Pending: typeof import('./../../../src/views/index/vabAutoComponents/Pending.vue')['default']
+    PortalHeader: typeof import('./../../../src/views/portal/vabAutoComponents/PortalHeader.vue')['default']
     ProgressCircularProgressBar: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressCircularProgressBar.vue')['default']
     ProgressCustomColor: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressCustomColor.vue')['default']
     ProgressCustomizedContent: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressCustomizedContent.vue')['default']

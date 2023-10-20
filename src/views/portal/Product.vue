@@ -4,30 +4,59 @@
       <el-alert :closable="false" title="手机端不支持产品简介演示" type="error" />
     </div>
     <div class="product-main hidden-xs-only">
-      <header>
-        <div class="index-nav">
-          <div class="logo">
-            <a href="#/portal"></a>
-            <span class="logo-title">Vue Shop Vite</span>
+      <portal-header active-menu="product" />
+      <div class="banner">
+        <main>
+          <div class="banner-title">企业级通用型中后台前端框架</div>
+          <div class="banner-description">
+            便捷式全域数据采集，全域用户行为分析，深耕科学营销运营应用，智能化洞察用户行为，全方位驱动企业数字化经营。
           </div>
 
-          <ul class="nav-item">
-            <li>
-              <a href="#/portal">主页</a>
-            </li>
-            <li class="is-active">
-              <a href="#/product">产品简介</a>
-            </li>
-            <li>
-              <a href="#/index" target="_blank">后台管理</a>
-            </li>
-          </ul>
-        </div>
-      </header>
-      <div class="banner">
-        <h1>TODO</h1>
+          <el-button
+            href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
+            rel="noopener noreferrer"
+            tag="a"
+            target="_blank"
+            type="primary"
+          >
+            立即购买
+          </el-button>
+          <el-button
+            href="https://vue-admin-beautiful.com/shop-vite"
+            plain
+            rel="noopener noreferrer"
+            tag="a"
+            target="_blank"
+            type="primary"
+          >
+            进入产品
+          </el-button>
+
+          <div class="image-bg"></div>
+          <el-image :src="logo" />
+        </main>
       </div>
-      <main><h1>TODO</h1></main>
+
+      <main>
+        <div class="news-box">
+          <div class="news-box-item">
+            <a class="news-box-title">全链路监控营销推广</a>
+            <div class="news-box-description">全链路监控营销推广</div>
+          </div>
+          <div class="news-box-item">
+            <a class="news-box-title">全方位优化产品体验</a>
+            <div class="news-box-description">全方位优化产品体验</div>
+          </div>
+          <div class="news-box-item">
+            <a class="news-box-title">精准刻画用户画像</a>
+            <div class="news-box-description">精准刻画用户画像</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 100px">
+          <h1>TODO</h1>
+        </div>
+      </main>
 
       <vab-footer />
     </div>
@@ -37,6 +66,12 @@
 </template>
 
 <script lang="ts" setup>
+import logo from '/@/assets/avatar.svg'
+
+defineOptions({
+  name: 'Product',
+})
+
 onMounted(() => {
   document.getElementsByTagName('body')[0].className = ''
 })
@@ -50,100 +85,107 @@ onMounted(() => {
     background: var(--el-color-white);
   }
 
-  header {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 70px;
-    margin: 0;
-    background: rgba(251, 251, 253, 0.8);
-    backdrop-filter: saturate(180%) blur(20px);
+  .banner {
+    position: relative;
+    width: 100%;
+    height: 410px;
+    margin-top: 70px;
+    background: var(--el-color-primary-light-9);
 
-    .index-nav {
-      min-width: 1152px;
-      max-width: 1366px;
-      padding: 0;
-      margin: auto;
+    &-title {
+      margin-top: 80px;
+      margin-bottom: 12px;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 60px;
+      color: #000;
+    }
 
-      .logo {
-        display: flex;
-        flex: 1;
-        align-items: center;
-        justify-content: center;
-        float: left;
-        height: 70px;
-        font-size: 20px;
-        line-height: 70px;
+    &-description {
+      width: 600px;
+      margin-bottom: 40px;
+      font-size: 16px;
+      line-height: 20px;
+    }
 
-        a {
-          display: inline-block;
-          width: 40px;
-          height: 40px;
-          margin-right: 15px;
-          background: url('/@/assets/avatar.svg') center center no-repeat;
-          background-size: 100% 100%;
-        }
+    .image-bg {
+      position: absolute;
+      top: 80px;
+      right: 30px;
+      width: 192px;
+      height: 192px;
+      background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
+      filter: blur(40px);
+      border-radius: 50%;
+    }
 
-        span {
-          margin-right: 40px;
-        }
-      }
-
-      .nav-item {
-        margin: auto;
-
-        li {
-          position: relative;
-          float: left;
-          padding: 0 10px 0 10px;
-          list-style: none;
-
-          &.is-active {
-            &::before {
-              position: absolute;
-              right: 8px;
-              bottom: 10px;
-              left: 8px;
-              height: 2px;
-              content: '';
-              background-color: var(--el-color-primary);
-            }
-          }
-
-          a {
-            position: relative;
-            display: block;
-            height: 100%;
-            padding: 0 16px;
-            font-size: var(--el-font-size-big);
-            line-height: 71px;
-            color: #545c63;
-            text-align: center;
-            transition: background-color 0.3s;
-          }
-        }
+    :deep() {
+      .el-image {
+        position: absolute;
+        top: 85px;
+        right: 35px;
+        width: 170px;
       }
     }
   }
 
-  .banner {
-    width: 100%;
-    height: 500px;
-    margin-top: 70px;
-    background: var(--el-color-primary-light-9);
-  }
-
   main {
+    position: relative;
     width: 1152px;
-    min-height: calc(100vh - 555px);
+    min-height: calc(100vh - 550px);
     padding: 10px 0 0 0;
     margin-right: auto;
     margin-left: auto;
+
+    .news-box {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      width: 1200px;
+      height: 120px;
+      padding: 40px 0;
+      background-color: rgba(255, 255, 255, 0.6);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border: 1.5px solid #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 33px rgba(190, 196, 207, 0.28);
+      transform: translate(-50%, 0);
+      -ms-flex-align: center;
+
+      &-item {
+        box-sizing: border-box;
+        width: 33.3%;
+        padding: 0 30px;
+        border-right: 1px solid var(--el-border-color);
+
+        &:last-child {
+          border-right: 0;
+        }
+      }
+
+      &-title {
+        display: inline-block;
+        margin-bottom: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 22px;
+        color: #282c33;
+        cursor: pointer;
+
+        &:hover {
+          color: #0054e6;
+        }
+      }
+
+      &-description {
+        line-height: 20px;
+        color: #848b99;
+      }
+    }
   }
 }
 
