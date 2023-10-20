@@ -133,15 +133,29 @@
 </template>
 
 <script lang="ts" setup>
-import { getImageUrl } from '/@/utils/imageUrl'
-
-const banner_1 = getImageUrl('assets/portal_images/banner_1.jpg')
+import banner_1 from '/@/assets/portal_images/banner_1.jpg'
+import carousel_1 from '/@/assets/portal_images/carousel_1.jpg'
+import carousel_2 from '/@/assets/portal_images/carousel_2.jpg'
+import carousel_3 from '/@/assets/portal_images/carousel_3.jpg'
 
 const background = ref<string>('')
 
 const handleChange = (value: any) => {
-  const img = getImageUrl(`assets/portal_images/carousel_${value + 1}.jpg`)
-  background.value = `url('${img}')`
+  switch (value) {
+    case 0:
+      background.value = `url('${carousel_1}')`
+      break
+    case 1:
+      background.value = `url('${carousel_2}')`
+      break
+    case 2:
+      background.value = `url('${carousel_3}')`
+      break
+
+    default:
+      background.value = `url('${carousel_1}')`
+      break
+  }
 }
 
 const openWindow = (url: string) => {

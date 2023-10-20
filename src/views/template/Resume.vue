@@ -90,16 +90,14 @@
 </template>
 
 <script lang="ts" setup>
+import avatar from '/@/assets/avatar.svg'
+
 const name = ref<string>('张三')
 const gender = ref<string>('男')
 const age = ref<any>(25)
 const occupation = ref<string>('前端工程师')
 const email = ref<string>('zhangsan@example.com')
 const phoneNumber = ref<string>('123456789')
-
-import { getImageUrl } from '/@/utils/imageUrl'
-
-const avatar = getImageUrl('assets/avatar.svg')
 
 const educations = ref<any>([
   {

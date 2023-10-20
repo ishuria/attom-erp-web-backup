@@ -13,12 +13,10 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { getImageUrl } from '/@/utils/imageUrl'
+import award_1 from '/@/assets/award_images/award_1.png'
+import btnImg from '/@/assets/award_images/btn.png'
+import buttonImg from '/@/assets/award_images/button2.png'
 import { VabAwardGrid } from '/@/plugins/VabAward'
-
-const buttonImg = getImageUrl('assets/award_images/button2.png')
-const award_1 = getImageUrl('assets/award_images/award_1.png')
-const btnImg = getImageUrl('assets/award_images/btn.png')
 
 const $baseMessage = inject<any>('$baseMessage')
 const luckyNum = 1

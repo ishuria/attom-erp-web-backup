@@ -63,8 +63,8 @@ import dayjs from 'dayjs'
 import { ElScrollbar } from 'element-plus'
 import { uniqueId } from 'lodash-es'
 import TypeIt from 'typeit'
+import avatarUrl from '/@/assets/chatGPT_images/chatGPT.png'
 import { useUserStore } from '/@/store/modules/user'
-import { getImageUrl } from '/@/utils/imageUrl'
 
 const userStore = useUserStore()
 const { avatar, username } = storeToRefs(userStore)
@@ -76,7 +76,7 @@ const finish = ref<boolean>(true)
 const $baseMessage = inject<any>('$baseMessage')
 const radio = ref<string>('小爱同学')
 const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
-const avatarUrl = getImageUrl('assets/chatGPT_images/chatGPT.png')
+
 const loading = ref<boolean>(false)
 let timer: any
 const result =

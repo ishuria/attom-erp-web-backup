@@ -62,9 +62,9 @@
 
 <script lang="ts" setup>
 import { register } from '/@/api/user'
+import leftImg from '/@/assets/login_images/left_img.png'
 import { translate } from '/@/i18n'
 import { useUserStore } from '/@/store/modules/user'
-import { getImageUrl } from '/@/utils/imageUrl'
 import { isPassword, isPhone } from '/@/utils/validate'
 
 defineOptions({
@@ -75,7 +75,6 @@ const $baseConfirm = inject<any>('$baseConfirm')
 const router = useRouter()
 const userStore = useUserStore()
 const { setToken } = userStore
-const leftImg = ref<string>(getImageUrl(`assets/login_images/left_img.png`))
 const loading = ref<boolean>(false)
 const formRef = ref<any>(null)
 const isGetPhone = ref<boolean>(false)

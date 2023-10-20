@@ -12,11 +12,10 @@
 </template>
 
 <script lang="ts" setup>
-import { getImageUrl } from '/@/utils/imageUrl'
 import { VabSlotMachine } from '/@/plugins/VabAward'
 
-const award_1 = getImageUrl('assets/award_images/award_1.png')
-const award_2 = getImageUrl('assets/award_images/award_2.png')
+import award_1 from '/@/assets/award_images/award_1.png'
+import award_2 from '/@/assets/award_images/award_2.png'
 
 const blocks = [
   { padding: '15px', background: '#ffc27a', borderRadius: 28 },

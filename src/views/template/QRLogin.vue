@@ -23,21 +23,18 @@
 </template>
 
 <script lang="ts" setup>
-import { getImageUrl } from '/@/utils/imageUrl'
-
-const QR = getImageUrl('assets/qr_images/QR.png')
-const scan = ref<string>('')
+import QR from '/@/assets/qr_images/QR.png'
+import _scan from '/@/assets/qr_images/scan.png'
+const scan = ref<string>(_scan)
 const dialogVisible = ref<boolean>(false)
 let timer: any
 let timer2: any
-
-scan.value = getImageUrl('assets/qr_images/scan.png')
 
 onActivated(() => {
   timer = setInterval(() => {
     scan.value = ''
     nextTick(() => {
-      scan.value = getImageUrl('assets/qr_images/scan.png')
+      scan.value = _scan
     })
   }, 10000)
 

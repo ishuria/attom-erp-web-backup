@@ -55,10 +55,10 @@
 </template>
 
 <script lang="ts" setup>
+import leftImg from '/@/assets/login_images/left_img.png'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
-import { getImageUrl } from '/@/utils/imageUrl'
 import { isPassword } from '/@/utils/validate'
 
 defineOptions({
@@ -70,7 +70,6 @@ const router = useRouter()
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
 const { title } = storeToRefs(settingsStore)
-const leftImg = ref<string>(getImageUrl(`assets/login_images/left_img.png`))
 const login = (form: any) => userStore.login(form)
 const loading = ref<boolean>(false)
 const passwordType = ref<string>('password')

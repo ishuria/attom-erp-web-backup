@@ -3,7 +3,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_01.png')" />
+          <el-image class="data-screen-bottom-icon" :src="bottom_01" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -16,7 +16,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_02.png')" />
+          <el-image class="data-screen-bottom-icon" :src="bottom_02" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -29,7 +29,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_03.png')" />
+          <el-image class="data-screen-bottom-icon" :src="bottom_03" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -42,7 +42,7 @@
     <el-col :span="6">
       <el-row>
         <el-col :span="12">
-          <el-image class="data-screen-bottom-icon" :src="getImageUrl('assets/data_screen_images/bottom_04.png')" />
+          <el-image class="data-screen-bottom-icon" :src="bottom_04" />
         </el-col>
         <el-col :span="12">
           <div class="data-screen-bottom-text">
@@ -57,7 +57,10 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { getImageUrl } from '/@/utils/imageUrl'
+import bottom_01 from '/@/assets/data_screen_images/bottom_01.png'
+import bottom_02 from '/@/assets/data_screen_images/bottom_02.png'
+import bottom_03 from '/@/assets/data_screen_images/bottom_03.png'
+import bottom_04 from '/@/assets/data_screen_images/bottom_04.png'
 
 defineOptions({
   name: 'DataScreenBottom',

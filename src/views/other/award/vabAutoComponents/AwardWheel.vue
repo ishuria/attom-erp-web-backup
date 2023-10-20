@@ -13,13 +13,12 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { getImageUrl } from '/@/utils/imageUrl'
+import award_1 from '/@/assets/award_images/award_1.png'
+import award_2 from '/@/assets/award_images/award_2.png'
+import blockImg from '/@/assets/award_images/block.png'
+import buttonImg from '/@/assets/award_images/button.png'
 import { VabAwardWheel } from '/@/plugins/VabAward'
 
-const blockImg = getImageUrl('assets/award_images/block.png')
-const buttonImg = getImageUrl('assets/award_images/button.png')
-const award_1 = getImageUrl('assets/award_images/award_1.png')
-const award_2 = getImageUrl('assets/award_images/award_2.png')
 const $baseMessage = inject<any>('$baseMessage')
 
 const blocks = [

@@ -28,9 +28,7 @@ const canvas = ref<any>()
 let ctx: CanvasRenderingContext2D
 const $baseMessage = inject<any>('$baseMessage')
 let painting = false
-import { getImageUrl } from '/@/utils/imageUrl'
-
-const catUrl = getImageUrl('assets/signature_images/cat.png')
+import catUrl from '/@/assets/signature_images/cat.png'
 
 const getOffset = (event: MouseEvent | TouchEvent) => {
   let offset: [number, number]

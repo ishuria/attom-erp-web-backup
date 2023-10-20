@@ -24,7 +24,7 @@
             <el-tag v-if="item.status == 1" class="card-header-tag" effect="dark" type="success">已开启</el-tag>
             <el-tag v-else class="card-header-tag" effect="dark" type="danger">已停用</el-tag>
           </template>
-          <el-image class="task-item-image" :src="getImageUrl('assets/task_image/task.png')" />
+          <el-image class="task-item-image" :src="imageUrl" />
 
           <div class="task-item-bottom">
             <span>Ip: {{ item.ip }}</span>
@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { getList } from '/@/api/taskManagement'
-import { getImageUrl } from '/@/utils/imageUrl'
+import imageUrl from '/@/assets/task_image/task.png'
 
 defineOptions({
   name: 'TaskManagement',

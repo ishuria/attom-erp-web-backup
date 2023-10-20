@@ -17,11 +17,9 @@
 </template>
 
 <script lang="ts" setup>
+import logoUrl from '/@/assets/avatar.svg'
 import VabQrCode from '/@/plugins/VabQrCode'
 import clip from '/@/utils/clipboard'
-import { getImageUrl } from '/@/utils/imageUrl'
-
-const logoUrl = getImageUrl('assets/avatar.svg')
 
 defineOptions({
   name: 'Share',

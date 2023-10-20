@@ -1149,7 +1149,7 @@ const list = [
         component: '/@/views/setting/serverManagement/index.vue',
         meta: {
           title: '服务器管理',
-          icon: 'task-line',
+          icon: 'server-line',
           dot: true,
         },
       },

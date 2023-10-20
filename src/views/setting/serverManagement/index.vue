@@ -6,7 +6,7 @@
           <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
             <vab-card>
               <div class="server-box-left">
-                <el-image :src="getImageUrl('assets/task_image/task.png')" />
+                <el-image :src="imageUrl" />
                 <el-button-group>
                   <el-button type="primary">开机</el-button>
                   <el-button type="danger">关机</el-button>
@@ -48,7 +48,7 @@
           <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
             <vab-card>
               <div class="server-box-left">
-                <el-image :src="getImageUrl('assets/task_image/task.png')" />
+                <el-image :src="imageUrl" />
                 <el-button-group>
                   <el-button type="primary">开机</el-button>
                   <el-button type="danger">关机</el-button>
@@ -94,7 +94,7 @@
           <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
             <vab-card>
               <div class="server-box-left">
-                <el-image :src="getImageUrl('assets/task_image/task.png')" />
+                <el-image :src="imageUrl" />
                 <el-button-group>
                   <el-button type="primary">开机</el-button>
                   <el-button type="danger">关机</el-button>
@@ -136,7 +136,7 @@
           <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
             <vab-card>
               <div class="server-box-left">
-                <el-image :src="getImageUrl('assets/task_image/task.png')" />
+                <el-image :src="imageUrl" />
                 <el-button-group>
                   <el-button type="primary">开机</el-button>
                   <el-button type="danger">关机</el-button>
@@ -183,7 +183,7 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { getImageUrl } from '/@/utils/imageUrl'
+import imageUrl from '/@/assets/task_image/task.png'
 
 defineOptions({
   name: 'ServerManagement',
