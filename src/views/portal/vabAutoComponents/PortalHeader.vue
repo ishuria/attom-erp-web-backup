@@ -32,6 +32,10 @@ defineProps({
     default: 'portal',
   },
 })
+
+onMounted(() => {
+  document.getElementsByTagName('body')[0].className = ''
+})
 </script>
 
 <style lang="scss" scoped>

@@ -190,10 +190,6 @@ const tableData = [
     address: 'No. 189, Grove St, Los Angeles',
   },
 ]
-
-onMounted(() => {
-  document.getElementsByTagName('body')[0].className = ''
-})
 </script>
 
 <style lang="scss" scoped>
