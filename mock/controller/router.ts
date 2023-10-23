@@ -1262,6 +1262,15 @@ const list = [
         },
       },
       {
+        path: 'cashier',
+        name: 'Cashier',
+        component: '/@/views/goods/Cashier.vue',
+        meta: {
+          title: '收银台',
+          icon: 'copper-diamond-line',
+        },
+      },
+      {
         path: 'productCenter',
         name: 'ProductCenter',
         component: '/@/views/goods/ProductCenter.vue',

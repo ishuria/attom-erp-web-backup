@@ -262,6 +262,11 @@ onBeforeMount(() => {
     .el-tabs {
       border-radius: var(--el-border-radius-base);
 
+      &__header {
+        border-top-left-radius: var(--el-border-radius-base);
+        border-top-right-radius: var(--el-border-radius-base);
+      }
+
       &__nav-wrap {
         border-radius: var(--el-border-radius-base);
       }

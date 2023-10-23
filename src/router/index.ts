@@ -1313,6 +1313,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'cashier',
+        name: 'Cashier',
+        component: () => import('/@/views/goods/Cashier.vue'),
+        meta: {
+          title: '收银台',
+          icon: 'copper-diamond-line',
+        },
+      },
+      {
         path: 'productCenter',
         name: 'ProductCenter',
         component: () => import('/@/views/goods/ProductCenter.vue'),
