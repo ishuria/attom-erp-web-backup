@@ -74,7 +74,9 @@ const rightCardHeight3 = ref<any>('calc((100vh - 165px) / 3.5)')
 const $baseMessage = inject<any>('$baseMessage')
 
 onMounted(() => {
-  $baseMessage('点击右上角【全屏】按钮使用效果更佳', 'success', 'hey')
+  setTimeout(() => {
+    $baseMessage('点击右上角【全屏】按钮使用效果更佳', 'success', 'hey')
+  }, 1000)
   document.getElementsByTagName('body')[0].className = ''
 
   if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io') {

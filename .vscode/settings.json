@@ -40,10 +40,12 @@
   "cSpell.words": [
     "aliyun",
     "autofix",
+    "autoresize",
     "axios",
     "backtop",
     "beforeinstallprompt",
     "bilibili",
+    "Boxplot",
     "cascader",
     "catched",
     "chuzhixin",
@@ -54,6 +56,7 @@
     "croppreview",
     "cropvisible",
     "ctitle",
+    "curveness",
     "daterange",
     "datetime",
     "datetimerange",
@@ -80,6 +83,7 @@
     "qianwen",
     "RBAC",
     "remixicon",
+    "Sankey",
     "stylelint",
     "taobao",
     "textareas",
@@ -102,6 +106,7 @@
     "xinghuo",
     "yiyan",
     "zhangwenjia",
+    "zlevel",
     "zoomer",
     "zxwk"
   ]
