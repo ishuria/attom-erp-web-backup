@@ -129,7 +129,8 @@ onBeforeMount(() => {
     outline: none;
 
     .list-item {
-      padding: var(--el-padding);
+      padding: calc(var(--el-padding) / 2);
+      line-height: 20px;
       border-bottom: 1px solid var(--el-border-color);
 
       &-meta {
@@ -140,8 +141,8 @@ onBeforeMount(() => {
         &-avatar {
           :deep() {
             .el-image {
-              width: 50px;
-              height: 50px;
+              width: 60px;
+              height: 60px;
               cursor: pointer;
               border-radius: var(--el-border-radius-base);
             }
@@ -161,12 +162,17 @@ onBeforeMount(() => {
 
         &-title {
           font-size: var(--el-font-size-default);
+          font-weight: bold;
           color: var(--el-color-black);
         }
 
         &-description {
+          display: -webkit-box;
+          overflow: hidden;
           font-size: var(--el-font-size-default);
           color: var(--el-color-grey);
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
         }
 
         :deep() {

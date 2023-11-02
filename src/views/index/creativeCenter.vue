@@ -79,7 +79,7 @@
                   <vab-card>
                     <el-row :gutter="20">
                       <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-                        <el-image src="https://element-plus.org/images/hamburger.png" />
+                        <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>
                       <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
@@ -105,7 +105,7 @@
                   <vab-card>
                     <el-row :gutter="20">
                       <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-                        <el-image src="https://element-plus.org/images/hamburger.png" />
+                        <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>
                       <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
@@ -131,7 +131,7 @@
                   <vab-card>
                     <el-row :gutter="20">
                       <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-                        <el-image src="https://element-plus.org/images/hamburger.png" />
+                        <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>
                       <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
@@ -157,7 +157,7 @@
                   <vab-card>
                     <el-row :gutter="20">
                       <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-                        <el-image src="https://element-plus.org/images/hamburger.png" />
+                        <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>
                       <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
@@ -276,10 +276,15 @@
 
 <script lang="ts" setup>
 import { ArrowRight, CaretBottom, CaretTop } from '@element-plus/icons-vue'
+import { random } from 'lodash'
 
 defineOptions({
   name: 'CreativeCenter',
 })
+
+const handelImage = () => {
+  return `https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-${random(1, 38)}.jpg`
+}
 </script>
 
 <style lang="scss" scoped>
