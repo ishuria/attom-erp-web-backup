@@ -76,7 +76,7 @@ const goBack = async () => {
   .image {
     width: 100%;
     height: 400px;
-    object-fit: center;
+    object-fit: cover;
   }
 
   .article {
