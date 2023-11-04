@@ -25,6 +25,7 @@
 <script lang="ts" setup>
 import QR from '/@/assets/qr_images/QR.png'
 import _scan from '/@/assets/qr_images/scan.png'
+
 const scan = ref<string>(_scan)
 const dialogVisible = ref<boolean>(false)
 let timer: any

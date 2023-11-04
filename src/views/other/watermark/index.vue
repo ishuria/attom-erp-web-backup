@@ -135,6 +135,7 @@ const config = reactive<any>({
       display: flex;
       flex: auto;
     }
+
     .demo {
       flex: auto;
 
@@ -145,6 +146,7 @@ const config = reactive<any>({
         max-width: 300px;
       }
     }
+
     .form {
       width: 330px;
       padding-left: 20px;

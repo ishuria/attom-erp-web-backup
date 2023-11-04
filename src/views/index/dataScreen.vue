@@ -101,6 +101,7 @@ onMounted(() => {
     .vab-theme-setting {
       background: #01022e;
       border: 1px solid #101f58;
+
       section {
         > div {
           &:nth-child(1),

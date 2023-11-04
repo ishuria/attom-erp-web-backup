@@ -1,5 +1,5 @@
-import { isArray } from '/@/utils/validate'
 import { useAclStore } from '/@/store/modules/acl'
+import { isArray } from '/@/utils/validate'
 
 /**
  * 是否可以访问目标权限元素

@@ -414,6 +414,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+
   .origin-img {
     width: 100%;
     height: 100%;
@@ -425,9 +426,11 @@ export default {
     cursor: crosshair;
     background-repeat: no-repeat;
     border: 1px solid rgba(0, 0, 0, 0.1);
+
     &.circle {
       border-radius: 50%;
     }
+
     &-point {
       position: absolute;
       top: 50%;
@@ -438,6 +441,7 @@ export default {
       transform: translate(-50%, -50%);
     }
   }
+
   .img-out-show {
     position: absolute;
     right: -8px;
@@ -445,6 +449,7 @@ export default {
     background-repeat: no-repeat;
     border: 1px solid rgba(0, 0, 0, 0.1);
     transform: translate(100%, 0);
+
     &.base-line {
       &::after {
         position: absolute;
@@ -457,6 +462,7 @@ export default {
         border: 1px dashed rgba(0, 0, 0, 0.36);
         transform: translateX(-50%);
       }
+
       &::before {
         position: absolute;
         top: 50%;

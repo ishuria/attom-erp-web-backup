@@ -17,6 +17,7 @@
 
 <script lang="ts" setup>
 import _QR from '/@/assets/qr_images/QR.png'
+
 defineOptions({
   name: 'Cashier',
 })

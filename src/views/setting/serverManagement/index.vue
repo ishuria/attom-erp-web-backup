@@ -247,6 +247,7 @@ onDeactivated(() => {
   :deep() {
     .el-collapse {
       border: 0;
+
       &-item {
         padding: var(--el-padding);
         margin-bottom: var(--el-margin);
@@ -300,6 +301,7 @@ onDeactivated(() => {
     .server-box-right {
       flex: 1;
       flex-basis: 60%;
+
       .el-progress--line {
         margin-bottom: 15px;
       }

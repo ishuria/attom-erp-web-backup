@@ -3,7 +3,9 @@
     <el-col :span="24">
       <div class="data-screen-header">
         <vab-link target="_blank" to="/index">
-          <div class="data-go-home"><vab-icon icon="home-2-line" /></div>
+          <div class="data-go-home">
+            <vab-icon icon="home-2-line" />
+          </div>
         </vab-link>
         <span>Vue Shop Vite 数据大屏</span>
         <vab-full-screen class="data-full-screen" />

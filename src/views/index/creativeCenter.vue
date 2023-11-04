@@ -334,6 +334,7 @@ const handelImage = () => {
           color: var(--el-color-warning);
         }
       }
+
       .el-statistic__head,
       .el-statistic__content {
         display: flex;
