@@ -1,6 +1,5 @@
 import App from './App.vue'
 import VXETable from 'vxe-table'
-import 'vxe-table/lib/style.css'
 import ElementPlus from 'element-plus'
 import { setupVab } from '~/library'
 import { setupI18n } from '/@/i18n'
