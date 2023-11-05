@@ -1,5 +1,5 @@
 <template>
-  <div class="vxe-table-container">
+  <div class="vxe-table-container global-animation-disabled">
     <div class="hidden-sm-and-up">
       <el-alert :closable="false" title="手机端不支持低代码表格演示" type="error" />
     </div>
@@ -125,8 +125,8 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
         itemRender: { name: '$input', props: { type: 'number', min: 1, max: 120, placeholder: '请输入年龄' } },
       },
       {
-        span: 24,
-        align: 'center',
+        span: 8,
+        align: 'left',
         collapseNode: true,
         itemRender: {
           name: '$buttons',
@@ -203,14 +203,14 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
     { type: 'checkbox', title: 'ID', width: 120 },
     {
       field: 'name',
-      title: 'Name',
+      title: '名称',
       sortable: true,
       titlePrefix: { message: '名称必须填写！' },
       editRender: { name: 'input', attrs: { placeholder: '请输入名称' } },
     },
     {
       field: 'role',
-      title: 'Role',
+      title: '角色',
       sortable: true,
       titlePrefix: { useHTML: true, content: '点击链接：<a class="link" href="https://vxetable.cn" target="_blank">vxe-table官网</a>' },
       filters: [
@@ -222,10 +222,10 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
       filterMultiple: false,
       editRender: { name: 'input', attrs: { placeholder: '请输入角色' } },
     },
-    { field: 'nickname', title: 'Nickname', editRender: { name: 'input', attrs: { placeholder: '请输入昵称' } } },
+    { field: 'nickname', title: '昵称', editRender: { name: 'input', attrs: { placeholder: '请输入昵称' } } },
     {
       field: 'sex',
-      title: 'Sex',
+      title: '性别',
       filters: [
         { label: '男', value: '1' },
         { label: '女', value: '0' },
@@ -234,14 +234,14 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
     },
     {
       field: 'age',
-      title: 'Age',
+      title: '年龄',
       visible: false,
       sortable: true,
       editRender: { name: '$input', props: { type: 'number', min: 1, max: 120 } },
     },
     {
       field: 'updateDate',
-      title: 'Update Date',
+      title: '更新时间',
       width: 160,
       visible: false,
       sortable: true,
@@ -251,7 +251,7 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
     },
     {
       field: 'createDate',
-      title: 'Create Date',
+      title: '创建时间',
       width: 160,
       visible: false,
       sortable: true,
