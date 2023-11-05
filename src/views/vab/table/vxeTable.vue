@@ -1,6 +1,11 @@
 <template>
   <div class="vxe-table-container">
-    <vxe-grid ref="xGrid" min-height="665" v-bind="gridOptions" v-on="gridEvent" />
+    <div class="hidden-sm-and-up">
+      <el-alert :closable="false" title="手机端不支持低代码表格演示" type="error" />
+    </div>
+    <div class="hidden-xs-only">
+      <vxe-grid ref="xGrid" min-height="665" v-bind="gridOptions" v-on="gridEvent" />
+    </div>
   </div>
 </template>
 
