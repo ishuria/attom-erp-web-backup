@@ -38,6 +38,7 @@
   "vue.codeActions.savingTimeLimit": 100000,
   "workbench.colorTheme": "One Monokai",
   "cSpell.words": [
+    "actived",
     "aliyun",
     "autofix",
     "autoresize",
@@ -51,6 +52,7 @@
     "chuzhixin",
     "cnpm",
     "codepen",
+    "commafy",
     "cropdata",
     "cropend",
     "croppreview",
