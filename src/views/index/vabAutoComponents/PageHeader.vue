@@ -24,12 +24,12 @@ const handleTips = () => {
   return hour < 8
     ? `早上好 ${username.value}，又是元气满满的一天。`
     : hour <= 11
-    ? `上午好 ${username.value}，看到您我好开心。`
-    : hour <= 13
-    ? `中午好 ${username.value}，忙碌了一上午，记得吃午饭哦。`
-    : hour < 18
-    ? `下午好 ${username.value}，您一定有些累了，喝杯咖啡提提神。`
-    : `晚上好 ${username.value}，愿您天黑有灯，下雨有伞。`
+      ? `上午好 ${username.value}，看到您我好开心。`
+      : hour <= 13
+        ? `中午好 ${username.value}，忙碌了一上午，记得吃午饭哦。`
+        : hour < 18
+          ? `下午好 ${username.value}，您一定有些累了，喝杯咖啡提提神。`
+          : `晚上好 ${username.value}，愿您天黑有灯，下雨有伞。`
 }
 const fetchData = async () => {
   const { data } = await getList()

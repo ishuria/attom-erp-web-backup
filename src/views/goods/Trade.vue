@@ -50,10 +50,10 @@
               row.transactionStatus == '已支付'
                 ? 'success'
                 : row.transactionStatus == '未支付'
-                ? 'warning'
-                : row.transactionStatus == '已退款'
-                ? 'danger'
-                : 'info'
+                  ? 'warning'
+                  : row.transactionStatus == '已退款'
+                    ? 'danger'
+                    : 'info'
             "
           >
             {{ row.transactionStatus }}
