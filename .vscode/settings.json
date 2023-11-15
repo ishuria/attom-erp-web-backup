@@ -10,7 +10,11 @@
   "docthis.includeAuthorTag": true,
   "docthis.includeDescriptionTag": true,
   "docthis.inferTypesFromNames": true,
-  "editor.codeActionsOnSave": { "source.fixAll.stylelint": true, "source.fixAll.eslint": true, "source.organizeImports": true },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
   "editor.detectIndentation": false,
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
