@@ -146,13 +146,17 @@ onBeforeMount(() => {
 <style lang="scss" scoped>
 .blog-container {
   :deep() {
-    .el-menu-item {
-      margin-bottom: 10px;
-      &.is-active,
-      &:hover {
-        color: var(--el-color-primary);
-        background-color: var(--el-color-primary-light-9);
-        border-radius: var(--el-border-radius-base);
+    .el-menu {
+      --el-menu-bg-color: transparent;
+
+      &-item {
+        margin-bottom: 10px;
+        &.is-active,
+        &:hover {
+          color: var(--el-color-primary);
+          background-color: var(--el-color-primary-light-9);
+          border-radius: var(--el-border-radius-base);
+        }
       }
     }
 
