@@ -1023,6 +1023,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'blog',
+        name: 'Blog',
+        component: () => import('/@/views/template/Blog.vue'),
+        meta: {
+          title: '博客',
+          icon: 'ball-pen-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'creditCard',
         name: 'CreditCard',
         component: () => import('/@/views/template/CreditCard.vue'),

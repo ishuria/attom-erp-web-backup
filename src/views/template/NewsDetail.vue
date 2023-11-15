@@ -1,6 +1,6 @@
 <template>
   <div class="news-detail-container">
-    <el-page-header content="新闻详情" title="返回上一页" @back="goBack">
+    <el-page-header content="详情" title="返回上一页" @back="goBack">
       <template #extra>
         <vab-full-screen />
       </template>

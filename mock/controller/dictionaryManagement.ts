@@ -42,14 +42,14 @@ export default [
         {
           parentKey: 'sex',
           id: '@id',
-          lable: '性别',
+          label: '性别',
           key: '1',
           value: '男',
         },
         {
           parentKey: 'sex',
           id: '@id',
-          lable: '性别',
+          label: '性别',
           key: '2',
           value: '女',
         },
@@ -58,14 +58,14 @@ export default [
         {
           parentKey: 'type',
           id: '@id',
-          lable: '类型',
+          label: '类型',
           key: '1',
           value: '新闻',
         },
         {
           parentKey: 'type',
           id: '@id',
-          lable: '类型',
+          label: '类型',
           key: '2',
           value: '知识',
         },

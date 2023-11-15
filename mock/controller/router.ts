@@ -972,6 +972,16 @@ const list = [
         },
       },
       {
+        path: 'blog',
+        name: 'Blog',
+        component: '/@/views/template/Blog.vue',
+        meta: {
+          title: '博客',
+          icon: 'ball-pen-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'creditCard',
         name: 'CreditCard',
         component: '/@/views/template/CreditCard.vue',
