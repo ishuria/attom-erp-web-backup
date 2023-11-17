@@ -4,6 +4,7 @@ const notEmpty = (name) => {
     else return true
   }
 }
+
 export default {
   description: '创建curd',
   prompts: [
