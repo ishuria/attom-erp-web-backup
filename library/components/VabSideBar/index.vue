@@ -135,9 +135,6 @@ const handleRoutes = computed(() => {
       text-overflow: ellipsis;
       white-space: nowrap;
       border-radius: var(--el-border-radius-base);
-    }
-
-    .el-menu-item {
       @include active;
     }
   }
