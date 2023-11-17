@@ -1,5 +1,10 @@
-const { notEmpty } = require('../utils.js')
-module.exports = {
+const notEmpty = (name) => {
+  return (v) => {
+    if (!v || v.trim === '') return `${name}为必填项`
+    else return true
+  }
+}
+export default {
   description: '创建curd',
   prompts: [
     {
