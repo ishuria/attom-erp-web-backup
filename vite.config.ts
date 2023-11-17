@@ -39,6 +39,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         overlay: true,
       },
       host: '0.0.0.0',
+      warmup: {
+        clientFiles: ['./index.html', './library/{components,layouts}/*', './src/{views,plugins}/*'],
+      },
     },
     resolve: {
       alias: {
@@ -65,6 +68,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
       },
       minify,
+      target: 'es2015',
+      sourcemap: false,
     },
     css: {
       postcss: {
