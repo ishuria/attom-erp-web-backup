@@ -91,6 +91,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'monitor',
+        name: 'Monitor',
+        component: () => import('/@/views/index/monitor.vue'),
+        meta: {
+          title: '实时监控',
+          icon: 'vidicon-2-line',
+        },
+      },
+      {
         path: 'tile',
         name: 'Tile',
         component: () => import('/@/views/index/tile.vue'),
@@ -122,7 +131,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
       {
         path: 'application',
         name: 'Application',
-        component: () => import('/@/views/index/application.vue'),
+        component: () => import('../views/index/application.vue'),
         meta: {
           title: '客户端',
           icon: 'apps-2-line',

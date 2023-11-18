@@ -40,6 +40,15 @@ const list = [
         },
       },
       {
+        path: 'monitor',
+        name: 'Monitor',
+        component: '/@/views/index/monitor.vue',
+        meta: {
+          title: '实时监控',
+          icon: 'vidicon-2-line',
+        },
+      },
+      {
         path: 'tile',
         name: 'Tile',
         component: '/@/views/index/tile.vue',
