@@ -11,7 +11,7 @@
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-row :gutter="20">
-      <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="12">
+      <el-col :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
         <vab-card>
           <vab-icon
             icon="vite"
@@ -23,7 +23,7 @@
           />
         </vab-card>
       </el-col>
-      <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="12">
+      <el-col :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
         <vab-card>
           <vab-icon
             icon="vab"
@@ -35,7 +35,7 @@
           />
         </vab-card>
       </el-col>
-      <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="12">
+      <el-col :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
         <vab-card>
           <vab-icon
             icon="mall-fill"
@@ -47,7 +47,7 @@
           />
         </vab-card>
       </el-col>
-      <el-col :lg="2" :md="3" :sm="8" :xl="2" :xs="12">
+      <el-col :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
         <vab-card>
           <notification
             :style="{
