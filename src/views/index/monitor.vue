@@ -79,7 +79,7 @@
           <el-button bg class="live-button" text type="primary">主备流切换</el-button>
           <el-button bg class="live-button" text type="primary">推流垫片</el-button>
         </vab-card>
-        <vab-card style="height: calc(var(--el-container-height) - 255px)">
+        <vab-card style="height: calc(var(--el-container-height) - 255px); min-height: 430px">
           <template #header>
             <vab-icon icon="stack-line" />
             直播状态
@@ -238,7 +238,7 @@ const radio = ref('普通直播')
 
   .chat-input {
     float: left;
-    width: calc(100% - 75px);
+    width: calc(100% - 95px);
   }
 
   .chat-send {
