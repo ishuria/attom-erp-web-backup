@@ -46,6 +46,7 @@ const list = [
         meta: {
           title: '实时监控',
           icon: 'vidicon-2-line',
+          dot: true,
         },
       },
       {
