@@ -95,6 +95,7 @@
     "unplugin-vue-components": "^0.25.2",
     "vite": "^5.0.0",
     "vite-plugin-banner": "^0.7.1",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-mock": "2.9.8",
     "vite-plugin-pwa": "^0.16.7",
     "vite-plugin-svg-icons": "^2.0.1",

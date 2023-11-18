@@ -24,6 +24,7 @@ export const {
   color,
   colorWeakness,
   columnStyle,
+  compress,
   contentType,
   copyright,
   cssCodeSplit,

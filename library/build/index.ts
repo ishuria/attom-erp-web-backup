@@ -5,12 +5,13 @@ import dayjs from 'dayjs'
 import pc from 'picocolors'
 import type { Plugin } from 'vite'
 import { createBanner } from './banner/'
+import { createCompress } from './compress/'
 import { createMock } from './mock/'
 import { createProgress } from './progress/'
 import { createPwa } from './pwa/'
 import { createSvgIcons } from './svgSprite/'
 import { createUnPlugin } from './unplugin/'
-import { port } from '/@/config/'
+import { compress, port } from '/@/config/'
 
 const viteApp = 'VITE_' + 'APP_'
 const viteUser = 'VITE_' + 'USER_'
@@ -32,6 +33,7 @@ export const createVitePlugin = (env: Record<string, string>) => {
   vitePlugins.push(createMock())
   vitePlugins.push(createSvgIcons())
   vitePlugins.push(createBanner())
+  vitePlugins.push(createCompress(compress))
   return vitePlugins
 }
 

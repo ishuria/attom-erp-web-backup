@@ -29,4 +29,6 @@ export const cliConfig: { [key: string]: string | number | boolean } = {
   localEnabled: true,
   // 生产环境是否启用mock
   prodEnabled: true,
+  // 开启代码压缩 boolean | 'gzip' | 'brotli'
+  compress: 'gzip',
 }
