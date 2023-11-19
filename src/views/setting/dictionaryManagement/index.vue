@@ -30,7 +30,7 @@
             </vab-query-form-top-panel>
           </vab-query-form>
           <el-table v-loading="listLoading" border :data="list">
-            <el-table-column label="id" prop="id" />
+            <el-table-column label="id" min-width="180" prop="id" />
             <el-table-column label="key值" prop="key" />
             <el-table-column label="字典值" prop="value" />
             <el-table-column label="操作" width="162">

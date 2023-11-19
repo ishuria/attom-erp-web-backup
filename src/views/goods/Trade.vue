@@ -38,11 +38,11 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="交易时间" prop="transactionTime" show-overflow-tooltip sortable />
+      <el-table-column align="center" label="交易时间" min-width="160" prop="transactionTime" show-overflow-tooltip sortable />
       <el-table-column align="center" label="商户订单号" min-width="120" prop="merchantOrderId" show-overflow-tooltip />
       <el-table-column align="center" label="微信支付单号" min-width="120" prop="wechatPaymentNo" show-overflow-tooltip />
       <el-table-column align="center" label="支付场景" min-width="120" prop="paymentScene" sortable />
-      <el-table-column align="center" label="交易状态" min-width="100" prop="transactionStatus" sortable>
+      <el-table-column align="center" label="交易状态" min-width="120" prop="transactionStatus" sortable>
         <template #default="{ row }">
           <el-tag
             effect="dark"
@@ -60,7 +60,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="订单金额(元)" min-width="100" prop="orderAmount" />
+      <el-table-column align="center" label="订单金额(元)" min-width="120" prop="orderAmount" />
       <el-table-column align="center" label="操作" width="80">
         <template #default="{ row }">
           <el-button

@@ -10,7 +10,9 @@
         </el-image>
         <el-button type="primary" @click="refresh">刷新二维码</el-button>
       </el-tab-pane>
-      <el-tab-pane label="微信">TODO</el-tab-pane>
+      <el-tab-pane label="微信">
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>

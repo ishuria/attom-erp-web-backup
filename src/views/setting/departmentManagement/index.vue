@@ -30,7 +30,7 @@
       <el-table-column align="center" label="名称" min-width="120" prop="label" />
       <el-table-column align="center" label="父节点Value" min-width="120" prop="parentValue" />
       <el-table-column align="center" label="排序" prop="order" />
-      <el-table-column align="center" label="创建时间" min-width="120" prop="createTime" show-overflow-tooltip />
+      <el-table-column align="center" label="创建时间" min-width="160" prop="createTime" show-overflow-tooltip />
       <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>

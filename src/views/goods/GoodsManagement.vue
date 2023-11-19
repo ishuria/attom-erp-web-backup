@@ -24,7 +24,7 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品ID" min-width="120" prop="id" show-overflow-tooltip />
+      <el-table-column align="center" label="商品ID" min-width="180" prop="id" show-overflow-tooltip />
       <el-table-column align="center" label="商品名称" min-width="120" prop="name" />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">

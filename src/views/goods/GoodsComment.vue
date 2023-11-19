@@ -23,8 +23,8 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品ID" min-width="120" prop="id" show-overflow-tooltip />
-      <el-table-column align="center" label="商品名称" min-width="120" prop="name" sortable />
+      <el-table-column align="center" label="商品ID" min-width="180" prop="id" show-overflow-tooltip />
+      <el-table-column align="center" label="商品名称" min-width="120" prop="name" show-overflow-tooltip sortable />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
           <el-popover placement="top-start" trigger="hover">
@@ -40,8 +40,8 @@
           <el-rate v-model="row.rate" disabled />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="评论内容" prop="comment" show-overflow-tooltip />
-      <el-table-column align="center" label="回复内容" prop="reply" show-overflow-tooltip />
+      <el-table-column align="center" label="评论内容" min-width="200" prop="comment" show-overflow-tooltip />
+      <el-table-column align="center" label="回复内容" min-width="200" prop="reply" show-overflow-tooltip />
       <el-table-column align="center" label="回复状态" min-width="100">
         <template #default="{ row }">
           <el-tag effect="dark" :type="row.replyStatus == '已回复' ? 'success' : row.replyStatus == '未回复' ? 'warning' : 'info'">

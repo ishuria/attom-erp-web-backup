@@ -24,11 +24,11 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="id" prop="id" show-overflow-tooltip />
-      <el-table-column align="center" label="用户名" prop="username" />
-      <el-table-column align="center" label="邮箱" prop="email" show-overflow-tooltip />
+      <el-table-column align="center" label="id" min-width="180" prop="id" show-overflow-tooltip />
+      <el-table-column align="center" label="用户名" min-width="120" prop="username" />
+      <el-table-column align="center" label="邮箱" min-width="120" prop="email" show-overflow-tooltip />
 
-      <el-table-column align="center" label="角色" min-width="135">
+      <el-table-column align="center" label="角色" min-width="155">
         <template #default="{ row }">
           <el-space wrap>
             <el-tag v-for="(item, index) in row.roles" :key="index">
@@ -38,7 +38,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="修改时间" prop="datetime" show-overflow-tooltip />
+      <el-table-column align="center" label="修改时间" min-width="160" prop="datetime" show-overflow-tooltip />
       <el-table-column align="center" label="操作" width="162">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>

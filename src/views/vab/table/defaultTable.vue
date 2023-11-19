@@ -69,7 +69,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="时间" min-width="200" prop="datetime" />
+      <el-table-column align="center" label="时间" min-width="160" prop="datetime" />
       <el-table-column align="center" label="操作" width="237">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleDetail(row)">详情</el-button>

@@ -24,14 +24,14 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="工单号" min-width="200" prop="uuid" show-overflow-tooltip />
-      <el-table-column align="center" label="标题" prop="title" />
+      <el-table-column align="center" label="标题" min-width="200" prop="title" show-overflow-tooltip />
       <el-table-column align="center" label="进度" min-width="180">
         <template #default="{ row }">
           <el-progress :percentage="parseInt(row.progress)" :status="row.progress == '100' ? 'success' : ''" />
         </template>
       </el-table-column>
       <el-table-column align="center" label="提交者" prop="submit" />
-      <el-table-column align="center" label="受理人员" prop="accept" />
+      <el-table-column align="center" label="受理人员" min-width="90" prop="accept" show-overflow-tooltip />
       <el-table-column align="center" label="工单状态" min-width="90">
         <template #default="{ row }">
           <el-tag effect="dark" :type="row.status == '处理中' ? 'warning' : row.status == '已处理' ? 'success' : ''">
