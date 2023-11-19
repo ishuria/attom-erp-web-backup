@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "5.9.5",
+  "version": "6.0.0",
   "private": true,
   "author": "vue-admin-beautiful.com",
   "scripts": {
@@ -97,7 +97,7 @@
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-mock": "2.9.8",
-    "vite-plugin-pwa": "^0.16.7",
+    "vite-plugin-pwa": "^0.17.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.6.9",
     "vite-plugin-vitebar": "^0.0.5",
