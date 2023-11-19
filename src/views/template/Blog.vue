@@ -113,6 +113,7 @@
 
 <script lang="ts" setup>
 import { getList } from '/@/api/news'
+
 defineOptions({
   name: 'Blog',
 })
@@ -151,6 +152,7 @@ onBeforeMount(() => {
 
       &-item {
         margin-bottom: 10px;
+
         &.is-active,
         &:hover {
           color: var(--el-color-primary);

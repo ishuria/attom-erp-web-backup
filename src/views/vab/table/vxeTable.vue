@@ -20,6 +20,7 @@ defineOptions({
 interface RowVO {
   [key: string]: any
 }
+
 // 真实接口已注释请自行对接
 //const serveApiUrl = 'https://api.vxetable.cn/demo'
 const xGrid = ref<VxeGridInstance<RowVO>>()
@@ -108,7 +109,13 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
         itemRender: { name: '$input', props: { placeholder: '请输入名称' } },
       },
       { field: 'nickname', title: '昵称', span: 8, itemRender: { name: '$input', props: { placeholder: '请输入昵称' } } },
-      { field: 'role', title: '角色', span: 8, folding: true, itemRender: { name: '$input', props: { placeholder: '请输入角色' } } },
+      {
+        field: 'role',
+        title: '角色',
+        span: 8,
+        folding: true,
+        itemRender: { name: '$input', props: { placeholder: '请输入角色' } },
+      },
       {
         field: 'sex',
         title: '性别',
@@ -130,7 +137,15 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
         collapseNode: true,
         itemRender: {
           name: '$buttons',
-          children: [{ props: { type: 'submit', content: '搜索', status: 'primary' } }, { props: { type: 'reset', content: '重置' } }],
+          children: [
+            { props: { type: 'submit', content: '搜索', status: 'primary' } },
+            {
+              props: {
+                type: 'reset',
+                content: '重置',
+              },
+            },
+          ],
         },
       },
     ],
@@ -212,7 +227,10 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
       field: 'role',
       title: '角色',
       sortable: true,
-      titlePrefix: { useHTML: true, content: '点击链接：<a class="link" href="https://vxetable.cn" target="_blank">vxe-table官网</a>' },
+      titlePrefix: {
+        useHTML: true,
+        content: '点击链接：<a class="link" href="https://vxetable.cn" target="_blank">vxe-table官网</a>',
+      },
       filters: [
         { label: '前端开发', value: '前端' },
         { label: '后端开发', value: '后端' },

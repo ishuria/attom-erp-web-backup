@@ -53,7 +53,7 @@ const generateData = (columns: ReturnType<typeof generateColumns>, length = 200,
     )
   })
 
-const columns: Column<any>[] = generateColumns(15)
+const columns: Column[] = generateColumns(15)
 columns.unshift({
   key: 'selection',
   width: 38,
