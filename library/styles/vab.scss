@@ -2,15 +2,15 @@
  * @description 全局样式
  */
 
-@import 'vsv-icon/dist/style.css';
+@import './var';
+@import 'normalize.css';
 @import 'element-plus/theme-chalk/src/display';
 @import 'element-plus/theme-chalk/src/index';
-@import 'vxe-table/lib/style.css';
-@import './var';
 @import './dark';
 @import './plain';
 @import './technology';
-@import 'normalize.css';
+@import 'vsv-icon/dist/style.css';
+@import 'vxe-table/lib/style.css';
 
 @mixin base-scrollbar {
   &::-webkit-scrollbar {

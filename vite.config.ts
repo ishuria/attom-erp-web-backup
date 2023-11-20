@@ -9,6 +9,8 @@ import {
   base,
   chunkSizeWarningLimit,
   cssCodeSplit,
+  exclude,
+  include,
   minify,
   open,
   outDir,
@@ -50,6 +52,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         '/@vab/': `/${resolve(__dirname, 'library')}/`,
         '/@types/': `/${resolve(__dirname, 'src/types')}/`,
       },
+    },
+    optimizeDeps: {
+      include,
+      exclude,
     },
     build: {
       assetsDir,
