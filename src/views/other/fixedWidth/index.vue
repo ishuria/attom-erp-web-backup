@@ -31,10 +31,13 @@
 </template>
 
 <script lang="ts" setup>
+import { useSettingsStore } from '/@/store/modules/settings'
+
 defineOptions({
   name: 'FixedWidth',
 })
-
+const settingsStore = useSettingsStore()
+const { device } = storeToRefs(settingsStore)
 const activeName = ref<string>('first')
 const queryForm1 = reactive<any>({
   count: 1200,
@@ -74,6 +77,16 @@ const handleChecked = (value: any) => {
   if (value) useCssVar('--el-fixed-width-margin', el).value = 'auto'
   else useCssVar('--el-fixed-width-margin', el).value = '0'
 }
+
+onMounted(() => {
+  if (device.value == 'mobile') {
+    handleChange2(100)
+  } else {
+    handleClick({
+      index: 0,
+    })
+  }
+})
 </script>
 
 <style lang="scss">
