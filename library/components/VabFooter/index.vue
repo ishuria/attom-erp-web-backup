@@ -30,6 +30,7 @@ const { title, theme } = storeToRefs(settingsStore)
   background: var(--el-color-white);
   border: 1px solid var(--el-border-color);
   border-radius: var(--el-border-radius-base);
+  transition: var(--el-transition);
 
   i {
     margin: 0 3px;
