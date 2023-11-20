@@ -3,10 +3,10 @@ import type { App } from 'vue'
 import 'virtual:svg-icons-register'
 // 加载全局样式样式
 import { createHead } from '@vueuse/head'
+// 加载全局样式
 import './styles/vab.scss'
 // 加载图标
 import { VabIcon } from 'vsv-icon'
-import 'vsv-icon/dist/style.css'
 
 export const setupVab = (app: App<Element>) => {
   app.use(createHead())
