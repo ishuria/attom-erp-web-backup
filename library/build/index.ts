@@ -6,12 +6,13 @@ import pc from 'picocolors'
 import type { Plugin } from 'vite'
 import { createBanner } from './banner/'
 import { createCompress } from './compress/'
+import { createHttps } from './https'
 import { createMock } from './mock/'
 import { createProgress } from './progress/'
 import { createPwa } from './pwa/'
 import { createSvgIcons } from './svgSprite/'
 import { createUnPlugin } from './unplugin/'
-import { compress, port } from '/@/config/'
+import { compress, https, port } from '/@/config/'
 
 const viteApp = 'VITE_' + 'APP_'
 const viteUser = 'VITE_' + 'USER_'
@@ -34,6 +35,7 @@ export const createVitePlugin = (env: Record<string, string>) => {
   vitePlugins.push(createSvgIcons())
   vitePlugins.push(createBanner())
   vitePlugins.push(createCompress(compress))
+  if (https) vitePlugins.push(createHttps())
   return vitePlugins
 }
 

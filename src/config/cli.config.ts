@@ -35,4 +35,6 @@ export const cliConfig: { [key: string]: string | number | boolean | Array<strin
   include: ['element-plus'],
   // 不需要缓存到node_modules/.vite的模块
   exclude: [],
+  // 开发环境开启https
+  https: false,
 }

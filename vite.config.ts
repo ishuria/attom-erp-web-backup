@@ -10,6 +10,7 @@ import {
   chunkSizeWarningLimit,
   cssCodeSplit,
   exclude,
+  https,
   include,
   minify,
   open,
@@ -44,6 +45,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       warmup: {
         clientFiles: ['./index.html', './library/{components,layouts}/*', './src/{views,plugins}/*'],
       },
+      https,
     },
     resolve: {
       alias: {

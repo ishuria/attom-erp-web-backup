@@ -34,6 +34,7 @@ export const {
   exclude,
   fixedHeader,
   foldSidebar,
+  https,
   i18n,
   include,
   isCatchedTabs,
