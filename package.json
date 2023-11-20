@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev:vue-tsc": "vue-tsc --noEmit &&vite",
+    "dev:https": "vite --config ./vite.config.dev.ts",
     "build": "vue-tsc --noEmit && vite build",
     "build:fast": "set NODE_OPTIONS=--max-old-space-size=8192 && vue-tsc --noEmit && vite build",
     "build:vue-shop-vite": "vite build",

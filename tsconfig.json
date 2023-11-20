@@ -35,7 +35,8 @@
     "types/**/*.d.ts",
     "types/**/*.ts",
     "mock/**/*.ts",
-    "vite.config.ts"
+    "vite.config.ts",
+    "vite.config.dev.ts"
   ],
   "exclude": ["node_modules", "dist", "**/*.js"]
 }

@@ -1,3 +1,4 @@
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import autoprefixer from 'autoprefixer'
 import dayjs from 'dayjs'
 import { resolve } from 'path'
@@ -103,9 +104,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // },
         },
       },
-      devSourcemap: false,
+      devSourcemap: true,
     },
-    plugins: createVitePlugin(env),
+    plugins: [...(createVitePlugin(env) as any), basicSsl()],
     define: {
       'process.env': { ...process.env },
     },
