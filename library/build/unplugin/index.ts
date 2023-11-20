@@ -1,4 +1,4 @@
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+/* import { ElementPlusResolver } from 'unplugin-vue-components/resolvers' */
 import { unplugin } from 'vite-plugin-unplugin'
 
 export const createUnPlugin = (env: Record<string, string>) => {
@@ -14,7 +14,9 @@ export const createUnPlugin = (env: Record<string, string>) => {
         axios: [['default', 'axios']],
       },
     ],
-    resolvers: [ElementPlusResolver()],
+    resolvers: [
+      /* ElementPlusResolver() */
+    ],
     dirs: [],
   })
 }
