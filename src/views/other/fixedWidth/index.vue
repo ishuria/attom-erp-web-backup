@@ -72,7 +72,7 @@ const handleChange2 = (value: any) => {
 const handleChecked = (value: any) => {
   const el = ref<any>(null)
   if (value) useCssVar('--el-fixed-width-margin', el).value = 'auto'
-  else useCssVar('--el-fixed-width-margin', el).value = 0
+  else useCssVar('--el-fixed-width-margin', el).value = '0'
 }
 </script>
 
