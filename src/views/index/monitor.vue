@@ -49,12 +49,15 @@
         </vab-card>
       </el-col>
       <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
-        <vab-card :body-style="{ padding: '0' }" style="height: calc(var(--el-container-height) - 150px)">
+        <vab-card
+          :body-style="{ padding: '0', height: 'calc(var(--el-container-height) - 207px)' }"
+          style="height: calc(var(--el-container-height) - 150px)"
+        >
           <template #header>
             <vab-icon icon="vidicon-line" />
             直播预览
           </template>
-          <vab-player-hls :config="configHls" style="background-color: rgba(0, 0, 0, 0.87)" />
+          <vab-player-hls :config="configHls" style="background-color: rgba(0, 0, 0, 0.87)" @player="playerInstance" />
         </vab-card>
         <vab-card style="height: 130px">
           <template #header>
@@ -182,7 +185,7 @@ const configHls = reactive<any>({
   screenShot: true,
   playbackRate: [0.5, 0.75, 1, 1.5, 2],
   width: '100%',
-  height: 'calc(var(--el-container-height) - 207px)',
+  height: '100%',
 })
 const value = ref<string>('1')
 const form = reactive<any>({
@@ -195,6 +198,20 @@ const options = [
   },
 ]
 const radio = ref('普通直播')
+
+let _Player: any
+
+const playerInstance = (player: any) => {
+  _Player = player
+}
+
+onActivated(() => {
+  _Player.play()
+})
+
+onDeactivated(() => {
+  _Player.pause()
+})
 </script>
 
 <style lang="scss" scoped>
