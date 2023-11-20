@@ -54,7 +54,7 @@ const configMp4 = reactive<any>({
 })
 
 const configHls1 = reactive<any>({
-  url: 'https://gccncc.v.wscdns.com/gc/lsdfgfl_1/index.m3u8?contentid=2820180516001',
+  url: 'https://gctxyc.liveplay.myqcloud.com/gc/emsyh_1/index.m3u8?contentid=2820180516001',
   id: uniqueId('uuid_hls_'),
   lang: 'zh',
   volume: 0,
@@ -76,7 +76,7 @@ const configHls2 = reactive<any>({
 })
 
 const configHls3 = reactive<any>({
-  url: 'https://gcalic.v.myalicdn.com/gc/emspxps_1/index.m3u8?contentid=2820180516001',
+  url: 'https://gcalic.v.myalicdn.com/gc/hsxkscj_1/index.m3u8?contentid=2820180516001',
   id: uniqueId('uuid_hls_'),
   lang: 'zh',
   volume: 0,
@@ -87,7 +87,7 @@ const configHls3 = reactive<any>({
 })
 
 const configHls4 = reactive<any>({
-  url: 'https://gcalic.v.myalicdn.com/gc/hsxksqj_1/index.m3u8?contentid=2820180516001',
+  url: 'https://gctxyc.liveplay.myqcloud.com/gc/emsarm_1/index.m3u8?contentid=2820180516001',
   id: uniqueId('uuid_'),
   lang: 'zh',
   volume: 0,
