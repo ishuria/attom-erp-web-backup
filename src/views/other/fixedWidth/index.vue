@@ -45,7 +45,7 @@ const queryForm2 = reactive<any>({
   isChecked: true,
 })
 
-const handleClick = (tab: TabsPaneContext) => {
+const handleClick = (tab: any) => {
   if (tab.index == 0) {
     queryForm1.count = 1200
     handleChange1(1200)
@@ -59,17 +59,17 @@ const handleClick = (tab: TabsPaneContext) => {
   handleChecked(true)
 }
 
-const handleChange1 = (value: number) => {
+const handleChange1 = (value: any) => {
   const el = ref<any>(null)
   useCssVar('--el-fixed-width', el).value = `${value}px`
 }
 
-const handleChange2 = (value: number) => {
+const handleChange2 = (value: any) => {
   const el = ref<any>(null)
   useCssVar('--el-fixed-width', el).value = `${value}%`
 }
 
-const handleChecked = (value: boolean) => {
+const handleChecked = (value: any) => {
   const el = ref<any>(null)
   if (value) useCssVar('--el-fixed-width-margin', el).value = 'auto'
   else useCssVar('--el-fixed-width-margin', el).value = 0
