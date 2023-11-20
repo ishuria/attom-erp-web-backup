@@ -40,7 +40,7 @@
             </div>
           </el-scrollbar>
 
-          <el-form v-model="form">
+          <el-form :model="form">
             <el-form-item>
               <el-input v-model="form.text" class="chat-input" />
               <el-button class="chat-send" type="primary">发送</el-button>

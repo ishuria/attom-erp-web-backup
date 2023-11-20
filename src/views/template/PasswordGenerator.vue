@@ -91,8 +91,8 @@ const generatePassword = () => {
   :deep() {
     .el-form-item {
       display: flex;
-      align-items: center; /* 垂直居中 */
-      justify-content: space-between; /* 左右对齐 */
+      align-items: center;
+      justify-content: space-between;
 
       &__content {
         flex: 0 0 auto;

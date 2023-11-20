@@ -742,6 +742,17 @@ const list = [
         },
       },
       {
+        path: 'fixedWidth',
+        name: 'FixedWidth',
+        component: '/@/views/other/fixedWidth/index.vue',
+        meta: {
+          title: '定宽',
+          guard: ['Admin'],
+          icon: 'picture-in-picture-fill',
+          dot: true,
+        },
+      },
+      {
         path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
         name: 'ExternalLink',
         meta: {

@@ -793,6 +793,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'fixedWidth',
+        name: 'FixedWidth',
+        component: () => import('/@/views/other/fixedWidth/index.vue'),
+        meta: {
+          title: '定宽',
+          guard: ['Admin'],
+          icon: 'picture-in-picture-fill',
+          dot: true,
+        },
+      },
+      {
         path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
         name: 'ExternalLink',
         meta: {
