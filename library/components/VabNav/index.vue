@@ -57,6 +57,29 @@ const handleTabClick = () => {
 }
 </script>
 
+<style lang="scss">
+.vab-layout-comprehensive {
+  @media only screen and (min-width: 1200px) {
+    .right-panel {
+      .vab-search,
+      .vab-dark,
+      .vab-color-picker {
+        display: none;
+      }
+    }
+  }
+
+  @media only screen and (min-width: 1920px) {
+    .right-panel {
+      .vab-search,
+      .vab-dark,
+      .vab-color-picker {
+        display: inline-flex;
+      }
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 .vab-nav {
   position: relative;
@@ -136,42 +159,6 @@ const handleTabClick = () => {
           margin-left: 0;
           color: var(--el-color-white);
           cursor: pointer;
-        }
-      }
-    }
-  }
-
-  @media only screen and (min-width: 992px) {
-    .right-panel {
-      :deep() {
-        .vab-search,
-        .vab-dark,
-        .vab-color-picker {
-          display: none;
-        }
-      }
-    }
-  }
-
-  @media only screen and (min-width: 1200px) {
-    .right-panel {
-      :deep() {
-        .vab-search,
-        .vab-dark,
-        .vab-color-picker {
-          display: none;
-        }
-      }
-    }
-  }
-
-  @media only screen and (min-width: 1920px) {
-    .right-panel {
-      :deep() {
-        .vab-search,
-        .vab-dark,
-        .vab-color-picker {
-          display: inline-flex;
         }
       }
     }
