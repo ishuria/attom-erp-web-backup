@@ -42,6 +42,47 @@ const handleRoutes = computed(() => {
 })
 </script>
 
+<style lang="scss">
+.vab-header .vab-main .right-panel {
+  @media only screen and (min-width: 992px) {
+    .el-menu.el-menu--horizontal {
+      width: 50% !important;
+    }
+
+    .vab-search,
+    .vab-dark,
+    .vab-color-picker {
+      display: none !important;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    .el-menu.el-menu--horizontal {
+      width: 50% !important;
+    }
+
+    .vab-dark,
+    .vab-color-picker {
+      display: none !important;
+    }
+
+    .vab-search {
+      display: none !important;
+    }
+  }
+
+  @media only screen and (min-width: 1920px) {
+    .el-menu.el-menu--horizontal {
+      width: 80% !important;
+    }
+
+    .vab-dark,
+    .vab-color-picker {
+      display: inline-flex !important;
+    }
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 .vab-header {
   display: flex;
@@ -60,17 +101,25 @@ const handleRoutes = computed(() => {
       height: var(--el-header-height);
 
       :deep() {
-        .vab-logo {
-          width: 360px;
+        .vab-logo-horizontal {
+          width: 300px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
-
         .el-sub-menu__icon-more {
           margin-right: var(--el-margin) !important;
         }
 
+        .el-sub-menu__hide-arrow {
+          .el-sub-menu__title {
+            padding-right: 0;
+          }
+        }
+
         .el-menu {
           &.el-menu--horizontal {
-            width: 100%;
+            width: 60%;
             height: 40px;
             border: 0;
 
