@@ -59,11 +59,23 @@ const handleTabClick = () => {
 
 <style lang="scss">
 .vab-layout-comprehensive {
-  @media only screen and (min-width: 1200px) {
+  @media only screen and (min-width: 992px) {
     .right-panel {
       .vab-search,
       .vab-dark,
       .vab-color-picker {
+        display: none;
+      }
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    .right-panel {
+      .vab-dark,
+      .vab-color-picker {
+        display: inline-flex;
+      }
+
+      .vab-search {
         display: none;
       }
     }
