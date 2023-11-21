@@ -14,7 +14,7 @@
               </el-tab-pane>
             </template>
           </el-tabs>
-          <vab-breadcrumb v-else class="hidden-xs-only" />
+          <vab-breadcrumb v-else class="hidden-xs-only hidden-md-and-down" />
         </div>
       </el-col>
       <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="20">
@@ -81,7 +81,7 @@ const handleTabClick = () => {
 
       .el-tabs {
         width: 100%;
-        margin-left: var(--el-margin);
+        margin-left: 0;
 
         .el-tabs__header {
           margin: 0;
@@ -136,6 +136,42 @@ const handleTabClick = () => {
           margin-left: 0;
           color: var(--el-color-white);
           cursor: pointer;
+        }
+      }
+    }
+  }
+
+  @media only screen and (min-width: 992px) {
+    .right-panel {
+      :deep() {
+        .vab-search,
+        .vab-dark,
+        .vab-color-picker {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    .right-panel {
+      :deep() {
+        .vab-search,
+        .vab-dark,
+        .vab-color-picker {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media only screen and (min-width: 1920px) {
+    .right-panel {
+      :deep() {
+        .vab-search,
+        .vab-dark,
+        .vab-color-picker {
+          display: inline-flex;
         }
       }
     }

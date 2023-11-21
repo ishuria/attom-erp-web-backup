@@ -24,7 +24,7 @@
     <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
     <div class="vab-auto-box">
       <el-row :gutter="20">
-        <el-col v-for="(item, index) in queryIcon" :key="index" :lg="2" :md="3" :sm="6" :xl="2" :xs="6">
+        <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="3" :sm="6" :xl="2" :xs="6">
           <vab-card @click="handleCopyIcon(item.icon)">
             <vab-icon
               :icon="item.icon"
