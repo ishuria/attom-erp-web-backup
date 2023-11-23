@@ -122,17 +122,6 @@ html {
         border-radius: 50%;
         box-shadow: 0 2px 12px 0 var(--el-color-primary);
       }
-
-      /* 手机端移除毛玻璃遮罩 */
-      .el-overlay,
-      .el-image-viewer__mask {
-        backdrop-filter: none;
-      }
-
-      /* 手机端移除 v-modal、el-image-viewer__mask遮罩 */
-      .v-modal {
-        backdrop-filter: none;
-      }
     }
 
     * {
