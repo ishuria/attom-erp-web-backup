@@ -1,0 +1,43 @@
+<template>
+  <div class="poster-design-container">
+    <div class="hidden-sm-and-up">
+      <el-alert :closable="false" title="手机端不支持海报设计演示" type="error" />
+    </div>
+    <div class="hidden-xs-only">
+      <iframe src="https://vue-admin-beautiful.com/vue-fabric-editor/#/"></iframe>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { useSettingsStore } from '/@/store/modules/settings'
+
+defineOptions({
+  name: 'PosterDesign',
+})
+
+const route = useRoute()
+const settingsStore = useSettingsStore()
+const { mode } = storeToRefs<any>(settingsStore)
+const $pub = inject<any>('$pub')
+const $baseMessage = inject<any>('$baseMessage')
+
+const handleDark = () => {
+  if (route.path === '/goods/posterDesign') $pub('shop-vite-reset-dark')
+}
+
+onActivated(() => {
+  if ('dark' == mode.value) $baseMessage('海报设计不支持暗黑模式，已为您重置', 'success', 'hey')
+  handleDark()
+})
+</script>
+
+<style lang="scss" scoped>
+.poster-design-container {
+  iframe {
+    width: 100%;
+    height: var(--el-container-height);
+    border: 0;
+  }
+}
+</style>

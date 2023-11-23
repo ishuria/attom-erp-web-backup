@@ -1,6 +1,6 @@
 <template>
   <el-switch
-    v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
+    v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
     v-model="mode"
     :active-icon="Moon"
     active-value="dark"
@@ -14,6 +14,7 @@
 
 <script lang="ts" setup>
 // @ts-nocheck
+
 import { Moon, Sunny } from '@element-plus/icons-vue'
 import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -23,6 +24,7 @@ defineOptions({
 
 const $sub = inject<any>('$sub')
 const $unsub = inject<any>('$unsub')
+const route = useRoute()
 const settingsStore = useSettingsStore()
 const { theme, mode } = storeToRefs(settingsStore)
 const { updateMode } = settingsStore

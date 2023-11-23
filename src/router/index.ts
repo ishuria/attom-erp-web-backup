@@ -1371,6 +1371,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           badge: 'New',
         },
       },
+      {
+        path: 'posterDesign',
+        name: 'PosterDesign',
+        component: () => import('/@/views/goods/PosterDesign.vue'),
+        meta: {
+          title: '海报设计',
+          icon: 'image-2-line',
+          badge: 'New',
+        },
+      },
     ],
   },
   {

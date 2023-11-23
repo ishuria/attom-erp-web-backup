@@ -1320,6 +1320,16 @@ const list = [
           badge: 'New',
         },
       },
+      {
+        path: 'posterDesign',
+        name: 'PosterDesign',
+        component: '/@/views/goods/PosterDesign.vue',
+        meta: {
+          title: '海报设计',
+          icon: 'image-2-line',
+          badge: 'New',
+        },
+      },
     ],
   },
   {

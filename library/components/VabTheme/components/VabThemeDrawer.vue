@@ -21,7 +21,10 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('暗黑模式')">
+        <el-form-item
+          v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
+          :label="translate('暗黑模式')"
+        >
           <vab-dark />
         </el-form-item>
         <el-form-item v-if="'technology' != theme.themeName" :label="translate('配色')">
