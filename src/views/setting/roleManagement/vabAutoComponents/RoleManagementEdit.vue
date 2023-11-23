@@ -59,7 +59,6 @@ const list = ref<any>([])
 const showEdit = (row: any) => {
   if (!row) {
     title.value = '添加'
-    form = reactive<any>({})
   } else {
     title.value = '编辑'
     form = reactive<any>({ ...row })

@@ -42,7 +42,6 @@ const rules = reactive<any>({
 const showEdit = (row: any) => {
   if (!row) {
     title.value = '添加'
-    form = reactive<any>({})
   } else {
     title.value = '回复'
     form = reactive<any>({ ...row })

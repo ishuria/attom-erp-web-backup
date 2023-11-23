@@ -79,7 +79,6 @@ const fileList = ref<UploadUserFile[]>([])
 const showEdit = (row: any) => {
   if (!row) {
     title.value = '添加'
-    form = reactive<any>({})
     fileList.value = []
   } else {
     title.value = '编辑'
