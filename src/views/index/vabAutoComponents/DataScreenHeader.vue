@@ -8,7 +8,7 @@
           </div>
         </vab-link>
         <span>Vue Shop Vite 数据大屏</span>
-        <vab-full-screen class="data-full-screen" />
+        <vab-fullscreen class="data-fullscreen" />
       </div>
     </el-col>
   </el-row>
@@ -21,7 +21,7 @@
   background: url('/@/assets/data_screen_images/bgtop.png') no-repeat;
   background-size: 100% 100%;
 
-  .data-full-screen {
+  .data-fullscreen {
     position: fixed;
     top: 13px;
     right: 40px;

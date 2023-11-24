@@ -131,7 +131,7 @@ declare module 'vue' {
     VabErrorLogContent: typeof import('./../../components/VabErrorLog/components/VabErrorLogContent.vue')['default']
     VabFold: typeof import('./../../components/VabFold/index.vue')['default']
     VabFooter: typeof import('./../../components/VabFooter/index.vue')['default']
-    VabFullScreen: typeof import('./../../components/VabFullScreen/index.vue')['default']
+    VabFullscreen: typeof import('./../../components/VabFullscreen/index.vue')['default']
     VabGraphicStrokeAnimation: typeof import('./../../../src/views/other/echarts/vabAutoComponents/VabGraphicStrokeAnimation.vue')['default']
     VabHeader: typeof import('./../../components/VabHeader/index.vue')['default']
     VabIconSelector: typeof import('./../../../src/plugins/VabIconSelector/index.vue')['default']

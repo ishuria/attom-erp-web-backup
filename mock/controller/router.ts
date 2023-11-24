@@ -739,6 +739,7 @@ const list = [
           guard: ['Admin'],
           icon: 'aspect-ratio-line',
           dot: true,
+          fullscreen: true,
         },
       },
       {
@@ -1328,7 +1329,7 @@ const list = [
           title: '海报设计',
           icon: 'image-2-line',
           badge: '全屏',
-          fullScreen: true,
+          fullscreen: true,
         },
       },
     ],

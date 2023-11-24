@@ -1,12 +1,12 @@
 <template>
   <div class="no-layout-container">
-    <el-page-header content="全屏" title="返回上一页" @back="goBack">
+    <el-page-header content="全屏" :title="isFullscreen ? '退出全屏' : '返回上一页'" @back="goBack">
       <template #extra>
-        <vab-full-screen />
+        <vab-fullscreen />
       </template>
     </el-page-header>
 
-    <el-alert :closable="false" title="全屏示例" type="success" />
+    <el-alert :closable="false" title="刷新浏览器自动退出全屏" type="success" />
   </div>
 </template>
 
@@ -22,8 +22,10 @@ defineOptions({
 const tabsStore = useTabsStore()
 const route = useRoute()
 const { delVisitedRoute } = tabsStore
+const { exit, isFullscreen } = useFullscreen()
 
 const goBack = async () => {
+  exit()
   await delVisitedRoute(handleActivePath(route as VabRoute, true))
   await history.back()
 }

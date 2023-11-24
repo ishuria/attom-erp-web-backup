@@ -6,7 +6,7 @@
     <div class="hidden-xs-only">
       <el-page-header content="独立布局" title="返回上一页" @back="goBack">
         <template #extra>
-          <vab-full-screen />
+          <vab-fullscreen />
         </template>
       </el-page-header>
       <el-alert :closable="false" title="当前页面允许独立于默认布局之外并禁用主题配置，当切换至其他页面时回到默认布局" />

@@ -59,7 +59,7 @@ const guide = () => {
           position: 'left',
         },
         {
-          element: document.querySelector('.vab-full-screen'),
+          element: document.querySelector('.vab-fullscreen'),
           title: '全屏',
           intro: '这里是全屏',
           position: 'left',

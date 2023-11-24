@@ -46,26 +46,30 @@ const { foldSideBar } = settingsStore
 const { enter, exit } = useFullscreen()
 
 const handleLink = () => {
-  const routePath = props.itemOrMenu.path
-  const target = props.itemOrMenu.meta.target
-  const fullScreen = props.itemOrMenu.meta.fullScreen
+  nextTick(() => {
+    const routePath = props.itemOrMenu.path
+    const target = props.itemOrMenu.meta.target
+    const fullscreen = props.itemOrMenu.meta.fullscreen
 
-  if (fullScreen) enter()
-  else exit()
-
-  if (target === '_blank') {
-    if (isExternal(routePath)) {
-      window.open(routePath)
+    if (target === '_blank') {
+      if (isExternal(routePath)) {
+        window.open(routePath)
+        router.push('/redirect')
+      } else if (route.path !== routePath) isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
       router.push('/redirect')
-    } else if (route.path !== routePath) isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
-    router.push('/redirect')
-  } else {
-    if (isExternal(routePath)) window.location.href = routePath
-    else if (route.path !== routePath) {
-      if (device.value === 'mobile') foldSideBar()
-      router.push(props.itemOrMenu.path)
-    } else $pub('reload-router-view')
-  }
+    } else {
+      if (isExternal(routePath)) window.location.href = routePath
+      else if (route.path !== routePath) {
+        if (device.value === 'mobile') foldSideBar()
+        router.push(props.itemOrMenu.path)
+      } else $pub('reload-router-view')
+    }
+
+    setTimeout(() => {
+      if (fullscreen) enter()
+      else exit()
+    }, 500)
+  })
 }
 </script>
 

@@ -8,7 +8,7 @@
     <vab-lock v-show="theme.showLock" />
     <vab-notice v-show="theme.showNotice" />
     <vab-language v-show="theme.showLanguage" />
-    <vab-full-screen v-show="theme.showFullScreen" />
+    <vab-fullscreen v-show="theme.showFullScreen" />
     <vab-refresh v-show="theme.showRefresh" />
 
     <vab-avatar />

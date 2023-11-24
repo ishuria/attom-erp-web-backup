@@ -59,7 +59,7 @@ onBeforeUnmount(() => {
   background: var(--el-background-color) !important;
   border: 0 !important;
 
-  &.w-e-full-screen-container {
+  &.w-e-fullscreen-container {
     z-index: 9999 !important;
   }
 

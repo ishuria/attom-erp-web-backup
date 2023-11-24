@@ -10,5 +10,5 @@ setupVab(app)
 setupI18n(app)
 setupStore(app)
 setupRouter(app)
-  .isReady()
-  .then(() => app.mount('#app'))
+
+app.mount('#app')
