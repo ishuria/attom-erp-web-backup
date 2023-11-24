@@ -1378,7 +1378,8 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '海报设计',
           icon: 'image-2-line',
-          badge: 'New',
+          badge: '全屏',
+          fullScreen: true,
         },
       },
     ],

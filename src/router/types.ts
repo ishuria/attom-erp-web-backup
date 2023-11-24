@@ -36,6 +36,8 @@ export interface VabRouteMeta {
   target?: '_blank' | false
   // 菜单、面包屑、多标签页显示的名称
   title?: string
+  // 是否全屏
+  fullScreen?: boolean
 }
 
 // @ts-ignore

@@ -1,6 +1,6 @@
 <template>
   <div class="poster-design-container">
-    <div class="hidden-sm-and-up">
+    <div class="hidden-sm-and-up" style="padding: 15px">
       <el-alert :closable="false" title="手机端不支持海报设计演示" type="error" />
     </div>
     <div class="hidden-xs-only">
@@ -27,16 +27,21 @@ const handleDark = () => {
 }
 
 onActivated(() => {
-  if ('dark' == mode.value) $baseMessage('海报设计不支持暗黑模式，已为您重置', 'success', 'hey')
-  handleDark()
+  nextTick(() => {
+    if ('dark' == mode.value) $baseMessage('海报设计不支持暗黑模式，已为您重置', 'success', 'hey')
+    handleDark()
+  })
 })
 </script>
 
 <style lang="scss" scoped>
 .poster-design-container {
+  padding: 0 !important;
+
   iframe {
     width: 100%;
-    height: var(--el-container-height);
+    height: calc(var(--el-container-height) - 5px);
+
     border: 0;
   }
 }

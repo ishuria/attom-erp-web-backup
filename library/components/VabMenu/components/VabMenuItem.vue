@@ -43,10 +43,16 @@ const $pub = inject<any>('$pub')
 const settingsStore = useSettingsStore()
 const { device } = storeToRefs(settingsStore)
 const { foldSideBar } = settingsStore
+const { enter, exit } = useFullscreen()
 
 const handleLink = () => {
   const routePath = props.itemOrMenu.path
   const target = props.itemOrMenu.meta.target
+  const fullScreen = props.itemOrMenu.meta.fullScreen
+
+  if (fullScreen) enter()
+  else exit()
+
   if (target === '_blank') {
     if (isExternal(routePath)) {
       window.open(routePath)
@@ -67,10 +73,11 @@ const handleLink = () => {
 :deep(.el-tag) {
   position: absolute;
   right: 20px;
-  height: 16px;
-  padding-right: 4px;
-  padding-left: 4px;
-  line-height: 16px;
+  height: 18px;
+  padding-right: 5px;
+  padding-left: 5px;
+  font-size: 12px;
+  line-height: 18px;
 }
 
 .vab-dot {
