@@ -1,6 +1,6 @@
 <template>
   <div class="no-layout-container">
-    <el-page-header content="全屏" :title="isFullscreen ? '退出全屏' : '返回上一页'" @back="goBack">
+    <el-page-header content="全屏" :title="isFullscreen ? '退出全屏并返回上一页' : '返回上一页'" @back="goBack">
       <template #extra>
         <vab-fullscreen />
       </template>
@@ -25,7 +25,7 @@ const { delVisitedRoute } = tabsStore
 const { exit, isFullscreen } = useFullscreen()
 
 const goBack = async () => {
-  exit()
+  await exit()
   await delVisitedRoute(handleActivePath(route as VabRoute, true))
   await history.back()
 }
