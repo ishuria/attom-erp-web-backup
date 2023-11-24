@@ -13,7 +13,9 @@ onBeforeMount(() => {
   if (location.hostname !== 'localhost' && !location.hostname.includes('127') && !location.hostname.includes('192')) {
     ;(function () {
       const hm = document.createElement('script')
-      hm.src = 'https://hm.baidu.com/hm.js?820b686671af452e8a4e18952ce946d8'
+      let k = '820b686671af452e8a4e18952ce946d8'
+      if (location.hostname.includes('beautiful')) k = '9578a46b371ba85ee55bc868d6b30692'
+      hm.src = `https://hm.baidu.com/hm.js?${k}`
       const s: any = document.getElementsByTagName('script')[0]
       s.parentNode.insertBefore(hm, s)
     })()
