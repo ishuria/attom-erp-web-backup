@@ -56,7 +56,7 @@ const $baseMessage = inject<any>('$baseMessage')
 const formRef = ref<any>(null)
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
-let form = reactive<any>({})
+const form = reactive<any>({})
 const rules = reactive<any>({
   name: [{ required: true, trigger: 'blur', message: '请输入商品名称' }],
   type: [{ required: true, trigger: 'blur', message: '请输入商品类型' }],
@@ -82,7 +82,7 @@ const showEdit = (row: any) => {
     fileList.value = []
   } else {
     title.value = '编辑'
-    form = reactive<any>({ ...row })
+    Object.assign(form, row)
     fileList.value = [
       {
         name: '商品图',
@@ -108,7 +108,6 @@ const save = () => {
     if (valid) {
       const { msg }: any = await doEdit(form)
       $baseMessage(msg, 'success', 'hey')
-      emit('fetch-data')
       close()
     }
   })

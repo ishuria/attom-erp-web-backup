@@ -69,7 +69,7 @@ defineOptions({
 const emit = defineEmits(['fetch-data'])
 const $baseMessage = inject<any>('$baseMessage')
 const formRef = ref<any>(null)
-let form = reactive<any>({
+const form = reactive<any>({
   parentId: '',
   name: '',
   path: '',
@@ -107,7 +107,7 @@ const showEdit = (row: any) => {
     title.value = '添加'
   } else {
     title.value = '编辑'
-    form = reactive<any>({ ...row })
+    Object.assign(form, row)
   }
   dialogFormVisible.value = true
 }
@@ -127,7 +127,6 @@ const save = () => {
     if (valid) {
       const { msg }: any = await doEdit(form)
       $baseMessage(msg, 'success', 'hey')
-      emit('fetch-data')
       close()
     }
   })

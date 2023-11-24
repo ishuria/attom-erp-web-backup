@@ -27,11 +27,11 @@ defineOptions({
 })
 
 const active = ref<any>(0)
-let form = reactive<any>({})
+const form = reactive<any>({})
 
 const handleSetStep = (_active: any, _form: any) => {
   active.value = _active
-  if (_form) form = reactive<any>({ ..._form })
+  if (_form) Object.assign(form, _form)
 }
 </script>
 

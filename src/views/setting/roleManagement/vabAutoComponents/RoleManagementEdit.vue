@@ -45,7 +45,7 @@ const $baseMessage = inject<any>('$baseMessage')
 
 const formRef = ref<any>(null)
 const treeRef = ref<any>(null)
-let form = reactive<any>({
+const form = reactive<any>({
   role: '',
   btnRolesCheckedList: [],
 })
@@ -61,7 +61,7 @@ const showEdit = (row: any) => {
     title.value = '添加'
   } else {
     title.value = '编辑'
-    form = reactive<any>({ ...row })
+    Object.assign(form, row)
   }
   dialogFormVisible.value = true
 }
@@ -89,7 +89,6 @@ const save = () => {
         ...treeObject,
       })
       $baseMessage(msg, 'success', 'hey')
-      emit('fetch-data')
       close()
     }
   })

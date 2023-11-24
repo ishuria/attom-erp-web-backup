@@ -30,7 +30,7 @@ const $baseMessage = inject<any>('$baseMessage')
 const formRef = ref<any>(null)
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
-let form = reactive<any>({
+const form = reactive<any>({
   title: '',
   author: '',
 })
@@ -44,7 +44,7 @@ const showEdit = (row: any) => {
     title.value = '添加'
   } else {
     title.value = '回复'
-    form = reactive<any>({ ...row })
+    Object.assign(form, row)
     if (form.replyStatus === '未回复') {
       form.reply = ''
     }
@@ -67,7 +67,6 @@ const save = () => {
     if (valid) {
       const { msg }: any = await doEdit(form)
       $baseMessage(msg, 'success', 'hey')
-      emit('fetch-data')
       close()
     }
   })
