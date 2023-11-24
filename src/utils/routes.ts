@@ -9,7 +9,7 @@ import { isExternal } from '/@/utils/validate'
  * @param asyncRoutes
  * @returns {*}
  */
-export function convertRouter(asyncRoutes: VabRouteRecordRaw[]) {
+export const convertRouter = (asyncRoutes: VabRouteRecordRaw[]) => {
   const routeAllPathToCompMap = import.meta.glob(`../**/*.vue`)
   return asyncRoutes.map((route: VabRouteRecordRaw) => {
     if (route.component)
@@ -32,7 +32,7 @@ export function convertRouter(asyncRoutes: VabRouteRecordRaw[]) {
  * @param baseUrl 基础路由
  * @returns {[]}
  */
-export function filterRoutes(routes: VabRouteRecordRaw[], rolesControl: boolean, baseUrl = '/') {
+export const filterRoutes = (routes: VabRouteRecordRaw[], rolesControl: boolean, baseUrl = '/') => {
   return routes
     .filter((route: VabRouteRecordRaw) => (rolesControl && route.meta && route.meta.guard ? hasPermission(route.meta.guard) : true))
     .map((route: VabRouteRecordRaw) => {
@@ -64,7 +64,7 @@ export function filterRoutes(routes: VabRouteRecordRaw[], rolesControl: boolean,
  * @param path 路径
  * @returns {*} matched
  */
-export function handleMatched(routes: VabRouteRecordRaw[], path: string): VabRouteRecordRaw[] {
+export const handleMatched = (routes: VabRouteRecordRaw[], path: string): VabRouteRecordRaw[] => {
   return routes
     .filter((route) => route.childrenPathList.indexOf(path) + 1)
     .flatMap((route) => (route.children ? [route, ...handleMatched(route.children, path)] : [route]))
@@ -74,7 +74,7 @@ export function handleMatched(routes: VabRouteRecordRaw[], path: string): VabRou
  * 生成单个多标签元素，可用于同步/异步添加多标签
  * @param tag route页信息
  */
-export function handleTabs(tag: VabRoute) {
+export const handleTabs = (tag: VabRoute) => {
   let parentIcon = null
   if (tag.matched)
     for (let i = tag.matched.length - 2; i >= 0; i--) if (!parentIcon && tag.matched[i].meta.icon) parentIcon = tag.matched[i].meta.icon
@@ -98,7 +98,7 @@ export function handleTabs(tag: VabRoute) {
  * @param isTab 是否是标签
  * @returns {string|*}
  */
-export function handleActivePath(route: VabRoute, isTab = false) {
+export const handleActivePath = (route: VabRoute, isTab = false) => {
   const { meta, path } = route
   const rawPath = route.matched ? route.matched[route.matched.length - 1].path : path
   const fullPath = route.query && Object.keys(route.query).length ? `${route.path}?${stringify(route.query)}` : route.path
@@ -111,7 +111,7 @@ export function handleActivePath(route: VabRoute, isTab = false) {
  * 获取当前跳转登录页的Route
  * @param currentPath 当前页面地址
  */
-export function toLoginRoute(currentPath: string) {
+export const toLoginRoute = (currentPath: string) => {
   if (recordRoute && currentPath !== '/')
     return {
       path: '/login',
@@ -126,7 +126,7 @@ export function toLoginRoute(currentPath: string) {
  * @param routes 路由数组
  * @returns {*} Name数组
  */
-export function getNames(routes: VabRouteRecordRaw[]): string[] {
+export const getNames = (routes: VabRouteRecordRaw[]): string[] => {
   return routes.flatMap((route: VabRouteRecordRaw) => {
     const names = []
     if (route.name) names.push(route.name)

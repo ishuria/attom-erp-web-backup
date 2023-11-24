@@ -1,15 +1,15 @@
 /**
  * @description 路由守卫，目前两种模式：all模式与intelligence模式
  */
-import { useUserStore } from '/@/store/modules/user'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useSettingsStore } from '/@/store/modules/settings'
 import VabProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import { Router } from 'vue-router'
+import { authentication, loginInterception, routesWhiteList, supportVisit } from '/@/config'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useSettingsStore } from '/@/store/modules/settings'
+import { useUserStore } from '/@/store/modules/user'
 import getPageTitle from '/@/utils/pageTitle'
 import { toLoginRoute } from '/@/utils/routes'
-import { authentication, loginInterception, routesWhiteList, supportVisit } from '/@/config'
-import { Router } from 'vue-router'
 
 export function setupPermissions(router: Router) {
   VabProgress.configure({
@@ -49,7 +49,7 @@ export function setupPermissions(router: Router) {
         } catch (err) {
           console.error('vue-shop-vite 错误拦截:', err)
           await resetAll()
-          next(toLoginRoute(to.path))
+          next(toLoginRoute(to.fullPath))
         }
       }
     } else {
@@ -59,7 +59,7 @@ export function setupPermissions(router: Router) {
           await setRoutes('visit')
           next({ path: to.path, replace: true })
         } else next()
-      } else next(toLoginRoute(to.path))
+      } else next(toLoginRoute(to.fullPath))
     }
   })
   router.afterEach((to) => {
