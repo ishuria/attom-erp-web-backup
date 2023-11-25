@@ -10,6 +10,9 @@
 @import './plain';
 @import './technology';
 @import 'vsv-icon/dist/style.css';
+
+//vxeTable样式不需要可删除
+@import './vxeTableVar';
 @import 'vxe-table/lib/style.css';
 
 @mixin base-scrollbar {
