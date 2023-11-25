@@ -924,6 +924,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'webSocket',
+        name: 'WebSocket',
+        component: () => import('/@/views/operate/webSocket/index.vue'),
+        meta: {
+          title: 'WebSocket',
+          guard: ['Admin'],
+          icon: 'microsoft-loop-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'log',
         name: 'Log',
         component: () => import('/@/views/operate/errorLog/index.vue'),

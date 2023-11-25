@@ -873,6 +873,17 @@ const list = [
         },
       },
       {
+        path: 'webSocket',
+        name: 'WebSocket',
+        component: '/@/views/operate/webSocket/index.vue',
+        meta: {
+          title: 'WebSocket',
+          guard: ['Admin'],
+          icon: 'microsoft-loop-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'log',
         name: 'Log',
         component: '/@/views/operate/errorLog/index.vue',
