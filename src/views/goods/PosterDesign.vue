@@ -1,7 +1,7 @@
 <template>
   <div class="poster-design-container">
     <div class="hidden-sm-and-up" style="padding: 15px">
-      <el-alert :closable="false" title="手机端不支持海报设计演示" type="error" />
+      <el-alert :closable="false" title="手机端不支持海报设计演示" type="warning" />
     </div>
     <div class="hidden-xs-only">
       <iframe src="https://vue-admin-beautiful.com/vue-fabric-editor/#/"></iframe>

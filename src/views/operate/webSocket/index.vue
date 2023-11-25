@@ -1,5 +1,7 @@
 <template>
   <div class="web-socket-container">
+    <el-alert :closable="false" title="演示地址不提供WebSocket接口" type="warning" />
+
     <el-row :gutter="20">
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <el-form ref="formRef" label-position="top" :model="form" :rules="rules">
@@ -118,6 +120,7 @@ const toggle = () => {
 <style lang="scss" scoped>
 .web-socket-container {
   .list-content {
+    width: 100%;
     border: 1px solid var(--el-border-color);
     border-radius: var(--el-border-radius-base);
   }

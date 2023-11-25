@@ -1,7 +1,7 @@
 <template>
   <div class="magnifier-container">
     <div class="hidden-sm-and-up">
-      <el-alert :closable="false" title="手机端不支持放大镜演示" type="error" />
+      <el-alert :closable="false" title="手机端不支持放大镜演示" type="warning" />
     </div>
     <div class="hidden-xs-only">
       <el-row :gutter="20">

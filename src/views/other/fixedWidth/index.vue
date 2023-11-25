@@ -1,7 +1,7 @@
 <template>
   <div class="fixed-width-container no-background-container">
     <div class="fixed-width-box hidden-sm-and-up" style="width: 100%">
-      <el-alert :closable="false" title="手机端不支持定宽演示" type="error" />
+      <el-alert :closable="false" title="手机端不支持定宽演示" type="warning" />
     </div>
     <div class="fixed-width-box hidden-xs-only">
       <el-tabs v-model="activeName" @tab-click="handleClick">

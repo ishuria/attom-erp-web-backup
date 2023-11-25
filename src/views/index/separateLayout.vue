@@ -1,7 +1,7 @@
 <template>
   <div class="separate-layout-container">
     <div class="hidden-sm-and-up">
-      <el-alert :closable="false" title="手机端不支持独立布局演示" type="error" />
+      <el-alert :closable="false" title="手机端不支持独立布局演示" type="warning" />
     </div>
     <div class="hidden-xs-only">
       <el-page-header content="独立布局" title="返回上一页" @back="goBack">
