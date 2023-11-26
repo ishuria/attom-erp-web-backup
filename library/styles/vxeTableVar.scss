@@ -96,8 +96,8 @@ html body {
   --vxe-table-checkbox-range-border-width: 1px;
   --vxe-table-checkbox-range-border-color: var(--el-color-primary);
   --vxe-table-checkbox-range-background-color: var(--el-mask-color);
-  --vxe-table-fixed-left-scrolling-box-shadow: 8px 0px 10px -5px rgba(0, 0, 0, 0.12);
-  --vxe-table-fixed-right-scrolling-box-shadow: -8px 0px 10px -5px rgba(0, 0, 0, 0.12);
+  --vxe-table-fixed-left-scrolling-box-shadow: var(--el-box-shadow);
+  --vxe-table-fixed-right-scrolling-box-shadow: var(--el-box-shadow);
   --vxe-table-filter-panel-background-color: var(--el-color-white);
   --vxe-table-menu-item-width: 178px;
   --vxe-table-menu-background-color: var(--el-color-white);

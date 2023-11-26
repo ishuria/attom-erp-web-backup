@@ -853,6 +853,17 @@ const list = [
         },
       },
       {
+        path: 'contextMenu',
+        name: 'ContextMenu',
+        component: '/@/views/operate/contextMenu/index.vue',
+        meta: {
+          title: '右键菜单',
+          guard: ['Admin'],
+          icon: 'align-right',
+          dot: true,
+        },
+      },
+      {
         path: 'randomTheme',
         name: 'RandomTheme',
         component: '/@/views/operate/randomTheme/index.vue',

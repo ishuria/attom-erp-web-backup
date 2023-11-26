@@ -904,6 +904,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'contextMenu',
+        name: 'ContextMenu',
+        component: () => import('/@/views/operate/contextMenu/index.vue'),
+        meta: {
+          title: '右键菜单',
+          guard: ['Admin'],
+          icon: 'align-right',
+          dot: true,
+        },
+      },
+      {
         path: 'randomTheme',
         name: 'RandomTheme',
         component: () => import('/@/views/operate/randomTheme/index.vue'),
