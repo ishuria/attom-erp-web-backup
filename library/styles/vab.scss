@@ -130,6 +130,7 @@ html {
     * {
       box-sizing: border-box;
       outline: none !important;
+      -webkit-tap-highlight-color: transparent;
       @include base-scrollbar;
     }
 
