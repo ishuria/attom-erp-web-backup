@@ -461,9 +461,45 @@ html {
     .el-dialog {
       border-radius: var(--el-border-radius-base);
 
+      &__headerbtn {
+        &:focus {
+          .el-dialog__close {
+            color: var(--el-color-info);
+          }
+        }
+
+        .el-dialog__close {
+          color: var(--el-color-info);
+        }
+
+        .el-dialog__fullscreen {
+          font-size: 14px;
+          vertical-align: 3px;
+        }
+      }
+
       &__body {
         .el-form:not(.el-form--inline) {
           margin-right: 30px;
+
+          .el-form-item:last-child {
+            margin-bottom: 0;
+          }
+
+          .el-date-editor,
+          .el-select {
+            width: 100%;
+          }
+        }
+      }
+
+      &.is-fullscreen {
+        margin: 0;
+        border-radius: 0;
+
+        .el-dialog__body {
+          height: calc(100vh - 54px - 62px);
+          overflow-y: auto;
         }
       }
     }

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="needRefresh" append-to-body class="vab-update" draggable width="410px" @close="close">
+  <vab-dialog v-model="needRefresh" append-to-body class="vab-update" draggable width="410px" @close="close">
     <template #header></template>
     <div class="vab-update-icon">
       <vab-icon icon="upload-cloud-2-fill" />
@@ -16,7 +16,7 @@
         {{ button }}
       </el-button>
     </template>
-  </el-dialog>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>

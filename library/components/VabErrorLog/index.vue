@@ -4,13 +4,13 @@
       <vab-icon icon="bug-line" />
     </el-badge>
 
-    <el-dialog v-model="dialogVisible" append-to-body draggable title="shop-vite 异常捕获" width="60%">
+    <vab-dialog v-model="dialogVisible" append-to-body draggable title="shop-vite 异常捕获" width="60%">
       <vab-error-log-content />
       <template #footer>
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="danger" @click="clearAll">暂不显示</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
   </div>
 </template>
 

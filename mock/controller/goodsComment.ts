@@ -14,7 +14,7 @@ const List: {
   'replyStatus|1': string[]
   author: string
   datetime: string
-  pageViews: string
+  count: string
   image: string
   switch: string
   percent: string
@@ -37,7 +37,7 @@ for (let i = 0; i < count; i++) {
     reply: '@ctitle(20, 100)',
     'replyStatus|1': ['已回复', '未回复'],
     datetime: '@datetime',
-    pageViews: '@integer(300, 5000)',
+    count: '@integer(300, 5000)',
     image: handleRandomImage(),
     switch: '@boolean',
     percent: '@integer(80,99)',

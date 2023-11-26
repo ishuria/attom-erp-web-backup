@@ -1,5 +1,5 @@
 <template>
-  <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow">
+  <el-card :body-style="bodyStyle" class="vab-card" :shadow="shadow" v-bind="$attrs">
     <template v-if="$slots.header" #header>
       <slot name="header"></slot>
     </template>

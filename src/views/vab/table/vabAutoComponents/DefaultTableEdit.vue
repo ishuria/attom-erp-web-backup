@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="500px" @close="close">
+  <vab-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="500px" @close="close">
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="标题" prop="title">
         <el-input v-model.trim="form.title" clearable />
@@ -7,12 +7,29 @@
       <el-form-item label="作者" prop="author">
         <el-input v-model.trim="form.author" clearable />
       </el-form-item>
+      <el-form-item label="时间" prop="datetime">
+        <el-date-picker v-model="form.datetime" placeholder="选择日期时间" type="datetime" />
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="form.status" clearable>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="数量" prop="count">
+        <el-input-number v-model="form.count" />
+      </el-form-item>
+      <el-form-item label="评级" prop="rate">
+        <el-rate v-model="form.rate" />
+      </el-form-item>
+      <el-form-item label="开关" prop="switch">
+        <el-switch v-model="form.switch" />
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="save">确 定</el-button>
     </template>
-  </el-dialog>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -30,11 +47,21 @@ const dialogFormVisible = ref<boolean>(false)
 const form = reactive<any>({
   title: '',
   author: '',
+  rate: 0,
+  datetime: '',
+  status: '',
+  switch: false,
+  count: 0,
 })
 const rules = reactive<any>({
   title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
   author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
 })
+const options = ref<any>([
+  { value: 'published', label: 'published' },
+  { value: 'draft', label: 'draft' },
+  { value: 'deleted', label: 'deleted' },
+])
 
 const showEdit = (row: any) => {
   if (!row) {

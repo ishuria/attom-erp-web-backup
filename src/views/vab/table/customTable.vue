@@ -212,8 +212,8 @@ const columns = ref<any>([
     checked: true,
   },
   {
-    label: '点击量',
-    prop: 'pageViews',
+    label: '数量',
+    prop: 'count',
     sortable: true,
     checked: true,
   },

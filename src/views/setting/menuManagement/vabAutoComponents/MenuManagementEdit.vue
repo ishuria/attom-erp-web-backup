@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="830px" @close="close">
+  <vab-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="830px" @close="close">
     <el-form ref="formRef" inline label-width="140px" :model="form" :rules="rules">
       <el-form-item label="父级Id" prop="parentId">
         <el-input v-model="form.parentId" clearable />
@@ -59,7 +59,7 @@
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="save">确 定</el-button>
     </template>
-  </el-dialog>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>

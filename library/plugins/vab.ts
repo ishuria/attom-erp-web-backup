@@ -127,6 +127,7 @@ export default {
         confirmButtonText,
         cancelButtonText,
         closeOnClickModal: false,
+        draggable: true,
         type: 'warning',
         lockScroll: false,
       })

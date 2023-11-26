@@ -71,7 +71,7 @@
                 <el-rate v-model="row.rate" disabled />
               </template>
             </el-table-column>
-            <el-table-column align="center" label="点击量" min-width="100" prop="pageViews" sortable />
+            <el-table-column align="center" label="数量" min-width="100" prop="count" sortable />
             <el-table-column align="center" label="开关" prop="switch">
               <template #default="{ row }">
                 <el-switch v-model="row.switch" />

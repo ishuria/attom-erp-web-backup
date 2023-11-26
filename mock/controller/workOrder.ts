@@ -9,7 +9,7 @@ const List: {
   'status|1': string[]
   author: string
   datetime: string
-  pageViews: string
+  count: string
   image: string
   switch: string
   percent: string
@@ -30,7 +30,7 @@ for (let i = 0; i < count; i++) {
     'status|1': ['处理中', '已处理', '未分配'],
     author: '@cname',
     datetime: '@datetime',
-    pageViews: '@integer(300, 5000)',
+    count: '@integer(300, 5000)',
     image: handleRandomImage(),
     switch: '@boolean',
     percent: '@integer(80,99)',
