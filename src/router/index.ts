@@ -140,6 +140,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           dot: true,
         },
       },
+      {
+        path: 'changeLog',
+        name: 'ChangeLog',
+        component: () => import('/@/views/index/changeLog.vue'),
+        meta: {
+          title: '更新日志',
+          icon: 'file-word-line',
+          noKeepAlive: true,
+          badge: 'New',
+        },
+      },
     ],
   },
   {

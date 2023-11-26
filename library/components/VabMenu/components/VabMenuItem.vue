@@ -68,7 +68,7 @@ const handleLink = () => {
     setTimeout(() => {
       if (fullscreen) enter()
       else exit()
-    }, 500)
+    }, 1000)
   })
 }
 </script>

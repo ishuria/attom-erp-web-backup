@@ -89,6 +89,17 @@ const list = [
           dot: true,
         },
       },
+      {
+        path: 'changeLog',
+        name: 'ChangeLog',
+        component: '/@/views/index/changeLog.vue',
+        meta: {
+          title: '更新日志',
+          icon: 'file-word-line',
+          noKeepAlive: true,
+          badge: 'New',
+        },
+      },
     ],
   },
   {
