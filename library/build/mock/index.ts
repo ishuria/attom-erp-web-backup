@@ -1,7 +1,6 @@
 import { viteMockServe } from 'vite-plugin-mock'
-import { localEnabled, prodEnabled } from '/@/config'
 
-export const createMock = () => {
+export const createMock = (localEnabled: boolean, prodEnabled: boolean) => {
   return viteMockServe({
     logger: false,
     ignore: /^index/,

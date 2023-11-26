@@ -37,4 +37,6 @@ export const cliConfig: { [key: string]: string | number | boolean | Array<strin
   exclude: [],
   // 开发环境开启https
   https: false,
+  // 开启打包分析
+  report: false,
 }

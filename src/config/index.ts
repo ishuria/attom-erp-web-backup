@@ -61,6 +61,7 @@ export const {
   pwa,
   radius,
   recordRoute,
+  report,
   reportCompressedSize,
   rolesControl,
   routesWhiteList,

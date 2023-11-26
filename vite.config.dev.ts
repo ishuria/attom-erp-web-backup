@@ -2,6 +2,7 @@ import basicSsl from '@vitejs/plugin-basic-ssl'
 import autoprefixer from 'autoprefixer'
 import dayjs from 'dayjs'
 import { resolve } from 'path'
+import { visualizer } from 'rollup-plugin-visualizer'
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import { dependencies, devDependencies, name, version } from './package.json'
@@ -106,7 +107,17 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
       devSourcemap: true,
     },
-    plugins: [...(createVitePlugin(env) as any), basicSsl()],
+    plugins: [
+      ...(createVitePlugin(env) as any),
+      basicSsl(),
+      visualizer({
+        filename: 'stats.html',
+        title: 'Rollup Stats',
+        gzipSize: true,
+        brotliSize: true,
+        emitFile: true,
+      }),
+    ],
     define: {
       'process.env': { ...process.env },
     },
