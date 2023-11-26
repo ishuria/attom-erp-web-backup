@@ -30,6 +30,9 @@
       <el-form-item label="badge">
         <el-input v-model="form.meta.badge" clearable />
       </el-form-item>
+      <el-form-item label="guard">
+        <el-input v-model="form.meta.guard" clearable />
+      </el-form-item>
       <el-form-item label="dot">
         <el-switch v-model="form.meta.dot" />
       </el-form-item>
@@ -86,6 +89,7 @@ const form = reactive<any>({
     noClosable: false,
     noKeepAlive: false,
     tabHidden: false,
+    guard: [],
   },
 })
 const rules = reactive<any>({
@@ -134,7 +138,12 @@ const save = () => {
 </script>
 
 <style lang="scss" scoped>
-.el-input {
-  width: 200px;
+:deep() {
+  .el-form-item__content {
+    min-width: 200px;
+    .el-input {
+      width: 200px;
+    }
+  }
 }
 </style>

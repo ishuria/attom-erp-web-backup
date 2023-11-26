@@ -21,7 +21,7 @@
         </div>
       </el-form-item>
       <el-form-item label="按钮权限">
-        <el-input v-model="form.btnRolesCheckedList" clearable />
+        <el-input v-model="form.btnRolesCheckedList" clearable :rows="3" type="textarea" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -47,7 +47,7 @@ const formRef = ref<any>(null)
 const treeRef = ref<any>(null)
 const form = reactive<any>({
   role: '',
-  btnRolesCheckedList: [],
+  btnRolesCheckedList: ['read:system,write:system,delete:system,read:index,write:index,delete:index,read:index,write:index,delete:index'],
 })
 const rules = reactive<any>({
   role: [{ required: true, trigger: 'blur', message: '请输入角色码' }],
