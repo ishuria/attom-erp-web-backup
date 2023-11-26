@@ -460,21 +460,36 @@ html {
 
     .el-dialog {
       border-radius: var(--el-border-radius-base);
+      transition: var(--el-transition);
 
-      &__headerbtn {
-        &:focus {
+      &__header {
+        height: 54px;
+        padding: 0;
+        margin-right: 0;
+
+        .el-dialog__title {
+          width: calc(100% - 90px);
+          padding: var(--el-dialog-padding-primary);
+        }
+
+        &btn {
+          right: var(--el-margin);
+          width: 16px;
+
+          &:focus {
+            .el-dialog__close {
+              color: var(--el-color-info);
+            }
+          }
+
           .el-dialog__close {
             color: var(--el-color-info);
           }
-        }
 
-        .el-dialog__close {
-          color: var(--el-color-info);
-        }
-
-        .el-dialog__fullscreen {
-          font-size: 14px;
-          vertical-align: 3px;
+          .el-dialog__fullscreen {
+            font-size: 14px;
+            vertical-align: 3px;
+          }
         }
       }
 

@@ -12,12 +12,12 @@
     >
       <template #header>
         <slot name="header">
-          <span class="el-dialog__title">{{ title }}</span>
+          <div class="el-dialog__title" @dblclick="setFullscreen">{{ title }}</div>
         </slot>
         <button v-if="showClose" class="el-dialog__headerbtn" type="button" @click="closeDialog">
           <el-icon class="el-dialog__close"><close /></el-icon>
         </button>
-        <button v-if="showFullscreen" class="el-dialog__headerbtn" style="right: 32px" type="button" @click="setFullscreen">
+        <button v-if="showFullscreen" class="el-dialog__headerbtn" style="right: 56px" type="button" @click="setFullscreen">
           <vab-icon class="el-dialog__close el-dialog__fullscreen" :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
         </button>
       </template>
