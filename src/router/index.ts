@@ -1125,16 +1125,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
-        path: 'amount',
-        name: 'Amount',
-        component: () => import('/@/views/template/Amount.vue'),
-        meta: {
-          title: '大写金额转换',
-          guard: ['Admin'],
-          icon: 'money-cny-box-line',
-        },
-      },
-      {
         path: 'regularExpression',
         name: 'RegularExpression',
         component: () => import('/@/views/template/RegularExpression.vue'),

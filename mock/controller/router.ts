@@ -1074,16 +1074,6 @@ const list = [
         },
       },
       {
-        path: 'amount',
-        name: 'Amount',
-        component: '/@/views/template/Amount.vue',
-        meta: {
-          title: '大写金额转换',
-          guard: ['Admin'],
-          icon: 'money-cny-box-line',
-        },
-      },
-      {
         path: 'regularExpression',
         name: 'RegularExpression',
         component: '/@/views/template/RegularExpression.vue',
