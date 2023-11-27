@@ -4,7 +4,7 @@
       <el-form-item label="标题">
         <el-input v-model="form.title" style="width: 345px" />
       </el-form-item>
-      <el-form-item class="hidden-xs-only" label="弹窗宽度（30% - 60%）">
+      <el-form-item label="内容">
         <el-input v-model="form.content" style="width: 345px" type="textarea" />
       </el-form-item>
       <el-form-item label="基础配置">
@@ -45,7 +45,7 @@ defineOptions({
 
 const form = reactive<any>({
   showFullscreen: true,
-  animated: false,
+  animated: true,
   draggable: true,
   width: 30,
   title: '温馨提示',
@@ -57,6 +57,17 @@ const dialogVisible = ref<any>(false)
 const handleOpen = () => {
   dialogVisible.value = true
 }
+
+let timer: any
+onActivated(() => {
+  timer = setTimeout(() => {
+    dialogVisible.value = true
+  }, 1000)
+})
+
+onDeactivated(() => {
+  clearInterval(timer)
+})
 </script>
 
 <style lang="scss" scoped></style>
