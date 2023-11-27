@@ -926,6 +926,17 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'dialog',
+        name: 'Dialog',
+        component: () => import('/@/views/operate/dialog/index.vue'),
+        meta: {
+          title: '弹窗',
+          guard: ['Admin'],
+          icon: 'airplay-line',
+          badge: 'Hot',
+        },
+      },
+      {
         path: 'randomTheme',
         name: 'RandomTheme',
         component: () => import('/@/views/operate/randomTheme/index.vue'),

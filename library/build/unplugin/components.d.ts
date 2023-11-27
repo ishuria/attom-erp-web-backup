@@ -34,6 +34,7 @@ declare module 'vue' {
     DefaultTableEdit: typeof import('./../../../src/views/vab/table/vabAutoComponents/DefaultTableEdit.vue')['default']
     DepartmentManagementEdit: typeof import('./../../../src/views/setting/departmentManagement/vabAutoComponents/DepartmentManagementEdit.vue')['default']
     Develop: typeof import('./../../../src/views/index/vabAutoComponents/Develop.vue')['default']
+    DialogDemo: typeof import('./../../../src/views/operate/dialog/vabAutoComponents/DialogDemo.vue')['default']
     DictionaryManagementEdit: typeof import('./../../../src/views/setting/dictionaryManagement/vabAutoComponents/DictionaryManagementEdit.vue')['default']
     DrawerBasicUsage: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerBasicUsage.vue')['default']
     DrawerCustomizationContent: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerCustomizationContent.vue')['default']

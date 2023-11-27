@@ -875,6 +875,17 @@ const list = [
         },
       },
       {
+        path: 'dialog',
+        name: 'Dialog',
+        component: '/@/views/operate/dialog/index.vue',
+        meta: {
+          title: '弹窗',
+          guard: ['Admin'],
+          icon: 'airplay-line',
+          badge: 'Hot',
+        },
+      },
+      {
         path: 'randomTheme',
         name: 'RandomTheme',
         component: '/@/views/operate/randomTheme/index.vue',
