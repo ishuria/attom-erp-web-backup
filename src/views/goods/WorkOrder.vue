@@ -83,7 +83,6 @@ const queryForm = reactive<any>({
 
 onActivated(() => {
   tableSortRef.value.doLayout()
-  fetchData()
 })
 
 const fetchData = async () => {

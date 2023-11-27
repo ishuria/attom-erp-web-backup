@@ -117,11 +117,6 @@ const queryForm = reactive<any>({
   checked4: false,
 })
 
-onActivated(() => {
-  tableSortRef.value.doLayout()
-  fetchData()
-})
-
 const onChange1 = (status: boolean) => {
   queryForm.checked1 = status
   queryData()
@@ -250,6 +245,10 @@ const handleDetail = (row: any) => {
     else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
   }
 }
+
+onActivated(() => {
+  tableSortRef.value.doLayout()
+})
 
 onBeforeMount(() => {
   fetchData()

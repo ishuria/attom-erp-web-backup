@@ -230,11 +230,6 @@ const defaultProps = {
   label: 'label',
 }
 
-onActivated(() => {
-  tableSortRef.value.doLayout()
-  fetchData()
-})
-
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getList(queryForm)
@@ -347,6 +342,10 @@ const handleDetail = (row: any) => {
     else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
   }
 }
+
+onActivated(() => {
+  tableSortRef.value.doLayout()
+})
 
 onBeforeMount(() => {
   fetchData()

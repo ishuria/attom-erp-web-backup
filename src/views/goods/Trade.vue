@@ -111,11 +111,6 @@ const queryForm = reactive<any>({
   pageSize: 20,
 })
 
-onActivated(() => {
-  tableSortRef.value.doLayout()
-  fetchData()
-})
-
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getList(queryForm)
@@ -157,6 +152,10 @@ const handleRefund = (row: any) => {
     })
   }
 }
+
+onActivated(() => {
+  tableSortRef.value.doLayout()
+})
 
 onBeforeMount(() => {
   fetchData()

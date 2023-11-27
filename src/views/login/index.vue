@@ -41,7 +41,7 @@
           </el-input>
           <el-image class="code" :src="codeUrl" @click="changeCode" />
         </el-form-item>
-        <el-button class="login-btn" :loading="loading" native-type="submit" type="primary" @click.prevent="handleLogin">
+        <el-button class="login-btn" :loading="loading" type="primary" @click.prevent="handleLogin">
           {{ translate('登录') }}
         </el-button>
         <router-link to="/register">
