@@ -12,14 +12,24 @@
             更新日志
           </template>
           <el-scrollbar style="height: 100%">
-            <el-timeline :reverse="reverse" style="margin-top: 5px">
-              <el-timeline-item
-                v-for="(activity, index) in activities"
-                :key="index"
-                :color="activity.color"
-                :timestamp="activity.timestamp"
-              >
-                <div class="change-log-item" v-html="activity.content"></div>
+            <el-timeline style="margin-top: 5px">
+              <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
+                <template v-if="item.waver" #dot>
+                  <span
+                    class="vab-dot"
+                    :class="{
+                      ['vab-dot-' + item.waver]: true,
+                    }"
+                  >
+                    <span></span>
+                  </span>
+                </template>
+                <vab-card v-if="item.card">
+                  <div class="change-log-item" v-html="item.content"></div>
+                </vab-card>
+                <template v-else>
+                  <div class="change-log-item" v-html="item.content"></div>
+                </template>
               </el-timeline-item>
             </el-timeline>
           </el-scrollbar>
@@ -38,7 +48,6 @@ defineOptions({
 })
 
 const lastTime = dayjs().format('YYYY-MM-DD')
-const reverse = ref<any>(false)
 const commonUrl = `https://vue-admin-beautiful.com`
 const activities = ref<any[]>([])
 
@@ -64,6 +73,9 @@ const sortLogs = (logs: Log[]): Log[] => {
 
 onBeforeMount(async () => {
   const { data } = await getList()
+  // const _data = data.map((obj: any) => {
+  //   return { ...obj, color: 'var(--el-timeline-node-color)' }
+  // })
   data.push({
     timestamp: lastTime,
     content: `
@@ -72,7 +84,9 @@ onBeforeMount(async () => {
     小版本更新日志及bug修复日志演示地址不做展示，具体更新内容以购买者绑定仓库提交日志为准
     <a href='${commonUrl}/authorization/shop-vite.html' target='_blank'>点我购买</a>
     `,
+    waver: 'success',
   })
+  console.log(sortLogs(data))
   activities.value = sortLogs(data)
 })
 </script>
@@ -81,6 +95,17 @@ onBeforeMount(async () => {
 .change-log-container {
   .change-log-item {
     line-height: 24px;
+  }
+
+  :deep() {
+    .el-timeline-item__dot {
+      .vab-dot {
+        left: -1px;
+        width: 12px;
+        height: 12px;
+        margin: auto !important;
+      }
+    }
   }
 }
 </style>
