@@ -47,7 +47,7 @@
             </template>
           </el-input>
         </el-form-item>
-        <el-button class="register-btn" :loading="loading" type="primary" @click.prevent="handleRegister">
+        <el-button v-throttle="handleRegister" class="register-btn" :loading="loading" native-type="submit" type="primary">
           {{ translate('注册') }}
         </el-button>
         <router-link to="/login">

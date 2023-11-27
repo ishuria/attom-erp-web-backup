@@ -24,8 +24,8 @@
             v-model.trim="form.password"
             clearable
             :placeholder="translate('请输入密码')"
+            show-password
             :type="passwordType"
-            @keyup.enter="handleLogin"
           >
             <template #prefix>
               <vab-icon icon="lock-line" />
@@ -41,7 +41,7 @@
           </el-input>
           <el-image class="code" :src="codeUrl" @click="changeCode" />
         </el-form-item>
-        <el-button class="login-btn" :loading="loading" type="primary" @click.prevent="handleLogin">
+        <el-button v-throttle="handleLogin" class="login-btn" :loading="loading" native-type="submit" type="primary">
           {{ translate('登录') }}
         </el-button>
         <router-link to="/register">
