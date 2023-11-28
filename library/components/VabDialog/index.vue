@@ -2,17 +2,29 @@
   <el-dialog
     v-model="dialogVisible"
     v-bind="$attrs"
+    :align-center="alignCenter"
+    :append-to="appendTo"
     :append-to-body="appendToBody"
+    :before-close="beforeClose"
+    :center="center"
     :class="customClass"
+    :close-on-click-modal="closeOnClickModal"
+    :close-on-press-escape="closeOnPressEscape"
+    :destroy-on-close="destroyOnClose"
     :draggable="draggable"
     :fullscreen="isFullscreen"
     :lock-scroll="lockScroll"
-    :show-close="false"
+    :modal="modal"
+    :modal-class="modalClass"
+    :open-delay="openDelay"
+    :show-close="showClose"
     :style="{
       transition: animated ? 'var(--el-transition)' : '',
     }"
+    :top="top"
     :width="width"
   >
+    >
     <template #header>
       <slot name="header">
         <div class="el-dialog__title" @dblclick="setFullscreen">{{ title }}</div>
@@ -54,6 +66,14 @@ const props = defineProps({
   animated: {
     type: Boolean,
     default: true,
+  },
+  closeOnClickModal: {
+    type: Boolean,
+    default: false,
+  },
+  closeOnPressEscape: {
+    type: Boolean,
+    default: false,
   },
   customClass: {
     type: String,
