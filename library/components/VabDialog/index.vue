@@ -24,7 +24,6 @@
     :top="top"
     :width="width"
   >
-    >
     <template #header>
       <slot name="header">
         <div class="el-dialog__title" @dblclick="setFullscreen">{{ title }}</div>
@@ -37,10 +36,10 @@
       </button>
     </template>
     <div v-loading="loading">
-      <slot></slot>
+      <slot />
     </div>
     <template #footer>
-      <slot name="footer"></slot>
+      <slot name="footer" />
     </template>
   </el-dialog>
 </template>

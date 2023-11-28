@@ -13,7 +13,7 @@
         <el-badge :hidden="hidden" style="margin-right: 10px" :value="badge">
           <el-button type="primary" @click="handleBadge('DynamicMeta')">徽章+ 1</el-button>
         </el-badge>
-        <el-button type="danger" @click="resetBadge('DynamicMeta', { badge: '0' })">徽章清零</el-button>
+        <el-button type="warning" @click="resetBadge('DynamicMeta', { badge: '0' })">徽章清零</el-button>
         <el-button type="danger" @click="removeBadge('DynamicMeta', { badge: false })">移除徽章</el-button>
       </el-space>
     </vab-card>

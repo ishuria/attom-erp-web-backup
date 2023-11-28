@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-container">
-    <el-form label-position="top" :model="form">
+    <el-form label-position="top" :model="form" style="max-width: 380px">
       <el-form-item label="标题">
         <el-input v-model="form.title" style="width: 345px" />
       </el-form-item>
@@ -8,23 +8,37 @@
         <el-input v-model="form.content" style="width: 345px" type="textarea" />
       </el-form-item>
       <el-form-item label="基础配置">
+        <el-checkbox v-model="form.draggable" class="hidden-xs-only" label="开启拖拽" />
+        <el-checkbox v-model="form.modal" label="开启遮罩" />
         <el-checkbox v-model="form.showFullscreen" label="开启全屏按钮" />
         <el-checkbox v-if="form.showFullscreen" v-model="form.animated" label="开启全屏动画" />
-        <el-checkbox v-model="form.draggable" class="hidden-xs-only" label="开启拖拽" />
+      </el-form-item>
+      <el-form-item label="其他配置">
+        <el-checkbox v-model="form.alignCenter" label="开启垂直水平居中" />
+        <el-checkbox v-model="form.center" label="开启header、footer居中" />
+        <el-checkbox v-model="form.closeOnClickModal" label="开启点击遮罩关闭" />
+        <el-checkbox v-model="form.closeOnPressEscape" label="开启ESC按键关闭" />
       </el-form-item>
       <el-form-item class="hidden-xs-only" label="弹窗宽度（30% - 60%）">
         <el-slider v-model="form.width" :max="60" :min="30" style="width: 345px" />
       </el-form-item>
       <el-form-item label="操作">
         <el-button type="primary" @click="handleOpen">打开弹窗</el-button>
+        <el-button type="warning" @click="handleReset">重置</el-button>
       </el-form-item>
     </el-form>
 
     <vab-dialog
       v-model="dialogVisible"
+      :align-center="form.alignCenter"
       :animated="form.animated"
       append-to-body
+      :center="form.center"
+      :close-on-click-modal="form.closeOnClickModal"
+      :close-on-press-escape="form.closeOnPressEscape"
+      :destroy-on-close="true"
       :draggable="form.draggable"
+      :modal="form.modal"
       :show-fullscreen="form.showFullscreen"
       :title="form.title"
       :width="form.width + '%'"
@@ -50,12 +64,30 @@ const form = reactive<any>({
   width: 30,
   title: '温馨提示',
   content: '昨夜西风凋碧树，独上高楼望尽天涯路',
+  alignCenter: false,
+  modal: true,
+  center: false,
+  closeOnClickModal: false,
+  closeOnPressEscape: false,
 })
-
 const dialogVisible = ref<any>(false)
 
 const handleOpen = () => {
   dialogVisible.value = true
+}
+
+const handleReset = () => {
+  form.showFullscreen = true
+  form.animated = true
+  form.draggable = true
+  form.width = 30
+  form.title = '温馨提示'
+  form.content = '昨夜西风凋碧树，独上高楼望尽天涯路'
+  form.alignCenter = false
+  form.modal = true
+  form.center = false
+  form.closeOnClickModal = false
+  form.closeOnPressEscape = false
 }
 
 let timer: any

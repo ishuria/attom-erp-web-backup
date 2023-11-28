@@ -67,7 +67,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm()">立即创建</el-button>
-            <el-button type="danger" @click="resetForm()">重置</el-button>
+            <el-button type="warning" @click="resetForm()">重置</el-button>
           </el-form-item>
         </el-form>
       </el-col>

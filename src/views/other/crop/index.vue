@@ -5,7 +5,7 @@
         <el-form label-position="top" label-width="80px">
           <el-form-item label="操作">
             <el-button type="primary" @click="visible = !visible">图片裁剪</el-button>
-            <el-button type="danger" @click="handleReset">重置</el-button>
+            <el-button type="warning" @click="handleReset">重置</el-button>
           </el-form-item>
 
           <el-form-item label="裁剪比例">
