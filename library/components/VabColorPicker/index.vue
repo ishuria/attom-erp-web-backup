@@ -13,7 +13,6 @@ defineOptions({
 })
 
 const $sub = inject<any>('$sub')
-const $unsub = inject<any>('$unsub')
 const predefineColors = ref<any>([
   _color,
   '#1e90ff',
@@ -36,22 +35,15 @@ const handleChange = (value: any) => {
   changeColor()
 }
 
-// 还原默认
-$sub('shop-vite-reset-color', () => {
-  handleChange(_color)
-})
-
-$sub('shop-vite-change-color', () => {
-  handleChange(color)
-})
-
 onBeforeMount(() => {
+  // 还原默认
+  $sub('shop-vite-reset-color', () => {
+    handleChange(_color)
+  })
+  $sub('shop-vite-change-color', () => {
+    handleChange(color)
+  })
   handleChange(getColor)
-})
-
-onBeforeUnmount(() => {
-  $unsub('shop-vite-reset-color')
-  $unsub('shop-vite-change-color')
 })
 </script>
 

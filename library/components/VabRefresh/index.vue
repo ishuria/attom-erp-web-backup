@@ -8,7 +8,6 @@ defineOptions({
 })
 
 const $sub = inject<any>('$sub')
-const $unsub = inject<any>('$unsub')
 const $pub = inject<any>('$pub')
 const className = ref<string>('')
 
@@ -24,11 +23,9 @@ const refreshRoute = () => {
   rotate()
 }
 
-$sub('refresh-rotate', () => {
-  rotate()
-})
-
-onUnmounted(() => {
-  $unsub('reload-router-view')
+onBeforeMount(() => {
+  $sub('refresh-rotate', () => {
+    rotate()
+  })
 })
 </script>

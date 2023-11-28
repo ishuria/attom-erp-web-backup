@@ -23,7 +23,6 @@ defineOptions({
 })
 
 const $sub = inject<any>('$sub')
-const $unsub = inject<any>('$unsub')
 const route = useRoute()
 const settingsStore = useSettingsStore()
 const { theme, mode } = storeToRefs(settingsStore)
@@ -74,25 +73,20 @@ const handleSetScheme = (value: string) => {
   return localStorage.setItem('vueuse-color-scheme', value)
 }
 
-// 还原默认
-$sub('shop-vite-reset-dark', () => {
-  mode.value = handleGetScheme()
-
-  if (handleGetScheme() === 'dark') {
-    handleSetScheme('light')
-    handleUseDark()
-    mode.value = 'light'
-  }
-})
-
 onBeforeMount(() => {
+  // 还原默认
+  $sub('shop-vite-reset-dark', () => {
+    mode.value = handleGetScheme()
+    if (handleGetScheme() === 'dark') {
+      handleSetScheme('light')
+      handleUseDark()
+      mode.value = 'light'
+    }
+  })
+
   handleUseDark()
   if (handleGetScheme() === 'auto') handleSetScheme('light')
   mode.value = handleGetScheme()
-})
-
-onBeforeUnmount(() => {
-  $unsub('shop-vite-reset-dark')
 })
 </script>
 

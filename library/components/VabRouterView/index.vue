@@ -55,17 +55,19 @@ watchEffect(() => {
   siteData.description = `${'Vue'} ${'Shop'} ${'Vite'}-${route.meta.title}简介、官网、首页、文档和下载 - 前端开发框架`
 })
 
-$sub('reload-router-view', (refreshRouteName: any = route.name) => {
-  if (theme.value.showProgressBar) VabProgress.start()
-  const cacheActivePath = routerKey.value
-  routerKey.value = null
-  updateKeepAliveNameList(refreshRouteName)
-  nextTick(() => {
-    routerKey.value = cacheActivePath
-    updateKeepAliveNameList()
+onBeforeMount(() => {
+  $sub('reload-router-view', (refreshRouteName: any = route.name) => {
+    if (theme.value.showProgressBar) VabProgress.start()
+    const cacheActivePath = routerKey.value
+    routerKey.value = null
+    updateKeepAliveNameList(refreshRouteName)
+    nextTick(() => {
+      routerKey.value = cacheActivePath
+      updateKeepAliveNameList()
+    })
+    setTimeout(() => {
+      if (theme.value.showProgressBar) VabProgress.done()
+    }, 200)
   })
-  setTimeout(() => {
-    if (theme.value.showProgressBar) VabProgress.done()
-  }, 200)
 })
 </script>

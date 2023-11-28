@@ -140,7 +140,6 @@ defineOptions({
 const route = useRoute()
 const $sub = inject<any>('$sub')
 const $pub = inject<any>('$pub')
-const $unsub = inject<any>('$unsub')
 const $baseLoading = inject<any>('$baseLoading')
 const $baseMessage = inject<any>('$baseMessage')
 const settingsStore = useSettingsStore()
@@ -256,23 +255,6 @@ const handleSaveTheme = () => {
   //if (device.value === 'mobile') location.reload()
 }
 
-$sub('shop-vite-open-theme', () => {
-  handleOpenTheme()
-})
-
-$sub('shop-vite-reset-theme', () => {
-  setDefaultTheme()
-})
-
-$sub('shop-vite-save-theme', () => {
-  saveTheme()
-})
-
-$sub('shop-vite-change-theme', (value: string) => {
-  theme.value.themeName = value
-  _updateTheme()
-})
-
 watch(
   route,
   () => {
@@ -281,11 +263,20 @@ watch(
   { immediate: true }
 )
 
-onBeforeUnmount(() => {
-  $unsub('shop-vite-change-theme')
-  $unsub('shop-vite-open-theme')
-  $unsub('shop-vite-reset-theme')
-  $unsub('shop-vite-save-theme')
+onBeforeMount(() => {
+  $sub('shop-vite-open-theme', () => {
+    handleOpenTheme()
+  })
+  $sub('shop-vite-reset-theme', () => {
+    setDefaultTheme()
+  })
+  $sub('shop-vite-save-theme', () => {
+    saveTheme()
+  })
+  $sub('shop-vite-change-theme', (value: string) => {
+    theme.value.themeName = value
+    _updateTheme()
+  })
 })
 </script>
 
