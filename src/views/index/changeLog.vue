@@ -6,6 +6,8 @@
           :body-style="{
             height: 'calc(var(--el-container-height) - 57px)',
           }"
+          skeleton
+          :skeleton-rows="16"
         >
           <template #header>
             <vab-icon icon="file-word-line" />

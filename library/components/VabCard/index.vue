@@ -31,7 +31,7 @@ defineProps({
   },
   skeletonRows: {
     type: Number,
-    default: 4, //显示的数量会比传入的数量多 1
+    default: 5, //显示的数量会比传入的数量多 1
   },
 })
 
@@ -53,6 +53,11 @@ setTimeout(() => {
         background-clip: text;
         -webkit-text-fill-color: transparent;
       }
+    }
+
+    .el-skeleton {
+      height: 100%;
+      overflow: hidden;
     }
   }
 }
