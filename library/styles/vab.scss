@@ -463,7 +463,7 @@ html {
       border-radius: var(--el-border-radius-base);
 
       &__header {
-        height: 54px;
+        height: 60px;
         padding: 0;
         margin-right: 0;
 
@@ -514,6 +514,32 @@ html {
         .el-dialog__body {
           height: calc(100vh - 54px - 62px);
           overflow-y: auto;
+        }
+      }
+
+      &.vab-dialog-plain {
+        .el-dialog__header {
+          background: var(--el-color-info-light-9);
+          border-top-left-radius: var(--el-border-radius-base);
+          border-top-right-radius: var(--el-border-radius-base);
+        }
+      }
+
+      &.vab-dialog-primary {
+        .el-dialog__header {
+          --el-text-color-primary: var(--el-color-white);
+          --el-color-info: var(--el-color-white);
+          background: var(--el-color-primary);
+          border-top-left-radius: var(--el-border-radius-base);
+          border-top-right-radius: var(--el-border-radius-base);
+
+          .el-dialog__close {
+            --el-color-primary: var(--el-color-white);
+
+            &:hover {
+              opacity: 0.6;
+            }
+          }
         }
       }
     }

@@ -7,6 +7,13 @@
       <el-form-item label="内容">
         <el-input v-model="form.content" style="width: 345px" type="textarea" />
       </el-form-item>
+      <el-form-item label="主题配置">
+        <el-radio-group v-model="form.theme" @change="handleDialogTheme">
+          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label">
+            <template #default>{{ item.title }}</template>
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="基础配置">
         <el-checkbox v-model="form.draggable" class="hidden-xs-only" label="开启拖拽" />
         <el-checkbox v-model="form.modal" label="开启遮罩" />
@@ -19,6 +26,7 @@
         <el-checkbox v-model="form.closeOnClickModal" label="开启点击遮罩关闭" />
         <el-checkbox v-model="form.closeOnPressEscape" label="开启ESC按键关闭" />
       </el-form-item>
+
       <el-form-item class="hidden-xs-only" label="弹窗宽度（30% - 60%）">
         <el-slider v-model="form.width" :max="60" :min="30" style="width: 345px" />
       </el-form-item>
@@ -40,6 +48,7 @@
       :draggable="form.draggable"
       :modal="form.modal"
       :show-fullscreen="form.showFullscreen"
+      :theme="form.theme"
       :title="form.title"
       :width="form.width + '%'"
     >
@@ -69,8 +78,18 @@ const form = reactive<any>({
   center: false,
   closeOnClickModal: false,
   closeOnPressEscape: false,
+  theme: 'default',
 })
 const dialogVisible = ref<any>(false)
+const themeList = ref<any>([
+  { label: 'default', title: '默认' },
+  { label: 'plain', title: '简约' },
+  { label: 'primary', title: '主题色' },
+])
+
+const handleDialogTheme = (val: any) => {
+  form.theme = val
+}
 
 const handleOpen = () => {
   dialogVisible.value = true

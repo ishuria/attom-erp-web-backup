@@ -7,7 +7,7 @@
     :append-to-body="appendToBody"
     :before-close="beforeClose"
     :center="center"
-    :class="customClass"
+    :class="'vab-dialog-' + theme"
     :close-on-click-modal="closeOnClickModal"
     :close-on-press-escape="closeOnPressEscape"
     :destroy-on-close="destroyOnClose"
@@ -74,9 +74,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  customClass: {
+  theme: {
     type: String,
-    default: '', //支持空、vab-dialog-info、vab-dialog-primary三种
+    default: '', //支持default、plain、primary三种
   },
 })
 const emit = defineEmits(['update:modelValue'])
