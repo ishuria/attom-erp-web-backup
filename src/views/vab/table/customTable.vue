@@ -126,7 +126,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="237">
+      <el-table-column align="center" :fixed="fixed" label="操作" width="237">
+        <template #header>
+          <el-checkbox v-model="fixed" label="是否固定操作列" true-label="right" />
+        </template>
         <template #default="{ row }">
           <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
           <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
@@ -235,6 +238,7 @@ const queryForm = reactive<any>({
   pageSize: 20,
   title: '',
 })
+const fixed = ref<string>('right')
 
 const dragOptions = computed(() => {
   return {
