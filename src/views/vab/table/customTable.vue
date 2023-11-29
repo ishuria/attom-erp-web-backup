@@ -190,6 +190,7 @@ const columns = ref<any>([
     label: 'id',
     prop: 'id',
     sortable: true,
+    checked: true,
   },
   {
     label: '标题',
@@ -201,6 +202,7 @@ const columns = ref<any>([
   {
     label: '图片',
     prop: 'title',
+    checked: true,
   },
   {
     label: '作者',
@@ -230,6 +232,7 @@ const columns = ref<any>([
     label: '描述',
     prop: 'description',
     sortable: true,
+    checked: true,
   },
 ])
 const checkList = ref<any>([])
