@@ -39,4 +39,6 @@ export const cliConfig: { [key: string]: string | number | boolean | Array<strin
   https: false,
   // 开启打包分析
   report: false,
+  // 禁止在生产环境下使用调试
+  noDebugger: true,
 }
