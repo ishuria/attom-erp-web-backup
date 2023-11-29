@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item label="主题配置">
         <el-radio-group v-model="form.theme" @change="handleDialogTheme">
-          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label">
+          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label" @change="handleOpen">
             <template #default>{{ item.title }}</template>
           </el-radio-button>
         </el-radio-group>
