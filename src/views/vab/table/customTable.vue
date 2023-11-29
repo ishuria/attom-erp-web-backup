@@ -107,7 +107,9 @@
         v-for="(item, index) in finallyColumns"
         :key="index"
         align="center"
+        :fixed="item.fixed"
         :label="item.label"
+        :min-width="item.minWidth"
         :prop="item.prop"
         show-overflow-tooltip
         :sortable="item.sortable"
@@ -191,6 +193,7 @@ const columns = ref<any>([
     prop: 'id',
     sortable: true,
     checked: true,
+    minWidth: 200,
   },
   {
     label: '标题',
@@ -198,11 +201,13 @@ const columns = ref<any>([
     sortable: true,
     disableCheck: true,
     checked: true,
+    minWidth: 200,
   },
   {
     label: '图片',
     prop: 'title',
     checked: true,
+    minWidth: 100,
   },
   {
     label: '作者',
@@ -215,24 +220,28 @@ const columns = ref<any>([
     prop: 'rate',
     sortable: true,
     checked: true,
+    minWidth: 200,
   },
   {
     label: '数量',
     prop: 'count',
     sortable: true,
     checked: true,
+    minWidth: 100,
   },
   {
     label: '时间',
     prop: 'datetime',
     sortable: true,
     checked: true,
+    minWidth: 160,
   },
   {
     label: '描述',
     prop: 'description',
     sortable: true,
     checked: true,
+    minWidth: 400,
   },
 ])
 const checkList = ref<any>([])
