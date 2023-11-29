@@ -96,7 +96,7 @@ const handleRoutes = computed(() => {
 
       .el-menu--collapse.el-menu {
         > .el-menu-item,
-        > .el-sub-menu {
+        > .el-sub-menu .el-sub-menu__title {
           justify-content: center;
           height: calc(var(--el-menu-item-height) - 6px);
           padding: 0;
@@ -158,5 +158,12 @@ const handleRoutes = computed(() => {
 <style lang="scss">
 .el-menu {
   border-right: 0;
+}
+.el-menu--popup-right-start {
+  --el-menu-hover-bg-color: var(--el-color-primary) !important;
+  --el-menu-active-color: var(--el-color-white) !important;
+  .is-active {
+    background: var(--el-color-primary) !important;
+  }
 }
 </style>

@@ -296,5 +296,10 @@ html > body.vab-theme-plain {
 
   .vab-side-bar {
     border-right: 1px solid var(--el-border-color) !important;
+
+    .el-sub-menu__title:hover {
+      color: var(--el-color-primary);
+      background-color: var(--el-color-primary-light-9);
+    }
   }
 }
