@@ -17,7 +17,7 @@ onBeforeMount(() => {
   changeColor()
   updateTheme()
 
-  if (!location.hostname.includes('127')) {
+  if (!location.hostname.includes('127') && !location.hostname.includes('localhost')) {
     if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io' || noDebugger) {
       ;(() => {
         const block = () => {
