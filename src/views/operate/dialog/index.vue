@@ -101,7 +101,7 @@ const handleReset = () => {
   form.draggable = true
   form.width = 30
   form.title = '温馨提示'
-  form.content = '昨夜西风凋碧树，独上高楼望尽天涯路'
+  form.content = '昨夜西风凋碧树，独上高楼，望尽天涯路'
   form.alignCenter = false
   form.modal = true
   form.center = false
