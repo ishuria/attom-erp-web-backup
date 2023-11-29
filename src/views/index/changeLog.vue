@@ -52,6 +52,7 @@ defineOptions({
 const lastTime = dayjs().format('YYYY-MM-DD')
 const commonUrl = `https://vue-admin-beautiful.com`
 const activities = ref<any[]>([])
+const $baseMessage = inject<any>('$baseMessage')
 
 interface Log {
   timestamp: string
@@ -90,6 +91,21 @@ onBeforeMount(async () => {
   })
   console.log(sortLogs(data))
   activities.value = sortLogs(data)
+})
+
+// 正式项目如果要用到更新日志模板，请删除以下代码
+onMounted(() => {
+  if (
+    location.hostname !== 'localhost' &&
+    !location.hostname.includes('127') &&
+    !location.hostname.includes('192') &&
+    location.hostname !== 'vue-admin-beautiful.com' &&
+    location.hostname !== 'chu1204505056.gitee.io'
+  ) {
+    $baseMessage('检测到当前演示地址非官方演示地址，即将为您跳转，请稍后', 'warning', 'hey', () => {
+      location.href = 'https://vue-admin-beautiful.com/shop-vite/#/changeLog'
+    })
+  }
 })
 </script>
 
