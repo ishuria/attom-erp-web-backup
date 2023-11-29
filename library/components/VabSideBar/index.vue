@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar class="vab-side-bar" :class="{ 'is-collapse': collapse }">
-    <vab-logo v-if="layout === 'comprehensive' || layout === 'vertical'" />
+    <vab-logo v-if="layout === 'comprehensive' || layout === 'vertical'" class="fixed-logo" />
     <el-menu
       background-color="var(--el-menu-background-color)"
       :collapse="collapse"
@@ -69,6 +69,16 @@ const handleRoutes = computed(() => {
   background: var(--el-menu-background-color);
   transition: var(--el-transition);
 
+  .fixed-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: var(--el-z-index);
+    width: 100%;
+    height: var(--el-header-height);
+    background: var(--el-menu-background-color);
+  }
+
   &.side-bar-common {
     top: var(--el-header-height);
     height: calc(100vh - var(--el-header-height));
@@ -122,6 +132,10 @@ const handleRoutes = computed(() => {
   }
 
   :deep() {
+    .el-menu.el-menu--vertical {
+      margin-top: var(--el-header-height);
+    }
+
     .el-scrollbar__wrap {
       overflow-x: hidden;
     }
