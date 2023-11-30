@@ -404,6 +404,10 @@ html {
             cursor: pointer;
             border-radius: var(--el-border-radius-base);
           }
+
+          .el-button.is-text + .el-button.is-text {
+            margin-left: 0;
+          }
         }
       }
     }

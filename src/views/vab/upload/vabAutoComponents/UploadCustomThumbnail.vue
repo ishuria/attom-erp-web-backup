@@ -22,7 +22,7 @@
     </template>
   </el-upload>
 
-  <vab-dialog v-model="dialogVisible" append-to-body draggable>
+  <vab-dialog v-model="dialogVisible" append-to-body>
     <img alt="Preview Image" :src="dialogImageUrl" />
   </vab-dialog>
 </template>

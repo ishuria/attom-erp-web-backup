@@ -31,7 +31,7 @@
       <el-table-column align="center" label="父节点Value" min-width="120" prop="parentValue" />
       <el-table-column align="center" label="排序" prop="order" />
       <el-table-column align="center" label="创建时间" min-width="160" prop="createTime" show-overflow-tooltip />
-      <el-table-column align="center" label="操作" width="162">
+      <el-table-column align="center" label="操作" width="150">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
           <el-button :disabled="!row.parentValue" text type="primary" @click="handleDelete(row)">删除</el-button>

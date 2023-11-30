@@ -54,7 +54,7 @@
           <el-button @click="clickFullScreen">
             <vab-icon :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
           </el-button>
-          <el-popover trigger="hover" :width="162">
+          <el-popover trigger="hover" :width="150">
             <el-radio-group v-model="lineHeight">
               <el-radio-button label="large">大</el-radio-button>
               <el-radio-button label="default">中</el-radio-button>
@@ -128,7 +128,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :fixed="fixed" label="操作" width="237">
+      <el-table-column align="center" :fixed="fixed" label="操作" width="215">
         <template #header>
           <el-checkbox v-model="fixed" label="是否固定操作列" true-label="right" />
         </template>

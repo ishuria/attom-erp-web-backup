@@ -33,7 +33,7 @@
             <el-table-column label="id" min-width="180" prop="id" />
             <el-table-column label="key值" prop="key" />
             <el-table-column label="字典值" prop="value" />
-            <el-table-column label="操作" width="162">
+            <el-table-column label="操作" width="150">
               <template #default="{ row }">
                 <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
                 <el-button text type="danger" @click="handleDelete(row)">删除</el-button>

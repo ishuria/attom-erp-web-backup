@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dialogFormVisible" append-to-body draggable :title="title" width="830px" @close="close">
+  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="830px" @close="close">
     <el-form ref="formRef" inline label-width="140px" :model="form" :rules="rules">
       <el-form-item label="父级Id" prop="parentId">
         <el-input v-model="form.parentId" clearable />

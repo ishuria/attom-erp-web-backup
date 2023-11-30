@@ -78,6 +78,10 @@ const props = defineProps({
     type: String,
     default: '', //支持default、plain、primary三种
   },
+  draggable: {
+    type: Boolean,
+    default: true,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
