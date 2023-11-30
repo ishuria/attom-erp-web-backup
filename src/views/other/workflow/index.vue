@@ -1,6 +1,6 @@
 <template>
   <div class="workflow-container">
-    <el-alert class="hidden-sm-and-up" :closable="false" title="手机端不支持工作流演示" type="warning" />
+    <vab-alert class="hidden-sm-and-up" title="手机端不支持工作流演示" type="warning" />
     <control v-if="lf" class="vab-control hidden-xs-only" :lf="lf" @cat-data="catData" />
     <node-panel class="hidden-xs-only" :lf="lf" />
     <div id="container" ref="container" class="hidden-xs-only"></div>

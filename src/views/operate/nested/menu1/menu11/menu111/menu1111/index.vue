@@ -1,8 +1,8 @@
 <template>
   <div class="menu1-1-1-1-container">
-    <el-alert :closable="false" title="路由1.1">
-      <el-alert :closable="false" title="路由1.1.1">
-        <el-alert :closable="false" title="路由1.1.1.1">
+    <vab-alert  title="路由1.1">
+      <vab-alert  title="路由1.1.1">
+        <vab-alert  title="路由1.1.1.1">
           <el-input v-model="value" clearable style="width: 250px; margin-bottom: 20px" type="textarea" />
         </el-alert>
       </el-alert>

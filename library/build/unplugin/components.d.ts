@@ -102,6 +102,7 @@ declare module 'vue' {
     UploadPhotoWall: typeof import('./../../../src/views/vab/upload/vabAutoComponents/UploadPhotoWall.vue')['default']
     User: typeof import('./../../../src/views/other/workflow/vabAutoComponents/propertySetting/User.vue')['default']
     UserManagementEdit: typeof import('./../../../src/views/setting/userManagement/vabAutoComponents/UserManagementEdit.vue')['default']
+    VabAlert: typeof import('./../../components/VabAlert/index.vue')['default']
     VabApp: typeof import('./../../components/VabApp/index.vue')['default']
     VabAppMain: typeof import('./../../components/VabAppMain/index.vue')['default']
     VabAvatar: typeof import('./../../components/VabAvatar/index.vue')['default']

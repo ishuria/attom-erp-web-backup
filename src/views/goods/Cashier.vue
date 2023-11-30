@@ -2,7 +2,7 @@
   <div class="cashier-container no-background-container">
     <el-tabs type="border-card">
       <el-tab-pane label="支付宝">
-        <el-alert :closable="false" title="订单提交成功，请扫码下单，应付金额 1899.00 元" />
+        <vab-alert title="订单提交成功，请扫码下单，应付金额 1899.00 元" />
         <el-image :lazy="true" :src="QR">
           <template #error>
             <div class="image-slot">加载中...</div>

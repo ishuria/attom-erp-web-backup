@@ -1,7 +1,7 @@
 <template>
   <div class="separate-layout-container">
     <div class="hidden-sm-and-up">
-      <el-alert :closable="false" title="手机端不支持独立布局演示" type="warning" />
+      <vab-alert title="手机端不支持独立布局演示" type="warning" />
     </div>
     <div class="hidden-xs-only">
       <el-page-header content="独立布局" title="返回上一页" @back="goBack">
@@ -9,7 +9,7 @@
           <vab-fullscreen />
         </template>
       </el-page-header>
-      <el-alert :closable="false" title="当前页面允许独立于默认布局之外并禁用主题配置，当切换至其他页面时回到默认布局" />
+      <vab-alert title="当前页面允许独立于默认布局之外并禁用主题配置，当切换至其他页面时回到默认布局" />
       <tile />
     </div>
   </div>

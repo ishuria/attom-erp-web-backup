@@ -17,7 +17,7 @@
     <div class="pay-button-group">
       <el-button native-type="submit" type="primary" @click="handleSubmit">下一步</el-button>
     </div>
-    <el-alert :closable="false">
+    <vab-alert >
       <h3>转账到支付宝</h3>
       <p>生活好，支付宝。生活好，支付宝。生活好，支付宝。生活好，支付宝。</p>
       <h3>转账到微信</h3>

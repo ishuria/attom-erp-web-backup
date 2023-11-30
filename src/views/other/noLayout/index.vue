@@ -6,7 +6,7 @@
       </template>
     </el-page-header>
 
-    <el-alert :closable="false" title="刷新浏览器自动退出全屏" type="success" />
+    <vab-alert title="刷新浏览器自动退出全屏" type="success" />
   </div>
 </template>
 

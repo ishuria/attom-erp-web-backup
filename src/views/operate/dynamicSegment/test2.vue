@@ -1,13 +1,13 @@
 <template>
   <div class="test2-container">
-    <el-alert :closable="false" :title="'Query Id=' + route.query.id" />
+    <vab-alert :title="'Query Id=' + route.query.id" />
     <vab-json-viewer copyable :expand-depth="5" :value="finalRoute" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useTabsStore } from '/@/store/modules/tabs'
 import VabJsonViewer from 'vue-json-viewer'
+import { useTabsStore } from '/@/store/modules/tabs'
 
 defineOptions({
   name: 'Test2',

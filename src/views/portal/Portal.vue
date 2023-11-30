@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar wrap-class="scroll-wrap-portal">
     <div class="portal-main-mobile hidden-sm-and-up">
-      <el-alert :closable="false" title="手机端不支持门户演示" type="warning" />
+      <vab-alert title="手机端不支持门户演示" type="warning" />
     </div>
     <div class="portal-main hidden-xs-only">
       <portal-header active-menu="portal" />

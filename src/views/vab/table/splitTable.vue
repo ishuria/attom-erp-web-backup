@@ -1,7 +1,7 @@
 <template>
   <div class="split-table-container no-background-container table-auto-height">
     <vab-card class="hidden-sm-and-up">
-      <el-alert :closable="false" title="手机端不支持分割表格演示" type="warning" />
+      <vab-alert title="手机端不支持分割表格演示" type="warning" />
     </vab-card>
     <vab-pane-split class="hidden-xs-only" ratio="4/20">
       <template #one>
@@ -19,7 +19,7 @@
       </template>
       <template #two>
         <vab-card>
-          <el-alert :closable="false" title="长按竖线左右拖拽可重新分割面板大小" />
+          <vab-alert title="长按竖线左右拖拽可重新分割面板大小" />
           <vab-query-form>
             <vab-query-form-top-panel>
               <el-form inline label-width="49px" :model="queryForm" @submit.prevent>

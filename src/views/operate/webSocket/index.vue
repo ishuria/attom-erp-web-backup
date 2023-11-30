@@ -1,6 +1,6 @@
 <template>
   <div class="web-socket-container">
-    <el-alert :closable="false" title="演示地址不提供WebSocket接口" type="warning" />
+    <vab-alert title="演示地址不提供WebSocket接口" type="warning" />
 
     <el-row :gutter="20">
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">

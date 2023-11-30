@@ -1,7 +1,7 @@
 <template>
   <div class="delete-column-container">
-    <el-alert v-if="theme.layout == 'column'" :closable="false" title="单栏页面演示" />
-    <el-alert v-else :closable="false" title="当前布局不支持单栏页面演示" type="warning" />
+    <vab-alert v-if="theme.layout == 'column'" title="单栏页面演示" />
+    <vab-alert v-else title="当前布局不支持单栏页面演示" type="warning" />
   </div>
 </template>
 

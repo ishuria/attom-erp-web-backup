@@ -72,15 +72,15 @@
         <vab-card>
           <template #header>Alert 警告</template>
           <el-divider content-position="left">light</el-divider>
-          <el-alert show-icon title="成功提示的文案" type="success" />
-          <el-alert show-icon title="消息提示的文案" type="info" />
-          <el-alert show-icon title="警告提示的文案" type="warning" />
-          <el-alert show-icon title="错误提示的文案" type="error" />
+          <vab-alert show-icon title="成功提示的文案" type="success" />
+          <vab-alert show-icon title="消息提示的文案" type="info" />
+          <vab-alert show-icon title="警告提示的文案" type="warning" />
+          <vab-alert show-icon title="错误提示的文案" type="error" />
           <el-divider content-position="left">dark</el-divider>
-          <el-alert effect="dark" show-icon title="成功提示的文案" type="success" />
-          <el-alert effect="dark" show-icon title="消息提示的文案" type="info" />
-          <el-alert effect="dark" show-icon title="警告提示的文案" type="warning" />
-          <el-alert effect="dark" show-icon title="错误提示的文案" type="error" />
+          <vab-alert effect="dark" show-icon title="成功提示的文案" type="success" />
+          <vab-alert effect="dark" show-icon title="消息提示的文案" type="info" />
+          <vab-alert effect="dark" show-icon title="警告提示的文案" type="warning" />
+          <vab-alert effect="dark" show-icon title="错误提示的文案" type="error" />
         </vab-card>
       </el-col>
     </el-row>

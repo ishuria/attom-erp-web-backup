@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar wrap-class="scroll-wrap-product">
     <div class="product-main-mobile hidden-sm-and-up">
-      <el-alert :closable="false" title="手机端不支持产品简介演示" type="warning" />
+      <vab-alert title="手机端不支持产品简介演示" type="warning" />
     </div>
     <div class="product-main hidden-xs-only">
       <portal-header active-menu="product" />
