@@ -599,6 +599,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'hand-heart-line',
         },
       },
+      {
+        path: 'divider',
+        name: 'Divider',
+        component: () => import('/@/views/vab/divider/index.vue'),
+        meta: {
+          title: '分割线',
+          icon: 'equal-line',
+        },
+      },
     ],
   },
   {

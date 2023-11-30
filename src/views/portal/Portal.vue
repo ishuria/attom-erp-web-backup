@@ -43,7 +43,7 @@
                         <p class="text">全新一代的前端模板</p>
                       </div>
                     </div>
-                    <el-divider direction="vertical" />
+                    <vab-divider direction="vertical" />
                   </el-col>
                   <el-col :span="6">
                     <div class="show-box">
@@ -52,7 +52,7 @@
                       </div>
                       <div class="describe">高效 Efficient</div>
                     </div>
-                    <el-divider direction="vertical" />
+                    <vab-divider direction="vertical" />
                   </el-col>
                   <el-col :span="6">
                     <div class="show-box">
@@ -61,7 +61,7 @@
                       </div>
                       <div class="describe">专业 Major</div>
                     </div>
-                    <el-divider direction="vertical" />
+                    <vab-divider direction="vertical" />
                   </el-col>
                   <el-col :span="6">
                     <div class="show-box">
@@ -260,7 +260,7 @@ const tableData = [
       border-bottom-left-radius: 15px;
 
       :deep() {
-        .el-divider--vertical {
+        .vab-divider--vertical {
           float: right;
           height: 6.5em;
           margin-top: -20px;

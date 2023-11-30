@@ -20,7 +20,7 @@
         <el-scrollbar ref="scrollbarRef" always height="300px">
           <div ref="listRef">
             <div v-for="item in cityListByProvince" :key="item.p.n">
-              <el-divider :class="'el-city-' + item.p.l" content-position="left">{{ item.p.n }}</el-divider>
+              <vab-divider :class="'el-city-' + item.p.l" content-position="left">{{ item.p.n }}</vab-divider>
               <el-space wrap>
                 <el-button v-for="city in item.c" :key="city.n" text @click="handleChangeValue(city.c)">{{ city.n }}</el-button>
               </el-space>
@@ -37,9 +37,9 @@
         <el-scrollbar ref="scrollbarRef" always height="300px">
           <div ref="listRef">
             <div v-for="(item, key) in cityListByLetter" :key="key">
-              <el-divider :class="'el-city-' + key" content-position="left">
+              <vab-divider :class="'el-city-' + key" content-position="left">
                 {{ key }}
-              </el-divider>
+              </vab-divider>
               <div>
                 <el-space wrap>
                   <el-button v-for="city in item" :key="city.n" text @click="handleChangeValue(city.c)">{{ city.n }}</el-button>
@@ -54,8 +54,8 @@
 </template>
 
 <script lang="ts" setup>
-import provinceData from './province'
 import cityData from './city'
+import provinceData from './province'
 
 defineOptions({
   name: 'VabCity',

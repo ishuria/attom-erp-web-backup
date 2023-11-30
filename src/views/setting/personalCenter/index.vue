@@ -44,7 +44,7 @@
                 JavaScript、HTML、CSS、Vue、Node
               </li>
               <li>
-                <el-divider />
+                <vab-divider />
                 <h5>个性标签</h5>
                 <el-space wrap>
                   <el-tag v-for="tag in dynamicTags" :key="tag">
@@ -105,7 +105,7 @@
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
-              <el-divider />
+              <vab-divider />
               <div class="item">
                 <vab-icon icon="wechat-line" style="color: #4daf29" />
                 <div class="item-content">
@@ -114,7 +114,7 @@
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
-              <el-divider />
+              <vab-divider />
               <div class="item">
                 <vab-icon icon="alipay-line" style="color: #1476fe" />
                 <div class="item-content">
@@ -123,7 +123,7 @@
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
-              <el-divider />
+              <vab-divider />
               <div class="item">
                 <vab-icon icon="weibo-line" style="color: #ffd440" />
                 <div class="item-content">
@@ -132,7 +132,7 @@
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
-              <el-divider />
+              <vab-divider />
               <div class="item">
                 <vab-icon icon="github-line" />
                 <div class="item-content">
@@ -141,7 +141,7 @@
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
-              <el-divider />
+              <vab-divider />
               <div class="item">
                 <vab-icon icon="paypal-line" style="color: #012e85" />
                 <div class="item-content">
@@ -150,7 +150,7 @@
                 </div>
                 <el-link type="primary">更换绑定</el-link>
               </div>
-              <el-divider />
+              <vab-divider />
             </el-tab-pane>
           </el-tabs>
         </vab-card>

@@ -548,6 +548,15 @@ const list = [
           icon: 'hand-heart-line',
         },
       },
+      {
+        path: 'divider',
+        name: 'Divider',
+        component: '/@/views/vab/divider/index.vue',
+        meta: {
+          title: '分割线',
+          icon: 'equal-line',
+        },
+      },
     ],
   },
   {

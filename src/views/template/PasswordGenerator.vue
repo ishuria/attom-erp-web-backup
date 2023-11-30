@@ -28,7 +28,7 @@
               <el-switch v-model="form.includeSymbols" />
             </el-form-item>
 
-            <el-divider />
+            <vab-divider />
             <el-form-item label="生成的密码">
               <el-input v-model="generatedPassword" clearable readonly />
             </el-form-item>

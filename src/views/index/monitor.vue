@@ -91,7 +91,7 @@
 
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-divider content-position="left">主流</el-divider>
+              <vab-divider content-position="left">主流</vab-divider>
             </el-col>
             <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="12">
               <div class="live-item">
@@ -106,7 +106,7 @@
               </div>
             </el-col>
             <el-col :span="24">
-              <el-divider content-position="left">热备</el-divider>
+              <vab-divider content-position="left">热备</vab-divider>
             </el-col>
             <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="12">
               <div class="live-item">
@@ -121,7 +121,7 @@
               </div>
             </el-col>
             <el-col :span="24">
-              <el-divider content-position="left">冷备</el-divider>
+              <vab-divider content-position="left">冷备</vab-divider>
             </el-col>
             <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="12">
               <div class="live-item">
@@ -136,7 +136,7 @@
               </div>
             </el-col>
             <el-col :span="24">
-              <el-divider content-position="left">画面信息</el-divider>
+              <vab-divider content-position="left">画面信息</vab-divider>
             </el-col>
             <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="12">
               <div class="live-item">

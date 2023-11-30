@@ -71,12 +71,12 @@
       <el-col :span="24">
         <vab-card>
           <template #header>Alert 警告</template>
-          <el-divider content-position="left">light</el-divider>
+          <vab-divider content-position="left">light</vab-divider>
           <vab-alert show-icon title="成功提示的文案" type="success" />
           <vab-alert show-icon title="消息提示的文案" type="info" />
           <vab-alert show-icon title="警告提示的文案" type="warning" />
           <vab-alert show-icon title="错误提示的文案" type="error" />
-          <el-divider content-position="left">dark</el-divider>
+          <vab-divider content-position="left">dark</vab-divider>
           <vab-alert effect="dark" show-icon title="成功提示的文案" type="success" />
           <vab-alert effect="dark" show-icon title="消息提示的文案" type="info" />
           <vab-alert effect="dark" show-icon title="警告提示的文案" type="warning" />
