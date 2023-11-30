@@ -159,9 +159,11 @@ const handleRoutes = computed(() => {
 .el-menu {
   border-right: 0;
 }
+
 .el-menu--popup-right-start {
   --el-menu-hover-bg-color: var(--el-color-primary) !important;
   --el-menu-active-color: var(--el-color-white) !important;
+
   .is-active {
     background: var(--el-color-primary) !important;
   }

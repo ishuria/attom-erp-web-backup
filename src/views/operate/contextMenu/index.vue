@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { VabContextMenu, VabContextMenuItem, VabContextMenuSeparator, VabContextMenuGroup } from '/@/plugins/VabContextMenu'
+import { VabContextMenu, VabContextMenuGroup, VabContextMenuItem, VabContextMenuSeparator } from '/@/plugins/VabContextMenu'
 
 defineOptions({
   name: 'ContextMenu',

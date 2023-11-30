@@ -107,6 +107,7 @@ const handleRoutes = computed(() => {
           text-overflow: ellipsis;
           white-space: nowrap;
         }
+
         .el-sub-menu__icon-more {
           margin-right: var(--el-margin) !important;
         }

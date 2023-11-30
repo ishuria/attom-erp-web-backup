@@ -141,6 +141,7 @@ const save = () => {
 :deep() {
   .el-form-item__content {
     min-width: 200px;
+
     .el-input {
       width: 200px;
     }
