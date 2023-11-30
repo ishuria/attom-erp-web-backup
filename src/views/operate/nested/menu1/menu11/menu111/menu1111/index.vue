@@ -7,7 +7,7 @@
         </el-alert>
       </el-alert>
     </el-alert>
-    <el-button type="primary" @click="handleKeepAlive">路由缓存演示</el-button>
+    <el-button type="primary" @click="handleKeepAlive">多级路由缓存演示</el-button>
     <el-button type="primary" @click="handleRefresh">刷新当前标签页</el-button>
   </div>
 </template>
