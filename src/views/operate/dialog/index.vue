@@ -7,7 +7,7 @@
       <el-form-item label="内容">
         <el-input v-model="form.content" style="width: 345px" type="textarea" />
       </el-form-item>
-      <el-form-item label="主题配置">
+      <el-form-item v-if="'technology' != theme.themeName" label="主题配置">
         <el-radio-group v-model="form.theme" @change="handleDialogTheme">
           <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label" @change="handleOpen">
             <template #default>{{ item.title }}</template>
@@ -62,10 +62,14 @@
 </template>
 
 <script lang="ts" setup>
+import { useSettingsStore } from '/@/store/modules/settings'
+
 defineOptions({
   name: 'Dialog',
 })
 
+const settingsStore = useSettingsStore()
+const { theme } = storeToRefs(settingsStore)
 const form = reactive<any>({
   showFullscreen: true,
   animated: true,
@@ -107,10 +111,13 @@ const handleReset = () => {
   form.center = false
   form.closeOnClickModal = false
   form.closeOnPressEscape = false
+  form.theme = 'default'
 }
 
 let timer: any
 onActivated(() => {
+  if (theme.value.themeName === 'technology') form.theme = 'default'
+
   timer = setTimeout(() => {
     dialogVisible.value = true
   }, 1000)
