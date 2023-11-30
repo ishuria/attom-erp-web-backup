@@ -1,12 +1,12 @@
 <template>
   <div class="menu1-1-1-1-container">
-    <vab-alert  title="路由1.1">
-      <vab-alert  title="路由1.1.1">
-        <vab-alert  title="路由1.1.1.1">
+    <vab-alert title="路由1.1">
+      <vab-alert title="路由1.1.1">
+        <vab-alert title="路由1.1.1.1">
           <el-input v-model="value" clearable style="width: 250px; margin-bottom: 20px" type="textarea" />
-        </el-alert>
-      </el-alert>
-    </el-alert>
+        </vab-alert>
+      </vab-alert>
+    </vab-alert>
     <el-button type="primary" @click="handleKeepAlive">多级路由缓存演示</el-button>
     <el-button type="primary" @click="handleRefresh">刷新当前标签页</el-button>
   </div>
