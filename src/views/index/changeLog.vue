@@ -13,8 +13,13 @@
             <vab-icon icon="file-word-line" />
             更新日志
           </template>
-          <el-scrollbar style="height: 100%">
-            <el-timeline style="margin-top: 5px">
+          <vab-alert
+            n
+            title="温馨提示：请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您获取到网站的最新的更新内容"
+            type="info"
+          />
+          <el-scrollbar style="height: calc(100% - 60px)">
+            <el-timeline>
               <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
                 <template v-if="item.waver" #dot>
                   <span
@@ -79,18 +84,17 @@ onBeforeMount(async () => {
   // const _data = data.map((obj: any) => {
   //   return { ...obj, color: 'var(--el-timeline-node-color)' }
   // })
-  data.push({
+
+  const _data: any = sortLogs(data)
+  _data.push({
     timestamp: lastTime,
     content: `
-    温馨提示：
-    <br />
     小版本更新日志及bug修复日志演示地址不做展示，具体更新内容以购买者绑定仓库提交日志为准
     <a href='${commonUrl}/authorization/shop-vite.html' target='_blank'>点我购买</a>
     `,
     waver: 'success',
   })
-  console.log(sortLogs(data))
-  activities.value = sortLogs(data)
+  activities.value = sortLogs(_data)
 })
 
 // 正式项目如果要用到更新日志模板，请删除以下代码
@@ -116,12 +120,16 @@ onMounted(() => {
   }
 
   :deep() {
-    .el-timeline-item__dot {
-      .vab-dot {
-        left: -1px;
-        width: 12px;
-        height: 12px;
-        margin: auto !important;
+    .el-timeline {
+      padding-top: 5px;
+      padding-left: 15px;
+      &-item__dot {
+        .vab-dot {
+          left: -1px;
+          width: 12px;
+          height: 12px;
+          margin: auto !important;
+        }
       }
     }
   }
