@@ -1,19 +1,12 @@
 <template>
   <div class="permission-container">
-    <el-alert
-      v-if="showAlert"
-      :closable="false"
-      title="温馨提示：当前登录的账号非admin，如需查看演示地址全部功能，请使用admin账号登录。"
-      type="error"
-    />
-    <el-alert
+    <vab-alert v-if="showAlert" title="温馨提示：当前登录的账号非admin，如需查看演示地址全部功能，请使用admin账号登录。" type="error" />
+    <vab-alert
       v-if="!loginInterception"
-      :closable="false"
       title="检测到您当前的登录拦截已关闭，无法模拟切换角色功能，请在src/config/setting.config.js中配置loginInterception为true，开启登录拦截"
       type="error"
     />
-    <el-alert
-      :closable="false"
+    <vab-alert
       :title="`当前路由模式为：${authentication === 'all' ? '后端路由' : '前端路由'} ，是否开启前端角色权限控制：${
         rolesControl === true ? '是' : '否'
       }`"

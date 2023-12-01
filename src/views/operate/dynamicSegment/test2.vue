@@ -16,18 +16,20 @@ defineOptions({
 const route = useRoute()
 const tabsStore = useTabsStore()
 const { changeTabsMeta } = tabsStore
-let finalRoute = reactive({})
+const finalRoute = reactive<any>({
+  name: '',
+  path: '',
+  query: {},
+})
 
 const handleQuery = () => {
-  finalRoute = {
-    name: route.name,
-    path: route.path,
-    query: route.query,
-  }
+  finalRoute.name = route.name
+  finalRoute.path = route.path
+  finalRoute.query = route.query
   changeTabsMeta({
     title: 'Query',
     meta: {
-      title: `Query Id=${route.query.id}`,
+      title: `Query id=${route.query.id} `,
     },
   })
 }
