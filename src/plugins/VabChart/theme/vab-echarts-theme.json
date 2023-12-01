@@ -3,10 +3,10 @@
   "textStyle": {},
   "title": {
     "textStyle": {
-      "color": "#99999"
+      "color": "#515a6e"
     },
     "subtextStyle": {
-      "color": "#aaaaaa"
+      "color": "#aaa"
     }
   },
   "line": {
@@ -95,29 +95,29 @@
     },
     "lineStyle": {
       "width": 1,
-      "color": "#aaaaaa"
+      "color": "#aaa"
     },
     "symbolSize": 4,
     "symbol": "emptyCircle",
     "smooth": false,
     "color": ["#1890ff", "#36cbcb", "#4ecb73", "#fbd437", "#f2637b", "#8d98b3", "#975fe5"],
     "label": {
-      "color": "#eeeeee"
+      "color": "#eee"
     }
   },
   "map": {
     "itemStyle": {
-      "areaColor": "#eeeeee",
-      "borderColor": "#444444",
+      "areaColor": "#eee",
+      "borderColor": "#444",
       "borderWidth": 0.5
     },
     "label": {
-      "color": "#000000"
+      "color": "#000"
     },
     "emphasis": {
       "itemStyle": {
         "areaColor": "rgba(255,215,0,0.8)",
-        "borderColor": "#444444",
+        "borderColor": "#444",
         "borderWidth": 1
       },
       "label": {
@@ -127,17 +127,17 @@
   },
   "geo": {
     "itemStyle": {
-      "areaColor": "#eeeeee",
-      "borderColor": "#444444",
+      "areaColor": "#eee",
+      "borderColor": "#444",
       "borderWidth": 0.5
     },
     "label": {
-      "color": "#000000"
+      "color": "#000"
     },
     "emphasis": {
       "itemStyle": {
         "areaColor": "rgba(255,215,0,0.8)",
-        "borderColor": "#444444",
+        "borderColor": "#444",
         "borderWidth": 1
       },
       "label": {
@@ -267,27 +267,27 @@
   },
   "toolbox": {
     "iconStyle": {
-      "borderColor": "#999999"
+      "borderColor": "#999"
     },
     "emphasis": {
       "iconStyle": {
-        "borderColor": "#666666"
+        "borderColor": "#666"
       }
     }
   },
   "legend": {
     "textStyle": {
-      "color": "#99999"
+      "color": "#999"
     }
   },
   "tooltip": {
     "axisPointer": {
       "lineStyle": {
-        "color": "#cccccc",
+        "color": "#ccc",
         "width": 1
       },
       "crossStyle": {
-        "color": "#cccccc",
+        "color": "#ccc",
         "width": 1
       }
     }
@@ -337,16 +337,16 @@
     "handleColor": "#a7b7cc",
     "handleSize": "100%",
     "textStyle": {
-      "color": "#99999"
+      "color": "#999"
     }
   },
   "markPoint": {
     "label": {
-      "color": "#eeeeee"
+      "color": "#eee"
     },
     "emphasis": {
       "label": {
-        "color": "#eeeeee"
+        "color": "#eee"
       }
     }
   }

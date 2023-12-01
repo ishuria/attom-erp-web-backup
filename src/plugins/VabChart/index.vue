@@ -1,5 +1,13 @@
 <template>
-  <v-chart ref="VChartRef" :autoresize="autoresize" class="vab-chart" :option="option" @click="handleClick" @highlight="handleHighlight" />
+  <v-chart
+    ref="VChartRef"
+    :autoresize="autoresize"
+    class="vab-chart"
+    :option="option"
+    v-bind="$attrs"
+    @click="handleClick"
+    @highlight="handleHighlight"
+  />
 </template>
 
 <script lang="ts" setup>
