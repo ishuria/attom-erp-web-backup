@@ -10,7 +10,7 @@ import VabJsonViewer from 'vue-json-viewer'
 import { useTabsStore } from '/@/store/modules/tabs'
 
 defineOptions({
-  name: 'Test2',
+  name: 'Query',
 })
 
 const route = useRoute()

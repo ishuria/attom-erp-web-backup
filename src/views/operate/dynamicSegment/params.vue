@@ -1,5 +1,5 @@
 <template>
-  <div class="test1-container">
+  <div class="params-container">
     <vab-alert :title="'Params id=' + id" />
     <vab-json-viewer copyable :expand-depth="5" :value="finalRoute" />
   </div>
@@ -10,7 +10,7 @@ import VabJsonViewer from 'vue-json-viewer'
 import { useTabsStore } from '/@/store/modules/tabs'
 
 defineOptions({
-  name: 'Test1',
+  name: 'Params',
 })
 
 const route = useRoute()
@@ -26,7 +26,7 @@ const finalRoute = reactive<any>({
 })
 
 const handleParams = () => {
-  const _route = route.matched[0].children.filter((item) => item.name === 'Test1')[0]
+  const _route = route.matched[0].children.filter((item) => item.name === 'Params')[0]
   id.value = route.path.substring(route.path.lastIndexOf('/') + 1, route.path.length)
   finalRoute.name = _route.name
   finalRoute.path = _route.path

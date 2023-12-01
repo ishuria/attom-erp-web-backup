@@ -945,9 +945,9 @@ const list = [
         },
         children: [
           {
-            path: 'test1/:id',
-            name: 'Test1',
-            component: '/@/views/operate/dynamicSegment/test1.vue',
+            path: 'params/:id',
+            name: 'Params',
+            component: '../views/operate/dynamicSegment/params.vue',
             meta: {
               hidden: true,
               title: 'Params',
@@ -955,15 +955,21 @@ const list = [
             },
           },
           {
-            path: 'test1/1',
-            name: 'Test1/1',
-            component: '/@/views/operate/dynamicSegment/test1.vue',
+            path: 'params/1',
+            name: 'Params/1',
+            component: '../views/operate/dynamicSegment/params.vue',
             meta: { title: 'Params id=1' },
           },
           {
-            path: 'test2',
-            name: 'Test2',
-            component: '/@/views/operate/dynamicSegment/test2.vue',
+            path: 'params/2',
+            name: 'Params/2',
+            component: '../views/operate/dynamicSegment/params.vue',
+            meta: { title: 'Params id=2' },
+          },
+          {
+            path: 'query',
+            name: 'Query',
+            component: '../views/operate/dynamicSegment/query.vue',
             meta: {
               hidden: true,
               title: 'Query',
@@ -971,10 +977,16 @@ const list = [
             },
           },
           {
-            path: 'test2?id=1',
-            name: 'Test2?id=1',
-            component: '/@/views/operate/dynamicSegment/test2.vue',
+            path: 'query?id=1',
+            name: 'Query?id=1',
+            component: '../views/operate/dynamicSegment/query.vue',
             meta: { title: 'Query id=1' },
+          },
+          {
+            path: 'query?id=2',
+            name: 'Query?id=2',
+            component: '../views/operate/dynamicSegment/query.vue',
+            meta: { title: 'Query id=2' },
           },
         ],
       },
