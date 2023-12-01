@@ -62,7 +62,7 @@
 
 <script lang="ts" setup>
 import { register } from '/@/api/user'
-import leftImg from '/@/assets/login_images/left_img.png'
+import leftImg from '/@/assets/login_images/left_img_2.png'
 import { translate } from '/@/i18n'
 import { useUserStore } from '/@/store/modules/user'
 import { isPassword, isPhone } from '/@/utils/validate'
@@ -200,7 +200,7 @@ onUnmounted(() => {
     border-radius: var(--el-border-radius-base);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     .login-right-tools {
       top: 5vw !important;
       right: 5vw !important;
@@ -230,6 +230,9 @@ onUnmounted(() => {
     right: 0;
     bottom: 0;
     left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 1000px;
     height: 620px;
     padding: 4.5vh;
@@ -239,17 +242,22 @@ onUnmounted(() => {
     background-size: 100% 100%;
     border: 1px solid var(--el-border-color);
     border-radius: 15px;
+    transition: var(--el-transition);
+
+    * {
+      transition: var(--el-transition);
+    }
 
     .left-img {
-      float: left;
       width: 50%;
     }
 
     :deep() {
+      * {
+        transition: var(--el-transition);
+      }
       .el-form--default {
-        float: left;
         width: 44%;
-        margin-left: 5.8%;
       }
 
       .title {

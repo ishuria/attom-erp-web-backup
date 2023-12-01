@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import leftImg from '/@/assets/login_images/left_img.png'
+import leftImg from '/@/assets/login_images/left_img_1.png'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
@@ -175,7 +175,7 @@ onBeforeRouteLeave((to, from, next) => {
     border-radius: var(--el-border-radius-base);
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     .login-right-tools {
       top: 5vw !important;
       right: 5vw !important;
@@ -205,6 +205,9 @@ onBeforeRouteLeave((to, from, next) => {
     right: 0;
     bottom: 0;
     left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 1000px;
     height: 550px;
     padding: 4.5vh;
@@ -214,17 +217,18 @@ onBeforeRouteLeave((to, from, next) => {
     background-size: 100% 100%;
     border: 1px solid var(--el-border-color);
     border-radius: 15px;
+    transition: var(--el-transition);
 
     .left-img {
-      float: left;
       width: 50%;
     }
 
     :deep() {
+      * {
+        transition: var(--el-transition);
+      }
       .el-form--default {
-        float: left;
         width: 44%;
-        margin-left: 5.8%;
       }
 
       .title {
