@@ -34,7 +34,7 @@ const handleParams = () => {
   changeTabsMeta({
     title: 'Params',
     meta: {
-      title: `Params Id=${id}`,
+      title: `Params id=${id}`,
     },
   })
 }
