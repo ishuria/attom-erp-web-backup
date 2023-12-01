@@ -1,6 +1,6 @@
 <template>
   <div class="test2-container">
-    <vab-alert :title="'Query Id=' + route.query.id" />
+    <vab-alert :title="'Query id=' + route.query.id" />
     <vab-json-viewer copyable :expand-depth="5" :value="finalRoute" />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="test1-container">
-    <vab-alert :title="'Params Id=' + id" />
+    <vab-alert :title="'Params id=' + id" />
     <vab-json-viewer copyable :expand-depth="5" :value="finalRoute" />
   </div>
 </template>
