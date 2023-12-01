@@ -14,7 +14,7 @@ export interface VabRouteMeta {
   // 动态传参路由是否新开标签页
   dynamicNewTab?: boolean
   // 权限
-  guard?: string[] | { role?: string[]; permission?: string[]; mode?: string }
+  guard?: string[] | GuardType
   // 是否显示在菜单中显示隐藏路由(默认值：false)
   hidden?: boolean
   // 图标
