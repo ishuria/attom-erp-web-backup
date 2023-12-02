@@ -497,6 +497,8 @@ html {
       }
 
       &__body {
+        padding: var(--el-dialog-padding-primary);
+
         .el-form:not(.el-form--inline) {
           margin-right: 30px;
 
@@ -516,7 +518,7 @@ html {
         border-radius: 0;
 
         .el-dialog__body {
-          height: calc(100vh - 54px - 62px);
+          height: calc(100vh - 54px - 68px);
           overflow-y: auto;
         }
       }
