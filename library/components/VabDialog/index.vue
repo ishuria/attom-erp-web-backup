@@ -48,6 +48,10 @@
 import { Close } from '@element-plus/icons-vue'
 import { ElDialog } from 'element-plus'
 
+defineOptions({
+  name: 'VabDialog',
+})
+
 const props = defineProps({
   ...ElDialog.props,
   modelValue: {

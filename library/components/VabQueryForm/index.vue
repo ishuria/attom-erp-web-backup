@@ -4,6 +4,12 @@
   </el-row>
 </template>
 
+<script lang="ts" setup>
+defineOptions({
+  name: 'VabQueryForm',
+})
+</script>
+
 <style lang="scss" scoped>
 @mixin panel {
   display: flex;

@@ -26,6 +26,10 @@
 <script setup lang="ts">
 import { ElAlert } from 'element-plus'
 
+defineOptions({
+  name: 'VabAlert',
+})
+
 defineProps({
   ...ElAlert.props,
   closable: {

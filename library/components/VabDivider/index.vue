@@ -21,7 +21,7 @@
 import { ElDivider } from 'element-plus'
 
 defineOptions({
-  name: 'VabCard',
+  name: 'VabDivider',
 })
 
 defineProps({
