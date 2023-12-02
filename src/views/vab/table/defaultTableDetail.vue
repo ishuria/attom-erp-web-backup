@@ -7,7 +7,7 @@
     />
     <el-form inline :model="form" @submit.prevent>
       <el-form-item label="输入框缓存">
-        <el-input v-model="form.text" clearable />
+        <el-input v-model="form.text" clearable style="width: 200px" />
       </el-form-item>
       <el-form-item>
         <el-dropdown @command="handleRefreshMainPage">

@@ -1,7 +1,7 @@
 <template>
   <el-tree-select
     v-if="theme.showSearch"
-    v-model="value"
+    v-model="searchValue"
     class="vab-search"
     clearable
     :data="addFieldToTree(routes)"
@@ -32,19 +32,19 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
-const value = ref<any>('')
+const searchValue = ref<any>('')
 const router = useRouter()
 const route = useRoute()
 const routesStore = useRoutesStore()
 const { getRoutes: routes } = storeToRefs(routesStore)
 
-const addFieldToTree = (data: any) => {
-  data.forEach((node: any) => {
+const addFieldToTree = (routes: any) => {
+  routes.forEach((node: any) => {
     node.value = node.name
     node.label = translate(node.meta.title)
     if (node.children && node.children.length) addFieldToTree(node.children)
   })
-  return data
+  return routes
 }
 
 const handleSelect = (item: any) => {
@@ -58,14 +58,21 @@ const handleSelect = (item: any) => {
         isHashRouterMode ? window.open(`#${item.path}`) : window.open(item.path)
         router.push('/redirect')
         return
-      } else router.push(item)
+      } else router.push(item.path)
   })
 }
 
 watch(
   route,
   () => {
-    value.value = route.name
+    if (route.fullPath.includes('?')) {
+      //处理query传参
+      const matched = route.fullPath.match(/\?(.*)$/)
+      const name: any = route.name
+      if (matched) name.includes('?') ? (searchValue.value = route.name) : (searchValue.value = `${route.name as string}?${matched[1]}`)
+      // 详情页显示搜索项
+      if (route.meta.hidden && name.includes('Detail')) searchValue.value = ''
+    } else searchValue.value = route.name
   },
   {
     immediate: true,
