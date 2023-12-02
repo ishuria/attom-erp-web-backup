@@ -99,7 +99,6 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath, handleTabs } from '/@/utils/routes'
-import { onBeforeUnmount } from 'vue'
 
 defineOptions({
   name: 'VabTabs',
