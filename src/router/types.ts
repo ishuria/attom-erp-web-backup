@@ -41,7 +41,6 @@ export interface VabRouteMeta {
 }
 
 // @ts-ignore
-
 export interface VabRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   path: string
   // name 首字母必须大写

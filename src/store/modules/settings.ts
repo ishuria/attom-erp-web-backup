@@ -3,7 +3,6 @@
  */
 import { round } from 'lodash-es'
 import {
-  isCatchedTabs as _isCatchedTabs,
   color,
   colorWeakness,
   columnStyle,
@@ -15,6 +14,7 @@ import {
   logo,
   menuWidth,
   pageTransition,
+  persistenceTab as _persistenceTab,
   radius,
   showColorPicker,
   showDark,
@@ -98,18 +98,18 @@ const colorRgba = (str: any, n = 1) => {
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
-const { isCatchedTabs = _isCatchedTabs } = getLocalStorage('isCatchedTabs')
+const { persistenceTab = _persistenceTab } = getLocalStorage('persistenceTab')
 
 export const useSettingsStore = defineStore('settings', {
   state: (): SettingsModuleType => ({
     collapse,
     color: getLocalStorage('color').color || color,
     device: 'desktop',
-    isCatchedTabs,
     language: getLocalStorage('language').language || i18n,
     lock: getLocalStorage('lock').lock || false,
     logo: getLocalStorage('logo').logo || logo,
     mode: localStorage.getItem('vueuse-color-scheme') || 'light',
+    persistenceTab,
     theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
       ...defaultTheme,
     },
@@ -119,7 +119,7 @@ export const useSettingsStore = defineStore('settings', {
     getCollapse: (state) => state.collapse,
     getColor: (state) => state.color,
     getDevice: (state) => state.device,
-    getIsCatchedTabs: (state) => state.isCatchedTabs,
+    getPersistenceTab: (state) => state.persistenceTab,
     getLanguage: (state) => state.language,
     getLock: (state) => state.lock,
     getLogo: (state) => state.logo,
@@ -206,9 +206,9 @@ export const useSettingsStore = defineStore('settings', {
     handleUnLock() {
       this.updateState({ lock: false })
     },
-    updateCatchedTabs(value: any) {
-      this.updateState({ isCatchedTabs: value })
-      if (!value) localStorage.removeItem('catchedRoutes')
+    updateCaughtTabs(value: any) {
+      this.updateState({ persistenceTab: value })
+      if (!value) localStorage.removeItem('caughtRoutes')
     },
     changeLogo(logo: string) {
       this.updateState({ logo })

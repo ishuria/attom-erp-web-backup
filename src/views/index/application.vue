@@ -14,7 +14,7 @@ defineOptions({
 
 let deferredPrompt: any
 
-const beforeinstallprompt = () => {
+const beforeInstallPrompt = () => {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault()
     deferredPrompt = e
@@ -22,7 +22,7 @@ const beforeinstallprompt = () => {
 }
 
 onBeforeMount(() => {
-  beforeinstallprompt()
+  beforeInstallPrompt()
 })
 
 const handleInstall = () => {
@@ -30,7 +30,7 @@ const handleInstall = () => {
     deferredPrompt.prompt()
     deferredPrompt.userChoice.then(() => {
       deferredPrompt = null
-      beforeinstallprompt()
+      beforeInstallPrompt()
     })
   }
 }

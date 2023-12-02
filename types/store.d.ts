@@ -27,7 +27,7 @@ declare interface SettingsModuleType {
   collapse: boolean
   color: string
   device: DeviceType
-  isCatchedTabs: boolean
+  persistenceTab: boolean
   language: LanguageType
   lock: boolean
   logo: string
@@ -37,7 +37,7 @@ declare interface SettingsModuleType {
 }
 
 declare interface TabsModuleType {
-  catchedRoutes: []
+  caughtRoutes: []
   visitedRoutes: any[]
 }
 

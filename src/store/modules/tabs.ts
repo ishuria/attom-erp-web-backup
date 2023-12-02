@@ -5,8 +5,8 @@ import { useSettingsStore } from './settings'
  */
 export const useTabsStore = defineStore('tabs', {
   state: (): TabsModuleType => ({
-    visitedRoutes: JSON.parse(localStorage.getItem('catchedRoutes') as string) || [],
-    catchedRoutes: [],
+    visitedRoutes: JSON.parse(localStorage.getItem('caughtRoutes') as string) || [],
+    caughtRoutes: [],
   }),
   getters: {
     getVisitedRoutes: (state) => state.visitedRoutes.filter((route) => route.name !== 'Login'),
@@ -24,7 +24,7 @@ export const useTabsStore = defineStore('tabs', {
 
       //应对极特殊情况：没有配置noClosable的情况，默认使当前tab不可关闭
       if (!this.visitedRoutes.find((route) => route.meta.noClosable)) this.visitedRoutes[0].meta.noClosable = true
-      this.handleCatchedRoutes()
+      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页
@@ -33,7 +33,7 @@ export const useTabsStore = defineStore('tabs', {
      */
     delVisitedRoute(path: string) {
       this.visitedRoutes = this.visitedRoutes.filter((route) => route.path !== path)
-      this.handleCatchedRoutes()
+      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页以外其它全部标签页
@@ -42,7 +42,7 @@ export const useTabsStore = defineStore('tabs', {
      */
     delOthersVisitedRoutes(path: string) {
       this.visitedRoutes = this.visitedRoutes.filter((route) => route.meta.noClosable || route.path === path)
-      this.handleCatchedRoutes()
+      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页左边全部标签页
@@ -55,7 +55,7 @@ export const useTabsStore = defineStore('tabs', {
         if (route.path === path) found = true
         return route.meta.noClosable || found
       })
-      this.handleCatchedRoutes()
+      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页右边全部标签页
@@ -69,7 +69,7 @@ export const useTabsStore = defineStore('tabs', {
         if (route.path === path) found = true
         return route.meta.noClosable || !close
       })
-      this.handleCatchedRoutes()
+      this.handleCaughtRoutes()
     },
     /**
      * @description 删除全部标签页
@@ -77,7 +77,7 @@ export const useTabsStore = defineStore('tabs', {
      */
     delAllVisitedRoutes() {
       this.visitedRoutes = this.visitedRoutes.filter((route) => route.meta.noClosable)
-      localStorage.setItem('catchedRoutes', JSON.stringify(this.visitedRoutes))
+      localStorage.setItem('caughtRoutes', JSON.stringify(this.visitedRoutes))
     },
     /**
      * @description 修改 meta
@@ -92,18 +92,18 @@ export const useTabsStore = defineStore('tabs', {
         })
       }
       this.visitedRoutes = handleVisitedRoutes(this.visitedRoutes)
-      this.handleCatchedRoutes()
+      this.handleCaughtRoutes()
     },
     /**
      * @description 缓存tab页
      */
 
-    handleCatchedRoutes() {
+    handleCaughtRoutes() {
       const settingsStore = useSettingsStore()
-      if (settingsStore.isCatchedTabs) localStorage.setItem('catchedRoutes', JSON.stringify(this.visitedRoutes))
+      if (settingsStore.persistenceTab) localStorage.setItem('caughtRoutes', JSON.stringify(this.visitedRoutes))
       else {
-        this.catchedRoutes = []
-        localStorage.removeItem('catchedRoutes')
+        this.caughtRoutes = []
+        localStorage.removeItem('caughtRoutes')
       }
     },
   },

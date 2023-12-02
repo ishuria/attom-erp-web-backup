@@ -45,7 +45,7 @@
           <template #label>
             {{ translate('持久化标签') }}
           </template>
-          <el-switch v-model="isCatchedTabs" @change="handleIsCatchedTabs" />
+          <el-switch v-model="persistenceTab" @change="handlePersistenceTab" />
         </el-form-item>
         <el-form-item v-if="theme.showTabs">
           <template #label>
@@ -144,8 +144,8 @@ const $baseLoading = inject<any>('$baseLoading')
 const $baseMessage = inject<any>('$baseMessage')
 const settingsStore = useSettingsStore()
 const routeName = ref<any>(route.name)
-const { theme, device, mode, isCatchedTabs } = storeToRefs<any>(settingsStore)
-const { saveTheme, resetTheme, updateTheme, updateCatchedTabs, setCssVar } = settingsStore
+const { theme, device, mode, persistenceTab } = storeToRefs<any>(settingsStore)
+const { saveTheme, resetTheme, updateTheme, updateCaughtTabs, setCssVar } = settingsStore
 const drawerVisible = ref<boolean>(false)
 const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
 const tabsBarStyleList = ref<any>([
@@ -211,8 +211,8 @@ const handleShowTabs = (value: any) => {
   else useCssVar('--el-tabs-height', el).value = '50px'
 }
 
-const handleIsCatchedTabs = (value: any) => {
-  updateCatchedTabs(value)
+const handlePersistenceTab = (value: any) => {
+  updateCaughtTabs(value)
 }
 
 const _updateTheme = (value: any = '') => {
