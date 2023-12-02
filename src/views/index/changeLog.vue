@@ -118,8 +118,7 @@ onMounted(() => {
 
   :deep() {
     .el-timeline {
-      padding-top: 5px;
-      padding-left: 15px;
+      padding: 5px;
       &-item__dot {
         .vab-dot {
           left: -1px;
