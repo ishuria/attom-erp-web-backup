@@ -21,10 +21,8 @@ export const useTabsStore = defineStore('tabs', {
       const target = this.visitedRoutes.find((item) => item.path === route.path)
       if (target && !route.meta.dynamicNewTab) Object.assign(target, route)
       else if (!target) this.visitedRoutes.push(Object.assign({}, route))
-
       //应对极特殊情况：没有配置noClosable的情况，默认使当前tab不可关闭
       if (!this.visitedRoutes.find((route) => route.meta.noClosable)) this.visitedRoutes[0].meta.noClosable = true
-      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页
@@ -33,7 +31,6 @@ export const useTabsStore = defineStore('tabs', {
      */
     delVisitedRoute(path: string) {
       this.visitedRoutes = this.visitedRoutes.filter((route) => route.path !== path)
-      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页以外其它全部标签页
@@ -42,7 +39,6 @@ export const useTabsStore = defineStore('tabs', {
      */
     delOthersVisitedRoutes(path: string) {
       this.visitedRoutes = this.visitedRoutes.filter((route) => route.meta.noClosable || route.path === path)
-      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页左边全部标签页
@@ -55,7 +51,6 @@ export const useTabsStore = defineStore('tabs', {
         if (route.path === path) found = true
         return route.meta.noClosable || found
       })
-      this.handleCaughtRoutes()
     },
     /**
      * @description 删除当前标签页右边全部标签页
@@ -69,7 +64,6 @@ export const useTabsStore = defineStore('tabs', {
         if (route.path === path) found = true
         return route.meta.noClosable || !close
       })
-      this.handleCaughtRoutes()
     },
     /**
      * @description 删除全部标签页
@@ -92,7 +86,6 @@ export const useTabsStore = defineStore('tabs', {
         })
       }
       this.visitedRoutes = handleVisitedRoutes(this.visitedRoutes)
-      this.handleCaughtRoutes()
     },
     /**
      * @description 缓存tab页

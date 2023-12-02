@@ -27,11 +27,11 @@ declare interface SettingsModuleType {
   collapse: boolean
   color: string
   device: DeviceType
-  persistenceTab: boolean
   language: LanguageType
   lock: boolean
   logo: string
   mode: string
+  persistenceTab: boolean
   theme: ThemeType
   title: string
 }

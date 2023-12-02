@@ -99,6 +99,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath, handleTabs } from '/@/utils/routes'
+import { onBeforeUnmount } from 'vue'
 
 defineOptions({
   name: 'VabTabs',
@@ -119,8 +120,15 @@ const routesStore = useRoutesStore()
 const { getRoutes: routes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabsStore)
-const { addVisitedRoute, delVisitedRoute, delOthersVisitedRoutes, delLeftVisitedRoutes, delRightVisitedRoutes, delAllVisitedRoutes } =
-  tabsStore
+const {
+  addVisitedRoute,
+  delVisitedRoute,
+  delOthersVisitedRoutes,
+  delLeftVisitedRoutes,
+  delRightVisitedRoutes,
+  delAllVisitedRoutes,
+  handleCaughtRoutes,
+} = tabsStore
 const tabActive = ref<string>('')
 const active = ref<boolean>(false)
 const hoverRoute = ref<any>()
@@ -263,6 +271,10 @@ watch(
     immediate: true,
   }
 )
+
+onBeforeMount(() => {
+  window.addEventListener('beforeunload', handleCaughtRoutes)
+})
 
 watchEffect(() => {
   if (visible.value) document.body.addEventListener('click', closeMenu)
