@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item v-if="'technology' != theme.themeName" label="主题配置">
         <el-radio-group v-model="form.theme" @change="handleDialogTheme">
-          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label" @change="handleOpen">
+          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label">
             <template #default>{{ item.title }}</template>
           </el-radio-button>
         </el-radio-group>
