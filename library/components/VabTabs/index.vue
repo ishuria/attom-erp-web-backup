@@ -9,7 +9,7 @@
     >
       <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoCLosable(item)" lazy :name="item.path">
         <template #label>
-          <span class="vab-tabs-title" @contextmenu.prevent="openMenu">
+          <span class="vab-tabs-title" @contextmenu.prevent="openMenu(item)">
             <template v-if="theme.showTabsIcon">
               <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
               <!--  如果没有图标那么取第二级的图标 -->
@@ -37,6 +37,12 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu class="tabs-more">
+          <el-dropdown-item command="refresh">
+            <vab-icon icon="refresh-line" />
+            <span>
+              {{ translate('刷新') }}
+            </span>
+          </el-dropdown-item>
           <el-dropdown-item command="closeOthersTabs">
             <vab-icon icon="close-line" />
             <span>
@@ -65,6 +71,10 @@
       </template>
     </el-dropdown>
     <ul v-if="visible" class="contextmenu el-dropdown-menu" :style="{ left: left + 'px', top: top + 'px' }">
+      <li class="el-dropdown-menu__item" @click="refresh">
+        <vab-icon icon="refresh-line" />
+        <span>{{ translate('刷新') }}</span>
+      </li>
       <li class="el-dropdown-menu__item" :class="{ 'is-disabled': visitedRoutes.length === 1 }" @click="closeOthersTabs">
         <vab-icon icon="close-line" />
         <span>{{ translate('关闭其他') }}</span>
@@ -134,6 +144,7 @@ const hoverRoute = ref<any>()
 const visible = ref<boolean>(false)
 const top = ref<any>(0)
 const left = ref<any>(0)
+const $pub = inject<any>('$pub')
 
 const isActive = (path: any) => path === handleActivePath(route, true)
 const isNoCLosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
@@ -154,6 +165,9 @@ const initNoCLosableTabs = (routes: any[]) => {
 
 const handleCommand = (command: any) => {
   switch (command) {
+    case 'refresh':
+      refresh()
+      break
     case 'closeOthersTabs':
       closeOthersTabs()
       break
@@ -167,6 +181,14 @@ const handleCommand = (command: any) => {
       closeAllTabs()
       break
   }
+}
+
+/**
+ * 刷新当前标签页
+ */
+const refresh = () => {
+  $pub('reload-router-view')
+  $pub('refresh-rotate')
 }
 
 /**
@@ -248,9 +270,11 @@ const toLastTab = async () => {
 
 const { x, y } = useMouse()
 
-const openMenu = () => {
+const openMenu = (item: any) => {
   left.value = x.value
   top.value = y.value
+  hoverRoute.value = item
+  hoverRoute.value.path = item.path
   visible.value = true
 }
 
@@ -493,6 +517,10 @@ watchEffect(() => {
     left: 0;
     z-index: 10;
     box-shadow: var(--el-box-shadow);
+
+    i {
+      margin-right: 3px;
+    }
 
     .el-dropdown-menu__item:hover {
       color: var(--el-color-primary);
