@@ -251,7 +251,7 @@ const queryForm = reactive<any>({
   title: '',
 })
 const fixed = ref<string>('right')
-const { exit, enter } = useFullscreen()
+const { exit, enter, isFullscreen: _isFullscreen } = useFullscreen()
 
 const dragOptions = computed(() => {
   return {
@@ -372,6 +372,15 @@ const handleDetail = (row: any) => {
     else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
   }
 }
+
+watch(
+  _isFullscreen,
+  () => {
+    if (_isFullscreen.value) isFullscreen.value = true
+    else isFullscreen.value = false
+  },
+  { immediate: true }
+)
 
 onBeforeMount(() => {
   columns.value.forEach((item: any) => {
