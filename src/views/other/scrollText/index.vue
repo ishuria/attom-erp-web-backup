@@ -18,7 +18,7 @@
           </el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="滚动时长配置（S）">
+      <el-form-item label="滚动时长配置（s）">
         <el-input-number v-model="form.time" :max="30" :min="0" />
       </el-form-item>
     </el-form>
