@@ -75,11 +75,9 @@
             <el-checkbox-group v-model="checkList">
               <vab-draggable item-key="{ element }" :list="columns" v-bind="dragOptions">
                 <template #item="{ element }">
-                  <div>
-                    <el-checkbox :disabled="element.disableCheck" :label="element.label">
-                      {{ element.label }}
-                    </el-checkbox>
-                  </div>
+                  <el-checkbox :disabled="element.disableCheck" :label="element.label">
+                    {{ element.label }}
+                  </el-checkbox>
                 </template>
               </vab-draggable>
             </el-checkbox-group>
@@ -89,7 +87,7 @@
     </vab-query-form>
 
     <el-table
-      ref="tableSortRef"
+      ref="tableRef"
       v-loading="listLoading"
       :border="border"
       :data="list"
@@ -109,7 +107,7 @@
         align="center"
         :fixed="item.fixed"
         :label="item.label"
-        :min-width="item.minWidth"
+        :min-width="item.minWidth || 100"
         :prop="item.prop"
         show-overflow-tooltip
         :sortable="item.sortable"
@@ -175,7 +173,7 @@ const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const $baseConfirm = inject<any>('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
-const tableSortRef = ref<any>(null)
+const tableRef = ref<any>(null)
 const fold = ref<boolean>(true)
 const editRef = ref<any>(null)
 const border = ref<boolean>(true)
@@ -214,6 +212,7 @@ const columns = ref<any>([
     prop: 'author',
     sortable: true,
     checked: true,
+    minWidth: 100,
   },
   {
     label: '评级',
@@ -381,6 +380,10 @@ watch(
   },
   { immediate: true }
 )
+
+onActivated(() => {
+  tableRef.value.doLayout()
+})
 
 onBeforeMount(() => {
   columns.value.forEach((item: any) => {

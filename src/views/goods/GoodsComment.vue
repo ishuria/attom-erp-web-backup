@@ -16,7 +16,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableSortRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+    <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
@@ -84,7 +84,7 @@ defineOptions({
 const $baseConfirm = inject<any>('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
 const editRef = ref<any>(null)
-const tableSortRef = ref<any>(null)
+const tableRef = ref<any>(null)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const layout = ref<string>('total, sizes, prev, pager, next, jumper')
@@ -149,7 +149,7 @@ const handleDelete = (row: any) => {
 }
 
 onActivated(() => {
-  tableSortRef.value.doLayout()
+  tableRef.value.doLayout()
 })
 
 onBeforeMount(() => {
