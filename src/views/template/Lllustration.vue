@@ -3,18 +3,18 @@
     <el-row :gutter="20">
       <el-col>
         <vab-card>
-          <el-form :inline="true" @submit.prevent>
+          <el-form @submit.prevent>
             <el-form-item label="换肤" label-width="40">
               <vab-color-picker />
             </el-form-item>
             <el-form-item label="svg大小">
-              <el-slider v-model="queryForm.num" :max="300" :min="150" style="width: 200px; margin: 0 20px 0 5px" />
+              <el-slider v-model="queryForm.num" :max="300" :min="150" style="width: 190px; margin: 0 20px 0 5px" />
               px
             </el-form-item>
           </el-form>
         </vab-card>
       </el-col>
-      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
+      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="4" :md="12" :sm="12" :xl="4" :xs="24">
         <vab-card class="lllustration-card" @click="handleCopyIcon(item)">
           <vab-icon
             class="vab-lllustration"
@@ -63,7 +63,7 @@ const handleCopyIcon = (item: any) => {
   }
 
   :deep() {
-    .el-form-item {
+    .el-form-item:last-child {
       margin-bottom: 0;
     }
 
