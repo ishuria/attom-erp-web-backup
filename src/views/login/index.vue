@@ -175,7 +175,7 @@ onBeforeRouteLeave((to, from, next) => {
     border-radius: var(--el-border-radius-base);
   }
 
-  @media (max-width: 1000px) {
+  @media (max-width: 696px) {
     .login-right-tools {
       top: 5vw !important;
       right: 5vw !important;
@@ -194,6 +194,24 @@ onBeforeRouteLeave((to, from, next) => {
           width: 100% !important;
           margin-right: auto !important;
           margin-left: auto !important;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 696px) and (max-width: 999px) {
+    .login-right-tools {
+      top: 5vw !important;
+      right: 5vw !important;
+    }
+
+    .login-form {
+      width: 90vw !important;
+      margin: auto !important;
+
+      :deep() {
+        .el-form--default {
+          width: 50% !important;
         }
       }
     }
@@ -228,7 +246,7 @@ onBeforeRouteLeave((to, from, next) => {
         transition: var(--el-transition);
       }
       .el-form--default {
-        width: 44%;
+        width: 45%;
       }
 
       .title {

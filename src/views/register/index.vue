@@ -200,8 +200,8 @@ onUnmounted(() => {
     border-radius: var(--el-border-radius-base);
   }
 
-  @media (max-width: 1000px) {
-    .login-right-tools {
+  @media (max-width: 696px) {
+    .register-right-tools {
       top: 5vw !important;
       right: 5vw !important;
     }
@@ -219,6 +219,24 @@ onUnmounted(() => {
           width: 100% !important;
           margin-right: auto !important;
           margin-left: auto !important;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 696px) and (max-width: 999px) {
+    .register-right-tools {
+      top: 5vw !important;
+      right: 5vw !important;
+    }
+
+    .register-form {
+      width: 90vw !important;
+      margin: auto !important;
+
+      :deep() {
+        .el-form--default {
+          width: 50% !important;
         }
       }
     }
