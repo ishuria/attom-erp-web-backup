@@ -15,7 +15,7 @@
             </el-button>
           </el-form-item>
           <el-form-item label="文字大小">
-            <el-input-number v-model="queryForm.num" :max="40" :min="12" style="width: 120px; margin-right: 10px" />
+            <el-slider v-model="queryForm.num" :max="30" :min="12" style="width: 200px; margin: 0 20px 0 5px" />
             px
           </el-form-item>
         </el-form>
@@ -24,7 +24,7 @@
     <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
     <div class="vab-auto-box">
       <el-row :gutter="20">
-        <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="3" :sm="6" :xl="2" :xs="6">
+        <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="4" :sm="6" :xl="3" :xs="6">
           <vab-card @click="handleCopyIcon(item.icon)">
             <vab-icon
               :icon="item.icon"

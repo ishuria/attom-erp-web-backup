@@ -3,16 +3,28 @@
     <el-row :gutter="20">
       <el-col>
         <vab-card>
-          <el-form :inline="true">
-            <el-form-item label="换肤">
+          <el-form :inline="true" @submit.prevent>
+            <el-form-item label="换肤" label-width="40">
               <vab-color-picker />
+            </el-form-item>
+            <el-form-item label="svg大小">
+              <el-slider v-model="queryForm.num" :max="300" :min="150" style="width: 200px; margin: 0 20px 0 5px" />
+              px
             </el-form-item>
           </el-form>
         </vab-card>
       </el-col>
-      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="4" :md="8" :sm="8" :xl="4" :xs="12">
-        <vab-card :body-style="{ height: '170px' }" @click="handleCopyIcon(item)">
-          <vab-icon class="vab-lllustration" :icon="item" is-custom-svg />
+      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
+        <vab-card class="lllustration-card" @click="handleCopyIcon(item)">
+          <vab-icon
+            class="vab-lllustration"
+            :icon="item"
+            is-custom-svg
+            :style="{
+              width: queryForm.num + 'px',
+              height: queryForm.num + 'px',
+            }"
+          />
         </vab-card>
       </el-col>
     </el-row>
@@ -33,6 +45,10 @@ for (const key in files) {
   lllustrationsArray.push(_key.substring(0, _key.length - 4))
 }
 
+const queryForm = reactive<any>({
+  num: 150,
+})
+
 const handleCopyIcon = (item: any) => {
   clip(`<vab-icon style="width:100%;height:300px" icon="${item}" is-custom-svg/>`)
 }
@@ -49,6 +65,16 @@ const handleCopyIcon = (item: any) => {
   :deep() {
     .el-form-item {
       margin-bottom: 0;
+    }
+
+    .vab-color-picker {
+      margin-left: 0 !important;
+    }
+
+    .lllustration-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 }
