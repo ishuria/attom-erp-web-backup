@@ -655,8 +655,20 @@ html {
 
     /* svg */
     [fill='#6c63ff'],
-    [fill='#7CADF6'] {
+    [fill='#7CADF6'],
+    [fill='#1C85E8'],
+    [fill='#5CA4E6'] {
       fill: var(--el-color-primary) !important;
+    }
+
+    [fill='#5661AE'] {
+      fill: var(--el-color-primary-light-5) !important;
+    }
+
+    [fill='#FEBB94'],
+    [fill='#BC775C'],
+    [fill='#E6A23C'] {
+      fill: var(--el-color-warning) !important;
     }
 
     .el-menu--horizontal .el-menu-item:not(.is-disabled):focus,

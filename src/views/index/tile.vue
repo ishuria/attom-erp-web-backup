@@ -13,8 +13,7 @@
                 <vab-icon icon="user-heart-line" />
                 <span>门户</span>
               </div>
-
-              <vab-icon class="tile-svg" icon="lllustration/educator_re_ju47" is-custom-svg />
+              <vab-icon class="tile-svg" icon="lllustration/Scenes08" is-custom-svg />
             </vab-link>
           </vab-card>
         </el-col>
@@ -186,8 +185,10 @@ defineOptions({
   border-radius: var(--el-border-radius-base);
   transition: var(--el-transition) !important;
 
-  * {
-    transition: var(--el-transition) !important;
+  :deep() {
+    * {
+      transition: var(--el-transition) !important;
+    }
   }
 
   .tile-box {
@@ -210,7 +211,7 @@ defineOptions({
       right: var(--el-margin);
       bottom: var(--el-margin);
       width: auto;
-      height: auto;
+      height: 210px;
     }
 
     a {
@@ -298,11 +299,6 @@ defineOptions({
 
             &::before {
               transform: translate3d(50%, 50%, 0) scale3d(15, 15, 15);
-            }
-
-            .tile-svg,
-            i {
-              transform: scale(1.05);
             }
           }
         }

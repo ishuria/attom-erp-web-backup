@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :lg="3" :md="12" :sm="24" :xl="3" :xs="24">
         <vab-card class="dashboard-user">
-          <vab-icon icon="lllustration/complete_design_re_h75h" is-custom-svg />
+          <vab-icon icon="lllustration/Scenes03" is-custom-svg />
         </vab-card>
       </el-col>
       <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
@@ -73,7 +73,6 @@ const countConfig2 = {
         .vab-icon {
           width: 100%;
           height: 130px;
-          text-align: left;
         }
       }
     }
