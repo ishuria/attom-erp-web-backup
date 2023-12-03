@@ -654,8 +654,9 @@ html {
       fill: var(--el-color-primary) !important;
     }
 
-    [fill='#5661AE'] {
-      fill: var(--el-color-primary-light-5) !important;
+    [fill='#5661AE'],
+    [fill='#465393'] {
+      fill: var(--el-color-primary-light-1) !important;
     }
 
     [fill='#FEBB94'],

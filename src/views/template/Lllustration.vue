@@ -11,7 +11,7 @@
         </vab-card>
       </el-col>
       <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="4" :md="8" :sm="8" :xl="4" :xs="12">
-        <vab-card @click="handleCopyIcon(item)">
+        <vab-card :body-style="{ height: '160px', padding: '0' }" @click="handleCopyIcon(item)">
           <vab-icon class="vab-lllustration" :icon="item" is-custom-svg />
         </vab-card>
       </el-col>
