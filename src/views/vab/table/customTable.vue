@@ -54,7 +54,7 @@
           <el-button @click="clickFullScreen">
             <vab-icon :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
           </el-button>
-          <el-popover trigger="hover" :width="150">
+          <el-popover trigger="hover" :width="165">
             <el-radio-group v-model="lineHeight">
               <el-radio-button label="large">大</el-radio-button>
               <el-radio-button label="default">中</el-radio-button>
@@ -251,6 +251,7 @@ const queryForm = reactive<any>({
   title: '',
 })
 const fixed = ref<string>('right')
+const { exit, enter } = useFullscreen()
 
 const dragOptions = computed(() => {
   return {
@@ -289,6 +290,7 @@ const queryData = () => {
 
 const clickFullScreen = () => {
   isFullscreen.value = !isFullscreen.value
+  isFullscreen.value ? enter() : exit()
 }
 
 const setSelectRows = (value: any) => {
