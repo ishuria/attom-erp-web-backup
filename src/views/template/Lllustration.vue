@@ -42,7 +42,7 @@ const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
 
 for (const key in files) {
   const _key = key.slice(11)
-  lllustrationsArray.push(_key.substring(0, _key.length - 4))
+  lllustrationsArray.unshift(_key.substring(0, _key.length - 4))
 }
 
 const queryForm = reactive<any>({
