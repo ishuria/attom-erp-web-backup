@@ -13,7 +13,7 @@ import { createPwa } from './pwa/'
 import { createSvgIcons } from './svgSprite/'
 import { createUnPlugin } from './unplugin/'
 import { createVisualizer } from './visualizer/'
-import { compress, https, localEnabled, port, prodEnabled, report } from '/@/config/'
+import { compress, https, localEnabled, port, prodEnabled, pwa, report } from '/@/config/'
 
 const viteApp = 'VITE_' + 'APP_'
 const viteUser = 'VITE_' + 'USER_'
@@ -31,11 +31,11 @@ export const createVitePlugin = (env: Record<string, string>) => {
   vitePlugins.push(vueJsx())
   vitePlugins.push(createProgress(env))
   vitePlugins.push(createUnPlugin(env))
-  vitePlugins.push(createPwa())
   vitePlugins.push(createMock(localEnabled, prodEnabled))
   vitePlugins.push(createSvgIcons())
   vitePlugins.push(createBanner())
-  vitePlugins.push(createCompress(compress))
+  if (compress) vitePlugins.push(createCompress(compress))
+  if (pwa) vitePlugins.push(createPwa())
   if (https) vitePlugins.push(createHttps())
   if (report) vitePlugins.push(createVisualizer())
   return vitePlugins
