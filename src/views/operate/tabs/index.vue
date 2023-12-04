@@ -85,10 +85,10 @@ const handleRefresh = () => {
 }
 
 const handleOpenParams = () => {
-  router.push(`/operate/dynamicSegment/test1/${random(0, 100)}`)
+  router.push(`/operate/dynamicSegment/params/${random(0, 100)}`)
 }
 
 const handleOpenQuery = () => {
-  router.push(`/operate/dynamicSegment/test2?id=${random(0, 100)}`)
+  router.push(`/operate/dynamicSegment/query?id=${random(0, 100)}`)
 }
 </script>
