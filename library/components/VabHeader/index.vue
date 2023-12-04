@@ -44,41 +44,8 @@ const handleRoutes = computed(() => {
 
 <style lang="scss">
 .vab-header .vab-main .right-panel {
-  @media only screen and (min-width: 992px) {
-    .el-menu.el-menu--horizontal {
-      width: 50% !important;
-    }
-
-    .vab-search,
-    .vab-dark,
-    .vab-color-picker {
-      display: none !important;
-    }
-  }
-  @media only screen and (min-width: 1200px) {
-    .el-menu.el-menu--horizontal {
-      width: 50% !important;
-    }
-
-    .vab-dark,
-    .vab-color-picker {
-      display: none !important;
-    }
-
-    .vab-search {
-      display: none !important;
-    }
-  }
-
-  @media only screen and (min-width: 1920px) {
-    .el-menu.el-menu--horizontal {
-      width: 80% !important;
-    }
-
-    .vab-dark,
-    .vab-color-picker {
-      display: inline-flex !important;
-    }
+  .el-menu.el-menu--horizontal {
+    width: calc(100vw * 0.92 - 195px - 435px) !important;
   }
 }
 </style>
@@ -102,7 +69,7 @@ const handleRoutes = computed(() => {
 
       :deep() {
         .vab-logo-horizontal {
-          width: 300px;
+          width: 200px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;

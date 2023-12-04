@@ -1,28 +1,29 @@
 <template>
   <div class="vab-nav">
-    <el-row :gutter="20">
-      <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="4">
-        <div class="left-panel">
-          <vab-fold fold="contract-left-line" unfold="contract-right-line" />
-          <el-tabs v-if="layout === 'comprehensive'" v-model="tab.data" tab-position="top" @tab-click="handleTabClick">
-            <template v-for="(item, index) in routes" :key="index + item.name">
-              <el-tab-pane :name="item.name">
-                <template #label>
-                  <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
-                  {{ translate(item.meta.title) }}
-                </template>
-              </el-tab-pane>
+    <div class="left-panel">
+      <vab-fold fold="contract-left-line" unfold="contract-right-line" />
+      <el-tabs
+        v-if="layout === 'comprehensive'"
+        v-model="tab.data"
+        class="comprehensive-tabs"
+        tab-position="top"
+        @tab-click="handleTabClick"
+      >
+        <template v-for="(item, index) in routes" :key="index + item.name">
+          <el-tab-pane :name="item.name">
+            <template #label>
+              <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
+              {{ translate(item.meta.title) }}
             </template>
-          </el-tabs>
-          <vab-breadcrumb v-else class="hidden-xs-only hidden-md-and-down" />
-        </div>
-      </el-col>
-      <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="20">
-        <div class="right-panel">
-          <vab-right-tools />
-        </div>
-      </el-col>
-    </el-row>
+          </el-tab-pane>
+        </template>
+      </el-tabs>
+      <vab-breadcrumb v-else class="hidden-xs-only hidden-md-and-down" />
+    </div>
+
+    <div class="right-panel">
+      <vab-right-tools />
+    </div>
   </div>
 </template>
 
@@ -59,42 +60,16 @@ const handleTabClick = () => {
 
 <style lang="scss">
 .vab-layout-comprehensive {
-  @media only screen and (min-width: 992px) {
-    .right-panel {
-      .vab-search,
-      .vab-dark,
-      .vab-color-picker {
-        display: none;
-      }
-    }
-  }
-  @media only screen and (min-width: 1200px) {
-    .right-panel {
-      .vab-dark,
-      .vab-color-picker {
-        display: inline-flex;
-      }
-
-      .vab-search {
-        display: none;
-      }
-    }
-  }
-
-  @media only screen and (min-width: 1920px) {
-    .right-panel {
-      .vab-search,
-      .vab-dark,
-      .vab-color-picker {
-        display: inline-flex;
-      }
-    }
+  .comprehensive-tabs {
+    width: calc(100vw - var(--el-left-menu-width) - 675px) !important;
   }
 }
 </style>
 <style lang="scss" scoped>
 .vab-nav {
   position: relative;
+  display: flex;
+  justify-content: space-between;
   height: var(--el-nav-height);
   padding-right: var(--el-padding);
   padding-left: var(--el-padding);

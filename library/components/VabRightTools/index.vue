@@ -1,6 +1,6 @@
 <template>
   <div class="vab-right-tools">
-    <vab-search v-show="!isHorizontal" class="hidden-xs-only hidden-md-and-down" />
+    <vab-search v-show="!isHorizontal" class="hidden-xs-only" />
     <vab-dark v-show="theme.showDark" :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }" />
     <vab-color-picker v-show="theme.showColorPicker" />
     <vab-theme v-show="theme.showTheme && routeName !== 'SeparateLayout'" />
