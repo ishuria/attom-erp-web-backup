@@ -27,5 +27,6 @@ const handleCommand = (language: string) => {
   changeLanguage(language)
   locale.value = language
   document.title = getPageTitle(route.meta.title)
+  if (route.path === '/login' || route.path === '/register') location.reload()
 }
 </script>

@@ -31,7 +31,7 @@
             </template>
           </el-input>
           <el-button class="phone-code" :disabled="isGetPhone" type="primary" @click="getPhoneCode">
-            {{ phoneCode }}
+            {{ translate(phoneCode) }}
           </el-button>
         </el-form-item>
         <el-form-item prop="password">
