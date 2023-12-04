@@ -8,8 +8,8 @@
         <el-input v-model="form.content" style="width: 345px" type="textarea" />
       </el-form-item>
       <el-form-item v-if="'technology' != theme.themeName" label="主题配置">
-        <el-radio-group v-model="form.theme" @change="handleDialogTheme">
-          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label">
+        <el-radio-group v-model="form.theme">
+          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label" @change="handleDialogTheme">
             <template #default>{{ item.title }}</template>
           </el-radio-button>
         </el-radio-group>
