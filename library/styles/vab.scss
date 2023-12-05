@@ -732,16 +732,17 @@ html {
     .no-background-container.table-auto-height {
       > .el-row {
         margin-bottom: calc(0px - var(--el-margin));
-      }
+        > .el-col {
+          > .el-card {
+            > .el-card__body {
+              display: flex;
+              flex-direction: column;
+              height: calc(var(--el-container-height) - 2px);
 
-      .el-card {
-        .el-card__body {
-          display: flex;
-          flex-direction: column;
-          height: calc(var(--el-container-height) - 2px);
-
-          .el-table {
-            flex: 1;
+              .el-table {
+                flex: 1;
+              }
+            }
           }
         }
       }

@@ -103,7 +103,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // },
         },
       },
-      devSourcemap: false,
+      devSourcemap: true,
     },
     plugins: createVitePlugin(env),
     define: {

@@ -1424,7 +1424,6 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '产品中心',
           icon: 'presentation-line',
-          badge: 'New',
         },
       },
       {
@@ -1436,6 +1435,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           icon: 'image-2-line',
           badge: '全屏',
           fullscreen: true,
+        },
+      },
+      {
+        path: 'explorer',
+        name: 'Explorer',
+        component: () => import('/@/views/goods/Explorer.vue'),
+        meta: {
+          title: '资源管理器',
+          icon: 'file-cloud-line',
+          badge: 'New',
         },
       },
     ],
