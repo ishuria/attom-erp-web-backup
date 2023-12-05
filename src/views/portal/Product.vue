@@ -312,6 +312,10 @@ defineOptions({
 }
 
 :deep() {
+  .vab-footer {
+    background: #f6f8f9;
+    border: 0;
+  }
   .vab-theme-setting {
     section {
       > div {

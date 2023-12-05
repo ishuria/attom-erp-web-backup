@@ -137,7 +137,10 @@ export default [
     url: '/news/getList',
     method: 'get',
     response: () => {
-      list.sort(() => Math.random() - 0.5)
+      list.map((item: any) => {
+        item.logo = handleRandomImage()
+        item.image = handleRandomImage()
+      })
       return {
         code: 200,
         msg: 'success',

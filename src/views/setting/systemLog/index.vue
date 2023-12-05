@@ -65,7 +65,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="登录IP" min-width="130" prop="ip" />
-      <el-table-column align="center" label="访问时间" min-width="160" prop="datetime" />
+      <el-table-column align="center" label="访问时间" min-width="160" prop="datetime" sortable />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
