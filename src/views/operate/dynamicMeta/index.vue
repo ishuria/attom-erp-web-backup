@@ -1,14 +1,20 @@
 <template>
   <div class="dynamic-meta-container no-background-container">
     <vab-card>
-      <template #header>动态标题</template>
+      <template #header>
+        动态logo
+        <el-tag class="card-header-tag" type="danger">New</el-tag>
+      </template>
+      <el-button type="primary" @click="handleChangeLogo('vab')">修改logo</el-button>
+      <el-button type="warning" @click="handleChangeLogo('vite')">重置</el-button>
+    </vab-card>
+    <vab-card title="动态标题">
       <el-space wrap>
         <el-button type="primary" @click="handleMeta('DynamicMeta', { title: 'vab-demo' })">标题变更为 vab-demo</el-button>
-        <el-button type="warning" @click="handleMeta('DynamicMeta', { title: '动态Meta' })">还原为默认标题</el-button>
+        <el-button type="warning" @click="handleMeta('DynamicMeta', { title: '动态Meta' })">重置</el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>动态徽章</template>
+    <vab-card title="动态徽章">
       <el-space wrap>
         <el-badge :hidden="hidden" style="margin-right: 10px" :value="badge">
           <el-button type="primary" @click="handleBadge('DynamicMeta')">徽章+ 1</el-button>
@@ -17,8 +23,7 @@
         <el-button type="danger" @click="removeBadge('DynamicMeta', { badge: false })">移除徽章</el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>动态图标</template>
+    <vab-card title="动态图标">
       <el-popover popper-class="icon-selector-popper" trigger="hover" :width="305">
         <template #reference>
           <el-button>
@@ -29,12 +34,12 @@
         </template>
         <vab-icon-selector @handle-icon="handleIcon" />
       </el-popover>
+      <el-button type="warning" @click="handleResetIcon()">重置</el-button>
     </vab-card>
-    <vab-card>
-      <template #header>动态高亮菜单</template>
+    <vab-card title="动态高亮菜单">
       <el-space wrap>
         <el-button type="primary" @click="handleActiveMenu('/operate/tabs')">高亮菜单至多标签</el-button>
-        <el-button type="warning" @click="handleActiveMenu('/operate/dynamicMeta')">还原默认高亮</el-button>
+        <el-button type="warning" @click="handleActiveMenu('/operate/dynamicMeta')">重置</el-button>
       </el-space>
     </vab-card>
   </div>
@@ -42,6 +47,7 @@
 
 <script lang="ts" setup>
 import { useRoutesStore } from '/@/store/modules/routes'
+import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import getPageTitle from '/@/utils/pageTitle'
 
@@ -52,11 +58,14 @@ defineOptions({
 const route = useRoute()
 const tabsStore = useTabsStore()
 const routesStore = useRoutesStore()
+const settingsStore = useSettingsStore()
 const { changeTabsMeta } = tabsStore
 const { changeActiveMenu, changeMenuMeta } = routesStore
+const { changeLogo } = settingsStore
 const badge = ref<number>(0)
 const icon = ref<any>(route.meta.icon)
 const hidden = ref<boolean>(false)
+const favicon = useFavicon()
 
 const handleBadge = (name: any) => {
   badge.value = badge.value + 1
@@ -89,6 +98,18 @@ const handleIcon = (item: any) => {
   icon.value = item
   changeMenuMeta({ name: 'DynamicMeta', meta: { icon: item } })
   changeTabsMeta({ name: 'DynamicMeta', meta: { icon: item } })
+}
+
+const handleResetIcon = () => {
+  const _icon = route.meta.icon
+  icon.value = _icon
+  changeMenuMeta({ name: 'DynamicMeta', meta: { icon: _icon } })
+  changeTabsMeta({ name: 'DynamicMeta', meta: { icon: _icon } })
+}
+
+const handleChangeLogo = (logo: string) => {
+  'vab' === logo ? (favicon.value = 'favicon-vab.ico') : (favicon.value = 'favicon.ico')
+  changeLogo(logo)
 }
 
 const handleActiveMenu = (activeMenu: string) => {
