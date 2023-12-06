@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="24">
         <vab-card>
-          <template #header>element-plus风格 Message 消息提示</template>
+          <template #header>Message 消息提示（默认）</template>
           <el-button type="primary" @click="open1">消息</el-button>
           <el-button type="success" @click="open2">成功</el-button>
           <el-button type="warning" @click="open3">警告</el-button>
@@ -12,7 +12,7 @@
       </el-col>
       <el-col :span="24">
         <vab-card>
-          <template #header>element-plus风格 Message 消息提示</template>
+          <template #header>Message 消息提示（自定义）</template>
           <el-button type="primary" @click="open5">消息</el-button>
           <el-button type="success" @click="open6">成功</el-button>
           <el-button type="warning" @click="open7">警告</el-button>
@@ -100,37 +100,37 @@ const open1 = () => {
   $baseMessage('这是一条消息提示', 'info')
 }
 const open2 = () => {
-  $baseMessage('恭喜您，这是一条成功消息', 'success')
+  $baseMessage('这是一条成功消息', 'success')
 }
 const open3 = () => {
-  $baseMessage('警告哦，这是一条警告消息', 'warning')
+  $baseMessage('这是一条警告消息', 'warning')
 }
 const open4 = () => {
-  $baseMessage('错了哦，这是一条错误消息', 'error')
+  $baseMessage('这是一条错误消息', 'error')
 }
 const open5 = () => {
   $baseMessage('这是一条消息提示', 'info', 'hey')
 }
 const open6 = () => {
-  $baseMessage('恭喜您，这是一条成功消息', 'success', 'hey')
+  $baseMessage('这是一条成功消息', 'success', 'hey')
 }
 const open7 = () => {
-  $baseMessage('警告哦，这是一条警告消息', 'warning', 'hey')
+  $baseMessage('这是一条警告消息', 'warning', 'hey')
 }
 const open8 = () => {
-  $baseMessage('错了哦，这是一条错误消息', 'error', 'hey')
+  $baseMessage('这是一条错误消息', 'error', 'hey')
 }
 const open9 = () => {
-  $baseNotify('这是一条消息的提示消息', '提示', 'info', 'bottom-right')
+  $baseNotify('这是一条提示消息', '提示', 'info', 'bottom-right')
 }
 const open10 = () => {
-  $baseNotify('这是一条成功的提示消息', '成功', 'success', 'bottom-right')
+  $baseNotify('这是一条成功消息', '成功', 'success', 'bottom-right')
 }
 const open11 = () => {
-  $baseNotify('这是一条警告的提示消息', '警告', 'warning', 'bottom-right')
+  $baseNotify('这是一条警告消息', '警告', 'warning', 'bottom-right')
 }
 const open12 = () => {
-  $baseNotify('这是一条错误的提示消息', '错误', 'error', 'bottom-right')
+  $baseNotify('这是一条错误消息', '错误', 'error', 'bottom-right')
 }
 const open13 = (value: string) => {
   $baseAlert(`这是一条${value}弹框`)

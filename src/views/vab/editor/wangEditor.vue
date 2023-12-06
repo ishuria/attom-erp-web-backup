@@ -3,9 +3,17 @@
     <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
     <editor v-model="html" class="wang-editor-content" :default-config="editorConfig" @on-created="handleCreated" />
     <div class="wang-editor-footer">
-      <el-button type="primary" @click="onSubmit">保存</el-button>
+      <el-button type="primary" @click="handlePreview">预览</el-button>
+      <el-button type="primary" @click="handleSave">保存</el-button>
     </div>
   </div>
+  <vab-dialog v-model="dialogVisible" append-to-body class="wang-editor-dialog" width="500px">
+    <div v-html="html"></div>
+    <template #footer>
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    </template>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -17,8 +25,8 @@ defineOptions({
   name: 'WangEditor',
 })
 
+const dialogVisible = ref<any>(false)
 const $baseMessage = inject<any>('$baseMessage')
-const $baseAlert = inject<any>('$baseAlert')
 const editorRef = shallowRef<IDomEditor | undefined>(undefined)
 const html = ref<any>(
   '<h1>一级标题</h1><h2>二级标题</h2><h3>三级标题</h3><p>hello world ~~~ </p><blockquote>blockquote</blockquote><pre><code class="language-javascript">const a = 100;</code></pre><p><img src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg"/></p>'
@@ -39,8 +47,11 @@ const handleCreated = (editor: IDomEditor) => {
   editorRef.value = editor
 }
 
-const onSubmit = () => {
-  $baseAlert(html.value)
+const handlePreview = () => {
+  dialogVisible.value = true
+}
+
+const handleSave = () => {
   $baseMessage('模拟保存成功', 'success', 'hey')
 }
 
@@ -63,7 +74,11 @@ onBeforeUnmount(() => {
     z-index: 9999 !important;
   }
 
-  [classname='w-e-toolbar-init'] {
+  .w-e-bar-divider {
+    display: none;
+  }
+
+  .w-e-toolbar-init {
     border-bottom: 1px solid var(--el-border-color) !important;
   }
 
@@ -90,6 +105,12 @@ onBeforeUnmount(() => {
     .wang-editor-footer {
       width: 90%;
     }
+  }
+}
+
+.wang-editor-dialog {
+  img {
+    max-width: 100%;
   }
 }
 </style>
