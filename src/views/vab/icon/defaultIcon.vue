@@ -155,7 +155,7 @@ onBeforeMount(() => {
         font-size: var(--el-font-size-small);
         color: var(--el-color-white);
         text-align: center;
-        content: '点击复制';
+        content: '复制';
         background-color: var(--el-color-primary);
         transition: var(--el-transition);
       }

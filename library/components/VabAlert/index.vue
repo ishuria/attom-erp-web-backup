@@ -10,12 +10,12 @@
     :title="title"
     :type="type"
   >
-    <template #title>
+    <template v-if="title || $slots.title" #title>
       <slot name="title">
         {{ title }}
       </slot>
     </template>
-    <template v-if="description" #default>
+    <template v-if="$slots.default || description" #default>
       <slot name="default">
         {{ description }}
       </slot>
