@@ -186,9 +186,13 @@ const handleCommand = (command: any) => {
 /**
  * 刷新当前标签页
  */
-const refresh = () => {
-  $pub('reload-router-view')
-  $pub('refresh-rotate')
+const refresh = async () => {
+  if (hoverRoute.value) {
+    await router.push(hoverRoute.value)
+    await $pub('reload-router-view', hoverRoute.value.name)
+  } else await $pub('reload-router-view')
+  await $pub('refresh-rotate')
+  await closeMenu()
 }
 
 /**

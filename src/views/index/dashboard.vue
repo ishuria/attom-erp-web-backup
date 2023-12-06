@@ -15,13 +15,13 @@
       <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
         <top-card background="white" :count-config="countConfig2" icon="u-disk-line" percentage="13%" title="硬盘占用" />
       </el-col>
-      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
+      <el-col :lg="7" :md="12" :sm="24" :xl="7" :xs="24">
         <branch />
       </el-col>
-      <el-col :lg="10" :md="12" :sm="24" :xl="10" :xs="24">
+      <el-col :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
         <trend />
       </el-col>
-      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
+      <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <rank />
       </el-col>
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
