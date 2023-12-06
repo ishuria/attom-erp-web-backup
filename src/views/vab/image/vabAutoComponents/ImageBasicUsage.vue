@@ -19,7 +19,7 @@ const url = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.
     height: 100px;
   }
 
-  @media only screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     .el-image {
       width: 50px;
       height: 50px;

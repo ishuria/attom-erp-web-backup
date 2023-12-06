@@ -202,8 +202,7 @@ onUnmounted(() => {
 
   @media (max-width: 696px) {
     .register-right-tools {
-      top: 5vw !important;
-      right: 5vw !important;
+      display: none;
     }
 
     .register-form {
@@ -226,8 +225,7 @@ onUnmounted(() => {
 
   @media (min-width: 696px) and (max-width: 999px) {
     .register-right-tools {
-      top: 5vw !important;
-      right: 5vw !important;
+      display: none;
     }
 
     .register-form {

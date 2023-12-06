@@ -14,7 +14,7 @@
             更新日志
           </template>
           <vab-alert title="温馨提示：请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容" type="info" />
-          <el-scrollbar style="height: calc(100% - 60px)">
+          <el-scrollbar style="height: calc(100% - 75px)">
             <el-timeline>
               <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
                 <template v-if="item.waver" #dot>
@@ -126,7 +126,7 @@ onMounted(() => {
 
   :deep() {
     .el-timeline {
-      padding: 5px;
+      padding: 10px;
       &-item__dot {
         .vab-dot {
           left: -1px;

@@ -150,5 +150,16 @@ const handleTabClick = () => {
       }
     }
   }
+
+  @media (max-width: 450px) {
+    .right-panel {
+      :deep() {
+        .el-badge,
+        .ri-refresh-line {
+          display: none;
+        }
+      }
+    }
+  }
 }
 </style>

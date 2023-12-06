@@ -1,5 +1,5 @@
 .error-container {
-  @media only screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     .error-content {
       flex-direction: column !important;
       padding-top: 6.5vh;

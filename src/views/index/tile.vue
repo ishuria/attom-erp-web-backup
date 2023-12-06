@@ -306,31 +306,31 @@ defineOptions({
     }
   }
 
-  @media only screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     .tile-box {
       width: 100%;
     }
   }
 
-  @media only screen and (min-width: 768px) {
+  @media (min-width: 768px) {
     .tile-box {
       width: 100%;
     }
   }
 
-  @media only screen and (min-width: 992px) {
+  @media (min-width: 992px) {
     .tile-box {
       width: 100%;
     }
   }
 
-  @media only screen and (min-width: 1200px) {
+  @media (min-width: 1200px) {
     .tile-box {
       width: 90%;
     }
   }
 
-  @media only screen and (min-width: 1920px) {
+  @media (min-width: 1920px) {
     .tile-box {
       width: 70%;
     }
