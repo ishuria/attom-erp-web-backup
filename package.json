@@ -103,7 +103,7 @@
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-mock": "2.9.8",
-    "vite-plugin-pwa": "^0.17.3",
+    "vite-plugin-pwa": "^0.17.4",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.7.0",
     "vite-plugin-vitebar": "^0.0.5",
