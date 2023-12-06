@@ -1,25 +1,29 @@
 <template>
   <div class="pane-split-container no-background-container table-auto-height">
-    <vab-card class="hidden-sm-and-up">
-      <vab-alert title="手机端不支持面板分割演示" type="warning" />
-    </vab-card>
-    <vab-card class="hidden-xs-only">
-      <vab-pane-split ratio="2/3">
-        <template #one>
-          <div class="pane-split-left">A</div>
-        </template>
-        <template #two>
-          <vab-pane-split class="pane-split-right" horizontal>
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <vab-card class="hidden-sm-and-up">
+          <vab-alert title="手机端不支持面板分割演示" type="warning" />
+        </vab-card>
+        <vab-card class="hidden-xs-only">
+          <vab-pane-split ratio="2/3">
             <template #one>
-              <div class="pane-split-up">B</div>
+              <div class="pane-split-left">A</div>
             </template>
             <template #two>
-              <div class="pane-split-down">C</div>
+              <vab-pane-split class="pane-split-right" horizontal>
+                <template #one>
+                  <div class="pane-split-up">B</div>
+                </template>
+                <template #two>
+                  <div class="pane-split-down">C</div>
+                </template>
+              </vab-pane-split>
             </template>
           </vab-pane-split>
-        </template>
-      </vab-pane-split>
-    </vab-card>
+        </vab-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
