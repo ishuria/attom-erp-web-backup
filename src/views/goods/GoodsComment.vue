@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-comment-container table-auto-height">
+  <div class="goods-comment-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>

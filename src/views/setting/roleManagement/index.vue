@@ -1,5 +1,5 @@
 <template>
-  <div class="role-management-container table-auto-height">
+  <div class="role-management-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
         <el-button :icon="Plus" type="primary" @click="handleEdit()">添加</el-button>

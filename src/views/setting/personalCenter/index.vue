@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-center-container no-background-container">
+  <div class="personal-center-container no-background-container auto-height-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
         <vab-card>

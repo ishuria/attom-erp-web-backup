@@ -1,5 +1,5 @@
 <template>
-  <div class="comprehensive-table-container table-auto-height">
+  <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline label-width="49px" :model="queryForm" @submit.prevent>

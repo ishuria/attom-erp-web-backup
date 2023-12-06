@@ -1,5 +1,5 @@
 <template>
-  <div class="big-data-table-container table-auto-height">
+  <div class="big-data-table-container auto-height-container">
     <el-alert class="hidden-sm-and-up" :closable="false" title="手机端不支持大数据表格演示" type="warning" />
     <el-auto-resizer class="hidden-xs-only">
       <template #default="{ height, width }">

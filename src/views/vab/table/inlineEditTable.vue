@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-edit-table-container table-auto-height">
+  <div class="inline-edit-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>

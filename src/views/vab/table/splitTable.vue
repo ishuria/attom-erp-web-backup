@@ -1,5 +1,5 @@
 <template>
-  <div class="split-table-container no-background-container table-auto-height">
+  <div class="split-table-container no-background-container auto-height-container">
     <vab-card class="hidden-sm-and-up">
       <vab-alert title="手机端不支持分割表格演示" type="warning" />
     </vab-card>

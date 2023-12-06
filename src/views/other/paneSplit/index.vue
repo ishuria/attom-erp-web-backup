@@ -1,5 +1,5 @@
 <template>
-  <div class="pane-split-container no-background-container table-auto-height">
+  <div class="pane-split-container no-background-container auto-height-container">
     <el-row :gutter="20">
       <el-col :span="24">
         <vab-card class="hidden-sm-and-up">

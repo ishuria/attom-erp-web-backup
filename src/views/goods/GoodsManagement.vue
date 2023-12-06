@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-management-container table-auto-height">
+  <div class="goods-management-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>

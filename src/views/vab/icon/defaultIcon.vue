@@ -1,5 +1,5 @@
 <template>
-  <div class="default-icon-container table-auto-height">
+  <div class="default-icon-container auto-height-container">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline label-width="80px" @submit.prevent>

@@ -1,5 +1,5 @@
 <template>
-  <div class="errorLog-container table-auto-height">
+  <div class="errorLog-container auto-height-container">
     <vab-error-log-content />
   </div>
 </template>

@@ -710,7 +710,7 @@ html {
     }
 
     /* 表格自动高度 */
-    :not(.no-background-container).table-auto-height {
+    :not(.no-background-container).auto-height-container {
       display: flex;
       flex-direction: column;
       height: var(--el-container-height);
@@ -730,7 +730,7 @@ html {
       }
     }
 
-    .no-background-container.table-auto-height {
+    .no-background-container.auto-height-container {
       > .el-row {
         margin-bottom: calc(0px - var(--el-margin));
 
@@ -750,7 +750,7 @@ html {
       }
     }
 
-    :not(.table-auto-height).no-background-container {
+    :not(.auto-height-container).no-background-container {
       > .el-row:has(.el-card) {
         margin-bottom: calc(0px - var(--el-margin));
       }
