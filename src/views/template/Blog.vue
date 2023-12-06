@@ -1,7 +1,7 @@
 <template>
   <div class="blog-container no-background-container">
     <el-row :gutter="20">
-      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col :lg="4" :md="24" :sm="24" :xl="4" :xs="24">
         <vab-card>
           <el-menu class="blog-menu" default-active="1" @select="handleSelect">
             <el-menu-item index="1">
@@ -27,7 +27,7 @@
           </el-menu>
         </vab-card>
       </el-col>
-      <el-col :lg="14" :md="12" :sm="24" :xl="14" :xs="24">
+      <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <vab-card :body-style="{ minHeight: 'calc(var(--el-container-height) - 2px)' }">
           <div v-show="index === '1'">
             <el-tabs active-name="first">
@@ -99,7 +99,7 @@
           </div>
         </vab-card>
       </el-col>
-      <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
+      <el-col :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
         <el-carousel height="180px" :interval="6000">
           <el-carousel-item v-for="item in 4" :key="item">
             <img src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg" />

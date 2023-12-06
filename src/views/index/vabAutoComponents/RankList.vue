@@ -1,5 +1,5 @@
 <template>
-  <vab-card>
+  <vab-card :body-style="{ padding: '20px 20px 20px 0' }">
     <template #header>
       <vab-icon icon="medal-line" />
       榜单
@@ -12,7 +12,7 @@
             <vab-icon :icon="item.icon" />
           </div>
         </div>
-        <div class="medal-list-item-left">
+        <div class="medal-list-item-right">
           <div class="item-title">把青春华章写在祖国大地上</div>
           <div class="item-type">type</div>
         </div>
@@ -50,7 +50,7 @@ const iconList = ref<any>([
 .medal-list {
   &-item {
     position: relative;
-    display: block;
+    display: flex;
     width: 100%;
     height: 80px;
     clear: both;
@@ -107,17 +107,17 @@ const iconList = ref<any>([
       background-size: 152px 151px;
     }
 
-    &-left {
-      float: left;
+    &-right {
       height: 48px;
-      margin: 10px 0 18px;
+      margin: 15px 0 0 -5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       .item-title {
         margin-bottom: 10px;
-        overflow: hidden;
+
         color: var(--el-color-grey);
-        text-overflow: ellipsis;
-        white-space: nowrap;
       }
 
       .item-type {
