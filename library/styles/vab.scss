@@ -732,6 +732,7 @@ html {
     .no-background-container.table-auto-height {
       > .el-row {
         margin-bottom: calc(0px - var(--el-margin));
+
         > .el-col {
           > .el-card {
             > .el-card__body {

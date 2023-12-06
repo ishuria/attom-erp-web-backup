@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    v-bind="$attrs"
     :align-center="alignCenter"
     :append-to="appendTo"
     :append-to-body="appendToBody"
@@ -23,13 +22,16 @@
     }"
     :top="top"
     :width="width"
+    v-bind="$attrs"
   >
     <template #header>
       <slot name="header">
         <div class="el-dialog__title" @dblclick="setFullscreen">{{ title }}</div>
       </slot>
       <button v-if="showClose" class="el-dialog__headerbtn" type="button" @click="closeDialog">
-        <el-icon class="el-dialog__close"><close /></el-icon>
+        <el-icon class="el-dialog__close">
+          <close />
+        </el-icon>
       </button>
       <button v-if="showFullscreen" class="el-dialog__headerbtn" style="right: 56px" type="button" @click="setFullscreen">
         <vab-icon class="el-dialog__close el-dialog__fullscreen" :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
@@ -44,7 +46,7 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Close } from '@element-plus/icons-vue'
 import { ElDialog } from 'element-plus'
 

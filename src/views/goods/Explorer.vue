@@ -13,7 +13,9 @@
             @node-click="handleNodeClick"
           >
             <template #default="{ node }">
-              <el-icon><folder /></el-icon>
+              <el-icon>
+                <folder />
+              </el-icon>
               <span style="margin-left: 3px">{{ node.label }}</span>
             </template>
           </el-tree>

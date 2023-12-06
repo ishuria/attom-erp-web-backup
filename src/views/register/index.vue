@@ -272,6 +272,7 @@ onUnmounted(() => {
       * {
         transition: var(--el-transition);
       }
+
       .el-form--default {
         width: 44%;
       }

@@ -90,6 +90,7 @@ onBeforeMount(() => {
 
       &__wrapper {
         margin-bottom: var(--el-margin);
+
         .up {
           div {
             text-overflow: ellipsis;

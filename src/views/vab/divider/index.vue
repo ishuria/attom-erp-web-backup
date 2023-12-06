@@ -29,7 +29,9 @@
         <vab-card title="设置文案">
           <vab-divider content-position="left">占位符</vab-divider>
           <vab-divider>
-            <el-icon><star-filled /></el-icon>
+            <el-icon>
+              <star-filled />
+            </el-icon>
             占位符
           </vab-divider>
           <vab-divider content-position="right" style="margin-bottom: 0px">占位符</vab-divider>
@@ -57,6 +59,7 @@
 
 <script lang="ts" setup>
 import { StarFilled } from '@element-plus/icons-vue'
+
 defineOptions({
   name: 'Divider',
 })

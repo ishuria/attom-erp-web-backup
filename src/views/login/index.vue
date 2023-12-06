@@ -243,6 +243,7 @@ onBeforeRouteLeave((to, from, next) => {
       * {
         transition: var(--el-transition);
       }
+
       .el-form--default {
         width: 45%;
       }

@@ -1,6 +1,5 @@
 <template>
   <el-alert
-    v-bind="$attrs"
     :center="center"
     :closable="closable"
     :close-text="closeText"
@@ -9,6 +8,7 @@
     :show-icon="showIcon"
     :title="title"
     :type="type"
+    v-bind="$attrs"
   >
     <template v-if="title || $slots.title" #title>
       <slot name="title">
@@ -23,7 +23,7 @@
   </el-alert>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ElAlert } from 'element-plus'
 
 defineOptions({
