@@ -18,6 +18,7 @@
     </vab-query-form>
 
     <el-table
+      ref="tableRef"
       v-loading="listLoading"
       border
       :data="list"
@@ -64,7 +65,7 @@ defineOptions({
 
 const $baseConfirm: any = inject('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
-
+const tableRef = ref<any>(null)
 const editRef = ref<any>(null)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -133,6 +134,10 @@ const fetchData = async () => {
   total.value = data.total
   listLoading.value = false
 }
+
+onActivated(() => {
+  tableRef.value.doLayout()
+})
 
 onBeforeMount(() => {
   fetchData()

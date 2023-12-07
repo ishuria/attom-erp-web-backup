@@ -14,6 +14,7 @@
             </vab-query-form-top-panel>
           </vab-query-form>
           <el-table
+            ref="tableRef"
             v-loading="listLoading"
             border
             :data="list"
@@ -98,6 +99,7 @@ defineOptions({
 
 const $baseConfirm: any = inject('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
+const tableRef = ref<any>(null)
 const editRef = ref<any>(null)
 const treeList = ref<any>([])
 const defaultProps = reactive<any>({
@@ -135,6 +137,10 @@ const fetchData = async (role: any = {}) => {
 const handleNodeClick = ({ role }: any) => {
   fetchData(role)
 }
+
+onActivated(() => {
+  tableRef.value.doLayout()
+})
 
 onBeforeMount(() => {
   getTree().then(({ data }) => {

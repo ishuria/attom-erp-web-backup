@@ -29,7 +29,7 @@
               <el-button :disabled="isRoot" :icon="Plus" type="primary" @click="handleEdit({ parentKey })">添加</el-button>
             </vab-query-form-top-panel>
           </vab-query-form>
-          <el-table v-loading="listLoading" border :data="list">
+          <el-table ref="tableRef" v-loading="listLoading" border :data="list">
             <el-table-column label="id" min-width="180" prop="id" />
             <el-table-column label="key值" prop="key" />
             <el-table-column label="字典值" prop="value" />
@@ -60,7 +60,7 @@ defineOptions({
 
 const $baseConfirm: any = inject('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
-
+const tableRef = ref<any>(null)
 const treeRef = ref<any>(null)
 const editRef = ref<any>(null)
 const treeList = ref<any>([])
@@ -72,6 +72,7 @@ let list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const isRoot = ref<boolean>(true)
 const parentKey = ref<string>('')
+const filterText = ref<string>('')
 
 const handleAdd = () => {
   editRef.value.showEdit()
@@ -100,14 +101,10 @@ const fetchData = async (data = { key: 'root' }) => {
   list = res.data.list
   listLoading.value = false
 }
+
 const handleNodeClick = (data: { key: string } | undefined) => {
   fetchData(data)
 }
-
-const filterText = ref<string>('')
-watch(filterText, (value) => {
-  treeRef.value.filter(value)
-})
 
 const filterNode: any = (value: any, data: any) => {
   if (!value) return true
@@ -118,6 +115,7 @@ getTree().then(({ data }) => {
   const { list } = data
   treeList.value = list
 })
+
 const remove = (node: { parent: any }, data: any) => {
   const parent = node.parent
   const children = parent.data.children || parent.data
@@ -125,6 +123,14 @@ const remove = (node: { parent: any }, data: any) => {
   children.splice(index, 1)
   treeList.value = [...treeList.value]
 }
+
+watch(filterText, (value) => {
+  treeRef.value.filter(value)
+})
+
+onActivated(() => {
+  tableRef.value.doLayout()
+})
 
 onBeforeMount(() => {
   fetchData()
