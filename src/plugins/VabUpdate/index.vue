@@ -30,7 +30,9 @@ defineOptions({
 })
 
 const { getTitle: title } = useSettingsStore()
-const { needRefresh, updateServiceWorker } = useRegisterSW()
+const { needRefresh, updateServiceWorker } = useRegisterSW({
+  immediate: true,
+})
 const button = ref<string>(translate('立即升级'))
 const loading = ref<boolean>(false)
 const _version = ref<any>(version)
@@ -39,10 +41,15 @@ const save = async () => {
   button.value = translate('正在更新')
   loading.value = true
   await updateServiceWorker()
+  setTimeout(() => {
+    loading.value = false
+    button.value = translate('更新完成')
+    needRefresh.value = false
+  }, 1000 * 3)
 }
 
 const close = async () => {
-  needRefresh.value = true
+  needRefresh.value = false
 }
 
 onMounted(() => {
