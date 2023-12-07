@@ -1478,6 +1478,15 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: '//bard.google.com/chat',
+        name: 'Bard',
+        meta: {
+          title: 'Bard',
+          target: '_blank',
+          icon: 'bard-line',
+        },
+      },
+      {
         path: '//copilot.microsoft.com',
         name: 'Copilot',
         meta: {
