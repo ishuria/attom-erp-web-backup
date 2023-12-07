@@ -15,6 +15,7 @@ defineOptions({
   name: 'Application',
 })
 
+const $baseAlert = inject<any>('$baseAlert')
 const development = import.meta.env.DEV
 const protocol = window.location.protocol === 'https:'
 let deferredPrompt: any
@@ -36,6 +37,10 @@ const handleInstall = () => {
     deferredPrompt.userChoice.then(() => {
       deferredPrompt = null
       beforeInstallPrompt()
+    })
+  } else {
+    $baseAlert('未获取到安装指令，请按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面后重试', () => {
+      location.reload()
     })
   }
 }
