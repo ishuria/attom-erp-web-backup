@@ -939,7 +939,7 @@ const list = [
         path: 'dynamicSegment',
         name: 'DynamicSegment',
         meta: {
-          title: '动态路径参数',
+          title: '动态传参',
           guard: ['Admin'],
           icon: 'arrow-left-right-line',
         },
@@ -1121,7 +1121,7 @@ const list = [
         name: 'RegularExpression',
         component: '/@/views/template/RegularExpression.vue',
         meta: {
-          title: '正则表达式',
+          title: '正则校验',
           guard: ['Admin'],
           icon: 'file-copy-2-line',
         },
