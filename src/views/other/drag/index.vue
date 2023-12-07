@@ -2,7 +2,7 @@
   <div class="card-drag-container global-animation-disabled">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="warning" @click="sort">重置顺序</el-button>
+        <el-button type="warning" @click="sort">重置</el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
 
