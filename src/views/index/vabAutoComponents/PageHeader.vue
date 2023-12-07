@@ -2,10 +2,10 @@
   <vab-colorful-card class="page-header" :style="style">
     <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
     <div class="page-header-tip">
-      <p class="page-header-tip-title">
+      <div class="page-header-tip-title">
         {{ handleTips() }}
-      </p>
-      <p class="page-header-tip-description" v-html="description"></p>
+      </div>
+      <div class="page-header-tip-description" v-html="description"></div>
     </div>
   </vab-colorful-card>
 </template>
@@ -54,7 +54,7 @@ const style = {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 160px;
+      min-height: 120px;
     }
   }
 
@@ -74,10 +74,12 @@ const style = {
     &-title {
       font-size: var(--el-font-size-bigger);
       font-weight: bold;
+      line-height: 30px;
     }
 
     &-description {
-      line-height: 22px;
+      line-height: 25px;
+      min-height: 25px;
     }
   }
 }
