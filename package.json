@@ -1,8 +1,8 @@
 {
   "name": "shop-vite",
-  "version": "6.5.5",
+  "version": "6.6.0",
   "private": true,
-  "author": "vue-admin-beautiful.com",
+  "author": "chuzhixin",
   "scripts": {
     "dev": "set VITE_CJS_IGNORE_WARNING=true && vite",
     "dev:vue-tsc": "set VITE_CJS_IGNORE_WARNING=true && vue-tsc --noEmit && vite",
@@ -74,7 +74,7 @@
     "@types/qs": "^6.9.10",
     "@vite-pwa/assets-generator": "^0.0.11",
     "@vitejs/plugin-basic-ssl": "^1.0.2",
-    "@vitejs/plugin-vue": "^4.5.1",
+    "@vitejs/plugin-vue": "^4.5.2",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/compiler-sfc": "^3.3.10",
     "@vue/eslint-config-prettier": "^8.0.0",
