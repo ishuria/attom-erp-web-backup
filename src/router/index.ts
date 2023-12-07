@@ -1537,7 +1537,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         meta: {
           title: '豆包',
           target: '_blank',
-          icon: 'douban-line',
+          icon: 'tiktok-line',
         },
       },
     ],
