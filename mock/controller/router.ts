@@ -1427,6 +1427,15 @@ const list = [
         },
       },
       {
+        path: '//copilot.microsoft.com',
+        name: 'Copilot',
+        meta: {
+          title: 'Copilot',
+          target: '_blank',
+          icon: 'copilot-line',
+        },
+      },
+      {
         path: '//claude.ai/chat',
         name: 'Claude',
         meta: {
