@@ -246,7 +246,7 @@
         </vab-card>
         <el-carousel height="180px" :interval="6000">
           <el-carousel-item v-for="item in 4" :key="item">
-            <img src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg" />
+            <el-image :src="landscape" />
           </el-carousel-item>
         </el-carousel>
         <rank-list />
@@ -277,6 +277,7 @@
 <script lang="ts" setup>
 import { ArrowRight, CaretBottom, CaretTop } from '@element-plus/icons-vue'
 import { random } from 'lodash'
+import landscape from '/@/assets/common_images/landscape.jpg'
 
 defineOptions({
   name: 'CreativeCenter',
@@ -406,7 +407,7 @@ const handelImage = () => {
       border-radius: var(--el-border-radius-base);
 
       &__item {
-        img {
+        .el-image {
           width: 100%;
           object-fit: fill;
         }

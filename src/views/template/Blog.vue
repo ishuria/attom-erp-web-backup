@@ -102,7 +102,7 @@
       <el-col :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
         <el-carousel height="180px" :interval="6000">
           <el-carousel-item v-for="item in 4" :key="item">
-            <img src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg" />
+            <img :src="landscape" />
           </el-carousel-item>
         </el-carousel>
         <rank-list />
@@ -113,6 +113,7 @@
 
 <script lang="ts" setup>
 import { getList } from '/@/api/news'
+import landscape from '/@/assets/common_images/landscape.jpg'
 
 defineOptions({
   name: 'Blog',

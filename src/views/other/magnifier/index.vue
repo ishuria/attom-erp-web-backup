@@ -11,7 +11,7 @@
             :out-zoomer="showType"
             :scale="scale"
             :type="type"
-            :url="url"
+            :url="landscape"
             :width="width"
             :zoomer-style="{
               'background-color': taobao ? 'transparent' : 'rgba(0,0,0,0)',
@@ -42,7 +42,12 @@
 </template>
 
 <script lang="ts" setup>
-const url = ref<any>('https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg')
+import landscape from '/@/assets/common_images/landscape.jpg'
+
+defineOptions({
+  name: 'Magnifier',
+})
+
 const scale = ref<any>(2)
 const type = ref<any>('circle')
 const showType = ref<any>(false)

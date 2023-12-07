@@ -53,7 +53,7 @@ export const isIP = (value: string) => {
  * @returns {boolean}
  */
 export const isUrl = (value: string) => {
-  const reg = /^(http|https):\/\/[a-zA-Z-9]+([-.]\w+)*\.[a-zA-Z]{2,20}(:[-\d]{1,5})?(\/.*)?$/
+  const reg = /^https?:\/\/([^:/]+\.)+[^:/]+(:[0-9]+)?(\/.+)$/
   return reg.test(value)
 }
 

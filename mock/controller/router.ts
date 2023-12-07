@@ -1093,7 +1093,7 @@ const list = [
         name: 'QRLogin',
         component: '/@/views/template/QRLogin.vue',
         meta: {
-          title: '二维码登录',
+          title: '扫码登录',
           icon: 'qr-scan-2-line',
         },
       },
