@@ -2,7 +2,7 @@
   <div class="dictionary-management-container no-background-container auto-height-container">
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
-        <vab-card>
+        <vab-card class="auto-height-card">
           <el-button class="tree-button" :icon="Plus" type="primary" @click="handleAdd">添加字典分类</el-button>
           <el-input v-model="filterText" clearable placeholder="请输入字典名称" />
           <el-tree
@@ -23,7 +23,7 @@
         </vab-card>
       </el-col>
       <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
-        <vab-card>
+        <vab-card class="auto-height-card">
           <vab-query-form>
             <vab-query-form-top-panel :span="12">
               <el-button :disabled="isRoot" :icon="Plus" type="primary" @click="handleEdit({ parentKey })">添加</el-button>

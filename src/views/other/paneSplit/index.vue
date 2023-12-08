@@ -2,10 +2,10 @@
   <div class="pane-split-container no-background-container auto-height-container">
     <el-row :gutter="20">
       <el-col :span="24">
-        <vab-card class="hidden-sm-and-up">
+        <vab-card class="auto-height-card hidden-sm-and-up">
           <vab-alert title="手机端不支持面板分割演示" type="warning" />
         </vab-card>
-        <vab-card class="hidden-xs-only">
+        <vab-card class="auto-height-card hidden-xs-only">
           <vab-pane-split ratio="2/3">
             <template #one>
               <div class="pane-split-left">A</div>

@@ -711,7 +711,7 @@ html {
       margin-left: 10px;
     }
 
-    /* 表格自动高度 */
+    /* 默认布局自动高度 */
     :not(.no-background-container).auto-height-container {
       display: flex;
       flex-direction: column;
@@ -732,21 +732,16 @@ html {
       }
     }
 
+    /* 左右布局自动高度 */
     .no-background-container.auto-height-container {
-      > .el-row {
-        margin-bottom: calc(0px - var(--el-margin));
+      .auto-height-card {
+        > .el-card__body {
+          display: flex;
+          flex-direction: column;
+          height: calc(var(--el-container-height) - 2px);
 
-        > .el-col {
-          > .el-card {
-            > .el-card__body {
-              display: flex;
-              flex-direction: column;
-              height: calc(var(--el-container-height) - 2px);
-
-              .el-table {
-                flex: 1;
-              }
-            }
+          .el-table {
+            flex: 1;
           }
         }
       }

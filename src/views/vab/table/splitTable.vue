@@ -1,11 +1,11 @@
 <template>
   <div class="split-table-container no-background-container auto-height-container">
-    <vab-card class="hidden-sm-and-up">
+    <vab-card class="auto-height-card hidden-sm-and-up">
       <vab-alert title="手机端不支持分割表格演示" type="warning" />
     </vab-card>
     <vab-pane-split class="hidden-xs-only" ratio="4/20">
       <template #one>
-        <vab-card>
+        <vab-card class="auto-height-card">
           <el-input v-model="filterText" placeholder="请输入查询条件" style="margin-bottom: 10px" />
           <el-tree
             ref="treeRef"
@@ -18,7 +18,7 @@
         </vab-card>
       </template>
       <template #two>
-        <vab-card>
+        <vab-card class="auto-height-card">
           <vab-alert title="长按竖线左右拖拽可重新分割面板大小" />
           <vab-query-form>
             <vab-query-form-top-panel>
