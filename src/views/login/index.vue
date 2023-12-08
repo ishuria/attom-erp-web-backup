@@ -1,9 +1,9 @@
 <template>
   <div class="login-container">
-    <div class="login-right-tools">
-      <vab-language />
-      <vab-color-picker />
-      <vab-dark />
+    <div v-show="theme.showLanguage || theme.showColorPicker || theme.showDark" class="login-right-tools">
+      <vab-language v-show="theme.showLanguage" />
+      <vab-color-picker v-show="theme.showColorPicker" />
+      <vab-dark v-show="theme.showDark" />
     </div>
     <div class="login-form">
       <img alt="" class="left-img" :src="leftImg" />
@@ -69,7 +69,7 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
-const { title } = storeToRefs(settingsStore)
+const { theme, title } = storeToRefs(settingsStore)
 const login = (form: any) => userStore.login(form)
 const loading = ref<boolean>(false)
 const passwordType = ref<string>('password')
@@ -168,11 +168,19 @@ onBeforeRouteLeave((to, from, next) => {
     right: var(--el-margin);
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: calc(var(--el-padding) / 2) var(--el-padding) calc(var(--el-padding) / 2) var(--el-padding);
+    justify-content: space-between;
+    padding: calc(var(--el-padding) / 2);
     background: var(--el-color-white);
     border: 1px solid var(--el-border-color);
     border-radius: var(--el-border-radius-base);
+
+    :deep() {
+      .vab-language,
+      .vab-color-picker,
+      .vab-dark {
+        margin: 0 calc(var(--el-padding) / 2) 0 calc(var(--el-padding) / 2) !important;
+      }
+    }
   }
 
   @media (max-width: 696px) {

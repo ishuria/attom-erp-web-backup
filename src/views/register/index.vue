@@ -1,9 +1,9 @@
 <template>
   <div class="register-container">
-    <div class="register-right-tools">
-      <vab-language />
-      <vab-color-picker />
-      <vab-dark />
+    <div v-show="theme.showLanguage || theme.showColorPicker || theme.showDark" class="register-right-tools">
+      <vab-language v-show="theme.showLanguage" />
+      <vab-color-picker v-show="theme.showColorPicker" />
+      <vab-dark v-show="theme.showDark" />
     </div>
     <div class="register-form">
       <img alt="" class="left-img" :src="leftImg" />
@@ -64,6 +64,7 @@
 import { register } from '/@/api/user'
 import leftImg from '/@/assets/login_images/left_img_2.png'
 import { translate } from '/@/i18n'
+import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
 import { isPassword, isPhone } from '/@/utils/validate'
 
@@ -75,6 +76,8 @@ const $baseConfirm = inject<any>('$baseConfirm')
 const router = useRouter()
 const userStore = useUserStore()
 const { setToken } = userStore
+const settingsStore = useSettingsStore()
+const { theme } = storeToRefs(settingsStore)
 const loading = ref<boolean>(false)
 const formRef = ref<any>(null)
 const isGetPhone = ref<boolean>(false)
@@ -193,11 +196,19 @@ onUnmounted(() => {
     right: var(--el-margin);
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: calc(var(--el-padding) / 2) var(--el-padding) calc(var(--el-padding) / 2) var(--el-padding);
+    justify-content: space-between;
+    padding: calc(var(--el-padding) / 2);
     background: var(--el-color-white);
     border: 1px solid var(--el-border-color);
     border-radius: var(--el-border-radius-base);
+
+    :deep() {
+      .vab-language,
+      .vab-color-picker,
+      .vab-dark {
+        margin: 0 calc(var(--el-padding) / 2) 0 calc(var(--el-padding) / 2) !important;
+      }
+    }
   }
 
   @media (max-width: 696px) {
