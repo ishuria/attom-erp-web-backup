@@ -730,6 +730,10 @@ html {
           margin-top: calc(0px - var(--el-margin));
         }
       }
+
+      @media (max-width: 1024px) {
+        height: auto;
+      }
     }
 
     /* 左右布局自动高度 */
