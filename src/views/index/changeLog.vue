@@ -1,20 +1,14 @@
 <template>
-  <div class="change-log-container no-background-container">
+  <div class="change-log-container no-background-container auto-height-container">
     <el-row :gutter="20">
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <vab-card
-          :body-style="{
-            height: 'calc(var(--el-container-height) - 57px)',
-          }"
-          skeleton
-          :skeleton-rows="16"
-        >
+        <vab-card class="auto-height-card has-header" skeleton :skeleton-rows="16">
           <template #header>
             <vab-icon icon="file-word-line" />
             更新日志
           </template>
           <vab-alert title="温馨提示：请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容" type="info" />
-          <el-scrollbar style="height: calc(100% - 75px)">
+          <el-scrollbar style="height: calc(100% - 60px)">
             <el-timeline>
               <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
                 <template v-if="item.waver" #dot>

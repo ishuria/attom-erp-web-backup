@@ -735,6 +735,8 @@ html {
     /* 左右布局自动高度 */
     .no-background-container.auto-height-container {
       .auto-height-card {
+        margin-bottom: 0;
+
         > .el-card__body {
           display: flex;
           flex-direction: column;
@@ -744,14 +746,41 @@ html {
             flex: 1;
           }
         }
+
+        &.has-header {
+          > .el-card__body {
+            height: calc(var(--el-container-height) - 57px);
+          }
+        }
       }
 
-      @media (max-width: 768px) {
-        margin-bottom: calc(0px - var(--el-margin));
+      @media (max-width: 1024px) {
+        margin-bottom: calc(0 - var(--el-margin));
+
+        > .el-row {
+          > .el-col + .el-col {
+            .auto-height-card {
+              margin-bottom: 0;
+            }
+          }
+        }
 
         .auto-height-card {
+          margin-bottom: var(--el-margin);
+
           > .el-card__body {
-            height: auto;
+            &:not(:has(.el-alert)) {
+              height: auto;
+            }
+          }
+
+          &.has-header {
+            margin-bottom: 0;
+
+            > .el-card__body {
+              height: auto;
+              min-height: calc(var(--el-container-height) - 57px);
+            }
           }
         }
       }
