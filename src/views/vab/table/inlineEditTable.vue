@@ -19,18 +19,18 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="标题">
+      <el-table-column align="center" label="标题" min-width="240">
         <template #default="{ row }">
           <template v-if="row.edit">
-            <el-input v-model="row.title" clearable style="width: 300px" />
+            <el-input v-model="row.title" clearable style="width: 100%" />
           </template>
           <span v-else @click="row.edit = !row.edit">{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="作者" prop="author">
+      <el-table-column align="center" label="作者" min-width="140" prop="author">
         <template #default="{ row }">
           <template v-if="row.edit">
-            <el-input v-model="row.author" clearable style="width: 300px" />
+            <el-input v-model="row.author" clearable style="width: 100%" />
           </template>
           <span v-else @click="row.edit = !row.edit">{{ row.author }}</span>
         </template>

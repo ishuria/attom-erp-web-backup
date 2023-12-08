@@ -745,6 +745,16 @@ html {
           }
         }
       }
+
+      @media (max-width: 768px) {
+        margin-bottom: calc(0px - var(--el-margin));
+
+        .auto-height-card {
+          > .el-card__body {
+            height: auto;
+          }
+        }
+      }
     }
 
     :not(.auto-height-container).no-background-container {
