@@ -12,6 +12,23 @@ export const lightenColor = (color: any, amount: any) => {
   return `#${rgb.map((v: any) => v.toString(16).padStart(2, '0')).join('')}`
 }
 
+export const lightenColorChrome = (color: any, amount: any) => {
+  const browser = window.navigator
+  const versionMatch = browser.userAgent.match(/Chrome\/(\d+.\d+)/)
+  if (versionMatch && parseFloat(versionMatch[1]) >= 111) return `color-mix(in srgb, ${color} ${100 - amount}%, white)`
+  else {
+    if (!/^#([0-9a-f]{3}){1,2}$/i.test(color)) return color
+    const rgb = color.replace(/^#/, '').match(/[a-f0-9]{2}/gi)
+    for (let i = 0; i < 3; i++) {
+      rgb[i] = parseInt(rgb[i], 16)
+    }
+    for (let i = 0; i < 3; i++) {
+      rgb[i] = Math.min(255, Math.round(rgb[i] + rgb[i] * (amount / 100)))
+    }
+    return `#${rgb.map((v: any) => v.toString(16).padStart(2, '0')).join('')}`
+  }
+}
+
 export const getRgbNum = (sColor: string) => {
   if (sColor.length === 4) {
     let sColorNew = '#'

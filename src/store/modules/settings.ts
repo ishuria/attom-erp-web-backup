@@ -33,7 +33,7 @@ import {
   themeName,
   title,
 } from '/@/config'
-import { colorRgba, lightenColor } from '/@/utils/lightenColor'
+import { colorRgba, lightenColorChrome } from '/@/utils/lightenColor'
 import { isJson } from '/@/utils/validate'
 
 const defaultTheme: ThemeType = {
@@ -156,7 +156,7 @@ export const useSettingsStore = defineStore('settings', {
       else useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`
 
       if (!this.theme.isFollow) useCssVar('--el-menu-background-color', el).value = '#282c34'
-      else useCssVar('--el-menu-background-color', el).value = lightenColor(this.color, 18)
+      else useCssVar('--el-menu-background-color', el).value = lightenColorChrome(this.color, 18)
 
       if (this.theme.colorWeakness) document.getElementsByTagName('body')[0].classList.add('color-weakness')
       else document.getElementsByTagName('body')[0].classList.remove('color-weakness')

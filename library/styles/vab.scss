@@ -38,11 +38,10 @@ html {
     height: 100vh;
     padding: 0;
     overflow: hidden;
-    font-family: Arial, sans-serif;
+
     font-size: var(--el-font-size-default);
     color: var(--el-color-black);
     background: var(--el-background-color);
-    -webkit-font-smoothing: antialiased;
 
     &.color-weakness {
       filter: invert(80%);
@@ -135,6 +134,9 @@ html {
       box-sizing: border-box;
       outline: none !important;
       -webkit-tap-highlight-color: transparent;
+      font-family: Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+
       @include base-scrollbar;
     }
 
