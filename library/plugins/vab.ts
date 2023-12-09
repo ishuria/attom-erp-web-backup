@@ -78,6 +78,7 @@ export default {
         duration: messageDuration,
         dangerouslyUseHTMLString,
         showClose: false,
+        grouping: true,
         onClose: () => {
           if (callback) callback()
         },
