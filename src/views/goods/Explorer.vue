@@ -62,10 +62,8 @@
             </el-col>
           </el-row>
 
-          <el-pagination
-            background
+          <vab-pagination
             :current-page="queryForm.pageNo"
-            :layout="layout"
             :page-size="queryForm.pageSize"
             :total="total"
             @current-change="handleCurrentChange"
@@ -90,7 +88,6 @@ const $baseConfirm = inject<any>('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
-const layout = ref<string>('total, sizes, prev, pager, next, jumper')
 const total = ref<any>(0)
 const selectRows = ref<any>([])
 const queryForm = reactive<any>({

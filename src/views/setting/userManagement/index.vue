@@ -49,10 +49,8 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <el-pagination
-      background
+    <vab-pagination
       :current-page="queryForm.pageNo"
-      :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
       @current-change="handleCurrentChange"
@@ -76,7 +74,7 @@ const tableRef = ref<any>(null)
 const editRef = ref<any>(null)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
-const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+
 const total = ref<any>(0)
 const selectRows = ref<any>([])
 const queryForm = reactive<any>({

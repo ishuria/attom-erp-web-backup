@@ -41,10 +41,9 @@
         </el-col>
       </el-row>
     </div>
-    <el-pagination
+    <vab-pagination
       background
       :current-page="queryForm.pageNo"
-      :layout="layout"
       :page-size="queryForm.pageSize"
       :page-sizes="[72, 144, 216, 288]"
       :total="total"
@@ -73,7 +72,7 @@ const queryForm = reactive<any>({
   colorful: false,
   num: 28,
 })
-const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+
 const emptyShow = ref<boolean>(false)
 
 const fetchData = async () => {

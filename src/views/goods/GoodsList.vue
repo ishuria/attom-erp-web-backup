@@ -41,10 +41,8 @@
         </el-col>
       </el-row>
     </div>
-    <el-pagination
-      background
+    <vab-pagination
       :current-page="queryForm.pageNo"
-      :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
       @current-change="handleCurrentChange"
@@ -64,7 +62,6 @@ defineOptions({
 const emptyShow = ref<boolean>(false)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
-const layout = ref<string>('total, sizes, prev, pager, next, jumper')
 const total = ref<any>(0)
 const queryForm = reactive<any>({
   pageNo: 1,

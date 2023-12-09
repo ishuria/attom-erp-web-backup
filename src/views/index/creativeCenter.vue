@@ -382,7 +382,6 @@ const handelImage = () => {
       margin: 0;
       line-height: 30px;
       list-style: none;
-      cursor: pointer;
 
       span {
         color: var(--el-color-grey);

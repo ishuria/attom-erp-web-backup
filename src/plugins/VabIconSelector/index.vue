@@ -20,8 +20,7 @@
       </vab-card>
     </el-col>
     <el-col :span="24">
-      <el-pagination
-        :background="background"
+      <vab-pagination
         :current-page="queryForm.pageNo"
         :layout="layout"
         :page-size="queryForm.pageSize"
@@ -46,7 +45,6 @@ const emit = defineEmits(['handle-icon'])
 const icon = ref<string>('24-hours-fill')
 const layout = ref<string>('total, prev, next')
 const total = ref<any>(0)
-const background = ref<boolean>(true)
 const queryIcon = ref<any>([])
 const queryForm = reactive<any>({
   pageNo: 1,

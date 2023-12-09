@@ -147,6 +147,7 @@ declare module 'vue' {
     VabMenuItem: typeof import('./../../components/VabMenu/components/VabMenuItem.vue')['default']
     VabNav: typeof import('./../../components/VabNav/index.vue')['default']
     VabNotice: typeof import('./../../components/VabNotice/index.vue')['default']
+    VabPagination: typeof import('./../../components/VabPagination/index.vue')['default']
     VabPaneSplit: typeof import('./../../../src/plugins/VabPaneSplit/index.vue')['default']
     VabPlayer: typeof import('./../../../src/plugins/VabPlayer/index.vue')['default']
     VabPlayerHls: typeof import('./../../../src/plugins/VabPlayer/VabPlayerHls.vue')['default']

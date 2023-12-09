@@ -50,10 +50,8 @@
         </div>
       </li>
     </ul>
-    <el-pagination
-      background
+    <vab-pagination
       :current-page="queryForm.pageNo"
-      :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
       @current-change="handleCurrentChange"
@@ -77,7 +75,7 @@ const queryForm = reactive<any>({
   pageSize: 20,
   title: '',
 })
-const layout = ref<string>('total, sizes, prev, pager, next, jumper')
+
 const listLoading = ref<boolean>(true)
 const emptyShow = ref<boolean>(true)
 
