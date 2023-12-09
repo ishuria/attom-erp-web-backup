@@ -1,3 +1,5 @@
+import { round } from 'lodash-es'
+
 export const lightenColor = (color: any, amount: any) => {
   if (!/^#([0-9a-f]{3}){1,2}$/i.test(color)) return color
   const rgb = color.replace(/^#/, '').match(/[a-f0-9]{2}/gi)
@@ -8,4 +10,26 @@ export const lightenColor = (color: any, amount: any) => {
     rgb[i] = Math.min(255, Math.round(rgb[i] + rgb[i] * (amount / 100)))
   }
   return `#${rgb.map((v: any) => v.toString(16).padStart(2, '0')).join('')}`
+}
+
+export const getRgbNum = (sColor: string) => {
+  if (sColor.length === 4) {
+    let sColorNew = '#'
+    for (let i = 1; i < 4; i += 1) {
+      sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1))
+    }
+    sColor = sColorNew
+  }
+  const sColorChange = []
+  for (let i = 1; i < 7; i += 2) {
+    sColorChange.push(parseInt(`0x${sColor.slice(i, i + 2)}`))
+  }
+  return sColorChange
+}
+
+export const colorRgba = (str: any, n = 1) => {
+  const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
+  const sColor = str.toLowerCase()
+  if (sColor && reg.test(sColor)) return `rgba(${getRgbNum(sColor).join(',')},${round(n, 1)})`
+  else return sColor
 }

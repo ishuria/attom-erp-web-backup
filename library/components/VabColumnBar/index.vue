@@ -421,7 +421,7 @@ onMounted(() => {
   height: 34px;
   line-height: 34px;
   text-align: center;
-  background: var(--el-color-primary-light-5);
+  background: var(--el-color-primary);
   border-radius: var(--el-border-radius-base);
 
   :deep() {

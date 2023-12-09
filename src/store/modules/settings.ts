@@ -1,8 +1,8 @@
 /**
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
-import { round } from 'lodash-es'
 import {
+  persistenceTab as _persistenceTab,
   color,
   colorWeakness,
   columnStyle,
@@ -14,7 +14,6 @@ import {
   logo,
   menuWidth,
   pageTransition,
-  persistenceTab as _persistenceTab,
   radius,
   showColorPicker,
   showDark,
@@ -34,7 +33,7 @@ import {
   themeName,
   title,
 } from '/@/config'
-import { lightenColor } from '/@/utils/lightenColor'
+import { colorRgba, lightenColor } from '/@/utils/lightenColor'
 import { isJson } from '/@/utils/validate'
 
 const defaultTheme: ThemeType = {
@@ -73,28 +72,6 @@ const getLocalStorage = (key: string) => {
   } else {
     return false
   }
-}
-
-const getRgbNum = (sColor: string) => {
-  if (sColor.length === 4) {
-    let sColorNew = '#'
-    for (let i = 1; i < 4; i += 1) {
-      sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1))
-    }
-    sColor = sColorNew
-  }
-  const sColorChange = []
-  for (let i = 1; i < 7; i += 2) {
-    sColorChange.push(parseInt(`0x${sColor.slice(i, i + 2)}`))
-  }
-  return sColorChange
-}
-
-const colorRgba = (str: any, n = 1) => {
-  const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
-  const sColor = str.toLowerCase()
-  if (sColor && reg.test(sColor)) return `rgba(${getRgbNum(sColor).join(',')},${round(n, 1)})`
-  else return sColor
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
