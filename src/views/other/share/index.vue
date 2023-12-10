@@ -8,6 +8,7 @@
         <vab-qr-code :dot-scale="0.5" :logo-src="logoUrl" :text="form.url" />
       </el-form-item>
       <el-form-item label="操作">
+        <el-button native-type="submit" type="primary" @click="startShare">分享</el-button>
         <el-button native-type="submit" type="primary" @click="copy">拷贝</el-button>
         <el-button type="warning" @click="reset">重置</el-button>
         <el-button type="danger" @click="clear">清空</el-button>
@@ -24,6 +25,15 @@ import clip from '/@/utils/clipboard'
 defineOptions({
   name: 'Share',
 })
+
+const { share } = useShare()
+
+function startShare() {
+  share({
+    title: 'Vue shop Vite',
+    url: 'https://vue-admin-beautiful.com/shop-vite',
+  })
+}
 
 const form = reactive<any>({
   url: 'https://vue-admin-beautiful.com/shop-vite',
