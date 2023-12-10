@@ -64,5 +64,3 @@ defineOptions({
   name: 'Divider',
 })
 </script>
-
-<style lang="scss" scoped></style>

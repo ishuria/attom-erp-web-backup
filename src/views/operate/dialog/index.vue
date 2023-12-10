@@ -127,5 +127,3 @@ onDeactivated(() => {
   clearInterval(timer)
 })
 </script>
-
-<style lang="scss" scoped></style>

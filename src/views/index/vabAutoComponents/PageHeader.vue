@@ -78,8 +78,8 @@ const style = {
     }
 
     &-description {
-      line-height: 25px;
       min-height: 25px;
+      line-height: 25px;
     }
   }
 }

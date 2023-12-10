@@ -132,9 +132,9 @@ html {
 
     * {
       box-sizing: border-box;
+      font-family: Arial, sans-serif;
       outline: none !important;
       -webkit-tap-highlight-color: transparent;
-      font-family: Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
 
       @include base-scrollbar;
