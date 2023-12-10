@@ -67,7 +67,7 @@ watch(
 )
 
 onActivated(() => {
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     option.series.data = [
       [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
       [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],

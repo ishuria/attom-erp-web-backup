@@ -12,6 +12,7 @@
 
 <script lang="ts" setup>
 import { useSettingsStore } from '/@/store/modules/settings'
+import { useUserStore } from '/@/store/modules/user'
 import { convertToCamelCase } from '/@/utils/convertToCamelCase'
 
 defineOptions({
@@ -22,11 +23,15 @@ interface ComponentType {
   default: Component
 }
 
+const userStore = useUserStore()
+const { username } = storeToRefs(userStore)
+const $baseNotify = inject<any>('$baseNotify')
 const settingsStore = useSettingsStore()
 const { device, collapse, theme } = storeToRefs(settingsStore)
 const { toggleDevice, foldSideBar, openSideBar, updateTheme } = settingsStore
 const mobile = ref(false)
 let oldLayout = theme.value.layout
+const visibility = useDocumentVisibility()
 const imports = import.meta.glob<ComponentType>('./**/*.vue', { eager: true })
 const Components: Record<string, Component> = {}
 Object.getOwnPropertyNames(imports).forEach((key: any) => {
@@ -38,7 +43,8 @@ const layout = computed(() => {
 })
 
 const resizeBody = () => {
-  mobile.value = document.body.getBoundingClientRect().width - 1 < 992
+  const { width } = useWindowSize()
+  mobile.value = width.value - 1 < 992
 }
 
 watch(mobile, (value) => {
@@ -59,6 +65,10 @@ onBeforeMount(() => {
 onBeforeUnmount(() => {
   if (mobile) theme.value.layout = oldLayout
   window.removeEventListener('resize', resizeBody)
+})
+
+watch(visibility, (current, previous) => {
+  if (current === 'visible' && previous === 'hidden') $baseNotify(`尊敬的${username.value}，欢迎回来`, '', 'success', 'bottom-right')
 })
 </script>
 

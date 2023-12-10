@@ -143,7 +143,7 @@ const option = reactive<any>({
   ],
 })
 
-setInterval(() => {
+useIntervalFn(() => {
   option.series[0].data = [random(20, 50), random(20, 50), random(20, 50), random(20, 50), random(20, 50), random(20, 50)]
   option.series[1].data = [random(0, 100), random(0, 100), random(0, 100), random(0, 100), random(0, 100), random(0, 100)]
 }, 1000 * 5)

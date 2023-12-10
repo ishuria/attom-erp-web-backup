@@ -37,7 +37,7 @@ let timer: any
 
 const handleChange = (value: any) => {
   if (value)
-    timer = setInterval(() => {
+    timer = useIntervalFn(() => {
       show.value = !show.value
     }, 1500)
   else clearInterval(timer)

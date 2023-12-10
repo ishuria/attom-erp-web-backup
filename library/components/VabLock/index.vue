@@ -86,7 +86,7 @@ const rules = {
 const handleUnLock = () => {
   formRef.value.validate(async (valid: boolean) => {
     if (valid) {
-      setTimeout(async () => {
+      useTimeoutFn(async () => {
         await _handleUnLock()
       }, 500)
     }

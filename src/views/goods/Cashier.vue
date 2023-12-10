@@ -27,7 +27,7 @@ const QR = ref<any>(_QR)
 
 const refresh = () => {
   QR.value = ''
-  setTimeout(() => {
+  useTimeoutFn(() => {
     QR.value = _QR
   }, 150)
 }

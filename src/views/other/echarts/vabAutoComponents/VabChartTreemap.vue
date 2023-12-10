@@ -60,15 +60,15 @@ const option = reactive<any>({
 watch(
   color,
   () => {
-    setTimeout(() => {
+    useTimeoutFn(() => {
       option.color = [color.value]
-    })
+    }, 200)
   },
   { immediate: true }
 )
 
 onActivated(() => {
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     option.series.data = [
       {
         name: 'nodeA',

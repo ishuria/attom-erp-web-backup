@@ -219,7 +219,7 @@ const option = reactive<any>({
 })
 
 onActivated(() => {
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     option.series.data = [
       {
         children: [

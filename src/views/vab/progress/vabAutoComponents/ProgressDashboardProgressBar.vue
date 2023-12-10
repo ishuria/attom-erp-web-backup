@@ -38,7 +38,7 @@ const decrease = () => {
   }
 }
 onBeforeMount(() => {
-  setInterval(() => {
+  useIntervalFn(() => {
     percentage2.value = (percentage2.value % 100) + 10
   }, 500)
 })

@@ -98,10 +98,10 @@ const handleClose = (done: () => void) => {
   })
     .then(() => {
       loading.value = true
-      timer = setTimeout(() => {
+      timer = useTimeoutFn(() => {
         done()
         // 动画关闭需要一定的时间
-        setTimeout(() => {
+        useTimeoutFn(() => {
           loading.value = false
         }, 400)
       }, 2000)

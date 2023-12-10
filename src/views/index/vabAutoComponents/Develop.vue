@@ -108,7 +108,7 @@ onActivated(() => {
     addData(false)
   }
 
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     addData(true)
   }, 5000)
 })

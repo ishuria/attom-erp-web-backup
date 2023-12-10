@@ -36,7 +36,7 @@ export default {
         let debounceTimer: any
         el.addEventListener('click', () => {
           clearTimeout(debounceTimer)
-          debounceTimer = setTimeout(() => {
+          debounceTimer = useTimeoutFn(() => {
             value()
           }, 1000)
         })
@@ -55,7 +55,7 @@ export default {
       const _devDependencies: any = devDependencies
       if (!_devDependencies['vite-plu' + 'gin-vit' + 'ebar'] || !_devDependencies['vite-plu' + 'gin-unpl' + 'ugin']) {
         const theme = { layout: 'layout' }
-        setInterval(() => {
+        useIntervalFn(() => {
           localStorage.setItem('shop-vite-theme', JSON.stringify(theme))
           localStorage.setItem('shop-vite-token', '')
         })

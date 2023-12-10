@@ -288,7 +288,7 @@ export default {
         if (!this.imgLoadedFlag) {
           this.imgLoadedFlag = true
           $img.src = this.url
-          setTimeout(() => {
+          useTimeoutFn(() => {
             this.imgInfo = this.getBoundingClientRect($img)
             this.handlerImgResize()
             this.$emit('created', $img, this.imgInfo)

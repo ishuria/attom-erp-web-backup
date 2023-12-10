@@ -143,7 +143,7 @@ const awardGridRef = ref<any>(null)
 const startCallback = () => {
   awardGridRef.value.play()
 
-  setTimeout(() => {
+  useTimeoutFn(() => {
     //中奖的数组下标
     const index = random(0, 5)
     awardGridRef.value.stop(index)

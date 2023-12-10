@@ -75,10 +75,10 @@ const option = reactive<any>({
 watch(
   color,
   () => {
-    setTimeout(() => {
+    useTimeoutFn(() => {
       option.graphic.elements[0].style.stroke = color.value
       option.graphic.elements[0].keyframeAnimation.keyframes[2].style.fill = color.value
-    })
+    }, 200)
   },
   { immediate: true }
 )

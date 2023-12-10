@@ -103,7 +103,7 @@ const handleMouseLeave = () => {
 
 const start = () => {
   clearTimeout(timer.value)
-  timer.value = setInterval(ListScroll, speed.value)
+  timer.value = useIntervalFn(ListScroll, speed.value)
 }
 
 const ListScroll = () => {

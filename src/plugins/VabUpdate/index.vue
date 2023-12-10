@@ -41,7 +41,7 @@ const save = async () => {
   button.value = translate('正在更新')
   loading.value = true
   await updateServiceWorker()
-  setTimeout(() => {
+  useTimeoutFn(() => {
     loading.value = false
     button.value = translate('更新完成')
     needRefresh.value = false
@@ -53,7 +53,7 @@ const close = async () => {
 }
 
 onMounted(() => {
-  setTimeout(() => {
+  useTimeoutFn(() => {
     save()
   }, 1000 * 3)
 })

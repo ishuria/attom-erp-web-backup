@@ -32,14 +32,14 @@ let timer: any
 let timer2: any
 
 onActivated(() => {
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     scan.value = ''
     nextTick(() => {
       scan.value = _scan
     })
   }, 10000)
 
-  timer2 = setTimeout(() => {
+  timer2 = useTimeoutFn(() => {
     dialogVisible.value = true
   }, 1000)
 })

@@ -118,7 +118,7 @@ let timer: any
 onActivated(() => {
   if (theme.value.themeName === 'technology') form.theme = 'default'
 
-  timer = setTimeout(() => {
+  timer = useTimeoutFn(() => {
     dialogVisible.value = true
   }, 1000)
 })

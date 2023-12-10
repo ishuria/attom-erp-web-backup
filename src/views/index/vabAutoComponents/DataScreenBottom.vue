@@ -86,7 +86,7 @@ const countConfig4 = reactive({
   endValue: random(1000, 2000),
 })
 
-setInterval(() => {
+useIntervalFn(() => {
   countConfig1.endValue = countConfig1.endValue + random(0, 100)
   countConfig2.endValue = countConfig2.endValue + random(0, 100)
   countConfig3.endValue = countConfig3.endValue + random(0, 100)

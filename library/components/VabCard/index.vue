@@ -47,7 +47,7 @@ defineProps({
 
 const skeletonShow = ref<boolean>(true)
 
-setTimeout(() => {
+useTimeoutFn(() => {
   skeletonShow.value = false
 }, 500)
 </script>

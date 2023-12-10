@@ -65,7 +65,7 @@ const handleLink = () => {
       } else $pub('reload-router-view')
     }
 
-    setTimeout(() => {
+    useTimeoutFn(() => {
       if (fullscreen) enter()
       else exit()
     }, 1000)

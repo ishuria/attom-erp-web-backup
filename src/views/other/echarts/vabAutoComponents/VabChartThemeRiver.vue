@@ -192,7 +192,7 @@ watch(
 )
 
 onActivated(() => {
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     option.series.data = [
       ['2015/11/08', random(0, 100), 'DQ'],
       ['2015/11/09', random(0, 100), 'DQ'],

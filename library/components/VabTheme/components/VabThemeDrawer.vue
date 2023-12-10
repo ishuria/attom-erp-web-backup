@@ -220,11 +220,11 @@ const _updateTheme = (value: any = '') => {
   if (theme.value.themeName == 'technology') $pub('shop-vite-reset-color')
 
   const loading = $baseLoading()
-  setTimeout(() => {
+  useTimeoutFn(() => {
     updateTheme()
   }, 500)
 
-  setTimeout(() => {
+  useTimeoutFn(() => {
     loading.close()
     $baseMessage('切换成功', 'success', 'hey')
   }, 1000)
@@ -236,13 +236,13 @@ const setDefaultTheme = () => {
   drawerVisible.value = false
   const loading = $baseLoading()
 
-  setTimeout(() => {
+  useTimeoutFn(() => {
     resetTheme()
     $pub('shop-vite-reset-color')
     $pub('shop-vite-reset-dark')
   }, 500)
 
-  setTimeout(() => {
+  useTimeoutFn(() => {
     loading.close()
     $baseMessage('切换成功', 'success', 'hey')
     if (device.value === 'mobile') location.reload()

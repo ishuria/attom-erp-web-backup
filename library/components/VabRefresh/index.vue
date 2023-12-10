@@ -13,7 +13,7 @@ const className = ref<string>('')
 
 const rotate = () => {
   className.value = 'rotate'
-  setTimeout(() => {
+  useTimeoutFn(() => {
     className.value = ''
   }, 500)
 }

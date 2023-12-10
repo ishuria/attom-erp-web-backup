@@ -98,7 +98,7 @@ watch(
 )
 
 onActivated(() => {
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     if (n.value > 0) {
       n.value--
     } else {

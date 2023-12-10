@@ -51,7 +51,7 @@ const handleSubmit = () => {
   formRef.value.validate((valid: any) => {
     if (valid) {
       loading.value = true
-      setTimeout(() => {
+      useTimeoutFn(() => {
         emit('change-step', 2)
         loading.value = false
       }, 2000)

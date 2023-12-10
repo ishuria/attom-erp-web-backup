@@ -81,7 +81,7 @@ watch(
 )
 
 onActivated(() => {
-  timer = setInterval(() => {
+  timer = useIntervalFn(() => {
     option.series.data = [
       { value: random(0, 100), name: '访问' },
       { value: random(20, 100), name: '咨询' },

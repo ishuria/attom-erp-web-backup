@@ -22,7 +22,7 @@ const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
   }
   if (node.level > 1) return resolve([])
 
-  setTimeout(() => {
+  useTimeoutFn(() => {
     const data: Tree[] = [
       {
         name: 'leaf',

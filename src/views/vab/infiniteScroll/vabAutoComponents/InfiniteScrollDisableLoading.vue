@@ -15,7 +15,7 @@ const noMore = computed(() => count.value >= 20)
 const disabled = computed(() => loading.value || noMore.value)
 const load = () => {
   loading.value = true
-  setTimeout(() => {
+  useTimeoutFn(() => {
     count.value += 2
     loading.value = false
   }, 2000)

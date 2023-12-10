@@ -77,7 +77,7 @@ const {
 const menuRef = ref<any>(null)
 
 const setDefaultOpeneds = () => {
-  setTimeout(() => {
+  useTimeoutFn(() => {
     defaultOpeneds.forEach((item: string) => {
       try {
         menuRef.value.open(item)

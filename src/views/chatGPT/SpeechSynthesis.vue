@@ -55,11 +55,11 @@ const voices = ref<SpeechSynthesisVoice[]>([])
 
 onMounted(() => {
   if (speech.isSupported.value) {
-    setTimeout(() => {
+    useTimeoutFn(() => {
       synth = window.speechSynthesis
       voices.value = synth.getVoices()
       voice.value = voices.value[0]
-    })
+    }, 200)
     fetchData()
   }
 })

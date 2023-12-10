@@ -47,7 +47,7 @@ const option = reactive<any>({
   },
 })
 
-setInterval(() => {
+useIntervalFn(() => {
   option.series.data = [
     { value: random(200, 500), name: '学生' },
     { value: random(200, 500), name: '职场青年' },
