@@ -41,10 +41,10 @@ import {
   AxisPointerComponent,
   BrushComponent,
   CalendarComponent,
-  DatasetComponent,
   DataZoomComponent,
   DataZoomInsideComponent,
   DataZoomSliderComponent,
+  DatasetComponent,
   GeoComponent,
   GraphicComponent,
   GridComponent,
@@ -178,6 +178,8 @@ const getHeight = () => {
 <style lang="scss" scoped>
 .vab-chart {
   width: 100%;
+  min-width: 160px;
   height: 100%;
+  min-height: 90px;
 }
 </style>
