@@ -6,14 +6,14 @@
       <el-button type="primary" @click="handlePreview">预览</el-button>
       <el-button type="primary" @click="handleSave">保存</el-button>
     </div>
+    <vab-dialog v-model="dialogVisible" append-to-body class="wang-editor-dialog" width="500px">
+      <div v-html="html"></div>
+      <template #footer>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </template>
+    </vab-dialog>
   </div>
-  <vab-dialog v-model="dialogVisible" append-to-body class="wang-editor-dialog" width="500px">
-    <div v-html="html"></div>
-    <template #footer>
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-    </template>
-  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
