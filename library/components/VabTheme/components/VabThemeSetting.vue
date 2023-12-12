@@ -2,16 +2,16 @@
   <div v-if="theme.showThemeSetting" class="vab-theme-setting">
     <el-collapse-transition>
       <section v-show="show">
-        <div v-show="routeName !== 'SeparateLayout'" @click="handleOpenTheme">
-          <a>
-            <vab-icon icon="t-shirt-line" />
-            <p>{{ translate('主题配置') }}</p>
-          </a>
-        </div>
         <div v-show="routeName !== 'SeparateLayout'" @click="randomTheme">
           <a>
             <vab-icon icon="fire-line" />
             <p>{{ translate('随机换肤') }}</p>
+          </a>
+        </div>
+        <div v-show="routeName !== 'SeparateLayout'" @click="handleOpenTheme">
+          <a>
+            <vab-icon icon="t-shirt-line" />
+            <p>{{ translate('主题配置') }}</p>
           </a>
         </div>
         <div @click="changeTheme('technology')">
@@ -204,6 +204,7 @@ watch(
     }
 
     &:nth-child(1),
+    &:nth-child(3),
     &:nth-child(4) {
       a {
         color: var(--el-color-primary);
@@ -215,7 +216,8 @@ watch(
       }
     }
 
-    &:nth-child(2) {
+    &:nth-child(2),
+    &:nth-child(5) {
       a {
         color: var(--el-color-success);
         background: var(--el-color-success-lighter);
@@ -226,7 +228,7 @@ watch(
       }
     }
 
-    &:nth-child(3) {
+    &:nth-child(4) {
       a {
         color: var(--el-color-info);
         background: var(--el-color-info-lighter);
@@ -237,7 +239,7 @@ watch(
       }
     }
 
-    &:nth-child(5) {
+    &:nth-child(6) {
       a {
         color: var(--el-color-danger);
         background: var(--el-color-danger-lighter);
