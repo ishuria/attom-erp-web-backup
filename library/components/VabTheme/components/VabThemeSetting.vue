@@ -8,6 +8,12 @@
             <p>{{ translate('主题配置') }}</p>
           </a>
         </div>
+        <div v-show="routeName !== 'SeparateLayout'" @click="randomTheme">
+          <a>
+            <vab-icon icon="fire-line" />
+            <p>{{ translate('随机换肤') }}</p>
+          </a>
+        </div>
         <div @click="changeTheme('technology')">
           <a>
             <vab-icon icon="user-5-line" />
@@ -70,10 +76,13 @@ defineOptions({
 
 const $pub = inject<any>('$pub')
 const settingsStore = useSettingsStore()
-const { theme } = storeToRefs(settingsStore)
+const { device, color, theme } = storeToRefs(settingsStore)
+const { changeColor, saveTheme, updateTheme, setCssVar } = settingsStore
 const show = ref<boolean>(true)
 const route = useRoute()
 const routeName = ref<any>(route.name)
+const $baseLoading = inject<any>('$baseLoading')
+const $baseMessage = inject<any>('$baseMessage')
 
 const handleOpenTheme = () => {
   $pub('shop-vite-open-theme')
@@ -99,6 +108,55 @@ const changeTheme = (value: string) => {
 
 const toggleShowHide = () => {
   show.value = !show.value
+}
+
+const shuffle = (val: any, list: any) => list.filter((item: any) => item !== val)[(Math.random() * (list.length - 1)) | 0]
+
+const randomTheme = async () => {
+  const loading = $baseLoading()
+
+  useTimeoutFn(() => {
+    const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
+    const columnStyle = shuffle(theme.value.columnStyle, ['vertical', 'horizontal', 'card', 'arrow', 'semicircle'])
+    const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect'])
+    const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
+    const layout =
+      device.value === 'desktop' ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive']) : 'vertical'
+    const _color = shuffle(color.value, [
+      '#1e90ff',
+      '#4e88f3',
+      '#0052d9',
+      '#3fb884',
+      '#16baa9',
+      '#07c160',
+      '#009688',
+      '#6954f0',
+      '#7b40f2',
+      '#f01414',
+    ])
+    const isFollow = shuffle(theme.value.isFollow, [true, false])
+
+    theme.value.themeName = themeName
+    theme.value.columnStyle = columnStyle
+    theme.value.tabsBarStyle = tabsBarStyle
+    theme.value.showTabsIcon = showTabsIcon
+    theme.value.layout = layout
+
+    if (themeName !== 'technology') color.value = _color
+    else color.value = '#4e88f3'
+
+    if (themeName === 'default') theme.value.isFollow = isFollow
+    else theme.value.isFollow = false
+
+    changeColor()
+    setCssVar()
+    updateTheme()
+    saveTheme()
+    useTimeoutFn(() => {
+      loading.close()
+      $baseMessage('切换成功', 'success', 'hey')
+    }, 1000)
+  }, 100)
 }
 
 watch(
