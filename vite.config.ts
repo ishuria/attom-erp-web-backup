@@ -46,6 +46,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         clientFiles: ['./index.html', './library/{components,layouts}/*', './src/{views,plugins}/*'],
       },
       https,
+      fs: {
+        cachedChecks: true,
+      },
     },
     resolve: {
       alias: {
