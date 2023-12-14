@@ -9,6 +9,7 @@
     "dev:https": "set VITE_CJS_IGNORE_WARNING=true && vite --config ./vite.config.dev.ts",
     "build": "set VITE_CJS_IGNORE_WARNING=true && vue-tsc --noEmit && vite build",
     "build:fast": "set VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build",
+    "build:website": "set VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build --config ./vite.config.website.ts",
     "build:report": "set VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build --config ./vite.config.dev.ts",
     "build:vue-shop-vite": "set VITE_CJS_IGNORE_WARNING=true && vite build",
     "preview": " set VITE_CJS_IGNORE_WARNING=true && vite preview",
