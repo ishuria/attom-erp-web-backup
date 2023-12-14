@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "6.8.0",
+  "version": "6.8.5",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -100,7 +100,7 @@
     "typescript": "^5.3.3",
     "unplugin-auto-import": "^0.17.2",
     "unplugin-vue-components": "^0.26.0",
-    "vite": "^5.0.8",
+    "vite": "^5.0.9",
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-mock": "2.9.8",
