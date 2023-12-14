@@ -77,20 +77,22 @@ const statusList = ref<any>([
 const fileList = ref<UploadUserFile[]>([])
 
 const showEdit = (row: any) => {
-  if (!row) {
-    title.value = '添加'
-    fileList.value = []
-  } else {
-    title.value = '编辑'
-    Object.assign(form, row)
-    fileList.value = [
-      {
-        name: '商品图',
-        url: row.image,
-      },
-    ]
-  }
   dialogFormVisible.value = true
+  nextTick(() => {
+    if (!row) {
+      title.value = '添加'
+      fileList.value = []
+    } else {
+      title.value = '编辑'
+      Object.assign(form, row)
+      fileList.value = [
+        {
+          name: '商品图',
+          url: row.image,
+        },
+      ]
+    }
+  })
 }
 
 defineExpose({

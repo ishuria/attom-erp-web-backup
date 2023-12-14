@@ -35,7 +35,7 @@ const emit = defineEmits(['fetch-data'])
 const $baseMessage = inject<any>('$baseMessage')
 
 const formRef = ref<any>(null)
-let form = ref<any>({
+const form = reactive<any>({
   username: '',
   password: '',
   email: '',
@@ -51,13 +51,14 @@ const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
 
 const showEdit = (row: any) => {
-  if (!row) {
-    title.value = '添加'
-  } else {
-    title.value = '编辑'
-    form = reactive<any>({ ...row })
-  }
   dialogFormVisible.value = true
+  nextTick(() => {
+    if (!row) title.value = '添加'
+    else {
+      title.value = '编辑'
+      Object.assign(form, row)
+    }
+  })
 }
 
 defineExpose({

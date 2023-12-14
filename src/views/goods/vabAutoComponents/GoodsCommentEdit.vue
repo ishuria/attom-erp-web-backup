@@ -40,16 +40,17 @@ const rules = reactive<any>({
 })
 
 const showEdit = (row: any) => {
-  if (!row) {
-    title.value = '添加'
-  } else {
-    title.value = '回复'
-    Object.assign(form, row)
-    if (form.replyStatus === '未回复') {
-      form.reply = ''
-    }
-  }
   dialogFormVisible.value = true
+  nextTick(() => {
+    if (!row) title.value = '添加'
+    else {
+      title.value = '回复'
+      Object.assign(form, row)
+      if (form.replyStatus === '未回复') {
+        form.reply = ''
+      }
+    }
+  })
 }
 
 defineExpose({

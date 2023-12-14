@@ -42,10 +42,12 @@ const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
 
 const showEdit = (row: any) => {
-  title.value = '添加/编辑'
-  if (row) Object.assign(form, row, { id: uuid() })
-  else Object.assign(form, row, { id: uuid(), parentKey: 'root' })
   dialogFormVisible.value = true
+  nextTick(() => {
+    title.value = '添加/编辑'
+    if (row) Object.assign(form, row, { id: uuid() })
+    else Object.assign(form, row, { id: uuid(), parentKey: 'root' })
+  })
 }
 
 defineExpose({

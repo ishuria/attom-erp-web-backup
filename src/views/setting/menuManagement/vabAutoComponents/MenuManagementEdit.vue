@@ -107,13 +107,28 @@ const handleIcon = (item: string) => {
 }
 
 const showEdit = (row: any) => {
-  if (!row) {
-    title.value = '添加'
-  } else {
-    title.value = '编辑'
-    Object.assign(form, row)
-  }
   dialogFormVisible.value = true
+  nextTick(() => {
+    if (!row) {
+      title.value = '添加'
+      form.meta = {
+        title: '',
+        icon: '',
+        badge: '',
+        dot: false,
+        hidden: false,
+        levelHidden: false,
+        isCustomSvg: false,
+        noClosable: false,
+        noKeepAlive: false,
+        tabHidden: false,
+        guard: [],
+      }
+    } else {
+      title.value = '编辑'
+      Object.assign(form, row)
+    }
+  })
 }
 
 defineExpose({

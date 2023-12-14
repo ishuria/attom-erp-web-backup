@@ -1515,6 +1515,7 @@ const list = [
     redirect: '/404',
     name: 'NotFound',
     meta: {
+      title: '404',
       hidden: true,
     },
   },

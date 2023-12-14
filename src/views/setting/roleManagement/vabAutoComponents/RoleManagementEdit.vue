@@ -9,7 +9,7 @@
           <el-tree
             ref="treeRef"
             :data="list"
-            :default-checked-keys="['/', '/vab', '/other', '/noColumn', '/setting']"
+            :default-checked-keys="form.menuCheckedList"
             :default-expanded-keys="[]"
             node-key="path"
             show-checkbox
@@ -40,14 +40,22 @@ defineOptions({
 })
 
 const emit = defineEmits(['fetch-data'])
-
 const $baseMessage = inject<any>('$baseMessage')
-
 const formRef = ref<any>(null)
 const treeRef = ref<any>(null)
 const form = reactive<any>({
   role: '',
-  btnRolesCheckedList: ['read:system,write:system,delete:system,read:index,write:index,delete:index,read:index,write:index,delete:index'],
+  btnRolesCheckedList: [
+    'read:system',
+    'write:system',
+    'delete:system',
+    'read:index',
+    'write:index',
+    'delete:index',
+    'read:index',
+    'write:index',
+    'delete:index',
+  ],
 })
 const rules = reactive<any>({
   role: [{ required: true, trigger: 'blur', message: '请输入角色码' }],
@@ -57,13 +65,26 @@ const dialogFormVisible = ref<boolean>(false)
 const list = ref<any>([])
 
 const showEdit = (row: any) => {
-  if (!row) {
-    title.value = '添加'
-  } else {
-    title.value = '编辑'
-    Object.assign(form, row)
-  }
   dialogFormVisible.value = true
+  nextTick(() => {
+    if (!row) {
+      title.value = '添加'
+      form.btnRolesCheckedList = [
+        'read:system',
+        'write:system',
+        'delete:system',
+        'read:index',
+        'write:index',
+        'delete:index',
+        'read:index',
+        'write:index',
+        'delete:index',
+      ]
+    } else {
+      title.value = '编辑'
+      Object.assign(form, row)
+    }
+  })
 }
 
 defineExpose({
@@ -75,10 +96,12 @@ const close = () => {
   emit('fetch-data')
   dialogFormVisible.value = false
 }
+
 const fetchData = async () => {
   const { data } = await getList()
   list.value = data.list
 }
+
 const save = () => {
   formRef.value.validate(async (valid: any) => {
     if (valid) {
@@ -93,6 +116,7 @@ const save = () => {
     }
   })
 }
+
 onBeforeMount(() => {
   fetchData()
 })

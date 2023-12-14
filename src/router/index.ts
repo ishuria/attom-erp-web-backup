@@ -1566,6 +1566,7 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
     redirect: '/404',
     name: 'NotFound',
     meta: {
+      title: '404',
       hidden: true,
     },
   },

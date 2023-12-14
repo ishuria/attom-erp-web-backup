@@ -76,7 +76,7 @@ const validatePass = (rule: any, value: string, callback: any) => {
 }
 
 const formRef = ref()
-const form = ref({
+const form = reactive({
   password: '123456',
 })
 const rules = {

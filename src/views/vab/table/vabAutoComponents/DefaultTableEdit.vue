@@ -64,13 +64,14 @@ const options = ref<any>([
 ])
 
 const showEdit = (row: any) => {
-  if (!row) {
-    title.value = '添加'
-  } else {
-    title.value = '编辑'
-    Object.assign(form, row)
-  }
   dialogFormVisible.value = true
+  nextTick(() => {
+    if (!row) title.value = '添加'
+    else {
+      title.value = '编辑'
+      Object.assign(form, row)
+    }
+  })
 }
 
 defineExpose({
@@ -78,6 +79,7 @@ defineExpose({
 })
 
 const close = () => {
+  formRef.value.clearValidate()
   formRef.value.resetFields()
   emit('fetch-data')
   dialogFormVisible.value = false

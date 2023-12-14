@@ -5,11 +5,13 @@ const List = [
     id: '@id',
     role: 'admin',
     btnRolesCheckedList: ['read:system', 'write:system', 'delete:system'],
+    menuCheckedList: ['/', '/vab', '/other', '/operate', '/template', '/noColumn', '/setting', '/goods', '/chat', '/portal'],
   },
   {
     id: '@id',
     role: 'editor',
     btnRolesCheckedList: ['read:system', 'write:system'],
+    menuCheckedList: ['/', '/vab', '/other', '/noColumn', '/setting'],
   },
 ]
 
