@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
 import VabSliderVerify from 'vue3-puzzle-vcode'
+import landscape from '/@/assets/common_images/landscape.jpg'
 
 defineOptions({
   name: 'SliderVerify',
@@ -14,10 +15,7 @@ defineOptions({
 
 const isShow = ref<any>(false)
 const $baseMessage = inject<any>('$baseMessage')
-const imgs = ref<any>([
-  'https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png',
-  'https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg',
-])
+const imgs = ref<any>(['https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png', landscape])
 
 const onShow = () => {
   isShow.value = true
