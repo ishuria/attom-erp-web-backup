@@ -4,7 +4,7 @@
       <el-col>
         <vab-card>
           <el-form class="demo-form-inline" :inline="true">
-            <el-form-item label="换肤">
+            <el-form-item label="换肤" label-width="40">
               <vab-color-picker />
             </el-form-item>
           </el-form>
@@ -39,6 +39,10 @@ defineOptions({
   :deep() {
     .el-form-item {
       margin-bottom: 0;
+
+      .vab-color-picker {
+        margin-left: 0 !important;
+      }
     }
 
     .vab-card {
