@@ -1,7 +1,7 @@
 <template>
   <div class="echarts-container no-background-container">
     <el-row :gutter="20">
-      <el-col>
+      <el-col :span="24">
         <vab-card>
           <el-form class="demo-form-inline" :inline="true">
             <el-form-item label="换肤" label-width="40">
