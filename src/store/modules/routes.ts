@@ -17,6 +17,14 @@ const filterHidden = (data: any) => {
   }, [])
 }
 
+const filterBreadcrumb = (data: any) => {
+  return data.reduce((acc: any, item: any) => {
+    const newItem = { ...item }
+    if (item.children && item.children.length > 0) newItem.children = filterBreadcrumb(item.children)
+    return [...acc, newItem]
+  }, [])
+}
+
 export const useRoutesStore = defineStore('routes', {
   state: (): RoutesModuleType => ({
     tab: {
@@ -28,6 +36,7 @@ export const useRoutesStore = defineStore('routes', {
     },
     routes: [],
     allRoutes: [],
+    breadcrumbRoutes: [],
   }),
   getters: {
     getTab: (state) => state.tab,
@@ -35,6 +44,7 @@ export const useRoutesStore = defineStore('routes', {
     getActiveMenu: (state) => state.activeMenu,
     getRoutes: (state) => state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getAllRoutes: (state) => state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
+    getBreadcrumbRoutes: (state) => state.breadcrumbRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getPartialRoutes: (state) =>
       state.tab.data
         ? state.routes.find((route) => route.name === state.tab.data) &&
@@ -72,6 +82,7 @@ export const useRoutesStore = defineStore('routes', {
       // 设置菜单所需路由
       this.routes = filterHidden(accessRoutes)
       this.allRoutes = accessRoutes
+      this.breadcrumbRoutes = filterBreadcrumb(accessRoutes)
       // 根据可访问路由重置Vue Router
       await resetRouter(accessRoutes)
     },

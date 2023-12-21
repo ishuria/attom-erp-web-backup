@@ -18,6 +18,7 @@ declare interface RoutesModuleType {
   }
   routes: any[]
   allRoutes: any[]
+  breadcrumbRoutes: any[]
 }
 
 declare type DeviceType = 'mobile' | 'desktop'
