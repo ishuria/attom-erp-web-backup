@@ -1,6 +1,6 @@
 <template>
   <div class="default-table-detail-container">
-    <el-page-header :content="'【' + route.query.title + '】详情页面'" @back="goBack" />
+    <el-page-header :content="'【' + route.query.title + '】详情页'" @back="goBack" />
     <el-alert
       :closable="false"
       title="默认表格、左树右表、分类表格、自定义表格、分割表格共用的详情页demo，所有表格都会跳转详情至此页面，当前详情页允许多开。"

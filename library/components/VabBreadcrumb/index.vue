@@ -18,12 +18,12 @@ defineOptions({
 
 const route = useRoute()
 const routesStore = useRoutesStore()
-const { getRoutes: routes } = storeToRefs(routesStore)
+const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 
 const breadcrumbList = computed(() => {
-  const matchedRoutes = handleMatched(routes.value, route.fullPath).filter((item) => !item.meta.breadcrumbHidden)
+  const matchedRoutes = handleMatched(allRoutes.value, route.fullPath).filter((item) => !item.meta.breadcrumbHidden)
   if (matchedRoutes.length) return matchedRoutes
-  else return handleMatched(routes.value, route.path).filter((item) => !item.meta.breadcrumbHidden)
+  else return handleMatched(allRoutes.value, route.path).filter((item) => !item.meta.breadcrumbHidden)
 })
 
 const handleTo = (path: any) => {

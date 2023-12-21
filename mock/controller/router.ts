@@ -1053,7 +1053,7 @@ const list = [
         name: 'NewsDetail',
         component: '/@/views/template/NewsDetail.vue',
         meta: {
-          title: '新闻详情',
+          title: '详情页',
           icon: 'newspaper-line',
           hidden: true,
         },
