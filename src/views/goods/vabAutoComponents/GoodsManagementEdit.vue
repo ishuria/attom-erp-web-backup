@@ -36,8 +36,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="save">确 定</el-button>
+      <el-button type="primary" @click="save">保存</el-button>
     </template>
   </vab-dialog>
 </template>
@@ -100,6 +99,7 @@ defineExpose({
 })
 
 const close = () => {
+  formRef.value.clearValidate()
   formRef.value.resetFields()
   emit('fetch-data')
   dialogFormVisible.value = false
