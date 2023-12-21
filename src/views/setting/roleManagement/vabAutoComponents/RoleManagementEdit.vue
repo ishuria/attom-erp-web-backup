@@ -94,7 +94,6 @@ const close = () => {
   formRef.value.clearValidate()
   formRef.value.resetFields()
   emit('fetch-data')
-  dialogFormVisible.value = false
 }
 
 const fetchData = async () => {
@@ -111,8 +110,9 @@ const save = () => {
         ...form,
         ...treeObject,
       })
-      $baseMessage(msg, 'success', 'hey')
-      close()
+      await $baseMessage(msg, 'success', 'hey')
+      await close()
+      dialogFormVisible.value = false
     }
   })
 }

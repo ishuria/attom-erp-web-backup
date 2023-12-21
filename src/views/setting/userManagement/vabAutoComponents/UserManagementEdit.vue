@@ -68,16 +68,15 @@ const close = () => {
   formRef.value.clearValidate()
   formRef.value.resetFields()
   emit('fetch-data')
-  dialogFormVisible.value = false
 }
 
 const save = () => {
   formRef.value.validate(async (valid: any) => {
     if (valid) {
       const { msg }: any = await doEdit(form)
-      $baseMessage(msg, 'success', 'hey')
-      emit('fetch-data')
-      close()
+      await $baseMessage(msg, 'success', 'hey')
+      await close()
+      dialogFormVisible.value = false
     }
   })
 }
