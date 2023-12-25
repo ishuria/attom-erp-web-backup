@@ -13,6 +13,8 @@ export const cliConfig: { [key: string]: string | number | boolean | Array<strin
   port: 5173,
   // pwa
   pwa: true,
+  // pwaDev
+  pwaDev: false,
   // build时规定触发警告的 chunk 大小。（以 kbs 为单位）
   chunkSizeWarningLimit: 20480,
   // 开发服务器启动时，自动在浏览器中打开应用程序

@@ -4,7 +4,7 @@
       <vab-alert
         title="点击安装前需手动按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面，如果无法安装，PC端请点击浏览器地址栏右侧安装按钮进行安装，手机端请点击添加到主屏幕进行安装，仅支持Edge、Chrome、Safari"
       />
-      <el-button type="primary" @click="handleInstall">点击安装</el-button>
+      <el-button id="installRef" type="primary">点击安装</el-button>
     </div>
     <vab-alert v-else title="开发环境或非https协议下暂不支持安装PWA应用" type="warning" />
   </div>
@@ -25,23 +25,31 @@ const beforeInstallPrompt = () => {
     e.preventDefault()
     deferredPrompt = e
   })
+
+  useTimeoutFn(() => {
+    const installRef = document.getElementById('installRef')
+    if (installRef)
+      installRef.addEventListener('click', () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt()
+          deferredPrompt.userChoice.then(() => {
+            location.reload()
+          })
+        } else {
+          $baseAlert(
+            '未获取到安装指令，请按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面后重试，如果无法安装，PC端请点击浏览器地址栏右侧安装按钮进行安装，手机端请点击添加到主屏幕进行安装，仅支持Edge、Chrome、Safari',
+            () => {
+              location.reload()
+            }
+          )
+        }
+      })
+  }, 300)
 }
 
-onBeforeMount(() => {
-  if (!development && protocol) beforeInstallPrompt()
+onMounted(() => {
+  nextTick(() => {
+    if (!development && protocol) beforeInstallPrompt()
+  })
 })
-
-const handleInstall = () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt()
-    deferredPrompt.userChoice.then(() => {
-      deferredPrompt = null
-      beforeInstallPrompt()
-    })
-  } else {
-    $baseAlert('未获取到安装指令，请按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面后重试', () => {
-      location.reload()
-    })
-  }
-}
 </script>
