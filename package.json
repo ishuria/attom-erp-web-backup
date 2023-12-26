@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "7.0.5",
+  "version": "7.1.0",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -54,7 +54,7 @@
     "typeit": "^8.8.0",
     "vsv-icon": "^1.1.8",
     "vue": "^3.3.13",
-    "vue-echarts": "^6.6.5",
+    "vue-echarts": "^6.6.7",
     "vue-i18n": "^9.8.0",
     "vue-json-viewer": "^3.0.4",
     "vue-pdf-embed": "^1.2.1",
@@ -73,7 +73,7 @@
     "@types/mockjs": "^1.0.10",
     "@types/nprogress": "^0.2.3",
     "@types/qs": "^6.9.11",
-    "@vite-pwa/assets-generator": "^0.2.1",
+    "@vite-pwa/assets-generator": "^0.2.2",
     "@vitejs/plugin-basic-ssl": "^1.0.2",
     "@vitejs/plugin-vue": "^5.0.0",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
@@ -109,7 +109,7 @@
     "vite-plugin-unplugin": "^1.7.0",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^1.8.26"
+    "vue-tsc": "^1.8.27"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
