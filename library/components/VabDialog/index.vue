@@ -64,6 +64,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  fullscreen: {
+    type: Boolean,
+    default: false,
+  },
   loading: {
     type: Boolean,
     default: false,
@@ -98,7 +102,18 @@ const closeDialog = () => {
   dialogVisible.value = false
   isFullscreen.value = false
 }
+
 const setFullscreen = () => {
   isFullscreen.value = !isFullscreen.value
 }
+
+watch(
+  props,
+  () => {
+    isFullscreen.value = props.fullscreen
+  },
+  {
+    immediate: true,
+  }
+)
 </script>
