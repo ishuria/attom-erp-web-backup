@@ -66,6 +66,7 @@ const badge = ref<number>(0)
 const icon = ref<any>(route.meta.icon)
 const hidden = ref<boolean>(false)
 const favicon = useFavicon()
+const $baseMessage = inject<any>('$baseMessage')
 
 const handleBadge = (name: any) => {
   badge.value = badge.value + 1
@@ -108,8 +109,21 @@ const handleResetIcon = () => {
 }
 
 const handleChangeLogo = (logo: string) => {
-  'vab' === logo ? (favicon.value = 'favicon-vab.ico') : (favicon.value = 'favicon.ico')
   changeLogo(logo)
+  switch (logo) {
+    case 'vab':
+      favicon.value = 'favicon-vab.ico'
+      $baseMessage('logo修改成功，为保持页面美观，10秒后将重置为默认logo', 'warning', 'hey')
+      setTimeout(() => {
+        handleChangeLogo('vite')
+      }, 1000 * 10)
+
+      break
+    case 'vite':
+      favicon.value = 'favicon.ico'
+      localStorage.removeItem('logo')
+      break
+  }
 }
 
 const handleActiveMenu = (activeMenu: string) => {
