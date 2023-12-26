@@ -12,7 +12,6 @@ import {
   exclude,
   https,
   include,
-  minify,
   open,
   outDir,
   outputHash,
@@ -23,6 +22,9 @@ import { createVitePlugin, createWatch } from '/@vab/build'
 
 const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
 const info = { dependencies, devDependencies, lastBuildTime, name, version }
+
+//vue_shop_vite官网独立配置
+const minify = 'terser'
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   process.env['VITE_APP_UPDATE_TIME'] = info.lastBuildTime
