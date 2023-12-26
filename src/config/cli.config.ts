@@ -10,7 +10,7 @@ export const cliConfig: { [key: string]: string | number | boolean | Array<strin
   // 放置生成的静态资源 (js、css、img、fonts) 的目录。
   assetsDir: 'static',
   // 开发环境端口号
-  port: 5173,
+  port: 5200,
   // pwa
   pwa: true,
   // pwaDev
