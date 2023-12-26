@@ -469,6 +469,8 @@ html {
         height: 60px;
         padding: 0;
         margin-right: 0;
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
 
         .el-dialog__title {
           padding: var(--el-dialog-padding-primary);
@@ -525,8 +527,6 @@ html {
       &.vab-dialog-plain {
         .el-dialog__header {
           background: var(--el-color-info-light-9);
-          border-top-left-radius: var(--el-border-radius-base);
-          border-top-right-radius: var(--el-border-radius-base);
         }
       }
 
@@ -535,8 +535,6 @@ html {
           --el-text-color-primary: var(--el-color-white);
           --el-color-info: var(--el-color-white);
           background: var(--el-color-primary);
-          border-top-left-radius: var(--el-border-radius-base);
-          border-top-right-radius: var(--el-border-radius-base);
 
           .el-dialog__close {
             --el-color-primary: var(--el-color-white);

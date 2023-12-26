@@ -29,7 +29,7 @@
       </el-form-item>
 
       <el-form-item class="hidden-xs-only" label="弹窗宽度（30% - 60%）">
-        <el-slider v-model="form.width" :max="60" :min="30" style="width: 345px" />
+        <el-slider v-model="form.width" :disabled="form.fullscreen" :max="60" :min="30" style="width: 345px" />
       </el-form-item>
       <el-form-item label="操作">
         <el-button type="primary" @click="handleOpen">打开弹窗</el-button>
