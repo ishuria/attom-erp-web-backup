@@ -15,11 +15,11 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="基础配置">
+        <el-checkbox v-model="form.showFullscreen" label="开启全屏按钮" />
         <el-checkbox v-model="form.draggable" class="hidden-xs-only" label="开启拖拽" />
         <el-checkbox v-model="form.modal" label="开启遮罩" />
-        <el-checkbox v-model="form.fullscreen" label="弹窗时全屏显示" />
-        <el-checkbox v-model="form.showFullscreen" label="开启全屏按钮" />
-        <el-checkbox v-if="form.showFullscreen" v-model="form.animated" label="开启全屏动画" />
+        <el-checkbox v-model="form.fullscreen" label="全屏显示弹窗" />
+        <el-checkbox v-model="form.animated" label="开启动画" />
       </el-form-item>
       <el-form-item label="其他配置">
         <el-checkbox v-model="form.alignCenter" label="开启垂直水平居中" />
