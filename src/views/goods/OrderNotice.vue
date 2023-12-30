@@ -67,7 +67,7 @@ const handleSettingNotice = () => {
   window.Notification.requestPermission().then((result: any) => {
     if (result === 'granted') {
       const notification = new window.Notification('温馨提示', {
-        body: '你有新订单，请及时发货！',
+        body: text.value,
       })
       notification.onclick = () => {
         window.focus()
