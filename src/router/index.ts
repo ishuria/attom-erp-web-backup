@@ -1409,6 +1409,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'orderNotice',
+        name: 'OrderNotice',
+        component: () => import('/@/views/goods/OrderNotice.vue'),
+        meta: {
+          title: '订单提醒',
+          icon: 'bell-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'cashier',
         name: 'Cashier',
         component: () => import('/@/views/goods/Cashier.vue'),

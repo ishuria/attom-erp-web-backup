@@ -1358,6 +1358,16 @@ const list = [
         },
       },
       {
+        path: 'orderNotice',
+        name: 'OrderNotice',
+        component: '/@/views/goods/OrderNotice.vue',
+        meta: {
+          title: '订单提醒',
+          icon: 'bell-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'cashier',
         name: 'Cashier',
         component: '/@/views/goods/Cashier.vue',
