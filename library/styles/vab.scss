@@ -266,11 +266,11 @@ html {
       margin-left: 10px;
     }
 
-    /* 毛玻璃遮罩 */
+    /* 毛玻璃遮罩(影响性能，默认关闭) */
     .el-overlay,
     .el-image-viewer__mask {
       background-color: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(2.5px);
+      //backdrop-filter: blur(2.5px);
       opacity: 1;
 
       > div {
@@ -278,11 +278,10 @@ html {
       }
     }
 
-    /* v-modal、el-image-viewer__mask遮罩 */
     .v-modal {
       z-index: var(--el-z-index);
       background-color: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(2.5px);
+      //backdrop-filter: blur(2.5px);
       opacity: 1;
     }
 
