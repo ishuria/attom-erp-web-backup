@@ -15,7 +15,7 @@
     "preview": " set VITE_CJS_IGNORE_WARNING=true && vite preview",
     "lint": "eslint  */**/*.{vue,js,ts} --fix",
     "lint:eslint": "eslint {src,mock,library,types}/**/*.{vue,js,ts} --fix",
-    "lint:prettier": "prettier {src,mock,library,types}/**/*.{html,vue,css,sass,scss,js,ts,md} --write",
+    "lint:prettier": "prettier {src,mock,library,types}/**/*.{html,vue,css,sass,scss,js,ts} --write",
     "lint:stylelint": "stylelint {src,mock,library}/**/*.{vue,css,sass,scss} --fix --cache --cache-location node_modules/.cache/stylelint/",
     "global:install": "cnpm i -g nrm cnpm@8.2.0 npm-check-updates pnpm",
     "globle:update": "ncu -g",
@@ -24,7 +24,8 @@
     "module:reinstall": "rimraf node_modules && npm run module:install",
     "git": "start ./git.sh",
     "generate-pwa-assets": "pwa-assets-generator",
-    "template": "plop"
+    "template": "plop",
+    "mac:sudo": "sudo chown -R $(whoami)  *"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
