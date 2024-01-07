@@ -4,8 +4,8 @@
 
 <script lang="ts" setup>
 import Player from 'xgplayer'
-import 'xgplayer/dist/index.min.css'
 import HlsPlayer from 'xgplayer-hls.js'
+import 'xgplayer/dist/index.min.css'
 
 defineOptions({
   name: 'VabPlayerHls',
@@ -53,3 +53,7 @@ onBeforeMount(() => {
   player.value && typeof player.value.destroy === 'function' && player.value.destroy()
 })
 </script>
+
+<style lang="scss">
+@import './scss/player';
+</style>

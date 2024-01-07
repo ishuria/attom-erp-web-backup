@@ -51,34 +51,5 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss">
-.xgplayer {
-  &-progress-played {
-    background: var(--el-color-primary) !important;
-  }
-
-  &-progress-btn {
-    background: var(--el-color-primary-light-9) !important;
-    border: 0.5px solid var(--el-color-primary-light-9) !important;
-    box-shadow: 0 0 1px var(--el-color-primary) !important;
-  }
-
-  &-progress-btn.active {
-    border: 4px solid var(--el-color-primary-light-9) !important;
-  }
-
-  &-progress-btn.active:before {
-    box-shadow: 0 0 3px var(--el-color-primary) !important;
-  }
-
-  .xg-options-list {
-    li:hover,
-    li.selected {
-      color: var(--el-color-primary) !important;
-    }
-  }
-
-  &-drag {
-    background: var(--el-color-primary) !important;
-  }
-}
+@import './scss/player';
 </style>
