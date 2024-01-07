@@ -129,6 +129,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
           badge: 'Hot',
         },
       },
+      // {
+      //   path: 'workbench',
+      //   name: 'Workbench',
+      //   component: () => import('/@/views/index/workbench.vue'),
+      //   meta: {
+      //     title: '工作台',
+      //     icon: 'artboard-line',
+      //     target: '_blank',
+      //   },
+      // },
       {
         path: 'application',
         name: 'Application',

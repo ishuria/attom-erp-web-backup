@@ -169,5 +169,6 @@ declare module 'vue' {
     VabThemeSetting: typeof import('./../../components/VabTheme/components/VabThemeSetting.vue')['default']
     VabUpdate: typeof import('./../../../src/plugins/VabUpdate/index.vue')['default']
     VersionInformation: typeof import('./../../../src/views/index/vabAutoComponents/VersionInformation.vue')['default']
+    WorkbenchHeader: typeof import('./../../../src/views/index/vabAutoComponents/WorkbenchHeader.vue')['default']
   }
 }
