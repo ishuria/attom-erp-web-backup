@@ -276,7 +276,7 @@
 
 <script lang="ts" setup>
 import { ArrowRight, CaretBottom, CaretTop } from '@element-plus/icons-vue'
-import { random } from 'lodash'
+import { random } from 'lodash-es'
 import landscape from '/@/assets/common_images/landscape.jpg'
 
 defineOptions({
