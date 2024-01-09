@@ -1,6 +1,7 @@
 /**
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
+
 import {
   persistenceTab as _persistenceTab,
   color,
@@ -34,7 +35,7 @@ import {
   title,
 } from '/@/config'
 import { colorRgba, lightenColorChrome } from '/@/utils/lightenColor'
-import { isJson } from '/@/utils/validate'
+import { getLocalStorage } from '/@/utils/localStorage'
 
 const defaultTheme: ThemeType = {
   color,
@@ -63,15 +64,6 @@ const defaultTheme: ThemeType = {
   showThemeSetting,
   tabsBarStyle,
   themeName,
-}
-
-const getLocalStorage = (key: string) => {
-  const value: any = localStorage.getItem(key)
-  if (value && isJson(value)) {
-    return JSON.parse(value)
-  } else {
-    return false
-  }
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
