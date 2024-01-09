@@ -13,15 +13,7 @@
       :with-header="false"
     >
       <div class="vab-screen-lock">
-        <div
-          class="vab-screen-lock-background"
-          :style="{
-            background: `var(--el-color-primary-light-5) fixed url(${background}) center`,
-            backgroundSize: '100% 100%',
-            filter: 'blur(10px)',
-            transform: 'scale(1.1)',
-          }"
-        ></div>
+        <div id="vab-screen-lock-background" class="vab-screen-lock-background" :style="style"></div>
         <div class="vab-screen-lock-content">
           <div class="vab-screen-lock-content-title">
             <el-avatar :size="180" :src="avatar" />
@@ -61,10 +53,25 @@ const settingsStore = useSettingsStore()
 const { lock, title } = storeToRefs(settingsStore)
 const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
 const url = 'https://gcore.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
-
 const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
+const style = reactive<any>({
+  background: `var(--el-color-primary-light-5) fixed url(${background.value}) center`,
+  backgroundSize: '100% 100%',
+  filter: 'blur(10px)',
+  transform: 'scale(1.05)',
+  transition: 'all 3s',
+})
+
 const randomBackground = () => {
+  style.transform = 'scale(1.05)'
+  style.transition = 'none'
   background.value = `${url}${Math.round(Math.random() * 31)}.jpg`
+  style.background = `var(--el-color-primary-light-5) fixed url(${background.value}) center`
+
+  useTimeoutFn(() => {
+    style.transform = 'scale(1.2)'
+    style.transition = 'all 3s'
+  }, 500)
 }
 
 const validatePass = (rule: any, value: string, callback: any) => {
@@ -85,17 +92,25 @@ const rules = {
 
 const handleUnLock = () => {
   formRef.value.validate(async (valid: boolean) => {
-    if (valid) {
-      useTimeoutFn(async () => {
-        await _handleUnLock()
-      }, 500)
-    }
+    if (valid) await _handleUnLock()
   })
 }
 
 const handleLock = () => {
   _handleLock()
 }
+
+watch(
+  lock,
+  () => {
+    useTimeoutFn(() => {
+      lock.value ? (style.transform = 'scale(1.2)') : (style.transform = 'scale(1.05)')
+    }, 500)
+  },
+  {
+    immediate: true,
+  }
+)
 </script>
 
 <style lang="scss">
