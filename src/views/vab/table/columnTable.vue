@@ -1,5 +1,5 @@
 <template>
-  <div class="column-table-container no-background-container auto-height-container">
+  <div class="column-table-container no-background-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
     <el-row :gutter="20">
       <el-col :lg="5" :md="24" :sm="24" :xl="4" :xs="24">
         <vab-card class="auto-height-card">
@@ -50,12 +50,22 @@
                 </el-form-item>
               </el-form>
             </vab-query-form-top-panel>
-            <vab-query-form-left-panel :span="24">
+            <vab-query-form-left-panel :span="20">
               <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
               <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
               <el-button type="primary" @click="handleDetail">详情</el-button>
               <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
             </vab-query-form-left-panel>
+            <vab-query-form-right-panel :span="4">
+              <div class="custom-table-right-tools">
+                <el-button @click="queryData">
+                  <vab-icon icon="refresh-line" />
+                </el-button>
+                <el-button @click="clickFullScreen">
+                  <vab-icon :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
+                </el-button>
+              </div>
+            </vab-query-form-right-panel>
           </vab-query-form>
           <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
             <el-table-column type="selection" width="38" />
@@ -133,6 +143,7 @@ const editRef = ref<any>(null)
 const tableRef = ref<any>(null)
 const fold = ref<boolean>(true)
 const list = ref<any>([])
+const isFullscreen = ref<boolean>(false)
 const listLoading = ref<boolean>(true)
 const total = ref<any>(0)
 const selectRows = ref<any>([])
@@ -140,9 +151,9 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
 })
-
 const filterText = ref<string>('')
 const treeRef = ref<InstanceType<typeof ElTree>>()
+const { exit, enter, isFullscreen: _isFullscreen } = useFullscreen()
 
 watch(filterText, (value) => {
   treeRef.value?.filter(value)
@@ -242,6 +253,11 @@ const queryData = () => {
   fetchData()
 }
 
+const clickFullScreen = () => {
+  isFullscreen.value = !isFullscreen.value
+  isFullscreen.value ? enter() : exit()
+}
+
 const statusFilter = (status: string | number) => {
   const statusMap: any = {
     published: 'success',
@@ -330,6 +346,15 @@ const handleDetail = (row: any) => {
     else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
   }
 }
+
+watch(
+  _isFullscreen,
+  () => {
+    if (_isFullscreen.value) isFullscreen.value = true
+    else isFullscreen.value = false
+  },
+  { immediate: true }
+)
 
 onActivated(() => {
   tableRef.value.doLayout()

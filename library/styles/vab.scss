@@ -761,7 +761,7 @@ html {
         }
       }
 
-      @media (max-width: 1024px) {
+      @media (max-width: 1200px) {
         margin-bottom: calc(0 - var(--el-margin));
 
         > .el-row {
@@ -788,6 +788,16 @@ html {
               height: auto;
               min-height: calc(var(--el-container-height) - 57px);
             }
+          }
+        }
+      }
+
+      &.vab-table-fullscreen {
+        padding: var(--el-padding) !important;
+
+        .auto-height-card {
+          > .el-card__body {
+            height: calc(100vh - var(--el-padding) * 2 - 2px);
           }
         }
       }
