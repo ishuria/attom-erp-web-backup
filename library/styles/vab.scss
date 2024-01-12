@@ -259,6 +259,11 @@ html {
       }
     }
 
+    /* el-select */
+    .el-select {
+      min-width: 105px;
+    }
+
     a + a,
     a + .el-button,
     .el-button + a {
