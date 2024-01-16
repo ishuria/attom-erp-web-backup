@@ -7,15 +7,17 @@
       @tab-click="handleTabClick"
       @tab-remove="handleTabRemove"
     >
-      <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoCLosable(item)" lazy :name="item.path">
+      <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoClosable(item)" lazy :name="item.path">
         <template #label>
           <span class="vab-tabs-title" @contextmenu.prevent="openMenu(item)">
             <template v-if="theme.showTabsIcon">
               <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
-              <!--  如果没有图标那么取第二级的图标 -->
               <vab-icon v-else :icon="item.parentIcon" />
             </template>
-            <span>
+            <span v-if="!isNoClosable(item)" @dblclick="handleTabRemove(item.path)">
+              {{ translate(item.meta.title) }}
+            </span>
+            <span v-else>
               {{ translate(item.meta.title) }}
             </span>
           </span>
@@ -147,7 +149,7 @@ const left = ref<any>(0)
 const $pub = inject<any>('$pub')
 
 const isActive = (path: any) => path === handleActivePath(route, true)
-const isNoCLosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
+const isNoClosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
 
 const handleTabClick: any = (tab: any) => {
   if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
@@ -214,6 +216,7 @@ const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
  * @returns {Promise<void>}
  */
 const handleTabRemove: any = async (rawPath: string) => {
+  console.log(rawPath)
   if (isActive(rawPath)) await toLastTab()
   await delVisitedRoute(rawPath)
 }
