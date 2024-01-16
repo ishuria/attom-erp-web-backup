@@ -28,7 +28,7 @@ import _scan from '/@/assets/qr_images/scan.png'
 
 const scan = ref<string>(_scan)
 const dialogVisible = ref<boolean>(false)
-let timer: any
+let timer: any = null
 let timer2: any
 
 onActivated(() => {
@@ -45,7 +45,7 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  clearInterval(timer)
+  if (timer) timer.pause()
   clearInterval(timer2)
 })
 </script>

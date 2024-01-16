@@ -33,18 +33,18 @@
 <script lang="ts" setup>
 const show = ref<boolean>(true)
 const checked = ref<boolean>(false)
-let timer: any
+let timer: any = null
 
 const handleChange = (value: any) => {
   if (value)
     timer = useIntervalFn(() => {
       show.value = !show.value
     }, 1500)
-  else clearInterval(timer)
+  else timer.pause()
 }
 
 onDeactivated(() => {
-  clearInterval(timer)
+  if (timer) timer.pause()
 })
 </script>
 

@@ -39,7 +39,7 @@
               <vab-icon icon="barcode-box-line" />
             </template>
           </el-input>
-          <el-image class="code" :src="codeUrl" @click="changeCode" />
+          <img class="code" :src="codeUrl" @click="changeCode" />
         </el-form-item>
         <el-button v-throttle="handleLogin" class="login-btn" :loading="loading" native-type="submit" type="primary">
           {{ translate('登录') }}
@@ -74,7 +74,7 @@ const login = (form: any) => userStore.login(form)
 const loading = ref<boolean>(false)
 const passwordType = ref<string>('password')
 const redirect = ref<any>(undefined)
-let timer: any
+let timer: any = null
 const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
 const previewText = ref<string>('')
 const formRef = ref<any>(null)
@@ -151,7 +151,7 @@ watchEffect(() => {
 })
 
 onBeforeRouteLeave((to, from, next) => {
-  clearInterval(timer)
+  if (timer) timer.pause()
   next()
 })
 </script>

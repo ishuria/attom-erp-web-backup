@@ -189,7 +189,7 @@ defineOptions({
   name: 'ServerManagement',
 })
 
-let timer: any
+let timer: any = null
 
 const activeNames = ref<any>(['1', '2'])
 
@@ -238,7 +238,7 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  clearInterval(timer)
+  if (timer) timer.pause()
 })
 </script>
 

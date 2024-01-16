@@ -36,7 +36,7 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { color } = storeToRefs(settingsStore)
-let timer: any
+let timer: any = null
 const n = ref<number>(5)
 const countConfig = reactive<any>({
   startValue: 0,
@@ -109,7 +109,7 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  clearInterval(timer)
+  if (timer) timer.pause()
 })
 </script>
 

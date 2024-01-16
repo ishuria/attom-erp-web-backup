@@ -24,13 +24,17 @@ defineOptions({
   name: 'Cashier',
 })
 const QR = ref<any>(_QR)
-
+let timer: any = null
 const refresh = () => {
   QR.value = ''
-  useTimeoutFn(() => {
+  timer = useTimeoutFn(() => {
     QR.value = _QR
   }, 150)
 }
+
+onBeforeUnmount(() => {
+  if (timer) timer.pause()
+})
 </script>
 
 <style lang="scss" scoped>

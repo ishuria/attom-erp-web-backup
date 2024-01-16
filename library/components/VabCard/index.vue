@@ -47,9 +47,13 @@ defineProps({
 
 const skeletonShow = ref<boolean>(true)
 
-useTimeoutFn(() => {
+const timer: any = useTimeoutFn(() => {
   skeletonShow.value = false
 }, 500)
+
+onBeforeUnmount(() => {
+  if (timer) timer.pause()
+})
 </script>
 
 <style lang="scss" scoped>

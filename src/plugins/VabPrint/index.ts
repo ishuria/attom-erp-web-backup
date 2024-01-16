@@ -97,7 +97,7 @@ Print.prototype = {
     const _this = this
     iframe.onload = function () {
       _this.toPrint(w)
-      useTimeoutFn(function () {
+      useTimeoutFn(() => {
         document.body.removeChild(iframe)
       }, 100)
     }
@@ -110,7 +110,7 @@ Print.prototype = {
     close: () => void
   }) {
     try {
-      useTimeoutFn(function () {
+      useTimeoutFn(() => {
         frameWindow.focus()
         try {
           if (!frameWindow.document.execCommand('print', false, null)) frameWindow.print()

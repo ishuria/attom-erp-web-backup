@@ -35,7 +35,7 @@ export default {
         const { value } = binding
         let debounceTimer: any
         el.addEventListener('click', () => {
-          clearTimeout(debounceTimer)
+          if (debounceTimer) debounceTimer.pause()
           debounceTimer = useTimeoutFn(() => {
             value()
           }, 1000)

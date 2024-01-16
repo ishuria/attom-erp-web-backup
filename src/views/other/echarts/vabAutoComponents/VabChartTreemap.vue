@@ -24,7 +24,7 @@ defineProps({
 
 const settingsStore = useSettingsStore()
 const { color } = storeToRefs(settingsStore)
-let timer: any
+let timer: any = null
 
 const option = reactive<any>({
   grid: {
@@ -89,6 +89,6 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  clearInterval(timer)
+  if (timer) timer.pause()
 })
 </script>

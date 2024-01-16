@@ -12,7 +12,7 @@ import { lightenColor } from '/@/utils/lightenColor'
 
 const settingsStore = useSettingsStore()
 const { color } = storeToRefs(settingsStore)
-let timer: any
+let timer: any = null
 const updateTime = ref<any>()
 
 const option = reactive<any>({
@@ -100,7 +100,7 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  clearInterval(timer)
+  if (timer) timer.pause()
 })
 </script>
 

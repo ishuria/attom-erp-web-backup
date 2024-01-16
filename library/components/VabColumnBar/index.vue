@@ -75,9 +75,10 @@ const {
   getPartialRoutes: partialRoutes,
 } = storeToRefs<any>(routesStore)
 const menuRef = ref<any>(null)
+let timer: any = null
 
 const setDefaultOpeneds = () => {
-  useTimeoutFn(() => {
+  timer = useTimeoutFn(() => {
     defaultOpeneds.forEach((item: string) => {
       try {
         menuRef.value.open(item)
@@ -127,6 +128,10 @@ onMounted(() => {
         }
       )
   })
+})
+
+onBeforeUnmount(() => {
+  if (timer) timer.pause()
 })
 </script>
 

@@ -42,16 +42,21 @@ const fetchData = async () => {
 
 let synth: SpeechSynthesis
 const voices = ref<SpeechSynthesisVoice[]>([])
+let timer: any = null
 
 onMounted(() => {
   if (speech.isSupported.value) {
-    useTimeoutFn(() => {
+    timer = useTimeoutFn(() => {
       synth = window.speechSynthesis
       voices.value = synth.getVoices()
       voice.value = voices.value[0]
     }, 200)
     fetchData()
   }
+})
+
+onBeforeUnmount(() => {
+  if (timer) timer.pause()
 })
 
 const handlePlay = () => {

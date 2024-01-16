@@ -19,6 +19,7 @@ const $baseAlert = inject<any>('$baseAlert')
 const development = import.meta.env.DEV
 const protocol = window.location.protocol === 'https:'
 let deferredPrompt: any
+let timer: any = null
 
 const beforeInstallPrompt = () => {
   window.addEventListener('beforeinstallprompt', (e) => {
@@ -26,7 +27,7 @@ const beforeInstallPrompt = () => {
     deferredPrompt = e
   })
 
-  useTimeoutFn(() => {
+  timer = useTimeoutFn(() => {
     const installRef = document.getElementById('installRef')
     if (installRef)
       installRef.addEventListener('click', () => {
@@ -51,5 +52,9 @@ onMounted(() => {
   nextTick(() => {
     if (!development && protocol) beforeInstallPrompt()
   })
+})
+
+onBeforeUnmount(() => {
+  if (timer) timer.pause()
 })
 </script>

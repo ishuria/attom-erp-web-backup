@@ -44,7 +44,7 @@
 import { ElDrawer, ElMessageBox } from 'element-plus'
 
 const formLabelWidth = '80px'
-let timer: any
+let timer: any = null
 
 const table = ref<boolean>(false)
 const dialog = ref<boolean>(false)
@@ -114,6 +114,6 @@ const handleClose = (done: () => void) => {
 const cancelForm = () => {
   loading.value = false
   dialog.value = false
-  clearTimeout(timer)
+  if (timer) timer.pause()
 }
 </script>

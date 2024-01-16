@@ -53,17 +53,6 @@ const fetchData = async () => {
 let synth: SpeechSynthesis
 const voices = ref<SpeechSynthesisVoice[]>([])
 
-onMounted(() => {
-  if (speech.isSupported.value) {
-    useTimeoutFn(() => {
-      synth = window.speechSynthesis
-      voices.value = synth.getVoices()
-      voice.value = voices.value[0]
-    }, 200)
-    fetchData()
-  }
-})
-
 const play = () => {
   if (speech.status.value === 'pause') window.speechSynthesis.resume()
   else speech.speak()
@@ -76,6 +65,23 @@ const pause = () => {
 const stop = () => {
   speech.stop()
 }
+
+let timer: any = null
+
+onMounted(() => {
+  if (speech.isSupported.value) {
+    timer = useTimeoutFn(() => {
+      synth = window.speechSynthesis
+      voices.value = synth.getVoices()
+      voice.value = voices.value[0]
+    }, 200)
+    fetchData()
+  }
+})
+
+onBeforeUnmount(() => {
+  if (timer) timer.pause()
+})
 </script>
 
 <style lang="scss" scoped>
