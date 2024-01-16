@@ -151,7 +151,12 @@ watchEffect(() => {
 })
 
 onBeforeRouteLeave((to, from, next) => {
-  if (timer) timer.pause()
+  try {
+    if (timer) timer.pause()
+  } catch (error) {
+    /* empty */
+  }
+
   next()
 })
 </script>
