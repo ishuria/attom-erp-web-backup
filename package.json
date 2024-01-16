@@ -5,6 +5,7 @@
   "author": "chuzhixin",
   "scripts": {
     "dev": "set VITE_CJS_IGNORE_WARNING=true && vite",
+    "dev:mac": "export VITE_CJS_IGNORE_WARNING=true && vite",
     "dev:vue-tsc": "set VITE_CJS_IGNORE_WARNING=true && vue-tsc --noEmit && vite",
     "dev:https": "set VITE_CJS_IGNORE_WARNING=true && vite --config ./vite.config.dev.ts",
     "build": "set VITE_CJS_IGNORE_WARNING=true && vue-tsc --noEmit && vite build",
