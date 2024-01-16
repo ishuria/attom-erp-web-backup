@@ -31,7 +31,7 @@ const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
     hasChild = Math.random() > 0.5
   }
 
-  useTimeoutFn(() => {
+  setTimeout(() => {
     let data: Tree[]
     if (hasChild) {
       data = [

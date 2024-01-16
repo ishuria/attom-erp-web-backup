@@ -32,16 +32,16 @@ const handleKeepAlive = () => {
     router.push({
       name: 'Index',
     })
-    useTimeoutFn(() => {
+    setTimeout(() => {
       $baseMessage('倒计时：3', 'success', 'hey')
     }, 1000)
-    useTimeoutFn(() => {
+    setTimeout(() => {
       $baseMessage('倒计时：2', 'success', 'hey')
     }, 2000)
-    useTimeoutFn(() => {
+    setTimeout(() => {
       $baseMessage('倒计时：1', 'success', 'hey')
     }, 3000)
-    useTimeoutFn(() => {
+    setTimeout(() => {
       $baseMessage('路由缓存已生效，即将回到路由1.1.1.1', 'success', 'hey', () => {
         router.push({
           name: 'Menu1111',

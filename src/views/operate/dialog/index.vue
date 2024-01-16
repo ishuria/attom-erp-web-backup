@@ -121,12 +121,12 @@ let timer: any = null
 onActivated(() => {
   if (theme.value.themeName === 'technology') form.theme = 'default'
 
-  timer = useTimeoutFn(() => {
+  timer = setTimeout(() => {
     dialogVisible.value = true
   }, 1000)
 })
 
 onDeactivated(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>

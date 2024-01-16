@@ -192,7 +192,7 @@ watch(
 )
 
 onActivated(() => {
-  timer = useIntervalFn(() => {
+  timer = setInterval(() => {
     option.series.data = [
       ['2015/11/08', random(0, 100), 'DQ'],
       ['2015/11/09', random(0, 100), 'DQ'],
@@ -325,6 +325,6 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>

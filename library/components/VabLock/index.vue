@@ -68,7 +68,7 @@ const randomBackground = () => {
   background.value = `${url}${Math.round(Math.random() * 31)}.jpg`
   style.background = `var(--el-color-primary-light-5) fixed url(${background.value}) center`
 
-  useTimeoutFn(() => {
+  setTimeout(() => {
     style.transform = 'scale(1.2)'
     style.transition = 'all 3s'
   }, 500)
@@ -103,7 +103,7 @@ const handleLock = () => {
 watch(
   lock,
   () => {
-    useTimeoutFn(() => {
+    setTimeout(() => {
       lock.value ? (style.transform = 'scale(1.2)') : (style.transform = 'scale(1.05)')
     }, 500)
   },

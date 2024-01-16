@@ -35,7 +35,7 @@ const setWatermark = (str: string) => {
 }
 watermark.set = (str: any) => {
   let id = setWatermark(str)
-  useIntervalFn(() => {
+  setInterval(() => {
     if (document.getElementById(id) === null) id = setWatermark(str)
   }, 500)
   window.onresize = () => {

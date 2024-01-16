@@ -214,7 +214,7 @@ const percentageDisk3 = ref<any>(random(0, 100))
 const percentageDisk4 = ref<any>(random(0, 100))
 
 onActivated(() => {
-  timer = useIntervalFn(() => {
+  timer = setInterval(() => {
     percentageCpu1.value = random(0, 100)
     percentageCpu2.value = random(0, 100)
     percentageCpu3.value = random(0, 100)
@@ -238,7 +238,7 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>
 

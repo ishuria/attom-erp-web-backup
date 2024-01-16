@@ -33,7 +33,7 @@ const findPageList = (currentPage: number, pageSize: number) => {
     }
     result: RowVO[]
   }>((resolve) => {
-    useTimeoutFn(() => {
+    setTimeout(() => {
       const list = [
         { id: 10001, name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: '深圳' },
         { id: 10002, name: 'Test2', nickname: 'T2', role: 'Test', sex: 'Women', age: 22, address: '广州' },

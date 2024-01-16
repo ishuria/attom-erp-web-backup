@@ -93,7 +93,7 @@ const listData = reactive<any>([
 ])
 
 const handleMouseEnter = () => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 }
 
 const handleMouseLeave = () => {
@@ -103,15 +103,15 @@ const handleMouseLeave = () => {
 let timer: any = null
 
 const start = () => {
-  if (timer) timer.pause()
-  timer = useIntervalFn(ListScroll, speed.value)
+  if (timer) clearTimeout(timer)
+  timer = setInterval(ListScroll, speed.value)
 }
 
 const ListScroll = () => {
   const scrollDom = scrollRef.value
   if (scrollDom.offsetHeight !== 0) {
     if (scrollDom.children.length < 4) {
-      if (timer) timer.pause()
+      if (timer) clearTimeout(timer)
       return
     }
     scrollDom.scrollTop += 1
@@ -128,11 +128,11 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 
 onUnmounted(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>
 

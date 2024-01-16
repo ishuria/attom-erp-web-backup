@@ -108,13 +108,13 @@ onActivated(() => {
     addData(false)
   }
 
-  timer = useIntervalFn(() => {
+  timer = setInterval(() => {
     addData(true)
   }, 5000)
 })
 
 onDeactivated(() => {
-  if (timer) timer.pause()
+  if (timer) clearInterval(timer)
 })
 </script>
 

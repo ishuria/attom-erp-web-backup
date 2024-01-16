@@ -147,7 +147,7 @@ const getPhoneCode = () => {
   }
   isGetPhone.value = true
   let n = 60
-  getPhoneInterval.value = useIntervalFn(() => {
+  getPhoneInterval.value = setInterval(() => {
     if (n > 0) {
       n--
       phoneCode.value = `${translate('获取验证码 ') + n}s`

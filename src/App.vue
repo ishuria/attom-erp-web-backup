@@ -21,7 +21,7 @@ onBeforeMount(() => {
     if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io' || noDebugger) {
       ;(() => {
         const block = () => {
-          useIntervalFn(() => {
+          setInterval(() => {
             ;(function () {
               return false
             })

@@ -36,7 +36,7 @@ const getMap = async () => {
     method: 'get',
   })
 
-  useTimeoutFn(() => {
+  setTimeout(() => {
     registerMap('china', data)
     option.geo = {
       map: 'china',

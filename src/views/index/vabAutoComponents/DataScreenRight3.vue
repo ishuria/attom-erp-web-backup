@@ -108,7 +108,7 @@ const option = reactive<any>({
   },
 })
 
-useIntervalFn(() => {
+setInterval(() => {
   option.series.data = [
     random(100, 2000),
     random(100, 2000),

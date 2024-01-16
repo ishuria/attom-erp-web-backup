@@ -46,7 +46,7 @@ let timer: any = null
 
 onMounted(() => {
   if (speech.isSupported.value) {
-    timer = useTimeoutFn(() => {
+    timer = setTimeout(() => {
       synth = window.speechSynthesis
       voices.value = synth.getVoices()
       voice.value = voices.value[0]
@@ -56,7 +56,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 
 const handlePlay = () => {
@@ -85,7 +85,7 @@ const handleSettingNotice = () => {
 const handleAll = () => {
   handleElNotice()
   handleSettingNotice()
-  useTimeoutFn(() => {
+  setTimeout(() => {
     handlePlay()
   }, 500)
 }

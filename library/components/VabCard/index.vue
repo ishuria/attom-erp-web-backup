@@ -47,12 +47,12 @@ defineProps({
 
 const skeletonShow = ref<boolean>(true)
 
-const timer: any = useTimeoutFn(() => {
+const timer: any = setTimeout(() => {
   skeletonShow.value = false
 }, 500)
 
 onBeforeUnmount(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>
 

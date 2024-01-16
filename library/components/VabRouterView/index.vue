@@ -65,7 +65,7 @@ onBeforeMount(() => {
       routerKey.value = cacheActivePath
       updateKeepAliveNameList()
     })
-    useTimeoutFn(() => {
+    setTimeout(() => {
       if (theme.value.showProgressBar) VabProgress.done()
     }, 200)
   })

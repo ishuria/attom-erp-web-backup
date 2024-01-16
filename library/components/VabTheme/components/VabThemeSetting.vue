@@ -115,7 +115,7 @@ const shuffle = (val: any, list: any) => list.filter((item: any) => item !== val
 const randomTheme = async () => {
   const loading = $baseLoading()
 
-  useTimeoutFn(() => {
+  setTimeout(() => {
     const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
     const columnStyle = shuffle(theme.value.columnStyle, ['vertical', 'horizontal', 'card', 'arrow', 'semicircle'])
     const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect'])
@@ -152,7 +152,7 @@ const randomTheme = async () => {
     setCssVar()
     updateTheme()
     saveTheme()
-    useTimeoutFn(() => {
+    setTimeout(() => {
       loading.close()
       $baseMessage('切换成功', 'success', 'hey')
     }, 1000)

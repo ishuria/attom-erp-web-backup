@@ -114,7 +114,7 @@ const handleChangeLogo = (logo: string) => {
     case 'vab':
       favicon.value = 'favicon-vab.ico'
       $baseMessage('logo修改成功，为保持页面美观，10秒后将重置为默认logo', 'warning', 'hey')
-      useTimeoutFn(() => {
+      setTimeout(() => {
         handleChangeLogo('vite')
       }, 1000 * 10)
 

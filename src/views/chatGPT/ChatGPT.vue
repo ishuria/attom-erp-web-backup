@@ -159,7 +159,7 @@ const send = () => {
 }
 
 const typeWriting = (id: string, answer: string) => {
-  useTimeoutFn(() => {
+  setTimeout(() => {
     new (TypeIt as any)(`#${id}`, {
       strings: [answer],
       cursorChar: "<span class='cursorChar'>|<span>", //用于光标的字符。HTML也可以
@@ -178,13 +178,13 @@ onMounted(() => {
 })
 
 onActivated(() => {
-  timer = useIntervalFn(() => {
+  timer = setInterval(() => {
     if (scrollbarRef.value && innerRef.value) scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
   }, 500)
 })
 
 onDeactivated(() => {
-  if (timer) timer.pause()
+  if (timer) clearInterval(timer)
 })
 </script>
 

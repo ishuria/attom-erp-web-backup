@@ -78,7 +78,7 @@ const menuRef = ref<any>(null)
 let timer: any = null
 
 const setDefaultOpeneds = () => {
-  timer = useTimeoutFn(() => {
+  timer = setTimeout(() => {
     defaultOpeneds.forEach((item: string) => {
       try {
         menuRef.value.open(item)
@@ -131,7 +131,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>
 

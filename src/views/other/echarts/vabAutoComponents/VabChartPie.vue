@@ -64,7 +64,7 @@ watch(
 )
 
 onActivated(() => {
-  timer = useIntervalFn(() => {
+  timer = setInterval(() => {
     option.series.data = [
       { value: random(0, 100), name: '搜索引擎' },
       { value: random(0, 100), name: '直接访问' },
@@ -76,6 +76,6 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-  if (timer) timer.pause()
+  if (timer) clearInterval(timer)
 })
 </script>

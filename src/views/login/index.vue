@@ -140,7 +140,7 @@ onBeforeMount(() => {
   // 为了演示效果，会在官网演示页自动登录到首页，正式开发可删除
   if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io') {
     previewText.value = '（演示地址验证码可不填）'
-    timer = useTimeoutFn(() => {
+    timer = setTimeout(() => {
       handleLogin()
     }, 5000)
   }
@@ -152,7 +152,7 @@ watchEffect(() => {
 
 onBeforeRouteLeave((to, from, next) => {
   try {
-    if (timer) timer.pause()
+    if (timer) clearTimeout(timer)
   } catch (error) {
     /* empty */
   }

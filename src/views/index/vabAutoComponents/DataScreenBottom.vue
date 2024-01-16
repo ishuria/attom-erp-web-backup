@@ -86,12 +86,16 @@ const countConfig4 = reactive({
   endValue: random(1000, 2000),
 })
 
-useIntervalFn(() => {
+const timer = setInterval(() => {
   countConfig1.endValue = countConfig1.endValue + random(0, 100)
   countConfig2.endValue = countConfig2.endValue + random(0, 100)
   countConfig3.endValue = countConfig3.endValue + random(0, 100)
   countConfig4.endValue = countConfig4.endValue + random(0, 100)
 }, 1000 * 5)
+
+onBeforeUnmount(() => {
+  clearInterval(timer)
+})
 </script>
 
 <style lang="scss" scoped>

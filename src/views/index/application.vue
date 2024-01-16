@@ -27,7 +27,7 @@ const beforeInstallPrompt = () => {
     deferredPrompt = e
   })
 
-  timer = useTimeoutFn(() => {
+  timer = setTimeout(() => {
     const installRef = document.getElementById('installRef')
     if (installRef)
       installRef.addEventListener('click', () => {
@@ -55,6 +55,6 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>

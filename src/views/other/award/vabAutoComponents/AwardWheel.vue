@@ -118,7 +118,7 @@ const awardWheelRef = ref<any>(null)
 const startCallback = () => {
   awardWheelRef.value.play()
 
-  useTimeoutFn(() => {
+  setTimeout(() => {
     //中奖的数组下标
     const index = random(0, 5)
     awardWheelRef.value.stop(index)

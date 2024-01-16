@@ -37,10 +37,15 @@ const decrease = () => {
     percentage.value = 0
   }
 }
+let timer: any = null
 onBeforeMount(() => {
-  useIntervalFn(() => {
+  timer = setInterval(() => {
     percentage2.value = (percentage2.value % 100) + 10
   }, 500)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(timer)
 })
 </script>
 

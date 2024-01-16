@@ -56,7 +56,7 @@ const awardSlotMachineRef = ref<any>(null)
 const startCallback = () => {
   awardSlotMachineRef.value.play()
 
-  useTimeoutFn(() => {
+  setTimeout(() => {
     const res = [
       [9, 9, 6],
       [0, 0, 7],

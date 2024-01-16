@@ -36,7 +36,7 @@ const getMap = async () => {
     method: 'get',
   })
 
-  useTimeoutFn(() => {
+  setTimeout(() => {
     registerMap('world', data)
 
     option.geo = {

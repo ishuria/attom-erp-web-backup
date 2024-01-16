@@ -98,10 +98,10 @@ const handleClose = (done: () => void) => {
   })
     .then(() => {
       loading.value = true
-      timer = useTimeoutFn(() => {
+      timer = setTimeout(() => {
         done()
         // 动画关闭需要一定的时间
-        useTimeoutFn(() => {
+        setTimeout(() => {
           loading.value = false
         }, 400)
       }, 2000)
@@ -114,6 +114,6 @@ const handleClose = (done: () => void) => {
 const cancelForm = () => {
   loading.value = false
   dialog.value = false
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 }
 </script>

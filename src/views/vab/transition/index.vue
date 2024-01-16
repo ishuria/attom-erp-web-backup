@@ -37,14 +37,14 @@ let timer: any = null
 
 const handleChange = (value: any) => {
   if (value)
-    timer = useIntervalFn(() => {
+    timer = setInterval(() => {
       show.value = !show.value
     }, 1500)
-  else timer.pause()
+  else clearTimeout(timer)
 }
 
 onDeactivated(() => {
-  if (timer) timer.pause()
+  if (timer) clearInterval(timer)
 })
 </script>
 

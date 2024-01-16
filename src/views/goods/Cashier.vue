@@ -27,13 +27,13 @@ const QR = ref<any>(_QR)
 let timer: any = null
 const refresh = () => {
   QR.value = ''
-  timer = useTimeoutFn(() => {
+  timer = setTimeout(() => {
     QR.value = _QR
   }, 150)
 }
 
 onBeforeUnmount(() => {
-  if (timer) timer.pause()
+  if (timer) clearTimeout(timer)
 })
 </script>
 

@@ -8,7 +8,7 @@ defineOptions({
 })
 
 onBeforeMount(() => {
-  useTimeoutFn(() => {
+  setTimeout(() => {
     history.back()
   }, 500)
 })
