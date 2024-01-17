@@ -43,4 +43,8 @@ watch(
     immediate: true,
   }
 )
+
+onActivated(() => {
+  handleQuery()
+})
 </script>
