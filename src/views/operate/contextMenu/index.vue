@@ -12,8 +12,8 @@
       </vab-context-menu-group>
       <vab-context-menu-item icon="ri-24-hours-fill" label="item带图标" />
       <vab-context-menu-group icon="ri-archive-line" label="group菜单带图标">
-        <vab-context-menu-item label="item1" @click="onMenuClick(1)" />
-        <vab-context-menu-item label="item1" @click="onMenuClick(2)" />
+        <vab-context-menu-item icon="ri-4k-line" label="item1" @click="onMenuClick(1)" />
+        <vab-context-menu-item icon="ri-account-box-line" label="item1" @click="onMenuClick(2)" />
       </vab-context-menu-group>
     </vab-context-menu>
   </div>
