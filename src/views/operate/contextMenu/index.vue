@@ -6,9 +6,14 @@
       <vab-context-menu-item v-if="showItem" label="单击上面的item显示/隐藏我" />
       <vab-context-menu-separator v-if="showItem" />
       <vab-context-menu-item :click-close="false" :label="itemText" @click="changeLabelText" />
-      <vab-context-menu-group label="子菜单">
-        <vab-context-menu-item label="子菜单1" @click="onMenuClick(1)" />
-        <vab-context-menu-item label="子菜单2" @click="onMenuClick(2)" />
+      <vab-context-menu-group label="group菜单">
+        <vab-context-menu-item label="item1" @click="onMenuClick(1)" />
+        <vab-context-menu-item label="item2" @click="onMenuClick(2)" />
+      </vab-context-menu-group>
+      <vab-context-menu-item icon="ri-24-hours-fill" label="item带图标" />
+      <vab-context-menu-group icon="ri-archive-line" label="group菜单带图标">
+        <vab-context-menu-item label="item1" @click="onMenuClick(1)" />
+        <vab-context-menu-item label="item1" @click="onMenuClick(2)" />
       </vab-context-menu-group>
     </vab-context-menu>
   </div>
