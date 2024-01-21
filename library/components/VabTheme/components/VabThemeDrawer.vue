@@ -309,11 +309,13 @@ onBeforeMount(() => {
 
         &__content {
           flex: 0 0 auto;
-        }
 
-        &.vab-item-custom {
-          display: block !important;
-          height: 130px;
+          .el-input,
+          .el-input-number,
+          .el-select {
+            width: 105px;
+            min-width: 105px;
+          }
         }
 
         &.vab-shop-item1 {
@@ -379,11 +381,6 @@ onBeforeMount(() => {
               }
             }
           }
-        }
-
-        .el-input,
-        .el-input-number {
-          width: 105px;
         }
       }
     }
