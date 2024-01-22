@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "7.3.0",
+  "version": "7.3.5",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -42,7 +42,7 @@
     "axios": "^1.6.5",
     "dayjs": "^1.11.10",
     "echarts": "^5.4.3",
-    "element-plus": "^2.5.2",
+    "element-plus": "^2.5.3",
     "intro.js": "^7.2.0",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
@@ -58,7 +58,7 @@
     "vue-echarts": "^6.6.8",
     "vue-i18n": "^9.9.0",
     "vue-json-viewer": "^3.0.4",
-    "vue-pdf-embed": "^2.0.0",
+    "vue-pdf-embed": "^2.0.2",
     "vue-qr": "^4.0.9",
     "vue-router": "^4.2.5",
     "vue3-gantt": "1.1.8-7",
