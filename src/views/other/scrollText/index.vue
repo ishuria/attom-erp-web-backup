@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-text-container global-animation-disabled">
+  <div class="scroll-text-container no-transition-container">
     <tiny-scroll-text :class="'vab-scroll-text-' + form.theme" :direction="form.direction" :time="form.time">
       <div v-html="text"></div>
     </tiny-scroll-text>

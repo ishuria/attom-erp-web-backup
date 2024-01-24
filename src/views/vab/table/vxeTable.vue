@@ -1,5 +1,5 @@
 <template>
-  <div class="vxe-table-container global-animation-disabled">
+  <div class="vxe-table-container no-transition-container">
     <div class="hidden-sm-and-up">
       <vab-alert title="手机端不支持低代码表格演示" type="warning" />
     </div>

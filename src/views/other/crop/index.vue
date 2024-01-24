@@ -1,5 +1,5 @@
 <template>
-  <div class="crop-container global-animation-disabled">
+  <div class="crop-container no-transition-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <el-form label-position="top" label-width="80px">

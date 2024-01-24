@@ -1,5 +1,5 @@
 <template>
-  <div class="credit-card-container global-animation-disabled">
+  <div class="credit-card-container no-transition-container">
     <tiny-credit-card-form :background-image="backgroundImage" :form-data="formData" @submit="handleSubmit" />
   </div>
 </template>

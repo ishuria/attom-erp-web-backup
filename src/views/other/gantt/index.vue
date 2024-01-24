@@ -1,5 +1,5 @@
 <template>
-  <div class="gantt-container global-animation-disabled">
+  <div class="gantt-container no-transition-container">
     <gantt :data="data" :date-range-list="dateRangeList" date-text="日期" item-text="项目" @schedule-click="scheduleClick" />
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="workflow-container global-animation-disabled">
+  <div class="workflow-container no-transition-container">
     <vab-alert class="hidden-sm-and-up" title="手机端不支持工作流演示" type="warning" />
     <control v-if="lf" class="vab-control hidden-xs-only" :lf="lf" @cat-data="catData" />
     <node-panel class="hidden-xs-only" :lf="lf" />

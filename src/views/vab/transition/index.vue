@@ -1,5 +1,5 @@
 <template>
-  <div class="transition-container global-animation-disabled">
+  <div class="transition-container no-transition-container">
     <el-button>
       <el-checkbox v-model="checked" label="循环播放" @change="handleChange" />
     </el-button>

@@ -1,5 +1,5 @@
 <template>
-  <div class="card-drag-container global-animation-disabled">
+  <div class="card-drag-container no-transition-container">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="warning" @click="sort">重置</el-button>
