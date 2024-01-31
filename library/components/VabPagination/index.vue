@@ -2,7 +2,6 @@
   <el-pagination
     :background="background"
     :current-page="currentPage"
-    v-bind="$attrs"
     :default-current-page="defaultCurrentPage"
     :default-page-size="defaultPageSize"
     :disabled="disabled"
@@ -20,6 +19,7 @@
     :small="small"
     :teleported="teleported"
     :total="total"
+    v-bind="$attrs"
   />
 </template>
 

@@ -171,6 +171,7 @@ onDeactivated(() => {
   :deep() {
     .el-form-item {
       margin-bottom: 0;
+
       .vab-color-picker {
         margin-left: 0 !important;
       }
