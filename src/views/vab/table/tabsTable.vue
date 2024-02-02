@@ -162,7 +162,7 @@ const queryData = () => {
 const statusFilter = (status: string | number) => {
   const statusMap: any = {
     published: 'success',
-    draft: '',
+    draft: 'primary',
     deleted: 'danger',
   }
   return statusMap[status]

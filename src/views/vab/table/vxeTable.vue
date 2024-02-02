@@ -375,13 +375,13 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
 
 const gridEvent: VxeGridListeners<RowVO> = {
   proxyQuery() {
-    console.log('数据代理查询事件')
+    //console.log('数据代理查询事件')
   },
   proxyDelete() {
-    console.log('数据代理删除事件')
+    //console.log('数据代理删除事件')
   },
   proxySave() {
-    console.log('数据代理保存事件')
+    //console.log('数据代理保存事件')
   },
 }
 
