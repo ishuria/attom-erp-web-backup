@@ -2,11 +2,11 @@
   <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="300px" :title="translate('主题配置')">
     <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
-        <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-item1">
+        <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-layout-item">
           <template #label>
             {{ translate('布局') }}
           </template>
-          <el-radio-group v-model="theme.layout" class="vab-shop-layout">
+          <el-radio-group v-model="theme.layout" class="vab-shop-layout-radio-group">
             <el-radio-button v-for="item in layoutList" :key="item" :label="item">
               <template #default>
                 <vab-icon :icon="item" is-custom-svg />
@@ -318,19 +318,22 @@ onBeforeMount(() => {
           }
         }
 
-        &.vab-shop-item1 {
+        &.vab-shop-layout-item {
           display: block !important;
 
           .el-form-item__content {
-            .vab-shop-layout {
+            .vab-shop-layout-radio-group {
+              display: flex;
+              flex-wrap: nowrap;
+              align-items: center;
+              justify-content: flex-end;
+              width: 100%;
+
               .el-radio-button {
-                position: relative;
-                display: block;
-                float: left;
-                width: 50px;
-                height: 50px;
+                width: 52.5px;
+                height: 52.5px;
                 padding: 0;
-                margin: 10px 10px 5px 4px;
+                margin: 10px 10px 5px 5px;
                 cursor: pointer;
                 background: transparent;
                 border: 0;
@@ -341,8 +344,36 @@ onBeforeMount(() => {
                   opacity: 0.6;
                 }
 
-                .el-radio-button__orig-radio {
-                  display: none;
+                &:last-child {
+                  margin-right: 0;
+                }
+
+                .el-radio-button {
+                  &__orig-radio {
+                    display: none;
+                  }
+
+                  &__inner {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: block;
+                    width: 50px;
+                    height: 50px;
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
+                    box-shadow: none;
+
+                    .vab-icon {
+                      width: 50px;
+                      height: 50px;
+                      padding: 0;
+                      margin: 0;
+                      border: 1px solid var(--el-border-color);
+                      border-radius: var(--el-border-radius-base);
+                    }
+                  }
                 }
 
                 .el-radio-button__original-radio:checked + .el-radio-button__inner {
@@ -352,32 +383,6 @@ onBeforeMount(() => {
                     box-shadow: 0 0 2px 2px var(--el-color-primary);
                   }
                 }
-
-                .el-radio-button__inner {
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  display: block;
-                  width: 50px;
-                  height: 50px;
-                  padding: 0;
-                  margin: 0;
-                  border: 0;
-                  box-shadow: none;
-
-                  .vab-icon {
-                    width: 50px;
-                    height: 50px;
-                    padding: 0;
-                    margin: 0;
-                    border: 1px solid var(--el-border-color);
-                    border-radius: var(--el-border-radius-base);
-                  }
-                }
-              }
-
-              .el-radio-button:last-child {
-                margin-right: 0;
               }
             }
           }
