@@ -128,7 +128,7 @@ const update = async () => {
   const servicesVersion = await fetchData()
   version !== servicesVersion
     ? $baseAlert(
-        `请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容`,
+        `您当前本地使用的不是最新版本，请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容`,
         `检测到新版本V${servicesVersion}`
       )
     : $baseMessage('当前已是最新版本', 'success', 'hey')
