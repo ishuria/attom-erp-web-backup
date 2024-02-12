@@ -50,7 +50,6 @@ defineOptions({
 
 const routesStore = useRoutesStore()
 const { changeMenuMeta } = routesStore
-const servicesVersion = ref<any>(version)
 const lastTime = dayjs().format('YYYY-MM-DD')
 const commonUrl = `https://vue-admin-beautiful.com`
 const activities = ref<any[]>([])
@@ -115,27 +114,25 @@ onMounted(() => {
   }
 })
 
-const fetchData = () => {
-  axios({
-    url: './vue-shop-vite-version.json',
+const fetchData = async () => {
+  const {
+    data: { version },
+  } = await axios({
+    url: `./vue-shop-vite-version.json` + `?t=${new Date().getTime()}`,
     method: 'get',
-  }).then(({ data }) => {
-    servicesVersion.value = data.version
   })
+  return version
 }
 
-const update = () => {
-  console.log(version)
-  version !== servicesVersion.value
+const update = async () => {
+  const servicesVersion = await fetchData()
+  version !== servicesVersion
     ? $baseAlert(
-        `检测到云端最新版本V${servicesVersion.value}，请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容`
+        `请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容`,
+        `检测到新版本V${servicesVersion}`
       )
     : $baseMessage('当前已是最新版本', 'success', 'hey')
 }
-
-onBeforeMount(() => {
-  fetchData()
-})
 </script>
 
 <style lang="scss" scoped>
