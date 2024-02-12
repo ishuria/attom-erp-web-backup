@@ -460,29 +460,36 @@ html {
 
     /* el-dialog */
     @media (max-width: 768px) {
-      .el-dialog {
+      .el-dialog,
+      .el-message-box {
         width: auto !important;
         margin: 5vw;
       }
     }
 
     .el-dialog {
+      padding: 0;
       border-radius: var(--el-border-radius-base);
 
       &__header {
-        height: 60px;
+        height: calc(var(--el-dialog-title-font-size) + var(--el-padding) * 2);
         padding: 0;
         margin-right: 0;
+        line-height: calc(var(--el-dialog-title-font-size) + var(--el-padding) * 2);
         border-top-left-radius: inherit;
         border-top-right-radius: inherit;
 
         .el-dialog__title {
-          padding: var(--el-dialog-padding-primary);
+          width: calc(100% - 60px);
+          height: inherit;
+          padding-left: var(--el-padding);
+          line-height: inherit;
         }
 
         &btn {
           right: var(--el-margin);
           width: 16px;
+          height: inherit;
 
           &:focus {
             .el-dialog__close {
@@ -502,7 +509,7 @@ html {
       }
 
       &__body {
-        padding: var(--el-dialog-padding-primary);
+        padding: var(--el-padding);
 
         .el-form:not(.el-form--inline) {
           margin-right: 30px;
@@ -516,6 +523,10 @@ html {
             width: 100%;
           }
         }
+      }
+
+      &__footer {
+        padding: 0 var(--el-padding) var(--el-padding) var(--el-padding);
       }
 
       &.is-fullscreen {
@@ -551,6 +562,52 @@ html {
       }
     }
 
+    /* el-el-message-box */
+    .el-message-box {
+      padding: 0;
+      border-radius: var(--el-border-radius-base);
+
+      &__header {
+        height: calc(var(--el-messagebox-font-size) + var(--el-padding) * 2);
+        padding: 0;
+        margin-right: 0;
+        line-height: calc(var(--el-messagebox-font-size) + var(--el-padding) * 2);
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+
+        .el-message-box__title {
+          width: calc(100% - 60px);
+          height: inherit;
+          padding-left: var(--el-padding);
+          line-height: inherit;
+        }
+
+        &btn {
+          right: var(--el-margin);
+          width: 16px;
+          height: inherit;
+
+          &:focus {
+            .el-message-box__close {
+              color: var(--el-color-info);
+            }
+          }
+
+          .el-message-box__close {
+            color: var(--el-color-info);
+          }
+        }
+      }
+
+      &__content {
+        padding: var(--el-padding);
+      }
+
+      &__btns {
+        padding: 0 var(--el-padding) var(--el-padding) var(--el-padding);
+      }
+    }
+
     /* el-card卡片 */
     .el-card {
       margin-bottom: var(--el-margin);
@@ -560,11 +617,18 @@ html {
 
       &__header {
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
 
-        .card-header-tag {
+        [class*='ri-'] {
+          margin-right: 3px;
+        }
+
+        .card-header-tag,
+        .card-header-button {
           position: absolute;
-          top: 15px;
-          right: 20px;
+          right: var(--el-margin);
         }
       }
 

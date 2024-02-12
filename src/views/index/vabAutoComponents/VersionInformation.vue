@@ -66,10 +66,9 @@
 </template>
 
 <script lang="ts" setup>
-import pkg from '~/package.json'
+import { dependencies, devDependencies, version } from '~/package.json'
 
 const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
-const { dependencies, devDependencies, version } = pkg
 </script>
 
 <style lang="scss" scoped>

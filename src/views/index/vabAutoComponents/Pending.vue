@@ -3,7 +3,7 @@
     <template #header>
       <vab-icon icon="ball-pen-line" />
       待处理
-      <el-badge class="item" :value="6" />
+      <el-badge class="pending-count" :value="6" />
     </template>
     <el-row :gutter="20">
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -51,6 +51,11 @@ const style2 = {
 
 <style lang="scss" scoped>
 .pending {
+  .pending-count {
+    --el-badge-size: 16px;
+    margin-left: 3px;
+  }
+
   :deep() {
     sup {
       top: -1px;

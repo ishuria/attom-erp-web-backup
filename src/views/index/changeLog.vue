@@ -6,6 +6,8 @@
           <template #header>
             <vab-icon icon="file-word-line" />
             更新日志
+
+            <el-button class="card-header-button" ss type="primary" @click="update">检查更新</el-button>
           </template>
           <vab-alert title="温馨提示：请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容" type="info" />
           <el-scrollbar style="height: calc(100% - 60px)">
@@ -38,6 +40,7 @@
 
 <script lang="ts" setup>
 import dayjs from 'dayjs'
+import { version } from '~/package.json'
 import { getList } from '/@/api/changeLog'
 import { useRoutesStore } from '/@/store/modules/routes'
 
@@ -47,11 +50,12 @@ defineOptions({
 
 const routesStore = useRoutesStore()
 const { changeMenuMeta } = routesStore
-
+const servicesVersion = ref<any>(version)
 const lastTime = dayjs().format('YYYY-MM-DD')
 const commonUrl = `https://vue-admin-beautiful.com`
 const activities = ref<any[]>([])
 const $baseMessage = inject<any>('$baseMessage')
+const $baseAlert = inject<any>('$baseAlert')
 
 interface Log {
   timestamp: string
@@ -109,6 +113,28 @@ onMounted(() => {
       location.href = 'https://vue-admin-beautiful.com/shop-vite/#/changeLog'
     })
   }
+})
+
+const fetchData = () => {
+  axios({
+    url: './vue-shop-vite-version.json',
+    method: 'get',
+  }).then(({ data }) => {
+    servicesVersion.value = data.version
+  })
+}
+
+const update = () => {
+  console.log(version)
+  version !== servicesVersion.value
+    ? $baseAlert(
+        `检测到云端最新版本V${servicesVersion.value}，请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容`
+      )
+    : $baseMessage('当前已是最新版本', 'success', 'hey')
+}
+
+onBeforeMount(() => {
+  fetchData()
 })
 </script>
 

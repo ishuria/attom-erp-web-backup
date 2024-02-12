@@ -68,12 +68,6 @@ const countConfig1 = reactive<any>({
       .el-card__header {
         position: relative;
 
-        .card-header-tag {
-          position: absolute;
-          top: 15px;
-          right: var(--el-margin);
-        }
-
         > div > span {
           display: flex;
           align-items: center;

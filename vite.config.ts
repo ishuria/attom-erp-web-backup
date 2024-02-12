@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import { resolve } from 'path'
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
-import { dependencies, devDependencies, name, version } from './package.json'
 import {
   assetsDir,
   base,
@@ -22,15 +21,14 @@ import {
 import { createVitePlugin, createWatch } from '/@vab/build'
 
 const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
-const info = { dependencies, devDependencies, lastBuildTime, name, version }
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
-  process.env['VITE_APP_UPDATE_TIME'] = info.lastBuildTime
+  process.env['VITE_APP_UPDATE_TIME'] = lastBuildTime
   process.env['VITE_USER_NODE_ENV'] = mode
   const root = process.cwd()
   const env = loadEnv(mode, root)
   createWatch(env)
-  console.log(info.lastBuildTime)
+  console.log(lastBuildTime)
 
   return {
     base,

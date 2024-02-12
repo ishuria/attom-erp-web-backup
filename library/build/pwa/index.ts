@@ -42,5 +42,5 @@ export const createPwa = (nodeEnv: string, pwaDev: boolean) => {
         },
       ],
     },
-  })
+  }) as any
 }
