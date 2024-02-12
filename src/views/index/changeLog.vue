@@ -7,9 +7,19 @@
             <vab-icon icon="file-word-line" />
             更新日志
 
-            <el-button class="card-header-button" ss type="primary" @click="update">检查更新</el-button>
+            <el-button class="card-header-button" type="primary" @click="update">检查更新</el-button>
           </template>
-          <vab-alert title="温馨提示：请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容" type="info" />
+
+          <vab-alert v-if="servicesVersion === version" :title="loading ? '正在检查更新...' : '当前已是最新版本'" type="info" />
+          <vab-alert
+            v-else
+            :title="
+              loading
+                ? '正在检查更新...'
+                : `检测到新版本V${servicesVersion}！请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容`
+            "
+            type="info"
+          />
           <el-scrollbar style="height: calc(100% - 60px)">
             <el-timeline>
               <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
@@ -55,6 +65,8 @@ const commonUrl = `https://vue-admin-beautiful.com`
 const activities = ref<any[]>([])
 const $baseMessage = inject<any>('$baseMessage')
 const $baseAlert = inject<any>('$baseAlert')
+const servicesVersion = ref<any>(version)
+const loading = ref<boolean>(false)
 
 interface Log {
   timestamp: string
@@ -115,24 +127,33 @@ onMounted(() => {
 })
 
 const fetchData = async () => {
+  loading.value = true
   const {
     data: { version },
   } = await axios({
     url: `./vue-shop-vite-version.json` + `?t=${new Date().getTime()}`,
     method: 'get',
   })
+  servicesVersion.value = version
+  setTimeout(() => {
+    loading.value = false
+  }, 300)
   return version
 }
 
 const update = async () => {
-  const servicesVersion = await fetchData()
-  version !== servicesVersion
+  const _servicesVersion = await fetchData()
+  version !== _servicesVersion
     ? $baseAlert(
-        `您当前本地使用的不是最新版本，请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容`,
-        `检测到新版本V${servicesVersion}`
+        '请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容',
+        `检测到新版本V${_servicesVersion}`
       )
     : $baseMessage('当前已是最新版本', 'success', 'hey')
 }
+
+onBeforeMount(async () => {
+  await fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
