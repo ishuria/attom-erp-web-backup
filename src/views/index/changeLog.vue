@@ -10,7 +10,15 @@
             <el-button class="card-header-button" type="primary" @click="update">检查更新</el-button>
           </template>
 
-          <vab-alert v-if="servicesVersion === version" :title="loading ? '正在检查更新...' : '当前已是最新版本'" type="info" />
+          <vab-alert
+            v-if="servicesVersion === version"
+            :title="
+              loading
+                ? '正在检查更新...'
+                : '当前已是最新版本，您可以手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容'
+            "
+            type="info"
+          />
           <vab-alert
             v-else
             :title="
