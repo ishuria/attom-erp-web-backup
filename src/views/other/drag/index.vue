@@ -5,25 +5,33 @@
         <el-button type="warning" @click="sort">重置</el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
+    <vab-draggable v-model="iconList" :animation="600" ghost-class="ghost" target=".el-row">
+      <el-row :gutter="20">
+        <el-col v-for="item in iconList" :key="item.icon" :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
+          <vab-card class="icon-panel">
+            <vab-icon :icon="item.icon" :style="{ color: item.color }" />
+            <p>按住拖拽</p>
+          </vab-card>
+        </el-col>
+      </el-row>
+    </vab-draggable>
 
-    <el-row :gutter="20">
-      <vab-draggable v-model="iconList" item-key="icon" v-bind="dragOptions">
-        <template #item="{ element: item }">
-          <el-col :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
-            <vab-card class="icon-panel">
-              <vab-icon :icon="item.icon" :style="{ color: item.color }" />
-              <p>按住拖拽</p>
-            </vab-card>
-          </el-col>
-        </template>
-      </vab-draggable>
-    </el-row>
+    <vab-draggable v-model="iconList" :animation="600" ghost-class="ghost" target=".el-row">
+      <el-row :gutter="20">
+        <el-col v-for="item in iconList" :key="item.icon" :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
+          <vab-card class="icon-panel">
+            <vab-icon :icon="item.icon" :style="{ color: item.color }" />
+            <p>按住拖拽</p>
+          </vab-card>
+        </el-col>
+      </el-row>
+    </vab-draggable>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { shuffle } from 'lodash-es'
-import VabDraggable from 'vuedraggable'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getIconList } from '/@/api/icon'
 
 defineOptions({
@@ -52,15 +60,6 @@ const sort = () => {
   iconList.value = iconList.value.sort((a: any, b: any) => a.order - b.order)
 }
 
-const dragOptions = computed(() => {
-  return {
-    animation: 600,
-    group: 'description',
-    disabled: false,
-    ghostClass: 'ghost',
-  }
-})
-
 onBeforeMount(() => {
   fetchData()
 })
@@ -68,19 +67,6 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .card-drag-container {
-  :deep() {
-    .el-row {
-      display: block;
-
-      > div {
-        position: relative;
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-      }
-    }
-  }
-
   .icon-panel {
     height: 120px;
     text-align: center;
@@ -106,5 +92,22 @@ onBeforeMount(() => {
       margin-top: 10px;
     }
   }
+}
+</style>
+<style>
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+.fade-leave-active {
+  position: absolute;
 }
 </style>

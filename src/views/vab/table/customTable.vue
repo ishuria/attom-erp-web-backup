@@ -72,15 +72,13 @@
                 <vab-icon icon="settings-line" />
               </el-button>
             </template>
-            <el-checkbox-group v-model="checkList">
-              <vab-draggable item-key="{ element }" :list="columns" v-bind="dragOptions">
-                <template #item="{ element }">
-                  <el-checkbox :disabled="element.disableCheck" :label="element.label">
-                    {{ element.label }}
-                  </el-checkbox>
-                </template>
-              </vab-draggable>
-            </el-checkbox-group>
+            <vab-draggable v-model="columns" :animation="600" ghost-class="ghost" target=".el-checkbox-group">
+              <el-checkbox-group v-model="checkList">
+                <el-checkbox v-for="item in columns" :key="item.label" :disabled="item.disableCheck" :label="item.label">
+                  {{ item.label }}
+                </el-checkbox>
+              </el-checkbox-group>
+            </vab-draggable>
           </el-popover>
         </div>
       </vab-query-form-right-panel>
@@ -154,7 +152,7 @@
 
 <script lang="ts" setup>
 import { Delete, Plus, Search } from '@element-plus/icons-vue'
-import VabDraggable from 'vuedraggable'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { doDelete, getList } from '/@/api/table'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -249,13 +247,6 @@ const queryForm = reactive<any>({
 })
 const fixed = ref<string>('right')
 const { exit, enter, isFullscreen: _isFullscreen } = useFullscreen()
-
-const dragOptions = computed(() => {
-  return {
-    animation: 600,
-    group: 'description',
-  }
-})
 
 const finallyColumns = computed(() => {
   return columns.value.filter((item: any) => checkList.value.includes(item.label))
