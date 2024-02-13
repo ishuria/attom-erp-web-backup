@@ -33,7 +33,7 @@
           <close />
         </el-icon>
       </button>
-      <button v-if="showFullscreen" class="el-dialog__headerbtn" style="right: 56px" type="button" @click="setFullscreen">
+      <button v-if="showFullscreen" class="el-dialog__headerbtn" style="right: 51px" type="button" @click="setFullscreen">
         <vab-icon class="el-dialog__close el-dialog__fullscreen" :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
       </button>
     </template>
@@ -86,7 +86,7 @@ const props = defineProps({
   },
   theme: {
     type: String,
-    default: '', //支持default、plain、primary三种
+    default: 'default', //支持default、plain、primary三种
   },
   draggable: {
     type: Boolean,

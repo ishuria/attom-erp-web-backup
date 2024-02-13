@@ -462,25 +462,28 @@ html {
     @media (max-width: 768px) {
       .el-dialog,
       .el-message-box {
-        width: auto !important;
-        margin: 5vw;
+        width: calc(100% - 10vw);
+        margin-right: 5vw;
+        margin-left: 5vw;
       }
     }
 
     .el-dialog {
+      --el-dialog-title-font-size: 18px;
+
       padding: 0;
       border-radius: var(--el-border-radius-base);
 
       &__header {
         height: calc(var(--el-dialog-title-font-size) + var(--el-padding) * 2);
-        padding: 0;
+        padding: 0 !important;
         margin-right: 0;
         line-height: calc(var(--el-dialog-title-font-size) + var(--el-padding) * 2);
         border-top-left-radius: inherit;
         border-top-right-radius: inherit;
 
         .el-dialog__title {
-          width: calc(100% - 60px);
+          width: 100%;
           height: inherit;
           padding-left: var(--el-padding);
           line-height: inherit;
@@ -488,6 +491,9 @@ html {
 
         &btn {
           right: var(--el-margin);
+          display: flex;
+          align-items: center;
+          justify-content: center;
           width: 16px;
           height: inherit;
 
@@ -503,7 +509,7 @@ html {
 
           .el-dialog__fullscreen {
             font-size: 14px;
-            vertical-align: 3px;
+            vertical-align: -3px;
           }
         }
       }
@@ -564,19 +570,21 @@ html {
 
     /* el-el-message-box */
     .el-message-box {
+      --el-messagebox-font-size: 18px;
+
       padding: 0;
       border-radius: var(--el-border-radius-base);
 
       &__header {
         height: calc(var(--el-messagebox-font-size) + var(--el-padding) * 2);
-        padding: 0;
+        padding: 0 !important;
         margin-right: 0;
         line-height: calc(var(--el-messagebox-font-size) + var(--el-padding) * 2);
         border-top-left-radius: inherit;
         border-top-right-radius: inherit;
 
         .el-message-box__title {
-          width: calc(100% - 60px);
+          width: 100%;
           height: inherit;
           padding-left: var(--el-padding);
           line-height: inherit;
@@ -586,6 +594,7 @@ html {
           right: var(--el-margin);
           width: 16px;
           height: inherit;
+          line-height: inherit;
 
           &:focus {
             .el-message-box__close {
