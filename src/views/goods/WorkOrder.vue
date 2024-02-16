@@ -34,7 +34,7 @@
       <el-table-column align="center" label="受理人员" min-width="90" prop="accept" show-overflow-tooltip />
       <el-table-column align="center" label="工单状态" min-width="90">
         <template #default="{ row }">
-          <el-tag effect="dark" :type="row.status == '处理中' ? 'warning' : row.status == '已处理' ? 'success' : ''">
+          <el-tag effect="dark" :type="row.status == '处理中' ? 'warning' : row.status == '已处理' ? 'success' : 'primary'">
             {{ row.status }}
           </el-tag>
         </template>

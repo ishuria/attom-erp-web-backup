@@ -84,7 +84,7 @@ const gridData = [
   },
 ]
 
-const drawerRef = ref<InstanceType<typeof ElDrawer>>()
+const drawerRef = ref<any>()
 const onClick = () => {
   drawerRef.value?.close()
 }

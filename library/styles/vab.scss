@@ -532,15 +532,16 @@ html {
       }
 
       &__footer {
-        padding: 0 var(--el-padding) var(--el-padding) var(--el-padding);
+        padding: var(--el-padding);
       }
 
       &.is-fullscreen {
+        width: 100%;
         margin: 0;
         border-radius: 0;
 
         .el-dialog__body {
-          height: calc(100vh - 54px - 68px);
+          height: calc(100vh - var(--el-dialog-title-font-size) - var(--el-padding) * 4 - 32px);
           overflow-y: auto;
         }
       }
@@ -613,7 +614,7 @@ html {
       }
 
       &__btns {
-        padding: 0 var(--el-padding) var(--el-padding) var(--el-padding);
+        padding: var(--el-padding);
       }
     }
 
