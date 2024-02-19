@@ -865,17 +865,10 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
             },
           },
           {
-            path: 'iframeView?url=cn.vuejs.org&title=Vue',
-            name: 'Vue',
+            path: 'iframeView?url=nodejs.org/en&title=Node',
+            name: 'Node',
             meta: {
-              title: 'Vue',
-            },
-          },
-          {
-            path: 'iframeView?url=cn.vitejs.dev&title=Vite',
-            name: 'Vite',
-            meta: {
-              title: 'Vite',
+              title: 'Node',
             },
           },
         ],
