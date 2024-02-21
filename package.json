@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "7.7.0",
+  "version": "7.7.5",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -38,7 +38,7 @@
     "@logicflow/extension": "^1.2.22",
     "@lucky-canvas/vue": "^0.1.11",
     "@opentiny/vue": "^3.13.0",
-    "@vueuse/core": "^10.7.2",
+    "@vueuse/core": "^10.8.0",
     "@vueuse/head": "^2.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
@@ -59,7 +59,7 @@
     "vsv-icon": "^1.1.9",
     "vue": "^3.4.19",
     "vue-draggable-plus": "^0.3.5",
-    "vue-echarts": "^6.6.8",
+    "vue-echarts": "^6.6.9",
     "vue-i18n": "^9.9.1",
     "vue-json-viewer": "^3.0.4",
     "vue-pdf-embed": "^2.0.2",
@@ -69,8 +69,8 @@
     "vue3-puzzle-vcode": "^1.1.7",
     "vxe-table": "^4.5.18",
     "xe-utils": "^3.5.20",
-    "xgplayer": "^3.0.12",
-    "xgplayer-hls.js": "^3.0.12"
+    "xgplayer": "^3.0.13",
+    "xgplayer-hls.js": "^3.0.13"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -95,7 +95,7 @@
     "postcss-html": "^1.6.0",
     "prettier": "^3.2.5",
     "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.71.0",
+    "sass": "^1.71.1",
     "stylelint": "^16.2.1",
     "stylelint-config-recess-order": "^4.6.0",
     "stylelint-config-recommended-scss": "^14.0.0",
