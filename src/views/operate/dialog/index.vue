@@ -30,7 +30,7 @@
       <el-form-item class="hidden-xs-only" label="弹窗宽度（30% - 60%）">
         <el-slider v-model="form.width" :disabled="form.fullscreen" :max="60" :min="30" style="width: 345px" />
       </el-form-item>
-      <el-form-item class="hidden-xs-only" label="弹窗距离顶部（15vh - 30vh）">
+      <el-form-item label="弹窗距离顶部（15vh - 30vh）">
         <el-slider v-model="form.top" :disabled="form.alignCenter" :max="30" :min="15" style="width: 345px" />
       </el-form-item>
       <el-form-item label="操作">
