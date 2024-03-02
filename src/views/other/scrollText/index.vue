@@ -6,14 +6,14 @@
     <el-form label-position="top" :model="form">
       <el-form-item label="主题配置">
         <el-radio-group v-model="form.theme">
-          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label">
+          <el-radio-button v-for="item in themeList" :key="item.label" :label="item.label" :value="item.label">
             <template #default>{{ item.title }}</template>
           </el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="滚动方向配置">
         <el-radio-group v-model="form.direction" @change="handleDirection">
-          <el-radio-button v-for="item in directionList" :key="item.label" :label="item.label">
+          <el-radio-button v-for="item in directionList" :key="item.label" :label="item.label" :value="item.label">
             <template #default>{{ item.title }}</template>
           </el-radio-button>
         </el-radio-group>

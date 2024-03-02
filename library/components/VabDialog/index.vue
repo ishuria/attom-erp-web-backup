@@ -16,6 +16,7 @@
     :modal="modal"
     :modal-class="modalClass"
     :open-delay="openDelay"
+    :overflow="overflow"
     :show-close="showClose"
     :style="{
       transition: animated ? 'var(--el-transition)' : '',

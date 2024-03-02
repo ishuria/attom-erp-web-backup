@@ -56,9 +56,9 @@
           </el-button>
           <el-popover trigger="hover" :width="165">
             <el-radio-group v-model="lineHeight">
-              <el-radio-button label="large">大</el-radio-button>
-              <el-radio-button label="default">中</el-radio-button>
-              <el-radio-button label="small">小</el-radio-button>
+              <el-radio-button label="large" value="large">大</el-radio-button>
+              <el-radio-button label="default" value="default">中</el-radio-button>
+              <el-radio-button label="small" value="small">小</el-radio-button>
             </el-radio-group>
             <template #reference>
               <el-button>
@@ -74,7 +74,13 @@
             </template>
             <vab-draggable v-model="columns" :animation="600" ghost-class="ghost" target=".el-checkbox-group">
               <el-checkbox-group v-model="checkList">
-                <el-checkbox v-for="item in columns" :key="item.label" :disabled="item.disableCheck" :label="item.label">
+                <el-checkbox
+                  v-for="item in columns"
+                  :key="item.label"
+                  :disabled="item.disableCheck"
+                  :label="item.label"
+                  :value="item.label"
+                >
                   {{ item.label }}
                 </el-checkbox>
               </el-checkbox-group>
@@ -126,7 +132,7 @@
 
       <el-table-column align="center" :fixed="fixed" label="操作" width="215">
         <template #header>
-          <el-checkbox v-model="fixed" label="是否固定操作列" true-label="right" />
+          <el-checkbox v-model="fixed" label="是否固定操作列" true-value="right" />
         </template>
         <template #default="{ row }">
           <el-button text type="primary" @click="handleDetail(row)">详情</el-button>

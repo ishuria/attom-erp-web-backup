@@ -24,16 +24,16 @@
       </el-form-item>
       <el-form-item label="活动性质">
         <el-checkbox-group v-model="form.type">
-          <el-checkbox label="美食/餐厅线上活动" name="type" />
-          <el-checkbox label="地推活动" name="type" />
-          <el-checkbox label="线下主题活动" name="type" />
-          <el-checkbox label="单纯品牌曝光" name="type" />
+          <el-checkbox label="美食/餐厅线上活动" name="type" value="美食/餐厅线上活动" />
+          <el-checkbox label="地推活动" name="type" value="地推活动" />
+          <el-checkbox label="线下主题活动" name="type" value="线下主题活动" />
+          <el-checkbox label="单纯品牌曝光" name="type" value="单纯品牌曝光" />
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="特殊资源">
         <el-radio-group v-model="form.resource">
-          <el-radio label="线上品牌商赞助" />
-          <el-radio label="线下场地免费" />
+          <el-radio label="线上品牌商赞助" value="线上品牌商赞助" />
+          <el-radio label="线下场地免费" value="线下场地免费" />
         </el-radio-group>
       </el-form-item>
       <el-form-item label="活动形式">

@@ -7,7 +7,7 @@
             {{ translate('布局') }}
           </template>
           <el-radio-group v-model="theme.layout" class="vab-shop-layout-radio-group">
-            <el-radio-button v-for="item in layoutList" :key="item" :label="item">
+            <el-radio-button v-for="item in layoutList" :key="item" :label="item" :value="item">
               <template #default>
                 <vab-icon :icon="item" is-custom-svg />
               </template>
@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item :label="translate('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
-            <el-radio-button v-for="item in themeNameList" :key="item.label" :label="item.label">
+            <el-radio-button v-for="item in themeNameList" :key="item.label" :label="item.label" :value="item.label">
               <template #default>{{ translate(item.title) }}</template>
             </el-radio-button>
           </el-radio-group>

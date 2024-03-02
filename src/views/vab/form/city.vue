@@ -20,7 +20,7 @@ defineOptions({
 
 const area = ref<any>([])
 const areaOptions = ref<any>([])
-const cityCode = ref<any>(110000)
+const cityCode = ref<string>('110000')
 
 const fetchData = async () => {
   const {

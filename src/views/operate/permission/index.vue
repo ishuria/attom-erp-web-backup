@@ -15,9 +15,9 @@
     <el-form label-position="top" label-width="140px" :model="form">
       <el-form-item label="账号切换">
         <el-radio-group v-model="form.account" @change="handleChangeRole">
-          <el-radio-button label="admin">admin</el-radio-button>
-          <el-radio-button label="editor">editor</el-radio-button>
-          <el-radio-button label="test">test</el-radio-button>
+          <el-radio-button label="admin" value="admin">admin</el-radio-button>
+          <el-radio-button label="editor" value="editor">editor</el-radio-button>
+          <el-radio-button label="test" value="test">test</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="token续期（每隔5s可刷新token）">

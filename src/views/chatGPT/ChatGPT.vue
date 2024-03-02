@@ -5,9 +5,9 @@
         <vab-card>
           <div class="vab-chat-main">
             <el-radio-group v-model="radio" @change="changeGPT">
-              <el-radio-button label="小爱同学" />
-              <el-radio-button label="GPT3.5" />
-              <el-radio-button label="GPT4.0" />
+              <el-radio-button label="小爱同学" value="小爱同学" />
+              <el-radio-button label="GPT3.5" value="GPT3.5" />
+              <el-radio-button label="GPT4.0" value="GPT4.0" />
             </el-radio-group>
             <el-scrollbar ref="scrollbarRef">
               <ul ref="innerRef">

@@ -11,9 +11,9 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-radio-group v-model="labelPosition">
-              <el-radio-button label="left">左对齐</el-radio-button>
-              <el-radio-button label="right">右对齐</el-radio-button>
-              <el-radio-button label="top">顶部对齐</el-radio-button>
+              <el-radio-button label="left" value="left">左对齐</el-radio-button>
+              <el-radio-button label="right" value="right">右对齐</el-radio-button>
+              <el-radio-button label="top" value="top">顶部对齐</el-radio-button>
             </el-radio-group>
           </vab-query-form-left-panel>
         </vab-query-form>
@@ -35,16 +35,16 @@
           </el-form-item>
           <el-form-item label="活动性质" prop="type">
             <el-checkbox-group v-model="form.type">
-              <el-checkbox label="美食/餐厅线上活动" name="type" />
-              <el-checkbox label="地推活动" name="type" />
-              <el-checkbox label="线下主题活动" name="type" />
-              <el-checkbox label="单纯品牌曝光" name="type" />
+              <el-checkbox label="美食/餐厅线上活动" name="type" value="美食/餐厅线上活动" />
+              <el-checkbox label="地推活动" name="type" value="地推活动" />
+              <el-checkbox label="线下主题活动" name="type" value="线下主题活动" />
+              <el-checkbox label="单纯品牌曝光" name="type" value="单纯品牌曝光" />
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="特殊资源" prop="resource">
             <el-radio-group v-model="form.resource">
-              <el-radio label="线上品牌商赞助" />
-              <el-radio label="线下场地免费" />
+              <el-radio label="线上品牌商赞助" value="线上品牌商赞助" />
+              <el-radio label="线下场地免费" value="线下场地免费" />
             </el-radio-group>
           </el-form-item>
           <el-form-item label="活动形式" prop="description">

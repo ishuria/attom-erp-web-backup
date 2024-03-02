@@ -8,8 +8,8 @@
     </template>
     <div>
       <el-radio-group v-model="listType" style="margin-bottom: var(--el-margin)">
-        <el-radio-button label="province">按省份</el-radio-button>
-        <el-radio-button label="city">按城市</el-radio-button>
+        <el-radio-button label="province" value="province">按省份</el-radio-button>
+        <el-radio-button label="city" value="city">按城市</el-radio-button>
       </el-radio-group>
       <div v-if="listType === 'province'">
         <el-space wrap>
