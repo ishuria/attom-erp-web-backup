@@ -17,8 +17,8 @@
     <template #header>按时段设置标题</template>
     <template #default>
       <div>
-        <el-radio v-model="radio1" label="Option 1" value="Option 1">选项1</el-radio>
-        <el-radio v-model="radio1" label="Option 2" value="Option 2">选项2</el-radio>
+        <el-radio v-model="radio1" label="Option 1">选项1</el-radio>
+        <el-radio v-model="radio1" label="Option 2">选项2</el-radio>
       </div>
     </template>
     <template #footer>
