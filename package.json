@@ -97,7 +97,7 @@
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.71.1",
     "stylelint": "^16.2.1",
-    "stylelint-config-recess-order": "^4.6.0",
+    "stylelint-config-recess-order": "^5.0.0",
     "stylelint-config-recommended-scss": "^14.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",
     "terser": "^5.28.1",
@@ -113,7 +113,7 @@
     "vite-plugin-unplugin": "^1.7.0",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^2.0.2"
+    "vue-tsc": "^2.0.4"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
