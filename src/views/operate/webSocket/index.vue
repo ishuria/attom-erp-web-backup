@@ -9,7 +9,7 @@
             <el-tag :type="getTagType">{{ status }}</el-tag>
           </el-form-item>
           <el-form-item label="服务地址">
-            <el-input v-model="form.serverHide" clearable disabled />
+            <el-input v-model="form.server" clearable />
           </el-form-item>
           <el-form-item label="内容" prop="sendValue">
             <el-input
@@ -68,15 +68,16 @@ defineOptions({
 
 const formRef = ref<any>(null)
 const form = reactive<any>({
-  server: 'ws://124.222.224.186:8800',
-  serverHide: 'ws://*.*.*.*:8800',
+  server: 'ws://127.0.0.1:8080',
   sendValue: '你好！',
   recordList: [],
 })
+
 const { status, data, send, close, open } = useWebSocket(form.server, {
   autoReconnect: false,
   heartbeat: true,
 })
+
 const rules = reactive<any>({
   sendValue: [{ required: true, trigger: 'blur', message: '请输入内容' }],
 })
