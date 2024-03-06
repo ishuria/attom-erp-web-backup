@@ -1,10 +1,10 @@
 import { gp } from '/@vab/plugins/vab'
 
-function clipboardSuccess(text: any) {
+const clipboardSuccess = (text: any) => {
   gp.$baseMessage(`拷贝${text}成功`, 'success', 'hey')
 }
 
-function clipboardError(text: any) {
+const clipboardError = (text: any) => {
   gp.$baseMessage(`拷贝${text}失败`, 'error', 'hey')
 }
 
@@ -14,9 +14,8 @@ function clipboardError(text: any) {
  */
 export default function handleClipboard(text: string) {
   const { isSupported, copy } = useClipboard()
-  if (!isSupported) {
-    usePermission('clipboard-write')
-  }
+  if (!isSupported) usePermission('clipboard-write')
+
   copy(text)
     .then(() => {
       clipboardSuccess(text)

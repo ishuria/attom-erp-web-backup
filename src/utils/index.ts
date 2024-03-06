@@ -5,20 +5,13 @@
  * @returns {string|null}
  */
 export function parseTime(time: any, cFormat: string) {
-  if (arguments.length === 0) {
-    return null
-  }
+  if (arguments.length === 0) return null
   const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
   let date
-  if (typeof time === 'object') {
-    date = time
-  } else {
-    if (typeof time === 'string' && /^[0-9]+$/.test(time)) {
-      time = parseInt(time)
-    }
-    if (typeof time === 'number' && time.toString().length === 10) {
-      time = time * 1000
-    }
+  if (typeof time === 'object') date = time
+  else {
+    if (typeof time === 'string' && /^[0-9]+$/.test(time)) time = parseInt(time)
+    if (typeof time === 'number' && time.toString().length === 10) time = time * 1000
     date = new Date(time)
   }
   const formatObj: any = {
@@ -32,12 +25,8 @@ export function parseTime(time: any, cFormat: string) {
   }
   return format.replace(/{([ymdhisa])+}/g, (result, key) => {
     let value = formatObj[key]
-    if (key === 'a') {
-      return ['日', '一', '二', '三', '四', '五', '六'][value]
-    }
-    if (result.length > 0 && value < 10) {
-      value = `0${value}`
-    }
+    if (key === 'a') return ['日', '一', '二', '三', '四', '五', '六'][value]
+    if (result.length > 0 && value < 10) value = `0${value}`
     return value || 0
   })
 }
@@ -49,30 +38,17 @@ export function parseTime(time: any, cFormat: string) {
  * @returns {string}
  */
 export function formatTime(time: any, option: any) {
-  if (`${time}`.length === 10) {
-    time = parseInt(time) * 1000
-  } else {
-    time = +time
-  }
+  if (`${time}`.length === 10) time = parseInt(time) * 1000
+  else time = +time
   const d: any = new Date(time)
   const now: number = Date.now()
-
   const diff = (now - d) / 1000
-
-  if (diff < 30) {
-    return '刚刚'
-  } else if (diff < 3600) {
-    return `${Math.ceil(diff / 60)}分钟前`
-  } else if (diff < 3600 * 24) {
-    return `${Math.ceil(diff / 3600)}小时前`
-  } else if (diff < 3600 * 24 * 2) {
-    return '1天前'
-  }
-  if (option) {
-    return parseTime(time, option)
-  } else {
-    return `${d.getMonth() + 1}月${d.getDate()}日${d.getHours()}时${d.getMinutes()}分`
-  }
+  if (diff < 30) return '刚刚'
+  else if (diff < 3600) return `${Math.ceil(diff / 60)}分钟前`
+  else if (diff < 3600 * 24) return `${Math.ceil(diff / 3600)}小时前`
+  else if (diff < 3600 * 24 * 2) return '1天前'
+  if (option) return parseTime(time, option)
+  else return `${d.getMonth() + 1}月${d.getDate()}日${d.getHours()}时${d.getMinutes()}分`
 }
 
 /**
@@ -82,9 +58,7 @@ export function formatTime(time: any, option: any) {
  */
 export function paramObj(url: string) {
   const search = url.split('?')[1]
-  if (!search) {
-    return {}
-  }
+  if (!search) return {}
   return JSON.parse(`{"${decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ')}"}`)
 }
 
@@ -203,30 +177,6 @@ export function uuid(length = 32) {
 export function random(m: number, n: number) {
   return Math.floor(Math.random() * (m - n) + n)
 }
-
-/**
- * @description addEventListener
- * @type {function(...[*]=)}
- */
-export const on = (function () {
-  return function (element: any, event: any, handler: any, useCapture = false) {
-    if (element && event && handler) {
-      element.addEventListener(event, handler, useCapture)
-    }
-  }
-})()
-
-/**
- * @description removeEventListener
- * @type {function(...[*]=)}
- */
-export const off = (function () {
-  return function (element: any, event: any, handler: any, useCapture = false) {
-    if (element && event) {
-      element.removeEventListener(event, handler, useCapture)
-    }
-  }
-})()
 
 /**
  * @description 数组打乱

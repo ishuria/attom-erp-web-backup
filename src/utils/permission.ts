@@ -5,7 +5,7 @@ import { useAclStore } from '/@/store/modules/acl'
  * @param targetRoleOrPermission 目标(路由|按钮)要求权限
  * @returns {boolean} 满足访问条件
  */
-export function hasPermission(targetRoleOrPermission: string[] | GuardType) {
+export const hasPermission = (targetRoleOrPermission: string[] | GuardType) => {
   const { getAdmin, getRole, getPermission } = useAclStore()
   if (getAdmin) return true
   if (getPermission.includes('*')) return true
@@ -38,7 +38,7 @@ export function hasPermission(targetRoleOrPermission: string[] | GuardType) {
  * @param target 目标(路由|按钮)要求权限
  * @returns {boolean} 满足访问条件
  */
-function can(roleOrPermission: (string | boolean)[], target: CanType): boolean {
+const can = (roleOrPermission: (string | boolean)[], target: CanType): boolean => {
   let hasRole = false
   const { permission = [], mode = 'oneOf' } = target
   if (mode === 'allOf') hasRole = permission.every((item: string | boolean) => roleOrPermission.includes(item))
