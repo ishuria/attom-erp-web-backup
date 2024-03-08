@@ -164,6 +164,7 @@ declare module 'vue' {
     VabStatistics: typeof import('./../../components/VabStatistics/index.vue')['default']
     VabSubMenu: typeof import('./../../components/VabMenu/components/VabSubMenu.vue')['default']
     VabTabs: typeof import('./../../components/VabTabs/index.vue')['default']
+    VabTabsSetting: typeof import('./../../components/VabTabs/components/VabTabsSetting.vue')['default']
     VabTheme: typeof import('./../../components/VabTheme/index.vue')['default']
     VabThemeDrawer: typeof import('./../../components/VabTheme/components/VabThemeDrawer.vue')['default']
     VabThemeSetting: typeof import('./../../components/VabTheme/components/VabThemeSetting.vue')['default']

@@ -515,9 +515,9 @@ html {
       }
 
       &__body {
-        padding: var(--el-padding);
+        padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
 
-        .el-form:not(.el-form--inline) {
+        .el-form:not(.el-form--inline):not(.el-form--label-top) {
           margin-right: 30px;
 
           .el-form-item:last-child {

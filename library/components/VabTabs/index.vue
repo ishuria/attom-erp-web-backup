@@ -69,6 +69,12 @@
               {{ translate('关闭全部') }}
             </span>
           </el-dropdown-item>
+          <el-dropdown-item command="setting">
+            <vab-icon icon="settings-5-line" />
+            <span>
+              {{ translate('标签设置') }}
+            </span>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -100,6 +106,8 @@
         <span>{{ translate('关闭全部') }}</span>
       </li>
     </ul>
+
+    <vab-tabs-setting ref="tabsSettingRef" />
   </div>
 </template>
 
@@ -147,6 +155,7 @@ const visible = ref<boolean>(false)
 const top = ref<any>(0)
 const left = ref<any>(0)
 const $pub = inject<any>('$pub')
+const tabsSettingRef = ref<any>(null)
 
 const isActive = (path: any) => path === handleActivePath(route, true)
 const isNoClosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
@@ -182,6 +191,9 @@ const handleCommand = (command: any) => {
     case 'closeAllTabs':
       closeAllTabs()
       break
+    case 'setting':
+      console.log(tabsSettingRef.value)
+      tabsSettingRef.value.handleOpenSetting()
   }
 }
 

@@ -2,10 +2,7 @@
   <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="300px" :title="translate('主题配置')">
     <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
-        <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-layout-item">
-          <template #label>
-            {{ translate('布局') }}
-          </template>
+        <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-layout-item" :label="translate('布局')">
           <el-radio-group v-model="theme.layout" class="vab-shop-layout-radio-group">
             <el-radio-button v-for="item in layoutList" :key="item" :label="item" :value="item">
               <template #default>
@@ -41,22 +38,13 @@
         <el-form-item :label="translate('标签')">
           <el-switch v-model="theme.showTabs" @change="handleShowTabs" />
         </el-form-item>
-        <el-form-item v-if="theme.showTabs">
-          <template #label>
-            {{ translate('持久化标签') }}
-          </template>
+        <el-form-item v-if="theme.showTabs" :label="translate('持久化标签')">
           <el-switch v-model="persistenceTab" @change="handlePersistenceTab" />
         </el-form-item>
-        <el-form-item v-if="theme.showTabs">
-          <template #label>
-            {{ translate('标签图标') }}
-          </template>
+        <el-form-item v-if="theme.showTabs" :label="translate('标签图标')">
           <el-switch v-model="theme.showTabsIcon" />
         </el-form-item>
-        <el-form-item v-if="theme.showTabs">
-          <template #label>
-            {{ translate('标签风格') }}
-          </template>
+        <el-form-item v-if="theme.showTabs" :label="translate('标签风格')">
           <el-select v-model="theme.tabsBarStyle">
             <el-option v-for="item in tabsBarStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>
@@ -67,10 +55,7 @@
         <el-form-item :label="translate('右侧浮窗')">
           <el-switch v-model="theme.showThemeSetting" />
         </el-form-item>
-        <el-form-item v-if="theme.layout === 'column'">
-          <template #label>
-            {{ translate('分栏风格') }}
-          </template>
+        <el-form-item v-if="theme.layout === 'column'" :label="translate('分栏风格')">
           <el-select v-model="theme.columnStyle">
             <el-option v-for="item in columnStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>

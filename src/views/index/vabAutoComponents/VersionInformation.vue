@@ -4,7 +4,10 @@
       <vab-icon icon="information-line" />
       信息
 
-      <el-tag class="card-header-tag hidden-xs-only">当前版本：V{{ version }} &nbsp; 部署时间:{{ updateTime }}</el-tag>
+      <el-tag class="card-header-tag">
+        <span class="hidden-xs-only">当前版本：V{{ version }}</span>
+        部署时间：{{ updateTime }}
+      </el-tag>
     </template>
     <el-scrollbar>
       <table class="table">
