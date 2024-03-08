@@ -45,9 +45,11 @@ const save = async () => {
     button.value = translate('更新完成')
     offlineReady.value = false
     needRefresh.value = false
-    show.value = false
-    location.reload()
-  }, 1000 * 5)
+    setTimeout(() => {
+      show.value = false
+      location.reload()
+    }, 1000 * 2)
+  }, 1000 * 3)
 }
 
 watch(
