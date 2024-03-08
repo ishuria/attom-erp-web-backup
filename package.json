@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "7.8.5",
+  "version": "7.9.0",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -37,7 +37,7 @@
     "@logicflow/core": "^1.2.22",
     "@logicflow/extension": "^1.2.22",
     "@lucky-canvas/vue": "^0.1.11",
-    "@opentiny/vue": "^3.13.0",
+    "@opentiny/vue": "^3.14.0",
     "@vueuse/core": "^10.9.0",
     "@vueuse/head": "^2.0.0",
     "@wangeditor/editor": "^5.1.23",
@@ -45,7 +45,7 @@
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
-    "element-plus": "^2.6.0",
+    "element-plus": "^2.6.1",
     "intro.js": "^7.2.0",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
@@ -69,8 +69,8 @@
     "vue3-puzzle-vcode": "^1.1.7",
     "vxe-table": "^4.5.20",
     "xe-utils": "^3.5.22",
-    "xgplayer": "^3.0.13",
-    "xgplayer-hls.js": "^3.0.13"
+    "xgplayer": "^3.0.14",
+    "xgplayer-hls.js": "^3.0.14"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
@@ -113,7 +113,7 @@
     "vite-plugin-unplugin": "^1.7.0",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^2.0.5"
+    "vue-tsc": "^2.0.6"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

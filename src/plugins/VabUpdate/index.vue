@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="needRefresh" append-to-body class="vab-update" width="410px" @close="close">
+  <vab-dialog v-model="show" append-to-body class="vab-update" :show-close="false" :show-fullscreen="false" width="410px">
     <template #header></template>
     <div class="vab-update-icon">
       <vab-icon icon="upload-cloud-2-fill" />
@@ -30,12 +30,11 @@ defineOptions({
 })
 
 const { getTitle: title } = useSettingsStore()
-const { needRefresh, updateServiceWorker } = useRegisterSW({
-  immediate: true,
-})
+const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
 const button = ref<string>(translate('立即升级'))
 const loading = ref<boolean>(false)
 const _version = ref<any>(version)
+const show = ref<boolean>(false)
 
 const save = async () => {
   button.value = translate('正在更新')
@@ -44,18 +43,15 @@ const save = async () => {
   setTimeout(() => {
     loading.value = false
     button.value = translate('更新完成')
+    offlineReady.value = false
     needRefresh.value = false
+    show.value = false
+    location.reload()
   }, 1000 * 3)
-}
-
-const close = async () => {
-  needRefresh.value = false
 }
 
 onMounted(() => {
-  setTimeout(() => {
-    save()
-  }, 1000 * 3)
+  if (offlineReady.value || needRefresh.value) save()
 })
 </script>
 
@@ -71,7 +67,7 @@ onMounted(() => {
     height: 100px;
     line-height: 100px;
     text-align: center;
-    background: linear-gradient(50deg, var(--el-color-primary), var(--el-color-primary-light-7));
+    background: linear-gradient(1deg, var(--el-color-primary-light-1), var(--el-color-primary));
     border-radius: 50%;
     transform: translateX(-50%);
 
@@ -109,7 +105,8 @@ onMounted(() => {
       .el-button {
         width: 200px;
         margin-bottom: 20px;
-        background: linear-gradient(50deg, var(--el-color-primary-light-3), var(--el-color-primary));
+        background: var(--el-color-primary);
+        border: 0;
         border-radius: 20px;
       }
     }
