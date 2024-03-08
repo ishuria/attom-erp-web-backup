@@ -160,7 +160,7 @@ const update = async () => {
 }
 
 onBeforeMount(async () => {
-  await fetchData()
+  await update()
 })
 </script>
 
