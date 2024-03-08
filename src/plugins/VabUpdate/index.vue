@@ -10,7 +10,7 @@
       {{ title }}
       V{{ _version }}
     </p>
-    <p>更新时间：最近更新</p>
+    <p>更新时间：{{ lastTime }}</p>
     <template #footer>
       <el-button :loading="loading" type="primary" @click="save">
         {{ button }}
@@ -20,6 +20,7 @@
 </template>
 
 <script lang="ts" setup>
+import dayjs from 'dayjs'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import { version } from '~/package.json'
 import { translate } from '/@/i18n'
@@ -35,6 +36,7 @@ const loading = ref<boolean>(false)
 const _version = ref<any>(version)
 const show = ref<boolean>(false)
 const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
+const lastTime = dayjs().format('YYYY-MM-DD')
 
 const save = async () => {
   button.value = translate('正在更新')
