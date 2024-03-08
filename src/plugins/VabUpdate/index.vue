@@ -54,6 +54,15 @@ const save = async () => {
   }, 1000 * 3)
 }
 
+onMounted(() => {
+  setTimeout(() => {
+    if (offlineReady.value || needRefresh.value) {
+      show.value = true
+      save()
+    }
+  }, 1000 * 3)
+})
+
 watch(
   offlineReady || needRefresh,
   () => {
