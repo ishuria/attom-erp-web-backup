@@ -51,8 +51,10 @@ const save = async () => {
 }
 
 onMounted(() => {
-  console.log(offlineReady.value, needRefresh.value)
-  if (offlineReady.value || needRefresh.value) save()
+  setTimeout(() => {
+    console.log(offlineReady.value, needRefresh.value)
+    if (offlineReady.value || needRefresh.value) save()
+  }, 1000 * 3)
 })
 </script>
 
