@@ -34,31 +34,34 @@ const button = ref<string>(translate('立即升级'))
 const loading = ref<boolean>(false)
 const _version = ref<any>(version)
 const show = ref<boolean>(false)
+const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
 
 const save = async () => {
-  const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
-  console.log(offlineReady.value, needRefresh.value)
-  if (offlineReady.value || needRefresh.value) {
-    show.value = true
-    button.value = translate('正在更新')
-    loading.value = true
-    await updateServiceWorker()
-    setTimeout(() => {
-      loading.value = false
-      button.value = translate('更新完成')
-      offlineReady.value = false
-      needRefresh.value = false
-      show.value = false
-      location.reload()
-    }, 1000 * 3)
-  }
+  button.value = translate('正在更新')
+  loading.value = true
+  await updateServiceWorker()
+  setTimeout(() => {
+    loading.value = false
+    button.value = translate('更新完成')
+    offlineReady.value = false
+    needRefresh.value = false
+    show.value = false
+    location.reload()
+  }, 1000 * 5)
 }
 
-onMounted(() => {
-  setTimeout(() => {
-    save()
-  }, 1000 * 3)
-})
+watch(
+  offlineReady || needRefresh,
+  () => {
+    if (offlineReady.value || needRefresh.value) {
+      show.value = true
+      save()
+    }
+  },
+  {
+    immediate: true,
+  }
+)
 </script>
 
 <style lang="scss" scoped>
