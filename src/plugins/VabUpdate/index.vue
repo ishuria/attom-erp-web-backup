@@ -30,30 +30,32 @@ defineOptions({
 })
 
 const { getTitle: title } = useSettingsStore()
-const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
 const button = ref<string>(translate('立即升级'))
 const loading = ref<boolean>(false)
 const _version = ref<any>(version)
 const show = ref<boolean>(false)
 
 const save = async () => {
-  button.value = translate('正在更新')
-  loading.value = true
-  await updateServiceWorker()
-  setTimeout(() => {
-    loading.value = false
-    button.value = translate('更新完成')
-    offlineReady.value = false
-    needRefresh.value = false
-    show.value = false
-    location.reload()
-  }, 1000 * 3)
+  const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
+  console.log(offlineReady.value, needRefresh.value)
+  if (offlineReady.value || needRefresh.value) {
+    button.value = translate('正在更新')
+    loading.value = true
+    await updateServiceWorker()
+    setTimeout(() => {
+      loading.value = false
+      button.value = translate('更新完成')
+      offlineReady.value = false
+      needRefresh.value = false
+      show.value = false
+      location.reload()
+    }, 1000 * 3)
+  }
 }
 
 onMounted(() => {
   setTimeout(() => {
-    console.log(offlineReady.value, needRefresh.value)
-    if (offlineReady.value || needRefresh.value) save()
+    save()
   }, 1000 * 3)
 })
 </script>
