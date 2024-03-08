@@ -75,6 +75,7 @@ const $baseMessage = inject<any>('$baseMessage')
 const $baseAlert = inject<any>('$baseAlert')
 const servicesVersion = ref<any>(version)
 const loading = ref<boolean>(false)
+const $pub = inject<any>('$pub')
 
 interface Log {
   timestamp: string
@@ -154,7 +155,10 @@ const update = async () => {
   version !== _servicesVersion
     ? $baseAlert(
         '请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容',
-        `检测到新版本V${_servicesVersion}`
+        `检测到新版本V${_servicesVersion}`,
+        () => {
+          $pub('update-website')
+        }
       )
     : $baseMessage('当前已是最新版本', 'success', 'hey')
 }

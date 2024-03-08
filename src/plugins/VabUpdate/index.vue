@@ -37,6 +37,7 @@ const _version = ref<any>(version)
 const show = ref<boolean>(false)
 const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
 const lastTime = dayjs().format('YYYY-MM-DD')
+const $sub = inject<any>('$sub')
 
 const save = async () => {
   button.value = translate('正在更新')
@@ -54,27 +55,36 @@ const save = async () => {
   }, 1000 * 3)
 }
 
+const handleShow = () => {
+  if (offlineReady.value || needRefresh.value) {
+    show.value = true
+    save()
+  }
+}
+
 onMounted(() => {
   setTimeout(() => {
-    if (offlineReady.value || needRefresh.value) {
-      show.value = true
-      save()
-    }
+    handleShow()
   }, 1000 * 3)
 })
 
 watch(
   offlineReady || needRefresh,
   () => {
-    if (offlineReady.value || needRefresh.value) {
-      show.value = true
-      save()
-    }
+    handleShow()
   },
   {
     immediate: true,
   }
 )
+
+onBeforeMount(() => {
+  $sub('update-website', () => {
+    offlineReady.value = true
+    needRefresh.value = true
+    handleShow()
+  })
+})
 </script>
 
 <style lang="scss" scoped>
