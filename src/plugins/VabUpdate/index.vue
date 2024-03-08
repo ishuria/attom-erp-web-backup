@@ -39,6 +39,7 @@ const save = async () => {
   const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
   console.log(offlineReady.value, needRefresh.value)
   if (offlineReady.value || needRefresh.value) {
+    show.value = true
     button.value = translate('正在更新')
     loading.value = true
     await updateServiceWorker()
