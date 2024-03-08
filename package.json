@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "7.9.0",
+  "version": "7.9.5",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -83,7 +83,7 @@
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/compiler-sfc": "^3.4.21",
     "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/eslint-config-typescript": "^12.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
     "autoprefixer": "^10.4.18",
     "chokidar": "^3.6.0",
     "eslint": "^8.57.0",
