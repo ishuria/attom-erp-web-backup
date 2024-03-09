@@ -30,7 +30,7 @@
       <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <vab-card :body-style="{ minHeight: 'calc(var(--el-container-height) - 2px)' }">
           <div v-show="index === '1'">
-            <el-tabs active-name="first">
+            <el-tabs v-model="activeName">
               <el-tab-pane label="推荐" name="first">
                 <div v-for="item in list" :key="item" :lg="item.span" :md="12" :sm="12" :xl="item.span" :xs="24">
                   <div class="blog-item" @click="handleDetail(item)">
@@ -58,7 +58,7 @@
             </el-tabs>
           </div>
           <div v-show="index === '2'">
-            <el-tabs active-name="first">
+            <el-tabs v-model="activeName">
               <el-tab-pane label="推荐" name="first">
                 <el-empty class="vab-data-empty" description="暂无数据" />
               </el-tab-pane>
@@ -68,7 +68,7 @@
             </el-tabs>
           </div>
           <div v-show="index === '3'">
-            <el-tabs active-name="first">
+            <el-tabs v-model="activeName">
               <el-tab-pane label="推荐" name="first">
                 <el-empty class="vab-data-empty" description="暂无数据" />
               </el-tab-pane>
@@ -78,7 +78,7 @@
             </el-tabs>
           </div>
           <div v-show="index === '4'">
-            <el-tabs active-name="first">
+            <el-tabs v-model="activeName">
               <el-tab-pane label="推荐" name="first">
                 <el-empty class="vab-data-empty" description="暂无数据" />
               </el-tab-pane>
@@ -88,7 +88,7 @@
             </el-tabs>
           </div>
           <div v-show="index === '5'">
-            <el-tabs active-name="first">
+            <el-tabs v-model="activeName">
               <el-tab-pane label="推荐" name="first">
                 <el-empty class="vab-data-empty" description="暂无数据" />
               </el-tab-pane>
@@ -119,6 +119,7 @@ defineOptions({
   name: 'Blog',
 })
 
+const activeName = ref<any>('first')
 const index = ref<any>('1')
 const router = useRouter()
 const list = ref<any>([])
