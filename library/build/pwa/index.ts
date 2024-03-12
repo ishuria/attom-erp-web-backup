@@ -3,7 +3,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 export const createPwa = (nodeEnv: string, pwaDev: boolean) => {
   return VitePWA({
     base: nodeEnv === 'development' && pwaDev ? '/' : './', // ./ 或 /
-    registerType: 'prompt', // promp弹窗提示手动更新、autoUpdate自动更新，建议使用自动更新
+    registerType: 'autoUpdate', // promp弹窗提示手动更新、autoUpdate自动更新，建议使用自动更新
     workbox: {
       cleanupOutdatedCaches: true,
     },
