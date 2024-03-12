@@ -22,7 +22,7 @@ const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
 
 //vue_shop_vite官网独立配置
 const minify = 'esbuild'
-const outputHash = false
+const outputHash = true
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   process.env['VITE_APP_UPDATE_TIME'] = lastBuildTime
