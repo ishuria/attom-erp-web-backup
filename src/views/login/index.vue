@@ -19,7 +19,6 @@
         </el-form-item>
         <el-form-item prop="password">
           <el-input
-            :key="passwordType"
             ref="passwordRef"
             v-model.trim="form.password"
             clearable
@@ -41,7 +40,7 @@
           </el-input>
           <img class="code" :src="codeUrl" @click="changeCode" />
         </el-form-item>
-        <el-button v-throttle="handleLogin" class="login-btn" :loading="loading" native-type="submit" type="primary">
+        <el-button v-throttle="handleLogin" class="login-btn" :loading="loading" type="primary">
           {{ translate('登录') }}
         </el-button>
         <router-link to="/register">
