@@ -13,7 +13,7 @@ defineOptions({
   name: 'Guide',
 })
 
-const open = ref<boolean>(false)
+const open = ref<boolean>(true)
 const steps = ref<any>([
   {
     target: '.vab-buy',
