@@ -21,7 +21,7 @@ import { createVitePlugin, createWatch } from '/@vab/build'
 const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
 
 //vue_shop_vite官网独立配置
-const minify = 'esbuild'
+const minify = 'terser'
 const outputHash = true
 
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
@@ -73,6 +73,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           chunkFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
           entryFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
           assetFileNames: outputHash ? 'static/[ext]/[name]-[hash].[ext]' : 'static/[ext]/[name].[ext]',
+          manualChunks: {
+            'vsc-element-plus': ['element-plus'],
+            'vsc-nprogress': ['nprogress'],
+            'vsv-icon': ['vsv-icon'],
+            'vsv-echarts': ['echarts'],
+          },
         },
         input: ['./index.html', './website.html'],
       },

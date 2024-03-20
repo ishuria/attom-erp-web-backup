@@ -73,6 +73,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           chunkFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
           entryFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
           assetFileNames: outputHash ? 'static/[ext]/[name]-[hash].[ext]' : 'static/[ext]/[name].[ext]',
+          manualChunks: {
+            'vsc-element-plus': ['element-plus'],
+            'vsc-nprogress': ['nprogress'],
+            'vsv-icon': ['vsv-icon'],
+            'vsv-echarts': ['echarts'],
+          },
         },
       },
       minify,

@@ -227,15 +227,6 @@ const list = [
             },
           },
           {
-            path: 'vxeTable',
-            name: 'VxeTable',
-            component: '/@/views/vab/table/vxeTable.vue',
-            meta: {
-              title: '低代码表格',
-              badge: 'New',
-            },
-          },
-          {
             path: 'defaultTableDetail',
             name: 'DefaultTableDetail',
             component: '/@/views/vab/table/defaultTableDetail.vue',
