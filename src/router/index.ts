@@ -949,6 +949,16 @@ export const asyncRoutes: VabRouteRecordRaw[] = [
         },
       },
       {
+        path: 'anchor',
+        name: 'Anchor',
+        component: () => import('/@/views/operate/anchor/index.vue'),
+        meta: {
+          title: '锚点',
+          guard: ['Admin'],
+          icon: 'anchor-line',
+        },
+      },
+      {
         path: 'randomTheme',
         name: 'RandomTheme',
         component: () => import('/@/views/operate/randomTheme/index.vue'),

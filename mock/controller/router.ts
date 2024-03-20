@@ -898,6 +898,16 @@ const list = [
         },
       },
       {
+        path: 'anchor',
+        name: 'Anchor',
+        component: '/@/views/operate/anchor/index.vue',
+        meta: {
+          title: '锚点',
+          guard: ['Admin'],
+          icon: 'anchor-line',
+        },
+      },
+      {
         path: 'randomTheme',
         name: 'RandomTheme',
         component: '/@/views/operate/randomTheme/index.vue',
