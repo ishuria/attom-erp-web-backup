@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "8.0.5",
+  "version": "8.1.0",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -34,8 +34,8 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@imengyu/vue3-context-menu": "^1.3.9",
     "@kangc/v-md-editor": "^2.3.15",
-    "@logicflow/core": "^1.2.22",
-    "@logicflow/extension": "^1.2.22",
+    "@logicflow/core": "^1.2.23",
+    "@logicflow/extension": "^1.2.23",
     "@lucky-canvas/vue": "^0.1.11",
     "@opentiny/vue": "^3.14.0",
     "@vueuse/core": "^10.9.0",
@@ -46,7 +46,6 @@
     "dayjs": "^1.11.10",
     "echarts": "^5.5.0",
     "element-plus": "^2.6.1",
-    "intro.js": "^7.2.0",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
@@ -104,16 +103,16 @@
     "typescript": "^5.4.2",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
-    "vite": "^5.1.6",
+    "vite": "^5.2.0",
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-mock": "2.9.8",
-    "vite-plugin-pwa": "^0.19.4",
+    "vite-plugin-pwa": "^0.19.5",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.7.0",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^2.0.6"
+    "vue-tsc": "^2.0.7"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

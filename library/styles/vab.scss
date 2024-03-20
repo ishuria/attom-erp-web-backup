@@ -459,6 +459,36 @@ html {
       }
     }
 
+    .el-tour {
+      --el-tour-title-font-size: 18px;
+      --el-tour-padding-primary: 20px;
+
+      &__closebtn {
+        width: auto;
+        height: auto;
+        margin-top: var(--el-tour-padding-primary);
+        margin-right: var(--el-tour-padding-primary);
+      }
+
+      &__content {
+        max-width: 400px !important;
+        transition: var(--el-transition);
+
+        .el-button--small {
+          height: 32px;
+          padding: 8px 15px;
+          font-size: var(--el-font-size-base);
+          border-radius: var(--el-border-radius-base);
+        }
+      }
+
+      @media (max-width: 768px) {
+        &__content {
+          width: calc(100% - 10vw);
+        }
+      }
+    }
+
     /* el-dialog */
     @media (max-width: 768px) {
       .el-dialog,
