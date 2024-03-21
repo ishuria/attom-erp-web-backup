@@ -391,9 +391,8 @@ const handelImage = () => {
     :deep() {
       .el-card__header {
         .more {
-          float: right;
-          height: 24px;
-          line-height: 24px;
+          position: absolute;
+          right: var(--el-margin);
           cursor: pointer;
         }
       }
