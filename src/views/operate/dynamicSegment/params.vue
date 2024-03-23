@@ -30,11 +30,12 @@ const handleParams = () => {
   id.value = route.path.substring(route.path.lastIndexOf('/') + 1, route.path.length)
   finalRoute.name = _route.name
   finalRoute.path = _route.path
-  finalRoute.params.id = id
+  finalRoute.params.id = id.value
+
   changeTabsMeta({
     title: 'Params',
     meta: {
-      title: `Params id=${id}`,
+      title: `Params id=${id.value}`,
     },
   })
 }

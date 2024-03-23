@@ -301,8 +301,6 @@ const closeMenu = () => {
   hoverRoute.value = null
 }
 
-initNoCLosableTabs(routes.value)
-
 watch(
   () => route.fullPath,
   () => {
@@ -314,6 +312,7 @@ watch(
 )
 
 onBeforeMount(() => {
+  initNoCLosableTabs(routes.value)
   window.addEventListener('beforeunload', handleCaughtRoutes)
 })
 
