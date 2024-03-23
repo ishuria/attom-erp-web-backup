@@ -60,14 +60,14 @@
 import dayjs from 'dayjs'
 import { version } from '~/package.json'
 import { getList } from '/@/api/changeLog'
-import { useRoutesStore } from '/@/store/modules/routes'
+// import { useRoutesStore } from '/@/store/modules/routes'
 
 defineOptions({
   name: 'ChangeLog',
 })
 
-const routesStore = useRoutesStore()
-const { changeMenuMeta } = routesStore
+// const routesStore = useRoutesStore()
+// const { changeMenuMeta } = routesStore
 const lastTime = dayjs().format('YYYY-MM-DD')
 const commonUrl = `https://vue-admin-beautiful.com`
 const activities = ref<any[]>([])
@@ -114,10 +114,10 @@ onBeforeMount(async () => {
     waver: 'success',
   })
   activities.value = _data
-  changeMenuMeta({
-    name: 'ChangeLog',
-    meta: { badge: _data.length },
-  })
+  // changeMenuMeta({
+  //   name: 'ChangeLog',
+  //   meta: { badge: _data.length },
+  // })
 })
 
 // 正式项目如果要用到更新日志模板，请删除以下代码

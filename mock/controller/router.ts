@@ -107,7 +107,7 @@ const list = [
           title: '更新日志',
           icon: 'file-word-line',
           noKeepAlive: true,
-          badge: 'New',
+          badge: '99+',
         },
       },
     ],
