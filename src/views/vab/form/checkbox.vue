@@ -2,12 +2,12 @@
   <div class="checkbox-container no-background-container">
     <vab-card>
       <template #header>基础用法</template>
-      <el-checkbox v-model="checked">备选项</el-checkbox>
+      <el-checkbox v-model="checked">备选项1</el-checkbox>
     </vab-card>
     <vab-card>
       <template #header>禁用状态</template>
       <el-checkbox v-model="checked1" disabled>备选项1</el-checkbox>
-      <el-checkbox v-model="checked2" disabled>备选项</el-checkbox>
+      <el-checkbox v-model="checked2" disabled>备选项2</el-checkbox>
     </vab-card>
     <vab-card>
       <template #header>多选框组</template>
@@ -22,17 +22,13 @@
     <vab-card>
       <template #header>可选项目数量的限制</template>
       <el-checkbox-group v-model="checkedCities" :max="2" :min="1">
-        <el-checkbox v-for="city in cities" :key="city" :label="city" value="city">
-          {{ city }}
-        </el-checkbox>
+        <el-checkbox v-for="city in cities" :key="city" :label="city" :value="city" />
       </el-checkbox-group>
     </vab-card>
     <vab-card>
       <template #header>按钮样式</template>
       <el-checkbox-group v-model="checkboxGroup1">
-        <el-checkbox-button v-for="city in cities" :key="city" :label="city" value="city">
-          {{ city }}
-        </el-checkbox-button>
+        <el-checkbox-button v-for="city in cities" :key="city" :label="city" :value="city" />
       </el-checkbox-group>
     </vab-card>
     <vab-card>
