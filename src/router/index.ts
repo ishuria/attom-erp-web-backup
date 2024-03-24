@@ -4,7 +4,7 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordName } from 'vue-router'
-import type { VabRouteRecordRaw } from './types'
+import type { VabRouteRecordRaw } from '~/types/route'
 import { authentication, base, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
 import Layout from '/@vab/layouts/index.vue'

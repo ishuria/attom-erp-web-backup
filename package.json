@@ -8,6 +8,7 @@
     "dev:mac": "export VITE_CJS_IGNORE_WARNING=true && vite",
     "dev:vue-tsc": "set VITE_CJS_IGNORE_WARNING=true && vue-tsc --noEmit && vite",
     "dev:https": "set VITE_CJS_IGNORE_WARNING=true && vite --config ./vite.config.dev.ts",
+    "vue-tsc": "vue-tsc --noEmit",
     "build": "set VITE_CJS_IGNORE_WARNING=true && vue-tsc --noEmit && vite build",
     "build:mac": "export VITE_CJS_IGNORE_WARNING=true && vue-tsc --noEmit && vite build",
     "build:fast": "set VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build",

@@ -113,8 +113,8 @@
 
 <script lang="ts" setup>
 import { RouteLocationNormalizedLoaded } from 'vue-router'
+import { VabRoute } from '~/types/route'
 import { translate } from '/@/i18n'
-import { VabRoute } from '/@/router/types'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'

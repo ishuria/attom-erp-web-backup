@@ -1,6 +1,6 @@
 import { stringify } from 'qs'
+import type { VabRoute, VabRouteRecordRaw } from '~/types/route'
 import { recordRoute } from '/@/config'
-import type { VabRoute, VabRouteRecordRaw } from '/@/router/types'
 import { hasPermission } from '/@/utils/permission'
 import { isExternal } from '/@/utils/validate'
 

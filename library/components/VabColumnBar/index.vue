@@ -52,7 +52,6 @@
 <script lang="ts" setup>
 import { defaultOpeneds, isHashRouterMode, openFirstMenu, uniqueOpened } from '/@/config'
 import { translate } from '/@/i18n'
-import { VabRoute } from '/@/router/types'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { isExternal } from '/@/utils/validate'
@@ -61,7 +60,7 @@ defineOptions({
   name: 'VabColumnBar',
 })
 
-const route: VabRoute = useRoute()
+const route = useRoute()
 const router = useRouter()
 const settingsStore = useSettingsStore()
 const { collapse, device, theme } = storeToRefs(settingsStore)
@@ -73,7 +72,7 @@ const {
   getActiveMenu: activeMenu,
   getRoutes: routes,
   getPartialRoutes: partialRoutes,
-} = storeToRefs<any>(routesStore)
+} = storeToRefs(routesStore)
 const menuRef = ref<any>(null)
 let timer: any = null
 

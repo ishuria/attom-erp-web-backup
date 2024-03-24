@@ -23,7 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-import { VabRoute } from '/@/router/types'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 
@@ -36,7 +35,7 @@ const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
 const goBack = async () => {
-  await delVisitedRoute(handleActivePath(route as VabRoute, true))
+  await delVisitedRoute(handleActivePath(route, true))
   await history.back()
 }
 </script>
