@@ -48,7 +48,7 @@ defineOptions({
 })
 
 const cropRef = ref<any>(null)
-const $baseConfirm: any = inject('$baseConfirm')
+const $baseConfirm = inject<any>('$baseConfirm')
 const visible = ref<boolean>(false)
 const autoCropArea = ref<number>(0.5)
 const aspectRatio = ref<number>(16 / 9)

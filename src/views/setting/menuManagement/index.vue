@@ -97,7 +97,7 @@ defineOptions({
   name: 'MenuManagement',
 })
 
-const $baseConfirm: any = inject('$baseConfirm')
+const $baseConfirm = inject<any>('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
 const tableRef = ref<any>(null)
 const editRef = ref<any>(null)

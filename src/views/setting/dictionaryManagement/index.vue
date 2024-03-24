@@ -58,7 +58,7 @@ defineOptions({
   name: 'DictionaryManagement',
 })
 
-const $baseConfirm: any = inject('$baseConfirm')
+const $baseConfirm = inject<any>('$baseConfirm')
 const $baseMessage = inject<any>('$baseMessage')
 const tableRef = ref<any>(null)
 const treeRef = ref<any>(null)
@@ -68,7 +68,7 @@ const defaultProps = reactive<any>({
   children: 'children',
   label: 'label',
 })
-let list = ref<any>([])
+const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const isRoot = ref<boolean>(true)
 const parentKey = ref<string>('')
@@ -98,7 +98,7 @@ const fetchData = async (data = { key: 'root' }) => {
 
   listLoading.value = true
   const res = await getList(data)
-  list = res.data.list
+  list.value = res.data.list
   listLoading.value = false
 }
 

@@ -63,7 +63,7 @@ onBeforeMount(() => {
 })
 
 onBeforeUnmount(() => {
-  if (mobile) theme.value.layout = oldLayout
+  if (mobile.value) theme.value.layout = oldLayout
   window.removeEventListener('resize', resizeBody)
 })
 
