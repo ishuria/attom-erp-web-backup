@@ -4,12 +4,11 @@
 import type { App } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory, createWebHistory, RouteRecordName } from 'vue-router'
-import { VabRouteRecordRaw } from '~/types/route'
 import { authentication, base, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
 import Layout from '/@vab/layouts/index.vue'
 
-export const constantRoutes: VabRouteRecordRaw[] = [
+export const constantRoutes: VabRouteRecord[] = [
   {
     path: '/login',
     name: 'Login',
@@ -52,7 +51,7 @@ export const constantRoutes: VabRouteRecordRaw[] = [
   },
 ]
 
-export const asyncRoutes: VabRouteRecordRaw[] = [
+export const asyncRoutes: VabRouteRecord[] = [
   {
     path: '/',
     name: 'Root',
@@ -1591,21 +1590,21 @@ const router = createRouter({
   routes: constantRoutes as RouteRecordRaw[],
 })
 
-const fatteningRoutes = (routes: VabRouteRecordRaw[]): VabRouteRecordRaw[] => {
+const fatteningRoutes = (routes: VabRouteRecord[]): VabRouteRecord[] => {
   return routes.flatMap((route) => {
     return route.children ? fatteningRoutes(route.children) : route
   })
 }
 
-const addRouter = (routes: VabRouteRecordRaw[]) => {
-  routes.forEach((route: VabRouteRecordRaw) => {
+const addRouter = (routes: VabRouteRecord[]) => {
+  routes.forEach((route: VabRouteRecord) => {
     if (!router.hasRoute(route.name)) router.addRoute(route as RouteRecordRaw)
     if (route.children) addRouter(route.children)
   })
 }
 
-export const resetRouter = (routes: VabRouteRecordRaw[] = constantRoutes) => {
-  routes.map((route: VabRouteRecordRaw) => {
+export const resetRouter = (routes: VabRouteRecord[] = constantRoutes) => {
+  routes.map((route: VabRouteRecord) => {
     if (route.children) route.children = fatteningRoutes(route.children)
   })
   router.getRoutes().forEach((route) => {

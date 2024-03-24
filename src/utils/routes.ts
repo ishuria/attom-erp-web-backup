@@ -1,5 +1,4 @@
 import { stringify } from 'qs'
-import { VabRoute, VabRouteRecordRaw } from '~/types/route'
 import { recordRoute } from '/@/config'
 import { hasPermission } from '/@/utils/permission'
 import { isExternal } from '/@/utils/validate'
@@ -9,9 +8,9 @@ import { isExternal } from '/@/utils/validate'
  * @param asyncRoutes
  * @returns {*}
  */
-export const convertRouter = (asyncRoutes: VabRouteRecordRaw[]) => {
+export const convertRouter = (asyncRoutes: VabRouteRecord[]) => {
   const routeAllPathToCompMap = import.meta.glob(`../**/*.vue`)
-  return asyncRoutes.map((route: VabRouteRecordRaw) => {
+  return asyncRoutes.map((route: VabRouteRecord) => {
     if (route.component)
       if (route.component === 'Layout') route.component = () => import('/@vab/layouts/index.vue')
       else {
@@ -32,10 +31,10 @@ export const convertRouter = (asyncRoutes: VabRouteRecordRaw[]) => {
  * @param baseUrl 基础路由
  * @returns {[]}
  */
-export const filterRoutes = (routes: VabRouteRecordRaw[], rolesControl: boolean, baseUrl = '/') => {
+export const filterRoutes = (routes: VabRouteRecord[], rolesControl: boolean, baseUrl = '/') => {
   return routes
-    .filter((route: VabRouteRecordRaw) => (rolesControl && route.meta && route.meta.guard ? hasPermission(route.meta.guard) : true))
-    .map((route: VabRouteRecordRaw) => {
+    .filter((route: VabRouteRecord) => (rolesControl && route.meta && route.meta.guard ? hasPermission(route.meta.guard) : true))
+    .map((route: VabRouteRecord) => {
       route = { ...route }
       if (route.path !== '*' && !isExternal(route.path)) {
         if (baseUrl.slice(-1) === '/') route.path = baseUrl + (route.path[0] === '/' ? route.path.slice(1) : route.path)
@@ -44,7 +43,7 @@ export const filterRoutes = (routes: VabRouteRecordRaw[], rolesControl: boolean,
       if (route.children && route.children.length > 0) {
         route.children = filterRoutes(route.children, rolesControl, route.path)
         if (route.children.length > 0) {
-          route.childrenPathList = route.children.flatMap((item: VabRouteRecordRaw) => item.childrenPathList)
+          route.childrenPathList = route.children.flatMap((item: VabRouteRecord) => item.childrenPathList)
           if (!route.redirect) route.redirect = route.children[0].redirect ? route.children[0].redirect : route.children[0].path
         }
       } else route.childrenPathList = [route.path]
@@ -64,7 +63,7 @@ export const filterRoutes = (routes: VabRouteRecordRaw[], rolesControl: boolean,
  * @param path 路径
  * @returns {*} matched
  */
-export const handleMatched = (routes: VabRouteRecordRaw[], path: string): VabRouteRecordRaw[] => {
+export const handleMatched = (routes: VabRouteRecord[], path: string): VabRouteRecord[] => {
   return routes
     .filter((route) => route.childrenPathList.indexOf(path) + 1)
     .flatMap((route) => (route.children ? [route, ...handleMatched(route.children, path)] : [route]))
@@ -126,8 +125,8 @@ export const toLoginRoute = (currentPath: string) => {
  * @param routes 路由数组
  * @returns {*} Name数组
  */
-export const getNames = (routes: VabRouteRecordRaw[]): string[] => {
-  return routes.flatMap((route: VabRouteRecordRaw) => {
+export const getNames = (routes: VabRouteRecord[]): string[] => {
+  return routes.flatMap((route: VabRouteRecord) => {
     const names = []
     if (route.name) names.push(route.name)
     if (route.children) names.push(...getNames(route.children))

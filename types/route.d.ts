@@ -1,7 +1,3 @@
-import { defineComponent } from 'vue'
-
-declare type Component<T = any> = ReturnType<typeof defineComponent> | (() => Promise<typeof import('*.vue')>) | (() => Promise<T>)
-
 declare interface VabRouteMeta {
   // 高亮指定菜单
   activeMenu?: string
@@ -41,19 +37,19 @@ declare interface VabRouteMeta {
 }
 
 // @ts-ignore
-declare interface VabRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
+declare interface VabRouteRecord extends Omit<RouteRecordRaw, 'meta'> {
   path: string
   // name 首字母必须大写
   name: Capitalize<string>
   meta: VabRouteMeta
   fullPath?: string
-  component?: Component | string
+  component?: Component | any
   components?: Component | string
-  children?: VabRouteRecordRaw[]
+  children?: VabRouteRecord[]
   childrenNameList?: (string | undefined)[]
 }
 
-declare interface VabRoute extends Omit<VabRouteRecordRaw, 'children' | 'childrenNameList'> {
+declare interface VabRoute extends Omit<VabRouteRecord, 'children' | 'childrenNameList'> {
   query?: any
   params?: any
   matched?: VabRoute[]
