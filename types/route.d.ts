@@ -1,8 +1,8 @@
 import { defineComponent } from 'vue'
 
-export type Component<T = any> = ReturnType<typeof defineComponent> | (() => Promise<typeof import('*.vue')>) | (() => Promise<T>)
+declare type Component<T = any> = ReturnType<typeof defineComponent> | (() => Promise<typeof import('*.vue')>) | (() => Promise<T>)
 
-export interface VabRouteMeta {
+declare interface VabRouteMeta {
   // 高亮指定菜单
   activeMenu?: string
   // badge小标签(只支持子级)
@@ -41,7 +41,7 @@ export interface VabRouteMeta {
 }
 
 // @ts-ignore
-export interface VabRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
+declare interface VabRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   path: string
   // name 首字母必须大写
   name: Capitalize<string>
@@ -53,7 +53,7 @@ export interface VabRouteRecordRaw extends Omit<RouteRecordRaw, 'meta'> {
   childrenNameList?: (string | undefined)[]
 }
 
-export interface VabRoute extends Omit<VabRouteRecordRaw, 'children' | 'childrenNameList'> {
+declare interface VabRoute extends Omit<VabRouteRecordRaw, 'children' | 'childrenNameList'> {
   query?: any
   params?: any
   matched?: VabRoute[]
