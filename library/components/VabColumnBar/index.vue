@@ -114,12 +114,12 @@ onMounted(() => {
           const floatFold: any = document.querySelector('.float-fold')
           if (route.meta.noColumn && theme.value.layout === 'column') {
             if (device.value !== 'mobile') foldSideBar()
-            if (foldUnfold) foldUnfold.style = 'display:none'
-            if (floatFold) floatFold.style = 'display:none'
+            if (foldUnfold) foldUnfold.style = 'opacity:0'
+            if (floatFold) floatFold.style = 'opacity:0'
           } else {
             if (device.value !== 'mobile') openSideBar()
-            if (foldUnfold) foldUnfold.style = ''
-            if (floatFold) floatFold.style = ''
+            if (foldUnfold) foldUnfold.style = 'opacity:1'
+            if (floatFold) floatFold.style = 'opacity:1'
           }
         },
         {

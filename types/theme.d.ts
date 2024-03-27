@@ -20,9 +20,9 @@ declare type LayoutName =
    */
   | 'common'
   /**
-   * 浮动布局
+   * 瀑布布局
    */
-  | 'float'
+  | 'fall'
 
 declare type ThemeName = 'default' | 'plain' | 'technology'
 

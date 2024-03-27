@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="300px" :title="translate('主题配置')">
+  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="350px" :title="translate('主题配置')">
     <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-layout-item" :label="translate('布局')">
@@ -132,7 +132,7 @@ const routeName = ref<any>(route.name)
 const { theme, device, mode, persistenceTab } = storeToRefs<any>(settingsStore)
 const { saveTheme, resetTheme, updateTheme, updateCaughtTabs, setCssVar } = settingsStore
 const drawerVisible = ref<boolean>(false)
-const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive'])
+const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive', 'fall'])
 const tabsBarStyleList = ref<any>([
   { label: '卡片', value: 'card' },
   { label: '灵动', value: 'smart' },

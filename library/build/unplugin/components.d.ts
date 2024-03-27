@@ -132,6 +132,7 @@ declare module 'vue' {
     VabDivider: typeof import('./../../components/VabDivider/index.vue')['default']
     VabErrorLog: typeof import('./../../components/VabErrorLog/index.vue')['default']
     VabErrorLogContent: typeof import('./../../components/VabErrorLog/components/VabErrorLogContent.vue')['default']
+    VabFallBar: typeof import('./../../components/VabFallBar/index.vue')['default']
     VabFold: typeof import('./../../components/VabFold/index.vue')['default']
     VabFooter: typeof import('./../../components/VabFooter/index.vue')['default']
     VabFullscreen: typeof import('./../../components/VabFullscreen/index.vue')['default']

@@ -76,7 +76,8 @@ const { theme, logo, title } = storeToRefs(settingsStore)
 
   &-vertical,
   &-column,
-  &-comprehensive {
+  &-comprehensive,
+  &-fall {
     @include container;
 
     height: var(--el-logo-height);

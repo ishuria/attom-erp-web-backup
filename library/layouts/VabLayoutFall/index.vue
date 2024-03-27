@@ -1,0 +1,76 @@
+<template>
+  <div
+    class="vab-layout-fall"
+    :class="{
+      fixed: fixedHeader,
+      'no-tabs-bar': !showTabs,
+    }"
+  >
+    <vab-fall-bar />
+    <div
+      class="vab-main"
+      :class="{
+        'is-collapse-main': false,
+        'is-no-tabs': !showTabs,
+      }"
+    >
+      <div
+        class="vab-layout-header"
+        :class="{
+          'fixed-header': fixedHeader,
+          'is-no-tabs': !showTabs,
+        }"
+      >
+        <vab-nav layout="fall" />
+        <vab-tabs v-show="showTabs" />
+      </div>
+      <vab-app-main />
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+defineOptions({
+  name: 'VabLayoutFall',
+})
+
+defineProps({
+  collapse: {
+    type: Boolean,
+    default() {
+      return false
+    },
+  },
+  fixedHeader: {
+    type: Boolean,
+    default() {
+      return true
+    },
+  },
+  showTabs: {
+    type: Boolean,
+    default() {
+      return true
+    },
+  },
+})
+</script>
+
+<style lang="scss" scoped>
+.vab-layout-fall {
+  .vab-main {
+    &.is-collapse-main {
+      &.vab-main-horizontal,
+      &.vab-main-semicircle {
+        margin-left: calc(var(--el-left-menu-width-min) * 1.4);
+
+        :deep() {
+          .fixed-header {
+            width: calc(100% - var(--el-left-menu-width-min) * 1.4);
+          }
+        }
+      }
+    }
+  }
+}
+</style>

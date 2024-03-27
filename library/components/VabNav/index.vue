@@ -1,7 +1,7 @@
 <template>
   <div class="vab-nav">
     <div class="left-panel">
-      <vab-fold fold="contract-left-line" unfold="contract-right-line" />
+      <vab-fold v-if="layout !== 'fall'" fold="contract-left-line" unfold="contract-right-line" />
       <el-tabs
         v-if="layout === 'comprehensive'"
         v-model="tab.data"
@@ -9,7 +9,7 @@
         tab-position="top"
         @tab-click="handleTabClick"
       >
-        <template v-for="(item, index) in routes" :key="index + item.name">
+        <template v-for="item in routes" :key="item.name">
           <el-tab-pane :name="item.name">
             <template #label>
               <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />

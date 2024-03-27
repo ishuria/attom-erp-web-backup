@@ -204,7 +204,8 @@ html {
         }
       }
 
-      &-error {
+      &-error,
+      &-danger {
         background: var(--el-color-error);
 
         span {
