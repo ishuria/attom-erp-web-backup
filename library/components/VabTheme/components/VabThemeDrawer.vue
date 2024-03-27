@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" size="350px" :title="translate('主题配置')">
+  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" :size="size" :title="translate('主题配置')">
     <el-scrollbar height="calc(100vh - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-layout-item" :label="translate('布局')">
@@ -160,6 +160,7 @@ const pageTransitionList = ref<any>([
   { value: 'el-zoom-in-top', label: 'zoom-in-top' },
   { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
 ])
+const size = ref<string>('337px')
 
 const handleOpenTheme = () => {
   drawerVisible.value = true
@@ -263,6 +264,10 @@ onBeforeMount(() => {
     _updateTheme()
   })
 })
+
+onMounted(() => {
+  if (device.value === 'mobile') size.value = '280px'
+})
 </script>
 
 <style lang="scss">
@@ -312,11 +317,10 @@ onBeforeMount(() => {
               flex-wrap: nowrap;
               align-items: center;
               justify-content: flex-end;
-              width: 100%;
 
               .el-radio-button {
-                width: 52.5px;
-                height: 52.5px;
+                width: 45px;
+                height: 45px;
                 padding: 0;
                 margin: 10px 10px 5px 5px;
                 cursor: pointer;
