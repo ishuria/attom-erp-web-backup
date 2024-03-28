@@ -10,7 +10,7 @@
     <div
       class="vab-main"
       :class="{
-        'is-collapse-main': false,
+        'is-collapse-main': collapse,
         'is-no-tabs': !showTabs,
       }"
     >
@@ -21,7 +21,7 @@
           'is-no-tabs': !showTabs,
         }"
       >
-        <vab-nav layout="fall" />
+        <vab-nav />
         <vab-tabs v-show="showTabs" />
       </div>
       <vab-app-main />

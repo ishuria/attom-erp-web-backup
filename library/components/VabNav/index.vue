@@ -1,7 +1,7 @@
 <template>
   <div class="vab-nav">
     <div class="left-panel">
-      <vab-fold v-if="layout !== 'fall'" fold="contract-left-line" unfold="contract-right-line" />
+      <vab-fold fold="contract-left-line" unfold="contract-right-line" />
       <el-tabs
         v-if="layout === 'comprehensive'"
         v-model="tab.data"

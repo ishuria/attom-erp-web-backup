@@ -1,22 +1,28 @@
 <template>
-  <div class="vab-fall-bar">
+  <div
+    class="vab-fall-bar"
+    :class="{
+      'is-collapse': collapse,
+    }"
+  >
     <vab-logo style="z-index: 999" />
     <fall-menu :data="handleRoutes">
       <template #level1="{ slotScope }">
-        <a @click="handleLink(slotScope)">
+        <a :title="translate(slotScope.meta.title)" @click="handleLink(slotScope)">
           <vab-icon :icon="slotScope.meta && slotScope.meta.icon" />
-          {{ slotScope.meta.title }}
+          <span>{{ translate(slotScope.meta.title) }}</span>
+          <vab-icon v-if="slotScope.children" class="fall-icon-right" icon="arrow-right-s-line" />
         </a>
       </template>
       <template #level2="{ slotScope }">
         <span style="cursor: pointer" @click="handleLink(slotScope)">
           <vab-icon :icon="slotScope.meta && slotScope.meta.icon" />
-          {{ slotScope.meta.title }}
+          <span>{{ translate(slotScope.meta.title) }}</span>
         </span>
       </template>
       <template #level3="{ slotScope }">
         <a v-for="(level3, index) in slotScope" :key="index" :href="level3.url" @click="handleLink(level3)">
-          {{ translate(level3.meta.title) }}
+          - {{ translate(level3.meta.title) }}
           <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" type="danger">
             {{ level3.meta.badge }}
           </el-tag>
@@ -41,20 +47,17 @@ import { translate } from '/@/i18n'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { isExternal } from '/@/utils/validate'
-
 defineOptions({
   name: 'VabFallBar',
 })
 
 const settingsStore = useSettingsStore()
-const { collapse } = storeToRefs(settingsStore)
-collapse.value = false
 const routesStore = useRoutesStore()
 const { getRoutes: routes } = storeToRefs(routesStore)
 const route = useRoute()
 const router = useRouter()
 const $pub = inject<any>('$pub')
-const { device } = storeToRefs(settingsStore)
+const { device, collapse } = storeToRefs(settingsStore)
 const { foldSideBar } = settingsStore
 const { enter, exit } = useFullscreen()
 const mousePosition = ref({ x: 0, y: 0 })
@@ -96,7 +99,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
     x: e.clientX,
     y: e.clientY,
   }
-  if (mousePosition.value.x < 265) {
+  if ((mousePosition.value.x < 265 && !collapse.value) || (mousePosition.value.x < 65 && collapse.value)) {
     const element: any = document.querySelector('.vab-fall-bar .tiny-fall-menu__box')
     const base = 60
     const intervalSize = 48
@@ -123,6 +126,10 @@ useEventListener('mousemove', (e: MouseEvent) => {
   background: var(--el-menu-background-color);
   border-right: 1px solid var(--el-border-color);
 
+  .fall-icon-right {
+    float: right;
+  }
+
   :deep() {
     .tiny-fall-menu {
       --ti-fall-menu-bg-color-normal: var(--el-menu-background-color);
@@ -132,7 +139,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
       --ti-fall-menu-slot-text-color: var(--el-color-white);
       --ti-common-font-size-base: 14px;
       --ti-fall-menu-title-font-size: 14px;
-      --ti-fall-menu-box-width: 550px;
+      --ti-fall-menu-box-width: 560px;
 
       &__nav {
         height: 100vh;
@@ -166,6 +173,14 @@ useEventListener('mousemove', (e: MouseEvent) => {
             margin: 0 10px 0px 10px !important;
             text-align: left;
             border-radius: var(--el-border-radius-base);
+
+            [class*='ri-'] {
+              margin-left: 1.5px;
+            }
+
+            [class*='ri-'] + span {
+              padding-left: 3px;
+            }
           }
         }
 
@@ -196,14 +211,18 @@ useEventListener('mousemove', (e: MouseEvent) => {
             h3.mcate-item-hd {
               color: var(--ti-fall-menu-box-title-text-color);
 
+              [class*='ri-'] + span {
+                padding-left: 3px;
+              }
+
               &:hover {
                 color: var(--el-color-primary) !important;
               }
             }
 
             p.mcate-item-bd {
-              margin-left: 20px;
               a {
+                font-size: 13px;
                 color: var(--ti-fall-menu-box-text-color);
 
                 &:hover {
@@ -217,6 +236,33 @@ useEventListener('mousemove', (e: MouseEvent) => {
               }
             }
           }
+        }
+      }
+    }
+  }
+
+  &.is-collapse {
+    width: 65px;
+
+    :deep() {
+      .tiny-fall-menu {
+        &__list {
+          li {
+            a {
+              [class*='ri-'] + span {
+                display: none;
+              }
+            }
+          }
+
+          .fall-hide {
+            opacity: 1;
+          }
+        }
+
+        &__box {
+          left: calc(var(--el-left-menu-width-min) + 2px);
+          padding-right: 0;
         }
       }
     }
