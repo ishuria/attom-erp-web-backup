@@ -1,5 +1,5 @@
-import { MockMethod } from 'vite-plugin-mock'
 import { handleRandomImage } from '../utils/index.ts'
+import type { MockMethod } from 'vite-plugin-mock'
 
 const List: {
   uuid: string
@@ -49,7 +49,7 @@ export default [
     method: 'get',
     response: ({ query }: any) => {
       const { title, pageNo = 1, pageSize = 20 } = query
-      const mockList = List.filter((item: { title: string | any[] }) => !(title && item.title.indexOf(title) < 0))
+      const mockList = List.filter((item: { title: string | any[] }) => !(title && !item.title.includes(title)))
       const list = mockList.filter((item: any, index: number) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
       list.sort(() => Math.random() - 0.5)
       return {

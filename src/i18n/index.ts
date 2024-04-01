@@ -1,6 +1,6 @@
 import enLocale from 'element-plus/dist/locale/en'
 import zhLocale from 'element-plus/dist/locale/zh-cn'
-import { App } from 'vue'
+import type { App } from 'vue'
 import { createI18n } from 'vue-i18n'
 import en from './en.json'
 import pinia from '/@/store'

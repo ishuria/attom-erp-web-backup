@@ -26,7 +26,7 @@ const finalRoute = reactive<any>({
 })
 
 const handleParams = () => {
-  const _route = route.matched[0].children.filter((item) => item.name === 'Params')[0]
+  const _route: any = route.matched[0].children.find((item) => item.name === 'Params')
   id.value = route.path.substring(route.path.lastIndexOf('/') + 1, route.path.length)
   finalRoute.name = _route.name
   finalRoute.path = _route.path

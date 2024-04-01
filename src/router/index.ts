@@ -2,8 +2,8 @@
  * @description router全局配置，如有必要可分文件抽离，其中asyncRoutes只有在intelligence模式下才会用到，pro版只支持remixIcon图标，具体配置请查看vip群文档
  */
 import type { App } from 'vue'
-import type { RouteRecordRaw } from 'vue-router'
-import { createRouter, createWebHashHistory, createWebHistory, RouteRecordName } from 'vue-router'
+import type { RouteRecordName, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { authentication, base, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
 import Layout from '/@vab/layouts/index.vue'

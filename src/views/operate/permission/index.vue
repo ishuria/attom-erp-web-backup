@@ -138,7 +138,7 @@ const tableData = [
 
 const handleChangeRole = async () => {
   $baseLoading('正在切换账号请稍后...')
-  await localStorage.setItem(tokenTableName, `${form.account}-token-${uuid()}-${new Date().getTime()}`)
+  await localStorage.setItem(tokenTableName, `${form.account}-token-${uuid()}-${Date.now()}`)
   await location.reload()
 }
 

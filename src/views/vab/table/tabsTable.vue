@@ -82,14 +82,15 @@
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'TabsTable',
-})
 import { Delete, Plus } from '@element-plus/icons-vue'
 import { doDelete, getList } from '/@/api/table'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
+
+defineOptions({
+  name: 'TabsTable',
+})
 
 const activeName = ref<string>('first')
 const router = useRouter()
@@ -191,7 +192,7 @@ const handleDelete = (row: any) => {
     if (selectRows.value.length > 0) {
       const ids = selectRows.value.map((item: { id: any }) => item.id).join()
       $baseConfirm('您确定要删除选中项吗', null, async () => {
-        const { msg }: any = await doDelete({ ids: ids })
+        const { msg }: any = await doDelete({ ids })
         $baseMessage(msg, 'success', 'hey')
         await fetchData()
       })
@@ -228,7 +229,7 @@ const handleDetail = (row: any) => {
       path: '/vab/table/defaultTableDetail',
       query: {
         ...row,
-        timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+        timestamp: Date.now(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
       },
     })
   else {
@@ -237,7 +238,7 @@ const handleDetail = (row: any) => {
         path: '/vab/table/defaultTableDetail',
         query: {
           ...selectRows.value[0],
-          timestamp: new Date().getTime(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
+          timestamp: Date.now(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
         },
       })
     else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')

@@ -91,7 +91,7 @@ const { changeTabsMeta, delVisitedRoute } = tabsStore
 const form = reactive<any>({ text: '' })
 const routesStore = useRoutesStore()
 const { changeActiveMenu } = routesStore
-const rate = ref<number>(parseInt(route.query.rate))
+const rate = ref<number>(Number.parseInt(route.query.rate))
 
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))

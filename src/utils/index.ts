@@ -10,7 +10,7 @@ export function parseTime(time: any, cFormat: string) {
   let date
   if (typeof time === 'object') date = time
   else {
-    if (typeof time === 'string' && /^[0-9]+$/.test(time)) time = parseInt(time)
+    if (typeof time === 'string' && /^[0-9]+$/.test(time)) time = Number.parseInt(time)
     if (typeof time === 'number' && time.toString().length === 10) time = time * 1000
     date = new Date(time)
   }
@@ -38,7 +38,7 @@ export function parseTime(time: any, cFormat: string) {
  * @returns {string}
  */
 export function formatTime(time: any, option: any) {
-  if (`${time}`.length === 10) time = parseInt(time) * 1000
+  if (`${time}`.length === 10) time = Number.parseInt(time) * 1000
   else time = +time
   const d: any = new Date(time)
   const now: number = Date.now()
@@ -102,8 +102,8 @@ export function translateTreeToData(data: any) {
       })
       const child = data.children
       if (child) {
-        for (let i = 0; i < child.length; i++) {
-          loop(child[i])
+        for (const element of child) {
+          loop(element)
         }
       }
     }

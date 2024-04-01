@@ -130,7 +130,7 @@ const handleLogin = async () => {
     })
 }
 const changeCode = () => {
-  codeUrl.value = `https://www.oschina.net/action/user/captcha?timestamp=${new Date().getTime()}`
+  codeUrl.value = `https://www.oschina.net/action/user/captcha?timestamp=${Date.now()}`
 }
 
 onBeforeMount(() => {
@@ -152,7 +152,7 @@ watchEffect(() => {
 onBeforeRouteLeave((to, from, next) => {
   try {
     if (timer) clearTimeout(timer)
-  } catch (error) {
+  } catch {
     /* empty */
   }
 

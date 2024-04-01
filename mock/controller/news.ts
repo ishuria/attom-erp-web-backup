@@ -1,5 +1,5 @@
-import { MockMethod } from 'vite-plugin-mock'
 import { handleRandomImage } from '../utils/index.ts'
+import type { MockMethod } from 'vite-plugin-mock'
 
 const list = [
   {

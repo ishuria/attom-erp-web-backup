@@ -28,7 +28,7 @@ const beforeInstallPrompt = () => {
   })
 
   timer = setTimeout(() => {
-    const installRef = document.getElementById('installRef')
+    const installRef = document.querySelector('#installRef')
     if (installRef)
       installRef.addEventListener('click', () => {
         if (deferredPrompt) {

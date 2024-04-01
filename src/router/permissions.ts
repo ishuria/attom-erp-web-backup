@@ -3,7 +3,7 @@
  */
 import VabProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { Router } from 'vue-router'
+import type { Router } from 'vue-router'
 import { authentication, loginInterception, routesWhiteList, supportVisit } from '/@/config'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'

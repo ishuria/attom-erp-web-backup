@@ -1,6 +1,10 @@
 module.exports = {
   root: true,
-  env: { node: true, browser: true, 'vue/setup-compiler-macros': true },
+  env: {
+    node: true,
+    browser: true,
+    'vue/setup-compiler-macros': true,
+  },
   extends: [
     'vue-global-api',
     'eslint:recommended',
@@ -8,10 +12,17 @@ module.exports = {
     '@vue/eslint-config-typescript/recommended',
     'plugin:prettier/recommended',
     '@vue/eslint-config-prettier',
+    '@element-plus/eslint-config',
   ],
-  globals: { defineOptions: 'writable' },
+  globals: {
+    defineOptions: 'writable',
+  },
   parser: 'vue-eslint-parser',
-  parserOptions: { parser: '@typescript-eslint/parser', sourceType: 'module', ecmaVersion: 2020 },
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    sourceType: 'module',
+    ecmaVersion: 2020,
+  },
   rules: {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-empty-function': 'off',
@@ -23,13 +34,51 @@ module.exports = {
     'prefer-template': 'error',
     'prettier/prettier': 'warn',
     'vue/attributes-order': ['warn', { alphabetical: true }],
-    'vue/component-name-in-template-casing': ['error', 'kebab-case', { registeredComponentsOnly: false, ignores: [] }],
-    'vue/html-self-closing': ['error', { html: { void: 'any', normal: 'any', component: 'always' }, svg: 'always', math: 'always' }],
+    'vue/component-name-in-template-casing': [
+      'error',
+      'kebab-case',
+      {
+        registeredComponentsOnly: false,
+        ignores: [],
+      },
+    ],
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          void: 'any',
+          normal: 'any',
+          component: 'always',
+        },
+        svg: 'always',
+        math: 'always',
+      },
+    ],
     'vue/multi-word-component-names': 'off',
     'vue/no-reserved-component-names': 'off',
     'vue/no-setup-props-destructure': 'off',
     'vue/no-v-html': 'off',
     'vue/require-default-prop': 'off',
-    'vue/v-on-event-hyphenation': ['error', 'always', { autofix: true }],
+    'vue/v-on-event-hyphenation': [
+      'error',
+      'always',
+      {
+        autofix: true,
+      },
+    ],
+    'escape-case': 'off',
+    'no-restricted-imports': 'off',
+    camelcase: 'off',
+    'no-alert': 'off',
+    'unicorn/prefer-query-selector': 'off',
+    'unicorn/prefer-string-slice': 'off',
+    'unicorn/prefer-math-trunc': 'off',
+    'unicorn/escape-case': 'off',
+    'eslint-comments/no-unlimited-disable': 'off',
+    'array-callback-return': 'off',
+    'unicorn/prefer-number-properties': 'off',
+    'unicorn/prefer-array-some': 'off',
+    'no-return-await': 'off',
+    'import/order': 'off',
   },
 }

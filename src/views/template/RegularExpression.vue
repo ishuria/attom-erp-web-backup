@@ -38,11 +38,11 @@
 </template>
 
 <script lang="ts" setup>
+import { isChinese, isEmail, isEnglish, isIdCard, isNumber, isPhone, isUrl } from '/@/utils/validate'
+
 defineOptions({
   name: 'RegularExpression',
 })
-
-import { isChinese, isEmail, isEnglish, isIdCard, isNumber, isPhone, isUrl } from '/@/utils/validate'
 
 const $baseMessage = inject<any>('$baseMessage')
 const formRef: Ref<any> = ref(null)

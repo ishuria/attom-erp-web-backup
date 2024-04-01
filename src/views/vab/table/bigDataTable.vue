@@ -13,7 +13,6 @@
 import type { CheckboxValueType, Column } from 'element-plus'
 import { ElCheckbox } from 'element-plus'
 import type { FunctionalComponent } from 'vue'
-import { ref, unref } from 'vue'
 
 defineOptions({
   name: 'BigDataTable',

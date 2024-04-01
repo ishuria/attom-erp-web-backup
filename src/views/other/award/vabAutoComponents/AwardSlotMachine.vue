@@ -64,7 +64,7 @@ const startCallback = () => {
       [8, 8, 8],
     ]
     // 随机取一组数据
-    const index = res[(Math.random() * 4) >> 0]
+    const index = res[Math.trunc(Math.random() * 4)]
     awardSlotMachineRef.value.stop(index)
   }, 3000)
 }

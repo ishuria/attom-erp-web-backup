@@ -46,8 +46,8 @@ export default {
     const $baseLoading = (text = loadingText, background = 'var(--el-color-white)') => {
       return ElLoading.service({
         lock: true,
-        text: text,
-        background: background,
+        text,
+        background,
       })
     }
 

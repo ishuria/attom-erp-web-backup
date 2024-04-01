@@ -140,7 +140,7 @@ const fetchData = async () => {
   const {
     data: { version },
   } = await axios({
-    url: `./vue-shop-vite-version.json` + `?t=${new Date().getTime()}`,
+    url: `./vue-shop-vite-version.json` + `?t=${Date.now()}`,
     method: 'get',
   })
   servicesVersion.value = version

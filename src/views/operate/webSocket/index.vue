@@ -87,11 +87,11 @@ watchEffect(() => {
     try {
       const res = JSON.parse(data.value)
       form.recordList.push(res)
-    } catch (error) {
+    } catch {
       form.recordList.push({
         res: data.value,
         id: Math.ceil(Math.random() * 1000),
-        time: new Date().getTime(),
+        time: Date.now(),
       })
     }
 })

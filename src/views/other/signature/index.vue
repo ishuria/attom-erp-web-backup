@@ -20,6 +20,8 @@
 </template>
 
 <script lang="ts" setup>
+import catUrl from '/@/assets/signature_images/cat.png'
+
 defineOptions({
   name: 'Signature',
 })
@@ -28,7 +30,6 @@ const canvas = ref<any>()
 let ctx: CanvasRenderingContext2D
 const $baseMessage = inject<any>('$baseMessage')
 let painting = false
-import catUrl from '/@/assets/signature_images/cat.png'
 
 const getOffset = (event: MouseEvent | TouchEvent) => {
   let offset: [number, number]

@@ -56,9 +56,8 @@ export default {
     type: {
       type: String,
       default: 'square',
-      validator: function (value) {
-        //@ts-ignore
-        return ['circle', 'square'].indexOf(value) !== -1
+      validator(value: string) {
+        return ['circle', 'square'].includes(value)
       },
     },
     zoomerStyle: {
@@ -248,7 +247,7 @@ export default {
   methods: {
     getBoundingClientRect(element: any) {
       const rect = element.getBoundingClientRect()
-      const isIE = navigator.userAgent.indexOf('MSIE') !== -1
+      const isIE = navigator.userAgent.includes('MSIE')
       const rectTop = isIE && element.tagName === 'HTML' ? -element.scrollTop : rect.top
       return {
         left: rect.left,

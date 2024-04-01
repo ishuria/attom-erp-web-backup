@@ -146,7 +146,7 @@ const data = ref<any>(generateData())
 const $baseMessage = inject<any>('$baseMessage')
 
 const filterMethod = (query: any, item: any) => {
-  return item.pinyin.indexOf(query) > -1
+  return item.pinyin.includes(query)
 }
 
 const fetchData = async () => {

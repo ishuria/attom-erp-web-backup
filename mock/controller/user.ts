@@ -1,10 +1,10 @@
-import { MockMethod } from 'vite-plugin-mock'
+import type { MockMethod } from 'vite-plugin-mock'
 import { Random } from '~/mock/utils'
 
 const tokens: { [key: string]: string } = {
-  admin: `admin-token-${Random.guid()}-${new Date().getTime()}`,
-  editor: `editor-token-${Random.guid()}-${new Date().getTime()}`,
-  test: `test-token-${Random.guid()}-${new Date().getTime()}`,
+  admin: `admin-token-${Random.guid()}-${Date.now()}`,
+  editor: `editor-token-${Random.guid()}-${Date.now()}`,
+  test: `test-token-${Random.guid()}-${Date.now()}`,
 }
 const username2role: { [key: string]: string[] } = {
   admin: ['Admin'],

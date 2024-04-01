@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import { IDomEditor } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import type { IDomEditor } from '@wangeditor/editor'
 import '@wangeditor/editor/dist/css/style.css'
 
 defineOptions({

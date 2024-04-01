@@ -16,7 +16,7 @@ onBeforeMount(() => {
       let k = '820b686671af452e8a4e18952ce946d8'
       if (location.hostname.includes('beautiful')) k = '9578a46b371ba85ee55bc868d6b30692'
       hm.src = `https://hm.baidu.com/hm.js?${k}`
-      const s: any = document.getElementsByTagName('script')[0]
+      const s: any = document.querySelectorAll('script')[0]
       s.parentNode.insertBefore(hm, s)
     })()
     ;(function (c, l, a, r, i, t, y) {

@@ -34,7 +34,7 @@ defineProps({
 })
 
 onMounted(() => {
-  document.getElementsByTagName('body')[0].className = ''
+  document.querySelectorAll('body')[0].className = ''
 })
 </script>
 

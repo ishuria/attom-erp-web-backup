@@ -1,4 +1,4 @@
-import { MockMethod } from 'vite-plugin-mock'
+import type { MockMethod } from 'vite-plugin-mock'
 
 const List: {
   uuid: string
@@ -30,7 +30,7 @@ export default [
     method: 'get',
     response: ({ query }: any) => {
       const { taskName, pageNo = 1, pageSize = 20 } = query
-      const mockList = List.filter((item: any) => !(taskName && item.taskName.indexOf(taskName) < 0))
+      const mockList = List.filter((item: any) => !(taskName && !item.taskName.includes(taskName)))
       const list = mockList.filter((item: any, index: any) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
       return {
         code: 200,

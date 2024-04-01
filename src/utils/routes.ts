@@ -81,7 +81,7 @@ export const handleTabs = (tag: VabRoute) => {
   const path = handleActivePath(tag, true)
   if (tag.name && tag.meta && tag.meta.tabHidden !== true) {
     return {
-      path: path,
+      path,
       query: tag.query,
       params: tag.params,
       name: tag.name,

@@ -38,8 +38,8 @@ Print.prototype = {
   getStyle() {
     let str = ''
     const styles = document.querySelectorAll('style,link')
-    for (let i = 0; i < styles.length; i++) {
-      str += styles[i].outerHTML
+    for (const style of styles) {
+      str += style.outerHTML
     }
     str += `<style>${this.options.noPrint ? this.options.noPrint : '.no-print'}{display:none;}</style>`
     str += '<style>html,body{background-color:#fff;}</style>'
@@ -51,27 +51,27 @@ Print.prototype = {
     const textareas = document.querySelectorAll('textarea')
     const selects = document.querySelectorAll('select')
 
-    for (let k = 0; k < inputs.length; k++) {
-      if (inputs[k].type == 'checkbox' || inputs[k].type == 'radio') {
-        if (inputs[k].checked) {
-          inputs[k].setAttribute('checked', 'checked')
+    for (const input of inputs) {
+      if (input.type == 'checkbox' || input.type == 'radio') {
+        if (input.checked) {
+          input.setAttribute('checked', 'checked')
         } else {
-          inputs[k].removeAttribute('checked')
+          input.removeAttribute('checked')
         }
-      } else if (inputs[k].type == 'text') {
-        inputs[k].setAttribute('value', inputs[k].value)
+      } else if (input.type == 'text') {
+        input.setAttribute('value', input.value)
       } else {
-        inputs[k].setAttribute('value', inputs[k].value)
+        input.setAttribute('value', input.value)
       }
     }
 
-    for (let k2 = 0; k2 < textareas.length; k2++) {
-      if (textareas[k2].type == 'textarea') textareas[k2].innerHTML = textareas[k2].value
+    for (const textarea of textareas) {
+      if (textarea.type == 'textarea') textarea.innerHTML = textarea.value
     }
 
-    for (let k3 = 0; k3 < selects.length; k3++) {
-      if (selects[k3].type == 'select-one') {
-        const child: any = selects[k3].children
+    for (const select of selects) {
+      if (select.type == 'select-one') {
+        const child: any = select.children
         for (const i in child) {
           if (child[i].tagName == 'OPTION') {
             if (child[i].selected == true) child[i].setAttribute('selected', 'selected')
@@ -114,7 +114,7 @@ Print.prototype = {
         frameWindow.focus()
         try {
           if (!frameWindow.document.execCommand('print', false, null)) frameWindow.print()
-        } catch (e) {
+        } catch {
           frameWindow.print()
         }
         frameWindow.close()

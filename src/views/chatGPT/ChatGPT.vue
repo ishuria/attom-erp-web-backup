@@ -55,16 +55,16 @@
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'ChatGPT',
-})
-
 import dayjs from 'dayjs'
 import { ElScrollbar } from 'element-plus'
 import { uniqueId } from 'lodash-es'
 import TypeIt from 'typeit'
 import avatarUrl from '/@/assets/chatGPT_images/chatGPT.png'
 import { useUserStore } from '/@/store/modules/user'
+
+defineOptions({
+  name: 'ChatGPT',
+})
 
 const userStore = useUserStore()
 const { avatar, username } = storeToRefs(userStore)
@@ -121,8 +121,8 @@ const send = () => {
       {
         type: 'mine',
         result: value.value,
-        avatar: avatar,
-        username: username,
+        avatar,
+        username,
         time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       },
       {

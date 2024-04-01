@@ -117,15 +117,15 @@ export const useSettingsStore = defineStore('settings', {
       this.updateTheme()
     },
     updateTheme() {
-      document.getElementsByTagName('body')[0].className = `vab-theme-${this.theme.themeName}`
+      document.querySelectorAll('body')[0].className = `vab-theme-${this.theme.themeName}`
 
       if (this.theme.themeName !== 'default') {
-        document.getElementsByTagName('html')[0].className = ''
+        document.querySelectorAll('html')[0].className = ''
         localStorage.setItem('vueuse-color-scheme', 'light')
         this.mode = 'light'
       } else {
         const colorScheme = localStorage.getItem('vueuse-color-scheme')
-        const htmlElement = document.getElementsByTagName('html')[0]
+        const htmlElement = document.querySelectorAll('html')[0]
         htmlElement.className += ` ${colorScheme}`
         this.mode = colorScheme as string
       }
@@ -150,8 +150,8 @@ export const useSettingsStore = defineStore('settings', {
       if (!this.theme.isFollow) useCssVar('--el-menu-background-color', el).value = '#282c34'
       else useCssVar('--el-menu-background-color', el).value = lightenColorChrome(this.color, 18)
 
-      if (this.theme.colorWeakness) document.getElementsByTagName('body')[0].classList.add('color-weakness')
-      else document.getElementsByTagName('body')[0].classList.remove('color-weakness')
+      if (this.theme.colorWeakness) document.querySelectorAll('body')[0].classList.add('color-weakness')
+      else document.querySelectorAll('body')[0].classList.remove('color-weakness')
     },
     toggleCollapse() {
       this.collapse = !this.collapse

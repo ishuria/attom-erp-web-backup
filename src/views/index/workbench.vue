@@ -31,7 +31,7 @@ onMounted(() => {
   setTimeout(() => {
     $baseMessage('点击右上角【全屏】按钮使用效果更佳', 'success', 'hey')
   }, 1000)
-  document.getElementsByTagName('body')[0].className = ''
+  document.querySelectorAll('body')[0].className = ''
 })
 </script>
 

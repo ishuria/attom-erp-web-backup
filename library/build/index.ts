@@ -28,12 +28,14 @@ export const createVitePlugin = (env: Record<string, string>) => {
   }
   if (isEmpty(userName) || isEmpty(secretKey)) return
   if (nodeEnv !== 'development') if (isEmpty(userName) || isEmpty(secretKey)) return
-  vitePlugins.push(vueJsx())
-  vitePlugins.push(createProgress(env))
-  vitePlugins.push(createUnPlugin(env))
-  vitePlugins.push(createMock(localEnabled, prodEnabled))
-  vitePlugins.push(createSvgIcons())
-  vitePlugins.push(createBanner())
+  vitePlugins.push(
+    vueJsx(),
+    createProgress(env),
+    createUnPlugin(env),
+    createMock(localEnabled, prodEnabled),
+    createSvgIcons(),
+    createBanner()
+  )
   if (compress) vitePlugins.push(createCompress(compress))
   if (pwa) vitePlugins.push(createPwa(nodeEnv, pwaDev))
   if (https) vitePlugins.push(createHttps())
@@ -51,7 +53,7 @@ export const createWatch = (env: Record<string, string>) => {
     if (userName === 'test' || secretKey === 'preview') {
       console.log(
         `${pc.red(
-          '\u68c0\u6d4b\u5230\u60a8\u7684\u7528\u6237\u540d\u6216\u006b\u0065\u0079\u672a\u914d\u7f6e\uff0c\u006b\u0065\u0079\u5728\u8d2d\u4e70\u65f6\u901a\u8fc7\u90ae\u4ef6\u9080\u8bf7\u51fd\u53d1\u653e\uff0c\u5982\u60a8\u5df2\u8d2d\u4e70\u8bf7\u4ed4\u7ec6\u9605\u8bfb\u6587\u6863\u5e76\u8fdb\u884c\u914d\u7f6e\uff0c\u914d\u7f6e\u5b8c\u6210\u540e\u65b9\u53ef\u6253\u5305\u4f7f\u7528\u3002\u8d2d\u4e70\u5730\u5740\uff1a\u0068\u0074\u0074\u0070\u0073\u003a\u002f\u002f\u0076\u0075\u0065\u002d\u0061\u0064\u006d\u0069\u006e\u002d\u0062\u0065\u0061\u0075\u0074\u0069\u0066\u0075\u006c\u002e\u0063\u006f\u006d\u002f\u0061\u0075\u0074\u0068\u006f\u0072\u0069\u007a\u0061\u0074\u0069\u006f\u006e\u002f\u0073\u0068\u006f\u0070\u002d\u0076\u0069\u0074\u0065\u002e\u0068\u0074\u006d\u006c'
+          '\u68C0\u6D4B\u5230\u60A8\u7684\u7528\u6237\u540D\u6216\u006B\u0065\u0079\u672A\u914D\u7F6E\uFF0C\u006B\u0065\u0079\u5728\u8D2D\u4E70\u65F6\u901A\u8FC7\u90AE\u4EF6\u9080\u8BF7\u51FD\u53D1\u653E\uFF0C\u5982\u60A8\u5DF2\u8D2D\u4E70\u8BF7\u4ED4\u7EC6\u9605\u8BFB\u6587\u6863\u5E76\u8FDB\u884C\u914D\u7F6E\uFF0C\u914D\u7F6E\u5B8C\u6210\u540E\u65B9\u53EF\u6253\u5305\u4F7F\u7528\u3002\u8D2D\u4E70\u5730\u5740\uFF1A\u0068\u0074\u0074\u0070\u0073\u003A\u002F\u002F\u0076\u0075\u0065\u002D\u0061\u0064\u006D\u0069\u006E\u002D\u0062\u0065\u0061\u0075\u0074\u0069\u0066\u0075\u006C\u002E\u0063\u006F\u006D\u002F\u0061\u0075\u0074\u0068\u006F\u0072\u0069\u007A\u0061\u0074\u0069\u006F\u006E\u002F\u0073\u0068\u006F\u0070\u002D\u0076\u0069\u0074\u0065\u002E\u0068\u0074\u006D\u006C'
         )}`
       )
       process.exit()

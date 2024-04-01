@@ -4,7 +4,7 @@ export const lightenColor = (color: any, amount: any) => {
   if (!/^#([0-9a-f]{3}){1,2}$/i.test(color)) return color
   const rgb = color.replace(/^#/, '').match(/[a-f0-9]{2}/gi)
   for (let i = 0; i < 3; i++) {
-    rgb[i] = parseInt(rgb[i], 16)
+    rgb[i] = Number.parseInt(rgb[i], 16)
   }
   for (let i = 0; i < 3; i++) {
     rgb[i] = Math.min(255, Math.round(rgb[i] + rgb[i] * (amount / 100)))
@@ -15,12 +15,12 @@ export const lightenColor = (color: any, amount: any) => {
 export const lightenColorChrome = (color: any, amount: any) => {
   const browser = window.navigator
   const versionMatch = browser.userAgent.match(/Chrome\/(\d+.\d+)/)
-  if (versionMatch && parseFloat(versionMatch[1]) >= 111) return `color-mix(in srgb, ${color} ${100 - amount}%, white)`
+  if (versionMatch && Number.parseFloat(versionMatch[1]) >= 111) return `color-mix(in srgb, ${color} ${100 - amount}%, white)`
   else {
     if (!/^#([0-9a-f]{3}){1,2}$/i.test(color)) return color
     const rgb = color.replace(/^#/, '').match(/[a-f0-9]{2}/gi)
     for (let i = 0; i < 3; i++) {
-      rgb[i] = parseInt(rgb[i], 16)
+      rgb[i] = Number.parseInt(rgb[i], 16)
     }
     for (let i = 0; i < 3; i++) {
       rgb[i] = Math.min(255, Math.round(rgb[i] + rgb[i] * (amount / 100)))
@@ -39,7 +39,7 @@ export const getRgbNum = (sColor: string) => {
   }
   const sColorChange = []
   for (let i = 1; i < 7; i += 2) {
-    sColorChange.push(parseInt(`0x${sColor.slice(i, i + 2)}`))
+    sColorChange.push(Number.parseInt(`0x${sColor.slice(i, i + 2)}`))
   }
   return sColorChange
 }

@@ -81,7 +81,7 @@ const setDefaultOpeneds = () => {
     defaultOpeneds.forEach((item: string) => {
       try {
         menuRef.value.open(item)
-      } catch (e) {
+      } catch {
         /* empty */
       }
     })
