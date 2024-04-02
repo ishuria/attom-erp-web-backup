@@ -303,6 +303,7 @@ const closeMenu = () => {
 watch(
   () => route.fullPath,
   () => {
+    initNoCLosableTabs(routes.value)
     addTabs(route)
   },
   {
@@ -311,7 +312,6 @@ watch(
 )
 
 onBeforeMount(() => {
-  initNoCLosableTabs(routes.value)
   window.addEventListener('beforeunload', handleCaughtRoutes)
 })
 
