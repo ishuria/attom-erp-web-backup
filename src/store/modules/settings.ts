@@ -112,7 +112,13 @@ export const useSettingsStore = defineStore('settings', {
     },
     resetTheme() {
       this.theme = { ...defaultTheme }
-      if (this.device === 'mobile') this.theme = { ...defaultTheme, ...{ layout: 'vertical' } }
+      this.persistenceTab = _persistenceTab
+      this.changeLanguage(i18n)
+      if (this.device === 'mobile')
+        this.theme = {
+          ...defaultTheme,
+          ...{ layout: 'vertical' },
+        }
       localStorage.removeItem('shop-vite-theme')
       this.updateTheme()
     },

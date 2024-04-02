@@ -18,6 +18,7 @@
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
+
         <el-form-item
           v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
           :label="translate('暗黑模式')"
@@ -52,13 +53,13 @@
         <el-form-item :label="translate('页脚')">
           <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
         </el-form-item>
-        <el-form-item :label="translate('右侧浮窗')">
-          <el-switch v-model="theme.showThemeSetting" />
-        </el-form-item>
         <el-form-item v-if="theme.layout === 'column'" :label="translate('分栏风格')">
           <el-select v-model="theme.columnStyle">
             <el-option v-for="item in columnStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>
+        </el-form-item>
+        <el-form-item :label="translate('国际化')">
+          <vab-language />
         </el-form-item>
         <el-form-item :label="translate('圆角')">
           <el-input-number v-model="theme.radius" :max="26" :min="3" @change="handleRadius" />
@@ -95,6 +96,9 @@
         </el-form-item>
         <el-form-item :label="translate('锁屏')">
           <el-switch v-model="theme.showLock" />
+        </el-form-item>
+        <el-form-item :label="translate('右侧浮窗')">
+          <el-switch v-model="theme.showThemeSetting" />
         </el-form-item>
         <el-form-item :label="translate('页面动画')">
           <el-select v-model="theme.pageTransition">
