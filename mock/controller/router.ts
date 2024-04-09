@@ -1073,16 +1073,6 @@ const list = [
         },
       },
       {
-        path: 'creditCard',
-        name: 'CreditCard',
-        component: '/@/views/template/CreditCard.vue',
-        meta: {
-          title: '信用卡',
-          icon: 'bank-card-line',
-          dot: true,
-        },
-      },
-      {
         path: 'lllustration',
         name: 'Lllustration',
         component: '/@/views/template/Lllustration.vue',
