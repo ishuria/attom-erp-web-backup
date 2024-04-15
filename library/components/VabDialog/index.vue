@@ -19,7 +19,7 @@
     :overflow="overflow"
     :show-close="showClose"
     :style="{
-      transition: animated ? 'var(--el-transition)' : '',
+      transition: animated ? 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),transform 0s' : '',
     }"
     :top="top"
     :width="width"
