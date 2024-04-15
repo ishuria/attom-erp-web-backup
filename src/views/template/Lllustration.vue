@@ -8,13 +8,13 @@
               <vab-color-picker />
             </el-form-item>
             <el-form-item label="svg大小">
-              <el-slider v-model="queryForm.num" :max="300" :min="150" style="width: 190px; margin: 0 20px 0 5px" />
+              <el-slider v-model="queryForm.num" :max="350" :min="150" style="width: 190px; margin: 0 20px 0 5px" />
               px
             </el-form-item>
           </el-form>
         </vab-card>
       </el-col>
-      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="4" :md="12" :sm="12" :xl="4" :xs="24">
+      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="span" :md="12" :sm="12" :xl="span" :xs="24">
         <vab-card class="lllustration-card" @click="handleCopyIcon(item)">
           <vab-icon
             class="vab-lllustration"
@@ -35,6 +35,7 @@
 import clip from '/@/utils/clipboard'
 
 const lllustrationsArray: string[] = []
+const span = ref<number>(4)
 
 const files: any = import.meta.glob('../../icon/lllustration/*.svg', {
   eager: true,
@@ -52,6 +53,15 @@ const queryForm = reactive<any>({
 const handleCopyIcon = (item: any) => {
   clip(`<vab-icon style="width:100%;height:300px" icon="${item}" is-custom-svg/>`)
 }
+
+watch(
+  queryForm,
+  () => {
+    if (queryForm.num < 200) span.value = 4
+    else span.value = 6
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>
