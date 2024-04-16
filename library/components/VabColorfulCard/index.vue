@@ -61,10 +61,6 @@ defineProps({
   min-height: 120px;
   cursor: pointer;
 
-  * {
-    color: var(--el-color-white);
-  }
-
   :deep() {
     .el-card__header {
       color: var(--el-color-white);
