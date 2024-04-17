@@ -551,6 +551,17 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'segmented',
+        name: 'Segmented',
+        component: () => import('/@/views/vab/segmented/index.vue'),
+        meta: {
+          title: '分段控制器',
+          guard: ['Admin'],
+          icon: 'carousel-view',
+          dot: true,
+        },
+      },
+      {
         path: 'image',
         name: 'Image',
         component: () => import('/@/views/vab/image/index.vue'),

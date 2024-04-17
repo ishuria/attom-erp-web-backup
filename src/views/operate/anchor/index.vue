@@ -28,7 +28,7 @@ defineOptions({
   name: 'Anchor',
 })
 
-const containerRef = ref<HTMLElement | null>(null)
+const containerRef = ref<any>(null)
 
 const handleClick = (e: MouseEvent) => {
   e.preventDefault()

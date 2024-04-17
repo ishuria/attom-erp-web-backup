@@ -501,6 +501,17 @@ const list = [
         },
       },
       {
+        path: 'segmented',
+        name: 'Segmented',
+        component: '/@/views/vab/segmented/index.vue',
+        meta: {
+          title: '分段控制器',
+          guard: ['Admin'],
+          icon: 'carousel-view',
+          dot: true,
+        },
+      },
+      {
         path: 'image',
         name: 'Image',
         component: '/@/views/vab/image/index.vue',
