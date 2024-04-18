@@ -11,7 +11,7 @@ import { useUserStore } from '/@/store/modules/user'
 import getPageTitle from '/@/utils/pageTitle'
 import { toLoginRoute } from '/@/utils/routes'
 
-export function setupPermissions(router: Router) {
+export const setupPermissions = (router: Router) => {
   VabProgress.configure({
     easing: 'ease',
     speed: 500,
