@@ -68,7 +68,7 @@ export const useRoutesStore = defineStore('routes', {
           data: { list },
         } = await getList()
         if (!isArray(list)) gp.$baseMessage('路由格式返回有误！', 'error', 'hey')
-        if (list[list.length - 1].path !== '*')
+        if (list[list.length - 1].path !== '/:pathMatch(.*)*')
           list.push({
             path: '/:pathMatch(.*)*',
             redirect: '/404',

@@ -66,4 +66,10 @@ export const setupPermissions = (router: Router) => {
     if (typeof to.meta.title === 'string') document.title = getPageTitle(to.meta.title)
     if (VabProgress.status) VabProgress.done()
   })
+
+  router.onError((error: any) => {
+    console.error('vue-shop-vite 错误拦截:', error.message)
+  })
+
+  return router
 }
