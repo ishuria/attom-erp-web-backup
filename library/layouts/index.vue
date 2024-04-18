@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar wrap-class="scroll-wrap">
+  <el-scrollbar ref="scrollbarRef" wrap-class="scroll-wrap">
     <div class="vue-shop-vite-box" :class="{ mobile }">
       <component :is="layout" :collapse="collapse" :device="device" :fixed-header="theme.fixedHeader" :show-tabs="theme.showTabs" />
     </div>
@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElScrollbar } from 'element-plus'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
 import { convertToCamelCase } from '/@/utils/convertToCamelCase'
@@ -23,6 +24,8 @@ interface ComponentType {
   default: Component
 }
 
+const route = useRoute()
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
 const $baseNotify = inject<any>('$baseNotify')
@@ -70,6 +73,16 @@ onBeforeUnmount(() => {
 watch(visibility, (current, previous) => {
   if (current === 'visible' && previous === 'hidden') $baseNotify(`尊敬的${username.value}，欢迎回来`, '', 'success', 'bottom-right')
 })
+
+watch(
+  route,
+  () => {
+    nextTick(() => {
+      scrollbarRef.value!.setScrollTop(0)
+    })
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>
