@@ -163,8 +163,10 @@ const update = async () => {
     : $baseMessage('当前已是最新版本', 'success', 'hey')
 }
 
-onBeforeMount(async () => {
-  await update()
+onBeforeMount(() => {
+  if (location.hostname !== 'localhost' && !location.hostname.includes('127') && !location.hostname.includes('192')) {
+    update()
+  }
 })
 </script>
 

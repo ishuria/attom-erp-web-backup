@@ -104,6 +104,7 @@
             </el-table>
           </el-col>
         </el-row>
+        <portal-divider active-menu="portal" style="margin-top: 12px" />
       </main>
 
       <vab-footer />
@@ -366,6 +367,7 @@ const tableData = [
   .vab-footer {
     background: #f6f8f9;
     border: 0;
+    margin-top: 0;
   }
 
   .vab-theme-setting {

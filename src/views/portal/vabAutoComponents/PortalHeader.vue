@@ -6,32 +6,46 @@
         <span class="logo-title">Vue Shop Vite</span>
       </div>
 
-      <ul class="nav-item">
-        <li :class="activeMenu === 'portal' ? 'is-active' : ''">
-          <a href="#/portal">主页</a>
-        </li>
-        <li :class="activeMenu === 'product' ? 'is-active' : ''">
-          <a href="#/product">产品简介</a>
-        </li>
-        <li>
-          <a href="#/index" target="_blank">后台管理</a>
-        </li>
-      </ul>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="主页" name="portal"><a href="#/portal"></a></el-tab-pane>
+        <el-tab-pane label="产品简介" name="product"><a href="#/product"></a></el-tab-pane>
+        <el-tab-pane label="后台管理" name="admin"><a href="#/index" target="_blank"></a></el-tab-pane>
+      </el-tabs>
     </div>
   </header>
 </template>
 
 <script lang="ts" setup>
+import type { TabsPaneContext } from 'element-plus'
+import { ref } from 'vue'
+import router from '~/src/router'
+
 defineOptions({
   name: 'PortalHeader',
 })
 
-defineProps({
+const props = defineProps({
   activeMenu: {
     type: String,
     default: 'portal',
   },
 })
+
+const activeName = ref(props.activeMenu)
+
+const handleClick = (tab: TabsPaneContext) => {
+  switch (tab.index) {
+    case '0':
+      router.push('/portal')
+      break
+    case '1':
+      router.push('/product')
+      break
+    case '2':
+      router.push('/index')
+      break
+  }
+}
 
 onMounted(() => {
   document.querySelectorAll('body')[0].className = ''
@@ -58,13 +72,13 @@ header {
     max-width: 1366px;
     padding: 0;
     margin: auto;
+    display: flex;
+    align-items: center;
 
     .logo {
       display: flex;
       flex: 1;
       align-items: center;
-      justify-content: center;
-      float: left;
       height: 70px;
       font-size: 20px;
       line-height: 70px;
@@ -83,37 +97,10 @@ header {
       }
     }
 
-    .nav-item {
-      margin: auto;
-
-      li {
-        position: relative;
-        float: left;
-        padding: 0 10px 0 10px;
-        list-style: none;
-
-        &.is-active {
-          &::before {
-            position: absolute;
-            right: 8px;
-            bottom: 10px;
-            left: 8px;
-            height: 2px;
-            content: '';
-            background-color: var(--el-color-primary);
-          }
-        }
-
-        a {
-          position: relative;
-          display: block;
-          height: 100%;
-          padding: 0 16px;
-          font-size: var(--el-font-size-big);
-          line-height: 71px;
-          color: #545c63;
-          text-align: center;
-          transition: background-color 0.3s;
+    :deep() {
+      .el-tabs {
+        &__header {
+          margin: 0;
         }
       }
     }

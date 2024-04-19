@@ -118,6 +118,7 @@
             </el-row>
           </div>
         </div>
+        <portal-divider active-menu="product" />
       </main>
 
       <vab-footer />
@@ -247,7 +248,6 @@ defineOptions({
 
     .intro-box {
       position: relative;
-      margin-bottom: 50px;
 
       &-title {
         margin-bottom: 16px;
@@ -315,6 +315,7 @@ defineOptions({
   .vab-footer {
     background: #f6f8f9;
     border: 0;
+    margin-top: 0;
   }
 
   .vab-theme-setting {
