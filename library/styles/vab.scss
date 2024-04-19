@@ -288,6 +288,18 @@ html {
       opacity: 1;
     }
 
+    .vab-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: var(--el-z-index);
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.25);
+      opacity: 1;
+      //backdrop-filter: blur(2.5px);
+    }
+
     /* el-loading-mask遮罩 */
     .el-loading-mask {
       z-index: calc(var(--el-z-index) - 10) !important;

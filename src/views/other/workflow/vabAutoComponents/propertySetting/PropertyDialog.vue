@@ -31,6 +31,6 @@ export default defineComponent({
 </script>
 <style>
 .property-dialog {
-  padding: 20px;
+  padding: var(--el-padding);
 }
 </style>

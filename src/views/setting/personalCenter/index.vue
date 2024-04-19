@@ -222,7 +222,7 @@ const handleInputConfirm = () => {
     :deep() {
       .el-avatar {
         img {
-          padding: 20px;
+          padding: var(--el-padding);
           cursor: pointer;
         }
       }

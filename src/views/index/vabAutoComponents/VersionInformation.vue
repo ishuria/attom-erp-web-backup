@@ -78,11 +78,15 @@ const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
 .version-information {
   &-rely {
     min-width: 500px;
-    height: 50px;
-    margin-top: 10px;
-    line-height: 50px;
+    margin-top: var(--el-margin);
     text-align: left;
     border-radius: var(--el-border-radius-base);
+
+    :deep() {
+      .el-button {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .table {
@@ -93,7 +97,7 @@ const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
 
     td {
       position: relative;
-      padding: 11px 15px !important;
+      padding: 12px 15px !important;
       overflow: hidden;
       font-size: var(--el-font-size-default);
       text-overflow: ellipsis;

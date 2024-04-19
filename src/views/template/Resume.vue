@@ -170,7 +170,7 @@ const experiences = ref<any>([
         display: block;
         width: 100px;
         height: 100px;
-        padding: 20px;
+        padding: var(--el-padding);
         margin: 40px auto 20px auto;
         cursor: pointer;
         background: var(--el-color-white);

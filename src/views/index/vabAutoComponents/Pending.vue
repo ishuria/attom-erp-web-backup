@@ -40,12 +40,12 @@ const colorTo2 = ref<string>('var(--el-color-white)')
 const style1 = {
   background: `linear-gradient(to right,${colorFrom1.value}, ${colorTo1.value}) no-repeat`,
   border: 0,
-  height: '137px',
+  height: '135.19px',
 }
 const style2 = {
   background: `linear-gradient(to right,${colorFrom2.value}, ${colorTo2.value}) no-repeat`,
   border: 0,
-  height: '137px',
+  height: '135.19px',
 }
 </script>
 

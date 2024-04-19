@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "8.3.0",
+  "version": "8.3.5",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -63,14 +63,14 @@
     "vue-json-viewer": "^3.0.4",
     "vue-pdf-embed": "^2.0.3",
     "vue-qr": "^4.0.9",
-    "vue-router": "^4.3.1",
+    "vue-router": "^4.3.2",
     "vue3-gantt": "1.1.8-7",
     "vue3-puzzle-vcode": "^1.1.7",
     "xgplayer": "^3.0.16",
     "xgplayer-hls.js": "^3.0.16"
   },
   "devDependencies": {
-    "@element-plus/eslint-config": "^0.0.20240417",
+    "@element-plus/eslint-config": "^0.0.20240418",
     "@types/lodash-es": "^4.17.12",
     "@types/mockjs": "^1.0.10",
     "@types/nprogress": "^0.2.3",

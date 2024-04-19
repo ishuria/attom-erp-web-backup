@@ -119,7 +119,7 @@ onMounted(() => {
     position: relative;
     width: 100%;
     min-height: 160px;
-    padding: 20px;
+    padding: var(--el-padding);
     margin-bottom: 20px;
     border: 3px solid #01ffff;
     border-radius: 5px;

@@ -109,7 +109,7 @@ onBeforeUnmount(() => {
     display: block;
     width: 70px;
     height: 70px;
-    padding: 20px;
+    padding: var(--el-padding);
     margin: 8px auto 0 auto;
     background: #101f58;
     border-radius: 50%;

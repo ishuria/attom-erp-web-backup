@@ -121,7 +121,7 @@ onDeactivated(() => {
 }
 
 .bottom {
-  padding-top: 20px;
+  padding-top: var(--el-padding);
   margin-top: 5px;
   text-align: left;
   border-top: 1px solid var(--el-border-color);

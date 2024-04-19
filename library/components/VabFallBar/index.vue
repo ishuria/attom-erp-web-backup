@@ -193,7 +193,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
         top: 5px;
         left: var(--el-left-menu-width);
         min-width: var(--ti-fall-menu-box-width);
-        padding: 20px;
+        padding: var(--el-padding);
         overflow-y: auto;
         border: 0;
         border-radius: var(--el-border-radius-base);

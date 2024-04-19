@@ -93,7 +93,7 @@ import { ArrowRight, CaretBottom, CaretTop, Warning } from '@element-plus/icons-
 
 .statistic-card {
   height: 100%;
-  padding: 20px;
+  padding: var(--el-padding);
   background-color: var(--el-bg-color-overlay);
   border-radius: 4px;
 
