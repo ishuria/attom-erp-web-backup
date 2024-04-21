@@ -514,6 +514,12 @@ html {
       padding: 0;
       border-radius: var(--el-border-radius-base);
 
+      &--center {
+        .el-dialog__title {
+          padding-left: 0 !important;
+        }
+      }
+
       &__header {
         height: calc(var(--el-dialog-title-font-size) + var(--el-padding) * 2);
         padding: 0 !important;
