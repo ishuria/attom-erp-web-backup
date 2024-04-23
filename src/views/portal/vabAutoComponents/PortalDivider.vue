@@ -24,8 +24,8 @@ defineProps({
 <style lang="scss" scoped>
 .portal-divider {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   a {
     color: var(--el-color-grey);

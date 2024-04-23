@@ -23,5 +23,3 @@ defineOptions({
   name: 'Segmented',
 })
 </script>
-
-<style lang="scss" scoped></style>

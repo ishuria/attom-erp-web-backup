@@ -365,9 +365,9 @@ const tableData = [
 
 :deep() {
   .vab-footer {
+    margin-top: 0;
     background: #f6f8f9;
     border: 0;
-    margin-top: 0;
   }
 
   .vab-theme-setting {

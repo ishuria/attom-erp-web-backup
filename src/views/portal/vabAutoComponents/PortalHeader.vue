@@ -68,12 +68,12 @@ header {
   backdrop-filter: saturate(180%) blur(20px);
 
   .index-nav {
+    display: flex;
+    align-items: center;
     min-width: 1152px;
     max-width: 1366px;
     padding: 0;
     margin: auto;
-    display: flex;
-    align-items: center;
 
     .logo {
       display: flex;
