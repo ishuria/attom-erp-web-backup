@@ -21,32 +21,24 @@ const $baseAlert = inject<any>('$baseAlert')
 const development = import.meta.env.DEV
 const protocol = window.location.protocol === 'https:'
 
-const beforeInstallPrompt = () => {
-  window.addEventListener('beforeinstallprompt', (deferredPrompt: any) => {
-    deferredPrompt.preventDefault()
-    const installRef = document.querySelector('#installRef')
-    if (installRef)
-      installRef.addEventListener('click', () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt()
-          deferredPrompt.userChoice.then(() => {
+window.addEventListener('beforeinstallprompt', (deferredPrompt: any) => {
+  deferredPrompt.preventDefault()
+  const installRef = document.querySelector('#installRef')
+  if (installRef)
+    installRef.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt()
+        deferredPrompt.userChoice.then(() => {
+          location.reload()
+        })
+      } else {
+        $baseAlert(
+          '未获取到安装指令，请按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面后重试，如果无法安装，PC端请点击浏览器地址栏右侧安装按钮进行安装，手机端请点击添加到主屏幕进行安装，仅支持Edge、Chrome、Safari',
+          () => {
             location.reload()
-          })
-        } else {
-          $baseAlert(
-            '未获取到安装指令，请按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面后重试，如果无法安装，PC端请点击浏览器地址栏右侧安装按钮进行安装，手机端请点击添加到主屏幕进行安装，仅支持Edge、Chrome、Safari',
-            () => {
-              location.reload()
-            }
-          )
-        }
-      })
-  })
-}
-
-onMounted(() => {
-  nextTick(() => {
-    beforeInstallPrompt()
-  })
+          }
+        )
+      }
+    })
 })
 </script>
