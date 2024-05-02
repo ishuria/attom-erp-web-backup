@@ -1,6 +1,6 @@
 <template>
   <div class="application-container">
-    <div v-if="!development && protocol">
+    <div v-if="(!development && protocol) || (development && pwaDev)">
       <vab-alert
         title="点击安装前需手动按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面，如果无法安装，PC端请点击浏览器地址栏右侧安装按钮进行安装，手机端请点击添加到主屏幕进行安装，仅支持Edge、Chrome、Safari"
       />
@@ -11,6 +11,8 @@
 </template>
 
 <script lang="ts" setup>
+import { pwaDev } from '/@/config'
+
 defineOptions({
   name: 'Application',
 })
@@ -18,16 +20,10 @@ defineOptions({
 const $baseAlert = inject<any>('$baseAlert')
 const development = import.meta.env.DEV
 const protocol = window.location.protocol === 'https:'
-let deferredPrompt: any
-let timer: any = null
 
 const beforeInstallPrompt = () => {
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault()
-    deferredPrompt = e
-  })
-
-  timer = setTimeout(() => {
+  window.addEventListener('beforeinstallprompt', (deferredPrompt: any) => {
+    deferredPrompt.preventDefault()
     const installRef = document.querySelector('#installRef')
     if (installRef)
       installRef.addEventListener('click', () => {
@@ -45,16 +41,12 @@ const beforeInstallPrompt = () => {
           )
         }
       })
-  }, 300)
+  })
 }
 
 onMounted(() => {
   nextTick(() => {
-    if (!development && protocol) beforeInstallPrompt()
+    beforeInstallPrompt()
   })
-})
-
-onBeforeUnmount(() => {
-  if (timer) clearTimeout(timer)
 })
 </script>
