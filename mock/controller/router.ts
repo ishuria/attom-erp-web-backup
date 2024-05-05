@@ -1245,6 +1245,16 @@ const list = [
         },
       },
       {
+        path: 'lOTManagement',
+        name: 'LOTManagement',
+        component: '/@/views/setting/lOTManagement/index.vue',
+        meta: {
+          title: '物联网管理',
+          icon: 'mastercard-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'serverManagement',
         name: 'ServerManagement',
         component: '/@/views/setting/serverManagement/index.vue',

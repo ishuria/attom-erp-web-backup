@@ -70,7 +70,7 @@
     "xgplayer-hls.js": "^3.0.17"
   },
   "devDependencies": {
-    "@element-plus/eslint-config": "^0.0.20240502",
+    "@element-plus/eslint-config": "^0.0.20240503",
     "@types/lodash-es": "^4.17.12",
     "@types/mockjs": "^1.0.10",
     "@types/nprogress": "^0.2.3",

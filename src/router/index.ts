@@ -1295,6 +1295,16 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'lOTManagement',
+        name: 'LOTManagement',
+        component: () => import('/@/views/setting/lOTManagement/index.vue'),
+        meta: {
+          title: '物联网管理',
+          icon: 'mastercard-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'serverManagement',
         name: 'ServerManagement',
         component: () => import('/@/views/setting/serverManagement/index.vue'),
