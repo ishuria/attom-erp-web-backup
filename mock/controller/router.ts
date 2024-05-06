@@ -19,6 +19,7 @@ const list = [
           title: '首页',
           icon: 'home-2-line',
           noClosable: true,
+          noKeepAlive: true,
         },
       },
       {
@@ -589,6 +590,7 @@ const list = [
           title: '图表',
           guard: ['Admin'],
           icon: 'bubble-chart-line',
+          noKeepAlive: true,
         },
       },
       {

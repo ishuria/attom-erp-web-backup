@@ -97,7 +97,7 @@ watch(
   { immediate: true }
 )
 
-onActivated(() => {
+onMounted(() => {
   timer = setInterval(() => {
     if (n.value > 0) {
       n.value--
@@ -108,7 +108,7 @@ onActivated(() => {
   }, 1000)
 })
 
-onDeactivated(() => {
+onBeforeUnmount(() => {
   if (timer) clearInterval(timer)
 })
 </script>

@@ -80,7 +80,7 @@ watch(
   { immediate: true }
 )
 
-onActivated(() => {
+onMounted(() => {
   timer = setInterval(() => {
     option.series.data = [
       { value: random(0, 100), name: '访问' },
@@ -92,7 +92,8 @@ onActivated(() => {
   }, 3000)
 })
 
-onDeactivated(() => {
+onBeforeUnmount(() => {
   if (timer) clearInterval(timer)
 })
 </script>
+storeToRefslettimer

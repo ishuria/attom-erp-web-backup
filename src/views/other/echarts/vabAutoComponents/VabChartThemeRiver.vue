@@ -191,7 +191,7 @@ watch(
   { immediate: true }
 )
 
-onActivated(() => {
+onMounted(() => {
   timer = setInterval(() => {
     option.series.data = [
       ['2015/11/08', random(0, 100), 'DQ'],
@@ -324,7 +324,7 @@ onActivated(() => {
   }, 3000)
 })
 
-onDeactivated(() => {
+onBeforeUnmount(() => {
   if (timer) clearTimeout(timer)
 })
 </script>

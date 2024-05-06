@@ -69,6 +69,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '首页',
           icon: 'home-2-line',
           noClosable: true,
+          noKeepAlive: true,
         },
       },
       {
@@ -639,6 +640,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '图表',
           guard: ['Admin'],
           icon: 'bubble-chart-line',
+          noKeepAlive: true,
         },
       },
       {

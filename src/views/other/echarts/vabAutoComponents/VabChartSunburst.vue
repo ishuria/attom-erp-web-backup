@@ -218,7 +218,7 @@ const option = reactive<any>({
   },
 })
 
-onActivated(() => {
+onMounted(() => {
   timer = setInterval(() => {
     option.series.data = [
       {
@@ -399,7 +399,7 @@ onActivated(() => {
   }, 3000)
 })
 
-onDeactivated(() => {
+onBeforeUnmount(() => {
   if (timer) clearInterval(timer)
 })
 </script>

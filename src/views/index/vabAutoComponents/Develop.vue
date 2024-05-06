@@ -79,7 +79,7 @@ watch(
   { immediate: true }
 )
 
-onActivated(() => {
+onMounted(() => {
   const base = +new Date(2023, 10, 1)
   const oneDay = 24 * 3600 * 1000
   const date: any = []
@@ -113,7 +113,7 @@ onActivated(() => {
   }, 5000)
 })
 
-onDeactivated(() => {
+onBeforeUnmount(() => {
   if (timer) clearInterval(timer)
 })
 </script>
