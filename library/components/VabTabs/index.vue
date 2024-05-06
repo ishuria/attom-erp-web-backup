@@ -191,7 +191,6 @@ const handleCommand = (command: any) => {
       closeAllTabs()
       break
     case 'setting':
-      console.log(tabsSettingRef.value)
       tabsSettingRef.value.handleOpenSetting()
   }
 }
