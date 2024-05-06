@@ -69,6 +69,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '首页',
           icon: 'home-2-line',
           noClosable: true,
+          noKeepAlive: true,
         },
       },
       {
@@ -78,6 +79,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '看板',
           icon: 'dashboard-2-line',
+          noKeepAlive: true,
         },
       },
       {
@@ -126,6 +128,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           icon: 'database-2-line',
           target: '_blank',
           badge: 'Hot',
+          noKeepAlive: true,
         },
       },
       // {
@@ -639,6 +642,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '图表',
           guard: ['Admin'],
           icon: 'bubble-chart-line',
+          noKeepAlive: true,
         },
       },
       {
