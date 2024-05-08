@@ -58,7 +58,7 @@
     "vsv-icon": "^1.1.9",
     "vue": "^3.4.27",
     "vue-draggable-plus": "^0.4.0",
-    "vue-echarts": "^6.7.1",
+    "vue-echarts": "^6.7.2",
     "vue-i18n": "^9.13.1",
     "vue-json-viewer": "^3.0.4",
     "vue-pdf-embed": "^2.0.3",
@@ -70,7 +70,7 @@
     "xgplayer-hls.js": "^3.0.17"
   },
   "devDependencies": {
-    "@element-plus/eslint-config": "^0.0.20240506",
+    "@element-plus/eslint-config": "^0.0.20240507",
     "@types/lodash-es": "^4.17.12",
     "@types/mockjs": "^1.0.10",
     "@types/nprogress": "^0.2.3",
