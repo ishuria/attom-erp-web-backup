@@ -7,8 +7,6 @@ defineOptions({
   name: 'VabTheme',
 })
 
-const $pub = inject<any>('$pub')
-
 const handleOpenTheme = () => {
   $pub('shop-vite-open-theme')
 }

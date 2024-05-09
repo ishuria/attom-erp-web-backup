@@ -7,8 +7,6 @@ defineOptions({
   name: 'VabRefresh',
 })
 
-const $sub = inject<any>('$sub')
-const $pub = inject<any>('$pub')
 const className = ref<string>('')
 
 const rotate = () => {

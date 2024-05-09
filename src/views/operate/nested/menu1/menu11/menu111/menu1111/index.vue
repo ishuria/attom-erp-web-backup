@@ -19,8 +19,6 @@ defineOptions({
 
 const router = useRouter()
 const value = ref<string>('')
-const $pub = inject<any>('$pub')
-const $baseMessage = inject<any>('$baseMessage')
 
 const handleRefresh = () => {
   $pub('reload-router-view', 'Menu1111')

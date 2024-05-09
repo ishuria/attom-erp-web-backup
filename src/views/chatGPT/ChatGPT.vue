@@ -73,7 +73,7 @@ const textareaRef = ref<any>()
 const innerRef = ref<HTMLDivElement>()
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
 const finish = ref<boolean>(true)
-const $baseMessage = inject<any>('$baseMessage')
+
 const radio = ref<string>('小爱同学')
 const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
 

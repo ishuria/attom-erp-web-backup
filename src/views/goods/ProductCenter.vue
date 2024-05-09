@@ -24,7 +24,7 @@
 defineOptions({
   name: 'ProductCenter',
 })
-const $baseAlert = inject<any>('$baseAlert')
+
 const list = ref<any>([
   {
     icon: 'secure-payment-line',

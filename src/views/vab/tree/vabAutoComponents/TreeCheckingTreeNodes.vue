@@ -21,7 +21,6 @@ interface Tree {
 }
 
 const treeRef = ref<InstanceType<typeof ElTree>>()
-const $baseMessage = inject<any>('$baseMessage')
 
 const getCheckedNodes = () => {
   $baseMessage(treeRef.value?.getCheckedNodes(false, false), 'success', 'hey')

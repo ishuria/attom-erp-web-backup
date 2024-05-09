@@ -10,8 +10,6 @@ defineOptions({
   name: 'ThrottleDebounce',
 })
 
-const $baseMessage = inject<any>('$baseMessage')
-
 const throttleClick = () => {
   $baseMessage(`节流函数，2秒后允许再次触发`, 'success', 'hey')
 }

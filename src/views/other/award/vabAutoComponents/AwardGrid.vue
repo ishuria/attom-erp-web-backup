@@ -18,7 +18,6 @@ import btnImg from '/@/assets/award_images/btn.png'
 import buttonImg from '/@/assets/award_images/button2.png'
 import { VabAwardGrid } from '/@/plugins/VabAward'
 
-const $baseMessage = inject<any>('$baseMessage')
 const luckyNum = 1
 
 const blocks = [

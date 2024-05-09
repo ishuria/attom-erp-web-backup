@@ -78,7 +78,7 @@ defineOptions({
 })
 
 const $baseConfirm = inject<any>('$baseConfirm')
-const $baseMessage = inject<any>('$baseMessage')
+
 const editRef = ref<any>(null)
 const tableRef = ref<any>(null)
 const list = ref<any>([])

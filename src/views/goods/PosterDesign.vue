@@ -19,8 +19,6 @@ defineOptions({
 const route = useRoute()
 const settingsStore = useSettingsStore()
 const { mode } = storeToRefs<any>(settingsStore)
-const $pub = inject<any>('$pub')
-const $baseMessage = inject<any>('$baseMessage')
 
 const handleDark = () => {
   if (route.path === '/goods/posterDesign') $pub('shop-vite-reset-dark')

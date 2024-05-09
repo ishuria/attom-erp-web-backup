@@ -166,8 +166,6 @@ defineOptions({
   name: 'PersonalCenter',
 })
 
-const $baseMessage = inject<any>('$baseMessage')
-
 const userStore = useUserStore()
 const { avatar } = storeToRefs(userStore)
 

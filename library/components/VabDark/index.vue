@@ -22,7 +22,6 @@ defineOptions({
   name: 'VabDark',
 })
 
-const $sub = inject<any>('$sub')
 const route = useRoute()
 const settingsStore = useSettingsStore()
 const { theme, mode } = storeToRefs(settingsStore)

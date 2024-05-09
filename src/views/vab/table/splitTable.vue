@@ -133,7 +133,7 @@ defineOptions({
 
 const router = useRouter()
 const $baseConfirm = inject<any>('$baseConfirm')
-const $baseMessage = inject<any>('$baseMessage')
+
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()

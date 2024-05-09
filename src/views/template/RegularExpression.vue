@@ -44,7 +44,6 @@ defineOptions({
   name: 'RegularExpression',
 })
 
-const $baseMessage = inject<any>('$baseMessage')
 const formRef: Ref<any> = ref(null)
 const form = reactive<any>({
   email: '',

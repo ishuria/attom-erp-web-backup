@@ -37,7 +37,6 @@ const _version = ref<any>(version)
 const show = ref<boolean>(false)
 const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
 const lastTime = dayjs().format('YYYY-MM-DD')
-const $sub = inject<any>('$sub')
 
 const save = async () => {
   button.value = translate('正在更新')

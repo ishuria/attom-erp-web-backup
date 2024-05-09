@@ -39,7 +39,7 @@ defineOptions({
 })
 
 const emit = defineEmits(['fetch-data'])
-const $baseMessage = inject<any>('$baseMessage')
+
 const formRef = ref<any>(null)
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)

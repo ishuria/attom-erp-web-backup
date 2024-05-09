@@ -169,36 +169,38 @@ export default {
     }
 
     const _emitter = mitt()
+
     const $pub = (...args: any[]) => {
       _emitter.emit(head(args), args[1])
     }
 
-    const $sub = function () {
-      // eslint-disable-next-line prefer-rest-params
-      Reflect.apply(_emitter.on, _emitter, toArray(arguments))
+    const $sub = (...args: any[]) => {
+      Reflect.apply(_emitter.on, _emitter, toArray(args))
     }
 
-    const $unsub = function () {
-      // eslint-disable-next-line prefer-rest-params
-      Reflect.apply(_emitter.off, _emitter, toArray(arguments))
+    const $unsub = (...args: any[]) => {
+      Reflect.apply(_emitter.off, _emitter, toArray(args))
     }
 
     if (isCheck()) {
-      app.provide('$baseLoading', $baseLoading)
-      app.provide('$baseMessage', $baseMessage)
       app.provide('$baseAlert', $baseAlert)
       app.provide('$baseConfirm', $baseConfirm)
+      app.provide('$baseLoading', $baseLoading)
+      app.provide('$baseMessage', $baseMessage)
       app.provide('$baseNotify', $baseNotify)
-      app.provide('$sub', $sub)
       app.provide('$pub', $pub)
+      app.provide('$sub', $sub)
       app.provide('$unsub', $unsub)
 
       gp = {
-        $pub,
-        $sub,
-        $baseNotify,
+        $baseAlert,
+        $baseConfirm,
         $baseLoading,
         $baseMessage,
+        $baseNotify,
+        $pub,
+        $sub,
+        $unsub,
       }
     }
   },

@@ -93,11 +93,6 @@ defineOptions({
   name: 'Notice',
 })
 
-const $baseAlert = inject<any>('$baseAlert')
-const $baseNotify = inject<any>('$baseNotify')
-const $baseMessage = inject<any>('$baseMessage')
-const $pub = inject<any>('$pub')
-
 const open1 = () => {
   $baseMessage('这是一条消息提示', 'info')
 }

@@ -21,7 +21,6 @@ defineOptions({
 })
 
 const route = useRoute()
-const $sub = inject<any>('$sub')
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 const tabsStore = useTabsStore()

@@ -71,11 +71,9 @@ defineOptions({
 const lastTime = dayjs().format('YYYY-MM-DD')
 const commonUrl = `https://vue-admin-beautiful.com`
 const activities = ref<any[]>([])
-const $baseMessage = inject<any>('$baseMessage')
-const $baseAlert = inject<any>('$baseAlert')
+
 const servicesVersion = ref<any>(version)
 const loading = ref<boolean>(false)
-const $pub = inject<any>('$pub')
 
 interface Log {
   timestamp: string

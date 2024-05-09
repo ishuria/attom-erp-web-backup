@@ -28,7 +28,7 @@ const route = useRoute()
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
 const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
-const $baseNotify = inject<any>('$baseNotify')
+
 const settingsStore = useSettingsStore()
 const { device, collapse, theme } = storeToRefs(settingsStore)
 const { toggleDevice, foldSideBar, openSideBar, updateTheme } = settingsStore

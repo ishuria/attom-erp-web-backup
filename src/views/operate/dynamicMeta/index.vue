@@ -66,7 +66,6 @@ const badge = ref<number>(0)
 const icon = ref<any>(route.meta.icon)
 const hidden = ref<boolean>(false)
 const favicon = useFavicon()
-const $baseMessage = inject<any>('$baseMessage')
 
 const handleBadge = (name: any) => {
   badge.value = badge.value + 1

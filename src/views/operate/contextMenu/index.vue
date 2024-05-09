@@ -29,7 +29,7 @@ defineOptions({
 const show = ref<any>(false)
 const showItem = ref<any>(true)
 const itemText = ref<any>('item动态改变label')
-const $baseMessage = inject<any>('$baseMessage')
+
 const options = reactive<any>({ minWidth: 200, x: 500, y: 200 })
 
 const onContextMenu = (e: MouseEvent) => {

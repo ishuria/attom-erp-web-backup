@@ -143,7 +143,6 @@ const rules = reactive<any>({
   description: [{ required: true, message: '请填写活动形式', trigger: 'blur' }],
 })
 const data = ref<any>(generateData())
-const $baseMessage = inject<any>('$baseMessage')
 
 const filterMethod = (query: any, item: any) => {
   return item.pinyin.includes(query)

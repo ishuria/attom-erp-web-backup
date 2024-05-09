@@ -127,10 +127,7 @@ defineOptions({
 })
 
 const route = useRoute()
-const $sub = inject<any>('$sub')
-const $pub = inject<any>('$pub')
-const $baseLoading = inject<any>('$baseLoading')
-const $baseMessage = inject<any>('$baseMessage')
+
 const settingsStore = useSettingsStore()
 const routeName = ref<any>(route.name)
 const { theme, device, mode, persistenceTab } = storeToRefs<any>(settingsStore)

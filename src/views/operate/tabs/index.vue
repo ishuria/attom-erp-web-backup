@@ -37,7 +37,6 @@ const tabStore = useTabsStore()
 const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabStore)
 const { delVisitedRoute, delOthersVisitedRoutes, delLeftVisitedRoutes, delRightVisitedRoutes, delAllVisitedRoutes } = tabStore
 const hoverRoute = ref<any>(null)
-const $pub = inject<any>('$pub')
 
 const handleTabRemove = async (rawPath: string) => {
   if (isActive(rawPath)) await toLastTab()

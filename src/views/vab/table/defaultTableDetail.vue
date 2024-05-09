@@ -85,7 +85,7 @@ defineOptions({
 })
 
 const route: any = useRoute()
-const $pub = inject<any>('$pub')
+
 const tabsStore = useTabsStore()
 const { changeTabsMeta, delVisitedRoute } = tabsStore
 const form = reactive<any>({ text: '' })

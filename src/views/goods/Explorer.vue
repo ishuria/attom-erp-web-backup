@@ -85,7 +85,7 @@ defineOptions({
 })
 
 const $baseConfirm = inject<any>('$baseConfirm')
-const $baseMessage = inject<any>('$baseMessage')
+
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<any>(0)

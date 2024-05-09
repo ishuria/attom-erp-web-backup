@@ -13,7 +13,6 @@ defineOptions({
   name: 'Gantt',
 })
 
-const $baseMessage = inject<any>('$baseMessage')
 const dateRangeList = ref(['2023-01-01', '2023-02-28'])
 const data = ref([
   {

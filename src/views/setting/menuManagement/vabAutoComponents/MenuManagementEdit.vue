@@ -69,7 +69,7 @@ defineOptions({
 })
 
 const emit = defineEmits(['fetch-data'])
-const $baseMessage = inject<any>('$baseMessage')
+
 const formRef = ref<any>(null)
 const form = reactive<any>({
   parentId: '',

@@ -56,7 +56,7 @@ const routesStore = useRoutesStore()
 const { getRoutes: routes } = storeToRefs(routesStore)
 const route = useRoute()
 const router = useRouter()
-const $pub = inject<any>('$pub')
+
 const { device, collapse } = storeToRefs(settingsStore)
 const { foldSideBar } = settingsStore
 const { enter, exit } = useFullscreen()

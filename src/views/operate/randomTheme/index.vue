@@ -15,9 +15,6 @@ defineOptions({
 const settingsStore = useSettingsStore()
 const { theme, device, color } = storeToRefs(settingsStore)
 const { changeColor, saveTheme, updateTheme, setCssVar } = settingsStore
-const $pub = inject<any>('$pub')
-const $baseLoading = inject<any>('$baseLoading')
-const $baseMessage = inject<any>('$baseMessage')
 
 const shuffle = (val: any, list: any) => list.filter((item: any) => item !== val)[(Math.random() * (list.length - 1)) | 0]
 

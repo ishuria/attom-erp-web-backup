@@ -14,7 +14,7 @@ defineOptions({
 })
 
 const isShow = ref<any>(false)
-const $baseMessage = inject<any>('$baseMessage')
+
 const imgs = ref<any>(['https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png', landscape])
 
 const onShow = () => {

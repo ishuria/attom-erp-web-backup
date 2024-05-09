@@ -74,7 +74,6 @@ defineOptions({
   name: 'VabThemeSetting',
 })
 
-const $pub = inject<any>('$pub')
 const settingsStore = useSettingsStore()
 const { device, color, theme } = storeToRefs(settingsStore)
 const { changeColor, saveTheme, updateTheme, setCssVar } = settingsStore
@@ -82,7 +81,6 @@ const show = ref<boolean>(true)
 const route = useRoute()
 const routeName = ref<any>(route.name)
 const $baseLoading = inject<any>('$baseLoading')
-const $baseMessage = inject<any>('$baseMessage')
 
 const handleOpenTheme = () => {
   $pub('shop-vite-open-theme')

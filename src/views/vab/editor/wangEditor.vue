@@ -17,8 +17,8 @@
 </template>
 
 <script lang="ts" setup>
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import type { IDomEditor } from '@wangeditor/editor'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
 
 defineOptions({
@@ -26,7 +26,7 @@ defineOptions({
 })
 
 const dialogVisible = ref<any>(false)
-const $baseMessage = inject<any>('$baseMessage')
+
 const editorRef = shallowRef<IDomEditor | undefined>(undefined)
 const html = ref<any>(
   '<h1>一级标题</h1><h2>二级标题</h2><h3>三级标题</h3><p>hello world ~~~ </p><blockquote>blockquote</blockquote><pre><code class="language-javascript">const a = 100;</code></pre><p><img src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg"/></p>'

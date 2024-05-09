@@ -117,12 +117,11 @@ defineOptions({
   name: 'Permission',
 })
 
-const $baseLoading = inject<any>('$baseLoading')
 const aclStore = useAclStore()
 const { role, permission } = storeToRefs(aclStore)
 const userStore = useUserStore()
 const { username, token } = storeToRefs(userStore)
-const $baseMessage = inject<any>('$baseMessage')
+
 const form = reactive<any>({ account: username.value })
 const showAlert = ref<boolean>(false)
 const tableData = [

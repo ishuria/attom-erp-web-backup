@@ -71,7 +71,6 @@ const leftCardHeight3 = ref<any>('calc((100vh - 165px) / 2.63)')
 const rightCardHeight1 = ref<any>('calc((100vh - 165px) / 3)')
 const rightCardHeight2 = ref<any>('calc((100vh - 165px) / 2.63)')
 const rightCardHeight3 = ref<any>('calc((100vh - 165px) / 3.5)')
-const $baseMessage = inject<any>('$baseMessage')
 
 onMounted(() => {
   setTimeout(() => {

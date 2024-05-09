@@ -19,8 +19,6 @@ import blockImg from '/@/assets/award_images/block.png'
 import buttonImg from '/@/assets/award_images/button.png'
 import { VabAwardWheel } from '/@/plugins/VabAward'
 
-const $baseMessage = inject<any>('$baseMessage')
-
 const blocks = [
   {
     padding: '35px',

@@ -28,7 +28,7 @@ defineOptions({
 
 const canvas = ref<any>()
 let ctx: CanvasRenderingContext2D
-const $baseMessage = inject<any>('$baseMessage')
+
 let painting = false
 
 const getOffset = (event: MouseEvent | TouchEvent) => {

@@ -13,7 +13,6 @@ defineOptions({
   name: 'Application',
 })
 
-const $baseAlert = inject<any>('$baseAlert')
 const development = import.meta.env.DEV
 const protocol = window.location.protocol === 'https:'
 const disabled = ref(true)

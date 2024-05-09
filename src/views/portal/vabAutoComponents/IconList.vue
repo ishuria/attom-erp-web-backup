@@ -10,8 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-const $baseAlert = inject<any>('$baseAlert')
-
 // 卡片图标
 const iconList = ref<any>([
   {

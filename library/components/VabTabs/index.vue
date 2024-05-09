@@ -153,7 +153,7 @@ const hoverRoute = ref<any>()
 const visible = ref<boolean>(false)
 const top = ref<any>(0)
 const left = ref<any>(0)
-const $pub = inject<any>('$pub')
+
 const tabsSettingRef = ref<any>(null)
 
 const isActive = (path: any) => path === handleActivePath(route, true)

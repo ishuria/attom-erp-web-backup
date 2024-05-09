@@ -51,7 +51,6 @@ defineOptions({
   name: 'VabNotice',
 })
 
-const $baseMessage = inject<any>('$baseMessage')
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 const activeName = ref<string>('notice')

@@ -28,7 +28,6 @@ defineOptions({
   name: 'OrderNotice',
 })
 
-const $baseNotify = inject<any>('$baseNotify')
 const voice = ref<SpeechSynthesisVoice>(undefined as unknown as SpeechSynthesisVoice)
 const text = ref<string>('')
 const speech = useSpeechSynthesis(text, {

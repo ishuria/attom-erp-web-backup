@@ -12,7 +12,6 @@ defineOptions({
   name: 'VabColorPicker',
 })
 
-const $sub = inject<any>('$sub')
 const predefineColors = ref<any>([
   _color,
   '#1e90ff',

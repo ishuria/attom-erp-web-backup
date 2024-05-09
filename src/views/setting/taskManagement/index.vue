@@ -60,8 +60,6 @@ defineOptions({
   name: 'TaskManagement',
 })
 
-const $baseMessage = inject<any>('$baseMessage')
-
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const queryForm = reactive<any>({

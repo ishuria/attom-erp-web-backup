@@ -60,8 +60,6 @@ interface formType {
   copyright: string
 }
 
-const $baseMessage = inject<any>('$baseMessage')
-
 const form = reactive<formType>({
   siteName: 'Vue Shop Vite',
   siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
