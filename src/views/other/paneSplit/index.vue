@@ -6,12 +6,12 @@
           <vab-alert title="手机端不支持面板分割演示" type="warning" />
         </vab-card>
         <vab-card class="auto-height-card hidden-xs-only">
-          <vab-pane-split ratio="2/3">
+          <vab-pane-split ratio="2/3" @resize="resize">
             <template #one>
               <div class="pane-split-left">A</div>
             </template>
             <template #two>
-              <vab-pane-split class="pane-split-right" horizontal>
+              <vab-pane-split class="pane-split-right" horizontal @resize="resize">
                 <template #one>
                   <div class="pane-split-up">B</div>
                 </template>
@@ -31,6 +31,11 @@
 defineOptions({
   name: 'PaneSplit',
 })
+
+const resize = () => {
+  // console.log('resize')
+  // 监听panel大小变化
+}
 </script>
 
 <style lang="scss" scoped>

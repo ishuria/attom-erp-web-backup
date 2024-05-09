@@ -24,14 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   horizontal: false,
 })
 
-const one = ref<HTMLElement>()
-const two = ref<HTMLElement>()
-const [initGrow1, initGrow2] = parseRatio(props.ratio as string)
-
-const grow1 = ref<any>(initGrow1)
-const grow2 = ref<any>(initGrow2)
-
-function parseRatio(ratio: string): [number, number] {
+const parseRatio = (ratio: string): [number, number] => {
   const rn = ratio
     ?.split('/')
     ?.map(Number)
@@ -44,7 +37,14 @@ function parseRatio(ratio: string): [number, number] {
   return rn as [number, number]
 }
 
-function startResize(mde: MouseEvent) {
+const one = ref<HTMLElement>()
+const two = ref<HTMLElement>()
+const emit = defineEmits(['resize'])
+const [initGrow1, initGrow2] = parseRatio(props.ratio as string)
+const grow1 = ref<any>(initGrow1)
+const grow2 = ref<any>(initGrow2)
+
+const startResize = (mde: MouseEvent) => {
   one.value?.classList.add('forbid-select')
   two.value?.classList.add('forbid-select')
 
@@ -52,7 +52,7 @@ function startResize(mde: MouseEvent) {
   const sizeOne = props.horizontal ? one?.value?.offsetHeight : one?.value?.offsetWidth
   const sizeTwo = props.horizontal ? two?.value?.offsetHeight : two?.value?.offsetWidth
 
-  function handleMouseMove(mme: MouseEvent) {
+  const handleMouseMove = (mme: MouseEvent) => {
     const pos = props.horizontal ? mme.clientY : mme?.clientX
     const newSizeOne = sizeOne! + pos - initialPos
 
@@ -61,12 +61,12 @@ function startResize(mde: MouseEvent) {
     grow2.value = totalGrow - grow1.value
   }
 
-  function handleMouseUp() {
+  const handleMouseUp = () => {
     one.value?.classList.remove('forbid-select')
     two.value?.classList.remove('forbid-select')
-
     document.removeEventListener('mousemove', handleMouseMove)
     document.removeEventListener('mouseup', handleMouseUp)
+    emit('resize')
   }
 
   document.addEventListener('mousemove', handleMouseMove)
