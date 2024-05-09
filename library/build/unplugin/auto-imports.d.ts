@@ -6,6 +6,7 @@
 export {}
 declare global {
   const $baseAlert: typeof import('../../../src/hooks/index')['$baseAlert']
+  const $baseConfirm: typeof import('../../../src/hooks/index')['$baseConfirm']
   const $baseLoading: typeof import('../../../src/hooks/index')['$baseLoading']
   const $baseMessage: typeof import('../../../src/hooks/index')['$baseMessage']
   const $baseNotify: typeof import('../../../src/hooks/index')['$baseNotify']

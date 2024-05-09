@@ -80,7 +80,6 @@ const { changeColor, saveTheme, updateTheme, setCssVar } = settingsStore
 const show = ref<boolean>(true)
 const route = useRoute()
 const routeName = ref<any>(route.name)
-const $baseLoading = inject<any>('$baseLoading')
 
 const handleOpenTheme = () => {
   $pub('shop-vite-open-theme')

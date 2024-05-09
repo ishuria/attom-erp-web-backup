@@ -95,8 +95,6 @@ defineOptions({
   name: 'Trade',
 })
 
-const $baseConfirm = inject<any>('$baseConfirm')
-
 const tableRef = ref<any>(null)
 const fold = ref<boolean>(true)
 const list = ref<any>([])

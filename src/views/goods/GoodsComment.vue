@@ -79,8 +79,6 @@ defineOptions({
   name: 'GoodsComment',
 })
 
-const $baseConfirm = inject<any>('$baseConfirm')
-
 const editRef = ref<any>(null)
 const tableRef = ref<any>(null)
 const list = ref<any>([])

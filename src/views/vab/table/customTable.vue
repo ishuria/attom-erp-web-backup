@@ -173,7 +173,6 @@ const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
-const $baseConfirm = inject<any>('$baseConfirm')
 
 const tableRef = ref<any>(null)
 const fold = ref<boolean>(true)

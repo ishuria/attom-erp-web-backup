@@ -66,8 +66,6 @@ defineOptions({
   name: 'WorkOrder',
 })
 
-const $baseConfirm = inject<any>('$baseConfirm')
-
 const tableRef = ref<any>(null)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)

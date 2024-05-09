@@ -61,8 +61,6 @@ defineOptions({
   label: 'DepartmentManagement',
 })
 
-const $baseConfirm = inject<any>('$baseConfirm')
-
 const tableRef = ref<any>(null)
 const editRef = ref<any>(null)
 const list = ref<any>([])

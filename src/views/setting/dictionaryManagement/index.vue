@@ -58,8 +58,6 @@ defineOptions({
   name: 'DictionaryManagement',
 })
 
-const $baseConfirm = inject<any>('$baseConfirm')
-
 const tableRef = ref<any>(null)
 const treeRef = ref<any>(null)
 const editRef = ref<any>(null)

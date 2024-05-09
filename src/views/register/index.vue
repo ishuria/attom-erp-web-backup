@@ -72,7 +72,6 @@ defineOptions({
   name: 'Register',
 })
 
-const $baseConfirm = inject<any>('$baseConfirm')
 const router = useRouter()
 const userStore = useUserStore()
 const { setToken } = userStore

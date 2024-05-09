@@ -34,6 +34,17 @@ export const $baseNotify: any = (
   return gp.$baseNotify(message, title, type, position, duration)
 }
 
+export const $baseConfirm: any = (
+  content: string | VNode,
+  title: string,
+  callback1: any,
+  callback2: any,
+  confirmButtonText = '确定',
+  cancelButtonText = '取消'
+) => {
+  return gp.$baseConfirm(content, title, callback1, callback2, confirmButtonText, cancelButtonText)
+}
+
 export const $pub: any = (...args: any[]) => {
   return gp.$pub(...args)
 }

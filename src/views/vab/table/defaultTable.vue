@@ -104,7 +104,6 @@ defineOptions({
 })
 
 const router = useRouter()
-const $baseConfirm = inject<any>('$baseConfirm')
 
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)

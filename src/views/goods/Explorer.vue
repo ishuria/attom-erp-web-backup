@@ -84,8 +84,6 @@ defineOptions({
   name: 'Explorer',
 })
 
-const $baseConfirm = inject<any>('$baseConfirm')
-
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<any>(0)
