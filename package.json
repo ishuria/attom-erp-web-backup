@@ -112,7 +112,7 @@
     "vite-plugin-unplugin": "^1.8.0",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^2.0.16"
+    "vue-tsc": "^2.0.17"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
