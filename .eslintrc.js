@@ -70,8 +70,8 @@ module.exports = {
       'error',
       {
         html: {
-          void: 'never',
-          normal: 'never',
+          void: 'any',
+          normal: 'any',
           component: 'always',
         },
         svg: 'always',
