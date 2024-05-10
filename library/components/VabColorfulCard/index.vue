@@ -15,7 +15,7 @@
       <slot name="header"></slot>
     </template>
     <vab-icon v-if="icon" :icon="icon" />
-    <slot />
+    <slot></slot>
   </el-card>
 </template>
 

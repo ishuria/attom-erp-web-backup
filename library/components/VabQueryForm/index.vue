@@ -1,6 +1,6 @@
 <template>
   <el-row class="vab-query-form" :gutter="0">
-    <slot />
+    <slot></slot>
   </el-row>
 </template>
 

@@ -13,7 +13,7 @@
       {{ itemOrMenu.meta.badge }}
     </el-tag>
     <span v-if="itemOrMenu.meta && itemOrMenu.meta.dot" class="vab-dot vab-dot-error">
-      <span />
+      <span></span>
     </span>
   </el-menu-item>
 </template>

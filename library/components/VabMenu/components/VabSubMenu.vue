@@ -16,7 +16,7 @@
         {{ translate(itemOrMenu.meta.title) }}
       </span>
     </template>
-    <slot />
+    <slot></slot>
   </el-sub-menu>
 </template>
 

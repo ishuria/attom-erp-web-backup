@@ -27,7 +27,7 @@
             {{ level3.meta.badge }}
           </el-tag>
           <span v-if="level3.meta && level3.meta.dot" class="vab-dot vab-dot-error">
-            <span />
+            <span></span>
           </span>
         </a>
       </template>

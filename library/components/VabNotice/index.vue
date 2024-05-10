@@ -11,7 +11,7 @@
               <ul v-if="badge">
                 <li v-for="(item, index) in notices" :key="index">
                   <el-avatar :size="45" :src="item.image" />
-                  <span v-html="item.notice" />
+                  <span v-html="item.notice"></span>
                 </li>
               </ul>
               <el-empty v-else description="暂无数据" />

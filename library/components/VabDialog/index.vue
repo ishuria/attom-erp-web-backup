@@ -39,10 +39,10 @@
       </button>
     </template>
     <div v-loading="loading">
-      <slot />
+      <slot></slot>
     </div>
     <template #footer>
-      <slot name="footer" />
+      <slot name="footer"></slot>
     </template>
   </el-dialog>
 </template>

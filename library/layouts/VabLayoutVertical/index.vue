@@ -7,7 +7,7 @@
     }"
   >
     <vab-side-bar />
-    <div v-if="device === 'mobile' && !collapse" class="vab-modal" @click="foldSideBar" />
+    <div v-if="device === 'mobile' && !collapse" class="vab-modal" @click="foldSideBar"></div>
     <div
       class="vab-main"
       :class="{

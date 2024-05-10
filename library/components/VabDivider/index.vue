@@ -4,15 +4,15 @@
     class="vab-blockquote"
     :class="isBorder ? 'vab-blockquote-' + type + ' is-border' : 'vab-blockquote-' + type"
   >
-    <slot />
+    <slot></slot>
   </blockquote>
   <fieldset v-else-if="fieldset" class="vab-fieldset">
     <legend>{{ title }}</legend>
-    <slot />
+    <slot></slot>
   </fieldset>
   <el-divider v-else :border-style="borderStyle" :content-position="contentPosition" :direction="direction">
     <template #default>
-      <slot />
+      <slot></slot>
     </template>
   </el-divider>
 </template>

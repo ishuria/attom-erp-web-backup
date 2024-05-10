@@ -54,21 +54,21 @@
     <vab-card>
       <template #header>局部基础水印</template>
       <el-watermark :content="config.content">
-        <div style="height: 200px" />
+        <div style="height: 200px"></div>
       </el-watermark>
     </vab-card>
 
     <vab-card>
       <template #header>局部多行水印</template>
       <el-watermark :content="['Vite 4.x', 'Vue Shop Vite']">
-        <div style="height: 200px" />
+        <div style="height: 200px"></div>
       </el-watermark>
     </vab-card>
 
     <vab-card>
       <template #header>局部图片水印</template>
       <el-watermark :height="30" image="https://element-plus.org/images/element-plus-logo.svg" :width="130">
-        <div style="height: 200px" />
+        <div style="height: 200px"></div>
       </el-watermark>
     </vab-card>
   </div>

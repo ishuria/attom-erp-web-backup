@@ -28,9 +28,9 @@
       :style="[outZoomerStyle, outZoomerSize, outZoomerPosition, zoomerBgUrl, zoomerBgSize, zoomerBgPosition]"
     >
       <div v-if="pointer" class="img-zoomer-point"></div>
-      <slot name="outZoomer" />
+      <slot name="outZoomer"></slot>
     </div>
-    <slot />
+    <slot></slot>
   </div>
 </template>
 <script lang="ts">
