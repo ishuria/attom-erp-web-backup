@@ -44,10 +44,10 @@ const speech = useSpeechSynthesis(text, {
 const fetchData = async () => {
   const { data } = await getList()
   text.value = data.description
-    .replace(/\n/g, '')
-    .replace(/<[^>]*>/g, '')
-    .replace(/\s/g, '')
-    .replace(/([。；：])\s*/g, '$1\n')
+    .replaceAll('\n', '')
+    .replaceAll(/<[^>]*>/g, '')
+    .replaceAll(/\s/g, '')
+    .replaceAll(/([。：；])\s*/g, '$1\n')
 }
 
 let synth: SpeechSynthesis

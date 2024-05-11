@@ -38,7 +38,7 @@ const visibility = useDocumentVisibility()
 const imports = import.meta.glob<ComponentType>('./**/*.vue', { eager: true })
 const Components: Record<string, Component> = {}
 Object.getOwnPropertyNames(imports).forEach((key: any) => {
-  Components[key.replace(/(\/|\.|index.vue)/g, '')] = imports[key].default
+  Components[key.replaceAll(/(\/|\.|index.vue)/g, '')] = imports[key].default
 })
 
 const layout = computed(() => {

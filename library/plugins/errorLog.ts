@@ -5,7 +5,7 @@ import { useErrorLogStore } from '/@/store/modules/errorLog'
 import { isArray } from '/@/utils/validate'
 
 export const needErrorLog = () => {
-  const errorLogArray = isArray(errorLog) ? [...errorLog] : [...[errorLog]]
+  const errorLogArray = isArray(errorLog) ? [...errorLog] : [errorLog]
   return errorLogArray.includes(import.meta.env.MODE)
 }
 

@@ -17,28 +17,30 @@ onBeforeMount(() => {
   changeColor()
   updateTheme()
 
-  if (!location.hostname.includes('127') && !location.hostname.includes('localhost')) {
-    if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io' || noDebugger) {
-      ;(() => {
-        const block = () => {
-          setInterval(() => {
-            ;(function () {
-              return false
-            })
-              ['constructor']('debugger')
-              ['call']()
-          }, 50)
-        }
+  if (
+    !location.hostname.includes('127') &&
+    !location.hostname.includes('localhost') &&
+    (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io' || noDebugger)
+  ) {
+    ;(() => {
+      const block = () => {
+        setInterval(() => {
+          ;(function () {
+            return false
+          })
+            ['constructor']('debugger')
+            ['call']()
+        }, 50)
+      }
 
-        try {
-          if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io')
-            console.error('演示地址禁止调试，如需调试代码请联系客服购买！')
-          block()
-        } catch {
-          /* empty */
-        }
-      })()
-    }
+      try {
+        if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io')
+          console.error('演示地址禁止调试，如需调试代码请联系客服购买！')
+        block()
+      } catch {
+        /* empty */
+      }
+    })()
   }
 })
 </script>

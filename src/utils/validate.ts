@@ -32,7 +32,7 @@ export const isNumber = (value: string) => {
  * @returns {boolean}
  */
 export const isName = (value: string) => {
-  const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/
+  const reg = /^[\dA-Za-z\u4e00-\u9fa5]+$/
   return reg.test(value)
 }
 
@@ -53,7 +53,7 @@ export const isIP = (value: string) => {
  * @returns {boolean}
  */
 export const isUrl = (value: string) => {
-  const reg = /^https?:\/\/([^:/]+\.)+[^:/]+(:[0-9]+)?(\/.+)$/
+  const reg = /^https?:\/\/([^/:]+\.)+[^/:]+(:\d+)?(\/.+)$/
   return reg.test(value)
 }
 
@@ -101,7 +101,7 @@ export const isString = (value: any) => {
  * @param value
  */
 export const isArray = (value: any) => {
-  if (typeof Array.isArray === 'undefined') return Object.prototype.toString.call(value) === '[object Array]'
+  if (Array.isArray === undefined) return Object.prototype.toString.call(value) === '[object Array]'
   return Array.isArray(value)
 }
 
@@ -111,7 +111,7 @@ export const isArray = (value: any) => {
  * @returns {boolean}
  */
 export const isPort = (value: string) => {
-  const reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
+  const reg = /^(\d|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
   return reg.test(value)
 }
 
@@ -121,7 +121,7 @@ export const isPort = (value: string) => {
  * @returns {boolean}
  */
 export const isPhone = (value: string) => {
-  const reg = /^1[3456789]\d{9}$/
+  const reg = /^1[3-9]\d{9}$/
   return reg.test(value)
 }
 
@@ -131,7 +131,7 @@ export const isPhone = (value: string) => {
  * @returns {boolean}
  */
 export const isIdCard = (value: string) => {
-  const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+  const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}([\dXx])$)/
   return reg.test(value)
 }
 
@@ -141,7 +141,7 @@ export const isIdCard = (value: string) => {
  * @returns {boolean}
  */
 export const isEmail = (value: string) => {
-  const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+  const reg = /^\w+([+.-]\w+)*@\w+([.-]\w+)*\.\w+([.-]\w+)*$/
   return reg.test(value)
 }
 
@@ -170,7 +170,7 @@ export const isBlank = (value: string) => {
  * @returns {boolean}
  */
 export const isTel = (value: string) => {
-  const reg = /^(400|800)([0-9\\-]{7,10})|(([0-9]{4}|[0-9]{3})([- ])?)?([0-9]{7,8})(([- 转])*([0-9]{1,4}))?$/
+  const reg = /^(400|800)([\d\\-]{7,10})|((\d{4}|\d{3})([ -])?)?(\d{7,8})(([ 转-])*(\d{1,4}))?$/
   return reg.test(value)
 }
 
@@ -203,6 +203,6 @@ export const isChinese = (value: string) => {
  * @returns {boolean}
  */
 export const isEnglish = (value: string) => {
-  const reg = /^[a-zA-Z]+$/
+  const reg = /^[A-Za-z]+$/
   return reg.test(value)
 }

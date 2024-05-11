@@ -284,7 +284,7 @@ const handleDelete = (row: any) => {
     })
   } else {
     if (selectRows.value.length > 0) {
-      const ids = selectRows.value.map((item: { id: any }) => item.id).join()
+      const ids = selectRows.value.map((item: { id: any }) => item.id).join(',')
       $baseConfirm('您确定要删除选中项吗', null, async () => {
         const { msg }: any = await doDelete({ ids })
         $baseMessage(msg, 'success', 'hey')
@@ -301,7 +301,7 @@ const handleDetailStayTable = async () => {
     for (let i = 0; i < selectRows.value.length; i++) {
       const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
       const tab = handleTabs({
-        ...matched[matched.length - 1],
+        ...matched.at(-1),
         query: selectRows.value[i],
       })
       if (tab) {

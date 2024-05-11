@@ -10,7 +10,7 @@ export function parseTime(time: any, cFormat: string) {
   let date
   if (typeof time === 'object') date = time
   else {
-    if (typeof time === 'string' && /^[0-9]+$/.test(time)) time = Number.parseInt(time)
+    if (typeof time === 'string' && /^\d+$/.test(time)) time = Number.parseInt(time)
     if (typeof time === 'number' && time.toString().length === 10) time = time * 1000
     date = new Date(time)
   }
@@ -23,7 +23,7 @@ export function parseTime(time: any, cFormat: string) {
     s: date.getSeconds(),
     a: date.getDay(),
   }
-  return format.replace(/{([ymdhisa])+}/g, (result, key) => {
+  return format.replaceAll(/{([adhimsy])+}/g, (result, key) => {
     let value = formatObj[key]
     if (key === 'a') return ['日', '一', '二', '三', '四', '五', '六'][value]
     if (result.length > 0 && value < 10) value = `0${value}`
@@ -59,7 +59,13 @@ export function formatTime(time: any, option: any) {
 export function paramObj(url: string) {
   const search = url.split('?')[1]
   if (!search) return {}
-  return JSON.parse(`{"${decodeURIComponent(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ')}"}`)
+  return JSON.parse(
+    `{"${decodeURIComponent(search)
+      .replaceAll('"', String.raw`\"`)
+      .replaceAll('&', '","')
+      .replaceAll('=', '":"')
+      .replaceAll('+', ' ')}"}`
+  )
 }
 
 /**
@@ -77,7 +83,7 @@ export function translateDataToTree(data: any[]) {
           const temp = JSON.parse(JSON.stringify(children))
           temp.splice(index, 1)
           translator([current], temp)
-          typeof _parent.children !== 'undefined' ? _parent.children.push(current) : (_parent.children = [current])
+          _parent.children === undefined ? (_parent.children = [current]) : _parent.children.push(current)
         }
       })
     })

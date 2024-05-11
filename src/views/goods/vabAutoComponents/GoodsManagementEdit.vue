@@ -78,10 +78,7 @@ const fileList = ref<UploadUserFile[]>([])
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
   nextTick(() => {
-    if (!row) {
-      title.value = '添加'
-      fileList.value = []
-    } else {
+    if (row) {
       title.value = '编辑'
       Object.assign(form, row)
       fileList.value = [
@@ -90,6 +87,9 @@ const showEdit = (row: any) => {
           url: row.image,
         },
       ]
+    } else {
+      title.value = '添加'
+      fileList.value = []
     }
   })
 }

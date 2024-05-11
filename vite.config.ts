@@ -1,6 +1,6 @@
 import autoprefixer from 'autoprefixer'
 import dayjs from 'dayjs'
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'
 import {

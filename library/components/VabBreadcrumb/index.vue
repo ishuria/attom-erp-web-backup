@@ -22,7 +22,7 @@ const { getBreadcrumbRoutes: breadcrumbRoutes } = storeToRefs(routesStore)
 
 const breadcrumbList = computed(() => {
   const matchedRoutes = handleMatched(breadcrumbRoutes.value, route.fullPath).filter((item) => !item.meta.breadcrumbHidden)
-  if (matchedRoutes.length) return matchedRoutes
+  if (matchedRoutes.length > 0) return matchedRoutes
   else return handleMatched(breadcrumbRoutes.value, route.path).filter((item) => !item.meta.breadcrumbHidden)
 })
 

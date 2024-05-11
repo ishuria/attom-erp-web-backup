@@ -29,8 +29,8 @@ export const isCheck = () => {
 
       try {
         block()
-      } catch (err) {
-        console.log(err)
+      } catch (error) {
+        console.log(error)
       }
     })()
     return false
@@ -63,7 +63,7 @@ export default {
       type: 'success' | 'warning' | 'info' | 'error' = 'info',
       customClass: string,
       dangerouslyUseHTMLString: boolean,
-      callback: any = undefined
+      callback?: any
     ) => {
       if (customClass == 'hey') customClass = `vab-hey-message-${type}`
       if (dangerouslyUseHTMLString && typeof dangerouslyUseHTMLString == 'function') {
@@ -92,7 +92,7 @@ export default {
      * @param {function} callback 若不使用Promise,可以使用此参数指定MessageBox关闭后的回调
      */
 
-    const $baseAlert = (content: string | VNode, title = '温馨提示', callback: any = undefined) => {
+    const $baseAlert = (content: string | VNode, title = '温馨提示', callback?: any) => {
       if (title && typeof title == 'function') {
         callback = title
         title = '温馨提示'

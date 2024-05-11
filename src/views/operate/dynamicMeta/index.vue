@@ -110,7 +110,7 @@ const handleResetIcon = () => {
 const handleChangeLogo = (logo: string) => {
   changeLogo(logo)
   switch (logo) {
-    case 'vab':
+    case 'vab': {
       favicon.value = 'favicon-vab.ico'
       $baseMessage('logo修改成功，为保持页面美观，10秒后将重置为默认logo', 'warning', 'hey')
       setTimeout(() => {
@@ -118,10 +118,12 @@ const handleChangeLogo = (logo: string) => {
       }, 1000 * 10)
 
       break
-    case 'vite':
+    }
+    case 'vite': {
       favicon.value = 'favicon.ico'
       localStorage.removeItem('logo')
       break
+    }
   }
 }
 

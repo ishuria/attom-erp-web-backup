@@ -66,7 +66,10 @@ const list = ref<any>([])
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
   nextTick(() => {
-    if (!row) {
+    if (row) {
+      title.value = '编辑'
+      Object.assign(form, row)
+    } else {
       title.value = '添加'
       form.btnRolesCheckedList = [
         'read:system',
@@ -79,9 +82,6 @@ const showEdit = (row: any) => {
         'write:index',
         'delete:index',
       ]
-    } else {
-      title.value = '编辑'
-      Object.assign(form, row)
     }
   })
 }

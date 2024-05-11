@@ -1,7 +1,7 @@
 import basicSsl from '@vitejs/plugin-basic-ssl'
 import autoprefixer from 'autoprefixer'
 import dayjs from 'dayjs'
-import { resolve } from 'path'
+import { resolve } from 'node:path'
 import { visualizer } from 'rollup-plugin-visualizer'
 import type { ConfigEnv, UserConfig } from 'vite'
 import { defineConfig, loadEnv } from 'vite'

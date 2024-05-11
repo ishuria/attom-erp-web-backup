@@ -38,9 +38,9 @@ watermark.set = (str: any) => {
   setInterval(() => {
     if (document.getElementById(id) === null) id = setWatermark(str)
   }, 500)
-  window.onresize = () => {
+  window.addEventListener('resize', () => {
     setWatermark(str)
-  }
+  })
 }
 
 export default watermark

@@ -39,10 +39,11 @@ const handleVisibleChange = (value: boolean) => {
 }
 const handleCommand = async (command: any) => {
   switch (command) {
-    case 'logout':
+    case 'logout': {
       await logout()
       await router.push(toLoginRoute(route.fullPath))
       break
+    }
   }
 }
 </script>

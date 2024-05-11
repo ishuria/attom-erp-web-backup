@@ -175,23 +175,29 @@ const initNoCLosableTabs = (routes: any[]) => {
 
 const handleCommand = (command: any) => {
   switch (command) {
-    case 'refresh':
+    case 'refresh': {
       refresh()
       break
-    case 'closeOthersTabs':
+    }
+    case 'closeOthersTabs': {
       closeOthersTabs()
       break
-    case 'closeLeftTabs':
+    }
+    case 'closeLeftTabs': {
       closeLeftTabs()
       break
-    case 'closeRightTabs':
+    }
+    case 'closeRightTabs': {
       closeRightTabs()
       break
-    case 'closeAllTabs':
+    }
+    case 'closeAllTabs': {
       closeAllTabs()
       break
-    case 'setting':
+    }
+    case 'setting': {
       tabsSettingRef.value.handleOpenSetting()
+    }
   }
 }
 
@@ -279,7 +285,7 @@ const closeAllTabs = async () => {
  * 跳转最后一个标签页
  */
 const toLastTab = async () => {
-  const latestView = visitedRoutes.value.filter((item) => item.path !== handleActivePath(route, true)).slice(-1)[0]
+  const latestView = visitedRoutes.value.filter((item) => item.path !== handleActivePath(route, true)).at(-1)
   if (latestView) await router.push(latestView)
   else await router.push('/')
 }

@@ -18,7 +18,7 @@ export const convertRouter = (asyncRoutes: VabRouteRecord[]) => {
         const path = index > 0 ? route.component.slice(index) : `${route.component}`
         route.component = routeAllPathToCompMap[`../${path}`]
       }
-    if (route.children && route.children.length) route.children = convertRouter(route.children)
+    if (route.children && route.children.length > 0) route.children = convertRouter(route.children)
     if (route.children && route.children.length === 0) delete route.children
     return route
   })
@@ -98,9 +98,9 @@ export const handleTabs = (tag: VabRoute) => {
  * @returns {string|*}
  */
 export const handleActivePath = (route: VabRoute, isTab = false) => {
-  const { meta, path } = route
-  const rawPath = route.matched ? route.matched[route.matched.length - 1].path : path
-  const fullPath = route.query && Object.keys(route.query).length ? `${route.path}?${stringify(route.query)}` : route.path
+  const { meta, path, matched, query }: any = route
+  const rawPath = matched ? matched.at(-1).path : path
+  const fullPath = query && Object.keys(query).length > 0 ? `${path}?${stringify(query)}` : path
   if (isTab) return meta.dynamicNewTab ? fullPath : rawPath
   if (meta.activeMenu) return meta.activeMenu
   return fullPath

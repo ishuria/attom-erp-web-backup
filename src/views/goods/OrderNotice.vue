@@ -73,10 +73,10 @@ const handleSettingNotice = () => {
       const notification = new window.Notification('温馨提示', {
         body: text.value,
       })
-      notification.onclick = () => {
+      notification.addEventListener('click', () => {
         window.focus()
         notification.close()
-      }
+      })
     }
   })
 }

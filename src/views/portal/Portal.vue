@@ -128,19 +128,23 @@ const background = ref<string>('')
 
 const handleChange = (value: any) => {
   switch (value) {
-    case 0:
+    case 0: {
       background.value = `url('${carousel_1}')`
       break
-    case 1:
+    }
+    case 1: {
       background.value = `url('${carousel_2}')`
       break
-    case 2:
+    }
+    case 2: {
       background.value = `url('${carousel_3}')`
       break
+    }
 
-    default:
+    default: {
       background.value = `url('${carousel_1}')`
       break
+    }
   }
 }
 

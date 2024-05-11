@@ -14,7 +14,7 @@ let refreshToking = false
 let requests: any[] = []
 
 // 操作正常Code数组
-const codeVerificationArray = isArray(successCode) ? [...successCode] : [...[successCode]]
+const codeVerificationArray = isArray(successCode) ? [...successCode] : [successCode]
 
 const CODE_MESSAGE: any = {
   200: '服务器成功返回请求数据',
@@ -61,7 +61,14 @@ const requestConf = (config: any) => {
  * @returns {any} 返回结果
  */
 const tryRefreshToken = async (config: any) => {
-  if (!refreshToking) {
+  if (refreshToking) {
+    return new Promise((resolve) => {
+      // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
+      requests.push(() => {
+        resolve(instance(requestConf(config)))
+      })
+    })
+  } else {
     refreshToking = true
     try {
       const {
@@ -81,13 +88,6 @@ const tryRefreshToken = async (config: any) => {
     } finally {
       refreshToking = false
     }
-  } else {
-    return new Promise((resolve) => {
-      // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
-      requests.push(() => {
-        resolve(instance(requestConf(config)))
-      })
-    })
   }
 }
 
@@ -107,23 +107,27 @@ const handleData = async ({ config, data, status, statusText }: { config: any; d
   // 若code属于操作正常code，则status修改为200
   if (codeVerificationArray.indexOf(data[statusName]) + 1) code = 200
   switch (code) {
-    case 200:
+    case 200: {
       // 业务层级错误处理，以下是假定restful有一套统一输出格式(指不管成功与否都有相应的数据格式)情况下进行处理
       // 例如响应内容：
       // 错误内容：{ code: 1, msg: '非法参数' }
       // 正确内容：{ code: 200, data: {  }, msg: '操作正常' }
       // return data
       return data
-    case 401:
+    }
+    case 401: {
       resetAll().then(() => {
         router.push({ path: '/login', replace: true }).then(() => {})
       })
       break
-    case 402:
+    }
+    case 402: {
       return await tryRefreshToken(config)
-    case 403:
+    }
+    case 403: {
       router.push({ path: '/403' }).then(() => {})
       break
+    }
   }
   // 异常处理
   // 若data.msg存在，覆盖默认提醒消息
@@ -131,7 +135,7 @@ const handleData = async ({ config, data, status, statusText }: { config: any; d
   // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
   gp.$baseMessage(errMsg, 'error', 'hey')
   if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })
-  return Promise.reject(data)
+  throw data
 }
 /**
  * @description axios初始化

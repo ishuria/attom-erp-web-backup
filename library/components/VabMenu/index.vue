@@ -1,6 +1,6 @@
 <template>
   <component :is="menuComponent" :item-or-menu="item">
-    <template v-if="item.children && item.children.length">
+    <template v-if="item.children && item.children.length > 0">
       <vab-menu v-for="route in item.children" :key="route.path" :item="route" />
     </template>
   </component>
@@ -18,7 +18,7 @@ interface ComponentType {
 const imports = import.meta.glob<ComponentType>('./**/*.vue', { eager: true })
 const Components: Record<string, Component> = {}
 Object.getOwnPropertyNames(imports).forEach((key) => {
-  Components[key.replace(/(\/|components|\.|vue)/g, '')] = imports[key].default
+  Components[key.replaceAll(/(\/|components|\.|vue)/g, '')] = imports[key].default
 })
 
 const props = defineProps({

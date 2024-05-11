@@ -80,11 +80,13 @@ const handleLink = (slotScope: any) => {
       router.push('/redirect')
     } else {
       if (isExternal(routePath)) window.location.href = routePath
-      else if (route.path !== routePath) {
+      else if (route.path === routePath) {
+        $pub('reload-router-view')
+      } else {
         if (device.value === 'mobile') foldSideBar()
         if (slotScope.children) router.push(slotScope.redirect)
         else router.push(slotScope.path)
-      } else $pub('reload-router-view')
+      }
     }
 
     setTimeout(() => {

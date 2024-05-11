@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('node:fs')
 const package = require('./package.json')
 const data = {
   version: package.version,

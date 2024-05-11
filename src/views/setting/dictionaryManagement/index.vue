@@ -91,7 +91,7 @@ const handleDelete = (row: { id: any }) => {
 }
 
 const fetchData = async (data = { key: 'root' }) => {
-  data.key !== 'root' ? (isRoot.value = false) : (isRoot.value = true)
+  data.key === 'root' ? (isRoot.value = true) : (isRoot.value = false)
   parentKey.value = data.key
 
   listLoading.value = true

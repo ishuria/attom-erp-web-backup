@@ -1,3 +1,1 @@
-import VabPdf from 'vue-pdf-embed'
-
-export default VabPdf
+export { default } from 'vue-pdf-embed'

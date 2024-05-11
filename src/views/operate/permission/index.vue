@@ -150,7 +150,7 @@ watch(token, (value) => {
 })
 
 onActivated(() => {
-  if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io')
-    if (username.value !== 'admin') showAlert.value = true
+  if ((location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io') && username.value !== 'admin')
+    showAlert.value = true
 })
 </script>

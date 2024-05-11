@@ -1635,7 +1635,7 @@ export const setupRouter = (app: App<Element>) => {
   else if (authentication === 'all' && isHashRouterMode) {
     const path = window.location.hash.slice(1)
     const words = path.split('/')
-    const lastWord = words[words.length - 1]
+    const lastWord: any = words.at(-1)
     const name = lastWord.charAt(0).toUpperCase() + lastWord.slice(1)
     router.addRoute({
       path,

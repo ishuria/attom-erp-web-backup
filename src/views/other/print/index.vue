@@ -46,12 +46,14 @@ const tableData = ref<any>([
 
 const print = async (value: any) => {
   switch (value) {
-    case 'imageRef':
+    case 'imageRef': {
       await VabPrint(imageRef.value)
       break
-    case 'tableRef':
+    }
+    case 'tableRef': {
       await VabPrint(tableRef.value)
       break
+    }
   }
 }
 const remotePrint = () => {

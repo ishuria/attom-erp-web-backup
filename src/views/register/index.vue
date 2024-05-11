@@ -94,14 +94,17 @@ const validateUsername = (rule: any, value: any, callback: any) => {
   else callback()
 }
 const validatePassword = (rule: any, value: any, callback: any) => {
-  if (!isPassword(value)) callback(new Error(translate('密码不能少于6位')))
-  else callback()
+  if (isPassword(value)) {
+    callback()
+  } else {
+    callback(new Error(translate('密码不能少于6位')))
+  }
 }
 const validatePhone = (rule: any, value: any, callback: any) => {
-  if (!isPhone(value)) {
-    callback(new Error(translate('请输入正确的手机号')))
-  } else {
+  if (isPhone(value)) {
     callback()
+  } else {
+    callback(new Error(translate('请输入正确的手机号')))
   }
 }
 

@@ -42,7 +42,7 @@ const addFieldToTree = (routes: any) => {
   routes.forEach((node: any) => {
     node.value = node.name
     node.label = translate(node.meta.title)
-    if (node.children && node.children.length) addFieldToTree(node.children)
+    if (node.children && node.children.length > 0) addFieldToTree(node.children)
   })
   return routes
 }

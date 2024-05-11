@@ -108,7 +108,10 @@ const handleIcon = (item: string) => {
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
   nextTick(() => {
-    if (!row) {
+    if (row) {
+      title.value = '编辑'
+      Object.assign(form, row)
+    } else {
       title.value = '添加'
       form.meta = {
         title: '',
@@ -123,9 +126,6 @@ const showEdit = (row: any) => {
         tabHidden: false,
         guard: [],
       }
-    } else {
-      title.value = '编辑'
-      Object.assign(form, row)
     }
   })
 }

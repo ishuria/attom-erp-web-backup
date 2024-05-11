@@ -89,8 +89,11 @@ const validateUsername = (rule: any, value: any, callback: any) => {
   else callback()
 }
 const validatePassword = (rule: any, value: any, callback: any) => {
-  if (!isPassword(value)) callback(new Error(translate('密码不能少于6位')))
-  else callback()
+  if (isPassword(value)) {
+    callback()
+  } else {
+    callback(new Error(translate('密码不能少于6位')))
+  }
 }
 
 const rules = reactive<any>({

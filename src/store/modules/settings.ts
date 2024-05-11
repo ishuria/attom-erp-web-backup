@@ -117,7 +117,7 @@ export const useSettingsStore = defineStore('settings', {
       if (this.device === 'mobile')
         this.theme = {
           ...defaultTheme,
-          ...{ layout: 'vertical' },
+          layout: 'vertical',
         }
       localStorage.removeItem('shop-vite-theme')
       this.updateTheme()
@@ -125,15 +125,15 @@ export const useSettingsStore = defineStore('settings', {
     updateTheme() {
       document.querySelectorAll('body')[0].className = `vab-theme-${this.theme.themeName}`
 
-      if (this.theme.themeName !== 'default') {
-        document.querySelectorAll('html')[0].className = ''
-        localStorage.setItem('vueuse-color-scheme', 'light')
-        this.mode = 'light'
-      } else {
+      if (this.theme.themeName === 'default') {
         const colorScheme = localStorage.getItem('vueuse-color-scheme')
         const htmlElement = document.querySelectorAll('html')[0]
         htmlElement.className += ` ${colorScheme}`
         this.mode = colorScheme as string
+      } else {
+        document.querySelectorAll('html')[0].className = ''
+        localStorage.setItem('vueuse-color-scheme', 'light')
+        this.mode = 'light'
       }
 
       this.setCssVar()
@@ -144,17 +144,29 @@ export const useSettingsStore = defineStore('settings', {
       if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px')) useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'
 
-      if (!this.theme.showTabs) useCssVar('--el-tabs-height', el).value = '0px'
-      else useCssVar('--el-tabs-height', el).value = '50px'
+      if (this.theme.showTabs) {
+        useCssVar('--el-tabs-height', el).value = '50px'
+      } else {
+        useCssVar('--el-tabs-height', el).value = '0px'
+      }
 
-      if (!this.theme.showFooter) useCssVar('--el-footer-height', el).value = '-20px'
-      else useCssVar('--el-footer-height', el).value = '50px'
+      if (this.theme.showFooter) {
+        useCssVar('--el-footer-height', el).value = '50px'
+      } else {
+        useCssVar('--el-footer-height', el).value = '-20px'
+      }
 
-      if (!this.theme.radius) useCssVar('--el-border-radius-base', el).value = '5px'
-      else useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`
+      if (this.theme.radius) {
+        useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`
+      } else {
+        useCssVar('--el-border-radius-base', el).value = '5px'
+      }
 
-      if (!this.theme.isFollow) useCssVar('--el-menu-background-color', el).value = '#282c34'
-      else useCssVar('--el-menu-background-color', el).value = lightenColorChrome(this.color, 18)
+      if (this.theme.isFollow) {
+        useCssVar('--el-menu-background-color', el).value = lightenColorChrome(this.color, 18)
+      } else {
+        useCssVar('--el-menu-background-color', el).value = '#282c34'
+      }
 
       if (this.theme.colorWeakness) document.querySelectorAll('body')[0].classList.add('color-weakness')
       else document.querySelectorAll('body')[0].classList.remove('color-weakness')

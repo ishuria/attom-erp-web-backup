@@ -81,7 +81,7 @@ export const useTabsStore = defineStore('tabs', {
       const handleVisitedRoutes = (visitedRoutes: any[]) => {
         return visitedRoutes.map((route: any) => {
           if (route.name === options.name || route.meta.title === options.title) Object.assign(route.meta, options.meta)
-          if (route.children && route.children.length) route.children = handleVisitedRoutes(route.children)
+          if (route.children && route.children.length > 0) route.children = handleVisitedRoutes(route.children)
           return route
         })
       }

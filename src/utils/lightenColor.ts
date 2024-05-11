@@ -1,8 +1,8 @@
 import { round } from 'lodash-es'
 
 export const lightenColor = (color: any, amount: any) => {
-  if (!/^#([0-9a-f]{3}){1,2}$/i.test(color)) return color
-  const rgb = color.replace(/^#/, '').match(/[a-f0-9]{2}/gi)
+  if (!/^#([\da-f]{3}){1,2}$/i.test(color)) return color
+  const rgb = color.replace(/^#/, '').match(/[\da-f]{2}/gi)
   for (let i = 0; i < 3; i++) {
     rgb[i] = Number.parseInt(rgb[i], 16)
   }
@@ -17,8 +17,8 @@ export const lightenColorChrome = (color: any, amount: any) => {
   const versionMatch = browser.userAgent.match(/Chrome\/(\d+.\d+)/)
   if (versionMatch && Number.parseFloat(versionMatch[1]) >= 111) return `color-mix(in srgb, ${color} ${100 - amount}%, white)`
   else {
-    if (!/^#([0-9a-f]{3}){1,2}$/i.test(color)) return color
-    const rgb = color.replace(/^#/, '').match(/[a-f0-9]{2}/gi)
+    if (!/^#([\da-f]{3}){1,2}$/i.test(color)) return color
+    const rgb = color.replace(/^#/, '').match(/[\da-f]{2}/gi)
     for (let i = 0; i < 3; i++) {
       rgb[i] = Number.parseInt(rgb[i], 16)
     }
@@ -45,7 +45,7 @@ export const getRgbNum = (sColor: string) => {
 }
 
 export const colorRgba = (str: any, n = 1) => {
-  const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
+  const reg = /^#([\dA-f]{3}|[\dA-f]{6})$/
   const sColor = str.toLowerCase()
   if (sColor && reg.test(sColor)) return `rgba(${getRgbNum(sColor).join(',')},${round(n, 1)})`
   else return sColor

@@ -59,10 +59,12 @@ const handleLink = () => {
       router.push('/redirect')
     } else {
       if (isExternal(routePath)) window.location.href = routePath
-      else if (route.path !== routePath) {
+      else if (route.path === routePath) {
+        $pub('reload-router-view')
+      } else {
         if (device.value === 'mobile') foldSideBar()
         router.push(props.itemOrMenu.path)
-      } else $pub('reload-router-view')
+      }
     }
 
     setTimeout(() => {

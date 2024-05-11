@@ -15,12 +15,12 @@ export const $baseMessage: any = (
   type: 'success' | 'warning' | 'info' | 'error' = 'info',
   customClass: string,
   dangerouslyUseHTMLString: boolean,
-  callback: any = undefined
+  callback?: any
 ) => {
   return gp.$baseMessage(message, type, customClass, dangerouslyUseHTMLString, callback)
 }
 
-export const $baseAlert: any = (content: string | VNode, title = '温馨提示', callback: any = undefined) => {
+export const $baseAlert: any = (content: string | VNode, title = '温馨提示', callback?: any) => {
   return gp.$baseAlert(content, title, callback)
 }
 

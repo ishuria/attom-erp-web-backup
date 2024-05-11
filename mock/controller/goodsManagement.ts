@@ -34,7 +34,7 @@ export default [
       return {
         code: 200,
         msg: 'success',
-        data: { list, ...{ total: mockList.length } },
+        data: { list, total: mockList.length },
       }
     },
   },

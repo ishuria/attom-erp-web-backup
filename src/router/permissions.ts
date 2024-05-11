@@ -32,7 +32,7 @@ export const setupPermissions = (router: Router) => {
     if (!loginInterception) hasToken = true
 
     if (hasToken) {
-      if (routes.length) {
+      if (routes.length > 0) {
         // 禁止已登录用户返回登录页
         if (to.path === '/login') {
           next({ path: '/' })
@@ -46,8 +46,8 @@ export const setupPermissions = (router: Router) => {
           // 根据路由模式获取路由并根据权限过滤
           await setRoutes(authentication)
           next({ ...to, replace: true })
-        } catch (err) {
-          console.error('vue-shop-vite 错误拦截:', err)
+        } catch (error) {
+          console.error('vue-shop-vite 错误拦截:', error)
           await resetAll()
           next(toLoginRoute(to.fullPath))
         }
@@ -55,7 +55,7 @@ export const setupPermissions = (router: Router) => {
     } else {
       if (routesWhiteList.includes(to.path)) {
         // 设置游客路由(不需要可以删除)
-        if (supportVisit && !routes.length) {
+        if (supportVisit && routes.length === 0) {
           await setRoutes('visit')
           next({ path: to.path, replace: true })
         } else next()

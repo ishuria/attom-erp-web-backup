@@ -27,7 +27,7 @@ defineOptions({
 
 const dialogVisible = ref<any>(false)
 
-const editorRef = shallowRef<IDomEditor | undefined>(undefined)
+const editorRef = shallowRef<IDomEditor | undefined>()
 const html = ref<any>(
   '<h1>一级标题</h1><h2>二级标题</h2><h3>三级标题</h3><p>hello world ~~~ </p><blockquote>blockquote</blockquote><pre><code class="language-javascript">const a = 100;</code></pre><p><img src="https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-1.jpg"/></p>'
 )

@@ -48,8 +48,11 @@ const randomTheme = async () => {
     theme.value.showTabsIcon = showTabsIcon
     theme.value.layout = layout
 
-    if (themeName !== 'technology') color.value = _color
-    else color.value = '#4e88f3'
+    if (themeName === 'technology') {
+      color.value = '#4e88f3'
+    } else {
+      color.value = _color
+    }
 
     if (themeName === 'default') theme.value.isFollow = isFollow
     else theme.value.isFollow = false

@@ -51,10 +51,11 @@ const dialogFormVisible = ref<boolean>(false)
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
   nextTick(() => {
-    if (!row) title.value = '添加'
-    else {
+    if (row) {
       title.value = '编辑'
       Object.assign(form, row)
+    } else {
+      title.value = '添加'
     }
   })
 }

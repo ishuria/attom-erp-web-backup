@@ -8,7 +8,7 @@ export default [
     response(request) {
       const authorization = request.headers.authorization || request.headers.Authorization
       const arr = authorization.split('-')
-      const tokenTime = Number.parseInt(arr[arr.length - 1])
+      const tokenTime = Number.parseInt(arr.at(-1))
 
       if (Date.now() - tokenTime > 5000)
         return {

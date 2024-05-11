@@ -194,8 +194,11 @@ const handleColorWeakness = (value: any) => {
 
 const handleShowTabs = (value: any) => {
   const el = ref<any>(null)
-  if (!value) useCssVar('--el-tabs-height', el).value = '0px'
-  else useCssVar('--el-tabs-height', el).value = '50px'
+  if (value) {
+    useCssVar('--el-tabs-height', el).value = '50px'
+  } else {
+    useCssVar('--el-tabs-height', el).value = '0px'
+  }
 }
 
 const handlePersistenceTab = (value: any) => {

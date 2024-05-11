@@ -131,7 +131,7 @@ const handleDelete = (row: any) => {
     })
   } else {
     if (selectRows.value.length > 0) {
-      const ids = selectRows.value.map((item: { id: any }) => item.id).join()
+      const ids = selectRows.value.map((item: { id: any }) => item.id).join(',')
       $baseConfirm('您确定要删除选中项吗', null, async () => {
         const { msg }: any = await doDelete({ ids })
         $baseMessage(msg, 'success', 'hey')

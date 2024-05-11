@@ -70,7 +70,7 @@ const closeAllTabs = async () => {
 }
 
 const toLastTab = async () => {
-  const latestView = visitedRoutes.value.filter((item) => item.path !== handleActivePath(route, true)).slice(-1)[0]
+  const latestView = visitedRoutes.value.filter((item) => item.path !== handleActivePath(route, true)).at(-1)
   if (latestView) await router.push(latestView)
   else await router.push('/')
 }

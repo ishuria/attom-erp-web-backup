@@ -1,8 +1,7 @@
-import registerDownload from './registerDownload'
-import registerEnd from './registerEnd'
-import registerPolyline from './registerPolyline'
-import registerPush from './registerPush'
-import registerStart from './registerStart'
-import registerUser from './registerUser'
+export { default as registerDownload } from './registerDownload'
+export { default as registerPolyline } from './registerPolyline'
+export { default as registerEnd } from './registerEnd'
+export { default as registerStart } from './registerStart'
+export { default as registerPush } from './registerPush'
 
-export { registerDownload, registerEnd, registerPolyline, registerPush, registerStart, registerUser }
+export { default as registerUser } from './registerUser'

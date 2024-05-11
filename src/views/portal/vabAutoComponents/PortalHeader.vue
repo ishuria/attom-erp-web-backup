@@ -35,15 +35,18 @@ const activeName = ref(props.activeMenu)
 
 const handleClick = (tab: TabsPaneContext) => {
   switch (tab.index) {
-    case '0':
+    case '0': {
       router.push('/portal')
       break
-    case '1':
+    }
+    case '1': {
       router.push('/product')
       break
-    case '2':
+    }
+    case '2': {
       router.push('/index')
       break
+    }
   }
 }
 

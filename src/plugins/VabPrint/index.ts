@@ -95,12 +95,12 @@ Print.prototype = {
     doc.write(content)
     doc.close()
     const _this = this
-    iframe.onload = function () {
+    iframe.addEventListener('load', () => {
       _this.toPrint(w)
       setTimeout(() => {
         document.body.removeChild(iframe)
       }, 100)
-    }
+    })
   },
 
   toPrint(frameWindow: {
@@ -119,8 +119,8 @@ Print.prototype = {
         }
         frameWindow.close()
       }, 10)
-    } catch (err) {
-      console.log('err', err)
+    } catch (error) {
+      console.log('err', error)
     }
   },
   isDOM:

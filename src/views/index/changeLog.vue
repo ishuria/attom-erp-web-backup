@@ -150,15 +150,15 @@ const fetchData = async () => {
 
 const update = async () => {
   const _servicesVersion = await fetchData()
-  version !== _servicesVersion
-    ? $baseAlert(
+  version === _servicesVersion
+    ? $baseMessage('当前已是最新版本', 'success', 'hey')
+    : $baseAlert(
         '请手动按下键盘Ctrl（Command） + Shift + R 刷新页面，以保证您第一时间获得网站的更新内容',
         `检测到新版本V${_servicesVersion}`,
         () => {
           $pub('update-website')
         }
       )
-    : $baseMessage('当前已是最新版本', 'success', 'hey')
 }
 
 onBeforeMount(() => {

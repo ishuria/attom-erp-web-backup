@@ -47,11 +47,12 @@ const fetchData = async () => {
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
   nextTick(() => {
-    if (!row) title.value = '添加'
-    else {
+    if (row) {
       delete row.value
       title.value = '编辑'
       Object.assign(form, row)
+    } else {
+      title.value = '添加'
     }
   })
 }

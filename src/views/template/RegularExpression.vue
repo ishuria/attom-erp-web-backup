@@ -56,38 +56,59 @@ const form = reactive<any>({
 })
 
 const validateEmail = (rule: any, value: any, callback: any) => {
-  if (!isEmail(value)) callback(new Error('请输入有效的邮箱地址'))
-  else callback()
+  if (isEmail(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入有效的邮箱地址'))
+  }
 }
 
 const validatePhone = (rule: any, value: any, callback: any) => {
-  if (!isPhone(value)) callback(new Error('请输入有效的手机号'))
-  else callback()
+  if (isPhone(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入有效的手机号'))
+  }
 }
 
 const validateIdCard = (rule: any, value: any, callback: any) => {
-  if (!isIdCard(value)) callback(new Error('请输入有效的身份证号'))
-  else callback()
+  if (isIdCard(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入有效的身份证号'))
+  }
 }
 
 const validateNumber = (rule: any, value: any, callback: any) => {
-  if (!isNumber(value)) callback(new Error('请输入有效的数字'))
-  else callback()
+  if (isNumber(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入有效的数字'))
+  }
 }
 
 const validateEnglish = (rule: any, value: any, callback: any) => {
-  if (!isEnglish(value)) callback(new Error('请输入有效的英文字符'))
-  else callback()
+  if (isEnglish(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入有效的英文字符'))
+  }
 }
 
 const validateChinese = (rule: any, value: any, callback: any) => {
-  if (!isChinese(value)) callback(new Error('请输入有效的中文字符'))
-  else callback()
+  if (isChinese(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入有效的中文字符'))
+  }
 }
 
 const validateUrl = (rule: any, value: any, callback: any) => {
-  if (!isUrl(value)) callback(new Error('请输入有效的URL'))
-  else callback()
+  if (isUrl(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入有效的URL'))
+  }
 }
 
 const rules = reactive<any>({
