@@ -5,7 +5,6 @@
         <vab-card>
           <div class="vab-chat-main">
             <el-radio-group v-model="radio" @change="changeGPT">
-              <el-radio-button label="小爱同学" value="小爱同学" />
               <el-radio-button label="GPT3.5" value="GPT3.5" />
               <el-radio-button label="GPT4.0" value="GPT4.0" />
             </el-radio-group>
@@ -74,8 +73,8 @@ const innerRef = ref<HTMLDivElement>()
 const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
 const finish = ref<boolean>(true)
 
-const radio = ref<string>('小爱同学')
-const url = ref<string>('https://api.oioweb.cn/api/ai/chat?text=')
+const radio = ref<string>('GPT3.5')
+const url = ref<string>('https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text=')
 
 const loading = ref<boolean>(false)
 let timer: any = null
@@ -83,7 +82,6 @@ const result =
   '\u0053\u0068\u006f\u0070\u0020\u0056\u0069\u0074\u0065\u0020\u6f14\u793a\u5730\u5740\u4ec5\u63d0\u4f9b\u0020\u0043\u0068\u0061\u0074\u0047\u0050\u0054\u0020\u57fa\u7840\u80fd\u529b\u5c55\u793a\uff0c\u5982\u9700\u83b7\u53d6\u0020\u0043\u0068\u0061\u0074\u0047\u0050\u0054\u0020\u5b8c\u6574\u529f\u80fd\u8bf7\u8bbf\u95ee\u0020\u004f\u0070\u0065\u006e\u0020\u0041\u0049\u0020\u5b98\u7f51\u81ea\u884c\u8d2d\u4e70\u5bf9\u63a5\uff0c\u60a8\u73b0\u5728\u53ef\u4ee5\u8ddf\u6211\u5bf9\u8bdd\u4e86'
 
 const changeGPT = (value: any) => {
-  if (value == '小爱同学') url.value = 'https://api.oioweb.cn/api/ai/chat?text='
   if (value == 'GPT3.5')
     url.value = 'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text='
   if (value == 'GPT4.0') url.value = 'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-4&text='
