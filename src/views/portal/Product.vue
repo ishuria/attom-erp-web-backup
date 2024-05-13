@@ -147,12 +147,11 @@ defineOptions({
   .banner {
     position: relative;
     width: 100%;
-    height: 410px;
-    margin-top: 70px;
+    height: 480px;
     background: var(--el-color-primary-light-9);
 
     &-title {
-      margin-top: 80px;
+      margin-top: 150px;
       margin-bottom: 12px;
       font-size: 40px;
       font-weight: 600;
@@ -169,7 +168,7 @@ defineOptions({
 
     .image-bg {
       position: absolute;
-      top: 80px;
+      top: 150px;
       right: 30px;
       width: 192px;
       height: 192px;
@@ -181,7 +180,7 @@ defineOptions({
     :deep() {
       .el-image {
         position: absolute;
-        top: 85px;
+        top: 155px;
         right: 35px;
         width: 170px;
       }

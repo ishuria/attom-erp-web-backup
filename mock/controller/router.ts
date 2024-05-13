@@ -1,7 +1,7 @@
 import type { MockMethod } from 'vite-plugin-mock'
 
 const Layout = 'Layout'
-const list = [
+const list: VabRouteRecord[] = [
   {
     path: '/',
     name: 'Root',
@@ -1534,6 +1534,15 @@ const list = [
     component: '/@/views/portal/Product.vue',
     meta: {
       title: '产品简介',
+      hidden: true,
+    },
+  },
+  {
+    path: '/partner',
+    name: 'Partner',
+    component: '/@/views/portal/Partner.vue',
+    meta: {
+      title: '合作伙伴',
       hidden: true,
     },
   },

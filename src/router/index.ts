@@ -1588,6 +1588,15 @@ export const asyncRoutes: VabRouteRecord[] = [
     },
   },
   {
+    path: '/partner',
+    name: 'Partner',
+    component: () => import('/@/views/portal/Partner.vue'),
+    meta: {
+      title: '合作伙伴',
+      hidden: true,
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
     name: 'NotFound',

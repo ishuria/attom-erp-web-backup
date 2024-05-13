@@ -4,6 +4,8 @@
     <el-divider direction="vertical" />
     <vab-link :class="activeMenu === 'product' ? 'active' : ''" to="/product">产品简介</vab-link>
     <el-divider direction="vertical" />
+    <vab-link :class="activeMenu === 'partner' ? 'active' : ''" to="/partner">合作伙伴</vab-link>
+    <el-divider direction="vertical" />
     <vab-link to="/index">后台管理</vab-link>
   </div>
 </template>

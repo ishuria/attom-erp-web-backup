@@ -7,9 +7,7 @@
       </div>
 
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="主页" name="portal"><a href="#/portal"></a></el-tab-pane>
-        <el-tab-pane label="产品简介" name="product"><a href="#/product"></a></el-tab-pane>
-        <el-tab-pane label="后台管理" name="admin"><a href="#/index" target="_blank"></a></el-tab-pane>
+        <el-tab-pane v-for="(item, index) in tabsList" :key="index" :label="item.label" :name="item.name" />
       </el-tabs>
     </div>
   </header>
@@ -31,27 +29,36 @@ const props = defineProps({
   },
 })
 
-const activeName = ref(props.activeMenu)
+const el = ref<any>(null)
+const activeName = ref<any>(props.activeMenu)
+const tabsList = reactive<any>([
+  {
+    label: '主页',
+    name: 'portal',
+  },
+  {
+    label: '产品简介',
+    name: 'product',
+  },
+  {
+    label: '合作伙伴',
+    name: 'partner',
+  },
+  {
+    label: '后台管理',
+    name: 'index',
+  },
+])
 
 const handleClick = (tab: TabsPaneContext) => {
-  switch (tab.index) {
-    case '0': {
-      router.push('/portal')
-      break
-    }
-    case '1': {
-      router.push('/product')
-      break
-    }
-    case '2': {
-      router.push('/index')
-      break
-    }
-  }
+  router.push(`/${tab.props.name}`)
 }
 
 onMounted(() => {
   document.querySelectorAll('body')[0].className = ''
+
+  if (activeName.value == 'partner') useCssVar('--el-color-primary', el).value = '#13ce66'
+  else useCssVar('--el-color-primary', el).value = '#4e88f3'
 })
 </script>
 
