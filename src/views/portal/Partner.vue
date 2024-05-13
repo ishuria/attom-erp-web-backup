@@ -9,7 +9,7 @@
         <div class="banner">
           <main>
             <div class="banner-title">合作伙伴计划</div>
-            <div class="banner-description">虚位以待，合作共赢，Vue Shop Vite与您共同成长</div>
+            <div class="banner-description">虚位以待，合作共赢，国内Vue3前端付费模板连续多年销量Top1，Vue Shop Vite期待与您共同成长</div>
 
             <el-button
               href="https://vue-admin-beautiful.com/authorization/shop-vite.html"
