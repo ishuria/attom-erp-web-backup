@@ -29,7 +29,7 @@ const props = defineProps({
   },
 })
 
-const el = ref<any>(null)
+// const el = ref<any>(null)
 const activeName = ref<any>(props.activeMenu)
 const tabsList = reactive<any>([
   {
@@ -57,8 +57,8 @@ const handleClick = (tab: TabsPaneContext) => {
 onMounted(() => {
   document.querySelectorAll('body')[0].className = ''
 
-  if (activeName.value == 'partner') useCssVar('--el-color-primary', el).value = '#13ce66'
-  else useCssVar('--el-color-primary', el).value = '#4e88f3'
+  // if (activeName.value == 'partner') useCssVar('--el-color-primary', el).value = '#13ce66'
+  // else useCssVar('--el-color-primary', el).value = '#4e88f3'
 })
 </script>
 

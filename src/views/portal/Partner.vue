@@ -16,7 +16,7 @@
               rel="noopener noreferrer"
               tag="a"
               target="_blank"
-              type="success"
+              type="primary"
             >
               立即购买
             </el-button>
@@ -26,13 +26,13 @@
               rel="noopener noreferrer"
               tag="a"
               target="_blank"
-              type="success"
+              type="primary"
             >
               进入产品
             </el-button>
 
             <div class="image-bg"></div>
-            <el-image :src="logo" />
+            <el-image :src="avatar" />
           </main>
         </div>
         <main>
@@ -60,8 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import avatar from '/@/assets/avatar.svg'
-import logo from '/@/assets/logo.svg'
+import avatar from '/@/assets/partner_images/copilot.svg'
 
 defineOptions({
   name: 'Partner',
@@ -112,7 +111,7 @@ const list = reactive<any>([
     position: relative;
     width: 100%;
     height: 430px;
-    background: var(--el-color-success-light-9);
+    background: var(--el-color-primary-light-9);
 
     &-title {
       margin-top: 150px;
@@ -136,7 +135,7 @@ const list = reactive<any>([
       right: 30px;
       width: 192px;
       height: 192px;
-      background-image: linear-gradient(-45deg, #35495e 50%, #41b882 50%);
+      background-image: linear-gradient(-45deg, #2e65e7 50%, #50d79a 50%);
       filter: blur(40px);
       border-radius: 50%;
     }
