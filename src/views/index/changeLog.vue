@@ -1,7 +1,7 @@
 <template>
   <div class="change-log-container no-background-container auto-height-container">
     <el-row :gutter="20">
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col :lg="15" :md="24" :sm="24" :xl="12" :xs="24">
         <vab-card class="auto-height-card has-header" skeleton :skeleton-rows="16">
           <template #header>
             <vab-icon icon="file-word-line" />
