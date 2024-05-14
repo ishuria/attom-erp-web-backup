@@ -36,7 +36,19 @@
           </main>
         </div>
         <main>
-          <h1>TODO</h1>
+          <ul>
+            <li v-for="(item, index) in list" :key="index" class="partner-detail">
+              <el-image :src="item.logo" />
+              <div class="partner-detail-discription">
+                <div class="partner-detail-name">
+                  {{ item.name }}
+                </div>
+                <div class="partner-detail-label">
+                  {{ item.label }}
+                </div>
+              </div>
+            </li>
+          </ul>
         </main>
       </div>
       <portal-divider active-menu="partner" style="margin-top: 12px" />
@@ -48,11 +60,27 @@
 </template>
 
 <script lang="ts" setup>
+import avatar from '/@/assets/avatar.svg'
 import logo from '/@/assets/logo.svg'
 
 defineOptions({
   name: 'Partner',
 })
+
+const list = reactive<any>([
+  {
+    logo: avatar,
+    name: '某某科技有限公司',
+    label:
+      '致力于成为全球电力行业数字化转型的优选伙伴，随着能源转型的不断深入，新型电力系统源侧低碳化、网侧数字化、荷侧电气化的趋势已经成为行业共识，坚持平台+生态战略，把创新ICT技术、电力数字平台与行业实践经验深度结合。',
+  },
+  {
+    logo: avatar,
+    name: '某某科技有限公司',
+    label:
+      '致力于为客户提供在线数据监测、数据整合、数据分析与挖掘、数据产品和智能应用以及数据化运营决策支持体系建设相关的工具、技术开发、咨询服务及企业培训。为国内众多知名企业输出高质量的数据分析服务，在业内获得广泛好评。',
+  },
+])
 </script>
 
 <style lang="scss" scoped>
@@ -119,6 +147,45 @@ defineOptions({
         top: 155px;
         right: 35px;
         width: 170px;
+      }
+    }
+  }
+
+  ul {
+    padding: 0;
+    margin-top: -10px;
+  }
+
+  .partner-detail {
+    display: flex;
+    align-items: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--el-border-color);
+
+    &-discription {
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    &-name {
+      padding-top: 10px;
+      font-size: var(--el-font-size-bigger);
+      font-weight: 600;
+      color: #333437;
+    }
+
+    &-label {
+      padding-top: 10px;
+      font-size: var(--el-font-size-default);
+      line-height: 1.5;
+      color: #808592;
+    }
+
+    :deep() {
+      .el-image {
+        width: 55px;
+        height: 55px;
       }
     }
   }
