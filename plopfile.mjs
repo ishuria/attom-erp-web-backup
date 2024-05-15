@@ -1,5 +1,6 @@
 import curdGenerator from './plop-template/curd/prompt.mjs'
 
-export default (plop) => {
+const plopfile = (plop) => {
   plop.setGenerator('curd', curdGenerator)
 }
+export default plopfile
