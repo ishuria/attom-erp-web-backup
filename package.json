@@ -57,7 +57,7 @@
     "typeit": "^8.8.3",
     "vsv-icon": "^1.1.9",
     "vue": "^3.4.27",
-    "vue-draggable-plus": "^0.4.0",
+    "vue-draggable-plus": "^0.4.1",
     "vue-echarts": "^6.7.2",
     "vue-i18n": "^9.13.1",
     "vue-json-viewer": "^3.0.4",
@@ -113,7 +113,7 @@
     "vite-plugin-unplugin": "^1.8.0",
     "vite-plugin-vitebar": "^0.0.5",
     "vue-global-api": "^0.4.1",
-    "vue-tsc": "^2.0.17"
+    "vue-tsc": "^2.0.19"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
