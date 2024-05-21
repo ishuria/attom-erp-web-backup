@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInstance } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { register } from '/@/api/user'
 import leftImg from '/@/assets/login_images/left_img_2.png'
 import { translate } from '/@/i18n'
@@ -73,6 +73,14 @@ defineOptions({
   name: 'Register',
 })
 
+interface FormType {
+  username: string
+  password: string
+  phone: string
+  verificationCode: string
+  phoneCode: string
+}
+
 const router = useRouter()
 const userStore = useUserStore()
 const { setToken } = userStore
@@ -81,13 +89,14 @@ const { theme } = storeToRefs(settingsStore)
 const loading = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const isGetPhone = ref<boolean>(false)
-const getPhoneInterval = ref<any>(null)
+let timer: ReturnType<typeof setInterval>
 const phoneCode = ref<any>(translate('获取验证码'))
-const form = reactive<any>({
+const form = reactive<FormType>({
   username: '',
   password: '',
   phone: '',
   verificationCode: '',
+  phoneCode: '',
 })
 
 const validateUsername = (rule: any, value: any, callback: any) => {
@@ -109,7 +118,7 @@ const validatePhone = (rule: any, value: any, callback: any) => {
   }
 }
 
-const rules = reactive<any>({
+const rules = reactive<FormRules<FormType>>({
   username: [
     {
       required: true,
@@ -150,14 +159,13 @@ const getPhoneCode = () => {
   }
   isGetPhone.value = true
   let n = 60
-  getPhoneInterval.value = setInterval(() => {
+  timer = setInterval(() => {
     if (n > 0) {
       n--
       phoneCode.value = `${translate('获取验证码 ') + n}s`
     } else {
-      clearInterval(getPhoneInterval.value)
+      clearInterval(timer)
       phoneCode.value = translate('获取验证码')
-      getPhoneInterval.value = null
       isGetPhone.value = false
     }
   }, 1000)
@@ -182,8 +190,7 @@ const handleRegister = () => {
 }
 
 onUnmounted(() => {
-  clearInterval(getPhoneInterval.value)
-  getPhoneInterval.value = null
+  clearInterval(timer)
 })
 </script>
 

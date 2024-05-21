@@ -8,7 +8,7 @@ export function getList(params?: any) {
   })
 }
 
-export function doEdit(data: any) {
+export const doEdit = (data: any) => {
   return request({
     url: '/workflow/doEdit',
     method: 'post',

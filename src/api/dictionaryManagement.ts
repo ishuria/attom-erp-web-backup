@@ -16,7 +16,7 @@ export function getList(params?: any) {
   })
 }
 
-export function doEdit(data: any) {
+export const doEdit = (data: any) => {
   return request({
     url: '/dictionaryManagement/doEdit',
     method: 'post',
@@ -24,7 +24,7 @@ export function doEdit(data: any) {
   })
 }
 
-export function doDelete(data: any) {
+export const doDelete = (data: any) => {
   return request({
     url: '/dictionaryManagement/doDelete',
     method: 'post',

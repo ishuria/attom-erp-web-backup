@@ -1,13 +1,13 @@
 import request from '/@/utils/request'
 
-export function expireToken() {
+export const expireToken = () => {
   return request({
     url: '/expireToken',
     method: 'get',
   })
 }
 
-export function refreshToken() {
+export const refreshToken = () => {
   return request({
     url: '/refreshToken',
     method: 'get',

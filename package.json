@@ -42,7 +42,7 @@
     "@vueuse/head": "^2.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
-    "axios": "^1.6.8",
+    "axios": "^1.7.1",
     "dayjs": "^1.11.11",
     "echarts": "^5.5.0",
     "element-plus": "^2.7.3",
@@ -67,7 +67,7 @@
     "vue3-gantt": "1.1.8-7",
     "vue3-puzzle-vcode": "^1.1.7",
     "xgplayer": "^3.0.17",
-    "xgplayer-hls.js": "^3.0.17"
+    "xgplayer-hls.js": "^3.0.18"
   },
   "devDependencies": {
     "@element-plus/eslint-config": "^2.7.3",

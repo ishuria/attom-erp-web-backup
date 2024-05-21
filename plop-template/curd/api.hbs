@@ -1,6 +1,6 @@
 import request from '/@/utils/request'
 
-export function getList(params: any) {
+export const getList=(params: any) =>{
   return request({
     url: '/{{name}}/getList',
     method: 'get',
@@ -8,7 +8,7 @@ export function getList(params: any) {
   })
 }
 
-export function doEdit(data: any) {
+export const doEdit=(data: any) => {
   return request({
     url: '/{{name}}/doEdit',
     method: 'post',
@@ -16,7 +16,7 @@ export function doEdit(data: any) {
   })
 }
 
-export function doDelete(data: any) {
+export const doDelete=(data: any) =>{
   return request({
     url: '/{{name}}/doDelete',
     method: 'post',

@@ -1,6 +1,6 @@
 import request from '/@/utils/request'
 
-export function getList() {
+export const getList = () => {
   return request({
     url: '/news/getList',
     method: 'get',

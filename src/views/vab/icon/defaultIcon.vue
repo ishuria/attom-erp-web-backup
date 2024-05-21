@@ -63,9 +63,17 @@ defineOptions({
   name: 'DefaultIcon',
 })
 
+interface QueryFormType {
+  pageNo: number
+  pageSize: number
+  title: string
+  colorful: boolean
+  num: number
+}
+
 const queryIcon = ref<any>([])
 const total = ref<number>(0)
-const queryForm = reactive<any>({
+const queryForm = reactive<QueryFormType>({
   pageNo: 1,
   pageSize: 72,
   title: '',
@@ -76,12 +84,14 @@ const queryForm = reactive<any>({
 const emptyShow = ref<boolean>(false)
 
 const fetchData = async () => {
-  const { data } = await getIconList(queryForm)
-  queryIcon.value = data.list.map((icon: any) => {
+  const {
+    data: { total, list },
+  } = await getIconList(queryForm)
+  queryIcon.value = list.map((icon: any) => {
     return { icon, color: randomHexColor() }
   })
-  total.value = data.total
-  emptyShow.value = data.total <= 0
+  total.value = total
+  emptyShow.value = total <= 0
 }
 
 const handleSizeChange = (value: number) => {

@@ -1,6 +1,6 @@
 import request from '/@/utils/request'
 
-export function getPublicKey() {
+export const getPublicKey = () => {
   return request({
     url: '/publicKey',
     method: 'get',

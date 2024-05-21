@@ -39,7 +39,7 @@ const CODE_MESSAGE: any = {
  * @param config
  * @returns {any}
  */
-const requestConf = (config: any) => {
+const requestConfig = (config: any): any => {
   const userStore = useUserStore()
   const { token } = userStore
   // 不规范写法 可根据setting.config.js tokenName配置随意自定义headers
@@ -60,12 +60,12 @@ const requestConf = (config: any) => {
  * @param config 过期请求配置
  * @returns {any} 返回结果
  */
-const tryRefreshToken = async (config: any) => {
+const tryRefreshToken = async (config: any): Promise<any> => {
   if (refreshToking) {
     return new Promise((resolve) => {
       // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
       requests.push(() => {
-        resolve(instance(requestConf(config)))
+        resolve(instance(requestConfig(config)))
       })
     })
   } else {
@@ -80,7 +80,7 @@ const tryRefreshToken = async (config: any) => {
         // 已经刷新了token，将所有队列中的请求进行重试
         requests.forEach((cb) => cb(token))
         requests = []
-        return instance(requestConf(config))
+        return instance(requestConfig(config))
       }
     } catch (error) {
       console.error('refreshToken error =>', error)
@@ -99,7 +99,7 @@ const tryRefreshToken = async (config: any) => {
  * @param statusText {any} HTTP status text
  * @returns {Promise<*|*>}
  */
-const handleData = async ({ config, data, status, statusText }: { config: any; data: any; status: any; statusText: any }) => {
+const handleData = async ({ config, data, status, statusText }: any): Promise<any | any> => {
   const { resetAll } = useUserStore()
   if (loadingInstance) loadingInstance.close()
   // 若data.code存在，覆盖默认code
@@ -151,7 +151,7 @@ const instance = axios.create({
 /**
  * @description axios请求拦截器
  */
-instance.interceptors.request.use(requestConf, (error) => {
+instance.interceptors.request.use(requestConfig, (error) => {
   return Promise.reject(error)
 })
 
