@@ -44,7 +44,7 @@ const emit = defineEmits(['handle-icon'])
 
 const icon = ref<string>('24-hours-fill')
 const layout = ref<string>('total, prev, next')
-const total = ref<any>(0)
+const total = ref<number>(0)
 const queryIcon = ref<any>([])
 const queryForm = reactive<any>({
   pageNo: 1,

@@ -62,7 +62,7 @@ defineOptions({
 const emptyShow = ref<boolean>(false)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
-const total = ref<any>(0)
+const total = ref<number>(0)
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,

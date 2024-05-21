@@ -104,7 +104,7 @@ const tableRef = ref<any>(null)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 
-const total = ref<any>(0)
+const total = ref<number>(0)
 const selectRows = ref<any>([])
 const queryForm = reactive<any>({
   pageNo: 1,
