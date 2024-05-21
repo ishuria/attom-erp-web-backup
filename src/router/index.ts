@@ -26,6 +26,14 @@ export const constantRoutes: VabRouteRecord[] = [
     },
   },
   {
+    path: '/password',
+    name: 'Password',
+    component: () => import('/@/views/login/Password.vue'),
+    meta: {
+      hidden: true,
+    },
+  },
+  {
     path: '/redirect',
     name: 'Redirect',
     component: () => import('/@/views/redirect/Redirect.vue'),

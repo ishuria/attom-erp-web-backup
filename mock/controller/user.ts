@@ -63,6 +63,17 @@ export default [
     },
   },
   {
+    url: '/password',
+    method: 'post',
+    response() {
+      return {
+        code: 200,
+        msg: '模拟修改密码成功',
+        data: { token: tokens['admin'] },
+      }
+    },
+  },
+  {
     url: '/userInfo',
     method: 'get',
     response(request: any) {

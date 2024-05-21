@@ -4,6 +4,7 @@ import request from '/@/utils/request'
 
 interface FormType {
   password: string
+  password2?: string
   phone: string
   phoneCode: string
   username: string
@@ -36,6 +37,14 @@ export const logout = () => {
 export const register = (data: FormType) => {
   return request({
     url: '/register',
+    method: 'post',
+    data,
+  })
+}
+
+export const password = (data: FormType) => {
+  return request({
+    url: '/password',
     method: 'post',
     data,
   })

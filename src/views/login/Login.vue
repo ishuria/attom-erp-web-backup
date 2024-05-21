@@ -43,6 +43,11 @@
             {{ translate('注册') }}
           </el-button>
         </router-link>
+        <router-link to="/password">
+          <el-button style="margin-top: 20px" text type="primary">
+            {{ translate('忘记密码') }}
+          </el-button>
+        </router-link>
       </el-form>
     </div>
   </login-container>
