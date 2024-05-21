@@ -100,7 +100,7 @@ const handleMouseLeave = () => {
   start()
 }
 
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 const start = () => {
   if (timer) clearTimeout(timer)

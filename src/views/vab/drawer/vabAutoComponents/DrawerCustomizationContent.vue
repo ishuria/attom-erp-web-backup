@@ -44,7 +44,7 @@
 import { ElDrawer, ElMessageBox } from 'element-plus'
 
 const formLabelWidth = '80px'
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 const table = ref<boolean>(false)
 const dialog = ref<boolean>(false)

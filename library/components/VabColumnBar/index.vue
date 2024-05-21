@@ -74,7 +74,7 @@ const {
   getPartialRoutes: partialRoutes,
 } = storeToRefs(routesStore)
 const menuRef = ref<any>(null)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 const setDefaultOpeneds = () => {
   timer = setTimeout(() => {

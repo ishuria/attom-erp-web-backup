@@ -24,7 +24,7 @@ defineOptions({
   name: 'Cashier',
 })
 const QR = ref<any>(_QR)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 const refresh = () => {
   QR.value = ''
   timer = setTimeout(() => {

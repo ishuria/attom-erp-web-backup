@@ -46,13 +46,13 @@
 
 <script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue'
-import type { UploadUserFile } from 'element-plus'
+import type { FormInstance, UploadUserFile } from 'element-plus'
 
 defineOptions({
   name: 'WebsiteSetting',
 })
 
-interface formType {
+interface FormType {
   siteName: string
   siteUrl: string
   metaKeywords: string
@@ -60,7 +60,7 @@ interface formType {
   copyright: string
 }
 
-const form = reactive<formType>({
+const form = reactive<FormType>({
   siteName: 'Vue Shop Vite',
   siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
   metaKeywords: '',
@@ -68,7 +68,7 @@ const form = reactive<formType>({
   copyright: '',
 })
 const fileList = ref<UploadUserFile[]>([])
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const formRules = reactive<any>({
   siteName: [{ required: true, message: '请输入网站名称', trigger: 'blur' }],
   siteUrl: [
@@ -85,7 +85,7 @@ const formRules = reactive<any>({
 })
 
 const submitForm = () => {
-  formRef.value.validate((valid: boolean) => {
+  formRef.value?.validate((valid: boolean) => {
     if (valid) {
       $baseMessage('表单提交成功', 'success', 'hey')
     }

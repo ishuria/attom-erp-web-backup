@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
 import { doEdit } from '/@/api/goodsComment'
 
 defineOptions({
@@ -26,17 +27,11 @@ defineOptions({
 
 const emit = defineEmits(['fetch-data'])
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
-const form = reactive<any>({
-  title: '',
-  author: '',
-})
-const rules = reactive<any>({
-  title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
-  author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
-})
+const form = reactive<any>({})
+const rules = reactive<any>({})
 
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
@@ -58,13 +53,13 @@ defineExpose({
 })
 
 const close = () => {
-  formRef.value.clearValidate()
-  formRef.value.resetFields()
+  formRef.value?.clearValidate()
+  formRef.value?.resetFields()
   emit('fetch-data')
 }
 
 const save = () => {
-  formRef.value.validate(async (valid: any) => {
+  formRef.value?.validate(async (valid: any) => {
     if (valid) {
       const { msg }: any = await doEdit(form)
       await $baseMessage(msg, 'success', 'hey')

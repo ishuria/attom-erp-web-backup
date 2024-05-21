@@ -54,6 +54,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance, FormRules, InputInstance } from 'element-plus'
 import leftImg from '/@/assets/login_images/left_img_1.png'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
@@ -64,21 +65,28 @@ defineOptions({
   name: 'Login',
 })
 
+interface FormType {
+  username: string
+  password: string
+  verificationCode: string
+}
+
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
 const { theme, title } = storeToRefs(settingsStore)
-const login = (form: any) => userStore.login(form)
+const login = (form: FormType) => userStore.login(form)
 const loading = ref<boolean>(false)
 const passwordType = ref<string>('password')
 const redirect = ref<any>(undefined)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
 const previewText = ref<string>('')
-const formRef = ref<any>(null)
-const passwordRef = ref<any>(null)
-const form = reactive<any>({
+const formRef = ref<FormInstance>()
+const passwordRef = ref<InputInstance>()
+
+const form = reactive<FormType>({
   username: '',
   password: '',
   verificationCode: '',
@@ -96,7 +104,7 @@ const validatePassword = (rule: any, value: any, callback: any) => {
   }
 }
 
-const rules = reactive<any>({
+const rules = reactive<FormRules<FormType>>({
   username: [
     {
       required: true,
@@ -119,7 +127,7 @@ const handleRoute = () => {
 
 const handleLogin = async () => {
   if (formRef.value)
-    formRef.value.validate(async (valid: any) => {
+    formRef.value?.validate(async (valid: any) => {
       if (valid)
         try {
           loading.value = true

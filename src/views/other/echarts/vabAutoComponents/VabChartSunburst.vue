@@ -21,7 +21,7 @@ defineProps({
   },
 })
 
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 const option = reactive<any>({
   grid: {

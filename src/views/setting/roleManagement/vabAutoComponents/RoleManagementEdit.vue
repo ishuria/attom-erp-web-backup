@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
 import { doEdit } from '/@/api/roleManagement'
 import { getList } from '/@/api/router'
 
@@ -40,7 +41,7 @@ defineOptions({
 
 const emit = defineEmits(['fetch-data'])
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const treeRef = ref<any>(null)
 const form = reactive<any>({
   role: '',
@@ -91,8 +92,8 @@ defineExpose({
 })
 
 const close = () => {
-  formRef.value.clearValidate()
-  formRef.value.resetFields()
+  formRef.value?.clearValidate()
+  formRef.value?.resetFields()
   emit('fetch-data')
 }
 
@@ -102,7 +103,7 @@ const fetchData = async () => {
 }
 
 const save = () => {
-  formRef.value.validate(async (valid: any) => {
+  formRef.value?.validate(async (valid: any) => {
     if (valid) {
       const tree = treeRef.value.getCheckedKeys()
       const treeObject = { 'treeArray:': tree }

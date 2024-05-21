@@ -91,7 +91,7 @@ const rules = {
 }
 
 const handleUnLock = () => {
-  formRef.value.validate(async (valid: boolean) => {
+  formRef.value?.validate(async (valid: boolean) => {
     if (valid) await _handleUnLock()
   })
 }

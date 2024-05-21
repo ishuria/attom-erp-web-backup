@@ -43,7 +43,7 @@
 
 <script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue'
-import type { UploadUserFile } from 'element-plus'
+import type { FormInstance, UploadUserFile } from 'element-plus'
 import { doEdit } from '/@/api/workOrder'
 
 defineOptions({
@@ -52,7 +52,7 @@ defineOptions({
 
 const emit = defineEmits(['fetch-data'])
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
 const form = reactive<any>({})
@@ -99,13 +99,13 @@ defineExpose({
 })
 
 const close = () => {
-  formRef.value.clearValidate()
-  formRef.value.resetFields()
+  formRef.value?.clearValidate()
+  formRef.value?.resetFields()
   emit('fetch-data')
 }
 
 const save = () => {
-  formRef.value.validate(async (valid: any) => {
+  formRef.value?.validate(async (valid: any) => {
     if (valid) {
       const { msg }: any = await doEdit(form)
       await $baseMessage(msg, 'success', 'hey')

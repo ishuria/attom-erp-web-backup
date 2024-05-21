@@ -189,7 +189,7 @@ defineOptions({
   name: 'ServerManagement',
 })
 
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 const activeNames = ref<any>(['1', '2'])
 

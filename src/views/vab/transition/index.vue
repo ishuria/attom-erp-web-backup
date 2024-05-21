@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 const show = ref<boolean>(true)
 const checked = ref<boolean>(false)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 const handleChange = (value: any) => {
   if (value)

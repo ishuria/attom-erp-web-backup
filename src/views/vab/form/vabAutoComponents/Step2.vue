@@ -25,6 +25,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
+
 defineOptions({
   name: 'Step2',
 })
@@ -38,7 +40,7 @@ defineProps({
 })
 const emit = defineEmits(['change-step'])
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const form = reactive<any>({
   password: '123456',
 })
@@ -48,7 +50,7 @@ const rules = reactive<any>({
 const loading = ref<boolean>(false)
 
 const handleSubmit = () => {
-  formRef.value.validate((valid: any) => {
+  formRef.value?.validate((valid: any) => {
     if (valid) {
       loading.value = true
       setTimeout(() => {

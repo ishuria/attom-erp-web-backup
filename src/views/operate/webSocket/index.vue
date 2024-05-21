@@ -60,13 +60,14 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
 import { thirteenBitTimestamp } from '/@/utils'
 
 defineOptions({
   name: 'WebSocket',
 })
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const form = reactive<any>({
   server: 'ws://127.0.0.1:8080',
   sendValue: '你好！',
@@ -104,7 +105,7 @@ const getList = computed(() => {
 })
 
 const handleSend = () => {
-  formRef.value.validate(async (valid: any) => {
+  formRef.value?.validate(async (valid: any) => {
     if (valid) {
       send(form.sendValue)
       form.sendValue = ''

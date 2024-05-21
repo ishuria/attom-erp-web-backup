@@ -27,12 +27,14 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
+
 defineOptions({
   name: 'Step1',
 })
 const emit = defineEmits(['change-step'])
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const form = reactive<any>({
   payAccount: '****************',
   gatheringAccount: '****************',
@@ -53,7 +55,7 @@ const rules = reactive<any>({
 })
 
 const handleSubmit = () => {
-  formRef.value.validate((valid: any) => {
+  formRef.value?.validate((valid: any) => {
     if (valid) {
       emit('change-step', 1, form)
     }

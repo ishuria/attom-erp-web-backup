@@ -12,7 +12,7 @@ import { lightenColor } from '/@/utils/lightenColor'
 
 const settingsStore = useSettingsStore()
 const { color } = storeToRefs(settingsStore)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 const updateTime = ref<any>()
 
 const option = reactive<any>({

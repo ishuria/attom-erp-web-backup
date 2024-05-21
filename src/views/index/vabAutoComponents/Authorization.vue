@@ -36,7 +36,7 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { color } = storeToRefs(settingsStore)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 const n = ref<number>(5)
 const countConfig = reactive<any>({
   startValue: 0,

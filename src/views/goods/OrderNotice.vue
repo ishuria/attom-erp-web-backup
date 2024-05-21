@@ -41,7 +41,7 @@ const fetchData = async () => {
 
 let synth: SpeechSynthesis
 const voices = ref<SpeechSynthesisVoice[]>([])
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 onMounted(() => {
   if (speech.isSupported.value) {

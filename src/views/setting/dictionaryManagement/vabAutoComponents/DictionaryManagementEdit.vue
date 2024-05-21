@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
 import { doEdit } from '/@/api/dictionaryManagement'
 import { uuid } from '/@/utils'
 
@@ -30,7 +31,7 @@ defineOptions({
 
 const emit = defineEmits(['fetch-data'])
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const form = reactive<any>({
   parentKey: '',
   id: uuid(),
@@ -54,12 +55,12 @@ defineExpose({
 })
 
 const close = () => {
-  formRef.value.clearValidate()
-  formRef.value.resetFields()
+  formRef.value?.clearValidate()
+  formRef.value?.resetFields()
   emit('fetch-data', { key: form.parentKey })
 }
 const save = () => {
-  formRef.value.validate(async (valid: any) => {
+  formRef.value?.validate(async (valid: any) => {
     if (valid) {
       const { msg }: any = await doEdit(form)
       await $baseMessage(msg, 'success', 'hey')

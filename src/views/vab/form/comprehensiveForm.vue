@@ -76,6 +76,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
 import { getList } from '/@/api/area'
 
 defineOptions({
@@ -96,7 +97,7 @@ const generateData = () => {
   return data
 }
 
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const labelPosition = ref<any>('right')
 const form = reactive<any>({
   name: '',
@@ -154,14 +155,14 @@ const fetchData = async () => {
 }
 
 const submitForm = () => {
-  formRef.value.validate((valid: any) => {
+  formRef.value?.validate((valid: any) => {
     if (valid) $baseMessage('表单提交成功', 'success', 'hey')
     else $baseMessage('表单提交失败', 'error', 'hey')
   })
 }
 
 const resetForm = () => {
-  formRef.value.resetFields()
+  formRef.value?.resetFields()
 }
 
 onBeforeMount(() => {

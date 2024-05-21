@@ -121,7 +121,7 @@ const handleReset = () => {
   form.theme = 'default'
 }
 
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 onActivated(() => {
   if (theme.value.themeName === 'technology') form.theme = 'default'
 

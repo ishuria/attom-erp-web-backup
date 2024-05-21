@@ -143,7 +143,7 @@ const rules = reactive<any>({
 })
 
 const submitForm = () => {
-  formRef.value.validate((valid: boolean) => {
+  formRef.value?.validate((valid: boolean) => {
     if (valid) {
       $baseMessage('表单校验通过', 'success', 'hey')
     } else {
@@ -153,6 +153,6 @@ const submitForm = () => {
 }
 
 const resetForm = () => {
-  formRef.value.resetFields()
+  formRef.value?.resetFields()
 }
 </script>

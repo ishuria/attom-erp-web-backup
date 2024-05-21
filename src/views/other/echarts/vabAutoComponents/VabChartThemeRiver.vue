@@ -24,7 +24,7 @@ defineProps({
 
 const settingsStore = useSettingsStore()
 const { color } = storeToRefs(settingsStore)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 const option = reactive<any>({
   grid: {
@@ -328,3 +328,4 @@ onBeforeUnmount(() => {
   if (timer) clearTimeout(timer)
 })
 </script>
+storeToRefslettimer

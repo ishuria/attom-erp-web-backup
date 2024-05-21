@@ -188,9 +188,7 @@ const configHls = reactive<any>({
   height: '100%',
 })
 const value = ref<string>('1')
-const form = reactive<any>({
-  text: '',
-})
+const form = reactive<any>({})
 const options = [
   {
     value: '1',

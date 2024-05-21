@@ -61,6 +61,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
 import { register } from '/@/api/user'
 import leftImg from '/@/assets/login_images/left_img_2.png'
 import { translate } from '/@/i18n'
@@ -78,7 +79,7 @@ const { setToken } = userStore
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 const loading = ref<boolean>(false)
-const formRef = ref<any>(null)
+const formRef = ref<FormInstance>()
 const isGetPhone = ref<boolean>(false)
 const getPhoneInterval = ref<any>(null)
 const phoneCode = ref<any>(translate('获取验证码'))
@@ -144,7 +145,7 @@ const rules = reactive<any>({
 
 const getPhoneCode = () => {
   if (!isPhone(form.phone)) {
-    formRef.value.validateField('phone')
+    formRef.value?.validateField('phone')
     return
   }
   isGetPhone.value = true
@@ -162,7 +163,7 @@ const getPhoneCode = () => {
   }, 1000)
 }
 const handleRegister = () => {
-  formRef.value.validate(async (valid: any) => {
+  formRef.value?.validate(async (valid: any) => {
     if (valid) {
       loading.value = true
       const {

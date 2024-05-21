@@ -66,7 +66,7 @@ const stop = () => {
   speech.stop()
 }
 
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 
 onMounted(() => {
   if (speech.isSupported.value) {

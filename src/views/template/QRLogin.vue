@@ -28,7 +28,7 @@ import _scan from '/@/assets/qr_images/scan.png'
 
 const scan = ref<string>(_scan)
 const dialogVisible = ref<boolean>(false)
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 let timer2: any
 
 onActivated(() => {

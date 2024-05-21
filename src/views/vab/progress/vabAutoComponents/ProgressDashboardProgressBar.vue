@@ -37,7 +37,7 @@ const decrease = () => {
     percentage.value = 0
   }
 }
-let timer: any = null
+let timer: ReturnType<typeof setInterval>
 onBeforeMount(() => {
   timer = setInterval(() => {
     percentage2.value = (percentage2.value % 100) + 10
