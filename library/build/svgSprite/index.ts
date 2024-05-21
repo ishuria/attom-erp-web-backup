@@ -5,5 +5,6 @@ export const createSvgIcons = () => {
   return createSvgIconsPlugin({
     iconDirs: [path.resolve(process.cwd(), 'src/icon')],
     symbolId: 'vab-icon-[name]',
+    // svgoOptions: false,
   })
 }

@@ -12,7 +12,7 @@ export const constantRoutes: VabRouteRecord[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('/@/views/login/index.vue'),
+    component: () => import('/@/views/login/Login.vue'),
     meta: {
       hidden: true,
     },
@@ -20,7 +20,7 @@ export const constantRoutes: VabRouteRecord[] = [
   {
     path: '/register',
     name: 'Register',
-    component: () => import('/@/views/register/index.vue'),
+    component: () => import('/@/views/login/Register.vue'),
     meta: {
       hidden: true,
     },
