@@ -84,14 +84,12 @@ const queryForm = reactive<QueryFormType>({
 const emptyShow = ref<boolean>(false)
 
 const fetchData = async () => {
-  const {
-    data: { total, list },
-  } = await getIconList(queryForm)
-  queryIcon.value = list.map((icon: any) => {
+  const { data } = await getIconList(queryForm)
+  queryIcon.value = data.list.map((icon: any) => {
     return { icon, color: randomHexColor() }
   })
-  total.value = total
-  emptyShow.value = total <= 0
+  total.value = data.total
+  emptyShow.value = data.total <= 0
 }
 
 const handleSizeChange = (value: number) => {
