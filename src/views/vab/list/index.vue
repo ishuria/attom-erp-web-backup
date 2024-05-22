@@ -13,43 +13,45 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-empty v-if="emptyShow" class="vab-data-empty el-table" description="暂无数据" />
-    <ul v-loading="listLoading" class="vab-auto-box">
-      <li v-for="(item, index) in list" :key="index" class="list-item">
-        <div class="list-item-meta">
-          <div class="list-item-meta-avatar">
-            <el-popover placement="top-start" trigger="hover">
-              <el-image :src="item.image" />
-              <template #reference>
+    <el-scrollbar>
+      <ul v-loading="listLoading" class="vab-auto-box">
+        <li v-for="(item, index) in list" :key="index" class="list-item">
+          <div class="list-item-meta">
+            <div class="list-item-meta-avatar">
+              <el-popover placement="top-start" trigger="hover">
                 <el-image :src="item.image" />
-              </template>
-            </el-popover>
-          </div>
-          <div class="list-item-meta-content hidden-xs-only">
-            <div class="list-item-meta-title">
-              {{ item.title }}
+                <template #reference>
+                  <el-image :src="item.image" />
+                </template>
+              </el-popover>
             </div>
-            <div class="list-item-meta-description hidden-xs-only">
-              {{ item.description }}
+            <div class="list-item-meta-content hidden-xs-only">
+              <div class="list-item-meta-title">
+                {{ item.title }}
+              </div>
+              <div class="list-item-meta-description hidden-xs-only">
+                {{ item.description }}
+              </div>
+            </div>
+            <div class="list-item-meta-content2 hidden-xs-only">
+              <el-progress :percentage="parseInt(item.percentage)" />
+            </div>
+            <div class="list-item-meta-content2">
+              <p>开始时间</p>
+              <p>{{ item.datetime }}</p>
+            </div>
+            <div class="list-item-meta-content2">
+              <p>状态</p>
+              <p>
+                <el-tag :type="statusFilter(item.status)">
+                  {{ item.status }}
+                </el-tag>
+              </p>
             </div>
           </div>
-          <div class="list-item-meta-content2 hidden-xs-only">
-            <el-progress :percentage="parseInt(item.percentage)" />
-          </div>
-          <div class="list-item-meta-content2">
-            <p>开始时间</p>
-            <p>{{ item.datetime }}</p>
-          </div>
-          <div class="list-item-meta-content2">
-            <p>状态</p>
-            <p>
-              <el-tag :type="statusFilter(item.status)">
-                {{ item.status }}
-              </el-tag>
-            </p>
-          </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </el-scrollbar>
     <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"

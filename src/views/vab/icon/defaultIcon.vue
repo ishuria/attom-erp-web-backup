@@ -2,7 +2,7 @@
   <div class="default-icon-container auto-height-container">
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-form inline label-width="80px" @submit.prevent>
+        <el-form inline label-width="70px" @submit.prevent>
           <el-form-item label="图标名称">
             <el-input v-model="queryForm.title" clearable placeholder="请输入图标名称" />
           </el-form-item>
@@ -22,25 +22,27 @@
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
-    <div class="vab-auto-box">
-      <el-row :gutter="20">
-        <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="4" :sm="6" :xl="3" :xs="6">
-          <vab-card @click="handleCopyIcon(item.icon)">
-            <vab-icon
-              :icon="item.icon"
-              :style="{
-                color: queryForm.colorful ? item.color : 'var(--el-color-grey)',
-                fontSize: queryForm.num + 'px',
-                transition: 'var(--el-transition)',
-              }"
-            />
-          </vab-card>
-          <div class="icon-text" @click="handleCopyText(item.icon)">
-            {{ item.icon }}
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+    <el-scrollbar>
+      <div class="vab-auto-box">
+        <el-row :gutter="20">
+          <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="4" :sm="6" :xl="3" :xs="6">
+            <vab-card @click="handleCopyIcon(item.icon)">
+              <vab-icon
+                :icon="item.icon"
+                :style="{
+                  color: queryForm.colorful ? item.color : 'var(--el-color-grey)',
+                  fontSize: queryForm.num + 'px',
+                  transition: 'var(--el-transition)',
+                }"
+              />
+            </vab-card>
+            <div class="icon-text" @click="handleCopyText(item.icon)">
+              {{ item.icon }}
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </el-scrollbar>
     <vab-pagination
       background
       :current-page="queryForm.pageNo"
