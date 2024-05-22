@@ -31,9 +31,7 @@ defineOptions({
 const props = defineProps({
   itemOrMenu: {
     type: Object,
-    default() {
-      return null
-    },
+    default: () => {},
   },
 })
 

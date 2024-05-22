@@ -84,9 +84,7 @@ const props = defineProps({
   },
   renderer: {
     type: String,
-    default: () => {
-      return 'CanvasRenderer'
-    },
+    default: 'CanvasRenderer',
   },
 })
 

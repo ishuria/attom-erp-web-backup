@@ -99,10 +99,7 @@ watchEffect(() => {
 
 const isOpen = computed(() => status.value === 'OPEN')
 const getTagType = computed(() => (isOpen.value ? 'success' : 'danger'))
-
-const getList = computed(() => {
-  return [...form.recordList].reverse()
-})
+const getList = computed(() => [...form.recordList].reverse())
 
 const handleSend = () => {
   formRef.value?.validate(async (valid: any) => {

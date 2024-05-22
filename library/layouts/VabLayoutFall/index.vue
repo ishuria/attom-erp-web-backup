@@ -37,21 +37,15 @@ defineOptions({
 defineProps({
   collapse: {
     type: Boolean,
-    default() {
-      return false
-    },
+    default: false,
   },
   fixedHeader: {
     type: Boolean,
-    default() {
-      return true
-    },
+    default: true,
   },
   showTabs: {
     type: Boolean,
-    default() {
-      return true
-    },
+    default: true,
   },
 })
 </script>

@@ -13,12 +13,10 @@ defineOptions({
 const props = defineProps({
   config: {
     type: Object,
-    default() {
-      return {
-        id: 'mse',
-        url: '',
-      }
-    },
+    default: () => ({
+      id: 'mse',
+      url: '',
+    }),
   },
 })
 

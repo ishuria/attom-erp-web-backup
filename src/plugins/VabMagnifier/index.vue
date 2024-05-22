@@ -62,15 +62,11 @@ export default {
     },
     zoomerStyle: {
       type: Object,
-      default() {
-        return {}
-      },
+      default: () => {},
     },
     outZoomerStyle: {
       type: Object,
-      default() {
-        return {}
-      },
+      default: () => {},
     },
     scale: {
       type: Number,
@@ -95,7 +91,7 @@ export default {
     outZoomer: {
       type: Boolean,
       default: false,
-    } as any,
+    },
     pointer: {
       type: Boolean,
       default: false,

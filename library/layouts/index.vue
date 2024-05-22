@@ -41,9 +41,7 @@ Object.getOwnPropertyNames(imports).forEach((key: any) => {
   Components[key.replaceAll(/(\/|\.|index.vue)/g, '')] = imports[key].default
 })
 
-const layout = computed(() => {
-  return Components[convertToCamelCase(`vab-layout-${theme.value.layout}`)]
-})
+const layout = computed(() => Components[convertToCamelCase(`vab-layout-${theme.value.layout}`)])
 
 const resizeBody = () => {
   const { width } = useWindowSize()

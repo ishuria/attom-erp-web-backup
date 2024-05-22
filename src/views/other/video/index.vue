@@ -82,7 +82,7 @@ const configHls2 = reactive<any>({
 })
 
 const configHls3 = reactive<any>({
-  url: 'https://gcalic.v.myalicdn.com/gc/hsxkscj_1/index.m3u8?contentid=2820180516001',
+  url: 'https://gctxyc.liveplay.myqcloud.com/gc/tyhjtys_1/index.m3u8?contentid=2820180516001',
   id: uniqueId('uuid_hls_'),
   lang: 'zh',
   volume: 0,

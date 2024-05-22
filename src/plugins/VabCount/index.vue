@@ -90,9 +90,7 @@ const formatNumber = (num) => {
   return props.prefix + x1 + x2 + props.suffix
 }
 
-const displayValue = computed(() => {
-  return formatNumber(output.value)
-})
+const displayValue = computed(() => formatNumber(output.value))
 
 watch(
   props,

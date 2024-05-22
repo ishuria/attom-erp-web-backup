@@ -62,9 +62,9 @@ const { foldSideBar } = settingsStore
 const { enter, exit } = useFullscreen()
 const mousePosition = ref({ x: 0, y: 0 })
 
-const handleRoutes = computed(() => {
-  return routes.value.flatMap((route: any) => (route.meta.levelHidden && route.children ? [...route.children] : route))
-})
+const handleRoutes = computed(() =>
+  routes.value.flatMap((route: any) => (route.meta.levelHidden && route.children ? [...route.children] : route))
+)
 
 const handleLink = (slotScope: any) => {
   nextTick(() => {

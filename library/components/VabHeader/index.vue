@@ -37,9 +37,9 @@ defineProps({
 const routesStore = useRoutesStore()
 const { getActiveMenu: activeMenu, getRoutes: routes } = storeToRefs(routesStore)
 
-const handleRoutes = computed(() => {
-  return routes.value.flatMap((route) => (route.meta && route.meta.levelHidden && route.children ? [...route.children] : route))
-})
+const handleRoutes = computed(() =>
+  routes.value.flatMap((route) => (route.meta && route.meta.levelHidden && route.children ? [...route.children] : route))
+)
 </script>
 
 <style lang="scss">

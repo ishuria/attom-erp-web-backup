@@ -173,7 +173,6 @@ const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
-
 const tableRef = ref<any>(null)
 const fold = ref<boolean>(true)
 const editRef = ref<any>(null)
@@ -183,7 +182,6 @@ const lineHeight = ref<any>('default')
 const isFullscreen = ref<boolean>(false)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
-
 const total = ref<number>(0)
 const selectRows = ref<any>([])
 const columns = ref<any>([
@@ -253,9 +251,7 @@ const queryForm = reactive<any>({
 const fixed = ref<string>('right')
 const { exit, enter, isFullscreen: _isFullscreen } = useFullscreen()
 
-const finallyColumns = computed(() => {
-  return columns.value.filter((item: any) => checkList.value.includes(item.label))
-})
+const finallyColumns = computed(() => columns.value.filter((item: any) => checkList.value.includes(item.label)))
 
 const fetchData = async () => {
   listLoading.value = true
