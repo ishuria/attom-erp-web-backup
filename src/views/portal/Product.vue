@@ -313,7 +313,7 @@ defineOptions({
 :deep() {
   .vab-footer {
     margin-top: 0;
-    background: #f6f8f9;
+    background: var(--el-background-color);
     border: 0;
   }
 
