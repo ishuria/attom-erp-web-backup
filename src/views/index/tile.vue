@@ -5,7 +5,7 @@
         <el-col :lg="9" :md="24" :sm="24" :xl="9" :xs="24">
           <vab-card
             :body-style="{
-              height: '262px',
+              height: '222px',
             }"
           >
             <vab-link target="_blank" to="/portal">
@@ -13,14 +13,14 @@
                 <vab-icon icon="user-heart-line" />
                 <span>门户</span>
               </div>
-              <vab-icon class="tile-svg" icon="lllustration/Scenes08" is-custom-svg />
+              <vab-icon class="tile-svg" icon="lllustration/Scenes02" is-custom-svg />
             </vab-link>
           </vab-card>
         </el-col>
         <el-col :lg="5" :md="24" :sm="24" :xl="5" :xs="24">
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/dataScreen">
@@ -36,7 +36,7 @@
 
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/other/video">
@@ -53,7 +53,7 @@
         <el-col :lg="5" :md="24" :sm="24" :xl="5" :xs="24">
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/vab/table/customTable">
@@ -68,7 +68,7 @@
           </vab-card>
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/other/echarts">
@@ -85,7 +85,7 @@
         <el-col :lg="5" :md="24" :sm="24" :xl="5" :xs="24">
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/other/gantt">
@@ -100,7 +100,7 @@
           </vab-card>
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/other/workflow">
@@ -117,7 +117,7 @@
         <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/operate/randomTheme">
@@ -134,7 +134,7 @@
         <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/operate/permission">
@@ -151,7 +151,7 @@
         <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
           <vab-card
             :body-style="{
-              height: '120px',
+              height: '100px',
             }"
           >
             <vab-link target="_blank" to="/chat/chatGPT">
@@ -177,6 +177,8 @@ defineOptions({
 </script>
 
 <style lang="scss" scoped>
+$breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680px 75%, 1920px 70%, 2560px 60%);
+
 .tile-container {
   position: relative;
   display: flex;
@@ -192,11 +194,16 @@ defineOptions({
   }
 
   .tile-box {
+    @each $bp, $width in $breakpoints {
+      @media (min-width: $bp) {
+        width: $width;
+      }
+    }
     position: relative;
-    padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
-    background: var(--el-color-white);
-    border: 1px solid var(--el-border-color);
-    border-radius: var(--el-border-radius-base);
+    //  padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
+    // background: var(--el-color-white);
+    // border: 1px solid var(--el-border-color);
+    // border-radius: var(--el-border-radius-base);
 
     .tile-title {
       font-size: var(--el-font-size-bigger);
@@ -208,10 +215,10 @@ defineOptions({
 
     .tile-svg {
       position: absolute;
-      right: var(--el-margin);
-      bottom: var(--el-margin);
+      right: -40px;
+      bottom: 10px;
       width: auto;
-      height: 210px;
+      height: 200px;
     }
 
     a {
@@ -228,7 +235,6 @@ defineOptions({
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
-      margin-top: 10px;
 
       i {
         flex-shrink: 0;
@@ -303,36 +309,6 @@ defineOptions({
           }
         }
       }
-    }
-  }
-
-  @media (max-width: 768px) {
-    .tile-box {
-      width: 100%;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .tile-box {
-      width: 100%;
-    }
-  }
-
-  @media (min-width: 992px) {
-    .tile-box {
-      width: 100%;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .tile-box {
-      width: 90%;
-    }
-  }
-
-  @media (min-width: 1920px) {
-    .tile-box {
-      width: 70%;
     }
   }
 }

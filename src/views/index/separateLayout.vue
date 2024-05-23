@@ -56,6 +56,7 @@ watch(
     .tile-container {
       min-height: calc(var(--el-container-height) - 150px);
       padding: var(--el-padding) !important;
+      background: var(--el-color-white) !important;
       border-radius: var(--el-border-radius-base);
     }
   }

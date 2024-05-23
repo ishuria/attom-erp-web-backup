@@ -151,7 +151,7 @@ const handleTabClick = () => {
     }
   }
 
-  @media (max-width: 450px) {
+  @media (max-width: 480px) {
     .right-panel {
       :deep() {
         .el-badge,
