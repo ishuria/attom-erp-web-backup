@@ -1,5 +1,5 @@
 <template>
-  <div class="l-o-t-management-container no-background-container">
+  <div class="iot-management-container no-background-container">
     <vab-query-form class="page-header">
       <vab-query-form-left-panel>
         <el-form inline label-width="70px" :model="queryForm" @submit.prevent>
@@ -21,24 +21,24 @@
     </vab-query-form>
     <el-row :gutter="20">
       <el-col v-for="item in list" :key="item.id" :lg="8" :md="8" :sm="12" :xl="8" :xs="24">
-        <vab-card class="l-o-t-item">
+        <vab-card class="Iot-item">
           <template #header>
             <vab-icon icon="color-filter-line" />
             产品名称 - {{ item.id }}
             <el-tag v-if="item.status == 1" class="card-header-tag" type="success">已开启</el-tag>
             <el-tag v-else class="card-header-tag" type="danger">已停用</el-tag>
           </template>
-          <div class="l-o-t-item-content">
+          <div class="Iot-item-content">
             <div>
               <p>所属门类：{{ item.status }}</p>
               <p>产品类型：网关子设备</p>
               <p>透传设备：否</p>
               <p>设备定位：是</p>
             </div>
-            <el-image class="l-o-t-item-image" :src="imageUrl" />
+            <el-image class="Iot-item-image" :src="imageUrl" />
           </div>
 
-          <div class="l-o-t-item-bottom">
+          <div class="Iot-item-bottom">
             <div>
               <el-button plain type="primary">编辑</el-button>
               <el-button plain type="success">详情</el-button>
@@ -79,11 +79,11 @@
 
 <script lang="ts" setup>
 import { Download, Plus, Search } from '@element-plus/icons-vue'
-import { getList } from '/@/api/lOTManagement'
+import { getList } from '../../../api/iotManagement'
 import imageUrl from '/@/assets/task_image/task.png'
 
 defineOptions({
-  name: 'TaskManagement',
+  name: 'IotManagement',
 })
 
 const list = ref<any>([])
@@ -124,7 +124,7 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-.l-o-t-management-container {
+.iot-management-container {
   .page-header {
     display: flex;
     align-items: center;
@@ -174,7 +174,7 @@ onBeforeMount(() => {
     }
   }
 
-  .l-o-t-item {
+  .Iot-item {
     min-height: 285px;
     max-height: 285px;
 

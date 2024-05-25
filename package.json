@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "8.6.0",
+  "version": "8.6.5",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -88,7 +88,7 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-unicorn": "^53.0.0",
     "eslint-plugin-vue": "^9.26.0",
-    "lint-staged": "^15.2.4",
+    "lint-staged": "^15.2.5",
     "picocolors": "^1.0.1",
     "plop": "^4.0.1",
     "postcss": "^8.4.38",
@@ -96,7 +96,7 @@
     "prettier": "^3.2.5",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.77.2",
-    "stylelint": "^16.5.0",
+    "stylelint": "^16.6.0",
     "stylelint-config-recess-order": "^5.0.1",
     "stylelint-config-recommended-scss": "^14.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",

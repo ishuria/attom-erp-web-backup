@@ -1172,6 +1172,17 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'Iot',
+        name: 'Iot',
+        component: () => import('../views/template/Iot.vue'),
+        meta: {
+          title: '物联网',
+          icon: 'earthquake-line',
+          target: '_blank',
+          badge: 'New',
+        },
+      },
+      {
         path: 'passwordGenerator',
         name: 'PasswordGenerator',
         component: () => import('/@/views/template/PasswordGenerator.vue'),
@@ -1305,9 +1316,9 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
-        path: 'lOTManagement',
-        name: 'LOTManagement',
-        component: () => import('/@/views/setting/lOTManagement/index.vue'),
+        path: 'iotManagement',
+        name: 'IotManagement',
+        component: () => import('/@/views/setting/iotManagement/index.vue'),
         meta: {
           title: '物联网管理',
           icon: 'mastercard-line',

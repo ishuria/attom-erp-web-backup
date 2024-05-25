@@ -1114,6 +1114,17 @@ const list: VabRouteRecord[] = [
         },
       },
       {
+        path: 'Iot',
+        name: 'Iot',
+        component: '/@/views/template/Iot.vue',
+        meta: {
+          title: '物联网',
+          icon: 'earthquake-line',
+          target: '_blank',
+          badge: 'New',
+        },
+      },
+      {
         path: 'passwordGenerator',
         name: 'PasswordGenerator',
         component: '/@/views/template/PasswordGenerator.vue',
@@ -1247,9 +1258,9 @@ const list: VabRouteRecord[] = [
         },
       },
       {
-        path: 'lOTManagement',
-        name: 'LOTManagement',
-        component: '/@/views/setting/lOTManagement/index.vue',
+        path: 'iotManagement',
+        name: 'IotManagement',
+        component: '/@/views/setting/iotManagement/index.vue',
         meta: {
           title: '物联网管理',
           icon: 'mastercard-line',

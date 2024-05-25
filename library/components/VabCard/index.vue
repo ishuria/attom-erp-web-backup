@@ -1,5 +1,5 @@
 <template>
-  <el-card :body-class="bodyClass" :body-style="bodyStyle" class="vab-card" :shadow="shadow" :title="title" v-bind="$attrs">
+  <el-card :body-class="bodyClass" :body-style="bodyStyle" class="vab-card" :shadow="shadow" :title="title">
     <template v-if="$slots.header || title" #header>
       <slot v-if="$slots.header" name="header"></slot>
       <template v-else>
@@ -40,6 +40,10 @@ defineProps({
     default: 5, //显示的数量会比传入的数量多 1
   },
   title: {
+    type: String,
+    default: '',
+  },
+  calss: {
     type: String,
     default: '',
   },

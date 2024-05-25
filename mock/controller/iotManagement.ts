@@ -26,7 +26,7 @@ for (let i = 0; i < count; i++) {
 
 export default [
   {
-    url: '/lOTManagement/getList',
+    url: '/iotManagement/getList',
     method: 'get',
     response: ({ query }: any) => {
       const { taskName, pageNo = 1, pageSize = 20 } = query
