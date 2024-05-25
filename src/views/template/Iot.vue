@@ -1,6 +1,6 @@
 <template>
   <div class="iot-container">
-    <div class="hidden-sm-and-up">
+    <div class="hidden-sm-and-up" style="padding: var(--el-padding)">
       <vab-alert title="手机端不支持物联网演示" type="warning" />
     </div>
     <div class="hidden-xs-only">
@@ -14,90 +14,59 @@
           </li>
         </ul>
       </div>
-      <div class="right-panel">
-        <div class="right-panel-content">
-          <el-row :gutter="20">
-            <el-col :span="16">
-              <el-row :gutter="20">
-                <el-col :lg="24">
-                  <vab-card
-                    :body-style="{
-                      height: '160px',
-                    }"
-                    class="top-card"
-                  >
-                    <page-header />
-                  </vab-card>
-                </el-col>
-                <el-col :lg="8">
-                  <vab-card class="left-card">
-                    <div>空调</div>
-                    <el-image fit="fill" :lazy="true" :src="iot_1" />
-                  </vab-card>
-                </el-col>
-                <el-col :lg="8">
-                  <vab-card class="left-card">
-                    <div>扫地机器人</div>
-                    <el-image fit="fill" :lazy="true" :src="iot_2" />
-                  </vab-card>
-                </el-col>
-                <el-col :lg="8">
-                  <vab-card class="left-card">
-                    <div>摄像头</div>
-                    <el-image fit="fill" :lazy="true" :src="iot_3" />
-                  </vab-card>
-                </el-col>
-                <el-col :lg="8">
-                  <vab-card class="left-card">
-                    <div>空气净化器</div>
-                    <el-image fit="fill" :lazy="true" :src="iot_4" />
-                  </vab-card>
-                </el-col>
-                <el-col :lg="8">
-                  <vab-card class="left-card">
-                    <div>灯</div>
-                    <el-image fit="fill" :lazy="true" :src="iot_5" />
-                  </vab-card>
-                </el-col>
-                <el-col :lg="8">
-                  <vab-card class="left-card">
-                    <div>门锁</div>
-                    <el-image fit="fill" :lazy="true" :src="iot_6" />
-                  </vab-card>
-                </el-col>
-              </el-row>
-            </el-col>
-            <el-col :span="8">
-              <el-row :gutter="20">
-                <el-col :lg="12">
-                  <vab-card class="right-card">TODO</vab-card>
-                </el-col>
-                <el-col :lg="12">
-                  <vab-card class="right-card">TODO</vab-card>
-                </el-col>
-                <el-col :lg="12">
-                  <vab-card class="right-card">TODO</vab-card>
-                </el-col>
-                <el-col :lg="12">
-                  <vab-card class="right-card">TODO</vab-card>
-                </el-col>
-              </el-row>
-            </el-col>
-          </el-row>
+      <el-scrollbar>
+        <div class="right-panel">
+          <div class="right-panel-content">
+            <el-row :gutter="20">
+              <el-col :span="16">
+                <el-row :gutter="20">
+                  <el-col :lg="24">
+                    <vab-card
+                      :body-style="{
+                        height: '160px',
+                      }"
+                      class="top-card"
+                    >
+                      <page-header />
+                    </vab-card>
+                  </el-col>
+                  <el-col v-for="(item, index) in iotList" :key="index" :span="8">
+                    <vab-card class="left-card" @click="handleAlert">
+                      <div>{{ item.title }}</div>
+                      <el-image :src="item.icon" />
+                    </vab-card>
+                  </el-col>
+                </el-row>
+              </el-col>
+              <el-col :span="8">
+                <el-row :gutter="20">
+                  <el-col v-for="(item, index) in serviceList" :key="index" :span="12">
+                    <vab-card class="right-card">
+                      <h1>{{ item.title }}</h1>
+                      <el-button plain round size="large" @click="handleAlert">
+                        点击跳转
+                        <el-icon class="el-icon--right"><arrow-right /></el-icon>
+                      </el-button>
+                    </vab-card>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </div>
         </div>
-      </div>
+      </el-scrollbar>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ArrowRight } from '@element-plus/icons-vue'
 import iot_1 from '/@/assets/iot_images/iot_1.png'
 import iot_2 from '/@/assets/iot_images/iot_2.png'
 import iot_3 from '/@/assets/iot_images/iot_3.png'
 import iot_4 from '/@/assets/iot_images/iot_4.png'
 import iot_5 from '/@/assets/iot_images/iot_5.png'
 import iot_6 from '/@/assets/iot_images/iot_6.png'
-
 import { useUserStore } from '/@/store/modules/user'
 
 defineOptions({
@@ -109,6 +78,16 @@ interface MenuListType {
   title: string
   path: string
   active?: boolean
+}
+
+interface iotListType {
+  icon: string
+  title: string
+}
+
+interface serviceListType {
+  icon: string
+  title: string
 }
 
 const userStore = useUserStore()
@@ -132,9 +111,45 @@ const menuList = ref<Array<MenuListType>>([
     path: '/index',
   },
 ])
+const iotList = ref<Array<iotListType>>([
+  {
+    title: '空调',
+    icon: iot_1,
+  },
+  {
+    title: '扫地机器人',
+    icon: iot_2,
+  },
+  {
+    title: '摄像头',
+    icon: iot_3,
+  },
+  {
+    title: '空气净化器',
+    icon: iot_4,
+  },
+  {
+    title: '灯',
+    icon: iot_5,
+  },
+  {
+    title: '门锁',
+    icon: iot_6,
+  },
+])
+const serviceList = ref<Array<serviceListType>>([
+  { title: '数据看板', icon: '' },
+  { title: '日志查询', icon: '' },
+  { title: '模组', icon: '' },
+  { title: '服务商', icon: '' },
+])
 
 const openWindow = (item: MenuListType) => {
   router.push(item.path)
+}
+
+const handleAlert = () => {
+  $baseAlert('敬请期待！')
 }
 
 onMounted(() => {
@@ -262,7 +277,27 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
 
         :deep() {
           .el-card__body {
+            position: relative;
             height: 250px;
+          }
+
+          .el-button {
+            &--large {
+              &.is-plain {
+                &.is-round {
+                  position: absolute;
+                  right: var(--el-margin);
+                  bottom: var(--el-margin);
+                  color: var(--el-color-white);
+                  background-image: linear-gradient(to left, #718391, #9ba5b2) !important;
+                  border: 1px solid #9ba5b2;
+
+                  &:hover {
+                    border: 1px solid var(--el-color-white);
+                  }
+                }
+              }
+            }
           }
         }
       }
