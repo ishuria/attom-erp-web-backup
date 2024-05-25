@@ -48,7 +48,7 @@ html > body.vab-theme-technology {
   --w-e-modal-button-bg-color: #2c6191;
   --w-e-modal-button-border-color: #2c6191;
 
-  color: var(--el-color-black) !important;
+  color: var(--el-color-grey) !important;
   background-color: var(--el-color-white) !important;
 
   .vab-side-bar {
@@ -71,7 +71,7 @@ html > body.vab-theme-technology {
   }
 
   .vab-column-bar .el-tabs .el-tabs__item {
-    color: var(--el-color-black) !important;
+    color: var(--el-color-grey) !important;
   }
 
   .vab-column-bar {
@@ -183,7 +183,7 @@ html > body.vab-theme-technology {
   }
 
   .el-drawer__header {
-    color: var(--el-color-black);
+    color: var(--el-color-grey);
   }
 
   .el-radio-button {
@@ -208,13 +208,13 @@ html > body.vab-theme-technology {
     .vab-main .right-panel {
       [class*='ri-'],
       .username {
-        color: var(--el-color-black) !important;
+        color: var(--el-color-grey) !important;
       }
     }
   }
 
   .vab-tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
-    color: var(--el-color-black);
+    color: var(--el-color-grey);
     background: #123372;
   }
 

@@ -205,7 +205,7 @@ const handleOpen = () => {
         margin: 0 48px 4px 0;
         overflow: hidden;
         font-size: var(--el-font-size-normal);
-        color: var(--el-color-black);
+        color: var(--el-color-grey);
         text-overflow: ellipsis;
         white-space: nowrap;
       }

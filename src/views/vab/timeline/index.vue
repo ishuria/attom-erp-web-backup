@@ -136,7 +136,7 @@ const activities = ref<any>([
     position: relative;
     width: 80%;
     padding: var(--el-padding);
-    color: var(--el-color-black);
+    color: var(--el-color-grey);
     background: var(--el-border-color);
     border-radius: calc(var(--el-border-radius-base) + 2px);
 

@@ -91,7 +91,7 @@ const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
 
   .table {
     width: 100%;
-    color: var(--el-color-black);
+    color: var(--el-color-grey);
     border-collapse: collapse;
     background-color: var(--el-color-white);
 

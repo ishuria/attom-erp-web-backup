@@ -56,12 +56,12 @@ const onMenuClick = (value: any) => {
   --mx-menu-open-backgroud: var(--el-color-primary-light-9);
   --mx-menu-open-hover-backgroud: var(--el-color-primary-light-9);
   --mx-menu-divider: var(--el-border-color);
-  --mx-menu-text: var(--el-color-black);
+  --mx-menu-text: var(--el-color-grey);
   --mx-menu-hover-text: var(--el-color-primary);
   --mx-menu-active-text: var(--el-color-primary);
   --mx-menu-open-text: var(--el-color-primary);
   --mx-menu-open-hover-text: var(--el-color-primary);
-  --mx-menu-disabled-text: var(--el-color-black);
+  --mx-menu-disabled-text: var(--el-color-grey);
   --mx-menu-icon-size: 16px;
   --mx-menu-shadow-color: rgba(0, 0, 0, 0.1);
   --mx-menu-backgroud-radius: var(--el-border-radius-base);
@@ -70,11 +70,11 @@ const onMenuClick = (value: any) => {
   --mx-menu-shortcut-backgroud-active: var(--el-color-white);
   --mx-menu-shortcut-backgroud-open: var(--el-color-white);
   --mx-menu-shortcut-backgroud-disabled: var(--el-color-white);
-  --mx-menu-shortcut-text: var(--el-color-black);
+  --mx-menu-shortcut-text: var(--el-color-grey);
   --mx-menu-shortcut-text-hover: var(--el-color-primary);
   --mx-menu-shortcut-text-active: var(--el-color-primary);
   --mx-menu-shortcut-text-open: var(--el-color-primary);
-  --mx-menu-shortcut-text-disabled: var(--el-color-black);
+  --mx-menu-shortcut-text-disabled: var(--el-color-grey);
   --mx-menu-focus-color: var(--el-color-primary);
   --mx-menu-placeholder-width: 24px;
 

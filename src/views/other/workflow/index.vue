@@ -132,41 +132,41 @@ export default defineComponent({
         circle: {
           r: 20,
           fill: 'var(--el-color-white)',
-          stroke: 'var(--el-color-black)',
+          stroke: 'var(--el-color-grey)',
           strokeWidth: 1,
         },
         rect: {
           fill: 'var(--el-color-white)',
-          stroke: 'var(--el-color-black)',
+          stroke: 'var(--el-color-grey)',
           strokeWidth: 1,
         },
         diamond: {
           fill: 'var(--el-color-white)',
-          stroke: 'var(--el-color-black)',
+          stroke: 'var(--el-color-grey)',
           strokeWidth: 1,
         },
         ellipse: {
           fill: 'var(--el-color-white)',
-          stroke: 'var(--el-color-black)',
+          stroke: 'var(--el-color-grey)',
           strokeWidth: 1,
         },
         polygon: {
           fill: 'var(--el-color-white)',
-          stroke: 'var(--el-color-black)',
+          stroke: 'var(--el-color-grey)',
           strokeWidth: 1,
         },
         polyline: {
-          stroke: 'var(--el-color-black)',
-          hoverStroke: 'var(--el-color-black)',
-          selectedStroke: 'var(--el-color-black)',
+          stroke: 'var(--el-color-grey)',
+          hoverStroke: 'var(--el-color-grey)',
+          selectedStroke: 'var(--el-color-grey)',
 
           strokeWidth: 1,
         },
         nodeText: {
-          color: 'var(--el-color-black)',
+          color: 'var(--el-color-grey)',
         },
         edgeText: {
-          color: 'var(--el-color-black)',
+          color: 'var(--el-color-grey)',
           background: {
             fill: 'var(--el-color-white)',
           },

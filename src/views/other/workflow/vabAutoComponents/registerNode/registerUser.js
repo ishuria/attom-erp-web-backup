@@ -2,7 +2,7 @@ export default function registerUser(lf) {
   lf.register('user', ({ PolygonNode, PolygonNodeModel, h }) => {
     class Node extends PolygonNode {
       getIconShape() {
-        const stroke = 'var(--el-color-black)'
+        const stroke = 'var(--el-color-grey)'
         return h(
           'svg',
           {

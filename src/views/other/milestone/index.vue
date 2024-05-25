@@ -80,7 +80,7 @@ const milestoneData = ref([
   :deep() {
     .tiny-milestone {
       &__description-name {
-        color: var(--el-color-black);
+        color: var(--el-color-grey);
       }
 
       &__description-status {

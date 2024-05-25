@@ -1,4 +1,4 @@
-const NODE_COLOR = 'var(--el-color-black)'
+const NODE_COLOR = 'var(--el-color-grey)'
 export default function registerDownload(lf) {
   lf.register('download', ({ PolygonNode, PolygonNodeModel, h }) => {
     class Node extends PolygonNode {

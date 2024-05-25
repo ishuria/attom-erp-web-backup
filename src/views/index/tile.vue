@@ -228,7 +228,7 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
       width: 100%;
       height: 100%;
       padding: var(--el-padding);
-      color: var(--el-color-black);
+      color: var(--el-color-grey);
     }
 
     .icon-panel {
@@ -252,7 +252,7 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
         margin-left: 10px;
         overflow: hidden;
         line-height: 20px;
-        color: var(--el-color-black);
+        color: var(--el-color-grey);
         text-overflow: ellipsis;
         white-space: nowrap;
 

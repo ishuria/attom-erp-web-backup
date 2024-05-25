@@ -216,7 +216,7 @@ onDeactivated(() => {
 .monitor-container {
   .live-item {
     line-height: 28px;
-    color: var(--el-color-black);
+    color: var(--el-color-grey);
 
     span {
       font-weight: bolder;
@@ -251,7 +251,7 @@ onDeactivated(() => {
       }
 
       &-content {
-        color: var(--el-color-black);
+        color: var(--el-color-grey);
       }
 
       &-time {

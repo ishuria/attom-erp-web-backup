@@ -85,7 +85,7 @@ VMdEditor.use(githubTheme)
 
       .v-md-textarea-editor pre,
       .v-md-textarea-editor textarea {
-        color: var(--el-color-black);
+        color: var(--el-color-grey);
         background-color: var(--el-color-white);
       }
 

@@ -47,7 +47,7 @@ html.dark > body[class*='vab-theme-'] {
   }
 
   .vab-column-bar .el-tabs .el-tabs__item {
-    color: var(--el-color-black) !important;
+    color: var(--el-color-grey) !important;
   }
 
   .vab-column-bar {
@@ -102,7 +102,7 @@ html.dark > body[class*='vab-theme-'] {
     .vab-main .right-panel {
       [class*='ri-'],
       .username {
-        color: var(--el-color-black) !important;
+        color: var(--el-color-grey) !important;
       }
     }
   }

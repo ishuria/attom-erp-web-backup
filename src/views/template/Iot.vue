@@ -308,8 +308,8 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
 
           [class*='ri-'] {
             font-size: 100px;
-            color: var(--el-color-black);
-            background-image: linear-gradient(to left, var(--el-color-black), #718391) !important;
+            color: var(--el-color-grey);
+            background-image: linear-gradient(to left, var(--el-color-grey), #718391) !important;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             transition: all 0.3s;

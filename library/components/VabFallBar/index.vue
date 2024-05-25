@@ -312,8 +312,8 @@ useEventListener('mousemove', (e: MouseEvent) => {
     --ti-fall-menu-bg-color-normal: var(--el-menu-background-color);
     --ti-fall-menu-bg-color-hover: var(--el-color-primary);
     --ti-fall-menu-slot-bg-color: var(--el-menu-background-color);
-    --ti-fall-menu-box-text-color: var(--el-color-black) !important;
-    --ti-fall-menu-slot-text-color: var(--el-color-black) !important;
+    --ti-fall-menu-box-text-color: var(--el-color-grey) !important;
+    --ti-fall-menu-slot-text-color: var(--el-color-grey) !important;
 
     &__box {
       border: 1px solid var(--el-border-color) !important;
@@ -346,8 +346,8 @@ useEventListener('mousemove', (e: MouseEvent) => {
     --ti-fall-menu-bg-color-normal: var(--el-menu-background-color);
     --ti-fall-menu-bg-color-hover: var(--el-color-primary);
     --ti-fall-menu-slot-bg-color: var(--el-menu-background-color);
-    --ti-fall-menu-box-text-color: var(--el-color-black) !important;
-    --ti-fall-menu-slot-text-color: var(--el-color-black) !important;
+    --ti-fall-menu-box-text-color: var(--el-color-grey) !important;
+    --ti-fall-menu-slot-text-color: var(--el-color-grey) !important;
 
     &__box {
       border: 1px solid var(--el-border-color) !important;

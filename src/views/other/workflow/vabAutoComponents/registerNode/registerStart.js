@@ -6,7 +6,7 @@ export default function registerStart(lf) {
         return h(
           'text',
           {
-            fill: 'var(--el-color-black)',
+            fill: 'var(--el-color-grey)',
             fontSize: 12,
             x: x - 12,
             y: y + 4,

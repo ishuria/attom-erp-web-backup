@@ -147,7 +147,7 @@ const handleChange = (value: any) => {
             h1 {
               font-size: 20px;
               font-weight: 400;
-              color: var(--el-color-black);
+              color: var(--el-color-grey);
             }
           }
 

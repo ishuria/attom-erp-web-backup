@@ -122,14 +122,14 @@ const { theme } = storeToRefs(settingsStore)
       .title {
         font-size: 54px;
         font-weight: 500;
-        color: var(--el-color-black);
+        color: var(--el-color-grey);
       }
 
       .title-tips {
         margin-top: 29px;
         font-size: 26px;
         font-weight: 400;
-        color: var(--el-color-black);
+        color: var(--el-color-grey);
       }
 
       .login-btn {

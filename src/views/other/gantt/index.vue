@@ -102,7 +102,7 @@ const scheduleClick = (object: any) => {
   :deep() {
     .gantt {
       --border: 1px solid var(--el-border-color);
-      --fontColor: var(--el-color-black);
+      --fontColor: var(--el-color-grey);
       --borderColor: var(--el-border-color);
       max-width: 100%;
       overflow: auto;

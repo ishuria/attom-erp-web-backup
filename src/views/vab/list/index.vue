@@ -163,7 +163,7 @@ onBeforeMount(() => {
         &-title {
           font-size: var(--el-font-size-default);
           font-weight: bold;
-          color: var(--el-color-black);
+          color: var(--el-color-grey);
         }
 
         &-description {

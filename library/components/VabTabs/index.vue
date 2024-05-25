@@ -478,7 +478,7 @@ watchEffect(() => {
 
             &:hover {
               z-index: 999;
-              color: var(--el-color-black);
+              color: var(--el-color-grey);
               background: var(--el-border-color);
               mask: url('/@/assets/tabs_images/vab-tab.png');
               mask-size: 100% 100%;

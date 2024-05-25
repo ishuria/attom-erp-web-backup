@@ -118,7 +118,7 @@ const { theme, logo, title } = storeToRefs(settingsStore)
       width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 1px);
       height: var(--el-nav-height);
       margin-left: 0 !important;
-      color: var(--el-color-black) !important;
+      color: var(--el-color-grey) !important;
       background: var(--el-color-white) !important;
       border-bottom: 1px solid var(--el-border-color);
 

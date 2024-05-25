@@ -1179,7 +1179,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '物联网',
           icon: 'earthquake-line',
           target: '_blank',
-          badge: 'New',
+          badge: 'Hot',
         },
       },
       {
