@@ -42,7 +42,8 @@
                 <el-row :gutter="20">
                   <el-col v-for="(item, index) in serviceList" :key="index" :span="12">
                     <vab-card class="right-card">
-                      <h1>{{ item.title }}</h1>
+                      <h3>{{ item.title }}</h3>
+                      <vab-icon :icon="item.icon" />
                       <el-button plain round size="large" @click="handleAlert">
                         点击跳转
                         <el-icon class="el-icon--right"><arrow-right /></el-icon>
@@ -138,10 +139,10 @@ const iotList = ref<Array<iotListType>>([
   },
 ])
 const serviceList = ref<Array<serviceListType>>([
-  { title: '数据看板', icon: '' },
-  { title: '日志查询', icon: '' },
-  { title: '模组', icon: '' },
-  { title: '服务商', icon: '' },
+  { title: '数据看板', icon: 'artboard-fill' },
+  { title: '日志查询', icon: 'book-read-fill' },
+  { title: '模组', icon: 'box-3-fill' },
+  { title: '服务商', icon: 'briefcase-4-fill' },
 ])
 
 const openWindow = (item: MenuListType) => {
@@ -177,6 +178,7 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
     top: 0;
     bottom: 0;
     left: 0;
+    z-index: var(--el-z-index);
     width: 80px;
     color: var(--el-color-white);
     text-align: center;
@@ -275,6 +277,10 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
       .right-card {
         background-image: linear-gradient(to bottom, #718391, #9ba5b2) !important;
 
+        h3 {
+          margin-top: 0px;
+        }
+
         :deep() {
           .el-card__body {
             position: relative;
@@ -297,6 +303,22 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
                   }
                 }
               }
+            }
+          }
+
+          [class*='ri-'] {
+            font-size: 100px;
+            color: var(--el-color-black);
+            background-image: linear-gradient(to left, var(--el-color-black), #718391) !important;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s;
+          }
+
+          &:hover {
+            [class*='ri-'] {
+              font-size: 110px;
+              transition: all 0.3s;
             }
           }
         }
