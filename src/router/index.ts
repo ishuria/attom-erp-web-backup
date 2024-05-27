@@ -1659,19 +1659,20 @@ export const resetRouter = (routes: VabRouteRecord[] = constantRoutes) => {
 
 export const setupRouter = (app: App<Element>) => {
   if (authentication === 'intelligence') addRouter(asyncRoutes)
-  // 使用后端路由时防止出现[Vue Router warn]: No match found for location with path "/index"报黄，未经全面测试请谨慎使用，建议注释掉else if中的代码
-  else if (authentication === 'all' && isHashRouterMode) {
-    let path = window.location.hash.slice(1)
-    if (path === '/') path = '/index'
-    const words = path.split('/')
-    const lastWord: any = words.at(-1)
-    const name = lastWord.charAt(0).toUpperCase() + lastWord.slice(1)
-    router.addRoute({
-      path,
-      name,
-      component: () => import('/@/views/index/index.vue'),
-    })
-  }
+  // 使用后端路由时防止出现[Vue Router warn]: No match found for location with path "/index"报黄，
+  // 未经全面测试请谨慎使用！建议注释掉else if中的代码，
+  // else if (authentication === 'all' && isHashRouterMode) {
+  //   let path = window.location.hash.slice(1)
+  //   if (path === '/') path = '/index'
+  //   const words = path.split('/')
+  //   const lastWord: any = words.at(-1)
+  //   const name = lastWord.charAt(0).toUpperCase() + lastWord.slice(1)
+  //   router.addRoute({
+  //     path,
+  //     name,
+  //     component: () => import('/@/views/index/index.vue'),
+  //   })
+  // }
   setupPermissions(router)
   app.use(router)
   return router
