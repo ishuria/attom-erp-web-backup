@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "8.6.5",
+  "version": "8.7.0",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -38,7 +38,7 @@
     "@logicflow/extension": "^1.2.27",
     "@lucky-canvas/vue": "^0.1.11",
     "@opentiny/vue": "^3.16.0",
-    "@vueuse/core": "^10.9.0",
+    "@vueuse/core": "^10.10.0",
     "@vueuse/head": "^2.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
