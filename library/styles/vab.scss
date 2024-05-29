@@ -163,6 +163,24 @@ html {
       }
     }
 
+    /* vab-query-form表单查询 */
+    .vab-query-form {
+      .el-form-item__content {
+        .el-slider {
+          width: 190px;
+        }
+      }
+      .el-form {
+        &.el-form--inline.el-form--label-right {
+          .el-form-item:not(:first-child) {
+            .el-form-item__label {
+              margin-left: 10px;
+            }
+          }
+        }
+      }
+    }
+
     /* vab-dot圆点动画 */
     .vab-dot {
       position: relative;

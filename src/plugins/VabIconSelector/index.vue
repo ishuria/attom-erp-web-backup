@@ -3,11 +3,11 @@
     <el-col :span="24">
       <vab-query-form>
         <vab-query-form-top-panel>
-          <el-form inline label-width="0" @submit.prevent>
+          <el-form inline @submit.prevent>
             <el-form-item>
               <el-input v-model="queryForm.title" clearable />
             </el-form-item>
-            <el-form-item label-width="0">
+            <el-form-item>
               <el-button :icon="Search" native-type="submit" type="primary" @click="queryData" />
             </el-form-item>
           </el-form>

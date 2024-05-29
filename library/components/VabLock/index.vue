@@ -22,7 +22,7 @@
           </div>
           <div class="vab-screen-lock-content-form">
             <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
-              <el-form-item label="" :label-width="0" prop="password">
+              <el-form-item prop="password">
                 <el-input v-model="form.password" v-focus autocomplete="off" :placeholder="translate('请输入密码123456')" type="password" />
                 <el-button native-type="submit" type="primary" @click="handleUnLock">
                   <vab-icon icon="lock-line" />

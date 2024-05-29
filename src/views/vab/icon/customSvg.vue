@@ -2,10 +2,9 @@
   <div class="custom-svg-container">
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-form inline label-width="65px" @submit.prevent>
-          <el-form-item label="svg大小">
-            <el-slider v-model="queryForm.num" :max="100" :min="12" style="width: 190px; margin: 0 20px 0 5px" />
-            px
+        <el-form inline @submit.prevent>
+          <el-form-item label="svg大小（px）">
+            <el-slider v-model="queryForm.num" :max="100" :min="12" />
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>

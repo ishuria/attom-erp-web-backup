@@ -12,7 +12,7 @@
       }`"
     />
 
-    <el-form label-position="top" label-width="140px" :model="form">
+    <el-form label-position="top" :model="form">
       <el-form-item label="账号切换">
         <el-radio-group v-model="form.account" @change="handleChangeRole">
           <el-radio-button label="admin" value="admin">admin</el-radio-button>

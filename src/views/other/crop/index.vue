@@ -2,7 +2,7 @@
   <div class="crop-container no-transition-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
-        <el-form label-position="top" label-width="80px">
+        <el-form label-position="top">
           <el-form-item label="操作">
             <el-button type="primary" @click="visible = !visible">图片裁剪</el-button>
             <el-button type="warning" @click="handleReset">重置</el-button>

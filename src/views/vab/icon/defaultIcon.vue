@@ -2,21 +2,21 @@
   <div class="default-icon-container auto-height-container">
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-form inline label-width="70px" @submit.prevent>
+        <el-form inline @submit.prevent>
           <el-form-item label="图标名称">
             <el-input v-model="queryForm.title" clearable placeholder="请输入图标名称" />
           </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">查询</el-button>
-          </el-form-item>
+          <!-- <el-form-item label="多彩图标" >
+            <template #label>多彩图标</template>
+            <el-switch v-model="queryForm.colorful" @change="queryData" />
+          </el-form-item> -->
           <el-form-item>
             <el-button>
-              <el-checkbox v-model="queryForm.colorful" label="多彩图标" style="margin-right: 10px" @change="queryData" />
+              <el-checkbox v-model="queryForm.colorful" label="多彩图标" @change="queryData" />
             </el-button>
           </el-form-item>
-          <el-form-item label="文字大小">
-            <el-slider v-model="queryForm.num" :max="30" :min="12" style="width: 190px; margin: 0 20px 0 5px" />
-            px
+          <el-form-item label="文字大小（px）">
+            <el-slider v-model="queryForm.num" :max="30" :min="12" />
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
@@ -56,7 +56,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
 import { shuffle } from 'lodash-es'
 import { getIconList } from '/@/api/icon'
 import clip from '/@/utils/clipboard'

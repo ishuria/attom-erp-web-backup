@@ -2,7 +2,7 @@
   <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
+        <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item label="标题">
             <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>

@@ -2,27 +2,12 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
+        <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item label="标题">
             <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
+          <el-form-item v-show="!fold" label="作者">
+            <el-input v-model="queryForm.author" clearable placeholder="请输入作者" />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
@@ -105,7 +90,6 @@ defineOptions({
 })
 
 const router = useRouter()
-
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()

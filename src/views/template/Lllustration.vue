@@ -4,12 +4,11 @@
       <el-col>
         <vab-card>
           <el-form @submit.prevent>
-            <el-form-item label="换肤" label-width="40">
+            <el-form-item label="换肤">
               <vab-color-picker />
             </el-form-item>
-            <el-form-item label="svg大小">
-              <el-slider v-model="queryForm.num" :max="350" :min="150" style="width: 190px; margin: 0 20px 0 5px" />
-              px
+            <el-form-item label="svg大小（px）">
+              <el-slider v-model="queryForm.num" :max="350" :min="150" style="width: 190px" />
             </el-form-item>
           </el-form>
         </vab-card>

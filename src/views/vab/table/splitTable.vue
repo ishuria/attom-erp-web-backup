@@ -22,7 +22,7 @@
           <vab-alert title="长按竖线左右拖拽可重新分割面板大小" />
           <vab-query-form>
             <vab-query-form-top-panel>
-              <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
+              <el-form inline :model="queryForm" @submit.prevent>
                 <el-form-item label="标题">
                   <el-input v-model="queryForm.title" placeholder="请输入标题" />
                 </el-form-item>

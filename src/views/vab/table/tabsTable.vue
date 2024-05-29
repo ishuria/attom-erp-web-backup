@@ -4,7 +4,7 @@
       <el-tab-pane label="当前" name="first">
         <vab-query-form>
           <vab-query-form-top-panel>
-            <el-form inline label-width="49px" :model="queryForm" @submit.prevent>
+            <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item label="分类">
                 <el-check-tag :checked="queryForm.checked1" @change="onChange1">分类一</el-check-tag>
                 <el-check-tag :checked="queryForm.checked2" @change="onChange2">分类二</el-check-tag>
