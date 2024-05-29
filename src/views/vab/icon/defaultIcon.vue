@@ -11,11 +11,11 @@
           </el-form-item>
           <el-form-item>
             <el-button>
-              <el-checkbox v-model="queryForm.colorful" label="多彩图标" @change="queryData" />
+              <el-checkbox v-model="queryForm.colorful" label="多彩图标" style="margin-right: 10px" @change="queryData" />
             </el-button>
           </el-form-item>
           <el-form-item label="文字大小">
-            <el-slider v-model="queryForm.num" :max="30" :min="12" style="width: 190px; margin: 0 20px 0 10px" />
+            <el-slider v-model="queryForm.num" :max="30" :min="12" style="width: 190px; margin: 0 20px 0 5px" />
             px
           </el-form-item>
         </el-form>
