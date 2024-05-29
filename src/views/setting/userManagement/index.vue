@@ -62,13 +62,14 @@
 
 <script lang="ts" setup>
 import { Delete, Plus, Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doDelete, getList } from '/@/api/userManagement'
 
 defineOptions({
   name: 'UserManagement',
 })
 
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const editRef = ref<any>(null)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -139,7 +140,7 @@ const fetchData = async () => {
 }
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {

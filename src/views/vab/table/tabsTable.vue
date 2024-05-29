@@ -83,6 +83,7 @@
 
 <script lang="ts" setup>
 import { Delete, Plus } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doDelete, getList } from '/@/api/table'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -100,7 +101,7 @@ const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 
@@ -245,7 +246,7 @@ const handleDetail = (row: any) => {
 }
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {

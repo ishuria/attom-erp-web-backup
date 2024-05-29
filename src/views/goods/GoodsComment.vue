@@ -73,6 +73,7 @@
 
 <script lang="ts" setup>
 import { Delete, Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doDelete, getList } from '/@/api/goodsComment'
 
 defineOptions({
@@ -80,7 +81,7 @@ defineOptions({
 })
 
 const editRef = ref<any>(null)
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
@@ -144,7 +145,7 @@ const handleDelete = (row: any) => {
 }
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {

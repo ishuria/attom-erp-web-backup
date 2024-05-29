@@ -90,6 +90,7 @@
 
 <script lang="ts" setup>
 import { Plus } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doDelete, getTree } from '/@/api/menuManagement'
 import { getList } from '/@/api/router'
 
@@ -97,7 +98,7 @@ defineOptions({
   name: 'MenuManagement',
 })
 
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const editRef = ref<any>(null)
 const treeList = ref<any>([])
 const defaultProps = reactive<any>({
@@ -137,7 +138,7 @@ const handleNodeClick = ({ role }: any) => {
 }
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {

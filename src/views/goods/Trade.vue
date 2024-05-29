@@ -89,13 +89,14 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doRefund, getList } from '/@/api/trade'
 
 defineOptions({
   name: 'Trade',
 })
 
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const fold = ref<boolean>(true)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -149,7 +150,7 @@ const handleRefund = (row: any) => {
 }
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {

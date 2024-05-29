@@ -60,13 +60,14 @@
 
 <script lang="ts" setup>
 import { Delete, Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doDelete, getList } from '/@/api/workOrder'
 
 defineOptions({
   name: 'WorkOrder',
 })
 
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
@@ -77,7 +78,7 @@ const queryForm = reactive<any>({
 })
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 const fetchData = async () => {

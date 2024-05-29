@@ -52,13 +52,14 @@
 
 <script lang="ts" setup>
 import { Plus } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doDelete, getList, getTree } from '/@/api/dictionaryManagement'
 
 defineOptions({
   name: 'DictionaryManagement',
 })
 
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const treeRef = ref<any>(null)
 const editRef = ref<any>(null)
 const treeList = ref<any>([])
@@ -127,7 +128,7 @@ watch(filterText, (value) => {
 })
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {

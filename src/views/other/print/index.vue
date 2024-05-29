@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { TableInstance } from 'element-plus'
 import { ElMessageBox } from 'element-plus'
 import landscape from '/@/assets/common_images/landscape.jpg'
 import VabPrint from '/@/plugins/VabPrint'
@@ -24,7 +25,7 @@ defineOptions({
 })
 
 const imageRef = ref<any>(null)
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const tableData = ref<any>([
   {
     name: '马云',

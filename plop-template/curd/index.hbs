@@ -52,6 +52,7 @@
 
 <script lang="ts" setup>
 import { Delete, Plus, Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { doDelete, getList } from '/@/api/{{ camelCase name }}'
 
 defineOptions({
@@ -61,7 +62,7 @@ defineOptions({
 
 
 const editRef = ref<any>(null)
-const tableRef = ref<any>(null)
+const tableRef = ref<TableInstance>()
 const fold = ref<boolean>(true)
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -137,7 +138,7 @@ const handleDelete = (row: any) => {
 }
 
 onActivated(() => {
-  tableRef.value.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {
