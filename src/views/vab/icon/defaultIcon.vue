@@ -15,7 +15,7 @@
             </el-button>
           </el-form-item>
           <el-form-item label="文字大小">
-            <el-slider v-model="queryForm.num" :max="30" :min="12" style="width: 190px; margin: 0 20px 0 5px" />
+            <el-slider v-model="queryForm.num" :max="30" :min="12" style="width: 190px; margin: 0 20px 0 10px" />
             px
           </el-form-item>
         </el-form>
