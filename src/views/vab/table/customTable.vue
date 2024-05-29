@@ -105,13 +105,14 @@
           {{ $index + 1 }}
         </template>
       </el-table-column>
+      <!-- 设定宽度导致错位，新版本bug临时去掉 -->
+      <!-- :min-width="item.minWidth || 100" -->
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
         align="center"
         :fixed="item.fixed"
         :label="item.label"
-        :min-width="item.minWidth || 100"
         :prop="item.prop"
         show-overflow-tooltip
         :sortable="item.sortable"
