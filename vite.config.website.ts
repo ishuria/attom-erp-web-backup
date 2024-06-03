@@ -82,7 +82,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         input: ['./index.html', './website.html'],
       },
       minify,
-      target: 'es2015',
       sourcemap: false,
     },
     css: {
@@ -108,7 +107,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: createVitePlugin(env),
     define: {
-      'process.env': { ...process.env },
+      // 如果您必须使用华为组件库且打包报错，请放开该行，放开注释后会将您的环境变量暴露给华为组件库
+      // 'process.env': { ...process.env },
     },
   }
 })

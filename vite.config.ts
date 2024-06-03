@@ -82,7 +82,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         },
       },
       minify,
-      target: 'es2015',
       sourcemap: false,
     },
     css: {

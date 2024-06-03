@@ -1,8 +1,9 @@
 <template>
   <div class="guid-container">
-    <el-button type="primary" @click="open = true">打开页面引导</el-button>
+    <el-button type="primary" @click="handleOpen('primary')">打开页面引导（主题色）</el-button>
+    <el-button plain type="primary" @click="handleOpen('default')">打开页面引导（默认）</el-button>
 
-    <el-tour v-model="open">
+    <el-tour v-model="open" :type="type">
       <el-tour-step v-for="step in steps" :key="step" :description="step.description" :target="step.target" :title="step.title" />
     </el-tour>
   </div>
@@ -14,6 +15,7 @@ defineOptions({
 })
 
 const open = ref<boolean>(true)
+const type = ref<any>('primary')
 const steps = ref<any>([
   {
     target: '.vab-buy',
@@ -71,4 +73,13 @@ const steps = ref<any>([
     description: '这里是购买源码',
   },
 ])
+
+const handleOpen = (value: string) => {
+  open.value = true
+  type.value = value
+}
+
+onActivated(() => {
+  open.value = true
+})
 </script>
