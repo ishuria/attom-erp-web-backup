@@ -14,8 +14,7 @@ defineOptions({
   name: 'MdEditor',
 })
 
-const markdownContent = ref<any>(`
-<div align="center">
+const markdownContent = ref<any>(`<div align="center">
   <img width="200" src="https://gcore.jsdelivr.net/gh/chuzhixin/image/logo/vab.png"/>
   <h1> vue-admin-better
     <img width="100" src="https://img.shields.io/github/stars/chuzhixin/vue-admin-beautiful?style=flat-square&logo=GitHub"/>
@@ -49,12 +48,16 @@ VMdEditor.use(githubTheme)
 .md-editor-container {
   :deep() {
     .v-md-editor {
-      min-height: calc(var(--el-container-height) - var(--el-margin));
+      min-height: calc(var(--el-container-height));
       background: var(--el-color-white);
       border: 1px solid var(--el-border-color);
       border-radius: var(--el-border-radius-base);
       box-shadow: none;
       transition: var(--el-transition);
+
+      &__left-area {
+        min-height: calc(var(--el-container-height));
+      }
 
       &--fullscreen {
         z-index: 9999;
@@ -73,8 +76,8 @@ VMdEditor.use(githubTheme)
 
           &--active,
           &:hover {
-            color: var(--el-color-white);
-            background: var(--el-color-grey);
+            color: var(--el-color-primary);
+            background: var(--el-color-primary-light-9);
           }
         }
       }
@@ -116,7 +119,7 @@ VMdEditor.use(githubTheme)
           display: flex;
           flex-direction: column;
           height: auto;
-          min-height: 100vh;
+          min-height: calc(var(--vh, 1vh) * 100);
           overflow: hidden;
         }
       }

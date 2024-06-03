@@ -61,16 +61,16 @@ defineOptions({
 })
 
 const headerContentHeight = ref<any>('60px')
-const topCardHeight = ref<any>('calc((100vh - 320px)')
+const topCardHeight = ref<any>('calc((var(--vh, 1vh) * 100 - 320px)')
 const bottomCardHeight = ref<any>('174px')
 
-const leftCardHeight1 = ref<any>('calc((100vh - 165px) / 3.5)')
-const leftCardHeight2 = ref<any>('calc((100vh - 165px) / 3)')
-const leftCardHeight3 = ref<any>('calc((100vh - 165px) / 2.63)')
+const leftCardHeight1 = ref<any>('calc((var(--vh, 1vh) * 100 - 165px) / 3.5)')
+const leftCardHeight2 = ref<any>('calc((var(--vh, 1vh) * 100 - 165px) / 3)')
+const leftCardHeight3 = ref<any>('calc((var(--vh, 1vh) * 100 - 165px) / 2.63)')
 
-const rightCardHeight1 = ref<any>('calc((100vh - 165px) / 3)')
-const rightCardHeight2 = ref<any>('calc((100vh - 165px) / 2.63)')
-const rightCardHeight3 = ref<any>('calc((100vh - 165px) / 3.5)')
+const rightCardHeight1 = ref<any>('calc((var(--vh, 1vh) * 100 - 165px) / 3)')
+const rightCardHeight2 = ref<any>('calc((var(--vh, 1vh) * 100 - 165px) / 2.63)')
+const rightCardHeight3 = ref<any>('calc((var(--vh, 1vh) * 100 - 165px) / 3.5)')
 
 onMounted(() => {
   setTimeout(() => {

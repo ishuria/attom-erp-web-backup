@@ -31,7 +31,7 @@ html {
   body {
     position: relative;
     box-sizing: border-box;
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     padding: 0;
     overflow: hidden;
     font-size: var(--el-font-size-default);
@@ -43,7 +43,7 @@ html {
     }
 
     #app {
-      height: 100vh;
+      height: calc(var(--vh, 1vh) * 100);
 
       @include base-scrollbar;
 
@@ -107,7 +107,9 @@ html {
     .vue-shop-vite-box.mobile {
       --el-margin: 16px;
       --el-padding: 16px;
-      --el-container-height: calc(100vh - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 3 - var(--el-footer-height));
+      --el-container-height: calc(
+        var(--vh, 1vh) * 100 - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 3 - var(--el-footer-height)
+      );
 
       .ri-contract-right-line.fold-unfold {
         position: fixed;
@@ -627,7 +629,7 @@ html {
         border-radius: 0;
 
         .el-dialog__body {
-          height: calc(100vh - var(--el-dialog-title-font-size) - var(--el-padding) * 4 - 32px);
+          height: calc(var(--vh, 1vh) * 100 - var(--el-dialog-title-font-size) - var(--el-padding) * 4 - 32px);
           overflow-y: auto;
         }
       }
@@ -854,7 +856,7 @@ html {
       z-index: calc(var(--el-z-index) + 3) !important;
       box-sizing: border-box !important;
       width: 100vw !important;
-      height: 100vh !important;
+      height: calc(var(--vh, 1vh) * 100) !important;
       overflow: auto !important;
       border: 0 !important;
       border-radius: 0 !important;
@@ -958,7 +960,7 @@ html {
 
         .auto-height-card {
           > .el-card__body {
-            height: calc(100vh - var(--el-padding) * 2 - 2px);
+            height: calc(var(--vh, 1vh) * 100 - var(--el-padding) * 2 - 2px);
           }
         }
       }

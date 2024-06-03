@@ -238,7 +238,7 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
     align-items: center;
     justify-content: center;
     width: calc(100vw - 80px);
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     margin-left: 80px;
 
     &-content {

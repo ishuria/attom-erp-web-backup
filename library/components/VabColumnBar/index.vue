@@ -158,7 +158,6 @@ onBeforeUnmount(() => {
   bottom: 0;
   left: 0;
   width: var(--el-left-menu-width);
-  height: 100vh;
   overflow: hidden;
   background: var(--el-color-white);
   border-right: 1px solid var(--el-border-color);
@@ -367,7 +366,7 @@ onBeforeUnmount(() => {
       }
 
       .el-tabs__nav {
-        height: calc(100vh - var(--el-logo-height));
+        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height));
         background: var(--el-menu-background-color);
       }
 

@@ -64,7 +64,6 @@ const handleRoutes = computed(() =>
   bottom: 0;
   left: 0;
   width: var(--el-left-menu-width);
-  height: 100vh;
   overflow: hidden;
   background: var(--el-menu-background-color);
   transition: var(--el-transition);
@@ -77,11 +76,6 @@ const handleRoutes = computed(() =>
     width: 100%;
     height: var(--el-header-height);
     background: var(--el-menu-background-color);
-  }
-
-  &.side-bar-common {
-    top: var(--el-header-height);
-    height: calc(100vh - var(--el-header-height));
   }
 
   &.is-collapse {

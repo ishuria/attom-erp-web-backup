@@ -63,17 +63,17 @@ const handleClick = (tab: any) => {
 }
 
 const handleChange1 = (value: any) => {
-  const el = ref<any>(null)
+  const el = ref<HTMLElement | null>(null)
   useCssVar('--el-fixed-width', el).value = `${value}px`
 }
 
 const handleChange2 = (value: any) => {
-  const el = ref<any>(null)
+  const el = ref<HTMLElement | null>(null)
   useCssVar('--el-fixed-width', el).value = `${value}%`
 }
 
 const handleChecked = (value: any) => {
-  const el = ref<any>(null)
+  const el = ref<HTMLElement | null>(null)
   if (value) useCssVar('--el-fixed-width-margin', el).value = 'auto'
   else useCssVar('--el-fixed-width-margin', el).value = '0'
 }

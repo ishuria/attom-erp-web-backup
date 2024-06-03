@@ -97,7 +97,7 @@
           </el-col>
           <el-col :span="16">
             <div class="news-tit"><h2>互动留言</h2></div>
-            <el-table :data="tableData" max-height="355" style="border: 1px solid var(--el-border-color)">
+            <el-table :data="tableData" :height="395" style="border: 1px solid var(--el-border-color)">
               <el-table-column label="Date" prop="date" />
               <el-table-column label="Name" prop="name" />
               <el-table-column label="Address" prop="address" />
@@ -194,13 +194,28 @@ const tableData = [
     name: 'Tom',
     address: 'No. 189, Grove St, Los Angeles',
   },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
 ]
 </script>
 
 <style lang="scss" scoped>
 .portal-main {
   &-mobile {
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     padding: var(--el-padding);
     background: var(--el-color-white);
   }

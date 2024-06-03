@@ -122,9 +122,10 @@ useEventListener('mousemove', (e: MouseEvent) => {
 .vab-fall-bar {
   position: fixed;
   top: 0;
+  bottom: 0;
+  left: 0;
   z-index: var(--el-z-index);
   width: calc(var(--el-left-menu-width) - 1px);
-  height: 100vh;
   background: var(--el-menu-background-color);
   border-right: 1px solid var(--el-border-color);
 
@@ -144,7 +145,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
       --ti-fall-menu-box-width: 560px;
 
       &__nav {
-        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
       }
 
       &__wrap {

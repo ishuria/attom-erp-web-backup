@@ -1,6 +1,6 @@
 <template>
   <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" :size="size" :title="translate('主题配置')">
-    <el-scrollbar height="calc(100vh - 120px)">
+    <el-scrollbar height="calc(var(--vh, 1vh) * 100 - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
         <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-layout-item" :label="translate('布局')">
           <el-radio-group v-model="theme.layout" class="vab-shop-layout-radio-group">
@@ -193,7 +193,7 @@ const handleColorWeakness = (value: any) => {
 }
 
 const handleShowTabs = (value: any) => {
-  const el = ref<any>(null)
+  const el = ref<HTMLElement | null>(null)
   if (value) {
     useCssVar('--el-tabs-height', el).value = '50px'
   } else {
@@ -285,7 +285,6 @@ onMounted(() => {
     padding-right: 0;
 
     .el-scrollbar__wrap {
-      height: calc(100vh - 80px);
       padding-right: var(--el-padding);
 
       .el-form-item {

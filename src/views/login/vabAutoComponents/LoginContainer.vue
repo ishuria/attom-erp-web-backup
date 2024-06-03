@@ -25,7 +25,7 @@ const { theme } = storeToRefs(settingsStore)
 .login-container {
   position: relative;
   display: flex;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   background: linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3));
 
   .login-right-tools {

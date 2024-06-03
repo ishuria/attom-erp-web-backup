@@ -139,7 +139,7 @@ export const useSettingsStore = defineStore('settings', {
       this.setCssVar()
     },
     setCssVar() {
-      const el = ref<any>(null)
+      const el = ref<HTMLElement | null>(null)
 
       if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px')) useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'
@@ -205,7 +205,7 @@ export const useSettingsStore = defineStore('settings', {
     },
     changeColor() {
       this.setCssVar()
-      const el = ref<any>(null)
+      const el = ref<HTMLElement | null>(null)
       useCssVar('--el-color-primary-dark-2', el).value = this.color
       useCssVar('--el-color-primary', el).value = this.color
       for (let index = 1; index < 10; index++) {

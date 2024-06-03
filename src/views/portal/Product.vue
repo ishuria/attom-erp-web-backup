@@ -139,7 +139,7 @@ defineOptions({
 <style lang="scss" scoped>
 .product-main {
   &-mobile {
-    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     padding: var(--el-padding);
     background: var(--el-color-white);
   }
@@ -190,7 +190,7 @@ defineOptions({
   main {
     position: relative;
     width: 1152px;
-    min-height: calc(100vh - 550px);
+    min-height: calc(var(--vh, 1vh) * 100 - 550px);
     padding: 10px 0 0 0;
     margin-right: auto;
     margin-left: auto;
