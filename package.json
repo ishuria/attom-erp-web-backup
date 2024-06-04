@@ -33,7 +33,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@imengyu/vue3-context-menu": "^1.4.1",
-    "@kangc/v-md-editor": "^2.3.15",
+    "@kangc/v-md-editor": "^2.3.18",
     "@logicflow/core": "^1.2.27",
     "@logicflow/extension": "^1.2.27",
     "@lucky-canvas/vue": "^0.1.11",
@@ -70,7 +70,7 @@
     "xgplayer-hls.js": "^3.0.18"
   },
   "devDependencies": {
-    "@element-plus/eslint-config": "^2.7.3",
+    "@element-plus/eslint-config": "^2.7.4",
     "@types/lodash-es": "^4.17.12",
     "@types/mockjs": "^1.0.10",
     "@types/nprogress": "^0.2.3",
