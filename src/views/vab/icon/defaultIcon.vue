@@ -6,6 +6,9 @@
           <el-form-item label="图标名称">
             <el-input v-model="queryForm.title" clearable placeholder="请输入图标名称" />
           </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">查询</el-button>
+          </el-form-item>
           <!-- <el-form-item label="多彩图标" >
             <template #label>多彩图标</template>
             <el-switch v-model="queryForm.colorful" @change="queryData" />
@@ -56,6 +59,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
 import { shuffle } from 'lodash-es'
 import { getIconList } from '/@/api/icon'
 import clip from '/@/utils/clipboard'
