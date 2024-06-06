@@ -41,7 +41,7 @@ defineOptions({
 const iconList = ref<any>([])
 
 const randomHexColor = () => {
-  return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
+  return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])[0]
 }
 
 const fetchData = async () => {
@@ -50,14 +50,15 @@ const fetchData = async () => {
     pageSize: 89,
   })
   iconList.value = data.list
-    .filter((icon: any) => icon.includes('-line'))
+    .filter((icon: any) => icon.includes('-fill'))
     .map((icon: any, index: any) => {
       return { icon, color: randomHexColor(), order: index + 1 }
     })
 }
 
 const sort = () => {
-  iconList.value = iconList.value.sort((a: any, b: any) => a.order - b.order)
+  //iconList.value = iconList.value.sort((a: any, b: any) => a.order - b.order)
+  fetchData()
 }
 
 onBeforeMount(() => {

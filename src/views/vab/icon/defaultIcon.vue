@@ -1,41 +1,54 @@
 <template>
   <div class="default-icon-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel>
+      <vab-query-form-left-panel>
         <el-form inline @submit.prevent>
-          <el-form-item label="图标名称">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入图标名称" />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">查询</el-button>
-          </el-form-item>
-          <!-- <el-form-item label="多彩图标" >
-            <template #label>多彩图标</template>
-            <el-switch v-model="queryForm.colorful" @change="queryData" />
-          </el-form-item> -->
           <el-form-item>
             <el-button>
               <el-checkbox v-model="queryForm.colorful" label="多彩图标" @change="queryData" />
             </el-button>
           </el-form-item>
+          <el-form-item>
+            <el-button :disabled="!queryForm.colorful" :icon="Refresh" @click="fetchData">随机颜色</el-button>
+          </el-form-item>
           <el-form-item label="文字大小（px）">
-            <el-slider v-model="queryForm.num" :max="30" :min="12" />
+            <el-slider v-model="queryForm.num" :max="40" :min="28" />
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline @submit.prevent>
+          <el-form-item>
+            <el-input v-model="queryForm.title" clearable placeholder="请输入图标名称" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">查询</el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
     </vab-query-form>
     <el-empty v-if="emptyShow" class="vab-data-empty" description="暂无数据" />
     <el-scrollbar>
       <div class="vab-auto-box">
         <el-row :gutter="20">
-          <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="4" :sm="6" :xl="3" :xs="6">
-            <vab-card @click="handleCopyIcon(item.icon)">
+          <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="4" :sm="6" :xl="2" :xs="6">
+            <vab-card
+              :body-style="{
+                'min-height': '65px',
+              }"
+              @click="handleCopyIcon(item.icon)"
+            >
               <vab-icon
                 :icon="item.icon"
                 :style="{
                   color: queryForm.colorful ? item.color : 'var(--el-color-grey)',
                   fontSize: queryForm.num + 'px',
                   transition: 'var(--el-transition)',
+                  // 'background-image': queryForm.colorful
+                  //   ? 'linear-gradient(120deg, ' + item.color + ' 50%, ' + colorRgba(item.color, 0.3) + ')'
+                  //   : '',
+                  // 'background-clip': queryForm.colorful ? 'text' : '',
+                  // '-webkit-text-fill-color': queryForm.colorful ? 'transparent' : '',
                 }"
               />
             </vab-card>
@@ -59,7 +72,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Refresh, Search } from '@element-plus/icons-vue'
 import { shuffle } from 'lodash-es'
 import { getIconList } from '/@/api/icon'
 import clip from '/@/utils/clipboard'
@@ -82,7 +95,7 @@ const queryForm = reactive<QueryFormType>({
   pageNo: 1,
   pageSize: 72,
   title: '',
-  colorful: false,
+  colorful: true,
   num: 28,
 })
 
@@ -122,7 +135,7 @@ const handleCopyIcon = (item: any) => {
 }
 
 const randomHexColor = () => {
-  return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])
+  return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])[0]
 }
 
 onBeforeMount(() => {
