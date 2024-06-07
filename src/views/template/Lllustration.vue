@@ -50,7 +50,7 @@ const queryForm = reactive<any>({
 })
 
 const handleCopyIcon = (item: any) => {
-  clip(`<vab-icon style="width:100%;height:300px" icon="${item}" is-custom-svg/>`)
+  clip(`<vab-icon icon="${item}" is-custom-svg/>`)
 }
 
 watch(

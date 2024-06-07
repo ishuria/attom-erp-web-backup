@@ -65,9 +65,9 @@
                 <div class="solution-box">
                   <div class="solution-box-item">
                     <div class="solution-box-title">商务服务</div>
-                    <div class="solution-box-description">全生命周期客户管理</div>
+                    <vab-icon icon="lllustration/IconPark12" />
                   </div>
-                  <vab-icon icon="shopping-bag-line" />
+                  <vab-icon icon="lllustration/IconPark12" is-custom-svg />
                 </div>
               </el-col>
               <el-col :span="8">
@@ -76,16 +76,16 @@
                     <div class="solution-box-title">在线零售</div>
                     <div class="solution-box-description">打造全域营销运营闭环</div>
                   </div>
-                  <vab-icon icon="archive-drawer-line" />
+                  <vab-icon icon="lllustration/IconPark03" is-custom-svg />
                 </div>
               </el-col>
               <el-col :span="8">
                 <div class="solution-box">
                   <div class="solution-box-item">
-                    <div class="solution-box-title">箱包服饰</div>
+                    <div class="solution-box-title">珠宝首饰</div>
                     <div class="solution-box-description">沉淀私域消费者数据资产</div>
                   </div>
-                  <vab-icon icon="briefcase-5-line" />
+                  <vab-icon icon="lllustration/IconPark05" is-custom-svg />
                 </div>
               </el-col>
               <el-col :span="8">
@@ -94,7 +94,7 @@
                     <div class="solution-box-title">商用软件</div>
                     <div class="solution-box-description">深度洞察企业客户需求</div>
                   </div>
-                  <vab-icon icon="code-s-slash-line" />
+                  <vab-icon icon="lllustration/IconPark08" is-custom-svg />
                 </div>
               </el-col>
               <el-col :span="8">
@@ -103,7 +103,7 @@
                     <div class="solution-box-title">消费电子</div>
                     <div class="solution-box-description">用户精准营销与智能触达通路</div>
                   </div>
-                  <vab-icon icon="computer-line" />
+                  <vab-icon icon="lllustration/IconPark04" is-custom-svg />
                 </div>
               </el-col>
               <el-col :span="8">
@@ -112,7 +112,7 @@
                     <div class="solution-box-title">房产家具</div>
                     <div class="solution-box-description">构建专属消费者大数据画像</div>
                   </div>
-                  <vab-icon icon="home-office-line" />
+                  <vab-icon icon="lllustration/IconPark02" is-custom-svg />
                 </div>
               </el-col>
             </el-row>
@@ -300,10 +300,10 @@ defineOptions({
       }
 
       :deep() {
-        [class*='ri-'] {
-          margin-right: 20px;
-          font-size: 50px;
-          color: var(--el-color-primary);
+        .vab-icon {
+          width: 100px;
+          height: 100px;
+          margin-right: 0;
         }
       }
     }

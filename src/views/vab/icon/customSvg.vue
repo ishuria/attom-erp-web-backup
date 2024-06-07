@@ -4,40 +4,16 @@
       <vab-query-form-top-panel>
         <el-form inline @submit.prevent>
           <el-form-item label="svg大小（px）">
-            <el-slider v-model="queryForm.num" :max="100" :min="12" />
+            <el-slider v-model="queryForm.num" :max="100" :min="20" />
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-row :gutter="20">
-      <el-col :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
+      <el-col v-for="(item, index) in iconList" :key="index" :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
         <vab-card>
           <vab-icon
-            icon="vite"
-            is-custom-svg
-            :style="{
-              width: queryForm.num + 'px',
-              height: queryForm.num + 'px',
-            }"
-          />
-        </vab-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
-        <vab-card>
-          <vab-icon
-            icon="vab"
-            is-custom-svg
-            :style="{
-              width: queryForm.num + 'px',
-              height: queryForm.num + 'px',
-            }"
-          />
-        </vab-card>
-      </el-col>
-      <el-col :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
-        <vab-card>
-          <vab-icon
-            icon="mall-fill"
+            :icon="item"
             is-custom-svg
             :style="{
               width: queryForm.num + 'px',
@@ -62,6 +38,7 @@
 
 <script lang="ts" setup>
 import { Notification } from '@element-plus/icons-vue'
+const iconList = ref<any>(['vite', 'vab', 'mall-fill', 'article', 'video', 'wenda', 'wtt'])
 
 defineOptions({
   name: 'CustomSvg',
