@@ -79,6 +79,7 @@ export default {
         dangerouslyUseHTMLString,
         showClose: false,
         grouping: true,
+        plain: true,
         onClose: () => {
           if (callback) callback()
         },
