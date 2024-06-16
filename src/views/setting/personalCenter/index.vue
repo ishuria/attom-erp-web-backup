@@ -12,7 +12,7 @@
               {{ form.description }}
             </div>
             <div class="user-info-follow">
-              <el-button href="https://github.com/chuzhixin" rel="noopener noreferrer" round tag="a" target="_blank" type="primary">
+              <el-button href="https://github.com/zxwk98" rel="noopener noreferrer" round tag="a" target="_blank" type="primary">
                 <vab-icon icon="group-line" />
                 <span>Follow me</span>
               </el-button>
