@@ -52,7 +52,7 @@ const { avatar } = storeToRefs(userStore)
 const settingsStore = useSettingsStore()
 const { lock, title } = storeToRefs(settingsStore)
 const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
-const url = 'https://gcore.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
+const url = 'https://gcore.jsdelivr.net/gh/zxwk1998/image/vab-image-lock/'
 const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
 const style = reactive<any>({
   background: `var(--el-color-primary-light-5) fixed url(${background.value}) center`,

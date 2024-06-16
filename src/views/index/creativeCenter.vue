@@ -284,7 +284,7 @@ defineOptions({
 })
 
 const handelImage = () => {
-  return `https://gcore.jsdelivr.net/gh/chuzhixin/image/table/vab-image-${random(1, 38)}.jpg`
+  return `https://gcore.jsdelivr.net/gh/zxwk1998/image/table/vab-image-${random(1, 38)}.jpg`
 }
 </script>
 

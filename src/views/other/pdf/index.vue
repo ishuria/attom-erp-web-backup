@@ -11,5 +11,5 @@ defineOptions({
   name: 'PDF',
 })
 
-const source = ref<any>('https://gcore.jsdelivr.net/gh/chuzhixin/image/demo.pdf')
+const source = ref<any>('https://gcore.jsdelivr.net/gh/zxwk1998/image/demo.pdf')
 </script>
