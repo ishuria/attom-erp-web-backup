@@ -57,9 +57,7 @@ const handleLink = () => {
       router.push('/redirect')
     } else {
       if (isExternal(routePath)) window.location.href = routePath
-      else if (route.path === routePath) {
-        $pub('reload-router-view')
-      } else {
+      else if (route.path !== routePath) {
         if (device.value === 'mobile') foldSideBar()
         router.push(props.itemOrMenu.path)
       }
