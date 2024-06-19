@@ -321,7 +321,7 @@ const handleDelete = (row: any) => {
 }
 
 const handleDetailStayTable = async () => {
-  if (selectRows.value.length === 1)
+  if (selectRows.value.length > 0)
     for (let i = 0; i < selectRows.value.length; i++) {
       const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
       const tab = handleTabs({
@@ -338,7 +338,7 @@ const handleDetailStayTable = async () => {
         })
       }
     }
-  else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
+  else $baseMessage('请至少选择一行进行详情页跳转', 'warning', 'hey')
 }
 
 const handleDetail = (row: any) => {
