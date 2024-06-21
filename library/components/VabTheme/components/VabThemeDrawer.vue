@@ -123,34 +123,38 @@ defineOptions({
   name: 'VabThemeDrawer',
 })
 
-const route = useRoute()
+interface ListType {
+  value: string
+  label: string
+}
 
+const route = useRoute()
 const settingsStore = useSettingsStore()
-const routeName = ref<any>(route.name)
+const routeName = ref(route.name)
 const { theme, device, mode, persistenceTab } = storeToRefs<any>(settingsStore)
 const { saveTheme, resetTheme, updateTheme, updateCaughtTabs, setCssVar } = settingsStore
 const drawerVisible = ref<boolean>(false)
-const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive', 'fall'])
-const tabsBarStyleList = ref<any>([
+const layoutList = ref<string[]>(['column', 'vertical', 'horizontal', 'comprehensive', 'fall'])
+const tabsBarStyleList = ref<ListType[]>([
   { value: 'card', label: '卡片' },
   { value: 'smart', label: '灵动' },
   { value: 'smooth', label: '圆滑' },
   { value: 'rect', label: '矩形' },
 ])
-const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
-const themeNameList = ref<any>([
+const menuWidthList = ref<string[]>(['266px', '277px', '288px', '299px'])
+const themeNameList = ref<ListType[]>([
   { value: 'default', label: '默认' },
   { value: 'plain', label: '简洁' },
   { value: 'technology', label: '科技' },
 ])
-const columnStyleList = ref<any>([
+const columnStyleList = ref<ListType[]>([
   { value: 'vertical', label: '纵向' },
   { value: 'horizontal', label: '横向' },
   { value: 'card', label: '卡片' },
   { value: 'arrow', label: '箭头' },
   { value: 'semicircle', label: '半圆' },
 ])
-const pageTransitionList = ref<any>([
+const pageTransitionList = ref<ListType[]>([
   { value: 'null', label: '无动画' },
   { value: 'el-fade-in-linear', label: 'fade-in-linear' },
   { value: 'el-fade-in', label: 'fade-in' },

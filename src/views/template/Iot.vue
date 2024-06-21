@@ -81,12 +81,12 @@ interface MenuListType {
   active?: boolean
 }
 
-interface iotListType {
+interface IotListType {
   icon: string
   title: string
 }
 
-interface serviceListType {
+interface ServiceListType {
   icon: string
   title: string
 }
@@ -94,7 +94,7 @@ interface serviceListType {
 const userStore = useUserStore()
 const { avatar, username } = storeToRefs(userStore)
 const router = useRouter()
-const menuList = ref<Array<MenuListType>>([
+const menuList = ref<MenuListType[]>([
   {
     icon: 'earthquake-fill',
     title: '物联网',
@@ -112,7 +112,7 @@ const menuList = ref<Array<MenuListType>>([
     path: '/index',
   },
 ])
-const iotList = ref<Array<iotListType>>([
+const iotList = ref<IotListType[]>([
   {
     title: '空调',
     icon: iot_1,
@@ -138,7 +138,7 @@ const iotList = ref<Array<iotListType>>([
     icon: iot_6,
   },
 ])
-const serviceList = ref<Array<serviceListType>>([
+const serviceList = ref<ServiceListType[]>([
   { title: '数据看板', icon: 'artboard-fill' },
   { title: '日志查询', icon: 'book-read-fill' },
   { title: '模组', icon: 'box-3-fill' },
