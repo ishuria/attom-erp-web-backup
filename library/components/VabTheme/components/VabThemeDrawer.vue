@@ -116,6 +116,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { RouteRecordName } from 'vue-router'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -130,7 +131,7 @@ interface ListType {
 
 const route = useRoute()
 const settingsStore = useSettingsStore()
-const routeName = ref(route.name)
+const routeName = ref<RouteRecordName | null | undefined>(route.name)
 const { theme, device, mode, persistenceTab } = storeToRefs<any>(settingsStore)
 const { saveTheme, resetTheme, updateTheme, updateCaughtTabs, setCssVar } = settingsStore
 const drawerVisible = ref<boolean>(false)
@@ -168,32 +169,32 @@ const handleOpenTheme = () => {
   drawerVisible.value = true
 }
 
-const updateMenuWidth = (value: any) => {
+const updateMenuWidth = (value: string) => {
   theme.value.menuWidth = value
   setCssVar()
 }
 
-const updateIsFollow = (value: any) => {
+const updateIsFollow = (value: string | number | boolean) => {
   theme.value.isFollow = value
   setCssVar()
 }
 
-const handleShowFooter = (value: any) => {
+const handleShowFooter = (value: string | number | boolean) => {
   theme.value.showFooter = value
   setCssVar()
 }
 
-const handleRadius = (value: any) => {
-  theme.value.radius = value
+const handleRadius = (cur: number | undefined, prev: number | undefined) => {
+  theme.value.radius = cur || prev
   setCssVar()
 }
 
-const handleColorWeakness = (value: any) => {
+const handleColorWeakness = (value: string | number | boolean) => {
   theme.value.colorWeakness = value
   setCssVar()
 }
 
-const handleShowTabs = (value: any) => {
+const handleShowTabs = (value: string | number | boolean) => {
   const el = ref<HTMLElement | null>(null)
   if (value) {
     useCssVar('--el-tabs-height', el).value = '50px'
@@ -202,11 +203,11 @@ const handleShowTabs = (value: any) => {
   }
 }
 
-const handlePersistenceTab = (value: any) => {
+const handlePersistenceTab = (value: string | number | boolean) => {
   updateCaughtTabs(value)
 }
 
-const _updateTheme = (value: any = '') => {
+const _updateTheme = (value: string | number | boolean = '') => {
   if (value == 'default') $pub('shop-vite-reset-dark')
   if (theme.value.themeName == 'technology') $pub('shop-vite-reset-color')
 
