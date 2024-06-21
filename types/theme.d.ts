@@ -80,7 +80,7 @@ declare type pageTransitionStyle =
   /**
    * 无动画
    */
-  | ''
+  | 'null'
   /**
    * el-fade-in-linear
    */

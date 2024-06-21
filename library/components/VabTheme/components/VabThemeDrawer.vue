@@ -13,12 +13,9 @@
         </el-form-item>
         <el-form-item :label="translate('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
-            <el-radio-button v-for="item in themeNameList" :key="item.label" :label="item.label" :value="item.label">
-              <template #default>{{ translate(item.title) }}</template>
-            </el-radio-button>
+            <el-radio-button v-for="item in themeNameList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-radio-group>
         </el-form-item>
-
         <el-form-item
           v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
           :label="translate('暗黑模式')"
@@ -135,16 +132,16 @@ const { saveTheme, resetTheme, updateTheme, updateCaughtTabs, setCssVar } = sett
 const drawerVisible = ref<boolean>(false)
 const layoutList = ref<any>(['column', 'vertical', 'horizontal', 'comprehensive', 'fall'])
 const tabsBarStyleList = ref<any>([
-  { label: '卡片', value: 'card' },
-  { label: '灵动', value: 'smart' },
-  { label: '圆滑', value: 'smooth' },
-  { label: '矩形', value: 'rect' },
+  { value: 'card', label: '卡片' },
+  { value: 'smart', label: '灵动' },
+  { value: 'smooth', label: '圆滑' },
+  { value: 'rect', label: '矩形' },
 ])
 const menuWidthList = ref<any>(['266px', '277px', '288px', '299px'])
 const themeNameList = ref<any>([
-  { label: 'default', title: '默认' },
-  { label: 'plain', title: '简洁' },
-  { label: 'technology', title: '科技' },
+  { value: 'default', label: '默认' },
+  { value: 'plain', label: '简洁' },
+  { value: 'technology', label: '科技' },
 ])
 const columnStyleList = ref<any>([
   { value: 'vertical', label: '纵向' },
@@ -154,7 +151,7 @@ const columnStyleList = ref<any>([
   { value: 'semicircle', label: '半圆' },
 ])
 const pageTransitionList = ref<any>([
-  { value: '', label: '无动画' },
+  { value: 'null', label: '无动画' },
   { value: 'el-fade-in-linear', label: 'fade-in-linear' },
   { value: 'el-fade-in', label: 'fade-in' },
   { value: 'el-zoom-in-center', label: 'zoom-in-center' },
