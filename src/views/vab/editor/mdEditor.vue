@@ -35,7 +35,7 @@ const markdownContent = ref<any>(`<div align="center">
 
 - [📌 Vue Shop Vite 购买地址](https://vue-admin-beautiful.com/authorization/shop-vite.html)
 
-- [🌐 github 仓库地址](https://github.com/zxwk98/vue-admin-beautiful?utm_source=gold_browser_extension)
+- [🌐 github 仓库地址](https://github.com/zxwk1998/vue-admin-beautiful?utm_source=gold_browser_extension)
 
 - [🌐 码云仓库地址](https://gitee.com/chu1204505056/vue-admin-better?_from=gitee_search)
 
