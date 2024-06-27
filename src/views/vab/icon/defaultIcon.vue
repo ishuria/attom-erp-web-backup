@@ -89,7 +89,12 @@ interface QueryFormType {
   num: number
 }
 
-const queryIcon = ref<any>([])
+interface QueryIconType {
+  icon: string
+  color: string
+}
+
+const queryIcon = ref<QueryIconType[]>()
 const total = ref<number>(0)
 const queryForm = reactive<QueryFormType>({
   pageNo: 1,

@@ -44,7 +44,11 @@ defineOptions({
   name: 'CustomSvg',
 })
 
-const queryForm = reactive<any>({
+interface QueryFormType {
+  num: number
+}
+
+const queryForm = reactive<QueryFormType>({
   num: 28,
 })
 </script>
