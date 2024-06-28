@@ -148,7 +148,11 @@ onBeforeMount(() => {
   form.username = 'admin'
   form.password = '123456'
   // 为了演示效果，会在官网演示页自动登录到首页，正式开发可删除
-  if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io') {
+  if (
+    location.hostname === 'vue-admin-beautiful.com' ||
+    location.hostname === 'chu1204505056.gitee.io' ||
+    location.hostname === 'vuejs-core.cn'
+  ) {
     previewText.value = '（演示地址验证码可不填）'
     timer = setTimeout(() => {
       handleLogin()

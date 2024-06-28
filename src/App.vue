@@ -36,7 +36,10 @@ onBeforeMount(() => {
   if (
     !location.hostname.includes('127') &&
     !location.hostname.includes('localhost') &&
-    (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io' || noDebugger)
+    (location.hostname === 'vue-admin-beautiful.com' ||
+      location.hostname === 'chu1204505056.gitee.io' ||
+      location.hostname === 'vuejs-core.cn' ||
+      noDebugger)
   ) {
     ;(() => {
       const block = () => {
@@ -50,7 +53,11 @@ onBeforeMount(() => {
       }
 
       try {
-        if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'chu1204505056.gitee.io')
+        if (
+          location.hostname === 'vue-admin-beautiful.com' ||
+          location.hostname === 'chu1204505056.gitee.io' ||
+          location.hostname === 'vuejs-core.cn'
+        )
           console.error('演示地址禁止调试，如需调试代码请联系客服购买！')
         block()
       } catch {

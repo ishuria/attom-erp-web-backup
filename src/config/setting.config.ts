@@ -15,7 +15,7 @@ export const settingConfig: {
   // 简写
   abbreviation: 'vab-shop-vite',
   // 付费版本copyright可随意修改
-  copyright: 'vue-admin-beautiful.com',
+  copyright: 'vuejs-core.cn',
   // 缓存路由的最大数量
   keepAliveMaxNum: 99,
   // 路由模式，是否为hash模式

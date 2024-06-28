@@ -7,6 +7,7 @@
     </div>
     <slot></slot>
     <vab-icon class="login-background" icon="background" is-custom-svg />
+    <vab-footer />
   </div>
 </template>
 
@@ -174,6 +175,15 @@ const { theme } = storeToRefs(settingsStore)
         user-select: none;
         border-radius: 3px;
       }
+    }
+
+    .vab-footer {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: transparent;
+      border: 0;
     }
   }
 

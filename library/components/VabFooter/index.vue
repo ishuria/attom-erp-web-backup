@@ -3,6 +3,16 @@
     Copyright
     <vab-icon icon="copyright-line" />
     {{ fullYear }} {{ title }}
+
+    <a
+      v-if="beian"
+      class="hidden-xs-only"
+      href="https://beian.miit.gov.cn/#/Integrated/index"
+      style="margin-left: 3px; color: var(--el-color-grey)"
+      target="_blank"
+    >
+      {{ beian }}
+    </a>
   </footer>
 </template>
 
@@ -13,9 +23,20 @@ defineOptions({
   name: 'VabFooter',
 })
 
+const route = useRoute()
 const fullYear = new Date().getFullYear()
 const settingsStore = useSettingsStore()
 const { title, theme } = storeToRefs(settingsStore)
+const beian = ref<any>(localStorage.getItem('beian'))
+
+console.log(route.query)
+
+onBeforeMount(() => {
+  if (route.query && route.query.beian) {
+    beian.value = route.query.beian
+    localStorage.setItem('beian', beian.value)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
