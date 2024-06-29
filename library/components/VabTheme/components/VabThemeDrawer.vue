@@ -376,6 +376,27 @@ onMounted(() => {
                   .vab-icon {
                     box-shadow: 0 0 2px 2px var(--el-color-primary);
                   }
+
+                  &:before {
+                    position: absolute;
+                    right: 0px;
+                    bottom: 1px;
+                    z-index: 1;
+                    font-family: 'remixicon', sans-serif !important;
+                    color: var(--el-color-white);
+                    content: '';
+                  }
+
+                  &:after {
+                    position: absolute;
+                    right: 0px;
+                    bottom: 0px;
+                    content: '';
+                    border: 12px dashed transparent;
+                    border-right: 12px solid var(--el-color-primary);
+                    border-bottom: 12px solid var(--el-color-primary);
+                    border-radius: var(--el-border-radius-base) 0px var(--el-border-radius-base) 0px;
+                  }
                 }
               }
             }
