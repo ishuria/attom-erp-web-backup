@@ -1,5 +1,5 @@
 <div align="center">
-<img width="200" src="https://gitee.com/chu1204505056/image/raw/master/logo/vab.svg" alt="VAB"/>
+<img width="200" src="https://gcore.jsdelivr.net/gh/zxwk1998/image/logo/vite.svg" alt="VAB"/>
 <h1>shop-vite</h1>
 </div>
 
