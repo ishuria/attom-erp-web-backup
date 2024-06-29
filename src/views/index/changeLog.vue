@@ -125,11 +125,10 @@ onMounted(() => {
     !location.hostname.includes('127') &&
     !location.hostname.includes('192') &&
     location.hostname !== 'vue-admin-beautiful.com' &&
-    location.hostname !== 'chu1204505056.gitee.io' &&
     location.hostname !== 'vuejs-core.cn'
   ) {
     $baseMessage('检测到当前演示地址非官方演示地址，即将为您跳转，请稍后', 'warning', 'hey', () => {
-      location.href = 'https://vue-admin-beautiful.com/shop-vite/#/changeLog'
+      location.href = 'https://vuejs-core.cn/shop-vite/#/changeLog'
     })
   }
 })
