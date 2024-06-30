@@ -91,7 +91,7 @@
     "lint-staged": "^15.2.7",
     "picocolors": "^1.0.1",
     "plop": "^4.0.1",
-    "postcss": "^8.4.38",
+    "postcss": "^8.4.39",
     "postcss-html": "^1.7.0",
     "prettier": "^3.3.2",
     "rollup-plugin-visualizer": "^5.12.0",
