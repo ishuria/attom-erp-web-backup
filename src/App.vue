@@ -40,6 +40,12 @@ onBeforeMount(() => {
   ) {
     ;(() => {
       const block = () => {
+        if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+          if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'vuejs-core.cn') {
+            console.error('演示地址禁止调试，如需调试代码请联系客服购买！')
+            document.body.innerHTML = '演示地址禁止调试，如需调试代码请联系客服购买！'
+          } else document.body.innerHTML = '线上地址禁止调试，如需调试代码请去config中配置noDebugger为false！'
+        }
         setInterval(() => {
           ;(function () {
             return false
@@ -50,8 +56,6 @@ onBeforeMount(() => {
       }
 
       try {
-        if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'vuejs-core.cn')
-          console.error('演示地址禁止调试，如需调试代码请联系客服购买！')
         block()
       } catch {
         /* empty */
