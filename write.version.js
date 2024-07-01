@@ -5,6 +5,7 @@
 const fs = require('node:fs')
 const AdmZip = require('adm-zip')
 const package = require('./package.json')
+const dayjs = require('dayjs')
 const data = {
   version: package.version,
 }
@@ -19,3 +20,5 @@ const zip = new AdmZip()
 zip.addLocalFolder('./dist')
 zip.writeZip(zipFilePath)
 console.log(`dist压缩成功！`)
+const lastBuildTime = dayjs().format('YYYY-MM-DD HH:mm:ss')
+console.log(lastBuildTime)
