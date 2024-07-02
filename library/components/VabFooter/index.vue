@@ -38,7 +38,7 @@ onBeforeMount(() => {
   } else {
     // 应对工信部审查，请自行配置成自己的备案号
     // 以下网站一年内停用
-    if (location.hostname === 'vue-admin-beautiful.com') beian.value = '鲁ICP备2021002317号-1'
+    if (location.hostname === 'vue-admin-beautiful.com') beian.value = ''
     // 以下网站为此后官方站点
     if (location.hostname === 'vuejs-core.cn') beian.value = ''
   }
