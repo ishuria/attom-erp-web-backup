@@ -132,7 +132,7 @@
 
       <el-table-column align="center" :fixed="fixed" label="操作" width="215">
         <template #header>
-          <el-checkbox v-model="fixed" label="是否固定操作列" true-value="right" />
+          <el-checkbox v-model="fixed" label="固定操作列" true-value="right" />
         </template>
         <template #default="{ row }">
           <el-button text type="primary" @click="handleDetail(row)">详情</el-button>

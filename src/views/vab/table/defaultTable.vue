@@ -55,11 +55,29 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="时间" min-width="160" prop="datetime" />
-      <el-table-column align="center" label="操作" width="215">
+      <el-table-column align="center" :fixed="fixed" label="操作" :width="!foldOperation ? 215 : 120">
+        <template #header>
+          <el-checkbox v-model="foldOperation" label="折叠操作列" true-value="right" />
+        </template>
         <template #default="{ row }">
-          <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
-          <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
-          <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
+          <div v-if="!foldOperation">
+            <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
+            <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+            <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
+          </div>
+          <el-dropdown v-else>
+            <el-button text type="primary">
+              操作
+              <el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleDetail(row)"><el-link type="primary" :underline="false">详情</el-link></el-dropdown-item>
+                <el-dropdown-item @click="handleEdit(row)"><el-link type="primary" :underline="false">编辑</el-link></el-dropdown-item>
+                <el-dropdown-item @click="handleDelete(row)"><el-link type="danger" :underline="false">删除</el-link></el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-table-column>
       <template #empty>
@@ -78,10 +96,11 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search } from '@element-plus/icons-vue'
+import { ArrowDown, Delete, Plus, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, getList } from '/@/api/table'
 import { useRoutesStore } from '/@/store/modules/routes'
+import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 
@@ -105,6 +124,10 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
 })
+const foldOperation = ref<boolean>(false)
+const settingsStore = useSettingsStore()
+const { device } = storeToRefs(settingsStore)
+const fixed = ref<string | boolean>(false)
 
 const fetchData = async () => {
   listLoading.value = true
@@ -218,6 +241,23 @@ const handleDetail = (row: any) => {
     else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
   }
 }
+
+/**
+ * @description: 手机端时自动折叠并固定操作列
+ * @author sundan
+ */
+watch(
+  () => device.value,
+  () => {
+    if (device.value === 'mobile') {
+      foldOperation.value = true
+      fixed.value = 'right'
+    }
+  },
+  {
+    immediate: true,
+  }
+)
 
 onActivated(() => {
   tableRef.value?.doLayout()
