@@ -14,8 +14,8 @@ onBeforeMount(() => {
     ;(function () {
       const hm = document.createElement('script')
       let k = '820b686671af452e8a4e18952ce946d8'
-      if (location.hostname.includes('beautiful')) k = '9578a46b371ba85ee55bc868d6b30692'
-      hm.src = `https://hm.baidu.com/hm.js?${k}`
+      if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'vuejs-core.cn') k = '9578a46b371ba85ee55bc868d6b30692'
+      hm.src = `//hm.baidu.com/hm.js?${k}`
       const s: any = document.querySelectorAll('script')[0]
       s.parentNode.insertBefore(hm, s)
     })()
@@ -28,7 +28,7 @@ onBeforeMount(() => {
         }
       t = l.createElement(r)
       t.async = 1
-      t.src = `https://www.clarity.ms/tag/${i}`
+      t.src = `//www.clarity.ms/tag/${i}`
       y = l.getElementsByTagName(r)[0]
       y.parentNode.insertBefore(t, y)
     })(window, document, 'clarity', 'script', 'j9de7dmm7n')
