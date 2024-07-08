@@ -35,14 +35,14 @@
 - 12.购买者需遵守以上约定，最终解释权归 vab 系列著作权人所有，如果您无法遵守以上约定，请勿下单。
 
 ```
-注：以上协议以 https://vue-admin-beautiful.com/authorization/shop-vite.html 为准
+注：以上协议以 https://vuejs-core.cn/authorization/shop-vite.html 为准
 ```
 
 ## 🔗 链接
 
-- 💻 常规版演示地址：[shop-vite](https://vue-admin-beautiful.com/shop-vite/)
+- 💻 常规版演示地址：[shop-vite](//vuejs-core.cn/shop-vite/)
 - 📝 使用文档：(文档地址及密码请查看 vip 群群公告第一条)
-- 📌 付费版及 vip 群购买地址：[购买地址](https://vue-admin-beautiful.com/authorization/shop-vite.html)
+- 📌 付费版及 vip 群购买地址：[购买地址](//vuejs-core.cn/authorization/shop-vite.html)
 
 ## ✅ 版权须知
 
@@ -58,7 +58,7 @@ Vab 系列产品受国家计算机软件著作权保护（证书号：软著登�
 
 - 免费名额之外，额外加入 vip 群 （100/人 仅限已购买框架的的公司员工加入，购买后联系 微信 zxwk-bfq 即可）
 
-- [购买地址，网页右下角切换付款码即可](https://vue-admin-beautiful.com/authorization/shop-vite.html)
+- [购买地址，网页右下角切换付款码即可](//vuejs-core.cn/authorization/shop-vite.html)
 
 ### 定制开发
 
@@ -90,7 +90,7 @@ Vab 系列产品受国家计算机软件著作权保护（证书号：软著登�
 
 ```txt
 
-邮箱：chuzhixin@vue-admin-beautiful.cn
+邮箱：fanhuihui1998@126.com
 
 邮件标题：企业一对一远程培训 - 公司名称，定制开发 -  公司名称，一对一技术支持 - 公司名称
 

@@ -23,17 +23,17 @@ const markdownContent = ref<any>(`<div align="center">
 
 ## 🌐 地址
 
-- [🎉 vue2.x + element-ui（免费商用，支持 PC、平板、手机）](https://vue-admin-beautiful.com/vue-admin-beautiful-element/)
+- [🎉 vue2.x + element-ui（免费商用，支持 PC、平板、手机）](//vuejs-core.cn/vue-admin-beautiful-element/)
 
-- [🚀 Vue Admin Pro 演示地址（vue2.x + element-ui 2.x 付费版本，支持 PC、平板、手机）](https://vue-admin-beautiful.com/admin-pro/)
+- [🚀 Vue Admin Pro 演示地址（vue2.x + element-ui 2.x 付费版本，支持 PC、平板、手机）](//vuejs-core.cn/admin-pro/)
 
-- [🚀 Vue Admin Plus 演示地址（vue3.x + element-plus 2.x 付费版本，支持 PC、平板、手机）](https://vue-admin-beautiful.com/admin-plus/)
+- [🚀 Vue Admin Plus 演示地址（vue3.x + element-plus 2.x 付费版本，支持 PC、平板、手机）](//vuejs-core.cn/admin-plus/)
 
-- [📌 Vue Admin Pro 及 Vue Admin Plus 购买地址](https://vue-admin-beautiful.com/authorization/)
+- [📌 Vue Admin Pro 及 Vue Admin Plus 购买地址](//vuejs-core.cn/authorization/)
 
-- [🚀 Vue Shop Vite 演示地址（vue3.x + vite 4.x + element-plus 2.x 付费版本，支持 PC、平板、手机）](https://vue-admin-beautiful.com/shop-vite/)
+- [🚀 Vue Shop Vite 演示地址（vue3.x + vite 4.x + element-plus 2.x 付费版本，支持 PC、平板、手机）](//vuejs-core.cn/shop-vite/)
 
-- [📌 Vue Shop Vite 购买地址](https://vue-admin-beautiful.com/authorization/shop-vite.html)
+- [📌 Vue Shop Vite 购买地址](//vuejs-core.cn/authorization/shop-vite.html)
 
 - [🌐 github 仓库地址](https://github.com/zxwk1998/vue-admin-beautiful?utm_source=gold_browser_extension)
 

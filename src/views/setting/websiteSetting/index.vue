@@ -62,7 +62,7 @@ interface FormType {
 
 const form = reactive<FormType>({
   siteName: 'Vue Shop Vite',
-  siteUrl: 'https://vue-admin-beautiful.com/shop-vite',
+  siteUrl: '//vuejs-core.cn/shop-vite',
   metaKeywords: '',
   metaDesc: '',
   copyright: '',

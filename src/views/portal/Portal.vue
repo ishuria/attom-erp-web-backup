@@ -11,13 +11,13 @@
           <el-col :span="6">
             <div class="left-tab">
               <el-menu active-text-color="var(--el-color-white)" background-color="#39364d" text-color="var(--el-color-white)">
-                <el-menu-item index="1" @click="openWindow('https://vue-admin-beautiful.com/admin-pro>')">
+                <el-menu-item index="1" @click="openWindow('//vuejs-core.cn/admin-pro>')">
                   <template #title>Vue Admin Pro：企业级中后台前端框架</template>
                 </el-menu-item>
-                <el-menu-item index="2" @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')">
+                <el-menu-item index="2" @click="openWindow('//vuejs-core.cn/admin-plus>')">
                   <template #title>Vue Admin Plus：企业级中后台前端框架</template>
                 </el-menu-item>
-                <el-menu-item index="3" @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')">
+                <el-menu-item index="3" @click="openWindow('//vuejs-core.cn/shop-vite>')">
                   <template #title>Vue Shop Vite：全新一代前端模板</template>
                 </el-menu-item>
               </el-menu>
@@ -25,9 +25,9 @@
           </el-col>
           <el-col :span="18">
             <el-carousel arrow="always" height="420px" :interval="3000" @change="handleChange">
-              <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/admin-plus>')" />
-              <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/shop-vite>')" />
-              <el-carousel-item @click="openWindow('https://vue-admin-beautiful.com/admin-pro')" />
+              <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-plus>')" />
+              <el-carousel-item @click="openWindow('//vuejs-core.cn/shop-vite>')" />
+              <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-pro')" />
             </el-carousel>
           </el-col>
           <el-col :span="24">

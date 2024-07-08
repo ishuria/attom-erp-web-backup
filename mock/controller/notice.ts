@@ -9,17 +9,17 @@ const List = [
   {
     email: '@email',
     image: 'https://i.gtimg.cn/club/item/face/img/0/15640_100.gif',
-    notice: 'Admin Pro：<a target="_blank" href="https://vue-admin-beautiful.com/admin-pro">点我</a>',
+    notice: 'Admin Pro：<a target="_blank" href="//vuejs-core.cn/admin-pro">点我</a>',
   },
   {
     email: '@email',
     image: 'https://i.gtimg.cn/club/item/face/img/9/15919_100.gif',
-    notice: 'Admin Plus：<a target="_blank" href="https://vue-admin-beautiful.com/admin-plus">点我</a>',
+    notice: 'Admin Plus：<a target="_blank" href="//vuejs-core.cn/admin-plus">点我</a>',
   },
   {
     email: '@email',
     image: 'https://i.gtimg.cn/club/item/face/img/8/15918_100.gif',
-    notice: 'Shop Vite：<a target="_blank" href="https://vue-admin-beautiful.com/shop-vite">点我</a>',
+    notice: 'Shop Vite：<a target="_blank" href="//vuejs-core.cn/shop-vite">点我</a>',
   },
 ]
 

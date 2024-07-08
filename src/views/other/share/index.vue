@@ -31,12 +31,12 @@ const { share } = useShare()
 function startShare() {
   share({
     title: 'Vue shop Vite',
-    url: 'https://vue-admin-beautiful.com/shop-vite',
+    url: '//vuejs-core.cn/shop-vite',
   })
 }
 
 const form = reactive<any>({
-  url: 'https://vue-admin-beautiful.com/shop-vite',
+  url: '//vuejs-core.cn/shop-vite',
 })
 
 const copy = () => {
@@ -44,7 +44,7 @@ const copy = () => {
 }
 
 const reset = () => {
-  form.url = 'https://vue-admin-beautiful.com/shop-vite'
+  form.url = '//vuejs-core.cn/shop-vite'
 }
 
 const clear = () => {

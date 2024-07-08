@@ -119,7 +119,7 @@
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
-  "homepage": "https://vue-admin-beautiful.com/shop-vite",
+  "homepage": "https://vuejs-core.cn/shop-vite",
   "license": "Mozilla Public License Version 2.0",
   "lint-staged": {
     "*.{js,ts,vue}": [
