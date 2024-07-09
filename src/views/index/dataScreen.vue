@@ -78,13 +78,13 @@ onMounted(() => {
   }, 1000)
   document.querySelectorAll('body')[0].className = ''
 
-  if (location.hostname === 'vue-admin-beautiful.com' || location.hostname === 'vuejs-core.cn') {
-    // 数据大屏占用内存较大，演示地址每隔3分钟刷新一次页面缓解浏览器压力
+  if (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core')) {
+    // 数据大屏占用内存较大，演示地址每隔15分钟刷新一次页面缓解浏览器压力
     setTimeout(
       () => {
         location.reload()
       },
-      1000 * 10 * 60
+      1000 * 60 * 15
     )
   }
 })

@@ -35,17 +35,17 @@ const handleKeepAlive = () => {
     }, 1000)
     setTimeout(() => {
       $baseMessage('倒计时：2', 'success', 'hey')
-    }, 2000)
+    }, 1000 * 2)
     setTimeout(() => {
       $baseMessage('倒计时：1', 'success', 'hey')
-    }, 3000)
+    }, 1000 * 3)
     setTimeout(() => {
       $baseMessage('路由缓存已生效，即将回到路由1.1.1.1', 'success', 'hey', () => {
         router.push({
           name: 'Menu1111',
         })
       })
-    }, 4000)
+    }, 1000 * 4)
   })
 }
 </script>

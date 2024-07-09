@@ -17,13 +17,13 @@ defineOptions({
 const markdownContent = ref<any>(`<div align="center">
   <img width="200" src="https://gcore.jsdelivr.net/gh/zxwk1998/image/logo/vab.png"/>
   <h1> vue-admin-better
-    <img width="100" src="https://img.shields.io/github/stars/chuzhixin/vue-admin-beautiful?style=flat-square&logo=GitHub"/>
+    <img width="100" src="https://img.shields.io/github/stars/zxwk1998/vue-admin-better?style=flat-square&logo=GitHub"/>
   </h1>
 </div>
 
 ## 🌐 地址
 
-- [🎉 vue2.x + element-ui（免费商用，支持 PC、平板、手机）](//vuejs-core.cn/vue-admin-beautiful-element/)
+- [🎉 vue2.x + element-ui（免费商用，支持 PC、平板、手机）](//vuejs-core.cn/vue-admin-better/)
 
 - [🚀 Vue Admin Pro 演示地址（vue2.x + element-ui 2.x 付费版本，支持 PC、平板、手机）](//vuejs-core.cn/admin-pro/)
 
@@ -35,9 +35,9 @@ const markdownContent = ref<any>(`<div align="center">
 
 - [📌 Vue Shop Vite 购买地址](//vuejs-core.cn/authorization/shop-vite.html)
 
-- [🌐 github 仓库地址](https://github.com/zxwk1998/vue-admin-beautiful?utm_source=gold_browser_extension)
+- [🌐 github 仓库地址](//github.com/zxwk1998/vue-admin-better)
 
-- [🌐 码云仓库地址](https://gitee.com/chu1204505056/vue-admin-better?_from=gitee_search)
+- [🌐 码云仓库地址](//gitee.com/chu1204505056/vue-admin-better)
 
 `)
 

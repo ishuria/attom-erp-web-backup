@@ -788,7 +788,7 @@ const list: VabRouteRecord[] = [
         },
       },
       {
-        path: '//github.com/chuzhixin/vue-admin-beautiful?utm_source=gold_browser_extension',
+        path: '//github.com/zxwk1998/vue-admin-better',
         name: 'ExternalLink',
         meta: {
           title: '外链',

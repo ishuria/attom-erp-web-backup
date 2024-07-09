@@ -146,7 +146,7 @@ const startCallback = () => {
     //中奖的数组下标
     const index = random(0, 5)
     awardGridRef.value.stop(index)
-  }, 3000)
+  }, 1000 * 3)
 }
 const endCallback = (prize: any) => {
   $baseMessage(`恭喜您获得${prize.fonts[0].text}`, 'success', 'hey')

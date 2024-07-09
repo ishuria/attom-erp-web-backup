@@ -104,7 +104,7 @@ const handleClose = (done: () => void) => {
         setTimeout(() => {
           loading.value = false
         }, 400)
-      }, 2000)
+      }, 1000 * 2)
     })
     .catch(() => {
       // catch error

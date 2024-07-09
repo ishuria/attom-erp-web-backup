@@ -37,7 +37,7 @@ onActivated(() => {
     nextTick(() => {
       scan.value = _scan
     })
-  }, 10000)
+  }, 1000 * 10)
 
   timer2 = setTimeout(() => {
     dialogVisible.value = true

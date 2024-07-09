@@ -60,7 +60,7 @@ const print = async (value: any) => {
 const remotePrint = () => {
   ElMessageBox.prompt('', '自定义打印', {
     inputType: 'textarea',
-    inputValue: `<h1>Vue Shop Vite</h1><p>vue-admin-beautiful.com/shop-vite</p>`,
+    inputValue: `<h1>Vue Shop Vite</h1><p>vuejs-core.cn/shop-vite</p>`,
     inputErrorMessage: 'Invalid Email',
     confirmButtonText: '打印',
     draggable: true,
