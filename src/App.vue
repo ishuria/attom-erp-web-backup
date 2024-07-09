@@ -33,35 +33,36 @@ onBeforeMount(() => {
   resizeContainer()
 
   // 是否允许生产环境进行代码调试，请前往config/cli.config.ts文件配置
-  if (
-    !location.hostname.includes('127') &&
-    !location.hostname.includes('localhost') &&
-    (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core') || noDebugger)
-  ) {
-    ;(() => {
+  ;(() => {
+    if (
+      !location.hostname.includes('127') &&
+      !location.hostname.includes('localhost') &&
+      (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core') || noDebugger)
+    ) {
       const block = () => {
-        if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-          let message = '线上地址禁止调试，如需调试代码请去config中配置noDebugger为false！'
-          if (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core'))
-            message = '演示地址禁止调试，如需调试代码请联系客服购买！'
-          console.error(message)
-          document.body.innerHTML = `<h1>${message}</h1>`
-        }
         setInterval(() => {
+          let startTime = performance.now()
+          if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+            let message = '线上地址禁止调试，如需调试代码请去config中配置noDebugger为false！'
+            if (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core'))
+              message = '演示地址禁止调试，如需调试代码请联系客服购买！'
+            document.body.innerHTML = `<h1>${message}</h1>`
+          }
           ;(function () {
             return false
           })
             ['constructor']('debugger')
             ['call']()
-        }, 50)
+          let endTime = performance.now()
+          if (endTime - startTime > 1000) window.location.href = 'about:blank'
+        }, 1000)
       }
-
       try {
         block()
       } catch {
         /* empty */
       }
-    })()
-  }
+    }
+  })()
 })
 </script>
