@@ -48,6 +48,16 @@
             {{ translate('忘记密码') }}
           </el-button>
         </router-link>
+
+        <div v-throttle="handleLogin" class="login-other">
+          <vab-icon icon="wechat-fill" style="color: #08c25f" />
+          <vab-icon icon="alipay-fill" style="color: #226bf3" />
+          <vab-icon icon="dingding-fill" style="color: #007ef8" />
+          <vab-icon icon="qq-fill" style="color: #009dff" />
+          <vab-icon icon="tiktok-fill" style="color: #000000" />
+          <vab-icon icon="weibo-fill" style="color: #df1e33" />
+          <vab-icon icon="github-fill" style="color: #151515" />
+        </div>
       </el-form>
     </div>
   </login-container>
@@ -170,3 +180,22 @@ onBeforeRouteLeave((to, from, next) => {
   next()
 })
 </script>
+
+<style lang="scss" scoped>
+.login-other {
+  position: absolute;
+  right: 0;
+  display: inline-block;
+  height: 32px;
+  margin-top: var(--el-margin);
+  margin-right: 4.5vh;
+  line-height: 32px;
+
+  :deep() {
+    [class*='ri-'] {
+      margin-left: calc(var(--el-margin) / 2);
+      font-size: var(--el-font-size-bigger);
+    }
+  }
+}
+</style>

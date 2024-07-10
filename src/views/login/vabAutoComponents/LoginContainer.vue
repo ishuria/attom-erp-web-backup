@@ -106,6 +106,7 @@ const handleShow = () => {
 
   :deep() {
     .login-form {
+      position: relative;
       z-index: 1;
       display: flex;
       align-items: center;
