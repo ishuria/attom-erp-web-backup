@@ -1,6 +1,6 @@
 <template>
   <div class="vab-lock">
-    <vab-icon icon="lock-line" @click="handleLock" />
+    <vab-icon icon="lock-2-line" @click="handleLock" />
     <el-drawer
       v-model="lock"
       append-to-body
@@ -17,7 +17,7 @@
         <div class="vab-screen-lock-content">
           <div class="vab-screen-lock-content-title">
             <el-avatar :size="180" :src="avatar" />
-            <vab-icon icon="lock-line" />
+            <vab-icon icon="lock-2-line" />
             {{ title }} {{ translate('屏幕已锁定') }}
           </div>
           <div class="vab-screen-lock-content-form">
@@ -25,7 +25,7 @@
               <el-form-item prop="password">
                 <el-input v-model="form.password" v-focus autocomplete="off" :placeholder="translate('请输入密码123456')" type="password" />
                 <el-button native-type="submit" type="primary" @click="handleUnLock">
-                  <vab-icon icon="lock-line" />
+                  <vab-icon icon="rotate-lock-2-line" />
                   <span>{{ translate('解锁') }}</span>
                 </el-button>
               </el-form-item>
@@ -39,7 +39,9 @@
 </template>
 
 <script lang="ts" setup>
+import { sample, shuffle } from 'lodash-es'
 import { translate } from '/@/i18n'
+import { useBingStore } from '/@/store/modules/bing'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
 
@@ -52,26 +54,27 @@ const { avatar } = storeToRefs(userStore)
 const settingsStore = useSettingsStore()
 const { lock, title } = storeToRefs(settingsStore)
 const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
-const url = 'https://gcore.jsdelivr.net/gh/zxwk1998/image/vab-image-lock/'
-const background = ref(`${url}${Math.round(Math.random() * 31)}.jpg`)
+const bingStore = useBingStore()
+const { backgroundList } = storeToRefs(bingStore)
+const background = ref<string | undefined>('')
+
 const style = reactive<any>({
-  background: `var(--el-color-primary-light-5) fixed url(${background.value}) center`,
-  backgroundSize: '100% 100%',
-  filter: 'blur(10px)',
+  background: 'var(--el-color-primary-light-5)',
+  backgroundSize: '100%',
+  filter: 'blur(5px)',
   transform: 'scale(1.05)',
-  transition: 'all 3s',
+  transition: 'all 3s  ease-in-out',
 })
 
 const randomBackground = () => {
   style.transform = 'scale(1.05)'
   style.transition = 'none'
-  background.value = `${url}${Math.round(Math.random() * 31)}.jpg`
-  style.background = `var(--el-color-primary-light-5) fixed url(${background.value}) center`
-
+  background.value = sample(shuffle(backgroundList.value))
+  style.background = `fixed url(${background.value}) center`
   setTimeout(() => {
     style.transform = 'scale(1.2)'
-    style.transition = 'all 3s'
-  }, 500)
+    style.transition = 'all 3s  ease-in-out'
+  }, 0)
 }
 
 const validatePass = (rule: any, value: string, callback: any) => {
@@ -111,6 +114,10 @@ watch(
     immediate: true,
   }
 )
+
+onBeforeMount(() => {
+  randomBackground()
+})
 </script>
 
 <style lang="scss">
@@ -182,7 +189,7 @@ watch(
             }
           }
 
-          .ri-lock-line {
+          [class*='ri-'] {
             display: block;
             margin: auto !important;
             font-size: 30px;
@@ -226,7 +233,7 @@ watch(
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
 
-            .ri-lock-line {
+            [class*='ri-'] {
               margin-left: 0 !important;
             }
           }

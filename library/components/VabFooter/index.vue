@@ -29,8 +29,6 @@ const settingsStore = useSettingsStore()
 const { title, theme } = storeToRefs(settingsStore)
 const beian = ref<any>(localStorage.getItem('beian'))
 
-console.log(route.query)
-
 onBeforeMount(() => {
   if (route.query && route.query.beian) {
     beian.value = route.query.beian

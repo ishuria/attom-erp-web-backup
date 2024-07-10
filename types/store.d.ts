@@ -4,6 +4,10 @@ declare interface AclModuleType {
   role: string[]
 }
 
+declare interface BingModuleType {
+  backgroundList: string[]
+}
+
 declare interface ErrorLogModuleType {
   errorLogs: any[]
 }

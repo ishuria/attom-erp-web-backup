@@ -1,6 +1,7 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" :style="{ background: background, backgroundSize: '100%' }">
     <div v-show="theme.showLanguage || theme.showColorPicker || theme.showDark" class="login-right-tools">
+      <el-checkbox v-model="show" @change="handleShow">{{ translate('必应壁纸') }}</el-checkbox>
       <vab-language v-show="theme.showLanguage" />
       <vab-color-picker v-show="theme.showColorPicker" />
       <vab-dark v-show="theme.showDark" />
@@ -12,6 +13,8 @@
 </template>
 
 <script lang="ts" setup>
+import { translate } from '/@/i18n'
+import { useBingStore } from '/@/store/modules/bing'
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({
@@ -20,6 +23,15 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
+const show = ref<boolean>(false)
+const bingStore = useBingStore()
+const { backgroundList } = storeToRefs(bingStore)
+const background = ref<string | undefined>('linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))')
+
+const handleShow = () => {
+  if (show.value) background.value = `url(${backgroundList.value[0]})`
+  else background.value = 'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
+}
 </script>
 
 <style lang="scss" scoped>
@@ -27,7 +39,6 @@ const { theme } = storeToRefs(settingsStore)
   position: relative;
   display: flex;
   height: calc(var(--vh, 1vh) * 100);
-  background: linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3));
 
   .login-right-tools {
     position: fixed;
@@ -44,7 +55,8 @@ const { theme } = storeToRefs(settingsStore)
     :deep() {
       .vab-language,
       .vab-color-picker,
-      .vab-dark {
+      .vab-dark,
+      .el-checkbox {
         margin: 0 calc(var(--el-padding) / 2) 0 calc(var(--el-padding) / 2) !important;
       }
     }
@@ -102,7 +114,7 @@ const { theme } = storeToRefs(settingsStore)
       padding: 4.5vh;
       margin: auto;
       overflow: hidden;
-      background: var(--el-color-white);
+      background: var(--el-mask-color);
       background-size: 100% 100%;
       border: 1px solid var(--el-border-color);
       border-radius: 15px;
