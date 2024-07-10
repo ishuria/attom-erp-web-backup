@@ -49,7 +49,7 @@
           </el-button>
         </router-link>
 
-        <div v-throttle="handleLogin" class="login-other">
+        <div v-throttle="handleLogin" class="login-other hidden-xs-only">
           <vab-icon icon="wechat-fill" style="color: #08c25f" />
           <vab-icon icon="alipay-fill" style="color: #226bf3" />
           <vab-icon icon="dingding-fill" style="color: #007ef8" />
