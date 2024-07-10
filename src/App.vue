@@ -42,7 +42,7 @@ onBeforeMount(() => {
       const block = () => {
         setInterval(() => {
           let startTime = performance.now()
-          if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
+          if (window.outerHeight - window.innerHeight > 300 || window.outerWidth - window.innerWidth > 300) {
             let message = '线上地址禁止调试，如需调试代码请去config中配置noDebugger为false！'
             if (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core'))
               message = '演示地址禁止调试，如需调试代码请联系客服购买！'
