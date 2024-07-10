@@ -56,7 +56,8 @@ const { lock, title } = storeToRefs(settingsStore)
 const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
 const bingStore = useBingStore()
 const { backgroundList } = storeToRefs(bingStore)
-const background = ref<string | undefined>('')
+const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
+const background = ref<string | undefined>(`${url}${Math.round(Math.random() * 31)}.jpg`)
 
 const style = reactive<any>({
   background: 'var(--el-color-primary-light-5)',
@@ -116,9 +117,9 @@ watch(
 )
 
 onMounted(() => {
-  nextTick(() => {
+  setTimeout(() => {
     randomBackground()
-  })
+  }, 50)
 })
 </script>
 
