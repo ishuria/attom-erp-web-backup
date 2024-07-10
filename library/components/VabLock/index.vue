@@ -115,8 +115,10 @@ watch(
   }
 )
 
-onBeforeMount(() => {
-  randomBackground()
+onMounted(() => {
+  nextTick(() => {
+    randomBackground()
+  })
 })
 </script>
 
