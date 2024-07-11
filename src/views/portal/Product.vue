@@ -157,7 +157,6 @@ const list2 = ref<any>([
     }
 
     &-description {
-      width: 600px;
       margin-bottom: 40px;
       font-size: 16px;
       line-height: 20px;
