@@ -4,7 +4,7 @@
       <portal-header active-menu="product" />
       <div class="banner">
         <main>
-          <div class="banner-title">企业级通用型中后台前端框架</div>
+          <div class="banner-title">企业级中后台前端框架</div>
           <div class="banner-description">
             便捷式全域数据采集，全域用户行为分析，深耕科学营销运营应用，智能化洞察用户行为，全方位驱动企业数字化经营。
           </div>
