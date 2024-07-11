@@ -1,9 +1,6 @@
 <template>
   <el-scrollbar wrap-class="scroll-wrap-product">
-    <div class="product-main-mobile hidden-sm-and-up">
-      <vab-alert title="手机端不支持产品简介演示" type="warning" />
-    </div>
-    <div class="product-main hidden-xs-only">
+    <div class="product-main">
       <portal-header active-menu="product" />
       <div class="banner">
         <main>
@@ -19,97 +16,44 @@
             进入产品
           </el-button>
 
-          <div class="image-bg"></div>
-          <el-image :src="logo" />
+          <div class="image-bg hidden-xs-only"></div>
+          <el-image class="hidden-xs-only" :src="logo" />
         </main>
       </div>
 
       <main>
-        <div class="news-box">
-          <div class="news-box-item">
-            <a class="news-box-title">全链路监控营销推广</a>
-            <div class="news-box-description">全链路监控营销推广</div>
-          </div>
-          <div class="news-box-item">
-            <a class="news-box-title">全方位优化产品体验</a>
-            <div class="news-box-description">全方位优化产品体验</div>
-          </div>
-          <div class="news-box-item">
-            <a class="news-box-title">精准刻画用户画像</a>
-            <div class="news-box-description">精准刻画用户画像</div>
+        <div class="news-box hidden-xs-only">
+          <div v-for="item in list2" :key="item.title" class="news-box-item">
+            <a class="news-box-title">{{ item.title }}</a>
+            <div class="news-box-description">{{ item.description }}</div>
           </div>
         </div>
 
-        <div style="margin-top: 100px">
-          <div class="intro-box">
-            <div class="intro-box-title">客户数据平台解决方案，助力企业数字化营销运营增长</div>
-            <div class="intro-box-description">
-              为企业打造全端数据管理平台，提供全域用户行为洞见，实现数据驱动营销和运营决策，全场景赋能企业数字化经营，驱动业务持续增长
-            </div>
-
-            <el-row :gutter="20" style="margin-top: 50px">
-              <el-col :span="8">
-                <div class="solution-box">
-                  <div class="solution-box-item">
-                    <div class="solution-box-title">商务服务</div>
-                    <vab-icon icon="lllustration/IconPark12" />
-                  </div>
-                  <vab-icon icon="lllustration/IconPark12" is-custom-svg />
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="solution-box">
-                  <div class="solution-box-item">
-                    <div class="solution-box-title">在线零售</div>
-                    <div class="solution-box-description">打造全域营销运营闭环</div>
-                  </div>
-                  <vab-icon icon="lllustration/IconPark03" is-custom-svg />
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="solution-box">
-                  <div class="solution-box-item">
-                    <div class="solution-box-title">珠宝首饰</div>
-                    <div class="solution-box-description">沉淀私域消费者数据资产</div>
-                  </div>
-                  <vab-icon icon="lllustration/IconPark05" is-custom-svg />
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="solution-box">
-                  <div class="solution-box-item">
-                    <div class="solution-box-title">商用软件</div>
-                    <div class="solution-box-description">深度洞察企业客户需求</div>
-                  </div>
-                  <vab-icon icon="lllustration/IconPark08" is-custom-svg />
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="solution-box">
-                  <div class="solution-box-item">
-                    <div class="solution-box-title">消费电子</div>
-                    <div class="solution-box-description">用户精准营销与智能触达通路</div>
-                  </div>
-                  <vab-icon icon="lllustration/IconPark04" is-custom-svg />
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="solution-box">
-                  <div class="solution-box-item">
-                    <div class="solution-box-title">房产家具</div>
-                    <div class="solution-box-description">构建专属消费者大数据画像</div>
-                  </div>
-                  <vab-icon icon="lllustration/IconPark02" is-custom-svg />
-                </div>
-              </el-col>
-            </el-row>
+        <div class="intro-box">
+          <div class="intro-box-title">客户数据平台解决方案，助力企业数字化营销运营增长</div>
+          <div class="intro-box-description">
+            为企业打造全端数据管理平台，提供全域用户行为洞见，实现数据驱动营销和运营决策，全场景赋能企业数字化经营，驱动业务持续增长
           </div>
+
+          <el-row :gutter="20" style="margin-top: 50px">
+            <el-col v-for="item in list" :key="item.title" :lg="8" :md="8" :sm="24" :xl="8" :xs="24">
+              <div class="solution-box">
+                <div class="solution-box-item">
+                  <div class="solution-box-title">{{ item.title }}</div>
+                  <div class="solution-box-description">{{ item.description }}</div>
+                </div>
+                <vab-icon :icon="item.icon" is-custom-svg />
+              </div>
+            </el-col>
+          </el-row>
         </div>
         <portal-divider active-menu="product" />
       </main>
 
       <vab-footer />
     </div>
+
+    <div class="hidden-sm-and-up"></div>
     <el-backtop target="#app .scroll-wrap-product" />
     <vab-theme-setting />
   </el-scrollbar>
@@ -121,14 +65,80 @@ import logo from '/@/assets/avatar.svg'
 defineOptions({
   name: 'Product',
 })
+
+const list = ref<any>([
+  {
+    title: '商务服务',
+    description: '全生命周期服务管理',
+    icon: 'lllustration/IconPark03',
+  },
+  {
+    title: '在线零售',
+    description: '打造全域营销运营闭环',
+    icon: 'lllustration/IconPark05',
+  },
+  {
+    title: '珠宝首饰',
+    description: '沉淀私域消费者数据资产',
+    icon: 'lllustration/IconPark07',
+  },
+  {
+    title: '商用软件',
+    description: '深度洞察企业客户需求',
+    icon: 'lllustration/IconPark08',
+  },
+  {
+    title: '消费电子',
+    description: '用户精准营销与智能触达通路',
+    icon: 'lllustration/IconPark04',
+  },
+  {
+    title: '智能家居',
+    description: '智能家居场景化运营',
+    icon: 'lllustration/IconPark02',
+  },
+])
+
+const list2 = ref<any>([
+  {
+    title: '全链路监控营销推广',
+    description: '全链路监控营销推广',
+  },
+  {
+    title: '全方位优化产品体验',
+    description: '全方位优化产品体验',
+  },
+  {
+    title: '精准刻画用户画像',
+    description: '精准刻画用户画像',
+  },
+])
 </script>
 
 <style lang="scss" scoped>
 .product-main {
-  &-mobile {
-    height: calc(var(--vh, 1vh) * 100);
-    padding: var(--el-padding);
-    background: var(--el-color-white);
+  @media screen and (max-width: 768px) {
+    .banner {
+      height: 370px !important;
+
+      &-title {
+        margin-top: 100px !important;
+        font-size: 26px !important;
+      }
+    }
+
+    main {
+      width: 100% !important;
+      padding: var(--el-padding) !important;
+
+      .intro-box {
+        margin-top: 0 !important;
+
+        &-title {
+          font-size: 26px !important;
+        }
+      }
+    }
   }
 
   .banner {
@@ -234,6 +244,7 @@ defineOptions({
 
     .intro-box {
       position: relative;
+      margin-top: 100px;
 
       &-title {
         margin-bottom: 16px;
@@ -245,7 +256,6 @@ defineOptions({
       }
 
       &-description {
-        width: 740px;
         margin: 0 auto;
         font-size: 16px;
         line-height: 28px;

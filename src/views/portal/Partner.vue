@@ -1,9 +1,6 @@
 <template>
   <el-scrollbar wrap-class="scroll-wrap-partner">
-    <div class="partner-main-mobile hidden-sm-and-up">
-      <vab-alert title="手机端不支持合作伙伴演示" type="warning" />
-    </div>
-    <div class="partner-main hidden-xs-only">
+    <div class="partner-main">
       <portal-header active-menu="partner" />
       <div class="partner-content">
         <div class="banner">
@@ -18,8 +15,8 @@
               进入产品
             </el-button>
 
-            <div class="image-bg"></div>
-            <el-image :src="avatar" />
+            <div class="image-bg hidden-xs-only"></div>
+            <el-image class="hidden-xs-only" :src="avatar" />
           </main>
         </div>
         <main>
@@ -81,14 +78,32 @@ const list = reactive<any>([
   flex-direction: column;
   height: calc(var(--vh, 1vh) * 100);
 
-  .partner-content {
-    flex: 1;
+  @media screen and (max-width: 768px) {
+    .banner {
+      height: 370px !important;
+
+      &-title {
+        margin-top: 100px !important;
+        font-size: 26px !important;
+      }
+    }
+
+    main {
+      width: 100% !important;
+      padding: var(--el-padding) !important;
+
+      .intro-box {
+        margin-top: 0 !important;
+
+        &-title {
+          font-size: 26px !important;
+        }
+      }
+    }
   }
 
-  &-mobile {
-    height: calc(var(--vh, 1vh) * 100);
-    padding: var(--el-padding);
-    background: var(--el-color-white);
+  .partner-content {
+    flex: 1;
   }
 
   main {
@@ -116,7 +131,6 @@ const list = reactive<any>([
     }
 
     &-description {
-      width: 600px;
       margin-bottom: 40px;
       font-size: 16px;
       line-height: 20px;

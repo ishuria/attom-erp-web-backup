@@ -1,12 +1,9 @@
 <template>
   <el-scrollbar wrap-class="scroll-wrap-portal">
-    <div class="portal-main-mobile hidden-sm-and-up">
-      <vab-alert title="手机端不支持门户演示" type="warning" />
-    </div>
-    <div class="portal-main hidden-xs-only">
+    <div class="portal-main">
       <portal-header active-menu="portal" />
       <div class="carousel-background" :style="{ background: background }"></div>
-      <main style="margin-top: 85px">
+      <main class="hidden-xs-only" style="padding-top: 85px">
         <el-row :gutter="0">
           <el-col :span="6">
             <div class="left-tab">
@@ -77,30 +74,31 @@
           </el-col>
         </el-row>
       </main>
-      <main style="margin-top: 30px">
+      <main>
+        <el-carousel arrow="always" class="hidden-sm-and-up" height="200px" :interval="3000" style="margin-top: 70px">
+          <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-plus>')" />
+          <el-carousel-item @click="openWindow('//vuejs-core.cn/shop-vite>')" />
+          <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-pro')" />
+        </el-carousel>
         <el-row :gutter="20">
-          <el-col :span="8">
+          <el-col :lg="8" :md="8" :sm="24" :xl="8" :xs="24">
             <div class="news-tit"><h2>今日要闻</h2></div>
             <el-image class="news-img" :src="banner_1" />
           </el-col>
-          <el-col :span="16">
+          <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
             <div class="news-tit"><h2>动态资讯</h2></div>
             <icon-list />
           </el-col>
-        </el-row>
-      </main>
-      <main>
-        <el-row :gutter="20">
-          <el-col :span="8">
+          <el-col :lg="8" :md="8" :sm="24" :xl="8" :xs="24">
             <div class="news-tit"><h2>工作日程</h2></div>
             <el-calendar v-model="date" style="border: 1px solid var(--el-border-color)" />
           </el-col>
-          <el-col :span="16">
+          <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
             <div class="news-tit"><h2>互动留言</h2></div>
             <el-table :data="tableData" :height="395" style="border: 1px solid var(--el-border-color)">
               <el-table-column label="Date" prop="date" />
               <el-table-column label="Name" prop="name" />
-              <el-table-column label="Address" prop="address" />
+              <el-table-column label="Address" prop="address" show-overflow-tooltip />
             </el-table>
           </el-col>
         </el-row>
@@ -214,10 +212,24 @@ const tableData = [
 
 <style lang="scss" scoped>
 .portal-main {
-  &-mobile {
-    height: calc(var(--vh, 1vh) * 100);
-    padding: var(--el-padding);
-    background: var(--el-color-white);
+  --portal-radius: 15px;
+
+  @media screen and (max-width: 768px) {
+    --portal-radius: 5px !important;
+    main {
+      width: 100% !important;
+      padding: var(--el-padding) !important;
+
+      :deep() {
+        .el-carousel--horizontal {
+          border-radius: var(--portal-radius) !important;
+        }
+
+        .icon-panel {
+          border-radius: var(--portal-radius) !important;
+        }
+      }
+    }
   }
 
   .carousel-background {
@@ -232,7 +244,7 @@ const tableData = [
 
   main {
     width: 1152px;
-    padding: 10px 0 0 0;
+    padding: var(--el-padding) 0 0 0;
     margin-right: auto;
     margin-left: auto;
     border-top: 1px solid #f3f5f6;
@@ -251,23 +263,31 @@ const tableData = [
       }
     }
 
-    .el-carousel--horizontal {
-      border-top-right-radius: 15px;
-    }
+    :deep() {
+      .el-carousel--horizontal {
+        border-top-right-radius: 15px;
+      }
 
-    .el-carousel__item:nth-of-type(1) {
-      background: url('/@/assets/portal_images/carousel_1.jpg');
-      background-size: cover;
-    }
+      .el-calendar {
+        padding: 0;
+        margin-bottom: var(--el-margin);
+        border-radius: var(--portal-radius);
 
-    .el-carousel__item:nth-of-type(2) {
-      background: url('/@/assets/portal_images/carousel_2.jpg');
-      background-size: cover;
-    }
+        &-table {
+          padding: 0;
+        }
 
-    .el-carousel__item:nth-of-type(3) {
-      background: url('/@/assets/portal_images/carousel_3.jpg');
-      background-size: cover;
+        &-day {
+          height: 42px;
+          line-height: 42px;
+          text-align: center;
+        }
+      }
+
+      .el-table {
+        margin-bottom: var(--el-margin);
+        border-radius: var(--portal-radius);
+      }
     }
 
     .description-box {
@@ -338,51 +358,33 @@ const tableData = [
     }
 
     .news-tit {
-      position: relative;
-      width: 100%;
-      height: 78px;
-      margin-top: -30px;
-      line-height: 36px;
-
       h2 {
-        float: left;
         font-size: 16px;
-        line-height: 36px;
-        color: #5184eb;
-        border-bottom: 2px solid #5184eb;
       }
     }
 
     .news-img {
       border: 1px solid var(--el-border-color);
-      border-radius: 15px;
-    }
-
-    :deep() {
-      .el-calendar {
-        padding: 0;
-        margin-bottom: 20px;
-        border-radius: 15px;
-
-        &-table {
-          padding: 0;
-        }
-
-        &-day {
-          height: 42px;
-          line-height: 42px;
-          text-align: center;
-        }
-      }
-
-      .el-table {
-        border-radius: 15px;
-      }
+      border-radius: var(--portal-radius);
     }
   }
 }
 
 :deep() {
+  .el-carousel__item:nth-of-type(1) {
+    background: url('/@/assets/portal_images/carousel_1.jpg');
+    background-size: cover;
+  }
+
+  .el-carousel__item:nth-of-type(2) {
+    background: url('/@/assets/portal_images/carousel_2.jpg');
+    background-size: cover;
+  }
+
+  .el-carousel__item:nth-of-type(3) {
+    background: url('/@/assets/portal_images/carousel_3.jpg');
+    background-size: cover;
+  }
   .vab-footer {
     margin-top: 0;
     background: var(--el-background-color);

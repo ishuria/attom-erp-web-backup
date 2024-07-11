@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="20">
-    <el-col v-for="(item, index) in iconList" :key="index" :span="6">
+    <el-col v-for="(item, index) in iconList" :key="index" :lg="6" :md="6" :sm="12" :xl="6" :xs="12">
       <vab-card class="icon-panel" @click="handleMore">
         <vab-icon :icon="item.icon" :style="{ backgroundColor: item.color }" />
         <p>{{ item.title }}</p>
@@ -63,7 +63,7 @@ const handleMore = () => {
 <style lang="scss" scoped>
 .icon-panel {
   cursor: pointer;
-  border-radius: 10px !important;
+  border-radius: 15px !important;
 
   :deep() {
     .el-card__body {
@@ -79,7 +79,7 @@ const handleMore = () => {
         font-size: 28px;
         line-height: 46px;
         color: var(--el-color-white);
-        border-radius: 10px;
+        border-radius: 50%;
         transition: all ease-in-out 0.3s;
       }
 

@@ -6,14 +6,29 @@
         <span class="logo-title">Vue Shop Vite</span>
       </div>
 
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName" class="hidden-xs-only" @tab-click="handleClick">
         <el-tab-pane v-for="(item, index) in tabsList" :key="index" :label="item.label" :name="item.name" />
       </el-tabs>
+
+      <el-dropdown class="hidden-sm-and-up" @command="handleCommand">
+        <el-button text>
+          菜单
+          <el-icon class="el-icon--right"><arrow-down /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item v-for="(item, index) in tabsList" :key="index" :command="item.name">
+              {{ item.label }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </header>
 </template>
 
 <script lang="ts" setup>
+import { ArrowDown } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import router from '~/src/router'
@@ -54,6 +69,9 @@ const handleClick = (tab: TabsPaneContext) => {
   router.push(`/${tab.props.name}`)
 }
 
+const handleCommand = (command: string | number | object) => {
+  router.push(`/${command}`)
+}
 onMounted(() => {
   document.querySelectorAll('body')[0].className = ''
 
@@ -76,6 +94,17 @@ header {
   margin: 0;
   background: rgba(251, 251, 253, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
+
+  @media screen and (max-width: 768px) {
+    .index-nav {
+      min-width: 100% !important;
+      max-width: 100% !important;
+      .logo {
+        margin-right: var(--el-margin);
+        margin-left: var(--el-margin);
+      }
+    }
+  }
 
   .index-nav {
     display: flex;
