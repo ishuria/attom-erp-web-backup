@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "9.1.0",
+  "version": "9.1.5",
   "private": true,
   "author": "chuzhixin",
   "scripts": {
@@ -46,7 +46,7 @@
     "dayjs": "^1.11.11",
     "disable-devtool": "^0.3.7",
     "echarts": "^5.5.1",
-    "element-plus": "^2.7.6",
+    "element-plus": "^2.7.7",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
@@ -71,7 +71,7 @@
     "xgplayer-hls.js": "^3.0.18"
   },
   "devDependencies": {
-    "@element-plus/eslint-config": "^2.7.4",
+    "@element-plus/eslint-config": "^2.7.7",
     "@types/lodash-es": "^4.17.12",
     "@types/mockjs": "^1.0.10",
     "@types/nprogress": "^0.2.3",
@@ -104,7 +104,7 @@
     "stylelint-config-recommended-vue": "^1.5.0",
     "terser": "^5.31.2",
     "typescript": "^5.5.3",
-    "unplugin-auto-import": "^0.17.6",
+    "unplugin-auto-import": "^0.18.0",
     "unplugin-vue-components": "^0.27.2",
     "vite": "^5.3.3",
     "vite-plugin-banner": "^0.7.1",
