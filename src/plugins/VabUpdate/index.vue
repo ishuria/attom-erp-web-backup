@@ -8,7 +8,7 @@
     <h3>版本更新：</h3>
     <p>
       {{ title }}
-      V{{ _version }}
+      V{{ servicesVersion || _version }}
     </p>
     <p>更新时间：{{ lastTime }}</p>
     <template #footer>
@@ -33,10 +33,11 @@ defineOptions({
 const { getTitle: title } = useSettingsStore()
 const button = ref<string>(translate('立即升级'))
 const loading = ref<boolean>(false)
-const _version = ref<any>(version)
+const _version = ref<string>(version)
 const show = ref<boolean>(false)
 const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
 const lastTime = dayjs().format('YYYY-MM-DD')
+const servicesVersion = ref<any>('')
 
 const save = async () => {
   button.value = translate('正在更新')
@@ -78,7 +79,8 @@ watch(
 )
 
 onBeforeMount(() => {
-  $sub('update-website', () => {
+  $sub('update-website', (_servicesVersion: any) => {
+    servicesVersion.value = servicesVersion
     offlineReady.value = true
     needRefresh.value = true
     handleShow()
