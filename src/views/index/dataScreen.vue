@@ -1,9 +1,6 @@
 <template>
   <div id="data-screen-container" class="data-screen-container vab-data-fullscreen">
-    <div class="hidden-sm-and-up" style="padding: 20px">
-      <vab-alert title="手机端不支持数据大屏演示" type="warning" />
-    </div>
-    <div class="hidden-xs-only">
+    <div>
       <data-screen-header
         :style="{
           height: headerContentHeight,
@@ -12,7 +9,7 @@
       />
       <div style="padding: 30px 40px 0 40px">
         <el-row :gutter="20">
-          <el-col :span="6">
+          <el-col :span="6" :xs="24">
             <div class="data-screen-card" :style="{ height: leftCardHeight1 }">
               <div class="card-title">数据聚合</div>
               <data-screen-left1 />
@@ -26,15 +23,15 @@
               <data-screen-left3 />
             </div>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="12" :xs="24">
             <div class="data-screen-card" :style="{ height: topCardHeight }">
               <data-screen-map />
             </div>
-            <div class="data-screen-card" :style="{ height: bottomCardHeight }">
+            <div class="data-screen-card hidden-xs-only" :style="{ height: bottomCardHeight }">
               <data-screen-bottom />
             </div>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="6" :xs="24">
             <div class="data-screen-card" :style="{ height: rightCardHeight1 }">
               <div class="card-title">数据散点</div>
               <data-screen-right1 />
