@@ -22,9 +22,9 @@
           </el-col>
           <el-col :span="18">
             <el-carousel arrow="always" height="420px" :interval="3000" @change="handleChange">
+              <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-pro')" />
               <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-plus')" />
               <el-carousel-item @click="openWindow('//vuejs-core.cn/shop-vite')" />
-              <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-pro')" />
             </el-carousel>
           </el-col>
           <el-col :span="24">
@@ -76,9 +76,9 @@
       </main>
       <main>
         <el-carousel arrow="always" class="hidden-sm-and-up" height="200px" :interval="3000" style="margin-top: 70px">
+          <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-pro')" />
           <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-plus')" />
           <el-carousel-item @click="openWindow('//vuejs-core.cn/shop-vite')" />
-          <el-carousel-item @click="openWindow('//vuejs-core.cn/admin-pro')" />
         </el-carousel>
         <el-row :gutter="20">
           <el-col :lg="8" :md="8" :sm="24" :xl="8" :xs="24">
