@@ -1,7 +1,5 @@
 <template>
   <div class="web-socket-container">
-    <vab-alert title="演示地址不提供WebSocket接口" type="warning" />
-
     <el-row :gutter="20">
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <el-form ref="formRef" label-position="top" :model="form" :rules="rules">
@@ -9,7 +7,7 @@
             <el-tag :type="getTagType">{{ status }}</el-tag>
           </el-form-item>
           <el-form-item label="服务地址">
-            <el-input v-model="form.server" clearable />
+            <el-input v-model="form.serverHide" clearable disabled />
           </el-form-item>
           <el-form-item label="内容" prop="sendValue">
             <el-input
@@ -33,18 +31,12 @@
         <el-form label-position="top">
           <el-form-item label="消息记录">
             <div class="list-content">
-              <el-scrollbar style="height: 400px">
+              <el-scrollbar style="height: calc(var(--el-container-height) - var(--el-margin) * 6)">
                 <ul>
                   <li v-for="item in getList" :key="item.time">
                     <div>{{ thirteenBitTimestamp(item.time) }}</div>
                     <div>
-                      {{
-                        item.res
-                          .replace(/\n/g, '')
-                          .replace(/<[^>]*>/g, '')
-                          .replace(/\s/g, '')
-                          .replace(/([。；：])\s*/g, '$1\n')
-                      }}
+                      {{ item.res }}
                     </div>
                   </li>
                 </ul>
@@ -69,16 +61,15 @@ defineOptions({
 
 const formRef = ref<FormInstance>()
 const form = reactive<any>({
-  server: 'ws://127.0.0.1:8080',
+  server: 'ws://127.0.0.1:7002',
+  serverHide: 'ws://*.*.*.*',
   sendValue: '你好！',
   recordList: [],
 })
-
 const { status, data, send, close, open } = useWebSocket(form.server, {
   autoReconnect: false,
   heartbeat: true,
 })
-
 const rules = reactive<any>({
   sendValue: [{ required: true, trigger: 'blur', message: '请输入内容' }],
 })
@@ -105,7 +96,7 @@ const handleSend = () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
       send(form.sendValue)
-      form.sendValue = ''
+      form.sendValue = '你好'
     }
   })
 }
