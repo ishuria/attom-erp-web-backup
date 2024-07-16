@@ -385,6 +385,7 @@ const tableData = [
     background: url('/@/assets/portal_images/carousel_3.jpg');
     background-size: cover;
   }
+
   .vab-footer {
     margin-top: 0;
     background: var(--el-background-color);

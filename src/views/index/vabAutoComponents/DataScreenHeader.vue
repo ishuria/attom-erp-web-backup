@@ -38,6 +38,7 @@
     opacity: 0;
   }
 }
+
 .data-screen-header {
   width: 100%;
   margin-bottom: 20px;
@@ -128,6 +129,7 @@
       background: linear-gradient(-90deg, #7cedfb 0%, #2ba3ff 0%, #02efff 50.2685546875%, #2ea5f9 100%);
       background-clip: text;
       -webkit-text-fill-color: transparent;
+
       &::before {
         position: absolute;
         left: 0;

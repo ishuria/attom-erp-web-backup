@@ -68,13 +68,21 @@
           <el-dropdown v-else>
             <el-button text type="primary">
               操作
-              <el-icon class="el-icon--right"><arrow-down /></el-icon>
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="handleDetail(row)"><el-link type="primary" :underline="false">详情</el-link></el-dropdown-item>
-                <el-dropdown-item @click="handleEdit(row)"><el-link type="primary" :underline="false">编辑</el-link></el-dropdown-item>
-                <el-dropdown-item @click="handleDelete(row)"><el-link type="danger" :underline="false">删除</el-link></el-dropdown-item>
+                <el-dropdown-item @click="handleDetail(row)">
+                  <el-link type="primary" :underline="false">详情</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item @click="handleEdit(row)">
+                  <el-link type="primary" :underline="false">编辑</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item @click="handleDelete(row)">
+                  <el-link type="danger" :underline="false">删除</el-link>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>

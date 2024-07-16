@@ -47,6 +47,7 @@ import { translate } from '/@/i18n'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { isExternal } from '/@/utils/validate'
+
 defineOptions({
   name: 'VabFallBar',
 })

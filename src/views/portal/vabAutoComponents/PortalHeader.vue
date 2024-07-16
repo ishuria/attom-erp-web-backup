@@ -13,7 +13,9 @@
       <el-dropdown class="hidden-sm-and-up" @command="handleCommand">
         <el-button text>
           菜单
-          <el-icon class="el-icon--right"><arrow-down /></el-icon>
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
@@ -99,6 +101,7 @@ header {
     .index-nav {
       min-width: 100% !important;
       max-width: 100% !important;
+
       .logo {
         margin-right: var(--el-margin);
         margin-left: var(--el-margin);

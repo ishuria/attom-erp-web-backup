@@ -46,7 +46,9 @@
                       <vab-icon :icon="item.icon" />
                       <el-button plain round size="large" @click="handleAlert">
                         点击跳转
-                        <el-icon class="el-icon--right"><arrow-right /></el-icon>
+                        <el-icon class="el-icon--right">
+                          <arrow-right />
+                        </el-icon>
                       </el-button>
                     </vab-card>
                   </el-col>

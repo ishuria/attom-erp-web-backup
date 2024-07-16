@@ -38,7 +38,6 @@
 
 <script lang="ts" setup>
 import { Notification } from '@element-plus/icons-vue'
-const iconList = ref<any>(['vite', 'vab', 'mall-fill', 'article', 'video', 'wenda', 'wtt'])
 
 defineOptions({
   name: 'CustomSvg',
@@ -48,6 +47,7 @@ interface QueryFormType {
   num: number
 }
 
+const iconList = ref<any>(['vite', 'vab', 'mall-fill', 'article', 'video', 'wenda', 'wtt'])
 const queryForm = reactive<QueryFormType>({
   num: 28,
 })

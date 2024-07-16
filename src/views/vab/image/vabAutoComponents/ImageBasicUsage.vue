@@ -9,6 +9,7 @@
 
 <script lang="ts" setup>
 import type { ImageProps } from 'element-plus'
+
 const fits = ref<ImageProps['fit'][]>(['fill', 'contain', 'cover', 'none', 'scale-down'])
 const url = ref<string>('https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg')
 </script>
