@@ -126,7 +126,9 @@ html.dark > body[class*='vab-theme-'] {
   .fold-unfold,
   .schedule-box,
   .vab-theme-setting div a:hover,
-  .transition-box {
+  .transition-box,
+  .top-card-blue,
+  .icon-panel {
     --el-color-white: var(--el-menu-text-color);
   }
 
