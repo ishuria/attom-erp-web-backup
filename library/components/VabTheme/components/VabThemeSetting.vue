@@ -198,7 +198,7 @@ watch(
     &:nth-child(n) {
       a {
         &:hover {
-          color: var(--el-color-white);
+          color: var(--el-menu-text-color);
         }
       }
     }

@@ -238,4 +238,17 @@ html > body.vab-theme-technology {
     background: url('/@/assets/login_images/background.png') center center fixed no-repeat;
     background-size: cover;
   }
+
+  .el-button,
+  .el-switch,
+  .el-checkbox,
+  .el-checkbox-group,
+  .el-radio,
+  .el-radio-group,
+  .el-slider,
+  .el-tag,
+  .el-pagination,
+  .fold-unfold {
+    --el-color-white: var(--el-menu-text-color);
+  }
 }

@@ -111,4 +111,17 @@ html.dark > body[class*='vab-theme-'] {
   [fill='#fff'] {
     fill: var(--el-color-white) !important;
   }
+
+  .el-button,
+  .el-switch,
+  .el-checkbox,
+  .el-checkbox-group,
+  .el-radio,
+  .el-radio-group,
+  .el-slider,
+  .el-tag,
+  .el-pagination,
+  .fold-unfold {
+    --el-color-white: var(--el-menu-text-color);
+  }
 }
