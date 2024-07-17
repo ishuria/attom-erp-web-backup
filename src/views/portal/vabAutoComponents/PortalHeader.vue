@@ -75,6 +75,7 @@ const handleCommand = (command: string | number | object) => {
   router.push(`/${command}`)
 }
 onMounted(() => {
+  document.querySelectorAll('html')[0].className = ''
   document.querySelectorAll('body')[0].className = ''
 
   // if (activeName.value == 'partner') useCssVar('--el-color-primary', el).value = '#13ce66'
