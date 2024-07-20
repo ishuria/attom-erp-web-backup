@@ -14,7 +14,7 @@
     "build:fast": "set VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build",
     "build:fast:mac": "export VITE_CJS_IGNORE_WARNING=true && vite build",
     "build:website": "set VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build --config ./vite.config.website.ts && node write.version.js",
-    "build:website:mac": "export VITE_CJS_IGNORE_WARNING=true && vite build --config ./vite.config.website.ts && node write.version.js",
+    "build:website:mac": "export VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build --config ./vite.config.website.ts && node write.version.js",
     "build:report": "set VITE_CJS_IGNORE_WARNING=true && set NODE_OPTIONS=--max-old-space-size=8192 && vite build --config ./vite.config.dev.ts",
     "build:vue-shop-vite": "set VITE_CJS_IGNORE_WARNING=true && vite build",
     "preview": " set VITE_CJS_IGNORE_WARNING=true && vite preview",
