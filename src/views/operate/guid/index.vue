@@ -38,7 +38,7 @@ const steps = ref<any>([
     description: '这里是主题配置',
   },
   {
-    target: '.lock-2-line',
+    target: '.vab-lock i',
     title: '锁屏',
     description: '这里是锁屏',
   },
