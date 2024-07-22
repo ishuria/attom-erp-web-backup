@@ -16,7 +16,7 @@ export const useBingStore = defineStore('bing', {
         url: `https://api.vuejs-core.cn/getBingImage`,
         method: 'get',
       }).then(({ data }) => {
-        this.backgroundList = data
+        this.backgroundList = data.data
       })
     },
   },
