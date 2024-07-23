@@ -32,7 +32,8 @@ const option = reactive<any>({
 
 const getMap = async () => {
   const { data } = await axios({
-    url: 'static/json/world.json',
+    //url: 'static/json/china.json',
+    url: 'https://unpkg.com/echarts@4.9.0/map/json/world.json',
     method: 'get',
   })
 

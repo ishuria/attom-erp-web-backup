@@ -24,7 +24,8 @@ const option = reactive<any>({
 const chinaData = ref<any>('')
 const getMap = () => {
   axios({
-    url: 'static/json/china.json',
+    //url: 'static/json/china.json',
+    url: 'https://unpkg.com/echarts@4.9.0/map/json/china.json',
     method: 'get',
   }).then(({ data }) => {
     chinaData.value = data
