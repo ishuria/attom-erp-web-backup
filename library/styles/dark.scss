@@ -46,6 +46,10 @@ html.dark > body[class*='vab-theme-'] {
     }
   }
 
+  .login-container .login-form {
+    background: rgba(#1d1e1f, 0.9);
+  }
+
   .vab-column-bar .el-tabs .el-tabs__item {
     color: var(--el-color-grey) !important;
   }

@@ -29,7 +29,7 @@ const { backgroundList } = storeToRefs(bingStore)
 const background = ref<string | undefined>('linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))')
 
 const handleShow = () => {
-  if (show.value) background.value = `url(${backgroundList.value[0]})`
+  if (show.value) background.value = `url(${backgroundList.value[0]})!important`
   else background.value = 'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
 }
 </script>
