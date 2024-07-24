@@ -281,6 +281,10 @@ html {
     /* el-select */
     .el-select {
       min-width: 115px;
+
+      &__wrapper {
+        font-size: var(--el-font-size-small);
+      }
     }
 
     a + a,

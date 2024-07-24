@@ -3,9 +3,9 @@
 
 html.dark > body,
 html.dark > body[class*='vab-theme-'] {
-  --el-color-black: #cfd3dc;
+  --el-color-black: #ffffff;
   --el-color-white: #1d1e1f;
-  --el-color-grey: #cfd3dc;
+  --el-color-grey: #ffffff;
   --el-menu-background-color-second: #1d1e1f;
   --el-border-color: #414243;
   --el-menu-background-color: #1d1e1f;
@@ -28,7 +28,7 @@ html.dark > body[class*='vab-theme-'] {
   --w-e-modal-button-bg-color: #333;
   --w-e-modal-button-border-color: #d9d9d9;
 
-  color: #cfd3dc !important;
+  color: #ffffff !important;
   background-color: var(--el-color-white) !important;
 
   .vab-nav {
