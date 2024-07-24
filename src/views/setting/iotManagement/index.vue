@@ -2,9 +2,9 @@
   <div class="iot-management-container no-background-container">
     <vab-query-form class="page-header">
       <vab-query-form-left-panel>
-        <el-form inline label-width="70px" :model="queryForm" @submit.prevent>
-          <el-form-item label="产品名称">
-            <el-input v-model.trim="queryForm.taskName" clearable placeholder="请输入产品名称" />
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item label="名称">
+            <el-input v-model.trim="queryForm.taskName" clearable placeholder="请输入名称" />
           </el-form-item>
           <el-form-item label="周期">
             <el-date-picker v-model="queryForm.date" end-placeholder="结束日期" start-placeholder="开始日期" type="daterange" />

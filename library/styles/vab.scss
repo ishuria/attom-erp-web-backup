@@ -297,7 +297,7 @@ html {
       //opacity: 1;
 
       // > div {
-      //   backdrop-filter: none;backdrop-filter
+      //   backdrop-filter: none;backdrop-filterbackdrop-filterbackdrop-filter
       // }
     }
 
@@ -331,6 +331,8 @@ html {
 
     /* el-tag */
     .el-tag {
+      --el-tag-font-size: var(--el-font-size-extra-small);
+
       border-radius: var(--el-border-radius-base);
     }
 
@@ -432,6 +434,17 @@ html {
       &__label {
         font-size: var(--el-font-size-base);
       }
+    }
+
+    /* el-breadcrumb */
+    .el-breadcrumb {
+      font-size: var(--el-font-size-base);
+    }
+
+    /* el-collapse*/
+    .el-collapse {
+      --el-collapse-header-font-size: var(--el-font-size-base);
+      --el-collapse-content-font-size: var(--el-font-size-base);
     }
 
     /* el-table表格 */

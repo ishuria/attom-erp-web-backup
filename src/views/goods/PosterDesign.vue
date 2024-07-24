@@ -4,7 +4,7 @@
       <vab-alert title="手机端不支持海报设计演示" type="warning" />
     </div>
     <div class="hidden-xs-only">
-      <iframe src="//vuejs-core.cn/vue-fabric-editor/#/"></iframe>
+      <iframe src="https://vuejs-core.cn/vue-fabric-editor/#/"></iframe>
     </div>
   </div>
 </template>

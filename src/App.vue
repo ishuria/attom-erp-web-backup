@@ -47,8 +47,8 @@ onMounted(() => {
       route.query.debugger !== 'auto'
     )
       DisableDevtool({
-        url: '//vuejs-core.cn/debugger',
-        timeOutUrl: '//vuejs-core.cn/debugger',
+        url: 'https://vuejs-core.cn/debugger',
+        timeOutUrl: 'https://vuejs-core.cn/debugger',
       })
   }, 500)
 })

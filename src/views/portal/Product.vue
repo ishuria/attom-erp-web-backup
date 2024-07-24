@@ -9,10 +9,16 @@
             便捷式全域数据采集，全域用户行为分析，深耕科学营销运营应用，智能化洞察用户行为，全方位驱动企业数字化经营。
           </div>
 
-          <el-button href="//vuejs-core.cn/authorization/shop-vite.html" rel="noopener noreferrer" tag="a" target="_blank" type="primary">
+          <el-button
+            href="https://vuejs-core.cn/authorization/shop-vite.html"
+            rel="noopener noreferrer"
+            tag="a"
+            target="_blank"
+            type="primary"
+          >
             立即购买
           </el-button>
-          <el-button href="//vuejs-core.cn/shop-vite" plain rel="noopener noreferrer" tag="a" target="_blank" type="primary">
+          <el-button href="https://vuejs-core.cn/shop-vite" plain rel="noopener noreferrer" tag="a" target="_blank" type="primary">
             进入产品
           </el-button>
 

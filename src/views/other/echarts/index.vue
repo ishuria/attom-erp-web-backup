@@ -4,7 +4,7 @@
       <el-col :span="24">
         <vab-card>
           <el-form class="demo-form-inline" :inline="true">
-            <el-form-item label="换肤" label-width="40">
+            <el-form-item label="换肤">
               <vab-color-picker />
             </el-form-item>
           </el-form>

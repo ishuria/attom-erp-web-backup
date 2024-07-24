@@ -86,7 +86,7 @@ const handleOpenTheme = () => {
 }
 
 const buy = () => {
-  window.open('//vuejs-core.cn/authorization/shop-vite.html')
+  window.open('https://vuejs-core.cn/authorization/shop-vite.html')
 }
 
 const removeLocalStorage = () => {
