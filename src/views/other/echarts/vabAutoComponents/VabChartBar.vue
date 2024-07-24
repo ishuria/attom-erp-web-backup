@@ -2,7 +2,17 @@
   <el-col :lg="8" :md="12" :sm="24" :xl="6" :xs="24">
     <vab-card :body-style="{ height: '240px' }" skeleton>
       <template #header>{{ title }}</template>
-      <vab-chart :option="option" />
+      <vab-chart
+        :option="option"
+        @click="handleClick"
+        @contextmenu="handleContextMenu"
+        @dblclick="handleDbClick"
+        @mousedown="handleMouseDown"
+        @mousemove="handleMouseMove"
+        @mouseout="handleMouseOut"
+        @mouseover="handleMouseOver"
+        @mouseup="handleMouseUp"
+      />
     </vab-card>
   </el-col>
 </template>
@@ -56,6 +66,37 @@ watch(
   },
   { immediate: true }
 )
+
+const handleClick = (event: any) => {
+  $baseMessage(`鼠标【点击】事件，name：${event.name}`, 'success')
+}
+const handleContextMenu = (event: any) => {
+  $baseMessage(`鼠标【右键】事件，name：${event.name}`, 'success')
+}
+
+const handleDbClick = (event: any) => {
+  $baseMessage(`鼠标【双击事件，name：${event.name}`, 'success')
+}
+
+const handleMouseDown = (event: any) => {
+  $baseMessage(`鼠标【按下】事件，name：${event.name}`, 'success')
+}
+
+const handleMouseMove = (event: any) => {
+  $baseMessage(`鼠标【移动】事件，name：${event.name}`, 'success')
+}
+
+const handleMouseOut = (event: any) => {
+  $baseMessage(`鼠标【移出】事件，name：${event.name}`, 'success')
+}
+
+const handleMouseOver = (event: any) => {
+  $baseMessage(`鼠标【移入】事件，name：${event.name}`, 'success')
+}
+
+const handleMouseUp = (event: any) => {
+  $baseMessage(`鼠标【松开】事件，name：${event.name}`, 'success')
+}
 
 onMounted(() => {
   timer = setInterval(() => {

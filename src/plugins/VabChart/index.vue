@@ -4,6 +4,7 @@
     :autoresize="autoresize"
     class="vab-chart"
     :option="option"
+    v-bind="$attrs"
     @click="handleClick"
     @contextmenu="handleContextMenu"
     @dblclick="handleDbClick"
