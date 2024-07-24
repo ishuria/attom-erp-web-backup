@@ -4,9 +4,14 @@
     :autoresize="autoresize"
     class="vab-chart"
     :option="option"
-    v-bind="$attrs"
     @click="handleClick"
-    @highlight="handleHighlight"
+    @contextmenu="handleContextMenu"
+    @dblclick="handleDbClick"
+    @mousedown="handleMouseDown"
+    @mousemove="handleMouseMove"
+    @mouseout="handleMouseOut"
+    @mouseover="handleMouseOver"
+    @mouseup="handleMouseUp"
   />
 </template>
 
@@ -144,12 +149,37 @@ use([
 
 provide(THEME_KEY, theme)
 
-const handleHighlight = (action: any) => {
-  return action
-}
+const emit = defineEmits(['click', 'contextmenu', 'dblclick', 'mousemove', 'mouseout', 'mouseover', 'mousedown', 'mouseup'])
 
 const handleClick = (event: any) => {
-  return event
+  emit('click', event)
+}
+
+const handleContextMenu = (event: any) => {
+  emit('contextmenu', event)
+}
+const handleDbClick = (event: any) => {
+  emit('dblclick', event)
+}
+
+const handleMouseDown = (event: any) => {
+  emit('mousedown', event)
+}
+
+const handleMouseMove = (event: any) => {
+  emit('mousemove', event)
+}
+
+const handleMouseOut = (event: any) => {
+  emit('mouseout', event)
+}
+
+const handleMouseOver = (event: any) => {
+  emit('mouseover', event)
+}
+
+const handleMouseUp = (event: any) => {
+  emit('mouseup', event)
 }
 
 const resize = () => {
