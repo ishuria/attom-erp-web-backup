@@ -36,7 +36,7 @@ const src = ref<string>('https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d51
 .demo-image__placeholder .demonstration {
   display: block;
   margin-bottom: 20px;
-  font-size: 14px;
+  font-size: var(--el-font-size-default);
   color: var(--el-text-color-secondary);
 }
 

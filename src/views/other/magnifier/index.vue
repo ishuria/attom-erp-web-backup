@@ -110,7 +110,6 @@ onBeforeMount(() => {
   bottom: 0;
   left: 0;
   z-index: 1;
-  font-size: 0;
   cursor: move;
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAMAAABFaP0WAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAGUExURT1uzv///62t27cAAAACdFJOU/8A5bcwSgAAABBJREFUeNpiYGBkYGQECDAAAA0ABMZIs2EAAAAASUVORK5CYII=)
     repeat scroll 0 0 transparent;

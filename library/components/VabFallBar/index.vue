@@ -141,8 +141,8 @@ useEventListener('mousemove', (e: MouseEvent) => {
       --ti-fall-menu-slot-bg-color: var(--el-menu-background-color);
       --ti-fall-menu-box-text-color: var(--el-color-white);
       --ti-fall-menu-slot-text-color: var(--el-color-white);
-      --ti-common-font-size-base: 14px;
-      --ti-fall-menu-title-font-size: 14px;
+      --ti-common-font-size-base: var(--el-font-size-default);
+      --ti-fall-menu-title-font-size: var(--el-font-size-default);
       --ti-fall-menu-box-width: 560px;
 
       &__nav {
