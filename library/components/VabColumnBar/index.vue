@@ -430,7 +430,7 @@ onBeforeUnmount(() => {
   :deep() {
     .fold-unfold,
     .ri-user-heart-line {
-      font-size: 20px;
+      font-size: var(--el-font-size-extra-large);
       color: var(--el-color-white);
       cursor: pointer;
     }

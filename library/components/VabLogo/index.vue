@@ -50,7 +50,7 @@ const { theme, logo, title } = storeToRefs(settingsStore)
   display: inline-block;
   margin-left: 5px;
   overflow: hidden;
-  font-size: 20px;
+  font-size: var(--el-font-size-extra-large);
   line-height: 55px;
   color: var(--el-title-color);
   text-overflow: ellipsis;

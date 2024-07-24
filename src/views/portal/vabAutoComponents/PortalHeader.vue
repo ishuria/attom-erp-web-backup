@@ -123,7 +123,7 @@ header {
       flex: 1;
       align-items: center;
       height: 70px;
-      font-size: 20px;
+      font-size: var(--el-font-size-extra-large);
       line-height: 70px;
 
       a {

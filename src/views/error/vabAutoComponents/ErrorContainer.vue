@@ -90,7 +90,7 @@ defineProps({
 
       &-headline {
         margin-bottom: 10px;
-        font-size: 20px;
+        font-size: var(--el-font-size-extra-large);
         font-weight: bold;
         line-height: 24px;
         color: var(--el-color-grey);

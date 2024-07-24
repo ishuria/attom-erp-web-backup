@@ -91,7 +91,7 @@ onDeactivated(() => {
 
       [class*='ri-'] {
         margin: 10px;
-        font-size: 20px;
+        font-size: var(--el-font-size-extra-large);
       }
     }
   }

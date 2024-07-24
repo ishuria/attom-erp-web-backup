@@ -34,7 +34,7 @@
 
     :deep() {
       [class*='ri-'] {
-        font-size: 20px;
+        font-size: var(--el-font-size-extra-large);
       }
     }
   }
@@ -52,7 +52,7 @@
 
     :deep() {
       [class*='ri-'] {
-        font-size: 20px;
+        font-size: var(--el-font-size-extra-large);
         color: #fff;
       }
     }

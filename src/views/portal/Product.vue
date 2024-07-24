@@ -285,7 +285,7 @@ const list2 = ref<any>([
 
       &-title {
         margin-bottom: 16px;
-        font-size: 20px;
+        font-size: var(--el-font-size-extra-large);
         font-weight: 500;
         line-height: 28px;
       }
