@@ -112,8 +112,8 @@ import { ArrowRight, CaretBottom, CaretTop, Warning } from '@element-plus/icons-
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    margin-top: var(--el-font-size-big);
-    font-size: var(--el-font-size-small);
+    margin-top: var(--el-font-size-medium);
+    font-size: var(--el-font-size-extra-small);
     color: var(--el-text-color-regular);
 
     .footer-item {

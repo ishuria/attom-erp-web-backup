@@ -54,4 +54,8 @@ export const themeConfig: ThemeType = {
   showColorPicker: true,
   // 色弱
   colorWeakness: false,
+  //是否显示字体大小组件
+  showFontSize: true,
+  // 默认字体大小
+  fontSize: '14px',
 }

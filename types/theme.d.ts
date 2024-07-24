@@ -155,4 +155,8 @@ declare interface ThemeType {
   showColorPicker: boolean
   // 色弱
   colorWeakness: boolean
+  // 是否显示字体大小组件
+  showFontSize: boolean
+  // 字体大小
+  fontSize: string
 }

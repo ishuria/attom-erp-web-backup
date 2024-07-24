@@ -176,14 +176,14 @@ const list = reactive<any>([
 
     &-name {
       padding-top: 10px;
-      font-size: var(--el-font-size-bigger);
+      font-size: var(--el-font-size-large);
       font-weight: 600;
       color: #333437;
     }
 
     &-label {
       padding-top: 10px;
-      font-size: var(--el-font-size-default);
+      font-size: var(--el-font-size-base);
       line-height: 1.5;
       color: #808592;
     }

@@ -156,7 +156,7 @@ const handleShow = () => {
 
         &__error {
           position: absolute;
-          font-size: var(--el-font-size-small);
+          font-size: var(--el-font-size-extra-small);
           line-height: 18px;
           color: var(--el-color-error);
         }
@@ -182,7 +182,7 @@ const handleShow = () => {
         right: 10px;
         width: 120px;
         height: 32px;
-        font-size: var(--el-font-size-default);
+        font-size: var(--el-font-size-base);
         color: var(--el-color-white);
         cursor: pointer;
         user-select: none;

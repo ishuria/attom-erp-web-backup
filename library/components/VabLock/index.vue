@@ -172,7 +172,7 @@ onMounted(() => {
       border-radius: 15px;
 
       > span {
-        font-size: var(--el-font-size-small);
+        font-size: var(--el-font-size-extra-small);
         cursor: pointer;
       }
 

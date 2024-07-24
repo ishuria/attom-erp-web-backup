@@ -178,7 +178,7 @@ onBeforeMount(() => {
 
     p {
       margin-top: var(--el-margin);
-      font-size: var(--el-font-size-small);
+      font-size: var(--el-font-size-extra-small);
     }
   }
 }

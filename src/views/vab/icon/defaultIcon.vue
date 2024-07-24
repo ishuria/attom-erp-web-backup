@@ -182,7 +182,7 @@ onBeforeMount(() => {
         bottom: -30px;
         width: 100%;
         padding: 4px 0;
-        font-size: var(--el-font-size-small);
+        font-size: var(--el-font-size-extra-small);
         color: var(--el-color-white);
         text-align: center;
         content: '复制';
@@ -206,7 +206,7 @@ onBeforeMount(() => {
     height: 30px;
     margin-top: -15px;
     overflow: hidden;
-    font-size: var(--el-font-size-small);
+    font-size: var(--el-font-size-extra-small);
     line-height: 30px;
     text-align: center;
     text-overflow: ellipsis;

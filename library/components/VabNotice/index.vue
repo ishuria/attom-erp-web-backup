@@ -123,7 +123,7 @@ onBeforeMount(() => {
   align-items: center;
   justify-content: center;
   padding: 10px 0 0 0;
-  font-size: var(--el-font-size-default);
+  font-size: var(--el-font-size-base);
   text-align: center;
   cursor: pointer;
   border-top: 1px solid var(--el-border-color);

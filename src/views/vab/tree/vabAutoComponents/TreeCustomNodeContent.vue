@@ -150,6 +150,6 @@ const dataSource = ref<Tree[]>([
   align-items: center;
   justify-content: space-between;
   padding-right: 8px;
-  font-size: var(--el-font-size-default);
+  font-size: var(--el-font-size-base);
 }
 </style>

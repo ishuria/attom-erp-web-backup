@@ -351,7 +351,7 @@ const handelImage = () => {
       align-items: center;
       justify-content: center;
       margin-top: var(--el-margin);
-      font-size: var(--el-font-size-small);
+      font-size: var(--el-font-size-extra-small);
       color: var(--el-text-color-regular);
 
       .footer-item {

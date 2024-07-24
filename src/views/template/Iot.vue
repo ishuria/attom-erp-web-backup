@@ -229,7 +229,7 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
 
         [class*='ri-'] {
           width: 100%;
-          font-size: var(--el-font-size-max);
+          font-size: var(--el-font-size-extra-large);
         }
       }
     }
@@ -353,7 +353,7 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
 
               .page-header-tip-title {
                 margin-bottom: 10px;
-                font-size: calc(var(--el-font-size-max) + 4px) !important;
+                font-size: calc(var(--el-font-size-extra-large) + 4px) !important;
               }
             }
           }

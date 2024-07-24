@@ -33,6 +33,9 @@
             <el-option v-for="item in menuWidthList" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
+        <el-form-item :label="translate('字体大小')">
+          <vab-font-size />
+        </el-form-item>
         <el-form-item :label="translate('标签')">
           <el-switch v-model="theme.showTabs" @change="handleShowTabs" />
         </el-form-item>
@@ -69,6 +72,9 @@
         </el-form-item>
         <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('暗黑组件')">
           <el-switch v-model="theme.showDark" />
+        </el-form-item>
+        <el-form-item :label="translate('字体')">
+          <el-switch v-model="theme.showFontSize" />
         </el-form-item>
         <el-form-item :label="translate('颜色选择器')">
           <el-switch v-model="theme.showColorPicker" />

@@ -32,7 +32,7 @@ import { Check } from '@element-plus/icons-vue'
 .percentage-label {
   display: block;
   margin-top: 10px;
-  font-size: var(--el-font-size-small);
+  font-size: var(--el-font-size-extra-small);
 }
 
 .demo-progress .el-progress--line {

@@ -348,7 +348,7 @@ const tableData = [
           margin-top: 15px;
           margin-left: 20px;
           font-family: PingFangSC-Medium, serif;
-          font-size: var(--el-font-size-big);
+          font-size: var(--el-font-size-medium);
           line-height: 22px;
           color: var(--el-color-grey);
           letter-spacing: 0.76px;

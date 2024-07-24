@@ -252,8 +252,8 @@ watch(
 
     a {
       display: inline-block;
-      width: 55px;
-      height: 55px;
+      width: 60px;
+      height: 60px;
       padding-top: 10px;
       text-align: center;
       background: var(--el-color-white);
@@ -263,7 +263,7 @@ watch(
         padding: 0;
         margin: 0;
         overflow: hidden;
-        font-size: var(--el-font-size-small);
+        font-size: var(--el-font-size-extra-small);
         line-height: 25px;
         text-overflow: ellipsis;
         white-space: nowrap;

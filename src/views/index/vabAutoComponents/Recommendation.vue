@@ -119,7 +119,7 @@ const iconList = ref<any>([
 
         .icon-panel-tips {
           margin-top: 5px;
-          font-size: var(--el-font-size-small);
+          font-size: var(--el-font-size-extra-small);
           color: var(--el-color-grey);
         }
       }

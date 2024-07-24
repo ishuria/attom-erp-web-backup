@@ -78,7 +78,7 @@ onDeactivated(() => {
       p {
         height: 24px;
         margin-bottom: 8px;
-        font-size: var(--el-font-size-small);
+        font-size: var(--el-font-size-extra-small);
         font-weight: 400;
         line-height: 24px;
         color: #999aaa;

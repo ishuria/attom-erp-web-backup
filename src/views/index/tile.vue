@@ -206,7 +206,7 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
     // border-radius: var(--el-border-radius-base);
 
     .tile-title {
-      font-size: var(--el-font-size-bigger);
+      font-size: var(--el-font-size-large);
 
       span {
         margin-left: 3px;
@@ -257,7 +257,7 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
         white-space: nowrap;
 
         .icon-panel-tips {
-          font-size: var(--el-font-size-small);
+          font-size: var(--el-font-size-extra-small);
           color: var(--el-color-grey);
         }
       }

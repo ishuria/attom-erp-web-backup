@@ -161,7 +161,7 @@ onBeforeMount(() => {
         }
 
         &-title {
-          font-size: var(--el-font-size-default);
+          font-size: var(--el-font-size-base);
           font-weight: bold;
           color: var(--el-color-grey);
         }
@@ -169,7 +169,7 @@ onBeforeMount(() => {
         &-description {
           display: -webkit-box;
           overflow: hidden;
-          font-size: var(--el-font-size-default);
+          font-size: var(--el-font-size-base);
           color: var(--el-color-grey);
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;

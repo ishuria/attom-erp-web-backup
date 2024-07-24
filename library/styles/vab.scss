@@ -34,7 +34,7 @@ html {
     height: calc(var(--vh, 1vh) * 100);
     padding: 0;
     overflow: hidden;
-    font-size: var(--el-font-size-default);
+    font-size: var(--el-font-size-base);
     color: var(--el-color-black);
     background: var(--el-background-color);
 
@@ -427,8 +427,17 @@ html {
       }
     }
 
+    /* el-checkbox */
+    .el-checkbox {
+      &__label {
+        font-size: var(--el-font-size-base);
+      }
+    }
+
     /* el-table表格 */
     .el-table {
+      font-size: var(--el-font-size-base);
+
       td {
         .cell {
           .el-image {
@@ -450,6 +459,11 @@ html {
       --el-pagination-border-radius: var(--el-border-radius-base);
       justify-content: center;
       margin-top: var(--el-margin);
+      font-size: var(--el-font-size-base);
+
+      * {
+        font-size: var(--el-font-size-base);
+      }
     }
 
     /* el-menu菜单 */

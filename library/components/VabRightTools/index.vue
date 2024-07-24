@@ -5,6 +5,7 @@
     <vab-color-picker v-show="theme.showColorPicker" />
     <vab-theme v-show="theme.showTheme && routeName !== 'SeparateLayout'" />
     <vab-error-log class="hidden-xs-only" />
+    <vab-font-size v-show="theme.showFontSize" />
     <vab-lock v-show="theme.showLock" />
     <vab-notice v-show="theme.showNotice" />
     <vab-language v-show="theme.showLanguage" />

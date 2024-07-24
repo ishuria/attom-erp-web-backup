@@ -9,6 +9,7 @@ import {
   columnStyle,
   fixedHeader,
   foldSidebar,
+  fontSize,
   i18n,
   isFollow,
   layout,
@@ -18,6 +19,7 @@ import {
   radius,
   showColorPicker,
   showDark,
+  showFontSize,
   showFooter,
   showFullScreen,
   showLanguage,
@@ -64,6 +66,8 @@ const defaultTheme: ThemeType = {
   showThemeSetting,
   tabsBarStyle,
   themeName,
+  showFontSize,
+  fontSize,
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
@@ -83,6 +87,7 @@ export const useSettingsStore = defineStore('settings', {
       ...defaultTheme,
     },
     title: getLocalStorage('title').title || title,
+    fontSize: getLocalStorage('fontSize').fontSize || fontSize,
   }),
   getters: {
     getCollapse: (state) => state.collapse,
@@ -95,6 +100,7 @@ export const useSettingsStore = defineStore('settings', {
     getMode: (state) => state.mode,
     getTheme: (state) => state.theme,
     getTitle: (state) => state.title,
+    getFontSize: (state) => state.fontSize,
   },
   actions: {
     updateState(obj: any) {
@@ -114,6 +120,7 @@ export const useSettingsStore = defineStore('settings', {
       this.theme = { ...defaultTheme }
       this.persistenceTab = _persistenceTab
       this.changeLanguage(i18n)
+      this.changeFontSize(fontSize)
       if (this.device === 'mobile')
         this.theme = {
           ...defaultTheme,
@@ -170,6 +177,8 @@ export const useSettingsStore = defineStore('settings', {
 
       if (this.theme.colorWeakness) document.querySelectorAll('body')[0].classList.add('color-weakness')
       else document.querySelectorAll('body')[0].classList.remove('color-weakness')
+
+      useCssVar('--el-font-size-base', el).value = this.fontSize
     },
     toggleCollapse() {
       this.collapse = !this.collapse
@@ -186,6 +195,14 @@ export const useSettingsStore = defineStore('settings', {
     },
     changeLanguage(language: string) {
       this.updateState({ language })
+    },
+    changeFontSize(fontSize: string) {
+      /**
+       * @description: 大 16ox 、中 14px、小 12px
+       * @author sundan
+       */
+      this.updateState({ fontSize })
+      this.setCssVar()
     },
     handleLock() {
       this.updateState({ lock: true })
@@ -204,7 +221,6 @@ export const useSettingsStore = defineStore('settings', {
       this.updateState({ title })
     },
     changeColor() {
-      this.setCssVar()
       const el = ref<HTMLElement | null>(null)
       useCssVar('--el-color-primary-dark-2', el).value = this.color
       useCssVar('--el-color-primary', el).value = this.color
@@ -212,6 +228,8 @@ export const useSettingsStore = defineStore('settings', {
         useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(this.color, 1 - index * 0.1)
       }
       this.updateState({ color: this.color })
+
+      this.setCssVar()
     },
   },
 })

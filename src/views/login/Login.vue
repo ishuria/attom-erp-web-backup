@@ -194,7 +194,7 @@ onBeforeRouteLeave((to, from, next) => {
   :deep() {
     [class*='ri-'] {
       margin-left: calc(var(--el-margin) / 2);
-      font-size: var(--el-font-size-bigger);
+      font-size: var(--el-font-size-large);
     }
   }
 }

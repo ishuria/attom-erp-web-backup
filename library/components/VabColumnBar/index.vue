@@ -23,7 +23,7 @@
                 <span v-if="translate(item.meta.title).length < 4">
                   {{ translate(item.meta.title) }}
                 </span>
-                <span v-else style="font-size: var(--el-font-size-small); zoom: 0.88">
+                <span v-else style="font-size: var(--el-font-size-extra-small); zoom: 0.88">
                   {{ translate(item.meta.title) }}
                 </span>
               </div>

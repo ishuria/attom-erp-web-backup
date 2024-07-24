@@ -85,11 +85,17 @@
   --el-color-info-lighter: #{$vab-color-info-lighter};
   --el-color-info-dark-2: #{$vab-color-info};
 
-  --el-font-size-small: #{$base-font-size-small};
-  --el-font-size-default: #{$base-font-size-default};
-  --el-font-size-big: #{$base-font-size-big};
-  --el-font-size-bigger: #{$base-font-size-bigger};
-  --el-font-size-max: #{$base-font-size-max};
+  /**
+    * @description: 全局字体大小
+    * @author sundan
+  */
+  --el-font-size-base: 14px;
+  --el-font-size-small: calc(var(--el-font-size-base) - 1px);
+  --el-font-size-extra-small: calc(var(--el-font-size-base) - 2px);
+  --el-font-size-medium: calc(var(--el-font-size-base) + 2px);
+  --el-font-size-large: calc(var(--el-font-size-base) + 4px);
+  --el-font-size-extra-large: calc(var(--el-font-size-base) + 6px);
+
   --el-transition: #{$base-transition};
   --el-left-menu-width-min: #{$base-left-menu-width-min};
   --el-padding: #{$base-padding};

@@ -149,7 +149,7 @@ const value3 = ref([1])
     width: 25px;
     height: 25px;
     margin-right: 3px;
-    font-size: var(--el-font-size-small);
+    font-size: var(--el-font-size-extra-small);
     color: var(--el-color-white);
     background-color: var(--el-color-primary);
     border-radius: 50%;

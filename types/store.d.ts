@@ -39,6 +39,7 @@ declare interface SettingsModuleType {
   persistenceTab: boolean
   theme: ThemeType
   title: string
+  fontSize: string
 }
 
 declare interface TabsModuleType {

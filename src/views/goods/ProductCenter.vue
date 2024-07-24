@@ -212,7 +212,7 @@ const handleOpen = () => {
 
       .description {
         overflow: hidden;
-        font-size: var(--el-font-size-small);
+        font-size: var(--el-font-size-extra-small);
         color: var(--el-color-grey);
         text-overflow: ellipsis;
         white-space: nowrap;

@@ -72,7 +72,7 @@ const style = {
     min-width: 300px;
 
     &-title {
-      font-size: var(--el-font-size-bigger);
+      font-size: var(--el-font-size-large);
       font-weight: bold;
       line-height: 30px;
     }

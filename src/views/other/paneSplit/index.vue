@@ -48,7 +48,7 @@ const resize = () => {
     align-items: center;
     justify-content: center;
     height: 100%;
-    font-size: var(--el-font-size-max);
+    font-size: var(--el-font-size-extra-large);
     font-weight: bold;
     color: var(--el-color-white);
     user-select: none;

@@ -45,7 +45,7 @@ const goBack = async () => {
   .title {
     margin: var(--el-margin);
     overflow: hidden;
-    font-size: var(--el-font-size-bigger);
+    font-size: var(--el-font-size-large);
     font-weight: 600;
     line-height: 24px;
     color: currentcolor;

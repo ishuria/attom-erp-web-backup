@@ -78,7 +78,7 @@ const handleLink = () => {
   height: 18px;
   padding-right: 5px;
   padding-left: 5px;
-  font-size: var(--el-font-size-small);
+  font-size: var(--el-font-size-extra-small);
   line-height: 18px;
 }
 

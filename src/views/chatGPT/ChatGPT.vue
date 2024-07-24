@@ -277,7 +277,7 @@ $border-top-color_1: var(--el-color-primary);
           top: -5px;
           left: 60px;
           width: 180px;
-          font-size: var(--el-font-size-small);
+          font-size: var(--el-font-size-extra-small);
           font-style: normal;
           line-height: 24px;
           color: $color_1;

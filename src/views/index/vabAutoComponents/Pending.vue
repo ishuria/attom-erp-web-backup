@@ -89,12 +89,12 @@ const style2 = {
     .pending-title {
       display: block;
       margin-top: 12px;
-      font-size: var(--el-font-size-big);
+      font-size: var(--el-font-size-medium);
       font-weight: bold;
       line-height: 38px;
 
       span {
-        font-size: var(--el-font-size-small);
+        font-size: var(--el-font-size-extra-small);
         font-weight: normal;
       }
 
@@ -108,7 +108,7 @@ const style2 = {
     }
 
     .pending-tips {
-      font-size: var(--el-font-size-small);
+      font-size: var(--el-font-size-extra-small);
       color: var(--el-color-grey);
     }
   }
