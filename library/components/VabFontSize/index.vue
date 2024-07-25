@@ -17,10 +17,13 @@ defineOptions({
 })
 
 const settingsStore = useSettingsStore()
-const { changeFontSize } = settingsStore
+const { theme } = storeToRefs<any>(settingsStore)
+const { updateTheme, saveTheme } = settingsStore
 const fontSizeList = ref<string[]>(['13px', '13.5px', '14px', '15px', '15.5px', '16px'])
 
 const handleCommand = (fontSize: string) => {
-  changeFontSize(fontSize)
+  theme.value.fontSize = fontSize
+  updateTheme()
+  saveTheme()
 }
 </script>

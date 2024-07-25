@@ -87,7 +87,6 @@ export const useSettingsStore = defineStore('settings', {
       ...defaultTheme,
     },
     title: getLocalStorage('title').title || title,
-    fontSize: getLocalStorage('fontSize').fontSize || fontSize,
   }),
   getters: {
     getCollapse: (state) => state.collapse,
@@ -100,7 +99,6 @@ export const useSettingsStore = defineStore('settings', {
     getMode: (state) => state.mode,
     getTheme: (state) => state.theme,
     getTitle: (state) => state.title,
-    getFontSize: (state) => state.fontSize,
   },
   actions: {
     updateState(obj: any) {
@@ -120,7 +118,6 @@ export const useSettingsStore = defineStore('settings', {
       this.theme = { ...defaultTheme }
       this.persistenceTab = _persistenceTab
       this.changeLanguage(i18n)
-      this.changeFontSize(fontSize)
       if (this.device === 'mobile')
         this.theme = {
           ...defaultTheme,
@@ -178,7 +175,10 @@ export const useSettingsStore = defineStore('settings', {
       if (this.theme.colorWeakness) document.querySelectorAll('body')[0].classList.add('color-weakness')
       else document.querySelectorAll('body')[0].classList.remove('color-weakness')
 
-      useCssVar('--el-font-size-base', el).value = this.fontSize
+      useCssVar('--el-font-size-base', el).value = this.theme.fontSize
+      if (this.theme.fontSize && this.theme.fontSize.endsWith('px')) {
+        //alert(this.theme.fontSize)
+      }
     },
     toggleCollapse() {
       this.collapse = !this.collapse
@@ -195,14 +195,6 @@ export const useSettingsStore = defineStore('settings', {
     },
     changeLanguage(language: string) {
       this.updateState({ language })
-    },
-    changeFontSize(fontSize: string) {
-      /**
-       * @description: 大 16ox 、中 14px、小 12px
-       * @author sundan
-       */
-      this.updateState({ fontSize })
-      this.setCssVar()
     },
     handleLock() {
       this.updateState({ lock: true })
