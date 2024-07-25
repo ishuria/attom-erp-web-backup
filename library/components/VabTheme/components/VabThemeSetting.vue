@@ -75,8 +75,8 @@ defineOptions({
 })
 
 const settingsStore = useSettingsStore()
-const { device, color, theme } = storeToRefs(settingsStore)
-const { changeColor, saveTheme, updateTheme, setCssVar } = settingsStore
+const { device, theme } = storeToRefs(settingsStore)
+const { saveTheme, updateTheme, setCssVar } = settingsStore
 const show = ref<boolean>(true)
 const route = useRoute()
 const routeName = ref<any>(route.name)
@@ -119,7 +119,7 @@ const randomTheme = async () => {
     const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
     const layout =
       device.value === 'desktop' ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall']) : 'vertical'
-    const _color = shuffle(color.value, [
+    const _color = shuffle(theme.value.color, [
       '#1e90ff',
       '#4e88f3',
       '#0052d9',
@@ -140,15 +140,14 @@ const randomTheme = async () => {
     theme.value.layout = layout
 
     if (themeName === 'technology') {
-      color.value = '#4e88f3'
+      theme.value.color = '#4e88f3'
     } else {
-      color.value = _color
+      theme.value.color = _color
     }
 
     if (themeName === 'default') theme.value.isFollow = isFollow
     else theme.value.isFollow = false
 
-    changeColor()
     setCssVar()
     updateTheme()
     saveTheme()

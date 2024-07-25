@@ -11,7 +11,7 @@ import { useSettingsStore } from '/@/store/modules/settings'
 import { lightenColor } from '/@/utils/lightenColor'
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 let timer: ReturnType<typeof setInterval>
 const updateTime = ref<any>()
 
@@ -47,19 +47,19 @@ const option = reactive<any>({
     itemStyle: {
       borderRadius: [0, 5, 5, 0],
       color: new graphic.LinearGradient(0, 0, 1, 0, [
-        { offset: 0, color: lightenColor(color.value, 50) },
-        { offset: 1, color: color.value },
+        { offset: 0, color: lightenColor(theme.value.color, 50) },
+        { offset: 1, color: theme.value.color },
       ]),
     },
   },
 })
 
 watch(
-  color,
+  theme.value,
   () => {
     option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
-      { offset: 0, color: lightenColor(color.value, 50) },
-      { offset: 1, color: color.value },
+      { offset: 0, color: lightenColor(theme.value.color, 50) },
+      { offset: 1, color: theme.value.color },
     ])
   },
   { immediate: true }

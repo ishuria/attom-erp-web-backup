@@ -12,7 +12,7 @@
 import { useSettingsStore } from '/@/store/modules/settings'
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 const option = reactive<any>({
   tooltip: {
     trigger: 'item',
@@ -39,9 +39,9 @@ const option = reactive<any>({
 })
 
 watch(
-  color,
+  theme.value,
   () => {
-    option.color = [color.value]
+    option.color = [theme.value.color]
   },
   { immediate: true }
 )

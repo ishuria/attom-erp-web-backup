@@ -22,7 +22,7 @@ defineProps({
 })
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 
 const option = reactive<any>({
   graphic: {
@@ -38,7 +38,7 @@ const option = reactive<any>({
           lineDash: [0, 200],
           lineDashOffset: 0,
           fill: 'transparent',
-          stroke: color.value,
+          stroke: theme.value.color,
           lineWidth: 1,
         },
         keyframeAnimation: {
@@ -62,7 +62,7 @@ const option = reactive<any>({
             {
               percent: 1,
               style: {
-                fill: color.value,
+                fill: theme.value.color,
               },
             },
           ],
@@ -73,11 +73,11 @@ const option = reactive<any>({
 })
 
 watch(
-  color,
+  theme.value,
   () => {
     setTimeout(() => {
-      option.graphic.elements[0].style.stroke = color.value
-      option.graphic.elements[0].keyframeAnimation.keyframes[2].style.fill = color.value
+      option.graphic.elements[0].style.stroke = theme.value.color
+      option.graphic.elements[0].keyframeAnimation.keyframes[2].style.fill = theme.value.color
     }, 200)
   },
   { immediate: true }

@@ -30,7 +30,6 @@ declare type LanguageType = 'zh' | 'en'
 
 declare interface SettingsModuleType {
   collapse: boolean
-  color: string
   device: DeviceType
   language: LanguageType
   lock: boolean

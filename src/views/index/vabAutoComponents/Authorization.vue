@@ -35,7 +35,7 @@ defineOptions({
 })
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 let timer: ReturnType<typeof setInterval>
 const n = ref<number>(5)
 const countConfig = reactive<any>({
@@ -79,19 +79,19 @@ const option = reactive<any>({
     itemStyle: {
       borderRadius: [2, 2, 0, 0],
       color: new graphic.LinearGradient(0, 0, 1, 0, [
-        { offset: 0, color: lightenColor(color.value, 50) },
-        { offset: 1, color: color.value },
+        { offset: 0, color: lightenColor(theme.value.color, 50) },
+        { offset: 1, color: theme.value.color },
       ]),
     },
   },
 })
 
 watch(
-  color,
+  theme.value,
   () => {
     option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
-      { offset: 0, color: lightenColor(color.value, 50) },
-      { offset: 1, color: color.value },
+      { offset: 0, color: lightenColor(theme.value.color, 50) },
+      { offset: 1, color: theme.value.color },
     ])
   },
   { immediate: true }

@@ -76,7 +76,6 @@ const { persistenceTab = _persistenceTab } = getLocalStorage('persistenceTab')
 export const useSettingsStore = defineStore('settings', {
   state: (): SettingsModuleType => ({
     collapse,
-    color: getLocalStorage('color').color || color,
     device: 'desktop',
     language: getLocalStorage('language').language || i18n,
     lock: getLocalStorage('lock').lock || false,
@@ -90,7 +89,6 @@ export const useSettingsStore = defineStore('settings', {
   }),
   getters: {
     getCollapse: (state) => state.collapse,
-    getColor: (state) => state.color,
     getDevice: (state) => state.device,
     getPersistenceTab: (state) => state.persistenceTab,
     getLanguage: (state) => state.language,
@@ -167,9 +165,15 @@ export const useSettingsStore = defineStore('settings', {
       }
 
       if (this.theme.isFollow) {
-        useCssVar('--el-menu-background-color', el).value = lightenColorChrome(this.color, 18)
+        useCssVar('--el-menu-background-color', el).value = lightenColorChrome(this.theme.color, 18)
       } else {
         useCssVar('--el-menu-background-color', el).value = '#282c34'
+      }
+
+      useCssVar('--el-color-primary-dark-2', el).value = this.theme.color
+      useCssVar('--el-color-primary', el).value = this.theme.color
+      for (let index = 1; index < 10; index++) {
+        useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(this.theme.color, 1 - index * 0.1)
       }
 
       if (this.theme.colorWeakness) document.querySelectorAll('body')[0].classList.add('color-weakness')
@@ -211,17 +215,6 @@ export const useSettingsStore = defineStore('settings', {
     },
     changeTitle(title: string) {
       this.updateState({ title })
-    },
-    changeColor() {
-      const el = ref<HTMLElement | null>(null)
-      useCssVar('--el-color-primary-dark-2', el).value = this.color
-      useCssVar('--el-color-primary', el).value = this.color
-      for (let index = 1; index < 10; index++) {
-        useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(this.color, 1 - index * 0.1)
-      }
-      this.updateState({ color: this.color })
-
-      this.setCssVar()
     },
   },
 })

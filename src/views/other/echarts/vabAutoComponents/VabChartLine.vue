@@ -23,7 +23,7 @@ defineProps({
 })
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 let timer: ReturnType<typeof setInterval>
 
 const option = reactive<any>({
@@ -50,9 +50,9 @@ const option = reactive<any>({
 })
 
 watch(
-  color,
+  theme.value,
   () => {
-    option.color = [color.value]
+    option.color = [theme.value.color]
   },
   { immediate: true }
 )
@@ -75,3 +75,4 @@ onBeforeUnmount(() => {
   if (timer) clearInterval(timer)
 })
 </script>
+storeToRefslettimer

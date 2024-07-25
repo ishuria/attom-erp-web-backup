@@ -23,7 +23,7 @@ defineProps({
 })
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 let timer: ReturnType<typeof setInterval>
 
 const option = reactive<any>({
@@ -58,10 +58,10 @@ const option = reactive<any>({
 })
 
 watch(
-  color,
+  theme.value,
   () => {
     setTimeout(() => {
-      option.color = [color.value]
+      option.color = [theme.value.color]
     }, 200)
   },
   { immediate: true }

@@ -236,7 +236,6 @@ const setDefaultTheme = () => {
 
   setTimeout(() => {
     resetTheme()
-    $pub('shop-vite-reset-color')
     $pub('shop-vite-reset-dark')
   }, 500)
 

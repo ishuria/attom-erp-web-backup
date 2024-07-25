@@ -23,7 +23,7 @@ defineProps({
 })
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 let timer: ReturnType<typeof setInterval>
 
 const option = reactive<any>({
@@ -49,8 +49,8 @@ const option = reactive<any>({
       [random(50, 100), random(50, 100), random(50, 100), random(50, 100)],
     ],
     itemStyle: {
-      color: color.value,
-      borderColor: color.value,
+      color: theme.value.color,
+      borderColor: theme.value.color,
       color0: '#f2637b',
       borderColor0: '#f2637b',
     },
@@ -58,10 +58,10 @@ const option = reactive<any>({
 })
 
 watch(
-  color,
+  theme.value,
   () => {
-    option.series.itemStyle.color = color.value
-    option.series.itemStyle.borderColor = color.value
+    option.series.itemStyle.color = theme.value.color
+    option.series.itemStyle.borderColor = theme.value.color
   },
   { immediate: true }
 )

@@ -1,6 +1,11 @@
 <template>
   <div v-if="'technology' != theme.themeName" class="vab-color-picker" style="margin-left: var(--el-margin)">
-    <el-color-picker v-model="color" popper-class="vab-color-picker-popper" :predefine="predefineColors" @active-change="handleChange" />
+    <el-color-picker
+      v-model="theme.color"
+      popper-class="vab-color-picker-popper"
+      :predefine="predefineColors"
+      @active-change="handleChange"
+    />
   </div>
 </template>
 
@@ -26,12 +31,13 @@ const predefineColors = ref<any>([
   '#f01414',
 ])
 const settingsStore = useSettingsStore()
-const { changeColor, getColor } = settingsStore
-const { color, theme } = storeToRefs(settingsStore)
+const { updateTheme, saveTheme } = settingsStore
+const { theme } = storeToRefs(settingsStore)
 
 const handleChange = (value: any) => {
-  color.value = value
-  changeColor()
+  theme.value.color = value
+  updateTheme()
+  saveTheme()
 }
 
 onBeforeMount(() => {
@@ -39,10 +45,6 @@ onBeforeMount(() => {
   $sub('shop-vite-reset-color', () => {
     handleChange(_color)
   })
-  $sub('shop-vite-change-color', () => {
-    handleChange(color)
-  })
-  handleChange(getColor)
 })
 </script>
 

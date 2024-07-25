@@ -12,7 +12,7 @@ defineOptions({
 })
 
 const settingsStore = useSettingsStore()
-const { updateTheme, changeColor } = settingsStore
+const { updateTheme } = settingsStore
 const route = useRoute()
 
 const resizeContainer = () => {
@@ -22,7 +22,6 @@ const resizeContainer = () => {
 }
 
 onBeforeMount(() => {
-  changeColor()
   updateTheme()
 
   /**

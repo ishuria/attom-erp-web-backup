@@ -13,7 +13,7 @@ import { useSettingsStore } from '/@/store/modules/settings'
 import { lightenColor } from '/@/utils/lightenColor'
 
 const settingsStore = useSettingsStore()
-const { color } = storeToRefs(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 const option = reactive<any>({
   tooltip: {
     trigger: 'axis',
@@ -67,9 +67,9 @@ const option = reactive<any>({
 })
 
 watch(
-  color,
+  theme.value,
   () => {
-    option.color = [color.value, lightenColor(color.value, 50)]
+    option.color = [theme.value.color, lightenColor(theme.value.color, 50)]
   },
   { immediate: true }
 )
