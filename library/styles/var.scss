@@ -101,7 +101,7 @@
   --el-font-size-large: calc(var(--el-font-size-base) + 4px);
   --el-font-size-extra-large: calc(var(--el-font-size-base) + 6px);
   //默认动画
-  --el-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), border 0s, color 0.1s, font-size 0s;
+  --el-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), border 0s, color 0.05s, font-size 0s;
   //纵向、分栏左侧导航已折叠的宽度
   --el-left-menu-width-min: 64px;
   //纵向左侧导航已折叠右侧内容的宽度
