@@ -34,7 +34,7 @@ export const cliConfig: { [key: string]: string | number | boolean | Array<strin
   // 开启代码压缩 boolean | 'gzip' | 'brotli'
   compress: false,
   // 需要缓存到node_modules/.vite的模块
-  include: ['element-plus'],
+  include: [],
   // 不需要缓存到node_modules/.vite的模块
   exclude: [],
   // 开发环境开启https

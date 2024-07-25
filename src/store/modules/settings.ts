@@ -141,48 +141,50 @@ export const useSettingsStore = defineStore('settings', {
       this.setCssVar()
     },
     setCssVar() {
+      /**
+       * @description 主题配置，如不精通前端css样式请勿修改
+       * @author sundan
+       */
       const el = ref<HTMLElement | null>(null)
 
+      //菜单宽度
       if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px')) useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'
-
+      //tabs处理
       if (this.theme.showTabs) {
         useCssVar('--el-tabs-height', el).value = '50px'
       } else {
         useCssVar('--el-tabs-height', el).value = '0px'
       }
-
+      //页脚处理
       if (this.theme.showFooter) {
         useCssVar('--el-footer-height', el).value = '50px'
       } else {
         useCssVar('--el-footer-height', el).value = '-20px'
       }
-
+      //圆角处理
       if (this.theme.radius) {
         useCssVar('--el-border-radius-base', el).value = `${this.theme.radius}px`
       } else {
         useCssVar('--el-border-radius-base', el).value = '5px'
       }
-
+      //分栏一级菜单跟随背景色处理
       if (this.theme.isFollow) {
         useCssVar('--el-menu-background-color', el).value = lightenColorChrome(this.theme.color, 18)
       } else {
         useCssVar('--el-menu-background-color', el).value = '#282c34'
       }
-
+      //主题色处理
       useCssVar('--el-color-primary-dark-2', el).value = this.theme.color
       useCssVar('--el-color-primary', el).value = this.theme.color
       for (let index = 1; index < 10; index++) {
         useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(this.theme.color, 1 - index * 0.1)
       }
-
+      //色弱处理
       if (this.theme.colorWeakness) document.querySelectorAll('body')[0].classList.add('color-weakness')
       else document.querySelectorAll('body')[0].classList.remove('color-weakness')
-
+      //字体大小处理
       useCssVar('--el-font-size-base', el).value = this.theme.fontSize
-      if (this.theme.fontSize && this.theme.fontSize.endsWith('px')) {
-        //alert(this.theme.fontSize)
-      }
     },
     toggleCollapse() {
       this.collapse = !this.collapse
