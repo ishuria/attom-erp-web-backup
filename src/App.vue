@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import DisableDevtool from 'disable-devtool'
-import { noDebugger } from '/@/config/index'
+import { disableDebugger } from '/@/config'
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({
@@ -41,7 +41,7 @@ onMounted(() => {
     if (
       !location.hostname.includes('127') &&
       !location.hostname.includes('localhost') &&
-      (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core') || noDebugger) &&
+      (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core') || disableDebugger) &&
       route.query &&
       route.query.debugger !== 'auto'
     )

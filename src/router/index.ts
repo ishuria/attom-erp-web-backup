@@ -4,7 +4,7 @@
 import type { App } from 'vue'
 import type { RouteRecordName, RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
-import { authentication, base, isHashRouterMode } from '/@/config'
+import { authentication, base, disableRouterWarning, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
 import Layout from '/@vab/layouts/index.vue'
 
@@ -1658,23 +1658,21 @@ export const resetRouter = (routes: VabRouteRecord[] = constantRoutes) => {
 }
 
 export const setupRouter = (app: App<Element>) => {
+  /*
+   * @description: 控制台禁止出现[Vue Router warn]: No match found for location with path "/index"报黄
+   * @tips: 未经全面测试，请谨慎使用！如遇问题请前往config/cli.config.ts配置disableRouterWarning:false
+   * @author: @sundan
+   */
+  if (disableRouterWarning)
+    router.addRoute({
+      path: '/:pathMatch(.*)*',
+      component: () => {},
+    })
+
   if (authentication === 'intelligence') addRouter(asyncRoutes)
-  // 使用后端路由时防止出现[Vue Router warn]: No match found for location with path "/index"报黄，
-  // 未经全面测试请谨慎使用！建议注释掉else if中的代码，
-  // else if (authentication === 'all' && isHashRouterMode) {
-  //   let path = window.location.hash.slice(1)
-  //   if (path === '/') path = '/index'
-  //   const words = path.split('/')
-  //   const lastWord: any = words.at(-1)
-  //   const name = lastWord.charAt(0).toUpperCase() + lastWord.slice(1)
-  //   router.addRoute({
-  //     path,
-  //     name,
-  //     component: () => import('/@/views/index/index.vue'),
-  //   })
-  // }
   setupPermissions(router)
   app.use(router)
+
   return router
 }
 
