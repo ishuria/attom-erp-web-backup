@@ -2,8 +2,7 @@
   <div class="website-setting-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="12" :md="20" :sm="24" :xl="10" :xs="24">
-        <vab-card>
-          <template #header>网站设置</template>
+        <vab-card title="网站设置">
           <el-form ref="formRef" label-position="top" :model="form" :rules="formRules" @submit="submitForm">
             <el-form-item label="网站名称" prop="siteName">
               <el-input v-model="form.siteName" clearable />

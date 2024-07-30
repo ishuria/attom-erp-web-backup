@@ -1,10 +1,8 @@
 <template>
-  <el-card :body-class="bodyClass" :body-style="bodyStyle" class="vab-card" :shadow="shadow" :title="title">
+  <el-card :body-class="bodyClass" :body-style="bodyStyle" class="vab-card" :shadow="shadow">
     <template v-if="$slots.header || title" #header>
       <slot v-if="$slots.header" name="header"></slot>
-      <template v-else>
-        {{ title }}
-      </template>
+      <template v-else>{{ title }}AAA</template>
     </template>
     <el-skeleton v-if="skeleton" animated :loading="skeletonShow" :rows="skeletonRows">
       <template #default>

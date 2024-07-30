@@ -1,7 +1,6 @@
 <template>
   <div class="tabs-container no-background-container">
-    <vab-card>
-      <template #header>标签页操作</template>
+    <vab-card title="标签页操作">
       <el-space wrap>
         <el-button type="primary" @click="closeOthersTabs">关闭其他</el-button>
         <el-button type="primary" @click="closeLeftTabs">关闭左侧</el-button>
@@ -11,12 +10,10 @@
         <el-button type="primary" @click="handleRefresh">刷新当前</el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>params传参(支持多开)</template>
+    <vab-card title="params传参(支持多开)">
       <el-button type="primary" @click="handleOpenParams">点击跳转</el-button>
     </vab-card>
-    <vab-card>
-      <template #header>query传参(支持多开)</template>
+    <vab-card title="query传参(支持多开)">
       <el-button type="primary" @click="handleOpenQuery">点击跳转</el-button>
     </vab-card>
   </div>

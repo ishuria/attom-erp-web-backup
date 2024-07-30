@@ -2,8 +2,7 @@
   <div class="regular-expression-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <vab-card>
-          <template #header>正则校验</template>
+        <vab-card title="正则校验">
           <el-form ref="formRef" label-width="100px" :model="form" :rules="rules">
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" clearable />

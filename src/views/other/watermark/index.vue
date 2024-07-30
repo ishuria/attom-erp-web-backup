@@ -1,14 +1,12 @@
 <template>
   <div class="watermark-container no-background-container">
-    <vab-card>
-      <template #header>全局水印</template>
+    <vab-card title="全局水印">
       <el-button type="primary" @click="setWatermark(title)">添加全局水印</el-button>
       <el-button type="primary" @click="setCustomWatermark">添加自定义全局水印</el-button>
       <el-button type="danger" @click="setWatermark('')">移除全局水印</el-button>
     </vab-card>
 
-    <vab-card>
-      <template #header>局部自定义配置水印</template>
+    <vab-card title="局部自定义配置水印">
       <div class="wrapper">
         <el-watermark
           class="watermark"
@@ -51,22 +49,19 @@
       </div>
     </vab-card>
 
-    <vab-card>
-      <template #header>局部基础水印</template>
+    <vab-card title="局部基础水印">
       <el-watermark :content="config.content">
         <div style="height: 200px"></div>
       </el-watermark>
     </vab-card>
 
-    <vab-card>
-      <template #header>局部多行水印</template>
+    <vab-card title="局部多行水印">
       <el-watermark :content="['Vite 4.x', 'Vue Shop Vite']">
         <div style="height: 200px"></div>
       </el-watermark>
     </vab-card>
 
-    <vab-card>
-      <template #header>局部图片水印</template>
+    <vab-card title="局部图片水印">
       <el-watermark :height="30" image="https://element-plus.org/images/element-plus-logo.svg" :width="130">
         <div style="height: 200px"></div>
       </el-watermark>
