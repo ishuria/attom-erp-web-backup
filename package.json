@@ -113,7 +113,7 @@
     "vite-plugin-pwa": "^0.20.1",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.8.0",
-    "vite-plugin-vitebar": "^0.0.6",
+    "vite-plugin-vitebar": "^0.0.7",
     "vue-global-api": "^0.4.1",
     "vue-tsc": "^2.0.29"
   },
