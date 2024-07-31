@@ -114,7 +114,7 @@ declare interface ThemeType {
   // 颜色
   color: string
   //菜单背景跟随配色
-  isFollow: boolean
+  isFollow: string | number | boolean
   // 是否固定头部固定
   fixedHeader: boolean
   // 纵向布局时是否默认收起左侧菜单（不支持分栏布局）
@@ -122,7 +122,7 @@ declare interface ThemeType {
   // 是否开启顶部进度条
   showProgressBar: boolean
   //是否开启页脚
-  showFooter: boolean
+  showFooter: string | number | boolean
   // 是否开启标签页
   showTabs: boolean
   // 显示标签页时标签页样式
@@ -148,13 +148,13 @@ declare interface ThemeType {
   // 是否开启页面动画
   pageTransition: pageTransitionStyle
   // 圆角
-  radius: number
+  radius: number | undefined
   // 是否开启锁屏
   showLock: boolean
   // 是否开启颜色选择器组件
   showColorPicker: boolean
   // 色弱
-  colorWeakness: boolean
+  colorWeakness: string | number | boolean
   // 是否显示字体大小组件
   showFontSize: boolean
   // 字体大小

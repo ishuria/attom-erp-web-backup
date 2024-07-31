@@ -138,7 +138,7 @@ interface ListType {
 const route = useRoute()
 const settingsStore = useSettingsStore()
 const routeName = ref<RouteRecordName | null | undefined>(route.name)
-const { theme, device, mode, persistenceTab } = storeToRefs<any>(settingsStore)
+const { theme, device, mode, persistenceTab } = storeToRefs(settingsStore)
 const { saveTheme, resetTheme, updateTheme, updateCaughtTabs, setCssVar } = settingsStore
 const drawerVisible = ref<boolean>(false)
 const layoutList = ref<string[]>(['column', 'vertical', 'horizontal', 'comprehensive', 'fall'])
@@ -270,7 +270,7 @@ onBeforeMount(() => {
   $sub('shop-vite-save-theme', () => {
     saveTheme()
   })
-  $sub('shop-vite-change-theme', (value: string) => {
+  $sub('shop-vite-change-theme', (value: ThemeName) => {
     theme.value.themeName = value
     _updateTheme()
   })

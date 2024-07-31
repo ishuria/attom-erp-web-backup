@@ -17,12 +17,12 @@ defineOptions({
 
 const route = useRoute()
 const routesStore = useRoutesStore()
-const { tab, activeMenu } = storeToRefs<any>(routesStore)
+const { tab, activeMenu } = storeToRefs(routesStore)
 
 watch(
   route,
   () => {
-    if (tab.value.data !== route.matched[0].name) tab.value.data = route.matched[0].name
+    if (tab.value.data !== route.matched[0].name) tab.value.data = route.matched[0].name as string
     activeMenu.value.data = handleActivePath(route)
   },
   { immediate: true }

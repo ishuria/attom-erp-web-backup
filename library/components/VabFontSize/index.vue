@@ -17,7 +17,7 @@ defineOptions({
 })
 
 const settingsStore = useSettingsStore()
-const { theme } = storeToRefs<any>(settingsStore)
+const { theme } = storeToRefs(settingsStore)
 const { updateTheme, saveTheme } = settingsStore
 const fontSizeList = ref<string[]>(['13px', '13.5px', '14px', '15px', '15.5px', '16px'])
 

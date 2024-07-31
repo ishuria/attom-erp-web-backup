@@ -98,7 +98,7 @@
     "prettier": "^3.3.3",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "1.77.6",
-    "stylelint": "^16.8.0",
+    "stylelint": "^16.8.1",
     "stylelint-config-recess-order": "^5.0.1",
     "stylelint-config-recommended-scss": "^14.1.0",
     "stylelint-config-recommended-vue": "^1.5.0",
@@ -113,7 +113,7 @@
     "vite-plugin-pwa": "^0.20.1",
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.8.0",
-    "vite-plugin-vitebar": "^0.0.5",
+    "vite-plugin-vitebar": "^0.0.6",
     "vue-global-api": "^0.4.1",
     "vue-tsc": "^2.0.29"
   },

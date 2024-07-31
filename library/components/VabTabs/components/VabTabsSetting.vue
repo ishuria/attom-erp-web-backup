@@ -30,7 +30,7 @@ defineOptions({
 })
 
 const settingsStore = useSettingsStore()
-const { theme, persistenceTab } = storeToRefs<any>(settingsStore)
+const { theme, persistenceTab } = storeToRefs(settingsStore)
 const { saveTheme, updateCaughtTabs } = settingsStore
 const drawerVisible = ref<boolean>(false)
 const tabsBarStyleList = ref<any>([
