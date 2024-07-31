@@ -1,38 +1,32 @@
 <template>
   <div class="input-container no-background-container">
-    <vab-card>
-      <template #header>基础用法</template>
+    <vab-card title="基础用法">
       <el-space wrap>
         <el-input v-model="input1" placeholder="请输入内容" />
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>禁用状态</template>
+    <vab-card title="禁用状态">
       <el-space wrap>
         <el-input v-model="input2" :disabled="true" placeholder="请输入内容" />
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>可清空</template>
+    <vab-card title="可清空">
       <el-space wrap>
         <el-input v-model="input3" clearable placeholder="请输入内容" />
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>密码框</template>
+    <vab-card title="密码框">
       <el-space wrap>
         <el-input v-model="input4" clearable placeholder="请输入内容" show-password />
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>带 icon 的输入框</template>
+    <vab-card title="带 icon 的输入框">
       <el-space wrap>
         <el-input v-model="input5" placeholder="请输入内容" :suffix-icon="Search" />
         <el-input v-model="input6" placeholder="请输入内容" :prefix-icon="Search" />
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>复合型输入框</template>
+    <vab-card title="复合型输入框">
       <el-space wrap>
         <el-input v-model="input7" clearable placeholder="请输入内容">
           <template #prepend>Http://</template>
@@ -54,8 +48,7 @@
         </el-input>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>textarea</template>
+    <vab-card title="textarea">
       <el-space wrap>
         <el-input v-model="textarea" placeholder="请输入内容" :rows="2" type="textarea" />
       </el-space>

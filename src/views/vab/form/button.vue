@@ -1,7 +1,6 @@
 <template>
   <div class="button-container no-background-container">
-    <vab-card>
-      <template #header>基础用法</template>
+    <vab-card title="基础用法">
       <el-space wrap>
         <el-button>默认按钮</el-button>
         <el-button type="primary">主要按钮</el-button>
@@ -29,8 +28,7 @@
         <el-button circle :icon="Delete" type="danger" />
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>禁用状态</template>
+    <vab-card title="禁用状态">
       <el-space wrap>
         <el-button disabled>默认按钮</el-button>
         <el-button disabled type="primary">主要按钮</el-button>
@@ -46,15 +44,13 @@
         <el-button disabled plain type="danger">危险按钮</el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>文字按钮</template>
+    <vab-card title="文字按钮">
       <el-space wrap>
         <el-button text type="primary">文字按钮</el-button>
         <el-button disabled text>文字按钮</el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>element内置图标按钮</template>
+    <vab-card title="element内置图标按钮">
       <el-space wrap>
         <el-button :icon="Edit" type="primary" />
         <el-button :icon="Share" type="primary" />
@@ -68,8 +64,7 @@
         </el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>自定义图标按钮</template>
+    <vab-card title="自定义图标按钮">
       <el-space wrap>
         <el-button type="primary">
           <vab-icon icon="24-hours-line" />
@@ -86,8 +81,7 @@
         </el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>按钮组</template>
+    <vab-card title="按钮组">
       <el-space wrap>
         <el-button-group>
           <el-button :icon="ArrowLeft" type="primary">上一页</el-button>
@@ -105,14 +99,12 @@
         </el-button-group>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>加载中</template>
+    <vab-card title="加载中">
       <el-space wrap>
         <el-button :loading="true" type="primary">加载中</el-button>
       </el-space>
     </vab-card>
-    <vab-card>
-      <template #header>不同尺寸</template>
+    <vab-card title="不同尺寸">
       <el-space wrap>
         <el-button>默认按钮</el-button>
         <el-button size="small">小型按钮</el-button>

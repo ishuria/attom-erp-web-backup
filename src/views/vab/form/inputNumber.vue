@@ -1,23 +1,18 @@
 <template>
   <div class="input-number-container no-background-container">
-    <vab-card>
-      <template #header>基础用法</template>
+    <vab-card title="基础用法">
       <el-input-number v-model="num" label="描述文字" :max="10" :min="1" />
     </vab-card>
-    <vab-card>
-      <template #header>禁用状态</template>
+    <vab-card title="禁用状态">
       <el-input-number v-model="num2" :disabled="true" />
     </vab-card>
-    <vab-card>
-      <template #header>步数</template>
+    <vab-card title="步长">
       <el-input-number v-model="num3" :step="2" />
     </vab-card>
-    <vab-card>
-      <template #header>精度</template>
+    <vab-card title="精度">
       <el-input-number v-model="num4" :max="10" :precision="2" :step="0.1" />
     </vab-card>
-    <vab-card>
-      <template #header>按钮位置</template>
+    <vab-card title="按钮位置">
       <el-input-number v-model="num5" controls-position="right" :max="10" :min="1" />
     </vab-card>
   </div>

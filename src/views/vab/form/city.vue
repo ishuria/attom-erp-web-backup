@@ -1,11 +1,9 @@
 <template>
   <div class="city-container no-background-container">
-    <vab-card>
-      <template #header>行政区划（分类）</template>
+    <vab-card title="行政区划（分类）">
       <vab-city v-model="cityCode" />
     </vab-card>
-    <vab-card>
-      <template #header>行政区划（默认）</template>
+    <vab-card title="行政区划（默认）">
       <el-cascader v-model="area" clearable filterable :options="areaOptions" :props="{ label: 'name', value: 'code' }" />
     </vab-card>
   </div>
