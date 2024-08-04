@@ -122,7 +122,7 @@ onBeforeMount(async () => {
 onMounted(() => {
   if (!['localhost', '127', '192', 'beautiful', 'vuejs-core'].some((host) => location.hostname.includes(host)))
     $baseMessage('检测到当前演示地址非官方演示地址，即将为您跳转，请稍后', 'warning', 'hey', () => {
-      location.href = 'https:https://vuejs-core.cn/shop-vite/#/changeLog'
+      location.href = 'https://vuejs-core.cn/shop-vite/#/changeLog'
     })
 })
 

@@ -67,34 +67,34 @@ watch(
 )
 
 const handleClick = (event: any) => {
-  $baseMessage(`鼠标【点击】事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【点击】事件，name：${event.name}`, 'success', 'hey')
 }
 const handleContextMenu = (event: any) => {
-  $baseMessage(`鼠标【右键】事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【右键】事件，name：${event.name}`, 'success', 'hey')
 }
 
 const handleDbClick = (event: any) => {
-  $baseMessage(`鼠标【双击事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【双击事件，name：${event.name}`, 'success', 'hey')
 }
 
 const handleMouseDown = (event: any) => {
-  $baseMessage(`鼠标【按下】事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【按下】事件，name：${event.name}`, 'success', 'hey')
 }
 
 const handleMouseMove = (event: any) => {
-  $baseMessage(`鼠标【移动】事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【移动】事件，name：${event.name}`, 'success', 'hey')
 }
 
 const handleMouseOut = (event: any) => {
-  $baseMessage(`鼠标【移出】事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【移出】事件，name：${event.name}`, 'success', 'hey')
 }
 
 const handleMouseOver = (event: any) => {
-  $baseMessage(`鼠标【移入】事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【移入】事件，name：${event.name}`, 'success', 'hey')
 }
 
 const handleMouseUp = (event: any) => {
-  $baseMessage(`鼠标【松开】事件，name：${event.name}`, 'success')
+  $baseMessage(`鼠标【松开】事件，name：${event.name}`, 'success', 'hey')
 }
 
 onMounted(() => {
