@@ -41,7 +41,7 @@ onMounted(() => {
     if (
       !location.hostname.includes('127') &&
       !location.hostname.includes('localhost') &&
-      (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core') || disableDebugger) &&
+      (location.hostname.includes('vuejs-core') || disableDebugger) &&
       route.query &&
       route.query.debugger !== 'auto'
     )

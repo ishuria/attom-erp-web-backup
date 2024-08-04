@@ -105,6 +105,13 @@ const handleShow = () => {
   }
 
   :deep() {
+    @keyframes identifier {
+      100% {
+        opacity: 1;
+        transform: translate(0);
+      }
+    }
+
     .login-form {
       position: relative;
       z-index: 1;
@@ -119,10 +126,16 @@ const handleShow = () => {
       background-size: 100% 100%;
       border: 1px solid var(--el-border-color);
       border-radius: 15px;
+      opacity: 0;
       transition: var(--el-transition);
+      transform: translateY(30px);
+      animation: identifier 0.3s ease-in-out 0.15s forwards;
 
       .left-img {
         width: 50%;
+        opacity: 0;
+        transform: translateX(-60px);
+        animation: identifier 0.35s ease-in-out 0.15s forwards;
       }
 
       * {
@@ -131,62 +144,62 @@ const handleShow = () => {
 
       .el-form--default {
         width: 45%;
-      }
 
-      .title {
-        font-size: 54px;
-        font-weight: 500;
-        color: var(--el-color-grey);
-      }
-
-      .title-tips {
-        margin-top: 29px;
-        font-size: 26px;
-        font-weight: 400;
-        color: var(--el-color-grey);
-      }
-
-      .login-btn {
-        width: 100%;
-        height: 50px;
-      }
-
-      .el-form-item {
-        margin: 20px 0;
-
-        &__error {
-          position: absolute;
-          font-size: var(--el-font-size-extra-small);
-          line-height: 18px;
-          color: var(--el-color-error);
+        .title {
+          font-size: 54px;
+          font-weight: 500;
+          color: var(--el-color-grey);
         }
 
-        .el-input {
+        .title-tips {
+          margin-top: 29px;
+          font-size: 26px;
+          font-weight: 400;
+          color: var(--el-color-grey);
+        }
+
+        .login-btn {
           width: 100%;
-          height: 48px;
-          line-height: 48px;
+          height: 50px;
         }
-      }
 
-      .code {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        cursor: pointer;
-        border-radius: var(--el-border-radius-base);
-      }
+        .el-form-item {
+          margin: 20px 0;
 
-      .phone-code {
-        position: absolute;
-        top: 8px;
-        right: 10px;
-        width: 120px;
-        height: 32px;
-        font-size: var(--el-font-size-base);
-        color: var(--el-color-white);
-        cursor: pointer;
-        user-select: none;
-        border-radius: 3px;
+          &__error {
+            position: absolute;
+            font-size: var(--el-font-size-extra-small);
+            line-height: 18px;
+            color: var(--el-color-error);
+          }
+
+          .el-input {
+            width: 100%;
+            height: 48px;
+            line-height: 48px;
+          }
+        }
+
+        .code {
+          position: absolute;
+          top: 4px;
+          right: 4px;
+          cursor: pointer;
+          border-radius: var(--el-border-radius-base);
+        }
+
+        .phone-code {
+          position: absolute;
+          top: 8px;
+          right: 10px;
+          width: 120px;
+          height: 32px;
+          font-size: var(--el-font-size-base);
+          color: var(--el-color-white);
+          cursor: pointer;
+          user-select: none;
+          border-radius: 3px;
+        }
       }
     }
 

@@ -14,7 +14,7 @@ onBeforeMount(() => {
     ;(function () {
       const hm = document.createElement('script')
       let k = '820b686671af452e8a4e18952ce946d8'
-      if (location.hostname.includes('beautiful') || location.hostname.includes('vuejs-core')) k = '9578a46b371ba85ee55bc868d6b30692'
+      if (location.hostname.includes('vuejs-core')) k = '9578a46b371ba85ee55bc868d6b30692'
       hm.src = `//hm.baidu.com/hm.js?${k}`
       const s: any = document.querySelectorAll('script')[0]
       s.parentNode.insertBefore(hm, s)
