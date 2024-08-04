@@ -13,7 +13,7 @@ export const isExternal = (value: string) => {
  * @returns {boolean}
  */
 export const isPassword = (value: string) => {
-  return value.length >= 6
+  return value.length >= 5
 }
 
 /**

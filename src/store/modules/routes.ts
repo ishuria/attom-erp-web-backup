@@ -1,7 +1,8 @@
 /**
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
-import { getList } from '/@/api/router'
+// import { getList } from '/@/api/router'
+import { getList } from '/@/api/devlocal/router'
 import { authentication, rolesControl } from '/@/config'
 import { asyncRoutes, constantRoutes, resetRouter } from '/@/router'
 import { convertRouter, filterRoutes } from '/@/utils/routes'
@@ -63,19 +64,32 @@ export const useRoutesStore = defineStore('routes', {
       // 设置游客路由关闭路由拦截(不需要可以删除)
       const control = mode === 'visit' ? false : rolesControl
       // 设置后端路由(不需要可以删除)
+      // if (authentication === 'all') {
+      //   const {
+      //     data: { list },
+      //   } = await getList()
+      //   if (!isArray(list)) gp.$baseMessage('路由格式返回有误！', 'error', 'hey')
+      //   if (list.at(-1).path !== '/:pathMatch(.*)*')
+      //     list.push({
+      //       path: '/:pathMatch(.*)*',
+      //       redirect: '/404',
+      //       name: 'NotFound',
+      //       meta: { hidden: true },
+      //     })
+      //   routes = convertRouter(list)
+      // }
+      // 替换成自己的路由返回格式，保留框架提供的
       if (authentication === 'all') {
-        const {
-          data: { list },
-        } = await getList()
-        if (!isArray(list)) gp.$baseMessage('路由格式返回有误！', 'error', 'hey')
-        if (list.at(-1).path !== '/:pathMatch(.*)*')
-          list.push({
+        const { data } = await getList()
+        if (!isArray(data)) gp.$baseMessage('路由格式返回有误！', 'error', 'hey')
+        if (data.at(-1).path !== '/:pathMatch(.*)*')
+          data.push({
             path: '/:pathMatch(.*)*',
             redirect: '/404',
             name: 'NotFound',
             meta: { hidden: true },
           })
-        routes = convertRouter(list)
+        routes = convertRouter(data)
       }
       // 根据权限和rolesControl过滤路由
       const accessRoutes = filterRoutes([...constantRoutes, ...routes], control)

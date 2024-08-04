@@ -74,7 +74,7 @@ const handleClearNotice = () => {
 }
 
 onBeforeMount(() => {
-  if (theme.value.showNotice) fetchData()
+  // if (theme.value.showNotice) fetchData()
 })
 </script>
 

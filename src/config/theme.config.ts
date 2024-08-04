@@ -39,7 +39,7 @@ export const themeConfig: ThemeType = {
   //是否开启全屏组件
   showFullScreen: true,
   //是否开启右侧悬浮窗
-  showThemeSetting: true,
+  showThemeSetting: false,
   //是否开启暗黑组件
   showDark: true,
   //否默认收起左侧菜单

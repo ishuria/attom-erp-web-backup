@@ -1,5 +1,3 @@
-import type { MockMethod } from 'vite-plugin-mock'
-
 const List = [
   '24-hours-fill',
   '24-hours-line',
@@ -2895,23 +2893,23 @@ const List = [
   'user-minus-line',
 ]
 
-List.sort((a, b) => {
-  return a.localeCompare(b)
-})
+// List.sort((a, b) => {
+//   return a.localeCompare(b)
+// })
 
-export default [
-  {
-    url: '/icon/getList',
-    method: 'get',
-    response({ query }: any) {
-      const { title, pageNo = 1, pageSize = 72 } = query
-      const mockList = List.filter((item) => !(title && !item.includes(title)))
-      const list = mockList.filter((item, index) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
-      return {
-        code: 200,
-        msg: 'success',
-        data: { list, total: mockList.length },
-      }
-    },
-  },
-] as MockMethod[]
+// export default [
+//   {
+//     url: '/icon/getList',
+//     method: 'get',
+//     response({ query }: any) {
+//       const { title, pageNo = 1, pageSize = 72 } = query
+//       const mockList = List.filter((item) => !(title && !item.includes(title)))
+//       const list = mockList.filter((item, index) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
+//       return {
+//         code: 200,
+//         msg: 'success',
+//         data: { list, total: mockList.length },
+//       }
+//     },
+//   },
+// ] as MockMethod[]
