@@ -87,18 +87,18 @@ const handleCommand = async (command: any) => {
       break
     }
     case 'portal': {
-      await window.open('/portal')
+      await window.open('#/portal')
       break
     }
     case 'dataScreen': {
-      await window.open('/dataScreen')
+      await window.open('#/dataScreen')
       break
     }
     case 'book': {
       $baseAlert(
         '已购买用户请前往群公告中获取，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>',
         () => {
-          window.open('https://vuejs-core.cn/shop-vite.html')
+          window.open('https://vuejs-core.cn/authorization/shop-vite.html')
         }
       )
       break
