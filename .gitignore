@@ -44,3 +44,6 @@ public/video
 *.zip
 *.7z
 *.rar
+# 去除前端官方的文件夹
+/.github
+/.vscode
