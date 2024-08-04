@@ -10,7 +10,7 @@
           >
             <vab-link target="_blank" to="/portal">
               <div class="tile-title">
-                <vab-icon icon="user-heart-line" />
+                <vab-icon icon="building-line" />
                 <span>门户</span>
               </div>
               <vab-icon class="tile-svg" icon="lllustration/Scenes02" is-custom-svg />

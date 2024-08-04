@@ -168,7 +168,10 @@ html {
 
     /* vab-dropdown下拉动画 */
     .vab-dropdown {
+      transition: var(--el-transition);
+
       &-active {
+        transition: var(--el-transition);
         transform: rotateZ(180deg);
       }
     }
@@ -881,7 +884,7 @@ html {
     }
 
     .el-avatar {
-      background-color: var(--el-color-primary-light-9) !important;
+      background-color: var(--el-background-color) !important;
     }
 
     .no-background-container {

@@ -280,7 +280,7 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
         background-image: linear-gradient(to bottom, #718391, #9ba5b2) !important;
 
         h3 {
-          margin-top: 0px;
+          margin-top: 0;
         }
 
         :deep() {

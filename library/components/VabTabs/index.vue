@@ -328,11 +328,20 @@ watchEffect(() => {
 
 <style lang="scss">
 .vab-tabs-more-dropdown {
-  width: 115px;
+  width: 135px;
+  padding: calc(var(--el-padding) / 2) !important;
+
+  .el-dropdown-menu {
+    padding: 0;
+
+    &__item {
+      border-radius: var(--el-border-radius-base);
+    }
+  }
 
   &[data-popper-placement='bottom-end'] {
     .el-popper__arrow {
-      left: 95px !important;
+      left: 120px !important;
     }
   }
 }
@@ -537,6 +546,8 @@ watchEffect(() => {
     top: 0;
     left: 0;
     z-index: 10;
+    padding: calc(var(--el-padding) / 2);
+
     box-shadow: var(--el-box-shadow);
 
     i {
@@ -546,6 +557,7 @@ watchEffect(() => {
     .el-dropdown-menu__item:hover {
       color: var(--el-color-primary);
       background-color: var(--el-color-primary-light-9);
+      border-radius: var(--el-border-radius-base);
     }
   }
 

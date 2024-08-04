@@ -1256,7 +1256,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         component: () => import('/@/views/setting/personalCenter/index.vue'),
         meta: {
           title: '个人中心',
-          icon: 'map-pin-user-line',
+          icon: 'user-follow-line',
         },
       },
       {
@@ -1593,7 +1593,7 @@ export const asyncRoutes: VabRouteRecord[] = [
     component: () => import('/@/views/portal/Portal.vue'),
     meta: {
       title: '门户',
-      icon: 'user-heart-line',
+      icon: 'building-line',
       target: '_blank',
     },
   },

@@ -1198,7 +1198,7 @@ const list: VabRouteRecord[] = [
         component: '/@/views/setting/personalCenter/index.vue',
         meta: {
           title: '个人中心',
-          icon: 'map-pin-user-line',
+          icon: 'user-follow-line',
         },
       },
       {
@@ -1535,7 +1535,7 @@ const list: VabRouteRecord[] = [
     component: '/@/views/portal/Portal.vue',
     meta: {
       title: '门户',
-      icon: 'user-heart-line',
+      icon: 'building-line',
       target: '_blank',
     },
   },
