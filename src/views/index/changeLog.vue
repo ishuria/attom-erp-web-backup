@@ -68,7 +68,7 @@ defineOptions({
 
 // const routesStore = useRoutesStore()
 // const { changeMenuMeta } = routesStore
-const lastTime = dayjs().format('YYYY-MM-DD')
+const lastTime = dayjs().format('YYYY-M-D')
 const commonUrl = `https://vuejs-core.cn`
 const activities = ref<any[]>([])
 
