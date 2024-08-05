@@ -3,7 +3,7 @@
     <vab-card class="auto-height-card">
       <vab-query-form>
         <vab-query-form-top-panel :span="12">
-          <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
+          <el-button :icon="Plus" type="primary" @click="handleAdd" v-permissions="{ permission: ['system:menu:add']}">添加</el-button>
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-table
@@ -44,10 +44,10 @@
 
         <el-table-column align="center" label="创建时间" min-width="120" prop="createTime" show-overflow-tooltip />
 
-        <el-table-column align="center" label="操作" width="150">
+        <el-table-column align="center" label="操作" width="150" v-permissions="{ permission: ['system:menu:update', 'system:menu:delete'] }">
           <template #default="{ row }">
-            <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
-            <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button text type="primary" @click="handleEdit(row)" v-permissions="{ permission: ['system:menu:update',]}">编辑</el-button>
+            <el-button text type="danger" @click="handleDelete(row)"v-permissions="{ permission: ['system:menu:delete',]}">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -62,7 +62,7 @@
 <script lang="ts" setup>
 import { Plus } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { getMenuList } from '/@/api/devlocal/router'
+import { getMenuList,  doDelete, } from '/@/api/devlocal/router'
 
 defineOptions({
   name: 'MenuEdit',
@@ -87,12 +87,23 @@ const handleEdit = (row: any = {}) => {
 }
 
 const handleDelete = (row: any = {}) => {
-  if (row.path) {
-    $baseConfirm('您确定要删除当前项吗', null, async () => {
-      const { msg }: any = await doDelete({ paths: row.path })
-      $baseMessage(msg, 'success', 'hey')
-      await fetchData()
-    })
+  
+  if (row.id) {
+
+    if (row.children.length > 0){
+      $baseConfirm('您确定要删除当前菜单以及子菜单或按钮吗', null, async () => {
+        const { msg }: any = await doDelete({ id:row.id })
+        $baseMessage(msg, 'success', 'hey')
+        await fetchData()
+        return
+      })
+    }else{
+        $baseConfirm('您确定要删除当前菜单或按钮吗', null, async () => {
+          const { msg }: any = await doDelete({id:row.id })
+          $baseMessage(msg, 'success', 'hey')
+          await fetchData()
+        })
+    }
   }
 }
 

@@ -51,14 +51,14 @@ defineOptions({
 const emit = defineEmits(['fetch-data'])
 const formRef = ref<FormInstance>()
 const treeRef = ref<any>(null)
-const disableRoleCode = ref<any>(false)
+const disableRoleCode = ref<boolean>(false)
 const form = reactive<any>({
   menuCheckedList: [],
   menuIds: '',
   permissionIds: '',
-  roleCode: 'ROLE_TEST',
-  roleName: '测试Role',
-  roleNameEn: 'Test Role',
+  roleCode: '',
+  roleName: '',
+  roleNameEn: '',
   status: '0',
 })
 
@@ -76,6 +76,7 @@ const showEdit = (row: any) => {
   dialogFormVisible.value = true
 
   nextTick(async () => {
+    
     if (row) {
       const { data } = await getMenuAndBtnListByRoleCode({ roleCode: row.roleCode })
 
@@ -85,6 +86,7 @@ const showEdit = (row: any) => {
         if (!treeRef.value?.getNode(item).childNodes || !treeRef.value?.getNode(item).childNodes.length) {
           arr.push(item)
         }
+        
       })
       form.menuCheckedList = arr
       treeRef.value?.setCheckedKeys(arr)
@@ -92,11 +94,12 @@ const showEdit = (row: any) => {
       title.value = '编辑'
       disableRoleCode.value = true
       Object.assign(form, row)
+
     } else {
+      disableRoleCode.value = false
       form.menuCheckedList.length = 0
       form.menuCheckedList = []
       title.value = '添加'
-      disableRoleCode.value = false
     }
   })
 }

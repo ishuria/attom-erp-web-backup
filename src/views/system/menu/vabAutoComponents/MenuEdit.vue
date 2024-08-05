@@ -1,49 +1,115 @@
 <template>
-  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="850px" @close="close">
+  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="850px" :draggable="false" @close="close">
     <el-form ref="formRef" label-width="120px" :model="form" :rules="rules" label-position="right">
-      <el-form-item label="上级菜单" prop="parentId">
-        <!-- <el-input v-model="form.parentId" clearable /> -->
+      <el-form-item label="上级菜单" prop="pid">
         <el-tree-select
-          v-model="selectMenuValue"
+          v-model="form.pid"
           :data="menuList"
           :filter-node-method="filterNodeMethod"
           filterable
           clearable
+          :check-strictly="true"
           value-key="id"
+          @change="changePid"
+          @clear="cleanSelectData"
         />
       </el-form-item>
       <el-row :gutter="24" type="flex">
-        <el-col :span="12">
-          <el-form-item label="name" prop="name">
+
+        <el-col :span="24">
+          <el-form-item label="菜单类型" prop="type" >
+            <el-radio-group v-model="form.type">
+              <el-radio value="0">菜单</el-radio>
+              <el-radio value="1">按钮</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="11" class="menu-row">
+          <el-form-item label="菜单排序" prop="sort">
+            <el-input-number
+              v-model="form.sort"
+              :min="0"
+              :max="100"
+              @change="handleChange"
+            />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="13" class="menu-row">
+          <el-form-item label="菜单状态" prop="status">
+            <el-radio-group v-model="form.status">
+              <el-radio value="0">正常</el-radio>
+              <el-radio value="1">停用</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="11" v-if="form.type == 0">
+          <el-form-item label="name" prop="name" class="menu-row">
             <el-input v-model="form.name" clearable />
           </el-form-item>
         </el-col>
 
-        <el-col :span="12">
-          <el-form-item label="路径" prop="path">
+        <el-col :span="13" v-if="form.type == 0">
+          <el-form-item label="路径" prop="path" class="menu-row">
             <el-input v-model="form.path" clearable />
           </el-form-item>
         </el-col>
 
-        <el-col :span="12" class="menu-row">
-          <el-form-item label="标题" prop="meta.title">
+        <el-col :span="11" class="menu-row">
+          <el-form-item label="标题" prop="meta.title" v-if="form.type == 0">
             <el-input v-model="form.meta.title" clearable />
+          </el-form-item>
+          <el-form-item label="按钮名称" prop="meta.title" v-if="form.type == 1">
+            <el-input v-model="form.meta.title" clearable />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="13" class="menu-row">
+          <el-form-item label="后台权限id" prop="permissionId">
+            <el-input v-model="form.permissionId" clearable />
           </el-form-item>
         </el-col>
       </el-row>
 
-      <el-form-item label="vue文件路径" prop="component" class="menu-row">
+      <el-form-item label="图标" class="menu-row" v-if="form.type == 0">
+        <el-popover popper-class="icon-selector-popper" trigger="click" :width="500">
+          <template #reference>
+            <el-input v-model="form.meta.icon" clearable placeholder="点击选择图标"/>
+          </template>
+           <el-row :gutter="20" >
+            <el-col :span="24">
+              <el-form inline @submit.prevent>
+                <el-form-item>
+                  <el-input clearable  v-model="iconTitle"/>
+                </el-form-item>
+                <el-form-item>
+                <el-button :icon="Search" native-type="submit" type="primary" @click="queryData" />
+              </el-form-item>
+              </el-form>
+            </el-col>
+           </el-row>
+           <div style="display: flex;flex-wrap: wrap;justify-content: space-around;max-height: 300px;overflow-y: auto;">
+            <div v-for="(item, index) in queryIcon" :key="index" :span="6">
+              <vab-card @click="handleIcon(item)">
+                <vab-icon :icon="item" />
+              </vab-card>
+            </div>
+           </div>
+        </el-popover>
+      </el-form-item>
+
+      <el-form-item label="vue文件路径" prop="component" v-if="form.pid == 1 && form.type != 1">
+        <el-input v-model="form.component" :disabled="true" />
+      </el-form-item>
+
+      <el-form-item label="vue文件路径" prop="component" v-if="form.pid != 1 && form.type != 1">
         <el-input v-model="form.component" clearable />
       </el-form-item>
 
-      <!-- <el-form-item label="图标">
-        <el-popover popper-class="icon-selector-popper" trigger="hover" :width="305">
-          <template #reference>
-            <el-input v-model="form.meta.icon" clearable />
-          </template>
-          <vab-icon-selector @handle-icon="handleIcon" />
-        </el-popover>
-      </el-form-item> -->
+
+
     </el-form>
     <template #footer>
       <el-button type="primary" @click="save">保存</el-button>
@@ -53,21 +119,31 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
-import { getMenuList, getMenuNameList } from '/@/api/devlocal/router'
+import { Search } from '@element-plus/icons-vue'
+import { 
+  getMenuNameList,
+  doAdd,
+  doUpdate
+   } from '/@/api/devlocal/router'
+import {icons} from '/@/icon'
 
 defineOptions({
   name: 'MenuEdit',
 })
-
+const queryIcon = ref<any>([])
+const iconTitle = ref();
 const emit = defineEmits(['fetch-data'])
 
 const formRef = ref<FormInstance>()
 const form = reactive<any>({
-  parentId: '',
+  pid: '',
   name: '',
   path: '',
   component: '',
-  redirect: '',
+  permissionId:'',
+  type: "0",
+  sort: 0,
+  status: "0",
   meta: {
     title: '',
     icon: '',
@@ -83,7 +159,7 @@ const form = reactive<any>({
   },
 })
 const rules = reactive<any>({
-  parentId: [{ required: true, trigger: 'blur', message: '请输入父级id' }],
+  pid: [{ required: true, trigger: 'blur', message: '请选择上级菜单id' }],
   name: [{ required: true, trigger: 'blur', message: '请输入name' }],
   path: [{ required: true, trigger: 'blur', message: '请输入path' }],
   component: [{ required: true, trigger: 'blur', message: '请输入component' }],
@@ -92,8 +168,6 @@ const rules = reactive<any>({
 const title = ref<string>('')
 
 const dialogFormVisible = ref<boolean>(false)
-
-const selectMenuValue = ref()
 
 const menuList = ref()
 
@@ -109,6 +183,10 @@ const showEdit = (row: any) => {
       Object.assign(form, row)
     } else {
       title.value = '添加'
+      form.component = ""
+      form.permissionId = ""
+      form.name = ""
+      form.path = ""
       form.meta = {
         title: '',
         icon: '',
@@ -139,9 +217,14 @@ const close = () => {
 const save = () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      // const { msg }: any = await doEdit(form)
-      // await $baseMessage(msg, 'success', 'hey')
-      // await close()
+      if (form.id){
+        const { msg }: any = await doUpdate({...form,menuName:form.meta.title})
+        await $baseMessage(msg, 'success', 'hey')
+      }else{
+        const { msg }: any = await doAdd({...form,menuName:form.meta.title})
+        await $baseMessage(msg, 'success', 'hey')
+      }
+      await close()
       dialogFormVisible.value = false
     }
   })
@@ -150,26 +233,78 @@ const save = () => {
 const menuInit = async () => {
   const { data } = await getMenuNameList()
   menuList.value = data
+  // 图标初始化
+  queryIcon.value = icons
+}
+
+// 上级菜单搜索过滤
+const filterNodeMethod = (value:string, data:any) => data.label.includes(value)
+
+// 菜单排序
+const handleChange = (value: number) => {
+  form.sort = value
+}
+
+// icon图标过滤方法
+const queryData = () => {
+  if (iconTitle.value == undefined || iconTitle.value == ""){
+    queryIcon.value = icons;
+  }else {
+    queryIcon.value = queryIcon.value.filter((val:string)=> val.includes(iconTitle.value))
+  }
+}
+
+// 主目录变化
+const changePid = (value:any) =>{
+  if (value == 1){
+    form.component = "Layout"
+  }
+  form.pid = value
+}
+
+const cleanSelectData = (value:any) =>{
+  form.pid = ""
+  form.component = ""
 }
 
 onBeforeMount(() => {
   menuInit()
 })
 
-const filterNodeMethod = (value, data) => data.label.includes(value)
 </script>
 
 <style lang="scss" scoped>
 :deep() {
   .menu-row {
     padding-top: 25px;
-  }
-  // .el-form-item__content {
-  //   min-width: 200px;
+  } 
+}
 
-  //   .el-input {
-  //     width: 200px;
-  //   }
-  // }
+.icon-selector-popper{
+  .vab-query-form {
+    margin-top: calc(var(--el-margin) / 2);
+
+    .el-input {
+      width: 220px;
+    }
+  }
+
+  .el-card__body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    cursor: pointer;
+
+    [class*='ri-'] {
+      font-size: 28px;
+      color: var(--el-color-grey);
+      text-align: center;
+      pointer-events: none;
+      cursor: pointer;
+    }
+  }
 }
 </style>
