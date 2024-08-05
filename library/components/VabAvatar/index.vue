@@ -13,7 +13,7 @@
       <div class="avatar-dropdown" @click="handleCommand('personalCenter')">
         <el-avatar class="user-avatar" :src="avatar" />
         <div class="username">
-          <div>admin</div>
+          <div>{{ username }}</div>
           <div class="personal-center">
             <el-text size="small" type="info">个人中心</el-text>
           </div>
