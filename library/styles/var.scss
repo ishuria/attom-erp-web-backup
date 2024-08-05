@@ -100,6 +100,15 @@
   --el-font-size-medium: calc(var(--el-font-size-base) + 2px);
   --el-font-size-large: calc(var(--el-font-size-base) + 4px);
   --el-font-size-extra-large: calc(var(--el-font-size-base) + 6px);
+
+  --ti-common-font-size-base: calc(var(--el-font-size-base) - 2px) !important;
+  --ti-common-font-size-1: var(--el-font-size-base) !important;
+  --ti-common-font-size-2: calc(var(--el-font-size-base) + 2px) !important;
+  --ti-common-font-size-3: calc(var(--el-font-size-base) + 4px) !important;
+  --ti-common-font-size-4: calc(var(--el-font-size-base) + 6px) !important;
+  --ti-common-font-size-5: calc(var(--el-font-size-base) + 10px) !important;
+  --ti-common-font-size-6: calc(var(--el-font-size-base) + 18px) !important;
+  --ti-common-font-size-7: calc(var(--el-font-size-base) + 22px) !important;
   //默认动画
   // --el-transition-duration: 0.3s;
   // --el-transition-function-ease-in-out-bezier: cubic-bezier(0.645, 0.045, 0.355, 1);

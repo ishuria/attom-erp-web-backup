@@ -312,7 +312,7 @@ html {
       //opacity: 1;
 
       // > div {
-      //   backdrop-filter: none;backdrop-filterbackdrop-filterbackdrop-filterbackdrop-filter
+      //   backdrop-filter: none;
       // }
     }
 
@@ -366,6 +366,14 @@ html {
 
     /* el-alert */
     .el-alert {
+      --el-alert-title-font-size: var(--el-font-size-base);
+      --el-alert-title-with-description-font-size: var(--el-font-size-medium);
+      --el-alert-description-font-size: var(--el-font-size-base);
+      --el-alert-close-font-size: var(--el-font-size-medium);
+      --el-alert-close-customed-font-size: var(--el-font-size-base);
+      --el-alert-icon-size: var(--el-font-size-medium);
+      --el-alert-icon-large-size: calc(var(--el-font-size-base) * 2);
+
       margin: 0 0 var(--el-margin) 0;
 
       &.is-light {
@@ -917,8 +925,25 @@ html {
       border-radius: 0 !important;
     }
 
-    .el-upload.el-upload--text + .el-button {
-      margin-left: 10px;
+    /* el-switch */
+    .el-switch {
+      font-size: var(--el-font-size-base);
+
+      &__label * {
+        font-size: var(--el-font-size-base);
+      }
+    }
+
+    /* el-upload */
+    .el-upload {
+      &.el-upload--text + .el-button {
+        margin-left: 10px;
+      }
+
+      &__tip {
+        margin-top: 10px;
+        font-size: var(--el-font-size-small);
+      }
     }
 
     /* 默认布局自动高度 */
