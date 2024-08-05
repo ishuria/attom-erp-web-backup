@@ -151,6 +151,9 @@ watch(token, (value) => {
 })
 
 onActivated(() => {
-  if (username.value !== 'admin') showAlert.value = true
+  if (username.value !== 'admin') {
+    showAlert.value = true
+    $baseAlert('当前登录的账号非admin，如需查看演示地址全部功能，请使用admin账号登录。')
+  }
 })
 </script>

@@ -29,6 +29,7 @@ const list: VabRouteRecord[] = [
         meta: {
           title: '看板',
           icon: 'dashboard-2-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -38,6 +39,7 @@ const list: VabRouteRecord[] = [
         meta: {
           title: '创作中心',
           icon: 'ancient-gate-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -48,6 +50,7 @@ const list: VabRouteRecord[] = [
           title: '实时监控',
           icon: 'vidicon-2-line',
           dot: true,
+          guard: ['Admin'],
         },
       },
       {
@@ -57,6 +60,7 @@ const list: VabRouteRecord[] = [
         meta: {
           title: '磁贴',
           icon: 'collage-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -66,6 +70,7 @@ const list: VabRouteRecord[] = [
         meta: {
           title: '独立布局',
           icon: 'layout-masonry-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -77,6 +82,7 @@ const list: VabRouteRecord[] = [
           icon: 'database-2-line',
           target: '_blank',
           badge: 'Hot',
+          guard: ['Admin'],
         },
       },
       // {
@@ -98,6 +104,7 @@ const list: VabRouteRecord[] = [
           icon: 'apps-2-line',
           noKeepAlive: true,
           dot: true,
+          guard: ['Admin'],
         },
       },
       {
@@ -109,6 +116,7 @@ const list: VabRouteRecord[] = [
           icon: 'file-word-line',
           noKeepAlive: true,
           badge: '99+',
+          guard: ['Admin'],
         },
       },
     ],
@@ -120,6 +128,7 @@ const list: VabRouteRecord[] = [
     meta: {
       title: '组件',
       icon: 'code-box-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -964,7 +973,7 @@ const list: VabRouteRecord[] = [
           {
             path: 'params/:id',
             name: 'Params',
-            component: '../views/operate/dynamicSegment/params.vue',
+            component: '/@/views/operate/dynamicSegment/params.vue',
             meta: {
               hidden: true,
               title: 'Params',
@@ -974,19 +983,19 @@ const list: VabRouteRecord[] = [
           {
             path: 'params/1',
             name: 'Params/1',
-            component: '../views/operate/dynamicSegment/params.vue',
+            component: '/@/views/operate/dynamicSegment/params.vue',
             meta: { title: 'Params id=1' },
           },
           {
             path: 'params/2',
             name: 'Params/2',
-            component: '../views/operate/dynamicSegment/params.vue',
+            component: '/@/views/operate/dynamicSegment/params.vue',
             meta: { title: 'Params id=2' },
           },
           {
             path: 'query',
             name: 'Query',
-            component: '../views/operate/dynamicSegment/query.vue',
+            component: '/@/views/operate/dynamicSegment/query.vue',
             meta: {
               hidden: true,
               title: 'Query',
@@ -996,13 +1005,13 @@ const list: VabRouteRecord[] = [
           {
             path: 'query?id=1',
             name: 'Query?id=1',
-            component: '../views/operate/dynamicSegment/query.vue',
+            component: '/@/views/operate/dynamicSegment/query.vue',
             meta: { title: 'Query id=1' },
           },
           {
             path: 'query?id=2',
             name: 'Query?id=2',
-            component: '../views/operate/dynamicSegment/query.vue',
+            component: '/@/views/operate/dynamicSegment/query.vue',
             meta: { title: 'Query id=2' },
           },
         ],
@@ -1053,6 +1062,7 @@ const list: VabRouteRecord[] = [
     meta: {
       title: '模板',
       icon: 'clipboard-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -1328,6 +1338,7 @@ const list: VabRouteRecord[] = [
     meta: {
       title: '商品',
       icon: 'shopping-bag-3-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -1443,6 +1454,7 @@ const list: VabRouteRecord[] = [
     meta: {
       title: 'GPT',
       icon: 'chat-1-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -1537,6 +1549,7 @@ const list: VabRouteRecord[] = [
       title: '门户',
       icon: 'building-line',
       target: '_blank',
+      guard: ['Admin'],
     },
   },
   {
