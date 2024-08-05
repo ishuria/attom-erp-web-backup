@@ -82,6 +82,8 @@ watch(
 
 <style lang="scss" scoped>
 .vab-search {
+  margin-left: var(--el-margin);
+
   :deep() {
     .el-input {
       width: 150px !important;

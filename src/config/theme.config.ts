@@ -26,6 +26,8 @@ export const themeConfig: ThemeType = {
   tabsBarStyle: 'card',
   //是否显示标签页图标
   showTabsIcon: true,
+  //是否开启标签拖拽
+  tabDrag: true,
   //是否开启语言选择组件
   showLanguage: true,
   //是否开启刷新组件

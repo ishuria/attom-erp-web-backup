@@ -5,7 +5,7 @@
       经营建议
     </template>
 
-    <vab-draggable v-model="iconList" :animation="600" ghost-class="ghost" target=".el-row">
+    <vab-draggable v-model="iconList" :animation="600" target=".el-row">
       <el-row :gutter="20">
         <el-col v-for="(item, index) in iconList" :key="index" :lg="6" :md="8" :sm="8" :xl="6" :xs="24">
           <vab-link :to="item.link">

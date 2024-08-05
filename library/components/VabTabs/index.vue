@@ -1,29 +1,31 @@
 <template>
   <div class="vab-tabs">
-    <el-tabs
-      v-model="tabActive"
-      class="vab-tabs-content"
-      :class="{ ['vab-tabs-content-' + theme.tabsBarStyle]: true }"
-      @tab-click="handleTabClick"
-      @tab-remove="handleTabRemove"
-    >
-      <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoClosable(item)" lazy :name="item.path">
-        <template #label>
-          <span class="vab-tabs-title" @contextmenu.prevent="openMenu(item)">
-            <template v-if="theme.showTabsIcon">
-              <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
-              <vab-icon v-else :icon="item.parentIcon" />
-            </template>
-            <span v-if="!isNoClosable(item)" @dblclick="handleTabRemove(item.path)">
-              {{ translate(item.meta.title) }}
+    <div class="vab-tabs-draggable">
+      <el-tabs
+        v-model="tabActive"
+        class="vab-tabs-content"
+        :class="{ ['vab-tabs-content-' + theme.tabsBarStyle]: true }"
+        @tab-click="handleTabClick"
+        @tab-remove="handleTabRemove"
+      >
+        <el-tab-pane v-for="item in visitedRoutes" :key="item" :closable="!isNoClosable(item)" :name="item.path">
+          <template #label>
+            <span class="vab-tabs-title" @contextmenu.prevent="openMenu(item)">
+              <template v-if="theme.showTabsIcon">
+                <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
+                <vab-icon v-else :icon="item.parentIcon" />
+              </template>
+              <span v-if="!isNoClosable(item)" @dblclick="handleTabRemove(item.path)">
+                {{ translate(item.meta.title) }}
+              </span>
+              <span v-else>
+                {{ translate(item.meta.title) }}
+              </span>
             </span>
-            <span v-else>
-              {{ translate(item.meta.title) }}
-            </span>
-          </span>
-        </template>
-      </el-tab-pane>
-    </el-tabs>
+          </template>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
 
     <el-dropdown
       placement="bottom-end"
@@ -118,6 +120,8 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath, handleTabs } from '/@/utils/routes'
+import Sortable from 'sortablejs'
+import { moveElement } from '/@/utils/index'
 
 defineOptions({
   name: 'VabTabs',
@@ -138,6 +142,7 @@ const routesStore = useRoutesStore()
 const { getRoutes: routes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabsStore)
+const _visitedRoutes = ref<any>([...visitedRoutes.value])
 const {
   addVisitedRoute,
   delVisitedRoute,
@@ -146,6 +151,7 @@ const {
   delRightVisitedRoutes,
   delAllVisitedRoutes,
   handleCaughtRoutes,
+  updateVisitedRoutes,
 } = tabsStore
 const tabActive = ref<string>('')
 const active = ref<boolean>(false)
@@ -153,7 +159,6 @@ const hoverRoute = ref<any>()
 const visible = ref<boolean>(false)
 const top = ref<any>(0)
 const left = ref<any>(0)
-
 const tabsSettingRef = ref<any>(null)
 
 const isActive = (path: any) => path === handleActivePath(route, true)
@@ -305,6 +310,27 @@ const closeMenu = () => {
   hoverRoute.value = null
 }
 
+let sortable
+const handleTabDrag = () => {
+  if (theme.value.tabDrag)
+    sortable = new Sortable(document.querySelectorAll('.el-tabs__nav.is-top')[0], {
+      animation: 600,
+      easing: 'cubic-bezier(1, 0, 0, 1)',
+      draggable: '.el-tabs__item',
+      filter: '.el-tabs__active-bar.is-top',
+      onEnd(e: DraggableEvent) {
+        const routes = moveElement([...visitedRoutes.value], parseInt(e.oldIndex - 1), parseInt(e.newIndex - 1))
+        updateVisitedRoutes(routes)
+        _visitedRoutes.value = routes
+      },
+    })
+}
+
+watchEffect(() => {
+  if (visible.value) document.body.addEventListener('click', closeMenu)
+  else document.body.removeEventListener('click', closeMenu)
+})
+
 watch(
   () => route.fullPath,
   () => {
@@ -320,10 +346,22 @@ onBeforeMount(() => {
   window.addEventListener('beforeunload', handleCaughtRoutes)
 })
 
-watchEffect(() => {
-  if (visible.value) document.body.addEventListener('click', closeMenu)
-  else document.body.removeEventListener('click', closeMenu)
+onMounted(() => {
+  nextTick(() => {
+    handleTabDrag()
+  })
 })
+
+watch(
+  theme.value,
+  () => {
+    if (theme.value.tabDrag) handleTabDrag()
+    else sortable && sortable.destroy()
+  },
+  {
+    immediate: true,
+  }
+)
 </script>
 
 <style lang="scss">
@@ -360,6 +398,10 @@ watchEffect(() => {
   padding-left: var(--el-padding);
   user-select: none;
   background: var(--el-color-white);
+
+  .vab-tabs-draggable {
+    width: calc(100% - var(--el-margin));
+  }
 
   :deep() {
     .fold-unfold {
@@ -404,7 +446,7 @@ watchEffect(() => {
   }
 
   &-content {
-    width: calc(100% - 20px);
+    width: 100%;
 
     &-card {
       height: var(--el-tab-item-height);

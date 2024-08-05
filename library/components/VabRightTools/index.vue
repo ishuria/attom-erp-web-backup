@@ -17,6 +17,8 @@
 
 <script lang="ts" setup>
 import { useSettingsStore } from '/@/store/modules/settings'
+import Sortable from 'sortablejs'
+import { moveElement } from '/@/utils/index'
 
 defineOptions({
   name: 'VabRightTools',
@@ -28,10 +30,19 @@ defineProps({
     default: false,
   },
 })
+
 const route = useRoute()
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 const routeName = ref<any>(route.name)
+
+const handleTabDrag = () => {
+  new Sortable(document.querySelectorAll('.vab-right-tools')[0], {
+    animation: 600,
+    easing: 'cubic-bezier(1, 0, 0, 1)',
+  })
+}
+
 watch(
   route,
   () => {
@@ -39,6 +50,12 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(() => {
+  nextTick(() => {
+    handleTabDrag()
+  })
+})
 </script>
 
 <style lang="scss" scoped>

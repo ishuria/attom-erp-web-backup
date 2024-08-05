@@ -32,6 +32,7 @@ import {
   showTabsIcon,
   showTheme,
   showThemeSetting,
+  tabDrag,
   tabsBarStyle,
   themeName,
   title,
@@ -67,6 +68,7 @@ const defaultTheme: ThemeType = {
   tabsBarStyle,
   themeName,
   showFontSize,
+  tabDrag,
   fontSize,
 }
 

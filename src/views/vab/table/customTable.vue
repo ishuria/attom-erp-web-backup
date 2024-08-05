@@ -72,7 +72,7 @@
                 <vab-icon icon="settings-line" />
               </el-button>
             </template>
-            <vab-draggable v-model="columns" :animation="600" ghost-class="ghost" target=".el-checkbox-group">
+            <vab-draggable v-model="columns" :animation="600" target=".el-checkbox-group">
               <el-checkbox-group v-model="checkList">
                 <el-checkbox
                   v-for="item in columns"

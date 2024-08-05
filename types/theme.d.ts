@@ -129,6 +129,8 @@ declare interface ThemeType {
   tabsBarStyle: TabsBarStyle
   // 是否标签页图标
   showTabsIcon: boolean
+  // 是否开启标签拖拽
+  tabDrag: boolean
   // 是否开启语言选择组件
   showLanguage: boolean
   // 是否开启刷新组件

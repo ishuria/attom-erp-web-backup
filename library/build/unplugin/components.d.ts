@@ -21,6 +21,7 @@ declare module 'vue' {
     CarouselVertical: typeof import('./../../../src/views/vab/carousel/vabAutoComponents/CarouselVertical.vue')['default']
     CommonProperty: typeof import('./../../../src/views/other/workflow/vabAutoComponents/propertySetting/CommonProperty.vue')['default']
     Control: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/Control.vue')['default']
+    copy: typeof import('./../../components/VabTabs/index copy.vue')['default']
     DataDialog: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/DataDialog.vue')['default']
     DataScreenBottom: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenBottom.vue')['default']
     DataScreenHeader: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenHeader.vue')['default']

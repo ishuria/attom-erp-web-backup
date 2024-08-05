@@ -5,7 +5,7 @@
         <el-button type="warning" @click="sort">重置</el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <vab-draggable v-model="iconList" :animation="600" ghost-class="ghost" target=".el-row">
+    <vab-draggable v-model="iconList" :animation="600" target=".el-row">
       <el-row :gutter="20">
         <el-col v-for="item in iconList" :key="item.icon" :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
           <vab-card class="icon-panel">
@@ -16,7 +16,7 @@
       </el-row>
     </vab-draggable>
 
-    <vab-draggable v-model="iconList" :animation="600" ghost-class="ghost" target=".el-row">
+    <vab-draggable v-model="iconList" :animation="600" target=".el-row">
       <el-row :gutter="20">
         <el-col v-for="item in iconList" :key="item.icon" :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
           <vab-card class="icon-panel">

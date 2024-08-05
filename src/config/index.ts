@@ -88,6 +88,7 @@ export const {
   storage,
   successCode,
   supportVisit,
+  tabDrag,
   tabsBarStyle,
   themeName,
   timeout,
