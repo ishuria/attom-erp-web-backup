@@ -223,6 +223,7 @@ declare module 'vue' {
     VabDark: typeof import('./../../components/VabDark/index.vue')['default']
     VabDialog: typeof import('./../../components/VabDialog/index.vue')['default']
     VabDivider: typeof import('./../../components/VabDivider/index.vue')['default']
+    VabDot: typeof import('./../../components/VabDot/index.vue')['default']
     VabErrorLog: typeof import('./../../components/VabErrorLog/index.vue')['default']
     VabErrorLogContent: typeof import('./../../components/VabErrorLog/components/VabErrorLogContent.vue')['default']
     VabFallBar: typeof import('./../../components/VabFallBar/index.vue')['default']

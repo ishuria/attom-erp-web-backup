@@ -84,6 +84,26 @@
           <vab-alert effect="dark" show-icon title="错误提示的文案" type="error" />
         </vab-card>
       </el-col>
+      <el-col :span="24">
+        <vab-card title="圆点提示">
+          <vab-divider content-position="left">
+            默认
+            <vab-dot style="margin-left: 3px" type="primary" />
+          </vab-divider>
+          <vab-divider content-position="left">
+            成功
+            <vab-dot style="margin-left: 3px" type="success" />
+          </vab-divider>
+          <vab-divider content-position="left">
+            警告
+            <vab-dot style="margin-left: 3px" type="warning" />
+          </vab-divider>
+          <vab-divider content-position="left">
+            错误
+            <vab-dot style="margin-left: 3px" type="danger" />
+          </vab-divider>
+        </vab-card>
+      </el-col>
     </el-row>
   </div>
 </template>

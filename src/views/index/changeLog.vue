@@ -32,14 +32,7 @@
             <el-timeline>
               <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
                 <template v-if="item.waver" #dot>
-                  <span
-                    class="vab-dot"
-                    :class="{
-                      ['vab-dot-' + item.waver]: true,
-                    }"
-                  >
-                    <span></span>
-                  </span>
+                  <vab-dot :type="item.waver" />
                 </template>
                 <vab-card v-if="item.card">
                   <div class="change-log-item" v-html="item.content"></div>

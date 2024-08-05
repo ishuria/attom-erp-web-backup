@@ -9,15 +9,7 @@
             <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
               <template v-if="!item.color" #dot>
                 <vab-icon v-if="item.icon" :icon="item.icon" />
-                <span
-                  v-if="item.waver"
-                  class="vab-dot"
-                  :class="{
-                    ['vab-dot-' + item.waver]: true,
-                  }"
-                >
-                  <span></span>
-                </span>
+                <vab-dot v-if="item.waver" :type="item.waver" />
               </template>
               <vab-card v-if="item.card">
                 {{ item.content }}
@@ -37,15 +29,7 @@
             <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
               <template v-if="!item.color" #dot>
                 <vab-icon v-if="item.icon" :icon="item.icon" />
-                <span
-                  v-if="item.waver"
-                  class="vab-dot"
-                  :class="{
-                    ['vab-dot-' + item.waver]: true,
-                  }"
-                >
-                  <span></span>
-                </span>
+                <vab-dot v-if="item.waver" :type="item.waver" />
               </template>
               <div class="vab-info-card" :class="{ ['vab-info-card-' + item.cardType]: true }">
                 {{ item.content }}

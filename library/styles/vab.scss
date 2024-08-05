@@ -195,56 +195,6 @@ html {
       }
     }
 
-    /* vab-dot圆点动画 */
-    .vab-dot {
-      position: relative;
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      margin-right: 3px;
-      vertical-align: middle;
-      border-radius: 50%;
-
-      span {
-        position: absolute;
-        top: 0;
-        left: 0;
-        box-sizing: border-box;
-        display: block;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        animation: vabDot 1.2s ease-in-out infinite;
-        @keyframes vabDot {
-          0% {
-            opacity: 0.6;
-            transform: scale(0.8);
-          }
-          to {
-            opacity: 0;
-            transform: scale(2.4);
-          }
-        }
-      }
-
-      &-success {
-        background: var(--el-color-success);
-
-        span {
-          background: var(--el-color-success);
-        }
-      }
-
-      &-error,
-      &-danger {
-        background: var(--el-color-error);
-
-        span {
-          background: var(--el-color-error);
-        }
-      }
-    }
-
     /* vab-data-empty占位图 */
     .vab-data-empty {
       display: flex;
