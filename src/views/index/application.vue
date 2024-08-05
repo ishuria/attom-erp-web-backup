@@ -39,13 +39,15 @@ onMounted(() => {
       if (deferredPrompt) {
         deferredPrompt.prompt()
         deferredPrompt.userChoice.then(() => {
-          location.reload()
+          //@ts-ignore
+          location.reload(true)
         })
       } else {
         $baseAlert(
           '未获取到安装指令，请按下键盘Ctrl（Command） + Shift + R 强制刷新当前页面后重试，如果无法安装，PC端请点击浏览器地址栏右侧安装按钮进行安装，手机端请点击添加到主屏幕进行安装，仅支持Edge、Chrome、Safari',
           () => {
-            location.reload()
+            //@ts-ignore
+            location.reload(true)
           }
         )
       }

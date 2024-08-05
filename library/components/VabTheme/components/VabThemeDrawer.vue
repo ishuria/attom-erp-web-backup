@@ -242,14 +242,16 @@ const setDefaultTheme = () => {
   setTimeout(() => {
     loading.close()
     $baseMessage('切换成功', 'success', 'hey')
-    if (device.value === 'mobile') location.reload()
+    //@ts-ignore
+    if (device.value === 'mobile') location.reload(true)
   }, 1000)
 }
 
 const handleSaveTheme = () => {
   saveTheme()
   drawerVisible.value = false
-  //if (device.value === 'mobile') location.reload()
+  //@ts-ignore
+  //if (device.value === 'mobile') location.reload(true)
 }
 
 watch(

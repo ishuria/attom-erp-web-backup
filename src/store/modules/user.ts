@@ -123,7 +123,8 @@ export const useUserStore = defineStore('user', {
     async logout() {
       await logout()
       await this.resetAll()
-      await location.reload()
+      //@ts-ignore
+      await location.reload(true)
     },
     /**
      * @description 重置token、roles、permission、router、tabsBar等

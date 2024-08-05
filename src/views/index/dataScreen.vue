@@ -79,7 +79,8 @@ onMounted(() => {
     // 数据大屏占用内存较大，演示地址每隔15分钟刷新一次页面缓解浏览器压力
     setTimeout(
       () => {
-        location.reload()
+        //@ts-ignore
+        location.reload(true)
       },
       1000 * 60 * 15
     )
