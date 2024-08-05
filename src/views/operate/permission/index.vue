@@ -1,6 +1,6 @@
 <template>
   <div class="permission-container">
-    <vab-alert v-if="showAlert" title="温馨提示：当前登录的账号非admin，如需查看演示地址全部功能，请使用admin账号登录。" type="error" />
+    <vab-alert v-if="showAlert" :title="tips" type="error" />
     <vab-alert
       v-if="!loginInterception"
       title="检测到您当前的登录拦截已关闭，无法模拟切换角色功能，请在src/config/setting.config.js中配置loginInterception为true，开启登录拦截"
@@ -15,7 +15,7 @@
     <el-form label-position="top" :model="form">
       <el-form-item label="账号切换">
         <el-radio-group v-model="form.account" @change="handleChangeRole">
-          <el-radio-button label="admin" value="admin">admin</el-radio-button>
+          <el-radio-button id="vsv-admin" label="admin" value="admin">admin</el-radio-button>
           <el-radio-button label="editor" value="editor">editor</el-radio-button>
           <el-radio-button label="test" value="test">test</el-radio-button>
         </el-radio-group>
@@ -102,6 +102,9 @@
         </el-table>
       </el-form-item>
     </el-form>
+    <el-tour v-model="open" :type="type">
+      <el-tour-step v-for="step in steps" :key="step" :description="step.description" :target="step.target" :title="step.title" />
+    </el-tour>
   </div>
 </template>
 
@@ -121,7 +124,6 @@ const aclStore = useAclStore()
 const { role, permission } = storeToRefs(aclStore)
 const userStore = useUserStore()
 const { username, token } = storeToRefs(userStore)
-
 const form = reactive<any>({ account: username.value })
 const showAlert = ref<boolean>(false)
 const tableData = [
@@ -134,6 +136,20 @@ const tableData = [
     no: 'no-2',
   },
 ]
+const tips = ref<string>('当前登录的账号非admin，如需查看演示地址全部功能，请使用admin账号登录。')
+const open = ref<boolean>(false)
+const type = ref<any>('primary')
+const steps = ref<any>([
+  {
+    target: '#vsv-admin',
+    title: '切换账号',
+    description: tips.value,
+  },
+])
+
+const handleOpen = () => {
+  open.value = true
+}
 
 const handleChangeRole = async () => {
   $baseLoading('正在切换账号请稍后...')
@@ -153,7 +169,7 @@ watch(token, (value) => {
 onActivated(() => {
   if (username.value !== 'admin') {
     showAlert.value = true
-    $baseAlert('当前登录的账号非admin，如需查看演示地址全部功能，请使用admin账号登录。')
+    handleOpen()
   }
 })
 </script>
