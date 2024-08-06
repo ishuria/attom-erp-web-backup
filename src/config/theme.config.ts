@@ -60,4 +60,8 @@ export const themeConfig: ThemeType = {
   showFontSize: true,
   // 默认字体大小
   fontSize: '14px',
+  // 顶部右侧图标是否允许拖拽
+  rightToolsDrag: true,
+  // 分栏布局一级菜单是否允许拖拽
+  columnDrag: true,
 }

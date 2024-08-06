@@ -98,4 +98,6 @@ export const {
   tokenName,
   tokenTableName,
   uniqueOpened,
+  columnDrag,
+  rightToolsDrag,
 } = config

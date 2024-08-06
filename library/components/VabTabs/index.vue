@@ -345,16 +345,6 @@ watch(
   }
 )
 
-onBeforeMount(() => {
-  window.addEventListener('beforeunload', handleCaughtRoutes)
-})
-
-onMounted(() => {
-  nextTick(() => {
-    handleTabDrag()
-  })
-})
-
 watch(
   theme.value,
   () => {
@@ -365,6 +355,16 @@ watch(
     immediate: true,
   }
 )
+
+onBeforeMount(() => {
+  window.addEventListener('beforeunload', handleCaughtRoutes)
+})
+
+onMounted(() => {
+  nextTick(() => {
+    handleTabDrag()
+  })
+})
 </script>
 
 <style lang="scss">
