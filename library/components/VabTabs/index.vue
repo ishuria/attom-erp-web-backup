@@ -318,7 +318,7 @@ const handleTabDrag = () => {
       sortable = new Sortable(navElement, {
         animation: 150,
         easing: 'cubic-bezier(1, 0, 0, 1)',
-        draggable: '.el-tabs__item.is-top is-active.is-closable',
+        draggable: '.el-tabs__item.is-top.is-closable',
         filter: '.el-tabs__active-bar.is-top',
         onEnd(e: any) {
           const routes = moveElement([...visitedRoutes.value], parseInt(e.oldIndex) - 1, parseInt(e.newIndex) - 1)
