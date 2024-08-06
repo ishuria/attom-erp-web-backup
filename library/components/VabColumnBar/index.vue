@@ -50,7 +50,6 @@
 </template>
 
 <script lang="ts" setup>
-import Sortable from 'sortablejs'
 import { defaultOpeneds, isHashRouterMode, openFirstMenu, uniqueOpened } from '/@/config'
 import { translate } from '/@/i18n'
 import { useRoutesStore } from '/@/store/modules/routes'
@@ -104,34 +103,8 @@ const handleTabClick = () => {
   })
 }
 
-let sortable: any
-const handleTabDrag = () => {
-  if (theme.value.columnDrag) {
-    const columnElement = document.querySelector('.el-tabs__nav.is-left') as HTMLElement
-    if (columnElement)
-      sortable = new Sortable(columnElement, {
-        animation: 150,
-        easing: 'cubic-bezier(1, 0, 0, 1)',
-        draggable: '.el-tabs__item',
-        filter: '.el-tabs__active-bar.is-left',
-      })
-  }
-}
-
-watch(
-  theme.value,
-  () => {
-    if (theme.value.columnDrag) handleTabDrag()
-    else sortable && sortable.destroy()
-  },
-  {
-    immediate: true,
-  }
-)
-
 onMounted(() => {
   nextTick(() => {
-    handleTabDrag()
     setDefaultOpeneds()
     if (theme.value.layout === 'column')
       watch(

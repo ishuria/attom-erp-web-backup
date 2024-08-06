@@ -163,6 +163,4 @@ declare interface ThemeType {
   fontSize: string
   // 顶部右侧图标是否允许拖拽
   rightToolsDrag: boolean
-  // 分栏布局一级菜单是否允许拖拽
-  columnDrag: boolean
 }

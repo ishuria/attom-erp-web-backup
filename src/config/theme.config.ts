@@ -62,6 +62,4 @@ export const themeConfig: ThemeType = {
   fontSize: '14px',
   // 顶部右侧图标是否允许拖拽
   rightToolsDrag: true,
-  // 分栏布局一级菜单是否允许拖拽
-  columnDrag: true,
 }

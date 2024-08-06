@@ -6,7 +6,6 @@ import {
   persistenceTab as _persistenceTab,
   color,
   colorWeakness,
-  columnDrag,
   columnStyle,
   fixedHeader,
   foldSidebar,
@@ -73,7 +72,6 @@ const defaultTheme: ThemeType = {
   tabDrag,
   fontSize,
   rightToolsDrag,
-  columnDrag,
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')

@@ -34,12 +34,12 @@ defineProps({
 
 const route = useRoute()
 const settingsStore = useSettingsStore()
-const { theme } = storeToRefs(settingsStore)
+const { theme, device } = storeToRefs(settingsStore)
 const routeName = ref<any>(route.name)
 
 let sortable: any
 const handleTabDrag = () => {
-  if (theme.value.rightToolsDrag) {
+  if (theme.value.rightToolsDrag && device.value != 'mobile') {
     const toolsElement = document.querySelector('.vab-right-tools-draggable') as HTMLElement | null
 
     if (toolsElement)
