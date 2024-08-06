@@ -24,6 +24,11 @@ export const $baseAlert: any = (content: string | VNode, title = '温馨提示',
   return gp.$baseAlert(content, title, callback)
 }
 
+export const $baseDiyAlert: any = (content: string | VNode, title = '温馨提示',confirmButtonText = "确定", callback?: any) => {
+  return gp.$baseDiyAlert(content, title, callback)
+}
+
+
 export const $baseNotify: any = (
   message: string,
   title: string,

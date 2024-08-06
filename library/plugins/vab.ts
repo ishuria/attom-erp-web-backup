@@ -2,6 +2,7 @@ import { ElLoading, ElMessage, ElMessageBox, ElNotification } from 'element-plus
 import { head, toArray } from 'lodash-es'
 import mitt from 'mitt'
 import type { App, VNode } from 'vue'
+import { markRaw } from 'vue'
 import { loadingText, messageDuration } from '/@/config'
 
 export let gp: Record<string, any>
@@ -169,6 +170,29 @@ export default {
       })
     }
 
+    /**
+     * @description 自定义全局Alert
+     * @param {string|VNode} content 消息正文内容
+     * @param {string} title 标题
+     * @param {string} confirmButtonText 按钮
+     * @param {function} callback 若不使用Promise,可以使用此参数指定MessageBox关闭后的回调
+     */
+
+    const $baseDiyAlert = (content: string | VNode, title = '温馨提示',confirmButtonText = '确定', callback?: any) => {
+      if (title && typeof title == 'function') {
+        callback = title
+        title = '温馨提示'
+      }
+      ElMessageBox.alert(content, title, {
+        confirmButtonText: confirmButtonText,
+        dangerouslyUseHTMLString: true, // 此处可能引起跨站攻击，建议配置为false
+        draggable: true,
+        callback: () => {
+          if (callback) callback()
+        },
+      }).then(() => {})
+    }
+
     const _emitter = mitt()
 
     const $pub = (...args: any[]) => {
@@ -185,6 +209,7 @@ export default {
 
     if (isCheck()) {
       app.provide('$baseAlert', $baseAlert)
+      app.provide('$baseDiyAlert', $baseDiyAlert)
       app.provide('$baseConfirm', $baseConfirm)
       app.provide('$baseLoading', $baseLoading)
       app.provide('$baseMessage', $baseMessage)
@@ -195,6 +220,7 @@ export default {
 
       gp = {
         $baseAlert,
+        $baseDiyAlert,
         $baseConfirm,
         $baseLoading,
         $baseMessage,

@@ -129,9 +129,19 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
       break
     }
   }
-  // 异常处理
+
   // 若data.msg存在，覆盖默认提醒消息
   const errMsg = `${data && data[messageName] ? data[messageName] : CODE_MESSAGE[code] ? CODE_MESSAGE[code] : statusText}`
+  // 处理重新登录异常
+  if (code == 8888){
+    gp.$baseAlert(errMsg, "系统提示", () => {
+        resetAll().then(() => {
+          router.push({ path: '/login', replace: true }).then(() => {})  
+        })
+    })
+    return
+  }
+  // 异常处理
   // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
   gp.$baseMessage(errMsg, 'error', 'hey')
   if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })
