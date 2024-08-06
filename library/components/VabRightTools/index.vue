@@ -44,7 +44,7 @@ const handleTabDrag = () => {
 
     if (toolsElement)
       sortable = new Sortable(toolsElement, {
-        animation: 600,
+        animation: 150,
         easing: 'cubic-bezier(1, 0, 0, 1)',
       })
   }

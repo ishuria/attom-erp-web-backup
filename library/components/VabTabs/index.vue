@@ -316,7 +316,7 @@ const handleTabDrag = () => {
     const navElement = document.querySelector('.el-tabs__nav.is-top') as HTMLElement
     if (navElement)
       sortable = new Sortable(navElement, {
-        animation: 600,
+        animation: 150,
         easing: 'cubic-bezier(1, 0, 0, 1)',
         draggable: '.el-tabs__item',
         filter: '.el-tabs__active-bar.is-top',
