@@ -114,14 +114,14 @@
 </template>
 
 <script lang="ts" setup>
+import Sortable from 'sortablejs'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { translate } from '/@/i18n'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { handleActivePath, handleTabs } from '/@/utils/routes'
-import Sortable from 'sortablejs'
 import { moveElement } from '/@/utils/index'
+import { handleActivePath, handleTabs } from '/@/utils/routes'
 
 defineOptions({
   name: 'VabTabs',
@@ -310,20 +310,23 @@ const closeMenu = () => {
   hoverRoute.value = null
 }
 
-let sortable
+let sortable: any
 const handleTabDrag = () => {
-  if (theme.value.tabDrag)
-    sortable = new Sortable(document.querySelectorAll('.el-tabs__nav.is-top')[0], {
-      animation: 600,
-      easing: 'cubic-bezier(1, 0, 0, 1)',
-      draggable: '.el-tabs__item',
-      filter: '.el-tabs__active-bar.is-top',
-      onEnd(e: DraggableEvent) {
-        const routes = moveElement([...visitedRoutes.value], parseInt(e.oldIndex - 1), parseInt(e.newIndex - 1))
-        updateVisitedRoutes(routes)
-        _visitedRoutes.value = routes
-      },
-    })
+  if (theme.value.tabDrag) {
+    const navElement = document.querySelector('.el-tabs__nav.is-top') as HTMLElement
+    if (navElement)
+      sortable = new Sortable(navElement, {
+        animation: 600,
+        easing: 'cubic-bezier(1, 0, 0, 1)',
+        draggable: '.el-tabs__item',
+        filter: '.el-tabs__active-bar.is-top',
+        onEnd(e: any) {
+          const routes = moveElement([...visitedRoutes.value], parseInt(e.oldIndex) - 1, parseInt(e.newIndex) - 1)
+          updateVisitedRoutes(routes)
+          _visitedRoutes.value = routes
+        },
+      })
+  }
 }
 
 watchEffect(() => {
