@@ -23,7 +23,7 @@
 
 <script>
 import LogicFlow from '@logicflow/core'
-import '@logicflow/core/dist/style/index.css'
+import '@logicflow/core/dist/index.css'
 import { Menu, Snapshot } from '@logicflow/extension'
 import '@logicflow/extension/lib/style/index.css'
 import {

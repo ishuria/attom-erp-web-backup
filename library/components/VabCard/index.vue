@@ -1,5 +1,5 @@
 <template>
-  <el-card :body-class="bodyClass" :body-style="bodyStyle" class="vab-card" :shadow="shadow">
+  <el-card :body-class="bodyClass" :body-style="bodyStyle" :shadow="shadow" v-bind="$attrs">
     <template v-if="$slots.header || title" #header>
       <slot v-if="$slots.header" name="header"></slot>
       <template v-else>{{ title }}</template>
@@ -41,10 +41,6 @@ defineProps({
     type: String,
     default: '',
   },
-  calss: {
-    type: String,
-    default: '',
-  },
 })
 
 const skeletonShow = ref<boolean>(true)
@@ -59,8 +55,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.vab-card {
-  :deep() {
+:deep() {
+  .el-card {
     .el-card__header {
       font-weight: 500;
 

@@ -376,19 +376,19 @@ const handelImage = () => {
     }
   }
 
-  .vab-card {
-    ul {
-      padding: 0;
-      margin: 0;
-      line-height: 30px;
-      list-style: none;
+  :deep() {
+    .el-card {
+      ul {
+        padding: 0;
+        margin: 0;
+        line-height: 30px;
+        list-style: none;
 
-      span {
-        color: var(--el-color-grey);
+        span {
+          color: var(--el-color-grey);
+        }
       }
-    }
 
-    :deep() {
       .el-card__header {
         .more {
           position: absolute;
@@ -397,9 +397,7 @@ const handelImage = () => {
         }
       }
     }
-  }
 
-  :deep() {
     .el-carousel {
       margin-bottom: 20px;
       border-radius: var(--el-border-radius-base);
