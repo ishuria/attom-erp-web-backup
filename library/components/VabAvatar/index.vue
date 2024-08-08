@@ -1,5 +1,12 @@
 <template>
-  <el-popover class="vab-avatar" popper-class="vab-avatar-popper" width="188" @hide="handleShow" @show="handleHide">
+  <el-popover
+    v-model:visible="visible"
+    class="vab-avatar"
+    popper-class="vab-avatar-popper"
+    width="188"
+    @hide="handleShow"
+    @show="handleHide"
+  >
     <template #reference>
       <div class="avatar-dropdown">
         <el-avatar class="user-avatar" :src="avatar" />
@@ -62,6 +69,7 @@ const userStore = useUserStore()
 const { avatar, username } = storeToRefs(userStore)
 const { logout } = userStore
 const active = ref<boolean>(false)
+const visible = ref<boolean>(false)
 
 const handleShow = () => {
   active.value = false
@@ -76,28 +84,34 @@ const handleCommand = async (command: any) => {
     case 'logout': {
       await logout()
       await router.push(toLoginRoute(route.fullPath))
+      visible.value = false
       break
     }
     case 'personalCenter': {
       await router.push('/setting/personalCenter')
+      visible.value = false
       break
     }
     case 'changeLog': {
       await router.push('/changeLog')
+      visible.value = false
       break
     }
     case 'portal': {
       await window.open('#/portal')
+      visible.value = false
       break
     }
     case 'dataScreen': {
       await window.open('#/dataScreen')
+      visible.value = false
       break
     }
     case 'book': {
       $baseAlert(
         '已购买用户请前往群公告中获取，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>'
       )
+      visible.value = false
       break
     }
   }

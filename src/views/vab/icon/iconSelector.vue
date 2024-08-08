@@ -1,6 +1,6 @@
 <template>
   <div class="icon-selector-container">
-    <el-popover popper-class="icon-selector-popper" trigger="hover">
+    <el-popover v-model:visible="visible" popper-class="icon-selector-popper" trigger="hover">
       <template #reference>
         <el-button>
           <vab-icon :icon="icon" />
@@ -18,8 +18,10 @@ defineOptions({
   name: 'IconSelector',
 })
 const icon = ref<string>('24-hours-fill')
+const visible = ref<boolean>(false)
 
 const handleIcon = (item: string) => {
   icon.value = item
+  visible.value = false
 }
 </script>
