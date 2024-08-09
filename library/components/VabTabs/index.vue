@@ -393,7 +393,6 @@ onMounted(() => {
   position: relative;
   box-sizing: border-box;
   display: flex;
-  align-content: center;
   align-items: center;
   justify-content: space-between;
   min-height: var(--el-tabs-height);
@@ -445,6 +444,12 @@ onMounted(() => {
         justify-content: center;
         height: var(--el-tab-item-height);
       }
+
+      &__content {
+        display: none;
+        height: 0;
+        opacity: 0;
+      }
     }
   }
 
@@ -456,6 +461,8 @@ onMounted(() => {
 
       :deep() {
         .el-tabs__header {
+          margin: 0 0 1px 0;
+
           .el-tabs__item {
             height: var(--el-tab-item-height);
             margin-right: 5px;
@@ -476,6 +483,8 @@ onMounted(() => {
 
       :deep() {
         .el-tabs__header {
+          margin: 0 0 1px 0;
+
           .el-tabs__item {
             height: var(--el-tab-item-height);
             margin-right: 5px;
@@ -526,7 +535,10 @@ onMounted(() => {
         }
 
         .el-tabs__header {
+          margin: 0 0 -7px 0;
+
           .el-tabs__item {
+            //  min-width: 120px;
             height: calc(var(--el-tab-item-height) + 4px);
             margin-right: -18px;
 
@@ -535,6 +547,7 @@ onMounted(() => {
               color: var(--el-color-grey);
               background: var(--el-border-color);
               mask: url('/@/assets/tabs_images/vab-tab.png');
+              mask-layer: url('/@/assets/tabs_images/vab-tab.png');
               mask-size: 100% 100%;
             }
 
@@ -547,6 +560,7 @@ onMounted(() => {
               color: var(--el-color-primary);
               background: var(--el-color-primary-light-9);
               mask: url('/@/assets/tabs_images/vab-tab.png');
+              mask-layer: url('/@/assets/tabs_images/vab-tab.png');
               mask-size: 100% 100%;
 
               &:hover {
