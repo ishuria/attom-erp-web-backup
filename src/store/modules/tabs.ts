@@ -99,9 +99,12 @@ export const useTabsStore = defineStore('tabs', {
         localStorage.removeItem('caughtRoutes')
       }
     },
-    updateVisitedRoutes(visitedRoutes: any) {
-      this.visitedRoutes = visitedRoutes
-      this.handleCaughtRoutes()
+    async updateVisitedRoutes(visitedRoutes: any) {
+      this.visitedRoutes = []
+      await this.handleCaughtRoutes()
+      setTimeout(() => {
+        this.visitedRoutes = [...visitedRoutes]
+      }, 0)
     },
   },
 })

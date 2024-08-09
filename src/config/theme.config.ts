@@ -26,7 +26,7 @@ export const themeConfig: ThemeType = {
   tabsBarStyle: 'card',
   //是否显示标签页图标
   showTabsIcon: true,
-  //是否开启标签拖拽
+  //是否开启标签拖拽（影响性能建议关闭）
   tabDrag: false,
   //是否开启语言选择组件
   showLanguage: true,
@@ -60,6 +60,6 @@ export const themeConfig: ThemeType = {
   showFontSize: true,
   // 默认字体大小
   fontSize: '14px',
-  // 顶部右侧图标是否允许拖拽
+  // 顶部右侧图标是否允许拖拽（影响性能建议关闭）
   rightToolsDrag: false,
 }

@@ -50,10 +50,9 @@
             <el-option v-for="item in tabsBarStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <!-- 有bug请勿使用，后续能用会放开-->
-        <!-- <el-form-item v-if="device !== 'mobile' && theme.showTabs" :label="translate('标签拖拽')">
+        <el-form-item v-if="device !== 'mobile' && theme.showTabs" :label="translate('标签拖拽')">
           <el-switch v-model="theme.tabDrag" />
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item :label="translate('页脚')">
           <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
         </el-form-item>
