@@ -27,7 +27,7 @@ export const themeConfig: ThemeType = {
   //是否显示标签页图标
   showTabsIcon: true,
   //是否开启标签拖拽
-  tabDrag: true,
+  tabDrag: false,
   //是否开启语言选择组件
   showLanguage: true,
   //是否开启刷新组件
@@ -61,5 +61,5 @@ export const themeConfig: ThemeType = {
   // 默认字体大小
   fontSize: '14px',
   // 顶部右侧图标是否允许拖拽
-  rightToolsDrag: true,
+  rightToolsDrag: false,
 }

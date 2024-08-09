@@ -219,6 +219,8 @@ export const asyncRoutes: VabRouteRecord[] = [
             component: () => import('/@/views/vab/icon/customSvg.vue'),
             meta: {
               title: '自定义图标',
+              icon: 'vite',
+              isCustomSvg: true,
             },
           },
         ],

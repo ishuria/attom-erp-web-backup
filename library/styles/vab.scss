@@ -1044,5 +1044,9 @@ html {
 
       animation: rotate 1s linear infinite;
     }
+
+    .vab-icon {
+      --el-font-size-big: var(--el-font-size-medium) !important;
+    }
   }
 }
