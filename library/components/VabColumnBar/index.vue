@@ -345,6 +345,7 @@ onBeforeUnmount(() => {
     .el-tabs {
       position: fixed;
       z-index: 9999;
+      height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height));
 
       .el-tabs__header.is-left {
         margin-right: 0 !important;
@@ -354,7 +355,7 @@ onBeforeUnmount(() => {
           background: var(--el-menu-background-color);
 
           .el-tabs__nav-scroll {
-            height: 100%;
+            height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
             overflow-y: auto;
 
             &::-webkit-scrollbar {
@@ -366,7 +367,7 @@ onBeforeUnmount(() => {
       }
 
       .el-tabs__nav {
-        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height));
+        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
         background: var(--el-menu-background-color);
       }
 

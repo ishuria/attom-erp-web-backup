@@ -70,12 +70,20 @@ html > body.vab-theme-technology {
     background: var(--el-color-white) !important;
   }
 
-  .vab-column-bar .el-tabs .el-tabs__item {
-    color: var(--el-color-grey) !important;
-  }
-
   .vab-column-bar {
     border-right: 1px solid var(--el-border-color) !important;
+
+    .el-tabs {
+      border-right: 1px solid var(--el-border-color) !important;
+
+      .el-tabs__item {
+        color: var(--el-color-grey) !important;
+      }
+
+      .el-tabs__nav {
+        background: var(--el-color-white) !important;
+      }
+    }
 
     &-arrow {
       .el-tabs {
@@ -97,14 +105,12 @@ html > body.vab-theme-technology {
     }
   }
 
-  .vab-tabs-content-card .el-tabs__header .el-tabs__item {
-    border: 1px solid var(--el-border-color) !important;
-  }
-
-  .vab-column-bar .el-tabs .el-tabs__nav {
-    margin-left: -1px !important;
-    background: var(--el-color-white) !important;
-    border-right: 1px solid var(--el-border-color) !important;
+  .vab-tabs-content-card {
+    .el-tabs__header {
+      .el-tabs__item {
+        border: 1px solid var(--el-border-color) !important;
+      }
+    }
   }
 
   .vab-logo-column {
@@ -177,9 +183,13 @@ html > body.vab-theme-technology {
     border-left: 1px solid var(--el-border-color);
   }
 
-  .el-pagination.is-background .btn-prev:disabled,
-  .el-pagination.is-background .btn-next:disabled {
-    background-color: var(--el-pagination-button-bg-color);
+  .el-pagination {
+    &.is-background {
+      .btn-prev:disabled,
+      .btn-next:disabled {
+        background-color: var(--el-pagination-button-bg-color);
+      }
+    }
   }
 
   .el-drawer__header {
@@ -192,9 +202,11 @@ html > body.vab-theme-technology {
     }
   }
 
-  .el-input.is-disabled {
-    .el-input__wrapper {
-      background: #214e85 !important;
+  .el-input {
+    &.is-disabled {
+      .el-input__wrapper {
+        background: #214e85 !important;
+      }
     }
   }
 
@@ -205,17 +217,25 @@ html > body.vab-theme-technology {
       height: calc(var(--el-header-height) - 2px);
     }
 
-    .vab-main .right-panel {
-      [class*='ri-'],
-      .username {
-        color: var(--el-color-grey) !important;
+    .vab-main {
+      .right-panel {
+        [class*='ri-'],
+        .username {
+          color: var(--el-color-grey) !important;
+        }
       }
     }
   }
 
-  .vab-tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
-    color: var(--el-color-grey);
-    background: #123372;
+  .vab-tabs-content-smooth {
+    .el-tabs__header {
+      .el-tabs__item {
+        &:hover {
+          color: var(--el-color-grey);
+          background: #123372;
+        }
+      }
+    }
   }
 
   /* .vab-hey-message */
