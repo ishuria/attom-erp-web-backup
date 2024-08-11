@@ -31,7 +31,8 @@ defineOptions({
 
 .vab-query-form {
   :deep() {
-    .el-input {
+    .el-input,
+    .el-select {
       width: 175px;
     }
 
