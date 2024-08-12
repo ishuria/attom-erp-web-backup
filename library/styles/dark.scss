@@ -1,4 +1,4 @@
-@use 'element-plus/theme-chalk/dark/css-vars.css';
+@use 'element-plus/theme-chalk/dark/css-vars.css' as *;
 
 html.dark > body,
 html.dark > body[class*='vab-theme-'] {

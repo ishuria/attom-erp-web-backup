@@ -53,5 +53,5 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss">
-@use './scss/player';
+@use './scss/player' as *;
 </style>
