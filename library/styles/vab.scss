@@ -2,14 +2,14 @@
  * @description 全局样式
  */
 
-@import 'normalize.css';
-@import 'element-plus/theme-chalk/src/display';
-@import 'element-plus/theme-chalk/src/index';
-@import './dark';
-@import './plain';
-@import './technology';
-@import 'vsv-icon/dist/style.css';
-@import './var';
+@use 'normalize.css';
+@use 'element-plus/theme-chalk/src/display';
+@use 'element-plus/theme-chalk/src/index';
+@use './dark';
+@use './plain';
+@use './technology';
+@use 'vsv-icon/dist/style.css';
+@use './var';
 
 @mixin base-scrollbar {
   &::-webkit-scrollbar {
