@@ -1,8 +1,8 @@
 {
   "name": "shop-vite",
-  "version": "9.6.0",
+  "version": "9.6.5",
   "private": true,
-  "author": "chuzhixin",
+  "author": "github.com/zxwk1998",
   "scripts": {
     "dev": "set VITE_CJS_IGNORE_WARNING=true && vite",
     "dev:mac": "export VITE_CJS_IGNORE_WARNING=true && vite",
@@ -106,7 +106,7 @@
     "terser": "^5.31.5",
     "typescript": "^5.5.4",
     "unplugin-auto-import": "^0.18.2",
-    "unplugin-vue-components": "^0.27.3",
+    "unplugin-vue-components": "^0.27.4",
     "vite": "^5.4.0",
     "vite-plugin-banner": "^0.7.1",
     "vite-plugin-compression": "^0.5.1",
