@@ -25,7 +25,7 @@
 import LogicFlow from '@logicflow/core'
 import '@logicflow/core/lib/style/index.css'
 import { Menu, Snapshot } from '@logicflow/extension'
-import '@logicflow/extension/lib/style/index.min.css'
+import '@logicflow/extension/lib/style/index.css'
 import {
   registerDownload,
   registerEnd,
