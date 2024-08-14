@@ -42,7 +42,7 @@
     "@vueuse/head": "^2.0.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
-    "axios": "^1.7.3",
+    "axios": "^1.7.4",
     "dayjs": "^1.11.12",
     "disable-devtool": "^0.3.7",
     "echarts": "^5.5.1",
