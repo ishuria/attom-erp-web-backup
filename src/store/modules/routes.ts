@@ -10,6 +10,7 @@ import { isArray } from '/@/utils/validate'
 import { gp } from '/@vab/plugins/vab'
 
 const filterHidden = (data: any) => {
+  
   return data.reduce((acc: any, item: any) => {
     if (item.meta && item.meta.hidden) return acc
     const newItem = { ...item }
@@ -19,6 +20,8 @@ const filterHidden = (data: any) => {
 }
 
 const filterBreadcrumb = (data: any) => {
+
+  
   return data.reduce((acc: any, item: any) => {
     const newItem = { ...item }
     if (item.children && item.children.length > 0) newItem.children = filterBreadcrumb(item.children)

@@ -57,6 +57,8 @@ export const constantRoutes: VabRouteRecord[] = [
       hidden: true,
     },
   },
+
+  
 ]
 
 export const asyncRoutes: VabRouteRecord[] = [
@@ -1654,6 +1656,7 @@ export const resetRouter = (routes: VabRouteRecord[] = constantRoutes) => {
       router.hasRoute(routeName) && router.removeRoute(routeName)
     }
   })
+  
   addRouter(routes)
 }
 

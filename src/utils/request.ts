@@ -136,7 +136,9 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
   if (code == 8888){
     gp.$baseAlert(errMsg, "系统提示", () => {
         resetAll().then(() => {
-          router.push({ path: '/login', replace: true }).then(() => {})  
+          router.push({ path: '/login', replace: true }).then(() => {})
+          // 重新加载页面
+          location.reload()
         })
     })
     return

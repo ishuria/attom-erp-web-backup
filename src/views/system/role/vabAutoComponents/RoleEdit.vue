@@ -55,6 +55,7 @@ const disableRoleCode = ref<boolean>(false)
 const form = reactive<any>({
   menuCheckedList: [],
   menuIds: '',
+  menuBtnIds: '',
   permissionIds: '',
   roleCode: '',
   roleName: '',
@@ -68,6 +69,7 @@ const rules = reactive<any>({
   roleNameEn: [{ required: true, trigger: 'blur', message: '请给角色英文' }],
 })
 const checkMenuList = ref<any>([])
+const childMenuBtnList = ref<any>([])
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
 const list = ref<any>([])
@@ -82,7 +84,8 @@ const showEdit = (row: any) => {
 
       // 处理拿到菜单回显问题
       const arr: any = []
-      data.forEach((item: any) => {
+      
+      data.forEach((item: any) => {        
         if (!treeRef.value?.getNode(item).childNodes || !treeRef.value?.getNode(item).childNodes.length) {
           arr.push(item)
         }
@@ -120,8 +123,11 @@ const close = () => {
 const handleCheckChange = (data1: any, data2: any) => {
   // 选中的子节点
   const checkedKeys = data2.checkedKeys
+  childMenuBtnList.value = checkedKeys
+  
   // 选中的父节点
   const halfCheckedKeys = data2.halfCheckedKeys
+  
   // 数据合并
   checkMenuList.value = [...checkedKeys, ...halfCheckedKeys]
 }
@@ -141,6 +147,14 @@ const save = () => {
       const menuIdsStr = checkMenuList.value.map(String).join(',')
       // tree菜单对应的keys
       form.menuIds = menuIdsStr
+
+
+      if (childMenuBtnList.value == 0){
+        childMenuBtnList.value = [...treeRef.value.getCheckedKeys()]
+      }
+
+      const menuBtnIdsStr = childMenuBtnList.value.map(String).join(',')
+      form.menuBtnIds = menuBtnIdsStr
 
       // 权限
       const permissionIdsList: [] = treeRef.value.getCheckedNodes(false, true).map((item: any) => {
