@@ -23,7 +23,7 @@
       <template #level3="{ slotScope }">
         <a v-for="(level3, index) in slotScope" :key="index" :href="level3.url" @click="handleLink(level3)">
           - {{ translate(level3.meta.title) }}
-          <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" type="danger">
+          <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" :type="level3.meta.badgeType || 'danger'">
             {{ level3.meta.badge }}
           </el-tag>
           <vab-dot v-if="level3.meta && level3.meta.dot" :type="typeof level3.meta.dot === 'string' ? level3.meta.dot : 'danger'" />

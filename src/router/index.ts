@@ -783,6 +783,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           guard: ['Admin'],
           icon: 'water-flash-line',
           badge: 'New',
+          badgeType: 'warning',
         },
       },
       {
@@ -935,6 +936,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           guard: ['Admin'],
           icon: 'notification-badge-line',
           badge: '0',
+          badgeType: 'success',
         },
       },
       {
@@ -1192,6 +1194,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           icon: 'earthquake-line',
           target: '_blank',
           badge: 'Hot',
+          badgeType: 'primary',
         },
       },
       {

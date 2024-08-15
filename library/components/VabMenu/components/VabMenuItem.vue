@@ -9,7 +9,7 @@
     <span :title="translate(itemOrMenu.meta.title)">
       {{ translate(itemOrMenu.meta.title) }}
     </span>
-    <el-tag v-if="itemOrMenu.meta && itemOrMenu.meta.badge" effect="dark" type="danger">
+    <el-tag v-if="itemOrMenu.meta && itemOrMenu.meta.badge" effect="dark" :type="itemOrMenu.meta.badgeType || 'danger'">
       {{ translate(itemOrMenu.meta.badge) }}
     </el-tag>
     <vab-dot

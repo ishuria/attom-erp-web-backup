@@ -3,6 +3,8 @@ declare interface VabRouteMeta {
   activeMenu?: string
   // badge小标签(只支持子级)
   badge?: string
+  // badge小标签类型(只支持子级)
+  badgeType?: 'primary' | 'success' | 'warning' | 'danger'
   // 是否隐藏面包屑
   breadcrumbHidden?: boolean
   // 是否显示小圆点
