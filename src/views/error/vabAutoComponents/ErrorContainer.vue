@@ -2,7 +2,7 @@
   <div class="error-container">
     <div class="error-content">
       <div class="pic-error">
-        <vab-icon class="error-svg" icon="403" is-custom-svg />
+        <vab-icon class="error-svg" :icon="icon" is-custom-svg />
       </div>
       <div class="bullshit">
         <div class="bullshit-oops">{{ oops }}</div>
@@ -38,6 +38,10 @@ defineProps({
     type: String,
     default: '',
   },
+  icon: {
+    type: String,
+    default: '',
+  },
 })
 </script>
 
@@ -64,8 +68,9 @@ defineProps({
     margin: auto;
 
     .pic-error {
-      flex-basis: 60%;
+      flex-basis: 65%;
       height: 300px;
+      animation: identifier 0.5s ease-in-out 0.2s forwards;
 
       .error-svg {
         width: 100%;
@@ -74,50 +79,39 @@ defineProps({
     }
 
     .bullshit {
-      flex-basis: 40%;
+      flex-basis: 35%;
+      animation: slideUp 0.5s ease-in-out 0.2s forwards;
 
       &-oops {
-        margin-bottom: 20px;
-        font-size: 24px;
+        margin-bottom: var(--el-margin);
+        font-size: calc(var(--el-font-size-extra-large) + 6px);
         font-weight: bold;
-        line-height: 40px;
         color: var(--el-color-primary);
-        opacity: 0;
-        animation-name: slideUp;
-        animation-duration: 0.5s;
-        animation-fill-mode: forwards;
       }
 
       &-headline {
         margin-bottom: 10px;
-        font-size: var(--el-font-size-extra-large);
+        font-size: var(--el-font-size-large);
         font-weight: bold;
-        line-height: 24px;
         color: var(--el-color-grey);
-        opacity: 0;
-        animation-name: slideUp;
-        animation-duration: 0.5s;
-        animation-delay: 0.1s;
-        animation-fill-mode: forwards;
       }
 
       &-info {
         margin-bottom: 30px;
-        font-size: 13px;
-        line-height: 21px;
+        font-size: var(--el-font-size-extra-small);
         color: var(--el-color-grey);
-        opacity: 0;
-        animation-name: slideUp;
-        animation-duration: 0.5s;
-        animation-delay: 0.2s;
-        animation-fill-mode: forwards;
       }
 
-      .el-button {
-        animation-name: slideUp;
-        animation-duration: 0.5s;
-        animation-delay: 0.3s;
-        animation-fill-mode: forwards;
+      @keyframes identifier {
+        0% {
+          opacity: 0;
+          transform: translateX(-60px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
 
       @keyframes slideUp {
@@ -128,7 +122,7 @@ defineProps({
 
         100% {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(30px);
         }
       }
     }
