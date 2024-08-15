@@ -1,5 +1,5 @@
 <template>
-  <div class="column-table-container no-background-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div class="column-table-container no-background-container auto-height-container" :class="{ 'fullscreen-container': isFullscreen }">
     <el-row :gutter="20">
       <el-col :lg="5" :md="24" :sm="24" :xl="4" :xs="24">
         <vab-card class="auto-height-card">

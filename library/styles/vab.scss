@@ -850,8 +850,8 @@ html {
       border: 0 !important;
     }
 
-    /* 表格全屏 */
-    .vab-table-fullscreen {
+    /* 内容全屏 */
+    .fullscreen-container {
       position: fixed !important;
       inset: 0 !important;
       z-index: calc(var(--el-z-index) + 3) !important;
@@ -973,7 +973,7 @@ html {
         }
       }
 
-      &.vab-table-fullscreen {
+      &.fullscreen-container {
         padding: var(--el-padding) !important;
 
         .auto-height-card {

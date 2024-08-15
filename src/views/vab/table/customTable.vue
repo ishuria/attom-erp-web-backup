@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div class="custom-table-container auto-height-container" :class="{ 'fullscreen-container': isFullscreen }">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline :model="queryForm" @submit.prevent>
