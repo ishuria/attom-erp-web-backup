@@ -26,7 +26,7 @@
           <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" type="danger">
             {{ level3.meta.badge }}
           </el-tag>
-          <vab-dot v-if="level3.meta && level3.meta.dot" type="danger" />
+          <vab-dot v-if="level3.meta && level3.meta.dot" :type="typeof level3.meta.dot === 'string' ? level3.meta.dot : 'danger'" />
         </a>
       </template>
     </fall-menu>

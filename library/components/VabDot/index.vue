@@ -9,7 +9,7 @@ defineOptions({
 
 defineProps({
   type: {
-    values: ['primary', 'success', 'info', 'warning', 'danger'],
+    values: ['primary', 'success', 'warning', 'danger'],
     type: String,
     default: 'primary',
   },

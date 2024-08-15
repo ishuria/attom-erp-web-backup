@@ -68,7 +68,6 @@
             <el-radio-button label="普通直播" value="普通直播" />
             <el-radio-button label="控流直播" value="控流直播" />
             <el-radio-button label="视频直播" value="视频直播" />
-            <el-radio-button label="网页开播" value="网页开播" />
           </el-radio-group>
         </vab-card>
       </el-col>

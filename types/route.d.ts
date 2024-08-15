@@ -6,7 +6,7 @@ declare interface VabRouteMeta {
   // 是否隐藏面包屑
   breadcrumbHidden?: boolean
   // 是否显示小圆点
-  dot?: boolean
+  dot?: boolean | 'primary' | 'success' | 'warning' | 'danger'
   // 动态传参路由是否新开标签页
   dynamicNewTab?: boolean
   // 权限

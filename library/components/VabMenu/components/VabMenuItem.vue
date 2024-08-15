@@ -12,7 +12,10 @@
     <el-tag v-if="itemOrMenu.meta && itemOrMenu.meta.badge" effect="dark" type="danger">
       {{ translate(itemOrMenu.meta.badge) }}
     </el-tag>
-    <vab-dot v-if="itemOrMenu.meta && itemOrMenu.meta.dot" type="danger" />
+    <vab-dot
+      v-if="itemOrMenu.meta && itemOrMenu.meta.dot"
+      :type="typeof itemOrMenu.meta.dot === 'string' ? itemOrMenu.meta.dot : 'danger'"
+    />
   </el-menu-item>
 </template>
 

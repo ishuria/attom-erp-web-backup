@@ -107,7 +107,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '实时监控',
           icon: 'vidicon-2-line',
-          dot: true,
+          dot: 'success',
           guard: ['Admin'],
         },
       },
@@ -260,7 +260,7 @@ export const asyncRoutes: VabRouteRecord[] = [
             component: () => import('/@/views/vab/table/tabsTable.vue'),
             meta: {
               title: '分类表格',
-              dot: true,
+              dot: 'primary',
             },
           },
           {
@@ -680,7 +680,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '视频播放器',
           guard: ['Admin'],
           icon: 'video-line',
-          dot: true,
+          dot: 'warning',
         },
       },
       {
@@ -741,7 +741,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '抽奖',
           icon: 'award-line',
-          dot: true,
+          dot: 'danger',
         },
       },
       {
