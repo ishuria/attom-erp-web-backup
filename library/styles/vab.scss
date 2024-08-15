@@ -1024,7 +1024,7 @@ html {
     @media (max-width: 768px) {
       .el-space {
         &__item {
-          &:has([class*='hidden']) {
+          &:has([class*='hidden-']) {
             display: none;
           }
         }

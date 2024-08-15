@@ -16,12 +16,11 @@
     </vab-card>
     <vab-card title="动态徽章">
       <el-space wrap>
-        徽章类型
-        <el-select v-model="badgeType" placeholder="徽章类型" @change="handleBadgeType('DynamicMeta')">
+        <el-select v-model="badgeType" placeholder="徽章类型" style="min-width: 95px" @change="handleBadgeType('DynamicMeta')">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-badge :hidden="hidden" style="margin-right: 10px" :value="badge">
-          <el-button type="primary" @click="handleBadge('DynamicMeta')">徽章+ 1</el-button>
+        <el-badge :hidden="hidden" style="margin-right: 10px" :type="badgeType" :value="badge">
+          <el-button :type="badgeType" @click="handleBadge('DynamicMeta')">{{ badgeType }} 徽章+ 1</el-button>
         </el-badge>
         <el-button type="warning" @click="resetBadge('DynamicMeta', { badge: '0' })">徽章清零</el-button>
         <el-button type="danger" @click="removeBadge('DynamicMeta', { badge: false })">移除徽章</el-button>
@@ -71,7 +70,7 @@ const icon = ref<any>(route.meta.icon)
 const hidden = ref<boolean>(false)
 const favicon = useFavicon()
 const visible = ref<boolean>(false)
-const badgeType = ref<string>('success')
+const badgeType = ref<any>('success')
 const options = [
   {
     value: 'primary',
