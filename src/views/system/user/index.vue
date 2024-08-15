@@ -21,14 +21,9 @@
 
     <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
       <el-table-column type="selection" width="38" />
-      <el-table-column align="center" label="序号" width="55">
-        <template #default="{ $index }">
-          {{ $index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="id" min-width="180" prop="userId" show-overflow-tooltip />
+      <el-table-column align="center" label="用户id" min-width="120" prop="userId" show-overflow-tooltip />
       <el-table-column align="center" label="用户名" min-width="120" prop="userName" />
-      <el-table-column align="center" label="邮箱" min-width="120" prop="email" show-overflow-tooltip />
+      <el-table-column align="center" label="邮箱" min-width="220" prop="email" show-overflow-tooltip />
 
       <el-table-column align="center" label="角色" min-width="155">
         <template #default="{ row }">
@@ -47,7 +42,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间" min-width="160" prop="createTime" show-overflow-tooltip />
-      <el-table-column align="center" label="操作" width="150" v-permissions="{ permission: ['system:user:edit', 'system:user:delete'] }">
+      <el-table-column align="center" label="操作" width="250" v-permissions="{ permission: ['system:user:edit', 'system:user:delete'] }">
         <template #default="{ row }">
           <el-button v-permissions="{ permission: ['system:user:edit'] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
           <el-button v-permissions="{ permission: ['system:user:delete'] }" text type="danger" @click="handleDelete(row)">删除</el-button>

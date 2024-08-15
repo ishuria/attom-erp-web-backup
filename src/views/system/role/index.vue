@@ -21,12 +21,7 @@
 
     <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
       <el-table-column type="selection" width="38" />
-      <el-table-column align="center" label="序号" show-overflow-tooltip width="55">
-        <template #default="{ $index }">
-          {{ $index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="id" width="100" prop="roleId" show-overflow-tooltip />
+      <el-table-column align="center" label="角色id" width="100" prop="roleId" show-overflow-tooltip />
       <el-table-column align="center" label="角色代码" prop="roleCode" show-overflow-tooltip />
       <el-table-column align="center" label="角色名称" prop="roleName" show-overflow-tooltip />
       <el-table-column align="center" label="角色英文" prop="roleNameEn" show-overflow-tooltip />
@@ -36,7 +31,7 @@
           <el-tag v-if="row.status == 1" type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="150" v-permissions="{ permission: ['system:role:edit', 'system:role:delete'] }">
+      <el-table-column align="center" label="操作" width="200" v-permissions="{ permission: ['system:role:edit', 'system:role:delete'] }">
         <template #default="{ row }">
           <el-button v-permissions="{ permission: ['system:role:edit'] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
           <el-button v-permissions="{ permission: ['system:role:delete'] }" text type="danger" @click="handleDelete(row)">删除</el-button>

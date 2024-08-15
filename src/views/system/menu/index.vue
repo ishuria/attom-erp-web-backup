@@ -11,8 +11,8 @@
         v-loading="listLoading"
         border
         :data="list"
-        row-key="path"
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        row-key="id"
+        :tree-props="{ hasChildren: 'hasChildren',children: 'children'}"
       >
         <el-table-column align="center" label="标题" min-width="140" prop="meta.title" show-overflow-tooltip />
         <el-table-column align="center" label="name" min-width="120" prop="name" show-overflow-tooltip />
@@ -44,7 +44,7 @@
 
         <el-table-column align="center" label="创建时间" min-width="120" prop="createTime" show-overflow-tooltip />
 
-        <el-table-column align="center" label="操作" width="150" v-permissions="{ permission: ['system:menu:update', 'system:menu:delete'] }">
+        <el-table-column align="center" label="操作" width="200" v-permissions="{ permission: ['system:menu:update', 'system:menu:delete'] }">
           <template #default="{ row }">
             <el-button text type="primary" @click="handleEdit(row)" v-permissions="{ permission: ['system:menu:update',]}">编辑</el-button>
             <el-button text type="danger" @click="handleDelete(row)"v-permissions="{ permission: ['system:menu:delete',]}">删除</el-button>

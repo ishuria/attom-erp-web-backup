@@ -51,6 +51,16 @@ export function getEvaluationScoreDetail(params?: any) {
 }
 
 
+export function getEvaluationShareInfo(params?: any) {
+  return request({
+    url: `${BASE_API}/evaluation/share`,
+    method: 'get',
+    params,
+  })
+}
+
+
+
 export function doAddEvaluation(data?: any) {
   return request({
     url: `${BASE_API}/evaluation/add`,
@@ -85,4 +95,10 @@ export function updateEvaluationCostParams(data?: any) {
   })
 }
 
-
+export function updateSharePerson(data?: any) {
+  return request({
+    url: `${BASE_API}/evaluation/update/share`,
+    method: 'post',
+    data,
+  })
+}

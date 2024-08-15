@@ -82,7 +82,7 @@
               </div>
               <template #tip>
                 <div class="el-upload__tip">
-                  文件上传格式必须是.xls或.xlsx
+                  上传易芽导出的excel文件，至少2页/80个产品数据
                 </div>
               </template>
             </el-upload>

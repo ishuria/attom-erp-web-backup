@@ -1,6 +1,6 @@
 <template>
   <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="500px" @close="close" :draggable="false">
-    <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
+    <el-form ref="formRef" label-width="100px" :model="form" :rules="rules">
       <el-form-item label="角色代码" prop="roleCode">
         <el-tooltip class="item" effect="dark" content="角色代码必须是ROLE_XXXX形式，且必须是全大写英文" placement="top-start">
           <el-input :disabled="disableRoleCode" v-model="form.roleCode" />

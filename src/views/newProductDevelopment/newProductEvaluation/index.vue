@@ -4,8 +4,8 @@
       <vab-query-form-left-panel>
         <el-button type="primary" @click="startEvalution" v-permissions="{ permission: ['newProduct:evaluation:add']}">开始评估</el-button>
         <el-button type="primary" @click="keyWordTrendVisible = true" v-permissions="{ permission: ['newProduct:evaluation:keyword:trend']}" >关键词趋势</el-button>
-        <el-button type="primary" @click="getScoreParams">评分参数</el-button>
-        <el-button class="hidden-xs-only" type="primary" @click="costAccountingeParam">成本核算默认参数</el-button>
+        <el-button type="primary" @click="getScoreParams" v-permissions="{ permission: ['newProduct:evaluation:default:params']}" >评分参数</el-button>
+        <el-button class="hidden-xs-only" type="primary" v-permissions="{ permission: ['newProduct:evaluation:score:params']}" @click="costAccountingeParam">成本核算默认参数</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="custom-table-right-tools">
@@ -67,8 +67,8 @@
                   <el-dropdown-item >
                     <el-link type="primary" :underline="false" @click="searchKeyWordTrend(row)" v-permissions="{ permission: ['newProduct:evaluation:keyword:trend']}">关键词趋势</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item >
-                    <el-link type="primary" :underline="false" @click="sharedVisible = true">共享</el-link>
+                  <el-dropdown-item v-if="row.userId === currentLoginUserId">
+                    <el-link type="primary" :underline="false" @click="sharedEvaluation(row)">共享</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item >
                     <el-link type="primary" :underline="false" @click="getScoreDetail(row.idNo)" v-permissions="{ permission: ['newProduct:evaluation:score:detail']}">分数明细</el-link>
@@ -252,7 +252,7 @@
 
     <el-dialog v-model="scoreDetailVisible"
       :close-on-click-modal="false"
-      title="跑分明细" width="650">
+      title="跑分明细" width="750">
       <el-table 
       :data="scoreDetailList"
       :cell-style="{ textAlign: 'center' }"
@@ -276,7 +276,7 @@
       :close-on-click-modal="false"
       title="共享" width="650">
       <el-table 
-      :data="userList"
+      :data="shareUserList"
       :cell-style="{ textAlign: 'center' }"
       :header-cell-style="{ 'text-align': 'center' }"
       >
@@ -289,8 +289,10 @@
           <template #default="{ row }">
               <div v-if="item.label === '操作'">
                 <el-switch
+                  v-model="row.share"
                   class="ml-2"
                   style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                  @change="handlerSwitchChange(row)"
                 />
               </div>
           </template>
@@ -317,7 +319,10 @@ import {getList,
   getEvaluationScoreParameter,
   updateEvaluationCostParams,
   updateEvaluationScoreParams,
-  getEvaluationScoreDetail} from '/@/api/devlocal/evaluation'
+  getEvaluationScoreDetail,
+  getEvaluationShareInfo,
+  updateSharePerson} from '/@/api/devlocal/evaluation'
+import { getUserInfo } from '/@/api/devlocal/userLogin'
 
 defineOptions({
   name: 'Evaluation',
@@ -328,7 +333,7 @@ const border = ref<boolean>(true)
 const lineHeight = ref<any>('default')
 const isFullscreen = ref<boolean>(false)
 const list = ref<any>([])
-const userList = ref<any>([])
+const shareUserList = ref<any>([])
 const listLoading = ref<boolean>(true)
 const keyWordTrendVisible = ref<boolean>(false)
 const keyWordTrendEchatsVisible = ref<boolean>(false)
@@ -341,6 +346,8 @@ const idxKeyWordValue = ref<string>('0')
 const total = ref<number>(0)
 const scoreParamList = ref<any>([])
 const scoreDetailList = ref<any>([])
+const shareId = ref<string>("")
+const currentLoginUserId = ref<string>("")
 const x = ref<any>([])
 const y = ref<any>([])
 const costFrom = reactive<any>({
@@ -389,6 +396,7 @@ const columns = ref<any>([
   {
     label: '评估日期',
     prop: 'evaluateDate',
+    minWidth: 110
   },
   {
     label: '中文品名',
@@ -408,7 +416,7 @@ const columns = ref<any>([
   {
     label: '年市场容量',
     prop: 'marketVolume',
-    minWidth: 120
+    minWidth: 130
   },
   {
     label: '关键词趋势',
@@ -462,7 +470,7 @@ const sharedColumns = ref<any>([
   },
   {
     label: '操作',
-    prop: 'isCheck',
+    prop: 'isShare',
   },
 ])
 
@@ -566,6 +574,30 @@ const keyWordTrendCellClick = (row: any, column: any, cell: HTMLTableCellElement
   }
 }
 
+const handlerSwitchChange = async (row:any) =>{
+  
+  let type = 1;
+  
+  if (row.share === true){
+    type = 0
+  }
+
+  const {data} = await updateSharePerson({
+    evaluationId:shareId.value,
+    userId:row.userID,
+    type
+  })
+
+  if (data === true && type === 0){
+    $baseMessage(`已共享给${row.userName}成功！`,"success","hey")
+  }
+
+  if (data === true && type === 1){
+    $baseMessage(`取消共享给${row.userName}成功！`,"success","hey")
+  }
+}
+
+
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
@@ -632,14 +664,27 @@ const updateScoreParam = (row:any) => {
   })
 }
 
+const sharedEvaluation = async (row:any) => {
+  sharedVisible.value = true
+  const {data} = await getEvaluationShareInfo({evaluationId:row.idNo})
+  shareId.value = row.idNo
+  shareUserList.value = data
+  
+}
+
 const getScoreDetail = async(id:any) => {
-  scoreDetailVisible.value = true
   const {data} = await getEvaluationScoreDetail({id})
   scoreDetailList.value = data
+  scoreDetailVisible.value = true
 }
 
 onActivated(() => {
   tableRef.value?.doLayout()
+})
+
+onMounted( async()=>{
+  const {data} = await getUserInfo()
+  currentLoginUserId.value = data.userId
 })
 
 onBeforeMount(() => {
