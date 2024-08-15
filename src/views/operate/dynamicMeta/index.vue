@@ -16,6 +16,10 @@
     </vab-card>
     <vab-card title="动态徽章">
       <el-space wrap>
+        徽章类型
+        <el-select v-model="badgeType" placeholder="徽章类型" @change="handleBadgeType('DynamicMeta')">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
         <el-badge :hidden="hidden" style="margin-right: 10px" :value="badge">
           <el-button type="primary" @click="handleBadge('DynamicMeta')">徽章+ 1</el-button>
         </el-badge>
@@ -24,7 +28,7 @@
       </el-space>
     </vab-card>
     <vab-card title="动态图标">
-      <el-popover popper-class="icon-selector-popper" trigger="hover" :width="305">
+      <el-popover v-model:visible="visible" popper-class="icon-selector-popper" :width="305">
         <template #reference>
           <el-button>
             <vab-icon :icon="icon" />
@@ -66,13 +70,45 @@ const badge = ref<number>(0)
 const icon = ref<any>(route.meta.icon)
 const hidden = ref<boolean>(false)
 const favicon = useFavicon()
+const visible = ref<boolean>(false)
+const badgeType = ref<string>('success')
+const options = [
+  {
+    value: 'primary',
+    label: 'primary',
+  },
+  {
+    value: 'success',
+    label: 'success',
+  },
+  {
+    value: 'warning',
+    label: 'warning',
+  },
+  {
+    value: 'danger',
+    label: 'danger',
+  },
+]
 
 const handleBadge = (name: any) => {
   badge.value = badge.value + 1
   hidden.value = false
   changeMenuMeta({
     name,
-    meta: { badge: badge.value },
+    meta: {
+      badge: badge.value,
+      badgeType: badgeType.value,
+    },
+  })
+}
+
+const handleBadgeType = (name: any) => {
+  changeMenuMeta({
+    name,
+    meta: {
+      badgeType: badgeType.value,
+    },
   })
 }
 
@@ -98,6 +134,7 @@ const handleIcon = (item: any) => {
   icon.value = item
   changeMenuMeta({ name: 'DynamicMeta', meta: { icon: item } })
   changeTabsMeta({ name: 'DynamicMeta', meta: { icon: item } })
+  visible.value = false
 }
 
 const handleResetIcon = () => {
@@ -112,10 +149,10 @@ const handleChangeLogo = (logo: string) => {
   switch (logo) {
     case 'vab': {
       favicon.value = 'favicon-vab.ico'
-      $baseMessage('logo修改成功，为保持页面美观，10秒后将重置为默认logo', 'warning', 'hey')
+      $baseMessage('logo修改成功，为保持页面美观，5秒后将重置为默认logo', 'warning', 'hey')
       setTimeout(() => {
         handleChangeLogo('vite')
-      }, 1000 * 10)
+      }, 5 * 1000)
 
       break
     }

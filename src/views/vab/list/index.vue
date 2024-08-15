@@ -18,7 +18,7 @@
         <li v-for="(item, index) in list" :key="index" class="list-item">
           <div class="list-item-meta">
             <div class="list-item-meta-avatar">
-              <el-popover placement="top-start" trigger="hover">
+              <el-popover placement="top-start">
                 <el-image :src="item.image" />
                 <template #reference>
                   <el-image :src="item.image" />

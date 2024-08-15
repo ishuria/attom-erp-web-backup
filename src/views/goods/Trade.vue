@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
-          <el-popover placement="top-start" trigger="hover">
+          <el-popover placement="top-start">
             <el-image :src="row.image" />
             <template #reference>
               <el-image :src="row.image" />

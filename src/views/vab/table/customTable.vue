@@ -49,7 +49,7 @@
           <el-button @click="clickFullScreen">
             <vab-icon :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
           </el-button>
-          <el-popover trigger="hover" :width="165">
+          <el-popover :width="165">
             <el-radio-group v-model="lineHeight">
               <el-radio-button label="large" value="large">大</el-radio-button>
               <el-radio-button label="default" value="default">中</el-radio-button>
@@ -61,7 +61,7 @@
               </el-button>
             </template>
           </el-popover>
-          <el-popover popper-class="custom-table-checkbox" trigger="hover">
+          <el-popover popper-class="custom-table-checkbox">
             <template #reference>
               <el-button>
                 <vab-icon icon="settings-line" />
@@ -115,7 +115,7 @@
           <span v-if="item.label === '评级'">
             <el-rate v-model="row.rate" disabled />
           </span>
-          <el-popover v-if="item.label === '图片'" placement="top-start" trigger="hover">
+          <el-popover v-if="item.label === '图片'" placement="top-start">
             <el-image :src="row.image" />
             <template #reference>
               <el-image :src="row.image" />

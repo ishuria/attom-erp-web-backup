@@ -20,7 +20,7 @@
         <el-input v-model="form.meta.title" clearable />
       </el-form-item>
       <el-form-item label="图标">
-        <el-popover popper-class="icon-selector-popper" trigger="hover" :width="305">
+        <el-popover v-model:visible="visible" popper-class="icon-selector-popper" :width="305">
           <template #reference>
             <el-input v-model="form.meta.icon" clearable />
           </template>
@@ -70,7 +70,7 @@ defineOptions({
 })
 
 const emit = defineEmits(['fetch-data'])
-
+const visible = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const form = reactive<any>({
   parentId: '',
@@ -104,6 +104,7 @@ const dialogFormVisible = ref<boolean>(false)
 
 const handleIcon = (item: string) => {
   form.meta.icon = item
+  visible.value = false
 }
 
 const showEdit = (row: any) => {

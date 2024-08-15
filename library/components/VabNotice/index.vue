@@ -1,6 +1,6 @@
 <template>
   <el-badge type="danger" :value="badge">
-    <el-popover placement="bottom" trigger="hover" :width="305">
+    <el-popover placement="bottom" :width="305">
       <template #reference>
         <vab-icon icon="notification-2-line" />
       </template>
