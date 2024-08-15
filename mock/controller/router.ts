@@ -88,7 +88,7 @@ const list: VabRouteRecord[] = [
       // {
       //   path: 'workbench',
       //   name: 'Workbench',
-      //   component: '/@/views/index/workbench.vue',
+      //   component:('/@/views/index/workbench.vue'),
       //   meta: {
       //     title: '工作台',
       //     icon: 'artboard-line',
@@ -161,6 +161,8 @@ const list: VabRouteRecord[] = [
             component: '/@/views/vab/icon/customSvg.vue',
             meta: {
               title: '自定义图标',
+              icon: 'vite',
+              isCustomSvg: true,
             },
           },
         ],
@@ -1568,6 +1570,16 @@ const list: VabRouteRecord[] = [
     meta: {
       title: '合作伙伴',
       hidden: true,
+    },
+  },
+  {
+    path: '//vuejs-core.cn/authorization/shop-vite.html',
+    name: 'ExternalLink',
+    meta: {
+      title: '外链',
+      target: '_blank',
+      guard: ['Admin'],
+      icon: 'external-link-line',
     },
   },
   {

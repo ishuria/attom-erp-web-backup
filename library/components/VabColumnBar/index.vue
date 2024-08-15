@@ -90,15 +90,15 @@ const setDefaultOpeneds = () => {
 
 const handleTabClick = () => {
   nextTick(() => {
-    if (tabMenu.value.meta.target === '_blank') {
-      if (route.path !== tabMenu.value.path) {
-        isHashRouterMode ? window.open(`#${tabMenu.value.path}`) : window.open(tabMenu.value.path)
-        router.push('/redirect')
-      }
-    } else if (isExternal(tabMenu.value.path)) {
-      window.open(tabMenu.value.path)
+    const openPath = (path: any, target: string) => (target === '_blank' ? window.open(path) : (location.href = path))
+    if (isExternal(tabMenu.value.path) || tabMenu.value.meta.target === '_blank') {
+      openPath(
+        isExternal(tabMenu.value.path) ? tabMenu.value.path : isHashRouterMode ? `#${tabMenu.value.path}` : tabMenu.value.path,
+        '_blank'
+      )
       router.push('/redirect')
     } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
+
     setDefaultOpeneds()
   })
 }

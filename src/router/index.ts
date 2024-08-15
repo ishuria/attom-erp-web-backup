@@ -1631,6 +1631,16 @@ export const asyncRoutes: VabRouteRecord[] = [
     },
   },
   {
+    path: '//vuejs-core.cn/authorization/shop-vite.html',
+    name: 'ExternalLink',
+    meta: {
+      title: '外链',
+      target: '_blank',
+      guard: ['Admin'],
+      icon: 'external-link-line',
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/404',
     name: 'NotFound',
