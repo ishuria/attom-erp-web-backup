@@ -1,5 +1,5 @@
 <template>
-  <el-card :body-class="bodyClass" :body-style="bodyStyle" :shadow="shadow" v-bind="$attrs">
+  <el-card :body-class="bodyClass" :body-style="bodyStyle" class="vab-card" :shadow="shadow">
     <template v-if="$slots.header || title" #header>
       <slot v-if="$slots.header" name="header"></slot>
       <template v-else>{{ title }}</template>
@@ -55,8 +55,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep() {
-  .el-card {
+.vab-card {
+  :deep() {
     .el-card__header {
       font-weight: 500;
 
