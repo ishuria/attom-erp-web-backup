@@ -92,6 +92,7 @@ html > body.vab-theme-plain {
     border-right: 1px solid var(--el-border-color) !important;
 
     .el-tabs {
+      margin-left: -1px !important;
       border-right: 1px solid var(--el-border-color) !important;
       @include container;
 

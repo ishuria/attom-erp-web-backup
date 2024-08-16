@@ -74,6 +74,7 @@ html > body.vab-theme-technology {
     border-right: 1px solid var(--el-border-color) !important;
 
     .el-tabs {
+      margin-left: -1px !important;
       border-right: 1px solid var(--el-border-color) !important;
 
       .el-tabs__item {

@@ -51,6 +51,7 @@ html.dark > body[class*='vab-theme-'] {
   }
 
   .vab-column-bar {
+    margin-left: -1px !important;
     border-right: 1px solid var(--el-border-color) !important;
 
     .el-tabs {
