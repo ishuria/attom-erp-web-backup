@@ -102,3 +102,41 @@ export function updateSharePerson(data?: any) {
     data,
   })
 }
+
+
+export function addEstimatedCostAccounting(data?: any) {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/add`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+
+export function updateEstimatedCostAccounting(data?: any) {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/update`,
+    method: 'post',
+    data,
+  })
+}
+
+
+export function getEstimatedCostAccountingList(params?: any) {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/list`,
+    method: 'get',
+    params,
+  })
+}
+
+
+export function uploadFileBoBakend(data?: any) {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+
