@@ -61,7 +61,7 @@
     "vue": "^3.4.38",
     "vue-draggable-plus": "^0.5.3",
     "vue-echarts": "6.7.3",
-    "vue-i18n": "^9.13.1",
+    "vue-i18n": "^9.14.0",
     "vue-json-viewer": "^3.0.4",
     "vue-pdf-embed": "^2.1.0",
     "vue-qr": "^4.0.9",
