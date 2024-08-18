@@ -103,7 +103,13 @@ export function updateSharePerson(data?: any) {
   })
 }
 
+// =============================== 产品成本核算与推进 ===============================
 
+/**
+ * 添加
+ * @param data 传递的参数
+ * @returns Promise
+ */
 export function addEstimatedCostAccounting(data?: any) {
   return request({
     url: `${BASE_API}/estimatedCostAccounting/add`,
@@ -113,6 +119,11 @@ export function addEstimatedCostAccounting(data?: any) {
   })
 }
 
+/**
+ * 修改
+ * @param data 传递的参数
+ * @returns Promise
+ */
 export function updateEstimatedCostAccounting(data?: any) {
   return request({
     url: `${BASE_API}/estimatedCostAccounting/update`,
@@ -121,7 +132,11 @@ export function updateEstimatedCostAccounting(data?: any) {
   })
 }
 
-
+/**
+ * 获取数据列表
+ * @param params 传递的参数
+ * @returns Promise
+ */
 export function getEstimatedCostAccountingList(params?: any) {
   return request({
     url: `${BASE_API}/estimatedCostAccounting/list`,
@@ -130,10 +145,43 @@ export function getEstimatedCostAccountingList(params?: any) {
   })
 }
 
-
+/**
+ * 上传文件
+ * @param data 传递的参数
+ * @returns Promise
+ */
 export function uploadFileBoBakend(data?: any) {
   return request({
     url: `${BASE_API}/estimatedCostAccounting/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+
+
+/**
+ * 删除
+ * @param data 传递的参数
+ * @returns Promise
+ */
+export function deleteEstimatedCostAccounting(data?: any) {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/delete`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+
+/**
+ * 复制
+ * @param data 传递的参数
+ * @returns Promise 
+ */
+export function copyEstimatedCostAccounting(data?: any) {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/copy`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
     data,

@@ -223,17 +223,64 @@ export const estimatedCostAccountingSiteColumns = [
     {
         value: '0',
         label: '亚马逊US',
-      },
-      {
+    },
+    {
         value: '1',
         label: '亚马逊DE',
-      },
-      {
+    },
+    {
         value: '2',
         label: '亚马逊UK',
-      },
-      {
+    },
+    {
         value: '3',
         label: '沃尔玛US',
-      },
+    },
 ]
+
+export const  firstLegChannelColumns = [
+    {
+        value: '0',
+        label: '头程渠道1',
+    },
+    {
+        value: '1',
+        label: '头程渠道2',
+    },
+    {
+        value: '2',
+        label: '头程渠道3',
+    },
+    {
+        value: '3',
+        label: '头程渠道4',
+    },
+]
+
+
+export interface EstimatedCostAccounting{
+    id:number,
+    createTime:string,
+    site:string,
+    imgUrl:string,
+    desc:string,
+    priceInfo:string,
+    url1688:string,
+    price:number,
+    length:number,
+    width:number,
+    height:number,
+    weight:number,
+    lastMile:number,
+    firstMile:number,
+    packaging:number,
+    firstMileChannel:string,
+    sellingPrice:number,
+    grossMarginRate:number,
+    roi:number,
+    weightCoefficient:number,
+    volumeCoefficient:number,
+    tariff:number,
+    platformCommission:number,
+    storageFee:number
+}

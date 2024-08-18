@@ -155,7 +155,7 @@
               @change="updateKeyWordTrend"
             >
               <el-option
-                v-for="item in keyWordOptions"
+                v-for="item in idxKeyWordOptions"
                
                 :key="item.value"
                 :label="item.label"
@@ -184,12 +184,10 @@
 
 <script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue'
-import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import {removeLocalStorage} from '/@/utils/localStorage'
 import type {FormInstance,
-  FormRules,
   UploadFile,
   UploadFiles,UploadInstance } from 'element-plus'
 import {doAddEvaluation,
@@ -197,6 +195,14 @@ import {doAddEvaluation,
   getEvaluationById,
   getEvaluationTrendList
 } from '/@/api/devlocal/evaluation'
+
+import {rules,
+  selectOptions,
+} from './addOrUpdateEvalution'
+
+import {
+  idxKeyWordOptions
+} from '../newProductDevelopment/newProductEvaluation/indexColumns'
 
 const inputFormRef = ref<FormInstance>()
 const outputFormRef = ref<FormInstance>()
@@ -212,7 +218,6 @@ const echartsFlag = ref(false)
 
 const tabsStore = useTabsStore()
 const { changeTabsMeta, delVisitedRoute } = tabsStore
-const routesStore = useRoutesStore()
 const uploadRef = ref<UploadInstance>()
 const fileList = ref<any>([])
 const isSaveLoading = ref<boolean>(false)
@@ -254,132 +259,10 @@ const inputForm = reactive<any>({
   finalScore:'',
  })
 
-// select value
-const selectOptions = [
-  {
-    value: '欧鹭',
-    label: '欧鹭',
-  },
-  {
-    value: '亚马逊随机浏览',
-    label: '亚马逊随机浏览',
-  },
-  {
-    value: '亚马逊榜单',
-    label: '亚马逊榜单',
-  },
-  {
-    value: '1688',
-    label: '1688',
-  },
-  {
-    value: '供应商推荐',
-    label: '供应商推荐',
-  },
-  {
-    value: '已有产品扩展',
-    label: '已有产品扩展',
-  },
-  {
-    value: '随机搜索',
-    label: '随机搜索',
-  },
-]
-
-const keyWordOptions = [
-{
-    value: '0',
-    label: '全部',
-  },
-  {
-    value: '1',
-    label: '近半年',
-  },
-  {
-    value: '2',
-    label: '近一年',
-  },
-  {
-    value: '3',
-    label: '近两年',
-  },
-]
- // input form check
- const rules = reactive<FormRules<any>>({
-  productSource: [
-    { required: true, message: '产品来源是必填项', trigger: 'blur' },
-  ],
-  productNameZh: [
-    {
-      required: true,
-      message: '中文品名是必填项',
-      trigger: 'blur',
-    },
-  ],
-  amazonFrontendKeywords: [
-    {
-      required: true,
-      message: '亚马逊前台关键词是必填项',
-      trigger: 'blur',
-    },
-  ],
-  amazonBackendKeywords: [
-    {
-      required: true,
-      message: '亚马逊后台关键词是必填项',
-      trigger: 'blur',
-    },
-  ],
-  amazonListingQuantity: [
-    {
-      required: true,
-      message: '亚马逊listing是必填项',
-      trigger: 'blur',
-    },
-  ],
-  searchVolume90Days: [
-    {
-      required: true,
-      message: '90天搜索量是必填项',
-      trigger: 'blur',
-    },
-  ],
-  averageSellingPrice: [
-    {
-      required: true,
-      message: '平均售价是必填项',
-      trigger: 'blur',
-    },
-  ],
-  averageSales360Days: [
-    {
-      required: true,
-      message: '360天平均销量是必填项',
-      trigger: 'blur',
-    },
-  ],
-  top80PercentClickedProductsCount: [
-    {
-      required: true,
-      message: '前80%点击的产品个数是必填项',
-      trigger: 'blur',
-    },
-  ],
-  amazonAdCpc: [
-    { required: true, message: '亚马逊广告单个点击价格$(CPC)是必填项', trigger: 'blur' },
-  ],
-  categoryAvgConversionRate: [
-    { required: true, message: '类目平均转化率是必填项', trigger: 'blur' },
-  ],
-})
-
-
 // file format upload  check
 const uploadFileCheck = async (file:File) =>{
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
- 
   const whiteList = ["xls", "xlsx"];
- 
   if (whiteList.indexOf(fileSuffix) === -1) {
     await $baseMessage('上传文件只能是xls、xlsx格式', 'error', 'hey')
     await close()
@@ -513,9 +396,7 @@ const updateKeyWordTrend = async () =>{
 
 
 onMounted(async () => {
-
   if (route.query.idNo){
-
     aginAnalyzeFlg.value = false
     outPutResFlg.value = true
     const {data} = await getEvaluationById({idNo:route.query.idNo})
