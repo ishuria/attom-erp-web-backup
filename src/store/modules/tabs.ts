@@ -90,7 +90,6 @@ export const useTabsStore = defineStore('tabs', {
     /**
      * @description 缓存tab页
      */
-
     handleCaughtRoutes() {
       const settingsStore = useSettingsStore()
       if (settingsStore.persistenceTab) localStorage.setItem('caughtRoutes', JSON.stringify(this.visitedRoutes))
