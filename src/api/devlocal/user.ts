@@ -2,7 +2,9 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-export function getList(params?: any) {
+import {IUserQueryReq,IUserDeleteReq,IUserAddOrUpateReq} from '/@/type/user/userType'
+
+export function getList(params?: IUserQueryReq) {
   return request({
     url: `${BASE_API}/user/getList`,
     method: 'get',
@@ -10,7 +12,7 @@ export function getList(params?: any) {
   })
 }
 
-export const doAdd = (data: any) => {
+export const doAdd = (data: IUserAddOrUpateReq) => {
   return request({
     url: `${BASE_API}/user/doAdd`,
     method: 'post',
@@ -18,7 +20,7 @@ export const doAdd = (data: any) => {
   })
 }
 
-export const doEdit = (data: any) => {
+export const doEdit = (data: IUserAddOrUpateReq) => {
   return request({
     url: `${BASE_API}/user/doEdit`,
     method: 'post',
@@ -26,7 +28,7 @@ export const doEdit = (data: any) => {
   })
 }
 
-export const doDelete = (data: any) => {
+export const doDelete = (data: IUserDeleteReq) => {
   return request({
     url: `${BASE_API}/user/doDelete`,
     method: 'post',
@@ -34,7 +36,7 @@ export const doDelete = (data: any) => {
   })
 }
 
-export const doMostDelete = (data: any) => {
+export const doMostDelete = (data: IUserDeleteReq) => {
   return request({
     url: `${BASE_API}/user/doDeleteList`,
     method: 'post',

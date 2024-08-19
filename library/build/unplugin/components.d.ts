@@ -196,6 +196,7 @@ declare module 'vue' {
     VabColorfulCard: typeof import('./../../components/VabColorfulCard/index.vue')['default']
     VabColorPicker: typeof import('./../../components/VabColorPicker/index.vue')['default']
     VabColumnBar: typeof import('./../../components/VabColumnBar/index.vue')['default']
+    VabCostAccountingParam: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabCostAccountingParam.vue')['default']
     VabCount: typeof import('./../../../src/plugins/VabCount/index.vue')['default']
     VabDark: typeof import('./../../components/VabDark/index.vue')['default']
     VabDialog: typeof import('./../../components/VabDialog/index.vue')['default']
@@ -246,6 +247,7 @@ declare module 'vue' {
     VabThemeDrawer: typeof import('./../../components/VabTheme/components/VabThemeDrawer.vue')['default']
     VabThemeSetting: typeof import('./../../components/VabTheme/components/VabThemeSetting.vue')['default']
     VabUpdate: typeof import('./../../../src/plugins/VabUpdate/index.vue')['default']
+    VabUpload: typeof import('./../../../src/plugins/VabUpload/index.vue')['default']
     VersionInformation: typeof import('./../../../src/views/index/vabAutoComponents/VersionInformation.vue')['default']
     WorkbenchHeader: typeof import('./../../../src/views/index/vabAutoComponents/WorkbenchHeader.vue')['default']
   }

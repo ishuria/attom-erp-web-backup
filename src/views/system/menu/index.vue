@@ -31,13 +31,15 @@
         <el-table-column align="center" label="状态" width="120" prop="status" show-overflow-tooltip>
           <template #default="{ row }">
             <el-tag v-if="row.status == 0" type="success">正常</el-tag>
-            <el-tag v-if="row.status == 1" type="warning">禁用</el-tag>
+            <el-tag v-if="row.status == 1" type="danger">禁用</el-tag>
+            <el-tag v-if="row.status == 2" type="warning">特殊</el-tag>
           </template>
         </el-table-column>
 
         <el-table-column align="center" label="类型" width="120" prop="type" show-overflow-tooltip>
           <template #default="{ row }">
-            <el-tag v-if="row.type == 0">菜单</el-tag>
+            <el-tag v-if="row.type == 0 && row.status == 0">菜单</el-tag>
+            <el-tag v-if="row.type == 0 && row.status == 2" type="info">页面</el-tag>
             <el-tag v-if="row.type == 1" type="info">按钮</el-tag>
           </template>
         </el-table-column>
@@ -60,9 +62,11 @@
 </template>
 
 <script lang="ts" setup>
+
 import { Plus } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { getMenuList,  doDelete, } from '/@/api/devlocal/router'
+import { IMenuQueryResp} from '/@/type/menu/menuType'
 
 defineOptions({
   name: 'MenuEdit',
@@ -71,11 +75,8 @@ defineOptions({
 const tableRef = ref<TableInstance>()
 const editRef = ref<any>(null)
 
-const defaultProps = reactive<any>({
-  children: 'children',
-  label: 'label',
-})
-const list = ref<any>([])
+
+const list = ref<IMenuQueryResp[]>([])
 const listLoading = ref<boolean>(true)
 
 const handleAdd = () => {
@@ -87,8 +88,7 @@ const handleEdit = (row: any = {}) => {
 }
 
 const handleDelete = (row: any = {}) => {
-  
-  if (row.id) {
+  if (row.id && row.id !="") {
 
     if (row.children.length > 0){
       $baseConfirm('您确定要删除当前菜单以及子菜单或按钮吗', null, async () => {
@@ -107,16 +107,14 @@ const handleDelete = (row: any = {}) => {
   }
 }
 
-const fetchData = async (role: any = {}) => {
+const fetchData = async () => {
   listLoading.value = true
   const { data } = await getMenuList()
   list.value = data
   listLoading.value = false
+
 }
 
-const handleNodeClick = ({ role }: any) => {
-  // fetchData(role)
-}
 
 onActivated(() => {
   tableRef.value?.doLayout()

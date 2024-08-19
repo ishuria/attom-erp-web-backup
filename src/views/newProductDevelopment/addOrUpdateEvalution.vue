@@ -202,7 +202,7 @@ import {rules,
 
 import {
   idxKeyWordOptions
-} from '../newProductDevelopment/newProductEvaluation/indexColumns'
+} from './newProductEvaluation/indexColumns'
 
 const inputFormRef = ref<FormInstance>()
 const outputFormRef = ref<FormInstance>()

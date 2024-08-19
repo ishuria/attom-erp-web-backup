@@ -2,12 +2,17 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
+import {IRoleDeleteReq,
+  IRoleQuery,
+  IRoleAddOrUpdateReq,
+  IRoleMenuReq
+} from '/@/type/role/roleType'
+
 /**
  * 角色列表
- * @param params 可选
  * @returns
  */
-export function getAllList(params?: any) {
+export function getAllList(params: IRoleQuery) {
   return request({
     url: `${BASE_API}/role/getAllList`,
     method: 'get',
@@ -17,14 +22,12 @@ export function getAllList(params?: any) {
 
 /**
  * 角色名称、角色code列表
- * @param params 可选
  * @returns
  */
-export function getList(params?: any) {
+export function getList() {
   return request({
     url: `${BASE_API}/role/getList`,
     method: 'get',
-    params,
   })
 }
 
@@ -33,15 +36,14 @@ export function getList(params?: any) {
  * @param params
  * @returns
  */
-export const getAllMenuAndBtnList = (params?: any) => {
+export const getAllMenuAndBtnList = () => {
   return request({
     url: `${BASE_API}/role/router/getAllList`,
     method: 'get',
-    params,
   })
 }
 
-export const getMenuAndBtnListByRoleCode = (params?: any) => {
+export const getMenuAndBtnListByRoleCode = (params?: IRoleMenuReq) => {
   return request({
     url: `${BASE_API}/role/permissionList`,
     method: 'get',
@@ -49,7 +51,7 @@ export const getMenuAndBtnListByRoleCode = (params?: any) => {
   })
 }
 
-export const doAdd = (data: any) => {
+export const doAdd = (data: IRoleAddOrUpdateReq) => {
   return request({
     url: `${BASE_API}/role/add`,
     method: 'post',
@@ -57,7 +59,7 @@ export const doAdd = (data: any) => {
   })
 }
 
-export const doEdit = (data: any) => {
+export const doEdit = (data: IRoleAddOrUpdateReq) => {
   return request({
     url: `${BASE_API}/role/doEdit`,
     method: 'post',
@@ -65,7 +67,7 @@ export const doEdit = (data: any) => {
   })
 }
 
-export const doDelete = (data: any) => {
+export const doDelete = (data: IRoleDeleteReq) => {
   return request({
     url: `${BASE_API}/role/doDelete`,
     method: 'post',
@@ -73,7 +75,7 @@ export const doDelete = (data: any) => {
   })
 }
 
-export const doDeleteList = (data: any) => {
+export const doDeleteList = (data: IRoleDeleteReq) => {
   return request({
     url: `${BASE_API}/role/doDeleteList`,
     method: 'post',

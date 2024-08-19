@@ -256,31 +256,3 @@ export const  firstLegChannelColumns = [
         label: '头程渠道4',
     },
 ]
-
-
-export interface EstimatedCostAccounting{
-    id:number,
-    createTime:string,
-    site:string,
-    imgUrl:string,
-    desc:string,
-    priceInfo:string,
-    url1688:string,
-    price:number,
-    length:number,
-    width:number,
-    height:number,
-    weight:number,
-    lastMile:number,
-    firstMile:number,
-    packaging:number,
-    firstMileChannel:string,
-    sellingPrice:number,
-    grossMarginRate:number,
-    roi:number,
-    weightCoefficient:number,
-    volumeCoefficient:number,
-    tariff:number,
-    platformCommission:number,
-    storageFee:number
-}

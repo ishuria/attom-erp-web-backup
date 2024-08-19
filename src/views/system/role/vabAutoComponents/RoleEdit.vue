@@ -43,6 +43,7 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { doAdd, doEdit, getAllMenuAndBtnList, getMenuAndBtnListByRoleCode } from '/@/api/devlocal/role'
+import { IRoleAddOrUpdateReq } from '/@/type/role/roleType'
 
 defineOptions({
   name: 'RoleEdit',
@@ -52,10 +53,10 @@ const emit = defineEmits(['fetch-data'])
 const formRef = ref<FormInstance>()
 const treeRef = ref<any>(null)
 const disableRoleCode = ref<boolean>(false)
-const form = reactive<any>({
+const form = reactive<IRoleAddOrUpdateReq>({
+  roleId:'',
   menuCheckedList: [],
   menuIds: '',
-  menuBtnIds: '',
   permissionIds: '',
   roleCode: '',
   roleName: '',
@@ -148,14 +149,6 @@ const save = () => {
       // tree菜单对应的keys
       form.menuIds = menuIdsStr
 
-
-      if (childMenuBtnList.value == 0){
-        childMenuBtnList.value = [...treeRef.value.getCheckedKeys()]
-      }
-
-      const menuBtnIdsStr = childMenuBtnList.value.map(String).join(',')
-      form.menuBtnIds = menuBtnIdsStr
-
       // 权限
       const permissionIdsList: [] = treeRef.value.getCheckedNodes(false, true).map((item: any) => {
         return item.permissionId + ''
@@ -163,8 +156,7 @@ const save = () => {
 
       const permissionIdsStr = permissionIdsList.map(String).join(',')
       form.permissionIds = permissionIdsStr
-
-      if (form.roleId) {
+      if (form.roleId && form.roleId !="") {
         const { msg }: any = await doEdit({
           ...form,
         })

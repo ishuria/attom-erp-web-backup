@@ -28,7 +28,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" :border="border" :data="list" :size="lineHeight" :stripe="true"
+    <el-table ref="tableRef" v-loading="listLoading" :border="true" :data="evaluationList" :stripe="true"
       @cell-click="keyWordTrendCellClick">
       <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
         :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
@@ -61,7 +61,7 @@
                   <el-link type="primary" :underline="false" @click="sharedEvaluation(row)">共享</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="getScoreDetail(row.idNo)"
+                  <el-link type="primary" :underline="false" @click="getBenchmarkScoreDetail(row.idNo)"
                     v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -102,9 +102,9 @@
       <vab-echarts-chart-line class="chart-line" :x-axis-data="x" :y-axis-data="y" v-if="keyWordTrendEchatsVisible" />
     </el-dialog>
 
-    <el-dialog v-model="scoreParamVisible" :close-on-click-modal="false" title="评分参数" width="500"
+    <el-dialog v-model="scoreParametersVisible" :close-on-click-modal="false" title="评分参数" width="500"
       style="height: 800px;">
-      <el-table height="700px" :data="scoreParamList" :cell-style="{ textAlign: 'center' }"
+      <el-table height="700px" :data="scoreParametersList" :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ 'text-align': 'center' }">
         <el-table-column property="key" label="名称" />
         <el-table-column label="值">
@@ -123,88 +123,8 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="costAccountingeParamVisible" :close-on-click-modal="false" title="成本核算默认参数" width="500">
-      <el-form label-position="top" label-width="auto" style="max-width: 600px">
-        <div class="cost-accountinge-param">
-          <el-form-item label="目标毛利率">
-            <el-input v-model="costFrom.rateMargin" />
-          </el-form-item>
-          <el-form-item label="目标ROI">
-            <el-input v-model="costFrom.rateRoi" />
-          </el-form-item>
-        </div>
-        <div class="cost-accountinge-param">
-          <el-form-item label="关税比例">
-            <el-input v-model="costFrom.tariffRatio" />
-          </el-form-item>
-          <el-form-item label="额外FBA Fulfillment($)">
-            <el-input v-model="costFrom.extraFulfillment" />
-          </el-form-item>
-        </div>
-
-        <div class="cost-accountinge-param">
-          <el-form-item label="最近一次汇率">
-            <el-input v-model="costFrom.exchangeRate" />
-          </el-form-item>
-          <el-form-item label="装箱体积系数">
-            <el-input v-model="costFrom.volumeFactor" />
-          </el-form-item>
-        </div>
-
-        <div class="cost-accountinge-param">
-          <el-form-item label="装箱重量系数">
-            <el-input v-model="costFrom.weightFactor" />
-          </el-form-item>
-          <el-form-item label="运输方式">
-            <el-input v-model="costFrom.shippingType" />
-          </el-form-item>
-        </div>
-
-        <div class="cost-accountinge-param">
-          <el-form-item label="仓储费单价($/ft3/月)">
-            <el-input v-model="costFrom.savePrice" />
-          </el-form-item>
-          <el-form-item label="人工费">
-            <el-input v-model="costFrom.laborCost" />
-          </el-form-item>
-        </div>
-
-        <div class="cost-accountinge-param">
-          <el-form-item label="海运(RMB/M3)">
-            <el-input v-model="costFrom.oceanShipping" />
-          </el-form-item>
-          <el-form-item label="空运(RMB/KG)">
-            <el-input v-model="costFrom.airTransport" />
-          </el-form-item>
-        </div>
-
-        <div class="cost-accountinge-param">
-          <el-form-item label="重量系数">
-            <el-input v-model="costFrom.weightRate" />
-          </el-form-item>
-          <el-form-item label="体积系数">
-            <el-input v-model="costFrom.volumeRate" />
-          </el-form-item>
-        </div>
-
-        <div style="display: flex;padding-left: 20px;">
-          <el-form-item label="燃油附加费">
-            <el-input v-model="costFrom.fuelCost" />
-          </el-form-item>
-        </div>
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="commitUpdateCostParam">
-            提交修改
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
-
-    <el-dialog v-model="scoreDetailVisible" :close-on-click-modal="false" title="跑分明细" width="750">
-      <el-table :data="scoreDetailList" :cell-style="{ textAlign: 'center' }"
+    <el-dialog v-model="benchmarkScoreVisible" :close-on-click-modal="false" title="跑分明细" width="750">
+      <el-table :data="benchmarkScoreList" :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ 'text-align': 'center' }">
         <el-table-column v-for="(item, index) in scoreDetialColumns" :key="index" :label="item.label"
           :prop="item.prop" />
@@ -240,6 +160,7 @@
       </template>
     </el-dialog>
 
+    <!-- 产品成本核算与推进子组件 -->
     <vab-estimated-cost-accounting 
       :flag="estimatedCostAccountingVisible" 
       :list="estimatedCostAccountingList"
@@ -247,6 +168,14 @@
       @update:visibleValue = "updateEstimatedCostAccountingVisibleValue"
       :callParentMethod="fetchEstimatedCostAccounting"
     />
+
+     <!-- 成本核算默认方式 -->
+     <vab-cost-accounting-param 
+     :flag="costAccountingeParamVisible"
+     @update:visibleValue = "updatecostAccountingeParamVisible"
+     :data = "costAccountingFrom"
+     />
+
   </div>
 </template>
 
@@ -257,14 +186,13 @@ import { setLocalStorage } from '/@/utils/localStorage'
 import {
   getList,
   getEvaluationTrendList,
-  getEvaluationCostParameter,
   getEvaluationScoreParameter,
-  updateEvaluationCostParams,
   updateEvaluationScoreParams,
   getEvaluationScoreDetail,
   getEvaluationShareInfo,
   getEstimatedCostAccountingList,
-  updateSharePerson
+  updateSharePerson,
+  getEvaluationCostParameter
 } from '/@/api/devlocal/evaluation'
 import { getUserInfo } from '/@/api/devlocal/userLogin'
 import {
@@ -272,9 +200,19 @@ import {
   indexColumns,
   scoreDetialColumns,
   idxKeyWordOptions,
-  EstimatedCostAccounting
 } from './indexColumns'
 
+import {IEstimatedCostAccounting,
+  IEvaluation,
+  IShared,
+  IEvaluationScore,
+  IBenchmarkScore,
+  IEvaluationQueryReq,
+  ICostAccounting
+} from '/@/type/evaluation/evaluationType'
+
+
+import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
   name: 'Evaluation',
@@ -283,32 +221,53 @@ defineOptions({
 
 const router = useRouter()
 const tableRef = ref<TableInstance>()
-const border = ref<boolean>(true)
-const lineHeight = ref<any>('default')
 const isFullscreen = ref<boolean>(false)
-const list = ref<any>([])
-const shareUserList = ref<any>([])
-const listLoading = ref<boolean>(true)
-const keyWordTrendVisible = ref<boolean>(false)
-const keyWordTrendEchatsVisible = ref<boolean>(false)
-const sharedVisible = ref<boolean>(false)
-const estimatedCostAccountingVisible = ref<boolean>(false)
-const scoreParamVisible = ref<boolean>(false)
-const costAccountingeParamVisible = ref<boolean>(false)
-const scoreDetailVisible = ref<boolean>(false)
-const inputKeyWord = ref<string>('')
-const idxKeyWordValue = ref<string>('0')
-const total = ref<number>(0)
-const scoreParamList = ref<any>([])
-const scoreDetailList = ref<any>([])
-const estimatedCostAccountingList = ref<EstimatedCostAccounting[]>([])
-const shareId = ref<string>("")
-const currentLoginUserId = ref<string>("")
-const evaluationId = ref<string>('')
-const x = ref<any>([])
-const y = ref<any>([])
 
-const costFrom = reactive<any>({
+// 表格加载loading
+const listLoading = ref<boolean>(true)
+// 成本核算默认参数
+const costAccountingeParamVisible = ref<boolean>(false)
+// 关键词
+const keyWordTrendVisible = ref<boolean>(false)
+// 关键词趋势
+const keyWordTrendEchatsVisible = ref<boolean>(false)
+// 共享
+const sharedVisible = ref<boolean>(false)
+// 产品成本核算
+const estimatedCostAccountingVisible = ref<boolean>(false)
+// 评分参数
+const scoreParametersVisible = ref<boolean>(false)
+// 跑分明细
+const benchmarkScoreVisible = ref<boolean>(false)
+// 输入的关键词
+const inputKeyWord = ref<string>('')
+// 关键词趋势列表下拉框默认选中值
+const idxKeyWordValue = ref<string>('0')
+// 总记录数
+const total = ref<number>(0)
+// 评分参数列表
+const scoreParametersList = ref<IEvaluationScore[]>([])
+// 跑分明细参数列表
+const benchmarkScoreList = ref<IBenchmarkScore[]>([])
+// 产品成本核算列表
+const estimatedCostAccountingList = ref<IEstimatedCostAccounting[]>([])
+// 评估列表
+const evaluationList = ref<IEvaluation[]>([])
+// 共享人列表
+const shareUserList = ref<IShared[]>([])
+// 共享人id
+const shareId = ref<string>("")
+// 当前登入者id
+const currentLoginUserId = ref<string>("")
+// 评估id
+const evaluationId = ref<string>('')
+// 图表x轴
+const x = ref<string[]>([])
+// 图表y轴
+const y = ref<number[]>([])
+
+// 默认成本核算参数
+const costAccountingFrom = reactive<ICostAccounting>({
   rateMargin: '',
   rateRoi: '',
   tariffRatio: '',
@@ -326,7 +285,7 @@ const costFrom = reactive<any>({
   fuelCost: ''
 })
 
-const queryForm = reactive<any>({
+const queryForm = reactive<IEvaluationQueryReq>({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
@@ -334,25 +293,37 @@ const queryForm = reactive<any>({
 
 const fixed = ref<string>('right')
 
+/**
+ * 获取初始新款评估数据
+ */
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getList(queryForm)
-  list.value = data.list
+  evaluationList.value = data.list
   total.value = data.total
   listLoading.value = false
 }
 
+/**
+ * 分页大小的改变
+ */
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
 }
 
+/**
+ * 分页页数改变
+ */
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
 }
 
+/**
+ * 开始新款评估
+ */
 const startEvalution = (row: any) => {
 
   router.push({
@@ -364,6 +335,9 @@ const startEvalution = (row: any) => {
   })
 }
 
+/**
+ * 修改新款评估
+ */
 const toUpdateEvaluation = (row: any) => {
   row.avgConversionRate = row.avgConversionRate.split("%")[0]
   setLocalStorage("evlautionRouteParams", { ...row })
@@ -389,7 +363,9 @@ const searchKeyWordTrend = async (row: any) => {
   keyWordTrendEchatsVisible.value = true
 }
 
-
+/**
+ * 关键词下拉change
+ */
 const idxUpdateKeyWordTrend = async (val: any) => {
   x.value = []
   y.value = []
@@ -407,6 +383,9 @@ const keyWordTrendCellClick = (row: any, column: any, cell: HTMLTableCellElement
   }
 }
 
+/**
+ * 共享操作
+ */
 const handlerSwitchChange = async (row: any) => {
   let type = 1;
 
@@ -428,23 +407,32 @@ const handlerSwitchChange = async (row: any) => {
   }
 }
 
-
+/**
+ * 获取评估列表数据
+ */
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
 
+/**
+ * 产品核算推进
+ */
 const handleClick = async (row: any) => {
-  evaluationId.value = row.idNo + "";
+  evaluationId.value = convertString(row.idNo);
   fetchEstimatedCostAccounting(row.idNo)
 }
 
+/**
+ * 获取产品成本核算
+ */
 const fetchEstimatedCostAccounting =  async (id:number)=>{
-  const { data } = await getEstimatedCostAccountingList({ evaluationId: id+"" })
+  const { data } = await getEstimatedCostAccountingList({ evaluationId: convertString(id) })
   estimatedCostAccountingList.value = data
   estimatedCostAccountingVisible.value = true
 }
 
+// 清除关键词趋势相关数据
 const cleanKeyWordTrendData = () => {
   idxKeyWordValue.value = '0'
   inputKeyWord.value = ''
@@ -455,43 +443,38 @@ const cleanKeyWordTrendData = () => {
 
 }
 
+// 获取评分参数列表
 const getScoreParams = async () => {
   const { data } = await getEvaluationScoreParameter()
-  scoreParamList.value = data
-  scoreParamVisible.value = true
-
+  scoreParametersList.value = data
+  scoreParametersVisible.value = true
 }
 
+// 获取成本核算默认参数
 const costAccountingeParam = async () => {
+
+  
   const { data } = await getEvaluationCostParameter()
-  costFrom.rateMargin = data.rateMargin
-  costFrom.rateRoi = data.rateRoi
-  costFrom.tariffRatio = data.tariffRatio
-  costFrom.extraFulfillment = data.extraFulfillment
-  costFrom.exchangeRate = data.exchangeRate
-  costFrom.volumeFactor = data.volumeFactor
-  costFrom.weightFactor = data.weightFactor
-  costFrom.shippingType = data.shippingType
-  costFrom.savePrice = data.savePrice
-  costFrom.laborCost = data.laborCost
-  costFrom.oceanShipping = data.oceanShipping
-  costFrom.airTransport = data.airTransport
-  costFrom.volumeRate = data.volumeRate
-  costFrom.weightRate = data.weightRate
-  costFrom.fuelCost = data.fuelCost
+  costAccountingFrom.rateMargin = data.rateMargin
+  costAccountingFrom.rateRoi = data.rateRoi
+  costAccountingFrom.tariffRatio = data.tariffRatio
+  costAccountingFrom.extraFulfillment = data.extraFulfillment
+  costAccountingFrom.exchangeRate = data.exchangeRate
+  costAccountingFrom.volumeFactor = data.volumeFactor
+  costAccountingFrom.weightFactor = data.weightFactor
+  costAccountingFrom.shippingType = data.shippingType
+  costAccountingFrom.savePrice = data.savePrice
+  costAccountingFrom.laborCost = data.laborCost
+  costAccountingFrom.oceanShipping = data.oceanShipping
+  costAccountingFrom.airTransport = data.airTransport
+  costAccountingFrom.volumeRate = data.volumeRate
+  costAccountingFrom.weightRate = data.weightRate
+  costAccountingFrom.fuelCost = data.fuelCost
+
   costAccountingeParamVisible.value = true
 }
 
-const commitUpdateCostParam = () => {
-  $baseConfirm('您确定要提交修改吗', null, async () => {
-    const { data } = await updateEvaluationCostParams({ ...costFrom })
-    if (data == true) {
-      $baseMessage("成本核算默认参数修改成功!", "success", "hey")
-    }
-    costAccountingeParamVisible.value = false
-  })
-}
-
+// 修改评分参数
 const updateScoreParam = (row: any) => {
   $baseConfirm(`您确定要修改评分参数${row.key}的值吗`, null, async () => {
     const { data } = await updateEvaluationScoreParams({ ...row })
@@ -501,6 +484,7 @@ const updateScoreParam = (row: any) => {
   })
 }
 
+// 共享
 const sharedEvaluation = async (row: any) => {
   sharedVisible.value = true
   const { data } = await getEvaluationShareInfo({ evaluationId: row.idNo })
@@ -509,15 +493,20 @@ const sharedEvaluation = async (row: any) => {
 
 }
 
-const getScoreDetail = async (id: any) => {
-  const { data } = await getEvaluationScoreDetail({ id })
-  scoreDetailList.value = data
-  scoreDetailVisible.value = true
+// 获取跑分明细
+const getBenchmarkScoreDetail = async (id: any) => {
+  const { data } = await getEvaluationScoreDetail({ evaluationId:id })
+  benchmarkScoreList.value = data
+  benchmarkScoreVisible.value = true
 }
 
 // 获取子组件的修改
 const updateEstimatedCostAccountingVisibleValue = (newV:boolean) =>{
   estimatedCostAccountingVisible.value = newV
+}
+
+const updatecostAccountingeParamVisible = (newValue:boolean) =>{
+  costAccountingeParamVisible.value = newValue
 }
 
 onActivated(() => {
@@ -560,10 +549,6 @@ onBeforeMount(() => {
   min-height: 40px;
 }
 
-.cost-accountinge-param {
-  display: flex;
-  justify-content: space-around;
-}
 
 .chart-line {
   width: 100%;

@@ -67,6 +67,7 @@
 import { Delete, Plus, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, doMostDelete, getList } from '/@/api/devlocal/user'
+import {IUserQuery,IUserQueryReq} from '/@/type/user/userType'
 
 defineOptions({
   name: 'User',
@@ -74,12 +75,12 @@ defineOptions({
 
 const tableRef = ref<TableInstance>()
 const editRef = ref<any>(null)
-const list = ref<any>([])
+const list = ref<IUserQuery[]>([])
 const listLoading = ref<boolean>(true)
 
 const total = ref<number>(0)
 const selectRows = ref<any>([])
-const queryForm = reactive<any>({
+const queryForm = reactive<IUserQueryReq>({
   pageNo: 1,
   pageSize: 20,
   userName: '',
@@ -93,7 +94,7 @@ const handleAdd = () => {
   editRef.value.showEdit()
 }
 
-const handleEdit = (row: any = {}) => {
+const handleEdit = (row: any ) => {
   editRef.value.showEdit(row)
 }
 

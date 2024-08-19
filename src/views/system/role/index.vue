@@ -56,6 +56,7 @@
 import { Delete, Plus, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, doDeleteList, getAllList } from '/@/api/devlocal/role'
+import { IRoleQuery,IRole} from '/@/type/role/roleType'
 
 defineOptions({
   name: 'Role',
@@ -63,12 +64,12 @@ defineOptions({
 
 const tableRef = ref<TableInstance>()
 const editRef = ref<any>(null)
-const list = ref<any>([])
+const list = ref<IRole[]>([])
 const listLoading = ref<boolean>(true)
 
 const total = ref<number>(0)
 const selectRows = ref<any>([])
-const queryForm = reactive<any>({
+const queryForm = reactive<IRoleQuery>({
   pageNo: 1,
   pageSize: 20,
   role: '',

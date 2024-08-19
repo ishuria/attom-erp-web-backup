@@ -29,6 +29,7 @@
 import type { FormInstance } from 'element-plus'
 import { getList } from '/@/api/devlocal/role'
 import { doAdd, doEdit } from '/@/api/devlocal/user'
+import { IUserAddOrUpateReq } from '/@/type/user/userType'
 
 defineOptions({
   name: 'UserEdit',
@@ -36,7 +37,8 @@ defineOptions({
 
 const emit = defineEmits(['fetch-data'])
 const formRef = ref<FormInstance>()
-const form = reactive<any>({
+const form = reactive<IUserAddOrUpateReq>({
+  userId:'',
   userName: '',
   password: '',
   email: '',
@@ -46,6 +48,9 @@ const form = reactive<any>({
   roles: [],
 })
 
+const title = ref<string>('')
+const dialogFormVisible = ref<boolean>(false)
+
 const rules = reactive<any>({
   userName: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
   password: [{ required: true, trigger: 'blur', message: '请输入密码' }],
@@ -53,8 +58,6 @@ const rules = reactive<any>({
   roleId: [{ required: true, trigger: 'blur', message: '请选择角色' }],
   status: [{ required: true, trigger: 'blur', message: '请选择状态' }],
 })
-const title = ref<string>('')
-const dialogFormVisible = ref<boolean>(false)
 
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
@@ -83,7 +86,7 @@ const close = () => {
 const save = () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      if (form.userId) {
+      if (form.userId && form.userId != "") {
         const { msg }: any = await doEdit(form)
         await $baseMessage(msg, 'success', '用户添加成功！')
         await close()

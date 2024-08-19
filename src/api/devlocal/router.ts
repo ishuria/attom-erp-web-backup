@@ -1,6 +1,8 @@
 import { BASE_API } from '/@/api/devlocal/api'
 import request from '/@/utils/request'
 
+import {IMenuDeleteReq,IMenuAddOrUpdteReq} from '/@/type/menu/menuType'
+
 export const getList = (params?: any) => {
   return request({
     url: `${BASE_API}/router/getOwnerList`,
@@ -9,24 +11,34 @@ export const getList = (params?: any) => {
   })
 }
 
-export const getMenuList = (params?: any) => {
+/**
+ * 获取菜单列表
+ * @returns 
+ */
+export const getMenuList = () => {
   return request({
     url: `${BASE_API}/router/getList`,
     method: 'get',
-    params,
   })
 }
 
-export const getMenuNameList = (params?: any) => {
+/**
+ * 获取菜单名称列表
+ * @returns 
+ */
+export const getMenuNameList = () => {
   return request({
     url: `${BASE_API}/router/getMenuList`,
     method: 'get',
-    params,
   })
 }
 
-
-export const doAdd = (data?: any) => {
+/**
+ * 添加菜单
+ * @param data
+ * @returns 
+ */
+export const doAdd = (data?: IMenuAddOrUpdteReq) => {
   return request({
     url: `${BASE_API}/router/add`,
     method: 'post',
@@ -34,7 +46,12 @@ export const doAdd = (data?: any) => {
   })
 }
 
-export const doUpdate = (data?: any) => {
+/**
+ * 修改菜单
+ * @param data 
+ * @returns 
+ */
+export const doUpdate = (data?: IMenuAddOrUpdteReq) => {
   return request({
     url: `${BASE_API}/router/update`,
     method: 'post',
@@ -42,8 +59,12 @@ export const doUpdate = (data?: any) => {
   })
 }
 
-
-export const doDelete = (data?: any) => {
+/**
+ * 删除菜单
+ * @param data 
+ * @returns 
+ */
+export const doDelete = (data: IMenuDeleteReq) => {
   return request({
     url: `${BASE_API}/router/delete`,
     method: 'post',

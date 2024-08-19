@@ -32,19 +32,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column prop="imgUrl" label="图片" @click="getCellRowData">
+            <el-table-column prop="imgUrl" label="图片">
                 <template v-slot="scope">
-                    <!-- <div @click="getCellRowData(scope.$index)" style="width: 100%;height: 100%;" data-img="f">
-                        <el-upload action="#" :show-file-list="false" :http-request="uploadFile"
-                            :before-upload="beforeAvatarUpload">
-                            <img v-if="scope.row.imgUrl" :src="scope.row.imgUrl" width="40px" />
-                            <el-icon style="width: 40px;" v-else>
-                                <Plus />
-                            </el-icon>
-                        </el-upload>
-                    </div> -->
                     <div @click="getCellRowData(scope.$index)">
-                        <el-image style="width: 50px; height: 50px" :src="scope.row.imgUrl" fit="fill" data-img="img" />
+                        <el-image v-if="scope.row.imgUrl" style="width: 50px; height: 50px" :src="scope.row.imgUrl" fit="fill" data-img="img" />
                     </div>
                 </template>
             </el-table-column>
@@ -203,7 +194,7 @@
 
 
             <el-table-column align="center" :fixed="fixed" label="操作" width="120px">
-                <template #default="{ row }">
+                <template v-slot="scope">
                     <el-dropdown>
                         <el-button text type="primary">
                             逆算
@@ -214,13 +205,13 @@
                         <template #dropdown>
                             <el-dropdown-menu>
                                 <el-dropdown-item>
-                                    <el-link type="primary" :underline="false">上传图片</el-link>
+                                    <el-link type="primary" :underline="false" @click="handlerPicUpload(scope.row,scope.$index)">上传图片</el-link>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                    <el-link type="primary" :underline="false" @click="copyData(row)">复制</el-link>
+                                    <el-link type="primary" :underline="false" @click="handlerCopyData(scope.row)">复制</el-link>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
-                                    <el-link type="primary" :underline="false" @click="handlerDelete(row)">删除</el-link>
+                                    <el-link type="primary" :underline="false" @click="handlerDelete(scope.row)">删除</el-link>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
@@ -236,12 +227,21 @@
     </el-dialog>
 
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+
+    <vab-upload 
+        :upload-visible="uploadPicVisible" 
+        title="上传图片" 
+        :is-multiple="false"
+        :fileListFlag = "false"
+        :dataId = "dataId"
+        @update:uploadVisible = "updateUploadPicVisible"
+        @obtain:imageRes = "updateTableCellIdx"
+    />
 </template>
 
 <script lang="ts" setup>
 
 import { defineProps, defineEmits } from 'vue';
-
 import {  ArrowDown } from '@element-plus/icons-vue'
 import { formatDate } from '/@/utils/dateUtils'
 import {
@@ -254,13 +254,15 @@ import {
 import {
   estimatedCostAccountingSiteColumns,
   firstLegChannelColumns,
-  EstimatedCostAccounting
 } from '../indexColumns'
+
+import {IEstimatedCostAccounting} from '/@/type/evaluation/evaluationType'
 
 import {getRootElement,
     getSpecificChildren,
     getDataAttribute
 } from '/@/utils/nodeUtils'
+
 
 defineOptions({
     name: 'VabEstimatedCostAccounting',
@@ -269,14 +271,17 @@ defineOptions({
 let props = defineProps<{
     flag: boolean
     evaluationId:string
-    list: EstimatedCostAccounting[]
+    list: IEstimatedCostAccounting[]
     callParentMethod: (id:number) => void
 }>();
 
 
 const emit = defineEmits<{ (e: 'update:visibleValue', value: boolean): void }>()
+// Table cell 下标
 let imageUploadCellIdx = 0
 const imagePreviewVisible = ref<boolean>(false)
+const uploadPicVisible = ref<boolean>(false)
+const dataId = ref<string>("")
 const fixed = ref<string>('right')
 const estimatedCostAccountingList = ref<any[]>([])
 const imagePriviewList = ref<any[]>([])
@@ -335,7 +340,6 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
   ){
     return
   }
-  
 
   cell.children[0].children[0].classList.remove('none')
   cell.children[0].children[1].classList.add('none')
@@ -369,30 +373,6 @@ const clickCancle = async (event:any,value:any) =>{
 
 }
 
-// 图片上传前的check
-// const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-//   if (rawFile.type !== 'image/jpeg') {
-//     $baseMessage('图片类型只能是image/jpeg!','error','hey')
-//     return false
-//   } else if (rawFile.size / 1024 / 1024 > 2) {
-//     $baseMessage('图片超过了2MB!','error','hey')
-//     return false
-//   }
-//   return true
-// }
-
-// 文件上传
-// const uploadFile = async (options: UploadRequestOptions) => {
-//   const id = list.value[imageUploadCellIdx].id
-//   const formdata = new FormData()
-//   formdata.append('file', options.file)
-//   formdata.append('type', "1")
-//   formdata.append('id', id+"")
-
-//   const {data} = await uploadFileBoBakend(formdata);
-//   list.value[imageUploadCellIdx].imgUrl = data
-//   imagePriviewList.value.push(data)
-// }
 
 // 获取点击行的table cell下标
 const getCellRowData = (idx:number) =>{
@@ -401,27 +381,19 @@ const getCellRowData = (idx:number) =>{
     imagePriviewList.value.push(list.value[imageUploadCellIdx].imgUrl)   
 }
 
-// table单元格双击
-// const handlerCellDbClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
-//   // 双击特定只有table中img的才能生效
-//   if (getDataAttribute(cell.children[0].children[0],'img') && getSpecificChildren(cell,"img")[0]){
-//       imagePreviewVisible.value = true;
-//   }
-// }
 
 // 图片预览关闭事件
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
 
-// 调用子组件的事件,修改父元素的值
+// 通过事件,修改父元素的值
 const handlerCloseDialog = () =>{
-    flag.value = false
     emit('update:visibleValue', false);
 }
 
 // 复制
-const copyData = async (row:any) => {
+const handlerCopyData = async (row:any) => {
    const {data} = await copyEstimatedCostAccounting({id:row.id+ ""})
    if (data == true){
     $baseMessage("此条产品成本核算信息复制成功!","success","hey")
@@ -444,6 +416,26 @@ const handlerDelete = async (row:any)=>{
 const handlerEstimatendChange = async (row:any) =>{
   await updateEstimatedCostAccounting({...row})
 }
+
+// 上传图片
+const handlerPicUpload = async (row:any,idx:number) => {
+    uploadPicVisible.value = true
+    dataId.value = row.id + ""
+    imageUploadCellIdx = idx
+
+}
+
+// 通过事件获取子组件数据
+const updateUploadPicVisible = (newV:boolean) =>{
+    uploadPicVisible.value = newV
+}
+
+const updateTableCellIdx = (newValue:string) =>{
+    imagePriviewList.value = []
+    list.value[imageUploadCellIdx].imgUrl = newValue
+    imagePriviewList.value.push(newValue)   
+}
+
 </script>
 
 <style lang="scss" scoped>

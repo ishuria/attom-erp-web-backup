@@ -66,7 +66,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="13" class="menu-row">
+        <el-col v-if="form.type != 0" :span="13" class="menu-row">
           <el-form-item label="后台权限id" prop="permissionId">
             <el-input v-model="form.permissionId" clearable />
           </el-form-item>
@@ -100,15 +100,13 @@
         </el-popover>
       </el-form-item>
 
-      <el-form-item label="vue文件路径" prop="component" v-if="form.pid == 1 && form.type != 1">
+      <el-form-item label="vue文件路径" prop="component" v-if="form.pid == '1' && form.type != 1">
         <el-input v-model="form.component" :disabled="true" />
       </el-form-item>
 
-      <el-form-item label="vue文件路径" prop="component" v-if="form.pid != 1 && form.type != 1">
+      <el-form-item label="vue文件路径" prop="component" v-if="form.pid != '1' && form.type != 1">
         <el-input v-model="form.component" clearable />
       </el-form-item>
-
-
 
     </el-form>
     <template #footer>
@@ -127,6 +125,8 @@ import {
    } from '/@/api/devlocal/router'
 import {icons} from '/@/icon'
 
+import { IMenuAddOrUpdteReq } from '/@/type/menu/menuType'
+
 defineOptions({
   name: 'MenuEdit',
 })
@@ -135,13 +135,15 @@ const iconTitle = ref();
 const emit = defineEmits(['fetch-data'])
 
 const formRef = ref<FormInstance>()
-const form = reactive<any>({
+
+const form = reactive<IMenuAddOrUpdteReq>({
+  id:"",
   pid: '',
   name: '',
   path: '',
   component: '',
   permissionId:'',
-  type: "0",
+  type: 0,
   sort: 0,
   status: "0",
   meta: {
@@ -157,7 +159,9 @@ const form = reactive<any>({
     tabHidden: false,
     guard: [],
   },
+  menuName:""
 })
+
 const rules = reactive<any>({
   pid: [{ required: true, trigger: 'blur', message: '请选择上级菜单id' }],
   name: [{ required: true, trigger: 'blur', message: '请输入name' }],
@@ -165,6 +169,7 @@ const rules = reactive<any>({
   component: [{ required: true, trigger: 'blur', message: '请输入component' }],
   'meta.title': [{ required: true, trigger: 'blur', message: '请输入标题' }],
 })
+
 const title = ref<string>('')
 
 const dialogFormVisible = ref<boolean>(false)
@@ -175,7 +180,7 @@ const handleIcon = (item: string) => {
   form.meta.icon = item
 }
 
-const showEdit = (row: any) => {
+const showEdit = (row: IMenuAddOrUpdteReq) => {
   dialogFormVisible.value = true
   nextTick(async () => {
     if (row) {
@@ -209,15 +214,19 @@ defineExpose({
 })
 
 const close = () => {
-  formRef.value?.clearValidate()
-  formRef.value?.resetFields()
+  dialogFormVisible.value = false
   emit('fetch-data')
+  setTimeout(() => {
+    formRef.value?.clearValidate()
+    formRef.value?.resetFields()
+  }, 2000)
+ 
 }
 
 const save = () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      if (form.id){
+      if (form.id && form.id != ""){
         const { msg }: any = await doUpdate({...form,menuName:form.meta.title})
         await $baseMessage(msg, 'success', 'hey')
       }else{
@@ -241,7 +250,7 @@ const menuInit = async () => {
 const filterNodeMethod = (value:string, data:any) => data.label.includes(value)
 
 // 菜单排序
-const handleChange = (value: number) => {
+const handleChange = (value: any) => {
   form.sort = value
 }
 
@@ -262,9 +271,9 @@ const changePid = (value:any) =>{
   form.pid = value
 }
 
-const cleanSelectData = (value:any) =>{
-  form.pid = ""
-  form.component = ""
+const cleanSelectData = () =>{
+  form.pid = ''
+  form.component = ''
 }
 
 onBeforeMount(() => {

@@ -2,7 +2,18 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-export function getList(params?: any) {
+
+import { 
+  ICostAccounting,
+  IEvaluationScore,
+  IEvaluationQueryReq,
+  IEvaluationKeyWordTrendReq,
+  IEvaluationSharePersonReq,
+  IEstimatedCostAccountingQueryReq 
+} from '/@/type/evaluation/evaluationType'
+
+
+export function getList(params?: IEvaluationQueryReq) {
   return request({
     url: `${BASE_API}/evaluation/list`,
     method: 'get',
@@ -18,7 +29,7 @@ export function getEvaluationById(params?: any) {
   })
 }
 
-export function getEvaluationTrendList(params?: any) {
+export function getEvaluationTrendList(params?: IEvaluationKeyWordTrendReq) {
   return request({
     url: `${BASE_API}/evaluation/getTrendList`,
     method: 'get',
@@ -26,23 +37,21 @@ export function getEvaluationTrendList(params?: any) {
   })
 }
 
-export function getEvaluationCostParameter(params?: any) {
+export function getEvaluationCostParameter() {
   return request({
     url: `${BASE_API}/evaluation/getCostParameter`,
     method: 'get',
-    params,
   })
 }
 
-export function getEvaluationScoreParameter(params?: any) {
+export function getEvaluationScoreParameter() {
   return request({
     url: `${BASE_API}/evaluation/score`,
     method: 'get',
-    params,
   })
 }
 
-export function getEvaluationScoreDetail(params?: any) {
+export function getEvaluationScoreDetail(params?: IEstimatedCostAccountingQueryReq) {
   return request({
     url: `${BASE_API}/evaluation/score/detail`,
     method: 'get',
@@ -51,7 +60,7 @@ export function getEvaluationScoreDetail(params?: any) {
 }
 
 
-export function getEvaluationShareInfo(params?: any) {
+export function getEvaluationShareInfo(params?: IEstimatedCostAccountingQueryReq) {
   return request({
     url: `${BASE_API}/evaluation/share`,
     method: 'get',
@@ -79,7 +88,7 @@ export function updateEvaluation(data?: any) {
   })
 }
 
-export function updateEvaluationScoreParams(data?: any) {
+export function updateEvaluationScoreParams(data?: IEvaluationScore) {
   return request({
     url: `${BASE_API}/evaluation/score/update`,
     method: 'post',
@@ -87,7 +96,7 @@ export function updateEvaluationScoreParams(data?: any) {
   })
 }
 
-export function updateEvaluationCostParams(data?: any) {
+export function updateEvaluationCostParams(data?: ICostAccounting) {
   return request({
     url: `${BASE_API}/evaluation/updateCostParameter`,
     method: 'post',
@@ -95,7 +104,7 @@ export function updateEvaluationCostParams(data?: any) {
   })
 }
 
-export function updateSharePerson(data?: any) {
+export function updateSharePerson(data?: IEvaluationSharePersonReq) {
   return request({
     url: `${BASE_API}/evaluation/update/share`,
     method: 'post',
@@ -133,11 +142,11 @@ export function updateEstimatedCostAccounting(data?: any) {
 }
 
 /**
- * 获取数据列表
+ * 获取产品成本核算列表
  * @param params 传递的参数
  * @returns Promise
  */
-export function getEstimatedCostAccountingList(params?: any) {
+export function getEstimatedCostAccountingList(params?: IEstimatedCostAccountingQueryReq) {
   return request({
     url: `${BASE_API}/estimatedCostAccounting/list`,
     method: 'get',
