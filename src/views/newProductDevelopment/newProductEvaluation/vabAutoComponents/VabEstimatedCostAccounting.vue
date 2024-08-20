@@ -25,10 +25,22 @@
 
             <el-table-column prop="site" label="站点" min-width="120">
                 <template #default="{ row }">
-                    <el-select v-model="row.site" placeholder="请选择站点" @change="handlerEstimatendChange(row)">
+                    <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)">
                         <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
                             :value="dict.value" :label="dict.label"></el-option>
                     </el-select>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="外汇币种">
+                <template #default="{ row }">
+                    <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="汇率">
+                <template #default="{ row }">
+                    <span>{{row.foreignExchange}}</span>
                 </template>
             </el-table-column>
 
@@ -249,19 +261,18 @@ import {
   updateEstimatedCostAccounting,
   deleteEstimatedCostAccounting,
   copyEstimatedCostAccounting,
+  getExchangeRate,
 } from '/@/api/devlocal/evaluation'
 
 import {
   estimatedCostAccountingSiteColumns,
   firstLegChannelColumns,
+  siteReflectCurrencyAndExchangeRate
 } from '../indexColumns'
 
 import {IEstimatedCostAccounting} from '/@/type/evaluation/evaluationType'
 
-import {getRootElement,
-    getSpecificChildren,
-    getDataAttribute
-} from '/@/utils/nodeUtils'
+import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
 
 
 defineOptions({
@@ -283,34 +294,42 @@ const imagePreviewVisible = ref<boolean>(false)
 const uploadPicVisible = ref<boolean>(false)
 const dataId = ref<string>("")
 const fixed = ref<string>('right')
-const estimatedCostAccountingList = ref<any[]>([])
-const imagePriviewList = ref<any[]>([])
+const estimatedCostAccountingList = ref<IEstimatedCostAccounting[]>([])
+const imagePriviewList = ref<string[]>([])
 
 let {flag,list,evaluationId} = toRefs(props)
 
 // 新增行
 const handlerAddRowCost = async () => {
 
-  let newData: any = {
-    id:'',
-    evaluationId: '',
-    createTime: formatDate(new Date()),
-    site: '0',
-    imgUrl: '',
-    desc: '',
-    priceInfo: '',
-    url1688: '',
-    price: '',
-    length: '',
-    width: '',
-    height: '',
-    weight: '',
-    packaging: '',
-    firstMileChannel: '0',
-    sellingPrice: '',
-    weightCoefficient: '',
-    volumeCoefficient: '',
-    tariff: '',
+  let newData: IEstimatedCostAccounting = {
+      id: '',
+      evaluationId: '',
+      createTime: formatDate(new Date()),
+      site: '0',
+      currencyType: '',
+      foreignExchange: '',
+      imgUrl: '',
+      desc: '',
+      priceInfo: '',
+      url1688: '',
+      price: '',
+      length: '',
+      width: '',
+      height: '',
+      weight: '',
+      packaging: '',
+      firstMileChannel: '0',
+      sellingPrice: '',
+      weightCoefficient: '',
+      volumeCoefficient: '',
+      tariff: '',
+      lastMile: '',
+      firstMile: '',
+      grossMarginRate: '',
+      roi: '',
+      platformCommission: '',
+      storageFee: ''
   }
  
   const formdata = new FormData()
@@ -318,6 +337,11 @@ const handlerAddRowCost = async () => {
   
   const {data} = await addEstimatedCostAccounting(formdata)
   if (data){
+    
+      // 获取汇率
+      const {data} = await getExchangeRate({currency: siteReflectCurrencyAndExchangeRate.get(newData.site)!})
+      newData.foreignExchange = data
+
       $baseMessage("产品成本核算添加成功！","success","hey")
       estimatedCostAccountingList.value.push(newData)
       props.callParentMethod(parseInt(evaluationId.value))
@@ -327,7 +351,7 @@ const handlerAddRowCost = async () => {
 // 修改输入
 const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
-     // 处理图片放大预览
+  // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
       imagePreviewVisible.value = true;
@@ -413,8 +437,16 @@ const handlerDelete = async (row:any)=>{
 }
 
 // 修改
-const handlerEstimatendChange = async (row:any) =>{
+const handlerEstimatendChange = async (row:IEstimatedCostAccounting) =>{
   await updateEstimatedCostAccounting({...row})
+}
+
+// 修改站点
+const handlerSiteChange = async (row:IEstimatedCostAccounting) =>{
+    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
+    const {data} = await getExchangeRate({currency:row.currencyType})
+    row.foreignExchange = data   
+    await updateEstimatedCostAccounting({...row})
 }
 
 // 上传图片

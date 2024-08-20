@@ -256,3 +256,10 @@ export const  firstLegChannelColumns = [
         label: '头程渠道4',
     },
 ]
+
+export const siteReflectCurrencyAndExchangeRate = new Map<string,string>([
+  ["0","USD"],
+  ["1","EUR"],
+  ["2","GBP"],
+  ["3","USD"],
+])

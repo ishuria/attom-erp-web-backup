@@ -197,3 +197,16 @@ export function copyEstimatedCostAccounting(data?: any) {
   })
 }
 
+
+/**
+ * 获取对应货币汇率
+ * @param params 货币
+ * @returns Promise
+ */
+export function getExchangeRate(params?: any) {
+  return request({
+    url: `${BASE_API}/get/exchangeRate`,
+    method: 'get',
+    params,
+  })
+}

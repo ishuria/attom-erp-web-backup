@@ -68,53 +68,59 @@ export interface IKeyWordTrend{
  */
 export interface IEstimatedCostAccounting{
     // id
-    id:number,
+    id:string
+    // 评估id
+    evaluationId: string
     // 日期
-    createTime:string,
+    createTime:string
     // 站点
-    site:string,
+    site:string
+    // 外币币种
+    currencyType:string
+    // 汇率
+    foreignExchange:string
     // 图片地址
-    imgUrl:string,
+    imgUrl:string
     // 产品描述
-    desc:string,
+    desc:string
     // 价格信息
-    priceInfo:string,
+    priceInfo:string
     // 1688连接
-    url1688:string,
+    url1688:string
     // 价格信息
-    price: number,
+    price: string
     // 长
-    length:number,
+    length:string
     // 宽
-    width:number,
+    width:string
     // 高
-    height:number,
+    height:string
     // 重量
-    weight:number,
+    weight:string
     // 尾程
-    lastMile:number,
+    lastMile:string
     // 头程
-    firstMile:number,
+    firstMile:string
     // 打包
-    packaging:number,
+    packaging:string
     // 头程渠道
-    firstMileChannel:string,
+    firstMileChannel:string
     // 售价
-    sellingPrice:number,
+    sellingPrice:string
     // 毛利率
-    grossMarginRate:number,
+    grossMarginRate:string
     // ROI
-    roi:number,
+    roi:string
     // weightCoefficient
-    weightCoefficient:number,
+    weightCoefficient:string
     // volumeCoefficient
-    volumeCoefficient:number,
+    volumeCoefficient:string
     // 关税
-    tariff:number,
+    tariff:string
     // 平台佣金
-    platformCommission:number,
+    platformCommission:string
     // 仓储费
-    storageFee:number
+    storageFee:string
 }
 
 /**
