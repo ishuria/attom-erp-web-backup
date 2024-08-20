@@ -1,5 +1,5 @@
 <template>
-  <vab-app v-show="show" />
+  <vab-app />
 </template>
 
 <script lang="ts" setup>
@@ -14,7 +14,6 @@ defineOptions({
 const settingsStore = useSettingsStore()
 const { updateTheme } = settingsStore
 const route = useRoute()
-const show = ref<boolean>(false)
 
 const resizeContainer = () => {
   let vh = window.innerHeight * 0.01
@@ -36,8 +35,6 @@ onBeforeMount(() => {
 
 onMounted(() => {
   nextTick(() => {
-    // 等待动画处理完成再加载页面
-    show.value = true
     // 是否允许生产环境进行代码调试，请前往config/cli.config.ts文件配置
     setTimeout(() => {
       if (
