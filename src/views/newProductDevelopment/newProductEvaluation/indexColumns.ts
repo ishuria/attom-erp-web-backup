@@ -84,6 +84,10 @@ export const indexColumns = [
     prop: 'keyWordScore',
   },
   {
+    label: '总分',
+    prop: 'finalScore',
+  },
+  {
     label: '来源',
     prop: 'productSource',
   },

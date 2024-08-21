@@ -9,7 +9,7 @@
         <vab-query-form>
             <vab-query-form-left-panel>
                 <el-button type="primary" @click="handlerAddRowCost">新增</el-button>
-                <el-button type="primary">新品推进(发布到新品进度管理)</el-button>
+                <el-button type="primary" @click="handlerProductProgress">新品推进(发布到新品进度管理)</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
 
@@ -18,6 +18,7 @@
             border stripe 
             @cell-click="changeInput"
             :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
+            @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" width="38" />
 
@@ -262,6 +263,7 @@ import {
   deleteEstimatedCostAccounting,
   copyEstimatedCostAccounting,
   getExchangeRate,
+  addEstimatedCostAccountingProductRelease,
 } from '/@/api/devlocal/evaluation'
 
 import {
@@ -273,6 +275,7 @@ import {
 import {IEstimatedCostAccounting} from '/@/type/evaluation/evaluationType'
 
 import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
+import { ElLink, ElMessageBox } from 'element-plus';
 
 
 defineOptions({
@@ -296,7 +299,8 @@ const dataId = ref<string>("")
 const fixed = ref<string>('right')
 const estimatedCostAccountingList = ref<IEstimatedCostAccounting[]>([])
 const imagePriviewList = ref<string[]>([])
-
+const selectRows = ref<IEstimatedCostAccounting[]>([])
+const router = useRouter()
 let {flag,list,evaluationId} = toRefs(props)
 
 // 新增行
@@ -350,7 +354,7 @@ const handlerAddRowCost = async () => {
 
 // 修改输入
 const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-
+    
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
@@ -455,6 +459,45 @@ const handlerPicUpload = async (row:any,idx:number) => {
     dataId.value = row.id + ""
     imageUploadCellIdx = idx
 
+}
+
+// 添加到新品进度管理
+const handlerProductProgress = async() =>{
+    const idsArr:string[] = selectRows.value.map( (item:IEstimatedCostAccounting) =>{
+        return item.id
+    })
+    const ids:string = idsArr.map(String).join(',')
+    try {
+       const {data} = await addEstimatedCostAccountingProductRelease({ids,evaluationId:props.evaluationId})
+       if (data == true){
+            ElMessageBox({
+                title: '发布成功',
+                confirmButtonText:"关闭",
+                showClose:false,
+                showCancelButton:false,
+                type:"success",
+                dangerouslyUseHTMLString: true,
+                message: ()=>
+                    h('div',{style:"cursor: pointer; color: #409eff;",onClick:handleClick},{default:()=>"点击此链接跳转到新品进度管理"}),
+                
+            })
+       }
+    }catch(e){
+        console.error(e as Error);
+    }
+}
+
+// 处理MessageBox的页面跳转
+const handleClick = () =>{
+    ElMessageBox.close()
+    router.push({
+        path: '/newProductDevelopment/newProductProgress',
+    })
+}
+
+// table checkbox事件
+const handleSelectionChange = (val: IEstimatedCostAccounting[]) => {
+    selectRows.value = val
 }
 
 // 通过事件获取子组件数据

@@ -11,7 +11,6 @@
           <el-tree
             ref="treeRef"
             highlight-current
-            default-expand-all
             :data="list"
             :default-checked-keys="form.menuCheckedList"
             node-key="id"
@@ -43,7 +42,7 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { doAdd, doEdit, getAllMenuAndBtnList, getMenuAndBtnListByRoleCode } from '/@/api/devlocal/role'
-import { IRoleAddOrUpdateReq } from '/@/type/role/roleType'
+import { IRoleAddOrUpdateReq,IRole } from '/@/type/role/roleType'
 
 defineOptions({
   name: 'RoleEdit',
@@ -69,11 +68,11 @@ const rules = reactive<any>({
   roleName: [{ required: true, trigger: 'blur', message: '请输入角色名称' }],
   roleNameEn: [{ required: true, trigger: 'blur', message: '请给角色英文' }],
 })
-const checkMenuList = ref<any>([])
-const childMenuBtnList = ref<any>([])
+const checkMenuList = ref<string[]>([])
+const childMenuBtnList = ref<string[]>([])
 const title = ref<string>('')
 const dialogFormVisible = ref<boolean>(false)
-const list = ref<any>([])
+const list = ref<IRole[]>([])
 
 const showEdit = (row: any) => {
   dialogFormVisible.value = true

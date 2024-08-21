@@ -9,7 +9,8 @@ import {
   IEvaluationQueryReq,
   IEvaluationKeyWordTrendReq,
   IEvaluationSharePersonReq,
-  IEstimatedCostAccountingQueryReq 
+  IEstimatedCostAccountingQueryReq,
+  EstimatedCostAccountingProductRelease
 } from '/@/type/evaluation/evaluationType'
 
 
@@ -208,5 +209,21 @@ export function getExchangeRate(params?: any) {
     url: `${BASE_API}/get/exchangeRate`,
     method: 'get',
     params,
+  })
+}
+
+
+
+/**
+ * 发布到新品进度管理
+ * @param params 
+ * @returns Promise
+ */
+export function addEstimatedCostAccountingProductRelease(data?: EstimatedCostAccountingProductRelease) {
+  return request({
+    url: `${BASE_API}/product/release`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
   })
 }

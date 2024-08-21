@@ -48,7 +48,7 @@ export interface IEvaluation{
     // 首页销售额偏离度
     salseDeviation:string 
     // 平均上架距今天日期
-    avgDaysListed:string 
+    avgDaysListed:string
     // 总分
     finalScore:string 
 }
@@ -198,5 +198,10 @@ export interface IEvaluationSharePersonReq {
 
 
 export interface IEstimatedCostAccountingQueryReq {
+    evaluationId:string
+}
+
+export interface EstimatedCostAccountingProductRelease{
+    ids:string
     evaluationId:string
 }
