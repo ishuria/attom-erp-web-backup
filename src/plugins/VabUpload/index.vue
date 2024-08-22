@@ -28,7 +28,6 @@
 
 import { UploadFilled } from '@element-plus/icons-vue'
 import { UploadProps, UploadRequestOptions } from 'element-plus';
-import { defineProps, withDefaults } from 'vue';
 import { uploadFileBoBakend } from '/@/api/devlocal/evaluation'
 import {iamgeSuffixTypeArr} from '/@/const/image'
 

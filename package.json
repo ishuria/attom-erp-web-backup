@@ -46,7 +46,7 @@
     "dayjs": "^1.11.12",
     "disable-devtool": "^0.3.7",
     "echarts": "^5.5.1",
-    "element-plus": "^2.7.8",
+    "element-plus": "2.7.8",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
