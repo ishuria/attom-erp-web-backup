@@ -54,7 +54,7 @@
                   <el-link type="primary" :underline="false" @click="toUpdateEvaluation(row)">查看和修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="searchKeyWordTrend(row)"
+                  <el-link type="primary" :underline="false" @click="cliekFontSearchKeyWord(row)"
                     v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="row.userId === currentLoginUserId">
@@ -97,7 +97,7 @@
         :trendEchatsVisible="keyWordTrendEchatsVisible"
         :keyWord = "inputKeyWord"
         :trnedData = "trendEcahts"
-        @update:trendEchatsVisible = "updateTrendVisibleValue"
+        @update:visibleValue = "updateTrendVisibleValue"
         @update:clearnInputKeyWord = "cleanKeyWordTrendData"
         @update:trendEchatsList  = "updateTrendEchatsData"
      />
@@ -335,25 +335,28 @@ const toUpdateEvaluation = (row: any) => {
 }
 
 // 关键词趋势检索
-const searchKeyWordTrend = async (row: any) => {
-  if (row) {
-    inputKeyWord.value = row.amazonFrontendKeywords
+const searchKeyWordTrend = async () => {
+   keyWordTrend(inputKeyWord.value)
+}
+
+const cliekFontSearchKeyWord = (row:any)=>{
+  keyWordTrend(row.amazonFrontendKeywords)
+}
+
+
+const keyWordTrendCellClick = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  if (column.label === "关键词趋势") {
+    keyWordTrend(row.amazonFrontendKeywords)
   }
-  const { data } = await getEvaluationTrendList({ keyWord: inputKeyWord.value, type: 0 })
+}
+
+const keyWordTrend  = async (str:string) =>{
+  const { data } = await getEvaluationTrendList({ keyWord: str, type: 0 })
   trendEcahts.value.xAxis = data.xAxis
   trendEcahts.value.yAxis = data.yAxis
   keyWordTrendVisible.value = false
   keyWordTrendEchatsVisible.value = true
 }
-
-
-
-const keyWordTrendCellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  if (column.label === "关键词趋势") {
-    searchKeyWordTrend(row)
-  }
-}
-
 
 /**
  * 获取评估列表数据
@@ -507,6 +510,5 @@ onBeforeMount(() => {
   height: 100%;
   min-height: 40px;
 }
-
 
 </style>

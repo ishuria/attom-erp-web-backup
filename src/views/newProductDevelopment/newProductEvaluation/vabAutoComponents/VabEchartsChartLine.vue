@@ -75,8 +75,8 @@ watch(
     { immediate: true },
 )
 
-onMounted(() => {
-    
+onMounted( async () => {
+    await nextTick();
 })
 
 onBeforeUnmount(() => {

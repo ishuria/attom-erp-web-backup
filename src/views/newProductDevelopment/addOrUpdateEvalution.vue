@@ -389,7 +389,7 @@ const goBack = async () => {
 
 
 const updateKeyWordTrend = async () =>{
-  let {data} = await getEvaluationTrendList({keyWord:inputForm.amazonFrontendKeywords,type:keyWordValue.value})
+  let {data} = await getEvaluationTrendList({keyWord:inputForm.amazonFrontendKeywords,type:parseInt(keyWordValue.value)})
   x.value = data.xAxis
   y.value = data.yAxis
 }

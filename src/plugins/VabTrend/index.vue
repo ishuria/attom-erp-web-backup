@@ -1,15 +1,15 @@
 <template>
   <el-dialog
-    v-model="trendEchatsVisible"
+    :model-value="props.trendEchatsVisible"
     :close-on-click-modal="false"
-    :before-close="cleanKeyWordTrendData"
+    :before-close="handlerClose"
     width="75%"
     title="关键词趋势"
   >
     <el-select v-model="idxKeyWordValue" :reserve-keyword="false" @change="idxUpdateKeyWordTrend" style="width: 200px">
       <el-option v-for="item in idxKeyWordOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <vab-echarts-chart-line class="chart-line" :x-axis-data="trnedData.xAxis" :y-axis-data="trnedData.yAxis" v-if="trendEchatsVisible" />
+    <vab-echarts-chart-line class="chart-line" :x-axis-data="trnedData.xAxis" :y-axis-data="trnedData.yAxis" v-if="props.trendEchatsVisible" />
   </el-dialog>
 </template>
 
@@ -26,31 +26,29 @@ defineOptions({
 })
 
 const emit = defineEmits<{ 
-    (e: 'update:trendEchatsVisible', value: boolean): void
+    (e: 'update:visibleValue', value: boolean): void
     (e: 'update:clearnInputKeyWord', value: string): void
     (e: 'update:trendEchatsList', value: IKeyWordTrend): void
  }>()
 
 
-const props = withDefaults(defineProps<{
+let props = withDefaults(defineProps<{
     trendEchatsVisible: boolean
     keyWord:string
     trnedData:IKeyWordTrend
 }>(),{
-    trendVisible: false,
-    trendEchatsVisible: false,
+
 });
 
 // 关键词趋势列表下拉框默认选中值
 const idxKeyWordValue = ref<string>('0')
-let {trendEchatsVisible} = toRefs(props)
 
 
 // 清除关键词趋势相关数据
-const cleanKeyWordTrendData = () => {
+const handlerClose = () => {
     idxKeyWordValue.value = "0"
     emit('update:clearnInputKeyWord', "")
-    emit('update:trendEchatsVisible', false)
+    emit('update:visibleValue', false)
 }
 
 /**
@@ -59,7 +57,6 @@ const cleanKeyWordTrendData = () => {
  const idxUpdateKeyWordTrend = async (val: any) => {
   const { data } = await getEvaluationTrendList({ keyWord: props.keyWord, type: val })
   emit('update:trendEchatsList',{xAxis:data.xAxis,yAxis:data.y})
-  emit('update:trendEchatsVisible', true)
 }
 
 
