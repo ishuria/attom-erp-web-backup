@@ -92,15 +92,15 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="keyWordTrendEchatsVisible" :close-on-click-modal="false" :before-close="cleanKeyWordTrendData"
-      width="75%" title="关键词趋势">
-
-      <el-select v-model="idxKeyWordValue" :reserve-keyword="false" @change="idxUpdateKeyWordTrend"
-        style="width: 200px;">
-        <el-option v-for="item in idxKeyWordOptions" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
-      <vab-echarts-chart-line class="chart-line" :x-axis-data="x" :y-axis-data="y" v-if="keyWordTrendEchatsVisible" />
-    </el-dialog>
+    <!-- 关键词趋势图表 -->
+     <vab-trend 
+        :trendEchatsVisible="keyWordTrendEchatsVisible"
+        :keyWord = "inputKeyWord"
+        :trnedData = "trendEcahts"
+        @update:trendEchatsVisible = "updateTrendVisibleValue"
+        @update:clearnInputKeyWord = "cleanKeyWordTrendData"
+        @update:trendEchatsList  = "updateTrendEchatsData"
+     />
 
     <el-dialog v-model="scoreParametersVisible" :close-on-click-modal="false" title="评分参数" width="500"
       style="height: 800px;">
@@ -136,29 +136,14 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="sharedVisible" :close-on-click-modal="false" title="共享" width="650">
-      <el-table
-        :data="shareUserList" 
-        :cell-style="{ textAlign: 'center' }"
-        :header-cell-style="{ 'text-align': 'center' }"
-      >
-        <el-table-column v-for="(item, index) in sharedColumns" :key="index" :label="item.label" :prop="item.prop">
-          <template #default="{ row }">
-            <div v-if="item.label === '操作'">
-              <el-switch v-model="row.share" class="ml-2"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-                @change="handlerSwitchChange(row)" />
-            </div>
-          </template>
-        </el-table-column>
-
-      </el-table>
-
-      <template #footer>
-        <div class="dialog-footer">
-        </div>
-      </template>
-    </el-dialog>
+    <!-- 共享 -->
+    <vab-shared  
+      :visible="sharedVisible"
+      :id = "shareId"
+      :list="shareUserList"
+      @update:sharedVisible = "updateSharedVisibleValue"
+      
+    />
 
     <!-- 产品成本核算与推进子组件 -->
     <vab-estimated-cost-accounting 
@@ -191,15 +176,12 @@ import {
   getEvaluationScoreDetail,
   getEvaluationShareInfo,
   getEstimatedCostAccountingList,
-  updateSharePerson,
   getEvaluationCostParameter
 } from '/@/api/devlocal/evaluation'
 import { getUserInfo } from '/@/api/devlocal/userLogin'
 import {
-  sharedColumns,
   indexColumns,
   scoreDetialColumns,
-  idxKeyWordOptions,
 } from './indexColumns'
 
 import {IEstimatedCostAccounting,
@@ -208,7 +190,8 @@ import {IEstimatedCostAccounting,
   IEvaluationScore,
   IBenchmarkScore,
   IEvaluationQueryReq,
-  ICostAccounting
+  ICostAccounting,
+  IKeyWordTrend
 } from '/@/type/evaluation/evaluationType'
 
 
@@ -241,8 +224,7 @@ const scoreParametersVisible = ref<boolean>(false)
 const benchmarkScoreVisible = ref<boolean>(false)
 // 输入的关键词
 const inputKeyWord = ref<string>('')
-// 关键词趋势列表下拉框默认选中值
-const idxKeyWordValue = ref<string>('0')
+
 // 总记录数
 const total = ref<number>(0)
 // 评分参数列表
@@ -261,10 +243,11 @@ const shareId = ref<string>("")
 const currentLoginUserId = ref<string>("")
 // 评估id
 const evaluationId = ref<string>('')
-// 图表x轴
-const x = ref<string[]>([])
-// 图表y轴
-const y = ref<number[]>([])
+// // 图表x轴
+const trendEcahts = ref<IKeyWordTrend>({})
+// const x = ref<string[]>([])
+// // 图表y轴
+// const y = ref<number[]>([])
 
 // 默认成本核算参数
 const costAccountingFrom = reactive<ICostAccounting>({
@@ -357,24 +340,12 @@ const searchKeyWordTrend = async (row: any) => {
     inputKeyWord.value = row.amazonFrontendKeywords
   }
   const { data } = await getEvaluationTrendList({ keyWord: inputKeyWord.value, type: 0 })
-  x.value = data.xAxis
-  y.value = data.yAxis
+  trendEcahts.value.xAxis = data.xAxis
+  trendEcahts.value.yAxis = data.yAxis
   keyWordTrendVisible.value = false
   keyWordTrendEchatsVisible.value = true
 }
 
-/**
- * 关键词下拉change
- */
-const idxUpdateKeyWordTrend = async (val: any) => {
-  x.value = []
-  y.value = []
-  const { data } = await getEvaluationTrendList({ keyWord: inputKeyWord.value, type: val })
-  x.value = data.xAxis
-  y.value = data.yAxis
-  keyWordTrendVisible.value = false
-  keyWordTrendEchatsVisible.value = true
-}
 
 
 const keyWordTrendCellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
@@ -383,29 +354,6 @@ const keyWordTrendCellClick = (row: any, column: any, cell: HTMLTableCellElement
   }
 }
 
-/**
- * 共享操作
- */
-const handlerSwitchChange = async (row: any) => {
-  let type = 1;
-
-  if (row.share === true) {
-    type = 0
-  }
-  const { data } = await updateSharePerson({
-    evaluationId: shareId.value,
-    userId: row.userID,
-    type
-  })
-
-  if (data === true && type === 0) {
-    $baseMessage(`已共享给${row.userName}成功！`, "success", "hey")
-  }
-
-  if (data === true && type === 1) {
-    $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
-  }
-}
 
 /**
  * 获取评估列表数据
@@ -432,12 +380,11 @@ const fetchEstimatedCostAccounting =  async (id:number)=>{
   estimatedCostAccountingVisible.value = true
 }
 
-// 清除关键词趋势相关数据
-const cleanKeyWordTrendData = () => {
-  idxKeyWordValue.value = '0'
-  inputKeyWord.value = ''
-  x.value = []
-  y.value = []
+ // 清除关键词趋势相关数据
+const cleanKeyWordTrendData = (newValue:string) => {
+  inputKeyWord.value = newValue
+  trendEcahts.value.xAxis = []
+  trendEcahts.value.yAxis = []
   keyWordTrendEchatsVisible.value = false
   keyWordTrendVisible.value = false
 
@@ -453,7 +400,6 @@ const getScoreParams = async () => {
 // 获取成本核算默认参数
 const costAccountingeParam = async () => {
 
-  
   const { data } = await getEvaluationCostParameter()
   costAccountingFrom.rateMargin = data.rateMargin
   costAccountingFrom.rateRoi = data.rateRoi
@@ -498,6 +444,19 @@ const getBenchmarkScoreDetail = async (id: any) => {
   const { data } = await getEvaluationScoreDetail({ evaluationId:id })
   benchmarkScoreList.value = data
   benchmarkScoreVisible.value = true
+}
+
+const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
+  trendEcahts.value = newValue
+}
+
+
+const updateTrendVisibleValue = (newValue:boolean) =>{
+  keyWordTrendEchatsVisible.value = newValue
+}
+
+const updateSharedVisibleValue = (newValue:boolean) =>{
+  sharedVisible.value = newValue
 }
 
 // 获取子组件的修改
@@ -550,9 +509,4 @@ onBeforeMount(() => {
 }
 
 
-.chart-line {
-  width: 100%;
-  height: 100%;
-  min-height: 700px;
-}
 </style>

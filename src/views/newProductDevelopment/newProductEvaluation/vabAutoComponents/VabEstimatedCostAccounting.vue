@@ -415,7 +415,7 @@ const imagePreviewClose = () =>{
 
 // 通过事件,修改父元素的值
 const handlerCloseDialog = () =>{
-    emit('update:visibleValue', false);
+    emit('update:visibleValue', false)
 }
 
 // 复制

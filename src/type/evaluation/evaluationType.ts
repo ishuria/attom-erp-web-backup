@@ -131,6 +131,8 @@ export interface IShared{
     userId:number
     // 用户姓名
     userName:string
+    // 角色名称
+    roleName:string
     // 是否共享
     isShare:boolean
 }

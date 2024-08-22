@@ -4,3 +4,4 @@ export const iamgeSuffixTypeArr:string[] = [
     "image/jpg",
     "image/png",
 ] 
+

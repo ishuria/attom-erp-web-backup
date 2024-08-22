@@ -10,7 +10,7 @@ import {
   IEvaluationKeyWordTrendReq,
   IEvaluationSharePersonReq,
   IEstimatedCostAccountingQueryReq,
-  EstimatedCostAccountingProductRelease
+  EstimatedCostAccountingProductRelease,
 } from '/@/type/evaluation/evaluationType'
 
 
