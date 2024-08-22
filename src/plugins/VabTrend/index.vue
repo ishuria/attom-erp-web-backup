@@ -9,7 +9,7 @@
     <el-select v-model="idxKeyWordValue" :reserve-keyword="false" @change="idxUpdateKeyWordTrend" style="width: 200px">
       <el-option v-for="item in idxKeyWordOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <vab-echarts-chart-line class="chart-line" :x-axis-data="trnedData.xAxis" :y-axis-data="trnedData.yAxis" v-if="props.trendEchatsVisible" />
+    <vab-echarts-chart-line class="chart-line" :x-axis-data="trnedData.xAxis" :y-axis-data="trnedData.yAxis" />
   </el-dialog>
 </template>
 
