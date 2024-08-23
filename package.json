@@ -20,7 +20,7 @@
     "global:install": "cnpm i -g nrm cnpm npm-check-updates pnpm",
     "globle:update": "ncu -g",
     "module:install": "pnpm install",
-    "module:update": "ncu -u --reject vite-plugin-mock,eslint,sass,vue-echarts --registry https://registry.npmmirror.com && npm run module:install",
+    "module:update": "ncu -u --reject vite-plugin-mock,eslint,sass,vue-echarts && npm run module:install",
     "module:reinstall": "rimraf node_modules && npm run module:install",
     "git": "start ./git.sh",
     "generate-pwa-assets": "pwa-assets-generator",
@@ -30,8 +30,8 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@imengyu/vue3-context-menu": "^1.4.2",
     "@kangc/v-md-editor": "^2.3.18",
-    "@logicflow/core": "^2.0.2",
-    "@logicflow/extension": "^2.0.2",
+    "@logicflow/core": "2.0.2",
+    "@logicflow/extension": "2.0.2",
     "@lucky-canvas/vue": "^0.1.11",
     "@opentiny/vue": "^3.18.0",
     "@vueuse/core": "^11.0.1",
@@ -64,8 +64,8 @@
     "vue-router": "^4.4.3",
     "vue3-gantt": "1.1.8-7",
     "vue3-puzzle-vcode": "^1.1.7",
-    "xgplayer": "^3.0.19",
-    "xgplayer-hls.js": "^3.0.19"
+    "xgplayer": "^3.0.20",
+    "xgplayer-hls.js": "^3.0.20"
   },
   "devDependencies": {
     "@element-plus/eslint-config": "^2.8.0",
