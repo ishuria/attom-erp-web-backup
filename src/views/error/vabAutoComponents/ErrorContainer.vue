@@ -70,6 +70,8 @@ defineProps({
     .pic-error {
       flex-basis: 65%;
       height: 300px;
+      opacity: 0;
+      transform: translateX(-60px);
       animation: identifier 0.5s ease-in-out 0.2s forwards;
 
       .error-svg {
@@ -80,6 +82,8 @@ defineProps({
 
     .bullshit {
       flex-basis: 35%;
+      opacity: 0;
+      transform: translateY(50px);
       animation: slideUp 0.5s ease-in-out 0.2s forwards;
 
       &-oops {
@@ -103,11 +107,6 @@ defineProps({
       }
 
       @keyframes identifier {
-        0% {
-          opacity: 0;
-          transform: translateX(-60px);
-        }
-
         100% {
           opacity: 1;
           transform: translateX(0);
@@ -115,14 +114,9 @@ defineProps({
       }
 
       @keyframes slideUp {
-        0% {
-          opacity: 0;
-          transform: translateY(60px);
-        }
-
         100% {
           opacity: 1;
-          transform: translateY(30px);
+          transform: translateY(20px);
         }
       }
     }
