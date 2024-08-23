@@ -143,7 +143,7 @@ const iotList = ref<IotListType[]>([
 const serviceList = ref<ServiceListType[]>([
   { title: '数据看板', icon: 'article' },
   { title: '日志查询', icon: 'wtt' },
-  { title: '模组', icon: 'article' },
+  { title: '模组', icon: 'video' },
   { title: '服务商', icon: 'wenda' },
 ])
 
