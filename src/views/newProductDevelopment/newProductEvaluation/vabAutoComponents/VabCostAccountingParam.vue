@@ -1,6 +1,6 @@
 
 <template>
-    <el-dialog v-model="props.flag" 
+    <el-dialog v-model="zflag" 
         :close-on-click-modal="false" 
         title="成本核算默认参数" width="500"
         :before-close = "handlerCloseDialog"
@@ -104,6 +104,11 @@ let props = defineProps<{
     data: ICostAccounting
 }>();
 
+const zflag = ref<boolean>(false)
+watchEffect(()=>{
+  zflag.value = props.flag
+})
+
 const emit = defineEmits<{ (e: 'update:visibleValue', value: boolean): void }>()
 
 let costAccountingFrom:ICostAccounting = reactive(props.data)
@@ -116,11 +121,13 @@ const commitUpdateCostParam = () => {
       $baseMessage("成本核算默认参数修改成功!", "success", "hey")
     }
     emit('update:visibleValue', false);
+    zflag.value = false
   })
 }
 
 // 通过事件,修改父元素的值
 const handlerCloseDialog = () =>{
+    zflag.value = false
     emit('update:visibleValue', false);
 }
 

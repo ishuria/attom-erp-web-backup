@@ -28,51 +28,57 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" :border="true" :data="evaluationList" :stripe="true"
-      @cell-click="keyWordTrendCellClick">
-      <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-        :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
-        <template #default="{ row }">
-          <div v-if="item.label === '关键词趋势'">
-            <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
-          </div>
-        </template>
-      </el-table-column>
 
-      <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
-        <template #default="{ row }">
-          <el-dropdown>
-            <el-button text type="primary" @click="handleClick(row)">
-              产品核算推进
-              <el-icon class="el-icon--right">
-                <arrow-down />
-              </el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="toUpdateEvaluation(row)">查看和修改</el-link>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="cliekFontSearchKeyWord(row)"
-                    v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
-                </el-dropdown-item>
-                <el-dropdown-item v-if="row.userId === currentLoginUserId">
-                  <el-link type="primary" :underline="false" @click="sharedEvaluation(row)">共享</el-link>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="getBenchmarkScoreDetail(row.idNo)"
-                    v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
-      </el-table-column>
+    <el-table ref="tableRef" 
+      v-loading="listLoading" 
+      :border="true" 
+      :data="evaluationList" 
+      :stripe="true"
+      @cell-click="keyWordTrendCellClick"
+    >
+        <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+          :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+          <template #default="{ row }">
+            <div v-if="item.label === '关键词趋势'">
+              <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
+            </div>
+          </template>
+        </el-table-column>
 
-      <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
-      </template>
+        <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
+          <template #default="{ row }">
+            <el-dropdown>
+              <el-button text type="primary" @click="handleClick(row)">
+                产品核算推进
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>
+                    <el-link type="primary" :underline="false" @click="toUpdateEvaluation(row)">查看和修改</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-link type="primary" :underline="false" @click="cliekFontSearchKeyWord(row)"
+                      v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item v-if="row.userId === currentLoginUserId">
+                    <el-link type="primary" :underline="false" @click="sharedEvaluation(row)">共享</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <el-link type="primary" :underline="false" @click="getBenchmarkScoreDetail(row.idNo)"
+                      v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
+        </el-table-column>
+
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
     </el-table>
     <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />
@@ -150,7 +156,6 @@
       :flag="estimatedCostAccountingVisible" 
       :list="estimatedCostAccountingList"
       :evaluationId="evaluationId"
-      @update:visibleValue = "updateEstimatedCostAccountingVisibleValue"
       :callParentMethod="fetchEstimatedCostAccounting"
     />
 
@@ -176,7 +181,7 @@ import {
   getEvaluationScoreDetail,
   getEvaluationShareInfo,
   getEstimatedCostAccountingList,
-  getEvaluationCostParameter
+  getEvaluationCostParameter,
 } from '/@/api/devlocal/evaluation'
 import { getUserInfo } from '/@/api/devlocal/userLogin'
 import {
@@ -193,7 +198,6 @@ import {IEstimatedCostAccounting,
   ICostAccounting,
   IKeyWordTrend
 } from '/@/type/evaluation/evaluationType'
-
 
 import { convertString } from '/@/utils/stringUtils'
 
@@ -464,10 +468,6 @@ const updateSharedVisibleValue = (newValue:boolean) =>{
   sharedVisible.value = newValue
 }
 
-// 获取子组件的修改
-const updateEstimatedCostAccountingVisibleValue = (newV:boolean) =>{
-  estimatedCostAccountingVisible.value = newV
-}
 
 const updatecostAccountingeParamVisible = (newValue:boolean) =>{
   costAccountingeParamVisible.value = newValue
@@ -512,5 +512,8 @@ onBeforeMount(() => {
   height: 100%;
   min-height: 40px;
 }
-
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
 </style>

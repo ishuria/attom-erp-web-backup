@@ -11,6 +11,7 @@ import {
   IEvaluationSharePersonReq,
   IEstimatedCostAccountingQueryReq,
   EstimatedCostAccountingProductRelease,
+  EstimatedCostAccountingSort
 } from '/@/type/evaluation/evaluationType'
 
 
@@ -198,6 +199,21 @@ export function copyEstimatedCostAccounting(data?: any) {
   })
 }
 
+
+
+/**
+ * 修改排序
+ * @param data 
+ * @returns 
+ */
+export function updateEstimatedCostAccountingSort(data?: EstimatedCostAccountingSort) {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/update/sort`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
 
 /**
  * 获取对应货币汇率

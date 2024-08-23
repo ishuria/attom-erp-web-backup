@@ -207,3 +207,8 @@ export interface EstimatedCostAccountingProductRelease{
     ids:string
     evaluationId:string
 }
+
+export interface EstimatedCostAccountingSort{
+    estimatedId:string
+    sort:string
+}
