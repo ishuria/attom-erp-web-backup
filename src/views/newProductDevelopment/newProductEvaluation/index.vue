@@ -243,11 +243,11 @@ const shareId = ref<string>("")
 const currentLoginUserId = ref<string>("")
 // 评估id
 const evaluationId = ref<string>('')
-// // 图表x轴
-const trendEcahts = ref<IKeyWordTrend>({})
-// const x = ref<string[]>([])
-// // 图表y轴
-// const y = ref<number[]>([])
+// 图表
+const trendEcahts = ref<IKeyWordTrend>({
+  xAxis:[],
+  yAxis:[]
+})
 
 // 默认成本核算参数
 const costAccountingFrom = reactive<ICostAccounting>({
@@ -339,13 +339,15 @@ const searchKeyWordTrend = async () => {
    keyWordTrend(inputKeyWord.value)
 }
 
-const cliekFontSearchKeyWord = (row:any)=>{
+const cliekFontSearchKeyWord = async(row:any)=>{
+  inputKeyWord.value = row.amazonFrontendKeywords
   keyWordTrend(row.amazonFrontendKeywords)
 }
 
 
 const keyWordTrendCellClick = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
   if (column.label === "关键词趋势") {
+    inputKeyWord.value = row.amazonFrontendKeywords
     keyWordTrend(row.amazonFrontendKeywords)
   }
 }

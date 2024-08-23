@@ -46,15 +46,19 @@ const idxKeyWordValue = ref<string>('0')
 
 // 清除关键词趋势相关数据
 const handlerClose = () => {
-    idxKeyWordValue.value = "0"
-    emit('update:clearnInputKeyWord', "")
-    emit('update:visibleValue', false)
+    setTimeout(() => {
+      idxKeyWordValue.value = "0"
+      emit('update:clearnInputKeyWord', "")
+      emit('update:visibleValue', false)
+      emit('update:trendEchatsList',{xAxis:[],yAxis:[]})
+    }, 800);
 }
 
 /**
  * 关键词下拉change
  */
  const idxUpdateKeyWordTrend = async (val: any) => {
+  emit('update:trendEchatsList',{xAxis:[],yAxis:[]})  
   const { data } = await getEvaluationTrendList({ keyWord: props.keyWord, type: val })
   emit('update:trendEchatsList',{xAxis:data.xAxis,yAxis:data.y})
 }
