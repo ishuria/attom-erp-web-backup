@@ -104,7 +104,7 @@ const menuList = ref<MenuListType[]>([
     active: true,
   },
   {
-    icon: 'abuilding-line',
+    icon: 'building-line',
     title: '门户',
     path: '/portal',
   },
