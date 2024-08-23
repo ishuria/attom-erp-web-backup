@@ -104,9 +104,14 @@ const menuList = ref<MenuListType[]>([
     active: true,
   },
   {
-    icon: 'artboard-fill',
+    icon: 'abuilding-line',
     title: '门户',
     path: '/portal',
+  },
+  {
+    icon: 'database-2-line',
+    title: '数据大屏',
+    path: '/dataScreen',
   },
   {
     icon: 'admin-fill',
