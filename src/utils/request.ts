@@ -2,6 +2,7 @@ import { stringify } from 'qs'
 import { refreshToken } from '/@/api/refreshToken'
 import { contentType, debounce, messageName, statusName, successCode, timeout } from '/@/config'
 import router from '/@/router'
+import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
 import { isArray } from '/@/utils/validate'
 import { addErrorLog, needErrorLog } from '/@vab/plugins/errorLog'
@@ -21,6 +22,7 @@ const CODE_MESSAGE: any = {
   201: '新建或修改数据成功',
   202: '一个请求已经进入后台排队(异步任务)',
   204: '删除数据成功',
+  205: '后端code指令强制开启锁屏',
   400: '发出信息有误',
   401: '用户没有权限(令牌失效、用户名、密码错误、登录过期)',
   402: '令牌过期',
@@ -115,6 +117,16 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
       // return data
       return data
     }
+    case 205: {
+      // 屏幕锁定
+      const settingsStore = useSettingsStore()
+      const { lock } = storeToRefs(settingsStore)
+      lock.value = true
+      setTimeout(() => {
+        gp.$baseMessage(CODE_MESSAGE[205], 'success', 'hey')
+      }, 1000 * 3)
+      break
+    }
     case 401: {
       resetAll().then(() => {
         router.push({ path: '/login', replace: true }).then(() => {})
@@ -129,13 +141,16 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
       break
     }
   }
-  // 异常处理
-  // 若data.msg存在，覆盖默认提醒消息
-  const errMsg = `${data && data[messageName] ? data[messageName] : CODE_MESSAGE[code] ? CODE_MESSAGE[code] : statusText}`
-  // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
-  gp.$baseMessage(errMsg, 'error', 'hey')
-  if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })
-  throw data
+  // 若code非操作正常code，且非205锁屏，则抛出错误
+  if (code != 205) {
+    // 异常处理
+    // 若data.msg存在，覆盖默认提醒消息
+    const errMsg = `${data && data[messageName] ? data[messageName] : CODE_MESSAGE[code] ? CODE_MESSAGE[code] : statusText}`
+    // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
+    gp.$baseMessage(errMsg, 'error', 'hey')
+    if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })
+    throw data
+  }
 }
 /**
  * @description axios初始化

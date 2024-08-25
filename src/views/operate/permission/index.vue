@@ -101,6 +101,9 @@
           <el-table-column v-if="hasPermission({ role: ['Admin'], mode: 'except' })" label="未拥有['Admin']的表格列" prop="no" />
         </el-table>
       </el-form-item>
+      <el-form-item label="后端code指令强制开启锁屏">
+        <el-button type="primary" @click="handleLock">点击锁屏</el-button>
+      </el-form-item>
     </el-form>
     <el-tour v-model="open" :type="type">
       <el-tour-step v-for="step in steps" :key="step" :description="step.description" :target="step.target" :title="step.title" />
@@ -110,6 +113,7 @@
 
 <script lang="ts" setup>
 import { expireToken } from '/@/api/refreshToken'
+import { lock } from '/@/api/user'
 import { authentication, loginInterception, rolesControl, tokenTableName } from '/@/config'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
@@ -160,6 +164,10 @@ const handleChangeRole = async () => {
 
 const handleRefreshToken = async () => {
   await expireToken()
+}
+
+const handleLock = async () => {
+  await lock()
 }
 
 watch(token, (value) => {

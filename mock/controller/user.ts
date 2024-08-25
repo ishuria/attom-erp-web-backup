@@ -18,6 +18,7 @@ const role2permission: { [key: string]: string[] } = {
 }
 
 export default [
+  // 功能繁琐，如无保密需求，不推荐使用RSA加密
   {
     url: '/publicKey',
     method: 'get',
@@ -107,6 +108,15 @@ export default [
       return {
         code: 200,
         msg: 'success',
+      }
+    },
+  },
+  {
+    url: '/lock',
+    method: 'get',
+    response() {
+      return {
+        code: 205,
       }
     },
   },
