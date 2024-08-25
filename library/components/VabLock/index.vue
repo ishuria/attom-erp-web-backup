@@ -53,7 +53,7 @@ const userStore = useUserStore()
 const { avatar } = storeToRefs(userStore)
 const settingsStore = useSettingsStore()
 const { lock, title } = storeToRefs(settingsStore)
-const { handleLock: _handleLock, handleUnLock: _handleUnLock } = settingsStore
+const { handleLock, handleUnLock: _handleUnLock } = settingsStore
 const bingStore = useBingStore()
 const { backgroundList } = storeToRefs(bingStore)
 const url = 'https://cdn.jsdelivr.net/gh/chuzhixin/image/vab-image-lock/'
@@ -98,10 +98,6 @@ const handleUnLock = () => {
   formRef.value?.validate(async (valid: boolean) => {
     if (valid) await _handleUnLock()
   })
-}
-
-const handleLock = () => {
-  _handleLock()
 }
 
 watch(

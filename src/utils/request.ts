@@ -120,11 +120,11 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
     case 205: {
       // 屏幕锁定
       const settingsStore = useSettingsStore()
-      const { lock } = storeToRefs(settingsStore)
-      lock.value = true
+      const { handleLock } = settingsStore
+      handleLock()
       setTimeout(() => {
         gp.$baseMessage(CODE_MESSAGE[205], 'success', 'hey')
-      }, 1000 * 3)
+      }, 1000 * 1.5)
       break
     }
     case 401: {
