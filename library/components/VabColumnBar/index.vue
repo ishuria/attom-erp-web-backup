@@ -110,16 +110,12 @@ onMounted(() => {
       watch(
         route,
         () => {
-          const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
-          const floatFold: any = document.querySelector('.float-fold')
           if (route.meta.noColumn && theme.value.layout === 'column') {
             if (device.value !== 'mobile') foldSideBar()
-            if (foldUnfold) foldUnfold.style = 'opacity:0'
-            if (floatFold) floatFold.style = 'opacity:0'
+            useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, { id: 'fold-unfold-useStyleTag' })
           } else {
             if (device.value !== 'mobile') openSideBar()
-            if (foldUnfold) foldUnfold.style = 'opacity:1'
-            if (floatFold) floatFold.style = 'opacity:1'
+            useStyleTag('', { id: 'fold-unfold-useStyleTag' })
           }
         },
         {
