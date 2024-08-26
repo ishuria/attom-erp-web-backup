@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import {IUserQueryReq,IUserDeleteReq,IUserAddOrUpateReq} from '/@/type/user/userType'
+import {IUserQueryReq,IUserDeleteReq,IUserAddOrUpateReq, IEditParams, IAddParams} from '/@/type/user/userType'
 
 export function getList(params?: IUserQueryReq) {
   return request({
@@ -12,7 +12,7 @@ export function getList(params?: IUserQueryReq) {
   })
 }
 
-export const doAdd = (data: IUserAddOrUpateReq) => {
+export const doAdd = (data: IAddParams) => {
   return request({
     url: `${BASE_API}/user/doAdd`,
     method: 'post',
@@ -20,7 +20,7 @@ export const doAdd = (data: IUserAddOrUpateReq) => {
   })
 }
 
-export const doEdit = (data: IUserAddOrUpateReq) => {
+export const doEdit = (data: IEditParams) => {
   return request({
     url: `${BASE_API}/user/doEdit`,
     method: 'post',
@@ -43,3 +43,14 @@ export const doMostDelete = (data: IUserDeleteReq) => {
     data,
   })
 }
+
+/**
+ * 获取分公司列表
+ */
+export function getCompany() {
+  return request({
+    url: `${BASE_API}/user/getCompany`,
+    method: 'post',
+  })
+}
+

@@ -24,19 +24,65 @@ export interface IUserQueryReq {
 export interface IUserDeleteReq {
     ids:string
 }
-
+/**
+ * 用户编辑类型
+ */
 export interface IUserAddOrUpateReq {
     userId:string
     userName: string,
     password: string,
+    currentYearSickLeave: number | null,
+    nextYearSickLeave: number | null,
+    currentYearAnnualLeave: number | null,
+    nextYearAnnualLeave: number | null,
+    affiliatedBranchCompany: string,
     email: string,
     roleName: string,
     roleCode: string,
     status: string,
     roles: IRole[],
+    companies: ICompany[], //分公司列表
 }
 
 interface IRole{
     roleCode:string
     roleName:string
+}
+/**
+ * 每个分公司的类型
+ */
+export interface ICompany{
+    label: string
+    value: number
+}
+
+/**
+ * 用户编辑参数类型
+ */
+export interface IEditParams {
+    userId: string
+    username: string
+    password: string
+    roleCode: string
+    status: string
+    currentYearSickLeave: number | null
+    nextYearSickLeave: number | null
+    currentYearAnnualLeave: number | null
+    nextYearAnnualLeave: number | null
+    affiliatedBranchCompanyId: string | null
+}
+/**
+ * 用户添加参数类型
+ */
+export interface IAddParams {
+    username: string
+    password: string
+    email: string
+    roleCode: string
+    status: string
+    currentYearSickLeave: number | null
+    nextYearSickLeave: number | null
+    currentYearAnnualLeave: number | null
+    nextYearAnnualLeave: number | null
+    affiliatedBranchCompanyId: string | null
 }

@@ -23,6 +23,13 @@
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="用户id" min-width="120" prop="userId" show-overflow-tooltip />
       <el-table-column align="center" label="用户名" min-width="120" prop="userName" />
+
+      <el-table-column align="center" label="今年病假" min-width="120" prop="currentYearSickLeave" />
+      <el-table-column align="center" label="明年病假" min-width="120" prop="nextYearSickLeave" />
+      <el-table-column align="center" label="今年年假" min-width="120" prop="currentYearAnnualLeave" />
+      <el-table-column align="center" label="明年年假" min-width="120" prop="nextYearAnnualLeave" />
+      <el-table-column align="center" label="所属分公司" min-width="120" prop="affiliatedBranchCompany" />
+
       <el-table-column align="center" label="邮箱" min-width="220" prop="email" show-overflow-tooltip />
 
       <el-table-column align="center" label="角色" min-width="155">

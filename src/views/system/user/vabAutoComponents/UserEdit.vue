@@ -7,6 +7,25 @@
       <el-form-item label="密码" prop="password">
         <el-input v-model.trim="form.password" clearable type="password" />
       </el-form-item>
+
+      <el-form-item label="今年病假" prop="currentYearSickLeave">
+        <el-input v-model.trim="form.currentYearSickLeave" clearable />
+      </el-form-item>
+      <el-form-item label="明年病假" prop="nextYearSickLeave">
+        <el-input v-model.trim="form.nextYearSickLeave" clearable />
+      </el-form-item>
+      <el-form-item label="今年年假" prop="currentYearAnnualLeave">
+        <el-input v-model.trim="form.currentYearAnnualLeave" clearable />
+      </el-form-item>
+      <el-form-item label="明年年假" prop="nextYearAnnualLeave">
+        <el-input v-model.trim="form.nextYearAnnualLeave" clearable />
+      </el-form-item>
+      <el-form-item label="所属分公司" prop="affiliatedBranchCompany">
+        <el-select v-model="form.affiliatedBranchCompany" filterable clearable placeholder="请选择分公司">
+          <el-option v-for="item in form.companies" :key="item.label" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="邮箱" prop="email">
         <el-input v-model.trim="form.email" clearable />
       </el-form-item>
@@ -27,9 +46,11 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
+import { convertString } from '/@/utils/stringUtils'
 import { getList } from '/@/api/devlocal/role'
-import { doAdd, doEdit } from '/@/api/devlocal/user'
-import { IUserAddOrUpateReq } from '/@/type/user/userType'
+import { doAdd, doEdit, getCompany } from '/@/api/devlocal/user'
+import { IAddParams, IEditParams, IUserAddOrUpateReq } from '/@/type/user/userType'
+import { constantRoutes } from '~/src/router'
 
 defineOptions({
   name: 'UserEdit',
@@ -41,11 +62,17 @@ const form = reactive<IUserAddOrUpateReq>({
   userId:'',
   userName: '',
   password: '',
+  currentYearSickLeave: null,
+  nextYearSickLeave: null,
+  currentYearAnnualLeave: null,
+  nextYearAnnualLeave: null,
+  affiliatedBranchCompany: "",
   email: '',
   roleName: '',
   roleCode: '',
   status: '0',
   roles: [],
+  companies: [], //分公司列表
 })
 
 const title = ref<string>('')
@@ -57,11 +84,17 @@ const rules = reactive<any>({
   email: [{ required: true, trigger: 'blur', message: '请输入邮箱' }],
   roleId: [{ required: true, trigger: 'blur', message: '请选择角色' }],
   status: [{ required: true, trigger: 'blur', message: '请选择状态' }],
+  currentYearSickLeave: [{ required: true, trigger: 'blur', message: '请输入今年年假' }],
+  nextYearSickLeave: [{ required: true, trigger: 'blur', message: '请输入明年年假' }],
+  currentYearAnnualLeave: [{ required: true, trigger: 'blur', message: '请输入今年年假' }],
+  nextYearAnnualLeave: [{ required: true, trigger: 'blur', message: '请输入明年年假' }],
+  affiliatedBranchCompany: [{ required: true, trigger: 'blur', message: '请选择所属分公司' }],
 })
 
 const showEdit = (row: any) => {
   dialogFormVisible.value = true
   fetchData()
+  fetchCompanyData()
   nextTick(() => {
     if (row) {
       title.value = '编辑'
@@ -87,11 +120,35 @@ const save = () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
       if (form.userId && form.userId != "") {
-        const { msg }: any = await doEdit(form)
-        await $baseMessage(msg, 'success', '用户添加成功！')
+        const newForm: IEditParams = {
+          userId: form.userId ,
+          username: form.userName,
+          password: form.password,
+          roleCode: form.roleCode,
+          status: form.status,
+          currentYearSickLeave: form.currentYearSickLeave,
+          nextYearSickLeave: form.nextYearSickLeave,
+          currentYearAnnualLeave: form.currentYearAnnualLeave,
+          nextYearAnnualLeave: form.nextYearAnnualLeave,
+          affiliatedBranchCompanyId: form.affiliatedBranchCompany
+        }
+        const { msg }: any = await doEdit(newForm)
+        await $baseMessage(msg, 'success', '用户编辑成功！')
         await close()
       } else {
-        const { msg }: any = await doAdd(form)
+        const newForm: IAddParams = {
+          username: form.userName,
+          password: form.password,
+          email: form.email,
+          roleCode: form.roleCode,
+          status: form.status,
+          currentYearSickLeave: form.currentYearSickLeave,
+          nextYearSickLeave: form.nextYearSickLeave,
+          currentYearAnnualLeave: form.currentYearAnnualLeave,
+          nextYearAnnualLeave: form.nextYearAnnualLeave ,
+          affiliatedBranchCompanyId: form.affiliatedBranchCompany
+        }
+        const { msg }: any = await doAdd(newForm)
         await $baseMessage(msg, 'success', '用户添加成功！')
         await close()
       }
@@ -103,5 +160,12 @@ const save = () => {
 const fetchData = async () => {
   const { data } = await getList()
   form.roles = data
+}
+const fetchCompanyData = async () => {
+  const { data } = await getCompany()
+  data.forEach((item: any) => {
+    item.value = convertString(item.value)
+  });
+  form.companies = data
 }
 </script>
