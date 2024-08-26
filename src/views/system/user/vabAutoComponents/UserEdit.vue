@@ -21,8 +21,8 @@
         <el-input v-model.trim="form.nextYearAnnualLeave" clearable />
       </el-form-item>
       <el-form-item label="所属分公司" prop="affiliatedBranchCompany">
-        <el-select v-model="form.affiliatedBranchCompany" filterable clearable placeholder="请选择分公司">
-          <el-option v-for="item in form.companies" :key="item.label" :label="item.label" :value="item.value"></el-option>
+        <el-select v-model="branchValue" filterable clearable placeholder="请选择分公司">
+          <el-option v-for="item in form.companies" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
 
@@ -50,7 +50,6 @@ import { convertString } from '/@/utils/stringUtils'
 import { getList } from '/@/api/devlocal/role'
 import { doAdd, doEdit, getCompany } from '/@/api/devlocal/user'
 import { IAddParams, IEditParams, IUserAddOrUpateReq } from '/@/type/user/userType'
-import { constantRoutes } from '~/src/router'
 
 defineOptions({
   name: 'UserEdit',
@@ -58,6 +57,7 @@ defineOptions({
 
 const emit = defineEmits(['fetch-data'])
 const formRef = ref<FormInstance>()
+const branchValue = ref<string>("")
 const form = reactive<IUserAddOrUpateReq>({
   userId:'',
   userName: '',
@@ -130,7 +130,7 @@ const save = () => {
           nextYearSickLeave: form.nextYearSickLeave,
           currentYearAnnualLeave: form.currentYearAnnualLeave,
           nextYearAnnualLeave: form.nextYearAnnualLeave,
-          affiliatedBranchCompanyId: form.affiliatedBranchCompany
+          affiliatedBranchCompanyId: branchValue.value
         }
         const { msg }: any = await doEdit(newForm)
         await $baseMessage(msg, 'success', '用户编辑成功！')
@@ -146,7 +146,7 @@ const save = () => {
           nextYearSickLeave: form.nextYearSickLeave,
           currentYearAnnualLeave: form.currentYearAnnualLeave,
           nextYearAnnualLeave: form.nextYearAnnualLeave ,
-          affiliatedBranchCompanyId: form.affiliatedBranchCompany
+          affiliatedBranchCompanyId: branchValue.value
         }
         const { msg }: any = await doAdd(newForm)
         await $baseMessage(msg, 'success', '用户添加成功！')
@@ -165,6 +165,9 @@ const fetchCompanyData = async () => {
   const { data } = await getCompany()
   data.forEach((item: any) => {
     item.value = convertString(item.value)
+    if(item.label === form.affiliatedBranchCompany){
+      branchValue.value = item.value
+    }
   });
   form.companies = data
 }
