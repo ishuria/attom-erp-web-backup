@@ -471,7 +471,8 @@ const handlerEstimatendChange = async (row:IEstimatedCostAccounting) =>{
 const handlerSiteChange = async (row:IEstimatedCostAccounting) =>{
     row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
     const {data} = await getExchangeRate({currency:row.currencyType})
-    row.foreignExchange = data   
+    row.foreignExchange = data
+    row.site = row.site  
     await updateEstimatedCostAccounting({...row})
 }
 
