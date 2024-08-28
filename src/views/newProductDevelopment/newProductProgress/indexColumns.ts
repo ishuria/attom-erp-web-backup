@@ -8,16 +8,17 @@ export const indexColumns = [
     {
         label: '示例图片',
         prop: 'imageList',
-        minWidth: 600,
+        minWidth: 500,
     },
     {
         label: '产品',
         prop: 'product',
-        minWidth: 100,
+        minWidth: 160,
     },
     {
         label: 'OEM',
         prop: 'oem',
+        minWidth: 60,
     },
     {
         label: '立项日期',

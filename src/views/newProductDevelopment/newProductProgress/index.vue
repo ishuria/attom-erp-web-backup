@@ -4,6 +4,7 @@
       v-model="activeName"
       type="border-card"
       class="demo-tabs"
+      @tab-click="handleTabClick"
     >
       <el-tab-pane label="进行中" name="0">
         <vab-query-form>
@@ -36,7 +37,6 @@
           :border="true" 
           :data="progressList" 
           :stripe="true"
-          @cell-click="tableCellCliek"
         >
           <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
             :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
@@ -53,23 +53,57 @@
                 </el-select>
               </div>
               <div v-if="item.label === '示例图片'" class="image-wall">
-                <el-upload
-                  action="#"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove"
-                  v-model:file-list="row.imageList"
+                <el-upload 
+                  action="#" 
+                  list-type="picture-card" 
+                  :file-list="row.imageList" 
+                  :limit="5" 
+                  :class="{ hide: hideUpload || row.hide }"
+                  :on-change="changeImage"
+                  :on-exceed="handleExceed"
+                  :http-request="uploadImage"
                 >
-                  <el-icon><Plus /></el-icon>
+                  <div 
+                    style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
+                    @click="handleIconClick(row)"
+                  >
+                    <el-icon ><Plus /></el-icon>
+                  </div>
+
+                  <template #file="{ file }">
+                    <div>
+                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                      <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-preview"
+                          @click="handlePictureCardPreview(file, row)"
+                        >
+                          <el-icon><zoom-in /></el-icon>
+                        </span>
+                        <span
+                          v-if="!disabled"
+                          class="el-upload-list__item-delete"
+                          @click="handleRemove(file, row)"
+                        >
+                          <el-icon><Delete /></el-icon>
+                        </span>
+                      </span>
+                    </div>
+                  </template>
                 </el-upload>
-                <!-- <el-dialog v-model="dialogVisible"> -->
-                  <!-- <img w-full :src="dialogImageUrl" alt="Preview Image" class="previewImage"/> -->
-                 
-                <!-- </el-dialog> -->
+              </div>
+              <div v-if="item.label === '产品'">
+                <div v-html="row.product" style="text-align: left"></div>
               </div>
               <div v-if="item.label === 'OEM'" >
                 <!--当 row.oem 的值为 1 时，复选框就会自动选中-->
-                <el-checkbox v-model="row.oem" :true-label="'1'" :false-label="'0'" size="large" />
+                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" />
+              </div>
+              <div v-if="item.label === '立项日期'">
+                {{ row.createTime.split(' ')[0] }}
+              </div>
+              <div v-if="item.label === '参与人员'">
+                <div v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
               </div>
             </template>
           </el-table-column>
@@ -86,7 +120,7 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false">开票申请</el-link>
+                      <el-link type="primary" :underline="false">开模申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false">订大货申请</el-link>
@@ -143,7 +177,7 @@
             :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
             <template #default="{ row }">
               <div v-if="item.label === '优先级'">
-                <el-select size="small" v-model="row.priority" :disabled="true">
+                <el-select size="small" v-model="row.priority" disabled>
                   <el-option 
                     v-for="item in priorityOptions" 
                     :key="item.value" 
@@ -154,23 +188,44 @@
                 </el-select>
               </div>
               <div v-if="item.label === '示例图片'" class="image-wall">
-                <el-upload
-                  action="#"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove"
-                  v-model:file-list="row.imageList"
-                  :disabled="true"
-                >
+                <el-upload action="#" list-type="picture-card" :auto-upload="false" 
+                  :file-list="row.imageList" disabled>
                   <el-icon><Plus /></el-icon>
+
+                  <template #file="{ file }">
+                    <div>
+                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                      <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-preview"
+                          @click="handlePictureCardPreview(file, row)"
+                        >
+                          <el-icon><zoom-in /></el-icon>
+                        </span>
+                        <span
+                          v-if="!disabled"
+                          class="el-upload-list__item-delete"
+                          @click="handleRemove(file, row)"
+                        >
+                          <el-icon><Delete /></el-icon>
+                        </span>
+                      </span>
+                    </div>
+                  </template>
                 </el-upload>
-                <el-dialog v-model="dialogVisible" >
-                  <img w-full :src="dialogImageUrl" alt="Preview Image"/>
-                </el-dialog>
+              </div>
+              <div v-if="item.label === '产品'">
+                <div v-html="row.product" style="text-align: left"></div>
               </div>
               <div v-if="item.label === 'OEM'" >
                 <!--当 row.oem 的值为 1 时，复选框就会自动选中-->
-                <el-checkbox v-model="row.oem" :true-label="'1'" :false-label="'0'" size="large" :disabled="true"/>
+                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" disabled />
+              </div>
+              <div v-if="item.label === '立项日期'">
+                {{ row.createTime.split(' ')[0] }}
+              </div>
+              <div v-if="item.label === '参与人员'">
+                <div v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
               </div>
             </template>
           </el-table-column>
@@ -204,17 +259,20 @@ defineOptions({
 })
 
 import { ref } from 'vue'
-import { Search, ArrowDown, Plus } from '@element-plus/icons-vue'
-import { rowContextKey, type TableInstance } from 'element-plus'
+import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
+import { type TableInstance } from 'element-plus'
 import {
   indexColumns,
 } from './indexColumns'
 
-import { IProgressQueryReq, IProgress } from '/@/type/progress/progressType'
+import { IProgressQueryReq, IProgress, IImageQueryReq } from '/@/type/progress/progressType'
 import {
+  deleteImage,
   getList,
+  uploadFile,
 } from '/@/api/devlocal/progress'
-import type { UploadProps, UploadUserFile } from 'element-plus'
+import type { UploadFile, TabsPaneContext, UploadProps, UploadUserFile } from 'element-plus'
+import { VueDraggable } from 'vue-draggable-plus';
 
 const activeName = ref("0")
 const fixed = ref<string>('right')
@@ -223,8 +281,9 @@ const tableRef = ref<TableInstance>()
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 // 新品进度列表
-const progressList = ref<IProgress[]>([])
-const tableClickIdx = ref<number>(0)
+let progressList = reactive<IProgress[]>([])
+let tableClickProgressId = ref<number>(0)
+let tableClickRowIndex = ref<number>(0)
 // 总记录数
 const total = ref<number>(0)
 const queryForm = reactive<IProgressQueryReq>({
@@ -233,6 +292,7 @@ const queryForm = reactive<IProgressQueryReq>({
   productKeyWord: '',
   status: 0, //查询状态：0表示进行中 1表示已归档
 })
+
 const priorityOptions = [
   { 
     value: "0",
@@ -248,33 +308,116 @@ const priorityOptions = [
   },
 ]
 
+// 图片
 const dialogImageUrl = ref<string>('')
 const dialogVisible = ref<boolean>(false)
-let list:any = []
-const imagePriviewList = ref<string[]>([
-])
+const disabled = ref(false)
 
-const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
-  console.log(uploadFile, uploadFiles)
+// let list: any = []
+const imagePriviewList = ref<string[]>([])
+let hideUpload = ref<boolean>(false)
+
+const changeImage = (file: any, fileList: any) => {
+  hideUpload.value = fileList.length >= 5
 }
-
-const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
-  dialogImageUrl.value = uploadFile.url!
+const handleTabClick = (tab: TabsPaneContext, event: Event) => {
+  console.log('tab', tab)
+  if (tab.props.name === '0')  queryForm.status = 0
+  else queryForm.status = 1
+  fetchData()
+}
+/**
+ * 图片删除功能
+ */
+const handleRemove = async (file: UploadFile, row: any) => {
+  let i = row.imageList.findIndex((item: any) => item.uid === file.uid)
+  // console.log(file)
+  // console.log("Initial index:", i);
+  // 如果没找到下标，说明是新上传的图片
+  if (i === -1) {
+    row.imageList.push({
+      url: file.url,
+      name: file.name,
+      uid: file.uid,
+    })
+    i = row.imageList.length - 1 // 新上传的图片在数组的最后一项
+  }
+  row.imageList.splice(i, 1)
+  console.log('row.imageList.length', row.imageList.length);
+  if (row.imageList.length <= 5) {
+    row.hide = false
+    hideUpload.value = false
+  }
+  const delImgForm = new FormData()
+  delImgForm.append('type', '2')
+  delImgForm.append('imageId', file.name)
+  const { data } = await deleteImage(delImgForm)
+  
+  // console.log(data)
+}
+/**
+ * 定义超出限制时的行为
+ */
+const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
+  // console.log(files, uploadFiles);
+  if (uploadFiles.length >= 5) hideUpload.value = true
+  else hideUpload.value = false
+}
+/**
+ * 图片预览事件
+ */
+const handlePictureCardPreview = (file: UploadFile, row: any) => {
+  dialogImageUrl.value = file.url!
   dialogVisible.value = true
-
-  console.log("list",list);
-  console.log("idx",tableClickIdx.value);
-  
-  // const r = list[tableClickIdx]
-  // console.log(r);
-  
-  // imagePriviewList.value.push(])
+  imagePriviewList.value = []
+  const i = row.imageList.find((item: any) => item.uid === file.uid)
+  imagePriviewList.value.push(file.url!)
+  row.imageList.forEach((item: any) => {
+    if (item.uid === i.uid) return
+    imagePriviewList.value.push(item.url)
+  })
 }
-
 
 // 图片预览关闭事件
 const imagePreviewClose = () =>{
   dialogVisible.value = false;
+}
+/**
+ * 点击添加图标事件
+ */
+const handleIconClick = (row: any) => {
+  tableClickProgressId = row.progressId
+  tableClickRowIndex.value = progressList.findIndex(item => item.progressId == row.progressId) as any
+  // console.log('点击行的下标', tableClickRowIndex.value);
+}
+/**
+ * 上传图片
+ */
+const imageForm = ref(new FormData()) as any;
+async function uploadImage (params: any) {
+  let imgListlength = progressList[tableClickRowIndex.value].imageList.length + 1
+  if (imgListlength >= 5) {
+    progressList[tableClickRowIndex.value].hide = false
+    hideUpload.value = false
+  }
+  console.log('progressList', progressList);
+   
+  // console.log(params.file);
+  let sort = progressList[tableClickRowIndex.value].imageList.length - 1
+  // length 0 sort 5
+  //        1      4  5-i
+  imageForm.value = new FormData(); // 每次上传前重置 FormData
+  imageForm.value.append('file', params.file);
+  imageForm.value.append('type', '2');
+  imageForm.value.append('progressId', tableClickProgressId);
+  imageForm.value.append('sort', sort);
+  // console.log(imageForm.value.get("type"))
+  const { data } = await uploadFile(imageForm.value)
+  // console.log(data)
+  setTimeout(() => {
+    fetchData()
+  }, 500);
+  
 }
 /**
  * 获取初始新品进度数据
@@ -282,12 +425,12 @@ const imagePreviewClose = () =>{
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getList(queryForm)
-  progressList.value = data.list
+  progressList = data.list
   total.value = data.total
   listLoading.value = false
 
-  progressList.value.forEach(item => {
-    const tempArr:string[] = []
+  progressList.forEach(item => {
+    const tempArr: string[] = []
     item.imageList.forEach(image => {
       tempArr.push(image.imageUrl!)
       image.url = image.imageUrl;
@@ -295,17 +438,24 @@ const fetchData = async () => {
       delete image.imageUrl;
       delete image.imageId;
     })
-    list.push(tempArr)
+    
+    if(tempArr.length === 5){
+      item.hide = true
+    }else {
+      item.hide = false
+      hideUpload.value = false
+    }
+    // list.push(tempArr)
   })
   // console.log(list.value);
 }
 
-const tableCellCliek = (row: any, column: any, cell: HTMLTableCellElement, event: Event)=>{
+// const tableCellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event)=>{
+//   console.log(progressList);
+//   tableClickIdx.value = progressList.indexOf(row)
   
-  tableClickIdx.value = progressList.value.indexOf(row)
-  
-  console.log(tableClickIdx.value);
-}
+//   console.log(tableClickIdx.value);
+// }
 
 /**
  * 获取新品进度列表数据
@@ -361,18 +511,20 @@ onBeforeMount(() => {
   max-width: 100%; /* 限制最大宽度，以防止超出表格单元格 */
   overflow-x: auto; /* 当图片超出宽度时，允许水平滚动 */
   :deep(.el-upload-list__item) {
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
   }
   :deep(.el-upload--picture-card) {
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
   }
 }
-.previewImage {
-  width: 300px; /* 设置图片的宽度 */
-  height: auto; /* 自动调整高度 */
-  object-fit: contain; /* 保持图片比例 */
+.hide :deep(.el-upload--picture-card) {
+  display: none
+}
+// 下拉框宽度
+:deep(.el-select--small .el-select__wrapper) {
+  width: 50px;
 }
 
 .example-showcase .el-dropdown+.el-dropdown {

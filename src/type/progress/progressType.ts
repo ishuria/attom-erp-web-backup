@@ -40,6 +40,29 @@ export interface IProgress{
     targetMonthlySales: string 
     // 参与人员
     sharerName: string 
+    // 进度id
+    progressId: number
     // 新款评估编号
-    evaluationId: string 
+    evaluationId: string
+    // 控添加图片样式隐藏显示 
+    hide: boolean
+}
+/**
+ * 图片上传参数类型
+ */
+export interface IImageQueryReq {
+    file: any
+    type: string
+    progressId: number
+}
+/**
+ * 图片删除参数类型
+ */
+export interface IDelImgQueryReq {
+    type: string
+    imageId: number
+}
+export interface ProgressImgSort{
+    imageId: number
+    sort: number
 }
