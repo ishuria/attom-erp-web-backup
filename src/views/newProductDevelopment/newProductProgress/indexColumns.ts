@@ -3,12 +3,12 @@ export const indexColumns = [
     {
         label: '优先级',
         prop: 'priority',
-        minWidth: 80,
+        minWidth: 55,
     },
     {
         label: '示例图片',
         prop: 'imageList',
-        minWidth: 500,
+        minWidth: 400,
     },
     {
         label: '产品',
@@ -18,21 +18,22 @@ export const indexColumns = [
     {
         label: 'OEM',
         prop: 'oem',
-        minWidth: 60,
+        minWidth: 55,
     },
     {
         label: '立项日期',
         prop: 'createTime',
-        minWidth: 110,
+        minWidth: 95,
     },
     {
         label: '当前阶段',
         prop: 'currentPhaseStatus',
-        minWidth: 100,
+        minWidth: 80,
     },
     {
         label: '开发日志',
         prop: 'progressLog',
+        
     },
     {
         label: '备注',

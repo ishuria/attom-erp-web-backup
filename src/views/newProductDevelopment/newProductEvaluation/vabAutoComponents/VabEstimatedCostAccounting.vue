@@ -520,27 +520,17 @@ const handleClick = () =>{
 
 // 移动之后触发修改排序接口
 const onEnd = debounce(async (e: SortableEvent ) => {
-//   const idx = e.newIndex
-//   const oldIdx = e.oldIndex
-//   if (idx !== undefined && idx !== undefined && oldIdx !== undefined){
     try {
-        // const id = dlist.value[idx].id
-        // const param:EstimatedCostAccountingSort = {
-        //     estimatedId: id,
-        //     sort: convertString(idx + 1)
-        // }
         const idList = dlist.value.map((item:IEstimatedCostAccounting) =>{
             return item.id
         })
-        console.log(idList);
-        
+
         await updateEstimatedCostAccountingSort(idList)
 
     }catch(e){
         console.error(e as Error)
     }
-//   }
-},1000)
+},500)
 
 // table checkbox事件
 const handleSelectionChange = (val: IEstimatedCostAccounting[]) => {

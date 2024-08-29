@@ -10,11 +10,12 @@ export interface IProgressQueryReq {
 /**
  * 每个图片的类型
  */
-export interface imageList {
+export interface ImageList {
     imageId?: number
     imageUrl?: string
     url?: string
     name?: number
+    uid?: number
 }
 /**
  * 新品进度类型
@@ -23,7 +24,7 @@ export interface IProgress{
     // 优先级
     priority: number
     // 示例图片列表
-    imageList: imageList[]
+    imageList: ImageList[]
     // 产品名
     product: string 
     // OEM
