@@ -209,6 +209,5 @@ export interface EstimatedCostAccountingProductRelease{
 }
 
 export interface EstimatedCostAccountingSort{
-    estimatedId:string
-    sort:string
+    id:string
 }

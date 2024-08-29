@@ -206,11 +206,10 @@ export function copyEstimatedCostAccounting(data?: any) {
  * @param data 
  * @returns 
  */
-export function updateEstimatedCostAccountingSort(data?: EstimatedCostAccountingSort) {
+export function updateEstimatedCostAccountingSort(data?: string[]) {
   return request({
     url: `${BASE_API}/estimatedCostAccounting/update/sort`,
     method: 'post',
-    headers: { 'content-type': 'multipart/form-data' },
     data,
   })
 }

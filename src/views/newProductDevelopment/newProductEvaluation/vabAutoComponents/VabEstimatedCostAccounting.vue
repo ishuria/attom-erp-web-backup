@@ -520,28 +520,26 @@ const handleClick = () =>{
 
 // 移动之后触发修改排序接口
 const onEnd = debounce(async (e: SortableEvent ) => {
-  const idx = e.newIndex
-  const oldIdx = e.oldIndex
-  if (idx !== undefined && idx !== undefined && oldIdx !== undefined){
+//   const idx = e.newIndex
+//   const oldIdx = e.oldIndex
+//   if (idx !== undefined && idx !== undefined && oldIdx !== undefined){
     try {
-        const id = dlist.value[idx].id
-        const param:EstimatedCostAccountingSort = {
-            estimatedId: id,
-            sort: convertString(idx + 1)
-        }
-        await updateEstimatedCostAccountingSort(param)
-
-        // 修改交换两个移动的排序
-        const oldParam:EstimatedCostAccountingSort = {
-            estimatedId:dlist.value[oldIdx].id,
-            sort: convertString(oldIdx + 1)
-        }
-        await updateEstimatedCostAccountingSort(oldParam)
+        // const id = dlist.value[idx].id
+        // const param:EstimatedCostAccountingSort = {
+        //     estimatedId: id,
+        //     sort: convertString(idx + 1)
+        // }
+        const idList = dlist.value.map((item:IEstimatedCostAccounting) =>{
+            return item.id
+        })
+        console.log(idList);
+        
+        await updateEstimatedCostAccountingSort(idList)
 
     }catch(e){
         console.error(e as Error)
     }
-  }
+//   }
 },1000)
 
 // table checkbox事件
