@@ -156,7 +156,7 @@
           <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary">
+                <el-button text type="primary"  @click="handleSampleCostting(row)">
                   拿样与核算
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -707,6 +707,20 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 
+
+// 拿样与核算
+const handleSampleCostting = (row:IProgress) =>{
+  
+  router.push({
+    path: '/newProductDevelopment/productProgressComponent',
+    query: {
+      title: "零件清单",
+      progressId: row.progressId,
+      product: row.product,
+      timestamp: Date.now(),
+    },
+  })
+}
 
 onActivated(() => {
   tableRef.value?.doLayout()
