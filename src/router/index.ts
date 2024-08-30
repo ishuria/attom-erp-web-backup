@@ -962,6 +962,18 @@ export const asyncRoutes: VabRouteRecord[] = [
         },
       },
       {
+        path: 'scrollTop',
+        name: 'ScrollTop',
+        component: () => import('/@/views/operate/scrollTop/index.vue'),
+        meta: {
+          title: '滚动条位置记录',
+          guard: ['Admin'],
+          icon: 'scroll-to-bottom-line',
+          dot: true,
+        },
+      },
+
+      {
         path: 'dialog',
         name: 'Dialog',
         component: () => import('/@/views/operate/dialog/index.vue'),

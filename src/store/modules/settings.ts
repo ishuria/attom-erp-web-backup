@@ -90,6 +90,7 @@ export const useSettingsStore = defineStore('settings', {
       ...defaultTheme,
     },
     title: getLocalStorage('title').title || title,
+    scrollTop: JSON.parse(localStorage.getItem('scrollTop') || '[]'),
   }),
   getters: {
     getCollapse: (state) => state.collapse,
@@ -101,6 +102,7 @@ export const useSettingsStore = defineStore('settings', {
     getMode: (state) => state.mode,
     getTheme: (state) => state.theme,
     getTitle: (state) => state.title,
+    getScrollTop: (state) => state.scrollTop,
   },
   actions: {
     updateState(obj: any) {
@@ -221,6 +223,20 @@ export const useSettingsStore = defineStore('settings', {
     },
     changeTitle(title: string) {
       this.updateState({ title })
+    },
+    updateScrollTop(scrollTop: number, routeName: any) {
+      const originalArray = [...this.scrollTop, { routeName, scrollTop }]
+      const uniqueArray = []
+      const routeNameSet = new Set()
+      for (const item of originalArray.reverse()) {
+        if (!routeNameSet.has(item.routeName)) {
+          uniqueArray.push(item)
+          routeNameSet.add(item.routeName)
+        }
+      }
+      uniqueArray.reverse()
+      this.scrollTop = uniqueArray as any
+      localStorage.setItem('scrollTop', JSON.stringify(uniqueArray))
     },
   },
 })

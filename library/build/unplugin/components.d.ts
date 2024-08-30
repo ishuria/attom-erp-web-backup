@@ -40,6 +40,7 @@ declare module 'vue' {
     DrawerCustomizationHeader: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerCustomizationHeader.vue')['default']
     DrawerNestedDrawer: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNestedDrawer.vue')['default']
     DrawerNoTitle: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNoTitle.vue')['default']
+    ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAnchor: typeof import('element-plus/es')['ElAnchor']
     ElAnchorLink: typeof import('element-plus/es')['ElAnchorLink']

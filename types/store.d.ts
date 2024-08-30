@@ -38,6 +38,7 @@ declare interface SettingsModuleType {
   persistenceTab: boolean
   theme: ThemeType
   title: string
+  scrollTop: []
 }
 
 declare interface TabsModuleType {
