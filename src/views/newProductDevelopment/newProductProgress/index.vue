@@ -1,58 +1,56 @@
 <template>
-  <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
-    <el-tabs
-      v-model="activeName"
-      type="border-card"
-      class="demo-tabs"
-      @tab-click="handleTabClick"
-    >
+  <div class="tabs-table-container no-background-container">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="进行中" name="0">
         <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-button type="primary" 
-              v-permissions="{ permission: ['newProduct:evaluation:add'] }">样品进度</el-button>
-            <el-button type="primary" 
-              v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">开模进度</el-button>
-            <el-button type="primary" 
-              v-permissions="{ permission: ['newProduct:evaluation:default:params'] }">筛选</el-button>
+          <vab-query-form-left-panel >
+            <el-button type="primary">样品进度</el-button>
+            <el-button type="primary">开模进度</el-button>
+            <el-button type="primary">筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
-            <div class="custom-table-right-tools">
-              <el-form inline :model="queryForm" @submit.prevent>
-                <el-form-item>
-                  <el-input v-model="queryForm.productKeyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
-                </el-form-item>
-                <el-form-item>
-                  <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                    @click="queryData"></el-button>
-                </el-form-item>
-              </el-form>
-            </div>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.productKeyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                  @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
 
         <el-table 
           ref="tableRef" 
           v-loading="listLoading" 
-          :border="true" 
+          border stripe
           :data="progressList" 
-          :stripe="true"
+          @cell-click="changeInput"
+          :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column v-for="(item, idx) in indexColumns" :key="idx" align="center" :label="item.label"
-            :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
-            <template #default="{ row }">
-              <div v-if="item.label === '优先级'">
-                <el-select size="small" v-model="row.priority">
-                  <el-option 
-                    v-for="item in priorityOptions" 
-                    :key="item.value" 
-                    :label="item.label" 
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
-              <div v-if="item.label === '示例图片'" class="image-wall">
+          <el-table-column label="优先级" prop="priority" align="center" width="75">
+            <template #default = "{ row }">
+              <el-select size="small" v-model="row.priority" @blur="clickCancle($event, row)">
+                <el-option 
+                  v-for="item in priorityOptions" 
+                  :key="item.value" 
+                  :label="item.label" 
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="示例图片" prop="imageList" class="image-wall" width="450">
+            <template #default = "{ row }">
+              <VueDraggable
+                v-model="row.imageList"
+                :animation="150"
+                ghostClass="ghost"
+                target="ul"
+                @end="onEnd"
+              >
                 <el-upload 
                   list-type="picture-card" 
                   :file-list="row.imageList" 
@@ -89,20 +87,69 @@
                     </div>
                   </template>
                 </el-upload>
+              </VueDraggable>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品" prop="product" width="160">
+            <template #default = "{ row }">
+              <div class="none">
+                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 9 }"
+                    @blur="clickCancle($event, row)" />
+                </div>
+                <span v-html="row.product" style="text-align: left"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="OEM" prop="oem" align="center" width="60">
+            <template #default = "{ row }">
+               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" />
+            </template>
+          </el-table-column>
+          <el-table-column label="立项日期" prop="createTime" align="center" width="100">
+            <template #default = "{ row }">
+              <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="80">
+            <template #default = "{ row }">
+              <div class="none">
+                <el-input type="text" v-model="row.currentPhaseStatus" @blur="clickCancle($event, row)"/>
               </div>
-              <div v-if="item.label === '产品'">
-                <div v-html="row.product" style="text-align: left"></div>
+              <span>{{ row.currentPhaseStatus }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="开发日志" prop="progressLog" min-width="300">
+            <template #default = "{ row }">
+              <div class="none" >
+                <el-input type="textarea" autofocus v-model="row.progressLog" :autosize="{ minRows: 3, maxRows: 9 }"
+                  @blur="clickCancle($event, row)" />
               </div>
-              <div v-if="item.label === 'OEM'" >
-                <!--当 row.oem 的值为 1 时，复选框就会自动选中-->
-                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" />
-              </div>
-              <div v-if="item.label === '立项日期'">
-                {{ row.createTime.split(' ')[0] }}
-              </div>
-              <div v-if="item.label === '参与人员'">
-                <div v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
-              </div>
+              <span>{{ row.progressLog }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="参与人员" prop="sharerName" align="center">
+            <template #default = "{ row }">
+              <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" prop="remark" >
+            <template #default = "{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.remark" @blur="clickCancle($event, row)" />
+                </div>
+                <span>{{ row.remark }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="目标月销" prop="targetMonthlySales" align="center">
+            <template #default = "{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                </div>
+                <span>{{ row.targetMonthlySales }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="新款评估编号" prop="evaluationId" align="center">
+            <template #default = "{ row }">
+              <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
           </el-table-column>
 
@@ -142,13 +189,19 @@
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
-
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+        <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
       <el-tab-pane label="已归档" name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" 
-              v-permissions="{ permission: ['newProduct:evaluation:default:params'] }">筛选</el-button>
+            <el-button type="primary">筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <div class="custom-table-right-tools">
@@ -168,30 +221,48 @@
         <el-table 
           ref="tableRef" 
           v-loading="listLoading" 
-          :border="true" 
+          border stripe
           :data="progressList" 
-          :stripe="true"
+          @cell-click="changeInput"
+          :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-            :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
-            <template #default="{ row }">
-              <div v-if="item.label === '优先级'">
-                <el-select size="small" v-model="row.priority" disabled>
-                  <el-option 
-                    v-for="item in priorityOptions" 
-                    :key="item.value" 
-                    :label="item.label" 
-                    :value="item.value"
+          <el-table-column label="优先级" prop="priority" align="center" width="75">
+            <template #default = "{ row }">
+              <el-select size="small" v-model="row.priority" @blur="clickCancle($event, row)" disabled>
+                <el-option 
+                  v-for="item in priorityOptions" 
+                  :key="item.value" 
+                  :label="item.label" 
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="示例图片" prop="imageList" class="image-wall" width="450">
+            <template #default = "{ row }">
+              <VueDraggable
+                v-model="row.imageList"
+                :animation="150"
+                ghostClass="ghost"
+                target="ul"
+                @end="onEnd"
+              >
+                <el-upload 
+                  list-type="picture-card" 
+                  :file-list="row.imageList" 
+                  :limit="5" 
+                  :class="{ hide: row.hide }"
+                  :http-request="uploadImage"
+                >
+                  <div 
+                    style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
+                    @click="handleIconClick(row)"
                   >
-                  </el-option>
-                </el-select>
-              </div>
-              <div v-if="item.label === '示例图片'" class="image-wall">
-                <el-upload action="#" list-type="picture-card" :auto-upload="false" 
-                  :file-list="row.imageList" disabled>
-                  <el-icon><Plus /></el-icon>
+                    <el-icon ><Plus /></el-icon>
+                  </div>
 
-                  <template #file="{ file}">
+                  <template #file="{ file }">
                     <div>
                       <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                       <span class="el-upload-list__item-actions">
@@ -209,23 +280,73 @@
                           <el-icon><Delete /></el-icon>
                         </span>
                       </span>
+                      {{ file.name }}
                     </div>
                   </template>
                 </el-upload>
+              </VueDraggable>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品" prop="product" width="160">
+            <template #default = "{ row }">
+              <div class="none">
+                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 9 }"
+                    @blur="clickCancle($event, row)" disabled/>
+                </div>
+                <span v-html="row.product" style="text-align: left"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="OEM" prop="oem" align="center" width="60">
+            <template #default = "{ row }">
+               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" disabled/>
+            </template>
+          </el-table-column>
+          <el-table-column label="立项日期" prop="createTime" align="center" width="100">
+            <template #default = "{ row }">
+              <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="80">
+            <template #default = "{ row }">
+              <div class="none">
+                <el-input type="text" v-model="row.currentPhaseStatus" @blur="clickCancle($event, row)" disabled/>
               </div>
-              <div v-if="item.label === '产品'">
-                <div v-html="row.product" style="text-align: left"></div>
+              <span>{{ row.currentPhaseStatus }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="开发日志" prop="progressLog" min-width="300">
+            <template #default = "{ row }">
+              <div class="none" >
+                <el-input type="textarea" autofocus v-model="row.progressLog" :autosize="{ minRows: 3, maxRows: 9 } " disabled
+                  @blur="clickCancle($event, row)" />
               </div>
-              <div v-if="item.label === 'OEM'" >
-                <!--当 row.oem 的值为 1 时，复选框就会自动选中-->
-                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" disabled />
-              </div>
-              <div v-if="item.label === '立项日期'">
-                {{ row.createTime.split(' ')[0] }}
-              </div>
-              <div v-if="item.label === '参与人员'">
-                <div v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
-              </div>
+              <span>{{ row.progressLog }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="参与人员" prop="sharerName" align="center">
+            <template #default = "{ row }">
+              <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" prop="remark" >
+            <template #default = "{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.remark" @blur="clickCancle($event, row)" />
+                </div>
+                <span>{{ row.remark }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="目标月销" prop="targetMonthlySales" align="center">
+            <template #default = "{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                </div>
+                <span>{{ row.targetMonthlySales }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="新款评估编号" prop="evaluationId" align="center">
+            <template #default = "{ row }">
+              <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
           </el-table-column>
 
@@ -236,31 +357,40 @@
               </el-button>
             </template>
           </el-table-column>
-
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+        <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
-
     </el-tabs>
-
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if ="dialogVisible"/>
-    <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
-    @current-change="handleCurrentChange" @size-change="handleSizeChange" />
 
+    <wangEditor
+      :title="wangEditorTitle"
+      :wangEditorVisible="wangEditorVisible"
+      :progressLog="progressLogCopy"
+      width="70%"
+      @clickChild="clickEven"
+      @clickBoolean="clickBool"
+    >
+    </wangEditor>
   </div>
 </template>
 
 <script lang="ts" setup>
-
-defineOptions({
-  name: 'Progress',
-})
-
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleMatched, handleTabs } from '/@/utils/routes'
 import { ref } from 'vue'
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import { type TableInstance, ElMessage } from 'element-plus'
 import {
   indexColumns,
 } from './indexColumns'
@@ -269,14 +399,32 @@ import { IProgressQueryReq, IProgress, IImageQueryReq } from '/@/type/progress/p
 import {
   deleteImage,
   getList,
+  updateProgressImgSort,
+  updateProgressManage,
   uploadFile,
 } from '/@/api/devlocal/progress'
-import type { UploadFile, TabsPaneContext, UploadProps, UploadUserFile, UploadFiles } from 'element-plus'
-import { VueDraggable } from 'vue-draggable-plus';
+import type { UploadFile, TabsPaneContext, TableInstance } from 'element-plus'
+
+import { type SortableEvent, VueDraggable, DraggableEvent } from 'vue-draggable-plus'
+import debounce from 'lodash/debounce'
+import { getRootElement, getSpecificChildren, getDataAttribute } from '/@/utils/nodeUtils'
+import wangEditor from './wangEditor.vue'
+import { getLocalStorage, setLocalStorage } from '~/src/utils/localStorage'
+
+defineOptions({
+  name: 'ProgressTable',
+})
+
+const router = useRouter()
+
+const routesStore = useRoutesStore()
+const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
+const tabsStore = useTabsStore()
+const { changeTabsMeta, addVisitedRoute } = tabsStore
+const editRef = ref<any>(null)
 
 const activeName = ref("0")
 const fixed = ref<string>('right')
-const isFullscreen = ref<boolean>(false)
 const tableRef = ref<TableInstance>()
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
@@ -312,11 +460,16 @@ const priorityOptions = [
 const dialogImageUrl = ref<string>('')
 const dialogVisible = ref<boolean>(false)
 const disabled = ref(false)
-
 const imagePriviewList = ref<string[]>([])
 
+// 弹出框的标题
+const wangEditorTitle = ref<string>('编辑开发日志')
+// 弹出富文本框是否显示
+const wangEditorVisible = ref<boolean>(false)
+const progressLogCopy = ref<string>('')
+const tableClickIdx = ref<any>(0)
+
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
-  console.log('tab', tab)
   if (tab.props.name === '0')  queryForm.status = 0
   else queryForm.status = 1
   fetchData()
@@ -421,6 +574,20 @@ async function uploadImage (params: any) {
     console.error(error)
   }
 }
+const dlist = ref<any>([])
+// 移动之后触发修改排序接口
+const onEnd = debounce(async (e: SortableEvent ) => {
+    try {
+        dlist.value = progressList.value[tableClickRowIndex.value].imageList
+        // console.log(dlist.value)
+        const idList = dlist.value.map((item: any) =>{
+            return item.name
+        })
+        await updateProgressImgSort(idList)
+    }catch(e){
+        console.error(e as Error)
+    }
+}, 500)
 /**
  * 获取初始新品进度数据
  */
@@ -449,13 +616,72 @@ const fetchData = async () => {
   })
 }
 
-// const tableCellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event)=>{
-//   console.log(progressList);
-//   tableClickIdx.value = progressList.indexOf(row)
-  
-//   console.log(tableClickIdx.value);
-// }
+/**
+ * 当点击时切换输入框，修改输入
+ */
+const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
+  if (!cell.children[0].children[0]
+      || !cell.children[0].children[1]
+      || !cell.children[0].children[0].classList
+      || !cell.children[0].children[1].classList) {
+    return
+  }
+  // console.log(cell.children[0].children[0])
+  // console.log(cell.children[0].children[1])
+  // console.log(cell.children[0].children[2])
+  // 获取行的下标
+  if (column.property == 'progressLog') {
+    tableClickIdx.value = progressList.value.indexOf(row)
+    progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
+    // console.log(progressLogCopy.value);
+    
+    wangEditorVisible.value = !wangEditorVisible.value
+  } else {
+    cell.children[0].children[0].classList.remove('none')
+    cell.children[0].children[1].classList.add('none')
+  }
+
+  // 自动聚焦
+  const inputElement = getSpecificChildren(cell, "input")[0];
+  if (inputElement) {
+      inputElement.focus()
+  } else {
+    const textareaElement = getSpecificChildren(cell, "textarea")[0];
+    if (textareaElement){
+      textareaElement.focus()
+    }
+  }
+}
+
+/**
+ * 输入失焦事件
+ */
+const clickCancle = async (event: any, value: any) =>{
+
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+
+  if (t1){
+    if (t1.classList[0] !== "el-select") {
+      t1.classList.add("none")
+    }
+  }
+
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  await updateProgressManage({...value})
+}
+
+
+const clickEven = ( val: any )=>{
+  // console.log('传递给父组件的val', val);
+  progressList.value[tableClickIdx.value].progressLog = val
+}
+const clickBool = ( val: any) => {
+  wangEditorVisible.value = val
+}
 /**
  * 获取新品进度列表数据
  */
@@ -481,6 +707,7 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 
+
 onActivated(() => {
   tableRef.value?.doLayout()
 })
@@ -488,75 +715,70 @@ onActivated(() => {
 onBeforeMount(() => {
   fetchData()
 })
-
 </script>
 
 <style lang="scss" scoped>
-.custom-table-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* 让父容器占满整个可用高度 */
-  .custom-table-right-tools {
-    display: flex;
-    align-items: center;
+.tabs-table-container {
+  :deep() {
+    .el-tabs {
+      border-radius: var(--el-border-radius-base);
+
+      &__header {
+        border-top-left-radius: var(--el-border-radius-base);
+        border-top-right-radius: var(--el-border-radius-base);
+      }
+
+      &__nav-wrap {
+        border-radius: var(--el-border-radius-base);
+      }
+
+      .el-tab-pane {
+        display: flex;
+        flex-direction: column;
+        height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
+
+        .vab-query-form {
+          .el-form {
+            .el-form-item:first-child {
+              margin: 0 !important;
+
+              .el-check-tag,
+              .el-form-item__label {
+                margin: 0 10px 5px 0;
+                border-radius: 99px;
+              }
+            }
+          }
+        }
+
+        .el-table {
+          flex: 1;
+        }
+      }
+    }
   }
-  .el-tabs {
-    flex: 1
-  }
-}
-:deep(.el-table__header){
-  height: 62.8px
-}
-// :deep(.el-table__row) {
-//   height: 56.8px
-// }
-:deep(.el-tabs__item) {
-  font-size: 18px;
-  width: 130px;
 }
 
-.image-wall {
-  display: flex;
-  align-items: center; /* 垂直居中 */
-  gap: 10px; /* 使用 gap 属性来控制图片之间的间距 */
-  :deep(.el-upload-list__item) {
-    width: 75px;
-    height: 75px;
-  }
-  :deep(.el-upload--picture-card) {
-    width: 75px;
-    height: 75px;
-  }
+:deep(.el-upload-list--picture-card .el-upload-list__item) {
+  width: 75px;
+  height: 75px;
+}
+:deep(.el-upload--picture-card) {
+  width: 75px;
+  height: 75px;
+}
+:deep(.el-table .cell) {
+  min-height: 30px;
+  max-height: 110px;
+}
+:deep(.eldialog) {
+  margin-top: 100px;
 }
 .hide :deep(.el-upload--picture-card) {
   display: none
 }
-
-// 下拉框宽度
-:deep(.el-select--small .el-select__wrapper) {
-  width: 48px;
-}
-
-/*去除upload组件过渡效果*/
-:deep(.el-upload-list__item) {
-  transition: none !important;
-}
-
-.example-showcase .el-dropdown+.el-dropdown {
-  margin-left: 15px;
-}
-
-.example-showcase .el-dropdown-link {
-  cursor: pointer;
-  color: var(--el-color-primary);
-  display: flex;
-  align-items: center;
-}
-
-.vab-chart {
-  width: 100%;
-  height: 100%;
-  min-height: 40px;
+.none {
+  display: none;
 }
 .ghost {
   opacity: 0.5;

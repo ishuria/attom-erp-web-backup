@@ -20,7 +20,7 @@ export interface ImageList {
 /**
  * 新品进度类型
  */
-export interface IProgress{
+export interface IProgress {
     // 优先级
     priority: number
     // 示例图片列表
@@ -44,9 +44,9 @@ export interface IProgress{
     // 进度id
     progressId: number
     // 新款评估编号
-    evaluationId: string
+    evaluationId?: string
     // 控添加图片样式隐藏显示 
-    hide: boolean
+    hide?: boolean
 }
 /**
  * 图片上传参数类型
@@ -63,7 +63,7 @@ export interface IDelImgQueryReq {
     type: string
     imageId: number
 }
-export interface ProgressImgSort{
-    imageId: number
-    sort: number
+export interface ProgressImgSort {
+    array: number[]
 }
+

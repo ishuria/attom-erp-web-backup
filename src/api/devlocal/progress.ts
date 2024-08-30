@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IDelImgQueryReq, IImageQueryReq, IProgressQueryReq, ProgressImgSort } from '/@/type/progress/progressType'
+import { IDelImgQueryReq, IImageQueryReq, IProgressQueryReq, ProgressImgSort, IProgress } from '/@/type/progress/progressType'
 
 /**
  * 获取新品进度管理数据
@@ -41,11 +41,20 @@ export function getList(params?: IProgressQueryReq) {
   /**
    * 拖拽修改图片排序
    */
-  export function updateProgressSort(data?: ProgressImgSort) {
+  export function updateProgressImgSort(data?: ProgressImgSort) {
     return request({
       url: `${BASE_API}/progress/img/sort`,
       method: 'post',
-      headers: { 'content-type': 'multipart/form-data' },
+      data,
+    })
+  }
+  /**
+   * 新品进度修改
+   */
+  export function updateProgressManage(data?: IProgress) {
+    return request({
+      url: `${BASE_API}/progress/update`,
+      method: 'post',
       data,
     })
   }

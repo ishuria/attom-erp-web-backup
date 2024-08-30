@@ -33,7 +33,7 @@ export const indexColumns = [
     {
         label: '开发日志',
         prop: 'progressLog',
-        
+
     },
     {
         label: '备注',
