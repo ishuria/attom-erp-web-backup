@@ -79,14 +79,16 @@ watch(
   route,
   () => {
     nextTick(() => {
-      const uniqueArray = scrollTop.value
-      const pageItem = uniqueArray.find((item: any) => item.routeName === route.name) as any
-      if (pageItem) {
-        scrollbarRef.value!.setScrollTop(pageItem.scrollTop)
-        if (pageItem.scrollTop !== 0) {
-          $baseMessage('已为您滚动至上次停留的页面位置', 'success', 'hey')
-        }
-      } else scrollbarRef.value!.setScrollTop(0)
+      setTimeout(() => {
+        const uniqueArray = scrollTop.value
+        const pageItem = uniqueArray.find((item: any) => item.routeName === route.name) as any
+        if (pageItem) {
+          scrollbarRef.value!.setScrollTop(pageItem.scrollTop)
+          if (pageItem.scrollTop !== 0) {
+            $baseMessage('已为您滚动至上次停留的页面位置', 'success', 'hey')
+          }
+        } else scrollbarRef.value!.setScrollTop(0)
+      }, 500)
     })
   },
   {
