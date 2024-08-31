@@ -4,17 +4,16 @@
     v-model="dflag"
     width="100%"
     :close-on-click-modal="false"
-    class="eldialog"
     :before-close = "handlerCloseDialog"
   >
     <div class="wang-editor-container" >
-      <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
-      <editor :model-value="html" class="wang-editor-content" :default-config="editorConfig" @on-created="handleCreated" @click.stop="handleClick"/>
+      <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" :defaultConfig="toolbarConfig"/>
+      <editor v-model="html" class="wang-editor-content" :default-config="editorConfig" @on-created="handleCreated" @click="handleClick"/>
     </div>
     <template #footer>
       <span>
         <el-button @click="handleCloseDialog">取消</el-button>
-        <el-button type="primary" @click.stop="handleConfirmDialog">确认</el-button>
+        <el-button type="primary" @click="handleConfirmDialog">确认</el-button>
       </span>
     </template>
   </el-dialog>
@@ -25,6 +24,7 @@ import type { IDomEditor } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
 import { removeLocalStorage, setLocalStorage } from '/@/utils/localStorage'
+import { IToolbarConfig } from '@wangeditor/editor'
 
 defineOptions({
   name: 'WangEditor',
@@ -33,9 +33,11 @@ defineOptions({
 let props = defineProps<{
   title: string
   wangEditorVisible: boolean
-  progressLog: string
+  content: string
+  classify: string
 }>();
-let { progressLog } = toRefs(props)
+
+let { content } = toRefs(props)
 
 const dflag = ref<boolean>(false)
 watchEffect(()=>{
@@ -43,11 +45,15 @@ watchEffect(()=>{
   }
 )
 
-
+// 如果 content 改变，更新 html
+watch(() => content.value, (newValue) => {
+  html.value = newValue
+})
 
 const editorRef = shallowRef<IDomEditor | undefined>()
 const html = ref<any>(
-  progressLog
+  content.value
+  // '<h1>一级标题</h1><h2>二级标题</h2><h3>三级标题</h3><p>hello world ~~~ </p><blockquote>blockquote</blockquote><pre><code class="language-javascript">const a = 100;</code></pre><p><img src="https://gcore.jsdelivr.net/gh/zxwk1998/image/table/vab-image-1.jpg"/></p>'
 )
 
 const editorConfig = reactive<any>({
@@ -62,91 +68,86 @@ const editorConfig = reactive<any>({
   },
 }
 )
-
-const clearTimer = () => {
-  clearInterval(intervalTimer)
-  intervalTimer = null
+const toolbarConfig: Partial<IToolbarConfig> = {  // TS 语法
+  excludeKeys: ['group-video','codeBlock',]
 }
-let intervalTimer: any = null
-clearTimer()
-const handleClick = () => {
-  const editor = editorRef.value 
-  if (!editor) return
-  
-  if (editor.isFocused()) {
-    console.log('editor.isFocused()', editor.isFocused())
-    clearTimer()
-    intervalTimer = setInterval(() => {
-      intervalTimer = setLocalStorage('progressLog', html.value)
-      console.log(html.value);
-    }, 2000);
-  } else {
-    clearTimer()
+
+// 初始化定时器
+let intervalTimerLog: NodeJS.Timeout | null = null
+/**
+ * 清除定时器
+ */
+const clearTimer = () => {
+  if (intervalTimerLog !== null ) {
+    clearInterval(intervalTimerLog);
+    intervalTimerLog = null;
   }
 }
+/**
+ * 当 onChange的时候，触发定时器
+ */
+const handleClick = () => {
+  clearTimer() // 确保在设置新定时器之前清除旧定时器
+  
+  intervalTimerLog = setInterval(() => {
+    setLocalStorage(props.classify, html.value)
+    // console.log(props.classify, html.value);
+  }, 2000);
+
+}
+
+const emit = defineEmits(['clickChild', 'clickBoolean'])
 // 通过事件,修改父元素的值
 const handlerCloseDialog = () =>{
   clearTimer()
-  removeLocalStorage('progressLog')
+  removeLocalStorage(props.classify)
   emit('clickBoolean', false)
   dflag.value = false
 }
-const handleCreated = (editor: IDomEditor) => {
-  editorRef.value = editor
-}
-const emit = defineEmits(['clickChild', 'clickBoolean'])
 /**
- * 当取消时
+ * 当取消对话框时
  */
- const handleCloseDialog = () => {
-  
+const handleCloseDialog = () => {
+  clearTimer()
   removeLocalStorage('progressLog')
   emit('clickBoolean', false)
   dflag.value = false
-  clearTimer()
 }
-
-
-
 /**
  * 当确认对话框的时候
  */
-const handleConfirmDialog = () => {
-  
-  
+ const handleConfirmDialog = () => {
   if(!editorRef.value) return
-  emit('clickChild', editorRef.value.getText())
-  // console.log(editorRef.value.getText());
-  // console.log('html',html.value)
+  emit('clickChild', editorRef.value.getHtml())
   emit('clickBoolean', false)
   $baseMessage('日志保存成功', 'success', 'hey')
   dflag.value = false
   clearTimer()
-  console.log('intervalTimer', intervalTimer); 
-  removeLocalStorage('progressLog')
+  removeLocalStorage(props.classify)
 }
 
-
+const handleCreated = (editor: IDomEditor) => {
+  editorRef.value = editor
+}
 onBeforeUnmount(() => {
   clearTimer()
   const editor = editorRef.value
-  
-  if (!editor) return
-  editor.destroy()
-  
+  if (editor) editor.destroy()
 })
 onUnmounted(() => {
   clearTimer()
 })
+
 </script>
 
 <style lang="scss">
 .wang-editor-container {
   padding: 0 !important;
   margin: -19px -19px 19px -19px;
-  overflow: hidden !important;
+  overflow: scroll !important;
   background: var(--el-background-color) !important;
   border: 0 !important;
+  max-height: 600px !important;
   &.w-e-full-screen-container {
     z-index: 9999 !important;
   }
@@ -165,6 +166,7 @@ onUnmounted(() => {
     margin: 20px auto 20px auto;
     background-color: var(--el-color-white);
     border: 0;
+    overflow: scroll;
   }
 
   #w-e-textarea-1 {

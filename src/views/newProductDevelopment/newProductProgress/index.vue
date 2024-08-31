@@ -15,7 +15,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                  @click="queryData"></el-button>
+                  @click="queryData" class="elsearch"></el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -29,7 +29,7 @@
           @cell-click="changeInput"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column label="优先级" prop="priority" align="center" width="75">
+          <el-table-column label="优先级" prop="priority"  width="75">
             <template #default = "{ row }">
               <el-select size="small" v-model="row.priority" @blur="clickCancle($event, row)">
                 <el-option 
@@ -96,12 +96,12 @@
                   <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 9 }"
                     @blur="clickCancle($event, row)" />
                 </div>
-                <span v-html="row.product" style="text-align: left"></span>
+                <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
           <el-table-column label="OEM" prop="oem" align="center" width="60">
             <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" />
+               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)"/>
             </template>
           </el-table-column>
           <el-table-column label="立项日期" prop="createTime" align="center" width="100">
@@ -112,7 +112,7 @@
           <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="80">
             <template #default = "{ row }">
               <div class="none">
-                <el-input type="text" v-model="row.currentPhaseStatus" @blur="clickCancle($event, row)"/>
+                <el-input type="textarea" autofocus v-model="row.currentPhaseStatus" :autosize="{ minRows: 3, maxRows: 9 }"   @blur="clickCancle($event, row)"/>
               </div>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
@@ -120,13 +120,12 @@
           <el-table-column label="开发日志" prop="progressLog" min-width="300">
             <template #default = "{ row }">
               <div class="none" >
-                <el-input type="textarea" autofocus v-model="row.progressLog" :autosize="{ minRows: 3, maxRows: 9 }"
-                  @blur="clickCancle($event, row)" />
+                <el-input type="textarea" autofocus v-model="row.progressLog" :autosize="{ minRows: 3, maxRows: 9 }" />
               </div>
-              <span>{{ row.progressLog }}</span>
+              <span> {{ removeHtmlTags(row.progressLog) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" align="center">
+          <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip width="100">
             <template #default = "{ row }">
               <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
             </template>
@@ -134,9 +133,9 @@
           <el-table-column label="备注" prop="remark" >
             <template #default = "{ row }">
               <div class="none">
-                  <el-input type="text" v-model="row.remark" @blur="clickCancle($event, row)" />
+                  <el-input type="textarea" autofocus v-model="row.remark" :autosize="{ minRows: 3, maxRows: 9 }" />
                 </div>
-                <span>{{ row.remark }}</span>
+                <span>{{ removeHtmlTags(row.remark) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" align="center">
@@ -375,11 +374,22 @@
 
     <wangEditor
       :title="wangEditorTitle"
-      :wangEditorVisible="wangEditorVisible"
-      :progressLog="progressLogCopy"
+      :wangEditorVisible="wangEditorLogVisible"
+      :content="progressLogCopy"
       width="70%"
-      @clickChild="clickEven"
-      @clickBoolean="clickBool"
+      @clickChild="clickLog"
+      @clickBoolean="clickLogBool"
+      :classify="classify"
+    >
+    </wangEditor>
+    <wangEditor
+      :title="wangEditorTitle"
+      :wangEditorVisible="wangEditorRemarkVisible"
+      :content="remarkCopy"
+      width="70%"
+      @clickChild="clickRemark"
+      @clickBoolean="clickRemarkBool"
+      :classify="classify"
     >
     </wangEditor>
   </div>
@@ -463,10 +473,14 @@ const disabled = ref(false)
 const imagePriviewList = ref<string[]>([])
 
 // 弹出框的标题
-const wangEditorTitle = ref<string>('编辑开发日志')
-// 弹出富文本框是否显示
-const wangEditorVisible = ref<boolean>(false)
+const wangEditorTitle = ref<string>('')
+// 点击日志弹出富文本框是否显示
+const wangEditorLogVisible = ref<boolean>(false)
+// 点击备注弹出富文本框是否显示
+const wangEditorRemarkVisible = ref<boolean>(false)
 const progressLogCopy = ref<string>('')
+const remarkCopy = ref<string>('')
+const classify = ref<string>('')
 const tableClickIdx = ref<any>(0)
 
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
@@ -593,6 +607,7 @@ const onEnd = debounce(async (e: SortableEvent ) => {
  */
 const fetchData = async () => {
   listLoading.value = true
+  // console.log(queryForm)
   const { data } = await getList(queryForm)
   progressList.value = data.list
   total.value = data.total
@@ -631,12 +646,17 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
   // console.log(cell.children[0].children[1])
   // console.log(cell.children[0].children[2])
   // 获取行的下标
+  tableClickIdx.value = progressList.value.indexOf(row)
   if (column.property == 'progressLog') {
-    tableClickIdx.value = progressList.value.indexOf(row)
     progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
-    // console.log(progressLogCopy.value);
-    
-    wangEditorVisible.value = !wangEditorVisible.value
+    wangEditorTitle.value = '编辑开发日志'
+    classify.value = 'progressLog'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+  } else if (column.property == 'remark'){
+    remarkCopy.value = progressList.value[tableClickIdx.value].remark
+    wangEditorTitle.value = '编辑备注'
+    classify.value = 'remark'
+    wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
   } else {
     cell.children[0].children[0].classList.remove('none')
     cell.children[0].children[1].classList.add('none')
@@ -653,7 +673,11 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
     }
   }
 }
-
+const handleCheckbox = async (value: any) => {
+  // console.log(value);
+  progressList.value[tableClickIdx.value].oem = value
+  await updateProgressManage(progressList.value[tableClickIdx.value])
+}
 /**
  * 输入失焦事件
  */
@@ -674,13 +698,39 @@ const clickCancle = async (event: any, value: any) =>{
   await updateProgressManage({...value})
 }
 
-
-const clickEven = ( val: any )=>{
-  // console.log('传递给父组件的val', val);
+/**
+ * 当点击确认时，子组件传递给父组件的新的val
+ */
+const clickLog = async (val: any) => {
+  // console.log('新的val', val);
+  
   progressList.value[tableClickIdx.value].progressLog = val
+  progressLogCopy.value = val
+  // console.log('点击log执行了');
+  await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
 }
-const clickBool = ( val: any) => {
-  wangEditorVisible.value = val
+const clickRemark = async (val: any) => {
+  progressList.value[tableClickIdx.value].remark = val
+  remarkCopy.value = val
+  // console.log('点击remark执行了');
+  await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+}
+// 去掉 HTML 标签并显示纯文本的方法
+const removeHtmlTags = (html: string): string => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+};
+/**
+ * 当点击取消，确认时，子组件传递给父组件 false
+ */
+const clickLogBool = ( val: any) => {
+  wangEditorLogVisible.value = val
+  // console.log('点击logbool执行了');
+}
+const clickRemarkBool = ( val: any) => {
+  wangEditorRemarkVisible.value = val
+  // console.log('点击remarkbool执行了');
 }
 /**
  * 获取新品进度列表数据
@@ -689,7 +739,11 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-
+const formattedProgressLog = (str: string) => {
+  return str
+    .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
+    .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
+};
 /**
  * 分页大小的改变
  */
@@ -752,6 +806,9 @@ onBeforeMount(() => {
         height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
 
         .vab-query-form {
+          .left-panel {
+            margin-bottom: 5px !important;
+          }
           .el-form {
             .el-form-item:first-child {
               margin: 0 !important;
@@ -761,6 +818,9 @@ onBeforeMount(() => {
                 margin: 0 10px 5px 0;
                 border-radius: 99px;
               }
+            }
+            .el-form-item:last-child {
+              margin: 0 !important;
             }
           }
         }
@@ -776,21 +836,25 @@ onBeforeMount(() => {
 :deep(.el-upload-list--picture-card .el-upload-list__item) {
   width: 75px;
   height: 75px;
+  margin: 0 8px 0 0;
 }
 :deep(.el-upload--picture-card) {
   width: 75px;
   height: 75px;
 }
-:deep(.el-table .cell) {
-  min-height: 30px;
-  max-height: 110px;
+// 设置行高
+:deep(.el-table .el-table__body .cell) {
+  max-height: 81.2px;
 }
-:deep(.eldialog) {
-  margin-top: 100px;
+// 下拉框宽度
+:deep(.el-select--small .el-select__wrapper) {
+  width: 50px;
 }
+// 控制添加图片图标显示与隐藏
 .hide :deep(.el-upload--picture-card) {
   display: none
 }
+// 控制编辑框显示与隐藏
 .none {
   display: none;
 }
@@ -798,4 +862,5 @@ onBeforeMount(() => {
   opacity: 0.5;
   background: #c8ebfb;
 }
+
 </style>
