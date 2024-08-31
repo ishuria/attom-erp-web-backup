@@ -199,6 +199,8 @@ declare module 'vue' {
     VabColorfulCard: typeof import('./../../components/VabColorfulCard/index.vue')['default']
     VabColorPicker: typeof import('./../../components/VabColorPicker/index.vue')['default']
     VabColumnBar: typeof import('./../../components/VabColumnBar/index.vue')['default']
+    VabComponentList: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabComponentList.vue')['default']
+    VabCostAccounting: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabCostAccounting.vue')['default']
     VabCostAccountingParam: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabCostAccountingParam.vue')['default']
     VabCount: typeof import('./../../../src/plugins/VabCount/index.vue')['default']
     VabDark: typeof import('./../../components/VabDark/index.vue')['default']

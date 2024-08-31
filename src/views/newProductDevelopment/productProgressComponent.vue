@@ -3,45 +3,50 @@
         <el-page-header  @back="goBack" >
             <template #content>
                 <div class="flex items-center">
-                    <span>{{ route.query.title }} <el-divider direction="vertical" /> {{ route.query.product }}</span>
+                    <span> <strong> {{ route.query.title }} </strong><el-divider direction="vertical" /> <strong>{{ route.query.product }}</strong></span>
                 </div>
             </template>
         </el-page-header>
-        <el-divider />
+        <el-divider style="margin:10px 0"/>
 
-        <div style="width: 100%; height: 500px;">
+        <vab-component-list :progress-id="route.query.progressId" />
 
-        </div>
+        <vab-cost-accounting :progress-id="route.query.progressId"/>
 
-        
-        <div style="width: 100%; height: 550px;">
-            <!-- <el-page-header >
-            <template #content>
-                <div class="flex items-center">
-                    <span>成本核算</span>
-                </div>
-            </template>
-        </el-page-header> -->
-            <div class="el-page-header__content">成本核算</div>
-            <el-divider />
-        </div>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
+
+   
 </template>
 
 <script lang="ts" setup>
+import { handleActivePath } from '/@/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
+
+
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
 
 // route
 const route: any = useRoute()
 const tabsStore = useTabsStore()
-const { changeTabsMeta, delVisitedRoute } = tabsStore
-import { handleActivePath } from '/@/utils/routes'
+const {delVisitedRoute } = tabsStore
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+
 
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
+
+
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
+
 
 
 </script>

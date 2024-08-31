@@ -1,4 +1,3 @@
-
 export const indexColumns = [
   {
     label: '编号',
@@ -190,47 +189,3 @@ export const estimatedCostAccountingColumns = [
   },
 ]
 
-export const estimatedCostAccountingSiteColumns = [
-    {
-        value: '0',
-        label: '亚马逊US',
-    },
-    {
-        value: '1',
-        label: '亚马逊DE',
-    },
-    {
-        value: '2',
-        label: '亚马逊UK',
-    },
-    {
-        value: '3',
-        label: '沃尔玛US',
-    },
-]
-
-export const  firstLegChannelColumns = [
-    {
-        value: '0',
-        label: '头程渠道1',
-    },
-    {
-        value: '1',
-        label: '头程渠道2',
-    },
-    {
-        value: '2',
-        label: '头程渠道3',
-    },
-    {
-        value: '3',
-        label: '头程渠道4',
-    },
-]
-
-export const siteReflectCurrencyAndExchangeRate = new Map<string,string>([
-  ["0","USD"],
-  ["1","EUR"],
-  ["2","GBP"],
-  ["3","USD"],
-])

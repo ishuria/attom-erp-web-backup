@@ -283,13 +283,14 @@ import {
   firstLegChannelColumns,
   siteReflectCurrencyAndExchangeRate,
   
-} from '../indexColumns'
+} from '../../indexCommon'
 
 import {IEstimatedCostAccounting,EstimatedCostAccountingSort} from '/@/type/evaluation/evaluationType'
 
 import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
 import { ElLink, ElMessageBox } from 'element-plus';
 import {convertString} from '/@/utils/stringUtils'
+import debounce from 'lodash/debounce'
 
 defineOptions({
     name: 'VabEstimatedCostAccounting',
@@ -322,7 +323,7 @@ const imagePriviewList = ref<string[]>([])
 const selectRows = ref<IEstimatedCostAccounting[]>([])
 const router = useRouter()
 let {list,evaluationId} = toRefs(props)
-import debounce from 'lodash/debounce'
+
 
 // 新增行
 const handlerAddRowCost = async () => {
