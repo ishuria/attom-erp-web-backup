@@ -30,8 +30,8 @@ const userStore = useUserStore()
 const { username } = storeToRefs(userStore)
 
 const settingsStore = useSettingsStore()
-const { device, collapse, theme, scrollTop } = storeToRefs(settingsStore)
-const { toggleDevice, foldSideBar, openSideBar, updateTheme, updateScrollTop } = settingsStore
+const { device, collapse, theme } = storeToRefs(settingsStore)
+const { toggleDevice, foldSideBar, openSideBar, updateTheme, updateScrollTop, getScrollTop: scrollTop } = settingsStore
 const mobile = ref(false)
 let oldLayout = theme.value.layout
 const visibility = useDocumentVisibility()
@@ -44,7 +44,9 @@ Object.getOwnPropertyNames(imports).forEach((key: any) => {
 const layout = computed(() => Components[convertToCamelCase(`vab-layout-${theme.value.layout}`)])
 
 const handleScroll = (scroll: any) => {
-  updateScrollTop(scroll.scrollTop, route.name)
+  nextTick(() => {
+    updateScrollTop(scroll.scrollTop, route.name)
+  })
 }
 const resizeBody = () => {
   const { width } = useWindowSize()
@@ -76,19 +78,22 @@ watch(mobile, (value) => {
 })
 
 watch(
-  route,
-  () => {
+  () => route.name,
+  (newValue) => {
     nextTick(() => {
-      setTimeout(() => {
-        const uniqueArray = scrollTop.value
-        const pageItem = uniqueArray.find((item: any) => item.routeName === route.name) as any
-        if (pageItem) {
-          scrollbarRef.value!.setScrollTop(pageItem.scrollTop)
-          if (pageItem.scrollTop !== 0) {
-            $baseMessage('已为您滚动至上次停留的页面位置', 'success', 'hey')
-          }
-        } else scrollbarRef.value!.setScrollTop(0)
-      }, 500)
+      // 暂时仅支持 ScrollTop 页面记录滚动条位置
+      if (newValue === 'ScrollTop')
+        setTimeout(() => {
+          const uniqueArray = JSON.parse(localStorage.getItem('scrollTop') || '[]')
+          const pageItem = uniqueArray.find((item: any) => item.routeName === newValue) as any
+          if (pageItem) {
+            scrollbarRef.value!.setScrollTop(pageItem.scrollTop)
+            if (pageItem.scrollTop !== 0) {
+              $baseMessage('已为您滚动至上次停留的页面位置', 'success', 'hey')
+            }
+          } else scrollbarRef.value!.setScrollTop(0)
+        }, 1000)
+      else scrollbarRef.value!.setScrollTop(0)
     })
   },
   {

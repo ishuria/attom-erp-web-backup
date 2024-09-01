@@ -225,18 +225,37 @@ export const useSettingsStore = defineStore('settings', {
       this.updateState({ title })
     },
     updateScrollTop(scrollTop: number, routeName: any) {
-      const originalArray = [...this.scrollTop, { routeName, scrollTop }]
-      const uniqueArray = []
-      const routeNameSet = new Set()
-      for (const item of originalArray.reverse()) {
-        if (!routeNameSet.has(item.routeName)) {
-          uniqueArray.push(item)
-          routeNameSet.add(item.routeName)
-        }
+      const originalArray = [...JSON.parse(localStorage.getItem('scrollTop') || '[]')]
+      interface Item {
+        routeName: string
+        scrollTop: number
       }
-      uniqueArray.reverse()
-      this.scrollTop = uniqueArray as any
-      localStorage.setItem('scrollTop', JSON.stringify(uniqueArray))
+
+      function updateArray(arr: Item[], routeNameToCheck: string, newScrollTopValue: number): Item[] {
+        let found = false
+        const newArr = arr.map((item) => {
+          if (item.routeName === routeNameToCheck) {
+            found = true
+            return {
+              ...item,
+              scrollTop: newScrollTopValue,
+            }
+          }
+          return item
+        })
+        if (!found) {
+          newArr.push({ routeName: routeNameToCheck, scrollTop: newScrollTopValue })
+        }
+        return newArr
+      }
+      const modifiedArray = updateArray(originalArray, routeName, scrollTop)
+      function removeItemsWithZeroScrollTop(arr: Item[]): Item[] {
+        return arr.filter((item) => item.scrollTop !== 0)
+      }
+
+      const filteredArray = removeItemsWithZeroScrollTop(modifiedArray)
+
+      localStorage.setItem('scrollTop', JSON.stringify(filteredArray))
     },
   },
 })
