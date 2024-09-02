@@ -162,6 +162,8 @@ export interface IComponentQueryReq {
   progressId: string
   // 关键词
   keyWord?: string
+  pageNo: number
+  pageSize: number
 }
 
 // 零件列表响应

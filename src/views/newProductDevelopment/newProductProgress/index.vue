@@ -4,8 +4,8 @@
       <el-tab-pane label="进行中" name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
-            <el-button type="primary">样品进度</el-button>
-            <el-button type="primary">开模进度</el-button>
+            <el-button type="primary" @click="getSampleProgress">样品进度</el-button>
+            <el-button type="primary" @click="getMoldProgress">开模进度</el-button>
             <el-button type="primary">筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
@@ -15,7 +15,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                  @click="queryData" class="elsearch"></el-button>
+                  @click="queryData"></el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -29,9 +29,9 @@
           @cell-click="changeInput"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column label="优先级" prop="priority"  width="75">
+          <el-table-column label="优先级" prop="priority" align="center" width="75">
             <template #default = "{ row }">
-              <el-select size="small" v-model="row.priority" @blur="clickCancle($event, row)">
+              <el-select size="default" v-model="row.priority" @blur="clickCancle($event, row)">
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
@@ -93,7 +93,7 @@
           <el-table-column label="产品" prop="product" width="160">
             <template #default = "{ row }">
               <div class="none">
-                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 9 }"
+                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 7 }"
                     @blur="clickCancle($event, row)" />
                 </div>
                 <span v-html="formattedProgressLog(row.product)"></span>
@@ -101,7 +101,7 @@
           </el-table-column>
           <el-table-column label="OEM" prop="oem" align="center" width="60">
             <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)"/>
+               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox"/>
             </template>
           </el-table-column>
           <el-table-column label="立项日期" prop="createTime" align="center" width="100">
@@ -109,7 +109,7 @@
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="80">
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="85">
             <template #default = "{ row }">
               <div class="none">
                 <el-input type="textarea" autofocus v-model="row.currentPhaseStatus" :autosize="{ minRows: 3, maxRows: 9 }"   @blur="clickCancle($event, row)"/>
@@ -138,7 +138,7 @@
                 <span>{{ removeHtmlTags(row.remark) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" align="center">
+          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" width="85">
             <template #default = "{ row }">
               <div class="none">
                   <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
@@ -146,7 +146,7 @@
                 <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" align="center">
+          <el-table-column label="新款评估编号" prop="evaluationId" align="center" width="110">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
@@ -155,7 +155,7 @@
           <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary"  @click="handleSampleCostting(row)">
+                <el-button text type="primary" @click="handleSampleCostting(row)">
                   拿样与核算
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -164,19 +164,19 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false">开模申请</el-link>
+                      <el-link type="primary" :underline="false" @click="addProgressMold">开模申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false">订大货申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >复制</el-link>
+                      <el-link type="primary" :underline="false" @click="handleCopyProgress(row.progressId)">复制</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false">共享</el-link>
+                      <el-link type="primary" :underline="false" @click="handleGetShareList(row.progressId)">共享</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false">查看新款评估</el-link>
+                      <el-link type="primary" :underline="false" @click="handleGetEvaluationById(row.evaluationId)">查看新款评估</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -227,7 +227,7 @@
         >
           <el-table-column label="优先级" prop="priority" align="center" width="75">
             <template #default = "{ row }">
-              <el-select size="small" v-model="row.priority" @blur="clickCancle($event, row)" disabled>
+              <el-select size="default" v-model="row.priority" @blur="clickCancle($event, row)" disabled>
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
@@ -246,6 +246,7 @@
                 ghostClass="ghost"
                 target="ul"
                 @end="onEnd"
+                disabled
               >
                 <el-upload 
                   list-type="picture-card" 
@@ -253,6 +254,7 @@
                   :limit="5" 
                   :class="{ hide: row.hide }"
                   :http-request="uploadImage"
+                  disabled
                 >
                   <div 
                     style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
@@ -288,16 +290,12 @@
           </el-table-column>
           <el-table-column label="产品" prop="product" width="160">
             <template #default = "{ row }">
-              <div class="none">
-                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 9 }"
-                    @blur="clickCancle($event, row)" disabled/>
-                </div>
-                <span v-html="row.product" style="text-align: left"></span>
+              <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
           <el-table-column label="OEM" prop="oem" align="center" width="60">
             <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" disabled/>
+               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox" disabled/>
             </template>
           </el-table-column>
           <el-table-column label="立项日期" prop="createTime" align="center" width="100">
@@ -305,45 +303,32 @@
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="80">
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="85">
             <template #default = "{ row }">
-              <div class="none">
-                <el-input type="text" v-model="row.currentPhaseStatus" @blur="clickCancle($event, row)" disabled/>
-              </div>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
           </el-table-column>
           <el-table-column label="开发日志" prop="progressLog" min-width="300">
             <template #default = "{ row }">
-              <div class="none" >
-                <el-input type="textarea" autofocus v-model="row.progressLog" :autosize="{ minRows: 3, maxRows: 9 } " disabled
-                  @blur="clickCancle($event, row)" />
-              </div>
-              <span>{{ row.progressLog }}</span>
+              <span> {{ removeHtmlTags(row.progressLog) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" align="center">
+          <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip width="100">
             <template #default = "{ row }">
               <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
             </template>
           </el-table-column>
           <el-table-column label="备注" prop="remark" >
             <template #default = "{ row }">
-              <div class="none">
-                  <el-input type="text" v-model="row.remark" @blur="clickCancle($event, row)" />
-                </div>
-                <span>{{ row.remark }}</span>
+              <span>{{ removeHtmlTags(row.remark) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" align="center">
+          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" width="85">
             <template #default = "{ row }">
-              <div class="none">
-                  <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                </div>
-                <span>{{ row.targetMonthlySales }}</span>
+              <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" align="center">
+          <el-table-column label="新款评估编号" prop="evaluationId" align="center" width="110">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
@@ -371,12 +356,10 @@
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if ="dialogVisible"/>
-
     <wangEditor
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorLogVisible"
       :content="progressLogCopy"
-      width="70%"
       @clickChild="clickLog"
       @clickBoolean="clickLogBool"
       :classify="classify"
@@ -386,12 +369,75 @@
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorRemarkVisible"
       :content="remarkCopy"
-      width="70%"
       @clickChild="clickRemark"
       @clickBoolean="clickRemarkBool"
       :classify="classify"
     >
     </wangEditor>
+    <!-- 共享 -->
+    <vab-shared  
+      :visible="sharedVisible"
+      :id="shareId"
+      :list="shareUserList"
+      @update:sharedVisible = "updateSharedVisibleValue"
+    />
+    <!-- 开模申请 -->
+    <el-dialog 
+      v-model="moldVisible" 
+      :close-on-click-modal="false" 
+      title="开模申请" 
+      width="650"
+    >
+      <div>
+        <el-row :gutter="20">
+          <el-col
+            :lg="{ span: 12, offset: 6 }"
+            :md="{ span: 20, offset: 2 }"
+            :sm="{ span: 20, offset: 2 }"
+            :xl="{ span: 12, offset: 6 }"
+            :xs="24"
+          >
+            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120px" :model="form">
+              
+              <el-form-item label="零件名" prop="componentName">
+                <el-select v-model="form.region" placeholder="" >
+                  <el-option label="1" value="shanghai" />
+                  <el-option label="2" value="beijing" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="供应商全名" prop="supplierName">
+                <el-select v-model="form.region" placeholder="">
+                  <el-option label="1" value="shanghai" />
+                  <el-option label="2" value="beijing" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="模具费(不含税)" prop="excludingTax">
+                <el-input v-model="form.name" clearable />
+              </el-form-item>
+              <el-form-item label="普票加税点" prop="standardInvoice">
+                <el-input v-model="form.name" clearable placeholder="例子:13个点则填13" />
+              </el-form-item>
+              <el-form-item label="专票加税点" prop="specialInvoice">
+                <el-input v-model="form.name" clearable placeholder="例子:13个点则填13" />
+              </el-form-item>
+              <el-form-item label="预估采购货值" prop="purchaseTotal">
+                <el-input v-model="form.name" clearable />
+              </el-form-item>
+              <el-form-item label="审核人" prop="audit">
+                <el-input v-model="form.name" clearable placeholder="王豪俊" disabled/>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+      </div>
+
+      <template #footer>
+        <span>
+          <el-button >退出</el-button>
+          <el-button type="primary" @click="handleSubmit">提交</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -405,13 +451,19 @@ import {
   indexColumns,
 } from './indexColumns'
 
-import { IProgressQueryReq, IProgress, IImageQueryReq } from '/@/type/progress/progressType'
+import { IProgressQueryReq, IProgress, IImageQueryReq, IProgressShared } from '/@/type/progress/progressType'
 import {
   deleteImage,
   getList,
+  getProgressMoldList,
+  getProgressSampleList,
+  getByIdQueryEvaluation,
   updateProgressImgSort,
   updateProgressManage,
+  updateProgressMoldAdd,
   uploadFile,
+  getProgressSharelist,
+  copyProgress,
 } from '/@/api/devlocal/progress'
 import type { UploadFile, TabsPaneContext, TableInstance } from 'element-plus'
 
@@ -420,6 +472,8 @@ import debounce from 'lodash/debounce'
 import { getRootElement, getSpecificChildren, getDataAttribute } from '/@/utils/nodeUtils'
 import wangEditor from './wangEditor.vue'
 import { getLocalStorage, setLocalStorage } from '~/src/utils/localStorage'
+import { style } from '@logicflow/extension/es/bpmn-elements/presets/icons'
+import { convertString } from '~/src/utils/stringUtils'
 
 defineOptions({
   name: 'ProgressTable',
@@ -441,6 +495,7 @@ const listLoading = ref<boolean>(true)
 // 新品进度列表
 let progressList = ref<IProgress[]>([])
 let tableClickProgressId = ref<number>(0)
+// 点击上传图标的行下标
 let tableClickRowIndex = ref<number>(0)
 // 总记录数
 const total = ref<number>(0)
@@ -483,6 +538,31 @@ const remarkCopy = ref<string>('')
 const classify = ref<string>('')
 const tableClickIdx = ref<any>(0)
 
+// 共享
+const sharedVisible = ref<boolean>(false)
+// 共享人id
+const shareId = ref<string>("")
+// 共享人列表
+const shareUserList = ref<IProgressShared[]>([])
+// 开模申请
+const moldVisible = ref<boolean>(false)
+// 开模申请数据表单
+const form = ref<any>({
+  componentName: '',
+  supplierName: '',
+  progressId: 1,
+  productName: "productName_yj3br",
+  excludingTax: 1,
+  standardInvoice: 1,
+  specialInvoice: 1,
+  purchaseTotal: 1,
+  audit: "audit_907nn"
+})
+
+
+const handlerCloseDialog = () => {
+
+}
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   if (tab.props.name === '0')  queryForm.status = 0
   else queryForm.status = 1
@@ -566,7 +646,6 @@ async function uploadImage (params: any) {
     let sort = progressList.value[tableClickRowIndex.value].imageList.length - 1
     imageForm.value = new FormData(); // 每次上传前重置 FormData
     imageForm.value.append('file', params.file);
-    imageForm.value.append('type', '2');
     imageForm.value.append('progressId', tableClickProgressId);
     imageForm.value.append('sort', sort);
 
@@ -636,6 +715,8 @@ const fetchData = async () => {
  */
 const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
+  // 获取行的下标
+  tableClickIdx.value = progressList.value.indexOf(row)
   if (!cell.children[0].children[0]
       || !cell.children[0].children[1]
       || !cell.children[0].children[0].classList
@@ -645,8 +726,7 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
   // console.log(cell.children[0].children[0])
   // console.log(cell.children[0].children[1])
   // console.log(cell.children[0].children[2])
-  // 获取行的下标
-  tableClickIdx.value = progressList.value.indexOf(row)
+
   if (column.property == 'progressLog') {
     progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
     wangEditorTitle.value = '编辑开发日志'
@@ -675,6 +755,7 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
 }
 const handleCheckbox = async (value: any) => {
   // console.log(value);
+  // console.log(tableClickIdx.value)
   progressList.value[tableClickIdx.value].oem = value
   await updateProgressManage(progressList.value[tableClickIdx.value])
 }
@@ -776,7 +857,57 @@ const handleSampleCostting = (row:IProgress) =>{
   })
 }
 
-onActivated(() => {
+const getSampleProgress = async () => {
+  const { data } = await getProgressSampleList({
+    keyWord: '',
+    pageNo: 1,
+    pageSize:20
+  })
+  console.log(data);
+}
+const getMoldProgress = async () => {
+  const { data } = await getProgressMoldList({
+    keyWord: '',
+    pageNo: 1,
+    pageSize:20
+  })
+  console.log(data);
+}
+
+// 开模申请
+const addProgressMold = () => {
+  moldVisible.value = true
+}
+const handleSubmit = async () => {
+  const { data } = await updateProgressMoldAdd({
+    ...form.value,
+    progressId: progressList.value[tableClickIdx.value].progressId,
+    productName: progressList.value[tableClickIdx.value].product,
+  })
+  console.log(data)
+}
+// 订大货申请
+// 复制
+const handleCopyProgress = async (progressId: number) => {
+  const { data } = await copyProgress({ progressId })
+  console.log(data);
+}
+// 共享
+const handleGetShareList = async (progressId: number) => {
+  sharedVisible.value = true
+  const { data } = await getProgressSharelist({ progressId })
+  shareId.value = convertString(progressId)
+  shareUserList.value = data
+}
+const updateSharedVisibleValue = (newValue:boolean) =>{
+  sharedVisible.value = newValue
+}
+// 查看新款评估
+const handleGetEvaluationById = async (idNo: number) => {
+  const { data } = await getByIdQueryEvaluation( { idNo })
+  console.log(data)
+}
+onActivated(() => { 
   tableRef.value?.doLayout()
 })
 
@@ -837,6 +968,7 @@ onBeforeMount(() => {
   width: 75px;
   height: 75px;
   margin: 0 8px 0 0;
+  transition: none;
 }
 :deep(.el-upload--picture-card) {
   width: 75px;
@@ -847,9 +979,13 @@ onBeforeMount(() => {
   max-height: 81.2px;
 }
 // 下拉框宽度
-:deep(.el-select--small .el-select__wrapper) {
+:deep(.el-select--default .el-select__wrapper) {
   width: 50px;
+  padding-left: 8px;
+  padding-right: 6px;
+  font-size: var(--el-font-size-base);
 }
+
 // 控制添加图片图标显示与隐藏
 .hide :deep(.el-upload--picture-card) {
   display: none
@@ -857,6 +993,10 @@ onBeforeMount(() => {
 // 控制编辑框显示与隐藏
 .none {
   display: none;
+}
+.custom-checkbox {
+  transform: scale(1.2); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
 }
 .ghost {
   opacity: 0.5;

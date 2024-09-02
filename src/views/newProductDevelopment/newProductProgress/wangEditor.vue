@@ -2,9 +2,10 @@
   <el-dialog
     :title="props.title"
     v-model="dflag"
-    width="100%"
+    width="60%"
     :close-on-click-modal="false"
     :before-close = "handlerCloseDialog"
+    class="wangEditorDialog"
   >
     <div class="wang-editor-container" >
       <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" :defaultConfig="toolbarConfig"/>
@@ -120,7 +121,12 @@ const handleCloseDialog = () => {
   if(!editorRef.value) return
   emit('clickChild', editorRef.value.getHtml())
   emit('clickBoolean', false)
-  $baseMessage('日志保存成功', 'success', 'hey')
+  if (props.classify === 'progressLog') {
+    $baseMessage('日志保存成功', 'success', 'hey')
+  }
+  else {
+    $baseMessage('备注保存成功', 'success', 'hey')
+  }
   dflag.value = false
   clearTimer()
   removeLocalStorage(props.classify)
@@ -141,55 +147,72 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
-.wang-editor-container {
-  padding: 0 !important;
-  margin: -19px -19px 19px -19px;
-  overflow: scroll !important;
-  background: var(--el-background-color) !important;
-  border: 0 !important;
-  max-height: 600px !important;
-  &.w-e-full-screen-container {
-    z-index: 9999 !important;
-  }
+.wangEditorDialog {
+  width: 55%;
+  margin: 8vh auto 5vh;
+  height: 87vh;
+  display: flex;
+  flex-direction: column;
 
-  .w-e-bar-divider {
-    display: none;
-  }
+  .el-dialog__body {
+    flex: 1 1 auto; // 中间自适应
+    display: flex; // 控制 container 垂直居中
+    align-items: center;
+    justify-content: center;
+    overflow: auto; // 防止滚动条问题
 
-  .w-e-toolbar-init {
-    border-bottom: 1px solid var(--el-border-color) !important;
-  }
+    .wang-editor-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding: 0 !important;
+      margin: -19px -19px 19px -19px;
+      background: var(--el-background-color) !important;
+      border: 0 !important;
+      &.w-e-full-screen-container {
+        z-index: 9999 !important;
+      }
 
-  .wang-editor-content {
-    width: 70%;
-    min-height: calc(var(--el-container-height) - 110px - 72px - 19px - 40px) !important;
-    margin: 20px auto 20px auto;
-    background-color: var(--el-color-white);
-    border: 0;
-    overflow: scroll;
-  }
+      .w-e-bar-divider {
+        display: none;
+      }
 
-  #w-e-textarea-1 {
-    margin: var(--el-margin) !important;
-  }
+      .w-e-toolbar-init {
+        border-bottom: 1px solid var(--el-border-color) !important;
+      }
 
-  .wang-editor-footer {
-    width: 70%;
-    margin: auto;
-  }
+      .wang-editor-content {
+        flex: 1; /* 使内容区域填满剩余空间 */
+        width: 70%;
+        margin: 20px auto;
+        background-color: var(--el-color-white);
+        border: 0;
+        overflow: auto;
+      }
 
-  @media (max-width: 768px) {
-    .wang-editor-title,
-    .wang-editor-content,
-    .wang-editor-footer {
-      width: 90%;
+      #w-e-textarea-1 {
+        margin: var(--el-margin) !important;
+      }
+
+      @media (max-width: 768px) {
+        .wang-editor-title,
+        .wang-editor-content,
+        .wang-editor-footer {
+          width: 90%;
+        }
+      }
     }
   }
-}
 
+  .el-dialog__footer {
+    padding: 1px var(--el-padding) var(--el-padding);
+  }
+}
 .wang-editor-dialog {
   img {
     max-width: 100%;
   }
 }
+
 </style>

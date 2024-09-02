@@ -31,7 +31,7 @@
 import {updateSharePerson,} from '/@/api/devlocal/evaluation'
 
 import {IShared,} from '/@/type/evaluation/evaluationType'
-
+import { IProgressShared } from '/@/type/progress/progressType'
 defineOptions({
   name: 'VabShared',
 })
@@ -40,7 +40,7 @@ defineOptions({
 let props = withDefaults(defineProps<{
     visible: boolean
     id:string
-    list: IShared[]
+    list: IShared[] | IProgressShared[]
 }>(),{
     visible: false,
 })
