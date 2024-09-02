@@ -7,11 +7,12 @@
         
         <vab-query-form>
             <vab-query-form-left-panel>
-                <el-button type="primary">新增</el-button>
+                <el-button type="primary" @click="addRowCostAccounting">新增</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
 
         <VueDraggable
+           
             v-model="estimatedCostList"
             :animation="150"
             ghostClass="ghost"
@@ -19,8 +20,8 @@
             @end="onEnd"
         >
             <el-table 
-                :data="estimatedCostList" 
-                border stripe
+                ref="costAccountingTable"
+                :data="estimatedCostList"
                 height="330"
                 @cell-click="costAccountingChangeInput"
                 :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
@@ -55,7 +56,7 @@
 
                 <el-table-column  label="图片">
                     <template v-slot="scope">
-                        <div @click="getCellRowData(scope.$index)">
+                        <div>
                             <el-image v-if="scope.row.imgUrl" style="width: 50px; height: 50px" :src="scope.row.imgUrl" fit="fill" data-img="img" />
                         </div>
                     </template>
@@ -152,6 +153,7 @@
                         <el-select 
                             v-model="row.firstMileChannel" 
                             placeholder="请选择头程渠道"
+                            @change="handlerEstimatendChange(row)"
                         >
                             <el-option 
                                 v-for="dict in firstLegChannelColumns" 
@@ -223,13 +225,13 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item>
-                                        <el-link type="primary" :underline="false">上传图片</el-link>
+                                        <el-link type="primary" :underline="false" @click="costAccountImageUpload(scope.row,scope.$index)">上传图片</el-link>
                                     </el-dropdown-item>
                                     <el-dropdown-item>
-                                        <el-link type="primary" :underline="false">复制</el-link>
+                                        <el-link type="primary" :underline="false" @click="costAccountCopy(scope.row)">复制</el-link>
                                     </el-dropdown-item>
                                     <el-dropdown-item>
-                                        <el-link type="primary" :underline="false">删除</el-link>
+                                        <el-link type="primary" :underline="false" @click="costAccountDelete(scope.row)">删除</el-link>
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
                             </template>
@@ -239,6 +241,15 @@
             </el-table>
         </VueDraggable>
 
+        <vab-upload 
+            :upload-visible="costAccoutingVisible" 
+            title="上传图片" 
+            :is-multiple="false"
+            :fileListFlag = "false"
+            :dataId = "dataId"
+            @update:uploadVisible = "costAccountingUpdateUploadPicVisible"
+            :upload-file="costAccountingUploadImageFile"
+        />
     </div>
 </template>
 
@@ -250,12 +261,18 @@ import debounce from 'lodash/debounce'
 import {formatDate} from '/@/utils/dateUtils'
 import {type SortableEvent, VueDraggable} from 'vue-draggable-plus'
 import {getExchangeRate} from '/@/api/devlocal/evaluation'
-import {getCostAccountingList} from '/@/api/devlocal/progressSample'
+import {convertString} from '/@/utils/stringUtils'
+import {getCostAccountingList,addCostAccounting,
+    costAccountingUploadImage,
+    costAccountingUpdateRowSort,costAccountingCopy,
+    costAccountingUpdate,costAccountingDelete} from '/@/api/devlocal/progressSample'
 import {
   estimatedCostAccountingSiteColumns,
   firstLegChannelColumns,
   siteReflectCurrencyAndExchangeRate,
 } from '../indexCommon'
+import { TableRefs, UploadRequestOptions } from 'element-plus'
+
 
 
 const props = defineProps<{
@@ -266,18 +283,25 @@ defineComponent({
     name:"VabCostAccounting"
 })
 
-// 控制预览图片的隐藏显示
-const imagePreviewVisible = ref<boolean>(false)
-// 预览图片列表
-const imagePriviewList = ref<string[]>([])
+
+const emit = defineEmits<{ 
+    (e: 'update:imagePreviewVisibale', value: boolean): void
+    (e: 'update:priviewListValue', value: string): void
+ }>()
+
+
 // 成本核算列表
 const estimatedCostList = ref<IProgressEstimatedCostAccounting[]>([])
-
-// 上传图片下标
+// 图片上传显示控制vesiblae
+const costAccoutingVisible = ref<boolean>(false)
+// 图片唯一id
+const dataId = ref<string>("")
+const costAccountingTable = ref<TableRefs>()
 let imageUploadCellIdx = 0
 
+
 // 输入input blur事件
-const clickCancle = async (event:any,value:any) =>{
+const clickCancle = async (event:any,value:IProgressEstimatedCostAccounting) =>{
 
     const t1 = getRootElement(event["srcElement"],".cell").children[0]
     if (t1){
@@ -288,14 +312,11 @@ const clickCancle = async (event:any,value:any) =>{
     if (t2){
         t2.classList.remove("none")
     }
+
+    await costAccountingUpdate({...value})
 }
 
-// 获取点击行的table cell下标
-const getCellRowData = (idx:number) =>{
-    imagePriviewList.value = []
-    imageUploadCellIdx = idx
-    imagePriviewList.value.push(estimatedCostList.value[imageUploadCellIdx].imgUrl)   
-}
+
 
 
 // 成本核算单击表格修改
@@ -304,7 +325,9 @@ const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellEle
     // 处理图片放大预览
     let el = getSpecificChildren(cell, "img")[0];
     if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-        imagePreviewVisible.value = true;
+
+        emit("update:priviewListValue",row.imgUrl)
+        emit("update:imagePreviewVisibale",true)
     }
   
     if (!cell.children[0].children[0] 
@@ -329,22 +352,31 @@ const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellEle
       }
     }
     
-  }
+}
 
 // 进度成本核算修改站点
 const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
     row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
     const {data} = await getExchangeRate({currency:row.currencyType})
     row.foreignExchange = data
-    row.site = row.site  
-    
+    row.site = row.site
+    await costAccountingUpdate({...row})
 }
 
 
 // 内容拖拽排序
 const onEnd = debounce(async (e: SortableEvent ) => {
-    
+    try {
+        const idList = estimatedCostList.value.map((item:IProgressEstimatedCostAccounting) =>{
+            return item.id
+        })
+
+        await costAccountingUpdateRowSort(idList)
+    }catch(e){
+        console.error(e as Error)
+    }
 },1000)
+
 
 // 获取成本核算数据列表
 const fetchDataCostAccounting = async ()=>{
@@ -355,6 +387,133 @@ const fetchDataCostAccounting = async ()=>{
     }catch(e){
         console.error(e as Error)
     }
+}
+
+// 图片上传按钮
+const costAccountImageUpload =  async (row:IProgressEstimatedCostAccounting,idx:number) =>{
+    costAccoutingVisible.value = true
+    dataId.value = row.id + ""
+    imageUploadCellIdx = idx
+}
+
+
+// 上传文件
+const costAccountingUploadImageFile = async (options: UploadRequestOptions) => {
+    const formdata = new FormData()
+    formdata.append('file', options.file)
+    formdata.append('accountingId', dataId.value)
+
+    try{
+    const {data} = await costAccountingUploadImage(formdata);
+    if (data){
+        $baseMessage("零件图片上传成功！","success","hey")
+        estimatedCostList.value[imageUploadCellIdx].imgUrl! = data
+        costAccoutingVisible.value = false
+    }
+    }catch(err){
+        const error = err as Error;
+        console.error(error)
+        $baseMessage("零件图片上传失败！","error","hey")
+    }
+}
+
+// 头程渠道修改
+const handlerEstimatendChange = async (row:IProgressEstimatedCostAccounting) =>{
+  await costAccountingUpdate({...row})
+}
+
+
+const costAccountingUpdateUploadPicVisible = (newV:boolean) =>{
+    costAccoutingVisible.value = newV
+}
+
+// 新增
+const addRowCostAccounting = async () =>{
+    let newData: IProgressEstimatedCostAccounting = {
+      id: '',
+      evaluationId: '',
+      createTime: formatDate(new Date()),
+      site: '0',
+      currencyType: '',
+      foreignExchange: '',
+      imgUrl: '',
+      desc: '',
+      priceInfo: '',
+      url1688: '',
+      price: '',
+      length: '',
+      width: '',
+      height: '',
+      weight: '',
+      packaging: '',
+      firstMileChannel: '0',
+      sellingPrice: '',
+      weightCoefficient: '',
+      volumeCoefficient: '',
+      tariff: '',
+      lastMile: '',
+      firstMile: '',
+      grossMarginRate: '',
+      roi: '',
+      platformCommission: '',
+      storageFee: ''
+  }
+ 
+  const formdata = new FormData()
+  formdata.append('progressId', props.progressId+"")
+  formdata.append('sort', convertString(estimatedCostList.value.length + 1))
+  
+  // 成本核算进度id
+  const {data} = await addCostAccounting(formdata)
+  newData.id = convertString(data!)
+
+  if (data){
+    // 获取汇率
+    const {data} = await getExchangeRate({currency: siteReflectCurrencyAndExchangeRate.get(newData.site)!})
+    newData.foreignExchange = data
+
+    $baseMessage("产品成本核算添加成功！","success","hey")
+    estimatedCostList.value.push(newData)
+    fetchDataCostAccounting()
+    // 自动滚动到最新的添加行
+    nextTick(() => {
+        if (costAccountingTable.value) {
+            const $bodyWrapper = costAccountingTable.value.$el.querySelector(".el-table__body");
+            if ($bodyWrapper) {
+                costAccountingTable.value.setScrollTop($bodyWrapper.scrollHeight);
+            }
+        }
+    })
+  }
+}
+
+// 复制
+const costAccountCopy = async(row:IProgressEstimatedCostAccounting) =>{
+    const {data} = await costAccountingCopy({accountingId:row.id+ "",progressId:props.progressId})
+    if (data == true){
+        $baseMessage("此条产品成本核算信息复制成功!","success","hey")
+        fetchDataCostAccounting()
+        if (costAccountingTable.value) {
+            const $bodyWrapper = costAccountingTable.value.$el.querySelector(".el-table__body");
+            if ($bodyWrapper) {
+                costAccountingTable.value.setScrollTop($bodyWrapper.scrollHeight);
+            }
+        }
+    }
+}
+
+// 删除
+const costAccountDelete = async(row:IProgressEstimatedCostAccounting) =>{
+    $baseConfirm('您确定要删除产品成本信息吗', null, async () => {
+    const {data} = await costAccountingDelete({accountingId:row.id})
+    if (data == true){
+        const index = estimatedCostList.value.findIndex((item:IProgressEstimatedCostAccounting) => item.id === row.id);
+        if (index !== -1) {
+            estimatedCostList.value.splice(index, 1);
+        }
+        $baseMessage("此条产品成本信息删除成功!","success","hey")
+    }
+  })
 }
 
 onMounted(async ()=>{

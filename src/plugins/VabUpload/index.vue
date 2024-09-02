@@ -13,8 +13,8 @@
             :multiple="props.isMultiple"
             :show-file-list="props.fileListFlag"
             style="padding-bottom: 15px;"
-            :before-upload="beforeAvatarUpload"
-            :http-request="uploadFile"
+            :before-upload="beforeUpload"
+            :http-request="props.uploadFile"
         >
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
             <div class="el-upload__text">
@@ -28,7 +28,6 @@
 
 import { UploadFilled } from '@element-plus/icons-vue'
 import { UploadProps, UploadRequestOptions } from 'element-plus';
-import { uploadFileBoBakend } from '/@/api/devlocal/evaluation'
 import {iamgeSuffixTypeArr} from '/@/const/image'
 
 defineOptions({
@@ -41,22 +40,17 @@ let props = withDefaults(defineProps<{
     title:string
     isMultiple:boolean
     fileListFlag:boolean
-    dataId:string
+    dataId:string,
+    uploadFile: (options: UploadRequestOptions) => XMLHttpRequest | Promise<unknown>
+
 }>(),{
     uploadVisible: false,
     isMultiple: false,
     fileListFlag: false
 });
 
-// 定义事件
-const emit = defineEmits<{ 
-    (e: 'update:uploadVisible', value: boolean): void 
-    (e: 'obtain:imageRes', value: string): void
-}>()
-
-
 // 图片上传前的check
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+const beforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (!iamgeSuffixTypeArr.includes(rawFile.type)) {
     $baseMessage('上传的不是图片类型，只能是image/jpeg、image/jpg、image/png!','error','hey')
     return false
@@ -67,28 +61,11 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   return true
 }
 
-// 上传文件
-const uploadFile = async (options: UploadRequestOptions) => {
+// 定义事件
+const emit = defineEmits<{ 
+    (e: 'update:uploadVisible', value: boolean): void
+}>()
 
-  const formdata = new FormData()
-  formdata.append('file', options.file)
-  formdata.append('type', "1")
-  formdata.append('id', props.dataId)
-
-  try{
-    const {data} = await uploadFileBoBakend(formdata);
-    if (data){
-        $baseMessage("产品成本核算图片上传成功！","success","hey")
-        emit('obtain:imageRes',data)
-        handlerCloseDialog()
-    }
-  }catch(err){
-    const error = err as Error;
-    console.error(error)
-    $baseMessage("产品成本核算图片上传失败！","error","hey")
-  }
-
-}
 
 // 关闭上传文件dialog
 const handlerCloseDialog = () =>{

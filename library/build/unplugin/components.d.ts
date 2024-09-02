@@ -242,6 +242,8 @@ declare module 'vue' {
     VabRefresh: typeof import('./../../components/VabRefresh/index.vue')['default']
     VabRightTools: typeof import('./../../components/VabRightTools/index.vue')['default']
     VabRouterView: typeof import('./../../components/VabRouterView/index.vue')['default']
+    VabSample: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSample.vue')['default']
+    VabSampleTranck: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSampleTranck.vue')['default']
     VabSearch: typeof import('./../../components/VabSearch/index.vue')['default']
     VabShared: typeof import('./../../../src/plugins/VabShared/index.vue')['default']
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']

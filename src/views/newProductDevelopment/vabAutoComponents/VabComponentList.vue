@@ -4,8 +4,8 @@
         <vab-query-form>
             <vab-query-form-left-panel>
                 <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
-                <el-button type="primary">拿样</el-button>
-                <el-button type="primary">样品追踪</el-button>
+                <el-button type="primary" @click="addSampleHandler">拿样</el-button>
+                <el-button type="primary" @click="sampleTrackHandler">样品追踪</el-button>
                 <el-button type="primary">开发日志</el-button>
                 <el-button type="primary">添加耗材</el-button>
                 <el-button type="primary">添加零件</el-button>
@@ -15,8 +15,7 @@
         <el-table 
             ref="progressComponentTable"
             :data="progressProductList" 
-            border stripe 
-            @cell-click="progressProductChangeInput"
+            @cell-click="componentTableInputChage"
             :span-method="objectSpanMethod"
             height="400"
             :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
@@ -25,7 +24,7 @@
             <el-table-column align="center" fixed="left" label="操作" width="120px">
                 <template v-slot="scope">
                     <el-dropdown>
-                        <el-button text type="primary">
+                        <el-button text type="primary" @click="uploadProdcutProgressImage(scope.row,scope.$index)">
                             上传图片
                             <el-icon class="el-icon--right">
                                 <arrow-down />
@@ -67,7 +66,7 @@
             <el-table-column label="已有零件id">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.skuComponentId" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.skuComponentId" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.skuComponentId }}</span>
                 </template>
@@ -76,7 +75,7 @@
             <el-table-column label="零件数量">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.componentQuantity" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.componentQuantity" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.componentQuantity }}</span>
                 </template>
@@ -85,7 +84,7 @@
             <el-table-column label="零件单位">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.componentUnit" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.componentUnit" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.componentUnit }}</span>
                 </template>
@@ -94,7 +93,7 @@
             <el-table-column label="出厂单价">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.unitPrice" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.unitPrice" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.unitPrice }}</span>
                 </template>
@@ -103,7 +102,7 @@
             <el-table-column label="出厂总价">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.totalPrice" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.totalPrice" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.totalPrice }}</span>
                 </template>
@@ -112,7 +111,7 @@
             <el-table-column label="运费（含税）" min-width="85">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.freight" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.freight" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.freight }}</span>
                 </template>
@@ -121,7 +120,7 @@
             <el-table-column  label="总价未税价">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.preTaxPrice" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.preTaxPrice" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.preTaxPrice }}</span>
                 </template>
@@ -130,7 +129,7 @@
             <el-table-column  label="总含税价">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.taxIncludedPrice" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.taxIncludedPrice" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.taxIncludedPrice }}</span>
                 </template>
@@ -146,9 +145,19 @@
             </el-table-column>
 
             <el-table-column  label="计入产品成本">
+                <template #default="{row}">
+                    <el-checkbox v-model="row.includedInCost" :true-value="0" :false-value="1"  size="large"  @change="includedInCostChange(row)"/>
+                </template>
             </el-table-column>
 
             <el-table-column  label="供应商">
+                <template #default="{row}">
+                    <div class="none">
+                        <el-input type="textarea" autofocus v-model="row.supplier" :autosize="{ minRows: 3, maxRows: 9 }"
+                            @blur="componentClickCancle($event, row)" />
+                    </div>
+                    <span>{{ row.supplier }}</span>
+                </template>
             </el-table-column>
 
             <el-table-column label="开票" min-width="110">
@@ -163,7 +172,7 @@
             <el-table-column  label="实际税点">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.actualTaxRate" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.actualTaxRate" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.actualTaxRate }}</span>
                 </template>
@@ -172,7 +181,7 @@
             <el-table-column  label="开票税点">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.invoicingTaxRate" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.invoicingTaxRate" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.invoicingTaxRate }}</span>
                 </template>
@@ -181,7 +190,7 @@
             <el-table-column  label="采购链接">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.purchaseLink" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.purchaseLink" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.purchaseLink }}</span>
                 </template>
@@ -190,7 +199,7 @@
             <el-table-column  label="备注">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.remarks" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.remarks" @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.remarks }}</span>
                 </template>
@@ -211,8 +220,7 @@
             </el-col>
             <el-col :span="23">
                 <el-table 
-                :data="sampleList" 
-                border stripe
+                :data="sampleList"
                 height="120"
                 :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
             >
@@ -388,21 +396,56 @@
             </el-col>
         </el-row>
        
+
+        <vab-upload 
+            :upload-visible="uploadPicVisible" 
+            title="上传图片" 
+            :is-multiple="false"
+            :fileListFlag = "false"
+            :dataId = "dataId"
+            @update:uploadVisible = "updateUploadPicVisible"
+            :upload-file="uploadImageFile"
+        />
+
+        <!-- 样品追踪dialog -->
+        <vab-sample-tranck 
+            :progress-id="props.progressId"
+            :close-dialog="() => sampleVisible = false"
+            :visible="sampleVisible"
+            @update:priviewListValue="settingPriviewList"    
+        />
+
+        <!-- 拿样 -->
+        <vab-sample
+           :progress-id="props.progressId"
+           :close-dialog="() => sampleFormVisible = false"
+           :visible="sampleFormVisible"
+        />
+
     </div>
+
 </template>
 
 <script lang="ts" setup>
 import {  ArrowDown } from '@element-plus/icons-vue'
-import {getRootElement} from '/@/utils/nodeUtils'
+import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
 import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,
      siteReflectCurrencyAndExchangeRate,currencyList,invoicingList } from '../indexCommon'
 import { IProgressEstimatedCostAccounting,IProgressProdcutComponent,IProgressSample, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
-import type { TableColumnCtx, TableRefs } from 'element-plus'
+import type { TableColumnCtx, TableRefs, UploadRequestOptions } from 'element-plus'
 import {getExchangeRate} from '/@/api/devlocal/evaluation'
 import {convertString} from '/@/utils/stringUtils'
-import {getComponentList,addComponent,addSuppliers,deleteSuppliers,copyComponent} from '/@/api/devlocal/progressSample'
+import {getComponentList,addComponent,
+    addSuppliers,deleteSuppliers,
+    copyComponent,componentUploadImage,
+    updateComponenet} from '/@/api/devlocal/progressSample'
 
-
+// 图片上传显示控制vesiblae
+const uploadPicVisible = ref<boolean>(false)
+// 图片唯一id
+const dataId = ref<string>("")
+let imageUploadCellIdx = 0
+const progressId = ref<string>('')
 defineOptions({
     name: 'VabComponentList',
 })
@@ -411,6 +454,15 @@ const props = defineProps<{
     progressId:string
 }>();
 
+
+watchEffect(()=>{
+    progressId.value = props.progressId
+})
+
+const emit = defineEmits<{ 
+    (e: 'update:imagePreviewVisibale', value: boolean): void
+    (e: 'update:priviewListValue', value: string): void
+ }>()
 
 interface SpanMethodProps {
   row: IProgressProdcutComponent
@@ -421,11 +473,14 @@ interface SpanMethodProps {
 
 // 拿样清单列表
 const sampleList = ref<IProgressSample[]>([])
-
 // 零件清单列表
 const progressProductList = ref<IProgressProdcutComponent[]>([])
-
+// 零件table ref
 const progressComponentTable = ref<TableRefs>()
+// 样品追踪flag
+const sampleVisible = ref<boolean>(false)
+// 拿样flag
+const sampleFormVisible = ref<boolean>(false)
 
 // 输入input blur事件
 const clickCancle = async (event:any,value:any) =>{
@@ -443,21 +498,16 @@ const clickCancle = async (event:any,value:any) =>{
 
 
 // 零件清单修改开票
-const handlerInvoicingChange = async (row:IProgressEstimatedCostAccounting) =>{
-
+const handlerInvoicingChange = async (row:IProgressProdcutComponent) =>{
+    await updateComponenet({...row})
 }
 
 // 零件清单修改货币
-const handlerCurrencyChange = async (row:IProgressEstimatedCostAccounting) =>{
-
+const handlerCurrencyChange = async (row:IProgressProdcutComponent) =>{
+    await updateComponenet({...row})
 }
 
-// 零件清单单击表格修改
-const progressProductChangeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-    
-}
-
-// 修改站点
+// 拿样清单成本试算-修改站点
 const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
     row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
     const { data } = await getExchangeRate({currency:row.currencyType})
@@ -528,6 +578,41 @@ const addComponentHandler = async () =>{
         }
     })
 }
+
+// 零件清单上传图片
+const uploadProdcutProgressImage = async (row:IProgressProdcutComponent,idx:number) =>{
+    uploadPicVisible.value = true
+    dataId.value = row.componentId + ""
+    imageUploadCellIdx = idx
+
+}
+
+const updateUploadPicVisible = (newV:boolean) =>{
+    uploadPicVisible.value = newV
+}
+
+
+// 上传文件
+const uploadImageFile = async (options: UploadRequestOptions) => {
+    const formdata = new FormData()
+    formdata.append('file', options.file)
+    formdata.append('componentId', dataId.value)
+
+    try{
+    const {data} = await componentUploadImage(formdata);
+    if (data){
+        $baseMessage("零件图片上传成功！","success","hey")
+        progressProductList.value[imageUploadCellIdx].componentImg! = data
+        uploadPicVisible.value = false
+    }
+    }catch(err){
+        const error = err as Error;
+        console.error(error)
+        $baseMessage("零件图片上传失败！","error","hey")
+    }
+
+}
+
 
 // 添加供应商
 const addSuppliserInfo = async (row:IProgressProdcutComponent) =>{
@@ -619,7 +704,6 @@ const deleteSupplserOrComponent = async (row:IProgressProdcutComponent) =>{
 
 // 零件复制
 const copyComponentInfo = async (row:IProgressProdcutComponent)=>{
-    console.log(row)
     // 获取该零件下的所有供应商id
     const suppliserIds:number[] = [] 
     progressProductList.value.forEach((item:IProgressProdcutComponent) => {
@@ -633,7 +717,78 @@ const copyComponentInfo = async (row:IProgressProdcutComponent)=>{
         $baseMessage("零件供应商信息复制成功！","success","hey")
         fetchDataComponent()
     }
+}
+
+// 零件清单table单击修改
+const componentTableInputChage = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     
+  // 不能被修改cell的下标
+  if(column.no === 3) return
+
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+    emit("update:priviewListValue",row.componentImg)
+    emit("update:imagePreviewVisibale",true)
+  }
+
+  if (!cell.children[0].children[0] 
+    || !cell.children[0].children[1]
+    || !cell.children[0].children[0].classList
+    || !cell.children[0].children[1].classList
+  ){
+    return
+  }
+
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+
+  // 自动聚焦
+  const inputElement = getSpecificChildren(cell, "input")[0];
+  if (inputElement) {
+      inputElement.focus()
+  } else {
+    const textareaElement = getSpecificChildren(cell, "textarea")[0];
+    if (textareaElement){
+      textareaElement.focus()
+    }
+  }
+}
+
+// 零件清单table blur事件
+const componentClickCancle = async (event:any,value:IProgressProdcutComponent) =>{
+    const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    t1.classList.add("none")
+  }
+
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  await updateComponenet({...value})
+ 
+}
+
+// 计入成本change
+const includedInCostChange = async (row:IProgressProdcutComponent) =>{
+    await updateComponenet({...row})
+}
+
+// 样品追踪
+const sampleTrackHandler = async()=>{
+    sampleVisible.value = true
+}
+
+// 添加样品Handler处理
+const addSampleHandler = async()=>{
+    sampleFormVisible.value = true
+}
+
+// 样品table
+const settingPriviewList = (imageUr:string) =>{
+    emit("update:priviewListValue",imageUr)
+    emit("update:imagePreviewVisibale",true)
 }
 
 
@@ -641,7 +796,7 @@ const copyComponentInfo = async (row:IProgressProdcutComponent)=>{
 const fetchDataComponent = async () =>{
     try {
         // 零件列表
-        const {data} = await getComponentList({progressId:props.progressId})
+        const {data} = await getComponentList({progressId: progressId.value!})
         progressProductList.value = data
         progressProductList.value.sort((a:IProgressProdcutComponent,b:IProgressProdcutComponent) => a.componentId! - b.componentId!)
     }catch(e){
@@ -658,7 +813,7 @@ const objectSpanMethod = ({
   columnIndex,
 }: SpanMethodProps) => {
     // 设置需要合并的列
-    if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2) {
+    if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
       // 获取当前row的零件id
       const componentId = row.componentId;
       // 默认不跨行
@@ -681,6 +836,7 @@ const objectSpanMethod = ({
       }
    }
 }
+
 
 onMounted(async ()=>{
     fetchDataComponent()

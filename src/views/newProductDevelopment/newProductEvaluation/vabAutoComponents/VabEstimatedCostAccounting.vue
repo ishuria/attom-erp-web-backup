@@ -256,7 +256,7 @@
         :fileListFlag = "false"
         :dataId = "dataId"
         @update:uploadVisible = "updateUploadPicVisible"
-        @obtain:imageRes = "updateTableCellIdx"
+        :upload-file="uploadFile"
     />
 </template>
 
@@ -285,12 +285,14 @@ import {
   
 } from '../../indexCommon'
 
-import {IEstimatedCostAccounting,EstimatedCostAccountingSort} from '/@/type/evaluation/evaluationType'
+import {IEstimatedCostAccounting} from '/@/type/evaluation/evaluationType'
 
 import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
-import { ElLink, ElMessageBox } from 'element-plus';
+import { ElLink, ElMessageBox, UploadProps, UploadRequestOptions } from 'element-plus';
 import {convertString} from '/@/utils/stringUtils'
 import debounce from 'lodash/debounce'
+import { uploadFileBoBakend } from '/@/api/devlocal/evaluation'
+
 
 defineOptions({
     name: 'VabEstimatedCostAccounting',
@@ -463,7 +465,7 @@ const handlerDelete = async (row:any)=>{
   })
 }
 
-// 修改
+// 头程渠道修改
 const handlerEstimatendChange = async (row:IEstimatedCostAccounting) =>{
   await updateEstimatedCostAccounting({...row})
 }
@@ -533,6 +535,32 @@ const onEnd = debounce(async (e: SortableEvent ) => {
     }
 },500)
 
+
+// 上传文件
+const uploadFile = async (options: UploadRequestOptions) => {
+
+  const formdata = new FormData()
+  formdata.append('file', options.file)
+  formdata.append('id', dataId.value)
+
+  try{
+    const {data} = await uploadFileBoBakend(formdata);
+    if (data){
+        $baseMessage("产品成本核算图片上传成功！","success","hey")
+        imagePriviewList.value = []
+        list.value[imageUploadCellIdx].imgUrl = data
+        imagePriviewList.value.push(data)   
+        uploadPicVisible.value = false
+    }
+  }catch(err){
+    const error = err as Error;
+    console.error(error)
+    $baseMessage("产品成本核算图片上传失败！","error","hey")
+    uploadPicVisible.value = false
+  }
+
+}
+
 // table checkbox事件
 const handleSelectionChange = (val: IEstimatedCostAccounting[]) => {
     selectRows.value = val
@@ -543,11 +571,6 @@ const updateUploadPicVisible = (newV:boolean) =>{
     uploadPicVisible.value = newV
 }
 
-const updateTableCellIdx = (newValue:string) =>{
-    imagePriviewList.value = []
-    list.value[imageUploadCellIdx].imgUrl = newValue
-    imagePriviewList.value.push(newValue)   
-}
 
 </script>
 

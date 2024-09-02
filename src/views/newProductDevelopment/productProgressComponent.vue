@@ -9,9 +9,17 @@
         </el-page-header>
         <el-divider style="margin:10px 0"/>
 
-        <vab-component-list :progress-id="route.query.progressId" />
+        <vab-component-list 
+            :progress-id="route.query.progressId"
+            @update:imagePreviewVisibale="updateUploadPriviewVisible"
+            @update:priviewListValue="setPreviewList"
+        />
 
-        <vab-cost-accounting :progress-id="route.query.progressId"/>
+        <vab-cost-accounting 
+            :progress-id="route.query.progressId"
+            @update:imagePreviewVisibale="updateUploadPriviewVisible"
+            @update:priviewListValue="setPreviewList"
+        />
 
         <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
@@ -47,6 +55,16 @@ const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
 
+// 控制图片是否预览
+const updateUploadPriviewVisible = (newV:boolean) =>{
+    imagePreviewVisible.value = newV
+}
+
+// 修改图片预览列表
+const setPreviewList = (imageUrl:string) =>{
+    imagePriviewList.value = []
+    imagePriviewList.value.push(imageUrl)
+}
 
 
 </script>
