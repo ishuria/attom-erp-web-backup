@@ -28,8 +28,22 @@ import {
   ICostAccountingDeleteReq,
   ICostAccountingDeleteResp,
   ISampleQueryReq,
-  ISampleQueryResp
-
+  ISampleQueryResp,
+  ISampleReceiptReq,
+  ISampleReceiptResp,
+  ISampleOrderReq,
+  ISampleOrderResp,
+  ISampleComponentListReq,
+  ISampleComponentListResp,
+  ISampleSuppliserListReq,
+  ISampleSuppliserListResp,
+  ISampleAddReq,
+  ISampleAddResp,
+  ITrialCalculationReq,
+  ITrialCalculationAddResp,
+  ITrialCalculation,
+  ITrialCalculationResp,
+  ITrialCalculationGetResp,
 } from '/@/type/progress/sampleAndComponentType'
 
 /**
@@ -124,7 +138,6 @@ export function updateComponenet(data?: IProgressProdcutComponent): Promise<ICom
   })
 }
 
-
 /**
  * 样品追踪数据列表
  * @param params
@@ -137,8 +150,6 @@ export function getSampleList(params?: ISampleQueryReq): Promise<ISampleQueryRes
     params,
   })
 }
-
-
 
 /**
  * 获取新品进度成本核算数据列表
@@ -231,5 +242,122 @@ export function costAccountingDelete(data?: ICostAccountingDeleteReq): Promise<I
     headers: { 'content-type': 'multipart/form-data' },
     method: 'post',
     data,
+  })
+}
+
+/**
+ * 样品追踪-手动签收
+ * @param data
+ * @returns
+ */
+export function updateSampleReceipt(params?: ISampleReceiptReq): Promise<ISampleReceiptResp> {
+  return request({
+    url: `${BASE_API}/progress/sample/receipt`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * 样品追踪-单号修改
+ * @param data
+ * @returns
+ */
+export function updateSampleOrder(data?: ISampleOrderReq): Promise<ISampleOrderResp> {
+  return request({
+    url: `${BASE_API}/progress/sample/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 拿样-零件列表
+ * @param params
+ * @returns
+ */
+export function getComponentInfoList(params: ISampleComponentListReq): Promise<ISampleComponentListResp> {
+  return request({
+    url: `${BASE_API}/progress/get/componentList`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * 拿样-供应商列表
+ * @param params
+ * @returns
+ */
+export function getSuppliserInfoList(params: ISampleSuppliserListReq): Promise<ISampleSuppliserListResp> {
+  return request({
+    url: `${BASE_API}/progress/get/suppliserList`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * 拿样-提交拿样
+ * @param data
+ * @returns
+ */
+export function addSample(data?: ISampleAddReq): Promise<ISampleAddResp> {
+  return request({
+    url: `${BASE_API}/progress/add/sample`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 拿样-拿样清单成本试算
+ * @param params
+ * @returns
+ */
+export function getTrialCalculation(params: ITrialCalculationReq): Promise<ITrialCalculationGetResp> {
+  return request({
+    url: `${BASE_API}/progress/get/trialcalculation`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * 拿样清单成本试算-添加
+ * @param data
+ * @returns
+ */
+export function addTrialCalculation(params?: ITrialCalculationReq): Promise<ITrialCalculationAddResp> {
+  return request({
+    url: `${BASE_API}/progress/add/trialcalculation`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * 拿样清单成本试算-更新
+ * @param data
+ * @returns
+ */
+export function updateTrialCalculation(data?: ITrialCalculation): Promise<ITrialCalculationResp> {
+  return request({
+    url: `${BASE_API}/progress/update/trialcalculation`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 拿样清单成本试算-保存
+ * @param data
+ * @returns
+ */
+export function saveTrialCalculation(params?: ITrialCalculation): Promise<ITrialCalculationResp> {
+  return request({
+    url: `${BASE_API}/progress/save/trialcalculation`,
+    method: 'post',
+    params,
   })
 }

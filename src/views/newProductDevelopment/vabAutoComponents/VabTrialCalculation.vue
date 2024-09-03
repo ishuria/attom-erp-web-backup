@@ -1,0 +1,324 @@
+<template>
+
+     <!-- 拿样清单成本试算 -->
+     <el-row style="padding-top:20px;">
+            <el-col :span="1" class="sample">
+                <div><strong>拿样清单成本试算</strong></div>
+            </el-col>
+            <el-col :span="23">
+                <el-table 
+                    :data="sampleList"
+                    height="140"
+                    :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
+                >
+
+                <el-table-column prop="site" label="站点" min-width="120">
+                    <template #default="{ row }">
+                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)">
+                            <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
+                                :value="dict.value" :label="dict.label"></el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="外汇币种">
+                    <template #default="{ row }">
+                        <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column label="汇率">
+                    <template #default="{ row }">
+                        <span>{{ row.foreignExchange }}</span>
+                    </template>
+                </el-table-column>
+
+
+                <el-table-column label="产品描述">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="textarea" autofocus v-model="row.desc" :autosize="{ minRows: 3, maxRows: 9 }"
+                                @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.desc }}</span>
+                    </template>
+                </el-table-column>
+
+
+                <el-table-column prop="length" label="长">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.length" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.length }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="width" label="宽">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.width" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.width }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="height" label="高">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.height" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.height }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="price" label="实际产品总成本">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.totalCost" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.totalCost }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="weight" label="重量">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.weight" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.weight }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="lastMile" label="尾程">
+                </el-table-column>
+
+                <el-table-column prop="lastfirstMileMile" label="头程">
+                </el-table-column>
+
+                <el-table-column prop="packaging" label="打包">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.packaging" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.packaging }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="120">
+                    <template #default="{ row }">
+                        <el-select 
+                            v-model="row.firstMileChannel" 
+                            placeholder="请选择头程渠道"
+                        >
+                            <el-option 
+                                v-for="dict in firstLegChannelColumns" 
+                                :key="dict.value" 
+                                :value="dict.value"
+                                :label="dict.label"
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="sellingPrice" label="售价">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.sellingPrice" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.sellingPrice }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="grossMarginRate" label="毛利率">
+                </el-table-column>
+
+                <el-table-column prop="roi" label="ROI">
+                </el-table-column>
+
+                <el-table-column prop="weightCoefficient" label="重量系数">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.weightCoefficient" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.weightCoefficient }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="volumeCoefficient" label="体积系数">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.volumeCoefficient" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.volumeCoefficient }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="tariff" label="关税%">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.tariff" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.tariff }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="platformCommission" label="平台佣金">
+                </el-table-column>
+
+                <el-table-column prop="storageFee" label="仓储费2个月$">
+                </el-table-column>
+
+
+                <el-table-column align="center" fixed="right" label="操作" width="120px">
+                    <template v-slot="scope">
+                        <el-button text type="primary">
+                            逆算
+                        </el-button>
+                        <el-button text type="primary" @click="saveTrialCalculationHandler(scope.row)">
+                            保存
+                        </el-button>
+                    </template>
+                </el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+</template>
+
+<script lang="ts" setup>
+import {getExchangeRate} from '/@/api/devlocal/evaluation'
+import {convertString} from '/@/utils/stringUtils'
+import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCurrencyAndExchangeRate, } from '../indexCommon'
+import { IProgressEstimatedCostAccounting,IProgressSample,ITrialCalculation } from '/@/type/progress/sampleAndComponentType'
+import {getTrialCalculation,addTrialCalculation,updateTrialCalculation,saveTrialCalculation} from '/@/api/devlocal/progressSample'
+import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
+
+const props = defineProps<{
+    progressId:string
+}>();
+
+
+defineComponent({
+    name:"VabTrialCalculation"
+})
+
+// 拿样清单列表
+const sampleList = ref<IProgressSample[]>([])
+
+// 拿样清单成本试算-修改站点
+const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
+    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
+    const { data } = await getExchangeRate({currency:row.currencyType})
+    row.foreignExchange = data
+    row.site = row.site  
+    // 调用修改接口
+}
+
+
+// 保存拿样清单成本试算
+const saveTrialCalculationHandler = async (row:IProgressSample) => {
+   const {data} = await saveTrialCalculation({progressId:parseInt(props.progressId), id: parseInt(row.id!)})
+   if (data === true){
+    $baseMessage("拿样清单成本试算添加到成本核算成功！","success","hey")
+
+   }
+}
+
+
+
+// 添加拿样清单成本试算
+const addTrialCalculationHandler = async ():Promise<number> => {
+    const {data} = await addTrialCalculation({progressId:props.progressId})
+    return data
+}
+
+
+// 获取拿样清单成本试算
+const getTrialCalculationHandler = async ():Promise<ITrialCalculation> => {
+    const {data} = await getTrialCalculation({progressId:props.progressId})
+    return data
+}
+
+
+
+// 输入input blur事件
+const clickCancle = async (event:any,value:any) =>{
+
+    const t1 = getRootElement(event["srcElement"],".cell").children[0]
+    if (t1){
+        t1.classList.add("none")
+    }
+
+    const t2 = getRootElement(event["srcElement"],".cell").children[1]
+    if (t2){
+        t2.classList.remove("none")
+    }
+}
+
+
+
+onMounted(async ()=>{
+    sampleList.value = []
+
+    let first: IProgressSample = {
+        site:"0",
+        currencyType:"0",
+        foreignExchange:'',
+        desc:'',
+        length:'',
+        width:'',
+        height:'',
+        totalCost: null,
+        weight:'',
+        lastMile:'',
+        firstMile:'',
+        packaging:'',
+        firstMileChannel:'0',
+        sellingPrice:'',
+        roi:'',
+        weightCoefficient:'',
+        volumeCoefficient:'',
+        tariff:'',
+        platformCommission:'',
+        storageFee:'',
+    }
+
+    const currencyType = siteReflectCurrencyAndExchangeRate.get(first.site!)
+    const {data} = await getExchangeRate({currency:currencyType})
+    first.foreignExchange = data
+
+    const dbInfo:ITrialCalculation =  await getTrialCalculationHandler()
+    if (!dbInfo){
+        // 创建拿样清单成本试算
+        const id = await addTrialCalculationHandler()
+        // -1 代表对应的拿样清单成本试算已经存在，无需重新赋值
+        if (id !== -1){
+            first.id = convertString(id)
+        }
+    }else{
+        first.id = convertString(dbInfo.id!)
+    }
+    
+    sampleList.value.push(first)
+})
+
+</script>
+
+<style lang="scss" scoped>
+.none {
+  display: none;
+}
+
+.block {
+  display: block;
+}
+
+.sample {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-left: 1px solid rgb(235, 238, 245);
+    border-bottom: 1px solid rgb(235, 238, 245);
+    font-weight: bold;
+}
+</style>

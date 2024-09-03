@@ -7,7 +7,7 @@
         
         <vab-query-form>
             <vab-query-form-left-panel>
-                <el-button type="primary" @click="addRowCostAccounting">新增</el-button>
+                <el-button type="primary" v-debounce="addRowCostAccounting">新增</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
 

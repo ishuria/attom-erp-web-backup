@@ -1,9 +1,9 @@
 <template>
     <!-- 零件清单 -->
-    <div style="width: 100%; height: 600px;">
+    <div style="width: 100%; height: 480px;">
         <vab-query-form>
             <vab-query-form-left-panel>
-                <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
+                <el-button type="primary" v-debounce="addComponentHandler">新增零件</el-button>
                 <el-button type="primary" @click="addSampleHandler">拿样</el-button>
                 <el-button type="primary" @click="sampleTrackHandler">样品追踪</el-button>
                 <el-button type="primary">开发日志</el-button>
@@ -57,7 +57,7 @@
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="textarea" autofocus v-model="row.componentName" :autosize="{ minRows: 3, maxRows: 9 }"
-                            @blur="clickCancle($event, row)" />
+                        @blur="componentClickCancle($event, row)" />
                     </div>
                     <span>{{ row.componentName }}</span>
                 </template>
@@ -211,190 +211,6 @@
                 </template>
             </el-table-column>
         </el-table>
-
-
-        <!-- 拿样清单成本试算 -->
-        <el-row style="padding-top:20px;">
-            <el-col :span="1" class="sample">
-                <div><strong>拿样清单成本试算</strong></div>
-            </el-col>
-            <el-col :span="23">
-                <el-table 
-                :data="sampleList"
-                height="120"
-                :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
-            >
-
-                <el-table-column prop="site" label="站点" min-width="120">
-                    <template #default="{ row }">
-                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)">
-                            <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
-                                :value="dict.value" :label="dict.label"></el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="外汇币种">
-                    <template #default="{ row }">
-                        <span>{{siteReflectCurrencyAndExchangeRate.get(row.currencyType)}}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="汇率">
-                    <template #default="{ row }">
-                        <span>{{row.foreignExchange}}</span>
-                    </template>
-                </el-table-column>
-
-
-                <el-table-column label="产品描述">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="textarea" autofocus v-model="row.desc" :autosize="{ minRows: 3, maxRows: 9 }"
-                                @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.desc }}</span>
-                    </template>
-                </el-table-column>
-
-
-                <el-table-column prop="length" label="长">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.length" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.length }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="width" label="宽">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.width" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.width }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="height" label="高">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.height" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.height }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="price" label="实际产品总成本">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.totalCost" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.totalCost }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="weight" label="重量">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.weight" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.weight }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="lastMile" label="尾程">
-                </el-table-column>
-
-                <el-table-column prop="lastfirstMileMile" label="头程">
-                </el-table-column>
-
-                <el-table-column prop="packaging" label="打包">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.packaging" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.packaging }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="120">
-                    <template #default="{ row }">
-                        <el-select 
-                            v-model="row.firstMileChannel" 
-                            placeholder="请选择头程渠道"
-                        >
-                            <el-option 
-                                v-for="dict in firstLegChannelColumns" 
-                                :key="dict.value" 
-                                :value="dict.value"
-                                :label="dict.label"
-                            >
-                            </el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="sellingPrice" label="售价">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.sellingPrice" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.sellingPrice }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="grossMarginRate" label="毛利率">
-                </el-table-column>
-
-                <el-table-column prop="roi" label="ROI">
-                </el-table-column>
-
-                <el-table-column prop="weightCoefficient" label="重量系数">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.weightCoefficient" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.weightCoefficient }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="volumeCoefficient" label="体积系数">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.volumeCoefficient" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.volumeCoefficient }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="tariff" label="关税%">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.tariff" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.tariff }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="platformCommission" label="平台佣金">
-                </el-table-column>
-
-                <el-table-column prop="storageFee" label="仓储费2个月$">
-                </el-table-column>
-
-
-                <el-table-column align="center" fixed="right" label="操作" width="120px">
-                    <template v-slot="scope">
-                        <el-button text type="primary">
-                            逆算
-                        </el-button>
-                        <el-button text type="primary">
-                            保存
-                        </el-button>
-                    </template>
-                </el-table-column>
-                </el-table>
-            </el-col>
-        </el-row>
        
 
         <vab-upload 
@@ -410,7 +226,7 @@
         <!-- 样品追踪dialog -->
         <vab-sample-tranck 
             :progress-id="props.progressId"
-            :close-dialog="() => sampleVisible = false"
+            :close-dialog-handler="() => sampleVisible = false"
             :visible="sampleVisible"
             @update:priviewListValue="settingPriviewList"    
         />
@@ -420,6 +236,7 @@
            :progress-id="props.progressId"
            :close-dialog="() => sampleFormVisible = false"
            :visible="sampleFormVisible"
+           :refreshComponent="fetchDataComponent"
         />
 
     </div>
@@ -429,16 +246,19 @@
 <script lang="ts" setup>
 import {  ArrowDown } from '@element-plus/icons-vue'
 import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
-import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,
-     siteReflectCurrencyAndExchangeRate,currencyList,invoicingList } from '../indexCommon'
-import { IProgressEstimatedCostAccounting,IProgressProdcutComponent,IProgressSample, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
+import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCurrencyAndExchangeRate,currencyList,invoicingList } from '../indexCommon'
+import { IProgressEstimatedCostAccounting,IProgressProdcutComponent,IProgressSample, ISuppliersAddReq,ITrialCalculation } from '/@/type/progress/sampleAndComponentType'
 import type { TableColumnCtx, TableRefs, UploadRequestOptions } from 'element-plus'
 import {getExchangeRate} from '/@/api/devlocal/evaluation'
 import {convertString} from '/@/utils/stringUtils'
 import {getComponentList,addComponent,
     addSuppliers,deleteSuppliers,
     copyComponent,componentUploadImage,
-    updateComponenet} from '/@/api/devlocal/progressSample'
+    updateComponenet,getTrialCalculation,
+    addTrialCalculation,updateTrialCalculation,
+    saveTrialCalculation
+} from '/@/api/devlocal/progressSample'
+import { data } from 'autoprefixer'
 
 // 图片上传显示控制vesiblae
 const uploadPicVisible = ref<boolean>(false)
@@ -471,8 +291,7 @@ interface SpanMethodProps {
   columnIndex: number
 }
 
-// 拿样清单列表
-const sampleList = ref<IProgressSample[]>([])
+
 // 零件清单列表
 const progressProductList = ref<IProgressProdcutComponent[]>([])
 // 零件table ref
@@ -481,21 +300,6 @@ const progressComponentTable = ref<TableRefs>()
 const sampleVisible = ref<boolean>(false)
 // 拿样flag
 const sampleFormVisible = ref<boolean>(false)
-
-// 输入input blur事件
-const clickCancle = async (event:any,value:any) =>{
-
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
-    if (t1){
-        t1.classList.add("none")
-    }
-
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-        t2.classList.remove("none")
-    }
-}
-
 
 // 零件清单修改开票
 const handlerInvoicingChange = async (row:IProgressProdcutComponent) =>{
@@ -507,14 +311,7 @@ const handlerCurrencyChange = async (row:IProgressProdcutComponent) =>{
     await updateComponenet({...row})
 }
 
-// 拿样清单成本试算-修改站点
-const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
-    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
-    const { data } = await getExchangeRate({currency:row.currencyType})
-    row.foreignExchange = data
-    row.site = row.site  
-    // 调用修改接口
-}
+
 
 // 新增零件
 const addComponentHandler = async () =>{
@@ -859,14 +656,4 @@ onMounted(async ()=>{
   font-weight: bolder;
 }
 
-.sample {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-top: 1px solid rgb(235, 238, 245);
-    border-left: 1px solid rgb(235, 238, 245);
-    border-bottom: 1px solid rgb(235, 238, 245);
-    font-weight: bold;
-}
 </style>

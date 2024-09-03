@@ -5,13 +5,15 @@
         v-model="sampleVisible" 
         :close-on-click-modal="false"
         :before-close = "props.closeDialogHandler"
-        title="样品追踪" 
+        title="样品追踪"
+        
         width="70%">
 
         <el-table 
             :data="sampleTableList" 
             style="width: 100%" 
             @cell-click="sampleTableInputChage"
+            height="850"
         >
             <el-table-column 
                 v-for="(item, index) in sampleTranckTableCloums" 
@@ -22,7 +24,7 @@
             >
                 <template #default="{row}">
                     <div v-if="item.prop === 'componentImg'">
-                        <el-image style="width: 100px; height: 100px" :src="row.componentImg" fit="fill" />
+                        <el-image v-if="row.componentImg"style="width: 100px; height: 100px" :src="row.componentImg" fit="fill" />
                     </div>
 
                     <div v-if="item.prop === 'createTime'">
@@ -49,24 +51,23 @@
     <el-dialog 
         :model-value="orderVisible"
         width="400"
-        title="单号修改"
+        :title="dialogFlag === true ?'物流单号修改':'1688订单号修改'"
         :close-on-click-modal="false"
+        :before-close="orderDialogClose"
     >
         <el-form 
             ref="formRef"
-            :model="orderForm" 
-            :rules="rules"
+            :model="orderForm"
             label-width="auto" 
-            style="max-width: 300px"
-            
+            style="max-width: 400px"
         >
-            <el-form-item label="1688单号" prop="orderNo1688">
-                <el-input :model-value="orderForm.orderNo"/>
+            <el-form-item label="1688订单号" prop="orderNo1688" v-if="!dialogFlag">
+                <el-input v-model="orderForm.orderNo"/>
             </el-form-item>
 
             
-            <el-form-item label="物流单号" prop="logisticsNo">
-                <el-input :model-value="orderForm.logisticsNo"/>
+            <el-form-item label="物流单号" prop="logisticsNo" v-if="dialogFlag">
+                <el-input v-model="orderForm.logisticsNo"/>
             </el-form-item>
 
         </el-form>
@@ -82,12 +83,15 @@
 
 <script lang="ts" setup>
 
-import {ISampleTrack} from '/@/type/progress/sampleAndComponentType'
+import {ISampleTrack,ISampleOrderReq} from '/@/type/progress/sampleAndComponentType'
 import {sampleTranckTableCloums} from '../productProgressComponent'
-import { getSampleList } from '/@/api/devlocal/progressSample'
+import { getSampleList,updateSampleReceipt,updateSampleOrder } from '/@/api/devlocal/progressSample'
 import { formatDate } from '/@/utils/dateUtils'
 import {getSpecificChildren} from '/@/utils/nodeUtils'
-import { FormInstance, FormRules } from 'element-plus'
+import { FormInstance, } from 'element-plus'
+import {convertString} from '/@/utils/stringUtils'
+
+
 defineComponent({
     name:"VabSampleTranck"
 })
@@ -96,6 +100,7 @@ const sampleTableList = ref<ISampleTrack[]>([])
 const sampleVisible = ref<boolean>(false)
 const orderVisible = ref<boolean>(false)
 const progressId = ref<string>()
+const dialogFlag = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 
 const props = defineProps<{
@@ -110,27 +115,11 @@ const emit = defineEmits<{
 
  // 订单号
 const orderForm = reactive({
+    sampleId:'',
     orderNo:'',
     logisticsNo:'',
 })
 
-
-const rules = reactive<FormRules>({
- orderNo1688: [
-    { 
-        required: true, 
-        message: '1688订单号',
-         trigger: 'blur' 
-    },
-  ],
-  logisticsNo: [
-    {
-      required: true,
-      message: '物流单号',
-      trigger: 'blur',
-    },
-  ],
-})
 
 const fetachData = async()=>{
   const { data } = await getSampleList({progressId:props.progressId})
@@ -152,34 +141,93 @@ const sampleTableInputChage = (row: any, column: any, cell: HTMLTableCellElement
 }
 
 // 手动签收
-const manualReceipt = (row:ISampleTrack) =>{
-    
+const manualReceipt = async (row:ISampleTrack) =>{
+
+    $baseConfirm('确定要手动签收此条样品记录吗',"系统提示", async ()=>{
+
+        const {data} = await updateSampleReceipt({sampleId:row.sampleId})
+        
+        row.receiptDate = data.receiptDate
+        if (data != null || data != undefined){
+            $baseMessage(`样品${row.componentName}手动签收成功！`,"success","hey")
+        }
+
+    })
+
 }
 
 // 1688单号修改
 const orderNo1688Update = (row:ISampleTrack) =>{
+    orderForm.sampleId = ''
     orderVisible.value = true
+    dialogFlag.value = false
+    orderForm.sampleId = convertString(row.sampleId)
 }
 
 // 物流单号修改
 const logisticsNoUpdate = (row:ISampleTrack) =>{
+    orderForm.sampleId = ''
     orderVisible.value = true
+    dialogFlag.value = true
+    orderForm.sampleId = convertString(row.sampleId)
 }
 
 const orderDialogClose = () =>{
     orderVisible.value = false
+    orderForm.sampleId = ''
+    orderForm.logisticsNo = ''
+    orderForm.orderNo = ''
 }
 
-
+// 修改提交
 const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!', fields)
+  let orderParam:ISampleOrderReq = {
+    sampleId: orderForm.sampleId
+  }
+
+
+  if (dialogFlag.value === false) {
+    if (orderForm.orderNo === ''){
+        $baseMessage("1688订单号不能为空！","error","hey")
+        return
+    }
+    orderParam.order1688No = orderForm.orderNo
+  }else {
+    if (orderForm.logisticsNo === ''){
+        $baseMessage("物流单号不能为空！","error","hey")
+        return
+    }
+    orderParam.logisticsNo = orderForm.logisticsNo
+
+  }
+
+  $baseConfirm(`确定要修改${dialogFlag.value === true ?'物流单号':'1688订单号'}`,"系统提示", async ()=>{
+    const {data} = await updateSampleOrder({...orderParam})
+    if(data === true){
+        if (orderForm.orderNo !== ''){
+            $baseMessage("1688订单号修改成功！","success","hey")
+            const index = sampleTableList.value.findIndex((item:ISampleTrack) => item.sampleId === parseInt(orderForm.sampleId));
+            if (index !== -1) {
+                sampleTableList.value[index].orderNo1688 = orderForm.orderNo;
+            }
+            orderDialogClose()
+            return
+        }
+
+        if (orderForm.logisticsNo !== ''){
+            $baseMessage("物流单号修改成功！","success","hey")
+            const index = sampleTableList.value.findIndex((item:ISampleTrack) => item.sampleId === parseInt(orderForm.sampleId));
+            if (index !== -1) {
+                sampleTableList.value[index].logisticsNo = orderForm.logisticsNo;
+            }
+            orderDialogClose()
+            return
+        }
+
     }
   })
+
 }
+
 
 </script>

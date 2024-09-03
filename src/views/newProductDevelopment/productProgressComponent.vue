@@ -15,6 +15,8 @@
             @update:priviewListValue="setPreviewList"
         />
 
+        <vab-trial-calculation :progress-id="route.query.progressId"/>
+
         <vab-cost-accounting 
             :progress-id="route.query.progressId"
             @update:imagePreviewVisibale="updateUploadPriviewVisible"

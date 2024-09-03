@@ -51,49 +51,49 @@ export interface IProgressProdcutComponent {
  */
 export interface IProgressSample {
   // id
-  id: string
+  id?: string|null
   // 站点
-  site: string
+  site?: string
   // 外币币种
-  currencyType: string
+  currencyType?: string
   // 汇率
-  foreignExchange: string
+  foreignExchange?: string
   // 产品描述
-  desc: string
+  desc?: string
   // 长
-  length: string
+  length?: string
   // 宽
-  width: string
+  width?: string
   // 高
-  height: string
+  height?: string
   // 实际总成本
-  totalCost: number
+  totalCost?: number | null
   // 重量
-  weight: string
+  weight?: string
   // 尾程
-  lastMile: string
+  lastMile?: string
   // 头程
-  firstMile: string
+  firstMile?: string
   // 打包
-  packaging: string
+  packaging?: string
   // 头程渠道
-  firstMileChannel: string
+  firstMileChannel?: string
   // 售价
-  sellingPrice: string
+  sellingPrice?: string
   // 毛利率
-  grossMarginRate: string
+  grossMarginRate?: string
   // ROI
-  roi: string
+  roi?: string
   // 重量系数
-  weightCoefficient: string
+  weightCoefficient?: string
   // 体积系数
-  volumeCoefficient: string
+  volumeCoefficient?: string
   // 关税
-  tariff: string
+  tariff?: string
   // 平台佣金
-  platformCommission: string
+  platformCommission?: string
   // 仓储费
-  storageFee: string
+  storageFee?: string
 }
 
 /**
@@ -164,8 +164,6 @@ export interface ISampleTrack {
   componentImg: string
   // 零件名称
   componentName: string
-  // 产品名
-  productName: string
   // 创建时间
   createTime: string
   // 签收时间
@@ -311,4 +309,126 @@ export interface ICostAccountingDeleteReq {
 // 新品进度-成本核算-删除响应
 export interface ICostAccountingDeleteResp {
   data?: boolean
+}
+
+// 新品进度-零件清单-手动签收请求
+export interface ISampleReceiptReq {
+  sampleId: number
+}
+
+// 新品进度-零件清单-手动签收响应
+export interface ISampleReceiptResp {
+  data: ISampleReceipt
+}
+
+export interface ISampleReceipt {
+  sampleId: string
+  receiptDate: string
+}
+
+// 新品进度-零件清单-样品单号修改请求
+export interface ISampleOrderReq {
+  sampleId: string
+  order1688No?: string | null
+  logisticsNo?: string | null
+}
+
+// 新品进度-零件清单-样品单号修改响应
+export interface ISampleOrderResp {
+  data: boolean
+}
+
+// 新品进度-零件清单-拿样零件列表请求参数
+export interface ISampleComponentListReq {
+  progressId: number
+}
+
+// 新品进度-零件清单-拿样零件列表请求参数
+export interface ISampleComponentListResp {
+  data: ISampleItem[]
+}
+
+export interface ISampleItem {
+  id?: number | null
+  label?: string | null
+}
+
+// 新品进度-零件清单-拿样供应商列表请求参数
+export interface ISampleSuppliserListReq {
+  componentId: number
+}
+
+// 新品进度-零件清单-拿样供应商列表请求参数
+export interface ISampleSuppliserListResp {
+  data: ISampleItem[]
+}
+
+// 新品进度-零件清单-添加拿样请求
+export interface ISampleAddReq {
+  progressId: string
+  componentId?: number
+  componentName?: string
+  suppliserId?: number
+  supplierName?: string | null
+  orderNo1688?: string | null
+  logisticsNo?: string | null
+  price?: string
+  bulkGoodsReturnable?: string
+  remark?: string
+}
+
+// 新品进度-零件清单-添加拿样响应
+export interface ISampleAddResp {
+  data: boolean
+}
+
+// 拿样成本试算清单-添加请求
+export interface ITrialCalculationReq {
+  progressId: string
+}
+
+// 拿样成本试算清单-添加响应请求
+export interface ITrialCalculationAddResp {
+  data: number
+}
+
+// 拿样成本试算清单-添加响应请求
+export interface ITrialCalculationGetResp {
+  data: ITrialCalculation
+}
+
+export interface ITrialCalculation{
+  id?:number
+  progressId?:number
+  site?:string
+  currencyType?:string
+  foreignExchange?:string
+  desc?:string
+  price?:string
+  length?:string
+  width?:string
+  height?:string
+  weight?:string
+  lastMile?:string
+  firstMile?:string
+  packaging?:string
+  firstMileChannel?:string
+  sellingPrice?:string
+  grossMarginRate?:string
+  roi?:string
+  weightCoefficient?:string
+  volumeCoefficient?:string
+  tariff?:string
+  platformCommission?:string
+}
+
+export interface ITrialCalculationResp{
+  data:boolean
+}
+
+
+
+export interface ITrialCalculationSave{
+  id?:number
+  progressId?:number
 }

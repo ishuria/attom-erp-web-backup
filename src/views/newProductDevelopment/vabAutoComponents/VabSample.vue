@@ -4,7 +4,7 @@
         title="拿样"
         v-model="sampleVisible"
         width="25%"
-        :before-close="props.closeDialog"
+        :before-close="childCloseDialog"
     >
 
         <el-form 
@@ -15,30 +15,34 @@
             style="max-width: 600px"
             
         >
-            <el-form-item label="零件名" prop="componentId">
+            <el-form-item label="零件名" prop="componentInfo">
                 <el-select 
-                    v-model="sampleForm.componentId" 
+                    v-model="sampleForm.componentInfo!" 
+                    value-key="id"
                     placeholder="请选择拿样零件或输入拿样零件"
                     filterable
                     clearable
                     allow-create
                     :reserve-keyword = "false"
+                    @change="componentSelectChange"
+                    
                 >
-                    <el-option label="Zone one" value="shanghai" />
+                    <el-option v-for="val,idx in componentList" :label="val.label!" :value="val" :key="val.id!"/>
                 </el-select>
             </el-form-item>
-            <el-form-item label="供应商" prop="suppliser">
+            <el-form-item label="供应商" prop="suppliserInfo">
                 
                 <el-select 
-                    v-model="sampleForm.suppliser" 
+                    v-model="sampleForm.suppliserInfo!" 
+                    value-key="id"
                     placeholder="请选择供应商或输入供应商"
                     filterable
                     clearable
                     allow-create
                     :reserve-keyword = "false"
+                    :disabled="suppliserFlag"
                 >
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
+                    <el-option v-for="val,idx in supplisertList" :label="val.label!" :value="val" :key="val.id!"/>
                 </el-select>
 
             </el-form-item>
@@ -67,7 +71,7 @@
 
         <template #footer>
             <span>
-                <el-button @click="props.closeDialog">取消</el-button>
+                <el-button @click="childCloseDialog">取消</el-button>
                 <el-button type="primary" @click="submitForm(sampleFormRef)">确认</el-button>
             </span>
         </template>
@@ -78,7 +82,8 @@
 
 <script lang="ts" setup>
 import { FormInstance, FormRules } from 'element-plus';
-
+import {getComponentInfoList,getSuppliserInfoList,addSample} from '/@/api/devlocal/progressSample'
+import {ISampleAddReq, ISampleItem,} from '/@/type/progress/sampleAndComponentType'
 
 defineComponent({
     name:"VabSample"
@@ -87,16 +92,20 @@ defineComponent({
 const props = defineProps<{
     visible:boolean
     progressId:string
-    closeDialog: (done: any) => void
+    closeDialog: () => void
+    refreshComponent: () => void
 }>();
 
 const sampleFormRef = ref<FormInstance>()
+const componentList = ref<ISampleItem[]>([])
+const supplisertList = ref<ISampleItem[]>([])
+const suppliserFlag = ref<boolean>(true)
+
 
 interface AddSampleForm {
-
   progressId: string
-  componentId: string
-  suppliser: string
+  componentInfo?:ISampleItem | null
+  suppliserInfo?: ISampleItem | null
   orderNo1688: string
   logisticsNo: string
   price: string
@@ -104,15 +113,14 @@ interface AddSampleForm {
   remark: string
 
 }
-
 const sampleVisible = ref<boolean>(false)
 const progressId = ref<string>()
 
 // 拿样form
-const sampleForm = reactive<AddSampleForm>({
+let sampleForm = reactive<AddSampleForm>({
   progressId: props.progressId,
-  componentId:'',
-  suppliser:'',
+  componentInfo:null,
+  suppliserInfo:null,
   orderNo1688:'',
   logisticsNo:'',
   price:'',
@@ -128,14 +136,14 @@ const rules = reactive<FormRules<AddSampleForm>>({
          trigger: 'change' 
     },
   ],
-  componentId: [
+  componentInfo: [
     {
       required: true,
-      message: '零件不能为空！',
+      message: '零件名不能为空！',
       trigger: 'change',
     },
   ],
-  suppliser: [
+  suppliserInfo: [
     {
       required: true,
       message: '供应商不能为空!',
@@ -154,9 +162,44 @@ const rules = reactive<FormRules<AddSampleForm>>({
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
-      console.log('submit!')
+        console.log(sampleForm);
+        let params:ISampleAddReq = {
+            progressId: sampleForm.progressId,
+            orderNo1688: sampleForm.orderNo1688,
+            price: sampleForm.price,
+            bulkGoodsReturnable: sampleForm.bulkGoodsReturnable,
+            remark:sampleForm.remark
+        }
+
+        // 处理零件
+        if (sampleForm && typeof sampleForm.componentInfo ==='object'){
+            params.componentId = sampleForm.componentInfo?.id!
+            params.componentName = sampleForm.componentInfo?.label!
+        }else{
+            params.componentId = -1
+            params.componentName = sampleForm.componentInfo as string
+        }
+
+        // 处理供应商
+        if (sampleForm && typeof sampleForm.suppliserInfo ==='object'){
+            params.suppliserId = sampleForm.suppliserInfo?.id!
+            params.supplierName = sampleForm.suppliserInfo?.label!
+        }else{
+            params.suppliserId = -1
+            params.supplierName = sampleForm.suppliserInfo as string
+        }
+        
+       const {data} = await addSample({...params})
+       if (data === true){
+            $baseMessage("新增拿样零件成功","success","hey")
+            childCloseDialog()
+            if(params.componentId === -1 || params.suppliserId === -1){
+                props.refreshComponent()
+            }
+       }
+
     } else {
       console.log('error submit!', fields)
     }
@@ -167,6 +210,26 @@ watchEffect(()=>{
     sampleVisible.value = props.visible
     progressId.value = props.progressId
     
+})
+
+// 零件名selct切换
+const componentSelectChange = async (value: ISampleItem) =>{
+    suppliserFlag.value = false
+    
+    if (value && typeof value === 'object'){
+        const {data} = await getSuppliserInfoList({componentId:value.id!})
+        supplisertList.value = data
+    }
+}
+
+const childCloseDialog = async () =>{
+    sampleFormRef.value!.resetFields()
+    props.closeDialog()
+}
+
+onMounted(async ()=>{
+    const {data} = await getComponentInfoList({progressId:parseInt(props.progressId)})
+    componentList.value = data
 })
 
 </script>
