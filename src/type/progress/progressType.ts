@@ -28,7 +28,7 @@ export interface IProgressShared {
 export interface IIdNo {
     idNo: number
 }
-export interface IProgressGetSuppliserList {
+export interface IComponentId {
     componentId: number
 }
 /**
@@ -401,10 +401,10 @@ export interface IGetByIdQueryEvaluation {
 }
 // 获取样品进度返回类型
 export interface ISampleListResp {
-    data: [
+    data: {
         total: number,
         list: ISampleList[]
-    ]
+    }
 }
 // 样品进度类型
 export interface ISampleList {
@@ -457,10 +457,10 @@ export interface ISampleList {
 }
 // 新品进度-开模进度列表返回类型
 export interface IProgressMoldListResp {
-    data: [
+    data: {
         total: number,
         list: IProgressMoldList[]
-    ]
+    }
 }
 export interface IProgressMoldList {
     componentName: string // 零件名
@@ -478,9 +478,11 @@ export interface IProgressMoldList {
     createTime: string //创建时间 提交日期
 }
 export interface IProgressMoldUpdateResp {
-    moldId: number
-    status: number
-    payPrice: number
+    data: {
+        moldId: number
+        status: number
+        payPrice: number
+    }
 }
 export interface IProgressCostAccountingUpdateResp {
     data: boolean

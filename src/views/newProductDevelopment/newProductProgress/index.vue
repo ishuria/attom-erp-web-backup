@@ -1,4 +1,4 @@
-<template>
+handleSubmit<template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="进行中" name="0">
@@ -164,7 +164,7 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="addProgressMold">开模申请</el-link>
+                      <el-link type="primary" :underline="false" @click="addProgressMold(row.progressId)">开模申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false">订大货申请</el-link>
@@ -386,77 +386,83 @@
       v-model="moldVisible" 
       :close-on-click-modal="false" 
       title="开模申请" 
-      width="650"
+      width="480"
+      class="moldDialog"
+      :before-close="handlerCloseDialog"
     >
-      <div>
-        <el-row :gutter="20">
-          <el-col
-            :lg="{ span: 12, offset: 6 }"
-            :md="{ span: 20, offset: 2 }"
-            :sm="{ span: 20, offset: 2 }"
-            :xl="{ span: 12, offset: 6 }"
-            :xs="24"
-          >
-            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120px" :model="form">
-              
-              <el-form-item label="零件名" prop="componentName">
-                <el-select v-model="form.region" placeholder="" >
-                  <el-option label="1" value="shanghai" />
-                  <el-option label="2" value="beijing" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="供应商全名" prop="supplierName">
-                <el-select v-model="form.region" placeholder="">
-                  <el-option label="1" value="shanghai" />
-                  <el-option label="2" value="beijing" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="模具费(不含税)" prop="excludingTax">
-                <el-input v-model="form.name" clearable />
-              </el-form-item>
-              <el-form-item label="普票加税点" prop="standardInvoice">
-                <el-input v-model="form.name" clearable placeholder="例子:13个点则填13" />
-              </el-form-item>
-              <el-form-item label="专票加税点" prop="specialInvoice">
-                <el-input v-model="form.name" clearable placeholder="例子:13个点则填13" />
-              </el-form-item>
-              <el-form-item label="预估采购货值" prop="purchaseTotal">
-                <el-input v-model="form.name" clearable />
-              </el-form-item>
-              <el-form-item label="审核人" prop="audit">
-                <el-input v-model="form.name" clearable placeholder="王豪俊" disabled/>
-              </el-form-item>
-            </el-form>
-          </el-col>
-        </el-row>
-      </div>
-
+      <el-divider style="margin-top: 0;"/>
+      <el-form ref="formRef" class="demo-form" label-position="right" label-width="110px" :model="form" style="max-width: 300px; margin: 0 auto;">
+        <el-form-item label="零件名" prop="componentName">
+          <el-select v-model="form.componentName" placeholder="" @change="handleComponentChange" clearable>
+            <el-option 
+              v-for="item in componentOptions" 
+              :key="item.id" 
+              :label="item.label" 
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="供应商全名" prop="supplierName">
+          <el-select v-model="form.supplierName" placeholder="" @change="handleSupplierChange" clearable :disabled="supplierDisabled">
+            <el-option 
+              v-for="item in supplierOptions" 
+              :key="item.id" 
+              :label="item.label" 
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="模具费(不含税)" prop="excludingTax">
+          <el-input v-model="form.excludingTax" clearable />
+        </el-form-item>
+        <el-form-item label="普票加税点" prop="standardInvoice">
+          <el-input v-model="form.standardInvoice" clearable placeholder="例子：13个点则填13" />
+        </el-form-item>
+        <el-form-item label="专票加税点" prop="specialInvoice">
+          <el-input v-model="form.specialInvoice" clearable placeholder="例子：13个点则填13" />
+        </el-form-item>
+        <el-form-item label="预估采购货值" prop="purchaseTotal">
+          <el-input v-model="form.purchaseTotal" clearable />
+        </el-form-item>
+        <el-form-item label="审核人" prop="audit">
+          <!-- <el-input v-model="form.name" clearable placeholder="王豪俊" disabled/> -->
+          <el-select v-model="form.audit" placeholder="" clearable>
+            <el-option label="王豪俊" value="王豪俊"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
       <template #footer>
         <span>
-          <el-button >退出</el-button>
+          <el-button @click="handleCancle">退出</el-button>
           <el-button type="primary" @click="handleSubmit">提交</el-button>
         </span>
       </template>
     </el-dialog>
+    <!-- 样品进度 -->
+    <sampleProgress 
+      :sampleProgressVisible="sampleProgressDialog"
+      @update:sampleProgressVisible="sampleProgressDialog = $event"
+    />
+    <!-- 开模进度 -->
+    <moldProgress 
+      :moldProgressVisible="moldProgressDialog"
+      @update:moldProgressVisible="moldProgressDialog = $event"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { handleMatched, handleTabs } from '/@/utils/routes'
 import { ref } from 'vue'
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import {
-  indexColumns,
-} from './indexColumns'
-
-import { IProgressQueryReq, IProgress, IImageQueryReq, IProgressShared } from '/@/type/progress/progressType'
+import { IProgressQueryReq, IProgress, IProgressShared } from '/@/type/progress/progressType'
 import {
   deleteImage,
   getList,
   getProgressMoldList,
-  getProgressSampleList,
   getByIdQueryEvaluation,
   updateProgressImgSort,
   updateProgressManage,
@@ -464,16 +470,18 @@ import {
   uploadFile,
   getProgressSharelist,
   copyProgress,
+  getProgressComponentList,
+  getProgressSuppliserList,
 } from '/@/api/devlocal/progress'
 import type { UploadFile, TabsPaneContext, TableInstance } from 'element-plus'
-
-import { type SortableEvent, VueDraggable, DraggableEvent } from 'vue-draggable-plus'
+import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
 import debounce from 'lodash/debounce'
-import { getRootElement, getSpecificChildren, getDataAttribute } from '/@/utils/nodeUtils'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from './wangEditor.vue'
-import { getLocalStorage, setLocalStorage } from '~/src/utils/localStorage'
-import { style } from '@logicflow/extension/es/bpmn-elements/presets/icons'
 import { convertString } from '~/src/utils/stringUtils'
+import sampleProgress from './sampleProgress.vue'
+import moldProgress from './moldProgress.vue'
+
 
 defineOptions({
   name: 'ProgressTable',
@@ -547,21 +555,29 @@ const shareUserList = ref<IProgressShared[]>([])
 // 开模申请
 const moldVisible = ref<boolean>(false)
 // 开模申请数据表单
-const form = ref<any>({
+let form = ref<any>({
   componentName: '',
   supplierName: '',
-  progressId: 1,
-  productName: "productName_yj3br",
-  excludingTax: 1,
-  standardInvoice: 1,
-  specialInvoice: 1,
-  purchaseTotal: 1,
-  audit: "audit_907nn"
+  progressId: null,
+  productName: "",
+  excludingTax: null,
+  standardInvoice: null,
+  specialInvoice: null,
+  purchaseTotal: null,
+  audit: ""
 })
-
-
+// 零件列表
+const componentOptions = ref<any>([])
+// 供应商列表
+const supplierOptions = ref<any>([])
+// 控制供应商列表是否可选择
+const supplierDisabled = ref<boolean>(true)
+// 控制样品进度是否显示
+const sampleProgressDialog = ref<boolean>(false)
+// 控制开模进度是否显示
+const moldProgressDialog = ref<boolean>(false)
 const handlerCloseDialog = () => {
-
+  moldVisible.value = false
 }
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   if (tab.props.name === '0')  queryForm.status = 0
@@ -856,36 +872,65 @@ const handleSampleCostting = (row:IProgress) =>{
     },
   })
 }
-
+// 样品进度
 const getSampleProgress = async () => {
-  const { data } = await getProgressSampleList({
-    keyWord: '',
-    pageNo: 1,
-    pageSize:20
-  })
-  console.log(data);
+  sampleProgressDialog.value = true
 }
 const getMoldProgress = async () => {
-  const { data } = await getProgressMoldList({
-    keyWord: '',
-    pageNo: 1,
-    pageSize:20
-  })
-  console.log(data);
+  moldProgressDialog.value = true
 }
 
 // 开模申请
-const addProgressMold = () => {
+const addProgressMold = async (progressId: number) => {
   moldVisible.value = true
+  const { data } = await getProgressComponentList({ progressId: 6 })
+  componentOptions.value = data
+}
+const handleComponentChange = async (value: any) => {
+  if (value) {
+    supplierDisabled.value = false
+  } else if (!value) {
+    supplierDisabled.value = true
+  }
+  const { data } = await getProgressSuppliserList({ componentId: value })
+  supplierOptions.value = data
+  const item = componentOptions.value.find((i: any) => i.id === value)
+  form.value.componentName = item.label
+}
+const handleSupplierChange = (value: any) => {
+  const item = supplierOptions.value.find((i: any) => i.id === value)
+  form.value.supplierName = item.label
+}
+const handleCancle = () => {
+  moldVisible.value = false
 }
 const handleSubmit = async () => {
-  const { data } = await updateProgressMoldAdd({
-    ...form.value,
-    progressId: progressList.value[tableClickIdx.value].progressId,
-    productName: progressList.value[tableClickIdx.value].product,
-  })
-  console.log(data)
+  try {
+    const { data } = await updateProgressMoldAdd({
+      ...form.value,
+      progressId: progressList.value[tableClickIdx.value].progressId,
+      productName: progressList.value[tableClickIdx.value].product,
+    })
+    if (data === true) {
+      $baseMessage("开模申请信息提交成功!","success","hey")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+  moldVisible.value = false
+  form.value = {
+    componentName: '',
+    supplierName: '',
+    progressId: null,
+    productName: "",
+    excludingTax: null,
+    standardInvoice: null,
+    specialInvoice: null,
+    purchaseTotal: null,
+    audit: ""
+  }
 }
+
 // 订大货申请
 // 复制
 const handleCopyProgress = async (progressId: number) => {
@@ -1002,5 +1047,10 @@ onBeforeMount(() => {
   opacity: 0.5;
   background: #c8ebfb;
 }
-
+// 开模申请
+:deep(.moldDialog .el-dialog__body) { 
+  padding-top: 0;
+}
+   
+  
 </style>

@@ -22,7 +22,6 @@ import {
   IProgressSampleUpdate, 
   IProgressId, 
   IGetByIdQueryEvaluation, 
-  IProgressGetSuppliserList, 
   ISupplierId, 
   ISampleId, 
   IIdNo, 
@@ -34,7 +33,8 @@ import {
   IAccountingId,
   IProgressCostAccountingCopyResp,
   IProgressCostAccountingUploadResp,
-  IShareListResp} from '/@/type/progress/progressType'
+  IShareListResp,
+  IComponentId} from '/@/type/progress/progressType'
 
 /**
  * 新品进度-获取新品进度管理列表
@@ -100,7 +100,26 @@ export function getProgressMoldList(params?: ISampleListQueryReq): Promise<IProg
     params,
   })
 }
-
+/**
+ * 零件清单-下拉零件列表
+ */
+export function getProgressComponentList(params?: IProgressId) {
+  return request({
+    url: `${BASE_API}/progress/get/componentList`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 零件清单-下拉供应商信息列表
+ */
+export function getProgressSuppliserList(params?: IComponentId) {
+  return request({
+    url: `${BASE_API}/progress/get/suppliserList`,
+    method: 'get',
+    params,
+  })
+}
 
 /**
  * 图片上传请求
