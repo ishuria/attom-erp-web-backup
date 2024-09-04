@@ -3,7 +3,7 @@
         v-model="dflag" 
         :close-on-click-modal="false" 
         title="开模进度" 
-        width="70%"
+        width="80%"
         class="moldDialog"
         style="margin: 10vh auto; height: 80vh; display: flex; flex-direction: column;"
         :before-close="handlerCloseDialog"
@@ -14,7 +14,7 @@
                 <vab-query-form-right-panel :span="24">
                     <el-form inline :model="queryForm" @submit.prevent>
                         <el-form-item>
-                            <el-input v-model="queryForm.productKeyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                            <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
                         </el-form-item>
                         <el-form-item>
                             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
@@ -28,7 +28,7 @@
                 ref="tableRef" 
                 v-loading="listLoading" 
                 border stripe 
-                :data="sampleList" 
+                :data="moldList" 
                 :header-cell-style="{ 'text-align': 'center' }"
             >
                 <el-table-column align="center" label="提交的信息">
@@ -65,7 +65,7 @@
                             模具费<br>（普票税点）
                         </template>
                         <template #default="{ row }">
-                            {{ row.standardInvoice }}
+                            {{ row.standardInvoice }}%
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="模具费（专票税点）" min-width="110">
@@ -73,7 +73,7 @@
                             模具费<br>（专票税点）
                         </template>
                         <template #default="{ row }">
-                            {{ row.specialInvoice }}
+                            {{ row.specialInvoice }}%
                         </template>
                     </el-table-column>
                     <el-table-column align="center" label="预估总采购货值（未税）" min-width="130">
@@ -117,10 +117,10 @@
                             {{ row.audit }}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" fixed="right" label="操作" width="200">
+                    <el-table-column align="center" fixed="right" label="操作" width="180">
                         <template #default="{ row }">
-                            <el-button text type="primary">付款申请</el-button>
-                            <el-button text type="primary" @click="handleAudit(row)">审批</el-button>
+                            <el-button text type="primary" :disabled="row.status !== 1">付款申请</el-button>
+                            <el-button text type="primary" @click="handleAudit(row)" :disabled="row.status === 1 || row.status === 2">审批</el-button>
                         </template>
                     </el-table-column>
                 </el-table-column>
@@ -145,24 +145,20 @@
         v-model="auditVisible"
         :close-on-click-modal="false" 
         title="审批" 
-        width="50%"
+        width="30%"
         class="moldDialog"
     >
         <el-divider style="margin-top: 0;"/>
-        <el-form ref="formRef" class="demo-form" label-position="right" label-width="110px" :model="form" style="max-width: 400px; margin: 0 auto;">
+        <el-form ref="formRef" class="demo-form" label-position="right" label-width="110px" :model="form" style="max-width: 300px; margin: 0 auto;">
             <el-form-item label="开模费处理方式" prop="dealMethod">
                 <el-select v-model="form.dealMethod" placeholder="" clearable>
-                    <el-option label="不含在PO" value=0></el-option>
-                    <el-option label="含在PO" value=1></el-option>
-                    <el-option label="含在其他PO" value=2></el-option>
+                    <el-option v-for="option in dealMethodOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="开票类型" prop="invoiceType">
-            <el-select v-model="form.invoiceType" placeholder="" clearable>
-                <el-option label="专票" value=0></el-option>
-                <el-option label="普票" value=1></el-option>
-                <el-option label="不开票" value=2></el-option>
-            </el-select>
+            <el-form-item label="开票类型" prop="type">
+                <el-select v-model="form.type" placeholder="" clearable>
+                    <el-option v-for="option in invoiceTypeOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
+                </el-select>
             </el-form-item>
         </el-form>
        <template #footer>
@@ -176,9 +172,9 @@
 
 <script lang="ts" setup>
 import { getProgressMoldList, getProgressSampleList, updateProgressMold } from '~/src/api/devlocal/progress';
-import { ISampleList } from '~/src/type/progress/progressType';
+import { IProgressMoldList, ISampleList, ISampleListQueryReq } from '~/src/type/progress/progressType';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import type { TableInstance } from 'element-plus'
+import type { TableInstance, FormInstance } from 'element-plus'
 
 defineOptions({
     name: 'moldProgressTable'
@@ -194,7 +190,7 @@ watchEffect(()=>{
 // 总记录数
 const total = ref<number>(0)
 // 分页查询表单
-const queryForm = reactive<any>({
+const queryForm = reactive<ISampleListQueryReq>({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
@@ -202,16 +198,31 @@ const queryForm = reactive<any>({
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 // 样品进度数据
-const sampleList = ref<ISampleList[]>([])
+const moldList = ref<IProgressMoldList[]>([])
 const tableRef = ref<TableInstance>()
 // 审批框显示状态
 const auditVisible = ref<boolean>(false)
 // 审批申请表单
 let form = ref<any>({
+  moldId: null,
   dealMethod: null,
-  invoiceType: null,
+  type: null,
 })
+const dealMethodOptions = [
+  { label: '不含在PO', value: 0 },
+  { label: '含在PO', value: 1 },
+  { label: '含在其他PO', value: 2 },
+];
+const invoiceTypeOptions = [
+  { label: '专票', value: 0 },
+  { label: '普票', value: 1 },
+  { label: '不开票', value: 2 },
+];
 const emit = defineEmits(['update:moldProgressVisible'])
+const formRef = ref<FormInstance>()
+const resetForm = () => {
+  formRef.value?.resetFields()
+}
 const handlerCloseDialog = () => {
     dflag.value = false
     emit('update:moldProgressVisible', dflag.value);
@@ -251,29 +262,34 @@ const generateInvoiceType = (value: number) => {
         return "不开票"
     }
 }
+// 点击审批
 const handleAudit = (row: any) => {
     auditVisible.value = true
-    form.value.dealMethod = generateDealMethod(row.dealMethod)
-    form.value.invoiceType = generateInvoiceType(row.invoiceType)
+    form.value.moldId = row.moldId
+    form.value.dealMethod = row.dealMethod
+    form.value.invoiceType = row.invoiceType
 }
+// 审批不通过
 const handleFailed = () => {
     auditVisible.value = false
+    resetForm()
 }
+// 审批通过
 const handleSuccess = async () => {
     auditVisible.value = false
-    const { data } = await updateProgressMold({
-        moldId: 1,
-        dealMethod: form.value.dealMethod,
-        type: form.value.invoiceType
-    })
+    const { data } = await updateProgressMold(form.value)
+    resetForm()
+    
 }
+
 /**
  * 获取开模进度数据
  */
 const fetchData = async () => {
   listLoading.value = true
+//   console.log(queryForm)
   const { data } = await getProgressMoldList(queryForm)
-  sampleList.value = data.list
+  moldList.value = data.list
   total.value = data.total
   listLoading.value = false
 }
@@ -325,7 +341,7 @@ onBeforeMount(() => {
   max-height: 50px !important;
 }
 .status-pending {
-  color: grey;
+  color: rgb(192, 192, 192, 1);
 }
 .status-in {
   color: orange;

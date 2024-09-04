@@ -305,7 +305,7 @@ export interface ISampleId {
 }
 // 根据id查询新款评估信息返回类型
 export interface IGetByIdQueryEvaluationResp {
-    data: IGetByIdQueryEvaluation[]
+    data: IGetByIdQueryEvaluation
 }
 // 新款评估信息类型
 export interface IGetByIdQueryEvaluation {
@@ -463,6 +463,7 @@ export interface IProgressMoldListResp {
     }
 }
 export interface IProgressMoldList {
+    moldId: number // 开模id
     componentName: string // 零件名
     supplierName: string // 供应商全名
     productName: string // 产品名
@@ -490,4 +491,11 @@ export interface IProgressCostAccountingUpdateResp {
 // 成本核算-成本核算推进复制返回类型
 export interface IProgressCostAccountingCopyResp {
     data: boolean
+}
+// 样品进度-手动签收返回类型
+export interface IProgressSampleReceiptResp {
+    data: {
+        sampleId: number
+        receiptDate: string
+    }
 }

@@ -3,8 +3,6 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import { 
-  IDelImgQueryReq, 
-  IImageQueryReq, 
   IProgressQueryReq, 
   IProgressImgSort, 
   IProgress, 
@@ -12,29 +10,17 @@ import {
   ISampleListQueryReq, 
   IProgressMoldAddQueryReq, 
   IProgressMoldUpdateQueryReq, 
-  IProgressCostAccountingAdd, 
-  IProgressCostAccountingUpdate, 
-  IProgressCostAccountingUpload, 
-  IProgressComponentList, 
-  IProgressComponentUpdate, 
-  IProgressComponentAndSuppliserCopy, 
-  IProgressAddSample, 
   IProgressSampleUpdate, 
   IProgressId, 
-  IGetByIdQueryEvaluation, 
-  ISupplierId, 
   ISampleId, 
   IIdNo, 
   IGetByIdQueryEvaluationResp, 
   ISampleListResp, 
   IProgressMoldListResp, 
   IProgressMoldUpdateResp, 
-  IProgressCostAccountingUpdateResp, 
-  IAccountingId,
-  IProgressCostAccountingCopyResp,
-  IProgressCostAccountingUploadResp,
   IShareListResp,
-  IComponentId} from '/@/type/progress/progressType'
+  IComponentId,
+  IProgressSampleReceiptResp} from '/@/type/progress/progressType'
 
 /**
  * 新品进度-获取新品进度管理列表
@@ -166,12 +152,11 @@ export function updateProgressManage(data?: IProgress) {
 /**
  * 新品进度-复制
  */
-export function copyProgress(data?: IProgressId) {
+export function copyProgress(params?: IProgressId) {
   return request({
     url: `${BASE_API}/progress/copy`,
-    headers: { 'content-type': 'multipart/form-data' },
     method: 'post',
-    data,
+    params,
   })
 }
 /**
@@ -179,7 +164,7 @@ export function copyProgress(data?: IProgressId) {
  */
 export function updateProgressSharelist(data?: ISharelistQueryReq) {
   return request({
-    url: `${BASE_API}/progress/share`,
+    url: `${BASE_API}/progress/update/share`,
     method: 'post',
     data,
   })
@@ -204,8 +189,26 @@ export function updateProgressMold(data?: IProgressMoldUpdateQueryReq): Promise<
     data,
   })
 }
-
-
+/**
+ * 样品进度-手动签收
+ */
+export function ProgressSampleReceipt(params?: ISampleId): Promise<IProgressSampleReceiptResp> {
+  return request({
+    url: `${BASE_API}/progress/sample/receipt`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 样品进度-修改1688单号or物流单号
+ */
+export function ProgressSampleUpdate(data?: IProgressSampleUpdate) {
+  return request({
+    url: `${BASE_API}/progress/sample/update`,
+    method: 'post',
+    data,
+  })
+}
 
 
 

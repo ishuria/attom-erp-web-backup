@@ -6,7 +6,6 @@
         title="样品进度" 
         width="70%"
         class="moldDialog"
-        style="margin: 10vh auto; height: 80vh; display: flex; flex-direction: column;"
         :before-close="handlerCloseDialog"
     >
         <el-divider style="margin-top: 0; margin-bottom: 20px"/>
@@ -15,7 +14,7 @@
                 <vab-query-form-right-panel :span="24">
                     <el-form inline :model="queryForm" @submit.prevent>
                         <el-form-item>
-                            <el-input v-model="queryForm.productKeyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                            <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
                         </el-form-item>
                         <el-form-item>
                             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
@@ -91,7 +90,7 @@
                 <el-table-column align="center" fixed="right" label="操作" width="160">
                     <template #default="{ row }">
                         <el-dropdown >
-                            <el-button text type="primary">
+                            <el-button text type="primary" @click="handleSampleReceipt(row.sampleId)">
                             手动签收
                             <el-icon class="el-icon--right">
                                 <arrow-down />
@@ -100,10 +99,10 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item @click="">
-                                        <el-link type="primary" :underline="false">1688修改</el-link>
+                                        <el-link type="primary" :underline="false" @click="handleSampleUpdate(row)">1688修改</el-link>
                                     </el-dropdown-item>
                                     <el-dropdown-item @click="">
-                                        <el-link type="primary" :underline="false">物流</el-link>
+                                        <el-link type="primary" :underline="false" @click="handleSampleUpdate(row)">物流</el-link>
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
                             </template>
@@ -127,7 +126,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getProgressSampleList } from '~/src/api/devlocal/progress';
+import { getProgressSampleList, ProgressSampleReceipt, ProgressSampleUpdate } from '~/src/api/devlocal/progress';
 import { ISampleList } from '~/src/type/progress/progressType';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
@@ -166,20 +165,31 @@ const formattedProgressLog = (str: string) => {
     .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
     .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
-const isFullscreen = ref<boolean>(false)
-const clickFullScreen = () => {
-  isFullscreen.value = !isFullscreen.value
-  isFullscreen.value ? enter() : exit()
+// const isFullscreen = ref<boolean>(false)
+// const clickFullScreen = () => {
+//   isFullscreen.value = !isFullscreen.value
+//   isFullscreen.value ? enter() : exit()
+// }
+// const { exit, enter, isFullscreen: _isFullscreen } = useFullscreen()
+// watch(
+//   _isFullscreen,
+//   () => {
+//     if (_isFullscreen.value) isFullscreen.value = true
+//     else isFullscreen.value = false
+//   },
+//   { immediate: true }
+// )
+
+const handleSampleReceipt = async (sampleId: number) => {
+    const { data } = await ProgressSampleReceipt({ sampleId })
 }
-const { exit, enter, isFullscreen: _isFullscreen } = useFullscreen()
-watch(
-  _isFullscreen,
-  () => {
-    if (_isFullscreen.value) isFullscreen.value = true
-    else isFullscreen.value = false
-  },
-  { immediate: true }
-)
+const handleSampleUpdate = async (row: any) => {
+    const { data } = await ProgressSampleUpdate({
+        sampleId: row.sampleId,
+        order1688No: row.orderNo1688,
+        logisticsNo: row.logisticsNo
+    })
+}
 /**
  * 获取样品进度数据
  */
@@ -226,9 +236,9 @@ onBeforeMount(() => {
 #table-height-container {
     display: flex;
     flex-direction: column;
-    max-height: calc(80vh - 100px);
-    height: calc(80vh - 100px);
-
+    max-height: calc(80vh - 120px);
+    height: calc(80vh - 120px);
+    padding-bottom: 20px;
     .el-table {
         flex: 1; // 使表格占据剩余空间
         overflow: auto; // 确保表格内容可以滚动

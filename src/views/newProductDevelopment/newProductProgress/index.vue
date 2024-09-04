@@ -6,7 +6,7 @@ handleSubmit<template>
           <vab-query-form-left-panel >
             <el-button type="primary" @click="getSampleProgress">样品进度</el-button>
             <el-button type="primary" @click="getMoldProgress">开模进度</el-button>
-            <el-button type="primary">筛选</el-button>
+            <el-button type="primary">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -170,7 +170,7 @@ handleSubmit<template>
                       <el-link type="primary" :underline="false">订大货申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleCopyProgress(row.progressId)">复制</el-link>
+                      <el-link type="primary" :underline="false" @click="handleCopyProgress(row)">复制</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false" @click="handleGetShareList(row.progressId)">共享</el-link>
@@ -200,7 +200,7 @@ handleSubmit<template>
       <el-tab-pane label="已归档" name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">筛选</el-button>
+            <el-button type="primary">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <div class="custom-table-right-tools">
@@ -375,12 +375,13 @@ handleSubmit<template>
     >
     </wangEditor>
     <!-- 共享 -->
-    <vab-shared  
+    <progressShare
       :visible="sharedVisible"
       :id="shareId"
       :list="shareUserList"
       @update:sharedVisible = "updateSharedVisibleValue"
     />
+    
     <!-- 开模申请 -->
     <el-dialog 
       v-model="moldVisible" 
@@ -428,7 +429,7 @@ handleSubmit<template>
         </el-form-item>
         <el-form-item label="审核人" prop="audit">
           <!-- <el-input v-model="form.name" clearable placeholder="王豪俊" disabled/> -->
-          <el-select v-model="form.audit" placeholder="" clearable>
+          <el-select v-model="form.audit" placeholder="王豪俊" clearable>
             <el-option label="王豪俊" value="王豪俊"></el-option>
           </el-select>
         </el-form-item>
@@ -450,6 +451,67 @@ handleSubmit<template>
       :moldProgressVisible="moldProgressDialog"
       @update:moldProgressVisible="moldProgressDialog = $event"
     />
+    <!-- 复制弹窗 -->
+    <el-dialog
+      v-model="copyDialogVisible"
+      title="是否要复制本条新品进度信息？"
+      width="500"
+    >
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="copyDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleCopyConfirm">
+            确认
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 新款评估 -->
+    <!-- <newEvaluation 
+      :newEvaluationVisible="newEvaluationVisible"
+      :newEvaluationData="newEvaluationData"
+      @update:newEvaluationVisible="newEvaluationVisible = $event"
+    /> -->
+    <el-dialog 
+        v-model="newEvaluationVisible" 
+        :close-on-click-modal="false" 
+        title="新款评估" 
+        width="90%"
+        style="height: 30vh; margin: 20vh auto 40vh;"
+        class="moldDialog"
+        :before-close="handlerEvaluationCloseDialog"
+        @opened="onDialogOpened"
+    >
+      <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+        <div id="table-height-container">
+            <el-table 
+                ref="evaluationTableRef" 
+                v-loading="listLoading" 
+                border stripe 
+                :data="newEvaluationData" 
+                :header-cell-style="{ 'text-align': 'center' }"
+                @cell-click="keyWordTrendCellClick"
+            >
+              <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+                  :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+                  <template #default="{ row }">
+                      <div  v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
+                        <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
+                      </div>
+                  </template>
+              </el-table-column>
+            </el-table>
+        </div>
+    </el-dialog>
+    <!-- 关键词趋势图表 -->
+        <vab-trend 
+          :trendEchatsVisible="keyWordTrendEchatsVisible"
+          :keyWord = "inputKeyWord"
+          :trnedData = "trendEcahts"
+          @update:visibleValue = "updateTrendVisibleValue"
+          @update:clearnInputKeyWord = "cleanKeyWordTrendData"
+          @update:trendEchatsList  = "updateTrendEchatsData"
+    />
   </div>
 </template>
 
@@ -458,7 +520,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { ref } from 'vue'
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import { IProgressQueryReq, IProgress, IProgressShared } from '/@/type/progress/progressType'
+import { IProgressQueryReq, IProgress, IProgressShared, IGetByIdQueryEvaluation } from '/@/type/progress/progressType'
 import {
   deleteImage,
   getList,
@@ -481,7 +543,11 @@ import wangEditor from './wangEditor.vue'
 import { convertString } from '~/src/utils/stringUtils'
 import sampleProgress from './sampleProgress.vue'
 import moldProgress from './moldProgress.vue'
-
+import progressShare from './progressShare.vue'
+import newEvaluation from './newEvaluation.vue'
+import { indexColumns } from './indexColumns'
+import { IKeyWordTrend } from '~/src/type/evaluation/evaluationType'
+import { getEvaluationTrendList } from '~/src/api/devlocal/evaluation'
 
 defineOptions({
   name: 'ProgressTable',
@@ -498,6 +564,7 @@ const editRef = ref<any>(null)
 const activeName = ref("0")
 const fixed = ref<string>('right')
 const tableRef = ref<TableInstance>()
+const evaluationTableRef = ref<TableInstance>()
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 // 新品进度列表
@@ -549,7 +616,7 @@ const tableClickIdx = ref<any>(0)
 // 共享
 const sharedVisible = ref<boolean>(false)
 // 共享人id
-const shareId = ref<string>("")
+const shareId = ref<number>(0)
 // 共享人列表
 const shareUserList = ref<IProgressShared[]>([])
 // 开模申请
@@ -576,8 +643,25 @@ const supplierDisabled = ref<boolean>(true)
 const sampleProgressDialog = ref<boolean>(false)
 // 控制开模进度是否显示
 const moldProgressDialog = ref<boolean>(false)
+// 控制复制提示框是否显示
+const copyDialogVisible = ref<boolean>(false)
+// 控制查看新款评估是否显示
+const newEvaluationVisible = ref<boolean>(false)
+// 根据评估id找到的新款评估信息
+const newEvaluationData = ref<IGetByIdQueryEvaluation[]>([])
+const keyWordTrendEchatsVisible = ref<boolean>(false)
+// 图表
+const trendEcahts = ref<IKeyWordTrend>({
+  xAxis:[],
+  yAxis:[]
+})
+// 输入的关键词
+const inputKeyWord = ref<string>('')
 const handlerCloseDialog = () => {
   moldVisible.value = false
+}
+const handlerEvaluationCloseDialog = () => {
+  newEvaluationVisible.value = false
 }
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   if (tab.props.name === '0')  queryForm.status = 0
@@ -930,18 +1014,30 @@ const handleSubmit = async () => {
     audit: ""
   }
 }
-
+const copyRow = ref<any>(null)
 // 订大货申请
 // 复制
-const handleCopyProgress = async (progressId: number) => {
-  const { data } = await copyProgress({ progressId })
-  console.log(data);
+const handleCopyProgress = async (row: any) => {
+  const { data } = await copyProgress({ progressId: row.progressId })
+  if (data) {
+    copyRow.value = row
+    copyDialogVisible.value = true
+  }
+}
+const handleCopyConfirm = async () => {
+  if(copyRow.value) {
+    progressList.value.push(copyRow.value)
+    $baseMessage("复制成功!","success","hey")
+  } else {
+    $baseMessage("复制失败!","error","hey")
+  }
+  copyDialogVisible.value = false
 }
 // 共享
 const handleGetShareList = async (progressId: number) => {
   sharedVisible.value = true
   const { data } = await getProgressSharelist({ progressId })
-  shareId.value = convertString(progressId)
+  shareId.value = progressId
   shareUserList.value = data
 }
 const updateSharedVisibleValue = (newValue:boolean) =>{
@@ -949,13 +1045,38 @@ const updateSharedVisibleValue = (newValue:boolean) =>{
 }
 // 查看新款评估
 const handleGetEvaluationById = async (idNo: number) => {
-  const { data } = await getByIdQueryEvaluation( { idNo })
-  console.log(data)
+  newEvaluationVisible.value = true
+  const { data } = await getByIdQueryEvaluation({ idNo })
+  newEvaluationData.value = [data];
 }
+const onDialogOpened = () => {
+  evaluationTableRef.value?.doLayout();
+};
+const keyWordTrendCellClick = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  if (column.label === "关键词趋势") {
+    inputKeyWord.value = row.amazonFrontendKeywords
+    trendEcahts.value.xAxis = row.trendList.xAxis
+    trendEcahts.value.yAxis = row.trendList.yAxis
+    keyWordTrendEchatsVisible.value = true
+  }
+}
+const updateTrendVisibleValue = (newValue:boolean) =>{
+  keyWordTrendEchatsVisible.value = newValue
+}
+// 清除关键词趋势相关数据
+const cleanKeyWordTrendData = (newValue:string) => {
+  inputKeyWord.value = newValue
+  trendEcahts.value.xAxis = []
+  trendEcahts.value.yAxis = []
+  keyWordTrendEchatsVisible.value = false
+}
+const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
+  trendEcahts.value = newValue
+}
+
 onActivated(() => { 
   tableRef.value?.doLayout()
 })
-
 onBeforeMount(() => {
   fetchData()
 })
