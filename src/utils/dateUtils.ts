@@ -4,7 +4,7 @@ export function getCurrentDate(): Date {
 }
 
 // 格式化日期为指定格式
-export function formatDate(date: Date, format: string = 'yyyy-MM-dd'): string {
+export function formatDate(date: Date = new Date(), format: string = 'yyyy-MM-dd'): string {
   const map: { [key: string]: number } = {
     'M+': date.getMonth() + 1, // 月份
     'd+': date.getDate(), // 日

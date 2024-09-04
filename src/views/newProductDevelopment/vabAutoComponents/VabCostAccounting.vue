@@ -356,7 +356,7 @@ const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellEle
 
 // 进度成本核算修改站点
 const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
-    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
+    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site!)!
     const {data} = await getExchangeRate({currency:row.currencyType})
     row.foreignExchange = data
     row.site = row.site
@@ -469,7 +469,7 @@ const addRowCostAccounting = async () =>{
 
   if (data){
     // 获取汇率
-    const {data} = await getExchangeRate({currency: siteReflectCurrencyAndExchangeRate.get(newData.site)!})
+    const {data} = await getExchangeRate({currency: siteReflectCurrencyAndExchangeRate.get(newData.site!)})
     newData.foreignExchange = data
 
     $baseMessage("产品成本核算添加成功！","success","hey")
@@ -477,12 +477,7 @@ const addRowCostAccounting = async () =>{
     fetchDataCostAccounting()
     // 自动滚动到最新的添加行
     nextTick(() => {
-        if (costAccountingTable.value) {
-            const $bodyWrapper = costAccountingTable.value.$el.querySelector(".el-table__body");
-            if ($bodyWrapper) {
-                costAccountingTable.value.setScrollTop($bodyWrapper.scrollHeight);
-            }
-        }
+        autoScrollButtom()
     })
   }
 }
@@ -493,19 +488,28 @@ const costAccountCopy = async(row:IProgressEstimatedCostAccounting) =>{
     if (data == true){
         $baseMessage("此条产品成本核算信息复制成功!","success","hey")
         fetchDataCostAccounting()
+        autoScrollButtom()
+    }
+}
+
+// 自动滚动
+const autoScrollButtom = () => {
+    nextTick(()=>{
         if (costAccountingTable.value) {
             const $bodyWrapper = costAccountingTable.value.$el.querySelector(".el-table__body");
             if ($bodyWrapper) {
                 costAccountingTable.value.setScrollTop($bodyWrapper.scrollHeight);
             }
         }
-    }
+    })
 }
+
+
 
 // 删除
 const costAccountDelete = async(row:IProgressEstimatedCostAccounting) =>{
     $baseConfirm('您确定要删除产品成本信息吗', null, async () => {
-    const {data} = await costAccountingDelete({accountingId:row.id})
+    const {data} = await costAccountingDelete({accountingId:row.id!})
     if (data == true){
         const index = estimatedCostList.value.findIndex((item:IProgressEstimatedCostAccounting) => item.id === row.id);
         if (index !== -1) {
@@ -515,6 +519,19 @@ const costAccountDelete = async(row:IProgressEstimatedCostAccounting) =>{
     }
   })
 }
+
+// 监听数据变化
+watch(estimatedCostList, () => {
+    autoScrollButtom();
+}, { deep: true });
+
+
+// 暴露给父组件
+defineExpose({
+    autoScrollButtom,
+    estimatedCostList,
+    fetchDataCostAccounting
+ })
 
 onMounted(async ()=>{
     fetchDataCostAccounting()

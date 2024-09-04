@@ -8,6 +8,7 @@
             <el-col :span="23">
                 <el-table 
                     :data="sampleList"
+                     @cell-click="sampelTrialTableInputChage"
                     height="140"
                     :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
                 >
@@ -74,9 +75,6 @@
 
                 <el-table-column prop="price" label="实际产品总成本">
                     <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.totalCost" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row.totalCost }}</span>
                     </template>
                 </el-table-column>
@@ -169,7 +167,7 @@
                 </el-table-column>
 
 
-                <el-table-column align="center" fixed="right" label="操作" width="120px">
+                <el-table-column fixed="right" label="操作" min-width="160px">
                     <template v-slot="scope">
                         <el-button text type="primary">
                             逆算
@@ -188,12 +186,17 @@
 import {getExchangeRate} from '/@/api/devlocal/evaluation'
 import {convertString} from '/@/utils/stringUtils'
 import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCurrencyAndExchangeRate, } from '../indexCommon'
-import { IProgressEstimatedCostAccounting,IProgressSample,ITrialCalculation } from '/@/type/progress/sampleAndComponentType'
+import {IProgressEstimatedCostAccounting,IProgressSample } from '/@/type/progress/sampleAndComponentType'
 import {getTrialCalculation,addTrialCalculation,updateTrialCalculation,saveTrialCalculation} from '/@/api/devlocal/progressSample'
-import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
+import {getRootElement,getSpecificChildren} from '/@/utils/nodeUtils'
+import { TableRefs } from 'element-plus'
+import {formatDate} from '/@/utils/dateUtils'
 
 const props = defineProps<{
     progressId:string
+    costScroll: (() => void) | undefined
+    costAccountingData: IProgressEstimatedCostAccounting[] | undefined
+    costAccountingFetch: (() => Promise<void>) | undefined
 }>();
 
 
@@ -206,7 +209,7 @@ const sampleList = ref<IProgressSample[]>([])
 
 // 拿样清单成本试算-修改站点
 const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
-    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
+    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site!)
     const { data } = await getExchangeRate({currency:row.currencyType})
     row.foreignExchange = data
     row.site = row.site  
@@ -216,14 +219,51 @@ const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
 
 // 保存拿样清单成本试算
 const saveTrialCalculationHandler = async (row:IProgressSample) => {
-   const {data} = await saveTrialCalculation({progressId:parseInt(props.progressId), id: parseInt(row.id!)})
+   const {data} = await saveTrialCalculation({progressId:parseInt(props.progressId), id: row.id!})
    if (data === true){
-    $baseMessage("拿样清单成本试算添加到成本核算成功！","success","hey")
+        $baseMessage("拿样清单成本试算添加到成本核算成功！","success","hey")
+         // 获取最新添加的元素
+         const newInfo:IProgressSample =  await getTrialCalculationHandler()
+         let newValue:IProgressEstimatedCostAccounting = {
+            createTime:formatDate(),
+            id:newInfo.id!,
+            site:newInfo.site,
+            currencyType:newInfo.currencyType,
+            foreignExchange:newInfo.foreignExchange,
+            desc:newInfo.desc,
+            length:newInfo.length,
+            width:newInfo.width,
+            height:newInfo.height,
+            weight:newInfo.weight,
+            lastMile:newInfo.lastMile,
+            firstMile:newInfo.firstMile,
+            packaging:newInfo.packaging,
+            firstMileChannel:newInfo.firstMileChannel,
+            sellingPrice:newInfo.sellingPrice,
+            grossMarginRate:newInfo.grossMarginRate,
+            roi:newInfo.roi,
+            weightCoefficient:newInfo.weightCoefficient,
+            volumeCoefficient:newInfo.volumeCoefficient,
+            tariff:newInfo.tariff,
+            platformCommission:newInfo.platformCommission,
+            storageFee:newInfo.storageFee
+        }
+        
+        if (newInfo.totalCost){
+            newValue.price = convertString(newInfo.totalCost!)
+        }
 
+        props.costAccountingData?.push(newValue)
+
+    
+        // 重新加载成本核算
+        props.costAccountingFetch?.()
+
+        // 自动滚动到新增加行位置    
+        props.costScroll?.()
+        
    }
 }
-
-
 
 // 添加拿样清单成本试算
 const addTrialCalculationHandler = async ():Promise<number> => {
@@ -233,15 +273,44 @@ const addTrialCalculationHandler = async ():Promise<number> => {
 
 
 // 获取拿样清单成本试算
-const getTrialCalculationHandler = async ():Promise<ITrialCalculation> => {
+const getTrialCalculationHandler = async ():Promise<IProgressSample> => {
     const {data} = await getTrialCalculation({progressId:props.progressId})
     return data
 }
 
-
+// 拿样清单成本试算修改
+const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+    
+    // 不能被修改cell的下标
+    if(column.no === 0 || column.no === 1 || column.no === 2 || column.no === 7 || column.no === 21) return
+  
+  
+    if (!cell.children[0].children[0] 
+      || !cell.children[0].children[1]
+      || !cell.children[0].children[0].classList
+      || !cell.children[0].children[1].classList
+    ){
+      return
+    }
+  
+    cell.children[0].children[0].classList.remove('none')
+    cell.children[0].children[1].classList.add('none')
+  
+    // 自动聚焦
+    const inputElement = getSpecificChildren(cell, "input")[0];
+    if (inputElement) {
+        inputElement.focus()
+    } else {
+      const textareaElement = getSpecificChildren(cell, "textarea")[0];
+      if (textareaElement){
+        textareaElement.focus()
+      }
+    }
+  }
+  
 
 // 输入input blur事件
-const clickCancle = async (event:any,value:any) =>{
+const clickCancle = async (event:any,value:IProgressSample) =>{
 
     const t1 = getRootElement(event["srcElement"],".cell").children[0]
     if (t1){
@@ -252,6 +321,8 @@ const clickCancle = async (event:any,value:any) =>{
     if (t2){
         t2.classList.remove("none")
     }
+    
+    await updateTrialCalculation({...value})
 }
 
 
@@ -286,19 +357,20 @@ onMounted(async ()=>{
     const {data} = await getExchangeRate({currency:currencyType})
     first.foreignExchange = data
 
-    const dbInfo:ITrialCalculation =  await getTrialCalculationHandler()
+    const dbInfo:IProgressSample =  await getTrialCalculationHandler()
     if (!dbInfo){
         // 创建拿样清单成本试算
         const id = await addTrialCalculationHandler()
-        // -1 代表对应的拿样清单成本试算已经存在，无需重新赋值
+        // -1 代表对应的拿样清单成本试算已经存在
         if (id !== -1){
             first.id = convertString(id)
         }
+        sampleList.value.push(first)
     }else{
-        first.id = convertString(dbInfo.id!)
+        first.id = dbInfo.id!
+        sampleList.value.push(dbInfo)
     }
     
-    sampleList.value.push(first)
 })
 
 </script>

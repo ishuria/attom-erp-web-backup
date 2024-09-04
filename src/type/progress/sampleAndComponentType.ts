@@ -51,7 +51,9 @@ export interface IProgressProdcutComponent {
  */
 export interface IProgressSample {
   // id
-  id?: string|null
+  id?: string | null
+  // 进度id
+  progressId?: number | null
   // 站点
   site?: string
   // 外币币种
@@ -103,57 +105,57 @@ export interface IProgressEstimatedCostAccounting {
   // id
   id: string
   // 评估id
-  evaluationId: string
+  evaluationId?: string
   // 日期
-  createTime: string
+  createTime?: string
   // 站点
-  site: string
+  site?: string
   // 外币币种
-  currencyType: string
+  currencyType?: string
   // 汇率
-  foreignExchange: string
+  foreignExchange?: string
   // 图片地址
-  imgUrl: string
+  imgUrl?: string
   // 产品描述
-  desc: string
+  desc?: string
   // 价格信息
-  priceInfo: string
+  priceInfo?: string
   // 1688连接
-  url1688: string
+  url1688?: string
   // 价格信息
-  price: string
+  price?: string
   // 长
-  length: string
+  length?: string
   // 宽
-  width: string
+  width?: string
   // 高
-  height: string
+  height?: string
   // 重量
-  weight: string
+  weight?: string
   // 尾程
-  lastMile: string
+  lastMile?: string
   // 头程
-  firstMile: string
+  firstMile?: string
   // 打包
-  packaging: string
+  packaging?: string
   // 头程渠道
-  firstMileChannel: string
+  firstMileChannel?: string
   // 售价
-  sellingPrice: string
+  sellingPrice?: string
   // 毛利率
-  grossMarginRate: string
+  grossMarginRate?: string
   // ROI
-  roi: string
+  roi?: string
   // weightCoefficient
-  weightCoefficient: string
+  weightCoefficient?: string
   // volumeCoefficient
-  volumeCoefficient: string
+  volumeCoefficient?: string
   // 关税
-  tariff: string
+  tariff?: string
   // 平台佣金
-  platformCommission: string
+  platformCommission?: string
   // 仓储费
-  storageFee: string
+  storageFee?: string
 }
 
 // 样品追踪
@@ -394,41 +396,39 @@ export interface ITrialCalculationAddResp {
 
 // 拿样成本试算清单-添加响应请求
 export interface ITrialCalculationGetResp {
-  data: ITrialCalculation
+  data: IProgressSample
 }
 
-export interface ITrialCalculation{
-  id?:number
-  progressId?:number
-  site?:string
-  currencyType?:string
-  foreignExchange?:string
-  desc?:string
-  price?:string
-  length?:string
-  width?:string
-  height?:string
-  weight?:string
-  lastMile?:string
-  firstMile?:string
-  packaging?:string
-  firstMileChannel?:string
-  sellingPrice?:string
-  grossMarginRate?:string
-  roi?:string
-  weightCoefficient?:string
-  volumeCoefficient?:string
-  tariff?:string
-  platformCommission?:string
+// export interface ITrialCalculation{
+//   id?:number
+//   progressId?:number
+//   site?:string
+//   currencyType?:string
+//   foreignExchange?:string
+//   desc?:string
+//   price?:string
+//   length?:string
+//   width?:string
+//   height?:string
+//   weight?:string
+//   lastMile?:string
+//   firstMile?:string
+//   packaging?:string
+//   firstMileChannel?:string
+//   sellingPrice?:string
+//   grossMarginRate?:string
+//   roi?:string
+//   weightCoefficient?:string
+//   volumeCoefficient?:string
+//   tariff?:string
+//   platformCommission?:string
+// }
+
+export interface ITrialCalculationResp {
+  data: boolean
 }
 
-export interface ITrialCalculationResp{
-  data:boolean
-}
-
-
-
-export interface ITrialCalculationSave{
-  id?:number
-  progressId?:number
+export interface ITrialCalculationSave {
+  id?: number
+  progressId?: number
 }

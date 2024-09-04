@@ -15,12 +15,19 @@
             @update:priviewListValue="setPreviewList"
         />
 
-        <vab-trial-calculation :progress-id="route.query.progressId"/>
+        <vab-trial-calculation 
+            :progress-id="route.query.progressId"
+            :costScroll="costAccountingRef?.autoScrollButtom"
+            :costAccountingData = "costAccountingRef?.estimatedCostList"
+            :costAccountingFetch = "costAccountingRef?.fetchDataCostAccounting"
+        />
 
-        <vab-cost-accounting 
+        <vab-cost-accounting
             :progress-id="route.query.progressId"
             @update:imagePreviewVisibale="updateUploadPriviewVisible"
             @update:priviewListValue="setPreviewList"
+            ref="costAccountingRef"
+            
         />
 
         <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
@@ -32,11 +39,12 @@
 <script lang="ts" setup>
 import { handleActivePath } from '/@/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
+import VabCostAccounting from './vabAutoComponents/VabCostAccounting.vue';
 
 
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
-
+const costAccountingRef = ref<InstanceType<typeof VabCostAccounting> | null>(null);
 // route
 const route: any = useRoute()
 const tabsStore = useTabsStore()

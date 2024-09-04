@@ -3,6 +3,7 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import {
+  IProgressSample,
   IProgressProdcutComponent,
   IProgressEstimatedCostAccounting,
   IComponentQueryReq,
@@ -41,7 +42,6 @@ import {
   ISampleAddResp,
   ITrialCalculationReq,
   ITrialCalculationAddResp,
-  ITrialCalculation,
   ITrialCalculationResp,
   ITrialCalculationGetResp,
 } from '/@/type/progress/sampleAndComponentType'
@@ -341,7 +341,7 @@ export function addTrialCalculation(params?: ITrialCalculationReq): Promise<ITri
  * @param data
  * @returns
  */
-export function updateTrialCalculation(data?: ITrialCalculation): Promise<ITrialCalculationResp> {
+export function updateTrialCalculation(data?: IProgressSample): Promise<ITrialCalculationResp> {
   return request({
     url: `${BASE_API}/progress/update/trialcalculation`,
     method: 'post',
@@ -354,7 +354,7 @@ export function updateTrialCalculation(data?: ITrialCalculation): Promise<ITrial
  * @param data
  * @returns
  */
-export function saveTrialCalculation(params?: ITrialCalculation): Promise<ITrialCalculationResp> {
+export function saveTrialCalculation(params?: IProgressSample): Promise<ITrialCalculationResp> {
   return request({
     url: `${BASE_API}/progress/save/trialcalculation`,
     method: 'post',

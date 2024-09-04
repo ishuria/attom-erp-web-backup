@@ -247,7 +247,7 @@
 import {  ArrowDown } from '@element-plus/icons-vue'
 import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
 import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCurrencyAndExchangeRate,currencyList,invoicingList } from '../indexCommon'
-import { IProgressEstimatedCostAccounting,IProgressProdcutComponent,IProgressSample, ISuppliersAddReq,ITrialCalculation } from '/@/type/progress/sampleAndComponentType'
+import { IProgressEstimatedCostAccounting,IProgressProdcutComponent,IProgressSample, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
 import type { TableColumnCtx, TableRefs, UploadRequestOptions } from 'element-plus'
 import {getExchangeRate} from '/@/api/devlocal/evaluation'
 import {convertString} from '/@/utils/stringUtils'
