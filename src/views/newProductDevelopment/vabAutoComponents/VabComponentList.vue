@@ -246,19 +246,15 @@
 <script lang="ts" setup>
 import {  ArrowDown } from '@element-plus/icons-vue'
 import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
-import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCurrencyAndExchangeRate,currencyList,invoicingList } from '../indexCommon'
-import { IProgressEstimatedCostAccounting,IProgressProdcutComponent,IProgressSample, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
+import {currencyList,invoicingList } from '../indexCommon'
+import { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
 import type { TableColumnCtx, TableRefs, UploadRequestOptions } from 'element-plus'
-import {getExchangeRate} from '/@/api/devlocal/evaluation'
 import {convertString} from '/@/utils/stringUtils'
 import {getComponentList,addComponent,
     addSuppliers,deleteSuppliers,
     copyComponent,componentUploadImage,
-    updateComponenet,getTrialCalculation,
-    addTrialCalculation,updateTrialCalculation,
-    saveTrialCalculation
+    updateComponenet
 } from '/@/api/devlocal/progressSample'
-import { data } from 'autoprefixer'
 
 // 图片上传显示控制vesiblae
 const uploadPicVisible = ref<boolean>(false)

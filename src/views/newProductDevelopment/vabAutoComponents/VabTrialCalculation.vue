@@ -255,13 +255,11 @@ const saveTrialCalculationHandler = async (row:IProgressSample) => {
 
         props.costAccountingData?.push(newValue)
 
-    
+        
         // 重新加载成本核算
         props.costAccountingFetch?.()
-
         // 自动滚动到新增加行位置    
-        props.costScroll?.()
-        
+        props.costScroll?.()        
    }
 }
 
