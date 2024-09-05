@@ -1,9 +1,9 @@
 <template>
     <div class="default-table-detail-container">
-        <el-page-header  @back="goBack" >
+        <el-page-header  @back="goBack" style="margin-bottom: 0px;">
             <template #content>
                 <div class="flex items-center">
-                    <span> <strong> {{ route.query.title }} </strong><el-divider direction="vertical" /> <strong>{{ route.query.product }}</strong></span>
+                    <span> <strong> {{ route.query.title }} </strong><el-divider direction="vertical"/> <strong>{{ route.query.product }}</strong></span>
                 </div>
             </template>
         </el-page-header>
@@ -13,6 +13,7 @@
             :progress-id="route.query.progressId"
             @update:imagePreviewVisibale="updateUploadPriviewVisible"
             @update:priviewListValue="setPreviewList"
+            :trialCalculationData="trialCalculationRef?.fetchData"
         />
 
         <vab-trial-calculation 
@@ -20,6 +21,7 @@
             :costScroll="costAccountingRef?.autoScrollButtom"
             :costAccountingData = "costAccountingRef?.estimatedCostList"
             :costAccountingFetch = "costAccountingRef?.fetchDataCostAccounting"
+            ref="trialCalculationRef"
         />
 
         <vab-cost-accounting
@@ -40,11 +42,13 @@
 import { handleActivePath } from '/@/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import VabCostAccounting from './vabAutoComponents/VabCostAccounting.vue';
+import VabTrialCalculation from './vabAutoComponents/VabTrialCalculation.vue';
 
 
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 const costAccountingRef = ref<InstanceType<typeof VabCostAccounting> | null>(null);
+const trialCalculationRef = ref<InstanceType<typeof VabTrialCalculation> | null>(null);
 // route
 const route: any = useRoute()
 const tabsStore = useTabsStore()

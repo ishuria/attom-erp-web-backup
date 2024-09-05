@@ -44,6 +44,7 @@ export interface IProgressProdcutComponent {
   purchaseLink?: string | null
   // 备注
   remarks?: string | null
+  [property: string]: any
 }
 
 /**

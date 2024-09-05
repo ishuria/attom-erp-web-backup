@@ -5,7 +5,7 @@
         <div class="el-page-header__content"><strong>成本核算</strong></div>
         <el-divider style="margin:10px 0"/>
         
-        <vab-query-form>
+        <vab-query-form style="margin-bottom: 0 !important;">
             <vab-query-form-left-panel>
                 <el-button type="primary" v-debounce="addRowCostAccounting">新增</el-button>
             </vab-query-form-left-panel>
@@ -22,7 +22,8 @@
             <el-table 
                 ref="costAccountingTable"
                 :data="estimatedCostList"
-                height="330"
+                height="205"
+                border stripe
                 @cell-click="costAccountingChangeInput"
                 :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
             >

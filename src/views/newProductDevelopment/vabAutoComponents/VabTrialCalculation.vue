@@ -1,21 +1,23 @@
 <template>
 
      <!-- 拿样清单成本试算 -->
-     <el-row style="padding-top:20px;">
+     <el-row style="padding-top:25px;">
             <el-col :span="1" class="sample">
                 <div><strong>拿样清单成本试算</strong></div>
             </el-col>
             <el-col :span="23">
                 <el-table 
                     :data="sampleList"
-                     @cell-click="sampelTrialTableInputChage"
+                    @cell-click="sampelTrialTableInputChage"
                     height="140"
+                    border stripe
                     :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
+                    ref="trialTableRef"
                 >
 
-                <el-table-column prop="site" label="站点" min-width="120">
+                <el-table-column prop="site" label="站点" min-width="140">
                     <template #default="{ row }">
-                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)">
+                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 15px;">
                             <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
@@ -75,7 +77,7 @@
 
                 <el-table-column prop="price" label="实际产品总成本">
                     <template #default="{ row }">
-                        <span>{{ row.totalCost }}</span>
+                        <span>{{ row.price }}</span>
                     </template>
                 </el-table-column>
 
@@ -102,11 +104,12 @@
                         <span>{{ row.packaging }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="120">
+                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
                     <template #default="{ row }">
                         <el-select 
                             v-model="row.firstMileChannel" 
                             placeholder="请选择头程渠道"
+                            style="min-width: 15px"
                         >
                             <el-option 
                                 v-for="dict in firstLegChannelColumns" 
@@ -189,8 +192,10 @@ import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCur
 import {IProgressEstimatedCostAccounting,IProgressSample } from '/@/type/progress/sampleAndComponentType'
 import {getTrialCalculation,addTrialCalculation,updateTrialCalculation,saveTrialCalculation} from '/@/api/devlocal/progressSample'
 import {getRootElement,getSpecificChildren} from '/@/utils/nodeUtils'
-import { TableRefs } from 'element-plus'
+import { TableRefs, TableInstance } from 'element-plus'
 import {formatDate} from '/@/utils/dateUtils'
+
+const trialTableRef = ref<TableInstance>()
 
 const props = defineProps<{
     progressId:string
@@ -324,7 +329,58 @@ const clickCancle = async (event:any,value:IProgressSample) =>{
 }
 
 
+const activiteTrialTable = () => {
+    trialTableRef.value?.doLayout()
+    console.log('刷新表格')
+}
 
+const fetchData = async () => {
+    sampleList.value = []
+
+    let first: IProgressSample = {
+        site:"0",
+        currencyType:"0",
+        foreignExchange:'',
+        desc:'',
+        length:'',
+        width:'',
+        height:'',
+        totalCost: null,
+        weight:'',
+        lastMile:'',
+        firstMile:'',
+        packaging:'',
+        firstMileChannel:'0',
+        sellingPrice:'',
+        roi:'',
+        weightCoefficient:'',
+        volumeCoefficient:'',
+        tariff:'',
+        platformCommission:'',
+        storageFee:'',
+    }
+
+    const currencyType = siteReflectCurrencyAndExchangeRate.get(first.site!)
+    const {data} = await getExchangeRate({currency:currencyType})
+    first.foreignExchange = data
+
+    const dbInfo:IProgressSample =  await getTrialCalculationHandler()
+    if (!dbInfo){
+        // 创建拿样清单成本试算
+        const id = await addTrialCalculationHandler()
+        // -1 代表对应的拿样清单成本试算已经存在
+        if (id !== -1){
+            first.id = convertString(id)
+        }
+        sampleList.value.push(first)
+    }else{
+        first.id = dbInfo.id!
+        sampleList.value.push(dbInfo)
+    }
+}
+defineExpose({
+    fetchData
+})
 onMounted(async ()=>{
     sampleList.value = []
 

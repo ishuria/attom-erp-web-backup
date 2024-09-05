@@ -45,6 +45,7 @@ import {
   ITrialCalculationResp,
   ITrialCalculationGetResp,
 } from '/@/type/progress/sampleAndComponentType'
+import { IProgressId } from '~/src/type/progress/progressType'
 
 /**
  * 获取零件清单数据列表
@@ -163,7 +164,16 @@ export function getCostAccountingList(params?: ICostAccountingQueryReq): Promise
     params,
   })
 }
-
+/**
+ * 获取零件清单中实际的成本
+ */
+export function getProgressCalculation(params?: IProgressId) {
+  return request({
+    url: `${BASE_API}/progress/get/calculation`,
+    method: 'get',
+    params,
+  })
+}
 /**
  * 成本核算-添加
  * @param data

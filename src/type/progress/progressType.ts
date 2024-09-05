@@ -46,32 +46,33 @@ export interface ImageList {
  */
 export interface IProgress {
   // 优先级
-  priority: number
+  priority?: number
   // 示例图片列表
-  imageList: ImageList[]
+  imageList?: ImageList[]
   // 产品名
-  product: string
+  product?: string
   // OEM
-  oem: string
+  oem?: string
   // 立项日期
-  createTime: string
+  createTime?: string
   // 当前阶段
-  currentPhaseStatus: string
+  currentPhaseStatus?: string
   // 产品推进日志
-  progressLog: string
+  progressLog?: string
   // 备注
-  remark: string
+  remark?: string
   // 目标月销
-  targetMonthlySales: string
+  targetMonthlySales?: string
   // 参与人员
-  sharerName: string
+  sharerName?: string
   // 进度id
-  progressId: number
+  progressId?: number
   // 新款评估编号
   evaluationId?: string
   // 控添加图片样式隐藏显示
   hide?: boolean
 }
+
 /**
  * 图片上传参数类型
  */

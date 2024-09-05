@@ -178,6 +178,9 @@ handleSubmit<template>
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false" @click="handleGetEvaluationById(row.evaluationId)">查看新款评估</el-link>
                     </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-link type="primary" :underline="false" >归档</el-link>
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -451,21 +454,6 @@ handleSubmit<template>
       :moldProgressVisible="moldProgressDialog"
       @update:moldProgressVisible="moldProgressDialog = $event"
     />
-    <!-- 复制弹窗 -->
-    <el-dialog
-      v-model="copyDialogVisible"
-      title="是否要复制本条新品进度信息？"
-      width="500"
-    >
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="copyDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleCopyConfirm">
-            确认
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
     <!-- 新款评估 -->
     <!-- <newEvaluation 
       :newEvaluationVisible="newEvaluationVisible"
@@ -477,7 +465,7 @@ handleSubmit<template>
         :close-on-click-modal="false" 
         title="新款评估" 
         width="90%"
-        style="height: 30vh; margin: 20vh auto 40vh;"
+        style="height: 40vh; margin: 30vh auto 30vh;"
         class="moldDialog"
         :before-close="handlerEvaluationCloseDialog"
         @opened="onDialogOpened"
@@ -608,8 +596,8 @@ const wangEditorTitle = ref<string>('')
 const wangEditorLogVisible = ref<boolean>(false)
 // 点击备注弹出富文本框是否显示
 const wangEditorRemarkVisible = ref<boolean>(false)
-const progressLogCopy = ref<string>('')
-const remarkCopy = ref<string>('')
+const progressLogCopy = ref<string | undefined>('')
+const remarkCopy = ref<string | undefined>('')
 const classify = ref<string>('')
 const tableClickIdx = ref<any>(0)
 
@@ -738,12 +726,12 @@ const handleIconClick = (row: any) => {
 const imageForm = ref(new FormData()) as any;
 async function uploadImage (params: any) {
   try {
-    let imgListlength = progressList.value[tableClickRowIndex.value].imageList.length + 1
+    let imgListlength = progressList.value[tableClickRowIndex.value].imageList!.length + 1
     if (imgListlength === 5) {
       // isUpdate.value = !isUpdate.value
       progressList.value[tableClickRowIndex.value].hide = true
     }
-    let sort = progressList.value[tableClickRowIndex.value].imageList.length - 1
+    let sort = progressList.value[tableClickRowIndex.value].imageList!.length - 1
     imageForm.value = new FormData(); // 每次上传前重置 FormData
     imageForm.value.append('file', params.file);
     imageForm.value.append('progressId', tableClickProgressId);
@@ -751,7 +739,7 @@ async function uploadImage (params: any) {
 
     const { data } = await uploadFile(imageForm.value)
     const { fileId, url } = data
-    const imageListCopy = [...progressList.value[tableClickRowIndex.value].imageList];
+    const imageListCopy = [...progressList.value[tableClickRowIndex.value].imageList!];
     imageListCopy.push({
         url: url,
         name: fileId,
@@ -794,7 +782,7 @@ const fetchData = async () => {
 
   progressList.value.forEach(item => {
     const tempArr: string[] = []
-    item.imageList.forEach(image => {
+    item.imageList!.forEach(image => {
       tempArr.push(image.imageUrl!)
       image.url = image.imageUrl;
       image.name = image.imageId;
@@ -1017,22 +1005,18 @@ const handleSubmit = async () => {
 const copyRow = ref<any>(null)
 // 订大货申请
 // 复制
-const handleCopyProgress = async (row: any) => {
-  const { data } = await copyProgress({ progressId: row.progressId })
-  if (data) {
-    copyRow.value = row
-    copyDialogVisible.value = true
-  }
+const handleCopyProgress = (row: any) => {
+  $baseConfirm('是否要复制本条新品进度信息？', '复制', async () => {
+    const { data } = await copyProgress({ progressId: row.progressId })
+    if (data === true) {
+      copyRow.value = JSON.parse(JSON.stringify(row))
+      const index = progressList.value.findIndex(item => item === row)
+      progressList.value.splice(index + 1, 0, copyRow.value)
+    }
+  }, null)
 }
-const handleCopyConfirm = async () => {
-  if(copyRow.value) {
-    progressList.value.push(copyRow.value)
-    $baseMessage("复制成功!","success","hey")
-  } else {
-    $baseMessage("复制失败!","error","hey")
-  }
-  copyDialogVisible.value = false
-}
+
+
 // 共享
 const handleGetShareList = async (progressId: number) => {
   sharedVisible.value = true

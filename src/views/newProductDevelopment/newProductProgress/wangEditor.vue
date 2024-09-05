@@ -34,7 +34,7 @@ defineOptions({
 let props = defineProps<{
   title: string
   wangEditorVisible: boolean
-  content: string
+  content: string | undefined
   classify: string
 }>();
 
