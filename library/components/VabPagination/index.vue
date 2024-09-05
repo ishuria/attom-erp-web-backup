@@ -1,24 +1,24 @@
 <template>
   <el-pagination
-    :background="background"
-    :current-page="currentPage"
-    :default-current-page="defaultCurrentPage"
-    :default-page-size="defaultPageSize"
-    :disabled="disabled"
-    :hide-on-single-page="hideOnSinglePage"
-    :layout="layout"
-    :next-icon="nextIcon"
-    :next-text="nextText"
-    :page-count="pageCount"
-    :page-size="pageSize"
-    :page-sizes="pageSizes"
-    :pager-count="pagerCount"
-    :popper-class="popperClass"
-    :prev-icon="prevIcon"
-    :prev-text="prevText"
-    :small="small"
-    :teleported="teleported"
-    :total="total"
+    :background="props.background"
+    :current-page="props.currentPage"
+    :default-current-page="props.defaultCurrentPage"
+    :default-page-size="props.defaultPageSize"
+    :disabled="props.disabled"
+    :hide-on-single-page="props.hideOnSinglePage"
+    :layout="props.layout"
+    :next-icon="props.nextIcon"
+    :next-text="props.nextText"
+    :page-count="props.pageCount"
+    :page-size="props.pageSize"
+    :page-sizes="props.pageSizes"
+    :pager-count="props.pagerCount"
+    :popper-class="props.popperClass"
+    :prev-icon="props.prevIcon"
+    :prev-text="props.prevText"
+    :small="props.small"
+    :teleported="props.teleported"
+    :total="props.total"
     v-bind="$attrs"
   />
 </template>
@@ -30,7 +30,7 @@ defineOptions({
   name: 'VabPagination',
 })
 
-defineProps({
+const props = defineProps({
   ...ElPagination.props,
   layout: {
     type: String,

@@ -1,20 +1,20 @@
 <template>
   <el-card
-    :body-style="bodyStyle"
+    :body-style="props.bodyStyle"
     class="vab-colorful-card"
-    :shadow="shadow"
+    :shadow="props.shadow"
     :style="
-      style
-        ? style
+      props.style
+        ? props.style
         : {
-            background: `linear-gradient(120deg, ${colorFrom} 10%, ${colorTo})`,
+            background: `linear-gradient(120deg, ${props.colorFrom} 10%, ${props.colorTo})`,
           }
     "
   >
     <template v-if="$slots.header" #header>
       <slot name="header"></slot>
     </template>
-    <vab-icon v-if="icon" :icon="icon" />
+    <vab-icon v-if="props.icon" :icon="props.icon" />
     <slot></slot>
   </el-card>
 </template>
@@ -26,7 +26,7 @@ defineOptions({
   name: 'VabColorfulCard',
 })
 
-defineProps({
+const props = defineProps({
   ...ElCard.props,
   shadow: {
     type: String,

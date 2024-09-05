@@ -1,23 +1,23 @@
 <template>
   <el-alert
-    :center="center"
-    :closable="closable"
-    :close-text="closeText"
-    :description="description"
-    :effect="effect"
-    :show-icon="showIcon"
-    :title="title"
-    :type="type"
+    :center="props.center"
+    :closable="props.closable"
+    :close-text="props.closeText"
+    :description="props.description"
+    :effect="props.effect"
+    :show-icon="props.showIcon"
+    :title="props.title"
+    :type="props.type"
     v-bind="$attrs"
   >
-    <template v-if="title || $slots.title" #title>
+    <template v-if="props.title || $slots.title" #title>
       <slot name="title">
-        {{ title }}
+        {{ props.title }}
       </slot>
     </template>
-    <template v-if="$slots.default || description" #default>
+    <template v-if="$slots.default || props.description" #default>
       <slot name="default">
-        {{ description }}
+        {{ props.description }}
       </slot>
     </template>
   </el-alert>
@@ -30,7 +30,7 @@ defineOptions({
   name: 'VabAlert',
 })
 
-defineProps({
+const props = defineProps({
   ...ElAlert.props,
   closable: {
     type: Boolean,
