@@ -316,26 +316,26 @@ const sampleFormVisible = ref<boolean>(false)
 // 零件清单修改开票
 const handlerInvoicingChange = async (row:IProgressProdcutComponent) =>{
     
-    // await updateComponenet({
-    //     progressId: row.progressId,
-    //     supplierId: row.supplierId,
-    //     componentId: row.componentId,
-    //     invoicing: row.invoicing,
-    // })
-    await updateComponenet(row)
+    await updateComponenet({
+        progressId: row.progressId,
+        supplierId: row.supplierId,
+        componentId: row.componentId,
+        invoicing: row.invoicing,
+    })
+    // await updateComponenet(row)
     props.trialCalculationData?.()
 }
 
 // 零件清单修改货币
 const handlerCurrencyChange = async (row:IProgressProdcutComponent) =>{
     
-    // await updateComponenet({
-    //     progressId: row.progressId,
-    //     supplierId: row.supplierId,
-    //     componentId: row.componentId,
-    //     currency: row.currency,
-    // })
-    await updateComponenet(row)
+    await updateComponenet({
+        progressId: row.progressId,
+        supplierId: row.supplierId,
+        componentId: row.componentId,
+        currency: row.currency,
+    })
+    // await updateComponenet(row)
     props.trialCalculationData?.()
 }
 
@@ -546,12 +546,14 @@ const copyComponentInfo = async (row:IProgressProdcutComponent)=>{
     }
 }
 let clickColumn: any 
+let rowCopy: any
 // 零件清单table单击修改
 const componentTableInputChage = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     
   // 不能被修改cell的下标
   if(column.no === 3) return
   clickColumn = column
+  rowCopy = JSON.parse(JSON.stringify(row))
  
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
@@ -587,7 +589,7 @@ const componentTableInputChage = async(row: any, column: any, cell: HTMLTableCel
 const componentClickCancle = async (event:any,value:IProgressProdcutComponent) =>{
     
     
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
   if (t1){
     t1.classList.add("none")
   }
@@ -603,10 +605,14 @@ const componentClickCancle = async (event:any,value:IProgressProdcutComponent) =
     componentId: value.componentId,
     [clickColumn.property]: value[clickColumn.property],
   }
-//   await updateComponenet(query)
-    await updateComponenet(value)
-  fetchDataComponent()
-  props.trialCalculationData?.()
+
+  
+  if (rowCopy[clickColumn.property] !== value[clickColumn.property]) {
+    await updateComponenet(query)
+    fetchDataComponent()
+    props.trialCalculationData?.()
+  }
+  
 }
 
 // 计入成本change
@@ -615,14 +621,14 @@ const includedInCostChange = async (row:IProgressProdcutComponent) =>{
     // const { data } = await getProgressCalculation({ progressId: parseInt(row.progressId)})
 
     
-    // 更新新值
-    // await updateComponenet({
-    //     progressId: row.progressId,
-    //     supplierId: row.supplierId,
-    //     componentId: row.componentId,
-    //     includedInCost: row.includedInCost
-    // })
-    await updateComponenet(row)
+    //更新新值
+    await updateComponenet({
+        progressId: row.progressId,
+        supplierId: row.supplierId,
+        componentId: row.componentId,
+        includedInCost: row.includedInCost
+    })
+    // await updateComponenet(row)
     props.trialCalculationData?.()
 }
 
