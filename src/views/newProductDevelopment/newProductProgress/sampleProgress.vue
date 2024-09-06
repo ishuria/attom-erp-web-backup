@@ -30,15 +30,11 @@
                 border stripe 
                 :data="sampleList" 
                 :header-cell-style="{ 'text-align': 'center' }"
+                @cell-click="sampleTableInputChage"
             >
-                <el-table-column align="center" label="图片" width="75">
+                <el-table-column align="center" label="图片" min-width="100">
                     <template #default="{ row }">
-                        <el-popover placement="top-start" trigger="hover">
-                            <el-image :src="row.compoenntImg" />
-                            <template #reference>
-                                <el-image :src="row.compoenntImg" />
-                            </template>
-                        </el-popover>
+                        <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
                     </template>
                 </el-table-column>
                 <el-table-column label="产品" min-width="160" prop="productName" >
@@ -90,7 +86,7 @@
                 <el-table-column align="center" fixed="right" label="操作" width="160">
                     <template #default="{ row }">
                         <el-dropdown >
-                            <el-button text type="primary" @click="handleSampleReceipt(row.sampleId)">
+                            <el-button text type="primary" @click="handleSampleReceipt(row)">
                             手动签收
                             <el-icon class="el-icon--right">
                                 <arrow-down />
@@ -99,10 +95,10 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item @click="">
-                                        <el-link type="primary" :underline="false" @click="handleSampleUpdate(row)">1688修改</el-link>
+                                        <el-link type="primary" :underline="false" @click="orderNo1688Update(row)">1688订单号修改</el-link>
                                     </el-dropdown-item>
                                     <el-dropdown-item @click="">
-                                        <el-link type="primary" :underline="false" @click="handleSampleUpdate(row)">物流</el-link>
+                                        <el-link type="primary" :underline="false" @click="logisticsNoUpdate(row)">物流订单修改</el-link>
                                     </el-dropdown-item>
                                 </el-dropdown-menu>
                             </template>
@@ -123,13 +119,47 @@
             />
         </div>
     </el-dialog>
+
+    <el-dialog 
+        :model-value="orderVisible"
+        width="400"
+        :title="dialogFlag === true ?'物流单号修改':'1688订单号修改'"
+        :close-on-click-modal="false"
+        :before-close="orderDialogClose"
+    >
+        <el-form 
+            ref="formRef"
+            :model="orderForm"
+            label-width="auto" 
+            style="max-width: 400px"
+        >
+            <el-form-item label="1688订单号" prop="orderNo1688" v-if="!dialogFlag">
+                <el-input v-model="orderForm.orderNo"/>
+            </el-form-item>
+
+            
+            <el-form-item label="物流单号" prop="logisticsNo" v-if="dialogFlag">
+                <el-input v-model="orderForm.logisticsNo"/>
+            </el-form-item>
+
+        </el-form>
+
+        <template #footer>
+            <span>
+                <el-button @click="orderDialogClose">取消</el-button>
+                <el-button type="primary" @click="submitForm(formRef)">确认</el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import { getProgressSampleList, ProgressSampleReceipt, ProgressSampleUpdate } from '~/src/api/devlocal/progress';
-import { ISampleList } from '~/src/type/progress/progressType';
+import { IProgressSampleUpdate, ISampleList } from '~/src/type/progress/progressType';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import type { TableInstance } from 'element-plus'
+import type { TableInstance, FormInstance } from 'element-plus'
+import { convertString } from '~/src/utils/stringUtils';
+import { getSpecificChildren } from '~/src/utils/nodeUtils';
 
 defineOptions({
     name: 'sampleProgressTable'
@@ -140,6 +170,9 @@ let props = defineProps<{
 const dflag = ref<boolean>(false)
 watchEffect(()=>{
     dflag.value = props.sampleProgressVisible
+    if(dflag.value === true) {
+        fetchData()
+    }
   }
 )
 // 总记录数
@@ -155,7 +188,16 @@ const listLoading = ref<boolean>(true)
 // 样品进度数据
 const sampleList = ref<ISampleList[]>([])
 const tableRef = ref<TableInstance>()
-const emit = defineEmits(['update:sampleProgressVisible'])
+const orderVisible = ref<boolean>(false)
+const dialogFlag = ref<boolean>(false)
+ // 订单号
+ const orderForm = reactive({
+    sampleId:'',
+    orderNo:'',
+    logisticsNo:'',
+})
+const emit = defineEmits(['update:sampleProgressVisible', 'update:priviewListValue'])
+
 const handlerCloseDialog = () => {
     dflag.value = false
     emit('update:sampleProgressVisible', dflag.value);
@@ -165,31 +207,99 @@ const formattedProgressLog = (str: string) => {
     .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
     .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
-// const isFullscreen = ref<boolean>(false)
-// const clickFullScreen = () => {
-//   isFullscreen.value = !isFullscreen.value
-//   isFullscreen.value ? enter() : exit()
-// }
-// const { exit, enter, isFullscreen: _isFullscreen } = useFullscreen()
-// watch(
-//   _isFullscreen,
-//   () => {
-//     if (_isFullscreen.value) isFullscreen.value = true
-//     else isFullscreen.value = false
-//   },
-//   { immediate: true }
-// )
-
-const handleSampleReceipt = async (sampleId: number) => {
-    const { data } = await ProgressSampleReceipt({ sampleId })
+const orderDialogClose = () =>{
+    orderVisible.value = false
+    orderForm.sampleId = ''
+    orderForm.logisticsNo = ''
+    orderForm.orderNo = ''
 }
-const handleSampleUpdate = async (row: any) => {
-    const { data } = await ProgressSampleUpdate({
-        sampleId: row.sampleId,
-        order1688No: row.orderNo1688,
-        logisticsNo: row.logisticsNo
+const formRef = ref<FormInstance>()
+// 手动签收
+const handleSampleReceipt = async (row: any) => {
+    $baseConfirm('确定要手动签收此条样品记录吗',"系统提示", async ()=>{
+
+        const {data} = await ProgressSampleReceipt({sampleId:row.sampleId})
+        row.receiptDate = data.receiptDate
+        
+        if (data != null || data != undefined){
+            $baseMessage(`样品${row.componentName}手动签收成功！`,"success","hey")
+        }
     })
 }
+
+
+// 拿样table单击事件
+const sampleTableInputChage = (row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+    if (getSpecificChildren(cell, ".el-image")[0]){
+        emit("update:priviewListValue", row.componentImg)
+    }
+}
+// 1688单号修改
+const orderNo1688Update = (row: any) =>{
+    orderForm.sampleId = ''
+    orderVisible.value = true
+    dialogFlag.value = false
+    orderForm.sampleId = convertString((row.sampleId))
+}
+
+// 物流单号修改
+const logisticsNoUpdate = (row: any) =>{
+    orderForm.sampleId = ''
+    orderVisible.value = true
+    dialogFlag.value = true
+    orderForm.sampleId = convertString(row.sampleId)
+}
+
+// 修改提交
+const submitForm = async (formEl: FormInstance | undefined) => {
+  let orderParam: IProgressSampleUpdate = {
+    sampleId: parseInt(orderForm.sampleId)
+  }
+
+
+  if (dialogFlag.value === false) {
+    if (orderForm.orderNo === ''){
+        $baseMessage("1688订单号不能为空！","error","hey")
+        return
+    }
+    orderParam.order1688No = orderForm.orderNo
+  }else {
+    if (orderForm.logisticsNo === ''){
+        $baseMessage("物流单号不能为空！","error","hey")
+        return
+    }
+    orderParam.logisticsNo = orderForm.logisticsNo
+
+  }
+
+  $baseConfirm(`确定要修改${dialogFlag.value === true ?'物流单号':'1688订单号'}`,"系统提示", async ()=>{
+    const {data} = await ProgressSampleUpdate({...orderParam})
+    if(data === true){
+        if (orderForm.orderNo !== ''){
+            $baseMessage("1688订单号修改成功！","success","hey")
+            const index = sampleList.value.findIndex((item:any) => item.sampleId === parseInt(orderForm.sampleId));
+            if (index !== -1) {
+                sampleList.value[index].orderNo1688 = orderForm.orderNo;
+            }
+            orderDialogClose()
+            return
+        }
+
+        if (orderForm.logisticsNo !== ''){
+            $baseMessage("物流单号修改成功！","success","hey")
+            const index = sampleList.value.findIndex((item:any) => item.sampleId === parseInt(orderForm.sampleId));
+            if (index !== -1) {
+                sampleList.value[index].logisticsNo = orderForm.logisticsNo;
+            }
+            orderDialogClose()
+            return
+        }
+
+    }
+  })
+
+}
+
 /**
  * 获取样品进度数据
  */
@@ -226,9 +336,9 @@ const fetchData = async () => {
 onActivated(() => {
   tableRef.value?.doLayout()
 })
-onBeforeMount(() => {
-  fetchData()
-})
+// onBeforeMount(() => {
+//   fetchData()
+// })
 
 </script>
 

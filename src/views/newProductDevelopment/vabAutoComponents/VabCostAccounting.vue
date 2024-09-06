@@ -34,9 +34,9 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="站点" min-width="120">
+                <el-table-column label="站点" min-width="140">
                     <template #default="{ row }">
-                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)">
+                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 15px;">
                             <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
@@ -149,12 +149,13 @@
                         <span>{{ row.packaging }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="头程渠道" min-width="120">
+                <el-table-column label="头程渠道" min-width="140">
                     <template #default="{ row }">
                         <el-select 
                             v-model="row.firstMileChannel" 
                             placeholder="请选择头程渠道"
                             @change="handlerEstimatendChange(row)"
+                            style="min-width: 15px;"
                         >
                             <el-option 
                                 v-for="dict in firstLegChannelColumns" 

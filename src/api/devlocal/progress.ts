@@ -20,7 +20,9 @@ import {
   IProgressMoldUpdateResp, 
   IShareListResp,
   IComponentId,
-  IProgressSampleReceiptResp} from '/@/type/progress/progressType'
+  IProgressSampleReceiptResp,
+  ISharePersonReq,
+  IProgressFilterResp} from '/@/type/progress/progressType'
 
 /**
  * 新品进度-获取新品进度管理列表
@@ -106,6 +108,17 @@ export function getProgressSuppliserList(params?: IComponentId) {
     params,
   })
 }
+/**
+ * 新品进度-获取参与人员列表
+ */
+export function getProgressPersonList() {
+  return request({
+    url: `${BASE_API}/progress/person/list`,
+    method: 'get',
+  })
+}
+
+
 
 /**
  * 图片上传请求
@@ -209,8 +222,26 @@ export function ProgressSampleUpdate(data?: IProgressSampleUpdate) {
     data,
   })
 }
-
-
+/**
+ * 新品进度-归档
+ */
+export function updateProgressArchive(params?: IProgressId) {
+  return request({
+    url: `${BASE_API}/progress/archive`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 新品进度-参与人员筛选
+ */
+export function getProgressFilter(data?: ISharePersonReq): Promise<IProgressFilterResp>{
+  return request({
+    url: `${BASE_API}/progress/filter`,
+    method: 'post',
+    data,
+  })
+}
 
 
 

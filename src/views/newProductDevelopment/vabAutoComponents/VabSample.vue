@@ -209,7 +209,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 watchEffect(()=>{
     sampleVisible.value = props.visible
     progressId.value = props.progressId
-    
+    if(sampleVisible.value === true) fetchData()
 })
 
 // 零件名selct切换
@@ -226,10 +226,10 @@ const childCloseDialog = async () =>{
     sampleFormRef.value!.resetFields()
     props.closeDialog()
 }
-
-onMounted(async ()=>{
+const fetchData = async () => {
     const {data} = await getComponentInfoList({progressId:parseInt(props.progressId)})
     componentList.value = data
-})
+}
+
 
 </script>

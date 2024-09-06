@@ -22,6 +22,18 @@ export interface IProgressShared {
     userID: number
     userName: string
 }
+// 筛选共享人
+export interface ISelectShare {
+    label: string
+    value: string
+}
+// 新品进度-参与人员筛选
+export interface ISharePersonReq {
+    userNameList: string[]
+    status: number
+    pageNo: number
+    pageSize: number
+}
 /**
  * 评估id
  */
@@ -72,7 +84,12 @@ export interface IProgress {
   // 控添加图片样式隐藏显示
   hide?: boolean
 }
-
+export interface IProgressFilterResp {
+    data: {
+        list: IProgress[]
+        total: number
+    }
+}
 /**
  * 图片上传参数类型
  */

@@ -148,7 +148,8 @@
       :id = "shareId"
       :list="shareUserList"
       @update:sharedVisible = "updateSharedVisibleValue"
-      
+      :handlerSwitchChange="handlerSwitchChange"
+      :fetchData="fetchData"
     />
 
     <!-- 产品成本核算与推进子组件 -->
@@ -182,6 +183,7 @@ import {
   getEvaluationShareInfo,
   getEstimatedCostAccountingList,
   getEvaluationCostParameter,
+  updateSharePerson,
 } from '/@/api/devlocal/evaluation'
 import { getUserInfo } from '/@/api/devlocal/userLogin'
 import {
@@ -447,7 +449,29 @@ const sharedEvaluation = async (row: any) => {
   shareUserList.value = data
 
 }
+/**
+ * 共享操作
+ */
+ const handlerSwitchChange = async (row: any) => {
+  let type = 1;
 
+  if (row.share === true) {
+    type = 0
+  }
+  const { data } = await updateSharePerson({
+    evaluationId: shareId.value,
+    userId: row.userID,
+    type
+  })
+
+  if (data === true && type === 0) {
+    $baseMessage(`已共享给${row.userName}成功！`, "success", "hey")
+  }
+
+  if (data === true && type === 1) {
+    $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
+  }
+}
 // 获取跑分明细
 const getBenchmarkScoreDetail = async (id: any) => {
   const { data } = await getEvaluationScoreDetail({ evaluationId:id })

@@ -13,6 +13,7 @@
     </div>
     <template #footer>
       <span>
+        <el-button @click="insertDate">插入日期</el-button>
         <el-button @click="handleCloseDialog">取消</el-button>
         <el-button type="primary" @click="handleConfirmDialog">确认</el-button>
       </span>
@@ -72,7 +73,19 @@ const editorConfig = reactive<any>({
 const toolbarConfig: Partial<IToolbarConfig> = {  // TS 语法
   excludeKeys: ['group-video','codeBlock',]
 }
+// 插入日期
+const insertDate = () => {
+  if (!editorRef.value) return
 
+  const editor = editorRef.value
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const formattedDate = `${year}-${month}-${day}：`
+
+  editor.insertText(formattedDate) // 插入文本
+}
 // 初始化定时器
 let intervalTimerLog: NodeJS.Timeout | null = null
 /**

@@ -316,24 +316,26 @@ const sampleFormVisible = ref<boolean>(false)
 // 零件清单修改开票
 const handlerInvoicingChange = async (row:IProgressProdcutComponent) =>{
     
-    await updateComponenet({
-        progressId: row.progressId,
-        supplierId: row.supplierId,
-        componentId: row.componentId,
-        invoicing: row.invoicing,
-    })
+    // await updateComponenet({
+    //     progressId: row.progressId,
+    //     supplierId: row.supplierId,
+    //     componentId: row.componentId,
+    //     invoicing: row.invoicing,
+    // })
+    await updateComponenet(row)
     props.trialCalculationData?.()
 }
 
 // 零件清单修改货币
 const handlerCurrencyChange = async (row:IProgressProdcutComponent) =>{
     
-    await updateComponenet({
-        progressId: row.progressId,
-        supplierId: row.supplierId,
-        componentId: row.componentId,
-        currency: row.currency,
-    })
+    // await updateComponenet({
+    //     progressId: row.progressId,
+    //     supplierId: row.supplierId,
+    //     componentId: row.componentId,
+    //     currency: row.currency,
+    // })
+    await updateComponenet(row)
     props.trialCalculationData?.()
 }
 
@@ -601,8 +603,8 @@ const componentClickCancle = async (event:any,value:IProgressProdcutComponent) =
     componentId: value.componentId,
     [clickColumn.property]: value[clickColumn.property],
   }
-  await updateComponenet(query)
-
+//   await updateComponenet(query)
+    await updateComponenet(value)
   fetchDataComponent()
   props.trialCalculationData?.()
 }
@@ -614,12 +616,13 @@ const includedInCostChange = async (row:IProgressProdcutComponent) =>{
 
     
     // 更新新值
-    await updateComponenet({
-        progressId: row.progressId,
-        supplierId: row.supplierId,
-        componentId: row.componentId,
-        includedInCost: row.includedInCost
-    })
+    // await updateComponenet({
+    //     progressId: row.progressId,
+    //     supplierId: row.supplierId,
+    //     componentId: row.componentId,
+    //     includedInCost: row.includedInCost
+    // })
+    await updateComponenet(row)
     props.trialCalculationData?.()
 }
 

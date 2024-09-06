@@ -6,14 +6,14 @@
         :close-on-click-modal="false"
         :before-close = "props.closeDialogHandler"
         title="样品追踪"
-        
         width="70%">
 
         <el-table 
             :data="sampleTableList" 
             style="width: 100%" 
             @cell-click="sampleTableInputChage"
-            height="850"
+            height="570"
+            border stripe
         >
             <el-table-column 
                 v-for="(item, index) in sampleTranckTableCloums" 
@@ -37,13 +37,28 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作" min-width="140">
-                <template #default="scope">
-                    <el-button text type="primary" @click="manualReceipt(scope.row)">手动签收</el-button>
-                    <el-button text type="primary" @click="orderNo1688Update(scope.row)">1688订单号修改</el-button>
-                    <el-button text type="primary" @click="logisticsNoUpdate(scope.row)">物流订单修改</el-button>
-                </template>
-            </el-table-column>
+            <el-table-column align="center" fixed="right" label="操作" min-width="160">
+                    <template #default="{ row }">
+                        <el-dropdown >
+                            <el-button text type="primary" @click="manualReceipt(row)">
+                            手动签收
+                            <el-icon class="el-icon--right">
+                                <arrow-down />
+                            </el-icon>
+                            </el-button>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item @click="">
+                                        <el-link type="primary" :underline="false" @click="orderNo1688Update(row)">1688订单号修改</el-link>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item @click="">
+                                        <el-link type="primary" :underline="false" @click="logisticsNoUpdate(row)">物流订单修改</el-link>
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                    </template>
+                </el-table-column>
         </el-table>
 
     </el-dialog>
@@ -90,7 +105,7 @@ import { formatDate } from '/@/utils/dateUtils'
 import {getSpecificChildren} from '/@/utils/nodeUtils'
 import { FormInstance, } from 'element-plus'
 import {convertString} from '/@/utils/stringUtils'
-
+import { ArrowDown } from '@element-plus/icons-vue'
 
 defineComponent({
     name:"VabSampleTranck"
@@ -127,10 +142,9 @@ const fetachData = async()=>{
 }
 
 watchEffect(()=>{
-    fetachData()
     sampleVisible.value = props.visible
     progressId.value = props.progressId
-    
+    if (sampleVisible.value === true) fetachData()
 })
 
 // 拿样table单击事件

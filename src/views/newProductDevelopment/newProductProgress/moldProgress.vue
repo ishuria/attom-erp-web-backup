@@ -117,7 +117,7 @@
                             {{ row.audit }}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" fixed="right" label="操作" width="180">
+                    <el-table-column align="center" fixed="right" label="操作" min-width="200">
                         <template #default="{ row }">
                             <el-button text type="primary" :disabled="row.status !== 1">付款申请</el-button>
                             <el-button text type="primary" @click="handleAudit(row)" :disabled="row.status === 1 || row.status === 2">审批</el-button>
@@ -185,6 +185,9 @@ let props = defineProps<{
 const dflag = ref<boolean>(false)
 watchEffect(()=>{
     dflag.value = props.moldProgressVisible
+    if (dflag.value === true) {
+        fetchData()
+    }
   }
 )
 // 总记录数
@@ -279,7 +282,7 @@ const handleSuccess = async () => {
     auditVisible.value = false
     const { data } = await updateProgressMold(form.value)
     resetForm()
-    
+    fetchData()
 }
 
 /**
@@ -317,9 +320,6 @@ const fetchData = async () => {
 }
 onActivated(() => {
   tableRef.value?.doLayout()
-})
-onBeforeMount(() => {
-  fetchData()
 })
 
 </script>

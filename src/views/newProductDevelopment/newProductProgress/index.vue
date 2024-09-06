@@ -6,7 +6,7 @@ handleSubmit<template>
           <vab-query-form-left-panel >
             <el-button type="primary" @click="getSampleProgress">样品进度</el-button>
             <el-button type="primary" @click="getMoldProgress">开模进度</el-button>
-            <el-button type="primary">参与人员筛选</el-button>
+            <el-button type="primary" @click="handlePersonSelect">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -179,7 +179,7 @@ handleSubmit<template>
                       <el-link type="primary" :underline="false" @click="handleGetEvaluationById(row.evaluationId)">查看新款评估</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >归档</el-link>
+                      <el-link type="primary" :underline="false" @click="handleArchived(row.progressId)">归档</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -203,7 +203,7 @@ handleSubmit<template>
       <el-tab-pane label="已归档" name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">参与人员筛选</el-button>
+            <el-button type="primary" @click="handlePersonSelect">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <div class="custom-table-right-tools">
@@ -378,11 +378,13 @@ handleSubmit<template>
     >
     </wangEditor>
     <!-- 共享 -->
-    <progressShare
+    <vab-shared  
       :visible="sharedVisible"
-      :id="shareId"
+      :id = "shareId"
       :list="shareUserList"
       @update:sharedVisible = "updateSharedVisibleValue"
+      :handlerSwitchChange="handlerSwitchChange"
+      :fetchData="fetchData"
     />
     
     <!-- 开模申请 -->
@@ -448,6 +450,7 @@ handleSubmit<template>
     <sampleProgress 
       :sampleProgressVisible="sampleProgressDialog"
       @update:sampleProgressVisible="sampleProgressDialog = $event"
+      @update:priviewListValue="setPreviewList"
     />
     <!-- 开模进度 -->
     <moldProgress 
@@ -455,11 +458,6 @@ handleSubmit<template>
       @update:moldProgressVisible="moldProgressDialog = $event"
     />
     <!-- 新款评估 -->
-    <!-- <newEvaluation 
-      :newEvaluationVisible="newEvaluationVisible"
-      :newEvaluationData="newEvaluationData"
-      @update:newEvaluationVisible="newEvaluationVisible = $event"
-    /> -->
     <el-dialog 
         v-model="newEvaluationVisible" 
         :close-on-click-modal="false" 
@@ -491,6 +489,36 @@ handleSubmit<template>
             </el-table>
         </div>
     </el-dialog>
+    <!-- 参与人员筛选 -->
+    <el-dialog 
+      v-model="shareSelectVisible" 
+      :close-on-click-modal="false" 
+      title="参与人员筛选" 
+      width="480"
+      class="moldDialog shareSelectDialog"
+      :before-close="handleShareSelectClose"
+    >
+      <el-divider style="margin-top: 0;"/>
+      <el-space>
+        <span>参与人员列表</span>
+        <el-select 
+          v-model="shareSelect" 
+          multiple 
+          placeholder="请选择参与人员"  
+          collapse-tags
+          collapse-tags-tooltip
+          style="width: 250px;"
+          clearable
+        >
+          <el-option v-for="item in optionShare" :key="item.userID" :label="item.userName" :value="item.userID" />
+        </el-select>
+      </el-space>
+      <template #footer>
+        <span>
+          <el-button type="primary" @click="handleShareSelectConfirm">筛选</el-button>
+        </span>
+      </template>
+    </el-dialog>
     <!-- 关键词趋势图表 -->
         <vab-trend 
           :trendEchatsVisible="keyWordTrendEchatsVisible"
@@ -508,7 +536,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { ref } from 'vue'
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import { IProgressQueryReq, IProgress, IProgressShared, IGetByIdQueryEvaluation } from '/@/type/progress/progressType'
+import { IProgressQueryReq, IProgress, IProgressShared, IGetByIdQueryEvaluation, ISelectShare } from '/@/type/progress/progressType'
 import {
   deleteImage,
   getList,
@@ -522,6 +550,11 @@ import {
   copyProgress,
   getProgressComponentList,
   getProgressSuppliserList,
+  updateProgressSharelist,
+  updateProgressArchive,
+  getProgressPersonList,
+  getProgressFilter,
+  getProgressLog
 } from '/@/api/devlocal/progress'
 import type { UploadFile, TabsPaneContext, TableInstance } from 'element-plus'
 import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
@@ -604,7 +637,7 @@ const tableClickIdx = ref<any>(0)
 // 共享
 const sharedVisible = ref<boolean>(false)
 // 共享人id
-const shareId = ref<number>(0)
+const shareId = ref<string>('')
 // 共享人列表
 const shareUserList = ref<IProgressShared[]>([])
 // 开模申请
@@ -645,8 +678,20 @@ const trendEcahts = ref<IKeyWordTrend>({
 })
 // 输入的关键词
 const inputKeyWord = ref<string>('')
+// 控制参与人员筛选
+const shareSelectVisible = ref<boolean>(false)
+// 参与人员筛选列表
+const optionShare = ref<any>([])
+// 参与人员选中的值
+const shareSelect = ref<ISelectShare[]>([])
+const userNameList = ref<string[]>([])
 const handlerCloseDialog = () => {
   moldVisible.value = false
+}
+// 控制筛选对话框关闭
+const handleShareSelectClose = () => {
+  shareSelectVisible.value = false
+  shareSelect.value = []
 }
 const handlerEvaluationCloseDialog = () => {
   newEvaluationVisible.value = false
@@ -655,6 +700,17 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   if (tab.props.name === '0')  queryForm.status = 0
   else queryForm.status = 1
   fetchData()
+}
+// 处理已归档
+const handleArchived = async (progressId: number) => {
+  const { data } = await updateProgressArchive({ progressId })
+  if (data === true) {
+    const index = progressList.value.findIndex((item: any) => item.progressId === progressId)
+    progressList.value.splice(index, 1)
+    $baseMessage("此条新品进度信息已归档成功!","success","hey")
+  }
+  
+  // activeName.value = "1"
 }
 /**
  * 图片删除功能
@@ -704,6 +760,13 @@ const handlePictureCardPreview = (file: UploadFile, row: any) => {
     if (item.uid === i.uid) return
     imagePriviewList.value.push(item.url)
   })
+}
+// 修改图片预览列表
+const setPreviewList = (imageUrl:string) =>{
+    dialogVisible.value = true
+    imagePriviewList.value = []
+    imagePriviewList.value.push(imageUrl)
+    console.log(imagePriviewList.value)
 }
 
 // 图片预览关闭事件
@@ -801,7 +864,7 @@ const fetchData = async () => {
 /**
  * 当点击时切换输入框，修改输入
  */
-const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
   // 获取行的下标
   tableClickIdx.value = progressList.value.indexOf(row)
@@ -816,7 +879,9 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
   // console.log(cell.children[0].children[2])
 
   if (column.property == 'progressLog') {
-    progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
+    const { data } = await getProgressLog({ progressId: row.progressId })
+    // progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
+    progressLogCopy.value = data
     wangEditorTitle.value = '编辑开发日志'
     classify.value = 'progressLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
@@ -1021,9 +1086,78 @@ const handleCopyProgress = (row: any) => {
 const handleGetShareList = async (progressId: number) => {
   sharedVisible.value = true
   const { data } = await getProgressSharelist({ progressId })
-  shareId.value = progressId
+  shareId.value = convertString(progressId)
   shareUserList.value = data
 }
+/**
+   * 共享操作
+   */
+   const handlerSwitchChange = async (row: any) => {
+    let type = 1;
+  
+    if (row.share === true) {
+      type = 0
+    }
+    const { data } = await updateProgressSharelist({
+      progressId: parseInt(shareId.value),
+      userId: row.userID,
+      type: convertString(type)
+    })
+  
+    if (data === true && type === 0) {
+      $baseMessage(`已共享给${row.userName}成功！`, "success", "hey")
+    }
+  
+    if (data === true && type === 1) {
+      $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
+    }
+  }
+// 获取参与人员列表
+const handlePersonSelect = async () => {
+  shareSelectVisible.value = true
+  const { data } = await getProgressPersonList()
+  
+  optionShare.value = data
+}
+// 确认筛选
+const handleShareSelectConfirm = async () => {
+  shareSelectVisible.value = false
+  // console.log(shareSelect.value);
+  shareSelect.value.forEach((item: any) => {
+    const i = optionShare.value.find((option: any) => option.userID === item)
+    userNameList.value.push(i.userName)
+  })
+  // console.log(userNameList.value);
+  listLoading.value = true
+  const { data } = await getProgressFilter({
+    userNameList: userNameList.value, 
+    status: 0,
+    pageNo: 1,
+    pageSize: 20,
+  })
+  progressList.value = data.list
+  total.value = data.total
+  listLoading.value = false
+
+  progressList.value.forEach(item => {
+    const tempArr: string[] = []
+    item.imageList!.forEach(image => {
+      tempArr.push(image.imageUrl!)
+      image.url = image.imageUrl;
+      image.name = image.imageId;
+      delete image.imageUrl;
+      delete image.imageId;
+    })
+    
+    if(tempArr.length === 5){
+      item.hide = true
+    } else {
+      item.hide = false
+    }
+  })
+  shareSelect.value = []
+}
+
 const updateSharedVisibleValue = (newValue:boolean) =>{
   sharedVisible.value = newValue
 }
@@ -1157,5 +1291,18 @@ onBeforeMount(() => {
   padding-top: 0;
 }
    
-  
+// .shareSelectDialog {
+//   .el-dialog__body {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: center;
+//   }
+// }
+:deep(.shareSelectDialog .el-dialog__body) {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 </style>

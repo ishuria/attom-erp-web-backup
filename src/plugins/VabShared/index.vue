@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="props.visible" 
+  <el-dialog v-model="dflag" 
     :close-on-click-modal="false" 
     title="共享" 
     width="650"
@@ -13,7 +13,7 @@
               v-model="row.share"
               class="ml-2"
               style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-              @change="handlerSwitchChange(row)"
+              @change="props.handlerSwitchChange(row)"
             />
           </div>
         </template>
@@ -28,10 +28,8 @@
 
 <script lang="ts" setup>
 
-import {updateSharePerson,} from '/@/api/devlocal/evaluation'
-
 import {IShared,} from '/@/type/evaluation/evaluationType'
-import { IProgressShared } from '/@/type/progress/progressType'
+import { IProgressShared} from '/@/type/progress/progressType'
 defineOptions({
   name: 'VabShared',
 })
@@ -41,6 +39,8 @@ let props = withDefaults(defineProps<{
     visible: boolean
     id:string
     list: IShared[] | IProgressShared[]
+    handlerSwitchChange: (row: any) => void
+    fetchData: () => void
 }>(),{
     visible: false,
 })
@@ -50,6 +50,11 @@ const emit = defineEmits<{
     (e: 'update:sharedVisible', value: boolean): void
 }>()
 
+const dflag = ref<boolean>(false)
+  watchEffect(()=>{
+    dflag.value = props.visible
+  }
+)
 
 const sharedColumns = [
   {
@@ -70,34 +75,10 @@ const sharedColumns = [
   },
 ]
 
-
-/**
- * 共享操作
- */
- const handlerSwitchChange = async (row: any) => {
-  let type = 1;
-
-  if (row.share === true) {
-    type = 0
-  }
-  const { data } = await updateSharePerson({
-    evaluationId: props.id,
-    userId: row.userID,
-    type
-  })
-
-  if (data === true && type === 0) {
-    $baseMessage(`已共享给${row.userName}成功！`, "success", "hey")
-  }
-
-  if (data === true && type === 1) {
-    $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
-  }
-}
-
 // 关闭dialog
 const handlerCloseDialog = () =>{
     emit('update:sharedVisible', false);
+    props.fetchData()
 }
 
 
