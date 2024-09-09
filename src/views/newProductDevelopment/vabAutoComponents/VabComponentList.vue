@@ -322,7 +322,7 @@ const handlerInvoicingChange = async (row:IProgressProdcutComponent) =>{
         componentId: row.componentId,
         invoicing: row.invoicing,
     })
-    // await updateComponenet(row)
+    fetchDataComponent()
     props.trialCalculationData?.()
 }
 
