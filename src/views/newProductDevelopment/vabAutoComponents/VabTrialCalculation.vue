@@ -9,22 +9,22 @@
                 <el-table 
                     :data="sampleList"
                     @cell-click="sampelTrialTableInputChage"
-                    height="140"
+                    height="95"
                     border stripe
                     :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
                     ref="trialTableRef"
                 >
 
-                <el-table-column prop="site" label="站点" min-width="140">
+                <el-table-column prop="site" label="站点" min-width="127">
                     <template #default="{ row }">
-                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 15px;">
+                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 12px;">
                             <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
                     </template>
                 </el-table-column>
 
-                <el-table-column label="外汇币种">
+                <el-table-column label="外汇币种" min-width="100">
                     <template #default="{ row }">
                         <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span>
                     </template>
@@ -37,7 +37,7 @@
                 </el-table-column>
 
 
-                <el-table-column label="产品描述">
+                <el-table-column label="产品描述" min-width="200">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="textarea" autofocus v-model="row.desc" :autosize="{ minRows: 3, maxRows: 9 }"
@@ -48,7 +48,7 @@
                 </el-table-column>
 
 
-                <el-table-column prop="length" label="长">
+                <el-table-column prop="length" label="长" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.length" @blur="clickCancle($event, row)" />
@@ -57,7 +57,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="width" label="宽">
+                <el-table-column prop="width" label="宽" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.width" @blur="clickCancle($event, row)" />
@@ -66,7 +66,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="height" label="高">
+                <el-table-column prop="height" label="高" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.height" @blur="clickCancle($event, row)" />
@@ -75,7 +75,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="price" label="实际产品总成本">
+                <el-table-column prop="price" label="实际总成本" min-width="100">
                     <template #default="{ row }">
                         <span>{{ row.price }}</span>
                     </template>
@@ -104,12 +104,12 @@
                         <span>{{ row.packaging }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
+                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="130">
                     <template #default="{ row }">
                         <el-select 
                             v-model="row.firstMileChannel" 
                             placeholder="请选择头程渠道"
-                            style="min-width: 15px"
+                            style="min-width: 13px"
                         >
                             <el-option 
                                 v-for="dict in firstLegChannelColumns" 
@@ -136,7 +136,7 @@
                 <el-table-column prop="roi" label="ROI">
                 </el-table-column>
 
-                <el-table-column prop="weightCoefficient" label="重量系数">
+                <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.weightCoefficient" @blur="clickCancle($event, row)" />
@@ -145,7 +145,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="volumeCoefficient" label="体积系数">
+                <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.volumeCoefficient" @blur="clickCancle($event, row)" />
@@ -163,10 +163,10 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="platformCommission" label="平台佣金">
+                <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
                 </el-table-column>
 
-                <el-table-column prop="storageFee" label="仓储费2个月$">
+                <el-table-column prop="storageFee" label="仓储费2个月$" min-width="120">
                 </el-table-column>
 
 

@@ -1,6 +1,6 @@
 handleSubmit<template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
       <el-tab-pane label="进行中" name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
@@ -29,7 +29,7 @@ handleSubmit<template>
           @cell-click="changeInput"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column label="优先级" prop="priority" align="center" width="75">
+          <el-table-column label="优先级" prop="priority" align="center" min-width="75">
             <template #default = "{ row }">
               <el-select size="default" v-model="row.priority" @blur="clickCancle($event, row)">
                 <el-option 
@@ -42,7 +42,7 @@ handleSubmit<template>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="示例图片" prop="imageList" class="image-wall" width="450">
+          <el-table-column label="示例图片" prop="imageList" class="image-wall" min-width="450">
             <template #default = "{ row }">
               <VueDraggable
                 v-model="row.imageList"
@@ -90,7 +90,7 @@ handleSubmit<template>
               </VueDraggable>
             </template>
           </el-table-column>
-          <el-table-column label="产品" prop="product" width="160">
+          <el-table-column label="产品" prop="product" min-width="160">
             <template #default = "{ row }">
               <div class="none">
                   <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 7 }"
@@ -99,17 +99,17 @@ handleSubmit<template>
                 <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" prop="oem" align="center" width="60">
+          <el-table-column label="OEM" prop="oem" align="center" min-width="60">
             <template #default = "{ row }">
                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox"/>
             </template>
           </el-table-column>
-          <el-table-column label="立项日期" prop="createTime" align="center" width="100">
+          <el-table-column label="立项日期" prop="createTime" align="center" min-width="100">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="85">
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" min-width="85">
             <template #default = "{ row }">
               <div class="none">
                 <el-input type="textarea" autofocus v-model="row.currentPhaseStatus" :autosize="{ minRows: 3, maxRows: 9 }"   @blur="clickCancle($event, row)"/>
@@ -117,15 +117,17 @@ handleSubmit<template>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="开发日志" prop="progressLog" min-width="300">
+          <el-table-column label="开发日志" prop="progressLog" min-width="500">
             <template #default = "{ row }">
               <div class="none" >
                 <el-input type="textarea" autofocus v-model="row.progressLog" :autosize="{ minRows: 3, maxRows: 9 }" />
               </div>
-              <span> {{ removeHtmlTags(row.progressLog) }}</span>
+              <span>
+                  {{ removeHtmlTags(row.progressLog) }}
+              </span>
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip width="100">
+          <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip min-width="100">
             <template #default = "{ row }">
               <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
             </template>
@@ -138,7 +140,7 @@ handleSubmit<template>
                 <span>{{ removeHtmlTags(row.remark) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" width="85">
+          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="85">
             <template #default = "{ row }">
               <div class="none">
                   <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
@@ -146,13 +148,13 @@ handleSubmit<template>
                 <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" align="center" width="110">
+          <el-table-column label="新款评估编号" prop="evaluationId" align="center" min-width="110">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
+          <el-table-column align="center" :fixed="fixed" label="操作" min-width="180px">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="handleSampleCostting(row)">
@@ -167,7 +169,7 @@ handleSubmit<template>
                       <el-link type="primary" :underline="false" @click="addProgressMold(row.progressId)">开模申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false">订大货申请</el-link>
+                      <el-link type="primary" :underline="false" @click="handleOrderProcess(row)">订大货申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false" @click="handleCopyProgress(row)">复制</el-link>
@@ -203,7 +205,7 @@ handleSubmit<template>
       <el-tab-pane label="已归档" name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="handlePersonSelect">参与人员筛选</el-button>
+            <el-button type="primary" @click="handleArchivedPersonselect">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <div class="custom-table-right-tools">
@@ -228,7 +230,7 @@ handleSubmit<template>
           @cell-click="changeInput"
           :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column label="优先级" prop="priority" align="center" width="75">
+          <el-table-column label="优先级" prop="priority" align="center" min-width="75">
             <template #default = "{ row }">
               <el-select size="default" v-model="row.priority" @blur="clickCancle($event, row)" disabled>
                 <el-option 
@@ -241,7 +243,7 @@ handleSubmit<template>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="示例图片" prop="imageList" class="image-wall" width="450">
+          <el-table-column label="示例图片" prop="imageList" class="image-wall" min-width="450">
             <template #default = "{ row }">
               <VueDraggable
                 v-model="row.imageList"
@@ -291,17 +293,17 @@ handleSubmit<template>
               </VueDraggable>
             </template>
           </el-table-column>
-          <el-table-column label="产品" prop="product" width="160">
+          <el-table-column label="产品" prop="product" min-width="160">
             <template #default = "{ row }">
               <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" prop="oem" align="center" width="60">
+          <el-table-column label="OEM" prop="oem" align="center" min-width="60">
             <template #default = "{ row }">
                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox" disabled/>
             </template>
           </el-table-column>
-          <el-table-column label="立项日期" prop="createTime" align="center" width="100">
+          <el-table-column label="立项日期" prop="createTime" align="center" min-width="100">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
@@ -311,7 +313,7 @@ handleSubmit<template>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="开发日志" prop="progressLog" min-width="300">
+          <el-table-column label="开发日志" prop="progressLog" min-width="500">
             <template #default = "{ row }">
               <span> {{ removeHtmlTags(row.progressLog) }}</span>
             </template>
@@ -326,20 +328,20 @@ handleSubmit<template>
               <span>{{ removeHtmlTags(row.remark) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" width="85">
+          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="85">
             <template #default = "{ row }">
               <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" align="center" width="110">
+          <el-table-column label="新款评估编号" prop="evaluationId" align="center" min-width="110">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
+          <el-table-column align="center" :fixed="fixed" label="操作" min-width="180px">
             <template #default="{ row }">
-              <el-button text type="primary">
+              <el-button text type="primary" @click="handleCopyAchivedProgress(row)">
                 复制
               </el-button>
             </template>
@@ -392,12 +394,12 @@ handleSubmit<template>
       v-model="moldVisible" 
       :close-on-click-modal="false" 
       title="开模申请" 
-      width="480"
+      width="500"
       class="moldDialog"
       :before-close="handlerCloseDialog"
     >
       <el-divider style="margin-top: 0;"/>
-      <el-form ref="formRef" class="demo-form" label-position="right" label-width="110px" :model="form" style="max-width: 300px; margin: 0 auto;">
+      <el-form ref="formRef" class="demo-form" label-position="right" label-width="120px" :model="form" style="max-width: 340px; margin: 0 auto;">
         <el-form-item label="零件名" prop="componentName">
           <el-select v-model="form.componentName" placeholder="" @change="handleComponentChange" clearable>
             <el-option 
@@ -516,6 +518,36 @@ handleSubmit<template>
       <template #footer>
         <span>
           <el-button type="primary" @click="handleShareSelectConfirm">筛选</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 参与人员筛选 -->
+    <el-dialog 
+      v-model="shareArchivedSelectVisible" 
+      :close-on-click-modal="false" 
+      title="参与人员筛选" 
+      width="480"
+      class="moldDialog shareSelectDialog"
+      :before-close="handleArchivedShareSelectClose"
+    >
+      <el-divider style="margin-top: 0;"/>
+      <el-space>
+        <span>参与人员列表</span>
+        <el-select 
+          v-model="shareArchivedSelect" 
+          multiple 
+          placeholder="请选择参与人员"  
+          collapse-tags
+          collapse-tags-tooltip
+          style="width: 250px;"
+          clearable
+        >
+          <el-option v-for="item in optionArchivedShare" :key="item.userID" :label="item.userName" :value="item.userID" />
+        </el-select>
+      </el-space>
+      <template #footer>
+        <span>
+          <el-button type="primary" @click="handleArchivedShareSelectConfirm">筛选</el-button>
         </span>
       </template>
     </el-dialog>
@@ -680,25 +712,37 @@ const trendEcahts = ref<IKeyWordTrend>({
 const inputKeyWord = ref<string>('')
 // 控制参与人员筛选
 const shareSelectVisible = ref<boolean>(false)
+// 控制已归档参与人员筛选
+const shareArchivedSelectVisible = ref<boolean>(false)
 // 参与人员筛选列表
 const optionShare = ref<any>([])
+const optionArchivedShare = ref<any>([])
 // 参与人员选中的值
 const shareSelect = ref<ISelectShare[]>([])
+const shareArchivedSelect = ref<ISelectShare[]>([])
+
 const userNameList = ref<string[]>([])
+const userNameArchivedList = ref<string[]>([])
 const handlerCloseDialog = () => {
   moldVisible.value = false
 }
 // 控制筛选对话框关闭
 const handleShareSelectClose = () => {
   shareSelectVisible.value = false
-  shareSelect.value = []
+  // shareSelect.value = []
+}
+// 控制筛选对话框关闭
+const handleArchivedShareSelectClose = () => {
+  shareArchivedSelectVisible.value = false
 }
 const handlerEvaluationCloseDialog = () => {
   newEvaluationVisible.value = false
 }
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
+  progressList.value=[]
   if (tab.props.name === '0')  queryForm.status = 0
   else queryForm.status = 1
+
   fetchData()
 }
 // 处理已归档
@@ -717,31 +761,35 @@ const handleArchived = async (progressId: number) => {
  */
 const handleRemove = async (file: UploadFile, row: any) => {
   try {
-    const imageListCopy = [...row.imageList];
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
 
-    // 找到要删除的元素的下标
-    const i = imageListCopy.findIndex((item: any) => item.url === file.url);
+      const imageListCopy = [...row.imageList];
 
-    if (i === -1) {
-      $baseMessage("错误，请联系开发人员!","error","hey")
-      return
-    }
+      // 找到要删除的元素的下标
+      const i = imageListCopy.findIndex((item: any) => item.url === file.url);
 
-    // 从复制的数组中移除该元素
-    imageListCopy.splice(i, 1);
-    // 将更新后的数组替换原来的 imageList
-    row.imageList = imageListCopy;
-    if (row.imageList.length <= 5) {
-       row.hide = false
-    }
-    const delImgForm = new FormData()
-    delImgForm.append('type', '2')
-    delImgForm.append('imageId', file.name)
+      if (i === -1) {
+        $baseMessage("错误，请联系开发人员!","error","hey")
+        return
+      }
+
+      // 从复制的数组中移除该元素
+      imageListCopy.splice(i, 1);
+      // 将更新后的数组替换原来的 imageList
+      row.imageList = imageListCopy;
+      if (row.imageList.length <= 5) {
+        row.hide = false
+      }
+      const delImgForm = new FormData()
+      delImgForm.append('type', '2')
+      delImgForm.append('imageId', file.name)
+
+      const { data } = await deleteImage(delImgForm)
+      if (data == true) {
+        $baseMessage("此条产品图片信息删除成功!","success","hey")
+      }
+})
     
-    const { data } = await deleteImage(delImgForm)
-    if (data == true) {
-      $baseMessage("此条产品图片信息删除成功!","success","hey")
-    }
   } catch (error) {
     console.error(error)
   }
@@ -1009,6 +1057,17 @@ const handleSampleCostting = (row:IProgress) =>{
     },
   })
 }
+// 订大货
+const handleOrderProcess = (row:IProgress) =>{
+  
+  router.push({
+    path: '/newProductDevelopment/orderingProcess',
+    query: {
+      progressId: row.progressId,
+      timestamp: Date.now(),
+    },
+  })
+}
 // 样品进度
 const getSampleProgress = async () => {
   sampleProgressDialog.value = true
@@ -1077,10 +1136,18 @@ const handleCopyProgress = (row: any) => {
       copyRow.value = JSON.parse(JSON.stringify(row))
       const index = progressList.value.findIndex(item => item === row)
       progressList.value.splice(index + 1, 0, copyRow.value)
+      $baseMessage(`复制成功！`, "success", "hey")
     }
   }, null)
 }
-
+const handleCopyAchivedProgress = (row: any) => {
+  $baseConfirm('是否要复制本条新品进度信息？', '复制', async () => {
+    const { data } = await copyProgress({ progressId: row.progressId })
+    if (data === true) {
+      $baseMessage(`复制成功！`, "success", "hey")
+    }
+  }, null)
+}
 
 // 共享
 const handleGetShareList = async (progressId: number) => {
@@ -1088,6 +1155,7 @@ const handleGetShareList = async (progressId: number) => {
   const { data } = await getProgressSharelist({ progressId })
   shareId.value = convertString(progressId)
   shareUserList.value = data
+  console.log('shareUserList.value', shareUserList.value)
 }
 /**
    * 共享操作
@@ -1112,15 +1180,24 @@ const handleGetShareList = async (progressId: number) => {
       $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
     }
   }
+const tabName = ref<string>('0')
 // 获取参与人员列表
 const handlePersonSelect = async () => {
   shareSelectVisible.value = true
   const { data } = await getProgressPersonList()
-  
+  // console.log(activeName.value);
+
   optionShare.value = data
+}
+const handleArchivedPersonselect = async () => {
+  shareArchivedSelectVisible.value = true
+  const { data } = await getProgressPersonList()
+
+  optionArchivedShare.value = data
 }
 // 确认筛选
 const handleShareSelectConfirm = async () => {
+  userNameList.value = []
   shareSelectVisible.value = false
   // console.log(shareSelect.value);
   shareSelect.value.forEach((item: any) => {
@@ -1128,12 +1205,16 @@ const handleShareSelectConfirm = async () => {
     userNameList.value.push(i.userName)
   })
   // console.log(userNameList.value);
+  // console.log(shareSelect.value);
   listLoading.value = true
-  const { data } = await getProgressFilter({
+  if (shareSelect.value.length === 0) { // 如果没有筛选任何人
+    fetchData()
+  } else {
+    const { data } = await getProgressFilter({
     userNameList: userNameList.value, 
-    status: 0,
-    pageNo: 1,
-    pageSize: 20,
+    status: queryForm.status,
+    pageNo: queryForm.pageNo,
+    pageSize: queryForm.pageSize,
   })
   progressList.value = data.list
   total.value = data.total
@@ -1155,9 +1236,51 @@ const handleShareSelectConfirm = async () => {
       item.hide = false
     }
   })
-  shareSelect.value = []
+  // shareSelect.value = []
+  }
 }
+const handleArchivedShareSelectConfirm = async () => {
+  userNameArchivedList.value = []
+  shareArchivedSelectVisible.value = false
+  // console.log(shareSelect.value);
+  shareArchivedSelect.value.forEach((item: any) => {
+    const i = optionArchivedShare.value.find((option: any) => option.userID === item)
+    userNameArchivedList.value.push(i.userName)
+  })
+  
+  listLoading.value = true
+  if (shareArchivedSelect.value.length === 0) { // 如果没有筛选任何人
+    fetchData()
+  } else {
+    const { data } = await getProgressFilter({
+    userNameList: userNameArchivedList.value, 
+    status: queryForm.status,
+    pageNo: queryForm.pageNo,
+    pageSize: queryForm.pageSize,
+  })
+  progressList.value = data.list
+  total.value = data.total
+  listLoading.value = false
 
+  progressList.value.forEach(item => {
+    const tempArr: string[] = []
+    item.imageList!.forEach(image => {
+      tempArr.push(image.imageUrl!)
+      image.url = image.imageUrl;
+      image.name = image.imageId;
+      delete image.imageUrl;
+      delete image.imageId;
+    })
+    
+    if(tempArr.length === 5){
+      item.hide = true
+    } else {
+      item.hide = false
+    }
+  })
+  // shareSelect.value = []
+  }
+}
 const updateSharedVisibleValue = (newValue:boolean) =>{
   sharedVisible.value = newValue
 }

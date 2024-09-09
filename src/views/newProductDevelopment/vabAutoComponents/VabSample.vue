@@ -157,6 +157,30 @@ const rules = reactive<FormRules<AddSampleForm>>({
       trigger: 'blur',
     },
   ],
+  orderNo1688: [
+    {
+      validator: (rule, value, callback) => {
+        if (!value && !sampleForm.logisticsNo) {
+          callback(new Error('1688和物流单号至少要填一个！'));
+        } else {
+          callback();
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  logisticsNo: [
+    {
+      validator: (rule, value, callback) => {
+        if (!value && !sampleForm.orderNo1688) {
+          callback(new Error('1688和物流单号至少要填一个！'));
+        } else {
+          callback();
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
 })
 
 
@@ -168,6 +192,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         let params:ISampleAddReq = {
             progressId: sampleForm.progressId,
             orderNo1688: sampleForm.orderNo1688,
+            logisticsNo: sampleForm.logisticsNo,
             price: sampleForm.price,
             bulkGoodsReturnable: sampleForm.bulkGoodsReturnable,
             remark:sampleForm.remark

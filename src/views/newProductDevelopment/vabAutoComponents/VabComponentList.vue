@@ -1,9 +1,9 @@
 <template>
     <!-- 零件清单 -->
-    <div style="width: 100%; height: 402px;">
-        <vab-query-form style="margin-top: 20px;">
+    <div style="width: 100%; height: 317px;">
+        <vab-query-form style="margin-top: 10px;">
             <vab-query-form-left-panel>
-                <el-button type="primary" v-debounce="addComponentHandler">新增零件</el-button>
+                <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
                 <el-button type="primary" @click="addSampleHandler">拿样</el-button>
                 <el-button type="primary" @click="sampleTrackHandler">样品追踪</el-button>
                 <el-button type="primary" @click="handleGetLog">开发日志</el-button>
@@ -18,11 +18,11 @@
             border stripe
             @cell-click="componentTableInputChage"
             :span-method="objectSpanMethod"
-            height="350"
+            height="280"
             :cell-style="{ textAlign: 'center'}" :header-cell-style="{ 'text-align': 'center' }"
         >
 
-            <el-table-column align="center" fixed="left" label="操作" width="120px">
+            <el-table-column align="center" fixed="left" label="零件操作" width="120px">
                 <template v-slot="scope">
                     <el-dropdown>
                         <el-button text type="primary" @click="uploadProdcutProgressImage(scope.row,scope.$index)">
@@ -65,6 +65,9 @@
             </el-table-column>
 
             <el-table-column label="已有零件id" prop="skuComponentId">
+                <template #header>
+                    已有零<br>件id
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.skuComponentId" @blur="componentClickCancle($event, row)" />
@@ -73,7 +76,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="零件数量" prop="componentQuantity">
+            <el-table-column label="零件数量" prop="componentQuantity" min-width="60">
+                <template #header>
+                    零件<br>数量
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.componentQuantity" @blur="componentClickCancle($event, row)" />
@@ -82,7 +88,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="零件单位" prop="componentUnit">
+            <el-table-column label="零件单位" prop="componentUnit" min-width="60">
+                <template #header>
+                    零件<br>单位
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.componentUnit" @blur="componentClickCancle($event, row)" />
@@ -91,7 +100,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="出厂单价" prop="unitPrice">
+            <el-table-column label="出厂单价" prop="unitPrice" min-width="60">
+                <template #header>
+                    出厂<br>单价
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.unitPrice" @blur="componentClickCancle($event, row)" />
@@ -100,7 +112,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="出厂总价" prop="totalPrice">
+            <el-table-column label="出厂总价" prop="totalPrice" min-width="60">
+                <template #header>
+                    出厂<br>总价
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.totalPrice" @blur="componentClickCancle($event, row,)" />
@@ -109,7 +124,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="运费（含税）" min-width="85" prop="freight">
+            <el-table-column label="运费含税" min-width="60" prop="freight">
+                <template #header>
+                    运费<br>含税
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.freight" @blur="componentClickCancle($event, row)" />
@@ -118,13 +136,13 @@
                 </template>
             </el-table-column>
 
-            <el-table-column  label="总价未税价" prop="preTaxPrice">
+            <el-table-column  label="总价未税价" prop="preTaxPrice" min-width="100">
                 <template #default="{ row }">
                     <span>{{ row.preTaxPrice }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column  label="总含税价" prop="taxIncludedPrice">
+            <el-table-column  label="总含税价" prop="taxIncludedPrice" min-width="100">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.taxIncludedPrice" @blur="componentClickCancle($event, row)" />
@@ -143,18 +161,25 @@
             </el-table-column>
 
             <el-table-column  label="计入产品成本" prop="includedInCost">
+                <template #header>
+                    计入产<br>品成本
+                </template>
                 <template #default="{row}">
                     <el-checkbox v-model="row.includedInCost" :true-value="0" :false-value="1"  size="large"  @change="includedInCostChange(row)"/>
                 </template>
             </el-table-column>
 
-            <el-table-column  label="供应商" prop="supplier">
+            <el-table-column  label="供应商" prop="supplier" min-width="140">
                 <template #default="{row}">
                     <div class="none">
-                        <el-input type="textarea" autofocus v-model="row.supplier" :autosize="{ minRows: 3, maxRows: 9 }"
+                        <el-input type="text" autofocus v-model="row.supplier" 
                             @blur="componentClickCancle($event, row)" />
                     </div>
-                    <span>{{ row.supplier }}</span>
+                    <span>
+                        <el-text truncated>
+                            {{ row.supplier }}
+                        </el-text>
+                    </span>
                 </template>
             </el-table-column>
 
@@ -167,7 +192,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column  label="实际税点" prop="actualTaxRate">
+            <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60">
+                <template #header>
+                    实际<br>税点
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.actualTaxRate" @blur="componentClickCancle($event, row)" />
@@ -176,7 +204,10 @@
                 </template>
             </el-table-column>
 
-            <el-table-column  label="开票税点" prop="invoicingTaxRate">
+            <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60">
+                <template #header>
+                    开票<br>税点
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.invoicingTaxRate" @blur="componentClickCancle($event, row)" />
@@ -185,12 +216,16 @@
                 </template>
             </el-table-column>
 
-            <el-table-column  label="采购链接" prop="purchaseLink">
+            <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="text" v-model="row.purchaseLink" @blur="componentClickCancle($event, row)" />
                     </div>
-                    <span>{{ row.purchaseLink }}</span>
+                    <span>
+                        <el-text truncated>
+                            {{ row.purchaseLink }}
+                        </el-text>
+                    </span>
                 </template>
             </el-table-column>
 
@@ -203,7 +238,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column align="center" fixed="right" label="操作" width="120px">
+            <el-table-column align="center" fixed="right" label="供应商操作" width="120px">
                 <template v-slot="scope">
                     <el-button text type="primary" @click="deleteSupplserOrComponent(scope.row)">删除</el-button>
                 </template>
@@ -735,5 +770,8 @@ onMounted(async ()=>{
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 46px;
+}
+:deep(.left-panel) {
+    margin-bottom: 0 !important;
 }
 </style>

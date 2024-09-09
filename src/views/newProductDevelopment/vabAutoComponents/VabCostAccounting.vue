@@ -1,13 +1,13 @@
 <template>
 
     <!-- 成本核算 -->
-    <div style="width: 100%; padding-top:25px;height: 330px;">
+    <div style="width: 100%; padding-top:15px;height: 340px;">
         <div class="el-page-header__content"><strong>成本核算</strong></div>
         <el-divider style="margin:10px 0"/>
         
-        <vab-query-form style="margin-bottom: 0 !important;">
+        <vab-query-form >
             <vab-query-form-left-panel>
-                <el-button type="primary" v-debounce="addRowCostAccounting">新增</el-button>
+                <el-button type="primary" @click="addRowCostAccounting">新增</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
 
@@ -22,7 +22,7 @@
             <el-table 
                 ref="costAccountingTable"
                 :data="estimatedCostList"
-                height="205"
+                height="245"
                 border stripe
                 @cell-click="costAccountingChangeInput"
                 :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
@@ -34,7 +34,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="站点" min-width="140">
+                <el-table-column label="站点" min-width="127">
                     <template #default="{ row }">
                         <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 15px;">
                             <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
@@ -43,7 +43,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="外汇币种">
+                <el-table-column label="外汇币种" min-width="100">
                     <template #default="{ row }">
                         <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span>
                     </template>
@@ -63,7 +63,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="产品描述">
+                <el-table-column label="产品描述" min-width="180">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="textarea" autofocus v-model="row.desc" :autosize="{ minRows: 3, maxRows: 9 }"
@@ -73,7 +73,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="价格信息">
+                <el-table-column label="价格信息" min-width="180">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.priceInfo" @blur="clickCancle($event, row)" />
@@ -82,7 +82,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="1688链接">
+                <el-table-column label="1688链接" min-width="140">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.url1688" @blur="clickCancle($event, row)" />
@@ -91,7 +91,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="产品价格￥">
+                <el-table-column label="产品价格￥" min-width="100">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.price" @blur="clickCancle($event, row)" />
@@ -100,7 +100,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="长">
+                <el-table-column label="长" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.length" @blur="clickCancle($event, row)" />
@@ -109,7 +109,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column  label="宽">
+                <el-table-column  label="宽" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.width" @blur="clickCancle($event, row)" />
@@ -118,7 +118,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column  label="高">
+                <el-table-column  label="高" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.height" @blur="clickCancle($event, row)" />
@@ -149,7 +149,7 @@
                         <span>{{ row.packaging }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="头程渠道" min-width="140">
+                <el-table-column label="头程渠道" min-width="130">
                     <template #default="{ row }">
                         <el-select 
                             v-model="row.firstMileChannel" 
@@ -181,7 +181,7 @@
 
                 <el-table-column prop="roi" label="ROI" />
 
-                <el-table-column label="重量系数">
+                <el-table-column label="重量系数" min-width="100">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.weightCoefficient" @blur="clickCancle($event, row)" />
@@ -190,7 +190,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="体积系数">
+                <el-table-column label="体积系数" min-width="100">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.volumeCoefficient" @blur="clickCancle($event, row)" />
@@ -208,10 +208,10 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="platformCommission" label="平台佣金">
+                <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
                 </el-table-column>
 
-                <el-table-column prop="storageFee" label="仓储费2个月$">
+                <el-table-column prop="storageFee" label="仓储费2个月$" min-width="120">
                 </el-table-column>
 
 
@@ -548,5 +548,13 @@ onMounted(async ()=>{
 
 .block {
   display: block;
+}
+
+:deep(.left-panel) {
+    margin-bottom: 0 !important;
+}
+// 设置行高
+:deep(.el-table .el-table__body .cell) {
+  max-height: 50px;
 }
 </style>
