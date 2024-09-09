@@ -138,7 +138,7 @@
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
-      <default-table-edit ref="editRef" @fetch-data="fetchData" />
+      <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     </div>
   </template>
   
@@ -198,28 +198,28 @@ const generateStatus = (value: number) => {
   }
 }
 
-  const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
-  }
+  // const fetchData = async () => {
+  //   listLoading.value = true
+  //   const { data } = await getList(queryForm)
+  //   list.value = data.list
+  //   total.value = data.total
+  //   listLoading.value = false
+  // }
   
   const handleSizeChange = (value: number) => {
     queryForm.pageNo = 1
     queryForm.pageSize = value
-    fetchData()
+    // fetchData()
   }
   
   const handleCurrentChange = (value: number) => {
     queryForm.pageNo = value
-    fetchData()
+    // fetchData()
   }
   
   const queryData = () => {
     queryForm.pageNo = 1
-    fetchData()
+    // fetchData()
   }
   
   const setSelectRows = (value: string) => {
@@ -230,9 +230,9 @@ const generateStatus = (value: number) => {
     tableRef.value?.doLayout()
   })
   
-  onBeforeMount(() => {
-    fetchData()
-  })
+  // onBeforeMount(() => {
+  //   fetchData()
+  // })
   </script>
   
 <style lang="scss" scoped>
