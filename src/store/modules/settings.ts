@@ -86,9 +86,7 @@ export const useSettingsStore = defineStore('settings', {
     logo: getLocalStorage('logo').logo || logo,
     mode: localStorage.getItem('vueuse-color-scheme') || 'light',
     persistenceTab,
-    theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
-      ...defaultTheme,
-    },
+    theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') },
     title: getLocalStorage('title').title || title,
     scrollTop: JSON.parse(localStorage.getItem('scrollTop') || '[]'),
   }),
