@@ -16,10 +16,12 @@
             <el-step title="完善SKU信息" />
             <el-step title="检查并提交" />
         </el-steps>
-        <order-step1 v-if="active === 0" @change-step="handleSetStep" />
+        <order-step1 v-if="active === 0" @change-step="handleSetStep" ref="orderStep1Ref" />
         <order-step2 v-if="active === 1" @change-step="handleSetStep" />
         <order-step3 v-if="active === 2" @change-step="handleSetStep" />
         <order-step4 v-if="active === 3" @change-step="handleSetStep" />
+        <order-step5 v-if="active === 4" @change-step="handleSetStep" :formData="formData" />
+        <order-step6 v-if="active === 5" @change-step="handleSetStep" />
     </div>
 </template>
 
@@ -29,11 +31,13 @@ defineOptions({
 })
 import { handleActivePath } from '/@/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import type { FormInstance } from 'element-plus'
+import { ref } from 'vue'
 import orderStep1 from './orderingProcessStep/orderStep1.vue'
 import orderStep2 from './orderingProcessStep/orderStep2.vue'
 import orderStep3 from './orderingProcessStep/orderStep3.vue'
 import orderStep4 from './orderingProcessStep/orderStep4.vue'
+import orderStep5 from './orderingProcessStep/orderStep5.vue'
+import orderStep6 from './orderingProcessStep/orderStep6.vue'
 
 // route
 const route: any = useRoute()
@@ -43,9 +47,22 @@ const active = ref<any>(0)
 // 预览图片列表
 const imagePriviewList = ref<string[]>([])
 const form = reactive<any>({})
+const orderStep1Ref = ref(null)
+const formData = ref<any>({})
+
 const handleSetStep = (_active: any) => {
   active.value = _active
 }
+
+
+watch(active, (newActive) => {
+  if (newActive === 0) {
+    const orderStep1: any = orderStep1Ref.value;
+    if (orderStep1) {
+      formData.value = orderStep1.form;
+    }
+  }
+});
 
 
 

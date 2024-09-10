@@ -93,6 +93,7 @@ const form = reactive<any>({
   variantNames: [''],
   bookTotal: [''],
 })
+defineExpose({ form });
 const rules = reactive<any>({
   payAccount: [{ required: true, message: '请输入产品主品名', trigger: 'blur' }],
   gatheringAccount: [

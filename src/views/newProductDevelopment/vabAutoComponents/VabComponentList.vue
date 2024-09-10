@@ -1,7 +1,7 @@
 <template>
     <!-- 零件清单 -->
-    <div style="width: 100%; height: 317px;">
-        <vab-query-form style="margin-top: 10px;">
+    <div style="width: 100%; flex-grow: 2">
+        <vab-query-form style="margin-top: 0;">
             <vab-query-form-left-panel>
                 <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
                 <el-button type="primary" @click="addSampleHandler">拿样</el-button>
@@ -18,7 +18,7 @@
             border stripe
             @cell-click="componentTableInputChage"
             :span-method="objectSpanMethod"
-            height="280"
+           
             :cell-style="{ textAlign: 'center'}" :header-cell-style="{ 'text-align': 'center' }"
         >
 
@@ -151,9 +151,9 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="货币" min-width="120" prop="currency">
+            <el-table-column label="货币" width="110px" prop="currency">
                 <template #default="{ row }">
-                    <el-select v-model="row.currency" placeholder="请选择货币" @change="handlerCurrencyChange(row)" style="min-width: 11px;">
+                    <el-select v-model="row.currency" placeholder="请选择货币" @change="handlerCurrencyChange(row)" style="min-width: 100%;">
                         <el-option v-for="dict in currencyList" :key="dict.value"
                             :value="dict.value" :label="dict.label"></el-option>
                     </el-select>
@@ -183,9 +183,9 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="开票" min-width="140" prop="invoicing">
+            <el-table-column label="开票" width="140" prop="invoicing">
                 <template #default="{ row }">
-                    <el-select v-model="row.invoicing" placeholder="请选择开票类型" @change="handlerInvoicingChange(row)" style="min-width: 40px;">
+                    <el-select v-model="row.invoicing" placeholder="请选择开票类型" @change="handlerInvoicingChange(row)" style="min-width: 100%;">
                         <el-option v-for="dict in invoicingList" :key="dict.value"
                             :value="dict.value" :label="dict.label"></el-option>
                     </el-select>
@@ -351,12 +351,13 @@ const sampleFormVisible = ref<boolean>(false)
 // 零件清单修改开票
 const handlerInvoicingChange = async (row:IProgressProdcutComponent) =>{
     
-    await updateComponenet({
-        progressId: row.progressId,
-        supplierId: row.supplierId,
-        componentId: row.componentId,
-        invoicing: row.invoicing,
-    })
+    // await updateComponenet({
+    //     progressId: row.progressId,
+    //     supplierId: row.supplierId,
+    //     componentId: row.componentId,
+    //     invoicing: row.invoicing,
+    // })
+    await updateComponenet(row)
     fetchDataComponent()
     props.trialCalculationData?.()
 }
@@ -364,13 +365,13 @@ const handlerInvoicingChange = async (row:IProgressProdcutComponent) =>{
 // 零件清单修改货币
 const handlerCurrencyChange = async (row:IProgressProdcutComponent) =>{
     
-    await updateComponenet({
-        progressId: row.progressId,
-        supplierId: row.supplierId,
-        componentId: row.componentId,
-        currency: row.currency,
-    })
-    // await updateComponenet(row)
+    // await updateComponenet({
+    //     progressId: row.progressId,
+    //     supplierId: row.supplierId,
+    //     componentId: row.componentId,
+    //     currency: row.currency,
+    // })
+    await updateComponenet(row)
     props.trialCalculationData?.()
 }
 
@@ -642,12 +643,14 @@ const componentClickCancle = async (event:any,value:IProgressProdcutComponent) =
   }
 
   
-  if (rowCopy[clickColumn.property] !== value[clickColumn.property]) {
-    await updateComponenet(query)
-    fetchDataComponent()
-    props.trialCalculationData?.()
-  }
-  
+//   if (rowCopy[clickColumn.property] !== value[clickColumn.property]) {
+//     await updateComponenet(query)
+//     fetchDataComponent()
+//     props.trialCalculationData?.()
+//   }
+await updateComponenet(value)
+fetchDataComponent()
+//     props.trialCalculationData?.()
 }
 
 // 计入成本change
@@ -657,13 +660,13 @@ const includedInCostChange = async (row:IProgressProdcutComponent) =>{
 
     
     //更新新值
-    await updateComponenet({
-        progressId: row.progressId,
-        supplierId: row.supplierId,
-        componentId: row.componentId,
-        includedInCost: row.includedInCost
-    })
-    // await updateComponenet(row)
+    // await updateComponenet({
+    //     progressId: row.progressId,
+    //     supplierId: row.supplierId,
+    //     componentId: row.componentId,
+    //     includedInCost: row.includedInCost
+    // })
+    await updateComponenet(row)
     props.trialCalculationData?.()
 }
 

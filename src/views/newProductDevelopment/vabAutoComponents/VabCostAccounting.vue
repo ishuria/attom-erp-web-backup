@@ -1,7 +1,7 @@
 <template>
 
     <!-- 成本核算 -->
-    <div style="width: 100%; padding-top:15px;height: 340px;">
+    <div style="width: 100%; padding-top:15px; flex-grow: 2">
         <div class="el-page-header__content"><strong>成本核算</strong></div>
         <el-divider style="margin:10px 0"/>
         
@@ -22,7 +22,7 @@
             <el-table 
                 ref="costAccountingTable"
                 :data="estimatedCostList"
-                height="245"
+                
                 border stripe
                 @cell-click="costAccountingChangeInput"
                 :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
@@ -34,9 +34,9 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="站点" min-width="127">
+                <el-table-column label="站点" min-width="135">
                     <template #default="{ row }">
-                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 15px;">
+                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
                             <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
@@ -91,7 +91,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="产品价格￥" min-width="100">
+                <el-table-column label="产品价格￥" min-width="120">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="text" v-model="row.price" @blur="clickCancle($event, row)" />
@@ -149,13 +149,13 @@
                         <span>{{ row.packaging }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="头程渠道" min-width="130">
+                <el-table-column label="头程渠道" min-width="140">
                     <template #default="{ row }">
                         <el-select 
                             v-model="row.firstMileChannel" 
                             placeholder="请选择头程渠道"
                             @change="handlerEstimatendChange(row)"
-                            style="min-width: 15px;"
+                            style="min-width: 100%;"
                         >
                             <el-option 
                                 v-for="dict in firstLegChannelColumns" 
@@ -211,7 +211,7 @@
                 <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
                 </el-table-column>
 
-                <el-table-column prop="storageFee" label="仓储费2个月$" min-width="120">
+                <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140">
                 </el-table-column>
 
 

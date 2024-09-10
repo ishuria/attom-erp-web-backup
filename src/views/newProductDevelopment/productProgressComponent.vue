@@ -8,7 +8,7 @@
             </template>
         </el-page-header>
         <el-divider style="margin:10px 0"/>
-
+        <div class="container">
         <vab-component-list 
             :progress-id="route.query.progressId"
             @update:imagePreviewVisibale="updateUploadPriviewVisible"
@@ -31,7 +31,7 @@
             ref="costAccountingRef"
             
         />
-
+        </div>
         <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
 
@@ -82,3 +82,11 @@ const setPreviewList = (imageUrl:string) =>{
 
 
 </script>
+<style lang="scss" scoped>
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+</style>
