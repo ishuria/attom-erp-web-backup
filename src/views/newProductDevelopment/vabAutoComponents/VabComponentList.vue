@@ -100,7 +100,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="出厂单价" prop="unitPrice" min-width="60">
+            <el-table-column label="出厂单价" prop="unitPrice" min-width="70">
                 <template #header>
                     出厂<br>单价
                 </template>
@@ -112,7 +112,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="出厂总价" prop="totalPrice" min-width="60">
+            <el-table-column label="出厂总价" prop="totalPrice" min-width="70">
                 <template #header>
                     出厂<br>总价
                 </template>
@@ -314,12 +314,18 @@ const classify = ref<string>('')
 defineOptions({
     name: 'VabComponentList',
 })
-
+interface Row {
+  unitPrice: string | number;
+}
 const props = defineProps<{
     progressId:string
     trialCalculationData: (() => Promise<void>) | undefined
+    row?: Row
 }>();
 
+const formattedPrice = (price: string) => {
+    return parseFloat(price).toFixed(2)
+}
 
 watchEffect(()=>{
     progressId.value = props.progressId
@@ -693,6 +699,11 @@ const fetchDataComponent = async () =>{
         // 零件列表
         const {data} = await getComponentList({progressId: progressId.value!})
         progressProductList.value = data
+        
+        progressProductList.value.forEach((item: any) => {
+            item.unitPrice = formattedPrice(item.unitPrice)
+            item.totalPrice = formattedPrice(item.totalPrice)
+        })
         progressProductList.value.sort((a:IProgressProdcutComponent,b:IProgressProdcutComponent) => a.componentId! - b.componentId!)
     }catch(e){
         console.error(e as Error)

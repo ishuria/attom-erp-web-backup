@@ -1,20 +1,20 @@
 <template>
-    <div class="comprehensive-table-container auto-height-container">
-        <h2 style="text-align: center">请选择需要添加到采购单里的零件</h2>
+    <div>
+        <h2 style="text-align: center;">请选择需要添加到采购单里的零件</h2>
         <el-table 
             ref="tableRef" 
       
-            border 
+            border stripe
             :data="list" 
             :header-cell-style="{'text-align': 'center'}"
-            height="470"
+         
         >
             <el-table-column align="center" label="图片" min-width="100">
                 <template #default="{ row }">
                     <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
                 </template>
             </el-table-column>
-            <el-table-column label="已有零件ID"  min-width="100" prop="componentName" >
+            <el-table-column label="已有零件ID" width="120" prop="componentName" >
                 <template #default="{ row }">
                     {{ row.componentName  }}
                 </template>
@@ -77,9 +77,9 @@
             </el-table-column>
             <el-table-column type="selection" width="38">
             </el-table-column>
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
-        </template>
+            <template #empty>
+                <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+            </template>
       </el-table>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
@@ -87,7 +87,7 @@
             <el-button native-type="submit" type="primary" @click="handleContinue">继续</el-button>
         </div>
     </div>
-  </template>
+</template>
   
 <script lang="ts" setup>
 defineOptions({

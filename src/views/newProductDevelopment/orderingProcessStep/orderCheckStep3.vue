@@ -104,44 +104,34 @@
 
                 </template>
             </el-table-column>
-            <el-table-column align="center" fixed="right" label="操作" width="120">
-                <template #default="{ row }">
-                    <el-link type="danger" :underline="false">删除</el-link>
-                </template>
-            </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
+            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">下一步</el-button>
         </div>
     </div>
   </template>
   
 <script lang="ts" setup>
 defineOptions({
-    name: 'OrderStep4',
+    name: 'OrderCheckStep3',
 })
 
 const emit = defineEmits(['change-step'])
 // const listLoading = ref<boolean>(true)
 const list = ref<any>([])
 
-// 当点击保存的时候
-const handleSave = () => {
-    $baseMessage("当前信息已保存。","success","hey")
-}
-// 当点击保存并继续的时候
+
+// 当点击下一步的时候
 const handleSaveAndContinue = () => {
-    $baseMessage("当前信息已保存。","success","hey")
-    emit('change-step', 4)
+    emit('change-step', 3)
 }
 // 当点击上一步的时候
 const handleGoback = () => {
-    emit('change-step', 2)
+    emit('change-step', 1)
 }
 </script>
   

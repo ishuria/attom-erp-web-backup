@@ -92,15 +92,14 @@
         </div>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>
+            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">完成</el-button>
         </div>
     </div>
   </template>
   
 <script lang="ts" setup>
 defineOptions({
-    name: 'OrderStep6',
+    name: 'OrderCheckStep5',
 })
 
 const emit = defineEmits(['change-step'])
@@ -259,17 +258,14 @@ const useTableDataLineToColumn = () => {
 const { initData, columns } = useTableDataLineToColumn()
 console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
 exchangeList.value = initData(tableData)
-// 当点击保存的时候
-const handleSave = () => {
-    $baseMessage("当前信息已保存。","success","hey")
-}
+
 // 当点击提交审核的时候
 const handleSaveAndContinue = () => {
-    $baseMessage("当前信息已保存。","success","hey")
+    $baseMessage("查看完成","success","hey")
 }
 // 当点击上一步的时候
 const handleGoback = () => {
-    emit('change-step', 4)
+    emit('change-step', 3)
 }
 </script>
   

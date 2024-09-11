@@ -5,7 +5,6 @@
             :data="exchangeList" 
             border stripe
             :header-cell-style="{ 'text-align': 'center' }"
-            @cell-click="changeInput"
         >
             <!-- 第一列固定标签列 -->
             <el-table-column 
@@ -23,7 +22,7 @@
                 <template #default="{row}">
                     
                     <template v-if="row['column0'] !== 'productImage'">
-                        <el-checkbox></el-checkbox>
+                        <el-checkbox disabled></el-checkbox>
                     </template>
                 </template>
             </el-table-column>
@@ -42,6 +41,7 @@
                             list-type="picture-card"  
                             :limit="1" 
                             action="#"
+                            disabled
                         >
                             <el-icon ><Plus /></el-icon>
                             <template #file="{ file }">
@@ -65,109 +65,58 @@
                         </el-upload>
                     </template>
                     <template v-if="row['column0'] === 'productLength'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span>
                     </template>
                     <template v-if="row['column0'] === 'productWidth'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span>
                     </template>
                     <template v-if="row['column0'] === 'productHeight'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span>
                     </template>
                     <template v-if="row['column0'] === 'productMaterial'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span>
                     </template>
                     <template v-if="row['column0'] === 'containsBattery'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'competitorASIN'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'patentStatus'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'productManager'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'productDesign'">
-                        <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
-                        </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'photoSampleStatus'">
-                        <el-select v-model="row[prop]" placeholder="请选择">
+                        <el-select v-model="row[prop]" placeholder="请选择" disabled>
                             <el-option label="已有拍照样品,大货无需留样" value="Sample1"></el-option>
                             <el-option label="大货需要留样拍照" value="Sample2"></el-option>
                         </el-select>
                     </template>
                     <template v-if="row['column0'] === 'packingGroup'">
-                        <el-checkbox></el-checkbox>
-                    </template>
-                    
-                    <template v-if="row['column0'] === 'operate'">
-                        <el-link type="primary" :underline="false">填入合并变体SKU的数据</el-link>
+                        <el-checkbox disabled></el-checkbox>
                     </template>
                 </template>
                 
             </el-table-column>
-  
-
-
-
-            <!-- <el-table-column 
-                v-for="(item, index) in props.formData?.variantNames"
-                align="center"
-                :label="item"
-                :key="index"
-            >
-            </el-table-column> -->
-            <!-- <el-table-column 
-                v-for="(item, index) in ['变体名1', '变体名2']"
-                align="center"
-                :label="item"
-                :prop="item"
-                :key="index"
-            >
-            </el-table-column> -->
             <template #empty>
                 <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
             </template>
         </el-table>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
+            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">下一步</el-button>
         </div>
     </div>
 </template>
   
 <script lang="ts" setup>
 defineOptions({
-    name: 'OrderStep5',
+    name: 'OrderCheckStep4',
 })
 import { Search, ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
@@ -207,7 +156,6 @@ const rowData = [
     packingGroup: 'Yes',
     certificateUpload: 'Certificate1.pdf',
     skuMerge: 'SKU123',
-    operate: '操作'
   },
   {
     column0: '变体名2',
@@ -225,7 +173,6 @@ const rowData = [
     packingGroup: 'Yes',
     certificateUpload: 'Certificate1.pdf',
     skuMerge: 'SKU123',
-    operate: '操作'
   },
   {
     column0: '变体名3',
@@ -243,7 +190,6 @@ const rowData = [
     packingGroup: 'Yes',
     certificateUpload: 'Certificate1.pdf',
     skuMerge: 'SKU123',
-    operate: '操作'
   },
 ];
 interface FormattedData {
@@ -366,65 +312,13 @@ const labelMap: Record<string, string> = {
   operate: '操作',
 }
 
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-
-
-if (!cell.children[0].children[0]
-    || !cell.children[0].children[1]
-    || !cell.children[0].children[0].classList
-    || !cell.children[0].children[1].classList) {
-  return
-}
-console.log(cell);
-console.log(cell.children[0]);
-console.log(cell.children[0].children[0]);
-
-cell.children[0].children[0].classList.remove('none')
-cell.children[0].children[1].classList.add('none')
-// 自动聚焦
-const inputElement = getSpecificChildren(cell, "input")[0];
-if (inputElement) {
-    inputElement.focus()
-} else {
-  const textareaElement = getSpecificChildren(cell, "textarea")[0];
-  if (textareaElement){
-    textareaElement.focus()
-  }
-}
-}
-/**
- * 输入失焦事件
- */
-const clickCancle = async (event: any, value: any) =>{
-
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
-
-    if (t1){
-        if (t1.classList[0] !== "el-select") {
-            t1.classList.add("none")
-        }
-    }
-
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-        t2.classList.remove("none")
-    }
-}
-
-// 当点击保存的时候
-const handleSave = () => {
-    $baseMessage("当前信息已保存。","success","hey")
-}
-// 当点击保存并继续的时候
+// 当点击下一步的时候
 const handleSaveAndContinue = () => {
-    $baseMessage("当前信息已保存。","success","hey")
-    emit('change-step', 5)
-    console.log('tableRef.value', tableRef.value);
-    
+    emit('change-step', 4)
 }
 // 当点击上一步的时候
 const handleGoback = () => {
-    emit('change-step', 3)
+    emit('change-step', 2)
 }
 </script>
 
@@ -435,9 +329,6 @@ const handleGoback = () => {
     margin: 20px auto;
     text-align: center;
 }
-// 控制编辑框显示与隐藏
-.none {
-  display: none;
-}
+
 </style>
   

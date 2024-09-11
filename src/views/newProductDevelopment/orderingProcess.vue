@@ -8,20 +8,36 @@
             </template>
         </el-page-header>
         
-        <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px">
+        <div >
+          <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
             <el-step title="产品基础信息录入" />
             <el-step title="拿样零件添加" />
             <el-step title="零件信息完善与售价核对" />
             <el-step title="新供应信息完善" />
             <el-step title="完善SKU信息" />
             <el-step title="检查并提交" />
-        </el-steps>
-        <order-step1 v-if="active === 0" @change-step="handleSetStep" ref="orderStep1Ref" />
-        <order-step2 v-if="active === 1" @change-step="handleSetStep" />
-        <order-step3 v-if="active === 2" @change-step="handleSetStep" />
-        <order-step4 v-if="active === 3" @change-step="handleSetStep" />
-        <order-step5 v-if="active === 4" @change-step="handleSetStep" :formData="formData" />
-        <order-step6 v-if="active === 5" @change-step="handleSetStep" />
+          </el-steps>
+          <order-step1 v-if="active === 0" @change-step="handleSetStep" ref="orderStep1Ref" />
+          <order-step2 v-if="active === 1" @change-step="handleSetStep" />
+          <order-step3 v-if="active === 2" @change-step="handleSetStep" />
+          <order-step4 v-if="active === 3" @change-step="handleSetStep" />
+          <order-step5 v-if="active === 4" @change-step="handleSetStep" :formData="formData" />
+          <order-step6 v-if="active === 5" @change-step="handleSetStep" />
+        </div>
+        <div style="display: none;">
+          <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
+            <el-step title="产品基础信息录入" />
+            <el-step title="零件信息完善与售价核对" />
+            <el-step title="新供应信息完善" />
+            <el-step title="完善SKU信息" />
+            <el-step title="检查并提交" />
+          </el-steps>
+          <order-check-step1 v-if="active === 0" @change-step="handleSetStep" />
+          <order-check-step2 v-if="active === 1" @change-step="handleSetStep" />
+          <order-check-step3 v-if="active === 2" @change-step="handleSetStep" />
+          <order-check-step4 v-if="active === 3" @change-step="handleSetStep" />
+          <order-check-step5 v-if="active === 4" @change-step="handleSetStep" />
+        </div>
     </div>
 </template>
 
@@ -38,6 +54,11 @@ import orderStep3 from './orderingProcessStep/orderStep3.vue'
 import orderStep4 from './orderingProcessStep/orderStep4.vue'
 import orderStep5 from './orderingProcessStep/orderStep5.vue'
 import orderStep6 from './orderingProcessStep/orderStep6.vue'
+import orderCheckStep1 from './orderingProcessStep/orderCheckStep1.vue'
+import orderCheckStep2 from './orderingProcessStep/orderCheckStep2.vue'
+import orderCheckStep3 from './orderingProcessStep/orderCheckStep3.vue'
+import orderCheckStep4 from './orderingProcessStep/orderCheckStep4.vue'
+import orderCheckStep5 from './orderingProcessStep/orderCheckStep5.vue'
 
 // route
 const route: any = useRoute()
