@@ -494,10 +494,12 @@ cell.children[0].children[1].classList.add('none')
 const inputElement = getSpecificChildren(cell, "input")[0];
 if (inputElement) {
     inputElement.focus()
+    inputElement.select()
 } else {
   const textareaElement = getSpecificChildren(cell, "textarea")[0];
   if (textareaElement){
     textareaElement.focus()
+    textareaElement.select()
   }
 }
 }

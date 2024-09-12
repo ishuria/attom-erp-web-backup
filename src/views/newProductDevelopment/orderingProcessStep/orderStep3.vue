@@ -571,10 +571,12 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     const inputElement = getSpecificChildren(cell, "input")[0];
     if (inputElement) {
         inputElement.focus()
+        inputElement.select()
     } else {
     const textareaElement = getSpecificChildren(cell, "textarea")[0];
     if (textareaElement){
         textareaElement.focus()
+        textareaElement.select()
     }
     }
 }
