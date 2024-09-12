@@ -4,7 +4,7 @@
             <el-form 
                 ref="formRef" 
                 label-position="right" 
-                label-width="auto" 
+                label-width="160px" 
                 :model="form" 
                 @submit.prevent
             >

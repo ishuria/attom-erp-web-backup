@@ -17,12 +17,33 @@
             <el-step title="完善SKU信息" />
             <el-step title="检查并提交" />
           </el-steps>
-          <order-step1 v-if="active === 0" @change-step="handleSetStep" ref="orderStep1Ref" />
-          <order-step2 v-if="active === 1" @change-step="handleSetStep" />
-          <order-step3 v-if="active === 2" @change-step="handleSetStep" />
+          <order-step1 
+            v-if="active === 0" 
+            @change-step="handleSetStep" 
+            @sendDataToStep2="setStep2Data"
+          />
+          <order-step2 
+            v-if="active === 1"
+            @change-step="handleSetStep" 
+            @update:imagePreviewVisibale="updateUploadPriviewVisible"
+            @update:priviewListValue="setPreviewList"
+            :step1Data="step2ReceivedData"
+          />
+          <order-step3 
+            v-if="active === 2" 
+            @change-step="handleSetStep" 
+            @update:imagePreviewVisibale="updateUploadPriviewVisible"
+            @update:priviewListValue="setPreviewList"
+            :step1Data="step2ReceivedData"
+          />
           <order-step4 v-if="active === 3" @change-step="handleSetStep" />
-          <order-step5 v-if="active === 4" @change-step="handleSetStep" :formData="formData" />
-          <order-step6 v-if="active === 5" @change-step="handleSetStep" />
+          <order-step5 v-if="active === 4" @change-step="handleSetStep" />
+          <order-step6 
+            v-if="active === 5" 
+            @change-step="handleSetStep"             
+            @update:imagePreviewVisibale="updateUploadPriviewVisible"
+            @update:priviewListValue="setPreviewList"
+          />
         </div>
         <div style="display: none;">
           <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
@@ -38,6 +59,7 @@
           <order-check-step4 v-if="active === 3" @change-step="handleSetStep" />
           <order-check-step5 v-if="active === 4" @change-step="handleSetStep" />
         </div>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
 </template>
 
@@ -65,25 +87,47 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const active = ref<any>(0)
-// 预览图片列表
-const imagePriviewList = ref<string[]>([])
-const form = reactive<any>({})
+
 const orderStep1Ref = ref(null)
 const formData = ref<any>({})
+// 接收从 step1 传递过来的数据
+const step2ReceivedData = ref<number>(0)
+
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
+// 控制图片是否预览
+const updateUploadPriviewVisible = (newV:boolean) =>{
+    imagePreviewVisible.value = newV
+}
+// 修改图片预览列表
+const setPreviewList = (imageUrl:string) =>{
+    imagePriviewList.value = []
+    imagePriviewList.value.push(imageUrl)
+}
 
 const handleSetStep = (_active: any) => {
   active.value = _active
 }
+// 接收并存储从 step1 传递过来的数据
+const setStep2Data = (res: any) => {
+  step2ReceivedData.value = res
+}
 
+// watch(active, (newActive) => {
+//   if (newActive === 0) {
+//     const orderStep1: any = orderStep1Ref.value;
 
-watch(active, (newActive) => {
-  if (newActive === 0) {
-    const orderStep1: any = orderStep1Ref.value;
-    if (orderStep1) {
-      formData.value = orderStep1.form;
-    }
-  }
-});
+//     if (orderStep1) {
+//       formData.value = orderStep1.form;
+//     }
+//   }
+// });
 
 
 

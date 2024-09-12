@@ -4,19 +4,19 @@
             <el-form 
                 ref="formRef" 
                 label-position="right" 
-                label-width="auto" 
+                label-width="160px" 
                 :model="form" 
                 @submit.prevent
                 :rules="rules" 
             >
-                <el-form-item label="合并变体的SKU(若有)" prop="excludingTax">
-                    <el-input v-model="form.excludingTax" clearable />
+                <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
+                    <el-input v-model="form.variantSku" clearable />
                 </el-form-item>
-                <el-form-item label="产品主品名" prop="standardInvoice">
-                    <el-input v-model="form.standardInvoice" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
+                <el-form-item label="产品主品名" prop="productName">
+                    <el-input v-model="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
                 </el-form-item>
-                <el-form-item label="产品短描述" prop="specialInvoice">
-                    <el-input v-model="form.specialInvoice" clearable placeholder="eg:20管45×31.7CM" />
+                <el-form-item label="产品短描述" prop="productDesc">
+                    <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
                 </el-form-item>
             </el-form>
             <div class="list-container auto-height-container">
@@ -25,16 +25,14 @@
                         <!-- list第一行 新增变体 -->
                         <li class="list-item"> 
                             <div class="list-item-meta">
-                                <div class="list-item-meta-content">
+                                <div class="list-item-meta-content" style="text-align: center">
                                     <el-space>
-                                        <span style="width: 50px; visibility: hidden;">{{ "变体名" }}</span>
-                                        <el-input style="width: 240px; visibility: hidden;"/>
+                                        <span style="width: 240px;">{{ "变体名" }}</span>
                                     </el-space>
                                 </div>
-                                <div class="list-item-meta-content">
+                                <div class="list-item-meta-content" style="text-align: center">
                                     <el-space>
-                                        <span style="width: 140px; visibility: hidden;">{{ "订货数量(亚马逊US)" }}</span>
-                                        <el-input style="width: 240px; visibility: hidden;"/>
+                                        <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
                                     </el-space>
                                 </div>
                                 <div class="list-item-meta-content">
@@ -42,22 +40,16 @@
                                 </div>
                             </div>
                         </li>
-                        <li v-for="(item, index) in form.variantNamesAndTotal" :key="index" class="list-item">
+                        <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
                             <div class="list-item-meta">
                                 <div class="list-item-meta-content">
-                                    <el-space>
-                                        <span style="width: 50px">{{ index === 0 ? "变体名" : "" }}</span>
-                                        <el-input v-model="item.variantNames" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
-                                    </el-space>
+                                  <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
                                 </div>
                                 <div class="list-item-meta-content">
-                                    <el-space>
-                                        <span style="width: 140px">{{ index === 0 ? "订货数量(亚马逊US)" : "" }}</span>
-                                        <el-input v-model="item.orderTotal" clearable style="width: 240px"/>
-                                    </el-space>
+                                  <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px"/>
                                 </div>
                                 <div class="list-item-meta-content">
-                                    <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
+                                  <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
                                 </div>
                             </div>
                         </li>
@@ -78,6 +70,8 @@
 defineOptions({
     name: 'OrderStep1',
 })
+import { IreviewStepNo1SaveOn } from '/@/type/orderProcess/orderProcessType';
+import { reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess';
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import type { FormInstance } from 'element-plus'
@@ -86,59 +80,102 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
-
-const emit = defineEmits(['change-step'])
+const emit = defineEmits<{ 
+    (e: 'change-step', value: number): void
+    (e: 'sendDataToStep2', value: number): void
+ }>()
 const formRef = ref<FormInstance>()
-const form = reactive<any>({
-  payAccount: '****************',
-  gatheringAccount: '****************',
-  gatheringName: '***',
-  variantNamesAndTotal: [
+const form = reactive<IreviewStepNo1SaveOn>({
+  variantSku: '',
+  productName: '',
+  productDesc: '',
+  variantList: [
     {
-        variantsNames: '', 
-        orderTotal: ''
+      variantName: '', 
+      amazonUSVariantQuantity: undefined,
+      orderEntryId: 0
     }
   ],
 })
-defineExpose({ form });
+
 const rules = reactive<any>({
-  payAccount: [{ required: true, message: '请输入产品主品名', trigger: 'blur' }],
-  gatheringAccount: [
+  productName: [{ required: true, message: '请输入产品主品名', trigger: 'blur' }],
+  productDesc: [
     { required: true, message: '请输入产品短描述', trigger: 'blur' },
   ],
-  gatheringName: [{ required: true, message: '请输入新建变体数量(含本体)', trigger: 'blur' }],
 })
 const handleAddVariants = () => {
     // 新增一个空的变体名和订货数量
-    form.variantNamesAndTotal.push({
-        variantNames: '', 
-        orderTotal: ''
+    form.variantList.push({
+      variantName: '', 
+      amazonUSVariantQuantity: undefined,
+      orderEntryId: form.variantList.length
     });
 }   
-const handleDelVariants = (index: number) => {
-    if (form.variantNamesAndTotal.length > 1) { // 防止删除最后一个变体
-        form.variantNamesAndTotal.splice(index, 1)
+const handleDelVariants = async (index: number) => {
+    if (form.variantList.length > 1) { // 防止删除最后一个变体
+        form.variantList.splice(index, 1)
     } else {
         $baseMessage("至少需要保留一个变体", "warning")
     }
 }
+
 // 当点击保存的时候
 const handleSubmit = () => {
   formRef.value?.validate((valid: any) => {
     if (valid) {
-      $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。","success","hey")
+      const saveOn = async () => {
+        if (route.query.progressId) {
+          const { data }  = await reviewStepNo1SaveOn({...form, progressId: route.query.progressId})
+          if (data) {
+            $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。","success","hey")
+          }
+        }
+      }
+      saveOn()
     }
   })
 }
-// 当点击保存并继续的时候
-const handleSubmitAndContinue = () => {
-  formRef.value?.validate((valid: any) => {
+
+let res: number
+const handleSubmitAndContinue = async () => {
+  formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。","success","hey")
-      emit('change-step', 1)
+      const saveOn = async () => {
+        try {
+          console.log('正在保存，progressId:', route.query.progressId)
+          if (route.query.progressId) {
+            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId })
+            console.log('API 请求返回:', data)
+
+            if (data) {
+              res = data
+              $baseMessage(
+                "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
+                "success",
+                "hey"
+              )
+              emit('sendDataToStep2', res)
+              emit('change-step', 1)
+            } else {
+              console.error('API 返回没有 data')
+            }
+          } else {
+            console.error('progressId 未定义')
+          }
+        } catch (error) {
+          console.error('保存过程出错:', error)
+        }
+      }
+      saveOn()
+    } else {
+      console.log('表单验证失败')
     }
   })
 }
+
+
+defineExpose({ form });
 // 当点击退出的时候
 const handleGoback = async () => {
     await delVisitedRoute(handleActivePath(route, true))

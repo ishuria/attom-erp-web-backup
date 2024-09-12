@@ -8,6 +8,7 @@
                 :header-cell-style="{ 'text-align': 'right' }"
                 height="430"
                 :show-header="false"
+                @cell-click="tableInputChange"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
@@ -30,9 +31,12 @@
                     align="center" 
                 >
                     <template #default = {row}>
-                        {{ row[prop] }}
+                        
                         <template v-if="row['column0'] === 'imageUrl'">
-                            <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
+                            <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img"/>
+                        </template>
+                        <template v-if="row['column0'] !== 'imageUrl'">
+                          {{ row[prop] }}
                         </template>
                     </template>
                 </el-table-column>
@@ -96,14 +100,31 @@
   </template>
   
 <script lang="ts" setup>
+import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils';
+
 defineOptions({
     name: 'OrderStep6',
 })
 
-const emit = defineEmits(['change-step'])
+const emit = defineEmits<{ 
+    (e: 'change-step', value: number): void
+    (e: 'update:imagePreviewVisibale', value: boolean): void
+    (e: 'update:priviewListValue', value: string): void
+ }>()
 // const listLoading = ref<boolean>(true)
 const list = ref<any>([])
 const exchangeList = ref<any>([])
+
+// table单击修改
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+    // 处理图片放大预览
+    let el = getSpecificChildren(cell, "img")[0];
+    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+      emit("update:priviewListValue", el.src)
+      emit("update:imagePreviewVisibale", true)
+    }
+}
+
 const labelMap: Record<string, string> = {
   column0: '',
   imageUrl: 'SKU图片',
@@ -127,8 +148,8 @@ const labelMap: Record<string, string> = {
 }
 const  tableData = [
     {
-        column0: '',
-        imageUrl: 'path-to-image.jpg',
+        column0: '变体名1',
+        imageUrl: 'https://via.placeholder.com/75',
         productName: '产品名称1',
         orderQuantity: 100,
         totalPrice: '¥5000',
@@ -148,8 +169,8 @@ const  tableData = [
         skuMerge: 'SKU123',
     },
     {
-        column0: '',
-        imageUrl: 'path-to-image.jpg',
+        column0: '变体名2',
+        imageUrl: 'https://via.placeholder.com/85',
         productName: '产品名称1',
         orderQuantity: 100,
         totalPrice: '¥5000',
@@ -212,7 +233,7 @@ const useTableDataLineToColumn = () => {
     // 转换后的数据
     const list: FormattedData[] = []
     // 解构分组数据
-    console.log('groupData.value', groupData.value);
+    // console.log('groupData.value', groupData.value);
     
     const [column0, ...otherData] = groupData.value
     // 初始化每一行的数据, 除去表头，有几个key就算有几行
@@ -253,7 +274,7 @@ const useTableDataLineToColumn = () => {
   }
 }
 const { initData, columns } = useTableDataLineToColumn()
-console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
+// console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
 exchangeList.value = initData(tableData)
 // 当点击保存的时候
 const handleSave = () => {

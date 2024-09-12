@@ -40,8 +40,10 @@
                     <template v-if="row['column0'] === 'productImage'">
                         <el-upload 
                             list-type="picture-card"  
-                            :limit="1" 
                             action="#"
+                           
+                            :limit="1" 
+                            :class="{ hide: row.hide }"
                         >
                             <el-icon ><Plus /></el-icon>
                             <template #file="{ file }">
@@ -66,59 +68,58 @@
                                 </div>
                             </template>
                         </el-upload>
-                    </template>
+                      </template>
                     <template v-if="row['column0'] === 'productLength'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span>
-                        {{ $index }}
                     </template>
                     <template v-if="row['column0'] === 'productWidth'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span>
                     </template>
                     <template v-if="row['column0'] === 'productHeight'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span>
                     </template>
                     <template v-if="row['column0'] === 'productMaterial'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span>
                     </template>
                     <template v-if="row['column0'] === 'containsBattery'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'competitorASIN'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'patentStatus'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'productManager'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'productDesign'">
                         <div class="none">
-                            <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row[prop]" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
@@ -129,7 +130,7 @@
                         </el-select>
                     </template>
                     <template v-if="row['column0'] === 'packingGroup'">
-                        <el-checkbox></el-checkbox>
+                        <el-checkbox v-model="row[prop]" :true-value="'0'" :false-value="'1'" class="custom-checkbox"></el-checkbox>
                     </template>
                     
                     <template v-if="row['column0'] === 'operate'">
@@ -147,7 +148,6 @@
             <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
         </div>
-        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if ="dialogVisible"/>
     </div>
 </template>
   
@@ -184,7 +184,7 @@ const managerList = [
 const rowData = [
   {
     column0: '变体名1',
-    productImage: 'Image1.jpg',
+    productImage: 'https://via.placeholder.com/75',
     productLength: 'Product1',
     productWidth: '30',
     productHeight: '20',
@@ -195,14 +195,14 @@ const rowData = [
     productManager: 'Manager1',
     productDesign: 'Design1',
     photoSampleStatus: 'Sample1',
-    packingGroup: 'Yes',
+    packingGroup: '0',
     certificateUpload: 'Certificate1.pdf',
     skuMerge: 'SKU123',
     operate: '操作'
   },
   {
     column0: '变体名2',
-    productImage: 'Image1.jpg',
+    productImage: 'https://via.placeholder.com/75',
     productLength: 'Product1',
     productWidth: '30',
     productHeight: '20',
@@ -213,14 +213,14 @@ const rowData = [
     productManager: 'Manager1',
     productDesign: 'Design1',
     photoSampleStatus: 'Sample1',
-    packingGroup: 'Yes',
+    packingGroup: '0',
     certificateUpload: 'Certificate1.pdf',
     skuMerge: 'SKU123',
     operate: '操作'
   },
   {
     column0: '变体名3',
-    productImage: 'Image1.jpg',
+    productImage: 'https://via.placeholder.com/75',
     productLength: 'Product1',
     productWidth: '30',
     productHeight: '20',
@@ -231,7 +231,61 @@ const rowData = [
     productManager: 'Manager1',
     productDesign: 'Design1',
     photoSampleStatus: 'Sample1',
-    packingGroup: 'Yes',
+    packingGroup: '1',
+    certificateUpload: 'Certificate1.pdf',
+    skuMerge: 'SKU123',
+    operate: '操作'
+  },
+  {
+    column0: '变体名1',
+    productImage: 'https://via.placeholder.com/75',
+    productLength: 'Product1',
+    productWidth: '30',
+    productHeight: '20',
+    productMaterial: 'Plastic',
+    containsBattery: 'No',
+    competitorASIN: 'ASIN1234',
+    patentStatus: 'Patented',
+    productManager: 'Manager1',
+    productDesign: 'Design1',
+    photoSampleStatus: 'Sample1',
+    packingGroup: '0',
+    certificateUpload: 'Certificate1.pdf',
+    skuMerge: 'SKU123',
+    operate: '操作'
+  },
+  {
+    column0: '变体名2',
+    productImage: 'https://via.placeholder.com/75',
+    productLength: 'Product1',
+    productWidth: '30',
+    productHeight: '20',
+    productMaterial: 'Plastic',
+    containsBattery: 'No',
+    competitorASIN: 'ASIN1234',
+    patentStatus: 'Patented',
+    productManager: 'Manager1',
+    productDesign: 'Design1',
+    photoSampleStatus: 'Sample1',
+    packingGroup: '0',
+    certificateUpload: 'Certificate1.pdf',
+    skuMerge: 'SKU123',
+    operate: '操作'
+  },
+  {
+    column0: '变体名3',
+    productImage: 'https://via.placeholder.com/75',
+    productLength: 'Product1',
+    productWidth: '30',
+    productHeight: '20',
+    productMaterial: 'Plastic',
+    containsBattery: 'No',
+    competitorASIN: 'ASIN1234',
+    patentStatus: 'Patented',
+    productManager: 'Manager1',
+    productDesign: 'Design1',
+    photoSampleStatus: 'Sample1',
+    packingGroup: '1',
     certificateUpload: 'Certificate1.pdf',
     skuMerge: 'SKU123',
     operate: '操作'
@@ -253,18 +307,8 @@ const handlePictureCardPreview = (file: UploadFile, row: any) => {
     imagePriviewList.value = []
     imagePriviewList.value.push(file.url!)
 }
-// 修改图片预览列表
-const setPreviewList = (imageUrl:string) =>{
-    dialogVisible.value = true
-    imagePriviewList.value = []
-    imagePriviewList.value.push(imageUrl)
-    // console.log(imagePriviewList.value)
-}
 
-// 图片预览关闭事件
-const imagePreviewClose = () =>{
-  dialogVisible.value = false;
-}
+
 /**
  * 图片删除功能
  */

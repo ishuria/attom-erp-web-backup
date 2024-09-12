@@ -314,13 +314,10 @@ const classify = ref<string>('')
 defineOptions({
     name: 'VabComponentList',
 })
-interface Row {
-  unitPrice: string | number;
-}
+
 const props = defineProps<{
     progressId:string
     trialCalculationData: (() => Promise<void>) | undefined
-    row?: Row
 }>();
 
 const formattedPrice = (price: string) => {

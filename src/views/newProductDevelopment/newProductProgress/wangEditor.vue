@@ -134,12 +134,7 @@ const handleCloseDialog = () => {
   if(!editorRef.value) return
   emit('clickChild', editorRef.value.getHtml())
   emit('clickBoolean', false)
-  if (props.classify === 'progressLog') {
-    $baseMessage('日志保存成功', 'success', 'hey')
-  }
-  else {
-    $baseMessage('备注保存成功', 'success', 'hey')
-  }
+  $baseMessage(`${props.title}保存成功`, 'success', 'hey')
   dflag.value = false
   clearTimer()
   removeLocalStorage(props.classify)
