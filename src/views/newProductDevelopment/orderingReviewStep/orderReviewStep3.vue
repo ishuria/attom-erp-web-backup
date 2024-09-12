@@ -59,7 +59,6 @@
             <h3>不分货则填0，不能留空</h3>
         </vab-alert>
         <div class="pay-button-group">
-            <el-button @click="handleGoback">上一步</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交</el-button>
         </div>
     </div>
@@ -223,10 +222,7 @@ const handleSaveAndContinue = () => {
     $baseMessage("通过","success","hey")
     emit('change-step', 3)
 }
-// 当点击不通过的时候
-const handleGoback = () => {
-    emit('change-step', 1)
-}
+
 </script>
   
 <style lang="scss" scoped>

@@ -59,7 +59,6 @@
             </el-table>
         </div>
         <div class="pay-button-group">
-            <el-button @click="handleGoback">上一步</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">发布PO</el-button>
         </div>
     </div>
@@ -195,10 +194,7 @@ exchangeList.value = initData(tableData)
 const handleSaveAndContinue = () => {
     $baseMessage("发布PO","success","hey")
 }
-// 当点击不通过的时候
-const handleGoback = () => {
-    emit('change-step', 2)
-}
+
 </script>
   
 <style lang="scss" scoped>

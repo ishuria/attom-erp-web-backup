@@ -1,24 +1,25 @@
 <template>
-    <div class="step-form-container">
-        <el-page-header @back="goBack" style="margin-bottom: 0px;">
-            <template #content>
-                <div class="flex items-center">
-                    <span> <strong> 新品订货审批 </strong></span>
-                </div>
-            </template>
-        </el-page-header>
-        
-        <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 800px;margin-bottom: 20px;">
-            <el-step title="主管终审" />
-            <el-step title="SKU创建" />
-            <el-step title="运营分货" />
-            <el-step title="产品经理审核" />
-        </el-steps>
-        <order-review-step1 v-if="active === 0" @change-step="handleSetStep" />
-        <order-review-step2 v-if="active === 1" @change-step="handleSetStep" />
-        <order-review-step3 v-if="active === 2" @change-step="handleSetStep" />
-        <order-review-step4 v-if="active === 3" @change-step="handleSetStep" />
-    </div>
+  <div class="step-form-container">
+    <el-page-header @back="goBack" style="margin-bottom: 0px;">
+      <template #content>
+        <div class="flex items-center">
+          <span> <strong> 新品订货审批 </strong></span>
+        </div>
+      </template>
+    </el-page-header>
+
+    <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 800px;margin-bottom: 20px;">
+      <el-step title="主管终审" />
+      <el-step title="SKU创建" />
+      <el-step title="运营分货" />
+      <el-step title="产品经理审核" />
+    </el-steps>
+    <order-review-step1 v-if="active === 0" @change-step="handleSetStep" :reviewId="route.query.reviewId"
+      :reviewStatus="route.query.reviewStatus" :reviewStepNo="route.query.reviewStepNo" />
+    <order-review-step2 v-if="active === 1" @change-step="handleSetStep" />
+    <order-review-step3 v-if="active === 2" @change-step="handleSetStep" />
+    <order-review-step4 v-if="active === 3" @change-step="handleSetStep" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -37,7 +38,7 @@ import orderReviewStep4 from './orderingReviewStep/orderReviewStep4.vue'
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-const active = ref<any>(0)
+const active = ref<number>(Number(route.query.reviewStepNo))
 // 预览图片列表
 const imagePriviewList = ref<string[]>([])
 const form = reactive<any>({})

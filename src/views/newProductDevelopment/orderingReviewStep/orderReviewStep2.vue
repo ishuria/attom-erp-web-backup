@@ -1,113 +1,87 @@
 <template>
+  <div>
     <div>
-        <div>
-            <el-table 
-                ref="tableRef" 
-                stripe border 
-                :data="exchangeList" 
-                :header-cell-style="{ 'text-align': 'right' }"
-                height="430"
-                :show-header="false"
-            >
-                <!-- 第一列固定标签列 -->
-                <el-table-column 
-                    :prop="'column0'" 
-                    :label="labelMap['column0']" 
-                    fixed
-                    
-                    align="right"
-                    width="260"
-                >
-                    <template #default="{ row }">
-                        <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
-                    </template>
-                </el-table-column>
-                <el-table-column 
-                    :prop="prop" 
-                    :label="prop" 
-                    v-for="(prop, i) in columns" 
-                    :key="i" 
-                    align="center" 
-                >
-                    <template #default = {row}>
-                        <template v-if="row['column0'] === 'imageUrl'">
-                            <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
-                        </template>
-                        <template v-if="row['column0'] === 'sku'">
-                            <el-input v-model="row[prop]"></el-input>
-                        </template>
-                        <template v-if="row['column0'] === 'oem'">
-                            <el-checkbox v-model="row[prop]" :true-value="'1'" :false-value="'0'" size="large" class="custom-checkbox"/>
-                        </template>
-                        <template v-if="row['column0'] !== 'oem' && row['column0'] !== 'imageUrl' && row['column0'] !== 'sku'">
-                            {{ row[prop] }}
-                        </template>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-                </template>
-            </el-table>
-        </div>
+      <el-table ref="tableRef" stripe border :data="exchangeList" :header-cell-style="{ 'text-align': 'right' }"
+        height="430" :show-header="false">
+        <!-- 第一列固定标签列 -->
+        <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
+          <template #default="{ row }">
+            <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
+          </template>
+        </el-table-column>
+        <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center">
+          <template #default="{ row }">
+            <template v-if="row['column0'] === 'imageUrl'">
+              <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
+            </template>
+            <template v-if="row['column0'] === 'sku'">
+              <el-input v-model="row[prop]"></el-input>
+            </template>
+            <template v-if="row['column0'] === 'oem'">
+              <el-checkbox v-model="row[prop]" :true-value="'1'" :false-value="'0'" size="large"
+                class="custom-checkbox" />
+            </template>
+            <template v-if="row['column0'] !== 'oem' && row['column0'] !== 'imageUrl' && row['column0'] !== 'sku'">
+              {{ row[prop] }}
+            </template>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
+        </template>
+      </el-table>
+    </div>
 
-      
-        <div>
-            <el-table 
-            ref="tableRef" 
 
-            stripe border 
-            :data="POdata" 
-            :header-cell-style="{ 'text-align': 'center' }"
-            style="margin-top: 25px;"
-            height="90"
-        >
-            <!-- <el-table-column label="" width="160" prop="">
+    <div>
+      <el-table ref="tableRef" stripe border :data="POdata" :header-cell-style="{ 'text-align': 'center' }"
+        style="margin-top: 25px;" height="90">
+        <!-- <el-table-column label="" width="160" prop="">
                 <strong style="color: var(--el-table-header-text-color)">{{ "含在PO里的开模费" }}</strong>
             </el-table-column> -->
-            <el-table-column label="提交日期" min-width="127" prop="date" align="center">
-                <template #default="{ row }">
-                   {{ row.date }}
-                </template>
-            </el-table-column>
-            <el-table-column label="零件名" min-width="200" prop="name">
-                    <template #default="{ row }">
-                        <!-- <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span> -->
+        <el-table-column label="提交日期" min-width="127" prop="date" align="center">
+          <template #default="{ row }">
+            {{ row.date }}
+          </template>
+        </el-table-column>
+        <el-table-column label="零件名" min-width="200" prop="name">
+          <template #default="{ row }">
+            <!-- <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span> -->
 
-                    </template>
-                </el-table-column>
-            <el-table-column label="供应商" min-width="127" prop="supplier">
-      
-            </el-table-column>
-            <el-table-column label="状态" min-width="127" align="center" prop="status">
-      
-            </el-table-column>
-            <el-table-column label="开票类型" min-width="127" align="center" prop="kaipiao">
-      
-            </el-table-column>
-            <el-table-column label="付款金额" min-width="127" align="center" prop="cost">
-      
-            </el-table-column>
-            <el-table-column label="处理方式" min-width="127" align="center" prop="dealMethod">
-      
-            </el-table-column>
-            <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-            </template>
-            </el-table>
-        </div>
-        
-        <div class="pay-button-group">
-            <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
-        </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="供应商" min-width="127" prop="supplier">
+
+        </el-table-column>
+        <el-table-column label="状态" min-width="127" align="center" prop="status">
+
+        </el-table-column>
+        <el-table-column label="开票类型" min-width="127" align="center" prop="kaipiao">
+
+        </el-table-column>
+        <el-table-column label="付款金额" min-width="127" align="center" prop="cost">
+
+        </el-table-column>
+        <el-table-column label="处理方式" min-width="127" align="center" prop="dealMethod">
+
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
+        </template>
+      </el-table>
     </div>
-  </template>
-  
+
+    <div class="pay-button-group">
+      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
 import { currencyList, firstLegChannelColumns, invoicingList } from '../indexCommon'
 defineOptions({
-    name: 'OrderReviewStep2',
+  name: 'OrderReviewStep2',
 })
 
 const emit = defineEmits(['change-step'])
@@ -137,64 +111,64 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
 }
-const  tableData = [
-    {
-        column0: '1',
-        imageUrl: 'path-to-image.jpg',
-        productName: '产品名称1',
-        sku: '',
-        count: 100,
-        oem: '0',
-        orderQuantity: 100,
-        totalPrice: '¥5000',
-        sellingPrice: '$19.99',
-        cost: '¥15',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productDimensions: '25x12x1',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        skuMerge: '',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        photoSampleStatus: '已有拍照样品',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-    },
-    {
-        column0: '2',
-        imageUrl: 'path-to-image.jpg',
-        productName: '产品名称1',
-        sku: '',
-        count: 100,
-        oem: '1',
-        orderQuantity: 100,
-        totalPrice: '¥5000',
-        sellingPrice: '$19.99',
-        cost: '¥15',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productDimensions: '25x12x1',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        skuMerge: '',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        photoSampleStatus: '已有拍照样品',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-    },
+const tableData = [
+  {
+    column0: '1',
+    imageUrl: 'path-to-image.jpg',
+    productName: '产品名称1',
+    sku: '',
+    count: 100,
+    oem: '0',
+    orderQuantity: 100,
+    totalPrice: '¥5000',
+    sellingPrice: '$19.99',
+    cost: '¥15',
+    grossProfit: '29%',
+    packageDimensions: '15x10x11',
+    productDimensions: '25x12x1',
+    productMaterial: '棉',
+    containsBattery: '锂电池',
+    skuMerge: '',
+    asin: 'ASIN123',
+    patentStatus: '无专利',
+    photoSampleStatus: '已有拍照样品',
+    productManager: '王文青',
+    productDesign: '任佳蓉',
+  },
+  {
+    column0: '2',
+    imageUrl: 'path-to-image.jpg',
+    productName: '产品名称1',
+    sku: '',
+    count: 100,
+    oem: '1',
+    orderQuantity: 100,
+    totalPrice: '¥5000',
+    sellingPrice: '$19.99',
+    cost: '¥15',
+    grossProfit: '29%',
+    packageDimensions: '15x10x11',
+    productDimensions: '25x12x1',
+    productMaterial: '棉',
+    containsBattery: '锂电池',
+    skuMerge: '',
+    asin: 'ASIN123',
+    patentStatus: '无专利',
+    photoSampleStatus: '已有拍照样品',
+    productManager: '王文青',
+    productDesign: '任佳蓉',
+  },
 ]
 const POdata = [
-    {
-        date: '2024-8-4',
-        name: 'component',
-        supplier: 'supplier1',
-        status: '已通过',
-        kaipiao: '专票',
-        cost: '3600',
-        dealMethod: '含在其它PO',
-    }
+  {
+    date: '2024-8-4',
+    name: 'component',
+    supplier: 'supplier1',
+    status: '已通过',
+    kaipiao: '专票',
+    cost: '3600',
+    dealMethod: '含在其它PO',
+  }
 
 ]
 
@@ -212,7 +186,7 @@ const useTableDataLineToColumn = () => {
   let groupData = ref<any[][]>([])
   // 计算表头
   const columns = computed(() => {
-    return props.value.length > 0 ?  [...groupData.value[0]] : []
+    return props.value.length > 0 ? [...groupData.value[0]] : []
   })
   // 根据每条数据的字段对数据进行分组
   const dataToGroupByKey = (list: any) => {
@@ -231,7 +205,7 @@ const useTableDataLineToColumn = () => {
     const list: FormattedData[] = []
     // 解构分组数据
     console.log('groupData.value', groupData.value);
-    
+
     const [column0, ...otherData] = groupData.value
     // 初始化每一行的数据, 除去表头，有几个key就算有几行
     props.value.slice(1).forEach((prop, i) => {
@@ -253,7 +227,7 @@ const useTableDataLineToColumn = () => {
     // 获取一条数组的所有字段
     props.value = Object.keys(firstData)
     // 初始化每个字段的分组数据
-    for(let i = 0; i < props.value.length; i++) {
+    for (let i = 0; i < props.value.length; i++) {
       groupData.value[i] = []
     }
   }
@@ -276,24 +250,20 @@ exchangeList.value = initData(tableData)
 
 // 当点击通过的时候
 const handleSaveAndContinue = () => {
-    $baseMessage("通过","success","hey")
-    emit('change-step', 2)
-}
-// 当点击不通过的时候
-const handleGoback = () => {
-    emit('change-step', 0)
+  $baseMessage("通过", "success", "hey")
+  emit('change-step', 2)
 }
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
 }
+
 .custom-checkbox {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
 </style>
-  
