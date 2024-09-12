@@ -30,9 +30,26 @@
                     align="center" 
                 >
                     <template #default = {row}>
-                        {{ row[prop] }}
                         <template v-if="row['column0'] === 'imageUrl'">
                             <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
+                        </template>
+                        <template v-if="row['column0'] === 'oem'">
+                            <el-checkbox v-model="row[prop]" :true-value="'1'" :false-value="'0'" size="large" class="custom-checkbox"/>
+                        </template>
+                        <template v-if="row['column0'] === 'orderQuantity'">
+                            <el-input v-model="row[prop]"></el-input>
+                        </template>
+                        <template v-if="row['column0'] === 'orderQuantityUK'">
+                            <el-input v-model="row[prop]"></el-input>
+                        </template>
+                        <template v-if="row['column0'] === 'orderQuantityDE'">
+                            <el-input v-model="row[prop]"></el-input>
+                        </template>
+                        <template v-if="row['column0'] === 'orderQuantityWo'">
+                            <el-input v-model="row[prop]"></el-input>
+                        </template>
+                        <template v-if="row['column0'] !== 'oem' && row['column0'] !== 'orderQuantity' && row['column0'] !== 'orderQuantityUK' && row['column0'] !== 'orderQuantityDE' && row['column0'] !== 'orderQuantityWo' && row['column0'] !== 'imageUrl'">
+                            {{ row[prop] }}
                         </template>
                     </template>
                 </el-table-column>
@@ -41,63 +58,18 @@
                 </template>
             </el-table>
         </div>
-
-      
-        <div>
-            <el-table 
-            ref="tableRef" 
-
-            stripe border 
-            :data="POdata" 
-            :header-cell-style="{ 'text-align': 'center' }"
-            style="margin-top: 25px;"
-            height="90"
-        >
-            <!-- <el-table-column label="" width="160" prop="">
-                <strong style="color: var(--el-table-header-text-color)">{{ "含在PO里的开模费" }}</strong>
-            </el-table-column> -->
-            <el-table-column label="提交日期" min-width="127" prop="date" align="center">
-                <template #default="{ row }">
-                   {{ row.date }}
-                </template>
-            </el-table-column>
-            <el-table-column label="零件名" min-width="200" prop="name">
-                    <template #default="{ row }">
-                        <!-- <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span> -->
-
-                    </template>
-                </el-table-column>
-            <el-table-column label="供应商" min-width="127" prop="supplier">
-      
-            </el-table-column>
-            <el-table-column label="状态" min-width="127" align="center" prop="status">
-      
-            </el-table-column>
-            <el-table-column label="开票类型" min-width="127" align="center" prop="kaipiao">
-      
-            </el-table-column>
-            <el-table-column label="付款金额" min-width="127" align="center" prop="cost">
-      
-            </el-table-column>
-            <el-table-column label="处理方式" min-width="127" align="center" prop="dealMethod">
-      
-            </el-table-column>
-            <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-            </template>
-            </el-table>
-        </div>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>
+            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">发布PO</el-button>
         </div>
     </div>
-  </template>
+</template>
   
 <script lang="ts" setup>
+import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
+import { currencyList, firstLegChannelColumns, invoicingList } from '../indexCommon'
 defineOptions({
-    name: 'OrderStep6',
+    name: 'OrderReviewStep4',
 })
 
 const emit = defineEmits(['change-step'])
@@ -108,79 +80,42 @@ const labelMap: Record<string, string> = {
   column0: '',
   imageUrl: 'SKU图片',
   productName: '产品名称',
+  sku: 'SKU',
+  count: '有效计数',
+  oem: 'OEM',
   orderQuantity: '订货数量(亚马逊US)',
-  totalPrice: '总采购含税价',
-  sellingPrice: '售价',
-  cost: '产品实际总成本',
-  grossProfit: '毛利率',
-  packageDimensions: '包装尺寸(cm)',
-  productDimensions: '产品尺寸(cm)',
-  productMaterial: '产品材质',
-  containsBattery: '是否含电池<br>(若有则填入电池类型)',
-  asin: '对标竞品ASIN',
-  patentStatus: '专利情况<br>(是否排查以及结果)',
-  photoSampleStatus: '拍照留样情况',
-  productManager: '产品经理',
-  productDesign: '产品设计',
-  certification: '证书',
-  skuMerge: '合并变体的SKU',
+  orderQuantityUK: '订货数量(亚马逊UK)',
+  orderQuantityDE: '订货数量(亚马逊DE)',
+  orderQuantityWo: '订货数量(沃尔玛US)',
 }
 const  tableData = [
     {
-        column0: '',
+        column0: '1',
         imageUrl: 'path-to-image.jpg',
         productName: '产品名称1',
+        sku: 'sku123',
+        count: 100,
+        oem: '0',
         orderQuantity: 100,
-        totalPrice: '¥5000',
-        sellingPrice: '$19.99',
-        cost: '¥15',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productDimensions: '25x12x1',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        photoSampleStatus: '已有拍照样品',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-        certification: 'SKU1',
-        skuMerge: 'SKU123',
+        orderQuantityUK: 100,
+        orderQuantityDE: 120,
+        orderQuantityWo: 0,
     },
     {
-        column0: '',
+        column0: '2',
         imageUrl: 'path-to-image.jpg',
         productName: '产品名称1',
-        orderQuantity: 100,
-        totalPrice: '¥5000',
-        sellingPrice: '$19.99',
-        cost: '¥15',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productDimensions: '25x12x1',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        photoSampleStatus: '已有拍照样品',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-        certification: 'SKU1',
-        skuMerge: 'SKU123',
+        sku: 'sku123',
+        count: 100,
+        oem: '1',
+        orderQuantity: 200,
+        orderQuantityUK: 100,
+        orderQuantityDE: 120,
+        orderQuantityWo: 0,
     },
 ]
-const POdata = [
-    {
-        date: '2024-8-4',
-        name: 'component',
-        supplier: 'supplier1',
-        status: '已通过',
-        kaipiao: '专票',
-        cost: '3600',
-        dealMethod: '含在其它PO',
-    }
 
-]
+
 interface FormattedData {
   [key: string]: any;
 }
@@ -255,17 +190,14 @@ const useTableDataLineToColumn = () => {
 const { initData, columns } = useTableDataLineToColumn()
 console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
 exchangeList.value = initData(tableData)
-// 当点击保存的时候
-const handleSave = () => {
-    $baseMessage("当前信息已保存。","success","hey")
-}
-// 当点击提交审核的时候
+
+// 当点击通过的时候
 const handleSaveAndContinue = () => {
-    $baseMessage("当前信息已保存。","success","hey")
+    $baseMessage("发布PO","success","hey")
 }
-// 当点击上一步的时候
+// 当点击不通过的时候
 const handleGoback = () => {
-    emit('change-step', 4)
+    emit('change-step', 2)
 }
 </script>
   
@@ -274,6 +206,10 @@ const handleGoback = () => {
     display: block;
     margin: 20px auto;
     text-align: center;
+}
+.custom-checkbox {
+  transform: scale(1.3); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
 }
 </style>
   

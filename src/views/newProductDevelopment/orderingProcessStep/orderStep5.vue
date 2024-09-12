@@ -19,11 +19,11 @@
                     <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
                 </template>
             </el-table-column>
-            <el-table-column label="变体值相同" prop="varientsSame" align="center" width="110">
-                <template #default="{row}">
-                    
+            <el-table-column label="变体值相同" prop="variantsSame" align="center" width="110">
+                <template #default="{row, $index}">
                     <template v-if="row['column0'] !== 'productImage'">
-                        <el-checkbox></el-checkbox>
+                        <el-checkbox v-model="variantsSame[$index - 1]" true-value="true" false-value="false" checked class="custom-checkbox">
+                        </el-checkbox>
                     </template>
                 </template>
             </el-table-column>
@@ -36,7 +36,7 @@
                 align="center"
                 min-width="180"
             >
-                <template #default = {row}>
+                <template #default = "{row, $index}">
                     <template v-if="row['column0'] === 'productImage'">
                         <el-upload 
                             list-type="picture-card"  
@@ -46,20 +46,23 @@
                             <el-icon ><Plus /></el-icon>
                             <template #file="{ file }">
                                 <div>
-                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                                <span class="el-upload-list__item-actions">
-                                    <span 
-                                        v-if="!disabled"
-                                        class="el-upload-list__item-preview">
-                                        <el-icon><zoom-in /></el-icon>
+                                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                                    <span class="el-upload-list__item-actions">
+                                        <span 
+                                            v-if="!disabled"
+                                            class="el-upload-list__item-preview"
+                                            @click="handlePictureCardPreview(file, row)"
+                                        >
+                                            <el-icon><zoom-in /></el-icon>
+                                        </span>
+                                        <span
+                                            v-if="!disabled"
+                                            class="el-upload-list__item-delete"
+                                            @click="handleRemove(file, row)"
+                                        >
+                                            <el-icon><Delete /></el-icon>
+                                        </span>
                                     </span>
-                                    <span
-                                        v-if="!disabled"
-                                        class="el-upload-list__item-delete"
-                                    >
-                                        <el-icon><Delete /></el-icon>
-                                    </span>
-                                </span>
                                 </div>
                             </template>
                         </el-upload>
@@ -69,6 +72,7 @@
                             <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row[prop] }}</span>
+                        {{ $index }}
                     </template>
                     <template v-if="row['column0'] === 'productWidth'">
                         <div class="none">
@@ -134,25 +138,6 @@
                 </template>
                 
             </el-table-column>
-  
-
-
-
-            <!-- <el-table-column 
-                v-for="(item, index) in props.formData?.variantNames"
-                align="center"
-                :label="item"
-                :key="index"
-            >
-            </el-table-column> -->
-            <!-- <el-table-column 
-                v-for="(item, index) in ['变体名1', '变体名2']"
-                align="center"
-                :label="item"
-                :prop="item"
-                :key="index"
-            >
-            </el-table-column> -->
             <template #empty>
                 <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
             </template>
@@ -162,6 +147,7 @@
             <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
         </div>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if ="dialogVisible"/>
     </div>
 </template>
   
@@ -171,7 +157,10 @@ defineOptions({
 })
 import { Search, ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
-import type { TableInstance } from 'element-plus'
+import type { TableInstance, UploadFile } from 'element-plus'
+
+
+
 const props = defineProps({
     formData: Object
 })
@@ -181,7 +170,9 @@ const emit = defineEmits(['change-step'])
 const list = ref<any>([])
 const disabled = ref(false)
 const tableRef = ref<TableInstance>()
-
+const dialogImageUrl = ref('')
+const dialogVisible = ref(false)
+const variantsSame = ref<boolean[]>([true, true, true, true, true, true, true, true, true, true, true, true, true, true,])
 const managerList = [
     { label: '采购助理', value: '0'},
     { label: '产品设计', value: '1'},
@@ -252,7 +243,66 @@ interface FormattedData {
 interface RowData {
   [key: string]: any;
 }
+const imagePriviewList = ref([''])
+/**
+ * 图片预览事件
+ */
+const handlePictureCardPreview = (file: UploadFile, row: any) => {
+    dialogImageUrl.value = file.url!
+    dialogVisible.value = true
+    imagePriviewList.value = []
+    imagePriviewList.value.push(file.url!)
+}
+// 修改图片预览列表
+const setPreviewList = (imageUrl:string) =>{
+    dialogVisible.value = true
+    imagePriviewList.value = []
+    imagePriviewList.value.push(imageUrl)
+    // console.log(imagePriviewList.value)
+}
 
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  dialogVisible.value = false;
+}
+/**
+ * 图片删除功能
+ */
+ const handleRemove = async (file: UploadFile, row: any) => {
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+
+      const imageListCopy = [...row.imageList];
+
+      // 找到要删除的元素的下标
+      const i = imageListCopy.findIndex((item: any) => item.url === file.url);
+
+      if (i === -1) {
+        $baseMessage("错误，请联系开发人员!","error","hey")
+        return
+      }
+
+      // 从复制的数组中移除该元素
+      imageListCopy.splice(i, 1);
+      // 将更新后的数组替换原来的 imageList
+      row.imageList = imageListCopy;
+      if (row.imageList.length <= 5) {
+        row.hide = false
+      }
+      const delImgForm = new FormData()
+      delImgForm.append('type', '2')
+      delImgForm.append('imageId', file.name)
+
+    //   const { data } = await deleteImage(delImgForm)
+    //   if (data == true) {
+    //     $baseMessage("此条产品图片信息删除成功!","success","hey")
+    //   }
+})
+    
+  } catch (error) {
+    console.error(error)
+  }
+}
 const useTableDataLineToColumn = () => {
   // 一条数据的所有字段数组
 //   let props = ref<string[]>([
@@ -365,7 +415,22 @@ const labelMap: Record<string, string> = {
   skuMerge: '合并变体的SKU',
   operate: '操作',
 }
-
+const variantsSameMap: Record<string, boolean> = {
+  productLength: true,
+  productWidth: true,
+  productHeight: true,
+  productMaterial: true,
+  containsBattery: true,
+  competitorASIN: true,
+  patentStatus: true,
+  productManager: true,
+  productDesign: true,
+  photoSampleStatus: true,
+  packingGroup: true,
+  certificateUpload: true,
+  skuMerge: true,
+  operate: true,
+}
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
 
@@ -438,6 +503,10 @@ const handleGoback = () => {
 // 控制编辑框显示与隐藏
 .none {
   display: none;
+}
+.custom-checkbox {
+  transform: scale(1.3); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
 }
 </style>
   

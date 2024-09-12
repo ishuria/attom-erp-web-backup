@@ -11,13 +11,13 @@
             <el-table 
                 ref="tableRef" 
                 stripe border 
-                :data="list" 
+                :data="tablelist" 
                 :header-cell-style="{ 'text-align': 'center' }"
-            
+                @cell-click="changeInput"
             >
-                <el-table-column align="center" label="属于变体" min-width="120" prop="currency">
+                <el-table-column align="center" label="属于变体" min-width="120" prop="variants">
                     <template #default="{ row }">
-                        <el-select v-model="row.currency" placeholder="请选择货币"  style="min-width: 11px;">
+                        <el-select v-model="row.variants" placeholder="请选择变体"  style="min-width: 11px;">
                             
                         </el-select>
                     </template>
@@ -27,58 +27,58 @@
                         <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
                     </template>
                 </el-table-column>
-                <el-table-column label="零件ID" align="center" min-width="70" prop="componentName" >
+                <el-table-column label="零件ID" align="center" min-width="70" prop="componentName" width="100">
                     <template #default="{ row }">
                         {{ row.componentName  }}
                     </template>
                 </el-table-column>   
-                <el-table-column label="零件名" prop="componentName">
+                <el-table-column label="零件名" prop="componentName" width="120">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input type="textarea" autofocus v-model="row.componentName" :autosize="{ minRows: 2, maxRows: 7 }"
-                            @blur="clickCancle($event, row)" />
+                            @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.componentName }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="每个SKU需要数量"  width="100" prop="componentQuantity" >
+                <el-table-column label="每个SKU需要数量"  width="100" prop="componentQuantity" align="center">
                     <template #header>
                         每个SKU<br>需要数量
                     </template>
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.componentQuantity" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.componentQuantity" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.componentQuantity }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="单位"  min-width="60" prop="componentUnit" >
+                <el-table-column label="单位"  min-width="60" prop="componentUnit" align="center">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.componentUnit" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.componentUnit" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.componentUnit }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="出厂单价" prop="unitPrice" min-width="70">
+                <el-table-column label="出厂单价" prop="unitPrice" min-width="70" align="center">
                     <template #header>
                         出厂<br>单价
                     </template>
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.unitPrice" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.unitPrice" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.unitPrice }}</span>
                     </template>
                 </el-table-column>
 
-                <el-table-column label="出厂总价" prop="totalPrice" min-width="70">
+                <el-table-column label="出厂总价" prop="totalPrice" min-width="70" align="center">
                     <template #header>
                         出厂<br>总价
                     </template>
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.totalPrice" @blur="clickCancle($event, row,)" />
+                            <el-input type="text" v-model="row.totalPrice" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row,)" />
                         </div>
                         <span>{{ row.totalPrice }}</span>
                     </template>
@@ -89,7 +89,7 @@
                     </template>
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.freight" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.freight" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.freight }}</span>
                     </template>
@@ -108,7 +108,7 @@
                     </template>
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.taxIncludedPrice" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.taxIncludedPrice" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.taxIncludedPrice }}</span>
                     </template>
@@ -135,7 +135,7 @@
                     <template #default="{row}">
                         <div class="none">
                             <el-input type="text" autofocus v-model="row.supplier" 
-                                @blur="clickCancle($event, row)" />
+                            @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>
                             <el-text truncated>
@@ -144,32 +144,33 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column label="开票" prop="oem" align="center" width="60">
+                <el-table-column label="开票" prop="oem" align="center" width="140">
                     <template #default = "{ row }">
-                        <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 11px;">
-                            
+                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
+                            <el-option v-for="dict in invoicingList" :key="dict.value"
+                                :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60">
+                <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
                     <template #header>
                         实际<br>税点
                     </template>
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.actualTaxRate" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.actualTaxRate" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.actualTaxRate }}</span>
                     </template>
                 </el-table-column>
 
-                <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60">
+                <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
                     <template #header>
                         开票<br>税点
                     </template>
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.invoicingTaxRate" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.invoicingTaxRate" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>{{ row.invoicingTaxRate }}</span>
                     </template>
@@ -179,7 +180,7 @@
                 <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.purchaseLink" @blur="clickCancle($event, row)" />
+                            <el-input type="text" v-model="row.purchaseLink" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                         </div>
                         <span>
                             <el-text truncated>
@@ -202,20 +203,20 @@
                         <el-option v-for="val,idx in list" :label="val.label!" :value="val" :key="val.id!"/>
                     </el-select>
                 </el-table-column>
-                <el-table-column  label="零件采购注意事项" prop="remarks" min-width="200">
+                <el-table-column  label="零件采购注意事项" prop="attention" min-width="200">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.remarks"  />
+                            <el-input type="text" v-model="row.attention"  />
                         </div>
-                        <span>{{ row.remarks }}</span>
+                        <span>{{ row.attention }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column  label="合同条款" prop="remarks" min-width="200">
+                <el-table-column  label="合同条款" prop="hetong" min-width="200">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.remarks"  />
+                            <el-input type="text" v-model="row.hetong"  />
                         </div>
-                        <span>{{ row.remarks }}</span>
+                        <span>{{ row.hetong }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column align="center" fixed="right" label="操作" width="120">
@@ -240,7 +241,7 @@
             stripe border 
             :data="list" 
             :header-cell-style="{ 'text-align': 'center' }"
-     
+            @cell-click="changeInput"
         >
             <el-table-column label="变体" min-width="100" prop="currency">
                 <template #default="{ row }">
@@ -272,7 +273,7 @@
             <el-table-column prop="length" label="长(cm)" min-width="90">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.length" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.length" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.length }}</span>
                 </template>
@@ -281,7 +282,7 @@
             <el-table-column prop="width" label="宽(cm)" min-width="90">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.width" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.width" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.width }}</span>
                 </template>
@@ -290,7 +291,7 @@
             <el-table-column prop="height" label="高(cm)" min-width="90">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.height" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.height" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.height }}</span>
                 </template>
@@ -299,7 +300,7 @@
             <el-table-column  label="重量(g)">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.weight" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.weight" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.weight }}</span>
                 </template>
@@ -309,7 +310,7 @@
             <el-table-column label="打包￥"  width="90" prop="packaging" >
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.packaging" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.packaging" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.packaging }}</span>
                 </template>
@@ -334,7 +335,7 @@
             <el-table-column label="最终售价$" min-width="100" prop="sellingPrice">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.sellingPrice" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.sellingPrice" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.sellingPrice }}</span>
                 </template>
@@ -344,7 +345,7 @@
             <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.weightCoefficient" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.weightCoefficient" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.weightCoefficient }}</span>
                 </template>
@@ -352,7 +353,7 @@
             <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.volumeCoefficient" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.volumeCoefficient" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.volumeCoefficient }}</span>
                 </template>
@@ -360,7 +361,7 @@
             <el-table-column prop="tariff" label="关税%">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.tariff" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.tariff" @keydown="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                     <span>{{ row.tariff }}</span>
                 </template>
@@ -394,13 +395,105 @@
 defineOptions({
     name: 'OrderStep3',
 })
-import { getRootElement } from '~/src/utils/nodeUtils';
-import { currencyList, firstLegChannelColumns } from '../indexCommon'
+import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
+import { currencyList, firstLegChannelColumns, invoicingList } from '../indexCommon'
 
 const emit = defineEmits(['change-step'])
 // const listLoading = ref<boolean>(true)
 const list = ref<any>([])
-// 零件清单table blur事件
+    const tablelist = [
+  {
+    variants: 'Variant A',
+    componentImg: 'https://via.placeholder.com/75',
+    componentName: 'Component 1',
+    componentQuantity: 100,
+    componentUnit: 'pcs',
+    unitPrice: 10,
+    totalPrice: 1000,
+    freight: 50,
+    preTaxPrice: 950,
+    taxIncludedPrice: 1020,
+    currency: 'USD',
+    createTime: '2024-09-12 10:00:00',
+    supplier: 'Supplier A',
+    oem: 1,
+    actualTaxRate: '5%',
+    invoicingTaxRate: '10%',
+    purchaseLink: 'https://example.com/component1',
+    attention: 'Important notice about Component 1',
+  },
+  {
+    variants: 'Variant B',
+    componentImg: 'https://via.placeholder.com/75',
+    componentName: 'Component 2',
+    componentQuantity: 50,
+    componentUnit: 'pcs',
+    unitPrice: 15,
+    totalPrice: 750,
+    freight: 30,
+    preTaxPrice: 720,
+    taxIncludedPrice: 792,
+    currency: 'EUR',
+    createTime: '2024-09-11 09:00:00',
+    supplier: 'Supplier B',
+    oem: 0,
+    actualTaxRate: '6%',
+    invoicingTaxRate: '12%',
+    purchaseLink: 'https://example.com/component2',
+    attention: 'Attention needed for shipping',
+  },
+  {
+    variants: 'Variant C',
+    componentImg: 'https://via.placeholder.com/75',
+    componentName: 'Component 3',
+    componentQuantity: 200,
+    componentUnit: 'pcs',
+    unitPrice: 20,
+    totalPrice: 4000,
+    freight: 100,
+    preTaxPrice: 3900,
+    taxIncludedPrice: 4290,
+    currency: 'CNY',
+    createTime: '2024-09-10 08:00:00',
+    supplier: 'Supplier C',
+    oem: 1,
+    actualTaxRate: '3%',
+    invoicingTaxRate: '7%',
+    purchaseLink: 'https://example.com/component3',
+    attention: 'Check quality before shipping',
+  }
+];
+
+/**
+ * 当点击时切换输入框，修改输入
+ */
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+
+
+    if (!cell.children[0].children[0]
+        || !cell.children[0].children[1]
+        || !cell.children[0].children[0].classList
+        || !cell.children[0].children[1].classList) {
+    return
+    }
+
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+
+
+    // 自动聚焦
+    const inputElement = getSpecificChildren(cell, "input")[0];
+    if (inputElement) {
+        inputElement.focus()
+    } else {
+    const textareaElement = getSpecificChildren(cell, "textarea")[0];
+    if (textareaElement){
+        textareaElement.focus()
+    }
+    }
+}
+
+// table blur事件
 const clickCancle = async (event:any,value:any) =>{
     const t1 = getRootElement(event["srcElement"],".cell").children[0]
     if (t1){
@@ -444,6 +537,9 @@ const handleGoback = () => {
 .table-container {
   flex: 1;
   
+}
+.none {
+    display: none;
 }
 </style>
   

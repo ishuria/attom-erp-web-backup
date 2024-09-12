@@ -14,6 +14,10 @@
             <el-step title="运营分货" />
             <el-step title="产品经理审核" />
         </el-steps>
+        <order-review-step1 v-if="active === 0" @change-step="handleSetStep" />
+        <order-review-step2 v-if="active === 1" @change-step="handleSetStep" />
+        <order-review-step3 v-if="active === 2" @change-step="handleSetStep" />
+        <order-review-step4 v-if="active === 3" @change-step="handleSetStep" />
     </div>
 </template>
 
@@ -24,7 +28,10 @@ defineOptions({
 import { handleActivePath } from '/@/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { ref } from 'vue'
-
+import orderReviewStep1 from './orderingReviewStep/orderReviewStep1.vue'
+import orderReviewStep2 from './orderingReviewStep/orderReviewStep2.vue'
+import orderReviewStep3 from './orderingReviewStep/orderReviewStep3.vue'
+import orderReviewStep4 from './orderingReviewStep/orderReviewStep4.vue'
 
 // route
 const route: any = useRoute()

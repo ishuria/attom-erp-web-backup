@@ -30,9 +30,17 @@
                     align="center" 
                 >
                     <template #default = {row}>
-                        {{ row[prop] }}
                         <template v-if="row['column0'] === 'imageUrl'">
                             <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
+                        </template>
+                        <template v-if="row['column0'] === 'sku'">
+                            <el-input v-model="row[prop]"></el-input>
+                        </template>
+                        <template v-if="row['column0'] === 'oem'">
+                            <el-checkbox v-model="row[prop]" :true-value="'1'" :false-value="'0'" size="large" class="custom-checkbox"/>
+                        </template>
+                        <template v-if="row['column0'] !== 'oem' && row['column0'] !== 'imageUrl' && row['column0'] !== 'sku'">
+                            {{ row[prop] }}
                         </template>
                     </template>
                 </el-table-column>
@@ -87,17 +95,19 @@
             </template>
             </el-table>
         </div>
+        
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>
+            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
         </div>
     </div>
   </template>
   
 <script lang="ts" setup>
+import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
+import { currencyList, firstLegChannelColumns, invoicingList } from '../indexCommon'
 defineOptions({
-    name: 'OrderStep6',
+    name: 'OrderReviewStep2',
 })
 
 const emit = defineEmits(['change-step'])
@@ -108,28 +118,33 @@ const labelMap: Record<string, string> = {
   column0: '',
   imageUrl: 'SKU图片',
   productName: '产品名称',
+  sku: 'SKU',
+  count: '有效计数',
+  oem: 'OEM',
   orderQuantity: '订货数量(亚马逊US)',
   totalPrice: '总采购含税价',
   sellingPrice: '售价',
-  cost: '产品实际总成本',
+  cost: '产品总实际成本',
   grossProfit: '毛利率',
   packageDimensions: '包装尺寸(cm)',
   productDimensions: '产品尺寸(cm)',
   productMaterial: '产品材质',
   containsBattery: '是否含电池<br>(若有则填入电池类型)',
+  skuMerge: '合并变体的SKU',
   asin: '对标竞品ASIN',
   patentStatus: '专利情况<br>(是否排查以及结果)',
   photoSampleStatus: '拍照留样情况',
   productManager: '产品经理',
   productDesign: '产品设计',
-  certification: '证书',
-  skuMerge: '合并变体的SKU',
 }
 const  tableData = [
     {
-        column0: '',
+        column0: '1',
         imageUrl: 'path-to-image.jpg',
         productName: '产品名称1',
+        sku: '',
+        count: 100,
+        oem: '0',
         orderQuantity: 100,
         totalPrice: '¥5000',
         sellingPrice: '$19.99',
@@ -139,18 +154,20 @@ const  tableData = [
         productDimensions: '25x12x1',
         productMaterial: '棉',
         containsBattery: '锂电池',
+        skuMerge: '',
         asin: 'ASIN123',
         patentStatus: '无专利',
         photoSampleStatus: '已有拍照样品',
         productManager: '王文青',
         productDesign: '任佳蓉',
-        certification: 'SKU1',
-        skuMerge: 'SKU123',
     },
     {
-        column0: '',
+        column0: '2',
         imageUrl: 'path-to-image.jpg',
         productName: '产品名称1',
+        sku: '',
+        count: 100,
+        oem: '1',
         orderQuantity: 100,
         totalPrice: '¥5000',
         sellingPrice: '$19.99',
@@ -160,13 +177,12 @@ const  tableData = [
         productDimensions: '25x12x1',
         productMaterial: '棉',
         containsBattery: '锂电池',
+        skuMerge: '',
         asin: 'ASIN123',
         patentStatus: '无专利',
         photoSampleStatus: '已有拍照样品',
         productManager: '王文青',
         productDesign: '任佳蓉',
-        certification: 'SKU1',
-        skuMerge: 'SKU123',
     },
 ]
 const POdata = [
@@ -181,6 +197,8 @@ const POdata = [
     }
 
 ]
+
+
 interface FormattedData {
   [key: string]: any;
 }
@@ -255,17 +273,15 @@ const useTableDataLineToColumn = () => {
 const { initData, columns } = useTableDataLineToColumn()
 console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
 exchangeList.value = initData(tableData)
-// 当点击保存的时候
-const handleSave = () => {
-    $baseMessage("当前信息已保存。","success","hey")
-}
-// 当点击提交审核的时候
+
+// 当点击通过的时候
 const handleSaveAndContinue = () => {
-    $baseMessage("当前信息已保存。","success","hey")
+    $baseMessage("通过","success","hey")
+    emit('change-step', 2)
 }
-// 当点击上一步的时候
+// 当点击不通过的时候
 const handleGoback = () => {
-    emit('change-step', 4)
+    emit('change-step', 0)
 }
 </script>
   
@@ -274,6 +290,10 @@ const handleGoback = () => {
     display: block;
     margin: 20px auto;
     text-align: center;
+}
+.custom-checkbox {
+  transform: scale(1.3); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
 }
 </style>
   

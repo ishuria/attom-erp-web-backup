@@ -814,7 +814,7 @@ const setPreviewList = (imageUrl:string) =>{
     dialogVisible.value = true
     imagePriviewList.value = []
     imagePriviewList.value.push(imageUrl)
-    console.log(imagePriviewList.value)
+    // console.log(imagePriviewList.value)
 }
 
 // 图片预览关闭事件
