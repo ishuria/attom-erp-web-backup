@@ -1,235 +1,212 @@
 <template>
+  <div>
     <div>
-        <div>
-            <el-table 
-                ref="tableRef" 
-                stripe border 
-                :data="exchangeList" 
-                :header-cell-style="{ 'text-align': 'right' }"
-                height="430"
-                :show-header="false"
-            >
-                <!-- 第一列固定标签列 -->
-                <el-table-column 
-                    :prop="'column0'" 
-                    :label="labelMap['column0']" 
-                    fixed
-                    
-                    align="right"
-                    width="260"
-                >
-                    <template #default="{ row }">
-                        <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
-                    </template>
-                </el-table-column>
-                <el-table-column 
-                    :prop="prop" 
-                    :label="prop" 
-                    v-for="(prop, i) in columns" 
-                    :key="i" 
-                    align="center" 
-                >
-                    <template #default = {row}>
-                        <template v-if="row['column0'] === 'imageUrl'">
-                            <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
-                        </template>
-                        <template v-if="row['column0'] === 'orderQuantity'">
-                            <el-input v-model="row[prop]"></el-input>
-                        </template>
-                        <template v-if="row['column0'] === 'orderQuantityUK'">
-                            <el-input v-model="row[prop]"></el-input>
-                        </template>
-                        <template v-if="row['column0'] === 'orderQuantityDE'">
-                            <el-input v-model="row[prop]"></el-input>
-                        </template>
-                        <template v-if="row['column0'] === 'orderQuantityWo'">
-                            <el-input v-model="row[prop]"></el-input>
-                        </template>
-                        <template v-if="row['column0'] !== 'orderQuantity' && row['column0'] !== 'orderQuantityUK' && row['column0'] !== 'orderQuantityDE' && row['column0'] !== 'orderQuantityWo' && row['column0'] !== 'imageUrl'">
-                            {{ row[prop] }}
-                        </template>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-                </template>
-            </el-table>
-        </div>
-        <vab-alert type="error" center="center">
-            <h3>不分货则填0，不能留空</h3>
-        </vab-alert>
-        <div class="pay-button-group">
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交</el-button>
-        </div>
+      <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
+        height="895" :show-header="false">
+        <!-- 第一列固定标签列 -->
+        <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
+          <template #default="{ row }">
+            <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
+          </template>
+        </el-table-column>
+        <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center">
+          <template v-slot="scope">
+            <template v-if="scope.row['column0'] === 'variantImg'">
+              <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" />
+            </template>
+            <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
+              <el-input
+                v-model="scope.row[prop]" 
+                @click="inputHandleMouseOver($event)"
+                @keydown.enter="updateHnadlerNumber($event, scope)" 
+                @blur="updateHnadlerNumber($event, scope)" 
+              />
+            </template>
+            <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
+              <el-input 
+                v-model="scope.row[prop]" 
+                @click="inputHandleMouseOver($event)"
+                @keydown.enter="updateHnadlerNumber($event, scope)"
+                @blur="updateHnadlerNumber($event, scope)"
+              />
+            </template>
+            <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
+              <el-input
+                v-model="scope.row[prop]"
+                @click="inputHandleMouseOver($event)"
+                @keydown.enter="updateHnadlerNumber($event, scope)"
+                @blur="updateHnadlerNumber($event, scope)"
+              />
+            </template>
+            <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
+              <el-input
+                v-model="scope.row[prop]"
+                @click="inputHandleMouseOver($event)"
+                @keydown.enter="updateHnadlerNumber($event, scope)"
+                @blur="updateHnadlerNumber($event, scope)"
+              />
+            </template>
+            <template v-if="scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
+              && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
+              && scope.row['column0'] !== 'variantImg'">
+              {{ scope.row[prop] }}
+            </template>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
+        </template>
+      </el-table>
     </div>
+    <vab-alert type="error" center="center">
+      <h3>不分货则填0，不能留空</h3>
+    </vab-alert>
+    <div class="pay-button-group">
+      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交</el-button>
+    </div>
+  </div>
 </template>
-  
+
 <script lang="ts" setup>
-import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
-import { currencyList, firstLegChannelColumns, invoicingList } from '../indexCommon'
+
+import { useTableDataLineToColumn, inputHandleMouseOver } from '/@/utils/tableColum'
+import { getDistributionList, updateStepNoQuantity,reviewStepNo3Save } from '/@/api/devlocal/orderingReview'
+import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
+const router = useRouter()
+
+
 defineOptions({
-    name: 'OrderReviewStep3',
+  name: 'OrderReviewStep3',
 })
 
+const props = defineProps<{
+  reviewStatus: string
+  reviewStepNo: string
+  reviewId: string
+}>();
+
 const emit = defineEmits(['change-step'])
-// const listLoading = ref<boolean>(true)
-const list = ref<any>([])
-const exchangeList = ref<any>([])
+const variantList = ref<any[]>([])
+// 原始数组的长度
+const variantSize = ref<number>(0)
 const labelMap: Record<string, string> = {
   column0: '',
-  imageUrl: 'SKU图片',
+  orderEntryId: '变体编号',
+  variantImg: 'SKU图片',
   productName: '产品名称',
   sku: 'SKU',
-  orderQuantity: '订货数量(亚马逊US)',
-  orderQuantityUK: '订货数量(亚马逊UK)',
-  orderQuantityDE: '订货数量(亚马逊DE)',
-  orderQuantityWo: '订货数量(沃尔玛US)',
-  sellingPrice: '售价',
-  grossProfit: '毛利率',
-  packageDimensions: '包装尺寸(cm)',
-  productWeight: '包装重量(g)',
-  productMaterial: '产品材质',
-  containsBattery: '是否含电池<br>(若有则填入电池类型)',
-  skuMerge: '合并变体的SKU',
-  asin: '对标竞品ASIN',
-  patentStatus: '专利情况<br>(是否排查以及结果)',
+  amazonUsOrderQuantity: '订货数量(亚马逊US)',
+  amazonUkOrderQuantity: '订货数量(亚马逊UK)',
+  amazonDeOrderQuantity: '订货数量(亚马逊DE)',
+  walmartUsOrderQuantity: '订货数量(沃尔玛US)',
+  finalSellingPrice: '售价',
+  grossMarginRate: '毛利率',
+  packagingSize: '包装尺寸(cm)',
+  weight: '包装重量(g)',
+  material: '产品材质',
+  battery: '是否含电池<br>(若有则填入电池类型)',
+  variantSku: '合并变体的SKU',
+  benchmarkAsin: '对标竞品ASIN',
+  patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
   productDesign: '产品设计',
 }
-const  tableData = [
-    {
-        column0: '1',
-        imageUrl: 'path-to-image.jpg',
-        productName: '产品名称1',
-        sku: 'sku123',
-        orderQuantity: 100,
-        orderQuantityUK: 100,
-        orderQuantityDE: 120,
-        orderQuantityWo: 0,
-        sellingPrice: '$19.99',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productWeight: '56',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        skuMerge: '',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-    },
-    {
-        column0: '2',
-        imageUrl: 'path-to-image.jpg',
-        productName: '产品名称1',
-        sku: 'sku123',
-        orderQuantity: 100,
-        orderQuantityUK: 100,
-        orderQuantityDE: 120,
-        orderQuantityWo: 0,
-        sellingPrice: '$19.99',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productWeight: '77',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        skuMerge: '',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-    },
-]
 
-
-interface FormattedData {
-  [key: string]: any;
-}
-interface RowData {
-  [key: string]: any;
-}
-const useTableDataLineToColumn = () => {
-  // 一条数据的所有字段数组
-  let props = ref<string[]>([])
-  // 每个字段的分组数据
-  let groupData = ref<any[][]>([])
-  // 计算表头
-  const columns = computed(() => {
-    return props.value.length > 0 ?  [...groupData.value[0]] : []
+const buildParams = (idx: number): IReviewStepUpdateReq => {
+  let n: any = {}
+  variantList.value.map((item, index) => {
+    n[item["column0"]] = item[idx]
   })
-  // 根据每条数据的字段对数据进行分组
-  const dataToGroupByKey = (list: any) => {
-    list.forEach((item: any) => {
-      // 遍历每个字段
-      props.value.forEach((key, index) => {
-        // 把对应字段的值放到对应字段分组中
-        groupData.value[index].push(item[key])
-      })
-    })
-  }
 
-  // 根据分组数据，转换成最终显示的数据个数
-  const changeGroupData = () => {
-    // 转换后的数据
-    const list: FormattedData[] = []
-    // 解构分组数据
-    console.log('groupData.value', groupData.value);
-    
-    const [column0, ...otherData] = groupData.value
-    // 初始化每一行的数据, 除去表头，有几个key就算有几行
-    props.value.slice(1).forEach((prop, i) => {
-      list[i] = []
-      // 设置第一列标题索引名称
-      const data = { [props.value[0]]: prop }
-      // 通过遍历每一列的日期，设置对应行的数据
-      column0.forEach((column0, dateIndex) => {
-        data[column0] = otherData[i][dateIndex]
-      })
-      list[i] = data
-    })
-    return list
+  const params: IReviewStepUpdateReq = {
+    orderEntryId: n.orderEntryId,
+    amazonUsOrderQuantity: n.amazonUsOrderQuantity,
+    amazonUkOrderQuantity: n.amazonUkOrderQuantity,
+    amazonDeOrderQuantity: n.amazonDeOrderQuantity,
+    walmartUsOrderQuantity: n.walmartUsOrderQuantity
   }
-
-  // 初始化分组数据
-  const initGroup = (list: RowData[]) => {
-    const firstData = list[0] || {}
-    // 获取一条数组的所有字段
-    props.value = Object.keys(firstData)
-    // 初始化每个字段的分组数据
-    for(let i = 0; i < props.value.length; i++) {
-      groupData.value[i] = []
-    }
-  }
-
-  return {
-    columns,
-    initData: (data: RowData[] = []) => {
-      // 初始化分组
-      initGroup(data)
-      // 向分组加入数据
-      dataToGroupByKey(data)
-      // 初始化分组内的数据，转为列数据
-      return changeGroupData()
-    }
-  }
+  return params
 }
-const { initData, columns } = useTableDataLineToColumn()
-console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
-exchangeList.value = initData(tableData)
 
+const updateHnadlerNumber = async (event: Event, row: any) => {
+  const updateParmas = buildParams(row.cellIndex)
+  console.log(updateParmas)
+
+  const targetElement = event.target as HTMLInputElement
+  targetElement.blur()
+  const { data } = await updateStepNoQuantity(updateParmas)
+  if (data === true) {
+    $baseMessage("分货数量成功！", "success", "hey")
+    fetchData()
+  }
+
+}
+
+const { initData, columns } = useTableDataLineToColumn()
+const fetchData = async () => {
+  const { data } = await getDistributionList({ reviewId: props.reviewId })
+  variantSize.value = data.length;
+
+  let arr: IReviewCommonItem[] = []
+  data.forEach((item: IReviewCommonItem, index: number) => {
+    let n: IReviewCommonItem = {
+      column0: (index + 1) + "",
+      orderEntryId: item.orderEntryId,
+      variantImg: item.variantImg,
+      productName: item.productName,
+      sku: item.sku,
+      amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+      amazonUkOrderQuantity: item.amazonUkOrderQuantity,
+      amazonDeOrderQuantity: item.amazonDeOrderQuantity,
+      walmartUsOrderQuantity: item.walmartUsOrderQuantity,
+      finalSellingPrice: item.finalSellingPrice,
+      grossMarginRate: item.grossMarginRate,
+      packagingSize: item.packagingSize,
+      material: item.material,
+      battery: item.battery,
+      variantSku: item.variantSku,
+      benchmarkAsin: item.benchmarkAsin,
+      patent: item.patent,
+      productManager: item.productManager,
+      productDesign: item.productDesign,
+    }
+    arr.push(n)
+  })
+
+  variantList.value = initData(arr)
+}
 // 当点击通过的时候
 const handleSaveAndContinue = () => {
-    $baseMessage("通过","success","hey")
-    emit('change-step', 3)
+  const deleteVNode = h('div', {}, [
+    h('p', {
+      style: {
+        color: 'origin'
+      }
+    }, '请再次确认，只有所有的站点都分货后才能进行提交！')
+  ]);
+  $baseConfirm(deleteVNode, "系统提示", async () => {
+
+    const { data } = await reviewStepNo3Save({reviewId:props.reviewId})
+    if (data === true) {
+      $baseMessage("分货提交成功！", "success", "hey")
+      router.push({
+        path: '/newProductDevelopment/newProductApprovalAndRecords'
+      })
+    }
+
+  })
 }
 
+onMounted(() => {
+  fetchData()
+})
+
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
 }
 </style>
-  

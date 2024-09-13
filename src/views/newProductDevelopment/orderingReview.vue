@@ -14,11 +14,34 @@
       <el-step title="运营分货" />
       <el-step title="产品经理审核" />
     </el-steps>
-    <order-review-step1 v-if="active === 0" @change-step="handleSetStep" :reviewId="route.query.reviewId"
-      :reviewStatus="route.query.reviewStatus" :reviewStepNo="route.query.reviewStepNo" />
-    <order-review-step2 v-if="active === 1" @change-step="handleSetStep" />
-    <order-review-step3 v-if="active === 2" @change-step="handleSetStep" />
-    <order-review-step4 v-if="active === 3" @change-step="handleSetStep" />
+    <order-review-step1 
+      v-if="active === 0" 
+      @change-step="handleSetStep" 
+      :reviewId="route.query.reviewId"
+      :reviewStatus="route.query.reviewStatus" 
+      :reviewStepNo="route.query.reviewStepNo" 
+    />
+    <order-review-step2 
+      v-if="active === 1" 
+      @change-step="handleSetStep" 
+      :reviewId="route.query.reviewId"
+      :reviewStatus="route.query.reviewStatus" 
+      :reviewStepNo="route.query.reviewStepNo" 
+    />
+    <order-review-step3 
+      v-if="active === 2" 
+      @change-step="handleSetStep" 
+      :reviewId="route.query.reviewId"
+      :reviewStatus="route.query.reviewStatus" 
+      :reviewStepNo="route.query.reviewStepNo" 
+    />
+    <order-review-step4 
+      v-if="active === 3" 
+      @change-step="handleSetStep" 
+      :reviewId="route.query.reviewId"
+      :reviewStatus="route.query.reviewStatus" 
+      :reviewStepNo="route.query.reviewStepNo" 
+   />
   </div>
 </template>
 
@@ -39,9 +62,6 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const active = ref<number>(Number(route.query.reviewStepNo))
-// 预览图片列表
-const imagePriviewList = ref<string[]>([])
-const form = reactive<any>({})
 const orderStep1Ref = ref(null)
 const formData = ref<any>({})
 

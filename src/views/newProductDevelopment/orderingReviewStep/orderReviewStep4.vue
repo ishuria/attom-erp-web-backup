@@ -4,9 +4,9 @@
             <el-table 
                 ref="tableRef" 
                 stripe border 
-                :data="exchangeList" 
+                :data="variantList" 
                 :header-cell-style="{ 'text-align': 'right' }"
-                height="430"
+                height="630"
                 :show-header="false"
             >
                 <!-- 第一列固定标签列 -->
@@ -14,7 +14,6 @@
                     :prop="'column0'" 
                     :label="labelMap['column0']" 
                     fixed
-                    
                     align="right"
                     width="260"
                 >
@@ -29,27 +28,51 @@
                     :key="i" 
                     align="center" 
                 >
-                    <template #default = {row}>
-                        <template v-if="row['column0'] === 'imageUrl'">
-                            <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
+                    <template v-slot="scope">
+                        <template v-if="scope.row['column0'] === 'variantImg'">
+                            <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" />
                         </template>
-                        <template v-if="row['column0'] === 'oem'">
-                            <el-checkbox v-model="row[prop]" :true-value="'1'" :false-value="'0'" size="large" class="custom-checkbox"/>
+                        <template v-if="scope.row['column0'] === 'oem'">
+                            <el-checkbox v-model="scope.row[prop]" :disabled="true":true-value="1" :false-value="0" size="large" class="custom-checkbox"/>
                         </template>
-                        <template v-if="row['column0'] === 'orderQuantity'">
-                            <el-input v-model="row[prop]"></el-input>
+                        <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
+                          <el-input
+                            v-model="scope.row[prop]" 
+                            @click="inputHandleMouseOver($event)"
+                            @keydown.enter="updateHnadlerNumber($event, scope)" 
+                            @blur="updateHnadlerNumber($event, scope)" 
+                          />
                         </template>
-                        <template v-if="row['column0'] === 'orderQuantityUK'">
-                            <el-input v-model="row[prop]"></el-input>
+                        <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
+                          <el-input 
+                            v-model="scope.row[prop]" 
+                            @click="inputHandleMouseOver($event)"
+                            @keydown.enter="updateHnadlerNumber($event, scope)"
+                            @blur="updateHnadlerNumber($event, scope)"
+                          />
                         </template>
-                        <template v-if="row['column0'] === 'orderQuantityDE'">
-                            <el-input v-model="row[prop]"></el-input>
+                        <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
+                          <el-input
+                            v-model="scope.row[prop]"
+                            @click="inputHandleMouseOver($event)"
+                            @keydown.enter="updateHnadlerNumber($event, scope)"
+                            @blur="updateHnadlerNumber($event, scope)"
+                          />
                         </template>
-                        <template v-if="row['column0'] === 'orderQuantityWo'">
-                            <el-input v-model="row[prop]"></el-input>
+                        <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
+                          <el-input
+                            v-model="scope.row[prop]"
+                            @click="inputHandleMouseOver($event)"
+                            @keydown.enter="updateHnadlerNumber($event, scope)"
+                            @blur="updateHnadlerNumber($event, scope)"
+                          />
                         </template>
-                        <template v-if="row['column0'] !== 'oem' && row['column0'] !== 'orderQuantity' && row['column0'] !== 'orderQuantityUK' && row['column0'] !== 'orderQuantityDE' && row['column0'] !== 'orderQuantityWo' && row['column0'] !== 'imageUrl'">
-                            {{ row[prop] }}
+                        <template 
+                          v-if="scope.row['column0'] !== 'oem' && scope.row['column0'] !== 'amazonUsOrderQuantity' && 
+                          scope.row['column0'] !== 'amazonUkOrderQuantity' && scope.row['column0'] !== 'amazonDeOrderQuantity' && 
+                          scope.row['column0'] !== 'walmartUsOrderQuantity' && scope.row['column0'] !== 'variantImg'"
+                        >
+                            {{ scope.row[prop] }}
                         </template>
                     </template>
                 </el-table-column>
@@ -65,139 +88,143 @@
 </template>
   
 <script lang="ts" setup>
-import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
-import { currencyList, firstLegChannelColumns, invoicingList } from '../indexCommon'
+import { useTableDataLineToColumn, inputHandleMouseOver } from '/@/utils/tableColum'
+import {reviewProductList,updateStepNoQuantity,releasePo} from '/@/api/devlocal/orderingReview'
+import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
+
 defineOptions({
     name: 'OrderReviewStep4',
 })
 
+const props = defineProps<{
+  reviewStatus: string
+  reviewStepNo: string
+  reviewId: string
+}>();
+
+const router = useRouter()
 const emit = defineEmits(['change-step'])
-// const listLoading = ref<boolean>(true)
-const list = ref<any>([])
-const exchangeList = ref<any>([])
+const variantList = ref<any[]>([])
 const labelMap: Record<string, string> = {
   column0: '',
-  imageUrl: 'SKU图片',
+  orderEntryId: '变体编号',
+  variantImg: 'SKU图片',
   productName: '产品名称',
   sku: 'SKU',
-  count: '有效计数',
+  effectiveCount: '有效计数',
   oem: 'OEM',
-  orderQuantity: '订货数量(亚马逊US)',
-  orderQuantityUK: '订货数量(亚马逊UK)',
-  orderQuantityDE: '订货数量(亚马逊DE)',
-  orderQuantityWo: '订货数量(沃尔玛US)',
+  amazonUsOrderQuantity: '订货数量(亚马逊US)',
+  amazonUkOrderQuantity: '订货数量(亚马逊UK)',
+  amazonDeOrderQuantity: '订货数量(亚马逊DE)',
+  walmartUsOrderQuantity: '订货数量(沃尔玛US)',
 }
-const  tableData = [
-    {
-        column0: '1',
-        imageUrl: 'path-to-image.jpg',
-        productName: '产品名称1',
-        sku: 'sku123',
-        count: 100,
-        oem: '0',
-        orderQuantity: 100,
-        orderQuantityUK: 100,
-        orderQuantityDE: 120,
-        orderQuantityWo: 0,
-    },
-    {
-        column0: '2',
-        imageUrl: 'path-to-image.jpg',
-        productName: '产品名称1',
-        sku: 'sku123',
-        count: 100,
-        oem: '1',
-        orderQuantity: 200,
-        orderQuantityUK: 100,
-        orderQuantityDE: 120,
-        orderQuantityWo: 0,
-    },
-]
 
-
-interface FormattedData {
-  [key: string]: any;
-}
-interface RowData {
-  [key: string]: any;
-}
-const useTableDataLineToColumn = () => {
-  // 一条数据的所有字段数组
-  let props = ref<string[]>([])
-  // 每个字段的分组数据
-  let groupData = ref<any[][]>([])
-  // 计算表头
-  const columns = computed(() => {
-    return props.value.length > 0 ?  [...groupData.value[0]] : []
+const buildParams = (idx: number): IReviewStepUpdateReq => {
+  let n: any = {}
+  variantList.value.map((item, index) => {
+    n[item["column0"]] = item[idx]
   })
-  // 根据每条数据的字段对数据进行分组
-  const dataToGroupByKey = (list: any) => {
-    list.forEach((item: any) => {
-      // 遍历每个字段
-      props.value.forEach((key, index) => {
-        // 把对应字段的值放到对应字段分组中
-        groupData.value[index].push(item[key])
-      })
-    })
-  }
 
-  // 根据分组数据，转换成最终显示的数据个数
-  const changeGroupData = () => {
-    // 转换后的数据
-    const list: FormattedData[] = []
-    // 解构分组数据
-    console.log('groupData.value', groupData.value);
-    
-    const [column0, ...otherData] = groupData.value
-    // 初始化每一行的数据, 除去表头，有几个key就算有几行
-    props.value.slice(1).forEach((prop, i) => {
-      list[i] = []
-      // 设置第一列标题索引名称
-      const data = { [props.value[0]]: prop }
-      // 通过遍历每一列的日期，设置对应行的数据
-      column0.forEach((column0, dateIndex) => {
-        data[column0] = otherData[i][dateIndex]
-      })
-      list[i] = data
-    })
-    return list
+  const params: IReviewStepUpdateReq = {
+    orderEntryId: n.orderEntryId,
+    amazonUsOrderQuantity: n.amazonUsOrderQuantity,
+    amazonUkOrderQuantity: n.amazonUkOrderQuantity,
+    amazonDeOrderQuantity: n.amazonDeOrderQuantity,
+    walmartUsOrderQuantity: n.walmartUsOrderQuantity
   }
-
-  // 初始化分组数据
-  const initGroup = (list: RowData[]) => {
-    const firstData = list[0] || {}
-    // 获取一条数组的所有字段
-    props.value = Object.keys(firstData)
-    // 初始化每个字段的分组数据
-    for(let i = 0; i < props.value.length; i++) {
-      groupData.value[i] = []
-    }
-  }
-
-  return {
-    columns,
-    initData: (data: RowData[] = []) => {
-      // 初始化分组
-      initGroup(data)
-      // 向分组加入数据
-      dataToGroupByKey(data)
-      // 初始化分组内的数据，转为列数据
-      return changeGroupData()
-    }
-  }
+  return params
 }
-const { initData, columns } = useTableDataLineToColumn()
-console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
-exchangeList.value = initData(tableData)
+
+
+const updateHnadlerNumber = async (event: Event, row: any) => {
+  const updateParmas = buildParams(row.cellIndex)
+  console.log(updateParmas)
+
+  const targetElement = event.target as HTMLInputElement
+  targetElement.blur()
+  const { data } = await updateStepNoQuantity(updateParmas)
+  if (data === true) {
+    $baseMessage("分货数量成功！", "success", "hey")
+    fetchData()
+  }
+
+}
+
 
 // 当点击通过的时候
-const handleSaveAndContinue = () => {
-    $baseMessage("发布PO","success","hey")
+const handleSaveAndContinue = async () => {
+  const deleteVNode = h('div', {}, [
+    h('p', {
+      style: {
+        color: 'origin'
+      }
+    }, '请再次确认，是否要真的发布PO！')
+  ]);
+  $baseConfirm(deleteVNode, "系统提示", async () => {
+
+    const { data } = await releasePo({reviewId:props.reviewId})
+    if (data === true) {
+      $baseMessage("发布PO成功！", "success", "hey")
+      router.push({
+        path: '/newProductDevelopment/newProductApprovalAndRecords'
+      })
+    }
+
+  })
 }
+
+const { initData, columns } = useTableDataLineToColumn()
+const fetchData = async () => {
+  const { data } = await reviewProductList({ reviewId: props.reviewId })
+
+
+  let arr: IReviewCommonItem[] = []
+  data.forEach((item: IReviewCommonItem, index: number) => {
+    let n: IReviewCommonItem = {
+      column0: (index + 1) + "",
+      orderEntryId: item.orderEntryId,
+      variantImg: item.variantImg,
+      productName: item.productName,
+      sku: item.sku,
+      effectiveCount: (item.effectiveCount == undefined || item.effectiveCount == null) ? "" : item.effectiveCount,
+      oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
+      amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+      amazonUkOrderQuantity: item.amazonUkOrderQuantity,
+      amazonDeOrderQuantity: item.amazonDeOrderQuantity,
+      walmartUsOrderQuantity: item.walmartUsOrderQuantity,
+    }
+    arr.push(n)
+  })
+
+  variantList.value = initData(arr)
+}
+
+onMounted(() => {
+  fetchData()
+})
+
 
 </script>
   
 <style lang="scss" scoped>
+
+// 选中且不被禁用的样式
+::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: #4A62E7;
+  border-color: #4A62E7;
+}
+
+// 选中且被禁用的样式
+::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+  background: rgb(10, 108, 245);
+  border-color: rgb(10, 108, 245);
+}
+
+// 选中后中间的 “✔” 的样式
+::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+  border-color: #fff;
+}
+
 .pay-button-group {
     display: block;
     margin: 20px auto;

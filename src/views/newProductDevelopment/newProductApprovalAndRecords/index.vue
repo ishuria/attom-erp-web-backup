@@ -7,8 +7,7 @@
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.productKeyWord" @keyup.enter.native="queryData" clearable
-              placeholder="请输入搜索关键词" />
+            <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
@@ -60,6 +59,7 @@
           {{ row.difference }}
         </template>
       </el-table-column>
+      <el-table-column label="有效计数" prop="effectiveCount" align="center" width="70"/>
       <el-table-column label="OEM" prop="oem" align="center" width="70">
         <template #default="{ row }">
           <el-checkbox :disabled="true" v-model="row.oem" :true-value="1" :false-value="0" size="large"
@@ -115,7 +115,8 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item v-if="row.reviewStatus === 1">
+                <el-dropdown-item
+                  v-if="row.reviewStatus === 1 || row.reviewStatus === 2 || row.reviewStatus === 3 || row.reviewStatus === 4 || row.reviewStatus === 5">
                   <el-link type="primary" :underline="false" @click="handleOrderReview(row)">审批和PO发布</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -138,15 +139,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Delete, Plus, Search } from '@element-plus/icons-vue'
-import type { TableInstance } from 'element-plus'
-import { doDelete, getList } from '/@/api/table'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useSettingsStore } from '/@/store/modules/settings'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { handleMatched, handleTabs } from '/@/utils/routes'
+import { ArrowDown,Search } from '@element-plus/icons-vue'
+import type { TableColumnCtx, TableInstance } from 'element-plus'
 import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
-import { IReviewQueryReq, IReviewQueryResp } from '/@/type/review/review'
+import { IReviewQueryReq, IReviewQueryResp, IReviewQueryItem } from '/@/type/review/review'
 import { getReviewList } from '/@/api/devlocal/orderingReview'
 import { formatDate } from '/@/utils/dateUtils'
 
@@ -156,33 +152,23 @@ defineOptions({
 
 
 interface SpanMethodProps {
-  row: IReviewQueryResp
-  column: TableColumnCtx<IReviewQueryResp>
+  row: IReviewQueryItem
+  column: TableColumnCtx<IReviewQueryItem>
   rowIndex: number
   columnIndex: number
 }
-
-
 const router = useRouter()
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const tabsStore = useTabsStore()
-const { changeTabsMeta, addVisitedRoute } = tabsStore
-const editRef = ref<any>(null)
 const tableRef = ref<TableInstance>()
-const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
-const selectRows = ref<any>([])
 const queryForm = reactive<IReviewQueryReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
 })
 const foldOperation = ref<boolean>(false)
-const settingsStore = useSettingsStore()
 
-const dataList = ref<IReviewQueryResp[]>()
+const dataList = ref<IReviewQueryItem[]>([])
 const formattedProgressLog = (str: string) => {
   return str
     .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
@@ -224,12 +210,12 @@ const generateStatus = (value: number) => {
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getReviewList(queryForm)
-  dataList.value = data.list
+  dataList.value = data.list!
   total.value = data.total
   listLoading.value = false
 }
 
-const handleOrderReview = (row: IReviewQueryResp) => {
+const handleOrderReview = (row: IReviewQueryItem) => {
   // console.log(row);
   router.push({
     path: '/newProductDevelopment/orderingReview',
@@ -255,22 +241,20 @@ const handleOrderProcess = (row: IReviewQueryResp) => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 
-const setSelectRows = (value: string) => {
-  selectRows.value = value
-}
+
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
@@ -299,7 +283,7 @@ const objectSpanMethod = ({
   // 设置需要合并的列
   if (columnIndex === 0 || columnIndex === 1 || columnIndex === 9 || columnIndex === 10
     || columnIndex === 11 || columnIndex === 12 || columnIndex === 13 || columnIndex === 14
-    || columnIndex === 15 || columnIndex === 16
+    || columnIndex === 15 || columnIndex === 16 || columnIndex === 17
 
   ) {
     // 获取当前row的id
@@ -307,7 +291,7 @@ const objectSpanMethod = ({
     // 默认不跨行
     let rowspan = 1;
     // 遍历后端返回的数据
-    for (let i = rowIndex + 1; i < dataList.value.length; i++) {
+    for (let i = rowIndex + 1; i < dataList.value.length!; i++) {
       // 如果id一样需要合并
       if (dataList.value[i].reviewMainId === reviewMainId) {
         rowspan++;

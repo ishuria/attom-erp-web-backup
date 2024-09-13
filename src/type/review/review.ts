@@ -13,6 +13,10 @@ export interface IReviewQueryReq {
  * 新品审核列表Resp
  */
 export interface IReviewQueryResp {
+  data: IReviewQuery
+}
+
+export interface IReviewQuery {
   // 总记录
   total: number
   list?: IReviewQueryItem[] | null
@@ -21,6 +25,7 @@ export interface IReviewQueryResp {
 export interface IReviewQueryItem {
   difference?: string
   oem?: number
+  effectiveCount?:number
   po?: string
   productDesign?: string
   productManager?: string
@@ -55,15 +60,19 @@ export interface IReviewCommonResp {
 
 export interface IReviewCommonItem {
   column0: string
-
   /**
    * 变体id
    */
-  orderEntryId?: number
+  orderEntryId: number
   /**
    * 合并变体sku
    */
   variantSku?: string
+
+  /**
+   * SKU
+   */
+  sku?: string
   /**
    * 产品名称
    */
@@ -139,7 +148,7 @@ export interface IReviewCommonItem {
   /**
    * 有效计数
    */
-  effectiveCount?: number
+  effectiveCount?: string
   /**
    * OEM 0不选中 1选中
    */
@@ -148,6 +157,10 @@ export interface IReviewCommonItem {
    * 变体图片
    */
   variantImg?: string
+  /**
+   * 包装重量
+   */
+  weight?: string
 }
 
 /**
@@ -318,4 +331,79 @@ export interface IVariantInfoItem {
    * 仓储费
    */
   storageFee: number
+}
+
+// 主管可行性审批req
+export interface IReviewStepNo1Req {
+  /**
+   * 审核id
+   */
+  reviewId: string
+  /**
+   * 变体列表
+   */
+  variantList: IReviewStepNo1Variant[]
+}
+
+export interface IReviewStepNo1Variant {
+  /**
+   * 变体id
+   */
+  orderEntryId?: number
+
+  /**
+   * 有效计数
+   */
+  effectiveCount?: number
+
+  /**
+   * OEM 0不选中 1选中
+   */
+  oem?: number
+}
+
+export interface IReviewStepResp {
+  data: boolean
+}
+
+/**
+ * sku创建req
+ */
+export interface IReviewStep2Req {
+  reviewId: string
+  variantList: IReviewStep2Item[]
+}
+
+export interface IReviewStep2Item {
+  orderEntryId?: number
+  sku?: string
+}
+
+
+export interface IReviewStepUpdateReq{
+  /**
+   * 变体id
+   */
+  orderEntryId:number
+  /**
+   * 亚马逊US订货数量
+   */
+  amazonUsOrderQuantity?:number
+  /**
+   * 亚马逊UK订货数量
+   */
+  amazonUkOrderQuantity?:number
+  /**
+   * 亚马逊DK订货数量
+   */
+  amazonDeOrderQuantity?:number
+  /**
+   * 沃尔玛US订货数量
+   */
+  walmartUsOrderQuantity?:number
+
+}
+
+export interface IReviewStep3Item{
+
 }

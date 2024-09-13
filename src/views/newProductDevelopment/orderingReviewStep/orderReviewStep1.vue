@@ -17,7 +17,7 @@
                             <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" />
                         </template>
                         <template v-if="row['column0'] === 'oem'">
-                            <el-checkbox v-model="row[prop]" :true-value="'1'" :false-value="'0'" size="large"
+                            <el-checkbox v-model="row[prop]" :true-value="1" :false-value="0" size="large"
                                 class="custom-checkbox" />
                         </template>
                         <template v-if="row['column0'] === 'effectiveCount'">
@@ -127,11 +127,10 @@
 </template>
 
 <script lang="ts" setup>
-
-import { getReviewByReviewId, getMoldInfoByReviewId, getVariantList } from '/@/api/devlocal/orderingReview'
-import { IReviewMoldItem, IReviewCommonItem, IVariantInfoItem } from '/@/type/review/review'
+import { getReviewByReviewId, getMoldInfoByReviewId, getVariantList, reviewStepNo1Pass, reviewStepNo1Fail } from '/@/api/devlocal/orderingReview'
+import { IReviewMoldItem, IReviewCommonItem, IVariantInfoItem, IReviewStepNo1Req, IReviewStepNo1Variant } from '/@/type/review/review'
 import { formatDate } from '/@/utils/dateUtils'
-import { getSpecificChildren } from '/@/utils/nodeUtils'
+import { useTableDataLineToColumn, inputHandleMouseOver, effectiveCountInputeHandle } from '/@/utils/tableColum'
 
 const props = defineProps<{
     reviewStatus: string
@@ -146,8 +145,13 @@ defineOptions({
 const emit = defineEmits(['change-step'])
 const variantDetialList = ref<IVariantInfoItem[]>([])
 const variantList = ref<any[]>([])
+// 原始数组的长度
+const variantSize = ref<number>(0)
+const moldData = ref<IReviewMoldItem[]>()
+
 const labelMap: Record<string, string> = {
     column0: '',
+    orderEntryId: '变体编号',
     variantImg: 'SKU图片',
     productName: '产品名称',
     effectiveCount: '有效计数',
@@ -169,115 +173,100 @@ const labelMap: Record<string, string> = {
     productDesign: '产品设计',
 }
 
-const moldData = ref<IReviewMoldItem[]>()
+const buildParams = (): IReviewStepNo1Req => {
+    let paramVArr: IReviewStepNo1Variant[] = []
+    let vArr: any = []
+    for (let i = 1; i < variantSize.value + 1; i++) {
+        let n: any = {}
+        variantList.value.map((item, index) => {
+            n[item["column0"]] = item[i]
+        })
+        vArr.push(n)
+    }
 
-interface FormattedData {
-    [key: string]: any;
-}
-interface RowData {
-    [key: string]: any;
-}
+    vArr.forEach((item: any, index: number) => {
+        const v: IReviewStepNo1Variant = {
+            orderEntryId: item.orderEntryId,
+            effectiveCount: item.effectiveCount,
+            oem: item.oem
+        }
 
-const useTableDataLineToColumn = () => {
-    // 一条数据的所有字段数组
-    let props = ref<string[]>([])
-    // 每个字段的分组数据
-    let groupData = ref<any[][]>([])
-    // 计算表头
-    const columns = computed(() => {
-        return props.value.length > 0 ? [...groupData.value[0]] : []
+        paramVArr.push(v)
     })
-    // 根据每条数据的字段对数据进行分组
-    const dataToGroupByKey = (list: any) => {
-        list.forEach((item: any) => {
-            // 遍历每个字段
-            props.value.forEach((key, index) => {
-                // 把对应字段的值放到对应字段分组中
-                groupData.value[index].push(item[key])
-            })
-        })
+
+    const params: IReviewStepNo1Req = {
+        reviewId: props.reviewId,
+        variantList: paramVArr
     }
 
-    // 根据分组数据，转换成最终显示的数据个数
-    const changeGroupData = () => {
-        // 转换后的数据
-        const list: FormattedData[] = []
-        // 解构分组数据
-        const [column0, ...otherData] = groupData.value
-        // 初始化每一行的数据, 除去表头，有几个key就算有几行
-        props.value.slice(1).forEach((prop, i) => {
-            list[i] = []
-            // 设置第一列标题索引名称
-            const data = { [props.value[0]]: prop }
-            // 通过遍历每一列的日期，设置对应行的数据
-            column0.forEach((column0, dateIndex) => {
-                data[column0] = otherData[i][dateIndex]
-            })
-            list[i] = data
-        })
-        return list
-    }
-
-    // 初始化分组数据
-    const initGroup = (list: RowData[]) => {
-        const firstData = list[0] || {}
-        // 获取一条数组的所有字段
-        props.value = Object.keys(firstData)
-        // 初始化每个字段的分组数据
-        for (let i = 0; i < props.value.length; i++) {
-            groupData.value[i] = []
-        }
-    }
-
-    return {
-        columns,
-        initData: (data: RowData[] = []) => {
-            // 初始化分组
-            initGroup(data)
-            // 向分组加入数据
-            dataToGroupByKey(data)
-            // 初始化分组内的数据，转为列数据
-            return changeGroupData()
-        }
-    }
-}
-const { initData, columns } = useTableDataLineToColumn()
-
-// 输入键盘enter失去焦点
-const effectiveCountInputeHandle = (event: Event) => {
-    const targetElement = event.target as HTMLInputElement;
-    targetElement.blur();
+    return params
 }
 
-const inputHandleMouseOver = (evnet: Event) => {
-    const target = event?.target;
-    if (target && (target as HTMLElement).tagName === 'INPUT') {
-        const inputElement = target as HTMLInputElement;
-        inputElement.select();
-    }
-}
 
 // 当点击通过的时候
-const handleSaveAndContinue = () => {
-    $baseMessage("通过", "success", "hey")
-    emit('change-step', 1)
+const handleSaveAndContinue = async () => {
+
+    try {
+
+        const deleteVNode = h('div', {}, [
+            h('p', {
+                style: {
+                    color: 'origin'
+                }
+            }, '请再次确认，是否需要通过审批！')
+        ]);
+        $baseConfirm(deleteVNode, "系统提示", async () => {
+            const params = buildParams()
+            const { data } = await reviewStepNo1Pass(params)
+            if (data === true) {
+                $baseMessage("审批通过成功！", "success", "hey")
+            }
+        })
+
+    } catch (e) {
+        console.error(e as Error)
+    }
+
 }
 // 当点击不通过的时候
 const handleGoback = () => {
-    $baseMessage("不通过", "error", "hey")
+
+    try {
+
+        const deleteVNode = h('div', {}, [
+            h('p', {
+                style: {
+                    color: 'red'
+                }
+            }, '确认要点击审核不通过吗？')
+        ]);
+        $baseConfirm(deleteVNode, "系统提示", async () => {
+            const params = buildParams()
+            const { data } = await reviewStepNo1Fail(params)
+            if (data === true) {
+                $baseMessage("审核不通过提交成功", "success", "hey")
+            }
+        })
+
+    } catch (e) {
+        console.error(e as Error)
+    }
 }
 
+const { initData, columns } = useTableDataLineToColumn()
 const fetchData = async () => {
     const { data } = await getReviewByReviewId({ reviewId: props.reviewId })
+    variantSize.value = data.length;
+
     let arr: IReviewCommonItem[] = []
     data.forEach((item: IReviewCommonItem, index: number) => {
-
         let n: IReviewCommonItem = {
             column0: (index + 1) + "",
+            orderEntryId: item.orderEntryId,
             variantImg: item.variantImg,
             productName: item.productName,
-            effectiveCount: item.effectiveCount,
-            oem: item.oem,
+            effectiveCount: (item.effectiveCount == undefined || item.effectiveCount == null) ? "" : item.effectiveCount,
+            oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
             amazonUsOrderQuantity: item.amazonUsOrderQuantity,
             purchaseTotalPrice: item.purchaseTotalPrice,
             finalSellingPrice: item.finalSellingPrice,
