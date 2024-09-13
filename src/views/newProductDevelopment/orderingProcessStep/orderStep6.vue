@@ -1,5 +1,5 @@
 <template>
-    <div>
+  <div>
         <div>
             <el-table 
                 ref="tableRef" 
@@ -15,7 +15,6 @@
                     :prop="'column0'" 
                     :label="labelMap['column0']" 
                     fixed
-                    
                     align="right"
                     width="260"
                 >
@@ -24,18 +23,18 @@
                     </template>
                 </el-table-column>
                 <el-table-column 
+                    v-for="(prop, i) in columnsChange" 
                     :prop="prop" 
                     :label="prop" 
-                    v-for="(prop, i) in columns" 
                     :key="i" 
                     align="center" 
                 >
                     <template #default = {row}>
                         
-                        <template v-if="row['column0'] === 'imageUrl'">
-                            <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img"/>
+                        <template v-if="row['column0'] === 'variantImg'">
+                            <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
                         </template>
-                        <template v-if="row['column0'] !== 'imageUrl'">
+                        <template v-if="row['column0'] !== 'variantImg'">
                           {{ row[prop] }}
                         </template>
                     </template>
@@ -49,46 +48,37 @@
       
         <div>
             <el-table 
-            ref="tableRef" 
-
-            stripe border 
-            :data="POdata" 
-            :header-cell-style="{ 'text-align': 'center' }"
-            style="margin-top: 25px;"
-            height="90"
-        >
-            <!-- <el-table-column label="" width="160" prop="">
-                <strong style="color: var(--el-table-header-text-color)">{{ "含在PO里的开模费" }}</strong>
-            </el-table-column> -->
-            <el-table-column label="提交日期" min-width="127" prop="date" align="center">
-                <template #default="{ row }">
-                   {{ row.date }}
-                </template>
-            </el-table-column>
-            <el-table-column label="零件名" min-width="200" prop="name">
-                    <template #default="{ row }">
-                        <!-- <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span> -->
-
-                    </template>
-                </el-table-column>
-            <el-table-column label="供应商" min-width="127" prop="supplier">
-      
-            </el-table-column>
-            <el-table-column label="状态" min-width="127" align="center" prop="status">
-      
-            </el-table-column>
-            <el-table-column label="开票类型" min-width="127" align="center" prop="kaipiao">
-      
-            </el-table-column>
-            <el-table-column label="付款金额" min-width="127" align="center" prop="cost">
-      
-            </el-table-column>
-            <el-table-column label="处理方式" min-width="127" align="center" prop="dealMethod">
-      
-            </el-table-column>
-            <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-            </template>
+              stripe border 
+              :data="moldCheckList" 
+              :header-cell-style="{ 'text-align': 'center' }"
+              style="margin-top: 25px;"
+              height="100"
+            >
+              <el-table-column label="提交日期" min-width="127" prop="createTime" align="center">
+                  <template #default="{ row }">
+                    {{ row.createTime }}
+                  </template>
+              </el-table-column>
+              <el-table-column label="零件名" min-width="200" prop="component">
+              </el-table-column>
+              <el-table-column label="供应商" min-width="127" prop="suppliser">
+        
+              </el-table-column>
+              <el-table-column label="状态" min-width="127" align="center" prop="status">
+        
+              </el-table-column>
+              <el-table-column label="开票类型" min-width="127" align="center" prop="invoiceType">
+        
+              </el-table-column>
+              <el-table-column label="付款金额" min-width="127" align="center" prop="payPrice">
+        
+              </el-table-column>
+              <el-table-column label="处理方式" min-width="127" align="center" prop="dealMethod">
+        
+              </el-table-column>
+              <template #empty>
+                <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+              </template>
             </el-table>
         </div>
         <div class="pay-button-group">
@@ -96,11 +86,13 @@
             <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>
         </div>
-    </div>
-  </template>
+  </div>
+</template>
   
 <script lang="ts" setup>
+import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6SaveSix } from '~/src/api/devlocal/orderProcess';
 import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils';
+import { convertString } from '~/src/utils/stringUtils';
 
 defineOptions({
     name: 'OrderStep6',
@@ -112,9 +104,9 @@ const emit = defineEmits<{
     (e: 'update:priviewListValue', value: string): void
  }>()
 // const listLoading = ref<boolean>(true)
-const list = ref<any>([])
+const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
-
+const props = defineProps<{ step1Data: number }>()
 // table单击修改
 const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     // 处理图片放大预览
@@ -127,87 +119,26 @@ const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement
 
 const labelMap: Record<string, string> = {
   column0: '',
-  imageUrl: 'SKU图片',
+  variantImg: 'SKU图片',
   productName: '产品名称',
-  orderQuantity: '订货数量(亚马逊US)',
-  totalPrice: '总采购含税价',
-  sellingPrice: '售价',
-  cost: '产品实际总成本',
-  grossProfit: '毛利率',
-  packageDimensions: '包装尺寸(cm)',
-  productDimensions: '产品尺寸(cm)',
-  productMaterial: '产品材质',
-  containsBattery: '是否含电池<br>(若有则填入电池类型)',
-  asin: '对标竞品ASIN',
-  patentStatus: '专利情况<br>(是否排查以及结果)',
-  photoSampleStatus: '拍照留样情况',
+  amazonUsOrderQuantity: '订货数量(亚马逊US)',
+  purchaseTotalPrice: '总采购含税价',
+  finalSellingPrice: '售价',
+  actualTotalCost: '产品实际总成本',
+  grossMarginRate: '毛利率',
+  packagingSize: '包装尺寸(cm)',
+  productSize: '产品尺寸(cm)',
+  material: '产品材质',
+  battery: '是否含电池<br>(若有则填入电池类型)',
+  benchmarkAsin: '对标竞品ASIN',
+  patent: '专利情况<br>(是否排查以及结果)',
+  sampleRetentionStatus: '拍照留样情况',
   productManager: '产品经理',
   productDesign: '产品设计',
   certification: '证书',
-  skuMerge: '合并变体的SKU',
+  variantSku: '合并变体的SKU',
 }
-const  tableData = [
-    {
-        column0: '变体名1',
-        imageUrl: 'https://via.placeholder.com/75',
-        productName: '产品名称1',
-        orderQuantity: 100,
-        totalPrice: '¥5000',
-        sellingPrice: '$19.99',
-        cost: '¥15',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productDimensions: '25x12x1',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        photoSampleStatus: '已有拍照样品',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-        certification: 'SKU1',
-        skuMerge: 'SKU123',
-    },
-    {
-        column0: '变体名2',
-        imageUrl: 'https://via.placeholder.com/85',
-        productName: '产品名称1',
-        orderQuantity: 100,
-        totalPrice: '¥5000',
-        sellingPrice: '$19.99',
-        cost: '¥15',
-        grossProfit: '29%',
-        packageDimensions: '15x10x11',
-        productDimensions: '25x12x1',
-        productMaterial: '棉',
-        containsBattery: '锂电池',
-        asin: 'ASIN123',
-        patentStatus: '无专利',
-        photoSampleStatus: '已有拍照样品',
-        productManager: '王文青',
-        productDesign: '任佳蓉',
-        certification: 'SKU1',
-        skuMerge: 'SKU123',
-    },
-]
-const POdata = [
-    {
-        date: '2024-8-4',
-        name: 'component',
-        supplier: 'supplier1',
-        status: '已通过',
-        kaipiao: '专票',
-        cost: '3600',
-        dealMethod: '含在其它PO',
-    }
 
-]
-interface FormattedData {
-  [key: string]: any;
-}
-interface RowData {
-  [key: string]: any;
-}
 const useTableDataLineToColumn = () => {
   // 一条数据的所有字段数组
   let props = ref<string[]>([])
@@ -231,7 +162,7 @@ const useTableDataLineToColumn = () => {
   // 根据分组数据，转换成最终显示的数据个数
   const changeGroupData = () => {
     // 转换后的数据
-    const list: FormattedData[] = []
+    const list: any = []
     // 解构分组数据
     // console.log('groupData.value', groupData.value);
     
@@ -251,7 +182,7 @@ const useTableDataLineToColumn = () => {
   }
 
   // 初始化分组数据
-  const initGroup = (list: RowData[]) => {
+  const initGroup = (list: any) => {
     const firstData = list[0] || {}
     // 获取一条数组的所有字段
     props.value = Object.keys(firstData)
@@ -263,7 +194,7 @@ const useTableDataLineToColumn = () => {
 
   return {
     columns,
-    initData: (data: RowData[] = []) => {
+    initData: (data: any) => {
       // 初始化分组
       initGroup(data)
       // 向分组加入数据
@@ -273,21 +204,67 @@ const useTableDataLineToColumn = () => {
     }
   }
 }
-const { initData, columns } = useTableDataLineToColumn()
-// console.log(columns) //'path-to-image.jpg', 'path-to-image.jpg'
-exchangeList.value = initData(tableData)
 // 当点击保存的时候
-const handleSave = () => {
-    $baseMessage("当前信息已保存。","success","hey")
+const handleSave = async () => {
+  try {
+    const { data } = await reviewStepNo6SaveSix({ reviewId: props.step1Data })
+    if (data === true) {
+      $baseMessage("当前信息已保存。","success","hey")
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 当点击提交审核的时候
-const handleSaveAndContinue = () => {
+const handleSaveAndContinue = async () => {
     $baseMessage("当前信息已保存。","success","hey")
 }
 // 当点击上一步的时候
 const handleGoback = () => {
     emit('change-step', 4)
 }
+const checkTableData = ref([])
+let columnsChange: any
+const fetchData = async () => {
+  const { data } = await reviewStepNo6CheckGet({ reviewId: props.step1Data })
+  checkTableData.value = data.map((item: any, index: number) => ({
+        column0: convertString(index),
+        variantImg: item.variantImg,
+        productName: item.productName,
+        amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+        purchaseTotalPrice: item.purchaseTotalPrice,
+        finalSellingPrice: item.finalSellingPrice,
+        actualTotalCost: item.actualTotalCost,
+        grossMarginRate: item.grossMarginRate,
+        packagingSize: item.packagingSize,
+        productSize: item.productSize,
+        material: item.material,
+        battery: item.battery,
+        benchmarkAsin: item.benchmarkAsin,
+        patent: item.patent,
+        sampleRetentionStatus: item.sampleRetentionStatus,
+        productManager: item.productManager,
+        productDesign: item.productDesign,
+        certification: '',
+        variantSku: item.variantSku,
+        orderEntryId: item.orderEntryId,
+  }))
+  const { initData, columns } = useTableDataLineToColumn();
+  columnsChange = columns 
+  exchangeList.value = initData(checkTableData.value);
+}
+
+const fetchMoldData = async () => {
+  const { data } = await reviewStepNo6CheckGetMold({ reviewId: props.step1Data })
+  if (data) {
+    moldCheckList.value = data
+    console.log(moldCheckList.value);
+  }
+}
+onMounted(async () => {
+  fetchData()
+  fetchMoldData()
+})
 </script>
   
 <style lang="scss" scoped>
@@ -295,6 +272,9 @@ const handleGoback = () => {
     display: block;
     margin: 20px auto;
     text-align: center;
+}
+:deep(.el-table__body-wrapper tr:last-child ){
+  display: none;
 }
 </style>
   

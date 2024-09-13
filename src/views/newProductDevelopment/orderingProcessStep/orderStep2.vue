@@ -156,10 +156,9 @@ const handleContinue = async () => {
     selectRows.value.forEach((item: any) => {
         suppliserIds.value.push(item.supplierId)
     })
-    console.log(suppliserIds.value);
+
     const id = suppliserIds.value + ""
-    console.log(props.step1Data);
-    
+   
     try {
         const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: props.step1Data })
         if (data === true) {

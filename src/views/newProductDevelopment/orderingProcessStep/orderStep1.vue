@@ -143,11 +143,8 @@ const handleSubmitAndContinue = async () => {
     if (valid) {
       const saveOn = async () => {
         try {
-          console.log('正在保存，progressId:', route.query.progressId)
           if (route.query.progressId) {
             const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId })
-            console.log('API 请求返回:', data)
-
             if (data) {
               res = data
               $baseMessage(

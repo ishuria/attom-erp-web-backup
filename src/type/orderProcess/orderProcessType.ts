@@ -56,7 +56,7 @@ export interface IreviewStepNo2Savetw {
 export interface IreviewId {
     reviewId: number
 }
-export interface IreviewStepNo3ComponentDel {
+export interface IreviewComponentId {
     reviewComponentId: number
 }
 export interface IreviewStepNo3ComponentUpdate {
@@ -143,6 +143,7 @@ export interface IreviewStepNo3ComponentListResp {
     msg: string
 }
 export interface IreviewStepNo3ComponentList {
+    hide?: boolean
     /**
     * 实际税点
     */
@@ -150,7 +151,7 @@ export interface IreviewStepNo3ComponentList {
     /**
     * 零件图片地址
     */
-    componentImgUrl: string;
+    componentImgUrl: string | any;
     /**
     * 零件名
     */
@@ -235,4 +236,255 @@ export interface IreviewStepNo3ComponentList {
     * 零件所属变体
     */
     variant: string;
+}
+// 新品订货流程-零件信息完善与售价核对-修改零件采购注意事项
+export interface IreviewStepNo3UpdatePurchaseMatters {
+    reviewComponentId: number
+    purchaseMatters: string
+}
+// 新品订货流程-零件信息完善与售价核对-修改零件合同条款
+export interface IreviewStepNo3UpdateContractTerms {
+    reviewComponentId: number
+    contractTerms: string
+}
+// 下拉变体列表类型
+export interface IGetSelectVariantsList {
+    id: number
+    label: string
+}
+export interface IreviewStepNo3VariantListResp {
+    code: number
+    data: IreviewStepNo3VariantList[]
+    msg: string
+}
+// 新品订货流程-零件信息完善与售价核对-查询变体列表信息
+export interface IreviewStepNo3VariantList {
+    /**
+     * 实际产品总成本
+     */
+    actualTotalCost: null;
+    /**
+     * 外币币种
+     */
+    currencyType: string;
+    /**
+     * 最终售价
+     */
+    finalSellingPrice: null;
+    /**
+     * 头程
+     */
+    firstMile: null;
+    /**
+     * 头程渠道
+     */
+    firstMileChannel: number;
+    /**
+     * 汇率
+     */
+    foreignExchange: string;
+    /**
+     * 毛利率
+     */
+    grossMarginRate: null;
+    /**
+     * 尾程
+     */
+    lastMile: null;
+    /**
+     * 变体id
+     */
+    orderEntryId: number;
+    /**
+     * 包装高
+     */
+    packagingHeight: null;
+    /**
+     * 包装长
+     */
+    packagingLength: null;
+    /**
+     * 打包费用
+     */
+    packagingPrice: null;
+    /**
+     * 包装宽
+     */
+    packagingWidth: null;
+    /**
+     * 平台佣金
+     */
+    platformCommission: null;
+    /**
+     * 审核id
+     */
+    reviewMainId: number;
+    /**
+     * ROI
+     */
+    roi: null;
+    /**
+     * 站点 ，0 亚马逊US 1 亚马逊DE 2 亚马逊UK  3 沃尔玛US
+     */
+    site: number;
+    /**
+     * storageFee
+     */
+    storageFee: null;
+    /**
+     * 关税
+     */
+    tariff: null;
+    /**
+     * 变体
+     */
+    variant: string;
+    /**
+     * 体积系数
+     */
+    volumeCoefficient: null;
+    /**
+     * 重量
+     */
+    weight: null;
+    /**
+     * 重量系数
+     */
+    weightCoefficient: null;
+}
+// 新品订货流程-零件信息完善与售价核对-更新变体信息
+export interface IreviewStepNo3VariantUpdate {
+    /**
+     * 外币币种
+     */
+    currencyType?: string;
+    /**
+     * 最终售价
+     */
+    finalSellingPrice?: number;
+    /**
+     * 头程渠道
+     */
+    firstMileChannel?: number;
+    /**
+     * 汇率
+     */
+    foreignExchange?: string;
+    /**
+     * 新品订货信息id
+     */
+    orderEntryId?: number;
+    /**
+     * 包装高
+     */
+    packagingHeight?: number;
+    /**
+     * 包装长
+     */
+    packagingLength?: number;
+    /**
+     * 打包费用
+     */
+    packagingPrice?: number;
+    /**
+     * 包装宽
+     */
+    packagingWidth?: number;
+    /**
+     * 0 亚马逊US 1 亚马逊DE 2 亚马逊UK 3 沃尔玛US
+     */
+    site?: number;
+    /**
+     * 关税
+     */
+    tariff?: number;
+    /**
+     * 体积系数
+     */
+    volumeCoefficient?: number;
+    /**
+     * 重量
+     */
+    weight?: number;
+    /**
+     * 重量系数
+     */
+    weightCoefficient?: number;
+}
+// 完善新供应商信息与打包质检清单 - 查询质检清单列表
+export interface IreviewStepNo4ListQualityInspectionResp {
+    code: number
+    data: IreviewStepNo4ListQualityInspection[]
+    msg: string
+}
+export interface IreviewStepNo4ListQualityInspection {
+    checkType?: number //0全检 1抽检5% 2抽检10% 3抽检15% 4抽检20% 5注意事项
+    packingPrecautions?: string
+    qualityInspectionId?: number
+    variant?: string
+    variantId?: number
+}
+// 新品订货流程-完善新供应商信息与打包质检清单-删除
+export interface IqualityInspectionId {
+    qualityInspectionId: number //质检清单id
+}
+export interface IreviewStepNo4DelQualityInspectionResp {
+    code: number
+    msg: string
+    data: boolean
+}
+//新品订货流程-完善新供应商信息与打包质检清单 -质检项目清单修改
+export interface IreviewStepNo4UpdateQualityInspection {
+    checkType: number //0全检 1抽检5% 2抽检10% 3抽检15% 4抽检20% 5注意事项
+    packingPrecautions: string
+    qualityInspectionId: number
+    variant: string
+    variantId: number
+}
+// 新品订货流程-完善sku信息 -变体信息修改
+export interface IreviewStepNo5SkuInfoPerfect {
+    /**
+     * 是否包含电池 0 不包含 1包含
+     */
+    battery?: string;
+    /**
+     * 对标asin
+     */
+    benchmarkAsin?: string;
+    /**
+     * 材质
+     */
+    material?: string;
+    /**
+     * 变体id
+     */
+    orderEntryId?: number;
+    /**
+     * 专利情况
+     */
+    patent?: string;
+    /**
+     * 产品设计
+     */
+    productDesign?: string;
+    /**
+     * 产品高
+     */
+    productHeight?: number;
+    /**
+     * 产品长
+     */
+    productLength?: number;
+    /**
+     * 产品经理
+     */
+    productManager?: string;
+    /**
+     * 产品宽
+     */
+    productWidth?: number;
+    /**
+     * 拍照留样状态
+     */
+    sampleRetentionStatus?: number;
 }

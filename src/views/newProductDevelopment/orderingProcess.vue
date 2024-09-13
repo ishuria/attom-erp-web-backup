@@ -36,13 +36,20 @@
             @update:priviewListValue="setPreviewList"
             :step1Data="step2ReceivedData"
           />
-          <order-step4 v-if="active === 3" @change-step="handleSetStep" />
-          <order-step5 v-if="active === 4" @change-step="handleSetStep" />
+          <order-step4 v-if="active === 3" @change-step="handleSetStep" :step1Data="step2ReceivedData"/>
+          <order-step5 
+            v-if="active === 4" 
+            @change-step="handleSetStep" 
+            :step1Data="step2ReceivedData"
+            @update:imagePreviewVisibale="updateUploadPriviewVisible"
+            @update:priviewListValue="setPreviewList"
+          />
           <order-step6 
             v-if="active === 5" 
             @change-step="handleSetStep"             
             @update:imagePreviewVisibale="updateUploadPriviewVisible"
             @update:priviewListValue="setPreviewList"
+            :step1Data="step2ReceivedData"
           />
         </div>
         <div style="display: none;">
