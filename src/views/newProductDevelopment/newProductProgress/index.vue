@@ -104,7 +104,7 @@ handleSubmit<template>
                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox"/>
             </template>
           </el-table-column>
-          <el-table-column label="立项日期" prop="createTime" align="center" min-width="100">
+          <el-table-column label="立项日期" prop="createTime" align="center" width="120">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
@@ -148,7 +148,7 @@ handleSubmit<template>
                 <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" align="center" min-width="110">
+          <el-table-column label="新款评估编号" prop="evaluationId" align="center" width="130">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>

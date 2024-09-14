@@ -8,7 +8,7 @@
             </template>
         </el-page-header>
         
-        <div >
+        <div :class="{ 'none1': isNone1 }">
           <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
             <el-step title="产品基础信息录入" />
             <el-step title="拿样零件添加" />
@@ -36,7 +36,7 @@
             @update:priviewListValue="setPreviewList"
             :step1Data="step2ReceivedData"
           />
-          <order-step4 v-if="active === 3" @change-step="handleSetStep" :step1Data="step2ReceivedData"/>
+          <order-step4 v-if="active === 3" @change-step="handleSetStep" :step1Data="step2ReceivedData" />
           <order-step5 
             v-if="active === 4" 
             @change-step="handleSetStep" 
@@ -52,19 +52,19 @@
             :step1Data="step2ReceivedData"
           />
         </div>
-        <div style="display: none;">
-          <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
+        <div :class="{ 'none2': isNone2 }">
+          <el-steps :active="activeCheck" align-center class="steps" :space="200" style="max-width: 1000px;">
             <el-step title="产品基础信息录入" />
             <el-step title="零件信息完善与售价核对" />
             <el-step title="新供应信息完善" />
             <el-step title="完善SKU信息" />
             <el-step title="检查并提交" />
           </el-steps>
-          <order-check-step1 v-if="active === 0" @change-step="handleSetStep" />
-          <order-check-step2 v-if="active === 1" @change-step="handleSetStep" />
-          <order-check-step3 v-if="active === 2" @change-step="handleSetStep" />
-          <order-check-step4 v-if="active === 3" @change-step="handleSetStep" />
-          <order-check-step5 v-if="active === 4" @change-step="handleSetStep" />
+          <order-check-step1 v-if="activeCheck === 0" @changeCheck-step="handleCheckSetStep" />
+          <order-check-step2 v-if="activeCheck === 1" @changeCheck-step="handleCheckSetStep" />
+          <order-check-step3 v-if="activeCheck === 2" @changeCheck-step="handleCheckSetStep" />
+          <order-check-step4 v-if="activeCheck === 3" @changeCheck-step="handleCheckSetStep" />
+          <order-check-step5 v-if="activeCheck === 4" @changeCheck-step="handleCheckSetStep" />
         </div>
         <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
@@ -93,10 +93,13 @@ import orderCheckStep5 from './orderingProcessStep/orderCheckStep5.vue'
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-const active = ref<any>(0)
 
-const orderStep1Ref = ref(null)
-const formData = ref<any>({})
+let active = ref<any>(0)
+// 查看跳转,从0开始
+const activeCheck = ref<any>(0)
+const isNone1 = ref<boolean>(false)
+const isNone2 = ref<boolean>(false)
+
 // 接收从 step1 传递过来的数据
 const step2ReceivedData = ref<number>(0)
 
@@ -121,30 +124,38 @@ const setPreviewList = (imageUrl:string) =>{
 const handleSetStep = (_active: any) => {
   active.value = _active
 }
+const handleCheckSetStep = (_active: any) => {
+  activeCheck.value = _active
+}
 // 接收并存储从 step1 传递过来的数据
 const setStep2Data = (res: any) => {
   step2ReceivedData.value = res
 }
-
-// watch(active, (newActive) => {
-//   if (newActive === 0) {
-//     const orderStep1: any = orderStep1Ref.value;
-
-//     if (orderStep1) {
-//       formData.value = orderStep1.form;
-//     }
-//   }
-// });
-
-
-
-
 
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
+onMounted(() => {
+  // 判断 `reviewStatus` 是否存在
+  const reviewStatusExists = 'reviewStatus' in route.query;
+  // 如果 `reviewStatus` 存在且值为 '0' 或 '2'
+  if (!reviewStatusExists || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
+    isNone2.value = true;
+    isNone1.value = false;
+  } else {
+    isNone2.value = false;
+    isNone1.value = true;
+  }
+  
+  if (!route.query.stepNo) { //订大货进去的
+    active.value = 0
+  
+  } else {
+    active.value = parseInt(route.query.stepNo) //编辑进去的
+  }
+});
 
 
 </script>
@@ -202,5 +213,11 @@ const goBack = async () => {
       }
     }
   }
+}
+.none1 {
+  display: none;
+}
+.none2 {
+  display: none;
 }
 </style>

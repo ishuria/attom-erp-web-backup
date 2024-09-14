@@ -71,7 +71,7 @@ defineOptions({
     name: 'OrderStep1',
 })
 import { IreviewStepNo1SaveOn } from '/@/type/orderProcess/orderProcessType';
-import { reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess';
+import { reviewProgressId, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess';
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import type { FormInstance } from 'element-plus'
@@ -85,7 +85,7 @@ const emit = defineEmits<{
     (e: 'sendDataToStep2', value: number): void
  }>()
 const formRef = ref<FormInstance>()
-const form = reactive<IreviewStepNo1SaveOn>({
+let form = reactive<any>({
   variantSku: '',
   productName: '',
   productDesc: '',
@@ -93,7 +93,7 @@ const form = reactive<IreviewStepNo1SaveOn>({
     {
       variantName: '', 
       amazonUSVariantQuantity: undefined,
-      orderEntryId: 0
+      orderEntryId: undefined
     }
   ],
 })
@@ -109,15 +109,38 @@ const handleAddVariants = () => {
     form.variantList.push({
       variantName: '', 
       amazonUSVariantQuantity: undefined,
-      orderEntryId: form.variantList.length
+      orderEntryId: undefined,
     });
 }   
 const handleDelVariants = async (index: number) => {
-    if (form.variantList.length > 1) { // 防止删除最后一个变体
-        form.variantList.splice(index, 1)
-    } else {
-        $baseMessage("至少需要保留一个变体", "warning")
+  if (form.variantList.length <= 1) { // 防止删除最后一个变体
+    $baseMessage("至少需要保留一个变体", "warning");
+    return;
+  }
+
+  if ((route.query.reviewStatus === '0' || route.query.reviewStatus === '2') && form.variantList[index].orderEntryId !== undefined) { // 编辑下并且变体的id是存在的
+    try {
+      $baseConfirm('确定要删除本条变体吗', "系统提示", async () => {
+        try {
+          const { data } = await reviewStepNo1Del({ orderEntryId: form.variantList[index].orderEntryId! });
+          if (data === true) {
+            form.variantList.splice(index, 1);
+            $baseMessage("变体删除成功！", "success", "hey");
+          } else {
+            $baseMessage("变体删除失败，请重试。", "error", "hey");
+          }
+        } catch (delError) {
+          console.error(delError);
+          $baseMessage("变体删除操作失败，请重试。", "error", "hey");
+        }
+      });
+    } catch (confirmError) {
+      console.error(confirmError);
+      $baseMessage("确认操作失败，请重试。", "error", "hey");
     }
+  } else {
+    form.variantList.splice(index, 1);
+  }
 }
 
 // 当点击保存的时候
@@ -130,8 +153,17 @@ const handleSubmit = () => {
           if (data) {
             $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。","success","hey")
           }
-        }
-      }
+        } else {
+          const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
+          const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId })
+          if (data) {
+            $baseMessage(
+              "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
+              "success",
+              "hey"
+            )
+          }
+        } }
       saveOn()
     }
   })
@@ -145,6 +177,8 @@ const handleSubmitAndContinue = async () => {
         try {
           if (route.query.progressId) {
             const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId })
+            console.log('save', form);
+            
             if (data) {
               res = data
               $baseMessage(
@@ -158,7 +192,20 @@ const handleSubmitAndContinue = async () => {
               console.error('API 返回没有 data')
             }
           } else {
-            console.error('progressId 未定义')
+            const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
+            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId })
+            if (data) {
+              res = data
+              $baseMessage(
+                "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
+                "success",
+                "hey"
+              )
+              emit('sendDataToStep2', res)
+              emit('change-step', 1)
+            } else {
+              console.error('API 返回没有 data')
+            }
           }
         } catch (error) {
           console.error('保存过程出错:', error)
@@ -171,13 +218,23 @@ const handleSubmitAndContinue = async () => {
   })
 }
 
-
 defineExpose({ form });
 // 当点击退出的时候
 const handleGoback = async () => {
     await delVisitedRoute(handleActivePath(route, true))
     history.back()
 }
+const fetchData = async () => {
+  const { data }  = await reviewStepNo1({ reviewId: parseInt(route.query.reviewId) })
+   
+  Object.assign(form, data);
+}
+
+onMounted(async () => {  //编辑进来的需要获取数据 并且状态不是查看
+  if (route.query.reviewId && (route.query.reviewStatus === '0' || route.query.reviewStatus === '1')) {
+    fetchData()
+  }
+})
 </script>
   
 <style lang="scss" scoped>

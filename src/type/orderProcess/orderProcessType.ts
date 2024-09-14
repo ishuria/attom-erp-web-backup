@@ -6,16 +6,31 @@ export interface IreviewStepNo1Del {
 export interface IvariantsList {
     variantName: string //变体名
     amazonUSVariantQuantity: number | undefined//订货数量（亚马逊US）
-    orderEntryId: number //变体id
+    orderEntryId?: number //变体id
 }
 // 新品订货流程-产品基础信息输入保存
 export interface IreviewStepNo1SaveOn {
-    progressId?: number
+    progressId?: number | undefined
     variantSku?: string //合并变体sku
     productName: string //主品名
     productDesc: string //描述
     variantList: IvariantsList[] //变体列表
     reviewId?: number //审核id
+}
+export interface IreviewStepNo1List {
+    orderEntryId?: number
+    variantName?: string
+    amazonUSVariantQuantity?: number
+}
+export interface IreviewStepNo1 {
+    code: number
+    msg: string
+    data: {
+        variantSku?: string
+        productName?: string
+        productDesc?: string
+        variantList?: IreviewStepNo1List[]
+    }
 }
 // 拿样零件添加列表
 export interface IComponentAdd {
@@ -371,10 +386,6 @@ export interface IreviewStepNo3VariantUpdate {
      */
     foreignExchange?: string;
     /**
-     * 新品订货信息id
-     */
-    orderEntryId?: number;
-    /**
      * 包装高
      */
     packagingHeight?: number;
@@ -410,6 +421,8 @@ export interface IreviewStepNo3VariantUpdate {
      * 重量系数
      */
     weightCoefficient?: number;
+    variant?: string;
+    orderEntryId?: number
 }
 // 完善新供应商信息与打包质检清单 - 查询质检清单列表
 export interface IreviewStepNo4ListQualityInspectionResp {
@@ -487,4 +500,10 @@ export interface IreviewStepNo5SkuInfoPerfect {
      * 拍照留样状态
      */
     sampleRetentionStatus?: number;
+    checkStatus?: number
+}
+// 新品订货流程- 检查提交审核信息 - 保存
+export interface IreviewStepNo6SaveSix {
+    reviewId: number
+    reviewPersonId: string
 }

@@ -15,9 +15,9 @@
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
             >
-                <el-table-column align="center" label="属于变体" min-width="140" prop="variant">
+                <el-table-column align="center" label="属于变体" min-width="140">
                     <template #default="{ row }">
-                        <el-select v-model="row.variant" placeholder="请选择变体"  style="min-width: 100%;">
+                        <el-select v-model="row.orderEntryId" placeholder="请选择变体" @change="handleVariantChange(row)" style="min-width: 100%;">
                             <el-option
                                 v-for="item in variantsSelectList"
                                 :label="item.label"
@@ -154,7 +154,7 @@
                 </el-table-column>    
                 <el-table-column label="货币" width="110px" prop="currency">
                     <template #default="{ row }">
-                        <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;">
+                        <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
                             <el-option v-for="dict in currencyList" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
@@ -191,7 +191,7 @@
                 </el-table-column>
                 <el-table-column label="开票" prop="oem" align="center" width="140">
                     <template #default = "{ row }">
-                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
+                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)">
                             <el-option v-for="dict in invoicingList" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
@@ -473,7 +473,7 @@ const variantsList = ref<IreviewStepNo3VariantList[]>([])
 // 查询下拉变体列表
 const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 const list = ref<any>([])
-
+const route: any = useRoute()
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 分类
@@ -540,6 +540,37 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
         weight: row.weight!,
         weightCoefficient: row.weightCoefficient!,
     })
+}
+const handleVariantChange = async (row: any) => {
+    let _variant: any
+    variantsSelectList.value.forEach((item: any) => {
+        if(item.id == row.orderEntryId) {
+            _variant = item.label
+        }
+    })
+    
+    await reviewStepNo3ComponentUpdate({
+        ...row,
+        variant: _variant,
+    })
+    fetchDataComponent()
+    fetchVariantsData()
+}
+const handleCurrencyChange = async (row: any) => {
+    await reviewStepNo3ComponentUpdate({
+        ...row,
+        currency: parseInt(row.currency),
+    })
+    fetchDataComponent()
+    fetchVariantsData()
+}
+const handleInvoicingChange = async (row: any) => {
+    await reviewStepNo3ComponentUpdate({
+        ...row,
+        invoicing: parseInt(row.invoicing),
+    })
+    fetchDataComponent()
+    fetchVariantsData()
 }
 // 头程渠道修改
 const handlerEstimatendChange = async (row:IreviewStepNo3VariantList) =>{
@@ -616,7 +647,9 @@ async function uploadImage(params: any) {
  * 图片预览事件
  */
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
-    emit("update:priviewListValue", row.componentImgUrl)
+    console.log(row);
+    
+    emit("update:priviewListValue", row.componentImgUrl[0].url)
     emit("update:imagePreviewVisibale", true)
 }
 /**
@@ -673,10 +706,17 @@ const handleAddComponent = async () => {
         unitPrice: '',
         variant: '',
     }
-    const { data } = await reviewStepNo3ComponentAdd({ reviewId: props.step1Data})
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
+    const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
     newComponent.reviewComponentId = data
     componentList.value.push(newComponent)
     fetchDataComponent()
+    fetchVariantsData()
 }
 // 删除逻辑
 const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
@@ -692,6 +732,8 @@ const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
                     $baseMessage("零件信息删除成功！","success","hey")
                 }
         })
+        fetchDataComponent()
+        fetchVariantsData()
     } catch(e){
         console.log(e as Error)
    }
@@ -707,6 +749,7 @@ const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
             componentList.value.splice(index + 1, 0, copyRow.value)
             $baseMessage(`复制成功！`, "success", "hey")
             fetchDataComponent()
+            fetchVariantsData()
         }
     })
 }
@@ -716,11 +759,11 @@ const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
 const clickRow = ref<any>()
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && el){
-      emit("update:priviewListValue", row.componentImg)
-      emit("update:imagePreviewVisibale", true)
-    }
+    // let el = getSpecificChildren(cell, "img")[0];
+    // if (getDataAttribute(el,'img') && el){
+    //   emit("update:priviewListValue", row.componentImg.url)
+    //   emit("update:imagePreviewVisibale", true)
+    // }
     if (!cell.children[0].children[0]
         || !cell.children[0].children[1]
         || !cell.children[0].children[0].classList
@@ -781,6 +824,7 @@ const clickCancle = async (event:any,value:any) =>{
         // 执行失去焦点处理逻辑
         await reviewStepNo3ComponentUpdate(value)
         fetchDataComponent()
+        fetchVariantsData()
     }
 }
 // 变体table blur事件
@@ -803,14 +847,26 @@ const clickVariantsCancle = async (event:any,value:any) =>{
 }
 // 当点击保存的时候
 const handleSave = async () => {
-    const { data } = await reviewStepNo3SaveTh({ reviewId: props.step1Data })
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
+    const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
     if (data === true) {
         $baseMessage("当前信息已保存。","success","hey")
     }
 }
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
-    const { data } = await reviewStepNo3SaveTh({ reviewId: props.step1Data })
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
+    const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
     if (data === true) {
         $baseMessage("当前信息已保存。","success","hey")
         emit('change-step', 3)
@@ -825,7 +881,13 @@ const handleGoback = () => {
 const fetchDataComponent = async () =>{
     try {
         // 拿样零件添加列表
-        const { data } = await reviewStepNo3ComponentList({reviewId: props.step1Data})
+        let classReviewId: number | undefined
+        if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+            classReviewId = props.step1Data
+        } else {
+            classReviewId = route.query.reviewId
+        }
+        const { data } = await reviewStepNo3ComponentList({reviewId: classReviewId!})
         componentList.value = data
         componentList.value.forEach((item: any, index: number) => {
             item.currency = convertString(item.currency)
@@ -840,16 +902,23 @@ const fetchDataComponent = async () =>{
             // console.log(item.componentImgUrl);
         })
         // 获取下拉变体列表
-        const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: props.step1Data });
+        const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
         variantsSelectList.value = variantSelectList
+        variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
     }catch(e){
         console.error(e as Error)
     }
 }
 // 获取变体列表
 const fetchVariantsData = async () => {
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
     try {
-        const { data } = await reviewStepNo3VariantList({ reviewId: props.step1Data })
+        const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
         variantsList.value = data
     } catch (error) {
         console.error(error)

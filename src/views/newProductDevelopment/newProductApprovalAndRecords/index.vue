@@ -230,11 +230,14 @@ const handleOrderReview = (row: IReviewQueryItem) => {
 
 }
 
-const handleOrderProcess = (row: IReviewQueryResp) => {
+const handleOrderProcess = (row: IReviewQueryItem) => {
   router.push({
     path: '/newProductDevelopment/orderingProcess',
     query: {
       timestamp: Date.now(),
+      reviewStatus: row.reviewStatus,
+      reviewId: row.reviewMainId,
+      stepNo: row.stepNo,
     },
   })
 }

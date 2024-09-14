@@ -9,6 +9,7 @@
                 height="430"
                 :show-header="false"
                 @cell-click="tableInputChange"
+                class="table1"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
@@ -46,17 +47,18 @@
         </div>
 
       
-        <div>
+          <div>
             <el-table 
               stripe border 
               :data="moldCheckList" 
               :header-cell-style="{ 'text-align': 'center' }"
               style="margin-top: 25px;"
               height="100"
+              :cell-style="{ 'text-align': 'center' }"
             >
-              <el-table-column label="提交日期" min-width="127" prop="createTime" align="center">
+              <el-table-column label="提交日期" min-width="100" prop="createTime">
                   <template #default="{ row }">
-                    {{ row.createTime }}
+                    <span>{{ row.createTime.split(' ')[0] }}</span>
                   </template>
               </el-table-column>
               <el-table-column label="零件名" min-width="200" prop="component">
@@ -65,22 +67,57 @@
         
               </el-table-column>
               <el-table-column label="状态" min-width="127" align="center" prop="status">
-        
+                <template #default="{ row }">
+                    <span :class="generateStatus(row.status).color">
+                        {{ generateStatus(row.status).text }}
+                    </span>
+                </template>
               </el-table-column>
               <el-table-column label="开票类型" min-width="127" align="center" prop="invoiceType">
-        
+                <template #default="{ row }">
+                  {{ generateInvoiceType(row.invoiceType) }}
+                </template>
               </el-table-column>
               <el-table-column label="付款金额" min-width="127" align="center" prop="payPrice">
         
               </el-table-column>
-              <el-table-column label="处理方式" min-width="127" align="center" prop="dealMethod">
-        
+              <el-table-column label="开模处理方式" min-width="127" align="center" prop="dealMethod">
+                <template #default="{ row }">
+                  {{ generateDealMethod(row.dealMethod) }}
+                </template>
               </el-table-column>
               <template #empty>
                 <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
               </template>
             </el-table>
-        </div>
+          </div>
+          <el-dialog 
+            v-model="checkPersonListVisible" 
+            :close-on-click-modal="false" 
+            title="审批人选择" 
+            width="480"
+            class="moldDialog shareSelectDialog"
+            :before-close="handleCheckPersonClose"
+          >
+            <el-space>
+              <span>审批人员列表</span>
+              <el-select 
+                v-model="reviewPersonId" 
+                placeholder="请选择审批人员"  
+                collapse-tags
+                collapse-tags-tooltip
+                style="width: 250px;"
+                clearable
+              >
+                <el-option v-for="item in personList" :key="item.userId" :label="item.userName" :value="item.userId" />
+              </el-select>
+            </el-space>
+            <template #footer>
+              <span>
+                <el-button type="primary" @click="handlePersonSelectConfirm">提交</el-button>
+              </span>
+            </template>
+          </el-dialog>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
             <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
@@ -90,9 +127,9 @@
 </template>
   
 <script lang="ts" setup>
-import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6SaveSix } from '~/src/api/devlocal/orderProcess';
-import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils';
-import { convertString } from '~/src/utils/stringUtils';
+import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess';
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
+import { convertString } from '/@/utils/stringUtils';
 
 defineOptions({
     name: 'OrderStep6',
@@ -104,9 +141,15 @@ const emit = defineEmits<{
     (e: 'update:priviewListValue', value: string): void
  }>()
 // const listLoading = ref<boolean>(true)
+const checkPersonListVisible = ref<boolean>(false)
+// 审批人列表
+const personList = ref<{ userId: number; userName: string}[]>([])
+// 审批人id
+const reviewPersonId = ref<string>('')
 const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
 const props = defineProps<{ step1Data: number }>()
+const route: any = useRoute()
 // table单击修改
 const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     // 处理图片放大预览
@@ -116,7 +159,45 @@ const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement
       emit("update:imagePreviewVisibale", true)
     }
 }
-
+const handleCheckPersonClose = () => {
+  checkPersonListVisible.value = false
+}
+const handlePersonSelectConfirm = () => {
+  checkPersonListVisible.value = false
+}
+const formattedPrice = (price: string) => {
+    return parseFloat(price).toFixed(2)
+}
+const generateStatus = (value: number) => {
+  switch (value) {
+    case 0:
+      return { text: "审批中", color: "status-pending" };
+    case 1:
+      return { text: "待提交付款申请", color: "status-in" };
+    case 2:
+      return { text: "已付款", color: "status-paid" };
+    default:
+      return { text: "未知", color: "status-pending" };
+  }
+}
+const generateInvoiceType = (value: number) => {
+    if (value === 0) {
+        return "专票"
+    } else if (value === 1) {
+        return "普票"
+    } else if (value === 2) {
+        return "不开票"
+    }
+}
+const generateDealMethod = (value: number) => {
+    if (value === 0) {
+        return "不含在PO"
+    } else if (value === 1) {
+        return "含在PO"
+    } else if (value === 2) {
+        return "含在其他PO"
+    }
+}
 const labelMap: Record<string, string> = {
   column0: '',
   variantImg: 'SKU图片',
@@ -207,7 +288,7 @@ const useTableDataLineToColumn = () => {
 // 当点击保存的时候
 const handleSave = async () => {
   try {
-    const { data } = await reviewStepNo6SaveSix({ reviewId: props.step1Data })
+    const { data } = await reviewStepNo6SaveSix({ reviewId: classReviewId!, reviewPersonId: reviewPersonId.value })
     if (data === true) {
       $baseMessage("当前信息已保存。","success","hey")
     }
@@ -217,7 +298,9 @@ const handleSave = async () => {
 }
 // 当点击提交审核的时候
 const handleSaveAndContinue = async () => {
-    $baseMessage("当前信息已保存。","success","hey")
+    checkPersonListVisible.value = true
+    const { data }  = await reviewStepNo6PersonList()
+    personList.value = data
 }
 // 当点击上一步的时候
 const handleGoback = () => {
@@ -226,13 +309,13 @@ const handleGoback = () => {
 const checkTableData = ref([])
 let columnsChange: any
 const fetchData = async () => {
-  const { data } = await reviewStepNo6CheckGet({ reviewId: props.step1Data })
+  const { data } = await reviewStepNo6CheckGet({ reviewId: classReviewId! })
   checkTableData.value = data.map((item: any, index: number) => ({
         column0: convertString(index),
         variantImg: item.variantImg,
         productName: item.productName,
         amazonUsOrderQuantity: item.amazonUsOrderQuantity,
-        purchaseTotalPrice: item.purchaseTotalPrice,
+        purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
         finalSellingPrice: item.finalSellingPrice,
         actualTotalCost: item.actualTotalCost,
         grossMarginRate: item.grossMarginRate,
@@ -252,18 +335,26 @@ const fetchData = async () => {
   const { initData, columns } = useTableDataLineToColumn();
   columnsChange = columns 
   exchangeList.value = initData(checkTableData.value);
+  
 }
+let classReviewId: number | undefined
 
 const fetchMoldData = async () => {
-  const { data } = await reviewStepNo6CheckGetMold({ reviewId: props.step1Data })
+  const { data } = await reviewStepNo6CheckGetMold({ reviewId: classReviewId! })
   if (data) {
     moldCheckList.value = data
-    console.log(moldCheckList.value);
   }
+
 }
-onMounted(async () => {
+onMounted(() => {
+  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+      classReviewId = props.step1Data
+  } else {
+      classReviewId = route.query.reviewId
+  }
   fetchData()
   fetchMoldData()
+  
 })
 </script>
   
@@ -273,8 +364,24 @@ onMounted(async () => {
     margin: 20px auto;
     text-align: center;
 }
-:deep(.el-table__body-wrapper tr:last-child ){
+/* 只隐藏 class 为 table1 的 el-table 的最后一行 */
+:deep(.table1 .el-table__body-wrapper tr:last-child ){
   display: none;
+}
+.status-pending {
+  color: rgb(192, 192, 192, 1);
+}
+.status-in {
+  color: orange;
+}
+.status-paid {
+  color: black;
+}
+:deep(.shareSelectDialog .el-dialog__body) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>
   

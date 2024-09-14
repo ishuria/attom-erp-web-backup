@@ -18,7 +18,9 @@ import {
     IqualityInspectionId,
     IreviewStepNo4DelQualityInspectionResp,
     IreviewStepNo4UpdateQualityInspection,
-    IreviewStepNo5SkuInfoPerfect
+    IreviewStepNo5SkuInfoPerfect,
+    IreviewStepNo1,
+    IreviewStepNo6SaveSix
 } from '/@/type/orderProcess/orderProcessType'
 
 /**
@@ -101,7 +103,45 @@ export function reviewStepNo6CheckGetMold(params?: IreviewId){
       params,
     })
 }
-
+/**
+ * 新品订货流程-查询产品基础输入信息
+ */
+export function reviewStepNo1(params?: IreviewId): Promise<IreviewStepNo1>{
+  return request({
+    url: `${BASE_API}/review/stepsNo1`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 新品订货流程- 查询审批人列表
+ */
+export function reviewStepNo6PersonList(){
+  return request({
+    url: `${BASE_API}/review/personList`,
+    method: 'get',
+  })
+}
+/**
+ * 根据审核id获取进度id
+ */
+export function reviewProgressId(params: IreviewId){
+  return request({
+    url: `${BASE_API}/review/progressId`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 根据审核id获取进度id
+ */
+export function reviewGetSkuList(params: IreviewId){
+  return request({
+    url: `${BASE_API}/review/getSku/list`,
+    method: 'get',
+    params
+  })
+}
 
 /**
  * 新品订货流程-删除变体信息
@@ -318,7 +358,7 @@ export function reviewStepNo5SaveFv(params: IreviewId) {
 /**
  * 新品订货流程- 检查提交审核信息 - 保存
  */
-export function reviewStepNo6SaveSix(params: IreviewId) {
+export function reviewStepNo6SaveSix(params?: IreviewStepNo6SaveSix) {
     return request({
       url: `${BASE_API}/review/save/six`,
       method: 'post',

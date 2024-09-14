@@ -143,6 +143,7 @@ defineOptions({
 })
 const props = defineProps<{ step1Data: number }>()
 const emit = defineEmits(['change-step'])
+const route: any = useRoute()
 // const listLoading = ref<boolean>(true)
 const list = ref<any>([])
 // 查询下拉变体列表
@@ -230,28 +231,54 @@ const handleAddQualityInspection = async () => {
         checkType: 0,//0全检 1抽检5% 2抽检10% 3抽检15% 4抽检20% 5注意事项
         packingPrecautions: '',
         qualityInspectionId: undefined,
-        variant: '',
-        variantId: undefined,
+        variant: '所有',
+        variantId: 0,
     }
-    const { data } = await reviewStepNo4AddQualityInspection({ reviewId: props.step1Data })
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
+    const { data } = await reviewStepNo4AddQualityInspection({ reviewId: classReviewId! })
     newQualityInspection.qualityInspectionId = data
     qualityInspectionList.value.push(newQualityInspection)
-    fetchQualityInspectionData()
+    // console.log(qualityInspectionList.value);
 }
 // 删除
 const handleDelQualityInspection = async (row: IreviewStepNo4ListQualityInspection) => {
     try {
-        $baseConfirm('确定要删除本条质检信息吗',"系统提示", async ()=>{
-
-            const {data, msg} = await reviewStepNo4DelQualityInspection({ qualityInspectionId: row.qualityInspectionId! })
-                if (msg === "调用成功！"){
-                    const index = qualityInspectionList.value.findIndex((item: IreviewStepNo4ListQualityInspection) => item.qualityInspectionId === row.qualityInspectionId);
-                    if (index !== -1) {
-                        qualityInspectionList.value.splice(index, 1);
+        if (route.query.reviewStatus === '0' || route.query.reviewStatus === '2') { // 编辑下
+            console.log('row.qualityInspectionId', row.qualityInspectionId)
+            try {
+                $baseConfirm('确定要删除本条质检信息吗', "系统提示", async () => {
+                    try {
+                        const {data, msg} = await reviewStepNo4DelQualityInspection({ qualityInspectionId: row.qualityInspectionId! })
+                    if (msg === "调用成功！") {
+                        const index = qualityInspectionList.value.findIndex((item: IreviewStepNo4ListQualityInspection) => item.qualityInspectionId === row.qualityInspectionId);
+                        if (index !== -1) {
+                            qualityInspectionList.value.splice(index, 1);
+                        }
+                        $baseMessage("质检信息删除成功！","success","hey")
+                    } else {
+                        $baseMessage("质检信息删除失败，请重试。", "error", "hey");
                     }
-                    $baseMessage("质检信息删除成功！","success","hey")
-                }
-        })
+                    } catch (delError) {
+                        console.error(delError);
+                        $baseMessage("变体删除操作失败，请重试。", "error", "hey");
+                    }
+                });
+            } catch (confirmError) {
+                console.error(confirmError);
+                $baseMessage("确认操作失败，请重试。", "error", "hey");
+            }
+        } else { //订大货进去 和 编辑下的新增
+            const index = qualityInspectionList.value.findIndex((item: IreviewStepNo4ListQualityInspection) => item.qualityInspectionId === row.qualityInspectionId);
+            if (index !== -1) {
+                qualityInspectionList.value.splice(index, 1);
+            }
+            $baseMessage("质检信息删除成功！","success","hey")
+        }
     } catch(e){
         console.log(e as Error)
    }
@@ -262,8 +289,14 @@ const generateCheckType = (num: number) => {
 }
 // 当点击保存的时候
 const handleSave = async () => {
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
     try {
-        const { data } = await reviewStepNo4SaveFr({ reviewId: props.step1Data })
+        const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
         if (data === true) {
             $baseMessage("当前信息已保存。","success","hey")
         }
@@ -273,8 +306,14 @@ const handleSave = async () => {
 }
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
     try {
-        const { data } = await reviewStepNo4SaveFr({ reviewId: props.step1Data })
+        const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
         if (data === true) {
             $baseMessage("当前信息已保存。","success","hey")
             emit('change-step', 4)
@@ -288,18 +327,24 @@ const handleGoback = () => {
     emit('change-step', 2)
 }
 const fetchQualityInspectionData = async () => {
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
     try {
-        const { data } = await reviewStepNo4ListQualityInspection({ reviewId: props.step1Data })
+        const { data } = await reviewStepNo4ListQualityInspection({ reviewId: classReviewId! })
         qualityInspectionList.value = data
         // 获取下拉变体列表
-        const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: props.step1Data });
+        const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
         variantsSelectList.value = variantSelectList
         // 转换为下拉框需要的数据格式
         // variantsSelectList.value.unshift({ id: -1, label: '所有' })
         // console.log(variantsSelectList.value);
         
         variantsSelectStringList.value = [
-            { label: '所有', value: '-1' }, // 添加“所有”选项
+            { label: '所有', value: '0' }, // 添加“所有”选项
             ...variantSelectList.map((item: any) => ({
                 label: item.label,
                 value: convertString(item.id)

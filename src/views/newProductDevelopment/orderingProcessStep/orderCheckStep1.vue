@@ -8,33 +8,41 @@
                 :model="form" 
                 @submit.prevent
             >
-                <el-form-item label="合并变体的SKU(若有)" prop="excludingTax">
-                    <el-input v-model="form.excludingTax" disabled/>
+                <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
+                    <el-input v-model="form.variantSku" disabled/>
                 </el-form-item>
-                <el-form-item label="产品主品名" prop="standardInvoice">
-                    <el-input v-model="form.standardInvoice" disabled placeholder="eg:碗架,硅胶吸管,水杯收纳"/>
+                <el-form-item label="产品主品名" prop="productName">
+                    <el-input v-model="form.productName" disabled placeholder="eg:碗架,硅胶吸管,水杯收纳"/>
                 </el-form-item>
-                <el-form-item label="产品短描述" prop="specialInvoice">
-                    <el-input v-model="form.specialInvoice" disabled placeholder="eg:20管45×31.7CM" />
+                <el-form-item label="产品短描述" prop="productDesc">
+                    <el-input v-model="form.productDesc" disabled placeholder="eg:20管45×31.7CM" />
                 </el-form-item>
             </el-form>
             <div class="list-container auto-height-container">
-                <el-scrollbar>
+              <el-scrollbar>
                     <ul class="vab-auto-box">
-                        
-                        <li v-for="(item, index) in form.variantNamesAndTotal" :key="index" class="list-item">
+                        <!-- list第一行 新增变体 -->
+                        <li class="list-item"> 
                             <div class="list-item-meta">
-                                <div class="list-item-meta-content">
+                                <div class="list-item-meta-content" style="text-align: center">
                                     <el-space>
-                                        <span style="width: 50px">{{ index === 0 ? "变体名" : "" }}</span>
-                                        <el-input v-model="item.variantNames" disabled placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
+                                        <span style="width: 240px;">{{ "变体名" }}</span>
                                     </el-space>
                                 </div>
-                                <div class="list-item-meta-content">
+                                <div class="list-item-meta-content" style="text-align: center">
                                     <el-space>
-                                        <span style="width: 140px">{{ index === 0 ? "订货数量(亚马逊US)" : "" }}</span>
-                                        <el-input v-model="item.orderTotal" disabled style="width: 240px"/>
+                                        <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
                                     </el-space>
+                                </div>
+                            </div>
+                        </li>
+                        <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
+                            <div class="list-item-meta">
+                                <div class="list-item-meta-content">
+                                  <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" disabled/>
+                                </div>
+                                <div class="list-item-meta-content">
+                                  <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px" disabled/>
                                 </div>
                             </div>
                         </li>
@@ -54,6 +62,7 @@
 defineOptions({
     name: 'OrderCheckStep1',
 })
+import { reviewStepNo1 } from '~/src/api/devlocal/orderProcess';
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import type { FormInstance } from 'element-plus'
@@ -63,16 +72,17 @@ const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
 
-const emit = defineEmits(['change-step'])
+const emit = defineEmits(['changeCheck-step'])
 const formRef = ref<FormInstance>()
-const form = reactive<any>({
-  payAccount: '****************',
-  gatheringAccount: '****************',
-  gatheringName: '***',
-  variantNamesAndTotal: [
+let form = reactive<any>({
+  variantSku: '',
+  productName: '',
+  productDesc: '',
+  variantList: [
     {
-        variantsNames: '', 
-        orderTotal: ''
+      variantName: '', 
+      amazonUSVariantQuantity: null,
+      orderEntryId: null,
     }
   ],
 })
@@ -80,13 +90,19 @@ defineExpose({ form });
 
 // 当点击下一步的时候
 const handleSubmitAndContinue = () => {
-    emit('change-step', 1)
+    emit('changeCheck-step', 1)
 }
 // 当点击退出的时候
 const handleGoback = async () => {
     await delVisitedRoute(handleActivePath(route, true))
     history.back()
 }
+onMounted(async () => {
+  if (route.query.reviewId) {
+    const { data }  = await reviewStepNo1({ reviewId: parseInt(route.query.reviewId) }) 
+    Object.assign(form, data);
+  }
+})
 </script>
   
 <style lang="scss" scoped>
@@ -96,6 +112,7 @@ const handleGoback = async () => {
     text-align: center;
 }
 .list-container {
+  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 178px); 
   ul {
     padding: 0;
     margin: 0;

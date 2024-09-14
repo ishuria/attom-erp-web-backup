@@ -84,7 +84,7 @@ import { IComponentAdd } from '/@/type/orderProcess/orderProcessType';
 import { getComponentList } from '/@/api/devlocal/progressSample';
 import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils';
 import { currencyList } from '../indexCommon';
-import { reviewStepNo2Savetw } from '~/src/api/devlocal/orderProcess';
+import { reviewProgressId, reviewStepNo2Savetw } from '~/src/api/devlocal/orderProcess';
 import { convertString } from '~/src/utils/stringUtils';
 
 defineOptions({
@@ -125,20 +125,28 @@ const setSelectRows = (value: string) => {
 const fetchDataComponent = async () =>{
     try {
         // 拿样零件添加列表
-        const {data} = await getComponentList({progressId: route.query.progressId})
-        progressProductList.value = data
         
-        progressProductList.value.forEach((item: any) => {
-            delete item.actualTaxRate
-            delete item.includedInCost
-            delete item.invoicing
-            delete item.invoicingTaxRate
-            delete item.purchaseLink
-            delete item.remarks
-            item.unitPrice = formattedPrice(item.unitPrice)
-            item.totalPrice = formattedPrice(item.totalPrice)
-        })
-        progressProductList.value.sort((a:IComponentAdd,b:IComponentAdd) => a.componentId! - b.componentId!)
+        if (route.query.progressId) { //如果有progressId,就是订大货进去的
+            const {data} = await getComponentList({progressId: route.query.progressId})
+            progressProductList.value = data
+        } else { //如果是编辑进去的
+            const { data: progressId} = await reviewProgressId({ reviewId: route.query.reviewId })
+            const {data} = await getComponentList({progressId: progressId })
+            progressProductList.value = data
+        }
+            progressProductList.value.forEach((item: any) => {
+                delete item.actualTaxRate
+                delete item.includedInCost
+                delete item.invoicing
+                delete item.invoicingTaxRate
+                delete item.purchaseLink
+                delete item.remarks
+                item.unitPrice = formattedPrice(item.unitPrice)
+                item.totalPrice = formattedPrice(item.totalPrice)
+            })
+            progressProductList.value.sort((a:IComponentAdd,b:IComponentAdd) => a.componentId! - b.componentId!)
+            
+        
     }catch(e){
         console.error(e as Error)
     }
@@ -158,9 +166,14 @@ const handleContinue = async () => {
     })
 
     const id = suppliserIds.value + ""
-   
+    let classReviewId: number | undefined
     try {
-        const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: props.step1Data })
+        if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+            classReviewId = props.step1Data
+        } else {
+            classReviewId = route.query.reviewId
+        }
+        const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: classReviewId})
         if (data === true) {
             emit('change-step', 2)
         }

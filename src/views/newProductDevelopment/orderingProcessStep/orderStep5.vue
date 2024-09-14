@@ -21,8 +21,8 @@
             </el-table-column>
             <el-table-column label="变体值相同" prop="variantsSame" align="center" width="110">
                 <template #default="{row, $index}">
-                    <template v-if="row['column0'] !== 'productImage'">
-                        <el-checkbox v-model="variantsSame[$index - 1]" true-value="true" false-value="false" checked class="custom-checkbox">
+                    <template v-if="row['column0'] !== 'productImgUrl'">
+                        <el-checkbox v-model="variantsSame[$index - 1]" true-value="true" false-value="false" class="custom-checkbox">
                         </el-checkbox>
                     </template>
                 </template>
@@ -133,7 +133,7 @@
                         </el-select>
                     </template>
                     <template v-if="row['column0'] === 'packingGroup'">
-                        <el-checkbox v-model="row[prop]" :true-value="'0'" :false-value="'1'" class="custom-checkbox"></el-checkbox>
+                        <el-checkbox v-model="row[prop]" :true-value="'0'" :false-value="'1'" class="custom-checkbox" @change="handlePackingUpdate(prop)"></el-checkbox>
                     </template>
                     
                     <template v-if="row['column0'] === 'operate'">
@@ -161,7 +161,7 @@ defineOptions({
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import type { TableInstance, UploadFile } from 'element-plus'
-import { reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess';
+import { reviewGetSkuList, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess';
 import { IGetSelectVariantsList, IreviewStepNo5SkuInfoPerfect } from '/@/type/orderProcess/orderProcessType';
 
 const props = defineProps<{ step1Data: number }>()
@@ -177,7 +177,7 @@ const emit = defineEmits<{
 const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 // const listLoading = ref<boolean>(true)
 
-
+const route: any = useRoute()
 const tableRef = ref<TableInstance>()
 
 const variantsSame = ref<boolean[]>([true, true, true, true, true, true, true, true, true, true, true, true, true, true,])
@@ -205,7 +205,7 @@ async function uploadImage(params: any) {
     
     imageForm.value = new FormData();
     imageForm.value.append('file', params.file);
-    imageForm.value.append('orderEntryId', exchangeList.value[14][prop]);
+    imageForm.value.append('orderEntryId', exchangeList.value[15][prop]);
 
     // 上传图片
     const { data } = await reviewStepNo5VariantImgUpload(imageForm.value);
@@ -231,7 +231,7 @@ async function uploadImage(params: any) {
  const handleRemove = async (file: UploadFile, prop: any) => {
     try {
         $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-            const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[14][prop]})
+            const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[15][prop]})
             if (data === true) {
                 $baseMessage("此产品图片信息删除成功!", "success", "hey");
                 exchangeList.value[0][prop].imgUrl = [] 
@@ -303,6 +303,29 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     }
   }
 }
+// 处理变体值相同
+const handleVariantsSame = (row: any, prop: any, index: number) => {
+  if (variantsSame.value[index - 1] === true) { //当变体值勾选的时候
+    
+    let nonEmptyKeys = Object.entries(exchangeList.value[index]).filter(([key, value]) => {
+      // 对于非字符串类型的值，直接判断是否为 null 或 undefined
+      if (typeof value !== 'string') {
+        return value !== null && value !== undefined;
+      }
+      // 对于字符串类型的值，去除前后空白字符后检查是否为空
+      return value.trim() !== '';
+    });
+    console.log(nonEmptyKeys);
+    // 都没有值,这一行中所有数据都同步
+    if (nonEmptyKeys.length === 2) {
+      // 如果有两个非空值，这里选择一个具体的逻辑
+      row[prop] = nonEmptyKeys[1][1]; // 示例：选择第二个非空值
+      variantsSame.value[index - 1] === false
+    } 
+    // 一行中多个单元格都有值,不会同步
+  }
+  return row[prop]
+}
 /**
  * 输入失焦事件
  */
@@ -321,6 +344,10 @@ const clickCancle = async (event: any, prop: any) =>{
         t2.classList.remove("none")
     }
     if (event.type === 'blur') {
+      // exchangeList.value[index]['黑色'] = handleVariantsSame(row, '黑色', index)
+      // exchangeList.value[index]['白色'] = handleVariantsSame(row, '白色', index)
+      // exchangeList.value[index]['海洋系列'] = handleVariantsSame(row, '海洋系列', index)
+      console.log( exchangeList.value[1])
         // 执行失去焦点处理逻辑
         await reviewStepNo5SkuInfoPerfect({
           productLength: exchangeList.value[1][prop],
@@ -333,9 +360,16 @@ const clickCancle = async (event: any, prop: any) =>{
           productManager: exchangeList.value[8][prop],
           productDesign: exchangeList.value[9][prop],
           sampleRetentionStatus: exchangeList.value[10][prop],
-          orderEntryId: exchangeList.value[14][prop],
+          orderEntryId: exchangeList.value[15][prop],
         })
     }
+}
+// 修改打包小组
+const handlePackingUpdate = async (prop: any) => {
+  await reviewStepNo5SkuInfoPerfect({
+    checkStatus: parseInt(exchangeList.value[11][prop]),
+    orderEntryId: exchangeList.value[15][prop],
+  })
 }
 // 修改拍照留样情况
 const handleSampleRetentionStatus = async (prop: any) => {
@@ -350,13 +384,19 @@ const handleSampleRetentionStatus = async (prop: any) => {
           productManager: exchangeList.value[8][prop],
           productDesign: exchangeList.value[9][prop],
           sampleRetentionStatus: exchangeList.value[10][prop],
-          orderEntryId: exchangeList.value[14][prop],
+          orderEntryId: exchangeList.value[15][prop],
         })
 }
 // 当点击保存的时候
 const handleSave = async () => {
+  let classReviewId: number | undefined
+  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+      classReviewId = props.step1Data
+  } else {
+      classReviewId = route.query.reviewId
+  }
   try {
-    const { data } = await reviewStepNo5SaveFv({ reviewId: props.step1Data })
+    const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
       $baseMessage("当前信息已保存。","success","hey")
     }
@@ -366,8 +406,14 @@ const handleSave = async () => {
 }
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
+  let classReviewId: number | undefined
+  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+      classReviewId = props.step1Data
+  } else {
+      classReviewId = route.query.reviewId
+  }
   try {
-    const { data } = await reviewStepNo5SaveFv({ reviewId: props.step1Data })
+    const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
       $baseMessage("当前信息已保存。","success","hey")
       emit('change-step', 5)
@@ -451,36 +497,76 @@ const useTableDataLineToColumn = () => {
 }
 // 转换后的列的数据
 let columnsChange: any
+
 // 异步获取变体数据
 const fetchVariantList = async () => {
+  let classReviewId: number | undefined
+  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+      classReviewId = props.step1Data
+  } else {
+      classReviewId = route.query.reviewId
+  }
   try {
-    const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: props.step1Data });
+    const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
     variantsSelectList.value = variantSelectList;
-
-    skuVariantsData.value = variantSelectList.map((item: any) => ({
-      column0: item.label,
-      productImgUrl: { hide: false, imgUrl: []},
-      productLength: undefined,
-      productWidth: undefined,
-      productHeight: undefined,
-      material: '',
-      battery: '',
-      benchmarkAsin: '',
-      patent: '',
-      productManager: '',
-      productDesign: '',
-      sampleRetentionStatus: '',
-      packingGroup: '0',
-      certificateUpload: '',
-      skuMerge: '',
-      operate: '操作',
-      orderEntryId: item.id,
-    }));
+    const { data } = await reviewGetSkuList({ reviewId: classReviewId! })
+    // console.log(data);
+    
+    skuVariantsData.value = data.map((item: any) => {
+      if (item.variantImg === "") {
+        return {
+          column0: '',
+          productImgUrl: { hide: false, imgUrl: []},
+          productLength: item.productLength,
+          productWidth: item.productWidth,
+          productHeight: item.productHeight,
+          material: item.material,
+          battery: item.battery,
+          benchmarkAsin: item.benchmarkAsin,
+          patent: item.patent,
+          productManager: item.productManager,
+          productDesign: item.productDesign,
+          sampleRetentionStatus: item.sampleRetentionStatus,
+          packingGroup: item.packingGroup,
+          certificateUpload: item.certificateUpload,
+          skuMerge: item.variantSku,
+          operate: '操作',
+          orderEntryId: undefined,
+        }
+      } else {
+          return {
+            column0: '',
+            productImgUrl: { hide: true, imgUrl: [{ url: item.variantImg}]},
+            productLength: item.productLength,
+            productWidth: item.productWidth,
+            productHeight: item.productHeight,
+            material: item.material,
+            battery: item.battery,
+            benchmarkAsin: item.benchmarkAsin,
+            patent: item.patent,
+            productManager: item.productManager,
+            productDesign: item.productDesign,
+            sampleRetentionStatus: item.sampleRetentionStatus,
+            packingGroup: item.packingGroup,
+            certificateUpload: item.certificateUpload,
+            skuMerge: item.variantSku,
+            operate: '操作',
+            orderEntryId: undefined,
+          }
+      }
+    })
+    skuVariantsData.value.forEach((item: any, index: number) => {
+      if (index < variantSelectList.length) {
+        const key = variantSelectList[index];
+        item.column0 = key.label;
+        item.orderEntryId = key.id;
+      }
+    })  
+    // console.log(skuVariantsData.value);
     
     const { initData, columns } = useTableDataLineToColumn();
     columnsChange = columns 
     exchangeList.value = initData(skuVariantsData.value);
-    
   } catch (error) {
     console.error('Error fetching variant list:', error);
   }
