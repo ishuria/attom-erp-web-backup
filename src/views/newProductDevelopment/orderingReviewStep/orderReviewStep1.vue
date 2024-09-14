@@ -17,12 +17,20 @@
                             <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" />
                         </template>
                         <template v-if="row['column0'] === 'oem'">
-                            <el-checkbox v-model="row[prop]" :true-value="1" :false-value="0" size="large"
-                                class="custom-checkbox" />
+                            <el-checkbox 
+                                v-model="row[prop]" 
+                                :true-value="1" 
+                                :false-value="0" size="large"
+                                class="custom-checkbox" 
+                            />
                         </template>
                         <template v-if="row['column0'] === 'effectiveCount'">
-                            <el-input v-model="row[prop]" @click="inputHandleMouseOver($event)"
-                                @keydown.enter="effectiveCountInputeHandle($event)"></el-input>
+                            <el-input 
+                                v-model="row[prop]" 
+                                @click="inputHandleMouseOver($event)"
+                                @keydown.enter="effectiveCountInputeHandle($event)"
+                                @blur="effectiveCountInputeHandle($event)"
+                            />
                         </template>
                         <template
                             v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem' && row['column0'] !== 'variantImg'">
@@ -73,9 +81,6 @@
                     </template>
                 </el-table-column>
 
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
-                </template>
             </el-table>
         </div>
 
@@ -131,6 +136,8 @@ import { getReviewByReviewId, getMoldInfoByReviewId, getVariantList, reviewStepN
 import { IReviewMoldItem, IReviewCommonItem, IVariantInfoItem, IReviewStepNo1Req, IReviewStepNo1Variant } from '/@/type/review/review'
 import { formatDate } from '/@/utils/dateUtils'
 import { useTableDataLineToColumn, inputHandleMouseOver, effectiveCountInputeHandle } from '/@/utils/tableColum'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 
 const props = defineProps<{
     reviewStatus: string
@@ -142,6 +149,10 @@ defineOptions({
     name: 'OrderReviewStep1',
 })
 
+const router = useRouter()
+const route: any = useRoute()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 const emit = defineEmits(['change-step'])
 const variantDetialList = ref<IVariantInfoItem[]>([])
 const variantList = ref<any[]>([])
@@ -219,7 +230,12 @@ const handleSaveAndContinue = async () => {
             const params = buildParams()
             const { data } = await reviewStepNo1Pass(params)
             if (data === true) {
+                
                 $baseMessage("审批通过成功！", "success", "hey")
+                await delVisitedRoute(handleActivePath(route, true))
+                router.push({
+                    path: '/newProductDevelopment/newProductApprovalAndRecords'
+                })
             }
         })
 
@@ -244,6 +260,7 @@ const handleGoback = () => {
             const params = buildParams()
             const { data } = await reviewStepNo1Fail(params)
             if (data === true) {
+                await delVisitedRoute(handleActivePath(route, true))
                 $baseMessage("审核不通过提交成功", "success", "hey")
             }
         })

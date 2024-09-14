@@ -26,7 +26,7 @@
       </el-table-column>
       <el-table-column align="center" label="SKU图片" width="100">
         <template #default="{ row }">
-          <el-image style="width: 75px; height: 75px" :src="row.skuImage" fit="fill" />
+          <el-image v-if="row.skuImage" style="width: 75px; height: 75px" :src="row.skuImage" fit="fill" />
         </template>
       </el-table-column>
       <el-table-column label="SKU" width="300" prop="sku">
@@ -321,19 +321,19 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 // 选中且不被禁用的样式
-::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+:deep .el-checkbox__input.is-checked .el-checkbox__inner {
   background-color: #4A62E7;
   border-color: #4A62E7;
 }
 
 // 选中且被禁用的样式
-::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+:deep.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
   background: rgb(10, 108, 245);
   border-color: rgb(10, 108, 245);
 }
 
 // 选中后中间的 “✔” 的样式
-::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+:deep.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
   border-color: #fff;
 }
 

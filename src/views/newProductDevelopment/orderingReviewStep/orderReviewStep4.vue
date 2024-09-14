@@ -91,6 +91,8 @@
 import { useTableDataLineToColumn, inputHandleMouseOver } from '/@/utils/tableColum'
 import {reviewProductList,updateStepNoQuantity,releasePo} from '/@/api/devlocal/orderingReview'
 import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 
 defineOptions({
     name: 'OrderReviewStep4',
@@ -102,6 +104,9 @@ const props = defineProps<{
   reviewId: string
 }>();
 
+const route: any = useRoute()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 const router = useRouter()
 const emit = defineEmits(['change-step'])
 const variantList = ref<any[]>([])
@@ -165,6 +170,7 @@ const handleSaveAndContinue = async () => {
     const { data } = await releasePo({reviewId:props.reviewId})
     if (data === true) {
       $baseMessage("发布PO成功！", "success", "hey")
+      await delVisitedRoute(handleActivePath(route, true))
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords'
       })
@@ -209,19 +215,19 @@ onMounted(() => {
 <style lang="scss" scoped>
 
 // 选中且不被禁用的样式
-::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+:deep .el-checkbox__input.is-checked .el-checkbox__inner {
   background-color: #4A62E7;
   border-color: #4A62E7;
 }
 
 // 选中且被禁用的样式
-::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+:deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
   background: rgb(10, 108, 245);
   border-color: rgb(10, 108, 245);
 }
 
 // 选中后中间的 “✔” 的样式
-::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+:deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
   border-color: #fff;
 }
 

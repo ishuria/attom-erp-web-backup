@@ -22,10 +22,10 @@
             <el-table 
                 ref="costAccountingTable"
                 :data="estimatedCostList"
-                
+                :cell-style="cellStyle"
                 border stripe
                 @cell-click="costAccountingChangeInput"
-                :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
+                :header-cell-style="{ 'text-align': 'center' }"
             >
 
                 <el-table-column prop="createTime" label="日期" min-width="110">
@@ -66,8 +66,13 @@
                 <el-table-column label="产品描述" min-width="180">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="textarea" autofocus v-model="row.desc" :autosize="{ minRows: 3, maxRows: 9 }"
-                                @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="textarea" 
+                                autofocus v-model="row.desc" 
+                                :autosize="{ minRows: 3, maxRows: 9 }"
+                                @blur="clickCancle($event, row)"
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                             />
                         </div>
                         <span>{{ row.desc }}</span>
                     </template>
@@ -76,7 +81,12 @@
                 <el-table-column label="价格信息" min-width="180">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.priceInfo" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.priceInfo" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.priceInfo }}</span>
                     </template>
@@ -85,7 +95,12 @@
                 <el-table-column label="1688链接" min-width="140">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.url1688" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.url1688" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.url1688 }}</span>
                     </template>
@@ -94,7 +109,12 @@
                 <el-table-column label="产品价格￥" min-width="120">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.price" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.price" 
+                                @blur="clickCancle($event, row)"
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.price }}</span>
                     </template>
@@ -103,7 +123,12 @@
                 <el-table-column label="长" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.length" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.length" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.length }}</span>
                     </template>
@@ -112,7 +137,12 @@
                 <el-table-column  label="宽" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.width" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.width" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.width }}</span>
                     </template>
@@ -121,7 +151,12 @@
                 <el-table-column  label="高" min-width="70">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.height" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.height" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.height }}</span>
                     </template>
@@ -130,7 +165,12 @@
                 <el-table-column  label="重量">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.weight" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.weight" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.weight }}</span>
                     </template>
@@ -144,7 +184,12 @@
                 <el-table-column  label="打包">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.packaging" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.packaging" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.packaging }}</span>
                     </template>
@@ -170,7 +215,12 @@
                 <el-table-column  label="售价">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.sellingPrice" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.sellingPrice" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.sellingPrice }}</span>
                     </template>
@@ -184,7 +234,12 @@
                 <el-table-column label="重量系数" min-width="100">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.weightCoefficient" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.weightCoefficient" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.weightCoefficient }}</span>
                     </template>
@@ -193,7 +248,12 @@
                 <el-table-column label="体积系数" min-width="100">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.volumeCoefficient" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.volumeCoefficient" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.volumeCoefficient }}</span>
                     </template>
@@ -202,7 +262,12 @@
                 <el-table-column label="关税%">
                     <template #default="{ row }">
                         <div class="none">
-                            <el-input type="text" v-model="row.tariff" @blur="clickCancle($event, row)" />
+                            <el-input 
+                                type="text" 
+                                v-model="row.tariff" 
+                                @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            />
                         </div>
                         <span>{{ row.tariff }}</span>
                     </template>
@@ -318,8 +383,32 @@ const clickCancle = async (event:any,value:IProgressEstimatedCostAccounting) =>{
     await costAccountingUpdate({...value})
 }
 
+// 鼠标enter事件
+const effectiveCountInputeHandle = (event: Event,row:any) => {
+    const targetElement = event.target as HTMLInputElement
+    targetElement.blur()
+}
 
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+    if  (data.columnIndex === 0 || data.columnIndex === 2 
+        || data.columnIndex === 3 || data.columnIndex === 21
+        || data.columnIndex === 13 || data.columnIndex === 14
+        || data.columnIndex === 18 || data.columnIndex === 19
+        || data.columnIndex === 23 || data.columnIndex === 24
 
+    ){
+        return {
+            backgroundColor: '#f5f5f5',
+            color: '#bbb',
+            cursor: 'not-allowed',
+            textAlign:'center'
+        }
+    }else {
+        return {
+            textAlign:'center'
+        }
+    }
+}
 
 // 成本核算单击表格修改
 const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
@@ -346,10 +435,12 @@ const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellEle
     // 自动聚焦
     const inputElement = getSpecificChildren(cell, "input")[0];
     if (inputElement) {
+        inputElement.select()
         inputElement.focus()
     } else {
       const textareaElement = getSpecificChildren(cell, "textarea")[0];
       if (textareaElement){
+        textareaElement.select()
         textareaElement.focus()
       }
     }

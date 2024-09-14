@@ -42,8 +42,7 @@
 
 
     <div style="padding-top: 20px;">
-      <el-table border :data="moldData" :header-cell-style="{ 'text-align': 'center' }" style="margin-top: 25px;"
-        height="150">
+      <el-table border :data="moldData" :header-cell-style="{ 'text-align': 'center' }" style="margin-top: 25px;">
         <el-table-column label="提交日期" align="center">
           <template #default="{ row }">
             {{ formatDate(new Date(row.createTime)) }}
@@ -78,9 +77,6 @@
           </template>
         </el-table-column>
 
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
-        </template>
       </el-table>
     </div>
 
@@ -95,7 +91,9 @@ import { useTableDataLineToColumn, inputHandleMouseOver, effectiveCountInputeHan
 import { getSkuVariantList, getMoldInfoByReviewId, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
 import { IReviewMoldItem, IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
 import { formatDate } from '/@/utils/dateUtils'
-const router = useRouter()
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
+
 const moldData = ref<IReviewMoldItem[]>()
 const variantList = ref<any[]>([])
 // 原始数组的长度
@@ -111,6 +109,10 @@ defineOptions({
   name: 'OrderReviewStep2',
 })
 
+const router = useRouter()
+const route: any = useRoute()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 const emit = defineEmits(['change-step'])
 const labelMap: Record<string, string> = {
   column0: '',
@@ -178,6 +180,7 @@ const handleSaveAndContinue = async () => {
     const { data } = await reviewStepNo2Pass(params)
     if (data === true) {
       $baseMessage("最终审批已通过成功！", "success", "hey")
+      await delVisitedRoute(handleActivePath(route, true))
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords'
       })
@@ -238,19 +241,19 @@ onMounted(async () => {
 <style lang="scss" scoped>
 
 // 选中且不被禁用的样式
-::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+:deep .el-checkbox__input.is-checked .el-checkbox__inner {
   background-color: #4A62E7;
   border-color: #4A62E7;
 }
 
 // 选中且被禁用的样式
-::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+:deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
   background: rgb(10, 108, 245);
   border-color: rgb(10, 108, 245);
 }
 
 // 选中后中间的 “✔” 的样式
-::v-deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+:deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
   border-color: #fff;
 }
 

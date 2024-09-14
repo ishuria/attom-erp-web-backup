@@ -72,6 +72,8 @@
 import { useTableDataLineToColumn, inputHandleMouseOver } from '/@/utils/tableColum'
 import { getDistributionList, updateStepNoQuantity,reviewStepNo3Save } from '/@/api/devlocal/orderingReview'
 import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 const router = useRouter()
 
 
@@ -84,7 +86,9 @@ const props = defineProps<{
   reviewStepNo: string
   reviewId: string
 }>();
-
+const route: any = useRoute()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 const emit = defineEmits(['change-step'])
 const variantList = ref<any[]>([])
 // 原始数组的长度
@@ -189,6 +193,7 @@ const handleSaveAndContinue = () => {
     const { data } = await reviewStepNo3Save({reviewId:props.reviewId})
     if (data === true) {
       $baseMessage("分货提交成功！", "success", "hey")
+      await delVisitedRoute(handleActivePath(route, true))
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords'
       })

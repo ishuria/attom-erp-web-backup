@@ -13,7 +13,7 @@
         </vab-query-form>
 
         <el-table ref="progressComponentTable" :data="progressProductList" border stripe
-            @cell-click="componentTableInputChage" :span-method="objectSpanMethod" :cell-style="{ textAlign: 'center' }"
+            @cell-click="componentTableInputChage" :span-method="objectSpanMethod" :cell-style="cellStyle"
             :header-cell-style="{ 'text-align': 'center' }">
 
             <el-table-column align="center" fixed="left" label="零件操作" width="120px">
@@ -54,8 +54,13 @@
             <el-table-column label="零件名" prop="componentName">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="textarea" autofocus v-model="row.componentName"
-                            :autosize="{ minRows: 2, maxRows: 7 }" @blur="componentClickCancle($event, row)" />
+                        <el-input type="textarea" 
+                            autofocus
+                            v-model="row.componentName"
+                            :autosize="{ minRows: 2, maxRows: 7 }" 
+                            @blur="componentClickCancle($event, row)"
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.componentName }}</span>
                 </template>
@@ -65,11 +70,8 @@
                 <template #header>
                     已有零<br>件id
                 </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.skuComponentId" @blur="componentClickCancle($event, row)" />
-                    </div>
-                    <span>{{ row.skuComponentId }}</span>
+                <template #default="{ row }"  >
+                    <div>{{ row.skuComponentId }}</div>
                 </template>
             </el-table-column>
 
@@ -79,8 +81,12 @@
                 </template>
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.componentQuantity"
-                            @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.componentQuantity"
+                            @blur="componentClickCancle($event, row)"
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.componentQuantity }}</span>
                 </template>
@@ -92,7 +98,12 @@
                 </template>
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.componentUnit" @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.componentUnit"
+                            @blur="componentClickCancle($event, row)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.componentUnit }}</span>
                 </template>
@@ -104,7 +115,12 @@
                 </template>
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.unitPrice" @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.unitPrice" 
+                            @blur="componentClickCancle($event, row)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.unitPrice }}</span>
                 </template>
@@ -116,7 +132,12 @@
                 </template>
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.totalPrice" @blur="componentClickCancle($event, row,)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.totalPrice" 
+                            @blur="componentClickCancle($event, row,)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.totalPrice }}</span>
                 </template>
@@ -128,7 +149,12 @@
                 </template>
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.freight" @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.freight" 
+                            @blur="componentClickCancle($event, row)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.freight }}</span>
                 </template>
@@ -143,8 +169,12 @@
             <el-table-column label="总含税价" prop="taxIncludedPrice" min-width="100">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.taxIncludedPrice"
-                            @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.taxIncludedPrice"
+                            @blur="componentClickCancle($event, row)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.taxIncludedPrice }}</span>
                 </template>
@@ -154,8 +184,11 @@
                 <template #default="{ row }">
                     <el-select v-model="row.currency" placeholder="请选择货币" @change="handlerCurrencyChange(row)"
                         style="min-width: 100%;">
-                        <el-option v-for="dict in currencyList" :key="dict.value" :value="dict.value"
-                            :label="dict.label"></el-option>
+                        <el-option 
+                            v-for="dict in currencyList" 
+                            :key="dict.value" 
+                            :value="dict.value"
+                            :label="dict.label" />
                     </el-select>
                 </template>
             </el-table-column>
@@ -165,16 +198,26 @@
                     计入产<br>品成本
                 </template>
                 <template #default="{ row }">
-                    <el-checkbox v-model="row.includedInCost" :true-value="0" :false-value="1" size="large"
-                        @change="includedInCostChange(row)" />
+                    <el-checkbox 
+                        v-model="row.includedInCost" 
+                        :true-value="0" 
+                        :false-value="1" 
+                        size="large"
+                        @change="includedInCostChange(row)" 
+                    />
                 </template>
             </el-table-column>
 
             <el-table-column label="供应商" prop="supplier" min-width="140">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" autofocus v-model="row.supplier"
-                            @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            autofocus 
+                            v-model="row.supplier"
+                            @blur="componentClickCancle($event, row)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>
                         <el-text truncated>
@@ -200,7 +243,12 @@
                 </template>
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.actualTaxRate" @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.actualTaxRate" 
+                            @blur="componentClickCancle($event, row)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.actualTaxRate }}</span>
                 </template>
@@ -212,8 +260,12 @@
                 </template>
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.invoicingTaxRate"
-                            @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.invoicingTaxRate"
+                            @blur="componentClickCancle($event, row)" 
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.invoicingTaxRate }}</span>
                 </template>
@@ -222,7 +274,12 @@
             <el-table-column label="采购链接" prop="purchaseLink" min-width="140">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.purchaseLink" @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.purchaseLink"
+                            @blur="componentClickCancle($event, row)"
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>
                         <el-text truncated>
@@ -235,7 +292,12 @@
             <el-table-column label="备注" prop="remarks">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.remarks" @blur="componentClickCancle($event, row)" />
+                        <el-input 
+                            type="text" 
+                            v-model="row.remarks" 
+                            @blur="componentClickCancle($event, row)"
+                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                        />
                     </div>
                     <span>{{ row.remarks }}</span>
                 </template>
@@ -249,20 +311,41 @@
         </el-table>
 
 
-        <vab-upload :upload-visible="uploadPicVisible" title="上传图片" :is-multiple="false" :fileListFlag="false"
-            :dataId="dataId" @update:uploadVisible="updateUploadPicVisible" :upload-file="uploadImageFile" />
+        <vab-upload 
+            :upload-visible="uploadPicVisible"
+            title="上传图片" 
+            :is-multiple="false" 
+            :fileListFlag="false"
+            :dataId="dataId" 
+            @update:uploadVisible="updateUploadPicVisible" 
+            :upload-file="uploadImageFile" 
+        />
 
         <!-- 样品追踪dialog -->
-        <vab-sample-tranck :progress-id="props.progressId" :close-dialog-handler="() => sampleVisible = false"
-            :visible="sampleVisible" @update:priviewListValue="settingPriviewList" />
+        <vab-sample-tranck 
+            :progress-id="props.progressId" 
+            :close-dialog-handler="() => sampleVisible = false"
+            :visible="sampleVisible" 
+            @update:priviewListValue="settingPriviewList" />
 
         <!-- 拿样 -->
-        <vab-sample :progress-id="props.progressId" :close-dialog="() => sampleFormVisible = false"
-            :visible="sampleFormVisible" :refreshComponent="fetchDataComponent" />
+        <vab-sample 
+            :progress-id="props.progressId" 
+            :close-dialog="() => sampleFormVisible = false"
+            :visible="sampleFormVisible" 
+            :refreshComponent="fetchDataComponent"
+        />
 
         <!-- 开发日志显示 -->
-        <wangEditor :wangEditorVisible="wangEditorVisible" :title="wangEditorTitle" :content="progressLog"
-            :classify='classify' @clickBoolean="clickLogBool" @clickChild="clickLog" />
+        <wangEditor 
+            :wangEditorVisible="wangEditorVisible" 
+            :title="wangEditorTitle" 
+            :content="progressLog"
+            :classify='classify' 
+            @clickBoolean="clickLogBool" 
+            @clickChild="clickLog" 
+        />
+
     </div>
 
 </template>
@@ -283,6 +366,8 @@ import {
 } from '/@/api/devlocal/progressSample'
 import { getProgressLog, updateProgressManage } from '~/src/api/devlocal/progress'
 import wangEditor from '../newProductProgress/wangEditor.vue'
+import { color } from 'echarts'
+import { reduce } from 'lodash'
 
 // 图片上传显示控制vesiblae
 const uploadPicVisible = ref<boolean>(false)
@@ -336,13 +421,6 @@ const sampleFormVisible = ref<boolean>(false)
 
 // 零件清单修改开票
 const handlerInvoicingChange = async (row: IProgressProdcutComponent) => {
-
-    // await updateComponenet({
-    //     progressId: row.progressId,
-    //     supplierId: row.supplierId,
-    //     componentId: row.componentId,
-    //     invoicing: row.invoicing,
-    // })
     await updateComponenet(row)
     fetchDataComponent()
     props.trialCalculationData?.()
@@ -350,18 +428,24 @@ const handlerInvoicingChange = async (row: IProgressProdcutComponent) => {
 
 // 零件清单修改货币
 const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
-
-    // await updateComponenet({
-    //     progressId: row.progressId,
-    //     supplierId: row.supplierId,
-    //     componentId: row.componentId,
-    //     currency: row.currency,
-    // })
     await updateComponenet(row)
     props.trialCalculationData?.()
 }
 
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+    if  (data.columnIndex === 3 || data.columnIndex === 9){
+        return {
+            backgroundColor: '#f5f5f5',
+            color: '#bbb',
+            cursor: 'not-allowed',
+            textAlign:'center'
+        }
+    }else {
+        return {
+            textAlign:'center'
+        }
+    }
+}
 
 // 新增零件
 const addComponentHandler = async () => {
@@ -598,10 +682,12 @@ const componentTableInputChage = async (row: any, column: any, cell: HTMLTableCe
     // 自动聚焦
     const inputElement = getSpecificChildren(cell, "input")[0];
     if (inputElement) {
+        inputElement.select()
         inputElement.focus()
     } else {
         const textareaElement = getSpecificChildren(cell, "textarea")[0];
         if (textareaElement) {
+            textareaElement.select()
             textareaElement.focus()
         }
     }
@@ -628,32 +714,21 @@ const componentClickCancle = async (event: any, value: IProgressProdcutComponent
         [clickColumn.property]: value[clickColumn.property],
     }
 
-
-    //   if (rowCopy[clickColumn.property] !== value[clickColumn.property]) {
-    //     await updateComponenet(query)
-    //     fetchDataComponent()
-    //     props.trialCalculationData?.()
-    //   }
     await updateComponenet(value)
     fetchDataComponent()
-    //     props.trialCalculationData?.()
 }
 
 // 计入成本change
 const includedInCostChange = async (row: IProgressProdcutComponent) => {
-    // 获取零件清单中实际的成本
-    // const { data } = await getProgressCalculation({ progressId: parseInt(row.progressId)})
-
-
-    //更新新值
-    // await updateComponenet({
-    //     progressId: row.progressId,
-    //     supplierId: row.supplierId,
-    //     componentId: row.componentId,
-    //     includedInCost: row.includedInCost
-    // })
     await updateComponenet(row)
     props.trialCalculationData?.()
+}
+
+
+// 鼠标enter事件
+const effectiveCountInputeHandle = (event: Event,row:any) => {
+    const targetElement = event.target as HTMLInputElement
+    targetElement.blur()
 }
 
 // 样品追踪
