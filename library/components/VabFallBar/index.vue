@@ -183,6 +183,10 @@ useEventListener('mousemove', (e: MouseEvent) => {
             [class*='ri-'] + span {
               padding-left: 3px;
             }
+
+            &:hover {
+              border-bottom: 0;
+            }
           }
         }
 
@@ -193,12 +197,13 @@ useEventListener('mousemove', (e: MouseEvent) => {
 
       &__box {
         top: 5px;
-        left: var(--el-left-menu-width);
+        left: calc(var(--el-left-menu-width) - 2px);
         min-width: var(--ti-fall-menu-box-width);
         padding: var(--el-padding);
         overflow-y: auto;
         border: 0;
-        border-radius: var(--el-border-radius-base);
+        border-left: 3px solid var(--el-background-color);
+        border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
         box-shadow: none;
         transition:
           all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
@@ -263,7 +268,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
         }
 
         &__box {
-          left: calc(var(--el-left-menu-width-min) + 2px);
+          left: var(--el-left-menu-width-min);
           padding-right: 0;
         }
       }
