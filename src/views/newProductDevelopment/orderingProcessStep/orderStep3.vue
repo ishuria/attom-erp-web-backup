@@ -542,17 +542,19 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
     })
 }
 const handleVariantChange = async (row: any) => {
-    let _variant: any
+    let _variant: any = {}
     variantsSelectList.value.forEach((item: any) => {
         if(item.id == row.orderEntryId) {
-            _variant = item.label
+            _variant.variant = item.label
         }
     })
-    
+    console.log(_variant);
+        
     await reviewStepNo3ComponentUpdate({
         ...row,
-        variant: _variant,
+        variant: _variant.variant
     })
+
     fetchDataComponent()
     fetchVariantsData()
 }
@@ -730,10 +732,11 @@ const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
                         componentList.value.splice(index, 1);
                     }
                     $baseMessage("零件信息删除成功！","success","hey")
+                    fetchDataComponent()
+                    fetchVariantsData()
                 }
         })
-        fetchDataComponent()
-        fetchVariantsData()
+       
     } catch(e){
         console.log(e as Error)
    }
