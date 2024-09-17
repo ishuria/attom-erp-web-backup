@@ -39,7 +39,7 @@
         <el-table-column align="center" label="类型" width="120" prop="type" show-overflow-tooltip>
           <template #default="{ row }">
             <el-tag v-if="row.type == 0 && row.status == 0">菜单</el-tag>
-            <el-tag v-if="row.type == 0 && row.status == 2" type="info">页面</el-tag>
+            <el-tag v-if="row.type == 2 && row.status == 0" type="info">页面</el-tag>
             <el-tag v-if="row.type == 1" type="info">按钮</el-tag>
           </template>
         </el-table-column>

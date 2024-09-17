@@ -215,19 +215,19 @@ onMounted(() => {
 <style lang="scss" scoped>
 
 // 选中且不被禁用的样式
-::deep .el-checkbox__input.is-checked .el-checkbox__inner {
+:deep() .el-checkbox__input.is-checked .el-checkbox__inner {
   background-color: #4A62E7;
   border-color: #4A62E7;
 }
 
 // 选中且被禁用的样式
-::deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+:deep() .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
   background: rgb(10, 108, 245);
   border-color: rgb(10, 108, 245);
 }
 
 // 选中后中间的 “✔” 的样式
-::deep .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+:deep() .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
   border-color: #fff;
 }
 
