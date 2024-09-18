@@ -44,7 +44,7 @@
                             </div>
                             <template #file="{ file }">
                                 <div>
-                                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                                    <img class="el-upload-list__item-thumbnail"  :lazy="true" :src="file.url" alt="" />
                                     <span class="el-upload-list__item-actions">
                                         <span
                                             class="el-upload-list__item-preview"
@@ -299,6 +299,7 @@
             :classify="classify"
         >
         </wangEditor>
+
     </div>
     <div class="table-container">
         <el-table 
@@ -442,7 +443,19 @@
             <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
         </div>
+        <!-- <div class="crop-container no-transition-container">
+            <tiny-crop
+            ref="cropRef"
+            :aspect-ratio="aspectRatio"
+            :auto-crop-area="autoCropArea"
+            :cropvisible="cropVisible"
+            :src="imgUrl"
+            @cropdata="cropdata"
+            @update:cropvisible="cropVisible = $event"
+        />
+        </div> -->
     </div>
+ 
   </template>
   
 <script lang="ts" setup>
@@ -458,6 +471,7 @@ import { convertString } from '/@/utils/stringUtils';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 import { getExchangeRate } from '~/src/api/devlocal/evaluation';
+import { Crop as TinyCrop } from '@opentiny/vue'
 
 const props = defineProps<{ step1Data: number }>()
 
@@ -466,6 +480,19 @@ const emit = defineEmits<{
     (e: 'update:imagePreviewVisibale', value: boolean): void
     (e: 'update:priviewListValue', value: string): void
  }>()
+const cropRef = ref<any>(null)
+const autoCropArea = ref<number>(0.5)
+const aspectRatio = ref<number>(1 / 1)
+const cropVisible = ref<boolean>(false)
+const cropData = ref<any>('')
+const imgUrl = ref<string>(`https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png`)
+const cropdata = (data: any) => {
+  cropData.value = data
+
+  $baseConfirm('裁剪完成，您是否要关闭弹窗？', null, () => {
+    cropRef.value.closeCrop()
+  })
+}
 // const listLoading = ref<boolean>(true)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
@@ -549,7 +576,7 @@ const handleVariantChange = async (row: any) => {
             _variant.variant = item.label
         }
     })
-    console.log(_variant);
+    // console.log(_variant);
         
     await reviewStepNo3ComponentUpdate({
         ...row,
@@ -607,51 +634,107 @@ const handleIconClick = (index: number) => {
  * 上传图片
  */
 const imageForm = ref(new FormData()) as any;
-
 async function uploadImage(params: any) {
   try {
     const index = clickIconRowIndex.value!;
     const currentComponent = componentList.value[index];
-    
-    // 创建 FormData 对象并添加文件和组件 ID
-    imageForm.value = new FormData();
-    imageForm.value.append('file', params.file);
-    imageForm.value.append('reviewComponentId', currentComponent.reviewComponentId);
 
-    // 上传图片
-    const { data } = await reviewStepNo3ComponentUpload(imageForm.value);
-    // 确保 data 是有效的图片 URL
-    if (!data) {
-      throw new Error('上传图片失败');
+    // 检查 params.file 是否有效
+    if (!params.file) {
+      throw new Error('文件无效');
     }
-    
-    // 更新当前组件的图片列表
-    const imageListCopy = [...(currentComponent.componentImgUrl || [])];
-    imageListCopy.push({ url: data });
 
-    componentList.value[index].componentImgUrl = imageListCopy;
+    // // 创建一个新的 Image 对象
+    // const img = new Image();
+    // const objectUrl = URL.createObjectURL(params.file); // 使用上传的文件
+    // img.src = objectUrl;
 
-    // 更新 hide 状态
-    componentList.value[index].hide = imageListCopy.length > 0;
+    // img.onload = () => {
+    //   const width = img.width;
+    //   const height = img.height;
 
-    // componentList.value.forEach((item: any, index: number) => {
-    //     console.log(item.componentImgUrl);
-    // })
-    // 提示成功信息
-    $baseMessage('图片上传成功!', 'success', 'hey');
-    
+    //   if (width === 0 || height === 0) {
+    //     console.error('加载的图片宽度或高度为0');
+    //     $baseMessage('图片加载失败，宽度或高度为0', 'error', 'hey');
+    //     return;
+    //   }
+
+        // // 检查图片比例
+        // if (width !== height) {
+        //     // 进行图片上传
+        //     // 创建 FormData 对象并添加文件和组件 ID
+        //     const imageForm = new FormData();
+        //     imageForm.append('file', params.file);
+        //     imageForm.append('reviewComponentId', currentComponent.reviewComponentId as any);
+
+        //     // 上传图片
+        //     reviewStepNo3ComponentUpload(imageForm)
+        //         .then(({ data }) => {
+        //         if (!data) {
+        //             throw new Error('上传图片失败');
+        //         }
+        //         imgUrl.value = data;
+        //         cropVisible.value = true; // 显示裁剪窗口
+        //         const imageListCopy = [...(currentComponent.componentImgUrl || [])];
+        //         imageListCopy.push({ url: data });
+
+        //         componentList.value[clickIconRowIndex.value!].componentImgUrl = imageListCopy;
+        //         componentList.value[clickIconRowIndex.value!].hide = imageListCopy.length > 0;
+        //          componentList.value[clickIconRowIndex.value!].cropData = cropData.value
+        //          console.log(componentList.value[clickIconRowIndex.value!].cropData);
+                 
+        //             // 提示成功信息
+        //             $baseMessage('图片上传成功!', 'success', 'hey');
+                
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //             $baseMessage('图片上传失败!', 'error', 'hey');
+        //         });
+        // } else {
+            const imageForm = new FormData();
+            imageForm.append('file', params.file);
+            imageForm.append('reviewComponentId', currentComponent.reviewComponentId as any);
+
+            // 上传图片
+            reviewStepNo3ComponentUpload(imageForm)
+                .then(({ data }) => {
+                if (!data) {
+                    throw new Error('上传图片失败');
+                }
+                const imageListCopy = [...(currentComponent.componentImgUrl || [])];
+                imageListCopy.push({ url: data });
+
+                componentList.value[clickIconRowIndex.value!].componentImgUrl = imageListCopy;
+                componentList.value[clickIconRowIndex.value!].hide = imageListCopy.length > 0;
+
+                    // 提示成功信息
+                    $baseMessage('图片上传成功!', 'success', 'hey');
+                
+                })
+                .catch(error => {
+                    console.error(error);
+                    $baseMessage('图片上传失败!', 'error', 'hey');
+                });
+        
+
   } catch (error) {
     console.error(error);
     $baseMessage('图片上传失败!', 'error', 'hey');
   }
 }
 
+// function handleImageUpload(params: any, currentComponent: any) {
+  
+// }
+
+
+
 /**
  * 图片预览事件
  */
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
-    console.log(row);
-    
+    // console.log(row);
     emit("update:priviewListValue", row.componentImgUrl[0].url)
     emit("update:imagePreviewVisibale", true)
 }
@@ -696,7 +779,7 @@ const handleAddComponent = async () => {
         invoicingTaxRate: '',
         minimumOrderQuantity: null,
         numberFullCartons: null,
-        orderEntryId: null,
+        orderEntryId: 0,
         preTaxPrice: '',
         purchaseLink: '',
         purchaseMatters: '',
@@ -889,36 +972,48 @@ const handleGoback = () => {
 // 获取拿样零件添加数据
 const fetchDataComponent = async () =>{
     if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
-    try {
-        // 拿样零件添加列表
-        let classReviewId: number | undefined
-        if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-            classReviewId = props.step1Data
-        } else {
-            classReviewId = route.query.reviewId
-        }
-        const { data } = await reviewStepNo3ComponentList({reviewId: classReviewId!})
-        componentList.value = data
-        componentList.value.forEach((item: any, index: number) => {
-            item.currency = convertString(item.currency)
-            item.invoicing = convertString(item.invoicing)
-            if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
-                item.hide = true;
-                item.componentImgUrl = [{ url: item.componentImgUrl }];
+        try {
+            // 拿样零件添加列表
+            let classReviewId: number | undefined
+            if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+                classReviewId = props.step1Data
             } else {
-                item.hide = false;
-                item.componentImgUrl = []; // 如果没有图片,确保这是空的
+                classReviewId = route.query.reviewId
             }
-            // console.log(item.componentImgUrl);
-        })
-        // 获取下拉变体列表
-        const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
-        variantsSelectList.value = variantSelectList
-        variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
-    }catch(e){
-        console.error(e as Error)
+            const { data } = await reviewStepNo3ComponentList({reviewId: classReviewId!})
+            componentList.value = data
+            componentList.value.forEach((item: any, index: number) => {
+                item.currency = convertString(item.currency)
+                item.invoicing = convertString(item.invoicing)
+                if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
+                    item.hide = true;
+                    item.componentImgUrl = [{ url: item.componentImgUrl }];
+                } else {
+                    item.hide = false;
+                    item.componentImgUrl = []; // 如果没有图片,确保这是空的
+                }
+                // item.cropData = ''
+                // console.log(item.componentImgUrl);
+            })
+            // 获取下拉变体列表
+            const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
+            variantsSelectList.value = variantSelectList
+            variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
+
+            // 排序
+            componentList.value.sort((a: any, b: any) => {
+            if (a.orderEntryId === 0 && b.orderEntryId !== 0) {
+                return -1; // a 在前
+            }
+            if (a.orderEntryId !== 0 && b.orderEntryId === 0) {
+                return 1; // b 在前
+            }
+                return 0; // 不排序
+            });
+        }catch(e){
+            console.error(e as Error)
+        }
     }
-}
 }
 // 获取变体列表
 const fetchVariantsData = async () => {
@@ -982,5 +1077,86 @@ onMounted(async ()=>{
   width: 75px;
   height: 75px;
 }
+// .crop-container {
+//   :deep() {
+//     .tiny-croppreview {
+//       z-index: calc(var(--el-z-index) + 3);
+
+//       [class*='croppreview'] {
+//         background: var(--el-color-white);
+//         border-radius: var(--el-border-radius-base);
+//       }
+//     }
+
+//     @media (max-width: 768px) {
+//       .tiny-crop__dialog {
+//         transform: scale(0.6);
+//       }
+//     }
+
+//     .tiny-crop {
+//       z-index: calc(var(--el-z-index) + 2);
+//       background-color: rgba(0, 0, 0, 0.25);
+//       backdrop-filter: blur(2.5px);
+//       opacity: 1;
+
+//       &__dialog {
+//         background: var(--el-color-white);
+//         border-radius: var(--el-border-radius-base);
+
+//         &-cropper {
+//           border-top-left-radius: var(--el-border-radius-base);
+//           border-top-right-radius: var(--el-border-radius-base);
+//         }
+
+//         &-content {
+//           &__crop {
+//             margin: 0 0 var(--el-margin) 0;
+//             background: var(--el-color-white);
+//             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
+//             border: 1px solid var(--el-border-color);
+//             border-radius: var(--el-border-radius-base);
+
+//             img {
+//               width: auto;
+//               height: 90%;
+//               border-radius: var(--el-border-radius-base);
+//             }
+
+//             h1 {
+//               font-size: var(--el-font-size-extra-large);
+//               font-weight: 400;
+//               color: var(--el-color-grey);
+//             }
+//           }
+
+//           &__handle {
+//             margin: var(--el-margin) 0 var(--el-margin);
+//           }
+//         }
+//       }
+//     }
+
+//     .el-image {
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       width: 212px;
+//       height: 120px;
+//       font-size: var(--el-font-size-large);
+//       color: var(--el-text-color-secondary);
+//       background: var(--el-fill-color-light);
+//       background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
+//       border: 1px solid var(--el-border-color);
+//       border-radius: var(--el-border-radius-base);
+
+//       img {
+//         width: auto;
+//         height: 90%;
+//         border-radius: var(--el-border-radius-base);
+//       }
+//     }
+//   }
+// }
 </style>
   
