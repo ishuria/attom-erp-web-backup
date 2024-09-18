@@ -19,14 +19,14 @@
                   <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
               </template>
           </el-table-column>
-          <el-table-column label="变体值相同" prop="variantsSame" align="center" width="110">
+          <!-- <el-table-column label="变体值相同" prop="variantsSame" align="center" width="110">
               <template #default="{row, $index}">
                   <template v-if="row['column0'] !== 'productImgUrl'">
                       <el-checkbox v-model="variantsSame[$index - 1]" true-value="true" false-value="false" class="custom-checkbox" disabled>
                       </el-checkbox>
                   </template>
               </template>
-          </el-table-column>
+          </el-table-column> -->
           <!-- 动态列 -->
           <el-table-column 
               v-for="(prop, index) in columnsChange" 
@@ -69,8 +69,13 @@
                   </template>
                   <template v-if="row['column0'] === 'sampleRetentionStatus'">
                       <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
-                          <el-option label="已有拍照样品,大货无需留样" value="0"></el-option>
-                          <el-option label="大货需要留样拍照" value="1"></el-option>
+                          <el-option 
+                            v-for="item in photoSampleOptions"
+                            :label="item.label"
+                            :value="item.value"
+                            :key="item.value"
+                          >
+                          </el-option>
                       </el-select>
                   </template>
                   <template v-if="row['column0'] === 'packingGroup'">
@@ -97,7 +102,7 @@ defineOptions({
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import type { TableInstance, UploadFile } from 'element-plus'
-import { reviewGetSkuList, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess';
+import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess';
 import { IGetSelectVariantsList, IreviewStepNo5SkuInfoPerfect } from '/@/type/orderProcess/orderProcessType';
 
 // const props = defineProps({
@@ -116,8 +121,10 @@ const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 const tableRef = ref<TableInstance>()
 
 const variantsSame = ref<boolean[]>([true, true, true, true, true, true, true, true, true, true, true, true, true, true,])
-
-
+const photoSampleOptions = [
+    { label: '已有拍照样品,大货无需留样', value: 0 },
+    { label: '大货需要留样拍照', value: 1 }
+];
 
 const labelMap: Record<string, string> = {
 column0: '',
@@ -136,22 +143,7 @@ packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经�
 certificateUpload: '证书上传',
 skuMerge: '合并变体的SKU',
 }
-const variantsSameMap: Record<string, boolean> = {
-productLength: true,
-productWidth: true,
-productHeight: true,
-productMaterial: true,
-containsBattery: true,
-competitorASIN: true,
-patentStatus: true,
-productManager: true,
-productDesign: true,
-photoSampleStatus: true,
-packingGroup: true,
-certificateUpload: true,
-skuMerge: true,
-operate: true,
-}
+
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
   let el = getSpecificChildren(cell, "img")[0];
@@ -159,29 +151,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
       emit("update:priviewListValue", el.src)
       emit("update:imagePreviewVisibale", true)
     }
-}
-// 处理变体值相同
-const handleVariantsSame = (row: any, prop: any, index: number) => {
-if (variantsSame.value[index - 1] === true) { //当变体值勾选的时候
-  
-  let nonEmptyKeys = Object.entries(exchangeList.value[index]).filter(([key, value]) => {
-    // 对于非字符串类型的值，直接判断是否为 null 或 undefined
-    if (typeof value !== 'string') {
-      return value !== null && value !== undefined;
-    }
-    // 对于字符串类型的值，去除前后空白字符后检查是否为空
-    return value.trim() !== '';
-  });
-  console.log(nonEmptyKeys);
-  // 都没有值,这一行中所有数据都同步
-  if (nonEmptyKeys.length === 2) {
-    // 如果有两个非空值，这里选择一个具体的逻辑
-    row[prop] = nonEmptyKeys[1][1]; // 示例：选择第二个非空值
-    variantsSame.value[index - 1] === false
-  } 
-  // 一行中多个单元格都有值,不会同步
-}
-return row[prop]
 }
 
 
@@ -270,13 +239,13 @@ const route: any = useRoute()
 const fetchVariantList = async () => {
 try {
   const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: route.query.reviewId });
+  const { data: productManager } = await reviewProductManager({reviewId: route.query.reviewId! })
   variantsSelectList.value = variantSelectList;
   const { data } = await reviewGetSkuList({ reviewId: route.query.reviewId })
-  skuVariantsData.value = data.map((item: any) => {
-      if (item.variantImg === "") {
-        return {
+  skuVariantsData.value = data.map((item: any) => (
+        {
           column0: '',
-          productImgUrl: { hide: false, imgUrl: []},
+          productImgUrl: item.variantImg,
           productLength: item.productLength,
           productWidth: item.productWidth,
           productHeight: item.productHeight,
@@ -284,7 +253,7 @@ try {
           battery: item.battery,
           benchmarkAsin: item.benchmarkAsin,
           patent: item.patent,
-          productManager: item.productManager,
+          productManager: productManager,
           productDesign: item.productDesign,
           sampleRetentionStatus: item.sampleRetentionStatus,
           packingGroup: item.packingGroup,
@@ -292,27 +261,7 @@ try {
           skuMerge: item.variantSku,
           orderEntryId: undefined,
         }
-      } else {
-          return {
-            column0: '',
-            productImgUrl: { hide: true, imgUrl: [{ url: item.variantImg}]},
-            productLength: item.productLength,
-            productWidth: item.productWidth,
-            productHeight: item.productHeight,
-            material: item.material,
-            battery: item.battery,
-            benchmarkAsin: item.benchmarkAsin,
-            patent: item.patent,
-            productManager: item.productManager,
-            productDesign: item.productDesign,
-            sampleRetentionStatus: item.sampleRetentionStatus,
-            packingGroup: item.packingGroup,
-            certificateUpload: item.certificateUpload,
-            skuMerge: item.variantSku,
-            orderEntryId: undefined,
-          }
-      }
-    })
+    ))
     skuVariantsData.value.forEach((item: any, index: number) => {
       if (index < variantSelectList.length) {
         const key = variantSelectList[index];

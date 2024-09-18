@@ -60,7 +60,7 @@
                             {{ row.excludingTax }}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="模具费（普票税点）" min-width="110">
+                    <el-table-column align="center" label="模具费（普票税点）" width="120">
                         <template #header>
                             模具费<br>（普票税点）
                         </template>
@@ -68,7 +68,7 @@
                             {{ row.standardInvoice }}%
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="模具费（专票税点）" min-width="110">
+                    <el-table-column align="center" label="模具费（专票税点）" width="120">
                         <template #header>
                             模具费<br>（专票税点）
                         </template>

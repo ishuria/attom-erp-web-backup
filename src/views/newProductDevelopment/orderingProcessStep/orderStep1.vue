@@ -1,62 +1,74 @@
 <template>
     <div>
-        <el-space direction="vertical" style="width: 100%">
+        <el-space direction="vertical" style="width: 100%;">
             <el-form 
                 ref="formRef" 
                 label-position="right" 
                 label-width="160px" 
                 :model="form" 
                 @submit.prevent
-                :rules="rules" 
+                :rules="rules"
+                style="display: flex; flex-direction: column; justify-content: center; align-items: center;"
             >
-                <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
-                    <el-input v-model="form.variantSku" clearable />
-                </el-form-item>
-                <el-form-item label="产品主品名" prop="productName">
-                    <el-input v-model="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
-                </el-form-item>
-                <el-form-item label="产品短描述" prop="productDesc">
-                    <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
-                </el-form-item>
-            </el-form>
-            <div class="list-container auto-height-container">
+    
+              <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
+              
+                  <el-input v-model="form.variantSku" clearable />
+             
+              </el-form-item>
+     
+              <el-form-item label="产品主品名" prop="productName">
+            
+                  <el-input v-model="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
+            
+              </el-form-item>
+              <el-form-item label="产品短描述" prop="productDesc">
+                  <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
+              </el-form-item>
+           
+             
+              <div class="list-container auto-height-container">
                 <el-scrollbar>
-                    <ul class="vab-auto-box">
-                        <!-- list第一行 新增变体 -->
-                        <li class="list-item"> 
-                            <div class="list-item-meta">
-                                <div class="list-item-meta-content" style="text-align: center">
-                                    <el-space>
-                                        <span style="width: 240px;">{{ "变体名" }}</span>
-                                    </el-space>
-                                </div>
-                                <div class="list-item-meta-content" style="text-align: center">
-                                    <el-space>
-                                        <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
-                                    </el-space>
-                                </div>
-                                <div class="list-item-meta-content">
-                                    <el-button type="primary" @click="handleAddVariants">新增变体</el-button>
-                                </div>
-                            </div>
-                        </li>
-                        <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
-                            <div class="list-item-meta">
-                                <div class="list-item-meta-content">
-                                  <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
-                                </div>
-                                <div class="list-item-meta-content">
-                                  <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px"/>
-                                </div>
-                                <div class="list-item-meta-content">
-                                  <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                  <el-form-item prop="variantList" class="variant-list-error" :error="variantListError">
+                      <ul class="vab-auto-box">
+                          <!-- list第一行 新增变体 -->
+                          <li class="list-item"> 
+                              <div class="list-item-meta">
+                                  <div class="list-item-meta-content" style="text-align: center">
+                                      <el-space>
+                                          <span style="width: 240px;">{{ "变体名" }}</span>
+                                      </el-space>
+                                  </div>
+                                  <div class="list-item-meta-content" style="text-align: center">
+                                      <el-space>
+                                          <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
+                                      </el-space>
+                                  </div>
+                                  <div class="list-item-meta-content">
+                                      <el-button type="primary" @click="handleAddVariants">新增变体</el-button>
+                                  </div>
+                              </div>
+                          </li>
+                          <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
+                              <div class="list-item-meta">
+                                  <div class="list-item-meta-content">
+                                    <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" />
+                                  </div>
+                                  <div class="list-item-meta-content">
+                                    <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px"/>
+                                  </div>
+                                  <div class="list-item-meta-content">
+                                    <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
+                                  </div>
+                              </div>
+                          </li>
+                      </ul>
+                  </el-form-item>
                 </el-scrollbar>
-            </div>
-            <div style="color: var(--el-color-primary)">注：产品最终名称系统自动合成=产品主品名+产品规格描述+变体名（若有）</div>
+              </div>
+             
+            </el-form>
+          <div style="color: var(--el-color-primary)">注：产品最终名称系统自动合成=产品主品名+产品规格描述+变体名（若有）</div>
         </el-space>
         <div class="pay-button-group">
             <el-button @click="handleGoback">退出</el-button>
@@ -77,6 +89,7 @@ import { handleActivePath } from '/@/utils/routes'
 import type { FormInstance } from 'element-plus'
 
 const route: any = useRoute()
+const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
@@ -97,13 +110,29 @@ let form = reactive<any>({
     }
   ],
 })
-
+const variantListError = ref('');
 const rules = reactive<any>({
   productName: [{ required: true, message: '请输入产品主品名', trigger: 'blur' }],
   productDesc: [
     { required: true, message: '请输入产品短描述', trigger: 'blur' },
   ],
+  variantList: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        const hasVariant = value.some((variant: any) => variant.variantName !== '' && variant.amazonUSVariantQuantity !== undefined);
+        if (!hasVariant) {
+          variantListError.value = '至少需要填写一个变体的名称和订货数量'; // 设置错误信息
+          callback(new Error(variantListError.value));
+        } else {
+          variantListError.value = ''; // 清空错误信息
+          callback();
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
 })
+
 const handleAddVariants = () => {
     // 新增一个空的变体名和订货数量
     form.variantList.push({
@@ -151,6 +180,7 @@ const handleSubmit = () => {
         if (route.query.progressId) {
           const { data }  = await reviewStepNo1SaveOn({...form, progressId: route.query.progressId})
           if (data) {
+            localStorage.setItem('orderStep1Form', JSON.stringify(form))
             $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。","success","hey")
           }
         } else {
@@ -181,6 +211,7 @@ const handleSubmitAndContinue = async () => {
             
             if (data) {
               res = data
+              localStorage.setItem('orderStep1Form', JSON.stringify(form))
               $baseMessage(
                 "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
                 "success",
@@ -203,6 +234,9 @@ const handleSubmitAndContinue = async () => {
               )
               emit('sendDataToStep2', res)
               emit('change-step', 1)
+              
+              const {...query} = route.query;
+              router.replace({query: {...query, stepNo: 1}});
             } else {
               console.error('API 返回没有 data')
             }
@@ -231,13 +265,19 @@ const fetchData = async () => {
 }
 
 onMounted(async () => {  //编辑进来的需要获取数据 并且状态不是查看
-  if (route.query.reviewId && (route.query.reviewStatus === '0' || route.query.reviewStatus === '1')) {
+  const getItem = localStorage.getItem('orderStep1Form')
+  if(getItem) {
+    Object.assign(form, JSON.parse(getItem));
+    localStorage.removeItem('orderStep1Form')
+  }
+  if (route.query.reviewId && (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     fetchData()
   }
 })
 </script>
   
 <style lang="scss" scoped>
+
 .pay-button-group {
     display: block;
     margin: 20px auto;
@@ -305,6 +345,21 @@ onMounted(async () => {  //编辑进来的需要获取数据 并且状态不是�
         }
       }
     }
+  }
+}
+:deep(.variant-list-error .el-form-item__error) {
+    margin-left: 30px;
+}
+:deep(.el-input__wrapper) {
+  position: relative;
+  .el-input__inner {
+    padding-right: 18px;
+  }
+  .el-input__suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 </style>

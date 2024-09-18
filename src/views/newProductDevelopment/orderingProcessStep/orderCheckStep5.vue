@@ -35,7 +35,18 @@
                         <template v-if="row['column0'] === 'variantImg'">
                             <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
                         </template>
-                        <template v-if="row['column0'] !== 'variantImg'">
+                        <template v-if="row['column0'] === 'sampleRetentionStatus'">
+                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
+                            <el-option 
+                              v-for="item in photoSampleOptions"
+                              :label="item.label"
+                              :value="item.value"
+                              :key="item.value"
+                            >
+                            </el-option>
+                          </el-select>
+                        </template>
+                        <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'">
                           {{ row[prop] }}
                         </template>
                     </template>
@@ -128,7 +139,7 @@
 </template>
   
 <script lang="ts" setup>
-import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess';
+import { reviewProductManager, reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess';
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
 import { convertString } from '/@/utils/stringUtils';
 
@@ -149,13 +160,17 @@ const personList = ref<{ userId: number; userName: string}[]>([])
 const reviewPersonId = ref<string>('')
 const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
-
+const photoSampleOptions = [
+    { label: '已有拍照样品,大货无需留样', value: 0 },
+    { label: '大货需要留样拍照', value: 1 }
+];
 // table单击修改
 const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     // 处理图片放大预览
     let el = getSpecificChildren(cell, "img")[0];
+    
     if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-      emit("update:priviewListValue", el.src)
+      emit("update:priviewListValue", " "+el.src)
       emit("update:imagePreviewVisibale", true)
     }
 }
@@ -304,6 +319,7 @@ const checkTableData = ref([])
 let columnsChange: any
 const fetchData = async () => {
   const { data } = await reviewStepNo6CheckGet({ reviewId: route.query.reviewId })
+  const { data: productManager } = await reviewProductManager({reviewId: route.query.reviewId! })
   checkTableData.value = data.map((item: any, index: number) => ({
         column0: convertString(index),
         variantImg: item.variantImg,
@@ -320,7 +336,7 @@ const fetchData = async () => {
         benchmarkAsin: item.benchmarkAsin,
         patent: item.patent,
         sampleRetentionStatus: item.sampleRetentionStatus,
-        productManager: item.productManager,
+        productManager: productManager,
         productDesign: item.productDesign,
         certification: '',
         variantSku: item.variantSku,

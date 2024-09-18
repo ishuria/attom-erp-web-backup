@@ -35,7 +35,18 @@
                         <template v-if="row['column0'] === 'variantImg'">
                             <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
                         </template>
-                        <template v-if="row['column0'] !== 'variantImg'">
+                        <template v-if="row['column0'] === 'sampleRetentionStatus'">
+                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
+                            <el-option 
+                              v-for="item in photoSampleOptions"
+                              :label="item.label"
+                              :value="item.value"
+                              :key="item.value"
+                            >
+                            </el-option>
+                          </el-select>
+                        </template>
+                        <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'">
                           {{ row[prop] }}
                         </template>
                     </template>
@@ -134,7 +145,10 @@ import { convertString } from '/@/utils/stringUtils';
 defineOptions({
     name: 'OrderStep6',
 })
-
+const photoSampleOptions = [
+    { label: '已有拍照样品,大货无需留样', value: 0 },
+    { label: '大货需要留样拍照', value: 1 }
+];
 const emit = defineEmits<{ 
     (e: 'change-step', value: number): void
     (e: 'update:imagePreviewVisibale', value: boolean): void

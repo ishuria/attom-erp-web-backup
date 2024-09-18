@@ -14,6 +14,7 @@ import {
   IReviewStep2Req,
   IReviewStepUpdateReq,
 } from '/@/type/review/review'
+import { IreviewId } from '/@/type/orderProcess/orderProcessType'
 
 // 新品审核与记录-获取新品审核列表
 export function getReviewList(params?: IReviewQueryReq): Promise<IReviewQueryResp> {
@@ -77,7 +78,14 @@ export function getSkuVariantList(params?: IReviewCommonReq): Promise<IReviewCom
     params,
   })
 }
-
+// 获取评估id
+export function getReviewEvaluationId(params?: IreviewId){
+  return request({
+    url: `${BASE_API}/review/evaluationId`,
+    method: 'get',
+    params,
+  })
+}
 // 新品订货审批-主管可行性审批不通过
 export function reviewStepNo2Pass(data?: IReviewStep2Req): Promise<IReviewStepResp> {
   return request({

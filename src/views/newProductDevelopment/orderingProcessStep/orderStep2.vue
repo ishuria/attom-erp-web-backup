@@ -154,7 +154,7 @@ const fetchDataComponent = async () =>{
 onMounted(async ()=>{
     fetchDataComponent()
 })
-
+const router = useRouter()
 // 当点击跳过的时候
 const handleSkip = () => {
     emit('change-step', 2)
@@ -176,6 +176,10 @@ const handleContinue = async () => {
         const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: classReviewId})
         if (data === true) {
             emit('change-step', 2)
+            if (route.query.reviewId) {
+                const {...query} = route.query;
+                router.replace({query: {...query, stepNo: 2}});
+            }
         }
     } catch (error) {
         console.error(error)

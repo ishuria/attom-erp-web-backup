@@ -14,6 +14,7 @@
                 :data="componentList" 
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
+                height="400"
             >
                 <el-table-column align="center" label="属于变体" min-width="140">
                     <template #default="{ row }">
@@ -861,6 +862,7 @@ const handleSave = async () => {
         $baseMessage("当前信息已保存。","success","hey")
     }
 }
+const router = useRouter()
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
     let classReviewId: number | undefined
@@ -873,6 +875,10 @@ const handleSaveAndContinue = async () => {
     if (data === true) {
         $baseMessage("当前信息已保存。","success","hey")
         emit('change-step', 3)
+        if (route.query.reviewId) {
+                const {...query} = route.query;
+                router.replace({query: {...query, stepNo: 3}});
+            }
     }
 }
 // 当点击上一步的时候
@@ -882,6 +888,7 @@ const handleGoback = () => {
 
 // 获取拿样零件添加数据
 const fetchDataComponent = async () =>{
+    if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     try {
         // 拿样零件添加列表
         let classReviewId: number | undefined
@@ -912,6 +919,7 @@ const fetchDataComponent = async () =>{
         console.error(e as Error)
     }
 }
+}
 // 获取变体列表
 const fetchVariantsData = async () => {
     let classReviewId: number | undefined
@@ -921,8 +929,10 @@ const fetchVariantsData = async () => {
         classReviewId = route.query.reviewId
     }
     try {
-        const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
-        variantsList.value = data
+        if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
+            const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
+            variantsList.value = data
+        }
     } catch (error) {
         console.error(error)
     }

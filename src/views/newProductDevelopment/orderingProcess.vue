@@ -61,10 +61,13 @@
             <el-step title="检查并提交" />
           </el-steps>
           <order-check-step1 v-if="activeCheck === 0" @changeCheck-step="handleCheckSetStep" />
-          <order-check-step2 v-if="activeCheck === 1" @changeCheck-step="handleCheckSetStep" />
+          <order-check-step2 v-if="activeCheck === 1" @changeCheck-step="handleCheckSetStep" @update:imagePreviewVisibale="updateUploadPriviewVisible"
+          @update:priviewListValue="setPreviewList"/>
           <order-check-step3 v-if="activeCheck === 2" @changeCheck-step="handleCheckSetStep" />
-          <order-check-step4 v-if="activeCheck === 3" @changeCheck-step="handleCheckSetStep" />
-          <order-check-step5 v-if="activeCheck === 4" @changeCheck-step="handleCheckSetStep" />
+          <order-check-step4 v-if="activeCheck === 3" @changeCheck-step="handleCheckSetStep" @update:imagePreviewVisibale="updateUploadPriviewVisible"
+          @update:priviewListValue="setPreviewList"/>
+          <order-check-step5 v-if="activeCheck === 4" @changeCheck-step="handleCheckSetStep" @update:imagePreviewVisibale="updateUploadPriviewVisible"
+          @update:priviewListValue="setPreviewList"/>
         </div>
         <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
@@ -138,10 +141,8 @@ const goBack = async () => {
   history.back()
 }
 onMounted(() => {
-  // 判断 `reviewStatus` 是否存在
-  const reviewStatusExists = 'reviewStatus' in route.query;
   // 如果 `reviewStatus` 存在且值为 '0' 或 '2'
-  if (!reviewStatusExists || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
+  if (!route.query.reviewStatus || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     isNone2.value = true;
     isNone1.value = false;
   } else {

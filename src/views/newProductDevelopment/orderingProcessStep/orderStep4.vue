@@ -249,7 +249,6 @@ const handleAddQualityInspection = async () => {
 const handleDelQualityInspection = async (row: IreviewStepNo4ListQualityInspection) => {
     try {
         if (route.query.reviewStatus === '0' || route.query.reviewStatus === '2') { // 编辑下
-            console.log('row.qualityInspectionId', row.qualityInspectionId)
             try {
                 $baseConfirm('确定要删除本条质检信息吗', "系统提示", async () => {
                     try {
@@ -304,6 +303,7 @@ const handleSave = async () => {
         console.error(error)
     }
 }
+const router = useRouter()
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
     let classReviewId: number | undefined
@@ -317,6 +317,10 @@ const handleSaveAndContinue = async () => {
         if (data === true) {
             $baseMessage("当前信息已保存。","success","hey")
             emit('change-step', 4)
+            if (route.query.reviewId) {
+                const {...query} = route.query;
+                router.replace({query: {...query, stepNo: 4}});
+            }
         }
     } catch (error) {
         console.error(error)

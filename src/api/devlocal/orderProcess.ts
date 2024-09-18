@@ -142,7 +142,16 @@ export function reviewGetSkuList(params: IreviewId){
     params
   })
 }
-
+/**
+ * 新品订货流程-完善sku信息-获取默认的产品经理
+ */
+export function reviewProductManager(params: IreviewId){
+  return request({
+    url: `${BASE_API}/review/productManager`,
+    method: 'get',
+    params
+  })
+}
 /**
  * 新品订货流程-删除变体信息
  */

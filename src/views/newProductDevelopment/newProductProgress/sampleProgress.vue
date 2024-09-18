@@ -47,7 +47,7 @@
                         {{ row.componentName  }}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="下单日期" min-width="100">
+                <el-table-column align="center" label="下单日期" width="120">
                     <template #default="{ row }">
                         {{ row.createTime.split(' ')[0] }}
                     </template>

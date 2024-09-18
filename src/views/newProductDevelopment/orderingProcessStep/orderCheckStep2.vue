@@ -7,6 +7,7 @@
                 :data="componentList" 
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
+                height="400"
             >
                 <el-table-column align="center" label="属于变体" min-width="140" prop="variant">
                     <template #default="{ row }">
@@ -355,6 +356,8 @@ const fetchDataComponent = async () =>{
             item.currency = convertString(item.currency)
             item.invoicing = convertString(item.invoicing)
         })
+        // console.log(componentList.value);
+        
         // 获取下拉变体列表
         const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: parseInt(route.query.reviewId) })
         variantsSelectList.value = variantSelectList

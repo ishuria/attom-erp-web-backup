@@ -49,6 +49,7 @@ export const indexColumns = [
     {
       label: '30毛利盈亏自然单占比',
       prop: 'grossProfitAndLoss',
+      minWidth: 120,
     },
     {
       label: '平均转化',
@@ -77,7 +78,6 @@ export const indexColumns = [
     {
         label: '90天搜索量',
         prop: 'searchVolume90Days',
-        minWidth: 90,
     },
     {
         label: '360天销售',

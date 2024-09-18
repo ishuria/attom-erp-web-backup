@@ -120,7 +120,7 @@
                   <el-link type="primary" :underline="false" @click="handleOrderReview(row)">审批和PO发布</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false">分数明细</el-link>
+                  <el-link type="primary" :underline="false" @click="handleGetScoreById(row.reviewMainId)">分数明细</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -133,6 +133,46 @@
     </el-table>
     <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />
+    <!-- 新款评估 -->
+    <el-dialog 
+      v-model="newScoreVisible" 
+      :close-on-click-modal="false" 
+      title="分数明细" 
+      width="90%"
+      style="height: 40vh; margin: 30vh auto 30vh;"
+      class="moldDialog"
+      :before-close="handlerScoreCloseDialog"
+  >
+    <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+      <div id="table-height-container">
+          <el-table 
+              ref="evaluationTableRef" 
+              v-loading="listLoading" 
+              border stripe 
+              :data="newEvaluationData" 
+              :header-cell-style="{ 'text-align': 'center' }"
+              @cell-click="keyWordTrendCellClick"
+          >
+            <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+                :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+                <template #default="{ row }">
+                    <div  v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
+                      <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
+                    </div>
+                </template>
+            </el-table-column>
+          </el-table>
+      </div>
+    </el-dialog>
+        <!-- 关键词趋势图表 -->
+        <vab-trend 
+          :trendEchatsVisible="keyWordTrendEchatsVisible"
+          :keyWord = "inputKeyWord"
+          :trnedData = "trendEcahts"
+          @update:visibleValue = "updateTrendVisibleValue"
+          @update:clearnInputKeyWord = "cleanKeyWordTrendData"
+          @update:trendEchatsList  = "updateTrendEchatsData"
+    />
     <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible" />
   </div>
@@ -143,9 +183,12 @@ import { ArrowDown,Search } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableInstance } from 'element-plus'
 import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
 import { IReviewQueryReq, IReviewQueryResp, IReviewQueryItem } from '/@/type/review/review'
-import { getReviewList } from '/@/api/devlocal/orderingReview'
+import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
 import { formatDate } from '/@/utils/dateUtils'
-
+import { getByIdQueryEvaluation } from '~/src/api/devlocal/progress'
+import { IGetByIdQueryEvaluation } from '~/src/type/progress/progressType'
+import { IKeyWordTrend } from '~/src/type/evaluation/evaluationType'
+import { indexColumns } from '../newProductProgress/indexColumns'
 defineOptions({
   name: 'DefaultTable',
 })
@@ -169,6 +212,18 @@ const queryForm = reactive<IReviewQueryReq>({
 const foldOperation = ref<boolean>(false)
 
 const dataList = ref<IReviewQueryItem[]>([])
+// 控制分数明细是否显示
+const newScoreVisible = ref<boolean>(false)
+// 根据评估id找到的新款评估信息
+const newEvaluationData = ref<IGetByIdQueryEvaluation[]>([])
+// 输入的关键词
+const inputKeyWord = ref<string>('')
+// 图表
+const trendEcahts = ref<IKeyWordTrend>({
+  xAxis:[],
+  yAxis:[]
+})
+const keyWordTrendEchatsVisible = ref<boolean>(false)
 const formattedProgressLog = (str: string) => {
   return str
     .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
@@ -184,6 +239,38 @@ const reviewTableInputChage = async (row: any, column: any, cell: HTMLTableCellE
   }
 }
 
+// 分数明细
+const handleGetScoreById = async (idNo: number) => {
+  const { data: evaluationId } = await getReviewEvaluationId({ reviewId: idNo })
+
+  newScoreVisible.value = true
+  const { data } = await getByIdQueryEvaluation({ idNo: evaluationId })
+  newEvaluationData.value = [data];
+}
+const handlerScoreCloseDialog = () => {
+  newScoreVisible.value = false
+}
+const keyWordTrendCellClick = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  if (column.label === "关键词趋势") {
+    inputKeyWord.value = row.amazonFrontendKeywords
+    trendEcahts.value.xAxis = row.trendList.xAxis
+    trendEcahts.value.yAxis = row.trendList.yAxis
+    keyWordTrendEchatsVisible.value = true
+  }
+}
+const updateTrendVisibleValue = (newValue:boolean) =>{
+  keyWordTrendEchatsVisible.value = newValue
+}
+// 清除关键词趋势相关数据
+const cleanKeyWordTrendData = (newValue:string) => {
+  inputKeyWord.value = newValue
+  trendEcahts.value.xAxis = []
+  trendEcahts.value.yAxis = []
+  keyWordTrendEchatsVisible.value = false
+}
+const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
+  trendEcahts.value = newValue
+}
 
 // 审批状态对应的文本和颜色
 const generateStatus = (value: number) => {
@@ -324,19 +411,19 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 // 选中且不被禁用的样式
-:deep .el-checkbox__input.is-checked .el-checkbox__inner {
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: #4A62E7;
   border-color: #4A62E7;
 }
 
 // 选中且被禁用的样式
-:deep.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
   background: rgb(10, 108, 245);
   border-color: rgb(10, 108, 245);
 }
 
 // 选中后中间的 “✔” 的样式
-:deep.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
 }
 
@@ -366,5 +453,8 @@ onBeforeMount(() => {
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.5px;
+}
+:deep(.moldDialog .el-dialog__body) { 
+  padding-top: 0;
 }
 </style>
