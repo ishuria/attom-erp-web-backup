@@ -109,7 +109,7 @@
               <el-table-column fixed="right" label="操作" width="150">
                   <template #default="{ row }">
                     <el-dropdown>
-                      <el-button text type="primary">
+                      <el-button text type="primary" @click="handleSkuDetail">
                         SKU详情
                         <el-icon class="el-icon--right">
                           <arrow-down />
@@ -167,8 +167,16 @@ const componentList = ref<IreviewStepNo3ComponentList[]>([])
 
 const list = ref<any>([])
 const route: any = useRoute()
-
-
+const router = useRouter()
+const handleSkuDetail = () => {
+  router.push({
+    path: '/productInfomation/skuDetailView',
+    query: {
+      title: "SKU详情",
+      timestamp: Date.now(),
+    },
+  })
+}
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
