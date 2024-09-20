@@ -118,8 +118,13 @@ const handlerCloseDialog = () => {
   updateVisible.value = false
 }
 const handleUpdate = () => {
-  updateVisible.value = true
-  form.value = {}
+  if(selectRows.value.length !== 0) {
+    updateVisible.value = true
+    form.value = {}
+  } else {
+    $baseMessage('您未选中任何行', 'warning', 'hey')
+  }
+
 }
 const handleSubmit = () => {
   updateVisible.value = false

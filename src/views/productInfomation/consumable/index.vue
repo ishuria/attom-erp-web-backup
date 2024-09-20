@@ -6,7 +6,7 @@
         </vab-query-form-top-panel>
           <vab-query-form-left-panel>
               <el-button type="primary">创建耗材</el-button>
-              <el-button type="primary">耗材种类</el-button>
+              <el-button type="primary" @click="handleConsumableType">耗材种类</el-button>
           </vab-query-form-left-panel>
       </vab-query-form>
           <el-table 
@@ -234,6 +234,53 @@
           :classify="classify"
       >
       </wangEditor>
+    <el-dialog 
+        v-model="consumableVisible" 
+        :close-on-click-modal="false" 
+        title="耗材种类" 
+        width="33%"
+        class="moldDialog"
+        :before-close="handlerCloseDialog"
+    >
+        <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+        <div id="table-height-container">
+            <el-row :gutter="20" style="margin-bottom: 20px">
+                <el-col :span="20">
+                    <el-input v-model="consumableTypeForm.consumableType" @keyup.enter.native="" clearable placeholder="请输入新增耗材种类" />      
+                </el-col>
+                <el-col :span="4">
+                    <el-button type="primary" @click="">新增</el-button>
+                </el-col>          
+            </el-row>
+        
+            <el-table 
+                ref="tableRef" 
+                stripe border   
+                :header-cell-style="{ 'text-align': 'center' }"
+                :data="consumableTypeData"
+            >
+                <el-table-column label="耗材种类" prop="consumableType">
+                    
+                </el-table-column>
+                <el-table-column align="center" fixed="right" label="操作" width="120">
+                    <template #default="{ row }">
+                        <el-link type="danger" :underline="false">删除</el-link>
+                    </template>
+                </el-table-column>
+                <template #empty>
+                    <el-empty class="vab-data-empty" description="暂无数据" />
+                </template>
+            </el-table>
+  
+            <vab-pagination
+                :current-page="consumableTypeQueryForm.pageNo"
+                :page-size="consumableTypeQueryForm.pageSize"
+                :total="consumableTypeTotal"
+                @current-change="handleConsumableTypeSizeChange"
+                @size-change="handleConsumableTypeCurrentChange"
+            />
+        </div>
+    </el-dialog>
   </div>
 
 </template>
@@ -250,15 +297,43 @@ import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3Vari
 import { convertString } from '/@/utils/stringUtils';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
-import { getExchangeRate } from '~/src/api/devlocal/evaluation';
 
-const props = defineProps<{ step1Data: number }>()
+
+const consumableTypeForm = reactive({
+    consumableType: ''
+})
 
 // const listLoading = ref<boolean>(true)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
-
+const consumableTypeData = ref([
+    { consumableType: 'OPP袋' },
+    { consumableType: '飞机盒' },
+    { consumableType: '小白盒' },
+    { consumableType: 'OPP袋' },
+    { consumableType: '飞机盒' },
+    { consumableType: '小白盒' },
+    { consumableType: 'OPP袋' },
+    { consumableType: '飞机盒' },
+    { consumableType: '小白盒' },
+    { consumableType: 'OPP袋' },
+    { consumableType: '飞机盒' },
+    { consumableType: '小白盒' },
+    { consumableType: 'OPP袋' },
+    { consumableType: '飞机盒' },
+    { consumableType: '小白盒' },
+    { consumableType: 'OPP袋' },
+    { consumableType: '飞机盒' },
+    { consumableType: '小白盒' },
+])
 const list = ref<any>([])
+const consumableVisible = ref<boolean>(false)
+const handlerCloseDialog = () => {
+    consumableVisible.value = false
+}
+const handleConsumableType = () => {
+    consumableVisible.value = true
+}
 const route: any = useRoute()
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
@@ -274,7 +349,12 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
 })
+const consumableTypeQueryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 20,
+})
 const total = ref<number>(0)
+const consumableTypeTotal = ref<number>(0)
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
@@ -283,6 +363,16 @@ const handleSizeChange = (value: number) => {
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  // fetchData()
+}
+const handleConsumableTypeSizeChange = (value: number) => {
+    consumableTypeQueryForm.pageNo = 1
+    consumableTypeQueryForm.pageSize = value
+  // fetchData()
+}
+
+const handleConsumableTypeCurrentChange = (value: number) => {
+    consumableTypeQueryForm.pageNo = value
   // fetchData()
 }
 /**
@@ -565,40 +655,40 @@ const handleRemove = async (file: UploadFile, row: any) => {
 }
 // 新增逻辑
 const handleAddComponent = async () => {
-  const newComponent: IreviewStepNo3ComponentList = {
-      actualTaxRate: '',
-      componentImgUrl: '',
-      componentName: '',
-      componentUnit: '',
-      contractTerms: '',
-      currency: null,
-      freight: '',
-      invoicing: null,
-      invoicingTaxRate: '',
-      minimumOrderQuantity: null,
-      numberFullCartons: null,
-      orderEntryId: 0,
-      preTaxPrice: '',
-      purchaseLink: '',
-      purchaseMatters: '',
-      quantity: null,
-      reviewComponentId: null,
-      reviewId: null,
-      supplier: '',
-      taxIncludedPrice: '',
-      totalPrice: '',
-      unitPrice: '',
-      variant: '',
-  }
-  let classReviewId: number | undefined
-  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
-  } else {
-      classReviewId = route.query.reviewId
-  }
-  const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-  newComponent.reviewComponentId = data
-  componentList.value.push(newComponent)
+//   const newComponent: IreviewStepNo3ComponentList = {
+//       actualTaxRate: '',
+//       componentImgUrl: '',
+//       componentName: '',
+//       componentUnit: '',
+//       contractTerms: '',
+//       currency: null,
+//       freight: '',
+//       invoicing: null,
+//       invoicingTaxRate: '',
+//       minimumOrderQuantity: null,
+//       numberFullCartons: null,
+//       orderEntryId: 0,
+//       preTaxPrice: '',
+//       purchaseLink: '',
+//       purchaseMatters: '',
+//       quantity: null,
+//       reviewComponentId: null,
+//       reviewId: null,
+//       supplier: '',
+//       taxIncludedPrice: '',
+//       totalPrice: '',
+//       unitPrice: '',
+//       variant: '',
+//   }
+//   let classReviewId: number | undefined
+//   if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+//       classReviewId = props.step1Data
+//   } else {
+//       classReviewId = route.query.reviewId
+//   }
+//   const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
+//   newComponent.reviewComponentId = data
+//   componentList.value.push(newComponent)
   // fetchDataComponent()
 }
 // 删除逻辑
@@ -791,6 +881,20 @@ const clickVariantsCancle = async (event:any,value:any) =>{
 .custom-checkbox {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
+}
+:deep(.moldDialog .el-dialog__body) { 
+  padding-top: 0;
+}
+#table-height-container {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(80vh - 130px);
+    height: calc(80vh - 130px);
+    padding-bottom: 20px;
+    .el-table {
+        flex: 1; // 使表格占据剩余空间
+        overflow: auto; // 确保表格内容可以滚动
+    }
 }
 </style>
 
