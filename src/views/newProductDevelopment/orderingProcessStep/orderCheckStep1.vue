@@ -4,7 +4,7 @@
             <el-form 
                 ref="formRef" 
                 label-position="right" 
-                label-width="160px" 
+                label-width="170px" 
                 :model="form" 
                 @submit.prevent
             >
@@ -23,7 +23,7 @@
                     <ul class="vab-auto-box">
                         <!-- list第一行 新增变体 -->
                         <li class="list-item"> 
-                            <div class="list-item-meta">
+                            <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular);">
                                 <div class="list-item-meta-content" style="text-align: center">
                                     <el-space>
                                         <span style="width: 240px;">{{ "变体名" }}</span>

@@ -8,6 +8,7 @@
                     <el-button type="primary">添加耗材</el-button>
                 </vab-query-form-left-panel>
             </vab-query-form>
+           
             <el-table 
                 ref="tableRef" 
                 stripe border 
@@ -28,13 +29,14 @@
                         </el-select>
                     </template>
                 </el-table-column>
+              
                 <el-table-column align="center" label="零件图片" class="image-wall" min-width="100">
                     <template #default="{ row, $index }">
                         <el-upload 
                             list-type="picture-card" 
                             :file-list="row.componentImgUrl" 
                             :class="{ hide: row.hide }"
-                            :http-request="uploadImage"
+                            :http-request="(File) => uploadImage(File, row)"
                         >
                             <div 
                                 style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
@@ -64,14 +66,9 @@
                         </el-upload>
                     </template>
                 </el-table-column>
-                <el-table-column label="零件ID" align="center" min-width="70" prop="reviewComponentId" width="100">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input type="text" v-model="row.reviewComponentId" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                        </div>
-                        <span>{{ row.reviewComponentId }}</span>
-                    </template>
+                <el-table-column label="零件ID" align="center" min-width="70"  width="100">
                 </el-table-column>   
+                
                 <el-table-column label="零件名" prop="componentName" width="120">
                     <template #default="{ row }">
                         <div class="none">
@@ -273,10 +270,12 @@
                         </el-space>
                     </template>
                 </el-table-column>
-            <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
-            </template>
-        </el-table>
+                <template #empty>
+                    <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+                </template>
+                </el-table>
+      
+            
         <vab-alert type="error">
             <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
             <h3>--为了精准核算利润，运费需要准确填写。</h3>
@@ -469,7 +468,7 @@ import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3Com
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
 import { convertString } from '/@/utils/stringUtils';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus'
+import type { FormInstance, UploadFile } from 'element-plus'
 import { getExchangeRate } from '~/src/api/devlocal/evaluation';
 import { Crop as TinyCrop } from '@opentiny/vue'
 
@@ -493,6 +492,13 @@ const cropdata = (data: any) => {
     cropRef.value.closeCrop()
   })
 }
+const form1Ref = ref<FormInstance>()
+const rules = reactive<any>({
+    componentName: [
+        { required: true, message: '请输入零件名', trigger: 'blur' }
+    ],
+
+})
 // const listLoading = ref<boolean>(true)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
@@ -634,7 +640,7 @@ const handleIconClick = (index: number) => {
  * 上传图片
  */
 const imageForm = ref(new FormData()) as any;
-async function uploadImage(params: any) {
+async function uploadImage(params: any, row: any) {
   try {
     const index = clickIconRowIndex.value!;
     const currentComponent = componentList.value[index];
@@ -699,14 +705,15 @@ async function uploadImage(params: any) {
             // 上传图片
             reviewStepNo3ComponentUpload(imageForm)
                 .then(({ data }) => {
+                    
                 if (!data) {
                     throw new Error('上传图片失败');
                 }
                 const imageListCopy = [...(currentComponent.componentImgUrl || [])];
                 imageListCopy.push({ url: data });
-
-                componentList.value[clickIconRowIndex.value!].componentImgUrl = imageListCopy;
-                componentList.value[clickIconRowIndex.value!].hide = imageListCopy.length > 0;
+                row.hide = imageListCopy.length > 0;
+                row.componentImgUrl = imageListCopy;
+                
 
                     // 提示成功信息
                     $baseMessage('图片上传成功!', 'success', 'hey');
@@ -954,15 +961,69 @@ const handleSaveAndContinue = async () => {
     } else {
         classReviewId = route.query.reviewId
     }
-    const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
-    if (data === true) {
-        $baseMessage("当前信息已保存。","success","hey")
-        emit('change-step', 3)
-        if (route.query.reviewId) {
-                const {...query} = route.query;
-                router.replace({query: {...query, stepNo: 3}});
-            }
+    let check = false
+    
+    
+    componentList.value.forEach((item: any) => {
+        console.log(item);
+        if(item.componentImgUrl.length === 0) {
+            check = true
+            $baseMessage('请先上传零件图片', 'error', 'hey')
+            return
+        } else if(item.componentName === '') {
+            check = true
+            $baseMessage('请先填写零件名', 'error', 'hey')
+            return 
+        } else if(item.quantity == null) {
+            check = true
+            $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+            return
+        } 
+        // else if(item.componentUnit == null) {
+        //     check = true
+        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+        //     return
+        // } else if(item.quantity == null) {
+        //     check = true
+        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+        //     return
+        // } else if(item.quantity == null) {
+        //     check = true
+        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+        //     return
+        // } else if(item.quantity == null) {
+        //     check = true
+        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+        //     return
+        // } else if(item.quantity == null) {
+        //     check = true
+        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+        //     return
+        // } else if(item.quantity == null) {
+        //     check = true
+        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+        //     return
+        // } else if(item.quantity == null) {
+        //     check = true
+        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
+        //     return
+        // }
+        
+    })
+    console.log(check);
+    
+    if (!check) {
+        const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
+        if (data === true) {
+            $baseMessage("当前信息已保存。","success","hey")
+            emit('change-step', 3)
+            if (route.query.reviewId) {
+                    const {...query} = route.query;
+                    router.replace({query: {...query, stepNo: 3}});
+                }
+        }
     }
+   
 }
 // 当点击上一步的时候
 const handleGoback = () => {

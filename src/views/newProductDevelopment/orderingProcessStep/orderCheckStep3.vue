@@ -65,10 +65,9 @@
             stripe border 
             :data="qualityInspectionList" 
             :header-cell-style="{ 'text-align': 'center' }"
-            :cell-style="{ 'text-align': 'center' }"
             style="margin-top: 20px"
         >
-            <el-table-column label="变体" width="140" prop="variant">
+            <el-table-column label="变体" width="140" prop="variant" align="center">
                 <template #default="{ row, $index }">
                     <el-select v-model="row.variant" placeholder="请选择变体" style="min-width: 100%;" disabled>
                         <el-option
@@ -80,7 +79,7 @@
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="检查类型" min-width="127">
+            <el-table-column label="检查类型" min-width="30" align="center">
                 <template #default="{ row, $index }">
                         <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" disabled>
                             <el-option

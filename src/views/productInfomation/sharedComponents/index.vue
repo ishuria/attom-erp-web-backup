@@ -26,14 +26,14 @@
           <span style="color: rgb(192, 192, 192)">{{ row.sku }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="不报关" prop="purchaseToOrder" align="center" min-width="90">
-        <template #default = "{ row }">
-            <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox" disabled/>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="供应商" min-width="200" prop="title" >
         <template #default="{ row }">
           <span style="color: rgb(192, 192, 192)">{{ row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="不报关" prop="purchaseToOrder" align="center" min-width="90">
+        <template #default = "{ row }">
+            <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="货源地" min-width="120" prop="fullName" >

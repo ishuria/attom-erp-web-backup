@@ -1,11 +1,13 @@
 <template>
-    <div>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+     
         <el-table 
             ref="tableRef"
             :data="exchangeList" 
             border stripe
             :header-cell-style="{ 'text-align': 'center' }"
             @cell-click="changeInput"
+            style="width: 80%"
         >
             <!-- 第一列固定标签列 -->
             <el-table-column 
@@ -13,7 +15,7 @@
                 :label="labelMap['column0']" 
                 fixed 
                 align="right"
-                width="260"
+                width="240"
             >
                 <template #default="{ row }">
                     <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
@@ -34,15 +36,16 @@
                 :label="prop" 
                 :key="index"
                 align="center"
-                min-width="180"
+                min-width="240"
+                max-width="240"
             >
                 <template #default = "{row, $index}">
                     <template v-if="row['column0'] === 'productImgUrl'">
-                        <el-upload 
+                      <el-upload 
                             list-type="picture-card" 
                             :file-list="row[prop].imgUrl" 
                             :class="{ hide: row[prop].hide }"
-                            :http-request="uploadImage"
+                            :http-request="(file) => uploadImage(file, row, prop)"
                         >
                             <div 
                                 style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
@@ -70,7 +73,7 @@
                                 </div>
                             </template>
                         </el-upload>
-                    
+
                       </template>
                     <template v-if="row['column0'] === 'productLength'">
                         <div class="none">
@@ -116,18 +119,19 @@
                     </template>
                     <template v-if="row['column0'] === 'productManager'">
                         <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                            <el-input type="text" v-model="row[prop]" filterable @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
                         </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'productDesign'">
                         <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                            <el-input type="text" v-model="row[prop]" filterable @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
                         </div>
                         <span>{{ row[prop] }}</span> 
                     </template>
                     <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                        <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
+                        
+                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
                           <el-option 
                             v-for="item in photoSampleOptions"
                             :label="item.label"
@@ -136,9 +140,10 @@
                           >
                           </el-option>
                         </el-select>
+                       
                     </template>
                     <template v-if="row['column0'] === 'packingGroup'">
-                        <el-checkbox v-model="row[prop]" :true-value="'0'" :false-value="'1'" class="custom-checkbox" @change="handlePackingUpdate(prop)"></el-checkbox>
+                        <el-checkbox v-model="row[prop]" :true-value="0" :false-value="1" class="custom-checkbox" @change="handlePackingUpdate(row, prop)"></el-checkbox>
                     </template>
                     
                     <template v-if="row['column0'] === 'operate'">
@@ -151,6 +156,7 @@
                 <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
             </template>
         </el-table>
+     
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
             <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
@@ -191,7 +197,7 @@ const photoSampleOptions = [
 /**
  * 图片预览事件
  */
-const handlePictureCardPreview = (file: UploadFile) => {
+ const handlePictureCardPreview = (file: UploadFile) => {
   emit("update:priviewListValue", file.url!)
   emit("update:imagePreviewVisibale", true)
 }
@@ -205,13 +211,14 @@ const handleIconClick = (prop: string) => {
   clickIconProp.value = prop
 }
 const imageForm = ref(new FormData()) as any;
-async function uploadImage(params: any) {
+async function uploadImage(params: any, row: any, _prop: any) {
   try {
-    const prop = clickIconProp.value!;
+    row[_prop].hide = true
+   
     
     imageForm.value = new FormData();
     imageForm.value.append('file', params.file);
-    imageForm.value.append('orderEntryId', exchangeList.value[15][prop]);
+    imageForm.value.append('orderEntryId', exchangeList.value[15][_prop]);
 
     // 上传图片
     const { data } = await reviewStepNo5VariantImgUpload(imageForm.value);
@@ -219,9 +226,8 @@ async function uploadImage(params: any) {
     if (!data) {
       throw new Error('上传图片失败');
     }
+    row[_prop].imgUrl = [{ url: data}] 
     
-    exchangeList.value[0][prop].imgUrl = [{ url: data}] 
-    exchangeList.value[0][prop].hide = true
     // 提示成功信息
     $baseMessage('图片上传成功!', 'success', 'hey');
     
@@ -410,27 +416,60 @@ const clickCancle = async (event: any, prop: any) =>{
     }
 }
 // 修改打包小组
-const handlePackingUpdate = async (prop: any) => {
-  await reviewStepNo5SkuInfoPerfect({
-    checkStatus: parseInt(exchangeList.value[11][prop]),
-    orderEntryId: exchangeList.value[15][prop],
-  })
+const handlePackingUpdate = async (row: any, prop: any) => {
+  if (row.variantsSame) {
+    // 获取当前输入框的值
+    const newValue = row[prop];
+    // 确保新值非空
+    if (newValue !== null && newValue !== undefined && newValue !== '') {
+      Object.keys(row).forEach(async key => {
+        if (key !== 'column0' && key !== 'variantsSame' && key !== prop) {
+          row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
+          const update = async () => {
+            await reviewStepNo5SkuInfoPerfect({
+              checkStatus: parseInt(exchangeList.value[11][prop]),
+              orderEntryId: exchangeList.value[15][prop],
+            })
+          }
+          update()
+        }
+      
+      });
+    }
+  }
+  
 }
 // 修改拍照留样情况
 const handleSampleRetentionStatus = async (row: any, prop: any) => {
-  await reviewStepNo5SkuInfoPerfect({
-          productLength: exchangeList.value[1][prop],
-          productWidth: exchangeList.value[2][prop],
-          productHeight: exchangeList.value[3][prop],
-          material: exchangeList.value[4][prop],
-          battery: exchangeList.value[5][prop],
-          benchmarkAsin: exchangeList.value[6][prop],
-          patent: exchangeList.value[7][prop],
-          productManager: exchangeList.value[8][prop],
-          productDesign: exchangeList.value[9][prop],
-          sampleRetentionStatus: exchangeList.value[10][prop],
-          orderEntryId: exchangeList.value[15][prop],
-        })
+  if (row.variantsSame) {
+    // 获取当前输入框的值
+    const newValue = row[prop];
+    // 确保新值非空
+    if (newValue !== null && newValue !== undefined && newValue !== '') {
+      Object.keys(row).forEach(async key => {
+        if (key !== 'column0' && key !== 'variantsSame' && key !== prop) {
+          row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
+          const update = async () => {
+            await reviewStepNo5SkuInfoPerfect({
+              productLength: exchangeList.value[1][prop],
+              productWidth: exchangeList.value[2][prop],
+              productHeight: exchangeList.value[3][prop],
+              material: exchangeList.value[4][prop],
+              battery: exchangeList.value[5][prop],
+              benchmarkAsin: exchangeList.value[6][prop],
+              patent: exchangeList.value[7][prop],
+              productManager: exchangeList.value[8][prop],
+              productDesign: exchangeList.value[9][prop],
+              sampleRetentionStatus: exchangeList.value[10][prop],
+              orderEntryId: exchangeList.value[15][prop],
+            })
+          }
+          update()
+        }
+      
+      });
+    }
+  }
 }
 // 当点击保存的时候
 const handleSave = async () => {
@@ -667,5 +706,9 @@ onMounted(async () => {
 :deep(.el-table__body-wrapper tr:last-child ){
   display: none;
 }
+// .el-select-dropdown__item {
+//   text-align: center;
+// }
+
+
 </style>
-  

@@ -2,19 +2,26 @@
 
      <!-- 拿样清单成本试算 -->
      <el-row style="padding-top:25px; flex-grow: 1;">
-            <el-col :span="1" class="sample">
+            <!-- <el-col :span="1" class="sample">
                 <div><strong>拿样清单成本试算</strong></div>
-            </el-col>
-            <el-col :span="23">
+            </el-col> -->
+            <el-col :span="24">
                 <el-table 
                     :data="sampleList"
                     @cell-click="sampelTrialTableInputChage"
-                    height="95"
+                    height="100"
                     border stripe
                     :cell-style="cellStyle" :header-cell-style="{ 'text-align': 'center' }"
                     ref="trialTableRef"
+                    :span-method="objectSpanMethod"
                 >
+                <el-table-column prop="firstColumn" min-width="100">
+                   
+                
+                    <span style="font-weight: 600; font-size: var(--el-font-size-base); color: var(--el-table-header-text-color);">拿样清单<br>成本试算</span>
 
+                  
+                </el-table-column>
                 <el-table-column prop="site" label="站点" min-width="135">
                     <template #default="{ row }">
                         <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
@@ -258,6 +265,27 @@ const props = defineProps<{
 defineComponent({
     name:"VabTrialCalculation"
 })
+
+
+
+// 列表col合并方法
+const objectSpanMethod = ({
+  row,
+  column,
+  rowIndex,
+  columnIndex,
+}: any) => {
+  
+  // 表头合并
+  if (column.property === 'firstColumn') {
+    if (rowIndex === 0) {
+      return { rowspan: 2, colspan: 1 }; // 合并表头与第一行数据
+    } else if (rowIndex === 1) {
+      return { rowspan: 0, colspan: 0 }; // 隐藏第二行的单元格
+    }
+  }
+  return { rowspan: 1, colspan: 1 }; // 其他列正常显示
+}
 
 // 拿样清单列表
 const sampleList = ref<IProgressSample[]>([])
@@ -525,4 +553,12 @@ onMounted(async ()=>{
     border-bottom: 1px solid rgb(235, 238, 245);
     font-weight: bold;
 }
+// /* 调整表头和数据行的边框样式 */
+// :deep(.el-table .el-table__header tr:first-child th) {
+//   border-bottom: none; /* 去掉表头的下边框 */
+// }
+
+// :deep(.el-table .el-table__body tr:first-child td) {
+//   border-top: none; /* 去掉第一行的上边框 */
+// }
 </style>

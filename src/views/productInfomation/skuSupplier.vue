@@ -190,11 +190,6 @@
                         <span style="color: rgb(192, 192, 192);">{{ row.person }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column fixed="right" label="操作" width="150" align="center">
-                  <template #default="{ row }">
-                        <el-button type="danger" text @click="">删除</el-button>
-                  </template>
-                </el-table-column>
                 <template #empty>
                     <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
                 </template>

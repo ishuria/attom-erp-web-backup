@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
         <h2 style="text-align: center;">请选择需要添加到采购单里的零件</h2>
         <el-table 
             ref="tableRef" 
-      
+            style="width: 80%"
             border stripe
             :data="progressProductList" 
             :header-cell-style="{'text-align': 'center'}"
@@ -11,7 +11,7 @@
             :cell-style="{ textAlign: 'center'}"
             @selection-change="setSelectRows"
         >
-            <el-table-column label="图片" min-width="100" prop="componentImg">
+            <el-table-column label="图片" min-width="90" prop="componentImg">
                 <template #default="{ row }">
                     <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" data-img="img" />
                 </template>
@@ -65,7 +65,7 @@
             </el-table-column>
             <el-table-column label="供应商" min-width="140" prop="supplier">
             </el-table-column>
-            <el-table-column type="selection" width="38" fixed="right">
+            <el-table-column type="selection" width="100" fixed="right" class="custom-checkbox">
             </el-table-column>
             <template #empty>
                 <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -196,6 +196,14 @@ const handleGoback = () => {
     display: block;
     margin: 20px auto;
     text-align: center;
+}
+:deep(.el-checkbox) {
+    transform: scale(1.3);
+    transform-origin: center;
+}
+// 设置行高
+:deep(.el-table .el-table__body .cell) {
+  max-height: 81.2px;
 }
 </style>
   

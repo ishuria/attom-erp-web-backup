@@ -166,7 +166,6 @@
                 <vab-query-form-left-panel style="margin-top: 10px;">
                     <el-button type="primary" @click="handleAddComponent">创建零件</el-button>
                     <el-button type="primary">添加零件</el-button>
-                    <el-button type="primary" @click="handleAddConsumables">创建耗材</el-button>
                     <el-button type="primary">添加耗材</el-button>
                 </vab-query-form-left-panel>
             </vab-query-form>
@@ -443,17 +442,61 @@
             v-model="addComponentVisible" 
             :close-on-click-modal="false" 
             title="创建零件" 
-            width="500"
+            width="600"
             class="moldDialog"
             :before-close="handlerCloseDialog"
         >
             <el-divider style="margin-top: 0;"/>
-            <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;">
-                <el-form-item label="零件名" prop="componentName">
-                    <el-input v-model="form.componentName" clearable />
+            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
+                <el-form-item label="类型" prop="type">
+                    <el-select v-model="form.type">
+                        <el-option
+                            v-for="item in componentType"
+                            :key="item.value"
+                            :value="item.value"
+                            :label="item.label"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="form.type === 0" label="零件名" prop="componentName">
+                    <el-input v-model="form.componentName" clearable
+     
+                    ></el-input>
+                </el-form-item>
+                <el-form-item v-if="form.type === 1" label="耗材名" prop="consumableName">
+                    <el-input
+                        v-model="form.consumableName"
+                       
+                        clearable
+                    ></el-input>
+                </el-form-item>
+                <el-form-item v-if="form.type === 1" label="耗材种类" prop="materialType">
+                    <el-select v-model="form.materialType" clearable />
+                </el-form-item>
+                <el-row style="margin-bottom: 18px;" v-if="form.type === 1" >
+                    <el-col :span="12">
+                        <el-form-item label="耗材尺寸" prop="size">
+                            <el-input v-model="form.size" clearable  />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="尺寸单位" prop="unit">
+                            <el-input v-model="form.unit" clearable  />
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-form-item label="规格和说明" prop="specification">
+                    <el-input v-model="form.specification" clearable />
+                </el-form-item>
+                <el-form-item label="按单采购" v-if="form.type === 1" prop="isSinglePurchase" >
+                    <el-switch v-model="form.isSinglePurchase" style="--el-switch-on-color: #13ce66;"/>
+                </el-form-item>
+                <el-form-item label="零件单位" prop="componentUnit">
+                    <el-input v-model="form.componentUnit" clearable placeholder="套, 个, 只, 片等" />
                 </el-form-item>
                 <el-form-item label="供应商" prop="supplier">
-                    <el-input v-model="form.supplier" clearable  />
+                    <el-input v-model="form.supplier" clearable filterable placeholder="点击输入和搜索"/>
                 </el-form-item>
                 <el-form-item label="开票" prop="invoicing">
                     <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
@@ -472,47 +515,6 @@
                 <span>
                     <el-button @click="addComponentVisible = false">退出</el-button>
                     <el-button type="primary" @click="handleSubmit">确认</el-button>
-                </span>
-            </template>
-        </el-dialog>
-        <!-- 创建耗材-->
-        <el-dialog 
-            v-model="addConsumablesVisible" 
-            :close-on-click-modal="false" 
-            title="创建耗材" 
-            width="500"
-            class="moldDialog"
-            :before-close="handlerConsumablesCloseDialog"
-        >
-            <el-divider style="margin-top: 0;"/>
-            <el-form ref="formConsumablesRef" class="demo-form" label-position="right" label-width="auto" :model="formConsumables" style="max-width: 340px; margin: 0 auto;" :rules="rules">
-                <el-form-item label="耗材名">
-                    <el-input
-                        v-model="mergedPartName"
-                        :disabled="true"
-                        placeholder="合并后的零件名"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item label="耗材种类" prop="materialType">
-                    <el-select v-model="formConsumables.materialType" clearable />
-                </el-form-item>
-                <el-form-item label="尺寸" prop="size">
-                    <el-input v-model="formConsumables.size" clearable  />
-                </el-form-item>
-                <el-form-item label="单位" prop="unit">
-                    <el-input v-model="formConsumables.unit" clearable  />
-                </el-form-item>
-                <el-form-item label="规格和说明" prop="specification">
-                    <el-input v-model="formConsumables.specification" clearable />
-                </el-form-item>
-                <el-form-item label="按单采购" prop="isSinglePurchase">
-                    <el-checkbox v-model="formConsumables.isSinglePurchase" class="custom-checkbox"></el-checkbox>
-                </el-form-item>
-            </el-form>
-            <template #footer>
-                <span>
-                    <el-button @click="addConsumablesVisible = false">退出</el-button>
-                    <el-button type="primary" @click="handleSubmitConsumables">确认</el-button>
                 </span>
             </template>
         </el-dialog>
@@ -607,6 +609,10 @@ const sku = ref({
   packagingQuantities: '25(150箱), 30(50箱), 50(10箱)',
   managerNotes: '2024-06-26: 亚克力板的薄后问题要在敲定群里沟通。\n2024-05-20: 往外不在安的单价提高0.21元/爿。需要厂家努力好，应订\n2024-05-16: 去秋杭来做底 单价提高0.3元/双。\n2024-05-15: 南通息换供应商，成本15.97元/套。税后17.17元/套。\n底托和插扣压条需要我司购买，并发到厂家产加工，让他们安装到底座\n应压工厂的地址如下：\n曹县彭意不业有限公司：王先生 13793040890 山东省菏泽市曹县仙明\n2024-05-15: 往胶压条是走到长度，1688挂账中是现货长度，下单\n时要考虑上（视情长4mm 平方，看根长度，数量）\n2024-05-15: 胶带我司需要收到供应商'
 })
+const componentType = [
+    { label: '零件', value: 0 },
+    { label: '耗材', value: 1 },
+]
 const imageUrl = ref('')
 // 预览图片列表
 const imagePriviewList = ref<string[]>([])
@@ -782,38 +788,77 @@ const removeHtmlTags = (html: string): string => {
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
 };
+const mergedPartName = computed(() => {
+    return `${form.value.materialType}-${form.value.size}-${form.value.unit}-${form.value.specification}`;
+});
+const mergedComponentName = computed(() => {
+    return `${form.value.componentName}-${form.value.specification}`;
+});
 const rules = reactive({
+    type: [
+        { required: true, message: '请选择类型', trigger: 'change' },
+    ],
+    componentName: [
+        { required: true, message: '请填写零件名', trigger: 'blur' },
+    ],
+    consumableName: [
+        { required: true, message: '请填写耗材名', trigger: 'blur' },
+    ],
     materialType: [
         { required: true, message: '请选择耗材种类', trigger: 'change' },
     ],
     size: [
-        { required: true, message: '请填写尺寸', trigger: 'blur' },
+        { required: true, message: '请填写耗材尺寸', trigger: 'blur' },
         { validator: validateNoSpaces, trigger: 'blur' },
     ],
     unit: [
-        { required: true, message: '请填写单位', trigger: 'blur' },
+        { required: true, message: '请填写尺寸单位', trigger: 'blur' },
         { validator: validateNoSpaces, trigger: 'blur' },
     ],
     specification: [
         { required: true, message: '请填写规格和说明', trigger: 'blur' },
         { validator: validateNoSpaces, trigger: 'blur' },
     ],
+    componentUnit: [
+        { required: true, message: '请填写零件单位', trigger: 'blur' },
+        { validator: validateNoSpaces, trigger: 'blur' },
+    ],
+    supplier: [
+        { required: true, message: '请输入供应商', trigger: 'blur' },
+        { validator: validateNoSpaces, trigger: 'blur' },
+    ],
+    invoicing: [
+        { required: true, message: '请选择开票类型', trigger: 'change' },
+    ],
+    actualTaxRate: [
+        { required: true, message: '请填写实际税点', trigger: 'blur' },
+        { validator: validateNoSpaces, trigger: 'blur' },
+    ],
+    invoicingTaxRate: [
+        { required: true, message: '请填写开票税点', trigger: 'blur' },
+        { validator: validateNoSpaces, trigger: 'blur' },
+    ],
 });
 const formRef = ref<FormInstance>()
-const formConsumablesRef = ref<FormInstance>()
-const form = ref<any>({})
-const formConsumables = ref({
+
+const form = ref<any>({
+    type: 0,
+    componentName: '',
+    consumableName: '',
     materialType: '',
     size: '',
     unit: '',
     specification: '',
-    isSinglePurchase: false,
-});
-const mergedPartName = computed(() => {
-    return `${formConsumables.value.materialType}-${formConsumables.value.size}-${formConsumables.value.unit}-${formConsumables.value.specification}`;
-});
+    isSinglePurchase: true,
+    componentUnit: '',
+    supplier: '',
+    invoicing: '0',
+    actualTaxRate: '',
+    invoicingTaxRate: '',
+})
+
 const addComponentVisible = ref<boolean>(false)
-const addConsumablesVisible = ref<boolean>(false)
+
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
     addOtherSkuVisible.value = false
@@ -821,17 +866,12 @@ const handlerOtherSkuCloseDialog = () => {
 const handlerCloseDialog = () => {
     addComponentVisible.value = false
 }
-const handlerConsumablesCloseDialog = () => {
-    addConsumablesVisible.value = false
-}
+
 const handleAddComponent = () => {
     addComponentVisible.value = true
     formRef.value?.resetFields()
 }
-const handleAddConsumables = () => {
-    addConsumablesVisible.value = true
-    formConsumablesRef.value?.resetFields()
-}
+
 function validateNoSpaces (rule: any, value: any, callback: any) {
     if (/\s/.test(value)) {
         callback(new Error('输入不能包含空格'));
@@ -892,52 +932,7 @@ const handleSubmitOtherSku = () => {
     }
 );
 }
-const handleSubmitConsumables = () => {
-    formConsumablesRef.value?.validate((valid: any) => {
-        if (valid) {
-            addConsumablesVisible.value = false
-            $baseMessage('表单提交成功', 'success', 'hey')
-        }
-        else $baseMessage('表单提交失败', 'error', 'hey')
-    })
-    
-    // const newComponent: IreviewStepNo3ComponentList = {
-    //     actualTaxRate: '',
-    //     componentImgUrl: '',
-    //     componentName: '',
-    //     componentUnit: '',
-    //     contractTerms: '',
-    //     currency: null,
-    //     freight: '',
-    //     invoicing: null,
-    //     invoicingTaxRate: '',
-    //     minimumOrderQuantity: null,
-    //     numberFullCartons: null,
-    //     orderEntryId: 0,
-    //     preTaxPrice: '',
-    //     purchaseLink: '',
-    //     purchaseMatters: '',
-    //     quantity: null,
-    //     reviewComponentId: null,
-    //     reviewId: null,
-    //     supplier: '',
-    //     taxIncludedPrice: '',
-    //     totalPrice: '',
-    //     unitPrice: '',
-    //     variant: '',
-    // }
-    // let classReviewId: number | undefined
-    // if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-    //     classReviewId = props.step1Data
-    // } else {
-    //     classReviewId = route.query.reviewId
-    // }
-    // const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-    // newComponent.reviewComponentId = data
-    // componentList.value.push(newComponent)
-    // fetchDataComponent()
-    // fetchVariantsData()
-}
+
 const handleAddOtherSku = () => {
     addOtherSkuVisible.value = true
 };
@@ -1134,6 +1129,7 @@ const handleSupplier = () => {
 
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
+
 }
 .custom-checkbox {
   transform: scale(1.2); 

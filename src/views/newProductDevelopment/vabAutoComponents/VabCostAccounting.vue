@@ -2,12 +2,12 @@
 
     <!-- 成本核算 -->
     <div style="width: 100%; padding-top:15px; flex-grow: 2">
-        <div class="el-page-header__content"><strong>成本核算</strong></div>
+        
         <el-divider style="margin:10px 0"/>
         
         <vab-query-form >
             <vab-query-form-left-panel>
-                <el-button type="primary" @click="addRowCostAccounting">新增</el-button>
+                <el-button type="primary" @click="addRowCostAccounting">新增成本核算</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
 
@@ -18,6 +18,7 @@
             ghostClass="ghost"
             target="tbody"
             @end="onEnd"
+            :disabled="isDraggingDisabled"
         >
             <el-table 
                 ref="costAccountingTable"
@@ -69,7 +70,7 @@
                             <el-input 
                                 type="textarea" 
                                 autofocus v-model="row.desc" 
-                                :autosize="{ minRows: 3, maxRows: 9 }"
+                                :autosize="{ minRows: 1, maxRows: 3 }"
                                 @blur="clickCancle($event, row)"
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
                              />
@@ -340,7 +341,7 @@ import {
 } from '../indexCommon'
 import { TableRefs, UploadRequestOptions } from 'element-plus'
 
-
+const isDraggingDisabled = ref<boolean>(false)
 
 const props = defineProps<{
     progressId:string
@@ -379,7 +380,7 @@ const clickCancle = async (event:any,value:IProgressEstimatedCostAccounting) =>{
     if (t2){
         t2.classList.remove("none")
     }
-
+    isDraggingDisabled.value = false
     await costAccountingUpdate({...value})
 }
 
@@ -387,6 +388,7 @@ const clickCancle = async (event:any,value:IProgressEstimatedCostAccounting) =>{
 const effectiveCountInputeHandle = (event: Event,row:any) => {
     const targetElement = event.target as HTMLInputElement
     targetElement.blur()
+    isDraggingDisabled.value = false
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
@@ -437,11 +439,13 @@ const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellEle
     if (inputElement) {
         inputElement.select()
         inputElement.focus()
+        isDraggingDisabled.value = true
     } else {
       const textareaElement = getSpecificChildren(cell, "textarea")[0];
       if (textareaElement){
         textareaElement.select()
         textareaElement.focus()
+        isDraggingDisabled.value = true
       }
     }
     

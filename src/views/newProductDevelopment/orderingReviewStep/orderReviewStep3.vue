@@ -2,7 +2,7 @@
   <div>
     <div>
       <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-        height="895" :show-header="false">
+        height="895" :show-header="false" @cell-click="tableInputChange">
         <!-- 第一列固定标签列 -->
         <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
           <template #default="{ row }">
@@ -64,6 +64,7 @@
     <div class="pay-button-group">
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交</el-button>
     </div>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
   </div>
 </template>
 
@@ -74,6 +75,7 @@ import { getDistributionList, updateStepNoQuantity,reviewStepNo3Save } from '/@/
 import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
 const router = useRouter()
 
 
@@ -115,7 +117,24 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
 }
-
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
+// table单击修改
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+    // 处理图片放大预览
+    let el = getSpecificChildren(cell, "img")[0];
+    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+      imagePreviewVisible.value = true
+      imagePriviewList.value = []
+      imagePriviewList.value.push(el.src)
+    }
+}
 const buildParams = (idx: number): IReviewStepUpdateReq => {
   let n: any = {}
   variantList.value.map((item, index) => {

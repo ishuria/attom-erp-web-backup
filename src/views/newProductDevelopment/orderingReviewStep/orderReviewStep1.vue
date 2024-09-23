@@ -30,6 +30,7 @@
                                 @click="inputHandleMouseOver($event)"
                                 @keydown.enter="effectiveCountInputeHandle($event)"
                                 @blur="effectiveCountInputeHandle($event)"
+                                style="text-align: center;"
                             />
                         </template>
                         <template

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div  class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div>
       <el-table 
           ref="tableRef"
           :data="exchangeList" 
@@ -35,6 +36,7 @@
               :key="index"
               align="center"
               min-width="180"
+              width="270"
           >
               <template #default = "{row, $index}">
                   <template v-if="row['column0'] === 'productImgUrl'">
@@ -79,7 +81,7 @@
                       </el-select>
                   </template>
                   <template v-if="row['column0'] === 'packingGroup'">
-                      <el-checkbox v-model="row[prop]" :true-value="'0'" :false-value="'1'" class="custom-checkbox" disabled></el-checkbox>
+                      <el-checkbox v-model="row[prop]" :true-value="0" :false-value="1" class="custom-checkbox" disabled></el-checkbox>
                   </template>
               </template>
               
@@ -88,6 +90,7 @@
               <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
           </template>
       </el-table>
+    </div>
       <div class="pay-button-group">
           <el-button @click="handleGoback">上一步</el-button>
           <el-button native-type="submit" type="primary" @click="handleSave">下一步</el-button>
@@ -256,7 +259,7 @@ try {
           productManager: productManager,
           productDesign: item.productDesign,
           sampleRetentionStatus: item.sampleRetentionStatus,
-          packingGroup: item.packingGroup,
+          packingGroup: item.checkStatus,
           certificateUpload: item.certificateUpload,
           skuMerge: item.variantSku,
           orderEntryId: undefined,

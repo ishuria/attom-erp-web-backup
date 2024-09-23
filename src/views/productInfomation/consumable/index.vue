@@ -197,9 +197,6 @@
                           <el-dropdown-item>
                             <el-link type="primary" :underline="false">添加到SKU</el-link>
                           </el-dropdown-item>
-                          <el-dropdown-item>
-                            <el-link type="danger" :underline="false">删除</el-link>
-                          </el-dropdown-item>
                         </el-dropdown-menu>
                       </template>
                     </el-dropdown>

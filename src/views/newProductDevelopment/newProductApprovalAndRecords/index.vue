@@ -17,8 +17,8 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" :header-cell-style="{ 'text-align': 'center' }" border stripe :data="dataList"
-      @cell-click="reviewTableInputChage" :span-method="objectSpanMethod">
+    <el-table ref="tableRef" :header-cell-style="{ 'text-align': 'center' }" border :data="dataList" 
+      @cell-click="reviewTableInputChage" :span-method="objectSpanMethod" :row-class-name="stripedRowClass">
       <el-table-column label="提交日期" prop="createTime" align="center" width="110">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.createTime)) }}</span>
@@ -81,7 +81,7 @@
           <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审批日期" prop="reviewDate" align="center" width="100">
+      <el-table-column label="审批日期" prop="reviewDate" align="center" width="110">
         <template #default="{ row }">
           <span> {{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : "" }}</span>
         </template>
@@ -336,11 +336,15 @@ const handleSizeChange = (value: number) => {
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  previous = null; 
+  currentGroupIndex = 0;
   fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
+  previous = null; 
+  currentGroupIndex = 0; 
   fetchData()
 }
 
@@ -399,6 +403,23 @@ const objectSpanMethod = ({
   }
 }
 
+
+let previous: any = null; 
+let currentGroupIndex = 0; // 当前组索引
+
+const stripedRowClass = (_row: any) => {
+  const { row } = _row;
+  const currentId = row.reviewMainId;
+  // 检查当前行是否与上一行不同
+  if (currentId !== previous) {
+    previous = currentId; 
+    currentGroupIndex++; 
+  }
+  // 根据当前组索引设置条纹样式
+  return currentGroupIndex % 2 === 0 ? 'row-striped' : '';
+};
+
+
 onActivated(() => {
   tableRef.value?.doLayout()
 })
@@ -456,5 +477,9 @@ onBeforeMount(() => {
 }
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
+}
+:deep(.row-striped) {
+  // background-color: var(--el-fill-color-lighter);
+  background-color: var(--el-fill-color-lighter);
 }
 </style>

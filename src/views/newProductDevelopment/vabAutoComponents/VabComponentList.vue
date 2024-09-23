@@ -12,7 +12,7 @@
             </vab-query-form-left-panel>
         </vab-query-form>
 
-        <el-table ref="progressComponentTable" :data="progressProductList" border stripe
+        <el-table ref="progressComponentTable" :data="progressProductList" border :row-class-name="stripedRowClass"
             @cell-click="componentTableInputChage" :span-method="objectSpanMethod" :cell-style="cellStyle"
             :header-cell-style="{ 'text-align': 'center' }">
 
@@ -42,16 +42,16 @@
             </el-table-column>
 
 
-            <el-table-column label="图片" prop="componentImg">
+            <el-table-column label="图片" prop="componentImg" min-width="80" align="center">
                 <template v-slot="scope">
                     <div>
-                        <el-image v-if="scope.row.componentImg" style="width: 50px; height: 50px"
-                            :src="scope.row.componentImg" fit="fill" data-img="img" />
+                        <el-image v-if="scope.row.componentImg" style="width: 55px;"
+                            :src="scope.row.componentImg" fit="contain" data-img="img" />
                     </div>
                 </template>
             </el-table-column>
 
-            <el-table-column label="零件名" prop="componentName">
+            <el-table-column label="零件名" prop="componentName" min-width="200">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input type="textarea" 
@@ -66,7 +66,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="已有零件id" prop="skuComponentId">
+            <el-table-column label="已有零件id" prop="skuComponentId"  min-width="80">
                 <template #header>
                     已有零<br>件id
                 </template>
@@ -160,13 +160,19 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="总价未税价" prop="preTaxPrice" min-width="100">
+            <el-table-column label="总未税价" prop="preTaxPrice" min-width="70">
+                <template #header>
+                    总未<br>税价
+                </template>
                 <template #default="{ row }">
                     <span>{{ row.preTaxPrice }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="总含税价" prop="taxIncludedPrice" min-width="100">
+            <el-table-column label="总含税价" prop="taxIncludedPrice" min-width="70">
+                <template #header>
+                    总含<br>税价
+                </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
@@ -204,6 +210,7 @@
                         :false-value="1" 
                         size="large"
                         @change="includedInCostChange(row)" 
+                        class="custom-checkbox"
                     />
                 </template>
             </el-table-column>
@@ -368,6 +375,7 @@ import { getProgressLog, updateProgressManage } from '~/src/api/devlocal/progres
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { color } from 'echarts'
 import { reduce } from 'lodash'
+import { classicNameResolver } from 'typescript'
 
 // 图片上传显示控制vesiblae
 const uploadPicVisible = ref<boolean>(false)
@@ -382,7 +390,9 @@ const classify = ref<string>('')
 defineComponent({
     name: 'VabComponentList',
 })
-
+const secondColumnCellStyle = (row: any, column: any, rowIndex: number, columnIndex: number) => {
+  return { padding: '5px 5px' }; // 设置你需要的 padding
+};
 const props = defineProps<{
     progressId: string
     trialCalculationData: (() => Promise<void>) | undefined
@@ -407,7 +417,21 @@ interface SpanMethodProps {
     rowIndex: number
     columnIndex: number
 }
+let previous: any = null; 
+let currentGroupIndex = 0; // 当前组索引
 
+const stripedRowClass = (_row: any) => {
+  const { row } = _row;
+  const currentId = row.componentId;
+  // 检查当前行是否与上一行不同
+  if (currentId !== previous) {
+    previous = currentId; 
+    currentGroupIndex++; 
+  }
+
+  // 根据当前组索引设置条纹样式
+  return currentGroupIndex % 2 === 0 ? 'row-striped' : '';
+};
 
 // 零件清单列表
 const progressProductList = ref<IProgressProdcutComponent[]>([])
@@ -433,18 +457,27 @@ const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-    if  (data.columnIndex === 3 || data.columnIndex === 9){
-        return {
-            backgroundColor: '#f5f5f5',
-            color: '#bbb',
-            cursor: 'not-allowed',
-            textAlign:'center'
+   
+        
+ 
+ 
+        if  (data.columnIndex === 3 || data.columnIndex === 9){        
+        
+            return {
+                        // backgroundColor: '#f5f5f5',
+                        color: '#bbb',
+                        cursor: 'not-allowed',
+                        textAlign:'center'
+                    } 
+        }else if(data.columnIndex === 1) {
+            return { padding: '0px' }
+        }else {
+            return {
+                textAlign:'center'
+            }
         }
-    }else {
-        return {
-            textAlign:'center'
-        }
-    }
+
+  
 }
 
 // 新增零件
@@ -760,6 +793,8 @@ const fetchDataComponent = async () => {
             item.totalPrice = formattedPrice(item.totalPrice)
         })
         progressProductList.value.sort((a: IProgressProdcutComponent, b: IProgressProdcutComponent) => a.componentId! - b.componentId!)
+        previous = null
+        currentGroupIndex = 0
     } catch (e) {
         console.error(e as Error)
     }
@@ -839,10 +874,18 @@ onMounted(async () => {
 
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
-    max-height: 46px;
+    max-height: 50px;
 }
 
 :deep(.left-panel) {
     margin-bottom: 0 !important;
 }
+:deep(.row-striped) {
+  background-color: var(--el-fill-color-lighter);
+}
+.custom-checkbox {
+  transform: scale(1.2); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
+}
+
 </style>
