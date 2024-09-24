@@ -5,12 +5,12 @@
           <h2>SKU信息</h2>
         </vab-query-form-top-panel>
           <vab-query-form-left-panel>
-              <el-button type="primary">隐藏停产</el-button>
+              <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.productKeyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" native-type="submit" type="primary"
@@ -22,77 +22,81 @@
           <el-table 
               ref="tableRef" 
               stripe border 
-              :data="fakeData" 
+              :data="list" 
               :header-cell-style="{ 'text-align': 'center' }"
               :cell-style="{ 'text-align': 'center' }"
               @cell-click="changeInput"
+              v-loading="listLoading"
           >
               <el-table-column label="图片" class="image-wall" min-width="100">
                 <template #default="{ row }">
-                    <el-image style="width: 75px; height: 75px" :src="row.imageUrl" fit="fill" data-img="img" />
+                    <el-image style="width: 75px; height: 75px" :src="row.skuImgUrl" fit="fill" data-img="img" />
                 </template>
               </el-table-column>
               <el-table-column label="SKU" min-width="70" prop="sku" width="100"></el-table-column>   
-              <el-table-column label="FNSKUUPC" prop="FNSKUUPC" width="120">
+              <el-table-column label="FNSKUUPC" prop="fnSkuUpc" width="120">
                 <template #header>
                   FNSKU<br>UPC
                 </template>
               </el-table-column>
               <el-table-column label="产品经理" prop="productManager" min-width="90"></el-table-column>
-              <el-table-column label="停产" prop="switch">
+              <el-table-column label="停产" prop="productionHaltStatus">
                 <template #default="{ row }">
-                  <el-switch v-model="row.switch" style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66"/>
+                  <el-switch v-model="row.productionHaltStatus" @change="handleUpdateStatus(row)" active-value="1"
+                  inactive-value="0" style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66"/>
                 </template>
               </el-table-column>
-              <el-table-column label="优先打包" prop="isPriority" min-width="90">
+              <el-table-column label="优先打包" prop="priorityPacking" min-width="90">
                 <template #default="{ row }">
-                  <el-switch v-model="row.isPriority" style="--el-switch-on-color: #13ce66;"/>
+                  <el-switch v-model="row.priorityPacking" @change="handleUpdateStatus(row)" active-value="1"
+                  inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
                 </template>
               </el-table-column>
-              <el-table-column label="打包拍照" prop="packagingPhoto" min-width="90">
+              <el-table-column label="打包拍照" prop="packagePhotograph" min-width="90">
                 <template #default="{ row }">
-                  <el-switch v-model="row.packagingPhoto" style="--el-switch-on-color: #13ce66;"/>
+                  <el-switch v-model="row.packagePhotograph" @change="handleUpdateStatus(row)" active-value="1"
+                  inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
                 </template>
               </el-table-column>
-              <el-table-column label="总实际成本" prop="unitPrice" min-width="70" >
+              <el-table-column label="总实际成本" prop="procurementCost" min-width="80" >
                   <template #header>
                       总实际<br>成本
                   </template>
               </el-table-column>
-              <el-table-column label="" prop="unitPrice" min-width="100" >
+              <el-table-column label="" prop="dilapidationCost" min-width="100" >
                   <template #header>
                       损耗成本<br>(近10次)
                   </template>
               </el-table-column>
-              <el-table-column label="" prop="unitPrice" min-width="100" >
+              <el-table-column label="" prop="packingCost" min-width="100" >
                   <template #header>
                       打包成本<br>(近10次)
                   </template>
               </el-table-column>
-              <el-table-column label="" prop="unitPrice" min-width="100" >
+              <el-table-column label="" prop="freightFeeCost" min-width="100" >
                   <template #header>
                       运费<br>(近10次)
                   </template>
               </el-table-column>
               <el-table-column label="货币" width="110px" prop="currency">
               </el-table-column>
-              <el-table-column label="" prop="unitPrice" min-width="100" >
+              <el-table-column label="" prop="avgTime" min-width="100" >
                   <template #header>
                     平均交期<br>(近10次)
                   </template>
               </el-table-column>
-              <el-table-column label="" prop="unitPrice" min-width="100" >
+              <el-table-column label="" prop="avgFluctuation" min-width="100" >
                   <template #header>
                     交期平均<br>波动
                   </template>
               </el-table-column>
-              <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
+              <el-table-column prop="length" label="长(cm)" min-width="90">
               </el-table-column>
 
-              <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
+              <el-table-column prop="width" label="宽(cm)" min-width="90">
               </el-table-column>
 
-              <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
+              <el-table-column prop="height" label="高(cm)" min-width="90">
               </el-table-column>
 
               <el-table-column prop="weight" label="重量(g)">
@@ -101,15 +105,15 @@
               </el-table-column>
               <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
               </el-table-column>
-              <el-table-column  label="开票/报关品名" prop="actualTaxRate" min-width="140" >
+              <el-table-column  label="开票/报关品名" prop="customsDeclaration" min-width="140" >
               </el-table-column>
 
-              <el-table-column  label="开票型号" prop="invoicingTaxRate" min-width="100" >
+              <el-table-column  label="开票型号" prop="invoiceIssuType" min-width="100" >
               </el-table-column>
               <el-table-column fixed="right" label="操作" width="150">
                   <template #default="{ row }">
                     <el-dropdown>
-                      <el-button text type="primary" @click="handleSkuDetail">
+                      <el-button text type="primary" @click="handleSkuDetail(row)">
                         SKU详情
                         <el-icon class="el-icon--right">
                           <arrow-down />
@@ -158,26 +162,55 @@ import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3Vari
 
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
+import { getProductList, updateProductStatus } from '~/src/api/devlocal/productInformation';
+import { IgetProductList } from '~/src/type/productInformation/skuInformationType';
 
-const props = defineProps<{ step1Data: number }>()
 
-// const listLoading = ref<boolean>(true)
+
+const listLoading = ref<boolean>(true)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
-
+const hideStopProduction = ref<boolean>(true) //false 展示停产 true 隐藏停产
 const list = ref<any>([])
 const route: any = useRoute()
 const router = useRouter()
-const handleSkuDetail = () => {
+const handleSkuDetail = (row: any) => {
   router.push({
     path: '/productInfomation/skuDetailView',
     query: {
       title: "SKU详情",
+      skuId: row.skuId,
       timestamp: Date.now(),
     },
   })
 }
+const handleHideStopProduction = () => {
+  if (queryForm.haltStatus === 0) {
+    queryForm.haltStatus = 1
+  } else {
+    queryForm.haltStatus = 0
+  }
+  fetchData()
+}
+// const rowClassName = (data: { row: any, rowIndex: number }) => {
+//   if (hideStopProduction.value === true) {
+//     if (data.row.switch) {
+//       return 'none'
+//     }
+//   }
+ 
+// }
+const handleUpdateStatus = async (row: IgetProductList) => {  
+  await updateProductStatus({
+    skuId: row.skuId,
+    haltStatus: row.productionHaltStatus,
+    photographStatus: row.packagePhotograph,
+    priorityStatus: row.priorityPacking
+  })
+}
 const queryForm = reactive<any>({
+  keyWord: '',
+  haltStatus: 1, // 0展示停产 1隐藏停产
   pageNo: 1,
   pageSize: 20,
 })
@@ -185,16 +218,16 @@ const total = ref<number>(0)
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const fakeData = [
   {
@@ -278,40 +311,40 @@ const handleCurrencyChange = async (row: any) => {
 
 // 新增逻辑
 const handleAddComponent = async () => {
-  const newComponent: IreviewStepNo3ComponentList = {
-      actualTaxRate: '',
-      componentImgUrl: '',
-      componentName: '',
-      componentUnit: '',
-      contractTerms: '',
-      currency: null,
-      freight: '',
-      invoicing: null,
-      invoicingTaxRate: '',
-      minimumOrderQuantity: null,
-      numberFullCartons: null,
-      orderEntryId: 0,
-      preTaxPrice: '',
-      purchaseLink: '',
-      purchaseMatters: '',
-      quantity: null,
-      reviewComponentId: null,
-      reviewId: null,
-      supplier: '',
-      taxIncludedPrice: '',
-      totalPrice: '',
-      unitPrice: '',
-      variant: '',
-  }
-  let classReviewId: number | undefined
-  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
-  } else {
-      classReviewId = route.query.reviewId
-  }
-  const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-  newComponent.reviewComponentId = data
-  componentList.value.push(newComponent)
+  // const newComponent: IreviewStepNo3ComponentList = {
+  //     actualTaxRate: '',
+  //     componentImgUrl: '',
+  //     componentName: '',
+  //     componentUnit: '',
+  //     contractTerms: '',
+  //     currency: null,
+  //     freight: '',
+  //     invoicing: null,
+  //     invoicingTaxRate: '',
+  //     minimumOrderQuantity: null,
+  //     numberFullCartons: null,
+  //     orderEntryId: 0,
+  //     preTaxPrice: '',
+  //     purchaseLink: '',
+  //     purchaseMatters: '',
+  //     quantity: null,
+  //     reviewComponentId: null,
+  //     reviewId: null,
+  //     supplier: '',
+  //     taxIncludedPrice: '',
+  //     totalPrice: '',
+  //     unitPrice: '',
+  //     variant: '',
+  // }
+  // let classReviewId: number | undefined
+  // if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+  //     classReviewId = props.step1Data
+  // } else {
+  //     classReviewId = route.query.reviewId
+  // }
+  // const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
+  // newComponent.reviewComponentId = data
+  // componentList.value.push(newComponent)
   // fetchDataComponent()
 }
 // 删除逻辑
@@ -354,55 +387,17 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   }
 }
 
-// // 获取拿样零件添加数据
-// const fetchDataComponent = async () =>{
-//   if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
-//       try {
-//           // 拿样零件添加列表
-//           let classReviewId: number | undefined
-//           if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-//               classReviewId = props.step1Data
-//           } else {
-//               classReviewId = route.query.reviewId
-//           }
-//           const { data } = await reviewStepNo3ComponentList({reviewId: classReviewId!})
-//           componentList.value = data
-//           componentList.value.forEach((item: any, index: number) => {
-//               item.currency = convertString(item.currency)
-//               item.invoicing = convertString(item.invoicing)
-//               if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
-//                   item.hide = true;
-//                   item.componentImgUrl = [{ url: item.componentImgUrl }];
-//               } else {
-//                   item.hide = false;
-//                   item.componentImgUrl = []; // 如果没有图片,确保这是空的
-//               }
-//               // item.cropData = ''
-//               // console.log(item.componentImgUrl);
-//           })
-//           // 获取下拉变体列表
-//           const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
-//           variantsSelectList.value = variantSelectList
-//           variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
-
-//           // 排序
-//           componentList.value.sort((a: any, b: any) => {
-//           if (a.orderEntryId === 0 && b.orderEntryId !== 0) {
-//               return -1; // a 在前
-//           }
-//           if (a.orderEntryId !== 0 && b.orderEntryId === 0) {
-//               return 1; // b 在前
-//           }
-//               return 0; // 不排序
-//           });
-//       }catch(e){
-//           console.error(e as Error)
-//       }
-//   }
-// }
-// onMounted(async ()=>{
-//   fetchDataComponent()
-// })
+// 获取拿样零件添加数据
+const fetchData = async () =>{
+  listLoading.value = true
+  const { data } = await getProductList(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
+}
+onMounted(async ()=>{
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>

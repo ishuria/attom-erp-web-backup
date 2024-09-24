@@ -11,12 +11,12 @@
     </vab-query-form>
 
     <el-table ref="tableRef" border stripe :data="sampleData" @cell-click="changeInput" :header-cell-style="{ textAlign: 'center'}">
-      <el-table-column align="center" label="图片" width="100" prop="imageUrl" >
+      <el-table-column align="center" label="图片" width="100" prop="imageUrl" fixed="left">
           <template #default="{ row }">
               <el-image style="width: 75px; height: 75px" :src="row.imageUrl" fit="fill" data-img="img" />
           </template>
       </el-table-column>
-      <el-table-column label="零件名" prop="componentName" width="120">
+      <el-table-column label="零件名" prop="componentName" width="200" fixed="left">
         <template #default="{ row }">
           <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
         </template>
@@ -26,14 +26,29 @@
           <span style="color: rgb(192, 192, 192)">{{ row.sku }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="不报关" prop="purchaseToOrder" align="center" min-width="90">
+        <template #default = "{ row }">
+            <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="供应商" min-width="200" prop="title" >
         <template #default="{ row }">
           <span style="color: rgb(192, 192, 192)">{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="不报关" prop="purchaseToOrder" align="center" min-width="90">
-        <template #default = "{ row }">
-            <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+      <el-table-column align="center" label="UPC" min-width="140" prop="fullName" >
+        <template #default="{ row }">
+          <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="北美FNSKU" min-width="140" prop="fullName" >
+        <template #default="{ row }">
+          <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="欧洲FNSKU" min-width="140" prop="fullName" >
+        <template #default="{ row }">
+          <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="货源地" min-width="120" prop="fullName" >
@@ -104,12 +119,12 @@
           <span>{{ row.componentUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="" min-width="100" prop="actualWeight" >
         <template #header>
           报关覆盖<br>实际净重
         </template>
         <template #default="{ row }">
-          <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+          <el-checkbox v-model="row.actualWeight" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="品牌" min-width="90" prop="fullName" >
@@ -243,30 +258,7 @@
           <span>{{ row.componentUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="UPC" min-width="140" prop="fullName" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.componentUnit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="北美FNSKU" min-width="140" prop="fullName" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.componentUnit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="欧洲FNSKU" min-width="140" prop="fullName" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.componentUnit }}</span>
-        </template>
-      </el-table-column>
+      
       <el-table-column align="center" label="云舟采购价(RMB)" min-width="120" prop="fullName" >
         <template #header>
           云舟采购价<br>(RMB)

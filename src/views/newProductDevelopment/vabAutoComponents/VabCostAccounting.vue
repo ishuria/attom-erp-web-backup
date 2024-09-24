@@ -1,7 +1,7 @@
 <template>
 
     <!-- 成本核算 -->
-    <div style="width: 100%; padding-top:15px; flex-grow: 2">
+    <div style="width: 100%; padding-top:15px; flex-grow: 2" >
         
         <el-divider style="margin:10px 0"/>
         
@@ -400,7 +400,6 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 
     ){
         return {
-            backgroundColor: '#f5f5f5',
             color: '#bbb',
             cursor: 'not-allowed',
             textAlign:'center'

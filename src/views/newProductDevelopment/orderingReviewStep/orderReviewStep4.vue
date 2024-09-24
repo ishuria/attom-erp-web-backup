@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>
+      <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table 
                 ref="tableRef" 
                 stripe border 
@@ -8,6 +8,7 @@
                 :header-cell-style="{ 'text-align': 'right' }"
                 height="630"
                 :show-header="false"
+                style="width: auto; table-layout: fixed;"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
@@ -27,6 +28,7 @@
                     v-for="(prop, i) in columns" 
                     :key="i" 
                     align="center" 
+                    min-width="240"
                 >
                     <template v-slot="scope">
                         <template v-if="scope.row['column0'] === 'variantImg'">

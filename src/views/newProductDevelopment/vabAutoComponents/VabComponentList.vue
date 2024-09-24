@@ -458,26 +458,21 @@ const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
    
-        
- 
- 
-        if  (data.columnIndex === 3 || data.columnIndex === 9){        
-        
-            return {
-                        // backgroundColor: '#f5f5f5',
-                        color: '#bbb',
-                        cursor: 'not-allowed',
-                        textAlign:'center'
-                    } 
-        }else if(data.columnIndex === 1) {
-            return { padding: '0px' }
-        }else {
-            return {
-                textAlign:'center'
-            }
+    if  (data.columnIndex === 3 || data.columnIndex === 9){        
+    
+        return {
+                    // backgroundColor: '#f5f5f5',
+                    color: '#bbb',
+                    cursor: 'not-allowed',
+                    textAlign:'center'
+                } 
+    }else if(data.columnIndex === 1) {
+        return { padding: '0px' }
+    }else {
+        return {
+            textAlign:'center'
         }
-
-  
+    }
 }
 
 // 新增零件
@@ -887,5 +882,7 @@ onMounted(async () => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-
+// :deep(.el-table__body tr.hover-row > td) {
+//   background-color: unset !important
+// }
 </style>

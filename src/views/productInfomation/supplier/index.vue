@@ -74,9 +74,6 @@
   	    </el-upload>
         </template>
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" width="120">
-        <el-button text type="danger">删除</el-button>
-      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>

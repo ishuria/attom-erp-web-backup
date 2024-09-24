@@ -1,15 +1,15 @@
 <template>
   <div>
-        <div>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table 
                 ref="tableRef" 
                 stripe border 
                 :data="exchangeList" 
                 :header-cell-style="{ 'text-align': 'right' }"
-                height="430"
                 :show-header="false"
                 @cell-click="tableInputChange"
                 class="table1"
+                style="width: auto; table-layout: fixed;"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
@@ -29,6 +29,7 @@
                     :label="prop" 
                     :key="i" 
                     align="center" 
+                    min-width="260"
                 >
                     <template #default = {row}>
                         
@@ -36,7 +37,7 @@
                             <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
                         </template>
                         <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
+                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled class="center-select">
                             <el-option 
                               v-for="item in photoSampleOptions"
                               :label="item.label"
@@ -396,6 +397,10 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+:deep(.center-select) {
+ text-align: center;
+ text-align-last: center;
 }
 </style>
   

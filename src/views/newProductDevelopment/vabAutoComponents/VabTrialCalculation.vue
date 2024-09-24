@@ -228,13 +228,15 @@
 
 
                 <el-table-column fixed="right" label="操作" min-width="160px">
-                    <template v-slot="scope">
-                        <el-button text type="primary">
-                            逆算
-                        </el-button>
-                        <el-button text type="primary" @click="saveTrialCalculationHandler(scope.row)">
-                            保存
-                        </el-button>
+                    <template #default="{ row }">
+                        <el-space :size="30">
+                            <el-link type="primary" :underline="false" >
+                                逆算
+                            </el-link>
+                            <el-link  type="primary" :underline="false"  @click="saveTrialCalculationHandler(row)">
+                                保存
+                            </el-link>
+                        </el-space>
                     </template>
                 </el-table-column>
                 </el-table>
@@ -306,15 +308,15 @@ const effectiveCountInputeHandle = (event: Event,row:any) => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-    if  (data.columnIndex === 1 || data.columnIndex === 2 
-        || data.columnIndex === 7 || data.columnIndex === 21
-        || data.columnIndex === 9 || data.columnIndex === 10
-        || data.columnIndex === 14 || data.columnIndex === 15
-        || data.columnIndex === 19 || data.columnIndex === 20
+    if  (data.columnIndex === 2 || data.columnIndex === 3 
+        || data.columnIndex === 8 || data.columnIndex === 22
+        || data.columnIndex === 10 || data.columnIndex === 11
+        || data.columnIndex === 15 || data.columnIndex === 16
+        || data.columnIndex === 20 || data.columnIndex === 21
 
     ){
         return {
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#fafafa',
             color: '#bbb',
             cursor: 'not-allowed',
             textAlign:'center'

@@ -7,7 +7,7 @@
             border stripe
             :header-cell-style="{ 'text-align': 'center' }"
             @cell-click="changeInput"
-            style="width: 80%"
+            style="width: auto; table-layout: fixed;"
         >
             <!-- 第一列固定标签列 -->
             <el-table-column 
@@ -36,8 +36,8 @@
                 :label="prop" 
                 :key="index"
                 align="center"
-                min-width="240"
-                max-width="240"
+                min-width="260"
+                
             >
                 <template #default = "{row, $index}">
                     <template v-if="row['column0'] === 'productImgUrl'">
@@ -131,7 +131,7 @@
                     </template>
                     <template v-if="row['column0'] === 'sampleRetentionStatus'">
                         
-                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
+                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)" class="center-select">
                           <el-option 
                             v-for="item in photoSampleOptions"
                             :label="item.label"
@@ -427,8 +427,8 @@ const handlePackingUpdate = async (row: any, prop: any) => {
           row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
           const update = async () => {
             await reviewStepNo5SkuInfoPerfect({
-              checkStatus: parseInt(exchangeList.value[11][prop]),
-              orderEntryId: exchangeList.value[15][prop],
+              checkStatus: parseInt(exchangeList.value[11][key]),
+              orderEntryId: exchangeList.value[15][key],
             })
           }
           update()
@@ -451,17 +451,17 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
           row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
           const update = async () => {
             await reviewStepNo5SkuInfoPerfect({
-              productLength: exchangeList.value[1][prop],
-              productWidth: exchangeList.value[2][prop],
-              productHeight: exchangeList.value[3][prop],
-              material: exchangeList.value[4][prop],
-              battery: exchangeList.value[5][prop],
-              benchmarkAsin: exchangeList.value[6][prop],
+              productLength: exchangeList.value[key],
+              productWidth: exchangeList.value[2][key],
+              productHeight: exchangeList.value[3][key],
+              material: exchangeList.value[4][key],
+              battery: exchangeList.value[5][key],
+              benchmarkAsin: exchangeList.value[6][key],
               patent: exchangeList.value[7][prop],
-              productManager: exchangeList.value[8][prop],
-              productDesign: exchangeList.value[9][prop],
-              sampleRetentionStatus: exchangeList.value[10][prop],
-              orderEntryId: exchangeList.value[15][prop],
+              productManager: exchangeList.value[8][key],
+              productDesign: exchangeList.value[9][key],
+              sampleRetentionStatus: exchangeList.value[10][key],
+              orderEntryId: exchangeList.value[15][key],
             })
           }
           update()
@@ -709,6 +709,9 @@ onMounted(async () => {
 // .el-select-dropdown__item {
 //   text-align: center;
 // }
-
+:deep(.center-select) {
+ text-align: center;
+ text-align-last: center;
+}
 
 </style>

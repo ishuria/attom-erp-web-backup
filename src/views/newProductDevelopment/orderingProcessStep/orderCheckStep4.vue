@@ -1,12 +1,13 @@
 <template>
-  <div  class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-    <div>
+  <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+ 
       <el-table 
           ref="tableRef"
           :data="exchangeList" 
           border stripe
           :header-cell-style="{ 'text-align': 'center' }"
           @cell-click="changeInput"
+          style="width: auto; table-layout: fixed;"
       >
           <!-- 第一列固定标签列 -->
           <el-table-column 
@@ -35,8 +36,7 @@
               :label="prop" 
               :key="index"
               align="center"
-              min-width="180"
-              width="270"
+              min-width="240"
           >
               <template #default = "{row, $index}">
                   <template v-if="row['column0'] === 'productImgUrl'">
@@ -90,7 +90,7 @@
               <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
           </template>
       </el-table>
-    </div>
+
       <div class="pay-button-group">
           <el-button @click="handleGoback">上一步</el-button>
           <el-button native-type="submit" type="primary" @click="handleSave">下一步</el-button>

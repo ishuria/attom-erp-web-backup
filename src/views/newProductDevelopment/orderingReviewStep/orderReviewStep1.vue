@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div>
+        <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-                height="430" :show-header="false">
+                height="430" :show-header="false" style="width: auto; table-layout: fixed;">
                 <!-- 第一列固定标签列 -->
                 <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
                     <template #default="{ row }">
@@ -11,7 +11,7 @@
 
                     </template>
                 </el-table-column>
-                <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center">
+                <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center" min-width="240">
                     <template #default="{ row }">
                         <template v-if="row['column0'] === 'variantImg'">
                             <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" />
@@ -30,7 +30,7 @@
                                 @click="inputHandleMouseOver($event)"
                                 @keydown.enter="effectiveCountInputeHandle($event)"
                                 @blur="effectiveCountInputeHandle($event)"
-                                style="text-align: center;"
+                                class="center-input"
                             />
                         </template>
                         <template
@@ -334,5 +334,8 @@ onMounted(async () => {
 .custom-checkbox {
     transform: scale(1.3); // 放大 20%
     transform-origin: center; // 确保放大从中心开始
+}
+:deep(.center-input .el-input__inner ){
+    text-align: center;
 }
 </style>

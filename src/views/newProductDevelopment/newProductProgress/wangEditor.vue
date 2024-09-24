@@ -83,9 +83,14 @@ const insertDate = () => {
   const month = String(now.getMonth() + 1).padStart(2, '0')
   const day = String(now.getDate()).padStart(2, '0')
   const formattedDate = `${year}-${month}-${day}：`
+  const currentHtml = editor.getHtml()
 
-  editor.insertText(formattedDate) // 插入文本
+  // 移动光标到最前面并插入回车和日期
+
+  editor.setHtml(`${formattedDate}${currentHtml}`) // 插入日期
+  
 }
+
 // 初始化定时器
 let intervalTimerLog: NodeJS.Timeout | null = null
 /**

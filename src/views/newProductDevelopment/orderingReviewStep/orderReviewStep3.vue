@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
       <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-        height="895" :show-header="false" @cell-click="tableInputChange">
+        height="895" :show-header="false" @cell-click="tableInputChange" style="width: auto; table-layout: fixed;">
         <!-- 第一列固定标签列 -->
         <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
           <template #default="{ row }">
             <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
           </template>
         </el-table-column>
-        <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center">
+        <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center" min-width="240">
           <template v-slot="scope">
             <template v-if="scope.row['column0'] === 'variantImg'">
               <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" />
@@ -20,6 +20,7 @@
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="updateHnadlerNumber($event, scope)" 
                 @blur="updateHnadlerNumber($event, scope)" 
+                class="center-input"
               />
             </template>
             <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
@@ -28,6 +29,7 @@
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="updateHnadlerNumber($event, scope)"
                 @blur="updateHnadlerNumber($event, scope)"
+                class="center-input"
               />
             </template>
             <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
@@ -36,6 +38,7 @@
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="updateHnadlerNumber($event, scope)"
                 @blur="updateHnadlerNumber($event, scope)"
+                class="center-input"
               />
             </template>
             <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
@@ -44,6 +47,7 @@
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="updateHnadlerNumber($event, scope)"
                 @blur="updateHnadlerNumber($event, scope)"
+                class="center-input"
               />
             </template>
             <template v-if="scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
@@ -232,5 +236,8 @@ onMounted(() => {
   display: block;
   margin: 20px auto;
   text-align: center;
+}
+:deep(.center-input .el-input__inner ){
+    text-align: center;
 }
 </style>

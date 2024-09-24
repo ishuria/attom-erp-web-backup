@@ -22,7 +22,7 @@
                           list-type="picture-card" 
                           :file-list="row.componentImgUrl" 
                           :class="{ hide: row.hide }"
-                          :http-request="uploadImage"
+                          :http-request="(File) => uploadImage(File, row)"
                       >
                           <div 
                               style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
@@ -186,7 +186,7 @@
               <el-table-column align="center" fixed="right" label="操作" width="150">
                   <template #default="{ row }">
                     <el-dropdown>
-                      <el-button text type="primary">
+                      <el-button text type="primary" @click="handleSupplier">
                         供应商
                         <el-icon class="el-icon--right">
                           <arrow-down />
@@ -299,7 +299,7 @@ import type { UploadFile } from 'element-plus'
 const consumableTypeForm = reactive({
     consumableType: ''
 })
-
+const router = useRouter()
 // const listLoading = ref<boolean>(true)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
@@ -371,6 +371,15 @@ const handleConsumableTypeSizeChange = (value: number) => {
 const handleConsumableTypeCurrentChange = (value: number) => {
     consumableTypeQueryForm.pageNo = value
   // fetchData()
+}
+const handleSupplier = () => {
+    router.push({
+        path: '/productInfomation/skuSupplier',
+        query: {
+        title: "SKU供应商",
+        timestamp: Date.now(),
+        },
+    })
 }
 /**
 * 当点击确认时，子组件传递给父组件的新的val
@@ -521,94 +530,30 @@ clickIconRowIndex.value = index
 * 上传图片
 */
 const imageForm = ref(new FormData()) as any;
-async function uploadImage(params: any) {
-try {
-  const index = clickIconRowIndex.value!;
-  const currentComponent = componentList.value[index];
+async function uploadImage(params: any, row: any) {
+    try {
+        const imageForm = new FormData();
+        imageForm.append('file', params.file);
+        imageForm.append('reviewComponentId', row.reviewComponentId as any);
 
-  // 检查 params.file 是否有效
-  if (!params.file) {
-    throw new Error('文件无效');
-  }
+        // 上传图片
+        const { data } = await reviewStepNo3ComponentUpload(imageForm)
+        if (!data) {
+            throw new Error('上传图片失败');
+        }
+        const imageListCopy = [...(row.componentImgUrl || [])];
+        imageListCopy.push({ url: data });
+        row.hide = imageListCopy.length > 0;
+        row.componentImgUrl = imageListCopy;
+        
 
-  // // 创建一个新的 Image 对象
-  // const img = new Image();
-  // const objectUrl = URL.createObjectURL(params.file); // 使用上传的文件
-  // img.src = objectUrl;
-
-  // img.onload = () => {
-  //   const width = img.width;
-  //   const height = img.height;
-
-  //   if (width === 0 || height === 0) {
-  //     console.error('加载的图片宽度或高度为0');
-  //     $baseMessage('图片加载失败，宽度或高度为0', 'error', 'hey');
-  //     return;
-  //   }
-
-      // // 检查图片比例
-      // if (width !== height) {
-      //     // 进行图片上传
-      //     // 创建 FormData 对象并添加文件和组件 ID
-      //     const imageForm = new FormData();
-      //     imageForm.append('file', params.file);
-      //     imageForm.append('reviewComponentId', currentComponent.reviewComponentId as any);
-
-      //     // 上传图片
-      //     reviewStepNo3ComponentUpload(imageForm)
-      //         .then(({ data }) => {
-      //         if (!data) {
-      //             throw new Error('上传图片失败');
-      //         }
-      //         imgUrl.value = data;
-      //         cropVisible.value = true; // 显示裁剪窗口
-      //         const imageListCopy = [...(currentComponent.componentImgUrl || [])];
-      //         imageListCopy.push({ url: data });
-
-      //         componentList.value[clickIconRowIndex.value!].componentImgUrl = imageListCopy;
-      //         componentList.value[clickIconRowIndex.value!].hide = imageListCopy.length > 0;
-      //          componentList.value[clickIconRowIndex.value!].cropData = cropData.value
-      //          console.log(componentList.value[clickIconRowIndex.value!].cropData);
-               
-      //             // 提示成功信息
-      //             $baseMessage('图片上传成功!', 'success', 'hey');
-              
-      //         })
-      //         .catch(error => {
-      //             console.error(error);
-      //             $baseMessage('图片上传失败!', 'error', 'hey');
-      //         });
-      // } else {
-          const imageForm = new FormData();
-          imageForm.append('file', params.file);
-          imageForm.append('reviewComponentId', currentComponent.reviewComponentId as any);
-
-          // 上传图片
-          reviewStepNo3ComponentUpload(imageForm)
-              .then(({ data }) => {
-              if (!data) {
-                  throw new Error('上传图片失败');
-              }
-              const imageListCopy = [...(currentComponent.componentImgUrl || [])];
-              imageListCopy.push({ url: data });
-
-              componentList.value[clickIconRowIndex.value!].componentImgUrl = imageListCopy;
-              componentList.value[clickIconRowIndex.value!].hide = imageListCopy.length > 0;
-
-                  // 提示成功信息
-                  $baseMessage('图片上传成功!', 'success', 'hey');
-              
-              })
-              .catch(error => {
-                  console.error(error);
-                  $baseMessage('图片上传失败!', 'error', 'hey');
-              });
+        // 提示成功信息
+        $baseMessage('图片上传成功!', 'success', 'hey');
       
-
-} catch (error) {
-  console.error(error);
-  $baseMessage('图片上传失败!', 'error', 'hey');
-}
+    } catch (error) {
+        console.error(error);
+        $baseMessage('图片上传失败!', 'error', 'hey');
+    }
 }
 
 // function handleImageUpload(params: any, currentComponent: any) {

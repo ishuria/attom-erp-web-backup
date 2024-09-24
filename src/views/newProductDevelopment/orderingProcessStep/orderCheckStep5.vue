@@ -1,15 +1,15 @@
 <template>
   <div>
-        <div>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table 
                 ref="tableRef" 
                 stripe border 
                 :data="exchangeList" 
                 :header-cell-style="{ 'text-align': 'right' }"
-                height="430"
                 :show-header="false"
                 @cell-click="tableInputChange"
                 class="table1"
+                style="width: auto; table-layout: fixed;"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
@@ -29,6 +29,7 @@
                     :label="prop" 
                     :key="i" 
                     align="center" 
+                    min-width="240"
                 >
                     <template #default = {row}>
                         

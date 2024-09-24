@@ -1,22 +1,22 @@
 <template>
   <div>
-    <div>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
       <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-        height="750" :show-header="false">
+        height="750" :show-header="false" style="width: auto; table-layout: fixed;">
         <!-- 第一列固定标签列 -->
         <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
           <template #default="{ row }">
             <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
           </template>
         </el-table-column>
-        <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center">
+        <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center" min-width="240">
           <template #default="{ row }">
 
             <template v-if="row['column0'] === 'sku'">
               <el-input 
-                v-model="row[prop]" 
+                v-model.trim="row[prop]" 
                 @click="inputHandleMouseOver($event)"
-                @keydown.enter="effectiveCountInputeHandle($event)"
+                @keydown.enter="handleEffectiveCountInpute($event)"
               />
             </template>
 
@@ -108,7 +108,17 @@ const props = defineProps<{
 defineOptions({
   name: 'OrderReviewStep2',
 })
-
+// 输入键盘enter失去焦点h
+const handleEffectiveCountInpute = (event: Event) => {
+    const targetElement = event.target as HTMLInputElement;
+    const sku = targetElement.value.trim()
+    if(sku.length > 40) {
+      $baseMessage('SKU长度不能超过40个字符', 'error', 'hey')
+      event.preventDefault(); // 防止提交或其他默认行为
+    } else {
+      targetElement.blur();
+    }
+}
 const router = useRouter()
 const route: any = useRoute()
 const tabsStore = useTabsStore()

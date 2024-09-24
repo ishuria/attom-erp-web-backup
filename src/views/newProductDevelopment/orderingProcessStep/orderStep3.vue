@@ -273,170 +273,170 @@
                 <template #empty>
                     <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
                 </template>
-                </el-table>
+            </el-table>
       
             
-        <vab-alert type="error">
-            <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
-            <h3>--为了精准核算利润，运费需要准确填写。</h3>
-        </vab-alert>
-        <wangEditor
-            :title="wangEditorTitle"
-            :wangEditorVisible="wangEditorAttentionVisible"
-            :content="attentionCopy"
-            @clickChild="clickAttentionConfirm"
-            @clickBoolean="clickAttentionCancel"
-            :classify="classify"
-        >
-        </wangEditor>
-        <wangEditor
-            :title="wangEditorTitle"
-            :wangEditorVisible="wangEditorContractVisible"
-            :content="contractCopy"
-            @clickChild="clickContractConfirm"
-            @clickBoolean="clickContractCancel"
-            :classify="classify"
-        >
-        </wangEditor>
+            <vab-alert type="error">
+                <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
+                <h3>--为了精准核算利润，运费需要准确填写。</h3>
+            </vab-alert>
+            <wangEditor
+                :title="wangEditorTitle"
+                :wangEditorVisible="wangEditorAttentionVisible"
+                :content="attentionCopy"
+                @clickChild="clickAttentionConfirm"
+                @clickBoolean="clickAttentionCancel"
+                :classify="classify"
+            >
+            </wangEditor>
+            <wangEditor
+                :title="wangEditorTitle"
+                :wangEditorVisible="wangEditorContractVisible"
+                :content="contractCopy"
+                @clickChild="clickContractConfirm"
+                @clickBoolean="clickContractCancel"
+                :classify="classify"
+            >
+            </wangEditor>
 
-    </div>
-    <div class="table-container">
-        <el-table 
-            ref="tableRef" 
-            stripe border 
-            :data="variantsList" 
-            :header-cell-style="{ 'text-align': 'center' }"
-            @cell-click="changeInput"
-            :cell-style="{ 'text-align': 'center' }"
-        >
-            <el-table-column label="变体" min-width="100" prop="variant" align="center"></el-table-column>
-            <el-table-column prop="site" label="站点" min-width="135">
-                <template #default="{ row }">
-                    <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
-                        <el-option v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
-                                :value="dict.value" :label="dict.label"></el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column label="外汇币种" min-width="100" prop="currencyType">
-            </el-table-column>
-            <el-table-column label="汇率" min-width="100" prop="foreignExchange">
-            </el-table-column>
-            <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="120"></el-table-column>
-            <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.packagingLength" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.packagingLength }}</span>
-                </template>
-            </el-table-column>
+        </div>
+        <div class="table-container">
+            <el-table 
+                ref="tableRef" 
+                stripe border 
+                :data="variantsList" 
+                :header-cell-style="{ 'text-align': 'center' }"
+                @cell-click="changeInput"
+                :cell-style="{ 'text-align': 'center' }"
+            >
+                <el-table-column label="变体" min-width="100" prop="variant" align="center"></el-table-column>
+                <el-table-column prop="site" label="站点" min-width="135">
+                    <template #default="{ row }">
+                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
+                            <el-option v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
+                                    :value="dict.value" :label="dict.label"></el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="外汇币种" min-width="100" prop="currencyType">
+                </el-table-column>
+                <el-table-column label="汇率" min-width="100" prop="foreignExchange">
+                </el-table-column>
+                <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="120"></el-table-column>
+                <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.packagingLength" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.packagingLength }}</span>
+                    </template>
+                </el-table-column>
 
-            <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.packagingWidth" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.packagingWidth }}</span>
-                </template>
-            </el-table-column>
+                <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.packagingWidth" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.packagingWidth }}</span>
+                    </template>
+                </el-table-column>
 
-            <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.packagingHeight" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.packagingHeight }}</span>
-                </template>
-            </el-table-column>
+                <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.packagingHeight" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.packagingHeight }}</span>
+                    </template>
+                </el-table-column>
 
-            <el-table-column prop="weight" label="重量(g)">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.weight" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.weight }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="尾程$"  min-width="70" prop="lastMile" ></el-table-column>
-            <el-table-column label="头程￥"  width="90" prop="firstMile" ></el-table-column>    
-            <el-table-column label="打包￥"  width="90" prop="packagingPrice" >
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.packagingPrice" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.packagingPrice }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
-                <template #default="{ row }">
-                    <el-select 
-                        v-model="row.firstMileChannel" 
-                        placeholder="请选择头程渠道"
-                        style="min-width: 100%"
-                        @change="handlerEstimatendChange(row)"
-                    >
-                        <el-option 
-                            v-for="dict in firstLegChannelColumnsNum" 
-                            :key="dict.value" 
-                            :value="dict.value"
-                            :label="dict.label"
+                <el-table-column prop="weight" label="重量(g)">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.weight" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.weight }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="尾程$"  min-width="70" prop="lastMile" ></el-table-column>
+                <el-table-column label="头程￥"  width="90" prop="firstMile" ></el-table-column>    
+                <el-table-column label="打包￥"  width="90" prop="packagingPrice" >
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.packagingPrice" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.packagingPrice }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
+                    <template #default="{ row }">
+                        <el-select 
+                            v-model="row.firstMileChannel" 
+                            placeholder="请选择头程渠道"
+                            style="min-width: 100%"
+                            @change="handlerEstimatendChange(row)"
                         >
-                        </el-option>
-                    </el-select>
+                            <el-option 
+                                v-for="dict in firstLegChannelColumnsNum" 
+                                :key="dict.value" 
+                                :value="dict.value"
+                                :label="dict.label"
+                            >
+                            </el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.finalSellingPrice" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.finalSellingPrice }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
+                <el-table-column prop="roi" label="ROI"></el-table-column>
+                <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.weightCoefficient" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.weightCoefficient }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.volumeCoefficient" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.volumeCoefficient }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="tariff" label="关税%">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.tariff" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
+                        </div>
+                        <span>{{ row.tariff }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
+                <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140"></el-table-column>
+            
+                <el-table-column align="center" fixed="right" label="操作" width="120">
+                    <template #default="{ row }">
+                        <el-link type="primary" :underline="false">逆算</el-link>
+                    </template>
+                </el-table-column>
+                <template #empty>
+                    <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
                 </template>
-            </el-table-column>
-            <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.finalSellingPrice" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.finalSellingPrice }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
-            <el-table-column prop="roi" label="ROI"></el-table-column>
-            <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.weightCoefficient" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.weightCoefficient }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.volumeCoefficient" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.volumeCoefficient }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="tariff" label="关税%">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.tariff" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                    </div>
-                    <span>{{ row.tariff }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
-            <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140"></el-table-column>
-           
-            <el-table-column align="center" fixed="right" label="操作" width="120">
-                <template #default="{ row }">
-                    <el-link type="primary" :underline="false">逆算</el-link>
-                </template>
-            </el-table-column>
-            <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
-            </template>
-        </el-table>
-        <vab-alert type="error">
-            <h3>--请输入精确的产品包装尺寸（精确到小数点后1位），重量（精确到整数）和最终售价。</h3>
-            <h3>--如果开专票则实际产品成本=总含税价/(1+开票税点)；如果开普票则则实际产品成本=总含税价</h3>
-        </vab-alert>
-    </div>
+            </el-table>
+            <vab-alert type="error">
+                <h3>--请输入精确的产品包装尺寸（精确到小数点后1位），重量（精确到整数）和最终售价。</h3>
+                <h3>--如果开专票则实际产品成本=总含税价/(1+开票税点)；如果开普票则则实际产品成本=总含税价</h3>
+            </vab-alert>
+        </div>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
             <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
@@ -954,77 +954,97 @@ const handleSave = async () => {
 }
 const router = useRouter()
 // 当点击保存并继续的时候
-const handleSaveAndContinue = async () => {
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
+// 校验每个组件项的函数
+const validateComponent = (item: any) => {
+    if (item.componentImgUrl.length === 0) {
+        $baseMessage('请先上传零件图片', 'error', 'hey');
+        return false;
+    } else if (!item.componentName) {
+        $baseMessage('请先填写零件名', 'error', 'hey');
+        return false;
+    } else if (!item.quantity) {
+        $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey');
+        return false;
+    } else if (!item.componentUnit) {
+        $baseMessage('请先填写单位', 'error', 'hey');
+        return false;
+    } else if (!item.unitPrice) {
+        $baseMessage('请先填写出厂单价', 'error', 'hey');
+        return false;
+    } else if (!item.totalPrice) {
+        $baseMessage('请先填写出场总价', 'error', 'hey');
+        return false;
+    } else if (!item.freight) {
+        $baseMessage('请先填写运费含税', 'error', 'hey');
+        return false;
+    } else if (!item.taxIncludedPrice) {
+        $baseMessage('请先填写总含税价', 'error', 'hey');
+        return false;
+    } else if (!item.supplier) {
+        $baseMessage('请先填写供应商', 'error', 'hey');
+        return false;
+    } else if (!item.actualTaxRate) {
+        $baseMessage('请先填写实际税点', 'error', 'hey');
+        return false;
+    } else if (!item.invoicingTaxRate) {
+        $baseMessage('请先填写开票税点', 'error', 'hey');
+        return false;
+    } else if (!item.purchaseLink) {
+        $baseMessage('请先填写采购链接', 'error', 'hey');
+        return false;
     }
-    let check = false
-    
-    
-    componentList.value.forEach((item: any) => {
-        console.log(item);
-        if(item.componentImgUrl.length === 0) {
-            check = true
-            $baseMessage('请先上传零件图片', 'error', 'hey')
-            return
-        } else if(item.componentName === '') {
-            check = true
-            $baseMessage('请先填写零件名', 'error', 'hey')
-            return 
-        } else if(item.quantity == null) {
-            check = true
-            $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-            return
-        } 
-        // else if(item.componentUnit == null) {
-        //     check = true
-        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-        //     return
-        // } else if(item.quantity == null) {
-        //     check = true
-        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-        //     return
-        // } else if(item.quantity == null) {
-        //     check = true
-        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-        //     return
-        // } else if(item.quantity == null) {
-        //     check = true
-        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-        //     return
-        // } else if(item.quantity == null) {
-        //     check = true
-        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-        //     return
-        // } else if(item.quantity == null) {
-        //     check = true
-        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-        //     return
-        // } else if(item.quantity == null) {
-        //     check = true
-        //     $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey')
-        //     return
-        // }
-        
-    })
-    console.log(check);
-    
-    if (!check) {
-        const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
+    return true; // 所有校验通过
+};
+const validateVariants = (item: any) => {
+    if (!item.packagingLength) {
+        $baseMessage('请先填写变体的长（cm）', 'error', 'hey');
+        return false;
+    } else if (!item.packagingWidth) {
+        $baseMessage('请先填写变体的宽（cm）', 'error', 'hey');
+        return false;
+    } else if (!item.packagingHeight) {
+        $baseMessage('请先填写变体的高（cm）', 'error', 'hey');
+        return false;
+    } else if (!item.weight) {
+        $baseMessage('请先填写重量', 'error', 'hey');
+        return false;
+    } else if (!item.packagingPrice) {
+        $baseMessage('请先填写打包价格', 'error', 'hey');
+        return false;
+    } else if (!item.finalSellingPrice) {
+        $baseMessage('请先填写最终售价', 'error', 'hey');
+        return false;
+    } else if (!item.weightCoefficient) {
+        $baseMessage('请先填写重量系数', 'error', 'hey');
+        return false;
+    } else if (!item.volumeCoefficient) {
+        $baseMessage('请先填写体积系数', 'error', 'hey');
+        return false;
+    } else if (!item.tariff) {
+        $baseMessage('请先填写关税', 'error', 'hey');
+        return false;
+    }
+    return true; // 所有校验通过
+};
+// 当点击保存并继续的时候
+const handleSaveAndContinue = async () => {
+    let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
+
+    const allValid = componentList.value.every((item) => validateComponent(item));
+    const allVariantsValid = variantsList.value.every((item) => validateVariants(item))
+    if (allValid && allVariantsValid) {
+        const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
         if (data === true) {
-            $baseMessage("当前信息已保存。","success","hey")
-            emit('change-step', 3)
+            $baseMessage("当前信息已保存。", "success", "hey");
+            emit('change-step', 3);
             if (route.query.reviewId) {
-                    const {...query} = route.query;
-                    router.replace({query: {...query, stepNo: 3}});
-                }
+                const { ...query } = route.query;
+                router.replace({ query: { ...query, stepNo: 3 } });
+            }
         }
     }
-   
-}
+};
+
 // 当点击上一步的时候
 const handleGoback = () => {
     emit('change-step', 1)

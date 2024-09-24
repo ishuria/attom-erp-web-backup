@@ -9,55 +9,58 @@
         </el-page-header>
         <el-card class="product-details-card" shadow="never">
             <el-row :gutter="20">
-                <el-col :span="2" class="custom-upload" >
-                    <el-upload list-type="picture-card" :auto-upload="false" :http-request="uploadImage">
-                            <el-icon v-if="!form.imageUrl"><Plus /></el-icon>
+                <el-col :span="2" class="custom-upload" > 
+                    <el-upload 
+                        list-type="picture-card" 
+                        :file-list="imgForm.imageList" 
+                        :limit="5" 
+                        :class="{ hide: imgForm.hide }"
+                        :http-request="uploadImage"
+                    >
+                        <div 
+                            style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
+                            @click="handleIconClick(imgForm)"
+                        >
+                            <el-icon ><Plus /></el-icon>
+                        </div>
 
-                            <!-- 预先显示已经存在的图片 -->
-                            <template v-if="form.imageUrl">
-                                <div>
-                                    <img class="el-upload-list__item-thumbnail" :src="form.imageUrl" alt="" />
-                                    <span class="el-upload-list__item-actions">
-                                        <span class="el-upload-list__item-preview">
-                                            <el-icon @click.stop="handlePreview(form)"><zoom-in /></el-icon>
-                                        </span>
-                                        <span class="el-upload-list__item-delete">
-                                            <el-icon @click.stop="handleRemove(form)"><Delete /></el-icon>
-                                        </span>
+                        <template #file="{ file }">
+                            <div>
+                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                                <span class="el-upload-list__item-actions">
+                                    <span
+                                        class="el-upload-list__item-preview"
+                                        @click="handlePreview(imgForm)"
+                                    >
+                                        <el-icon><zoom-in /></el-icon>
                                     </span>
-                                </div>
-                            </template>
-                            <template #file="{ file }">
-                                <div>
-                                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                                    <span class="el-upload-list__item-actions">
-                                    <span class="el-upload-list__item-preview">
-                                        <el-icon @click.stop="handlePreview(form)"><zoom-in /></el-icon>
+                                    <span
+                                        class="el-upload-list__item-delete"
+                                        @click="handleRemove(imgForm)"
+                                    >
+                                        <el-icon><Delete /></el-icon>
                                     </span>
-                                    <span class="el-upload-list__item-delete">
-                                        <el-icon @click.stop="handleRemove(form)"><Delete /></el-icon>
-                                    </span>
-                                    </span>
-                                </div>
-                            </template>
-                        </el-upload>
+                                </span>
+                            </div>
+                        </template>
+                    </el-upload>
                 </el-col>
                 <el-col :span="12" style="padding-right: 0px;">
                     <el-form label-position="top" :inline="true">
                         <el-row style="width: 100%">
                             <el-col :span="12">
                                 <el-form-item label="SKU">
-                                    <el-input v-model="sku.code" placeholder=""></el-input>
+                                    <el-input v-model="sku.sku" placeholder="" disabled></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="产品主品名">
-                                    <el-input v-model="sku.productName" ></el-input>
+                                    <el-input v-model="sku.productName"  @blur="handleUpdateSku"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
-                                <el-form-item label="产品短描述">
-                                    <el-input v-model="sku.shortDescription"></el-input>
+                                <el-form-item label="产品短描述" >
+                                    <el-input v-model="sku.productDesc" @blur="handleUpdateSku"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -65,17 +68,17 @@
                         <el-row style="width: 100%">
                             <el-col :span="6">
                                 <el-form-item label="北美FNSKU">
-                                    <el-input v-model="sku.originalList" ></el-input>
+                                    <el-input v-model="sku.northAmericaFnSku" disabled></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="欧洲FNSKU">
-                                    <el-input v-model="sku.originalList" ></el-input>
+                                    <el-input v-model="sku.europeFnSku" disabled></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
-                                <el-form-item label="变体名">
-                                    <el-input v-model="sku.variantName" ></el-input>
+                                <el-form-item label="变体名" >
+                                    <el-input v-model="sku.variantName" @blur="handleUpdateSku" ></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -83,22 +86,29 @@
                         <el-row style="width: 100%">
                             <el-col :span="6">
                                 <el-form-item label="UPC">
-                                    <el-input v-model="sku.upc" ></el-input>
+                                    <el-input v-model="sku.upc" disabled></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="默认收货仓库">
-                                    <el-select v-model="sku.upc" placeholder="请选择默认收货仓库"></el-select>
+                                    <el-select v-model="sku.defaultRepository" placeholder="请选择默认收货仓库" @change="handleUpdateSku">
+                                        <el-option
+                                            v-for="item in defaultRepositoryOption"
+                                            :label="item.label"
+                                            :value="item.value"
+                                            :key="item.value"
+                                        ></el-option>
+                                    </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
-                                <el-form-item label="产品经理">
-                                    <el-input v-model="sku.productDesign" ></el-input>
+                                <el-form-item label="产品经理" >
+                                    <el-input v-model="sku.productManager" @blur="handleUpdateSku"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6"> 
-                                <el-form-item label="产品设计">
-                                    <el-input v-model="sku.productDesign" ></el-input>
+                                <el-form-item label="产品设计" >
+                                    <el-input v-model="sku.productDesign" @blur="handleUpdateSku"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -106,22 +116,22 @@
                         <el-row style="width: 100%">
                             <el-col :span="4">
                                 <el-form-item label="总实际成本">
-                                    <el-input v-model="sku.totalCost"></el-input>
+                                    <el-input v-model="sku.procurementCost" disabled></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
-                                <el-form-item label="起订量">
-                                    <el-input v-model="sku.moq"></el-input>
+                                <el-form-item label="起订量" >
+                                    <el-input v-model="sku.minQuantity" @blur="handleUpdateSku"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="4">
-                                <el-form-item label="整箱数">
-                                    <el-input v-model="sku.boxQuantity"></el-input>
+                                <el-form-item label="整箱数" >
+                                    <el-input v-model="sku.numCartons" @blur="handleUpdateSku"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12"> 
                                 <el-form-item label="近10次打包装箱数">
-                                    <el-input v-model="sku.packagingQuantities" ></el-input>
+                                    <el-input disabled></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -137,7 +147,7 @@
                                         <span style="font-size: var(--el-form-label-font-size);">质检清单</span>
                                         <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handlePacking"><Edit /></el-icon>
                                     </el-space>
-                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 11 }" v-model="packingPrecautionsValue"></el-input>
+                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 11 }" v-model="sku.qualityChecklist" disabled></el-input>
                         </el-form-item>
                             </el-col>
                             <el-col :span="12">
@@ -146,7 +156,7 @@
                                         <span style="font-size: var(--el-form-label-font-size);">产品经理自己看的备注</span>
                                         <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handleManagerRemarks"><CirclePlusFilled /></el-icon>
                                     </el-space>
-                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 11 }" v-model="managerRemarks"></el-input>
+                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 11 }" v-model="sku.remarks" @blur="handleRemarksChange"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -357,19 +367,9 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column  label="默认收货仓库" prop="remarks" min-width="125">
+                <el-table-column  label="默认收货仓库" prop="componentInfo" min-width="125">
                     <template #default="{ row }">
-                        <el-select 
-                            v-model="row.componentInfo!" 
-                            value-key="id"
-                            placeholder="请选择收货仓库"
-                            filterable
-                            clearable
-                            allow-create
-                            style="min-width: 100%;"
-                        >
-                            
-                        </el-select>
+                        <el-input v-model="row.componentInfo" clearable />
                     </template>
                 </el-table-column>
                 <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
@@ -564,6 +564,8 @@ import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
 import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
+import { getProductSkuDetail, updateProductSku, updateProductSkuRemark } from '~/src/api/devlocal/productInformation';
+import { IgetProductSkuDetail } from '~/src/type/productInformation/skuInformationType';
 
 const route: any = useRoute()
 const router = useRouter()
@@ -594,24 +596,15 @@ const transferValue = ref([])
 const filterMethod = (query: any, item: any) => {
   return item.initial.toLowerCase().includes(query.toLowerCase())
 }
-const sku = ref({
-  code: 'NHome-X003UMLWLX',
-  productName: '可食用内粉',
-  shortDescription: '5g粗粉',
-  originalList: '2024-7-29: 检查产品配件是否齐全, 外观是否有破损和刮痕。\n2024-6-29: 胶条和亚克力板嵌入槽里集中定配。\n2024-5-29: 检查人偶底座是否能与配套支架完美契合。\n2024-5-22: 小塞宝贝（外翻）：几滴和薄薄的色差有严重问题的需要返厂处理。\n2024-2-29: 软皮使用说明书，每片或每方板上贴单面高透明胶。',
-  variantName: '斑色',
-  productDesign: '王文育',
-  supplier: '云舟-川桥路',
-  upc: '699035922947',
-  totalCost: 12.5,
-  moq: 100,
-  boxQuantity: 100,
-  packagingQuantities: '25(150箱), 30(50箱), 50(10箱)',
-  managerNotes: '2024-06-26: 亚克力板的薄后问题要在敲定群里沟通。\n2024-05-20: 往外不在安的单价提高0.21元/爿。需要厂家努力好，应订\n2024-05-16: 去秋杭来做底 单价提高0.3元/双。\n2024-05-15: 南通息换供应商，成本15.97元/套。税后17.17元/套。\n底托和插扣压条需要我司购买，并发到厂家产加工，让他们安装到底座\n应压工厂的地址如下：\n曹县彭意不业有限公司：王先生 13793040890 山东省菏泽市曹县仙明\n2024-05-15: 往胶压条是走到长度，1688挂账中是现货长度，下单\n时要考虑上（视情长4mm 平方，看根长度，数量）\n2024-05-15: 胶带我司需要收到供应商'
-})
+const sku = ref<any>({})
 const componentType = [
     { label: '零件', value: 0 },
     { label: '耗材', value: 1 },
+]
+const defaultRepositoryOption = [
+    { label: '云舟', value: 1 },
+    { label: '云梧舟', value: 2 },
+    { label: '埃托姆', value: 3 },
 ]
 const imageUrl = ref('')
 // 预览图片列表
@@ -657,7 +650,7 @@ const handlePacking = () => {
 const handleManagerRemarks = () => {
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0]; // 获取 'YYYY-MM-DD' 格式
-    managerRemarks.value = `${formattedDate}：\n${managerRemarks.value}`
+    sku.value.remarks = `${formattedDate}：\n${sku.value.remarks}`
 }
 const handleClosePackingPrecautions = (value: boolean) => {
     packingPrecautionsVisible.value = value
@@ -666,7 +659,7 @@ const packingPrecautionsValue = ref<string>('')
 const managerRemarks = ref<string>('')
     
 const handleTableDataValue = (value: any) => {
-    packingPrecautionsValue.value = value
+    sku.value.qualityChecklist = value
         .map((item: any) => `${item.date}: ${item.packingPrecautions}`)
         .join('\n');
 }
@@ -745,7 +738,25 @@ const tableData = [
     componentImgUrl: [], // 这里可以填入图片的 URL
   },
 ];
-
+const handleUpdateSku = async () => {
+    await updateProductSku({
+        skuId: sku.value.skuId,
+        productName: sku.value.productName,
+        productDesc: sku.value.productDesc,
+        variantName: sku.value.variantName,
+        defaultRepository: sku.value.defaultRepository,
+        minQuantity: sku.value.minQuantity,
+        numCartons: sku.value.numCartons,
+        productManager: sku.value.productManager,
+        productDesign: sku.value.productDesign,
+    })
+}
+const handleRemarksChange = async () => {
+    await updateProductSkuRemark({
+        skuId: sku.value.skuId,
+        remarks: sku.value.remarks
+    })
+}
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 分类
@@ -794,6 +805,7 @@ const mergedPartName = computed(() => {
 const mergedComponentName = computed(() => {
     return `${form.value.componentName}-${form.value.specification}`;
 });
+const imgForm = ref<any>({})
 const rules = reactive({
     type: [
         { required: true, message: '请选择类型', trigger: 'change' },
@@ -1055,6 +1067,7 @@ const handleIconClick = (index: number) => {
  */
 const imageForm = ref(new FormData()) as any;
 async function uploadImage(params: any) {
+    imageForm.value.hide = true
 //   try {
 //     const index = clickIconRowIndex.value!;
 //     const currentComponent = componentList.value[index];
@@ -1110,7 +1123,24 @@ const handleSupplier = () => {
         },
     })
 }
-
+// 获取拿样零件添加数据
+const fetchData = async () =>{
+ 
+  const { data } = await getProductSkuDetail({
+    skuId: route.query.skuId
+  })
+  sku.value = data
+  if (!sku.value.skuImgUrl) {
+    imageForm.value.hide = false
+    imageForm.value.imageList = []
+  } else {
+    imageForm.value.hide = true
+    imageForm.value.imageList = [{ url: sku.value.skuImgUrl }]
+  }
+}
+onMounted(async ()=>{
+  fetchData()
+})
 </script>
 
 <style scoped>
@@ -1165,7 +1195,9 @@ const handleSupplier = () => {
     align-items: center; /* 垂直居中，如果需要 */
     
 }
-
+.hide {
+    display: none
+}
 
 
 
