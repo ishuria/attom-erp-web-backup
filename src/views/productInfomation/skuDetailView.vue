@@ -505,7 +505,7 @@
                 </el-form-item>
                 <el-form-item label="供应商" prop="supplier">
                     <!-- <el-input v-model="form.supplier" clearable filterable placeholder="点击输入和搜索"/> -->
-                    <el-select v-model="form.supplier" placeholder="点击输入和搜索" clearable filterable >
+                    <el-select v-model="form.supplier" placeholder="点击输入和搜索" clearable filterable allow-create>
                             <!-- <el-option 
                                 v-for="item in row.suppliserList"
                                 :label="item.label"
@@ -683,15 +683,15 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
 }
 // 修改默认供应商
 const handleSuppliserChange = async (row: any) => {
-    const { data } = await updateProductComponent(row)
-    if (data === true) {
-        const { data: changeData } = await getChangeProductComponent({
-            skuId: row.skuId,
-            existingPartsListId: row.existingPartsListId,
-            suppliserId: row.defaultSuppliserId
-        })
-        row = changeData
-    }
+    // const { data } = await updateProductComponent(row)
+    // if (data === true) {
+    //     const { data: changeData } = await getChangeProductComponent({
+    //         skuId: row.skuId,
+    //         existingPartsListId: row.existingPartsListId,
+    //         suppliserId: row.defaultSuppliserId
+    //     })
+    //     row = changeData
+    // }
 }
 const packingPrecautionsVisible = ref<boolean>(false)
 const handlePacking = () => {
@@ -1057,6 +1057,9 @@ const clickCancle = async (event:any,value:any) =>{
         })
         fetchComponentData()
     }
+
+    // 重新获取实际总成本
+    fetchData()
 }
 const handleCurrencyChange = async (row: any) => {
     await updateProductComponent(row)
@@ -1071,6 +1074,7 @@ const handleInvoicingChange = async (row: any) => {
             suppliserId: row.defaultSuppliserId
         })
         row = changeData
+        fetchComponentData()
     }
 }
 // 点击图标的行的下标
@@ -1126,7 +1130,7 @@ const handleSupplier = (row: any) => {
         path: '/productInfomation/skuSupplier',
         query: {
             title: "SKU供应商",
-            componentId: row.componentId,
+            componentId: row.existingPartsListId,
             skuId: row.skuId,
             existingPartsListId: row.existingPartsListId,
             timestamp: Date.now(),

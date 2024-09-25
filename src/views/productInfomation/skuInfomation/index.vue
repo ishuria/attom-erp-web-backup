@@ -30,7 +30,7 @@
           >
               <el-table-column label="图片" class="image-wall" min-width="100">
                 <template #default="{ row }">
-                    <el-image style="width: 75px; height: 75px" :src="row.skuImgUrl" fit="fill" data-img="img" />
+                    <el-image style="width: 75px; height: 75px" v-if="row.skuImgUrl":src="row.skuImgUrl" fit="fill" data-img="img" />
                 </template>
               </el-table-column>
               <el-table-column label="SKU" min-width="70" prop="sku" width="100"></el-table-column>   
@@ -201,12 +201,12 @@ const handleHideStopProduction = () => {
  
 // }
 const handleUpdateStatus = async (row: IgetProductList) => {  
-  await updateProductStatus({
-    skuId: row.skuId,
-    haltStatus: row.productionHaltStatus,
-    photographStatus: row.packagePhotograph,
-    priorityStatus: row.priorityPacking
-  })
+  // await updateProductStatus({
+  //   skuId: row.skuId,
+  //   haltStatus: row.productionHaltStatus,
+  //   photographStatus: row.packagePhotograph,
+  //   priorityStatus: row.priorityPacking
+  // })
 }
 const queryForm = reactive<any>({
   keyWord: '',
