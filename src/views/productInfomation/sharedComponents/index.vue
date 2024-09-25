@@ -4,16 +4,27 @@
       <vab-query-form-top-panel>
         <h2>零件报关信息</h2>
       </vab-query-form-top-panel>
-      <vab-query-form-left-panel :span="24">
+      <vab-query-form-left-panel>
         <el-button type="primary">隐藏停产</el-button>
         <el-button type="primary">隐藏不报关</el-button>
       </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                  @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" border stripe :data="sampleData" @cell-click="changeInput" :header-cell-style="{ textAlign: 'center'}">
-      <el-table-column align="center" label="图片" width="100" prop="imageUrl" fixed="left">
+    <el-table ref="tableRef" border stripe :data="list" @cell-click="changeInput" :header-cell-style="{ textAlign: 'center'}" v-loading="listLoading">
+      <el-table-column align="center" label="图片" width="100" prop="componentImgUrl" fixed="left">
           <template #default="{ row }">
-              <el-image style="width: 75px; height: 75px" :src="row.imageUrl" fit="fill" data-img="img" />
+              <el-image style="width: 75px; height: 75px" :src="row.componentImgUrl" fit="fill" data-img="img" />
           </template>
       </el-table-column>
       <el-table-column label="零件名" prop="componentName" width="200" fixed="left">
@@ -26,281 +37,281 @@
           <span style="color: rgb(192, 192, 192)">{{ row.sku }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="不报关" prop="purchaseToOrder" align="center" min-width="90">
+      <el-table-column label="不报关" prop="customsDeclarationStatus" align="center" min-width="90">
         <template #default = "{ row }">
-            <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+            <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="供应商" min-width="200" prop="title" >
+      <el-table-column align="center" label="供应商" min-width="200" prop="suppliser" >
         <template #default="{ row }">
-          <span style="color: rgb(192, 192, 192)">{{ row.title }}</span>
+          <span style="color: rgb(192, 192, 192)">{{ row.suppliser }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="UPC" min-width="140" prop="fullName" >
+      <el-table-column align="center" label="UPC" min-width="140" prop="upc" >
         <template #default="{ row }">
-          <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
+          <span style="color: rgb(192, 192, 192)">{{ row.upc }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="北美FNSKU" min-width="140" prop="fullName" >
+      <el-table-column align="center" label="北美FNSKU" min-width="140" prop="northAmericaFnSku" >
         <template #default="{ row }">
-          <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
+          <span style="color: rgb(192, 192, 192)">{{ row.northAmericaFnSku }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="欧洲FNSKU" min-width="140" prop="fullName" >
+      <el-table-column align="center" label="欧洲FNSKU" min-width="140" prop="europeFnSku" >
         <template #default="{ row }">
-          <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
+          <span style="color: rgb(192, 192, 192)">{{ row.europeFnSku }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="货源地" min-width="120" prop="fullName" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.componentUnit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="中国报关品名" min-width="140" prop="fullName" >
+      <el-table-column align="center" label="货源地" min-width="120" prop="placeOrigin" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.placeOrigin" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.placeOrigin }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="每套有多少个开票单位" min-width="120" prop="fullName" >
+      <el-table-column align="center" label="中国报关品名" min-width="140" prop="customsDeclarationNameZh" >
+        <template #default="{ row }">
+          <div class="none">
+              <el-input type="text" v-model="row.customsDeclarationNameZh" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+          </div>
+          <span>{{ row.customsDeclarationNameZh }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="每套有多少个开票单位" min-width="120" prop="count" >
         <template #header>
           每套有多少<br>个开票单位
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.count" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.count }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="开票单位" min-width="90" prop="fullName" >
+      <el-table-column align="center" label="开票单位" min-width="90" prop="unit" >
         <template #header>
           开票<br>单位
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.unit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.unit }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="开票型号" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="开票型号" min-width="100" prop="type" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.type" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="" min-width="90" prop="fullName" >
+      <el-table-column align="center" label="" min-width="90" prop="statutoryUnit" >
         <template #header>
           法定第<br>1单位
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.statutoryUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.statutoryUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="" min-width="120" prop="fullName" >
+      <el-table-column align="center" label="" min-width="120" prop="statutoryCount" >
         <template #header>
           每套多少法<br>定第1单位
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.statutoryCount" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.statutoryCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="" min-width="100" prop="actualWeight" >
+      <el-table-column align="center" label="" min-width="100" prop="coveredWeightStatus" >
         <template #header>
           报关覆盖<br>实际净重
         </template>
         <template #default="{ row }">
-          <el-checkbox v-model="row.actualWeight" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+          <el-checkbox v-model="row.coveredWeightStatus" :true-value="1" :false-value="0" class="custom-checkbox"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="品牌" min-width="90" prop="fullName" >
+      <el-table-column align="center" label="品牌" min-width="90" prop="brank" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.brank" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="" min-width="90" prop="fullName" >
+      <el-table-column align="center" label="" min-width="90" prop="taxRate" >
         <template #header>
           出口退<br>税税率
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.taxRate" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.taxRate }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="HS" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="HS" min-width="100" prop="hs" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.hs" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.hs }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="HTS美国" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="HTS美国" min-width="100" prop="htsUs" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.htsUs" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.htsUs }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="HTS欧洲" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="HTS欧洲" min-width="100" prop="htsEurope" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.htsEurope" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.htsEurope }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="申报要素" min-width="200" prop="fullName" >
+      <el-table-column align="center" label="申报要素" min-width="200" prop="declarationElements" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.declarationElements" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.declarationElements }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="申报要素缩写" min-width="200" prop="fullName" >
+      <el-table-column align="center" label="申报要素缩写" min-width="200" prop="declarationElementsAbbreviation" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.declarationElementsAbbreviation" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.declarationElementsAbbreviation }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="制造商英文名称" min-width="140" prop="fullName" >
+      <el-table-column align="center" label="制造商英文名称" min-width="140" prop="manufacturerEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.manufacturerEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.manufacturerEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="制造商英文地址" min-width="140" prop="fullName" >
+      <el-table-column align="center" label="制造商英文地址" min-width="140" prop="manufacturerAddressEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.manufacturerAddressEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.manufacturerAddressEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="装箱单英文清关品名" min-width="180" prop="fullName" >
+      <el-table-column align="center" label="装箱单英文清关品名" min-width="180" prop="packgeClearanceNameEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.packgeClearanceNameEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.packgeClearanceNameEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="装箱单中文清关品名" min-width="180" prop="fullName" >
+      <el-table-column align="center" label="装箱单中文清关品名" min-width="180" prop="packgeClearanceNameZh" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.packgeClearanceNameZh" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.packgeClearanceNameZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="云舟采购合同品名" min-width="180" prop="fullName" >
+      <el-table-column align="center" label="云舟采购合同品名" min-width="180" prop="contractName" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.contractName" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.contractName }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="材质(英文)" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="材质(英文)" min-width="100" prop="materialEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.materialEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.materialEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="材质(中文)" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="材质(中文)" min-width="100" prop="materialZh" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.materialZh" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.materialZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用途(中文)" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="用途(中文)" min-width="100" prop="usageZh" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.usageZh" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.usageZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用途(英文)" min-width="100" prop="fullName" >
+      <el-table-column align="center" label="用途(英文)" min-width="100" prop="usageEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.usageEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.usageEn }}</span>
         </template>
       </el-table-column>
       
-      <el-table-column align="center" label="云舟采购价(RMB)" min-width="120" prop="fullName" >
+      <el-table-column align="center" label="云舟采购价(RMB)" min-width="120" prop="purchasePrice" >
         <template #header>
           云舟采购价<br>(RMB)
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.purchasePrice" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.purchasePrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="UPC" min-width="120" prop="fullName" >
+      <el-table-column align="center" label="UPC" min-width="120" prop="salePrice" >
         <template #header>
           云舟售价<br>(USD)
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.salePrice" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.salePrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="UPC" min-width="120" prop="fullName" >
+      <el-table-column align="center" label="UPC" min-width="120" prop="clearancePrice" >
         <template #header>
           清关价格<br>(美元)
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.clearancePrice" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.clearancePrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="UPC" min-width="120" prop="fullName" >
+      <el-table-column align="center" label="UPC" min-width="120" prop="componentWeight" >
         <template #header>
           零件重量<br>(g)
         </template>
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.componentUnit" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input type="text" v-model="row.componentWeight" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
           </div>
-          <span>{{ row.componentUnit }}</span>
+          <span>{{ row.componentWeight }}</span>
         </template>
       </el-table-column>
       <template #empty>
@@ -327,6 +338,8 @@ import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { getProductCustomsList } from '~/src/api/devlocal/productInformation'
+import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 
 defineOptions({
   name: 'sharedComponents',
@@ -341,6 +354,9 @@ const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
 const queryForm = reactive<any>({
+  keyWord: '',
+  status1: 0, //隐藏停产0，展示停产1
+  status2: 0, //隐藏不报关0，展示不报关1
   pageNo: 1,
   pageSize: 20,
 })
@@ -352,15 +368,19 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 // table单击修改
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
@@ -534,13 +554,13 @@ const sampleData = [
 
 
 
-// const fetchData = async () => {
-//     listLoading.value = true
-//     // const { data } = await getList(queryForm)
-//     // list.value = data.list
-//     // total.value = data.total
-//     listLoading.value = false
-// }
+const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getProductCustomsList(queryForm)
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+}
 
 const customsModeOption = [
   { label: '买单', value: 0 },
@@ -606,9 +626,9 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 
-// onBeforeMount(() => {
-//     fetchData()
-// })
+onBeforeMount(() => {
+    fetchData()
+})
 </script>
 
 <style lang="scss" scoped>

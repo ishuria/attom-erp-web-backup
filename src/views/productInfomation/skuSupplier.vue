@@ -15,39 +15,36 @@
             <el-table 
                 ref="tableRef" 
                 stripe border 
-                :data="tableData"
+                :data="list"
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
+                v-loading="listLoading"
             >
                 <el-table-column align="center" label="图片" class="image-wall" min-width="100">
                     <template #default="{ row, $index }">
-                        <el-upload list-type="picture-card" :auto-upload="false" :http-request="uploadImage">
-                            <el-icon v-if="!row.imageUrl"><Plus /></el-icon>
-
-                            <!-- 预先显示已经存在的图片 -->
-                            <template v-if="row.imageUrl">
-                                <div>
-                                    <img class="el-upload-list__item-thumbnail" :src="row.imageUrl" alt="" />
-                                    <span class="el-upload-list__item-actions">
-                                        <span class="el-upload-list__item-preview">
-                                            <el-icon @click.stop="handlePreview(row)"><zoom-in /></el-icon>
-                                        </span>
-                                        <span class="el-upload-list__item-delete">
-                                            <el-icon @click.stop="handleRemove(row)"><Delete /></el-icon>
-                                        </span>
-                                    </span>
-                                </div>
-                            </template>
+                        <el-upload 
+                            list-type="picture-card" 
+                            :file-list="row.imageList" 
+                            :class="{ hide: row.hide }"
+                            :http-request="(file) => uploadSkuComponentImage(file, row)"
+                        >
+                            <el-icon ><Plus /></el-icon>
                             <template #file="{ file }">
                                 <div>
                                     <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                                     <span class="el-upload-list__item-actions">
-                                    <span class="el-upload-list__item-preview">
-                                        <el-icon @click.stop="handlePreview(row)"><zoom-in /></el-icon>
-                                    </span>
-                                    <span class="el-upload-list__item-delete">
-                                        <el-icon @click.stop="handleRemove(row)"><Delete /></el-icon>
-                                    </span>
+                                        <span
+                                            class="el-upload-list__item-preview"
+                                            @click="handlePreview(file)"
+                                        >
+                                            <el-icon><zoom-in /></el-icon>
+                                        </span>
+                                        <span
+                                            class="el-upload-list__item-delete"
+                                            @click="handleComponentRemove(file, row)"
+                                        >
+                                            <el-icon><Delete /></el-icon>
+                                        </span>
                                     </span>
                                 </div>
                             </template>
@@ -93,7 +90,7 @@
                 <el-table-column label="货币" width="105px" prop="currency">
                     <template #default="{ row }">
                         <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
-                            <el-option v-for="dict in currencyList" :key="dict.value"
+                            <el-option v-for="dict in currencyNumList" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
                     </template>
@@ -114,15 +111,15 @@
                         <span>{{ row.numberFullCartons }}</span>
                     </template>
                 </el-table-column> 
-                <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
+                <el-table-column align="center" label="供应商" min-width="140" prop="suppliser">
                     <template #default="{row}">
-                        <span style="color: rgb(192, 192, 192)">{{ row.supplier }}</span>
+                        <span style="color: rgb(192, 192, 192)">{{ row.suppliser }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="开票" prop="oem" align="center" width="130">
                     <template #default = "{ row }">
-                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)">
-                            <el-option v-for="dict in invoicingList" :key="dict.value"
+                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                            <el-option v-for="dict in invoicingNumList" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
                     </template>
@@ -145,10 +142,15 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaser">
+                <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
                     <template #default="{row}">
-                        <el-select placeholder="请选择默认采购方" style="min-width: 100%;">
-                        
+                        <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                            <el-option 
+                                v-for="item in purchaseOption"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            />
                         </el-select>
                     </template>
                 </el-table-column>
@@ -194,6 +196,43 @@
                     <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
                 </template>
             </el-table>
+             <!-- 创建零件 -->
+        <el-dialog 
+            v-model="addSupplierVisible" 
+            :close-on-click-modal="false" 
+            title="添加供应商" 
+            width="500"
+            class="moldDialog"
+            :before-close="handlerCloseDialog"
+        >
+            <el-divider style="margin-top: 0;"/>
+            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
+                <el-form-item label="零件单位" prop="unit">
+                    <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
+                </el-form-item>
+                <el-form-item label="供应商名称" prop="suppliser">
+                    <el-input v-model="form.suppliser" clearable/>
+                </el-form-item>
+                <el-form-item label="开票" prop="invoicing">
+                    <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
+                        <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                            :value="dict.value" :label="dict.label"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="实际税点" prop="actualTaxRate">
+                    <el-input v-model="form.actualTaxRate" clearable />
+                </el-form-item>
+                <el-form-item label="开票税点" prop="invoicingTaxRate">
+                    <el-input v-model="form.invoicingTaxRate" clearable />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span>
+                    <el-button @click="addSupplierVisible = false">退出</el-button>
+                    <el-button type="primary" @click="handleSubmit">确认</el-button>
+                </span>
+            </template>
+        </el-dialog>
         <wangEditor
             :title="wangEditorTitle"
             :wangEditorVisible="wangEditorAttentionVisible"
@@ -225,11 +264,90 @@ import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.v
 import { reviewStepNo3ContractTerms, reviewStepNo3PurchaseMatters, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters } from '/@/api/devlocal/orderProcess';
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
-import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
+import { currencyList, currencyNumList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
+import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser } from '/@/api/devlocal/productInformation';
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
+const listLoading = ref<boolean>(true)
+const list = ref<any>([])
+const invoicingNumList = [
+  {
+    value: 0,
+    label: '专票',
+  },
+  {
+    value: 1,
+    label: '普票',
+  },
+  {
+    value: 2,
+    label: '无法开票',
+  },
+]
+const addSupplierVisible = ref<boolean>(false)
+const handlerCloseDialog = () => {
+    addSupplierVisible.value = false
+}
+const formRef = ref<FormInstance>()
+const form = reactive<any>({
+    unit: '',
+    suppliser: '',
+    invoicing: 0,
+    actualTaxRate: '',
+    invoicingTaxRate: '',
+})
+const rules = reactive({
+    unit: [
+        { required: true, message: '请填写零件单位', trigger: 'blur' },
+    ],
+    suppliser: [
+        { required: true, message: '请填写供应商名称', trigger: 'blur' },
+    ],
+    invoicing: [
+        { required: true, message: '请选择开票类型', trigger: 'change' },
+    ],
+    actualTaxRate: [
+        { required: true, message: '请填写实际税点', trigger: 'blur' },
+    ],
+    invoicingTaxRate: [
+        { required: true, message: '请填写开票税点', trigger: 'blur' },
+    ],
+});
+const handleSubmit = async () => {
+    formRef.value?.validate(async (valid: any) => {
+        if (valid) {
+            addSupplierVisible.value = false
+            const newComponent = {
+                unit: form.unit,
+                suppliser: form.suppliser,
+                invoicing: form.invoicing,
+                actualTaxRate: form.actualTaxRate,
+                invoicingTaxRate: form.invoicingTaxRate,
+            }
+            const { data } = await createProductComponentSuppliser({
+                skuId: parseInt(route.query.skuId),
+                existingPartsListId: parseInt(route.query.existingPartsListId),
+                unit: form.unit,
+                suppliser: form.suppliser,
+                invoicing: form.invoicing,
+                actualTaxRate: form.actualTaxRate,
+                invoicingTaxRate: form.invoicingTaxRate,
+            })
+            if (data) {
+                list.value.push(newComponent)
+                fetchData()
+                $baseMessage('表单提交成功', 'success', 'hey')
+            }
+        }
+        else $baseMessage('表单提交失败', 'error', 'hey')
+    })
+}
+const handleAddSupplier = async () => {
+    addSupplierVisible.value = true
+    formRef.value?.resetFields()
+}
 // 预览图片列表
 const imagePriviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
@@ -238,138 +356,47 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-const tableData = ref([
-  {
-    imageUrl: "https://via.placeholder.com/75",
-    reviewComponentId: 'R001',
-    componentName: '零件A',
-    quantity: 100,
-    componentUnit: '个',
-    unitPrice: 10.00,
-    totalPrice: 1000.00,
-    preTaxPrice: 950.00,
-    taxIncludedPrice: 1050.00,
-    currency: 'CNY',
-    minimumOrderQuantity: 10,
-    numberFullCartons: 5,
-    supplier: '供应商A',
-    invoicing: '增值税',
-    actualTaxRate: '13%',
-    invoicingTaxRate: '13%',
-    purchaser: '采购方A',
-    purchaseToOrder: '0',
-    purchaseLink: 'http://example.com/purchaseA',
-    componentInfo: null,
-    purchaseMatters: '硅胶部分采购价格=0.57一个含税运，不含税=0.5一个。不锈钢吸管，吸管刷，和白卡纸盒全部采购好之后寄到五河县伟田塑胶制品有限公司，让伟田帮我们打包好发过来。',
-    contractTerms: '硅胶吸管套产品色号：椰奶白11-0608TCX COCONUT MILK，冷灰Pantone Cool Grey 9C，粉色PANTONG 4064C，浅绿色PANTONE 9504 U，浅蓝色Pantone 290 C，深蓝色Pantone 2376 C；',
-  },
-  {
-    imageUrl: "https://via.placeholder.com/150",
-    reviewComponentId: 'R002',
-    componentName: '零件B',
-    quantity: 200,
-    componentUnit: '箱',
-    unitPrice: 20.00,
-    totalPrice: 4000.00,
-    preTaxPrice: 3700.00,
-    taxIncludedPrice: 4200.00,
-    currency: 'USD',
-    minimumOrderQuantity: 5,
-    numberFullCartons: 10,
-    supplier: '供应商B',
-    invoicing: '普通发票',
-    actualTaxRate: '5%',
-    invoicingTaxRate: '5%',
-    purchaser: '采购方B',
-    purchaseToOrder: '1',
-    purchaseLink: 'http://example.com/purchaseB',
-    componentInfo: null,
-    purchaseMatters: '注意事项B',
-    contractTerms: '合同条款B',
-  },
-  {
-    imageUrl: "https://via.placeholder.com/150",
-    reviewComponentId: 'R003',
-    componentName: '零件C',
-    quantity: 150,
-    componentUnit: '套',
-    unitPrice: 15.00,
-    totalPrice: 2250.00,
-    preTaxPrice: 2100.00,
-    taxIncludedPrice: 2500.00,
-    currency: 'EUR',
-    minimumOrderQuantity: 2,
-    numberFullCartons: 3,
-    supplier: '供应商C',
-    invoicing: '增值税',
-    actualTaxRate: '10%',
-    invoicingTaxRate: '10%',
-    purchaser: '采购方C',
-    purchaseToOrder: '0',
-    purchaseLink: 'http://example.com/purchaseC',
-    componentInfo: null,
-    purchaseMatters: '注意事项C',
-    contractTerms: '合同条款C',
-  },
-]);
-const handleAddSupplier = () => {
-    tableData.value.unshift({
-        imageUrl: "https://via.placeholder.com/150",
-        reviewComponentId: 'R003',
-        componentName: '零件C',
-        quantity: 150,
-        componentUnit: '套',
-        unitPrice: 15.00,
-        totalPrice: 2250.00,
-        preTaxPrice: 2100.00,
-        taxIncludedPrice: 2500.00,
-        currency: '0',
-        minimumOrderQuantity: 2,
-        numberFullCartons: 3,
-        supplier: '供应商C',
-        invoicing: '增值税',
-        actualTaxRate: '10%',
-        invoicingTaxRate: '10%',
-        purchaser: '采购方C',
-        purchaseToOrder: '0',
-        purchaseLink: 'http://example.com/purchaseC',
-        componentInfo: null,
-        purchaseMatters: '注意事项C',
-        contractTerms: '合同条款C',
-    })
+const uploadImgForm = ref(new FormData()) as any;
+async function uploadSkuComponentImage(params: any, row: any) {
+    row.hide = true
+    try {
+        uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
+        uploadImgForm.value.append('file', params.file);
+        uploadImgForm.value.append('id', row.id);
+
+        const { data } = await uploadComponentImage(uploadImgForm.value)
+        
+        row.imageList = [{ url: data }]
+    } catch (error) {
+        console.error(error)
+    }
 }
-const uploadImage = async () => {
-    
-    
-}
-const handlePreview = (row: any) => {
-    imagePreviewVisible.value = true
-    imagePriviewList.value = []
-    imagePriviewList.value.push(row.imageUrl)
-}
-/**
- * 图片删除功能
- */
-const handleRemove = async (row: any) => {
+const handleComponentRemove = async (file: UploadFile, row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
 
-        row.imageUrl = ""
-
-        // const delImgForm = new FormData()
-        // delImgForm.append('type', '2')
-        // delImgForm.append('imageId', file.name)
-
-        // const { data } = await deleteImage(delImgForm)
-        // if (data == true) {
-        //     $baseMessage("此条产品图片信息删除成功!","success","hey")
-        // }
+        const { data } = await delComponentImage({
+            id: row.id
+        })
+        if (data == true) {
+            row.imageList = []
+            row.hide = false
+            $baseMessage("SKU图片删除成功!","success","hey")
+        }
     })
     
   } catch (error) {
     console.error(error)
   }
 }
+
+
+const handlePreview = (file: any) => {
+    imagePreviewVisible.value = true
+    imagePriviewList.value = []
+    imagePriviewList.value.push(file.url)
+}
+
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -438,27 +465,14 @@ const clickCancle = async (event:any,value:any) =>{
     
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
-        // await reviewStepNo3ComponentUpdate(value)
-        // fetchDataComponent()
-        // fetchVariantsData()
+        await updateProductComponentSuppliser(value)
+        fetchData()
     }
 }
 const handleCurrencyChange = async (row: any) => {
-    // await reviewStepNo3ComponentUpdate({
-    //     ...row,
-    //     currency: parseInt(row.currency),
-    // })
-    // fetchDataComponent()
-    // fetchVariantsData()
+    await updateProductComponentSuppliser(row)
 }
-const handleInvoicingChange = async (row: any) => {
-    // await reviewStepNo3ComponentUpdate({
-    //     ...row,
-    //     invoicing: parseInt(row.invoicing),
-    // })
-    // fetchDataComponent()
-    // fetchVariantsData()
-}
+
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 分类
@@ -506,6 +520,32 @@ const goBack = async () => {
     await delVisitedRoute(handleActivePath(route, true))
     history.back()
 }
+const purchaseOption = ref<any>()
+const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getProductListSuppliser({
+        componentId: route.query.componentId
+    })
+    list.value = data
+    list.value.forEach((item: any) => {
+        if(!item.componentImage) {
+            item.hide = false
+            item.imageList = []
+        } else if(item.componentImage) {
+            item.hide = true
+            item.imageList = [{ url: item.componentImage}]
+        }
+    })
+    listLoading.value = false
+}
+const fetchPurchaseAndRepository = async () => {
+    const { data: purchase } = await getProductComponentPurchase()
+    purchaseOption.value = purchase
+}
+onBeforeMount(async () => {
+  fetchData()
+  fetchPurchaseAndRepository()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -529,5 +569,12 @@ const goBack = async () => {
 :deep(.el-upload--picture-card) {
   width: 75px;
   height: 75px;
+}
+.hide :deep(.el-upload--picture-card) {
+  display: none
+}
+
+:deep(.moldDialog .el-dialog__body) { 
+  padding-top: 0;
 }
 </style>

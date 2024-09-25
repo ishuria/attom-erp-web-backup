@@ -12,7 +12,7 @@
         <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center" min-width="240">
           <template v-slot="scope">
             <template v-if="scope.row['column0'] === 'variantImg'">
-              <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" />
+              <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" data-img="img"/>
             </template>
             <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
               <el-input

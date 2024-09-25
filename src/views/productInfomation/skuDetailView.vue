@@ -12,31 +12,24 @@
                 <el-col :span="2" class="custom-upload" > 
                     <el-upload 
                         list-type="picture-card" 
-                        :file-list="imgForm.imageList" 
-                        :limit="5" 
-                        :class="{ hide: imgForm.hide }"
+                        :file-list="sku.imageList" 
+                        :class="{ hide: sku.hide }"
                         :http-request="uploadImage"
                     >
-                        <div 
-                            style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
-                            @click="handleIconClick(imgForm)"
-                        >
-                            <el-icon ><Plus /></el-icon>
-                        </div>
-
+                        <el-icon ><Plus /></el-icon>
                         <template #file="{ file }">
                             <div>
                                 <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                                 <span class="el-upload-list__item-actions">
                                     <span
                                         class="el-upload-list__item-preview"
-                                        @click="handlePreview(imgForm)"
+                                        @click="handlePreview(file)"
                                     >
                                         <el-icon><zoom-in /></el-icon>
                                     </span>
                                     <span
                                         class="el-upload-list__item-delete"
-                                        @click="handleRemove(imgForm)"
+                                        @click="handleRemove(file)"
                                     >
                                         <el-icon><Delete /></el-icon>
                                     </span>
@@ -189,42 +182,38 @@
             >
                 <el-table-column align="center" label="图片" class="image-wall" min-width="100">
                     <template #default="{ row, $index }">
-                        <el-upload list-type="picture-card" :auto-upload="false" :http-request="uploadImage">
-                            <el-icon v-if="!row.imageUrl"><Plus /></el-icon>
-
-                            <!-- 预先显示已经存在的图片 -->
-                            <template v-if="row.imageUrl">
-                                <div>
-                                    <img class="el-upload-list__item-thumbnail" :src="row.imageUrl" alt="" />
-                                    <span class="el-upload-list__item-actions">
-                                        <span class="el-upload-list__item-preview">
-                                            <el-icon @click.stop="handlePreview(row)"><zoom-in /></el-icon>
-                                        </span>
-                                        <span class="el-upload-list__item-delete">
-                                            <el-icon @click.stop="handleRemove(row)"><Delete /></el-icon>
-                                        </span>
-                                    </span>
-                                </div>
-                            </template>
+                        <el-upload 
+                            list-type="picture-card" 
+                            :file-list="row.imageList" 
+                            :class="{ hide: row.hide }"
+                            :http-request="(file) => uploadSkuComponentImage(file, row)"
+                        >
+                            <el-icon ><Plus /></el-icon>
                             <template #file="{ file }">
                                 <div>
                                     <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                                     <span class="el-upload-list__item-actions">
-                                    <span class="el-upload-list__item-preview">
-                                        <el-icon @click.stop="handlePreview(row)"><zoom-in /></el-icon>
-                                    </span>
-                                    <span class="el-upload-list__item-delete">
-                                        <el-icon @click.stop="handleRemove(row)"><Delete /></el-icon>
-                                    </span>
+                                        <span
+                                            class="el-upload-list__item-preview"
+                                            @click="handlePreview(file)"
+                                        >
+                                            <el-icon><zoom-in /></el-icon>
+                                        </span>
+                                        <span
+                                            class="el-upload-list__item-delete"
+                                            @click="handleComponentRemove(file, row)"
+                                        >
+                                            <el-icon><Delete /></el-icon>
+                                        </span>
                                     </span>
                                 </div>
                             </template>
                         </el-upload>
                     </template>
                 </el-table-column>
-                <el-table-column label="零件ID" align="center" prop="reviewComponentId" width="80">
+                <el-table-column label="零件ID" align="center" prop="existingPartsListId" width="80">
                     <template #default="{ row }">
-                        <span style="color: rgb(192, 192, 192)">{{ row.reviewComponentId }}</span>
+                        <span style="color: rgb(192, 192, 192)">{{ row.existingPartsListId }}</span>
                     </template>
                 </el-table-column>   
                 <el-table-column label="零件名" prop="componentName" width="120">
@@ -290,7 +279,7 @@
                 <el-table-column label="货币" width="105px" prop="currency">
                     <template #default="{ row }">
                         <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
-                            <el-option v-for="dict in currencyList" :key="dict.value"
+                            <el-option v-for="dict in currencyNumList" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
                     </template>
@@ -311,16 +300,22 @@
                         <span>{{ row.numberFullCartons }}</span>
                     </template>
                 </el-table-column> 
-                <el-table-column align="center" label="默认供应商" min-width="140" prop="supplier">
+                <el-table-column align="center" label="默认供应商" min-width="140" prop="defaultSuppliserId">
                     <template #default="{row}">
-                        <el-select  placeholder="" clearable filterable>
+                        <el-select v-model="row.defaultSuppliserId" placeholder=""  @change="handleSuppliserChange(row)">
+                            <el-option 
+                                v-for="item in row.suppliserList"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            />
                         </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="开票" prop="oem" align="center" width="130">
                     <template #default = "{ row }">
                         <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)">
-                            <el-option v-for="dict in invoicingList" :key="dict.value"
+                            <el-option v-for="dict in invoicingNumList" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>
                     </template>
@@ -343,16 +338,21 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaser">
+                <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
                     <template #default="{row}">
-                        <el-select placeholder="请选择默认采购方" style="min-width: 100%;">
-                        
+                        <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                            <el-option 
+                                v-for="item in purchaseOption"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            />
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="不报关" prop="purchaseToOrder" align="center" min-width="75">
+                <el-table-column label="不报关" prop="declareCustomsStatus" align="center" min-width="75">
                     <template #default = "{ row }">
-                        <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox" />
+                        <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleCurrencyChange(row)"/>
                     </template>
                 </el-table-column>
                 <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
@@ -367,9 +367,17 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column  label="默认收货仓库" prop="componentInfo" min-width="125">
+                <el-table-column  label="默认收货仓库" prop="defaultRepositoryId" min-width="125">
                     <template #default="{ row }">
-                        <el-input v-model="row.componentInfo" clearable />
+                        <!-- <el-input v-model="row.defaultRepositoryId" clearable /> -->
+                        <el-select v-model="row.defaultRepositoryId" placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" filterable @change="handleCurrencyChange(row)">
+                            <el-option 
+                                v-for="item in repositoryOption"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            />
+                        </el-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
@@ -389,7 +397,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column fixed="right" label="操作" width="150" align="center">
-                  <template #default="{ row }">
+                  <template #default="{ row, $index }">
                     <el-dropdown>
                       <el-button text type="primary" v-permissions="{ permission: ['newProduct:evaluation:add'] }">
                         修改
@@ -400,13 +408,13 @@
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleSupplier">供应商</el-link>
+                            <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
                           </el-dropdown-item>
                           <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleAddOtherSku">添加到其他SKU</el-link>
+                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row.componentId)">添加到其他SKU</el-link>
                           </el-dropdown-item>
                           <el-dropdown-item>
-                            <el-link type="danger" :underline="false" @click="handleDel">删除</el-link>
+                            <el-link type="danger" :underline="false" @click="handleDel(row, $index)">删除</el-link>
                           </el-dropdown-item>
                         </el-dropdown-menu>
                       </template>
@@ -490,13 +498,21 @@
                     <el-input v-model="form.specification" clearable />
                 </el-form-item>
                 <el-form-item label="按单采购" v-if="form.type === 1" prop="isSinglePurchase" >
-                    <el-switch v-model="form.isSinglePurchase" style="--el-switch-on-color: #13ce66;"/>
+                    <el-switch v-model="form.isSinglePurchase" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
                 </el-form-item>
                 <el-form-item label="零件单位" prop="componentUnit">
                     <el-input v-model="form.componentUnit" clearable placeholder="套, 个, 只, 片等" />
                 </el-form-item>
                 <el-form-item label="供应商" prop="supplier">
-                    <el-input v-model="form.supplier" clearable filterable placeholder="点击输入和搜索"/>
+                    <!-- <el-input v-model="form.supplier" clearable filterable placeholder="点击输入和搜索"/> -->
+                    <el-select v-model="form.supplier" placeholder="点击输入和搜索" clearable filterable >
+                            <!-- <el-option 
+                                v-for="item in row.suppliserList"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            /> -->
+                        </el-select>
                 </el-form-item>
                 <el-form-item label="开票" prop="invoicing">
                     <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
@@ -564,35 +580,13 @@ import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
 import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
-import { getProductSkuDetail, updateProductSku, updateProductSkuRemark } from '~/src/api/devlocal/productInformation';
-import { IgetProductSkuDetail } from '~/src/type/productInformation/skuInformationType';
+import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductDefaultListComponent, getProductSkuDetail, getProductSkuList, updateProductComponent, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
 
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-/* 基础用法 */
-interface Option2 {
-  key: number
-  label: string
-  initial: string
-}
 
-const generateData2 = () => {
-  const data: Option2[] = []
-  const states = ['California', 'Illinois', 'Maryland', 'Texas', 'Florida', 'Colorado', 'Connecticut ']
-  const initials = ['CA', 'IL', 'MD', 'TX', 'FL', 'CO', 'CT']
-  states.forEach((city, index) => {
-    data.push({
-      label: city,
-      key: index,
-      initial: initials[index],
-    })
-  })
-  return data
-}
-const transferData = ref<Option2[]>(generateData2())
-const transferValue = ref([])
 const filterMethod = (query: any, item: any) => {
   return item.initial.toLowerCase().includes(query.toLowerCase())
 }
@@ -606,6 +600,35 @@ const defaultRepositoryOption = [
     { label: '云梧舟', value: 2 },
     { label: '埃托姆', value: 3 },
 ]
+const currencyNumList = [
+  {
+    value: 0,
+    label: 'RMB',
+  },
+  {
+    value: 1,
+    label: 'USD',
+  },
+  {
+    value: 2,
+    label: 'EUR',
+  },
+]
+
+const invoicingNumList = [
+  {
+    value: 0,
+    label: '专票',
+  },
+  {
+    value: 1,
+    label: '普票',
+  },
+  {
+    value: 2,
+    label: '无法开票',
+  },
+]
 const imageUrl = ref('')
 // 预览图片列表
 const imagePriviewList = ref<string[]>([])
@@ -615,33 +638,60 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-const handlePreview = (form: any) => {
+const handlePreview = (file: UploadFile) => {
     imagePreviewVisible.value = true
     imagePriviewList.value = []
-    imagePriviewList.value.push(form.imageUrl)
+    imagePriviewList.value.push(file.url!)
 }
 /**
  * 图片删除功能
  */
- const handleRemove = async (row: any) => {
+const handleRemove = async (file: UploadFile) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-
-        row.imageUrl = ""
-
-        // const delImgForm = new FormData()
-        // delImgForm.append('type', '2')
-        // delImgForm.append('imageId', file.name)
-
-        // const { data } = await deleteImage(delImgForm)
-        // if (data == true) {
-        //     $baseMessage("此条产品图片信息删除成功!","success","hey")
-        // }
+        const { data } = await delSkuImage({
+            skuId: sku.value.skuId
+        })
+        if (data == true) {
+            sku.value.imageList = []
+            sku.value.hide = false
+            $baseMessage("SKU图片删除成功!","success","hey")
+        }
     })
     
   } catch (error) {
     console.error(error)
   }
+}
+const handleComponentRemove = async (file: UploadFile, row: any) => {
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+
+        const { data } = await delComponentImage({
+            id: row.id
+        })
+        if (data == true) {
+            row.imageList = []
+            row.hide = false
+            $baseMessage("SKU图片删除成功!","success","hey")
+        }
+    })
+    
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 修改默认供应商
+const handleSuppliserChange = async (row: any) => {
+    const { data } = await updateProductComponent(row)
+    if (data === true) {
+        const { data: changeData } = await getChangeProductComponent({
+            skuId: row.skuId,
+            existingPartsListId: row.existingPartsListId,
+            suppliserId: row.defaultSuppliserId
+        })
+        row = changeData
+    }
 }
 const packingPrecautionsVisible = ref<boolean>(false)
 const handlePacking = () => {
@@ -663,81 +713,7 @@ const handleTableDataValue = (value: any) => {
         .map((item: any) => `${item.date}: ${item.packingPrecautions}`)
         .join('\n');
 }
-const tableData = [
-  {
-    imageUrl: "https://via.placeholder.com/150",
-    reviewComponentId: 'R001',
-    componentName: '零件A',
-    quantity: 100,
-    componentUnit: '个',
-    unitPrice: 10.00,
-    totalPrice: 1000.00,
-    preTaxPrice: 950.00,
-    taxIncludedPrice: 1050.00,
-    currency: 'CNY',
-    minimumOrderQuantity: 10,
-    numberFullCartons: 5,
-    supplier: '供应商A',
-    invoicing: '增值税',
-    actualTaxRate: '13%',
-    invoicingTaxRate: '13%',
-    purchaser: '采购方A',
-    purchaseToOrder: '0',
-    purchaseLink: 'http://example.com/purchaseA',
-    componentInfo: null,
-    purchaseMatters: '硅胶部分采购价格=0.57一个含税运，不含税=0.5一个。不锈钢吸管，吸管刷，和白卡纸盒全部采购好之后寄到五河县伟田塑胶制品有限公司，让伟田帮我们打包好发过来。',
-    contractTerms: '硅胶吸管套产品色号：椰奶白11-0608TCX COCONUT MILK，冷灰Pantone Cool Grey 9C，粉色PANTONG 4064C，浅绿色PANTONE 9504 U，浅蓝色Pantone 290 C，深蓝色Pantone 2376 C；',
-    componentImgUrl: [], // 这里可以填入图片的 URL
-  },
-  {
-    reviewComponentId: 'R002',
-    componentName: '零件B',
-    quantity: 200,
-    componentUnit: '箱',
-    unitPrice: 20.00,
-    totalPrice: 4000.00,
-    preTaxPrice: 3700.00,
-    taxIncludedPrice: 4200.00,
-    currency: 'USD',
-    minimumOrderQuantity: 5,
-    numberFullCartons: 10,
-    supplier: '供应商B',
-    invoicing: '普通发票',
-    actualTaxRate: '5%',
-    invoicingTaxRate: '5%',
-    purchaser: '采购方B',
-    purchaseToOrder: '1',
-    purchaseLink: 'http://example.com/purchaseB',
-    componentInfo: null,
-    purchaseMatters: '注意事项B',
-    contractTerms: '合同条款B',
-    componentImgUrl: [], // 这里可以填入图片的 URL
-  },
-  {
-    reviewComponentId: 'R003',
-    componentName: '零件C',
-    quantity: 150,
-    componentUnit: '套',
-    unitPrice: 15.00,
-    totalPrice: 2250.00,
-    preTaxPrice: 2100.00,
-    taxIncludedPrice: 2500.00,
-    currency: 'EUR',
-    minimumOrderQuantity: 2,
-    numberFullCartons: 3,
-    supplier: '供应商C',
-    invoicing: '增值税',
-    actualTaxRate: '10%',
-    invoicingTaxRate: '10%',
-    purchaser: '采购方C',
-    purchaseToOrder: '0',
-    purchaseLink: 'http://example.com/purchaseC',
-    componentInfo: null,
-    purchaseMatters: '注意事项C',
-    contractTerms: '合同条款C',
-    componentImgUrl: [], // 这里可以填入图片的 URL
-  },
-];
+const tableData = ref<any>([])
 const handleUpdateSku = async () => {
     await updateProductSku({
         skuId: sku.value.skuId,
@@ -799,13 +775,8 @@ const removeHtmlTags = (html: string): string => {
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
 };
-const mergedPartName = computed(() => {
-    return `${form.value.materialType}-${form.value.size}-${form.value.unit}-${form.value.specification}`;
-});
-const mergedComponentName = computed(() => {
-    return `${form.value.componentName}-${form.value.specification}`;
-});
-const imgForm = ref<any>({})
+
+
 const rules = reactive({
     type: [
         { required: true, message: '请选择类型', trigger: 'change' },
@@ -853,7 +824,7 @@ const rules = reactive({
 });
 const formRef = ref<FormInstance>()
 
-const form = ref<any>({
+const form = reactive<any>({
     type: 0,
     componentName: '',
     consumableName: '',
@@ -861,7 +832,7 @@ const form = ref<any>({
     size: '',
     unit: '',
     specification: '',
-    isSinglePurchase: true,
+    isSinglePurchase: 1,
     componentUnit: '',
     supplier: '',
     invoicing: '0',
@@ -891,76 +862,106 @@ function validateNoSpaces (rule: any, value: any, callback: any) {
         callback();
     }
 }
-const handleSubmit = () => {
-    formRef.value?.validate((valid: any) => {
+const mergedPartName = computed(() => {
+    return `${form.value.materialType}-${form.value.size}-${form.value.unit}-${form.value.specification}`;
+});
+const mergedComponentName = computed(() => {
+    return `${form.value.componentName}-${form.value.specification}`;
+});
+const handleSubmit = async () => {
+    formRef.value?.validate(async (valid: any) => {
         if (valid) {
             addComponentVisible.value = false
-            $baseMessage('表单提交成功', 'success', 'hey')
+            const newComponent = {
+                componentName: form.type === 0 ? `${form.componentName}-${form.specification}` : `${form.materialType}-${form.size}-${form.unit}-${form.specification}`,
+                unit: form.componentUnit,
+                suppliser: form.supplier,
+                invoicing: form.invoicing,
+                actualTaxRate: form.actualTaxRate,
+                invoicingTaxRate: form.invoicingTaxRate,
+                type: form.type,
+                status: form.isSinglePurchase
+            }
+            const { data} = await createProductComponent({
+                skuId: route.query.skuId,
+                componentName: form.type === 0 ? `${form.componentName}-${form.specification}` : `${form.materialType}-${form.size}-${form.unit}-${form.specification}`,
+                unit: form.componentUnit,
+                suppliser: form.supplier,
+                invoicing: form.invoicing,
+                actualTaxRate: form.actualTaxRate,
+                invoicingTaxRate: form.invoicingTaxRate,
+                type: form.type,
+                status: form.isSinglePurchase
+            })
+            if (data) {
+                tableData.value.push(newComponent)
+                fetchComponentData()
+                $baseMessage('表单提交成功', 'success', 'hey')
+            }
         }
         else $baseMessage('表单提交失败', 'error', 'hey')
     })
-    // const newComponent: IreviewStepNo3ComponentList = {
-    //     actualTaxRate: '',
-    //     componentImgUrl: '',
-    //     componentName: '',
-    //     componentUnit: '',
-    //     contractTerms: '',
-    //     currency: null,
-    //     freight: '',
-    //     invoicing: null,
-    //     invoicingTaxRate: '',
-    //     minimumOrderQuantity: null,
-    //     numberFullCartons: null,
-    //     orderEntryId: 0,
-    //     preTaxPrice: '',
-    //     purchaseLink: '',
-    //     purchaseMatters: '',
-    //     quantity: null,
-    //     reviewComponentId: null,
-    //     reviewId: null,
-    //     supplier: '',
-    //     taxIncludedPrice: '',
-    //     totalPrice: '',
-    //     unitPrice: '',
-    //     variant: '',
-    // }
-    // let classReviewId: number | undefined
-    // if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-    //     classReviewId = props.step1Data
-    // } else {
-    //     classReviewId = route.query.reviewId
-    // }
-    // const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-    // newComponent.reviewComponentId = data
-    // componentList.value.push(newComponent)
-    // fetchDataComponent()
-    // fetchVariantsData()
 }
-const handleSubmitOtherSku = () => {
+const handleSubmitOtherSku = async () => {
     addOtherSkuVisible.value = false
     $baseConfirm('添加后不可逆，无法批量删除，是否继续？', '系统提示', async () => {
-        
-        
-    }
-);
+        const { data } = await addProductComponentOtherSku({
+            skuIds: `${transferValue.value}`,
+            componentId: _compoenntId.value!
+        })
+        if(data === true) {
+            $baseMessage('添加成功', 'success', 'hey')
+        }
+    });
+}
+interface Option2 {
+  key: number
+  label: string
+  initial: number
 }
 
-const handleAddOtherSku = () => {
-    addOtherSkuVisible.value = true
-};
+let states = ref<string[]>([])
+let initials = ref<number[]>([])
+const transferData = ref<Option2[]>([]) // 初始化为空数组
+const transferValue = ref([])
 
-const handleDel = () => {
+// 生成数据
+const generateData2 = () => {
+  const data: Option2[] = []
+  states.value.forEach((sku, index) => {
+    data.push({
+      label: sku,
+      key: index,
+      initial: initials.value[index],
+    })
+  })
+  return data
+}
+let _compoenntId = ref<number>()
+// 添加其他 SKU 的逻辑
+const handleAddOtherSku = async (componentId: number) => {
+  const { data } = await getProductSkuList()
+  data.forEach((item: any) => {
+    states.value.push(item.sku)
+    initials.value.push(item.skuId)
+  })
+  transferData.value = generateData2()
+  _compoenntId.value = componentId
+  addOtherSkuVisible.value = true
+}
+
+
+const handleDel = async (row: any, index: number) => {
     $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
-        const secondConfirm = await $baseConfirm('确定删除，是否继续？', '系统提示');
-
-        if (secondConfirm) {
-            // 执行添加到其他SKU的逻辑
-            console.log('零件已添加到其他SKU');
-            // API 请求
-        } else {
-            console.log('操作已取消');
-        }
-        
+        $baseConfirm('确定删除，是否继续？', '系统提示', async () => {
+            const { data } = await delProductComponent({
+                componentId: row.componentId
+            })
+            if (data) {
+                tableData.value.splice(index, 1)
+                $baseMessage('SKU零配件删除成功', 'success', 'hey')
+            }
+        });
     })
 }
 /**
@@ -1031,26 +1032,46 @@ const clickCancle = async (event:any,value:any) =>{
     
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
-        // await reviewStepNo3ComponentUpdate(value)
-        // fetchDataComponent()
-        // fetchVariantsData()
+        await updateProductComponent({
+            id: value.id,
+            skuId: value.skuId,
+            componentId: value.componentId,
+            existingPartsListId: value.existingPartsListId,
+            suppliserId: value.suppliserId,
+            quantity: value.quantity,
+            unitPrice: value.unitPrice,
+            totalPrice: value.totalPrice,
+            preTaxPrice: value.preTaxPrice,
+            taxIncludedPrice: value.taxIncludedPrice,
+            currency: value.currency,
+            minimumOrderQuantity: value.minimumOrderQuantity,
+            numberFullCartons: value.numberFullCartons,
+            defaultSuppliserId: value.defaultSuppliserId,
+            invoicing: value.invoicing,
+            purchaseId: value.purchaseId,
+            declareCustomsStatus: value.declareCustomsStatus,
+            purchaseLink: value.purchaseLink,
+            defaultRepositoryId: value.defaultRepositoryId,
+            purchaseMatters: value.purchaseMatters,
+            contractTerms: value.contractTerms,
+        })
+        fetchComponentData()
     }
 }
 const handleCurrencyChange = async (row: any) => {
-    // await reviewStepNo3ComponentUpdate({
-    //     ...row,
-    //     currency: parseInt(row.currency),
-    // })
+    await updateProductComponent(row)
     // fetchDataComponent()
-    // fetchVariantsData()
 }
 const handleInvoicingChange = async (row: any) => {
-    // await reviewStepNo3ComponentUpdate({
-    //     ...row,
-    //     invoicing: parseInt(row.invoicing),
-    // })
-    // fetchDataComponent()
-    // fetchVariantsData()
+    const { data } = await updateProductComponent(row)
+    if (data === true) {
+        const { data: changeData } = await getChangeProductComponent({
+            skuId: row.skuId,
+            existingPartsListId: row.existingPartsListId,
+            suppliserId: row.defaultSuppliserId
+        })
+        row = changeData
+    }
 }
 // 点击图标的行的下标
 const clickIconRowIndex = ref<number>()
@@ -1065,61 +1086,50 @@ const handleIconClick = (index: number) => {
 /**
  * 上传图片
  */
-const imageForm = ref(new FormData()) as any;
+const uploadImgForm = ref(new FormData()) as any;
+
 async function uploadImage(params: any) {
-    imageForm.value.hide = true
-//   try {
-//     const index = clickIconRowIndex.value!;
-//     const currentComponent = componentList.value[index];
+    sku.value.hide = true
+    try {
+        uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
+        uploadImgForm.value.append('file', params.file);
+        uploadImgForm.value.append('skuId', sku.value.skuId);
 
-//     // 检查 params.file 是否有效
-//     if (!params.file) {
-//       throw new Error('文件无效');
-//     }
-
-//     const imageForm = new FormData();
-//     imageForm.append('file', params.file);
-//     imageForm.append('reviewComponentId', currentComponent.reviewComponentId as any);
-
-//     // 上传图片
-//     reviewStepNo3ComponentUpload(imageForm)
-//         .then(({ data }) => {
-//         if (!data) {
-//             throw new Error('上传图片失败');
-//         }
-//         const imageListCopy = [...(currentComponent.componentImgUrl || [])];
-//         imageListCopy.push({ url: data });
-
-//         componentList.value[clickIconRowIndex.value!].componentImgUrl = imageListCopy;
-//         componentList.value[clickIconRowIndex.value!].hide = imageListCopy.length > 0;
-
-//             // 提示成功信息
-//             $baseMessage('图片上传成功!', 'success', 'hey');
+        const { data } = await uploadSkuImage(uploadImgForm.value)
         
-//         })
-//         .catch(error => {
-//             console.error(error);
-//             $baseMessage('图片上传失败!', 'error', 'hey');
-//         });
-        
-
-//   } catch (error) {
-//     console.error(error);
-//     $baseMessage('图片上传失败!', 'error', 'hey');
-//   }
+        sku.value.imageList = [{ url: data }]
+    } catch (error) {
+        console.error(error)
+    }
 }
+async function uploadSkuComponentImage(params: any, row: any) {
+    row.hide = true
+    try {
+        uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
+        uploadImgForm.value.append('file', params.file);
+        uploadImgForm.value.append('id', row.id);
 
+        const { data } = await uploadComponentImage(uploadImgForm.value)
+        
+        row.imageList = [{ url: data }]
+    } catch (error) {
+        console.error(error)
+    }
+}
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
-const handleSupplier = () => {
+const handleSupplier = (row: any) => {
     router.push({
         path: '/productInfomation/skuSupplier',
         query: {
-        title: "SKU供应商",
-        timestamp: Date.now(),
+            title: "SKU供应商",
+            componentId: row.componentId,
+            skuId: row.skuId,
+            existingPartsListId: row.existingPartsListId,
+            timestamp: Date.now(),
         },
     })
 }
@@ -1129,17 +1139,46 @@ const fetchData = async () =>{
   const { data } = await getProductSkuDetail({
     skuId: route.query.skuId
   })
-  sku.value = data
+  Object.assign(sku.value, data)
+  
   if (!sku.value.skuImgUrl) {
-    imageForm.value.hide = false
-    imageForm.value.imageList = []
+    sku.value.hide = false
+    sku.value.imageList = []
   } else {
-    imageForm.value.hide = true
-    imageForm.value.imageList = [{ url: sku.value.skuImgUrl }]
+    sku.value.hide = true
+    sku.value.imageList = [{ url: sku.value.skuImgUrl }]
   }
+}
+const purchaseOption = ref<any>()
+const repositoryOption = ref<any>()
+const fetchComponentData = async () => {
+    const { data } = await getProductDefaultListComponent({ skuId: route.query.skuId })
+    tableData.value = data
+    tableData.value.forEach(async (item: any) => {
+        // 获取供应商列表
+        const { data: suppliser } = await getProductComponentSuppliser({
+            componentId: item.componentId
+        })
+        item.suppliserList = suppliser
+        if(!item.componentImage) {
+            item.hide = false
+            item.iamgeList = []
+        } else if (item.componentImage){
+            item.hide = true
+            item.imageList = [{ url: item.componentImage }]
+        }
+    })
+}
+const fetchPurchaseAndRepository = async () => {
+    const { data: purchase } = await getProductComponentPurchase()
+    purchaseOption.value = purchase
+    const { data: repository } = await getProductComponentStore()
+    repositoryOption.value = repository
 }
 onMounted(async ()=>{
   fetchData()
+  fetchComponentData()
+  fetchPurchaseAndRepository()
 })
 </script>
 
@@ -1159,7 +1198,6 @@ onMounted(async ()=>{
 
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
-
 }
 .custom-checkbox {
   transform: scale(1.2); 
@@ -1195,10 +1233,9 @@ onMounted(async ()=>{
     align-items: center; /* 垂直居中，如果需要 */
     
 }
-.hide {
-    display: none
+
+.hide :deep(.el-upload--picture-card) {
+  display: none
 }
-
-
 
 </style>

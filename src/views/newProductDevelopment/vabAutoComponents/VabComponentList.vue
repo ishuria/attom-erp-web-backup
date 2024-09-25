@@ -14,7 +14,7 @@
 
         <el-table ref="progressComponentTable" :data="progressProductList" border :row-class-name="stripedRowClass"
             @cell-click="componentTableInputChage" :span-method="objectSpanMethod" :cell-style="cellStyle"
-            :header-cell-style="{ 'text-align': 'center' }">
+            :header-cell-style="{ 'text-align': 'center' }" class="noneHoveTable" >
 
             <el-table-column align="center" fixed="left" label="零件操作" width="120px">
                 <template v-slot="scope">
@@ -430,7 +430,7 @@ const stripedRowClass = (_row: any) => {
   }
 
   // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'row-striped' : '';
+  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
 };
 
 // 零件清单列表
@@ -875,14 +875,20 @@ onMounted(async () => {
 :deep(.left-panel) {
     margin-bottom: 0 !important;
 }
-:deep(.row-striped) {
-  background-color: var(--el-fill-color-lighter);
-}
+
 .custom-checkbox {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-// :deep(.el-table__body tr.hover-row > td) {
-//   background-color: unset !important
-// }
+
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+
 </style>

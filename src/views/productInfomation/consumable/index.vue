@@ -5,16 +5,28 @@
           <h2>耗材信息</h2>
         </vab-query-form-top-panel>
           <vab-query-form-left-panel>
-              <el-button type="primary">创建耗材</el-button>
+              <el-button type="primary" @click="handleAddConsumable">创建耗材</el-button>
               <el-button type="primary" @click="handleConsumableType">耗材种类</el-button>
           </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                  @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
       </vab-query-form>
           <el-table 
               ref="tableRef" 
               stripe border 
-              :data="fakeData" 
+              :data="list" 
               :header-cell-style="{ 'text-align': 'center' }"
               @cell-click="changeInput"
+              v-loading="listLoading"
           >
               <el-table-column align="center" label="图片" class="image-wall" min-width="100">
                   <template #default="{ row, $index }">
@@ -52,9 +64,9 @@
                       </el-upload>
                   </template>
               </el-table-column>
-              <el-table-column label="零件ID" align="center" min-width="70" prop="reviewComponentId" width="100">
+              <el-table-column label="零件ID" align="center" min-width="70" prop="existingPartsListId" width="100">
                   <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.reviewComponentId }}</span>
+                      <span style="color: rgb(192, 192, 192)">{{ row.existingPartsListId }}</span>
                   </template>
               </el-table-column>   
               <el-table-column label="耗材名" prop="componentName" width="120">
@@ -62,17 +74,17 @@
                       <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
                   </template>
               </el-table-column>
-              <el-table-column label="按单采购" prop="purchaseToOrder" align="center" min-width="90">
+              <el-table-column label="按单采购" prop="status" align="center" min-width="90">
                 <template #default = "{ row }">
-                    <el-checkbox v-model="row.purchaseToOrder" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox"/>
                 </template>
               </el-table-column>
-              <el-table-column label="单位"  min-width="70" prop="componentUnit" align="center">
+              <el-table-column label="单位"  min-width="70" prop="unit" align="center">
                   <template #default="{ row }">
                       <div class="none">
-                          <el-input type="text" v-model="row.componentUnit" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                          <el-input type="text" v-model="row.unit" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                       </div>
-                      <span>{{ row.componentUnit }}</span>
+                      <span>{{ row.unit }}</span>
                   </template>
               </el-table-column>
               <el-table-column label="出厂单价" prop="unitPrice" min-width="70" align="center">
@@ -102,7 +114,7 @@
               <el-table-column label="货币" width="110px" prop="currency">
                   <template #default="{ row }">
                       <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
-                          <el-option v-for="dict in currencyList" :key="dict.value"
+                          <el-option v-for="dict in currencyNumList" :key="dict.value"
                               :value="dict.value" :label="dict.label"></el-option>
                       </el-select>
                   </template>
@@ -123,10 +135,15 @@
                       <span>{{ row.numberFullCartons }}</span>
                   </template>
               </el-table-column> 
-              <el-table-column align="center" label="默认供应商" min-width="140" prop="supplier">
+              <el-table-column align="center" label="默认供应商" min-width="140" prop="suppliserId">
                   <template #default="{row}">
                       <el-select placeholder="请选择默认供应商" style="min-width: 100%;">
-                        
+                        <el-option 
+                                v-for="item in row.suppliserList"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            />
                       </el-select>
                   </template>
               </el-table-column>
@@ -148,10 +165,17 @@
                   </template>
               </el-table-column>
 
-              <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaser">
+              <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
                 <template #default="{row}">
                     <el-select placeholder="请选择默认采购方" style="min-width: 100%;">
-                      
+                      <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                            <el-option 
+                                v-for="item in purchaseOption"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            />
+                        </el-select>
                     </el-select>
                 </template>
               </el-table-column>
@@ -246,7 +270,7 @@
                     <el-input v-model="consumableTypeForm.consumableType" @keyup.enter.native="" clearable placeholder="请输入新增耗材种类" />      
                 </el-col>
                 <el-col :span="4">
-                    <el-button type="primary" @click="">新增</el-button>
+                    <el-button type="primary" @click="handleAddConsumableType">新增</el-button>
                 </el-col>          
             </el-row>
         
@@ -256,12 +280,12 @@
                 :header-cell-style="{ 'text-align': 'center' }"
                 :data="consumableTypeData"
             >
-                <el-table-column label="耗材种类" prop="consumableType">
+                <el-table-column label="耗材种类" prop="consumablesName">
                     
                 </el-table-column>
                 <el-table-column align="center" fixed="right" label="操作" width="120">
-                    <template #default="{ row }">
-                        <el-link type="danger" :underline="false">删除</el-link>
+                    <template #default="{ row, $index }">
+                        <el-link type="danger" :underline="false" @click="handleDelConsumableType(row, $index)">删除</el-link>
                     </template>
                 </el-table-column>
                 <template #empty>
@@ -278,6 +302,48 @@
             />
         </div>
     </el-dialog>
+    <el-dialog 
+            v-model="addConsumableVisible" 
+            :close-on-click-modal="false" 
+            title="创建耗材" 
+            width="500"
+            class="moldDialog"
+            :before-close="handlerAddCloseDialog"
+        >
+            <el-divider style="margin-top: 0;"/>
+            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
+              <el-form-item label="零件名" prop="componentName">
+                    <el-input v-model="form.componentName" clearable />
+                </el-form-item>  
+              <el-form-item label="零件单位" prop="unit">
+                  <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
+              </el-form-item>
+              <el-form-item label="供应商名称" prop="suppliser">
+                  <el-input v-model="form.suppliser" clearable/>
+              </el-form-item>
+              <el-form-item label="开票" prop="invoicing">
+                  <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
+                      <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                          :value="dict.value" :label="dict.label"></el-option>
+                  </el-select>
+              </el-form-item>
+              <el-form-item label="实际税点" prop="actualTaxRate">
+                  <el-input v-model="form.actualTaxRate" clearable />
+              </el-form-item>
+              <el-form-item label="开票税点" prop="invoicingTaxRate">
+                  <el-input v-model="form.invoicingTaxRate" clearable />
+              </el-form-item>
+              <el-form-item label="按单采购" prop="status">
+                <el-switch v-model="form.status" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
+              </el-form-item>
+            </el-form>
+            <template #footer>
+                <span>
+                    <el-button @click="addConsumableVisible = false">退出</el-button>
+                    <el-button type="primary" @click="handleSubmit">确认</el-button>
+                </span>
+            </template>
+        </el-dialog>
   </div>
 
 </template>
@@ -287,49 +353,139 @@ defineOptions({
   name: 'consumable',
 })
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
+
 import { currencyList, firstLegChannelColumnsNum, invoicingList, estimatedCostAccountingSiteColumnsNum, siteReflectCurrencyAndExchangeRate } from '../../newProductDevelopment/indexCommon'
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue';
 import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess';
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
-import { convertString } from '/@/utils/stringUtils';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus'
+import type { FormInstance, UploadFile } from 'element-plus'
+import { addConsumablesType, createConsumables, delConsumablesType, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, updateConsumablesSupplier } from '~/src/api/devlocal/productInformation';
 
 
 const consumableTypeForm = reactive({
     consumableType: ''
 })
+const handleAddConsumableType = async () => {
+  const { data } = await addConsumablesType({
+    consumablesType: consumableTypeForm.consumableType
+  })
+  if(data) {
+    consumableTypeData.value.push({ consumablesName: consumableTypeForm.consumableType, id: data})
+    // await getProductConsumablesType()
+  }
+}
 const router = useRouter()
-// const listLoading = ref<boolean>(true)
+const listLoading = ref<boolean>(true)
+const addConsumableVisible = ref<boolean>(false)
+const handlerAddCloseDialog = () => {
+  addConsumableVisible.value = false
+}
+const formRef = ref<FormInstance>()
+const form = reactive<any>({
+    componentName: '',
+    unit: '',
+    suppliser: '',
+    invoicing: 0,
+    actualTaxRate: '',
+    invoicingTaxRate: '',
+    status: 0,
+})
+const handleAddConsumable = () => {
+  addConsumableVisible.value = true
+  formRef.value?.resetFields()
+}
+const invoicingNumList = [
+  {
+    value: 0,
+    label: '专票',
+  },
+  {
+    value: 1,
+    label: '普票',
+  },
+  {
+    value: 2,
+    label: '无法开票',
+  },
+]
+const rules = reactive({
+    componentName: [
+        { required: true, message: '请填写零件名', trigger: 'blur' },
+    ],
+    unit: [
+        { required: true, message: '请填写零件单位', trigger: 'blur' },
+    ],
+    suppliser: [
+        { required: true, message: '请填写供应商名称', trigger: 'blur' },
+    ],
+    invoicing: [
+        { required: true, message: '请选择开票类型', trigger: 'change' },
+    ],
+    actualTaxRate: [
+        { required: true, message: '请填写实际税点', trigger: 'blur' },
+    ],
+    invoicingTaxRate: [
+        { required: true, message: '请填写开票税点', trigger: 'blur' },
+    ],
+});
+const handleSubmit = async () => {
+    formRef.value?.validate(async (valid: any) => {
+        if (valid) {
+          addConsumableVisible.value = false
+            const { data } = await createConsumables(form.value)
+            if (data) {
+                list.value.push(form.value)
+                fetchData()
+                $baseMessage('表单提交成功', 'success', 'hey')
+            }
+        }
+        else $baseMessage('表单提交失败', 'error', 'hey')
+    })
+}
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
-const consumableTypeData = ref([
-    { consumableType: 'OPP袋' },
-    { consumableType: '飞机盒' },
-    { consumableType: '小白盒' },
-    { consumableType: 'OPP袋' },
-    { consumableType: '飞机盒' },
-    { consumableType: '小白盒' },
-    { consumableType: 'OPP袋' },
-    { consumableType: '飞机盒' },
-    { consumableType: '小白盒' },
-    { consumableType: 'OPP袋' },
-    { consumableType: '飞机盒' },
-    { consumableType: '小白盒' },
-    { consumableType: 'OPP袋' },
-    { consumableType: '飞机盒' },
-    { consumableType: '小白盒' },
-    { consumableType: 'OPP袋' },
-    { consumableType: '飞机盒' },
-    { consumableType: '小白盒' },
-])
+interface consumableType {
+  consumablesName: string
+  id: number
+}
+const consumableTypeData = ref<consumableType[]>([])
+const currencyNumList = [
+  {
+    value: 0,
+    label: 'RMB',
+  },
+  {
+    value: 1,
+    label: 'USD',
+  },
+  {
+    value: 2,
+    label: 'EUR',
+  },
+]
+
 const list = ref<any>([])
 const consumableVisible = ref<boolean>(false)
 const handlerCloseDialog = () => {
     consumableVisible.value = false
 }
-const handleConsumableType = () => {
+const handleConsumableType = async () => {
     consumableVisible.value = true
+    const { data } = await getProductConsumablesType() //获取耗材种类
+    consumableTypeData.value = data
+}
+const handleDelConsumableType = async (row: any, index: number) => {
+  $baseConfirm('确定要删除耗材种类吗', '系统提示', async () => {
+    const { data } = await delConsumablesType({
+      id: row.id
+    })
+    if (data === true) {
+      consumableTypeData.value.splice(index, 1)
+      $baseMessage('删除成功', 'success', 'hey')
+    }
+  })
+  
 }
 const route: any = useRoute()
 // 弹出框的标题
@@ -343,6 +499,7 @@ const wangEditorContractVisible = ref<boolean>(false)
 const attentionCopy = ref<string>('')
 const contractCopy = ref<string>('')
 const queryForm = reactive<any>({
+  keyWord: '',
   pageNo: 1,
   pageSize: 20,
 })
@@ -355,12 +512,12 @@ const consumableTypeTotal = ref<number>(0)
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleConsumableTypeSizeChange = (value: number) => {
     consumableTypeQueryForm.pageNo = 1
@@ -413,69 +570,6 @@ const removeHtmlTags = (html: string): string => {
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
 };
-const fakeData = [
-  {
-    reviewComponentId: "RC-001",
-    componentName: "零件A",
-    purchaseToOrder: '1',
-    componentUnit: "个",
-    unitPrice: 100.00,
-    preTaxPrice: 90.00,
-    taxIncludedPrice: 110.00,
-    currency: "CNY",
-    minimumOrderQuantity: 10,
-    numberFullCartons: 5,
-    supplier: "供应商A",
-    actualTaxRate: 13,
-    invoicingTaxRate: 13,
-    purchaseLink: "http://example.com/purchase-a",
-    purchaser: "仓库A",
-    purchaseMatters: "注意事项A",
-    contractTerms: "合同条款A",
-    componentImgUrl: [],
-  },
-  {
-    reviewComponentId: "RC-002",
-    componentName: "零件B",
-    purchaseToOrder: '0',
-    componentUnit: "箱",
-    unitPrice: 200.00,
-    preTaxPrice: 180.00,
-    taxIncludedPrice: 220.00,
-    currency: "USD",
-    minimumOrderQuantity: 5,
-    numberFullCartons: 10,
-    supplier: "供应商B",
-    actualTaxRate: 15,
-    invoicingTaxRate: 15,
-    purchaseLink: "http://example.com/purchase-b",
-    purchaser: "仓库B",
-    purchaseMatters: "注意事项B",
-    contractTerms: "合同条款B",
-    componentImgUrl: [],
-  },
-  {
-    reviewComponentId: "RC-003",
-    componentName: "零件C",
-    purchaseToOrder: '1',
-    componentUnit: "件",
-    unitPrice: 150.00,
-    preTaxPrice: 135.00,
-    taxIncludedPrice: 160.00,
-    currency: "EUR",
-    minimumOrderQuantity: 8,
-    numberFullCartons: 4,
-    supplier: "供应商C",
-    actualTaxRate: 10,
-    invoicingTaxRate: 10,
-    purchaseLink: "http://example.com/purchase-c",
-    purchaser: "仓库C",
-    purchaseMatters: "注意事项C",
-    contractTerms: "合同条款C",
-    componentImgUrl: [],
-  },
-];
-
 
 // // 零件信息完善与售价核对修改站点
 // const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
@@ -503,11 +597,7 @@ const fakeData = [
 // }
 
 const handleCurrencyChange = async (row: any) => {
-  await reviewStepNo3ComponentUpdate({
-      ...row,
-      currency: parseInt(row.currency),
-  })
-  // fetchDataComponent()
+  await updateConsumablesSupplier(row)
 }
 // const handleInvoicingChange = async (row: any) => {
 //   await reviewStepNo3ComponentUpdate({
@@ -723,8 +813,8 @@ const clickCancle = async (event:any,value:any) =>{
   
   if (event.type === 'blur') {
       // 执行失去焦点处理逻辑
-      // await reviewStepNo3ComponentUpdate(value)
-      // fetchDataComponent()
+      await updateConsumablesSupplier(value)
+      fetchData()
   }
 }
 // 变体table blur事件
@@ -745,57 +835,40 @@ const clickVariantsCancle = async (event:any,value:any) =>{
       // fetchVariantsData()
   }
 }
-
-
-// // 获取拿样零件添加数据
-// const fetchDataComponent = async () =>{
-//   if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
-//       try {
-//           // 拿样零件添加列表
-//           let classReviewId: number | undefined
-//           if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-//               classReviewId = props.step1Data
-//           } else {
-//               classReviewId = route.query.reviewId
-//           }
-//           const { data } = await reviewStepNo3ComponentList({reviewId: classReviewId!})
-//           componentList.value = data
-//           componentList.value.forEach((item: any, index: number) => {
-//               item.currency = convertString(item.currency)
-//               item.invoicing = convertString(item.invoicing)
-//               if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
-//                   item.hide = true;
-//                   item.componentImgUrl = [{ url: item.componentImgUrl }];
-//               } else {
-//                   item.hide = false;
-//                   item.componentImgUrl = []; // 如果没有图片,确保这是空的
-//               }
-//               // item.cropData = ''
-//               // console.log(item.componentImgUrl);
-//           })
-//           // 获取下拉变体列表
-//           const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
-//           variantsSelectList.value = variantSelectList
-//           variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
-
-//           // 排序
-//           componentList.value.sort((a: any, b: any) => {
-//           if (a.orderEntryId === 0 && b.orderEntryId !== 0) {
-//               return -1; // a 在前
-//           }
-//           if (a.orderEntryId !== 0 && b.orderEntryId === 0) {
-//               return 1; // b 在前
-//           }
-//               return 0; // 不排序
-//           });
-//       }catch(e){
-//           console.error(e as Error)
-//       }
-//   }
-// }
-// onMounted(async ()=>{
-//   fetchDataComponent()
-// })
+const purchaseOption = ref<any>()
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+const fetchData = async () => {
+    listLoading.value = true
+    const { data } = await getProductConsumables(queryForm)
+    list.value = data.list
+    total.value = data.total
+    list.value.forEach(async (item: any) => {
+        // 获取供应商列表
+        const { data: suppliser } = await getProductComponentSuppliser({
+            componentId: item.existingPartsListId
+        })
+        item.suppliserList = suppliser
+        // if(!item.componentImage) {
+        //     item.hide = false
+        //     item.iamgeList = []
+        // } else if (item.componentImage){
+        //     item.hide = true
+        //     item.imageList = [{ url: item.componentImage }]
+        // }
+    })
+    listLoading.value = false
+}
+const fetchPurchaseAndRepository = async () => {
+    const { data: purchase } = await getProductComponentPurchase()
+    purchaseOption.value = purchase
+}
+onMounted(async ()=>{
+  fetchData()
+  fetchPurchaseAndRepository()
+})
 </script>
 
 <style lang="scss" scoped>

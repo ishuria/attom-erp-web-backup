@@ -38,15 +38,10 @@
                             :class="{ hide: row.hide }"
                             :http-request="(File) => uploadImage(File, row)"
                         >
-                            <div 
-                                style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
-                                @click="handleIconClick($index)"
-                            >
-                                <el-icon ><Plus /></el-icon>
-                            </div>
+                            <el-icon ><Plus /></el-icon>
                             <template #file="{ file }">
                                 <div>
-                                    <img class="el-upload-list__item-thumbnail"  :lazy="true" :src="file.url" alt="" />
+                                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                                     <span class="el-upload-list__item-actions">
                                         <span
                                             class="el-upload-list__item-preview"
@@ -641,95 +636,22 @@ const handleIconClick = (index: number) => {
  */
 const imageForm = ref(new FormData()) as any;
 async function uploadImage(params: any, row: any) {
-  try {
-    const index = clickIconRowIndex.value!;
-    const currentComponent = componentList.value[index];
+    row.hide = true
+    try {
+        const imageForm = new FormData();
+        imageForm.append('file', params.file);
+        imageForm.append('reviewComponentId', row.reviewComponentId as any);
 
-    // 检查 params.file 是否有效
-    if (!params.file) {
-      throw new Error('文件无效');
-    }
-
-    // // 创建一个新的 Image 对象
-    // const img = new Image();
-    // const objectUrl = URL.createObjectURL(params.file); // 使用上传的文件
-    // img.src = objectUrl;
-
-    // img.onload = () => {
-    //   const width = img.width;
-    //   const height = img.height;
-
-    //   if (width === 0 || height === 0) {
-    //     console.error('加载的图片宽度或高度为0');
-    //     $baseMessage('图片加载失败，宽度或高度为0', 'error', 'hey');
-    //     return;
-    //   }
-
-        // // 检查图片比例
-        // if (width !== height) {
-        //     // 进行图片上传
-        //     // 创建 FormData 对象并添加文件和组件 ID
-        //     const imageForm = new FormData();
-        //     imageForm.append('file', params.file);
-        //     imageForm.append('reviewComponentId', currentComponent.reviewComponentId as any);
-
-        //     // 上传图片
-        //     reviewStepNo3ComponentUpload(imageForm)
-        //         .then(({ data }) => {
-        //         if (!data) {
-        //             throw new Error('上传图片失败');
-        //         }
-        //         imgUrl.value = data;
-        //         cropVisible.value = true; // 显示裁剪窗口
-        //         const imageListCopy = [...(currentComponent.componentImgUrl || [])];
-        //         imageListCopy.push({ url: data });
-
-        //         componentList.value[clickIconRowIndex.value!].componentImgUrl = imageListCopy;
-        //         componentList.value[clickIconRowIndex.value!].hide = imageListCopy.length > 0;
-        //          componentList.value[clickIconRowIndex.value!].cropData = cropData.value
-        //          console.log(componentList.value[clickIconRowIndex.value!].cropData);
-                 
-        //             // 提示成功信息
-        //             $baseMessage('图片上传成功!', 'success', 'hey');
-                
-        //         })
-        //         .catch(error => {
-        //             console.error(error);
-        //             $baseMessage('图片上传失败!', 'error', 'hey');
-        //         });
-        // } else {
-            const imageForm = new FormData();
-            imageForm.append('file', params.file);
-            imageForm.append('reviewComponentId', currentComponent.reviewComponentId as any);
-
-            // 上传图片
-            reviewStepNo3ComponentUpload(imageForm)
-                .then(({ data }) => {
-                    
-                if (!data) {
-                    throw new Error('上传图片失败');
-                }
-                const imageListCopy = [...(currentComponent.componentImgUrl || [])];
-                imageListCopy.push({ url: data });
-                row.hide = imageListCopy.length > 0;
-                row.componentImgUrl = imageListCopy;
-                
-
-                    // 提示成功信息
-                    $baseMessage('图片上传成功!', 'success', 'hey');
-                
-                })
-                .catch(error => {
-                    console.error(error);
-                    $baseMessage('图片上传失败!', 'error', 'hey');
-                });
+        const { data } = await reviewStepNo3ComponentUpload(imageForm)
         
+        row.componentImgUrl = [{ url: data }]
+        // 提示成功信息
+        $baseMessage('图片上传成功!', 'success', 'hey');
+    } catch (error) {
+        console.error(error)
+    }
+} 
 
-  } catch (error) {
-    console.error(error);
-    $baseMessage('图片上传失败!', 'error', 'hey');
-  }
-}
 
 // function handleImageUpload(params: any, currentComponent: any) {
   

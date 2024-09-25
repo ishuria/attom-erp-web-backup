@@ -97,6 +97,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
+// import * as XLSX from 'xlsx'
 
 defineOptions({
   name: 'DefaultTable',
