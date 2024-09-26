@@ -18,7 +18,7 @@
     </vab-query-form>
 
     <el-table ref="tableRef" :header-cell-style="{ 'text-align': 'center' }" border :data="dataList" 
-      @cell-click="reviewTableInputChage" :span-method="objectSpanMethod" :row-class-name="stripedRowClass">
+      @cell-click="reviewTableInputChage" :span-method="objectSpanMethod" :row-class-name="stripedRowClass" class="noneHoveTable">
       <el-table-column label="提交日期" prop="createTime" align="center" width="110">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.createTime)) }}</span>
@@ -416,7 +416,7 @@ const stripedRowClass = (_row: any) => {
     currentGroupIndex++; 
   }
   // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'row-striped' : '';
+  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
 };
 
 
@@ -481,5 +481,14 @@ onBeforeMount(() => {
 :deep(.row-striped) {
   // background-color: var(--el-fill-color-lighter);
   background-color: var(--el-fill-color-lighter);
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>

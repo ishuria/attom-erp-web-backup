@@ -227,19 +227,17 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column  label="收货仓库" prop="remarks" min-width="100">
-                    <el-select 
-                        v-model="list.componentInfo!" 
-                        value-key="id"
-                        placeholder="请选择收货仓库"
-                        filterable
-                        clearable
-                        allow-create
-                        :reserve-keyword = "false"
-                        
-                    >
-                        <el-option v-for="val,idx in list" :label="val.label!" :value="val" :key="val.id!"/>
-                    </el-select>
+                <el-table-column  label="收货仓库" prop="defaultRepositoryId" min-width="140">
+                    <template #default="{ row }">
+                        <el-select v-model="row.defaultRepositoryId" placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" filterable @change="handleCurrencyChange(row)">
+                            <el-option 
+                                v-for="item in repositoryOption"
+                                :label="item.label"
+                                :value="item.id"
+                                :key="item.id"
+                            />
+                        </el-select>
+                    </template>
                 </el-table-column>
                 <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
                     <template #default="{ row }">
@@ -464,8 +462,9 @@ import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3Vari
 import { convertString } from '/@/utils/stringUtils';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
-import { getExchangeRate } from '~/src/api/devlocal/evaluation';
+import { getExchangeRate } from '/@/api/devlocal/evaluation';
 import { Crop as TinyCrop } from '@opentiny/vue'
+import { getProductComponentStore } from '/@/api/devlocal/productInformation';
 
 const props = defineProps<{ step1Data: number }>()
 
@@ -948,21 +947,47 @@ const validateVariants = (item: any) => {
     }
     return true; // 所有校验通过
 };
+const validateSame = () => {
+    const grouped = componentList.value.reduce((acc: any, row: any) => {
+        const key = `${row.supplier}-${row.invoicing}` 
+        acc[key] = (acc[key] || []).concat({
+            actualTaxRate: row.actualTaxRate,
+            invoicingTaxRate: row.invoicingTaxRate
+        })
+        return acc
+    }, {})
+
+    for(const key in grouped) {
+        if(grouped[key].length > 1) {
+            const firstRow = grouped[key][0]
+            const valid = grouped[key].every((item: any) => item.actualTaxRate === firstRow.actualTaxRate && item.invoicingTaxRate === firstRow.invoicingTaxRate )
+            if(valid) {
+                return true
+            }
+            return false
+        }
+    }
+}
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
     let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
 
     const allValid = componentList.value.every((item) => validateComponent(item));
     const allVariantsValid = variantsList.value.every((item) => validateVariants(item))
+
     if (allValid && allVariantsValid) {
-        const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
-        if (data === true) {
-            $baseMessage("当前信息已保存。", "success", "hey");
-            emit('change-step', 3);
-            if (route.query.reviewId) {
-                const { ...query } = route.query;
-                router.replace({ query: { ...query, stepNo: 3 } });
+        if(validateSame()) {
+            const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
+            if (data === true) {
+                $baseMessage("当前信息已保存。", "success", "hey");
+                emit('change-step', 3);
+                if (route.query.reviewId) {
+                    const { ...query } = route.query;
+                    router.replace({ query: { ...query, stepNo: 3 } });
+                }
             }
+        } else {
+            $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
         }
     }
 };
@@ -1035,9 +1060,15 @@ const fetchVariantsData = async () => {
         console.error(error)
     }
 }
+const repositoryOption = ref<any>()
+const fetchRepository = async () => { //获取收货仓库
+    const { data: repository } = await getProductComponentStore()
+    repositoryOption.value = repository
+}
 onMounted(async ()=>{
     fetchDataComponent()
     fetchVariantsData()
+    fetchRepository()
 })
 </script>
   

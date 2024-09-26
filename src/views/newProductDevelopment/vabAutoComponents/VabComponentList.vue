@@ -654,6 +654,7 @@ const deleteSupplserOrComponent = async (row: IProgressProdcutComponent) => {
                 const index = progressProductList.value.findIndex((item: IProgressProdcutComponent) => item.supplierId === row.supplierId);
                 if (index !== -1) {
                     progressProductList.value.splice(index, 1);
+                    props.trialCalculationData?.()
                 }
                 $baseMessage("供应商删除成功！", "success", "hey")
             }

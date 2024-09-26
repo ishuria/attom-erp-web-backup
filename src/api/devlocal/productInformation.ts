@@ -33,7 +33,10 @@ import {
     IupdateProductReplenParams,
     IgetProductCustomsListQuery,
     IgetProductCustomsListResp,
-    IupdateProductCustoms
+    IupdateProductCustoms,
+    IgetProductQualityInspectionResp,
+    IaddProductQualityInspection,
+    ISuppliserName
 } from '/@/type/productInformation/skuInformationType'
 
 // SKU信息 - 获取查询列表
@@ -135,10 +138,11 @@ export function getProductSupplierList(params: IgetProductSupplierListQuery): Pr
     })
 }
 // 供应商-合同模板下载
-export function downloadProductSupplier(params: IsuppliserId) {
+export function downloadProductSupplier(params?: IsuppliserId): any {
     return request({
       url: `${BASE_API}/product/suppliser/download`,
       method: 'get',
+    responseType: 'blob',
       params
     })
 }
@@ -154,6 +158,22 @@ export function getProductReplenList(params: IgetProductReplenListQuery): Promis
 export function getProductCustomsList(params: IgetProductCustomsListQuery): Promise<IgetProductCustomsListResp> {
     return request({
       url: `${BASE_API}/product/customs/clearance/list`,
+      method: 'get',
+      params
+    })
+}
+// SKU质检清单-查询
+export function getProductQualityInspection(params: ISkuId): Promise<IgetProductQualityInspectionResp> {
+    return request({
+      url: `${BASE_API}/product/list/quality/inspection`,
+      method: 'get',
+      params
+    })
+}
+// SKU零配件清单-创建零件-获取所有的供应商
+export function getProductAllSupplier(params: ISuppliserName) {
+    return request({
+      url: `${BASE_API}/product/all/suppliser`,
       method: 'get',
       params
     })
@@ -409,6 +429,36 @@ export function updateProductReplenParams(data: IupdateProductReplenParams) {
 export function updateProductCustoms(data: IupdateProductCustoms) {
     return request({
       url: `${BASE_API}/product/customs/clearance/update`,
+      method: 'post',
+      data,
+    })
+}
+/**
+ * SKU质检清单-添加质检清单
+ */
+export function addProductQualityInspection(data: IaddProductQualityInspection) {
+    return request({
+      url: `${BASE_API}/product/add/quality/inspection`,
+      method: 'post',
+      data,
+    })
+}
+/**
+ * SKU质检清单-删除质检清单
+ */
+export function delProductQualityInspection(params: Iid) {
+    return request({
+      url: `${BASE_API}/product/delete/quality/inspection`,
+      method: 'post',
+      params,
+    })
+}
+/**
+ * SKU质检清单-修改质检清单
+ */
+export function updateProductQualityInspection(data: IaddProductQualityInspection) {
+    return request({
+      url: `${BASE_API}/product/update/quality/inspection`,
       method: 'post',
       data,
     })

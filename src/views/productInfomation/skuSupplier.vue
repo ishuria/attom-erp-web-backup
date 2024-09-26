@@ -266,7 +266,7 @@ import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
 import { currencyList, currencyNumList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
-import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser } from '/@/api/devlocal/productInformation';
+import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser, createConsumablesSupplier } from '/@/api/devlocal/productInformation';
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
@@ -326,20 +326,38 @@ const handleSubmit = async () => {
                 actualTaxRate: form.actualTaxRate,
                 invoicingTaxRate: form.invoicingTaxRate,
             }
-            const { data } = await createProductComponentSuppliser({
-                skuId: parseInt(route.query.skuId),
-                existingPartsListId: parseInt(route.query.existingPartsListId),
-                unit: form.unit,
-                suppliser: form.suppliser,
-                invoicing: form.invoicing,
-                actualTaxRate: form.actualTaxRate,
-                invoicingTaxRate: form.invoicingTaxRate,
-            })
-            if (data) {
-                list.value.push(newComponent)
-                fetchData()
-                $baseMessage('表单提交成功', 'success', 'hey')
+            if (route.query.from === 'sku') {
+                const { data } = await createProductComponentSuppliser({
+                    skuId: parseInt(route.query.skuId),
+                    existingPartsListId: parseInt(route.query.componentId),
+                    unit: form.unit,
+                    suppliser: form.suppliser,
+                    invoicing: form.invoicing,
+                    actualTaxRate: form.actualTaxRate,
+                    invoicingTaxRate: form.invoicingTaxRate,
+                })
+                if (data) {
+                    list.value.push(newComponent)
+                    fetchData()
+                    $baseMessage('表单提交成功', 'success', 'hey')
+                }
+            } else if (route.query.from === 'consumable' ) {
+                const { data } = await createConsumablesSupplier({
+                    skuId: parseInt(route.query.skuId),
+                    existingPartsListId: parseInt(route.query.componentId),
+                    unit: form.unit,
+                    suppliser: form.suppliser,
+                    invoicing: form.invoicing,
+                    actualTaxRate: form.actualTaxRate,
+                    invoicingTaxRate: form.invoicingTaxRate,
+                })
+                if (data) {
+                    list.value.push(newComponent)
+                    fetchData()
+                    $baseMessage('表单提交成功', 'success', 'hey')
+                }
             }
+           
         }
         else $baseMessage('表单提交失败', 'error', 'hey')
     })

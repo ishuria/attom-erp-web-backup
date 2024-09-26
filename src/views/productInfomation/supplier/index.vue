@@ -5,73 +5,178 @@
         <h2>供应商</h2>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel :span="24">
-        <el-button type="primary" @click="handleAdd">上传通用合同模板</el-button>
-        <el-button type="primary" @click="handleDetail">下载通用合同模板</el-button>
+        <el-space>
+          <el-upload
+            v-model:file-list="fileList"
+            class="upload-demo"
+            :http-request="uploadExcelFile"
+            :limit="1"
+            :show-file-list="false"
+          >
+            <el-button type="primary">上传通用合同模板</el-button>
+          </el-upload>
+          <el-button type="primary" @click="handleDownLoad" :loading="downloadLoading">下载通用合同模板</el-button>
+        </el-space>
       </vab-query-form-left-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" border stripe :data="supplierData" @selection-change="setSelectRows">
-      <el-table-column align="center" label="供应商ID" width="75" prop="id">
+    <el-table ref="tableRef" border stripe :data="list" @selection-change="setSelectRows" v-loading="listLoading" @cell-click="changeInput">
+      <el-table-column align="center" label="供应商ID" width="75" prop="suppliserId">
         <template #default="{ row }">
-          <span style="color: rgb(192, 192, 192)">{{ row.id }}</span>
+          <span style="color: rgb(192, 192, 192)">{{ row.suppliserId }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="供应商名称" min-width="200" prop="title" />
-      <el-table-column label="优先打包" prop="isPriorityPackaging" align="center" min-width="90">
+      <el-table-column align="center" label="供应商名称" min-width="200" prop="suppliser" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.suppliser" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.suppliser }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="优先打包" prop="packing" align="center" min-width="90">
         <template #default = "{ row }">
-            <el-checkbox v-model="row.isPriorityPackaging" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+            <el-checkbox v-model="row.packing" :true-value="1" :false-value="0" class="custom-checkbox" @change="handlePackingChange(row)"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="税号" prop="taxNumber" min-width="100"/>
-      <el-table-column align="center" label="地址" min-width="230" prop="address" />
+      <el-table-column align="center" label="税号" prop="taxNumber" min-width="100" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.taxNumber" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.taxNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="地址" min-width="230" prop="address" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.address" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.address }}</span>
+        </template>
+      </el-table-column>
       
-      <el-table-column align="center" label="开票电话" min-width="150" prop="phone" />
-      <el-table-column align="center" label="开户银行" min-width="230" prop="bank" />
-      <el-table-column align="center" label="开户账号" min-width="160" prop="account" />
-      <el-table-column align="center" label="联行号" min-width="160" prop="unionBankCode" />
-      <el-table-column align="center" label="联系人" min-width="100" prop="contact" />
-      <el-table-column align="center" label="联系人电话" min-width="150" prop="contactPhone" />
-      <el-table-column align="center" label="实际税点专票" prop="actualTaxRate" min-width="90">
+      <el-table-column align="center" label="开票电话" min-width="150" prop="telephone" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.telephone" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.telephone }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="开户银行" min-width="230" prop="bank" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.bank" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.bank }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="开户账号" min-width="160" prop="accountNumber" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.accountNumber" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.accountNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="联行号" min-width="160" prop="bankRoutingNumber" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.bankRoutingNumber" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.bankRoutingNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="联系人" min-width="100" prop="contactPerson" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.contactPerson" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.contactPerson }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="联系人电话" min-width="150" prop="contactNumber" >
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.contactNumber" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.contactNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="实际税点专票" prop="actualZTaxRate" min-width="90">
         <template #header>
           实际税点<br>专票
         </template>
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.actualZTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.actualZTaxRate }}</span>
+        </template>
       </el-table-column>
-      <el-table-column align="center" label="开票税点专票" prop="invoicingTaxRate" min-width="90">
+      <el-table-column align="center" label="开票税点专票" prop="invoicingZTaxRate" min-width="90">
           <template #header>
               开票税点<br>专票
           </template>
+          <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.invoicingZTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.invoicingZTaxRate }}</span>
+        </template>
       </el-table-column>
-      <el-table-column align="center" label="实际税点普票" prop="actualTaxRateNormal" min-width="90">
+      <el-table-column align="center" label="实际税点普票" prop="actualPTaxRate" min-width="90">
         <template #header>
             实际税点<br>普票
         </template>
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.actualPTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.actualPTaxRate }}</span>
+        </template>
       </el-table-column>
-      <el-table-column align="center" label="开票税点普票" prop="invoicingTaxRateNormal" min-width="90">
+      <el-table-column align="center" label="开票税点普票" prop="invoicingPTaxRate" min-width="90">
           <template #header>
               开票税点<br>普票
           </template>
-      </el-table-column>
-      <el-table-column align="center" label="旺旺ID" width="85" prop="wangwangID"></el-table-column>
-      <el-table-column label="使用特定合同模板" prop="isUsingSpecificTemplate" align="center" min-width="90">
-        <template #default = "{ row }">
-            <el-checkbox v-model="row.isUsingSpecificTemplate" :true-value="'1'" :false-value="'0'" class="custom-checkbox"/>
+          <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.invoicingPTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.invoicingPTaxRate }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="特定模板" min-width="160" prop="specificTemplate" >
+      <el-table-column align="center" label="旺旺ID" width="85" prop="wwId">
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.wwId" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            </div>
+            <span>{{ row.wwId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="使用特定合同模板" prop="templateStatus" align="center" min-width="90">
+        <template #default = "{ row }">
+            <el-checkbox v-model="row.templateStatus" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handlePackingChange(row)"/>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="特定模板" min-width="160" prop="templateUrl" >
         <template #default="{ row }">
           <el-upload 
             drag
-            :limit=1
-            :auto-upload="false"
+            :limit="1"
             accept=".xlsx"
-            action=""
             :class="{hide: row.hide}"
             :file-list="row.fileList"
+            :http-request="(file) => UploadRequestHandler(file, row)"
           >
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <!-- <el-button type="primary">下载</el-button> -->
             <!-- <div class="el-upload__tip" slot="tip">只能上传xlsx文件，且不超过10M</div> -->
-  	    </el-upload>
+  	      </el-upload>
+          <el-button v-if="row.fileList.length !== 0" type="primary"  text :underline="false" @click="handleDownLoadSpecialFile(row)">下载</el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -91,14 +196,17 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search } from '@element-plus/icons-vue'
-import type { TableInstance } from 'element-plus'
+import type { TableInstance, UploadFile } from 'element-plus'
 import { doDelete, getList } from '/@/api/table'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
+import { downloadProductSupplier, getProductSupplierList, updateProductSupplier, uploadProductSupplierFile, uploadProductSupplierSpecialFile } from '/@/api/devlocal/productInformation'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { UploadUserFile } from 'element-plus'
 // import * as XLSX from 'xlsx'
-
+import { BASE_API } from '/@/api/devlocal/api'
 defineOptions({
   name: 'DefaultTable',
 })
@@ -116,231 +224,186 @@ const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
 const selectRows = ref<any>([])
 const queryForm = reactive<any>({
+  keyWord: '',
   pageNo: 1,
   pageSize: 20,
 })
-
-
-
-
-
-const supplierData = ref([
-  {
-    id: 1,
-    title: "供应商A",
-    isPriorityPackaging: '1',     // 优先打包
-    taxNumber: "1234567890",       // 税号
-    address: "地址A, 城市A",
-    phone: "13800000001",
-    bank: "银行A",
-    account: "12345678901",
-    unionBankCode: "1001",
-    contact: "张三",
-    contactPhone: "13900000001",
-    actualTaxRate: "13%",          // 实际税点专票
-    invoicingTaxRate: "13%",       // 开票税点专票
-    actualTaxRateNormal: "6%",     // 实际税点普票
-    invoicingTaxRateNormal: "6%",   // 开票税点普票
-    specificTemplate: "模板A",      // 特定模板
-    wangwangID: "wwA001",           // 旺旺ID
-    isUsingSpecificTemplate: '1',    // 使用特定合同模板
-    fileList: [], previewData: '' ,
-    hide: false
-  },
-  {
-    id: 2,
-    title: "供应商B",
-    isPriorityPackaging: '0',
-    taxNumber: "0987654321",
-    address: "地址B, 城市B",
-    phone: "13800000002",
-    bank: "银行B",
-    account: "12345678902",
-    unionBankCode: "1002",
-    contact: "李四",
-    contactPhone: "13900000002",
-    actualTaxRate: "13%",
-    invoicingTaxRate: "13%",
-    actualTaxRateNormal: "6%",
-    invoicingTaxRateNormal: "6%",
-    specificTemplate: "模板B",
-    wangwangID: "wwB002",
-    isUsingSpecificTemplate: '0'
-  },
-  {
-    id: 3,
-    title: "供应商C",
-    isPriorityPackaging: '1',
-    taxNumber: "1122334455",
-    address: "地址C, 城市C",
-    phone: "13800000003",
-    bank: "银行C",
-    account: "12345678903",
-    unionBankCode: "1003",
-    contact: "王五",
-    contactPhone: "13900000003",
-    actualTaxRate: "13%",
-    invoicingTaxRate: "13%",
-    actualTaxRateNormal: "6%",
-    invoicingTaxRateNormal: "6%",
-    specificTemplate: "模板C",
-    wangwangID: "wwC003",
-    isUsingSpecificTemplate: '1'
-  },
-  {
-    id: 4,
-    title: "供应商D",
-    isPriorityPackaging: '0',
-    taxNumber: "2233445566",
-    address: "地址D, 城市D",
-    phone: "13800000004",
-    bank: "银行D",
-    account: "12345678904",
-    unionBankCode: "1004",
-    contact: "赵六",
-    contactPhone: "13900000004",
-    actualTaxRate: "13%",
-    invoicingTaxRate: "13%",
-    actualTaxRateNormal: "6%",
-    invoicingTaxRateNormal: "6%",
-    specificTemplate: "模板D",
-    wangwangID: "wwD004",
-    isUsingSpecificTemplate: '0'
-  },
-  {
-    id: 5,
-    title: "供应商E",
-    isPriorityPackaging: '1',
-    taxNumber: "3344556677",
-    address: "地址E, 城市E",
-    phone: "13800000005",
-    bank: "银行E",
-    account: "12345678905",
-    unionBankCode: "1005",
-    contact: "钱八",
-    contactPhone: "13900000005",
-    actualTaxRate: "13%",
-    invoicingTaxRate: "13%",
-    actualTaxRateNormal: "6%",
-    invoicingTaxRateNormal: "6%",
-    specificTemplate: "模板E",
-    wangwangID: "wwE005",
-    isUsingSpecificTemplate: '1'
+const downloadLoading = ref<boolean>(false)
+const fileList = ref<UploadUserFile[]>([])
+const uploadExcelFile = async (params: any) => {
+  const uploadForm = new FormData()
+  uploadForm.append('file', params.file)
+  const { data } = await uploadProductSupplierFile(uploadForm)
+  if (data === true) {
+    $baseMessage('上传通用合同模板成功', 'success', 'hey')
   }
-]);
+}
+const UploadRequestHandler = async (params: any, row: any) => {
+  const uploadForm = new FormData()
+  uploadForm.append('file', params.file)
+  uploadForm.append('suppliserId', row.suppliserId)
+  const { data } = await uploadProductSupplierSpecialFile(uploadForm)
+  if (data === true) {
+    $baseMessage('特定合同模板上传成功', 'success', 'hey')
+  }
+}
+const handleDownLoadSpecialFile = async (row: any) => {
+  const { data } = await downloadProductSupplier({
+    suppliserId: row.suppliserId
+  })
+  if (data === true) {
+    $baseMessage('下载特定合同模板成功', 'success', 'hey')
+  }
+}
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+  
+  if (!cell.children[0].children[0]
+      || !cell.children[0].children[1]
+      || !cell.children[0].children[0].classList
+      || !cell.children[0].children[1].classList) {
+      return
+  }
+
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+  
+  // 自动聚焦
+  const inputElement = getSpecificChildren(cell, "input")[0];
+  if (inputElement) {
+      inputElement.focus()
+      inputElement.select()
+  } else {
+      const textareaElement = getSpecificChildren(cell, "textarea")[0];
+      if (textareaElement){
+          textareaElement.focus()
+          textareaElement.select()
+      }
+  }
+}
+
+// 零件table blur事件
+const clickCancle = async (event:any,value:any) =>{
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    t1.classList.add("none")
+  }
+
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  
+  if (event.type === 'blur') {
+      // 执行失去焦点处理逻辑
+      await updateProductSupplier(value)
+      fetchData()
+  }
+}
+const handlePackingChange = async (row: any) => {
+  await updateProductSupplier(row)
+  fetchData()
+}
 
 
-// const fetchData = async () => {
-//   listLoading.value = true
-//   const { data } = await getList(queryForm)
-//   list.value = data.list
-//   total.value = data.total
-//   listLoading.value = false
-// }
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getProductSupplierList(queryForm)
+  list.value = data.list
+  total.value = data.total
+  list.value.forEach((item: any) => {
+    if(!item.templateUrl) {
+      item.hide = false
+      item.fileList = []
+    } else if (item.templateUrl) {
+      item.hide = true
+      item.fileList = [{ url: item.templateUrl }]
+    }
+  })
+  listLoading.value = false
+}
 
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
-}
-
-const statusFilter = (status: string | number) => {
-  const statusMap: any = {
-    published: 'success',
-    draft: 'primary',
-    deleted: 'danger',
-  }
-  return statusMap[status]
-}
-
-const handleFold = () => {
-  fold.value = !fold.value
+  fetchData()
 }
 
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
 
-const handleAdd = () => {
-  editRef.value.showEdit()
-}
 
-const handleEdit = (row = {}) => {
-  editRef.value.showEdit(row)
-}
 
-// const handleDelete = (row: any) => {
-//   if (row.id) {
-//     $baseConfirm('您确定要删除当前项吗', null, async () => {
-//       const { msg }: any = await doDelete({ ids: row.id })
-//       $baseMessage(msg, 'success', 'hey')
-//       await fetchData()
-//     })
-//   } else {
-//     if (selectRows.value.length > 0) {
-//       const ids = selectRows.value.map((item: { id: any }) => item.id).join(',')
-//       $baseConfirm('您确定要删除选中项吗', null, async () => {
-//         const { msg }: any = await doDelete({ ids })
-//         $baseMessage(msg, 'success', 'hey')
-//         await fetchData()
-//       })
-//     } else {
-//       $baseMessage('您未选中任何行', 'warning', 'hey')
-//     }
-//   }
-// }
-
-const handleDetailStayTable = async () => {
-  if (selectRows.value.length > 0)
-    for (let i = 0; i < selectRows.value.length; i++) {
-      const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
-      const tab = handleTabs({
-        ...matched.at(-1),
-        query: selectRows.value[i],
+const handleDownLoad = async () => {
+  // downloadLoading.value = true
+  // const { response } = await downloadProductSupplier()
+  // console.log(response);
+      axios({
+        url: `${BASE_API}/product/suppliser/download`,
+        method: 'GET',
+        // params: {
+        //   suppliserId: 17, 
+        // },
+        responseType: 'blob', // 重要: 确保responseType为'blob'
       })
-      if (tab) {
-        await addVisitedRoute(tab)
-        await changeTabsMeta({
-          title: '详情页',
-          meta: {
-            title: `${tab.query.title} 详情页`,
-          },
-        })
-      }
-    }
-  else $baseMessage('请至少选择一行进行详情页跳转', 'warning', 'hey')
-}
+      .then((response) => {
+        // console.log(response.data);
+        // const url = window.URL.createObjectURL(new Blob([response.data]));
+        // const link = document.createElement('a');
+        // link.href = url;
 
-const handleDetail = (row: any) => {
-  if (row.id)
-    router.push({
-      path: '/vab/table/defaultTableDetail',
-      query: {
-        ...row,
-        timestamp: Date.now(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
-      },
-    })
-  else {
-    if (selectRows.value.length === 1)
-      router.push({
-        path: '/vab/table/defaultTableDetail',
-        query: {
-          ...selectRows.value[0],
-          timestamp: Date.now(), //允许同一个详情页同时打开多次，否则会触发路由被缓存下次无法刷新的bug
-        },
+        // // 从响应头中获取文件名（如果需要）
+        // const contentDisposition = response.headers['content-disposition'];
+        // console.log('contentDisposition', contentDisposition);
+       
+
+        // let fileName = 'downloadedFile';
+        // if (contentDisposition) {
+        //   const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+        //   if (fileNameMatch.length === 2) fileName = fileNameMatch[1];
+        // }
+
+        // link.setAttribute('download', fileName); // 设置下载文件名
+        // document.body.appendChild(link);
+        // link.click();
+        // link.remove();
+        // const blob = new Blob([response.data], {
+        //     type: 'application/vnd.ms-excel'
+        //   });
+          
+        //   let link = document.createElement('a');
+        //   link.href = URL.createObjectURL(blob);
+        //   link.setAttribute('download', '工作日志.xlsx');
+        //   link.click();
+        //   link.remove();
+        let blob = new Blob([response.data], { type: 'application/ms-excel;charset=utf-8' });
+        let downloadElement = document.createElement('a');
+        let href = window.URL.createObjectURL(blob); //创建下载的链接
+        downloadElement.href = href;
+        downloadElement.download = 'forbidden-words.xls'; //下载后文件名
+        document.body.appendChild(downloadElement);
+        downloadElement.click(); //点击下载
+        document.body.removeChild(downloadElement); //下载完成移除元素
+        window.URL.revokeObjectURL(href); //释放掉blob对象
       })
-    else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
-  }
+      .catch((error) => {
+        console.error('Download failed:', error);
+      });
+
+  // if(data === true) {
+  //   downloadLoading.value = false
+  //   $baseMessage('下载通用合同模板成功', 'success', 'hey')
+  // }
 }
 
 
@@ -348,9 +411,9 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 
-// onBeforeMount(() => {
-//   fetchData()
-// })
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -358,7 +421,10 @@ onActivated(() => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-.hide {
+.none {
+  display: none;
+}
+.hide :deep(.el-upload-dragger) {
   display: none;
 }
 </style>

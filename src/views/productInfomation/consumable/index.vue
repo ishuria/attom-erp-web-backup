@@ -76,7 +76,7 @@
               </el-table-column>
               <el-table-column label="按单采购" prop="status" align="center" min-width="90">
                 <template #default = "{ row }">
-                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox"/>
+                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handleCurrencyChange(row)"/>
                 </template>
               </el-table-column>
               <el-table-column label="单位"  min-width="70" prop="unit" align="center">
@@ -98,12 +98,12 @@
                       <span>{{ row.unitPrice }}</span>
                   </template>
               </el-table-column>
-              <el-table-column label="未税价" prop="preTaxPrice" align="center" min-width="70">
+              <el-table-column label="未税价" prop="preTaxPrice" align="center" min-width="80">
                   <template #default="{ row }">
                       <span style="color: rgb(192, 192, 192)">{{ row.preTaxPrice }}</span>
                   </template>
               </el-table-column>
-              <el-table-column label="含税价" prop="taxIncludedPrice" align="center" min-width="70">
+              <el-table-column label="含税价" prop="taxIncludedPrice" align="center" min-width="80">
                   <template #default="{ row }">
                       <div class="none">
                           <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -137,7 +137,7 @@
               </el-table-column> 
               <el-table-column align="center" label="默认供应商" min-width="140" prop="suppliserId">
                   <template #default="{row}">
-                      <el-select placeholder="请选择默认供应商" style="min-width: 100%;">
+                      <el-select placeholder="请选择默认供应商" style="min-width: 100%;"  @change="handleCurrencyChange(row)">
                         <el-option 
                                 v-for="item in row.suppliserList"
                                 :label="item.label"
@@ -167,16 +167,16 @@
 
               <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
                 <template #default="{row}">
-                    <el-select placeholder="请选择默认采购方" style="min-width: 100%;">
-                      <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
-                            <el-option 
-                                v-for="item in purchaseOption"
-                                :label="item.label"
-                                :value="item.id"
-                                :key="item.id"
-                            />
-                        </el-select>
-                    </el-select>
+               
+                    <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                          <el-option 
+                              v-for="item in purchaseOption"
+                              :label="item.label"
+                              :value="item.id"
+                              :key="item.id"
+                          />
+                      </el-select>
+                 
                 </template>
               </el-table-column>
               <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
@@ -210,7 +210,7 @@
               <el-table-column align="center" fixed="right" label="操作" width="150">
                   <template #default="{ row }">
                     <el-dropdown>
-                      <el-button text type="primary" @click="handleSupplier">
+                      <el-button text type="primary" @click="handleSupplier(row)">
                         供应商
                         <el-icon class="el-icon--right">
                           <arrow-down />
@@ -219,7 +219,7 @@
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item>
-                            <el-link type="primary" :underline="false">添加到SKU</el-link>
+                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row.id)">添加到SKU</el-link>
                           </el-dropdown-item>
                         </el-dropdown-menu>
                       </template>
@@ -267,7 +267,7 @@
         <div id="table-height-container">
             <el-row :gutter="20" style="margin-bottom: 20px">
                 <el-col :span="20">
-                    <el-input v-model="consumableTypeForm.consumableType" @keyup.enter.native="" clearable placeholder="请输入新增耗材种类" />      
+                    <el-input v-model="consumableTypeForm.consumableType" @keyup.enter.native="handleAddConsumableType" clearable placeholder="请输入新增耗材种类" />      
                 </el-col>
                 <el-col :span="4">
                     <el-button type="primary" @click="handleAddConsumableType">新增</el-button>
@@ -293,13 +293,13 @@
                 </template>
             </el-table>
   
-            <vab-pagination
+            <!-- <vab-pagination
                 :current-page="consumableTypeQueryForm.pageNo"
                 :page-size="consumableTypeQueryForm.pageSize"
                 :total="consumableTypeTotal"
                 @current-change="handleConsumableTypeSizeChange"
                 @size-change="handleConsumableTypeCurrentChange"
-            />
+            /> -->
         </div>
     </el-dialog>
     <el-dialog 
@@ -344,6 +344,32 @@
                 </span>
             </template>
         </el-dialog>
+           <!-- 添加到其它SKU -->
+           <el-dialog 
+            v-model="addOtherSkuVisible" 
+            :close-on-click-modal="false" 
+            title="零件复制到其他SKU" 
+            width="800"
+            class="moldDialog"
+            :before-close="handlerOtherSkuCloseDialog"
+        >
+            <el-divider style="margin-top: 0;"/>
+            <div class="transfer-container">
+                <el-transfer 
+                    v-model="transferValue" 
+                    :data="transferData" 
+                   
+                    filterable 
+                    :titles="['源列', '目的列']"
+                />
+            </div>
+            <template #footer>
+                <span>
+                    <el-button @click="addOtherSkuVisible = false">取消</el-button>
+                    <el-button type="primary" @click="handleSubmitOtherSku">确认</el-button>
+                </span>
+            </template>
+        </el-dialog>
   </div>
 
 </template>
@@ -360,9 +386,12 @@ import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3Com
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
-import { addConsumablesType, createConsumables, delConsumablesType, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, updateConsumablesSupplier } from '~/src/api/devlocal/productInformation';
+import { addConsumablesOtherSku, addConsumablesType, createConsumables, delConsumablesType, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, getProductSkuList, updateConsumablesSupplier } from '/@/api/devlocal/productInformation';
 
-
+const addOtherSkuVisible = ref<boolean>(false)
+const handlerOtherSkuCloseDialog = () => {
+    addOtherSkuVisible.value = false
+}
 const consumableTypeForm = reactive({
     consumableType: ''
 })
@@ -375,6 +404,59 @@ const handleAddConsumableType = async () => {
     // await getProductConsumablesType()
   }
 }
+interface Option2 {
+  key: number
+  label: string
+  initial: number
+}
+
+let states = ref<string[]>([])
+let initials = ref<number[]>([])
+const transferData = ref<Option2[]>([]) // 初始化为空数组
+const transferValue = ref([])
+
+// 生成数据
+const generateData2 = () => {
+  const data: Option2[] = []
+  states.value.forEach((sku, index) => {
+    data.push({
+      label: sku,
+      key: initials.value[index],
+      initial: initials.value[index],
+    })
+  })
+  return data
+}
+let _compoenntId = ref<number>()
+// 添加其他 SKU 的逻辑
+const handleAddOtherSku = async (componentId: number) => {
+  transferData.value = []
+  transferValue.value = []
+  const { data } = await getProductSkuList()
+  data.forEach((item: any) => {
+    states.value.push(item.sku)
+    initials.value.push(item.skuId)
+  })
+  transferData.value = generateData2()
+  _compoenntId.value = componentId
+  console.log(transferData.value);
+  console.log(initials.value);
+  
+  addOtherSkuVisible.value = true
+}
+const handleSubmitOtherSku = async () => {
+    addOtherSkuVisible.value = false
+    $baseConfirm('添加后不可逆，无法批量删除，是否继续？', '系统提示', async () => {
+        const { data } = await addConsumablesOtherSku({
+            skuIds: `${transferValue.value}`,
+            componentId: _compoenntId.value!
+        })
+        if(data === true) {
+            $baseMessage('添加成功', 'success', 'hey')
+        }
+    });
+}
+
 const router = useRouter()
 const listLoading = ref<boolean>(true)
 const addConsumableVisible = ref<boolean>(false)
@@ -433,14 +515,25 @@ const handleSubmit = async () => {
     formRef.value?.validate(async (valid: any) => {
         if (valid) {
           addConsumableVisible.value = false
-            const { data } = await createConsumables(form.value)
+          const newConsumable = {
+            componentName: form.componentName,
+            unit: form.unit,
+            suppliser: form.suppliser,
+            invoicing: form.invoicing,
+            actualTaxRate: form.actualTaxRate,
+            invoicingTaxRate: form.invoicingTaxRate,
+            status: form.status,
+          }
+            const { data } = await createConsumables(newConsumable)
             if (data) {
-                list.value.push(form.value)
+                list.value.push(newConsumable)
                 fetchData()
                 $baseMessage('表单提交成功', 'success', 'hey')
             }
         }
-        else $baseMessage('表单提交失败', 'error', 'hey')
+        else {
+          $baseMessage('表单提交失败', 'error', 'hey')
+        }
     })
 }
 // 零件列表
@@ -529,12 +622,14 @@ const handleConsumableTypeCurrentChange = (value: number) => {
     consumableTypeQueryForm.pageNo = value
   // fetchData()
 }
-const handleSupplier = () => {
+const handleSupplier = (row: any) => {
     router.push({
         path: '/productInfomation/skuSupplier',
         query: {
-        title: "SKU供应商",
-        timestamp: Date.now(),
+          title: "SKU供应商",
+          componentId: row.existingPartsListId,
+          from: "consumable",
+          timestamp: Date.now(),
         },
     })
 }
@@ -597,15 +692,22 @@ const removeHtmlTags = (html: string): string => {
 // }
 
 const handleCurrencyChange = async (row: any) => {
-  await updateConsumablesSupplier(row)
+  await updateConsumablesSupplier({
+        id: row.existingPartsListId,
+        unitPrice: row.unitPrice,
+        taxIncludedPrice: row.taxIncludedPrice,
+        currency: row.currency,
+        minimumOrderQuantity: row.minimumOrderQuantity,
+        numberFullCartons: row.numberFullCartons,
+        invoicing: row.invoicing,
+        purchaseId: row.purchaseId,
+        purchaseLink: row.purchaseLink,
+        purchaseMatters: row.purchaseMatters,
+        contractTerms: row.contractTerms
+      })
+      fetchData()
 }
-// const handleInvoicingChange = async (row: any) => {
-//   await reviewStepNo3ComponentUpdate({
-//       ...row,
-//       invoicing: parseInt(row.invoicing),
-//   })
-//   fetchDataComponent()
-// }
+
 
 // 点击图标的行的下标
 const clickIconRowIndex = ref<number>()
@@ -813,7 +915,19 @@ const clickCancle = async (event:any,value:any) =>{
   
   if (event.type === 'blur') {
       // 执行失去焦点处理逻辑
-      await updateConsumablesSupplier(value)
+      await updateConsumablesSupplier({
+        id: value.id,
+        unitPrice: value.unitPrice,
+        taxIncludedPrice: value.taxIncludedPrice,
+        currency: value.currency,
+        minimumOrderQuantity: value.minimumOrderQuantity,
+        numberFullCartons: value.numberFullCartons,
+        invoicing: value.invoicing,
+        purchaseId: value.purchaseId,
+        purchaseLink: value.purchaseLink,
+        purchaseMatters: value.purchaseMatters,
+        contractTerms: value.contractTerms
+      })
       fetchData()
   }
 }
@@ -861,13 +975,15 @@ const fetchData = async () => {
     })
     listLoading.value = false
 }
-const fetchPurchaseAndRepository = async () => {
+const fetchPurchase = async () => { //获取默认采购方
     const { data: purchase } = await getProductComponentPurchase()
     purchaseOption.value = purchase
+    console.log(purchaseOption.value);
+    
 }
-onMounted(async ()=>{
+onBeforeMount(async ()=>{
+  fetchPurchase()
   fetchData()
-  fetchPurchaseAndRepository()
 })
 </script>
 

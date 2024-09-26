@@ -42,20 +42,20 @@
               <el-table-column label="产品经理" prop="productManager" min-width="90"></el-table-column>
               <el-table-column label="停产" prop="productionHaltStatus">
                 <template #default="{ row }">
-                  <el-switch v-model="row.productionHaltStatus" @change="handleUpdateStatus(row)" active-value="1"
-                  inactive-value="0" style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66"/>
+                  <el-switch v-model="row.productionHaltStatus" @change="handleUpdateStatus(row)" :active-value="1"
+                  :inactive-value="0" style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66"/>
                 </template>
               </el-table-column>
               <el-table-column label="优先打包" prop="priorityPacking" min-width="90">
                 <template #default="{ row }">
-                  <el-switch v-model="row.priorityPacking" @change="handleUpdateStatus(row)" active-value="1"
-                  inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
+                  <el-switch v-model="row.priorityPacking" @change="handleUpdateStatus(row)" :active-value="1"
+                  :inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
                 </template>
               </el-table-column>
               <el-table-column label="打包拍照" prop="packagePhotograph" min-width="90">
                 <template #default="{ row }">
-                  <el-switch v-model="row.packagePhotograph" @change="handleUpdateStatus(row)" active-value="1"
-                  inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
+                  <el-switch v-model="row.packagePhotograph" @change="handleUpdateStatus(row)" :active-value="1"
+                  :inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
                 </template>
               </el-table-column>
               <el-table-column label="总实际成本" prop="procurementCost" min-width="80" >
@@ -157,19 +157,17 @@ defineOptions({
 })
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 
-import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess';
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
 
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
-import { getProductList, updateProductStatus } from '~/src/api/devlocal/productInformation';
-import { IgetProductList } from '~/src/type/productInformation/skuInformationType';
-
+import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation';
+import { IgetProductList } from '/@/type/productInformation/skuInformationType';
 
 
 const listLoading = ref<boolean>(true)
 // 零件列表
-const componentList = ref<IreviewStepNo3ComponentList[]>([])
+
 const hideStopProduction = ref<boolean>(true) //false 展示停产 true 隐藏停产
 const list = ref<any>([])
 const route: any = useRoute()
@@ -192,21 +190,14 @@ const handleHideStopProduction = () => {
   }
   fetchData()
 }
-// const rowClassName = (data: { row: any, rowIndex: number }) => {
-//   if (hideStopProduction.value === true) {
-//     if (data.row.switch) {
-//       return 'none'
-//     }
-//   }
- 
-// }
+
 const handleUpdateStatus = async (row: IgetProductList) => {  
-  // await updateProductStatus({
-  //   skuId: row.skuId,
-  //   haltStatus: row.productionHaltStatus,
-  //   photographStatus: row.packagePhotograph,
-  //   priorityStatus: row.priorityPacking
-  // })
+  await updateProductStatus({
+    skuId: row.skuId,
+    haltStatus: row.productionHaltStatus,
+    photographStatus: row.packagePhotograph,
+    priorityStatus: row.priorityPacking
+  })
 }
 const queryForm = reactive<any>({
   keyWord: '',
@@ -229,144 +220,7 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const fakeData = [
-  {
-    reviewComponentId: "RC-001",
-    componentName: "零件A",
-    purchaseToOrder: '1',
-    componentUnit: "个",
-    unitPrice: 100.00,
-    preTaxPrice: 90.00,
-    taxIncludedPrice: 110.00,
-    currency: "CNY",
-    minimumOrderQuantity: 10,
-    numberFullCartons: 5,
-    supplier: "供应商A",
-    actualTaxRate: 13,
-    invoicingTaxRate: 13,
-    purchaseLink: "http://example.com/purchase-a",
-    purchaser: "仓库A",
-    purchaseMatters: "注意事项A",
-    contractTerms: "合同条款A",
-    componentImgUrl: [],
-  },
-  {
-    reviewComponentId: "RC-002",
-    componentName: "零件B",
-    purchaseToOrder: '0',
-    componentUnit: "箱",
-    unitPrice: 200.00,
-    preTaxPrice: 180.00,
-    taxIncludedPrice: 220.00,
-    currency: "USD",
-    minimumOrderQuantity: 5,
-    numberFullCartons: 10,
-    supplier: "供应商B",
-    actualTaxRate: 15,
-    invoicingTaxRate: 15,
-    purchaseLink: "http://example.com/purchase-b",
-    purchaser: "仓库B",
-    purchaseMatters: "注意事项B",
-    contractTerms: "合同条款B",
-    componentImgUrl: [],
-  },
-  {
-    reviewComponentId: "RC-003",
-    componentName: "零件C",
-    purchaseToOrder: '1',
-    componentUnit: "件",
-    unitPrice: 150.00,
-    preTaxPrice: 135.00,
-    taxIncludedPrice: 160.00,
-    currency: "EUR",
-    minimumOrderQuantity: 8,
-    numberFullCartons: 4,
-    supplier: "供应商C",
-    actualTaxRate: 10,
-    invoicingTaxRate: 10,
-    purchaseLink: "http://example.com/purchase-c",
-    purchaser: "仓库C",
-    purchaseMatters: "注意事项C",
-    contractTerms: "合同条款C",
-    componentImgUrl: [],
-  },
-];
 
-const handleCurrencyChange = async (row: any) => {
-  await reviewStepNo3ComponentUpdate({
-      ...row,
-      currency: parseInt(row.currency),
-  })
-  // fetchDataComponent()
-}
-// const handleInvoicingChange = async (row: any) => {
-//   await reviewStepNo3ComponentUpdate({
-//       ...row,
-//       invoicing: parseInt(row.invoicing),
-//   })
-//   fetchDataComponent()
-// }
-
-
-
-// 新增逻辑
-const handleAddComponent = async () => {
-  // const newComponent: IreviewStepNo3ComponentList = {
-  //     actualTaxRate: '',
-  //     componentImgUrl: '',
-  //     componentName: '',
-  //     componentUnit: '',
-  //     contractTerms: '',
-  //     currency: null,
-  //     freight: '',
-  //     invoicing: null,
-  //     invoicingTaxRate: '',
-  //     minimumOrderQuantity: null,
-  //     numberFullCartons: null,
-  //     orderEntryId: 0,
-  //     preTaxPrice: '',
-  //     purchaseLink: '',
-  //     purchaseMatters: '',
-  //     quantity: null,
-  //     reviewComponentId: null,
-  //     reviewId: null,
-  //     supplier: '',
-  //     taxIncludedPrice: '',
-  //     totalPrice: '',
-  //     unitPrice: '',
-  //     variant: '',
-  // }
-  // let classReviewId: number | undefined
-  // if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-  //     classReviewId = props.step1Data
-  // } else {
-  //     classReviewId = route.query.reviewId
-  // }
-  // const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-  // newComponent.reviewComponentId = data
-  // componentList.value.push(newComponent)
-  // fetchDataComponent()
-}
-// 删除逻辑
-const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
-  try {
-      $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
-
-          const {data} = await reviewStepNo3ComponentDel({ reviewComponentId: row.reviewComponentId! })
-              if (data === true){
-                  const index = componentList.value.findIndex((item: IreviewStepNo3ComponentList) => item.reviewComponentId === row.reviewComponentId);
-                  if (index !== -1) {
-                      componentList.value.splice(index, 1);
-                  }
-                  $baseMessage("零件信息删除成功！","success","hey")
-                  // fetchDataComponent()
-              }
-      })
-     
-  } catch(e){
-      console.log(e as Error)
- }
-}
 // 预览图片列表
 const imagePriviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
@@ -383,7 +237,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   if (getDataAttribute(el,'img') && el){
     imagePreviewVisible.value = true
     imagePriviewList.value = []
-    imagePriviewList.value.push(row.imageUrl)
+    imagePriviewList.value.push(el.src)
   }
 }
 

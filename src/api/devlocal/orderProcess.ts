@@ -20,7 +20,9 @@ import {
     IreviewStepNo4UpdateQualityInspection,
     IreviewStepNo5SkuInfoPerfect,
     IreviewStepNo1,
-    IreviewStepNo6SaveSix
+    IreviewStepNo6SaveSix,
+    IreviewStepNo4SupplierListResp,
+    IreviewStepNo4UpdateSupplier
 } from '/@/type/orderProcess/orderProcessType'
 
 /**
@@ -72,6 +74,16 @@ export function reviewStepNo3VariantList(params?: IreviewId): Promise<IreviewSte
       method: 'get',
       params,
     })
+}
+/**
+ * 新品订货流程-完善新供应商信息与打包质检清单-查询新添加的供应商信息
+ */
+export function reviewStepNo4SupplierList(params?: IreviewId): Promise<IreviewStepNo4SupplierListResp> {
+  return request({
+    url: `${BASE_API}/review/stepsNo4/list/suppliser`,
+    method: 'get',
+    params,
+  })
 }
 /**
  * 完善新供应商信息与打包质检清单 - 查询质检清单列表
@@ -373,4 +385,14 @@ export function reviewStepNo6SaveSix(params?: IreviewStepNo6SaveSix) {
       method: 'post',
       params,
     })
+}
+/**
+ * 新品订货流程-完善新供应商信息与打包质检清单-更新供应商信息
+ */
+export function reviewStepNo4UpdateSupplier(data: IreviewStepNo4UpdateSupplier) {
+  return request({
+    url: `${BASE_API}/review/stempsNo4/update/suppliser`,
+    method: 'post',
+    data,
+  })
 }

@@ -1070,3 +1070,27 @@ export interface IupdateProductCustoms {
     usageZh?: string;
     [property: string]: any;
 }
+// SKU质检清单-查询
+export interface IgetProductQualityInspection {
+    checkType: number
+    id: number
+    packagePrecautions: string
+    skuId: number
+    status: number
+}
+export interface IgetProductQualityInspectionResp {
+    code: number
+    msg: string
+    data: IgetProductQualityInspection[]
+}
+
+export interface IaddProductQualityInspection {
+    skuId?: number
+    status?: number
+    checkType?: number
+    packagePrecautions?: string
+}
+
+export interface ISuppliserName {
+    suppliserName: string
+}

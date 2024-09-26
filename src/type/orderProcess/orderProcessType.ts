@@ -431,6 +431,56 @@ export interface IreviewStepNo4ListQualityInspectionResp {
     data: IreviewStepNo4ListQualityInspection[]
     msg: string
 }
+// 新品订货流程-完善新供应商信息与打包质检清单-查询新添加的供应商信息
+export interface IreviewStepNo4SupplierList {
+    /**
+     * 开户账号
+     */
+    accountNumber?: string;
+    /**
+     * 地址
+     */
+    address?: string;
+    /**
+     * 开户银行
+     */
+    bank?: string;
+    /**
+     * 联行号
+     */
+    bankRoutingNumber?: string;
+    /**
+     * 零件id
+     */
+    componentId?: number;
+    contactNumber?: string;
+    contactPerson?: string;
+    /**
+     * 主键id
+     */
+    id?: number;
+    /**
+     * reviewId
+     */
+    reviewId?: number;
+    /**
+     * 供应商名
+     */
+    suppliser?: string;
+    /**
+     * 税号
+     */
+    taxNumber?: string;
+    /**
+     * 开票电话
+     */
+    telephone?: string;
+}
+export interface IreviewStepNo4SupplierListResp {
+    code: number
+    msg: string
+    data: IreviewStepNo4SupplierList[]
+}
 export interface IreviewStepNo4ListQualityInspection {
     checkType?: number //0全检 1抽检5% 2抽检10% 3抽检15% 4抽检20% 5注意事项
     packingPrecautions?: string
@@ -507,4 +557,44 @@ export interface IreviewStepNo5SkuInfoPerfect {
 export interface IreviewStepNo6SaveSix {
     reviewId: number
     reviewPersonId: string
+}
+// 新品订货流程-完善新供应商信息与打包质检清单-更新供应商信息
+export interface IreviewStepNo4UpdateSupplier {
+    /**
+     * 开户账号
+     */
+    accountNumber?: string;
+    /**
+     * 地址
+     */
+    address?: string;
+    /**
+     * 开户银行
+     */
+    bank?: string;
+    /**
+     * 开户账号
+     */
+    bankRoutingNumber?: string;
+    /**
+     * 联系电话
+     */
+    contactNumber?: string;
+    /**
+     * 联系人
+     */
+    contactPerson?: string;
+    /**
+     * 主键id
+     */
+    id?: number;
+    /**
+     * 税号
+     */
+    taxNumber?: string;
+    /**
+     * 开票电话
+     */
+    telephone?: string;
+    [property: string]: any;
 }

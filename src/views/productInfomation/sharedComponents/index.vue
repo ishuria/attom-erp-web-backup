@@ -5,8 +5,8 @@
         <h2>零件报关信息</h2>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel>
-        <el-button type="primary">隐藏停产</el-button>
-        <el-button type="primary">隐藏不报关</el-button>
+        <el-button type="primary">{{ queryForm.status1 === 0 ? '展示停产' : '隐藏停产' }}</el-button>
+        <el-button type="primary">{{ queryForm.status2 === 0 ? '展示不报关' : '隐藏不报关' }}</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column label="不报关" prop="customsDeclarationStatus" align="center" min-width="90">
         <template #default = "{ row }">
-            <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox"/>
+            <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleCustomsChange(row)"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="供应商" min-width="200" prop="suppliser" >
@@ -135,7 +135,7 @@
           报关覆盖<br>实际净重
         </template>
         <template #default="{ row }">
-          <el-checkbox v-model="row.coveredWeightStatus" :true-value="1" :false-value="0" class="custom-checkbox"/>
+          <el-checkbox v-model="row.coveredWeightStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleCustomsChange(row)"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="品牌" min-width="90" prop="brank" >
@@ -338,7 +338,7 @@ import { useSettingsStore } from '/@/store/modules/settings'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import { getProductCustomsList } from '~/src/api/devlocal/productInformation'
+import { getProductCustomsList, updateProductCustoms } from '/@/api/devlocal/productInformation'
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 
 defineOptions({
@@ -389,7 +389,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     if (getDataAttribute(el,'img') && el){
       imagePreviewVisible.value = true
       imagePriviewList.value = []
-      imagePriviewList.value.push(row.imageUrl)
+      imagePriviewList.value.push(el.src)
     }
     if (!cell.children[0].children[0]
         || !cell.children[0].children[1]
@@ -398,12 +398,9 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
         return
     }
 
+    cell.children[0].children[0].classList.remove('none')
+    cell.children[0].children[1].classList.add('none')
     
-            cell.children[0].children[0].classList.remove('none')
-            cell.children[0].children[1].classList.add('none')
-    
-
-
     // 自动聚焦
     const inputElement = getSpecificChildren(cell, "input")[0];
     if (inputElement) {
@@ -431,128 +428,14 @@ const clickCancle = async (event:any,value:any) =>{
   
   if (event.type === 'blur') {
       // 执行失去焦点处理逻辑
-      // await reviewStepNo3ComponentUpdate(value)
-      // fetchDataComponent()
+      await updateProductCustoms(value)
+      fetchData()
   }
 }
-const sampleData = [
-  {
-    imageUrl: 'https://example.com/image1.jpg',
-    componentName: '组件一',
-    id: 'SKU001',
-    purchaseToOrder: '1',
-    title: '供应商A',
-    fullName: '货源地A',
-    componentUnit: '单位A',
-    customInvoiceUnit1: '开票单位1',
-    customInvoiceUnit2: '开票单位2',
-    legalUnit1: '法定单位1',
-    legalUnitCount: '2',
-    actualNetWeight: '500g',
-    brand: '品牌A',
-    exportTaxRate: '5%',
-    hsCode: 'HS001',
-    htsUS: 'HTS001',
-    htsEU: 'HTS001',
-    declarationElement: '申报要素A',
-    declarationAbbreviation: '缩写A',
-    manufacturerName: '制造商A',
-    manufacturerAddress: '地址A',
-    packingListEnglishName: '清关品名A',
-    packingListChineseName: '清关品名A(中文)',
-    contractName: '合同品名A',
-    materialEnglish: '材质A',
-    materialChinese: '材质A(中文)',
-    usageChinese: '用途A(中文)',
-    usageEnglish: 'Usage A',
-    upc: 'UPC001',
-    fnskuNA: 'FNSKU-NA001',
-    fnskuEU: 'FNSKU-EU001',
-    purchasePriceRMB: '100',
-    salePriceUSD: '15',
-    clearancePriceUSD: '12',
-    weight: '500',
-  },
-  {
-    imageUrl: 'https://example.com/image2.jpg',
-    componentName: '组件二',
-    id: 'SKU002',
-    purchaseToOrder: '0',
-    title: '供应商B',
-    fullName: '货源地B',
-    componentUnit: '单位B',
-    customInvoiceUnit1: '开票单位1',
-    customInvoiceUnit2: '开票单位2',
-    legalUnit1: '法定单位1',
-    legalUnitCount: '3',
-    actualNetWeight: '300g',
-    brand: '品牌B',
-    exportTaxRate: '6%',
-    hsCode: 'HS002',
-    htsUS: 'HTS002',
-    htsEU: 'HTS002',
-    declarationElement: '申报要素B',
-    declarationAbbreviation: '缩写B',
-    manufacturerName: '制造商B',
-    manufacturerAddress: '地址B',
-    packingListEnglishName: '清关品名B',
-    packingListChineseName: '清关品名B(中文)',
-    contractName: '合同品名B',
-    materialEnglish: '材质B',
-    materialChinese: '材质B(中文)',
-    usageChinese: '用途B(中文)',
-    usageEnglish: 'Usage B',
-    upc: 'UPC002',
-    fnskuNA: 'FNSKU-NA002',
-    fnskuEU: 'FNSKU-EU002',
-    purchasePriceRMB: '150',
-    salePriceUSD: '22',
-    clearancePriceUSD: '18',
-    weight: '300',
-  },
-  {
-    imageUrl: 'https://example.com/image3.jpg',
-    componentName: '组件三',
-    id: 'SKU003',
-    purchaseToOrder: '1',
-    title: '供应商C',
-    fullName: '货源地C',
-    componentUnit: '单位C',
-    customInvoiceUnit1: '开票单位1',
-    customInvoiceUnit2: '开票单位2',
-    legalUnit1: '法定单位1',
-    legalUnitCount: '4',
-    actualNetWeight: '400g',
-    brand: '品牌C',
-    exportTaxRate: '7%',
-    hsCode: 'HS003',
-    htsUS: 'HTS003',
-    htsEU: 'HTS003',
-    declarationElement: '申报要素C',
-    declarationAbbreviation: '缩写C',
-    manufacturerName: '制造商C',
-    manufacturerAddress: '地址C',
-    packingListEnglishName: '清关品名C',
-    packingListChineseName: '清关品名C(中文)',
-    contractName: '合同品名C',
-    materialEnglish: '材质C',
-    materialChinese: '材质C(中文)',
-    usageChinese: '用途C(中文)',
-    usageEnglish: 'Usage C',
-    upc: 'UPC003',
-    fnskuNA: 'FNSKU-NA003',
-    fnskuEU: 'FNSKU-EU003',
-    purchasePriceRMB: '200',
-    salePriceUSD: '30',
-    clearancePriceUSD: '25',
-    weight: '400',
-  },
-];
-
-
-
-
-
+const handleCustomsChange = async (row: any) => { //修改报关和报关实际净重
+  await updateProductCustoms(row)
+  fetchData()
+}
 
 const fetchData = async () => {
     listLoading.value = true
@@ -561,66 +444,6 @@ const fetchData = async () => {
     total.value = data.total
     listLoading.value = false
 }
-
-const customsModeOption = [
-  { label: '买单', value: 0 },
-  { label: '退税(按整批)', value: 1 },
-  { label: '退税(可分批)', value: 2 },
-]
-
-const statusFilter = (status: string | number) => {
-const statusMap: any = {
-  正常: 'success',
-  停用: 'danger',
-}
-return statusMap[status]
-}
-
-
-
-
-
-// const handleDelete = (row: any) => {
-// if (row.id) {
-//     $baseConfirm('您确定要删除当前项吗', null, async () => {
-//     const { msg }: any = await doDelete({ ids: row.id })
-//     $baseMessage(msg, 'success', 'hey')
-//     await fetchData()
-//     })
-// } else {
-//     if (selectRows.value.length > 0) {
-//     const ids = selectRows.value.map((item: { id: any }) => item.id).join(',')
-//     $baseConfirm('您确定要删除选中项吗', null, async () => {
-//         const { msg }: any = await doDelete({ ids })
-//         $baseMessage(msg, 'success', 'hey')
-//         await fetchData()
-//     })
-//     } else {
-//     $baseMessage('您未选中任何行', 'warning', 'hey')
-//     }
-// }
-// }
-
-// const handleDetailStayTable = async () => {
-// if (selectRows.value.length > 0)
-//     for (let i = 0; i < selectRows.value.length; i++) {
-//     const matched = handleMatched(allRoutes.value, '/vab/table/defaultTableDetail')
-//     const tab = handleTabs({
-//         ...matched.at(-1),
-//         query: selectRows.value[i],
-//     })
-//     if (tab) {
-//         await addVisitedRoute(tab)
-//         await changeTabsMeta({
-//         title: '详情页',
-//         meta: {
-//             title: `${tab.query.title} 详情页`,
-//         },
-//         })
-//     }
-//     }
-// else $baseMessage('请至少选择一行进行详情页跳转', 'warning', 'hey')
-// }
 
 onActivated(() => {
   tableRef.value?.doLayout()

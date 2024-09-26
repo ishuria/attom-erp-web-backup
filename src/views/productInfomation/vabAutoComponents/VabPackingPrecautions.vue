@@ -18,21 +18,20 @@
         <el-table 
             ref="tableRef" 
             stripe border 
-            :data="tableData"
+            :data="list"
             :header-cell-style="{ 'text-align': 'center' }"
             @cell-click="changeInput"
+            v-loading="listLoading"
+            :cell-style="cellStyle"
         >
-            <el-table-column label="修改日期" width="140" prop="date" align="center">
+            <el-table-column label="修改日期" width="140" prop="createTime" align="center">
                 <template #default="{ row }">
-                    <div class="none">
-                        <el-input type="text" v-model="row.date" @keyup.enter="clickQualityInspectionCancle($event, row)" @blur="clickQualityInspectionCancle($event, row)" />
-                    </div>
-                    <span>{{ row.date }}</span>
+                    <span>{{ row.createTime.split(' ')[0] }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="需质检" width="90" prop="check" align="center">
+            <el-table-column label="需质检" width="90" prop="status" align="center">
                 <template #default="{ row }">
-                    <el-checkbox v-model="row.check" @change="" class="custom-checkbox"></el-checkbox>
+                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleStatusChange(row)"></el-checkbox>
                 </template>
             </el-table-column>
             <el-table-column label="检查类型" min-width="127" align="center">
@@ -47,17 +46,17 @@
                         </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="打包注意事项" min-width="200" prop="packingPrecautions">
+            <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.packingPrecautions" @keyup.enter="clickQualityInspectionCancle($event, row)" @blur="clickQualityInspectionCancle($event, row)" />
+                        <el-input type="text" v-model="row.packagePrecautions" @keyup.enter="clickQualityInspectionCancle($event, row)" @blur="clickQualityInspectionCancle($event, row)" />
                     </div>
-                    <span>{{ row.packingPrecautions }}</span>
+                    <span>{{ row.packagePrecautions }}</span>
                 </template>
             </el-table-column>
             <el-table-column align="center" fixed="right" label="操作" width="120">
-                <template #default="{ row }">
-                    <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row)">删除</el-link>
+                <template #default="{ row, $index }">
+                    <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row, $index)">删除</el-link>
                 </template>
             </el-table-column>
             <template #empty>
@@ -65,24 +64,22 @@
             </template>
         </el-table>
   
-            <vab-pagination
+            <!-- <vab-pagination
                 :current-page="queryForm.pageNo"
                 :page-size="queryForm.pageSize"
                 :total="total"
                 @current-change="handleCurrentChange"
                 @size-change="handleSizeChange"
-            />
+            /> -->
         </div>
     </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { getProgressSampleList, ProgressSampleReceipt, ProgressSampleUpdate } from '~/src/api/devlocal/progress';
-import { IProgressSampleUpdate, ISampleList } from '~/src/type/progress/progressType';
-import type { TableInstance, FormInstance } from 'element-plus'
-import { convertString } from '~/src/utils/stringUtils';
-import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
+import type { TableInstance } from 'element-plus'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import { checkTypeList } from '../../newProductDevelopment/indexCommon'
+import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation';
 defineOptions({
     name: 'vabPackingPrecautions'
 })
@@ -93,71 +90,62 @@ const dflag = ref<boolean>(false)
 watchEffect(()=>{
     dflag.value = props.packingPrecautionsVisible
     if(dflag.value === true) {
-        // fetchData()
+        fetchData()
     }
   }
 )
-const tableData = ref([
-    {
-        date: '2024-09-01',
-        check: true,
-        checkType: 0,
-        packingPrecautions: '注意防潮',
-    },
-    {
-        date: '2024-09-02',
-        check: false,
-        checkType: 1,
-        packingPrecautions: '易碎品请小心轻放',
-    },
-    {
-        date: '2024-09-03',
-        check: true,
-        checkType: 2,
-        packingPrecautions: '请保持通风',
-    },
-])
-// 总记录数
-const total = ref<number>(0)
-// 分页查询表单
-const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 20,
-  keyWord: '',
-})
+const list = ref<any>([])
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
-// 样品进度数据
-const sampleList = ref<ISampleList[]>([])
 const tableRef = ref<TableInstance>()
-const orderVisible = ref<boolean>(false)
-const dialogFlag = ref<boolean>(false)
- // 订单号
- const orderForm = reactive({
-    sampleId:'',
-    orderNo:'',
-    logisticsNo:'',
-})
+
+const route: any = useRoute()
 const emit = defineEmits(['update:packingPrecautionsVisible', 'update:tableValue'])
 
 const handlerCloseDialog = () => {
     dflag.value = false
     emit('update:packingPrecautionsVisible', dflag.value);
-    emit('update:tableValue', tableData.value)
+    emit('update:tableValue', list.value)
 }
-const handleCheckType = (row: any) => {
-    row.check = true
+const handleCheckType = async (row: any) => {
+    await updateProductQualityInspection(row)
+    fetchData()
+    row.status = 1
 }
-
-const handleAdd = () => {
+const handleStatusChange = async (row: any) => {
+    await updateProductQualityInspection(row)
+    fetchData()
+}
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+   
+   if  (data.columnIndex === 0){        
+   
+       return {
+            color: '#bbb',
+            cursor: 'not-allowed',
+            textAlign:'center'
+        } 
+   } else {
+       return {
+           textAlign:'center'
+       }
+   }
+}
+const handleAdd = async () => {
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0]; // 获取 'YYYY-MM-DD' 格式
-    tableData.value.push({
-        date: formattedDate,
-        check: true,
+    const newQualityInspection = {
+        skuId: parseInt(route.query.skuId),
+        status: 1,
         checkType: 0,
-        packingPrecautions: '',
-    })
+        packagePrecautions: '',
+    }
+    const { data } = await addProductQualityInspection(newQualityInspection)
+    if (data) {
+        $baseMessage('新增质检清单成功', 'success', 'hey')
+        list.value.push(newQualityInspection)
+        fetchData()
+    }
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
@@ -168,12 +156,9 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
         return
     }
 
+    cell.children[0].children[0].classList.remove('none')
+    cell.children[0].children[1].classList.add('none')
     
-            cell.children[0].children[0].classList.remove('none')
-            cell.children[0].children[1].classList.add('none')
-    
-
-
     // 自动聚焦
     const inputElement = getSpecificChildren(cell, "input")[0];
     if (inputElement) {
@@ -201,30 +186,28 @@ const clickQualityInspectionCancle = async (event:any,value:any) =>{
     
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
-        // await reviewStepNo4UpdateQualityInspection(value)
-        // fetchQualityInspectionData()
-        value.check = true
+        await updateProductQualityInspection(value)
+        fetchData()
+        value.status = 1
     }
 }
 // 删除
-const handleDelQualityInspection = async (row: any) => {
+const handleDelQualityInspection = async (row: any, index: number) => {
     try {
-        $baseConfirm('确定要删除本条质检信息吗', "系统提示", async () => {
-            // try {
-            //     const {data, msg} = await reviewStepNo4DelQualityInspection({ qualityInspectionId: row.qualityInspectionId! })
-            // if (msg === "调用成功！") {
-            //     const index = qualityInspectionList.value.findIndex((item: IreviewStepNo4ListQualityInspection) => item.qualityInspectionId === row.qualityInspectionId);
-            //     if (index !== -1) {
-            //         qualityInspectionList.value.splice(index, 1);
-            //     }
-            //     $baseMessage("质检信息删除成功！","success","hey")
-            // } else {
-            //     $baseMessage("质检信息删除失败，请重试。", "error", "hey");
-            // }
-            // } catch (delError) {
-            //     console.error(delError);
-            //     $baseMessage("变体删除操作失败，请重试。", "error", "hey");
-            // }
+        $baseConfirm('确定要删除本条质检信息吗? ', "系统提示", async () => {
+            try {
+                const { data } = await delProductQualityInspection({ id: row.id! })
+                if (data) {
+                    list.value.splice(index, 1);
+                    fetchData()
+                    $baseMessage("质检信息删除成功！","success","hey")
+                } else {
+                    $baseMessage("质检信息删除失败，请重试。", "error", "hey");
+                }
+            } catch (delError) {
+                console.error(delError);
+                $baseMessage("变体删除操作失败，请重试。", "error", "hey");
+            }
         });
     } catch(e){
         console.log(e as Error)
@@ -235,28 +218,13 @@ const handleDelQualityInspection = async (row: any) => {
 /**
  * 获取样品进度数据
  */
-// const fetchData = async () => {
-//   listLoading.value = true
-//   // console.log(queryForm)
-//   const { data } = await getProgressSampleList(queryForm)
-//   sampleList.value = data.list
-//   total.value = data.total
-//   listLoading.value = false
-// }
-/**
- * 分页页数改变
- */
- const handleCurrentChange = (value: number) => {
-  queryForm.pageNo = value
-//   fetchData()
-}
-/**
- * 分页大小的改变
- */
- const handleSizeChange = (value: number) => {
-  queryForm.pageNo = 1
-  queryForm.pageSize = value
-//   fetchData()
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getProductQualityInspection({
+    skuId: parseInt(route.query.skuId)
+  })
+  list.value = data
+  listLoading.value = false
 }
 
 onActivated(() => {

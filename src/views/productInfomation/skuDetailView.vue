@@ -399,7 +399,7 @@
                 <el-table-column fixed="right" label="操作" width="150" align="center">
                   <template #default="{ row, $index }">
                     <el-dropdown>
-                      <el-button text type="primary" v-permissions="{ permission: ['newProduct:evaluation:add'] }">
+                      <el-button text type="primary" @click="handleUpdateComponentName(row)">
                         修改
                         <el-icon class="el-icon--right">
                           <arrow-down />
@@ -504,15 +504,22 @@
                     <el-input v-model="form.componentUnit" clearable placeholder="套, 个, 只, 片等" />
                 </el-form-item>
                 <el-form-item label="供应商" prop="supplier">
-                    <!-- <el-input v-model="form.supplier" clearable filterable placeholder="点击输入和搜索"/> -->
-                    <el-select v-model="form.supplier" placeholder="点击输入和搜索" clearable filterable allow-create>
-                            <!-- <el-option 
-                                v-for="item in row.suppliserList"
-                                :label="item.label"
-                                :value="item.id"
-                                :key="item.id"
-                            /> -->
-                        </el-select>
+                    <el-select
+                        v-model="form.supplier"
+                        filterable
+                        remote
+                        reserve-keyword
+                        placeholder="点击输入和搜索"
+                        :remote-method="remoteMethod"
+                        :loading="loading"
+                    >
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="开票" prop="invoicing">
                     <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
@@ -566,6 +573,28 @@
                 </span>
             </template>
         </el-dialog>
+        <!-- 更新零件名 -->
+        <el-dialog 
+            v-model="updateComponentNameVisible" 
+            :close-on-click-modal="false" 
+            title="更新零件名" 
+            width="500"
+            class="moldDialog"
+            :before-close="handlerUpdateComponentNameDialog"
+        >
+            <el-divider style="margin-top: 0;"/>
+            <el-form ref="componentNameFormRef" :model="componentNameForm">
+                <el-form-item label="零件名" prop="componentName" :rules="{ required: true, message: '请输入零件名', trigger: 'blur' }">
+                    <el-input v-model="componentNameForm.componentName" clearable />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span>
+                    <el-button @click="updateComponentNameVisible = false">取消</el-button>
+                    <el-button type="primary" @click="handleSubmitComponentName">确认</el-button>
+                </span>
+            </template>
+        </el-dialog>
         <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
 </template>
@@ -580,15 +609,85 @@ import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
 import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
-import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductDefaultListComponent, getProductSkuDetail, getProductSkuList, updateProductComponent, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
+import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductDefaultListComponent, getProductSkuDetail, getProductSkuList, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
 
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
+const formRef = ref<FormInstance>()
 
-const filterMethod = (query: any, item: any) => {
-  return item.initial.toLowerCase().includes(query.toLowerCase())
+const form = reactive<any>({
+    type: 0,
+    componentName: '',
+    consumableName: '',
+    materialType: '',
+    size: '',
+    unit: '',
+    specification: '',
+    isSinglePurchase: 1,
+    componentUnit: '',
+    supplier: '',
+    invoicing: '0',
+    actualTaxRate: '',
+    invoicingTaxRate: '',
+})
+const loading = ref(false) //供应商搜索loading
+const options = ref<any[]>([]) //供应商搜索选项
+const supplierList = ref<any[]>([]) //供应商搜索列表
+const remoteMethod = async (query: string) => {
+  if (query) {
+    // 先获取供应商信息
+    const { data } = await getProductAllSupplier({
+        suppliserName: query
+    })
+    supplierList.value = data.map((item: any) => {
+        return { value: `${item}`, label: `${item}` }
+    })
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      options.value = supplierList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    options.value = []
+  }
+}
+const componentNameForm = reactive<any>({
+    componentName: ''
+})
+const updateComponentNameVisible = ref<boolean>(false)
+const componentNameFormRef = ref<FormInstance>()
+const handlerUpdateComponentNameDialog = () => {
+    updateComponentNameVisible.value = false
+}
+const _row = ref<any>({})
+const handleUpdateComponentName = (row: any) => {
+    _row.value = row
+    updateComponentNameVisible.value = true
+    componentNameFormRef.value?.resetFields()
+}
+const handleSubmitComponentName = async () => {
+    componentNameFormRef.value?.validate(async (valid: any) => { 
+        if(valid) {
+            const { data } = await updateProductComponentName({
+                existingPartsListId: _row.value.existingPartsListId!,
+                componentName: componentNameForm.componentName
+            })
+            if (data === true) {
+                updateComponentNameVisible.value = false
+                _row.value.componentName = componentNameForm.componentName
+                $baseMessage('修改零件名成功', 'success', 'hey')
+            } else {
+                $baseMessage('修改零件名失败', 'error', 'hey')
+            }
+        } else {
+            $baseMessage('零件名不能为空', 'error', 'hey')
+        }
+    })
+ 
 }
 const sku = ref<any>({})
 const componentType = [
@@ -629,7 +728,7 @@ const invoicingNumList = [
     label: '无法开票',
   },
 ]
-const imageUrl = ref('')
+
 // 预览图片列表
 const imagePriviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
@@ -683,15 +782,11 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
 }
 // 修改默认供应商
 const handleSuppliserChange = async (row: any) => {
-    // const { data } = await updateProductComponent(row)
-    // if (data === true) {
-    //     const { data: changeData } = await getChangeProductComponent({
-    //         skuId: row.skuId,
-    //         existingPartsListId: row.existingPartsListId,
-    //         suppliserId: row.defaultSuppliserId
-    //     })
-    //     row = changeData
-    // }
+    const { data } = await updateProductComponent(row)
+    if (data === true) {
+        fetchData()
+        fetchComponentData()
+    }
 }
 const packingPrecautionsVisible = ref<boolean>(false)
 const handlePacking = () => {
@@ -705,12 +800,10 @@ const handleManagerRemarks = () => {
 const handleClosePackingPrecautions = (value: boolean) => {
     packingPrecautionsVisible.value = value
 }
-const packingPrecautionsValue = ref<string>('')
-const managerRemarks = ref<string>('')
     
 const handleTableDataValue = (value: any) => {
     sku.value.qualityChecklist = value
-        .map((item: any) => `${item.date}: ${item.packingPrecautions}`)
+        .map((item: any) => `${item.createTime.split(' ')[0]}: ${item.packagePrecautions}`)
         .join('\n');
 }
 const tableData = ref<any>([])
@@ -822,23 +915,7 @@ const rules = reactive({
         { validator: validateNoSpaces, trigger: 'blur' },
     ],
 });
-const formRef = ref<FormInstance>()
 
-const form = reactive<any>({
-    type: 0,
-    componentName: '',
-    consumableName: '',
-    materialType: '',
-    size: '',
-    unit: '',
-    specification: '',
-    isSinglePurchase: 1,
-    componentUnit: '',
-    supplier: '',
-    invoicing: '0',
-    actualTaxRate: '',
-    invoicingTaxRate: '',
-})
 
 const addComponentVisible = ref<boolean>(false)
 
@@ -849,8 +926,7 @@ const handlerOtherSkuCloseDialog = () => {
 const handlerCloseDialog = () => {
     addComponentVisible.value = false
 }
-
-const handleAddComponent = () => {
+const handleAddComponent = async () => { //点击创建零件
     addComponentVisible.value = true
     formRef.value?.resetFields()
 }
@@ -931,7 +1007,7 @@ const generateData2 = () => {
   states.value.forEach((sku, index) => {
     data.push({
       label: sku,
-      key: index,
+      key: initials.value[index],
       initial: initials.value[index],
     })
   })
@@ -1068,12 +1144,7 @@ const handleCurrencyChange = async (row: any) => {
 const handleInvoicingChange = async (row: any) => {
     const { data } = await updateProductComponent(row)
     if (data === true) {
-        const { data: changeData } = await getChangeProductComponent({
-            skuId: row.skuId,
-            existingPartsListId: row.existingPartsListId,
-            suppliserId: row.defaultSuppliserId
-        })
-        row = changeData
+        fetchData()
         fetchComponentData()
     }
 }
@@ -1132,7 +1203,7 @@ const handleSupplier = (row: any) => {
             title: "SKU供应商",
             componentId: row.existingPartsListId,
             skuId: row.skuId,
-            existingPartsListId: row.existingPartsListId,
+            from: "sku",
             timestamp: Date.now(),
         },
     })
@@ -1161,12 +1232,12 @@ const fetchComponentData = async () => {
     tableData.value.forEach(async (item: any) => {
         // 获取供应商列表
         const { data: suppliser } = await getProductComponentSuppliser({
-            componentId: item.componentId
+            componentId: item.existingPartsListId
         })
         item.suppliserList = suppliser
         if(!item.componentImage) {
             item.hide = false
-            item.iamgeList = []
+            item.imageList = []
         } else if (item.componentImage){
             item.hide = true
             item.imageList = [{ url: item.componentImage }]
@@ -1179,6 +1250,7 @@ const fetchPurchaseAndRepository = async () => {
     const { data: repository } = await getProductComponentStore()
     repositoryOption.value = repository
 }
+
 onMounted(async ()=>{
   fetchData()
   fetchComponentData()
@@ -1213,6 +1285,7 @@ onMounted(async ()=>{
 :deep(.el-upload-list--picture-card .el-upload-list__item) {
   width: 75px;
   height: 75px;
+  transition: none;
 }
 :deep(.el-upload--picture-card) {
   width: 75px;

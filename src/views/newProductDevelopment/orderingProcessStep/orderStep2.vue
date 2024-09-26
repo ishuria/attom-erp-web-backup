@@ -16,7 +16,7 @@
                     <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" data-img="img" />
                 </template>
             </el-table-column>
-            <el-table-column label="已有零件ID" width="120" prop="componentId" >
+            <el-table-column label="已有零件ID" width="120">
             </el-table-column>   
             <el-table-column label="零件名"  min-width="160" prop="componentName" >
                 <template #default="{ row }">

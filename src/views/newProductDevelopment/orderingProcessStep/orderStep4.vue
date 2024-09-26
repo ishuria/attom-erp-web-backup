@@ -1,56 +1,77 @@
 <template>
     <div class="comprehensive-table-container auto-height-container">
-        <h2 style="text-align: center;">供应商信息完善</h2>
+        <h2 style="text-align: center;">新供应商信息完善</h2>
         <el-table 
             ref="tableRef" 
             stripe border 
             :data="list" 
             :header-cell-style="{ 'text-align': 'center' }"
-
+            :cell-style="cellStyle"
+            @cell-click="changeInput"
         >
-            <el-table-column label="供应商全名" align="center" min-width="120" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
-            </el-table-column>   
-            <el-table-column label="税号" min-width="120" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
+            <el-table-column label="供应商全名" align="center" min-width="120" prop="suppliser" ></el-table-column>   
+            <el-table-column label="税号" min-width="120" prop="taxNumber" >
+                 <template #default="{ row }">
+                    <div class="none">
+                        <el-input v-model="row.taxNumber" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.taxNumber }}</span>
                 </template>
             </el-table-column>  
-            <el-table-column label="地址"  min-width="160" prop="componentName" >
+            <el-table-column label="地址"  min-width="160" prop="address" >
                 <template #default="{ row }">
-                    {{ row.componentName  }}
+                    <div class="none">
+                        <el-input v-model="row.address" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.address }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="开票电话"  min-width="100" prop="componentName" >
+            <el-table-column label="开票电话"  min-width="100" prop="telephone" >
                 <template #default="{ row }">
-                    {{ row.componentName  }}
+                    <div class="none">
+                        <el-input v-model="row.telephone" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.telephone }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="开户银行"  min-width="120" prop="componentName" >
+            <el-table-column label="开户银行"  min-width="120" prop="bank" >
                 <template #default="{ row }">
-                    {{ row.componentName  }}
+                    <div class="none">
+                        <el-input v-model="row.bank" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.bank }}</span>
                 </template>
             </el-table-column>    
-            <el-table-column label="开户账号"  min-width="120" prop="componentName" >
+            <el-table-column label="开户账号"  min-width="120" prop="accountNumber" >
                 <template #default="{ row }">
-                    {{ row.componentName  }}
+                    <div class="none">
+                        <el-input v-model="row.accountNumber" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.accountNumber }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="联行号" prop="createTime" align="center" min-width="100">
-                <template #default = "{ row }">
-                <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
+            <el-table-column label="联行号" prop="bankRoutingNumber" align="center" min-width="100">
+                <template #default="{ row }">
+                    <div class="none">
+                        <el-input v-model="row.bankRoutingNumber" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.bankRoutingNumber }}</span>
                 </template>
             </el-table-column>    
-            <el-table-column label="联系人" prop="createTime" align="center" min-width="100">
-                <template #default = "{ row }">
-                <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
+            <el-table-column label="联系人" prop="contactPerson" align="center" min-width="100">
+                <template #default="{ row }">
+                    <div class="none">
+                        <el-input v-model="row.contactPerson" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.contactPerson }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="联系人电话" prop="componentName" min-width="100">
+            <el-table-column label="联系人电话" prop="contactNumber" min-width="100">
                 <template #default="{ row }">
-                    {{ row.componentName  }}
+                    <div class="none">
+                        <el-input v-model="row.contactNumber" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
+                    </div>
+                    <span>{{ row.contactNumber }}</span>
                 </template>
             </el-table-column>    
             
@@ -132,7 +153,9 @@ import {
     reviewStepNo4ListQualityInspection,
     reviewStepNo3GetSelectVariantList,
     reviewStepNo4UpdateQualityInspection,
-    reviewStepNo4SaveFr
+    reviewStepNo4SaveFr,
+    reviewStepNo4SupplierList,
+    reviewStepNo4UpdateSupplier
 } from '/@/api/devlocal/orderProcess';
 import { IreviewStepNo4ListQualityInspection, IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType';
 import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
@@ -178,6 +201,21 @@ const handleVariantUpdate = async (row: IreviewStepNo4ListQualityInspection) => 
     })
     fetchQualityInspectionData()
 }
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+   
+   if  (data.columnIndex === 0){        
+   
+       return {
+            color: '#bbb',
+            cursor: 'not-allowed',
+            textAlign:'center'
+        } 
+   } else {
+       return {
+           textAlign:'center'
+       }
+   }
+}
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -222,6 +260,23 @@ const clickQualityInspectionCancle = async (event:any,value:any) =>{
         // 执行失去焦点处理逻辑
         await reviewStepNo4UpdateQualityInspection(value)
         fetchQualityInspectionData()
+    }
+}
+// 新供应商table blur事件
+const supplierClickCancle = async (event: any, value: any) => {
+
+    const t1 = getRootElement(event["srcElement"], ".cell").children[0]
+    if (t1) {
+        t1.classList.add("none")
+    }
+
+    const t2 = getRootElement(event["srcElement"], ".cell").children[1]
+    if (t2) {
+        t2.classList.remove("none")
+    }
+    if (event.type === 'blur') { 
+        await reviewStepNo4UpdateSupplier(value)
+        fetchNewSupplier()
     }
 }
 // 新增
@@ -357,7 +412,18 @@ const fetchQualityInspectionData = async () => {
         console.error(error)
     }
 }
+const fetchNewSupplier = async () => {
+    let classReviewId: number | undefined
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+        classReviewId = props.step1Data
+    } else {
+        classReviewId = route.query.reviewId
+    }
+    const { data } = await reviewStepNo4SupplierList({  reviewId: classReviewId! })
+    list.value = data
+}
 onMounted(async () => {
+    fetchNewSupplier()
     fetchQualityInspectionData()
 })
 </script>
@@ -371,5 +437,9 @@ onMounted(async () => {
 .none {
     display: none;
 }
+// // 设置行高
+// :deep(.el-table .el-table__body .cell) {
+//   max-height: 32px;
+// }
 </style>
   

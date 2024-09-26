@@ -1,57 +1,29 @@
 <template>
     <div class="comprehensive-table-container auto-height-container">
-        <h2 style="text-align: center;">供应商信息完善</h2>
+        <h2 style="text-align: center;">新供应商信息完善</h2>
         <el-table 
             ref="tableRef" 
             stripe border 
             :data="list" 
             :header-cell-style="{ 'text-align': 'center' }"
-
         >
-            <el-table-column label="供应商全名" align="center" min-width="120" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
+            <el-table-column label="供应商全名" align="center" min-width="120" prop="suppliser" >
             </el-table-column>   
-            <el-table-column label="税号" min-width="120" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
+            <el-table-column label="税号" min-width="120" prop="taxNumber" >
             </el-table-column>  
-            <el-table-column label="地址"  min-width="160" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
+            <el-table-column label="地址"  min-width="160" prop="address" >
             </el-table-column>
-            <el-table-column label="开票电话"  min-width="100" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
+            <el-table-column label="开票电话"  min-width="100" prop="telephone" >
             </el-table-column>
-            <el-table-column label="开户银行"  min-width="120" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
+            <el-table-column label="开户银行"  min-width="120" prop="bank" >
             </el-table-column>    
-            <el-table-column label="开户账号"  min-width="120" prop="componentName" >
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
+            <el-table-column label="开户账号"  min-width="120" prop="accountNumber" >
             </el-table-column>
-            <el-table-column label="联行号" prop="createTime" align="center" min-width="100">
-                <template #default = "{ row }">
-                <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
-                </template>
+            <el-table-column label="联行号" prop="bankRoutingNumber" align="center" min-width="100">
             </el-table-column>    
-            <el-table-column label="联系人" prop="createTime" align="center" min-width="100">
-                <template #default = "{ row }">
-                <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
-                </template>
+            <el-table-column label="联系人" prop="contactPerson" align="center" min-width="100">
             </el-table-column>
-            <el-table-column label="联系人电话" prop="componentName" min-width="100">
-                <template #default="{ row }">
-                    {{ row.componentName  }}
-                </template>
+            <el-table-column label="联系人电话" prop="contactNumber" min-width="100">
             </el-table-column>    
             
         <template #empty>
@@ -117,6 +89,7 @@ import { checkTypeList } from '../indexCommon';
 import { 
     reviewStepNo4ListQualityInspection,
     reviewStepNo3GetSelectVariantList,
+    reviewStepNo4SupplierList,
 } from '/@/api/devlocal/orderProcess';
 import { IreviewStepNo4ListQualityInspection, IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType';
 
@@ -165,8 +138,13 @@ const fetchQualityInspectionData = async () => {
         console.error(error)
     }
 }
+const fetchNewSupplier = async () => {
+    const { data } = await reviewStepNo4SupplierList({  reviewId: parseInt(route.query.reviewId) })
+    list.value = data
+}
 onMounted(async () => {
     fetchQualityInspectionData()
+    fetchNewSupplier()
 })
 </script>
   

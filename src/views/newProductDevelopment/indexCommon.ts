@@ -140,8 +140,4 @@ export const checkTypeList = [
     value: 4,
     label: '抽检20%',
   },
-  {
-    value: 5,
-    label: '注意事项',
-  },
 ]
