@@ -104,7 +104,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
     const element: any = document.querySelector('.vab-fall-bar .tiny-fall-menu__box')
     const base = 60
     const intervalSize = 48
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < handleRoutes.value.length; i++) {
       const lowerBound = base + i * intervalSize
       const upperBound = lowerBound + intervalSize
       if (mousePosition.value.y > lowerBound && mousePosition.value.y < upperBound) {
