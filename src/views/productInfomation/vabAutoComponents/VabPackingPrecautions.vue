@@ -34,7 +34,7 @@
                     <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleStatusChange(row)"></el-checkbox>
                 </template>
             </el-table-column>
-            <el-table-column label="检查类型" min-width="127" align="center">
+            <el-table-column label="检查类型" min-width="40" align="center">
                 <template #default="{ row }">
                         <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
                             <el-option
@@ -125,10 +125,6 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
             cursor: 'not-allowed',
             textAlign:'center'
         } 
-   } else {
-       return {
-           textAlign:'center'
-       }
    }
 }
 const handleAdd = async () => {

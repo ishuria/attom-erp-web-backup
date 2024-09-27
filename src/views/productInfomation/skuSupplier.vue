@@ -3,12 +3,12 @@
         <el-page-header  @back="goBack" style="margin-bottom: 0px;">
             <template #content>
                 <div class="flex items-center">
-                    <span> <strong> SKU供应商 </strong></span>
+                    <span> <strong> 供应商 | {{ route.query.componentName }} | 零件ID：{{ route.query.componentId }} </strong></span>
                 </div>
             </template>
         </el-page-header>
         <vab-query-form>
-            <vab-query-form-left-panel style="margin-top: 10px;">
+            <vab-query-form-left-panel style="margin-top: 20px;">
                 <el-button type="primary" @click="handleAddSupplier">新增供应商</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
@@ -19,6 +19,8 @@
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
                 v-loading="listLoading"
+                class="noneHoveTable"
+                :cell-style="cellStyle"
             >
                 <el-table-column align="center" label="图片" class="image-wall" min-width="100">
                     <template #default="{ row, $index }">
@@ -182,14 +184,14 @@
                         <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="添加日期" prop="date" align="center" min-width="100">
+                <el-table-column label="添加日期" prop="createTime" align="center" min-width="120">
                     <template #default = "{ row }">
-                        <span style="color: rgb(192, 192, 192);">{{ row.date }}</span>
+                        <span>{{ row.createTime.split(' ')[0] }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="添加人员" prop="person" align="center" min-width="100">
+                <el-table-column label="添加人员" prop="createUserName" align="center" min-width="100">
                     <template #default = "{ row }">
-                        <span style="color: rgb(192, 192, 192);">{{ row.person }}</span>
+                        <span>{{ row.createUserName }}</span>
                     </template>
                 </el-table-column>
                 <template #empty>
@@ -201,12 +203,12 @@
             v-model="addSupplierVisible" 
             :close-on-click-modal="false" 
             title="添加供应商" 
-            width="500"
+            width="450"
             class="moldDialog"
             :before-close="handlerCloseDialog"
         >
             <el-divider style="margin-top: 0;"/>
-            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
+            <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;" :rules="rules" >
                 <el-form-item label="零件单位" prop="unit">
                     <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
                 </el-form-item>
@@ -266,7 +268,8 @@ import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
 import { currencyList, currencyNumList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
-import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser, createConsumablesSupplier } from '/@/api/devlocal/productInformation';
+import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser, createConsumablesSupplier, saveProductPurchaseMatters, saveProductContractTerms } from '/@/api/devlocal/productInformation';
+import { Row } from '@opentiny/vue';
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
@@ -436,17 +439,17 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     if (column.property == 'purchaseMatters') {
         // 查询零件采购注意事项
         clickRow.value = row
-        const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
-        attentionCopy.value = data
-        row.purchaseMatters = data
+        // const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
+        attentionCopy.value = row.purchaseMatters
+        // row.purchaseMatters = data
         wangEditorTitle.value = '零件采购注意事项'
         classify.value = 'purchaseMatters'
         wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
     } else if (column.property == 'contractTerms'){
             clickRow.value = row
-            const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
-            contractCopy.value = data
-            row.contractTerms = data
+            // const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
+            contractCopy.value = row.contractTerms
+            // row.contractTerms = data
             wangEditorTitle.value = '合同条款'
             classify.value = 'contractTerms'
             wangEditorContractVisible.value = !wangEditorContractVisible.value
@@ -483,14 +486,44 @@ const clickCancle = async (event:any,value:any) =>{
     
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
-        await updateProductComponentSuppliser(value)
+        await updateProductComponentSuppliser({
+            id: value.id,
+            skuId: parseInt(route.query.skuId),
+            componentId:  parseInt(route.query.componentId),
+            defaultSuppliserId: value.suppliserId,
+            unitPrice: value.unitPrice,
+            taxIncludedPrice: value.taxIncludedPrice,
+            currency: value.currency,
+            minimumOrderQuantity: value.minimumOrderQuantity,
+            numberFullCartons: value.numberFullCartons,
+            invoicing: value.invoicing,
+            purchaseId: value.purchaseId,
+            purchaseLink: value.purchaseLink,
+            purchaseMatters: value.purchaseMatters,
+            contractTerms: value.contractTerms
+        })
         fetchData()
     }
 }
 const handleCurrencyChange = async (row: any) => {
-    await updateProductComponentSuppliser(row)
+    await updateProductComponentSuppliser({...row, defaultSuppliserId: row.suppliserId, skuId: parseInt(route.query.skuId), componentId: parseInt(route.query.componentId)})
+    fetchData()
 }
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+     
+     if  (data.columnIndex === 1 || data.columnIndex === 3 || data.columnIndex === 8 || data.columnIndex === 10 || data.columnIndex === 11 || data.columnIndex === 16 || data.columnIndex === 17){        
+     
+         return {
+              color: '#bbb',
+              cursor: 'not-allowed',
+              textAlign:'center'
+          } 
+     }else {
+         return {
+             textAlign:'center'
+         }
+     }
+  }
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 分类
@@ -505,14 +538,14 @@ const contractCopy = ref<string>('')
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickAttentionConfirm = async (val: any) => {
-    const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
+    const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
     if (data === true) {
         attentionCopy.value = val
         clickRow.value.purchaseMatters = val
     }
 }
 const clickContractConfirm = async (val: any) => {
-    const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
+    const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
     if (data === true) {
         contractCopy.value = val
         clickRow.value.contractTerms = val
@@ -538,6 +571,9 @@ const goBack = async () => {
     await delVisitedRoute(handleActivePath(route, true))
     history.back()
 }
+const formattedPrice = (price: string) => {
+    return parseFloat(price).toFixed(2)
+}
 const purchaseOption = ref<any>()
 const fetchData = async () => {
     listLoading.value = true
@@ -546,6 +582,7 @@ const fetchData = async () => {
     })
     list.value = data
     list.value.forEach((item: any) => {
+        item.unitPrice = formattedPrice(item.unitPrice)
         if(!item.componentImage) {
             item.hide = false
             item.imageList = []
@@ -594,5 +631,14 @@ onBeforeMount(async () => {
 
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>

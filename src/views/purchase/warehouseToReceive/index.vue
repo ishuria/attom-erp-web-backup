@@ -9,7 +9,7 @@
         </vab-query-form-left-panel>
       </vab-query-form>
   
-      <el-table ref="tableRef" border stripe :data="list" @cell-click="changeInput" v-loading="listLoading" >
+      <el-table ref="tableRef" border stripe :data="list" @cell-click="changeInput" v-loading="listLoading" :cell-style="cellStyle">
         <el-table-column align="center" label="仓库ID" width="80" prop="id" >
             <template #default="{ row }">
                 <span style="color: rgb(192, 192, 192)">{{ row.id }}</span>
@@ -79,7 +79,7 @@
                 <div class="none">
                     <el-input type="text" v-model="row.createTime" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                 </div>
-                <span>{{ row.createTime.split(' ')[0] }}</span>
+                <span>{{ row.createTime }}</span>
             </template>
         </el-table-column>
         <el-table-column align="center" label="备注" min-width="160" prop="remarks" >
@@ -190,6 +190,21 @@ const rules = reactive<any>({
     { required: true, message: '请输入电话', trigger: 'blur' },
   ],
 })
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+     
+     if  (data.columnIndex === 0 ){        
+     
+         return {
+              color: '#bbb',
+              cursor: 'not-allowed',
+              textAlign:'center'
+          } 
+     }else {
+         return {
+             textAlign:'center'
+         }
+     }
+  }
 const handlerCloseDialog = () => {
   repositoryAddVisible.value = false
 }
@@ -284,6 +299,7 @@ const fetchData = async () => {
     const { data } = await getPurchaseRepository()
     list.value = data
     list.value.forEach((item: any) => {
+      item.createTime = item.createTime.split(' ')[0]
       if(item.status === 0) item.status = '正常'
       else if (item.status === 1) item.status = '停用'
     })

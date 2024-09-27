@@ -7,7 +7,7 @@
                 </div>
             </template>
         </el-page-header>
-        <el-card class="product-details-card" shadow="never">
+        <el-card class="product-details-card" shadow="never" >
             <el-row :gutter="20">
                 <el-col :span="2" class="custom-upload" > 
                     <el-upload 
@@ -140,7 +140,7 @@
                                         <span style="font-size: var(--el-form-label-font-size);">质检清单</span>
                                         <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handlePacking"><Edit /></el-icon>
                                     </el-space>
-                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 11 }" v-model="sku.qualityChecklist" disabled></el-input>
+                                    <el-input type="textarea" :rows="11" v-model="sku.qualityChecklist" disabled resize="none"></el-input>
                         </el-form-item>
                             </el-col>
                             <el-col :span="12">
@@ -149,7 +149,7 @@
                                         <span style="font-size: var(--el-form-label-font-size);">产品经理自己看的备注</span>
                                         <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handleManagerRemarks"><CirclePlusFilled /></el-icon>
                                     </el-space>
-                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 11 }" v-model="sku.remarks" @blur="handleRemarksChange"></el-input>
+                                    <el-input type="textarea" :rows="11" v-model="sku.remarks" @blur="handleRemarksChange" resize="none"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -157,7 +157,7 @@
                 </el-col>
             </el-row>
         </el-card>
-        <div class="comprehensive-table-container">
+        
             <el-page-header  @back="goBack" style="margin-bottom: 0px;">
                 <template #content>
                     <div class="flex items-center">
@@ -165,6 +165,7 @@
                     </div>
                 </template>
             </el-page-header>
+            <div class="comprehensive-table-container">
             <vab-query-form>
                 <vab-query-form-left-panel style="margin-top: 10px;">
                     <el-button type="primary" @click="handleAddComponent">创建零件</el-button>
@@ -179,6 +180,7 @@
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
                 height="400"
+                class="noneHoveTable"
             >
                 <el-table-column align="center" label="图片" class="image-wall" min-width="100">
                     <template #default="{ row, $index }">
@@ -399,8 +401,8 @@
                 <el-table-column fixed="right" label="操作" width="150" align="center">
                   <template #default="{ row, $index }">
                     <el-dropdown>
-                      <el-button text type="primary" @click="handleUpdateComponentName(row)">
-                        修改
+                      <el-button text type="primary" @click="handleSupplier(row)">
+                        供应商
                         <el-icon class="el-icon--right">
                           <arrow-down />
                         </el-icon>
@@ -408,10 +410,10 @@
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
+                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row.componentId)">添加到其他SKU</el-link>
                           </el-dropdown-item>
                           <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row.componentId)">添加到其他SKU</el-link>
+                            <el-link type="primary" :underline="false" @click="handleUpdateComponentName(row)">修改</el-link>
                           </el-dropdown-item>
                           <el-dropdown-item>
                             <el-link type="danger" :underline="false" @click="handleDel(row, $index)">删除</el-link>
@@ -450,12 +452,12 @@
             v-model="addComponentVisible" 
             :close-on-click-modal="false" 
             title="创建零件" 
-            width="600"
+            width="570"
             class="moldDialog"
             :before-close="handlerCloseDialog"
         >
             <el-divider style="margin-top: 0;"/>
-            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
+            <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 480px; margin: 0 auto;" :rules="rules" >
                 <el-form-item label="类型" prop="type">
                     <el-select v-model="form.type">
                         <el-option
@@ -480,7 +482,14 @@
                     ></el-input>
                 </el-form-item>
                 <el-form-item v-if="form.type === 1" label="耗材种类" prop="materialType">
-                    <el-select v-model="form.materialType" clearable />
+                    <el-select v-model="form.materialType" clearable placeholder="请选择耗材种类" >
+                        <el-option
+                            v-for="item in consumableTypeOption"
+                            :label="item.consumablesName"
+                            :value="item.id"
+                            :key="item.id"
+                        ></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-row style="margin-bottom: 18px;" v-if="form.type === 1" >
                     <el-col :span="12">
@@ -494,7 +503,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-form-item label="规格和说明" prop="specification">
+                <el-form-item label="规格/说明" prop="specification">
                     <el-input v-model="form.specification" clearable />
                 </el-form-item>
                 <el-form-item label="按单采购" v-if="form.type === 1" prop="isSinglePurchase" >
@@ -508,10 +517,13 @@
                         v-model="form.supplier"
                         filterable
                         remote
-                        reserve-keyword
+                        allow-create
+                        default-first-option
                         placeholder="点击输入和搜索"
                         :remote-method="remoteMethod"
                         :loading="loading"
+                        @change="handleTaxDisabled"
+                        clearable
                     >
                         <el-option
                             v-for="item in options"
@@ -522,16 +534,16 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="开票" prop="invoicing">
-                    <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
-                        <el-option v-for="dict in invoicingList" :key="dict.value"
-                            :value="dict.value" :label="dict.label"></el-option>
+                    <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
+                        <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                            :value="dict.value" :label="dict.label" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="实际税点" prop="actualTaxRate">
-                    <el-input v-model="form.actualTaxRate" clearable />
+                    <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled"/>
                 </el-form-item>
                 <el-form-item label="开票税点" prop="invoicingTaxRate">
-                    <el-input v-model="form.invoicingTaxRate" clearable />
+                    <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"/>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -609,7 +621,7 @@ import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
 import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
-import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductDefaultListComponent, getProductSkuDetail, getProductSkuList, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
+import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
 
 const route: any = useRoute()
 const router = useRouter()
@@ -628,19 +640,21 @@ const form = reactive<any>({
     isSinglePurchase: 1,
     componentUnit: '',
     supplier: '',
-    invoicing: '0',
+    invoicing: 0,
     actualTaxRate: '',
     invoicingTaxRate: '',
 })
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
 const supplierList = ref<any[]>([]) //供应商搜索列表
+const taxDisabled = ref<boolean>(false)
 const remoteMethod = async (query: string) => {
   if (query) {
     // 先获取供应商信息
     const { data } = await getProductAllSupplier({
         suppliserName: query
     })
+    console.log(data);
     supplierList.value = data.map((item: any) => {
         return { value: `${item}`, label: `${item}` }
     })
@@ -654,6 +668,34 @@ const remoteMethod = async (query: string) => {
   } else {
     options.value = []
   }
+}
+const handleTaxDisabled = async (value: string) => {
+   if(value) {
+        const { data } = await getProductSupplier({ suppliserName: value })
+        
+        if(data!==null) {
+            const {actualPTaxRate, actualZTaxRate, invoicingPTaxRate, invoicingZTaxRate, suppliserId } = data
+            taxDisabled.value = true
+            if(form.invoicing === 0) {
+                form.actualTaxRate = actualZTaxRate
+                form.invoicingTaxRate = invoicingZTaxRate
+            } else if(form.invoicing === 1) {
+                form.actualTaxRate = actualPTaxRate
+                form.invoicingTaxRate = invoicingPTaxRate
+            } else {
+                form.actualTaxRate = 0
+                form.invoicingTaxRate = 0
+            }
+        } else {
+            taxDisabled.value = false
+        }
+   }
+}
+const handleInvoicingTaxChange = async (value: number) => {
+   
+    if(form.supplier) {
+        handleTaxDisabled(form.supplier)
+    }
 }
 const componentNameForm = reactive<any>({
     componentName: ''
@@ -789,7 +831,8 @@ const handleSuppliserChange = async (row: any) => {
     }
 }
 const packingPrecautionsVisible = ref<boolean>(false)
-const handlePacking = () => {
+const packingList = ref<any>() //质检清单数据
+const handlePacking = async () => {
     packingPrecautionsVisible.value = true
 }
 const handleManagerRemarks = () => {
@@ -840,14 +883,15 @@ const contractCopy = ref<string>('')
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickAttentionConfirm = async (val: any) => {
-    const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
+    const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
     if (data === true) {
         attentionCopy.value = val
         clickRow.value.purchaseMatters = val
     }
+    // await updateProductComponent(clickRow.value)
 }
 const clickContractConfirm = async (val: any) => {
-    const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
+    const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
     if (data === true) {
         contractCopy.value = val
         clickRow.value.contractTerms = val
@@ -926,9 +970,12 @@ const handlerOtherSkuCloseDialog = () => {
 const handlerCloseDialog = () => {
     addComponentVisible.value = false
 }
+const consumableTypeOption = ref<any>()
 const handleAddComponent = async () => { //点击创建零件
     addComponentVisible.value = true
     formRef.value?.resetFields()
+    const { data } = await getProductConsumablesType() //获取耗材种类
+    consumableTypeOption.value = data  
 }
 
 function validateNoSpaces (rule: any, value: any, callback: any) {
@@ -972,6 +1019,7 @@ const handleSubmit = async () => {
             if (data) {
                 tableData.value.push(newComponent)
                 fetchComponentData()
+                fetchData()
                 $baseMessage('表单提交成功', 'success', 'hey')
             }
         }
@@ -1035,6 +1083,8 @@ const handleDel = async (row: any, index: number) => {
             })
             if (data) {
                 tableData.value.splice(index, 1)
+                fetchComponentData()
+                fetchData()
                 $baseMessage('SKU零配件删除成功', 'success', 'hey')
             }
         });
@@ -1061,17 +1111,17 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     if (column.property == 'purchaseMatters') {
         // 查询零件采购注意事项
         clickRow.value = row
-        const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
-        attentionCopy.value = data
-        row.purchaseMatters = data
+        // const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.id })
+        attentionCopy.value = row.purchaseMatters
+        // row.purchaseMatters = data
         wangEditorTitle.value = '零件采购注意事项'
         classify.value = 'purchaseMatters'
         wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
     } else if (column.property == 'contractTerms'){
             clickRow.value = row
-            const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
-            contractCopy.value = data
-            row.contractTerms = data
+            // const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.id })
+            contractCopy.value = row.contractTerms
+            // row.contractTerms = data
             wangEditorTitle.value = '合同条款'
             classify.value = 'contractTerms'
             wangEditorContractVisible.value = !wangEditorContractVisible.value
@@ -1139,7 +1189,8 @@ const clickCancle = async (event:any,value:any) =>{
 }
 const handleCurrencyChange = async (row: any) => {
     await updateProductComponent(row)
-    // fetchDataComponent()
+    fetchData()
+    fetchComponentData()
 }
 const handleInvoicingChange = async (row: any) => {
     const { data } = await updateProductComponent(row)
@@ -1203,12 +1254,13 @@ const handleSupplier = (row: any) => {
             title: "SKU供应商",
             componentId: row.existingPartsListId,
             skuId: row.skuId,
+            componentName: row.componentName,
             from: "sku",
             timestamp: Date.now(),
         },
     })
 }
-// 获取拿样零件添加数据
+// sku详情数据
 const fetchData = async () =>{
  
   const { data } = await getProductSkuDetail({
@@ -1224,12 +1276,16 @@ const fetchData = async () =>{
     sku.value.imageList = [{ url: sku.value.skuImgUrl }]
   }
 }
+const formattedPrice = (price: string) => {
+    return parseFloat(price).toFixed(2)
+}
 const purchaseOption = ref<any>()
 const repositoryOption = ref<any>()
 const fetchComponentData = async () => {
     const { data } = await getProductDefaultListComponent({ skuId: route.query.skuId })
     tableData.value = data
     tableData.value.forEach(async (item: any) => {
+        item.unitPrice = formattedPrice(item.unitPrice)
         // 获取供应商列表
         const { data: suppliser } = await getProductComponentSuppliser({
             componentId: item.existingPartsListId
@@ -1250,11 +1306,18 @@ const fetchPurchaseAndRepository = async () => {
     const { data: repository } = await getProductComponentStore()
     repositoryOption.value = repository
 }
-
+const fetchInspection = async () => { //获取质检清单数据
+    const { data } = await getProductQualityInspection({
+        skuId: parseInt(route.query.skuId)
+    })
+    packingList.value = data
+    handleTableDataValue(packingList.value) //初始化质检清单数据
+}
 onMounted(async ()=>{
   fetchData()
   fetchComponentData()
   fetchPurchaseAndRepository()
+  fetchInspection()
 })
 </script>
 
@@ -1314,5 +1377,13 @@ onMounted(async ()=>{
 .hide :deep(.el-upload--picture-card) {
   display: none
 }
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
 
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
 </style>

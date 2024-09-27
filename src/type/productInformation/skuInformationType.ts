@@ -342,7 +342,10 @@ export interface IupdateProductComponentSuppliser {
      /**
       * 已有零件供应商表id
       */
+     defaultSuppliserId?: number;
      id?: number;
+     componentId?: number;
+     skuId?: number;
      /**
       * 0专票 1普票 2无法开票
       */
@@ -452,6 +455,7 @@ export interface IcreateConsumablesSupplier {
 
 // 耗材信息 - 耗材信息修改
 export interface IupdateConsumablesSupplier {
+    defaultSuppliserId?: number
      /**
      * 合同条款
      */
@@ -1093,4 +1097,26 @@ export interface IaddProductQualityInspection {
 
 export interface ISuppliserName {
     suppliserName: string
+}
+// SKU零配件清单-保存采购注意事项
+export interface IsaveProductPurchaseMatters {
+    id: number
+    purchaseMatters: string
+}
+
+export interface IsaveProductContractTerms {
+    id: number
+    contractTerms: string
+}
+
+export interface IgetProductSupplier {
+    code: number
+    msg: string
+    data: {
+        actualPTaxRate: number
+        actualZTaxRate: number
+        invoicingPTaxRate: number
+        invoicingZTaxRate: number
+        suppliserId: number
+    }
 }

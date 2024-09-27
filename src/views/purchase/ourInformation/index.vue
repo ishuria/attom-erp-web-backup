@@ -9,11 +9,8 @@
         </vab-query-form-left-panel>
       </vab-query-form>
   
-      <el-table ref="tableRef" border stripe :data="list" @cell-click="changeInput" v-loading="listLoading">
+      <el-table ref="tableRef" border stripe :data="list" @cell-click="changeInput" v-loading="listLoading" :cell-style="cellStyle">
         <el-table-column align="center" label="采购方ID" width="100" prop="purchaserId" >
-          <template #default="{ row }">
-                <span style="color: rgb(192, 192, 192)">{{ row.purchaserId }}</span>
-            </template>
         </el-table-column>
         <el-table-column align="center" label="公司简称" min-width="200" prop="companyAbbreviation" >
           <template #default="{ row }">
@@ -123,6 +120,21 @@ const listLoading = ref<boolean>(true)
 const companyAddVisible = ref<boolean>(false)
 const form = reactive<any>({})
 const formRef = ref<FormInstance>()
+  const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+     
+     if  (data.columnIndex === 0 ){        
+     
+         return {
+              color: '#bbb',
+              cursor: 'not-allowed',
+              textAlign:'center'
+          } 
+     }else {
+         return {
+             textAlign:'center'
+         }
+     }
+  }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
   if (!cell.children[0].children[0]

@@ -27,6 +27,7 @@
               :cell-style="{ 'text-align': 'center' }"
               @cell-click="changeInput"
               v-loading="listLoading"
+              class="noneHoveTable"
           >
               <el-table-column label="图片" class="image-wall" min-width="100">
                 <template #default="{ row }">
@@ -156,9 +157,6 @@ defineOptions({
   name: 'consumable',
 })
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
-
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation';
@@ -167,8 +165,6 @@ import { IgetProductList } from '/@/type/productInformation/skuInformationType';
 
 const listLoading = ref<boolean>(true)
 // 零件列表
-
-const hideStopProduction = ref<boolean>(true) //false 展示停产 true 隐藏停产
 const list = ref<any>([])
 const route: any = useRoute()
 const router = useRouter()
@@ -218,7 +214,16 @@ const handleCurrentChange = (value: number) => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  fetchData()
+  if(!queryForm.keyWord) {
+        fetchData()
+    } else {
+        listLoading.value = true
+        const queryList = ref<any>()
+        queryList.value = list.value.filter((item: any) => item.sku.includes(queryForm.keyWord, 0))
+        list.value = queryList.value
+        total.value = list.value.length
+        listLoading.value = false
+    }
 }
 
 // 预览图片列表
@@ -279,6 +284,15 @@ onMounted(async ()=>{
 .custom-checkbox {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>
 

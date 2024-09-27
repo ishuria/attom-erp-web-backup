@@ -300,6 +300,8 @@ const fetchData = async () => {
   dataList.value = data.list!
   total.value = data.total
   listLoading.value = false
+  previous = null; 
+  currentGroupIndex = 0;
 }
 
 const handleOrderReview = (row: IReviewQueryItem) => {
@@ -336,15 +338,11 @@ const handleSizeChange = (value: number) => {
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  previous = null; 
-  currentGroupIndex = 0;
   fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
-  previous = null; 
-  currentGroupIndex = 0; 
   fetchData()
 }
 
@@ -491,4 +489,5 @@ onBeforeMount(() => {
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
+
 </style>

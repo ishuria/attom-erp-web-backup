@@ -5,7 +5,7 @@
         <h2>供应商</h2>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel :span="24">
-        <el-space>
+        <el-button type="primary">
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
@@ -13,18 +13,16 @@
             :limit="1"
             :show-file-list="false"
           >
-            <el-button type="primary">上传通用合同模板</el-button>
+            <el-link type="primary" style="color: #fff" :underline="false">上传通用合同模板</el-link>
           </el-upload>
+        </el-button>
           <el-button type="primary" @click="handleDownLoad" :loading="downloadLoading">下载通用合同模板</el-button>
-        </el-space>
+
       </vab-query-form-left-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" border stripe :data="list" @selection-change="setSelectRows" v-loading="listLoading" @cell-click="changeInput">
+    <el-table ref="tableRef" border stripe :data="list" @selection-change="setSelectRows" v-loading="listLoading" @cell-click="changeInput" :cell-style="cellStyle" >
       <el-table-column align="center" label="供应商ID" width="75" prop="suppliserId">
-        <template #default="{ row }">
-          <span style="color: rgb(192, 192, 192)">{{ row.suppliserId }}</span>
-        </template>
       </el-table-column>
       <el-table-column align="center" label="供应商名称" min-width="200" prop="suppliser" >
         <template #default="{ row }">
@@ -342,7 +340,17 @@ const setSelectRows = (value: string) => {
   selectRows.value = value
 }
 
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+   
+   if  (data.columnIndex === 0){        
+   
+       return {
+            color: '#bbb',
+            cursor: 'not-allowed',
+            textAlign:'center'
+        } 
+   }
+}
 
 const handleDownLoad = async () => {
   // downloadLoading.value = true
@@ -357,7 +365,8 @@ const handleDownLoad = async () => {
         responseType: 'blob', // 重要: 确保responseType为'blob'
       })
       .then((response) => {
-        // console.log(response.data);
+        console.log('Response Type:', response.headers['content-type']); // 打印 MIME 类型
+        console.log('Response Data:', response.data); // 打印返回的数据
         // const url = window.URL.createObjectURL(new Blob([response.data]));
         // const link = document.createElement('a');
         // link.href = url;
@@ -377,24 +386,25 @@ const handleDownLoad = async () => {
         // document.body.appendChild(link);
         // link.click();
         // link.remove();
-        // const blob = new Blob([response.data], {
-        //     type: 'application/vnd.ms-excel'
-        //   });
+        const blob = new Blob([response.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
           
-        //   let link = document.createElement('a');
-        //   link.href = URL.createObjectURL(blob);
-        //   link.setAttribute('download', '工作日志.xlsx');
-        //   link.click();
-        //   link.remove();
-        let blob = new Blob([response.data], { type: 'application/ms-excel;charset=utf-8' });
-        let downloadElement = document.createElement('a');
-        let href = window.URL.createObjectURL(blob); //创建下载的链接
-        downloadElement.href = href;
-        downloadElement.download = 'forbidden-words.xls'; //下载后文件名
-        document.body.appendChild(downloadElement);
-        downloadElement.click(); //点击下载
-        document.body.removeChild(downloadElement); //下载完成移除元素
-        window.URL.revokeObjectURL(href); //释放掉blob对象
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', '工作日志.xlsx');
+        document.body.appendChild(link); // 确保链接在 DOM 中
+        link.click();
+        link.remove();
+        // let blob = new Blob([response.data], { type: 'application/ms-excel;charset=utf-8' });
+        // let downloadElement = document.createElement('a');
+        // let href = window.URL.createObjectURL(blob); //创建下载的链接
+        // downloadElement.href = href;
+        // downloadElement.download = 'forbidden-words.xls'; //下载后文件名
+        // document.body.appendChild(downloadElement);
+        // downloadElement.click(); //点击下载
+        // document.body.removeChild(downloadElement); //下载完成移除元素
+        // window.URL.revokeObjectURL(href); //释放掉blob对象
       })
       .catch((error) => {
         console.error('Download failed:', error);
@@ -426,5 +436,13 @@ onBeforeMount(() => {
 }
 .hide :deep(.el-upload-dragger) {
   display: none;
+}
+
+:deep(.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell) {
+  background-color: #fff !important;
+}
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>

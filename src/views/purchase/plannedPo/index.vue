@@ -1,533 +1,615 @@
 <template>
-  <div class="container">
-      <div class="table-container">
+    <h2>采购计划</h2>
+    <div class="tabs-table-container no-background-container">
+      <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
+        <el-tab-pane label="待发布" name="0">
           <vab-query-form>
-              <vab-query-form-top-panel>
-                <h2>采购计划</h2>
-              </vab-query-form-top-panel>
-              <vab-query-form-left-panel>
-                  <el-button type="primary">批量删除</el-button>
-                  <el-button type="primary">创建</el-button>
-              </vab-query-form-left-panel>
+            <vab-query-form-left-panel >
+              <el-button type="primary" >批量删除</el-button>
+              <el-button type="primary" >创建</el-button>
+            </vab-query-form-left-panel>
           </vab-query-form>
-          <el-table 
-              ref="tableRef" 
-              stripe border 
-              :data="componentList" 
-              :header-cell-style="{ 'text-align': 'center' }"
-              @cell-click="changeInput"
-              height="400"
-          >
+  
+            <el-table 
+                ref="tableRef" 
+                stripe border 
+                :data="fakeData"
+                :header-cell-style="{ 'text-align': 'center' }"
+                @cell-click="changeInput"
+                class="noneHoveTable"
+            >
+                <el-table-column type="selection" class="custom-checkbox">
+                </el-table-column>
+                <el-table-column label="创建日期" prop="createTime" min-width="120"></el-table-column>
+                <el-table-column label="请购人" prop="person"></el-table-column>
+                <el-table-column align="center" label="SKU图片" class="image-wall" min-width="100">
+                    <template #default="{ row, $index }">
+                        <el-upload 
+                            list-type="picture-card" 
+                            :file-list="row.imageList" 
+                            :class="{ hide: row.hide }"
+                        
+                        >
+                            <el-icon ><Plus /></el-icon>
+                            <template #file="{ file }">
+                                <div>
+                                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                                    <span class="el-upload-list__item-actions">
+                                        <span
+                                            class="el-upload-list__item-preview"
+                                          
+                                        >
+                                            <el-icon><zoom-in /></el-icon>
+                                        </span>
+                                        <span
+                                            class="el-upload-list__item-delete"
+                                        
+                                        >
+                                            <el-icon><Delete /></el-icon>
+                                        </span>
+                                    </span>
+                                </div>
+                            </template>
+                        </el-upload>
+                    </template>
+                </el-table-column>
+                <el-table-column label="SKU" align="center" prop="sku" width="120"></el-table-column>   
+                <el-table-column label="数量" width="60" prop="quantity" align="center">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.quantity }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="零件名" prop="componentName" width="120">
+                    <template #default="{ row }">
+                        <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="零件数量" width="100" prop="componentQuantity" align="center">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.quantity }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="单位" width="60" prop="componentUnit" align="center">
+                    <template #default="{ row }">
+                        <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
+                    </template>
+                </el-table-column>
+            
+                <el-table-column label="含税价" prop="taxIncludedPrice" align="center" min-width="80">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        </div>
+                        <span>{{ row.taxIncludedPrice }}</span>
+                    </template>
+                </el-table-column>    
+                <el-table-column label="货币" width="105px" prop="currency">
+                    <template #default="{ row }">
+                        <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;">
+                            <!-- <el-option v-for="dict in currencyNumList" :key="dict.value"
+                                :value="dict.value" :label="dict.label"></el-option> -->
+                        </el-select>
+                    </template>
+                </el-table-column>
+             
+                <el-table-column align="center" label="供应商" min-width="200" prop="suppliser">
+                </el-table-column>
 
-              <el-table-column align="center" label="零件图片" class="image-wall" min-width="100">
-                  <template #default="{ row, $index }">
-                    
-                  </template>
-              </el-table-column>
-              <el-table-column label="零件ID" align="center" min-width="70" prop="reviewComponentId" width="100">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.reviewComponentId" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.reviewComponentId }}</span>
-                  </template>
-              </el-table-column>   
-              <el-table-column label="零件名" prop="componentName" width="120">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="textarea" autofocus v-model="row.componentName" :autosize="{ minRows: 2, maxRows: 7 }"
-                          @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.componentName }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="每个SKU需要数量"  width="100" prop="quantity" align="center">
-                  <template #header>
-                      每个SKU<br>需要数量
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.quantity }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="单位"  min-width="70" prop="componentUnit" align="center">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.componentUnit" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.componentUnit }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="出厂单价" prop="unitPrice" min-width="70" align="center">
-                  <template #header>
-                      出厂<br>单价
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.unitPrice }}</span>
-                  </template>
-              </el-table-column>
+                <el-table-column align="center" label="采购方" min-width="100" prop="purchaseId">
+                </el-table-column>
+                <el-table-column label="不报关" prop="declareCustomsStatus" align="center" min-width="75">
+                    <template #default = "{ row }">
+                        <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" />
+                    </template>
+                </el-table-column>
 
-              <el-table-column label="出厂总价" prop="totalPrice" min-width="70" align="center">
-                  <template #header>
-                      出厂<br>总价
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.totalPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row,)" />
-                      </div>
-                      <span>{{ row.totalPrice }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="每个SKU运费(含税)" prop="freight" align="center" min-width="100">
-                  <template #header>
-                      每个SKU<br>运费(含税)
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.freight" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.freight }}</span>
-                  </template>
-              </el-table-column>    
-              <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="70">
-                  <template #header>
-                      总未<br>税价
-                  </template>
-                  <template #default="{ row }">
-                      <span>{{ row.preTaxPrice }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="70">
-                  <template #header>
-                      总含<br>税价
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.taxIncludedPrice }}</span>
-                  </template>
-              </el-table-column>    
-              <el-table-column label="货币" width="110px" prop="currency">
-               
-              </el-table-column>
-              <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="100">
-                  <template #default="{ row }">
-                      <div class="none">
-                              <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                          </div>
-                      <span>{{ row.minimumOrderQuantity }}</span>
-                  </template>
-              </el-table-column> 
-              <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="100">
-                  <template #default="{ row }">
-                      <div class="none">
-                              <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                          </div>
-                      <span>{{ row.numberFullCartons }}</span>
-                  </template>
-              </el-table-column> 
-              <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
-                  <template #default="{row}">
-                      <div class="none">
-                          <el-input type="text" autofocus v-model="row.supplier" 
-                          @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>
-                          <el-text truncated>
-                              {{ row.supplier }}
-                          </el-text>
-                      </span>
-                  </template>
-              </el-table-column>
-              <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
-                  <template #header>
-                      实际<br>税点
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.actualTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.actualTaxRate }}</span>
-                  </template>
-              </el-table-column>
-
-              <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
-                  <template #header>
-                      开票<br>税点
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.invoicingTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.invoicingTaxRate }}</span>
-                  </template>
-              </el-table-column>
-
-              
-              <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>
-                          <el-text truncated>
-                              {{ row.purchaseLink }}
-                          </el-text>
-                      </span>
-                  </template>
-              </el-table-column>
-              <el-table-column  label="收货仓库" prop="remarks" min-width="100">
-                  <el-select 
-                      v-model="list.componentInfo!" 
-                      value-key="id"
-                      placeholder="请选择收货仓库"
-                      filterable
-                      clearable
-                      allow-create
-                      :reserve-keyword = "false"
-                      
-                  >
-                      <el-option v-for="val,idx in list" :label="val.label!" :value="val" :key="val.id!"/>
-                  </el-select>
-              </el-table-column>
-              <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.purchaseMatters"  />
-                      </div>
-                      <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="合同条款" prop="contractTerms" min-width="200">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.contractTerms"  />
-                      </div>
-                      <span>{{ removeHtmlTags(row.contractTerms) }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column align="center" fixed="right" label="操作" width="150">
-                  <template #default="{ row }">
-                     
-                  </template>
-              </el-table-column>
-          <template #empty>
-              <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
-          </template>
-      </el-table>
+                <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
+                    <template #default="{ row }">
+                        <div class="none">
+                            <el-input type="text" v-model="row.purchaseMatters"  />
+                        </div>
+                        <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                    </template>
+                </el-table-column>
  
+                <el-table-column fixed="right" label="操作" width="150" align="center">
+                  <template #default="{ row, $index }">
+                    <el-dropdown>
+                      <el-button text type="primary" >
+                        详情
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </el-button>
+                      <template #dropdown>
+                        <el-dropdown-menu>
+                          <el-dropdown-item>
+                            <el-link type="primary" :underline="false">发布PO</el-link>
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <el-link type="danger" :underline="false" >删除</el-link>
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <el-link type="primary" :underline="false" >未达起订量</el-link>
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                  </template>
+                </el-table-column>
+                <template #empty>
+                    <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+                </template>
+            </el-table>
+          <!-- <vab-pagination
+            :current-page="queryForm.pageNo"
+            :page-size="queryForm.pageSize"
+            :total="total"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          /> -->
+          <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
+        </el-tab-pane>
+        <el-tab-pane label="未达起订量" name="1">
+          <vab-query-form>
+            <vab-query-form-left-panel>
+                <el-button type="primary" >批量删除</el-button>
+                <el-button type="primary" >创建</el-button>
+            </vab-query-form-left-panel>
+          </vab-query-form>
+        
+   
+          <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
+        </el-tab-pane>
+      </el-tabs>
+      <el-image-viewer @close="" :url-list="imagePriviewList" v-if ="dialogVisible"/>
       <!-- <wangEditor
-          :title="wangEditorTitle"
-          :wangEditorVisible="wangEditorAttentionVisible"
-          :content="attentionCopy"
-          @clickChild="clickAttentionConfirm"
-          @clickBoolean="clickAttentionCancel"
-          :classify="classify"
-      >
-      </wangEditor>
-      <wangEditor
-          :title="wangEditorTitle"
-          :wangEditorVisible="wangEditorContractVisible"
-          :content="contractCopy"
-          @clickChild="clickContractConfirm"
-          @clickBoolean="clickContractCancel"
-          :classify="classify"
+        :title="wangEditorTitle"
+        :wangEditorVisible="wangEditorLogVisible"
+        :content="progressLogCopy"
+        @clickChild="clickLog"
+        @clickBoolean="clickLogBool"
+        :classify="classify"
       >
       </wangEditor> -->
-
-  </div>
-  </div>
-
-</template>
-
-<script lang="ts" setup>
-defineOptions({
-  name: 'plannedPo',
-})
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-
-
-import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
-import { convertString } from '/@/utils/stringUtils';
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-
-
-const props = defineProps<{ step1Data: number }>()
-
-const emit = defineEmits<{ 
-  (e: 'change-step', value: number): void
-  (e: 'update:imagePreviewVisibale', value: boolean): void
-  (e: 'update:priviewListValue', value: string): void
-}>()
-const cropRef = ref<any>(null)
-const autoCropArea = ref<number>(0.5)
-const aspectRatio = ref<number>(1 / 1)
-const cropVisible = ref<boolean>(false)
-const cropData = ref<any>('')
-const imgUrl = ref<string>(`https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png`)
-const cropdata = (data: any) => {
-cropData.value = data
-
-$baseConfirm('裁剪完成，您是否要关闭弹窗？', null, () => {
-  cropRef.value.closeCrop()
-})
-}
-// const listLoading = ref<boolean>(true)
-// 零件列表
-const componentList = ref<IreviewStepNo3ComponentList[]>([])
-// 变体列表
-const variantsList = ref<IreviewStepNo3VariantList[]>([])
-// 查询下拉变体列表
-const variantsSelectList = ref<IGetSelectVariantsList[]>([])
-const list = ref<any>([])
-const route: any = useRoute()
-// 弹出框的标题
-const wangEditorTitle = ref<string>('')
-// 分类
-const classify = ref<string>('')
-// 点击零件采购注意事项弹出富文本框是否显示
-const wangEditorAttentionVisible = ref<boolean>(false)
-// 点击合同条款弹出富文本框是否显示
-const wangEditorContractVisible = ref<boolean>(false)
-const attentionCopy = ref<string>('')
-const contractCopy = ref<string>('')
-/**
-* 当点击确认时，子组件传递给父组件的新的val
-*/
-const clickAttentionConfirm = async (val: any) => {
-  const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
-  if (data === true) {
-      attentionCopy.value = val
-      clickRow.value.purchaseMatters = val
-  }
-}
-const clickContractConfirm = async (val: any) => {
-  const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
-  if (data === true) {
-      contractCopy.value = val
-      clickRow.value.contractTerms = val
-  }
-}
-/**
-* 当点击取消，确认时，子组件传递给父组件 false
-*/
-const clickAttentionCancel = (val: any) => {
-wangEditorAttentionVisible.value = val
-}
-const clickContractCancel = (val: any) => {
-wangEditorContractVisible.value = val
-}
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-const div = document.createElement('div');
-div.innerHTML = html;
-return div.textContent || div.innerText || '';
-};
-
-
-
-
-// // 新增逻辑
-// const handleAddComponent = async () => {
-//   const newComponent: IreviewStepNo3ComponentList = {
-//       actualTaxRate: '',
-//       componentImgUrl: '',
-//       componentName: '',
-//       componentUnit: '',
-//       contractTerms: '',
-//       currency: null,
-//       freight: '',
-//       invoicing: null,
-//       invoicingTaxRate: '',
-//       minimumOrderQuantity: null,
-//       numberFullCartons: null,
-//       orderEntryId: 0,
-//       preTaxPrice: '',
-//       purchaseLink: '',
-//       purchaseMatters: '',
-//       quantity: null,
-//       reviewComponentId: null,
-//       reviewId: null,
-//       supplier: '',
-//       taxIncludedPrice: '',
-//       totalPrice: '',
-//       unitPrice: '',
-//       variant: '',
-//   }
-//   let classReviewId: number | undefined
-//   if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-//       classReviewId = props.step1Data
-//   } else {
-//       classReviewId = route.query.reviewId
-//   }
-//   const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-//   newComponent.reviewComponentId = data
-//   componentList.value.push(newComponent)
-//   fetchDataComponent()
-//   fetchVariantsData()
-// }
-// 删除逻辑
-// const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
-//   try {
-//       $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
-
-//           const {data} = await reviewStepNo3ComponentDel({ reviewComponentId: row.reviewComponentId! })
-//               if (data === true){
-//                   const index = componentList.value.findIndex((item: IreviewStepNo3ComponentList) => item.reviewComponentId === row.reviewComponentId);
-//                   if (index !== -1) {
-//                       componentList.value.splice(index, 1);
-//                   }
-//                   $baseMessage("零件信息删除成功！","success","hey")
-//                   fetchDataComponent()
-//                   fetchVariantsData()
-//               }
-//       })
-     
-//   } catch(e){
-//       console.log(e as Error)
-//  }
-// }
-
-/**
-* 当点击时切换输入框，修改输入
-*/
-const clickRow = ref<any>()
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+    </div>
+  </template>
   
-  // let el = getSpecificChildren(cell, "img")[0];
-  // if (getDataAttribute(el,'img') && el){
-  //   emit("update:priviewListValue", row.componentImg.url)
-  //   emit("update:imagePreviewVisibale", true)
-  // }
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
+  <script lang="ts" setup>
+  import { useRoutesStore } from '/@/store/modules/routes'
+  import { useTabsStore } from '/@/store/modules/tabs'
+  import { ref } from 'vue'
+  import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
+  import { IProgressQueryReq, IProgress, IProgressShared, IGetByIdQueryEvaluation, ISelectShare } from '/@/type/progress/progressType'
+
+  import type { UploadFile, TabsPaneContext, TableInstance } from 'element-plus'
+
+  import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+//   import wangEditor from './wangEditor.vue'
+
+
+  
+  defineOptions({
+    name: 'ProgressTable',
+  })
+  
+  const router = useRouter()
+  
+  const routesStore = useRoutesStore()
+  const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
+  const tabsStore = useTabsStore()
+  const { changeTabsMeta, addVisitedRoute } = tabsStore
+  const editRef = ref<any>(null)
+  
+  const activeName = ref("0")
+  const fixed = ref<string>('right')
+  const tableRef = ref<TableInstance>()
+  const evaluationTableRef = ref<TableInstance>()
+  // 表格加载loading状态
+  const listLoading = ref<boolean>(true)
+  // 新品进度列表
+  let progressList = ref<IProgress[]>([])
+  let tableClickProgressId = ref<number>(0)
+  // 点击上传图标的行下标
+  let tableClickRowIndex = ref<number>(0)
+  // 总记录数
+  const total = ref<number>(0)
+  const queryForm = reactive<IProgressQueryReq>({
+    pageNo: 1,
+    pageSize: 20,
+    productKeyWord: '',
+    status: 0, //查询状态：0表示进行中 1表示已归档
+  })
+// 采购计划col合并方法
+// const objectSpanMethod = ({
+//   row,
+//   column,
+//   rowIndex,
+//   columnIndex,
+// }: any) => {
+//   // 设置需要合并的列
+//   if (columnIndex === 1 || columnIndex === 2 || columnIndex === 3
+//     || columnIndex === 4 || columnIndex === 5 || columnIndex === 6
+//   ) {
+//     // 获取当前row的id
+//     const reviewMainId = row.reviewMainId;
+//     // 默认不跨行
+//     let rowspan = 1;
+//     // 遍历后端返回的数据
+//     for (let i = rowIndex + 1; i < dataList.value.length!; i++) {
+//       // 如果id一样需要合并
+//       if (dataList.value[i].reviewMainId === reviewMainId) {
+//         rowspan++;
+//       } else {
+//         break;
+//       }
+//     }
+
+//     // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+//     if (rowIndex === 0 || dataList.value[rowIndex - 1].reviewMainId !== reviewMainId) {
+//       return { rowspan, colspan: 1 };
+//     } else {
+//       return { rowspan: 0, colspan: 0 };
+//     }
+//   }
+// }
+const fakeData = [
+    { 
+        createTime: '',
+        person: '王豪俊',
+        sku: 'sku123',
+        quantity: 1,
+        componentName: '',
+        componentQuantity: 2,
+        unit: '',
+        taxIncludedPrice: 33,
+        currency: 0,
+        suppliser: '',
+        purchaseId: 9,
+        declareCustomsStatus: 1,
+        purchaseMatters: ''
+    },
+    { 
+        createTime: '',
+        person: '王豪俊',
+        sku: 'sku123',
+        quantity: 1,
+        componentName: '',
+        componentQuantity: 2,
+        unit: '',
+        taxIncludedPrice: 33,
+        currency: 0,
+        suppliser: '',
+        purchaseId: 9,
+        declareCustomsStatus: 1,
+        purchaseMatters: ''
+    },
+    { 
+        createTime: '',
+        person: '王豪俊',
+        sku: 'sku123',
+        quantity: 1,
+        componentName: '',
+        componentQuantity: 2,
+        unit: '',
+        taxIncludedPrice: 33,
+        currency: 0,
+        suppliser: '',
+        purchaseId: 9,
+        declareCustomsStatus: 1,
+        purchaseMatters: ''
+    },
+    { 
+        createTime: '',
+        person: '王豪俊',
+        sku: 'sku123',
+        quantity: 1,
+        componentName: '',
+        componentQuantity: 2,
+        unit: '',
+        taxIncludedPrice: 33,
+        currency: 0,
+        suppliser: '',
+        purchaseId: 9,
+        declareCustomsStatus: 1,
+        purchaseMatters: ''
+    },
+    { 
+        createTime: '',
+        person: '王豪俊',
+        sku: 'sku123',
+        quantity: 1,
+        componentName: '',
+        componentQuantity: 2,
+        unit: '',
+        taxIncludedPrice: 33,
+        currency: 0,
+        suppliser: '',
+        purchaseId: 9,
+        declareCustomsStatus: 1,
+        purchaseMatters: ''
+    },
+]
+  
+  // 图片
+  const dialogImageUrl = ref<string>('')
+  const dialogVisible = ref<boolean>(false)
+
+  const imagePriviewList = ref<string[]>([])
+  
+  // 弹出框的标题
+  const wangEditorTitle = ref<string>('')
+  // 点击日志弹出富文本框是否显示
+  const wangEditorLogVisible = ref<boolean>(false)
+  // 点击备注弹出富文本框是否显示
+  const wangEditorRemarkVisible = ref<boolean>(false)
+  const progressLogCopy = ref<string | undefined>('')
+  const remarkCopy = ref<string | undefined>('')
+  const classify = ref<string>('')
+  const tableClickIdx = ref<any>(0)
+  
+  
+  const handleTabClick = (tab: TabsPaneContext, event: Event) => {
+    progressList.value=[]
+    if (tab.props.name === '0')  queryForm.status = 0
+    else queryForm.status = 1
+  
+    // fetchData()
+  }
+//   // 处理已归档
+//   const handleArchived = async (progressId: number) => {
+//     const { data } = await updateProgressArchive({ progressId })
+//     if (data === true) {
+//       const index = progressList.value.findIndex((item: any) => item.progressId === progressId)
+//       progressList.value.splice(index, 1)
+//       $baseMessage("此条新品进度信息已归档成功!","success","hey")
+//     }
+    
+//     // activeName.value = "1"
+//   }
+
+  
+
+  // 修改图片预览列表
+  const setPreviewList = (imageUrl:string) =>{
+      dialogVisible.value = true
+      imagePriviewList.value = []
+      imagePriviewList.value.push(imageUrl)
+      // console.log(imagePriviewList.value)
+  }
+  
+
+  
+  
+  
+  
+
+  
+  /**
+   * 当点击时切换输入框，修改输入
+   */
+  const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+  
+    // 获取行的下标
+    tableClickIdx.value = progressList.value.indexOf(row)
+    if (!cell.children[0].children[0]
+        || !cell.children[0].children[1]
+        || !cell.children[0].children[0].classList
+        || !cell.children[0].children[1].classList) {
       return
-  }
-
-  if (column.property == 'purchaseMatters') {
-      // 查询零件采购注意事项
-      clickRow.value = row
-      const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
-      attentionCopy.value = data
-      row.purchaseMatters = data
-      wangEditorTitle.value = '零件采购注意事项'
-      classify.value = 'purchaseMatters'
-      wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
-  } else if (column.property == 'contractTerms'){
-          clickRow.value = row
-          const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
-          contractCopy.value = data
-          row.contractTerms = data
-          wangEditorTitle.value = '合同条款'
-          classify.value = 'contractTerms'
-          wangEditorContractVisible.value = !wangEditorContractVisible.value
-  } else {
-          cell.children[0].children[0].classList.remove('none')
-          cell.children[0].children[1].classList.add('none')
-  }
-
-
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-      inputElement.focus()
-      inputElement.select()
-  } else {
+    }
+    // console.log(cell.children[0].children[0])
+    // console.log(cell.children[0].children[1])
+    // console.log(cell.children[0].children[2])
+  
+    // if (column.property == 'progressLog') {
+    // //   const { data } = await getProgressLog({ progressId: row.progressId })
+    //   // progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
+    //   progressLogCopy.value = data
+    //   wangEditorTitle.value = '编辑开发日志'
+    //   classify.value = 'progressLog'
+    //   wangEditorLogVisible.value = !wangEditorLogVisible.value
+    // } else if (column.property == 'remark'){
+    //   remarkCopy.value = progressList.value[tableClickIdx.value].remark
+    //   wangEditorTitle.value = '编辑备注'
+    //   classify.value = 'remark'
+    //   wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
+    // } else {
+    //   cell.children[0].children[0].classList.remove('none')
+    //   cell.children[0].children[1].classList.add('none')
+    // }
+  
+    // 自动聚焦
+    const inputElement = getSpecificChildren(cell, "input")[0];
+    if (inputElement) {
+        inputElement.focus()
+    } else {
       const textareaElement = getSpecificChildren(cell, "textarea")[0];
       if (textareaElement){
-          textareaElement.focus()
-          textareaElement.select()
+        textareaElement.focus()
       }
-  }
-}
-
-// 零件table blur事件
-const clickCancle = async (event:any,value:any) =>{
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    t1.classList.add("none")
+    }
   }
 
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
+  /**
+   * 输入失焦事件
+   */
+  const clickCancle = async (event: any, value: any) =>{
+  
+    const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  
+    if (t1){
+      if (t1.classList[0] !== "el-select") {
+        t1.classList.add("none")
+      }
+    }
+  
+    const t2 = getRootElement(event["srcElement"],".cell").children[1]
+    if (t2){
+      t2.classList.remove("none")
+    }
+    // await updateProgressManage({...value})
   }
   
-  if (event.type === 'blur') {
-      // 执行失去焦点处理逻辑
+  /**
+   * 当点击确认时，子组件传递给父组件的新的val
+   */
+  const clickLog = async (val: any) => {
+    // console.log('新的val', val);
+    
+    progressList.value[tableClickIdx.value].progressLog = val
+    progressLogCopy.value = val
+    // console.log('点击log执行了');
+    // await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+  }
+  const clickRemark = async (val: any) => {
+    progressList.value[tableClickIdx.value].remark = val
+    remarkCopy.value = val
+    // console.log('点击remark执行了');
+    // await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+  }
+  // 去掉 HTML 标签并显示纯文本的方法
+  const removeHtmlTags = (html: string): string => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  };
+  /**
+   * 当点击取消，确认时，子组件传递给父组件 false
+   */
+  const clickLogBool = ( val: any) => {
+    wangEditorLogVisible.value = val
+    // console.log('点击logbool执行了');
+  }
+  const clickRemarkBool = ( val: any) => {
+    wangEditorRemarkVisible.value = val
+    // console.log('点击remarkbool执行了');
+  }
+
+  
+  
+
+
+
+  
+  onActivated(() => { 
+    tableRef.value?.doLayout()
+  })
+  onBeforeMount(() => {
+    // fetchData()
+  })
+  </script>
+  
+  <style lang="scss" scoped>
+  .tabs-table-container {
+    :deep() {
+      .el-tabs {
+        border-radius: var(--el-border-radius-base);
+  
+        &__header {
+          border-top-left-radius: var(--el-border-radius-base);
+          border-top-right-radius: var(--el-border-radius-base);
+        }
+  
+        &__nav-wrap {
+          border-radius: var(--el-border-radius-base);
+        }
+  
+        .el-tab-pane {
+          display: flex;
+          flex-direction: column;
+          height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
+  
+          .vab-query-form {
+            .left-panel {
+              margin-bottom: 5px !important;
+            }
+            .el-form {
+              .el-form-item:first-child {
+                margin: 0 !important;
+  
+                .el-check-tag,
+                .el-form-item__label {
+                  margin: 0 10px 5px 0;
+                  border-radius: 99px;
+                }
+              }
+              .el-form-item:last-child {
+                margin: 0 !important;
+              }
+            }
+          }
+  
+          .el-table {
+            flex: 1;
+          }
+        }
+      }
+    }
+  }
+  
+  :deep(.el-upload-list--picture-card .el-upload-list__item) {
+    width: 75px;
+    height: 75px;
+    margin: 0 8px 0 0;
+    transition: none;
+  }
+  :deep(.el-upload--picture-card) {
+    width: 75px;
+    height: 75px;
+  }
+  // 设置行高
+  :deep(.el-table .el-table__body .cell) {
+    max-height: 81.2px;
+  }
+  // 下拉框宽度
+  :deep(.el-select--default .el-select__wrapper) {
+    width: 50px;
+    padding-left: 8px;
+    padding-right: 6px;
+    font-size: var(--el-font-size-base);
+  }
+  
+  // 控制添加图片图标显示与隐藏
+  .hide :deep(.el-upload--picture-card) {
+    display: none
+  }
+  // 控制编辑框显示与隐藏
+  .none {
+    display: none;
+  }
+  .custom-checkbox {
+    transform: scale(1.2); // 放大 20%
+    transform-origin: center; // 确保放大从中心开始
+  }
+  .ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
+  }
+  // 开模申请
+  :deep(.moldDialog .el-dialog__body) { 
+    padding-top: 0;
+  }
      
- 
+  // .shareSelectDialog {
+  //   .el-dialog__body {
+  //     display: flex;
+  //     flex-direction: column;
+  //     align-items: center;
+  //     justify-content: center;
+  //   }
+  // }
+  :deep(.shareSelectDialog .el-dialog__body) {
+    display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
   }
-}
-
-// 当点击保存的时候
-const handleSave = async () => {
-  let classReviewId: number | undefined
-  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
-  } else {
-      classReviewId = route.query.reviewId
-  }
-  const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
-  if (data === true) {
-      $baseMessage("当前信息已保存。","success","hey")
-  }
-}
-const router = useRouter()
-
-
-
-
-</script>
-
-<style lang="scss" scoped>
-.pay-button-group {
-  display: block;
-  margin: 20px auto;
-  text-align: center;
-}
-
-.container {
-width: 100%;
-display: flex;
-flex-direction: column;
-box-sizing: border-box;
-}
-
-.table-container {
-flex: 1;
-
-}
-.none {
-  display: none;
-}
-// 设置行高
-:deep(.el-table .el-table__body .cell) {
-max-height: 81.2px;
-}
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-display: none
-}
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-width: 75px;
-height: 75px;
-margin: 0 8px 0 0;
-transition: none;
-}
-:deep(.el-upload--picture-card) {
-width: 75px;
-height: 75px;
-}
-
-</style>
-
+  </style>
+  

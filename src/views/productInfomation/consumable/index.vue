@@ -27,24 +27,21 @@
               :header-cell-style="{ 'text-align': 'center' }"
               @cell-click="changeInput"
               v-loading="listLoading"
+              :cell-style="cellStyle"
+              class="noneHoveTable"
           >
               <el-table-column align="center" label="图片" class="image-wall" min-width="100">
                   <template #default="{ row, $index }">
                       <el-upload 
                           list-type="picture-card" 
-                          :file-list="row.componentImgUrl" 
+                          :file-list="row.imageList" 
                           :class="{ hide: row.hide }"
                           :http-request="(File) => uploadImage(File, row)"
                       >
-                          <div 
-                              style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
-                              @click="handleIconClick($index)"
-                          >
-                              <el-icon ><Plus /></el-icon>
-                          </div>
+                          <el-icon ><Plus /></el-icon>
                           <template #file="{ file }">
                               <div>
-                                  <img class="el-upload-list__item-thumbnail"  :lazy="true" :src="file.url" alt="" />
+                                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                                   <span class="el-upload-list__item-actions">
                                       <span
                                           class="el-upload-list__item-preview"
@@ -66,12 +63,12 @@
               </el-table-column>
               <el-table-column label="零件ID" align="center" min-width="70" prop="existingPartsListId" width="100">
                   <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.existingPartsListId }}</span>
+                      <span >{{ row.existingPartsListId }}</span>
                   </template>
               </el-table-column>   
               <el-table-column label="耗材名" prop="componentName" width="120">
                   <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
+                      <span >{{ row.componentName }}</span>
                   </template>
               </el-table-column>
               <el-table-column label="按单采购" prop="status" align="center" min-width="90">
@@ -100,7 +97,7 @@
               </el-table-column>
               <el-table-column label="未税价" prop="preTaxPrice" align="center" min-width="80">
                   <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.preTaxPrice }}</span>
+                      <span >{{ row.preTaxPrice }}</span>
                   </template>
               </el-table-column>
               <el-table-column label="含税价" prop="taxIncludedPrice" align="center" min-width="80">
@@ -137,7 +134,7 @@
               </el-table-column> 
               <el-table-column align="center" label="默认供应商" min-width="140" prop="suppliserId">
                   <template #default="{row}">
-                      <el-select placeholder="请选择默认供应商" style="min-width: 100%;"  @change="handleCurrencyChange(row)">
+                      <el-select placeholder="请选择默认供应商" v-model="row.suppliserId" style="min-width: 100%;"  @change="handleCurrencyChange(row)">
                         <el-option 
                                 v-for="item in row.suppliserList"
                                 :label="item.label"
@@ -152,7 +149,7 @@
                       实际<br>税点
                   </template>
                   <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.actualTaxRate }}</span>
+                      <span >{{ row.actualTaxRate }}</span>
                   </template>
               </el-table-column>
 
@@ -161,7 +158,7 @@
                       开票<br>税点
                   </template>
                   <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.invoicingTaxRate }}</span>
+                      <span >{{ row.invoicingTaxRate }}</span>
                   </template>
               </el-table-column>
 
@@ -370,6 +367,7 @@
                 </span>
             </template>
         </el-dialog>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
   </div>
 
 </template>
@@ -379,14 +377,10 @@ defineOptions({
   name: 'consumable',
 })
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-
-import { currencyList, firstLegChannelColumnsNum, invoicingList, estimatedCostAccountingSiteColumnsNum, siteReflectCurrencyAndExchangeRate } from '../../newProductDevelopment/indexCommon'
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue';
-import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
-import { addConsumablesOtherSku, addConsumablesType, createConsumables, delConsumablesType, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, getProductSkuList, updateConsumablesSupplier } from '/@/api/devlocal/productInformation';
+import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, getProductSkuList, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation';
 
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
@@ -401,8 +395,19 @@ const handleAddConsumableType = async () => {
   })
   if(data) {
     consumableTypeData.value.push({ consumablesName: consumableTypeForm.consumableType, id: data})
-    // await getProductConsumablesType()
+    await getProductConsumablesType()
   }
+}
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+   
+   if  (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 6 || data.columnIndex === 12 || data.columnIndex === 13){        
+   
+       return {
+            color: '#bbb',
+            cursor: 'not-allowed',
+            textAlign:'center'
+        } 
+   }
 }
 interface Option2 {
   key: number
@@ -439,8 +444,6 @@ const handleAddOtherSku = async (componentId: number) => {
   })
   transferData.value = generateData2()
   _compoenntId.value = componentId
-  console.log(transferData.value);
-  console.log(initials.value);
   
   addOtherSkuVisible.value = true
 }
@@ -536,8 +539,7 @@ const handleSubmit = async () => {
         }
     })
 }
-// 零件列表
-const componentList = ref<IreviewStepNo3ComponentList[]>([])
+
 interface consumableType {
   consumablesName: string
   id: number
@@ -566,6 +568,7 @@ const handlerCloseDialog = () => {
 const handleConsumableType = async () => {
     consumableVisible.value = true
     const { data } = await getProductConsumablesType() //获取耗材种类
+    consumableTypeForm.consumableType = ''
     consumableTypeData.value = data
 }
 const handleDelConsumableType = async (row: any, index: number) => {
@@ -596,12 +599,9 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
 })
-const consumableTypeQueryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 20,
-})
+
 const total = ref<number>(0)
-const consumableTypeTotal = ref<number>(0)
+
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
@@ -612,22 +612,13 @@ const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
 }
-const handleConsumableTypeSizeChange = (value: number) => {
-    consumableTypeQueryForm.pageNo = 1
-    consumableTypeQueryForm.pageSize = value
-  // fetchData()
-}
-
-const handleConsumableTypeCurrentChange = (value: number) => {
-    consumableTypeQueryForm.pageNo = value
-  // fetchData()
-}
 const handleSupplier = (row: any) => {
     router.push({
         path: '/productInfomation/skuSupplier',
         query: {
           title: "SKU供应商",
           componentId: row.existingPartsListId,
+          componentName: row.componentName,
           from: "consumable",
           timestamp: Date.now(),
         },
@@ -637,14 +628,14 @@ const handleSupplier = (row: any) => {
 * 当点击确认时，子组件传递给父组件的新的val
 */
 const clickAttentionConfirm = async (val: any) => {
-  const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
+  const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
   if (data === true) {
       attentionCopy.value = val
       clickRow.value.purchaseMatters = val
   }
 }
 const clickContractConfirm = async (val: any) => {
-  const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
+  const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
   if (data === true) {
       contractCopy.value = val
       clickRow.value.contractTerms = val
@@ -666,34 +657,11 @@ const removeHtmlTags = (html: string): string => {
   return div.textContent || div.innerText || '';
 };
 
-// // 零件信息完善与售价核对修改站点
-// const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
-//   // 外币币种
-//   row.currencyType = siteReflectCurrencyAndExchangeRate.get(convertString(row.site))!
-//   const {data} = await getExchangeRate({currency:row.currencyType})
-//   row.foreignExchange = data
-//   row.site = row.site
-//   await reviewStepNo3VariantUpdate({
-//       currencyType: row.currencyType,
-//       finalSellingPrice: row.finalSellingPrice!,
-//       firstMileChannel: row.firstMileChannel,
-//       foreignExchange: row.foreignExchange,
-//       orderEntryId: row.orderEntryId,
-//       packagingHeight: row.packagingHeight!,
-//       packagingLength: row.packagingLength!,
-//       packagingPrice: row.packagingPrice!,     
-//       packagingWidth: row.packagingWidth!,     
-//       site: row.site,
-//       tariff: row.tariff!,
-//       volumeCoefficient: row.volumeCoefficient!,
-//       weight: row.weight!,
-//       weightCoefficient: row.weightCoefficient!,
-//   })
-// }
 
 const handleCurrencyChange = async (row: any) => {
   await updateConsumablesSupplier({
         id: row.existingPartsListId,
+        defaultSuppliserId: row.suppliserId,
         unitPrice: row.unitPrice,
         taxIncludedPrice: row.taxIncludedPrice,
         currency: row.currency,
@@ -708,142 +676,64 @@ const handleCurrencyChange = async (row: any) => {
       fetchData()
 }
 
-
-// 点击图标的行的下标
-const clickIconRowIndex = ref<number>()
-/**
-* 点击添加图标事件
-*/
-const handleIconClick = (index: number) => {
-// 获得点击行的下标
-clickIconRowIndex.value = index
-}
 /**
 * 上传图片
 */
-const imageForm = ref(new FormData()) as any;
 async function uploadImage(params: any, row: any) {
     try {
-        const imageForm = new FormData();
-        imageForm.append('file', params.file);
-        imageForm.append('reviewComponentId', row.reviewComponentId as any);
-
-        // 上传图片
-        const { data } = await reviewStepNo3ComponentUpload(imageForm)
-        if (!data) {
-            throw new Error('上传图片失败');
-        }
-        const imageListCopy = [...(row.componentImgUrl || [])];
-        imageListCopy.push({ url: data });
-        row.hide = imageListCopy.length > 0;
-        row.componentImgUrl = imageListCopy;
         
+        const uploadForm = new FormData(); // 每次上传前重置 FormData
+        uploadForm.append('file', params.file);
+        uploadForm.append('id', row.id);
 
-        // 提示成功信息
-        $baseMessage('图片上传成功!', 'success', 'hey');
-      
+        const { data } = await uploadComponentImage(uploadForm)
+        row.hide = true
+        if (data) {
+          
+          row.imageList = [{ url: data }]
+          $baseMessage('图片上传成功', 'success', 'hey')
+        }
     } catch (error) {
-        console.error(error);
-        $baseMessage('图片上传失败!', 'error', 'hey');
+        console.error(error)
     }
 }
 
-// function handleImageUpload(params: any, currentComponent: any) {
-
-// }
-
-
-
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
 /**
 * 图片预览事件
 */
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
-  
+  imagePreviewVisible.value = true
+  imagePriviewList.value = []
+  imagePriviewList.value.push(file.url!)
 }
 /**
 * 图片删除功能
 */
 const handleRemove = async (file: UploadFile, row: any) => {
   try {
-      $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-          const { data } = await reviewStepNo3ComponentImtDel({ reviewComponentId: row.reviewComponentId})
-          if (data === true) {
-              $baseMessage("此零件图片信息删除成功!", "success", "hey");
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
 
-              // 从 row.componentImgUrl 中删除对应的文件
-              const fileIndex = row.componentImgUrl.findIndex((img: any) => img.url === file.url);
-              if (fileIndex !== -1) {
-                  row.componentImgUrl.splice(fileIndex, 1);
-              }
-
-              // 如果 componentImgUrl 为空，则设置 hide 为 false
-              if (row.componentImgUrl.length === 0) {
-                  row.hide = false;
-              }
-          }
-      })
-      
+        const { data } = await delComponentImage({
+            id: row.id
+        })
+        if (data == true) {
+            row.imageList = []
+            row.hide = false
+            $baseMessage("图片删除成功!","success","hey")
+        }
+    })
+    
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
-}
-// 新增逻辑
-const handleAddComponent = async () => {
-//   const newComponent: IreviewStepNo3ComponentList = {
-//       actualTaxRate: '',
-//       componentImgUrl: '',
-//       componentName: '',
-//       componentUnit: '',
-//       contractTerms: '',
-//       currency: null,
-//       freight: '',
-//       invoicing: null,
-//       invoicingTaxRate: '',
-//       minimumOrderQuantity: null,
-//       numberFullCartons: null,
-//       orderEntryId: 0,
-//       preTaxPrice: '',
-//       purchaseLink: '',
-//       purchaseMatters: '',
-//       quantity: null,
-//       reviewComponentId: null,
-//       reviewId: null,
-//       supplier: '',
-//       taxIncludedPrice: '',
-//       totalPrice: '',
-//       unitPrice: '',
-//       variant: '',
-//   }
-//   let classReviewId: number | undefined
-//   if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-//       classReviewId = props.step1Data
-//   } else {
-//       classReviewId = route.query.reviewId
-//   }
-//   const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-//   newComponent.reviewComponentId = data
-//   componentList.value.push(newComponent)
-  // fetchDataComponent()
-}
-// 删除逻辑
-const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
-  try {
-      $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
-
-          const {data} = await reviewStepNo3ComponentDel({ reviewComponentId: row.reviewComponentId! })
-              if (data === true){
-                  const index = componentList.value.findIndex((item: IreviewStepNo3ComponentList) => item.reviewComponentId === row.reviewComponentId);
-                  if (index !== -1) {
-                      componentList.value.splice(index, 1);
-                  }
-                  $baseMessage("零件信息删除成功！","success","hey")
-                  // fetchDataComponent()
-              }
-      })
-     
-  } catch(e){
-      console.log(e as Error)
- }
 }
 
 /**
@@ -851,12 +741,6 @@ const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
 */
 const clickRow = ref<any>()
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  
-  // let el = getSpecificChildren(cell, "img")[0];
-  // if (getDataAttribute(el,'img') && el){
-  //   emit("update:priviewListValue", row.componentImg.url)
-  //   emit("update:imagePreviewVisibale", true)
-  // }
   if (!cell.children[0].children[0]
       || !cell.children[0].children[1]
       || !cell.children[0].children[0].classList
@@ -867,17 +751,17 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   if (column.property == 'purchaseMatters') {
       // 查询零件采购注意事项
       clickRow.value = row
-      const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
-      attentionCopy.value = data
-      row.purchaseMatters = data
+      // const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
+      attentionCopy.value = row.purchaseMatters
+      // row.purchaseMatters = data
       wangEditorTitle.value = '零件采购注意事项'
       classify.value = 'purchaseMatters'
       wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
   } else if (column.property == 'contractTerms'){
           clickRow.value = row
-          const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
-          contractCopy.value = data
-          row.contractTerms = data
+          // const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
+          contractCopy.value = row.contractTerms
+          // row.contractTerms = data
           wangEditorTitle.value = '合同条款'
           classify.value = 'contractTerms'
           wangEditorContractVisible.value = !wangEditorContractVisible.value
@@ -885,7 +769,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
           cell.children[0].children[0].classList.remove('none')
           cell.children[0].children[1].classList.add('none')
   }
-
 
   // 自动聚焦
   const inputElement = getSpecificChildren(cell, "input")[0];
@@ -901,7 +784,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   }
 }
 
-// 零件table blur事件
+// table blur事件
 const clickCancle = async (event:any,value:any) =>{
   const t1 = getRootElement(event["srcElement"],".cell").children[0]
   if (t1){
@@ -917,6 +800,7 @@ const clickCancle = async (event:any,value:any) =>{
       // 执行失去焦点处理逻辑
       await updateConsumablesSupplier({
         id: value.id,
+        defaultSuppliserId: value.suppliserId,
         unitPrice: value.unitPrice,
         taxIncludedPrice: value.taxIncludedPrice,
         currency: value.currency,
@@ -931,28 +815,23 @@ const clickCancle = async (event:any,value:any) =>{
       fetchData()
   }
 }
-// 变体table blur事件
-const clickVariantsCancle = async (event:any,value:any) =>{
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    t1.classList.add("none")
-  }
 
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  
-  if (event.type === 'blur') {
-      // 执行失去焦点处理逻辑
-      // await reviewStepNo3VariantUpdate(value)
-      // fetchVariantsData()
-  }
-}
 const purchaseOption = ref<any>()
 const queryData = () => {
   queryForm.pageNo = 1
-  fetchData()
+  if(queryForm.keyWord === '') {
+    fetchData()
+  } else {
+    listLoading.value = true
+    let queryList: any = []
+    queryList = list.value.filter((item: any) => item.componentName.includes(queryForm.keyWord, 0))
+    list.value = queryList
+    total.value = list.value.length
+    listLoading.value = false
+  }
+}
+const formattedPrice = (price: string) => {
+    return parseFloat(price).toFixed(2)
 }
 const fetchData = async () => {
     listLoading.value = true
@@ -960,26 +839,25 @@ const fetchData = async () => {
     list.value = data.list
     total.value = data.total
     list.value.forEach(async (item: any) => {
+      item.unitPrice = formattedPrice(item.unitPrice)
         // 获取供应商列表
         const { data: suppliser } = await getProductComponentSuppliser({
             componentId: item.existingPartsListId
         })
         item.suppliserList = suppliser
-        // if(!item.componentImage) {
-        //     item.hide = false
-        //     item.iamgeList = []
-        // } else if (item.componentImage){
-        //     item.hide = true
-        //     item.imageList = [{ url: item.componentImage }]
-        // }
+        if(!item.componentImage) {
+            item.hide = false
+            item.imageList = []
+        } else if (item.componentImage){
+            item.hide = true
+            item.imageList = [{ url: item.componentImage }]
+        }
     })
     listLoading.value = false
 }
 const fetchPurchase = async () => { //获取默认采购方
     const { data: purchase } = await getProductComponentPurchase()
     purchaseOption.value = purchase
-    console.log(purchaseOption.value);
-    
 }
 onBeforeMount(async ()=>{
   fetchPurchase()
@@ -1026,6 +904,20 @@ onBeforeMount(async ()=>{
         flex: 1; // 使表格占据剩余空间
         overflow: auto; // 确保表格内容可以滚动
     }
+}
+.transfer-container {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中，如果需要 */
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>
 

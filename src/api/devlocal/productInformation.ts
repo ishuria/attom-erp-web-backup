@@ -36,7 +36,10 @@ import {
     IupdateProductCustoms,
     IgetProductQualityInspectionResp,
     IaddProductQualityInspection,
-    ISuppliserName
+    ISuppliserName,
+    IsaveProductPurchaseMatters,
+    IsaveProductContractTerms,
+    IgetProductSupplier
 } from '/@/type/productInformation/skuInformationType'
 
 // SKU信息 - 获取查询列表
@@ -177,6 +180,14 @@ export function getProductAllSupplier(params: ISuppliserName) {
       method: 'get',
       params
     })
+}
+// SKU配件清单- 获取供应商税点信息
+export function getProductSupplier(params: ISuppliserName): Promise<IgetProductSupplier> {
+  return request({
+    url: `${BASE_API}/product/get/suppliser`,
+    method: 'get',
+    params
+  })
 }
 /**
  * SKU信息-sku停产、优先打包、打包拍照状态修改
@@ -461,5 +472,25 @@ export function updateProductQualityInspection(data: IaddProductQualityInspectio
       url: `${BASE_API}/product/update/quality/inspection`,
       method: 'post',
       data,
+    })
+}
+/**
+ * SKU零配件清单-保存采购注意事项
+ */
+export function saveProductPurchaseMatters(params: IsaveProductPurchaseMatters) {
+    return request({
+      url: `${BASE_API}/product/save/purchaseMatters`,
+      method: 'post',
+      params,
+    })
+}
+/**
+ * SKU零配件清单-保存合同条款
+ */
+export function saveProductContractTerms(params: IsaveProductContractTerms) {
+    return request({
+      url: `${BASE_API}/product/save/contractTerms`,
+      method: 'post',
+      params,
     })
 }
