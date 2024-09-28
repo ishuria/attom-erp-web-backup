@@ -1025,6 +1025,17 @@ html {
       i {
         color: var(--el-color-white);
       }
+
+      &:hover {
+        svg,
+        path {
+          fill: var(--el-button-hover-text-color);
+        }
+
+        i {
+          color: var(--el-button-hover-text-color);
+        }
+      }
     }
 
     @media (max-width: 768px) {

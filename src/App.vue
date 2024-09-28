@@ -48,7 +48,7 @@ onMounted(() => {
           url: 'https://vuejs-core.cn/debugger',
           timeOutUrl: 'https://vuejs-core.cn/debugger',
         })
-    }, 500)
+    }, 1000)
   })
 })
 </script>
