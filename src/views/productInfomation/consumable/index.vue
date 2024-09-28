@@ -659,8 +659,10 @@ const removeHtmlTags = (html: string): string => {
 
 
 const handleCurrencyChange = async (row: any) => {
+  console.log(row)
   await updateConsumablesSupplier({
-        id: row.existingPartsListId,
+        id: row.id,
+        componentId:row.existingPartsListId,
         defaultSuppliserId: row.suppliserId,
         unitPrice: row.unitPrice,
         taxIncludedPrice: row.taxIncludedPrice,
@@ -671,7 +673,8 @@ const handleCurrencyChange = async (row: any) => {
         purchaseId: row.purchaseId,
         purchaseLink: row.purchaseLink,
         purchaseMatters: row.purchaseMatters,
-        contractTerms: row.contractTerms
+        contractTerms: row.contractTerms,
+        status:row.status
       })
       fetchData()
 }
@@ -795,11 +798,13 @@ const clickCancle = async (event:any,value:any) =>{
   if (t2){
     t2.classList.remove("none")
   }
+  console.log(value,"///");
   
   if (event.type === 'blur') {
       // 执行失去焦点处理逻辑
       await updateConsumablesSupplier({
         id: value.id,
+        componentId:value.existingPartsListId,
         defaultSuppliserId: value.suppliserId,
         unitPrice: value.unitPrice,
         taxIncludedPrice: value.taxIncludedPrice,

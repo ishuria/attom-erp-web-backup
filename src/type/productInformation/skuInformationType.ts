@@ -465,9 +465,14 @@ export interface IupdateConsumablesSupplier {
       */
      currency?: number;
      /**
-      * 已有零件供应商表id
+      * 已有供应商零件表id
       */
      id?: number;
+
+     /**
+      * 已有零件id
+      */
+     componentId?:number
      /**
       * 0专票 1普票 2无法开票
       */
@@ -500,6 +505,10 @@ export interface IupdateConsumablesSupplier {
       * 出厂单价
       */
      unitPrice?: string;
+     /**
+      * 0不按单，1按单采购
+      */
+     status?:number
 }
 
 // 耗材信息 - 添加到其他SKU
