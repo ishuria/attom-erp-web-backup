@@ -1017,23 +1017,26 @@ html {
     }
 
     button {
+      .el-icon {
+        color: inherit;
+      }
       svg,
       path {
-        fill: var(--el-color-white);
+        fill: inherit;
       }
 
       i {
-        color: var(--el-color-white);
+        color: inherit;
       }
 
       &:hover {
         svg,
         path {
-          fill: var(--el-button-hover-text-color);
+          fill: inherit;
         }
 
         i {
-          color: var(--el-button-hover-text-color);
+          color: inherit;
         }
       }
     }
