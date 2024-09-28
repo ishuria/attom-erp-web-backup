@@ -1016,6 +1016,17 @@ html {
       }
     }
 
+    button {
+      svg,
+      path {
+        fill: var(--el-color-white);
+      }
+
+      i {
+        color: var(--el-color-white);
+      }
+    }
+
     @media (max-width: 768px) {
       .el-space {
         &__item {
