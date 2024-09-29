@@ -474,6 +474,10 @@ export interface IupdateConsumablesSupplier {
       */
      componentId?:number
      /**
+      * 零件单位
+      */
+     componentUnit?:number
+     /**
       * 0专票 1普票 2无法开票
       */
      invoicing?: number;

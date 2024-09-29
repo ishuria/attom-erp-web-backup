@@ -44,6 +44,7 @@ import {
   ITrialCalculationAddResp,
   ITrialCalculationResp,
   ITrialCalculationGetResp,
+  IUpdateProgressLogReq
 } from '/@/type/progress/sampleAndComponentType'
 import { IProgressId } from '~/src/type/progress/progressType'
 
@@ -369,5 +370,17 @@ export function saveTrialCalculation(params?: IProgressSample): Promise<ITrialCa
     url: `${BASE_API}/progress/save/trialcalculation`,
     method: 'post',
     params,
+  })
+}
+
+
+/**
+ * 拿样与核算-修改开发日志
+ */
+export function updateProgressLog(data?: IUpdateProgressLogReq) :Promise<IComponentCopyResp>{
+  return request({
+    url: `${BASE_API}/progress/update/log`,
+    method: 'post',
+    data,
   })
 }

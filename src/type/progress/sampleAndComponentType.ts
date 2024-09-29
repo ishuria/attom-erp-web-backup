@@ -433,3 +433,12 @@ export interface ITrialCalculationSave {
   id?: number
   progressId?: number
 }
+
+
+export interface IUpdateProgressLogReq {
+   // 产品推进日志
+   progressLog?: string
+   // 进度id
+   progressId?: number
+
+}

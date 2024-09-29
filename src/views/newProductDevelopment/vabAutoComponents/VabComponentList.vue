@@ -369,13 +369,12 @@ import {
     addSuppliers, deleteSuppliers,
     copyComponent, componentUploadImage,
     updateComponenet,
+    updateProgressLog,
     getProgressCalculation
 } from '/@/api/devlocal/progressSample'
-import { getProgressLog, updateProgressManage } from '~/src/api/devlocal/progress'
+import { getProgressLog,  } from '~/src/api/devlocal/progress'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { color } from 'echarts'
-import { reduce } from 'lodash'
-import { classicNameResolver } from 'typescript'
+
 
 // 图片上传显示控制vesiblae
 const uploadPicVisible = ref<boolean>(false)
@@ -745,6 +744,7 @@ const componentClickCancle = async (event: any, value: IProgressProdcutComponent
 
     await updateComponenet(value)
     fetchDataComponent()
+    props.trialCalculationData?.()
 }
 
 // 计入成本change
@@ -845,7 +845,7 @@ const clickLogBool = (val: any) => {
 const clickLog = async (val: any) => {
     // console.log('新的val', val);
     progressLog.value = val
-    await updateProgressManage({ progressId: parseInt(props.progressId), progressLog: progressLog.value }) //发送更新数据请求
+    await updateProgressLog({ progressId: parseInt(props.progressId), progressLog: progressLog.value }) //发送更新数据请求
 }
 onMounted(async () => {
     fetchDataComponent()

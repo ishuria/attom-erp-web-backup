@@ -825,21 +825,25 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
 
 // 零件table blur事件
 const clickCancle = async (event:any,value:any) =>{
+    
+
     const t1 = getRootElement(event["srcElement"],".cell").children[0]
     if (t1){
       t1.classList.add("none")
     }
-  
+    
     const t2 = getRootElement(event["srcElement"],".cell").children[1]
     if (t2){
       t2.classList.remove("none")
     }
     
     if (event.type === 'blur') {
-        // 执行失去焦点处理逻辑
+
         await reviewStepNo3ComponentUpdate(value)
-        fetchDataComponent()
-        fetchVariantsData()
+            fetchDataComponent()
+            fetchVariantsData()
+
+       
     }
 }
 // 变体table blur事件
@@ -987,7 +991,11 @@ const handleSaveAndContinue = async () => {
                 }
             }
         } else {
-            $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
+            // $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
+            const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
+            if (data === true) {
+                emit('change-step', 3);
+            }
         }
     }
 };
@@ -1065,6 +1073,9 @@ const fetchRepository = async () => { //获取收货仓库
     const { data: repository } = await getProductComponentStore()
     repositoryOption.value = repository
 }
+
+
+
 onMounted(async ()=>{
     fetchDataComponent()
     fetchVariantsData()

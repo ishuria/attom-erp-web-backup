@@ -73,7 +73,7 @@
               </el-table-column>
               <el-table-column label="按单采购" prop="status" align="center" min-width="90">
                 <template #default = "{ row }">
-                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handleCurrencyChange(row)"/>
+                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handleConsumablesUpdate(row)"/>
                 </template>
               </el-table-column>
               <el-table-column label="单位"  min-width="70" prop="unit" align="center">
@@ -110,7 +110,7 @@
               </el-table-column>    
               <el-table-column label="货币" width="110px" prop="currency">
                   <template #default="{ row }">
-                      <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                      <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
                           <el-option v-for="dict in currencyNumList" :key="dict.value"
                               :value="dict.value" :label="dict.label"></el-option>
                       </el-select>
@@ -134,7 +134,7 @@
               </el-table-column> 
               <el-table-column align="center" label="默认供应商" min-width="140" prop="suppliserId">
                   <template #default="{row}">
-                      <el-select placeholder="请选择默认供应商" v-model="row.suppliserId" style="min-width: 100%;"  @change="handleCurrencyChange(row)">
+                      <el-select placeholder="请选择默认供应商" v-model="row.suppliserId" style="min-width: 100%;"  @change="handleConsumablesUpdate(row)">
                         <el-option 
                                 v-for="item in row.suppliserList"
                                 :label="item.label"
@@ -144,6 +144,14 @@
                       </el-select>
                   </template>
               </el-table-column>
+              <el-table-column label="开票" prop="oem" align="center" width="130">
+                    <template #default = "{ row }">
+                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
+                            <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                                :value="dict.value" :label="dict.label"></el-option>
+                        </el-select>
+                    </template>
+                </el-table-column>
               <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
                   <template #header>
                       实际<br>税点
@@ -165,7 +173,7 @@
               <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
                 <template #default="{row}">
                
-                    <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                    <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
                           <el-option 
                               v-for="item in purchaseOption"
                               :label="item.label"
@@ -400,7 +408,7 @@ const handleAddConsumableType = async () => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
    
-   if  (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 6 || data.columnIndex === 12 || data.columnIndex === 13){        
+   if  (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 6 || data.columnIndex === 13 || data.columnIndex === 14){        
    
        return {
             color: '#bbb',
@@ -658,11 +666,11 @@ const removeHtmlTags = (html: string): string => {
 };
 
 
-const handleCurrencyChange = async (row: any) => {
-  console.log(row)
+const handleConsumablesUpdate = async (row: any) => {
   await updateConsumablesSupplier({
         id: row.id,
         componentId:row.existingPartsListId,
+        componentUnit:row.unit,
         defaultSuppliserId: row.suppliserId,
         unitPrice: row.unitPrice,
         taxIncludedPrice: row.taxIncludedPrice,
@@ -801,23 +809,26 @@ const clickCancle = async (event:any,value:any) =>{
   console.log(value,"///");
   
   if (event.type === 'blur') {
+  
       // 执行失去焦点处理逻辑
-      await updateConsumablesSupplier({
-        id: value.id,
-        componentId:value.existingPartsListId,
-        defaultSuppliserId: value.suppliserId,
-        unitPrice: value.unitPrice,
-        taxIncludedPrice: value.taxIncludedPrice,
-        currency: value.currency,
-        minimumOrderQuantity: value.minimumOrderQuantity,
-        numberFullCartons: value.numberFullCartons,
-        invoicing: value.invoicing,
-        purchaseId: value.purchaseId,
-        purchaseLink: value.purchaseLink,
-        purchaseMatters: value.purchaseMatters,
-        contractTerms: value.contractTerms
-      })
-      fetchData()
+      handleConsumablesUpdate(value)
+      // await updateConsumablesSupplier({
+      //   id: value.id,
+      //   componentId:value.existingPartsListId,
+      //   componentUnit:value.unit,
+      //   defaultSuppliserId: value.suppliserId,
+      //   unitPrice: value.unitPrice,
+      //   taxIncludedPrice: value.taxIncludedPrice,
+      //   currency: value.currency,
+      //   minimumOrderQuantity: value.minimumOrderQuantity,
+      //   numberFullCartons: value.numberFullCartons,
+      //   invoicing: value.invoicing,
+      //   purchaseId: value.purchaseId,
+      //   purchaseLink: value.purchaseLink,
+      //   purchaseMatters: value.purchaseMatters,
+      //   contractTerms: value.contractTerms
+      // })
+      // fetchData()
   }
 }
 
