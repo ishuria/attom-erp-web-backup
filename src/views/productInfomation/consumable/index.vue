@@ -446,6 +446,8 @@ const generateData2 = () => {
 let _compoenntId = ref<number>()
 // 添加其他 SKU 的逻辑
 const handleAddOtherSku = async (row: any) => {
+  console.log(row);
+  
   states.value = []
   initials.value = []
   transferData.value = []
@@ -456,7 +458,7 @@ const handleAddOtherSku = async (row: any) => {
     initials.value.push(item.skuId)
   })
   transferData.value = generateData2()
-  _compoenntId.value = row.componentId
+  _compoenntId.value = row.existingPartsListId
   
   addOtherSkuVisible.value = true
 }
@@ -814,29 +816,11 @@ const clickCancle = async (event:any,value:any) =>{
   if (t2){
     t2.classList.remove("none")
   }
-  console.log(value,"///");
   
   if (event.type === 'blur') {
   
       // 执行失去焦点处理逻辑
       handleConsumablesUpdate(value)
-      // await updateConsumablesSupplier({
-      //   id: value.id,
-      //   componentId:value.existingPartsListId,
-      //   componentUnit:value.unit,
-      //   defaultSuppliserId: value.suppliserId,
-      //   unitPrice: value.unitPrice,
-      //   taxIncludedPrice: value.taxIncludedPrice,
-      //   currency: value.currency,
-      //   minimumOrderQuantity: value.minimumOrderQuantity,
-      //   numberFullCartons: value.numberFullCartons,
-      //   invoicing: value.invoicing,
-      //   purchaseId: value.purchaseId,
-      //   purchaseLink: value.purchaseLink,
-      //   purchaseMatters: value.purchaseMatters,
-      //   contractTerms: value.contractTerms
-      // })
-      // fetchData()
   }
 }
 
