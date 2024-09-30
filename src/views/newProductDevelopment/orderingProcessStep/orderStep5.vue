@@ -147,7 +147,7 @@
                     </template>
                     
                     <template v-if="row['column0'] === 'operate'">
-                        <el-link type="primary" :underline="false">填入合并变体SKU的数据</el-link>
+                        <el-link type="primary" :underline="false">导入合并变体SKU的数据</el-link>
                     </template>
                 </template>
                 

@@ -132,7 +132,7 @@
                       <span>{{ row.numberFullCartons }}</span>
                   </template>
               </el-table-column> 
-              <el-table-column align="center" label="默认供应商" min-width="140" prop="suppliserId">
+              <el-table-column align="center" label="默认供应商" min-width="200" prop="suppliserId">
                   <template #default="{row}">
                       <el-select placeholder="请选择默认供应商" v-model="row.suppliserId" style="min-width: 100%;"  @change="handleConsumablesUpdate(row)">
                         <el-option 
@@ -170,7 +170,7 @@
                   </template>
               </el-table-column>
 
-              <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
+              <el-table-column align="center" label="默认采购方" min-width="160" prop="purchaseId">
                 <template #default="{row}">
                
                     <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
@@ -224,7 +224,10 @@
                       <template #dropdown>
                         <el-dropdown-menu>
                           <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row.id)">添加到SKU</el-link>
+                            <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
+                          </el-dropdown-item>
+                          <el-dropdown-item>
+                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row)">添加到SKU</el-link>
                           </el-dropdown-item>
                         </el-dropdown-menu>
                       </template>
@@ -442,16 +445,18 @@ const generateData2 = () => {
 }
 let _compoenntId = ref<number>()
 // 添加其他 SKU 的逻辑
-const handleAddOtherSku = async (componentId: number) => {
+const handleAddOtherSku = async (row: any) => {
+  states.value = []
+  initials.value = []
   transferData.value = []
   transferValue.value = []
-  const { data } = await getProductSkuList()
+  const { data } = await getProductSkuList({existingPartsListId: row.existingPartsListId})
   data.forEach((item: any) => {
     states.value.push(item.sku)
     initials.value.push(item.skuId)
   })
   transferData.value = generateData2()
-  _compoenntId.value = componentId
+  _compoenntId.value = row.componentId
   
   addOtherSkuVisible.value = true
 }
@@ -463,7 +468,7 @@ const handleSubmitOtherSku = async () => {
             componentId: _compoenntId.value!
         })
         if(data === true) {
-            $baseMessage('添加成功', 'success', 'hey')
+            $baseMessage('添加到其他SKU成功', 'success', 'hey')
         }
     });
 }
@@ -525,26 +530,29 @@ const rules = reactive({
 const handleSubmit = async () => {
     formRef.value?.validate(async (valid: any) => {
         if (valid) {
-          addConsumableVisible.value = false
-          const newConsumable = {
-            componentName: form.componentName,
-            unit: form.unit,
-            suppliser: form.suppliser,
-            invoicing: form.invoicing,
-            actualTaxRate: form.actualTaxRate,
-            invoicingTaxRate: form.invoicingTaxRate,
-            status: form.status,
-          }
+          
+          try {
+            const newConsumable = {
+              componentName: form.componentName,
+              unit: form.unit,
+              suppliser: form.suppliser,
+              invoicing: form.invoicing,
+              actualTaxRate: form.actualTaxRate,
+              invoicingTaxRate: form.invoicingTaxRate,
+              status: form.status,
+            }
             const { data } = await createConsumables(newConsumable)
             if (data) {
                 list.value.push(newConsumable)
                 fetchData()
-                $baseMessage('表单提交成功', 'success', 'hey')
+                addConsumableVisible.value = false
+                $baseMessage('创建耗材提交成功', 'success', 'hey')
             }
+          } catch (error) {
+            console.error(error)
+          }
         }
-        else {
-          $baseMessage('表单提交失败', 'error', 'hey')
-        }
+    
     })
 }
 
@@ -586,7 +594,7 @@ const handleDelConsumableType = async (row: any, index: number) => {
     })
     if (data === true) {
       consumableTypeData.value.splice(index, 1)
-      $baseMessage('删除成功', 'success', 'hey')
+      $baseMessage('删除耗材种类成功', 'success', 'hey')
     }
   })
   

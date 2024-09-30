@@ -81,6 +81,7 @@
       </el-table>
 
       <h2 style="text-align: center;">质检项目清单（打包注意事项和质检报告）</h2>
+      <div style="color: red; text-align: center; font-size: 22px">注意：一个质检项目填一行，一行不能填写多项质检内容</div>
       <vab-query-form>
             <vab-query-form-left-panel>
                 <el-button type="primary" @click="handleAddQualityInspection">新增</el-button>

@@ -181,6 +181,13 @@ const rules = reactive<FormRules<AddSampleForm>>({
       trigger: 'blur',
     },
   ],
+  bulkGoodsReturnable: [
+  {
+      required: true,
+      message: '下大货可退拿样金额不能为空！',
+      trigger: 'blur',
+    },
+  ]
 })
 
 

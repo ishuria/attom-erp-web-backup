@@ -47,7 +47,13 @@
                             </el-option>
                           </el-select>
                         </template>
-                        <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'">
+                        <template v-if="row['column0'] === 'packagingSize'">
+                            {{ row[prop] }} cm
+                        </template>
+                        <template v-if="row['column0'] === 'productSize'">
+                            {{ convertCmToInches(row[prop]) }} inch
+                        </template>
+                        <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'packagingSize'&& row['column0'] !== 'productSize'">
                           {{ row[prop] }}
                         </template>
                     </template>
@@ -175,6 +181,14 @@ const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement
       emit("update:imagePreviewVisibale", true)
     }
 }
+function convertCmToInches(dimensions: string) {
+    // 将字符串拆分为数组
+    const cmArray = dimensions.split('x').map(Number);
+    // 转换为英寸并保留两位小数
+    const inchArray = cmArray.map(cm => (cm * 0.393701).toFixed(2));
+    // 将数组转换回字符串格式
+    return inchArray.join('x');
+}
 const handleCheckPersonClose = () => {
   checkPersonListVisible.value = false
 }
@@ -224,7 +238,7 @@ const labelMap: Record<string, string> = {
   actualTotalCost: '产品实际总成本',
   grossMarginRate: '毛利率',
   packagingSize: '包装尺寸(cm)',
-  productSize: '产品尺寸(cm)',
+  productSize: '产品尺寸(in)',
   material: '产品材质',
   battery: '是否含电池<br>(若有则填入电池类型)',
   benchmarkAsin: '对标竞品ASIN',

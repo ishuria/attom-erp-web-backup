@@ -29,6 +29,10 @@
                             <el-dropdown-menu>
                                 <el-dropdown-item>
                                     <el-link type="primary" :underline="false"
+                                    @click="uploadProdcutProgressImage(scope.row, scope.$index)">上传图片</el-link>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <el-link type="primary" :underline="false"
                                         @click="addSuppliserInfo(scope.row)">新增供应商</el-link>
                                 </el-dropdown-item>
                                 <el-dropdown-item>

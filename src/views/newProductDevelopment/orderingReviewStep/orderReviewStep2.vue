@@ -2,7 +2,7 @@
   <div>
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
       <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-        height="750" :show-header="false" style="width: auto; table-layout: fixed;">
+        height="750" :show-header="false" style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
         <!-- 第一列固定标签列 -->
         <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
           <template #default="{ row }">
@@ -21,14 +21,23 @@
             </template>
 
             <template v-if="row['column0'] === 'variantImg'">
-              <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" />
+              <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" data-img="img">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
             </template>
 
             <template v-if="row['column0'] === 'oem'">
               <el-checkbox v-model="row[prop]" :disabled="true":true-value="1" :false-value="0" size="large" class="custom-checkbox"/>
             </template>
-
-            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem'">
+            <template v-if="row['column0'] === 'packagingSize'">
+                {{ row[prop] }} cm
+            </template>
+            <template v-if="row['column0'] === 'productSize'">
+                {{ convertCmToInches(row[prop]) }} inch
+            </template>
+            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem' && row['column0'] !== 'packagingSize' && row['column0'] !== 'productSize'">
               {{ row[prop] }}
             </template>
             
@@ -83,6 +92,8 @@
     <div class="pay-button-group">
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+
   </div>
 </template>
 
@@ -93,6 +104,7 @@ import { IReviewMoldItem, IReviewCommonItem, IReviewStep2Item, IReviewStep2Req }
 import { formatDate } from '/@/utils/dateUtils'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
 
 const moldData = ref<IReviewMoldItem[]>()
 const variantList = ref<any[]>([])
@@ -138,7 +150,7 @@ const labelMap: Record<string, string> = {
   actualTotalCost: '产品总实际成本',
   grossMarginRate: '毛利率',
   packagingSize: '包装尺寸(cm)',
-  productSize: '产品尺寸(cm)',
+  productSize: '产品尺寸(in)',
   material: '产品材质',
   battery: '是否含电池<br>(若有则填入电池类型)',
   variantSku: '合并变体的SKU',
@@ -148,7 +160,32 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
 }
-
+function convertCmToInches(dimensions: string) {
+    // 将字符串拆分为数组
+    const cmArray = dimensions.split('x').map(Number);
+    // 转换为英寸并保留两位小数
+    const inchArray = cmArray.map(cm => (cm * 0.393701).toFixed(2));
+    // 将数组转换回字符串格式
+    return inchArray.join('x');
+}
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
+// table单击修改
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+    // 处理图片放大预览
+    let el = getSpecificChildren(cell, "img")[0];
+    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+      imagePreviewVisible.value = true
+      imagePriviewList.value = []
+      imagePriviewList.value.push(el.src)
+    }
+}
 const buildParams = (): IReviewStep2Req => {
   let paramVArr: IReviewStep2Item[] = []
   let vArr: any = []

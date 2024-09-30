@@ -94,10 +94,13 @@
                             </el-button>
                             <template #dropdown>
                                 <el-dropdown-menu>
-                                    <el-dropdown-item @click="">
+                                    <el-dropdown-item >
+                                        <el-link type="primary" :underline="false" @click="handleSampleReceipt(row)">手动签收</el-link>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item >
                                         <el-link type="primary" :underline="false" @click="orderNo1688Update(row)">1688订单号修改</el-link>
                                     </el-dropdown-item>
-                                    <el-dropdown-item @click="">
+                                    <el-dropdown-item >
                                         <el-link type="primary" :underline="false" @click="logisticsNoUpdate(row)">物流订单修改</el-link>
                                     </el-dropdown-item>
                                 </el-dropdown-menu>

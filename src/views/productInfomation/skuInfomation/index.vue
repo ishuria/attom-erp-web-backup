@@ -34,7 +34,11 @@
                     <el-image style="width: 75px; height: 75px" v-if="row.skuImgUrl":src="row.skuImgUrl" fit="fill" data-img="img" />
                 </template>
               </el-table-column>
-              <el-table-column label="SKU" min-width="70" prop="sku" width="100"></el-table-column>   
+              <el-table-column label="SKU" prop="sku" width="250">
+                <!-- <template #default="{ row }">
+                  <el-text truncated>{{ row.sku }}</el-text>
+                </template> -->
+              </el-table-column>   
               <el-table-column label="FNSKUUPC" prop="fnSkuUpc" width="120">
                 <template #header>
                   FNSKU<br>UPC
@@ -106,15 +110,10 @@
               </el-table-column>
               <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
               </el-table-column>
-              <el-table-column  label="开票/报关品名" prop="customsDeclaration" min-width="140" >
-              </el-table-column>
-
-              <el-table-column  label="开票型号" prop="invoiceIssuType" min-width="100" >
-              </el-table-column>
               <el-table-column fixed="right" label="操作" width="150">
                   <template #default="{ row }">
                     <el-dropdown>
-                      <el-button text type="primary" @click="handleSkuDetail(row)">
+                      <el-button text type="primary" @click="handleSkuDetail(row)" >
                         SKU详情
                         <el-icon class="el-icon--right">
                           <arrow-down />
@@ -122,6 +121,9 @@
                       </el-button>
                       <template #dropdown>
                         <el-dropdown-menu>
+                          <el-dropdown-item>
+                            <el-link type="primary" :underline="false" @click="handleSkuDetail(row)" >SKU详情</el-link>
+                          </el-dropdown-item>
                           <el-dropdown-item>
                             <el-link type="primary" :underline="false">打包工时</el-link>
                           </el-dropdown-item>
@@ -157,7 +159,7 @@ defineOptions({
   name: 'consumable',
 })
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
+import { Search, ArrowDown, Delete, Plus, ZoomIn, MoreFilled  } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation';
 import { IgetProductList } from '/@/type/productInformation/skuInformationType';

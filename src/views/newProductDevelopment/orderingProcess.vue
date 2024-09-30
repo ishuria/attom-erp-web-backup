@@ -1,6 +1,10 @@
 <template>
     <div class="step-form-container">
         <el-page-header  @back="goBack" style="margin-bottom: 0px;">
+          <template #title >
+            退出
+          </template>
+
             <template #content>
                 <div class="flex items-center">
                     <span> <strong> 新品订货流程 </strong></span>

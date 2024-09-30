@@ -38,16 +38,12 @@
             <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="属于SKU" width="100" prop="sku" >
+        <el-table-column align="center" label="属于SKU" width="100" prop="sku" fixed="left">
           <template #default="{ row }">
             <span style="color: rgb(192, 192, 192)">{{ row.sku }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="不报关" prop="customsDeclarationStatus" align="center" min-width="90">
-          <template #default = "{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleCustomsChange(row)"/>
-          </template>
-        </el-table-column>
+
         <el-table-column align="center" label="供应商" min-width="200" prop="suppliser" >
           <template #default="{ row }">
             <span style="color: rgb(192, 192, 192)">{{ row.suppliser }}</span>
@@ -66,6 +62,11 @@
         <el-table-column align="center" label="欧洲FNSKU" min-width="140" prop="europeFnSku" >
           <template #default="{ row }">
             <span style="color: rgb(192, 192, 192)">{{ row.europeFnSku }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="不报关" prop="customsDeclarationStatus" align="center" min-width="90">
+          <template #default = "{ row }">
+              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleCustomsChange(row)"/>
           </template>
         </el-table-column>
         <el-table-column align="center" label="货源地" min-width="120" prop="placeOrigin" >
@@ -190,7 +191,7 @@
         <el-table-column align="center" label="申报要素" min-width="200" prop="declarationElements" >
           <template #default="{ row }">
             <div class="none">
-                <el-input type="text" v-model="row.declarationElements" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input type="textarea" v-model="row.declarationElements" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
             </div>
             <span>{{ row.declarationElements }}</span>
           </template>
@@ -198,7 +199,7 @@
         <el-table-column align="center" label="申报要素缩写" min-width="200" prop="declarationElementsAbbreviation" >
           <template #default="{ row }">
             <div class="none">
-                <el-input type="text" v-model="row.declarationElementsAbbreviation" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input type="textarea" v-model="row.declarationElementsAbbreviation" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
             </div>
             <span>{{ row.declarationElementsAbbreviation }}</span>
           </template>
@@ -378,7 +379,9 @@
     } else {
         listLoading.value = true
         const queryList = ref<any>()
-        queryList.value = list.value.filter((item: any) => item.componentName.includes(queryForm.keyWord, 0))
+        queryList.value = list.value.filter((item: any) => item.componentName.includes(queryForm.keyWord, 0) || item.sku.includes(queryForm.keyWord, 0) || 
+        item.suppliser.includes(queryForm.keyWord, 0) || item.upc.includes(queryForm.keyWord, 0) || item.northAmericaFnSku.includes(queryForm.keyWord, 0) 
+        || item.europeFnSku.includes(queryForm.keyWord, 0))
         list.value = queryList.value
         total.value = list.value.length
         listLoading.value = false
@@ -404,7 +407,7 @@
   }
   const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
      
-     if  (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 4 || data.columnIndex === 5 || data.columnIndex === 6 || data.columnIndex === 7){        
+     if  (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 5 || data.columnIndex === 6){        
      
          return {
               color: '#bbb',

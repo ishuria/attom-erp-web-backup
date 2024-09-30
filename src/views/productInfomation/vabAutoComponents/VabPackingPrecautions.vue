@@ -128,19 +128,24 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
    }
 }
 const handleAdd = async () => {
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0]; // 获取 'YYYY-MM-DD' 格式
-    const newQualityInspection = {
-        skuId: parseInt(route.query.skuId),
-        status: 1,
-        checkType: 0,
-        packagePrecautions: '',
-    }
-    const { data } = await addProductQualityInspection(newQualityInspection)
-    if (data) {
-        $baseMessage('新增质检清单成功', 'success', 'hey')
-        list.value.push(newQualityInspection)
-        fetchData()
+    try {
+        const newQualityInspection = {
+            skuId: parseInt(route.query.skuId),
+            status: 1,
+            checkType: 0,
+            packagePrecautions: '',
+        }
+        const { data } = await addProductQualityInspection(newQualityInspection)
+        if (data) {
+            const { data: tableData } = await getProductQualityInspection({
+                skuId: parseInt(route.query.skuId)
+            })
+            list.value = tableData
+            list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
+            $baseMessage('新增质检清单成功', 'success', 'hey')
+        }
+    } catch (error) {
+        console.error(error)
     }
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
@@ -190,19 +195,19 @@ const clickQualityInspectionCancle = async (event:any,value:any) =>{
 // 删除
 const handleDelQualityInspection = async (row: any, index: number) => {
     try {
-        $baseConfirm('确定要删除本条质检信息吗? ', "系统提示", async () => {
+        $baseConfirm('确定要删除本条信息吗? ', "系统提示", async () => {
             try {
                 const { data } = await delProductQualityInspection({ id: row.id! })
                 if (data) {
                     list.value.splice(index, 1);
                     fetchData()
-                    $baseMessage("质检信息删除成功！","success","hey")
+                    $baseMessage("删除成功！","success","hey")
                 } else {
-                    $baseMessage("质检信息删除失败，请重试。", "error", "hey");
+                    $baseMessage("删除失败，请重试。", "error", "hey");
                 }
             } catch (delError) {
                 console.error(delError);
-                $baseMessage("变体删除操作失败，请重试。", "error", "hey");
+                $baseMessage("删除操作失败，请重试。", "error", "hey");
             }
         });
     } catch(e){
@@ -221,6 +226,7 @@ const fetchData = async () => {
   })
   list.value = data
   listLoading.value = false
+  list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
 }
 
 onActivated(() => {

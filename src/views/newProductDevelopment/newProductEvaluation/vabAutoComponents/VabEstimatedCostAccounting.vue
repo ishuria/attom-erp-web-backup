@@ -291,6 +291,9 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item>
+                                        <el-link type="primary" :underline="false">逆算</el-link>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
                                         <el-link type="primary" :underline="false" @click="handlerPicUpload(scope.row,scope.$index)">上传图片</el-link>
                                     </el-dropdown-item>
                                     <el-dropdown-item>

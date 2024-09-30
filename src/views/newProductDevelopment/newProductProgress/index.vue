@@ -99,7 +99,7 @@ handleSubmit<template>
                 <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" prop="oem" align="center" min-width="60">
+          <el-table-column label="OEM" prop="oem" align="center" min-width="65">
             <template #default = "{ row }">
                <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox"/>
             </template>
@@ -109,7 +109,7 @@ handleSubmit<template>
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" min-width="85">
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" min-width="90">
             <template #default = "{ row }">
               <div class="none">
                 <el-input type="textarea" autofocus v-model="row.currentPhaseStatus" :autosize="{ minRows: 3, maxRows: 9 }"   @blur="clickCancle($event, row)"/>
@@ -140,7 +140,7 @@ handleSubmit<template>
                 <span>{{ removeHtmlTags(row.remark) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="85">
+          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="90">
             <template #default = "{ row }">
               <div class="none">
                   <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
@@ -165,6 +165,9 @@ handleSubmit<template>
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
+                    <el-dropdown-item>
+                      <el-link type="primary" :underline="false" @click="handleSampleCostting(row)">拿样与核算</el-link>
+                    </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false" @click="addProgressMold(row.progressId)">开模申请</el-link>
                     </el-dropdown-item>
@@ -947,10 +950,12 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   const inputElement = getSpecificChildren(cell, "input")[0];
   if (inputElement) {
       inputElement.focus()
+      inputElement.select()
   } else {
     const textareaElement = getSpecificChildren(cell, "textarea")[0];
     if (textareaElement){
       textareaElement.focus()
+      textareaElement.select()
     }
   }
 }

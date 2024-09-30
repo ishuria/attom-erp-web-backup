@@ -65,7 +65,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="产品描述" min-width="180">
+                <el-table-column label="产品描述" min-width="250" prop="desc">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input 
@@ -80,7 +80,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="价格信息" min-width="180">
+                <el-table-column label="价格信息" min-width="250" prop="priceInfo">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input 
@@ -94,7 +94,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="1688链接" min-width="140">
+                <!-- <el-table-column label="1688链接" min-width="140">
                     <template #default="{ row }">
                         <div class="none">
                             <el-input 
@@ -106,7 +106,7 @@
                         </div>
                         <span>{{ row.url1688 }}</span>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
 
                 <el-table-column label="产品价格￥" min-width="120">
                     <template #default="{ row }">
@@ -294,6 +294,9 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item>
+                                        <el-link type="primary" :underline="false">逆算</el-link>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
                                         <el-link type="primary" :underline="false" @click="costAccountImageUpload(scope.row,scope.$index)">上传图片</el-link>
                                     </el-dropdown-item>
                                     <el-dropdown-item>
@@ -319,6 +322,25 @@
             @update:uploadVisible = "costAccountingUpdateUploadPicVisible"
             :upload-file="costAccountingUploadImageFile"
         />
+        <!-- 产品描述显示 -->
+        <wangEditor 
+            :wangEditorVisible="wangEditorLogVisible" 
+            :title="wangEditorTitle" 
+            :content="progressLogCopy"
+            :classify='classify' 
+            @clickBoolean="clickLogBool" 
+            @clickChild="clickLog" 
+        />
+        <!-- 价格信息显示 -->
+        <wangEditor 
+                :wangEditorVisible="wangEditorRemarkVisible" 
+                :title="wangEditorTitle" 
+                :content="remarkCopy"
+                :classify='classify' 
+                @clickBoolean="clickRemarkBool" 
+                @clickChild="clickRemark" 
+            />
+
     </div>
 </template>
 
@@ -341,6 +363,7 @@ import {
   siteReflectCurrencyAndExchangeRate,
 } from '../indexCommon'
 import { TableRefs, UploadRequestOptions } from 'element-plus'
+import wangEditor from '../newProductProgress/wangEditor.vue'
 
 const isDraggingDisabled = ref<boolean>(false)
 
@@ -358,7 +381,47 @@ const emit = defineEmits<{
     (e: 'update:priviewListValue', value: string): void
  }>()
 
-
+// 弹出框的标题
+const wangEditorTitle = ref<string>('')
+// 点击日志弹出富文本框是否显示
+const wangEditorLogVisible = ref<boolean>(false)
+// 点击备注弹出富文本框是否显示
+const wangEditorRemarkVisible = ref<boolean>(false)
+const progressLogCopy = ref<string | undefined>('')
+const remarkCopy = ref<string | undefined>('')
+const classify = ref<string>('')
+/**
+ * 当点击确认时，子组件传递给父组件的新的val
+ */
+ const clickLog = async (val: any) => {
+  // console.log('新的val', val);
+  
+//   progressList.value[tableClickIdx.value].progressLog = val
+  progressLogCopy.value = val
+//   // console.log('点击log执行了');
+//   await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+}
+const clickRemark = async (val: any) => {
+//   progressList.value[tableClickIdx.value].remark = val
+  remarkCopy.value = val
+//   // console.log('点击remark执行了');
+//   await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+}
+// 去掉 HTML 标签并显示纯文本的方法
+const removeHtmlTags = (html: string): string => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+};
+/**
+ * 当点击取消，确认时，子组件传递给父组件 false
+ */
+const clickLogBool = ( val: any) => {
+  wangEditorLogVisible.value = val
+}
+const clickRemarkBool = ( val: any) => {
+  wangEditorRemarkVisible.value = val
+}
 // 成本核算列表
 const estimatedCostList = ref<IProgressEstimatedCostAccounting[]>([])
 // 图片上传显示控制vesiblae
@@ -430,9 +493,23 @@ const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellEle
     ){
       return
     }
-  
+    
+  if (column.property === 'desc') {
+    // const { data } = await getProgressLog({ progressId: row.progressId })
+    // progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
+    progressLogCopy.value = row.desc
+    wangEditorTitle.value = '编辑产品描述'
+    classify.value = 'desc'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+  } else if (column.property === 'priceInfo'){
+    remarkCopy.value = row.priceInfo
+    wangEditorTitle.value = '编辑价格信息'
+    classify.value = 'priceInfo'
+    wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
+  } else {
     cell.children[0].children[0].classList.remove('none')
     cell.children[0].children[1].classList.add('none')
+  }
   
     // 自动聚焦
     const inputElement = getSpecificChildren(cell, "input")[0];

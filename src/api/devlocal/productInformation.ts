@@ -39,7 +39,8 @@ import {
     ISuppliserName,
     IsaveProductPurchaseMatters,
     IsaveProductContractTerms,
-    IgetProductSupplier
+    IgetProductSupplier,
+    IexistingPartsListId
 } from '/@/type/productInformation/skuInformationType'
 
 // SKU信息 - 获取查询列表
@@ -102,10 +103,11 @@ export function getProductComponentPurchase() {
 }
 
 // SKU详情-添加到其他SKU，初始化数据
-export function getProductSkuList() {
+export function getProductSkuList(params: IexistingPartsListId) {
     return request({
       url: `${BASE_API}/product/getSku/list`,
       method: 'get',
+      params
     })
 }
 

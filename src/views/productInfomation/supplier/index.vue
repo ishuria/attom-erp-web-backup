@@ -4,7 +4,7 @@
       <vab-query-form-top-panel>
         <h2>供应商</h2>
       </vab-query-form-top-panel>
-      <vab-query-form-left-panel :span="24">
+      <vab-query-form-left-panel>
         <el-button type="primary">
           <el-upload
             v-model:file-list="fileList"
@@ -19,12 +19,23 @@
           <el-button type="primary" @click="handleDownLoad" :loading="downloadLoading">下载通用合同模板</el-button>
 
       </vab-query-form-left-panel>
+      <vab-query-form-right-panel >
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+              @click="queryData"></el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
     </vab-query-form>
 
     <el-table ref="tableRef" border stripe :data="list" @selection-change="setSelectRows" v-loading="listLoading" @cell-click="changeInput" :cell-style="cellStyle" >
       <el-table-column align="center" label="供应商ID" width="75" prop="suppliserId">
       </el-table-column>
-      <el-table-column align="center" label="供应商名称" min-width="200" prop="suppliser" >
+      <el-table-column align="center" label="供应商名称" min-width="300" prop="suppliser" >
         <template #default="{ row }">
             <div class="none">
                 <el-input type="text" v-model="row.suppliser" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -37,7 +48,7 @@
             <el-checkbox v-model="row.packing" :true-value="1" :false-value="0" class="custom-checkbox" @change="handlePackingChange(row)"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="税号" prop="taxNumber" min-width="100" >
+      <el-table-column align="center" label="税号" prop="taxNumber" min-width="200" >
         <template #default="{ row }">
             <div class="none">
                 <el-input type="text" v-model="row.taxNumber" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -62,7 +73,7 @@
             <span>{{ row.telephone }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="开户银行" min-width="230" prop="bank" >
+      <el-table-column align="center" label="开户银行" min-width="250" prop="bank" >
         <template #default="{ row }">
             <div class="none">
                 <el-input type="text" v-model="row.bank" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -70,7 +81,7 @@
             <span>{{ row.bank }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="开户账号" min-width="160" prop="accountNumber" >
+      <el-table-column align="center" label="开户账号" min-width="230" prop="accountNumber" >
         <template #default="{ row }">
             <div class="none">
                 <el-input type="text" v-model="row.accountNumber" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -146,7 +157,7 @@
             <span>{{ row.invoicingPTaxRate }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="旺旺ID" width="85" prop="wwId">
+      <el-table-column align="center" label="旺旺ID" width="125" prop="wwId">
         <template #default="{ row }">
             <div class="none">
                 <el-input type="text" v-model="row.wwId" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -159,22 +170,31 @@
             <el-checkbox v-model="row.templateStatus" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handlePackingChange(row)"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="特定模板" min-width="160" prop="templateUrl" >
+      <el-table-column align="center" label="特定模板" min-width="100" prop="templateUrl" >
         <template #default="{ row }">
-          <el-upload 
-            drag
-            :limit="1"
-            accept=".xlsx"
-            :class="{hide: row.hide}"
-            :file-list="row.fileList"
-            :http-request="(file) => UploadRequestHandler(file, row)"
-          >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <!-- <el-button type="primary">下载</el-button> -->
-            <!-- <div class="el-upload__tip" slot="tip">只能上传xlsx文件，且不超过10M</div> -->
-  	      </el-upload>
-          <el-button v-if="row.fileList.length !== 0" type="primary"  text :underline="false" @click="handleDownLoadSpecialFile(row)">下载</el-button>
+          <el-upload action="#" list-type="picture-card" :class="{ hide: row.hide }" :file-list="row.fileList" :http-request="(file) => UploadRequestHandler(file, row)" class="custom-upload">
+            <el-icon><Plus /></el-icon>
+
+            <template #file="{ file }">
+              <div class="file-item">
+                <el-icon class="file-icon"><Document /></el-icon>
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-preview"
+                    @click="handleDownLoadSpecialFile(row)"
+                  >
+                    <el-icon><Download /></el-icon>
+                  </span>
+                  <span
+                    class="el-upload-list__item-delete"
+                    @click="handleDelFile(row)"
+                  >
+                    <el-icon><Delete /></el-icon>
+                  </span>
+              </span>
+              </div>
+            </template>
+          </el-upload>
         </template>
       </el-table-column>
       <template #empty>
@@ -193,7 +213,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Delete, Plus, Search } from '@element-plus/icons-vue'
+import { ArrowDown, Delete, Plus, Search, Download, Document } from '@element-plus/icons-vue'
 import type { TableInstance, UploadFile } from 'element-plus'
 import { doDelete, getList } from '/@/api/table'
 import { useRoutesStore } from '/@/store/modules/routes'
@@ -237,6 +257,7 @@ const uploadExcelFile = async (params: any) => {
   }
 }
 const UploadRequestHandler = async (params: any, row: any) => {
+  row.hide = true
   const uploadForm = new FormData()
   uploadForm.append('file', params.file)
   uploadForm.append('suppliserId', row.suppliserId)
@@ -246,12 +267,40 @@ const UploadRequestHandler = async (params: any, row: any) => {
   }
 }
 const handleDownLoadSpecialFile = async (row: any) => {
-  const { data } = await downloadProductSupplier({
-    suppliserId: row.suppliserId
-  })
-  if (data === true) {
-    $baseMessage('下载特定合同模板成功', 'success', 'hey')
-  }
+  // const { data } = await downloadProductSupplier({
+  //   suppliserId: row.suppliserId
+  // })
+  axios({
+        url: `${BASE_API}/product/suppliser/download`,
+        method: 'GET',
+        params: {
+          suppliserId: row.suppliserId, 
+        },
+        responseType: 'blob', // 重要: 确保responseType为'blob'
+      })
+      .then((response) => {
+
+        const blob = new Blob([response.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+          
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', '工作日志.xlsx');
+        document.body.appendChild(link); // 确保链接在 DOM 中
+        link.click();
+        link.remove();
+      })
+      .catch((error) => {
+        console.error('Download failed:', error);
+      });
+  // if (data === true) {
+  //   $baseMessage('下载特定合同模板成功', 'success', 'hey')
+  // }
+}
+const handleDelFile = (row: any) => {
+  row.hide = false
+  row.fileList = []
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   
@@ -333,7 +382,16 @@ const handleCurrentChange = (value: number) => {
 
 const queryData = () => {
   queryForm.pageNo = 1
-  fetchData()
+  if(!queryForm.keyWord) {
+        fetchData()
+    } else {
+        listLoading.value = true
+        const queryList = ref<any>()
+        queryList.value = list.value.filter((item: any) => item.suppliser.includes(queryForm.keyWord, 0))
+        list.value = queryList.value
+        total.value = list.value.length
+        listLoading.value = false
+    }
 }
 
 const setSelectRows = (value: string) => {
@@ -434,8 +492,9 @@ onBeforeMount(() => {
 .none {
   display: none;
 }
-.hide :deep(.el-upload-dragger) {
-  display: none;
+// 控制添加图片图标显示与隐藏
+.hide :deep(.el-upload--picture-card) {
+  display: none
 }
 
 :deep(.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell) {
@@ -444,5 +503,27 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+:deep(.el-upload-list--picture-card .el-upload-list__item) {
+  width: 75px;
+  height: 75px;
+  margin: 0 8px 0 0;
+  transition: none;
+}
+:deep(.el-upload--picture-card) {
+  width: 75px;
+  height: 75px;
+}
+
+
+.file-item {
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+  align-items: center;    /* 水平居中 */
+  justify-content: center; /* 垂直居中 */
+  width: 100%;            /* 确保容器宽度 */
+}
+.file-icon {
+  font-size: 50px; /* 调整大小 */
 }
 </style>

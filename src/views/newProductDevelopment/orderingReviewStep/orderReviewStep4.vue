@@ -9,6 +9,7 @@
                 height="630"
                 :show-header="false"
                 style="width: auto; table-layout: fixed;"
+                @cell-click="tableInputChange"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
@@ -32,7 +33,11 @@
                 >
                     <template v-slot="scope">
                         <template v-if="scope.row['column0'] === 'variantImg'">
-                            <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" />
+                            <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" data-img="img">
+                              <template #error>
+                                <el-icon></el-icon>
+                              </template>
+                            </el-image>
                         </template>
                         <template v-if="scope.row['column0'] === 'oem'">
                             <el-checkbox v-model="scope.row[prop]" :disabled="true":true-value="1" :false-value="0" size="large" class="custom-checkbox"/>
@@ -86,7 +91,9 @@
         <div class="pay-button-group">
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">发布PO</el-button>
         </div>
+        
     </div>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
 </template>
   
 <script lang="ts" setup>
@@ -95,6 +102,7 @@ import {reviewProductList,updateStepNoQuantity,releasePo} from '/@/api/devlocal/
 import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
 
 defineOptions({
     name: 'OrderReviewStep4',
@@ -105,7 +113,26 @@ const props = defineProps<{
   reviewStepNo: string
   reviewId: string
 }>();
-
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
+// table单击修改
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+    // 处理图片放大预览
+    console.log(cell);
+    
+    let el = getSpecificChildren(cell, "img")[0];
+    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+      imagePreviewVisible.value = true
+      imagePriviewList.value = []
+      imagePriviewList.value.push(el.src)
+    }
+}
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore

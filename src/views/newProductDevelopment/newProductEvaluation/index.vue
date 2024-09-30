@@ -48,7 +48,7 @@
         <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
           <template #default="{ row }">
             <el-dropdown>
-              <el-button text type="primary" @click="handleClick(row)">
+              <el-button text type="primary"  @click="handleClick(row)">
                 产品核算推进
                 <el-icon class="el-icon--right">
                   <arrow-down />
@@ -56,6 +56,9 @@
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
+                  <el-dropdown-item>
+                    <el-link type="primary" :underline="false" @click="handleClick(row)">产品核算推进</el-link>
+                  </el-dropdown-item>
                   <el-dropdown-item>
                     <el-link type="primary" :underline="false" @click="toUpdateEvaluation(row)">查看和修改</el-link>
                   </el-dropdown-item>

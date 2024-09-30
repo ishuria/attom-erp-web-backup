@@ -115,6 +115,9 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="handleOrderProcess(row)">{{ (row.reviewStatus === 0 || row.reviewStatus === 2) ? '编辑' : '查看' }}</el-link>
+                </el-dropdown-item>
                 <el-dropdown-item
                   v-if="row.reviewStatus === 1 || row.reviewStatus === 2 || row.reviewStatus === 3 || row.reviewStatus === 4 || row.reviewStatus === 5">
                   <el-link type="primary" :underline="false" @click="handleOrderReview(row)">审批和PO发布</el-link>

@@ -390,8 +390,8 @@ const getTrialCalculationHandler = async ():Promise<IProgressSample> => {
 // 拿样清单成本试算修改
 const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     
-    // 不能被修改cell的下标
-    if(column.no === 0 || column.no === 1 || column.no === 2 || column.no === 7 || column.no === 21) return
+    // // 不能被修改cell的下标
+    // if(column.no === 1 || column.no === 2 || column.no === 3 || column.no === 8 || column.no === 22) return
   
   
     if (!cell.children[0].children[0] 
@@ -421,8 +421,7 @@ const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableC
   
 
 // 输入input blur事件
-const clickCancle = async (event:any,value:IProgressSample) =>{
-
+const clickCancle = async (event:any,value:IProgressSample) =>{  
     const t1 = getRootElement(event["srcElement"],".cell").children[0]
     if (t1){
         t1.classList.add("none")

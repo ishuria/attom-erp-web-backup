@@ -58,7 +58,7 @@
                         <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="出厂单价" prop="unitPrice" min-width="60" align="center">
+                <el-table-column label="出厂单价" prop="unitPrice" min-width="75" align="center">
                     <template #header>
                         出厂<br>单价
                     </template>
@@ -70,7 +70,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="60">
+                <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="75">
                     <template #header>
                         总未<br>税价
                     </template>
@@ -78,7 +78,7 @@
                         <span style="color: rgb(192, 192, 192)">{{ row.preTaxPrice }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="60">
+                <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="75">
                     <template #header>
                         总含<br>税价
                     </template>
@@ -144,7 +144,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
+                <el-table-column align="center" label="默认采购方" min-width="160" prop="purchaseId">
                     <template #default="{row}">
                         <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
                             <el-option 
@@ -202,7 +202,7 @@
         <el-dialog 
             v-model="addSupplierVisible" 
             :close-on-click-modal="false" 
-            title="添加供应商" 
+            title="新增供应商" 
             width="450"
             class="moldDialog"
             :before-close="handlerCloseDialog"
@@ -213,19 +213,37 @@
                     <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
                 </el-form-item>
                 <el-form-item label="供应商名称" prop="suppliser">
-                    <el-input v-model="form.suppliser" clearable/>
+                    <el-select
+                        v-model="form.suppliser"
+                        filterable
+                        remote
+                        allow-create
+                        default-first-option
+                        placeholder="点击输入和搜索"
+                        :remote-method="remoteMethod"
+                        :loading="loading"
+                        @change="handleTaxDisabled"
+                        clearable
+                    >
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="开票" prop="invoicing">
-                    <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
+                    <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
                         <el-option v-for="dict in invoicingNumList" :key="dict.value"
                             :value="dict.value" :label="dict.label"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="实际税点" prop="actualTaxRate">
-                    <el-input v-model="form.actualTaxRate" clearable />
+                    <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
                 </el-form-item>
                 <el-form-item label="开票税点" prop="invoicingTaxRate">
-                    <el-input v-model="form.invoicingTaxRate" clearable />
+                    <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -263,13 +281,11 @@ import { handleActivePath } from '/@/utils/routes'
 
 import { Delete, Plus, ZoomIn, Edit, CirclePlusFilled, ArrowDown } from '@element-plus/icons-vue'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
-import { reviewStepNo3ContractTerms, reviewStepNo3PurchaseMatters, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters } from '/@/api/devlocal/orderProcess';
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import { FormInstance, UploadFile } from 'element-plus';
 import { currencyList, currencyNumList, invoicingList } from '../newProductDevelopment/indexCommon';
-import type { UploadProps } from 'element-plus'
-import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser, createConsumablesSupplier, saveProductPurchaseMatters, saveProductContractTerms } from '/@/api/devlocal/productInformation';
-import { Row } from '@opentiny/vue';
+import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser, createConsumablesSupplier, saveProductPurchaseMatters, saveProductContractTerms, getProductSupplier, getProductAllSupplier } from '/@/api/devlocal/productInformation';
+
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
@@ -289,6 +305,58 @@ const invoicingNumList = [
     label: '无法开票',
   },
 ]
+const loading = ref(false) //供应商搜索loading
+const options = ref<any[]>([]) //供应商搜索选项
+const supplierList = ref<any[]>([]) //供应商搜索列表
+const taxDisabled = ref<boolean>(false)
+const remoteMethod = async (query: string) => {
+  if (query) {
+    // 先获取供应商信息
+    const { data } = await getProductAllSupplier({
+        suppliserName: query
+    })
+    supplierList.value = data.map((item: any) => {
+        return { value: `${item}`, label: `${item}` }
+    })
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      options.value = supplierList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    options.value = []
+  }
+}
+const handleTaxDisabled = async (value: string) => {
+   if(value) {
+        const { data } = await getProductSupplier({ suppliserName: value })
+        
+        if(data!==null) {
+            const {actualPTaxRate, actualZTaxRate, invoicingPTaxRate, invoicingZTaxRate, suppliserId } = data
+            taxDisabled.value = true
+            if(form.invoicing === 0) {
+                form.actualTaxRate = actualZTaxRate
+                form.invoicingTaxRate = invoicingZTaxRate
+            } else if(form.invoicing === 1) {
+                form.actualTaxRate = actualPTaxRate
+                form.invoicingTaxRate = invoicingPTaxRate
+            } else {
+                form.actualTaxRate = 0
+                form.invoicingTaxRate = 0
+            }
+        } else {
+            taxDisabled.value = false
+        }
+   }
+}
+const handleInvoicingTaxChange = async (value: number) => {
+   
+    if(form.suppliser) {
+        handleTaxDisabled(form.suppliser)
+    }
+}
 const addSupplierVisible = ref<boolean>(false)
 const handlerCloseDialog = () => {
     addSupplierVisible.value = false
@@ -321,7 +389,7 @@ const rules = reactive({
 const handleSubmit = async () => {
     formRef.value?.validate(async (valid: any) => {
         if (valid) {
-            addSupplierVisible.value = false
+            // addSupplierVisible.value = false
             const newComponent = {
                 unit: form.unit,
                 suppliser: form.suppliser,
@@ -329,6 +397,7 @@ const handleSubmit = async () => {
                 actualTaxRate: form.actualTaxRate,
                 invoicingTaxRate: form.invoicingTaxRate,
             }
+           try {
             if (route.query.from === 'sku') {
                 const { data } = await createProductComponentSuppliser({
                     skuId: parseInt(route.query.skuId),
@@ -342,7 +411,8 @@ const handleSubmit = async () => {
                 if (data) {
                     list.value.push(newComponent)
                     fetchData()
-                    $baseMessage('表单提交成功', 'success', 'hey')
+                    addSupplierVisible.value = false
+                    $baseMessage('新增供应商提交成功', 'success', 'hey')
                 }
             } else if (route.query.from === 'consumable' ) {
                 const { data } = await createConsumablesSupplier({
@@ -357,12 +427,16 @@ const handleSubmit = async () => {
                 if (data) {
                     list.value.push(newComponent)
                     fetchData()
-                    $baseMessage('表单提交成功', 'success', 'hey')
+                    addSupplierVisible.value = false
+                    $baseMessage('新增供应商提交成功', 'success', 'hey')
                 }
             }
+           } catch (error) {
+            console.error(error)
+           }
            
         }
-        else $baseMessage('表单提交失败', 'error', 'hey')
+        
     })
 }
 const handleAddSupplier = async () => {
@@ -402,7 +476,7 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
         if (data == true) {
             row.imageList = []
             row.hide = false
-            $baseMessage("SKU图片删除成功!","success","hey")
+            $baseMessage("图片删除成功!","success","hey")
         }
     })
     

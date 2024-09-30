@@ -2,7 +2,7 @@
     <div>
         <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-                height="430" :show-header="false" style="width: auto; table-layout: fixed;">
+                height="430" :show-header="false" style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
                 <!-- 第一列固定标签列 -->
                 <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
                     <template #default="{ row }">
@@ -14,7 +14,11 @@
                 <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center" min-width="240">
                     <template #default="{ row }">
                         <template v-if="row['column0'] === 'variantImg'">
-                            <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" />
+                            <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" data-img="img">
+                                <template #error>
+                                    <el-icon></el-icon>
+                                </template>
+                            </el-image>
                         </template>
                         <template v-if="row['column0'] === 'oem'">
                             <el-checkbox 
@@ -33,8 +37,14 @@
                                 class="center-input"
                             />
                         </template>
+                        <template v-if="row['column0'] === 'packagingSize'">
+                            {{ row[prop] }} cm
+                        </template>
+                        <template v-if="row['column0'] === 'productSize'">
+                            {{ convertCmToInches(row[prop]) }} inch
+                        </template>
                         <template
-                            v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem' && row['column0'] !== 'variantImg'">
+                            v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem' && row['column0'] !== 'packagingSize' && row['column0'] !== 'variantImg' && row['column0'] !== 'productSize'">
                             {{ row[prop] }}
                         </template>
                     </template>
@@ -129,6 +139,7 @@
             <el-button type="danger" @click="handleGoback">不通过</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">通过</el-button>
         </div>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
 </template>
 
@@ -139,6 +150,7 @@ import { formatDate } from '/@/utils/dateUtils'
 import { useTableDataLineToColumn, inputHandleMouseOver, effectiveCountInputeHandle } from '/@/utils/tableColum'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
 
 const props = defineProps<{
     reviewStatus: string
@@ -160,7 +172,14 @@ const variantList = ref<any[]>([])
 // 原始数组的长度
 const variantSize = ref<number>(0)
 const moldData = ref<IReviewMoldItem[]>()
-
+function convertCmToInches(dimensions: string) {
+    // 将字符串拆分为数组
+    const cmArray = dimensions.split('x').map(Number);
+    // 转换为英寸并保留两位小数
+    const inchArray = cmArray.map(cm => (cm * 0.393701).toFixed(2));
+    // 将数组转换回字符串格式
+    return inchArray.join('x');
+}
 const labelMap: Record<string, string> = {
     column0: '',
     orderEntryId: '变体编号',
@@ -174,7 +193,7 @@ const labelMap: Record<string, string> = {
     actualTotalCost: '产品总实际成本',
     grossMarginRate: '毛利率',
     packagingSize: '包装尺寸(cm)',
-    productSize: '产品尺寸(cm)',
+    productSize: '产品尺寸(in)',
     material: '产品材质',
     battery: '是否含电池<br>(若有则填入电池类型)',
     variantSku: '合并变体的SKU',
@@ -184,7 +203,24 @@ const labelMap: Record<string, string> = {
     productManager: '产品经理',
     productDesign: '产品设计',
 }
-
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
+// table单击修改
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+    // 处理图片放大预览
+    let el = getSpecificChildren(cell, "img")[0];
+    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+      imagePreviewVisible.value = true
+      imagePriviewList.value = []
+      imagePriviewList.value.push(el.src)
+    }
+}
 const buildParams = (): IReviewStepNo1Req => {
     let paramVArr: IReviewStepNo1Variant[] = []
     let vArr: any = []

@@ -621,19 +621,10 @@ const handlerEstimatendChange = async (row:IreviewStepNo3VariantList) =>{
         weightCoefficient: row.weightCoefficient!,
     })
 }
-// 点击图标的行的下标
-const clickIconRowIndex = ref<number>()
-/**
- * 点击添加图标事件
- */
-const handleIconClick = (index: number) => {
-  // 获得点击行的下标
-  clickIconRowIndex.value = index
-}
+
 /**
  * 上传图片
  */
-const imageForm = ref(new FormData()) as any;
 async function uploadImage(params: any, row: any) {
     row.hide = true
     try {
@@ -650,12 +641,6 @@ async function uploadImage(params: any, row: any) {
         console.error(error)
     }
 } 
-
-
-// function handleImageUpload(params: any, currentComponent: any) {
-  
-// }
-
 
 
 /**
@@ -914,7 +899,7 @@ const validateComponent = (item: any) => {
     } else if (!item.invoicingTaxRate) {
         $baseMessage('请先填写开票税点', 'error', 'hey');
         return false;
-    } else if (!item.purchaseLink) {
+    } else if (item.invoicing !== '0' && !item.purchaseLink) { //采购链接 必填的校验仅针对选择了普票和无法开票的
         $baseMessage('请先填写采购链接', 'error', 'hey');
         return false;
     }

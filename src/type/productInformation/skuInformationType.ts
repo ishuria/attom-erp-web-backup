@@ -1133,3 +1133,7 @@ export interface IgetProductSupplier {
         suppliserId: number
     }
 }
+
+export interface IexistingPartsListId {
+    existingPartsListId: number
+}

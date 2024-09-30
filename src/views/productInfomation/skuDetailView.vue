@@ -140,7 +140,7 @@
                                         <span style="font-size: var(--el-form-label-font-size);">质检清单</span>
                                         <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handlePacking"><Edit /></el-icon>
                                     </el-space>
-                                    <el-input type="textarea" :rows="11" v-model="sku.qualityChecklist" disabled resize="none"></el-input>
+                                    <el-input type="textarea" :rows="11" v-model="qualityCheckList" disabled resize="none"></el-input>
                         </el-form-item>
                             </el-col>
                             <el-col :span="12">
@@ -189,6 +189,7 @@
                             :file-list="row.imageList" 
                             :class="{ hide: row.hide }"
                             :http-request="(file) => uploadSkuComponentImage(file, row)"
+                            class="component-upload"
                         >
                             <el-icon ><Plus /></el-icon>
                             <template #file="{ file }">
@@ -218,7 +219,7 @@
                         <span style="color: rgb(192, 192, 192)">{{ row.existingPartsListId }}</span>
                     </template>
                 </el-table-column>   
-                <el-table-column label="零件名" prop="componentName" width="120">
+                <el-table-column label="零件名" prop="componentName" width="200">
                     <template #default="{ row }">
                         <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
                     </template>
@@ -236,7 +237,7 @@
                         <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="出厂单价" prop="unitPrice" min-width="60" align="center">
+                <el-table-column label="出厂单价" prop="unitPrice" min-width="75" align="center">
                     <template #header>
                         出厂<br>单价
                     </template>
@@ -248,7 +249,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="出厂总价" prop="totalPrice" min-width="60" align="center">
+                <el-table-column label="出厂总价" prop="totalPrice" min-width="75" align="center">
                     <template #header>
                         出厂<br>总价
                     </template>
@@ -259,7 +260,7 @@
                         <span>{{ row.totalPrice }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="60">
+                <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="75">
                     <template #header>
                         总未<br>税价
                     </template>
@@ -267,7 +268,7 @@
                         <span style="color: rgb(192, 192, 192)">{{ row.preTaxPrice }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="60">
+                <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="75">
                     <template #header>
                         总含<br>税价
                     </template>
@@ -286,7 +287,7 @@
                         </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="80">
+                <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="73">
                     <template #default="{ row }">
                         <div class="none">
                                 <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -294,7 +295,7 @@
                         <span>{{ row.minimumOrderQuantity }}</span>
                     </template>
                 </el-table-column> 
-                <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="80">
+                <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="73">
                     <template #default="{ row }">
                         <div class="none">
                                 <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -302,7 +303,7 @@
                         <span>{{ row.numberFullCartons }}</span>
                     </template>
                 </el-table-column> 
-                <el-table-column align="center" label="默认供应商" min-width="140" prop="defaultSuppliserId">
+                <el-table-column align="center" label="默认供应商" min-width="200" prop="defaultSuppliserId">
                     <template #default="{row}">
                         <el-select v-model="row.defaultSuppliserId" placeholder=""  @change="handleSuppliserChange(row)">
                             <el-option 
@@ -340,7 +341,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" label="默认采购方" min-width="140" prop="purchaseId">
+                <el-table-column align="center" label="默认采购方" min-width="180" prop="purchaseId">
                     <template #default="{row}">
                         <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
                             <el-option 
@@ -369,7 +370,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column  label="默认收货仓库" prop="defaultRepositoryId" min-width="125">
+                <el-table-column  label="默认收货仓库" prop="defaultRepositoryId" min-width="185">
                     <template #default="{ row }">
                         <!-- <el-input v-model="row.defaultRepositoryId" clearable /> -->
                         <el-select v-model="row.defaultRepositoryId" placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" filterable @change="handleCurrencyChange(row)">
@@ -409,8 +410,11 @@
                       </el-button>
                       <template #dropdown>
                         <el-dropdown-menu>
+                        <el-dropdown-item>
+                            <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
+                          </el-dropdown-item>
                           <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row.componentId)">添加到其他SKU</el-link>
+                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row)">添加到其他SKU</el-link>
                           </el-dropdown-item>
                           <el-dropdown-item>
                             <el-link type="primary" :underline="false" @click="handleUpdateComponentName(row)">修改</el-link>
@@ -476,8 +480,8 @@
                 </el-form-item>
                 <el-form-item v-if="form.type === 1" label="耗材名" prop="consumableName">
                     <el-input
-                        v-model="form.consumableName"
-                       
+                        v-model="mergedPartName"
+                        disabled
                         clearable
                     ></el-input>
                 </el-form-item>
@@ -494,17 +498,17 @@
                 <el-row style="margin-bottom: 18px;" v-if="form.type === 1" >
                     <el-col :span="12">
                         <el-form-item label="耗材尺寸" prop="size">
-                            <el-input v-model="form.size" clearable  />
+                            <el-input v-model="form.size" clearable placeholder="22x15x10"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="尺寸单位" prop="unit">
-                            <el-input v-model="form.unit" clearable  />
+                            <el-input v-model="form.unit" clearable placeholder="cm" />
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-form-item label="规格/说明" prop="specification">
-                    <el-input v-model="form.specification" clearable />
+                <el-form-item v-if="form.type === 1" label="规格/说明" prop="specification">
+                    <el-input v-model="form.specification" clearable placeholder="三层加硬空白"/>
                 </el-form-item>
                 <el-form-item label="按单采购" v-if="form.type === 1" prop="isSinglePurchase" >
                     <el-switch v-model="form.isSinglePurchase" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
@@ -540,10 +544,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="实际税点" prop="actualTaxRate">
-                    <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled"/>
+                    <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
                 </el-form-item>
                 <el-form-item label="开票税点" prop="invoicingTaxRate">
-                    <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"/>
+                    <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"placeholder="税点如果是13个点则输入0.13"/>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -618,7 +622,7 @@ import { Delete, Plus, ZoomIn, Edit, CirclePlusFilled, ArrowDown } from '@elemen
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { reviewStepNo3ContractTerms, reviewStepNo3PurchaseMatters, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters } from '/@/api/devlocal/orderProcess';
 import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
-import { FormInstance, UploadFile } from 'element-plus';
+import { FormInstance, rowContextKey, UploadFile } from 'element-plus';
 import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
 import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
@@ -628,11 +632,10 @@ const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const formRef = ref<FormInstance>()
-
+const qualityCheckList = ref<any>()
 const form = reactive<any>({
     type: 0,
     componentName: '',
-    consumableName: '',
     materialType: '',
     size: '',
     unit: '',
@@ -814,7 +817,7 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
         if (data == true) {
             row.imageList = []
             row.hide = false
-            $baseMessage("SKU图片删除成功!","success","hey")
+            $baseMessage("SKU零配件图片删除成功!","success","hey")
         }
     })
     
@@ -845,7 +848,7 @@ const handleClosePackingPrecautions = (value: boolean) => {
 }
     
 const handleTableDataValue = (value: any) => {
-    sku.value.qualityChecklist = value
+    qualityCheckList.value = value
         .map((item: any) => `${item.createTime.split(' ')[0]}: ${item.packagePrecautions}`)
         .join('\n');
 }
@@ -921,9 +924,6 @@ const rules = reactive({
     componentName: [
         { required: true, message: '请填写零件名', trigger: 'blur' },
     ],
-    consumableName: [
-        { required: true, message: '请填写耗材名', trigger: 'blur' },
-    ],
     materialType: [
         { required: true, message: '请选择耗材种类', trigger: 'change' },
     ],
@@ -986,17 +986,22 @@ function validateNoSpaces (rule: any, value: any, callback: any) {
     }
 }
 const mergedPartName = computed(() => {
-    return `${form.value.materialType}-${form.value.size}-${form.value.unit}-${form.value.specification}`;
+    let type = ''
+    if(form.materialType){
+        const i = consumableTypeOption.value.find((item: any) => item.id === form.materialType)
+        type=i.consumablesName
+    }
+    return `${type}-${form.size}-${form.unit}-${form.specification}`;
 });
 const mergedComponentName = computed(() => {
-    return `${form.value.componentName}-${form.value.specification}`;
+    return `${form.componentName}-${form.specification}`;
 });
 const handleSubmit = async () => {
     formRef.value?.validate(async (valid: any) => {
         if (valid) {
-            addComponentVisible.value = false
+            // addComponentVisible.value = false
             const newComponent = {
-                componentName: form.type === 0 ? `${form.componentName}-${form.specification}` : `${form.materialType}-${form.size}-${form.unit}-${form.specification}`,
+                componentName: form.type === 0 ? form.componentName : mergedPartName.value,
                 unit: form.componentUnit,
                 suppliser: form.supplier,
                 invoicing: form.invoicing,
@@ -1005,9 +1010,10 @@ const handleSubmit = async () => {
                 type: form.type,
                 status: form.isSinglePurchase
             }
-            const { data} = await createProductComponent({
+      try {
+        const { data} = await createProductComponent({
                 skuId: route.query.skuId,
-                componentName: form.type === 0 ? `${form.componentName}-${form.specification}` : `${form.materialType}-${form.size}-${form.unit}-${form.specification}`,
+                componentName: form.type === 0 ? form.componentName : mergedPartName.value,
                 unit: form.componentUnit,
                 suppliser: form.supplier,
                 invoicing: form.invoicing,
@@ -1020,10 +1026,14 @@ const handleSubmit = async () => {
                 tableData.value.push(newComponent)
                 fetchComponentData()
                 fetchData()
-                $baseMessage('表单提交成功', 'success', 'hey')
+                addComponentVisible.value = false
+                $baseMessage('创建零件提交成功', 'success', 'hey')
             }
+      } catch (error) {
+        console.error(error)
+      }
         }
-        else $baseMessage('表单提交失败', 'error', 'hey')
+        
     })
 }
 const handleSubmitOtherSku = async () => {
@@ -1034,7 +1044,7 @@ const handleSubmitOtherSku = async () => {
             componentId: _compoenntId.value!
         })
         if(data === true) {
-            $baseMessage('添加成功', 'success', 'hey')
+            $baseMessage('添加到其他SKU成功', 'success', 'hey')
         }
     });
 }
@@ -1063,17 +1073,20 @@ const generateData2 = () => {
 }
 let _compoenntId = ref<number>()
 // 添加其他 SKU 的逻辑
-const handleAddOtherSku = async (componentId: number) => {
-  const { data } = await getProductSkuList()
+const handleAddOtherSku = async (row: any) => {
+    states.value= []
+    initials.value=[]
+    transferData.value=[]
+    transferValue.value = []
+  const { data } = await getProductSkuList({ existingPartsListId: row.existingPartsListId })
   data.forEach((item: any) => {
     states.value.push(item.sku)
     initials.value.push(item.skuId)
   })
   transferData.value = generateData2()
-  _compoenntId.value = componentId
+  _compoenntId.value = row.componentId
   addOtherSkuVisible.value = true
 }
-
 
 const handleDel = async (row: any, index: number) => {
     $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
@@ -1330,6 +1343,7 @@ onMounted(async ()=>{
 }
 :deep(.el-card__body) {
     padding-bottom: 2px;
+    padding-right: 0;
 }
 .product-details-card {
     border: 0;
@@ -1345,12 +1359,12 @@ onMounted(async ()=>{
 .none {
     display: none;
 }
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
+:deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
   width: 75px;
   height: 75px;
   transition: none;
 }
-:deep(.el-upload--picture-card) {
+:deep(.component-upload .el-upload--picture-card) {
   width: 75px;
   height: 75px;
 }
@@ -1371,7 +1385,9 @@ onMounted(async ()=>{
     display: flex;
     justify-content: center; /* 水平居中 */
     align-items: center; /* 垂直居中，如果需要 */
-    
+}
+:deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
+    transition: none;  
 }
 
 .hide :deep(.el-upload--picture-card) {

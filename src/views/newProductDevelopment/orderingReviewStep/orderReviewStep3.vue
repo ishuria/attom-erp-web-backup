@@ -12,7 +12,14 @@
         <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center" min-width="240">
           <template v-slot="scope">
             <template v-if="scope.row['column0'] === 'variantImg'">
-              <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" data-img="img"/>
+              <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" data-img="img">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
+            </template>
+            <template v-if="scope.row['column0'] === 'packagingSize'">
+                {{ scope.row[prop] }} cm
             </template>
             <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
               <el-input
@@ -52,7 +59,7 @@
             </template>
             <template v-if="scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
               && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
-              && scope.row['column0'] !== 'variantImg'">
+              && scope.row['column0'] !== 'variantImg' && scope.row['column0'] !== 'packagingSize'">
               {{ scope.row[prop] }}
             </template>
           </template>
