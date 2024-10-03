@@ -83,6 +83,8 @@
                         {{ row.bulkGoodsReturnable }}
                     </template>
                 </el-table-column>
+                <el-table-column align="center" label="备注" min-width="130" prop="remark">
+                </el-table-column>
                 <el-table-column align="center" fixed="right" label="操作" width="160">
                     <template #default="{ row }">
                         <el-dropdown >
