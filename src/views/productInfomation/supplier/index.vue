@@ -278,18 +278,25 @@ const handleDownLoadSpecialFile = async (row: any) => {
         },
         responseType: 'blob', // 重要: 确保responseType为'blob'
       })
-      .then((response) => {
-
-        const blob = new Blob([response.data], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
+      .then((response:any) => {
+           console.log(response)
+          var fileURL = window.URL.createObjectURL(new Blob([response]));
+          console.log(fileURL, 'fileURL')
+          var fileLink = document.createElement('a');
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download',"xxxx.xlsx");
+          document.body.appendChild(fileLink);
+          fileLink.click();
+        // const blob = new Blob([response.data], {
+        //     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        // });
           
-        let link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute('download', '工作日志.xlsx');
-        document.body.appendChild(link); // 确保链接在 DOM 中
-        link.click();
-        link.remove();
+        // let link = document.createElement('a');
+        // link.href = URL.createObjectURL(blob);
+        // link.setAttribute('download', '工作日志.xlsx');
+        // document.body.appendChild(link); // 确保链接在 DOM 中
+        // link.click();
+        // link.remove();
       })
       .catch((error) => {
         console.error('Download failed:', error);
@@ -413,19 +420,27 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 
 const handleDownLoad = async () => {
   // downloadLoading.value = true
-  // const { response } = await downloadProductSupplier()
-  // console.log(response);
-      axios({
-        url: `${BASE_API}/product/suppliser/download`,
-        method: 'GET',
+  const { response } = await downloadProductSupplier()
+  console.log(response);
+      // axios({
+        // url: `http://192.168.6.246:8888:${BASE_API}/product/suppliser/download`,
+        // method: 'GET',
         // params: {
         //   suppliserId: 17, 
         // },
-        responseType: 'blob', // 重要: 确保responseType为'blob'
-      })
-      .then((response) => {
-        console.log('Response Type:', response.headers['content-type']); // 打印 MIME 类型
-        console.log('Response Data:', response.data); // 打印返回的数据
+        // responseType: 'blob', // 重要: 确保responseType为'blob'
+      // })
+      // .then((response:any) => {
+      //   console.log(response)
+      //     var fileURL = window.URL.createObjectURL(new Blob([response]));
+      //     console.log(fileURL, 'fileURL')
+      //     var fileLink = document.createElement('a');
+      //     fileLink.href = fileURL;
+      //     fileLink.setAttribute('download',"xxxx.xlsx");
+      //     document.body.appendChild(fileLink);
+      //     fileLink.click();
+        // console.log('Response Type:', response.headers['content-type']); // 打印 MIME 类型
+        // console.log('Response Data:', response.data); // 打印返回的数据
         // const url = window.URL.createObjectURL(new Blob([response.data]));
         // const link = document.createElement('a');
         // link.href = url;
@@ -445,16 +460,16 @@ const handleDownLoad = async () => {
         // document.body.appendChild(link);
         // link.click();
         // link.remove();
-        const blob = new Blob([response.data], {
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
+        // const blob = new Blob([response.data], {
+        //     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        // });
           
-        let link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute('download', '工作日志.xlsx');
-        document.body.appendChild(link); // 确保链接在 DOM 中
-        link.click();
-        link.remove();
+        // let link = document.createElement('a');
+        // link.href = URL.createObjectURL(blob);
+        // link.setAttribute('download', '工作日志.xlsx');
+        // document.body.appendChild(link); // 确保链接在 DOM 中
+        // link.click();
+        // link.remove();
         // let blob = new Blob([response.data], { type: 'application/ms-excel;charset=utf-8' });
         // let downloadElement = document.createElement('a');
         // let href = window.URL.createObjectURL(blob); //创建下载的链接
@@ -464,10 +479,10 @@ const handleDownLoad = async () => {
         // downloadElement.click(); //点击下载
         // document.body.removeChild(downloadElement); //下载完成移除元素
         // window.URL.revokeObjectURL(href); //释放掉blob对象
-      })
-      .catch((error) => {
-        console.error('Download failed:', error);
-      });
+      // })
+      // .catch((error) => {
+      //   console.error('Download failed:', error);
+      // });
 
   // if(data === true) {
   //   downloadLoading.value = false

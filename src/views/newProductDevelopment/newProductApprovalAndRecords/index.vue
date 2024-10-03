@@ -376,8 +376,7 @@ const objectSpanMethod = ({
   columnIndex,
 }: SpanMethodProps) => {
   // 设置需要合并的列
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 10
-    || columnIndex === 11 || columnIndex === 12 || columnIndex === 13 || columnIndex === 14
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 12 || columnIndex === 13 || columnIndex === 14
     || columnIndex === 15 || columnIndex === 16 || columnIndex === 17
 
   ) {

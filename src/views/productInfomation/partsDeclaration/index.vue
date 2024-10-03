@@ -191,7 +191,7 @@
         <el-table-column align="center" label="申报要素" min-width="200" prop="declarationElements" >
           <template #default="{ row }">
             <div class="none">
-                <el-input type="textarea" v-model="row.declarationElements" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input type="textarea" data-declaretion="specialElements" v-model="row.declarationElements" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
             </div>
             <span>{{ row.declarationElements }}</span>
           </template>
@@ -443,6 +443,7 @@ const queryData = () => {
   }
   // 零件table blur事件
   const clickCancle = async (event:any,value:any) =>{
+    
     const t1 = getRootElement(event["srcElement"],".cell").children[0]
     if (t1){
       t1.classList.add("none")
@@ -452,7 +453,73 @@ const queryData = () => {
     if (t2){
       t2.classList.remove("none")
     }
+
+    // 处理申报要素简写
+    var builder;
+    if (getRootElement(event["srcElement"],".el-textarea")){
+      let textAreaEl = getRootElement(event["srcElement"],".el-textarea").children[0]; 
+      if (getDataAttribute(textAreaEl,"declaretion")){
+          let element = value.declarationElements;
+          if(element.indexOf("【") > 0){
+              var s = element.split("【");
+              for(var i = 1; i < s.length; i++){
+                  if( i == 1){
+                      var text = s[i].split("】")[0];
+                      if(text == '无'){
+                          text = '0';
+                      }else if(text == '境内品牌'){
+                          text = '1';
+                      }else if(text == '境外贴牌'){
+                          text = '3';
+                      }
+                      builder = text;
+                  }else {
+                      var text = s[i].split("】")[0];
+                      if(text == '无' && builder.indexOf("|") < 0){
+                          text = '0';
+                      }else if(text == '境内品牌' && builder.indexOf("|") < 0){
+                          text = '1';
+                      }else if(text == '境外贴牌' && builder.indexOf("|") < 0){
+                          text = '3';
+                      }
+                      builder = builder + "|" + text;
+                  }
+              }
+          }else if(element.indexOf("[") > 0){
+              var s = element.split("[");
+              for(var i = 1; i < s.length; i++){
+                  if( i == 1){
+                      var text = s[i].split("]")[0];
+                      if(text == '无'){
+                          text = '0';
+                      }else if(text == '境内品牌'){
+                          text = '1';
+                      }else if(text == '境外贴牌'){
+                          text = '3';
+                      }
+                      builder = text;
+                  }else {
+                      var text = s[i].split("]")[0];
+                      if(text == '无' && builder.indexOf("|") < 0){
+                          text = '0';
+                      }else if(text == '境内品牌' && builder.indexOf("|") < 0){
+                          text = '1';
+                      }else if(text == '境外贴牌' && builder.indexOf("|") < 0){
+                          text = '3';
+                      }
+                      builder = builder + "|" + text;
+                  }
+              }
+          }
+       }
+    }
     
+    if (builder){
+       value.declarationElementsAbbreviation = builder;
+    }else {
+      value.declarationElementsAbbreviation = "";
+    }
+
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
         await updateProductCustoms(value)

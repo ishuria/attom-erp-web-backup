@@ -148,7 +148,7 @@ export function downloadProductSupplier(params?: IsuppliserId): any {
     return request({
       url: `${BASE_API}/product/suppliser/download`,
       method: 'get',
-    responseType: 'blob',
+      responseType: 'blob',
       params
     })
 }
