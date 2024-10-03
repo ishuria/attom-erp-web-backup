@@ -222,6 +222,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { downloadProductSupplier, getProductSupplierList, updateProductSupplier, uploadProductSupplierFile, uploadProductSupplierSpecialFile } from '/@/api/devlocal/productInformation'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import {downloadFile} from '/@/api/devlocal/download'
 import { UploadUserFile } from 'element-plus'
 // import * as XLSX from 'xlsx'
 import { BASE_API } from '/@/api/devlocal/api'
@@ -267,43 +268,9 @@ const UploadRequestHandler = async (params: any, row: any) => {
   }
 }
 const handleDownLoadSpecialFile = async (row: any) => {
-  // const { data } = await downloadProductSupplier({
-  //   suppliserId: row.suppliserId
-  // })
-  axios({
-        url: `${BASE_API}/product/suppliser/download`,
-        method: 'GET',
-        params: {
-          suppliserId: row.suppliserId, 
-        },
-        responseType: 'blob', // 重要: 确保responseType为'blob'
-      })
-      .then((response:any) => {
-           console.log(response)
-          var fileURL = window.URL.createObjectURL(new Blob([response]));
-          console.log(fileURL, 'fileURL')
-          var fileLink = document.createElement('a');
-          fileLink.href = fileURL;
-          fileLink.setAttribute('download',"xxxx.xlsx");
-          document.body.appendChild(fileLink);
-          fileLink.click();
-        // const blob = new Blob([response.data], {
-        //     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        // });
-          
-        // let link = document.createElement('a');
-        // link.href = URL.createObjectURL(blob);
-        // link.setAttribute('download', '工作日志.xlsx');
-        // document.body.appendChild(link); // 确保链接在 DOM 中
-        // link.click();
-        // link.remove();
-      })
-      .catch((error) => {
-        console.error('Download failed:', error);
-      });
-  // if (data === true) {
-  //   $baseMessage('下载特定合同模板成功', 'success', 'hey')
-  // }
+  await downloadFile("/product/suppliser/download",{
+    suppliserId: row.suppliserId, 
+  })
 }
 const handleDelFile = (row: any) => {
   row.hide = false
@@ -419,75 +386,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 }
 
 const handleDownLoad = async () => {
-  // downloadLoading.value = true
-  const { response } = await downloadProductSupplier()
-  console.log(response);
-      // axios({
-        // url: `http://192.168.6.246:8888:${BASE_API}/product/suppliser/download`,
-        // method: 'GET',
-        // params: {
-        //   suppliserId: 17, 
-        // },
-        // responseType: 'blob', // 重要: 确保responseType为'blob'
-      // })
-      // .then((response:any) => {
-      //   console.log(response)
-      //     var fileURL = window.URL.createObjectURL(new Blob([response]));
-      //     console.log(fileURL, 'fileURL')
-      //     var fileLink = document.createElement('a');
-      //     fileLink.href = fileURL;
-      //     fileLink.setAttribute('download',"xxxx.xlsx");
-      //     document.body.appendChild(fileLink);
-      //     fileLink.click();
-        // console.log('Response Type:', response.headers['content-type']); // 打印 MIME 类型
-        // console.log('Response Data:', response.data); // 打印返回的数据
-        // const url = window.URL.createObjectURL(new Blob([response.data]));
-        // const link = document.createElement('a');
-        // link.href = url;
-
-        // // 从响应头中获取文件名（如果需要）
-        // const contentDisposition = response.headers['content-disposition'];
-        // console.log('contentDisposition', contentDisposition);
-       
-
-        // let fileName = 'downloadedFile';
-        // if (contentDisposition) {
-        //   const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
-        //   if (fileNameMatch.length === 2) fileName = fileNameMatch[1];
-        // }
-
-        // link.setAttribute('download', fileName); // 设置下载文件名
-        // document.body.appendChild(link);
-        // link.click();
-        // link.remove();
-        // const blob = new Blob([response.data], {
-        //     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        // });
-          
-        // let link = document.createElement('a');
-        // link.href = URL.createObjectURL(blob);
-        // link.setAttribute('download', '工作日志.xlsx');
-        // document.body.appendChild(link); // 确保链接在 DOM 中
-        // link.click();
-        // link.remove();
-        // let blob = new Blob([response.data], { type: 'application/ms-excel;charset=utf-8' });
-        // let downloadElement = document.createElement('a');
-        // let href = window.URL.createObjectURL(blob); //创建下载的链接
-        // downloadElement.href = href;
-        // downloadElement.download = 'forbidden-words.xls'; //下载后文件名
-        // document.body.appendChild(downloadElement);
-        // downloadElement.click(); //点击下载
-        // document.body.removeChild(downloadElement); //下载完成移除元素
-        // window.URL.revokeObjectURL(href); //释放掉blob对象
-      // })
-      // .catch((error) => {
-      //   console.error('Download failed:', error);
-      // });
-
-  // if(data === true) {
-  //   downloadLoading.value = false
-  //   $baseMessage('下载通用合同模板成功', 'success', 'hey')
-  // }
+  await downloadFile("/product/suppliser/download",{})
 }
 
 

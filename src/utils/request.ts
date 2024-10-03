@@ -99,9 +99,10 @@ const tryRefreshToken = async (config: any): Promise<any> => {
  * @param statusText {any} HTTP status text
  * @returns {Promise<*|*>}
  */
-const handleData = async ({ config, data, status, statusText }: any): Promise<any | any> => {
+const handleData = async ({ config, data, status, statusText,headers }: any): Promise<any | any> => {
   const { resetAll } = useUserStore()
   if (loadingInstance) loadingInstance.close()
+  downloadDeal(headers["content-type"],data,headers)
   // 若data.code存在，覆盖默认code
   let code = data && data[statusName] ? data[statusName] : status
   // 若code属于操作正常code，则status修改为200
@@ -148,6 +149,58 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
   gp.$baseMessage(errMsg, 'error', 'hey')
   if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })
   throw data
+}
+
+/**
+ * 处理浏览器文件下载方法
+ * @param type 返回下载的类型
+ * @param data blob数据类型
+ * @param headers 请求头信息
+ * @param defaultFileName 默认下载文件名
+ */
+const downloadDeal = (type:string,data:any,headers:any,defaultFileName="download") => {
+  switch (type){
+    case 'application/vnd.ms-excel':
+    case 'text/csv':
+    case 'image/jpeg':
+    case 'image/png':
+    case 'application/zip':
+    case 'application/pdf':{
+                // 获取 Content-Disposition 响应头
+    const contentDisposition = headers['content-disposition'];
+    const contentType = headers['content-type'];
+
+    console.log('Content-Disposition:', contentDisposition);
+    console.log('Content-Type:', contentType);
+      // 创建Blob对象
+      const blob = new Blob([data], { type: contentType });
+
+      // 提取文件名
+      let fileName = defaultFileName;
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (fileNameMatch.length > 1) {
+          fileName = fileNameMatch[1].trim().replace(/_+$/, '');
+        }
+      }
+
+      // 创建一个URL链接供下载
+      const downloadUrl = window.URL.createObjectURL(blob);
+
+      // 创建一个临时的<a>标签用于下载
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = fileName; // 设置下载的文件名
+
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+
+      // 移除链接
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    }
+  }
 }
 /**
  * @description axios初始化
