@@ -35,7 +35,7 @@
                 {{ row[prop] }} cm
             </template>
             <template v-if="row['column0'] === 'productSize'">
-                {{ convertCmToInches(row[prop]) }} inch
+                {{ row[prop] }} inch
             </template>
             <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem' && row['column0'] !== 'packagingSize' && row['column0'] !== 'productSize'">
               {{ row[prop] }}
@@ -160,14 +160,7 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
 }
-function convertCmToInches(dimensions: string) {
-    // 将字符串拆分为数组
-    const cmArray = dimensions.split('x').map(Number);
-    // 转换为英寸并保留两位小数
-    const inchArray = cmArray.map(cm => (cm * 0.393701).toFixed(2));
-    // 将数组转换回字符串格式
-    return inchArray.join('x');
-}
+
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表

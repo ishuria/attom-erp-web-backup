@@ -410,7 +410,7 @@
                         <div class="none">
                             <el-input type="text" v-model="row.tariff" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
                         </div>
-                        <span>{{ row.tariff }}</span>
+                        <span>{{ row.tariff ? row.tariff+'%' : '' }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
@@ -757,6 +757,7 @@ const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
+let _row: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
     // let el = getSpecificChildren(cell, "img")[0];
@@ -770,7 +771,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
         || !cell.children[0].children[1].classList) {
         return
     }
-
+    _row = JSON.parse(JSON.stringify(row))
     if (column.property == 'purchaseMatters') {
         // 查询零件采购注意事项
         clickRow.value = row
@@ -841,11 +842,14 @@ const clickVariantsCancle = async (event:any,value:any) =>{
     const t2 = getRootElement(event["srcElement"],".cell").children[1]
     if (t2){
       t2.classList.remove("none")
+    }    
+    if(JSON.stringify(value) === JSON.stringify(_row)) {
+        return 
     }
     
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
-        await reviewStepNo3VariantUpdate(value)
+        await reviewStepNo3VariantUpdate({...value, tariff: value.tariff / 100})
         fetchVariantsData()
     }
 }
@@ -938,14 +942,14 @@ const validateVariants = (item: any) => {
 };
 const validateSame = () => {
     const grouped = componentList.value.reduce((acc: any, row: any) => {
-        const key = `${row.supplier}-${row.invoicing}` 
+        const key = `${row.supplier}-${row.invoicing}`        
         acc[key] = (acc[key] || []).concat({
             actualTaxRate: row.actualTaxRate,
             invoicingTaxRate: row.invoicingTaxRate
         })
         return acc
     }, {})
-
+    
     for(const key in grouped) {
         if(grouped[key].length > 1) {
             const firstRow = grouped[key][0]
@@ -954,8 +958,9 @@ const validateSame = () => {
                 return true
             }
             return false
-        }
+        } 
     }
+    return true
 }
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
@@ -976,11 +981,11 @@ const handleSaveAndContinue = async () => {
                 }
             }
         } else {
-            // $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
-            const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
-            if (data === true) {
-                emit('change-step', 3);
-            }
+            $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
+            // const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
+            // if (data === true) {
+            //     emit('change-step', 3);
+            // }
         }
     }
 };
@@ -992,6 +997,7 @@ const handleGoback = () => {
 
 // 获取拿样零件添加数据
 const fetchDataComponent = async () =>{
+
     if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
         try {
             // 拿样零件添加列表
@@ -1048,6 +1054,9 @@ const fetchVariantsData = async () => {
         if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
             const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
             variantsList.value = data
+            variantsList.value.forEach((item: any) => {
+                item.tariff = (item.tariff * 100).toFixed(0)
+            })
         }
     } catch (error) {
         console.error(error)

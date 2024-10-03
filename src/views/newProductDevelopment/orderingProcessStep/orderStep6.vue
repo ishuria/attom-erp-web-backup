@@ -51,7 +51,7 @@
                             {{ row[prop] }} cm
                         </template>
                         <template v-if="row['column0'] === 'productSize'">
-                            {{ convertCmToInches(row[prop]) }} inch
+                            {{ row[prop] }} inch
                         </template>
                         <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'productSize' && row['column0'] !== 'packagingSize' && row['column0'] !== 'sampleRetentionStatus'">
                           {{ row[prop] }}
@@ -189,14 +189,7 @@ const handlePersonSelectConfirm = () => {
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
 }
-function convertCmToInches(dimensions: string) {
-    // 将字符串拆分为数组
-    const cmArray = dimensions.split('x').map(Number);
-    // 转换为英寸并保留两位小数
-    const inchArray = cmArray.map(cm => (cm * 0.393701).toFixed(2));
-    // 将数组转换回字符串格式
-    return inchArray.join('x');
-}
+
 const generateStatus = (value: number) => {
   switch (value) {
     case 0:

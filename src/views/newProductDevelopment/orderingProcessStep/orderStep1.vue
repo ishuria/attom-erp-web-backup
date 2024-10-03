@@ -178,14 +178,14 @@ const handleSubmit = () => {
     if (valid) {
       const saveOn = async () => {
         if (route.query.progressId) {
-          const { data }  = await reviewStepNo1SaveOn({...form, progressId: route.query.progressId})
+          const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
           if (data) {
             localStorage.setItem('orderStep1Form', JSON.stringify(form))
             $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。","success","hey")
           }
         } else {
           const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
-          const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId })
+          const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
           if (data) {
             $baseMessage(
               "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
@@ -206,9 +206,8 @@ const handleSubmitAndContinue = async () => {
       const saveOn = async () => {
         try {
           if (route.query.progressId) {
-            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId })
-            console.log('save', form);
-            
+            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
+     
             if (data) {
               res = data
               localStorage.setItem('orderStep1Form', JSON.stringify(form))
@@ -224,22 +223,20 @@ const handleSubmitAndContinue = async () => {
             }
           } else {
             const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
-            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId })
-            if (data) {
-              res = data
+            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
+          
+          
               $baseMessage(
                 "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
                 "success",
                 "hey"
               )
-              emit('sendDataToStep2', res)
+   
               emit('change-step', 1)
               
               const {...query} = route.query;
               router.replace({query: {...query, stepNo: 1}});
-            } else {
-              console.error('API 返回没有 data')
-            }
+            
           }
         } catch (error) {
           console.error('保存过程出错:', error)

@@ -268,7 +268,7 @@
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
                             />
                         </div>
-                        <span>{{ row.tariff }}</span>
+                        <span>{{ row.tariff ? row.tariff+'%' : '' }}</span>
                     </template>
                 </el-table-column>
 
@@ -380,6 +380,13 @@ watchEffect(()=>{
     dflag.value = props.flag
 })
 
+onBeforeMount(() => {
+    dlist.value.forEach((item: any) => {
+        if(item.tariff) {
+            item.tariff = (item.tariff * 100).toFixed(0)
+        }
+    })
+})
 
 const emit = defineEmits<{ (e: 'update:visibleValue', value: boolean): void }>()
 // Table cell 下标
@@ -497,7 +504,7 @@ const clickCancle = async (event:any,value:any) =>{
   if (t2){
     t2.classList.remove("none")
   }
-  await updateEstimatedCostAccounting({...value})
+  await updateEstimatedCostAccounting({...value, tariff: value.tariff / 100})
 
 }
 

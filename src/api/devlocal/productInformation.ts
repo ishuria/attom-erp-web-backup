@@ -40,7 +40,8 @@ import {
     IsaveProductPurchaseMatters,
     IsaveProductContractTerms,
     IgetProductSupplier,
-    IexistingPartsListId
+    IexistingPartsListId,
+    IgetProductAllName
 } from '/@/type/productInformation/skuInformationType'
 
 // SKU信息 - 获取查询列表
@@ -187,6 +188,14 @@ export function getProductAllSupplier(params: ISuppliserName) {
 export function getProductSupplier(params: ISuppliserName): Promise<IgetProductSupplier> {
   return request({
     url: `${BASE_API}/product/get/suppliser`,
+    method: 'get',
+    params
+  })
+}
+// 获取所有公司所有人名
+export function getProductAllName(params: IgetProductAllName) {
+  return request({
+    url: `${BASE_API}/product/getAllName`,
     method: 'get',
     params
   })

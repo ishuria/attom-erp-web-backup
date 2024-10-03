@@ -223,6 +223,9 @@
             <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
             </el-table-column>
             <el-table-column prop="tariff" label="关税%">
+                <template #default="{row}">
+                    {{ row.tariff ? row.tariff+'%' : '' }}
+                </template>
             </el-table-column>
             <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
             <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140"></el-table-column>
@@ -370,6 +373,9 @@ const fetchVariantsData = async () => {
     try {
         const { data } = await reviewStepNo3VariantList({ reviewId: parseInt(route.query.reviewId) })
         variantsList.value = data
+        variantsList.value.forEach((item: any) => {
+                item.tariff = (item.tariff * 100).toFixed(0)
+            })
     } catch (error) {
         console.error(error)
     }

@@ -382,16 +382,17 @@ const handleCurrentChange = (value: number) => {
 
 const queryData = () => {
   queryForm.pageNo = 1
-  if(!queryForm.keyWord) {
-        fetchData()
-    } else {
-        listLoading.value = true
-        const queryList = ref<any>()
-        queryList.value = list.value.filter((item: any) => item.suppliser.includes(queryForm.keyWord, 0))
-        list.value = queryList.value
-        total.value = list.value.length
-        listLoading.value = false
-    }
+  fetchData()
+  // if(!queryForm.keyWord) {
+  //       fetchData()
+  //   } else {
+  //       listLoading.value = true
+  //       const queryList = ref<any>()
+  //       queryList.value = list.value.filter((item: any) => item.suppliser.includes(queryForm.keyWord, 0))
+  //       list.value = queryList.value
+  //       total.value = list.value.length
+  //       listLoading.value = false
+  //   }
 }
 
 const setSelectRows = (value: string) => {

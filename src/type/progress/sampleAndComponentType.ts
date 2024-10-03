@@ -442,3 +442,23 @@ export interface IUpdateProgressLogReq {
    progressId?: number
 
 }
+// 拿样清单成本试算-修改产品描述
+export interface IupdateTrialcalculationProductdesc {
+  id: number
+  productDesc: string
+}
+export interface IgetTrialCalculationProductDesc {
+  id: number
+}
+// 成本核算-修改产品描述
+export interface IupdateProgressProductdesc {
+  accountingId: number
+  productDesc: string
+}
+export interface IupdateProgressPriceInfo {
+  accountingId: number
+  priceInfo: string
+}
+export interface IgetProgressProductDesc {
+  accountingId: number
+}

@@ -9,7 +9,7 @@
         </el-page-header>
         <el-card class="product-details-card" shadow="never" >
             <el-row :gutter="20">
-                <el-col :span="2" class="custom-upload" > 
+                <el-col :span="2" class="custom-upload" style="padding-right: 15px;"> 
                     <el-upload 
                         list-type="picture-card" 
                         :file-list="sku.imageList" 
@@ -96,12 +96,48 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="产品经理" >
-                                    <el-input v-model="sku.productManager" @blur="handleUpdateSku"></el-input>
+                                    <el-select
+                                        v-model="sku.productManager"
+                                        filterable
+                                        remote
+                                        allow-create
+                                        default-first-option
+                                        placeholder="点击输入和搜索"
+                                        :remote-method="remotePeopleMethod"
+                                        :loading="peopleLoading"
+                                        @change="handleUpdateSku"
+                                        clearable
+                                    >
+                                        <el-option
+                                            v-for="item in peopleOptions"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                        />
+                                    </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6"> 
                                 <el-form-item label="产品设计" >
-                                    <el-input v-model="sku.productDesign" @blur="handleUpdateSku"></el-input>
+                                    <el-select
+                                        v-model="sku.productDesign"
+                                        filterable
+                                        remote
+                                        allow-create
+                                        default-first-option
+                                        placeholder="点击输入和搜索"
+                                        :remote-method="remotePeopleMethod"
+                                        :loading="peopleLoading"
+                                        @change="handleUpdateSku"
+                                        clearable
+                                    >
+                                        <el-option
+                                            v-for="item in peopleOptions"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                        />
+                                    </el-select>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -179,7 +215,7 @@
                 :data="tableData"
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
-                height="400"
+         
                 class="noneHoveTable"
             >
                 <el-table-column align="center" label="图片" class="image-wall" min-width="100">
@@ -303,7 +339,7 @@
                         <span>{{ row.numberFullCartons }}</span>
                     </template>
                 </el-table-column> 
-                <el-table-column align="center" label="默认供应商" min-width="200" prop="defaultSuppliserId">
+                <el-table-column align="center" label="默认供应商" min-width="205" prop="defaultSuppliserId">
                     <template #default="{row}">
                         <el-select v-model="row.defaultSuppliserId" placeholder=""  @change="handleSuppliserChange(row)">
                             <el-option 
@@ -341,9 +377,9 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column align="center" label="默认采购方" min-width="180" prop="purchaseId">
+                <el-table-column align="center" label="默认采购方" min-width="130" prop="purchaseId">
                     <template #default="{row}">
-                        <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                        <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleDefaultPurchase(row)">
                             <el-option 
                                 v-for="item in purchaseOption"
                                 :label="item.label"
@@ -355,7 +391,7 @@
                 </el-table-column>
                 <el-table-column label="不报关" prop="declareCustomsStatus" align="center" min-width="75">
                     <template #default = "{ row }">
-                        <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleCurrencyChange(row)"/>
+                        <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleDeclareCustoms(row)"/>
                     </template>
                 </el-table-column>
                 <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
@@ -370,7 +406,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column  label="默认收货仓库" prop="defaultRepositoryId" min-width="185">
+                <el-table-column  label="默认收货仓库" prop="defaultRepositoryId" min-width="160">
                     <template #default="{ row }">
                         <!-- <el-input v-model="row.defaultRepositoryId" clearable /> -->
                         <el-select v-model="row.defaultRepositoryId" placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" filterable @change="handleCurrencyChange(row)">
@@ -625,7 +661,7 @@ import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
 import { FormInstance, rowContextKey, UploadFile } from 'element-plus';
 import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
 import type { UploadProps } from 'element-plus'
-import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
+import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
 
 const route: any = useRoute()
 const router = useRouter()
@@ -647,6 +683,29 @@ const form = reactive<any>({
     actualTaxRate: '',
     invoicingTaxRate: '',
 })
+const peopleLoading = ref(false) //搜索产品经理和产品设计loading
+const peopleOptions = ref<any[]>([]) //搜索选项
+const peopleList = ref<any[]>([]) //搜索列表
+const remotePeopleMethod = async (query: string) => {
+  if (query) {
+    const { data } = await getProductAllName({
+        name: query
+    })
+
+    peopleList.value = data.map((item: any) => {
+        return { value: `${item}`, label: `${item}` }
+    })
+    peopleLoading.value = true
+    setTimeout(() => {
+        peopleLoading.value = false
+        peopleOptions.value = peopleList.value.filter((item) => {
+            return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    peopleOptions.value = []
+  }
+}
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
 const supplierList = ref<any[]>([]) //供应商搜索列表
@@ -657,7 +716,7 @@ const remoteMethod = async (query: string) => {
     const { data } = await getProductAllSupplier({
         suppliserName: query
     })
-    console.log(data);
+
     supplierList.value = data.map((item: any) => {
         return { value: `${item}`, label: `${item}` }
     })
@@ -1107,6 +1166,7 @@ const handleDel = async (row: any, index: number) => {
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
+let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
     // let el = getSpecificChildren(cell, "img")[0];
@@ -1120,7 +1180,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
         || !cell.children[0].children[1].classList) {
         return
     }
-
+    copyRow = JSON.parse(JSON.stringify(row))
     if (column.property == 'purchaseMatters') {
         // 查询零件采购注意事项
         clickRow.value = row
@@ -1168,7 +1228,9 @@ const clickCancle = async (event:any,value:any) =>{
     if (t2){
       t2.classList.remove("none")
     }
-    
+    if(JSON.stringify(value) === JSON.stringify(copyRow)) {
+        return 
+    }
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
         await updateProductComponent({
@@ -1199,6 +1261,38 @@ const clickCancle = async (event:any,value:any) =>{
 
     // 重新获取实际总成本
     fetchData()
+}
+// 处理默认采购方
+const handleDefaultPurchase = async (row: any) => {
+    const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+    if(item.type === 0) { //如果选择了为买单的采购方
+        row.declareCustomsStatus = 1 //自动勾选不报关
+    }
+    if(row.purchaseId === 2) { //选择了埃托姆
+        row.declareCustomsStatus = 0
+    } 
+    await updateProductComponent(row)
+    fetchData()
+    fetchComponentData()
+}
+// 处理不报关
+const handleDeclareCustoms = async (row: any) => {
+    const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+    if(item.type === 0) { //如果选择了为买单的采购方
+        if(row.declareCustomsStatus === 0) {
+            row.declareCustomsStatus = 1
+            $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+        }
+    } else if(row.purchaseId === 2) { //选择了埃托姆
+        if(row.declareCustomsStatus === 1) {
+            row.declareCustomsStatus = 0
+            $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
+        } 
+    } else {
+        await updateProductComponent(row)
+        fetchData()
+        fetchComponentData()
+    }
 }
 const handleCurrencyChange = async (row: any) => {
     await updateProductComponent(row)
@@ -1324,6 +1418,7 @@ const fetchInspection = async () => { //获取质检清单数据
         skuId: parseInt(route.query.skuId)
     })
     packingList.value = data
+    packingList.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
     handleTableDataValue(packingList.value) //初始化质检清单数据
 }
 onMounted(async ()=>{
@@ -1379,7 +1474,8 @@ onMounted(async ()=>{
 .custom-upload {
     display: flex;
     justify-content: center;
-    align-items: center; 
+    align-items: flex-start; 
+    margin-top: 30px;
 }
 .transfer-container {
     display: flex;
@@ -1388,6 +1484,8 @@ onMounted(async ()=>{
 }
 :deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
     transition: none;  
+    width: 142px;
+    height: 142px;
 }
 
 .hide :deep(.el-upload--picture-card) {

@@ -44,7 +44,12 @@ import {
   ITrialCalculationAddResp,
   ITrialCalculationResp,
   ITrialCalculationGetResp,
-  IUpdateProgressLogReq
+  IUpdateProgressLogReq,
+  IupdateTrialcalculationProductdesc,
+  IgetTrialCalculationProductDesc,
+  IupdateProgressProductdesc,
+  IupdateProgressPriceInfo,
+  IgetProgressProductDesc
 } from '/@/type/progress/sampleAndComponentType'
 import { IProgressId } from '~/src/type/progress/progressType'
 
@@ -382,5 +387,72 @@ export function updateProgressLog(data?: IUpdateProgressLogReq) :Promise<ICompon
     url: `${BASE_API}/progress/update/log`,
     method: 'post',
     data,
+  })
+}
+
+/**
+ * 拿样清单成本试算-修改产品描述
+ */
+export function updateTrialcalculationProductdesc(params?: IupdateTrialcalculationProductdesc){
+  return request({
+    url: `${BASE_API}/progress/update/trialcalculation/productdesc`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 拿样清单成本试算-获取产品描述
+ * @param params
+ * @returns
+ */
+export function getTrialCalculationProductDesc(params: IgetTrialCalculationProductDesc) {
+  return request({
+    url: `${BASE_API}/progress/get/trialcalculation/productdesc`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 成本核算-修改产品描述
+ */
+export function updateProgressProductdesc(params?: IupdateProgressProductdesc){
+  return request({
+    url: `${BASE_API}/progress/update/productdesc`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 拿样清单成本试算-修改产品描述
+ */
+export function updateProgressPriceInfo(params?: IupdateProgressPriceInfo){
+  return request({
+    url: `${BASE_API}/progress/update/priceInfo`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 成本核算-获取产品描述
+ * @param params
+ * @returns
+ */
+export function getProgressProductDesc(params: IgetProgressProductDesc) {
+  return request({
+    url: `${BASE_API}/progress/get/productdesc`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 成本核算-获取产品价格信息
+ * @param params
+ * @returns
+ */
+export function getProgressPriceInfo(params: IgetProgressProductDesc) {
+  return request({
+    url: `${BASE_API}/progress/get/priceInfo`,
+    method: 'get',
+    params,
   })
 }

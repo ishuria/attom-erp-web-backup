@@ -142,7 +142,7 @@
             报关覆盖<br>实际净重
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.coveredWeightStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleCustomsChange(row)"/>
+            <el-checkbox v-model="row.coveredWeightStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleWeightStatusChange(row)"/>
           </template>
         </el-table-column>
         <el-table-column align="center" label="品牌" min-width="90" prop="brank" >
@@ -372,21 +372,10 @@
   const imagePreviewClose = () =>{
     imagePreviewVisible.value = false;
   }
-  const queryData = () => {
-    queryForm.pageNo = 1
-    if(!queryForm.keyWord) {
-        fetchData()
-    } else {
-        listLoading.value = true
-        const queryList = ref<any>()
-        queryList.value = list.value.filter((item: any) => item.componentName.includes(queryForm.keyWord, 0) || item.sku.includes(queryForm.keyWord, 0) || 
-        item.suppliser.includes(queryForm.keyWord, 0) || item.upc.includes(queryForm.keyWord, 0) || item.northAmericaFnSku.includes(queryForm.keyWord, 0) 
-        || item.europeFnSku.includes(queryForm.keyWord, 0))
-        list.value = queryList.value
-        total.value = list.value.length
-        listLoading.value = false
-    }
-  }
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
   const handleSizeChange = (value: number) => {
     queryForm.pageNo = 1
     queryForm.pageSize = value
@@ -470,7 +459,10 @@
         fetchData()
     }
   }
-  const handleCustomsChange = async (row: any) => { //修改报关和报关实际净重
+const handleCustomsChange = async (row: any) => {
+  await updateProductCustoms(row)
+}
+  const handleWeightStatusChange = async (row: any) => { //修改报关和报关实际净重
     await updateProductCustoms(row)
     fetchData()
   }

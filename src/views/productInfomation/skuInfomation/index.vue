@@ -214,18 +214,19 @@ const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
 }
-const queryData = () => {
+const queryData = async () => {
   queryForm.pageNo = 1
-  if(!queryForm.keyWord) {
-        fetchData()
-    } else {
-        listLoading.value = true
-        const queryList = ref<any>()
-        queryList.value = list.value.filter((item: any) => item.sku.includes(queryForm.keyWord, 0))
-        list.value = queryList.value
-        total.value = list.value.length
-        listLoading.value = false
-    }
+  fetchData()
+  // if(!queryForm.keyWord) {
+  //       fetchData()
+  //   } else {
+  //       listLoading.value = true
+  //       const queryList = ref<any>()
+  //       queryList.value = list.value.filter((item: any) => item.sku.includes(queryForm.keyWord, 0))
+  //       list.value = queryList.value
+  //       total.value = list.value.length
+  //       listLoading.value = false
+  //   }
 }
 
 // 预览图片列表

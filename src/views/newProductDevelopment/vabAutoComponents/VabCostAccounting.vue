@@ -66,7 +66,7 @@
                 </el-table-column>
 
                 <el-table-column label="产品描述" min-width="250" prop="desc">
-                    <template #default="{ row }">
+                    <template #default="{ row, $index }">
                         <div class="none">
                             <el-input 
                                 type="textarea" 
@@ -74,23 +74,25 @@
                                 :autosize="{ minRows: 1, maxRows: 3 }"
                                 @blur="clickCancle($event, row)"
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
+                                @click="handlePriceAndDescClick($index)"
                              />
                         </div>
-                        <span>{{ row.desc }}</span>
+                        <span>{{ removeHtmlTags(row.desc) }}</span>
                     </template>
                 </el-table-column>
 
                 <el-table-column label="价格信息" min-width="250" prop="priceInfo">
-                    <template #default="{ row }">
+                    <template #default="{ row, $index }">
                         <div class="none">
                             <el-input 
                                 type="text" 
                                 v-model="row.priceInfo" 
                                 @blur="clickCancle($event, row)" 
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
+                                @click="handlePriceAndDescClick($index)"
                             />
                         </div>
-                        <span>{{ row.priceInfo }}</span>
+                        <span>{{ removeHtmlTags(row.priceInfo) }}</span>
                     </template>
                 </el-table-column>
 
@@ -271,7 +273,7 @@
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
                             />
                         </div>
-                        <span>{{ row.tariff }}</span>
+                        <span>{{ row.tariff ? row.tariff : '' }}{{ row.tariff ? '%' : '' }}</span>
                     </template>
                 </el-table-column>
 
@@ -356,7 +358,11 @@ import {convertString} from '/@/utils/stringUtils'
 import {getCostAccountingList,addCostAccounting,
     costAccountingUploadImage,
     costAccountingUpdateRowSort,costAccountingCopy,
-    costAccountingUpdate,costAccountingDelete} from '/@/api/devlocal/progressSample'
+    costAccountingUpdate,costAccountingDelete,
+    getProgressProductDesc,
+    getProgressPriceInfo,
+    updateProgressProductdesc,
+    updateProgressPriceInfo} from '/@/api/devlocal/progressSample'
 import {
   estimatedCostAccountingSiteColumns,
   firstLegChannelColumns,
@@ -380,7 +386,9 @@ const emit = defineEmits<{
     (e: 'update:imagePreviewVisibale', value: boolean): void
     (e: 'update:priviewListValue', value: string): void
  }>()
-
+const handlePriceAndDescClick = (index: number) => {
+    _index.value = index
+}
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 点击日志弹出富文本框是否显示
@@ -390,22 +398,27 @@ const wangEditorRemarkVisible = ref<boolean>(false)
 const progressLogCopy = ref<string | undefined>('')
 const remarkCopy = ref<string | undefined>('')
 const classify = ref<string>('')
+const _index = ref<number>(0)
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
- const clickLog = async (val: any) => {
-  // console.log('新的val', val);
-  
-//   progressList.value[tableClickIdx.value].progressLog = val
+const clickLog = async (val: any) => {  
+    estimatedCostList.value[_index.value].desc = val
   progressLogCopy.value = val
 //   // console.log('点击log执行了');
-//   await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+  await updateProgressProductdesc({
+    accountingId: parseInt(estimatedCostList.value[_index.value].id),
+    productDesc: estimatedCostList.value[_index.value].desc!
+  }) //发送更新数据请求
 }
 const clickRemark = async (val: any) => {
-//   progressList.value[tableClickIdx.value].remark = val
+    estimatedCostList.value[_index.value].priceInfo = val
   remarkCopy.value = val
-//   // console.log('点击remark执行了');
-//   await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+
+  await updateProgressPriceInfo({
+    accountingId: parseInt(estimatedCostList.value[_index.value].id),
+    priceInfo: estimatedCostList.value[_index.value].priceInfo!
+  }) //发送更新数据请求
 }
 // 去掉 HTML 标签并显示纯文本的方法
 const removeHtmlTags = (html: string): string => {
@@ -445,7 +458,7 @@ const clickCancle = async (event:any,value:IProgressEstimatedCostAccounting) =>{
         t2.classList.remove("none")
     }
     isDraggingDisabled.value = false
-    await costAccountingUpdate({...value})
+    await costAccountingUpdate({...value, tariff: ""+parseFloat(value.tariff!) / 100})
 }
 
 // 鼠标enter事件
@@ -457,9 +470,9 @@ const effectiveCountInputeHandle = (event: Event,row:any) => {
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
     if  (data.columnIndex === 0 || data.columnIndex === 2 
-        || data.columnIndex === 3 || data.columnIndex === 21
-        || data.columnIndex === 13 || data.columnIndex === 14
-        || data.columnIndex === 18 || data.columnIndex === 19
+        || data.columnIndex === 3 
+        || data.columnIndex === 12
+        || data.columnIndex === 17 
         || data.columnIndex === 23 || data.columnIndex === 24
 
     ){
@@ -476,7 +489,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 }
 
 // 成本核算单击表格修改
-const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
     // 处理图片放大预览
     let el = getSpecificChildren(cell, "img")[0];
@@ -495,14 +508,16 @@ const costAccountingChangeInput = (row: any, column: any, cell: HTMLTableCellEle
     }
     
   if (column.property === 'desc') {
-    // const { data } = await getProgressLog({ progressId: row.progressId })
-    // progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
-    progressLogCopy.value = row.desc
+    const { data } = await getProgressProductDesc({ accountingId: row.id })
+    progressLogCopy.value = data
+    row.desc = data
     wangEditorTitle.value = '编辑产品描述'
     classify.value = 'desc'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } else if (column.property === 'priceInfo'){
-    remarkCopy.value = row.priceInfo
+    const { data } = await getProgressPriceInfo({ accountingId: row.id })
+    remarkCopy.value = data
+    row.priceInfo = data
     wangEditorTitle.value = '编辑价格信息'
     classify.value = 'priceInfo'
     wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
@@ -558,6 +573,11 @@ const fetchDataCostAccounting = async ()=>{
         // 成本核算列表
         const {data} = await getCostAccountingList({progressId:props.progressId})
         estimatedCostList.value = data
+        estimatedCostList.value.forEach((item: any) => {
+            if(item.tariff) {
+                item.tariff = (item.tariff * 100).toFixed(0)
+            }
+        })
     }catch(e){
         console.error(e as Error)
     }
@@ -622,9 +642,9 @@ const addRowCostAccounting = async () =>{
       packaging: '',
       firstMileChannel: '0',
       sellingPrice: '',
-      weightCoefficient: '',
-      volumeCoefficient: '',
-      tariff: '',
+      weightCoefficient: '1.06',
+      volumeCoefficient: '1.26',
+      tariff: '15',
       lastMile: '',
       firstMile: '',
       grossMarginRate: '',

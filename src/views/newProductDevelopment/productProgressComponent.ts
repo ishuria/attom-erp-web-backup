@@ -2,7 +2,7 @@ export const sampleTranckTableCloums = [
   {
     label: '图片',
     prop: 'componentImg',
-    minWidth: 100,
+    minWidth: 75,
   },
   {
     label: '零件名称',
@@ -47,6 +47,11 @@ export const sampleTranckTableCloums = [
   {
     label: '大货可退金额',
     prop: 'bulkGoodsReturnable',
+    minWidth: 115,
+  },
+  {
+    label: '备注',
+    prop: 'remark',
     minWidth: 110,
   },
 ]

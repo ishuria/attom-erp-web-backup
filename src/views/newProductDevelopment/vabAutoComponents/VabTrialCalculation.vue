@@ -44,8 +44,8 @@
                 </el-table-column>
 
 
-                <el-table-column label="产品描述" min-width="200">
-                    <template #default="{ row }">
+                <el-table-column label="产品描述" min-width="200" prop="desc">
+                    <template #default="{ row, $index }">
                         <div class="none">
                             <el-input 
                                 type="textarea" 
@@ -56,7 +56,7 @@
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
                             />
                         </div>
-                        <span>{{ row.desc }}</span>
+                        <span @click="handleDescClick($index)">{{ removeHtmlTags(row.desc) }}</span>
                     </template>
                 </el-table-column>
 
@@ -216,7 +216,7 @@
                                 @blur="clickCancle($event, row)" 
                             />
                         </div>
-                        <span>{{ row.tariff }}</span>
+                        <span>{{ row.tariff ? row.tariff+'%' : '' }}</span>
                     </template>
                 </el-table-column>
 
@@ -242,6 +242,15 @@
                 </el-table>
             </el-col>
         </el-row>
+        <!-- 产品描述显示 -->
+        <wangEditor 
+            :wangEditorVisible="wangEditorLogVisible" 
+            :title="wangEditorTitle" 
+            :content="progressLogCopy"
+            :classify='classify' 
+            @clickBoolean="clickLogBool" 
+            @clickChild="clickLog" 
+        />
 </template>
 
 <script lang="ts" setup>
@@ -249,10 +258,11 @@ import {getExchangeRate} from '/@/api/devlocal/evaluation'
 import {convertString} from '/@/utils/stringUtils'
 import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCurrencyAndExchangeRate, } from '../indexCommon'
 import {IProgressEstimatedCostAccounting,IProgressSample } from '/@/type/progress/sampleAndComponentType'
-import {getTrialCalculation,addTrialCalculation,updateTrialCalculation,saveTrialCalculation} from '/@/api/devlocal/progressSample'
+import {getTrialCalculation,addTrialCalculation,updateTrialCalculation,saveTrialCalculation, getTrialCalculationProductDesc, updateTrialcalculationProductdesc} from '/@/api/devlocal/progressSample'
 import {getRootElement,getSpecificChildren} from '/@/utils/nodeUtils'
 import { TableRefs, TableInstance } from 'element-plus'
 import {formatDate} from '/@/utils/dateUtils'
+import wangEditor from '../newProductProgress/wangEditor.vue'
 
 const trialTableRef = ref<TableInstance>()
 
@@ -263,6 +273,45 @@ const props = defineProps<{
     costAccountingFetch: (() => Promise<void>) | undefined
 }>();
 
+// 弹出框的标题
+const wangEditorTitle = ref<string>('')
+// 点击日志弹出富文本框是否显示
+const wangEditorLogVisible = ref<boolean>(false)
+
+const progressLogCopy = ref<string | undefined>('')
+
+const classify = ref<string>('')
+const _index = ref<number>(0)
+const handleDescClick = (index: number) => {
+    _index.value = index
+}
+/**
+ * 当点击确认时，子组件传递给父组件的新的val
+ */
+ const clickLog = async (val: any) => {
+  // console.log('新的val', val);
+  
+  sampleList.value[_index.value].desc = val
+  progressLogCopy.value = val
+//   // console.log('点击log执行了');
+  await updateTrialcalculationProductdesc({
+    id: parseInt(sampleList.value[_index.value].id!),
+    productDesc: sampleList.value[_index.value].desc!
+  }) //发送更新数据请求
+}
+
+// 去掉 HTML 标签并显示纯文本的方法
+const removeHtmlTags = (html: string): string => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+};
+/**
+ * 当点击取消，确认时，子组件传递给父组件 false
+ */
+const clickLogBool = ( val: any) => {
+  wangEditorLogVisible.value = val
+}
 
 defineComponent({
     name:"VabTrialCalculation"
@@ -402,8 +451,17 @@ const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableC
       return
     }
   
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
+    if (column.property === 'desc') {
+    const { data } = await getTrialCalculationProductDesc({ id: row.id })
+    row.desc = data
+    progressLogCopy.value = data
+    wangEditorTitle.value = '编辑产品描述'
+    classify.value = 'desc'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+    } else {
+        cell.children[0].children[0].classList.remove('none')
+        cell.children[0].children[1].classList.add('none')
+    }
   
     // 自动聚焦
     const inputElement = getSpecificChildren(cell, "input")[0];
@@ -432,13 +490,7 @@ const clickCancle = async (event:any,value:IProgressSample) =>{
         t2.classList.remove("none")
     }
     
-    await updateTrialCalculation({...value})
-}
-
-
-const activiteTrialTable = () => {
-    trialTableRef.value?.doLayout()
-    console.log('刷新表格')
+    await updateTrialCalculation({...value, tariff: ""+parseInt(value.tariff!) / 100})
 }
 
 const fetchData = async () => {
@@ -484,54 +536,17 @@ const fetchData = async () => {
         first.id = dbInfo.id!
         sampleList.value.push(dbInfo)
     }
+    sampleList.value.forEach((item: any) => {
+            if(item.tariff) {
+                item.tariff = (item.tariff * 100).toFixed(0)
+            }
+        })
 }
 defineExpose({
     fetchData
 })
 onMounted(async ()=>{
-    sampleList.value = []
-
-    let first: IProgressSample = {
-        site:"0",
-        currencyType:"0",
-        foreignExchange:'',
-        desc:'',
-        length:'',
-        width:'',
-        height:'',
-        totalCost: null,
-        weight:'',
-        lastMile:'',
-        firstMile:'',
-        packaging:'',
-        firstMileChannel:'0',
-        sellingPrice:'',
-        roi:'',
-        weightCoefficient:'',
-        volumeCoefficient:'',
-        tariff:'',
-        platformCommission:'',
-        storageFee:'',
-    }
-
-    const currencyType = siteReflectCurrencyAndExchangeRate.get(first.site!)
-    const {data} = await getExchangeRate({currency:currencyType})
-    first.foreignExchange = data
-
-    const dbInfo:IProgressSample =  await getTrialCalculationHandler()
-    if (!dbInfo){
-        // 创建拿样清单成本试算
-        const id = await addTrialCalculationHandler()
-        // -1 代表对应的拿样清单成本试算已经存在
-        if (id !== -1){
-            first.id = convertString(id)
-        }
-        sampleList.value.push(first)
-    }else{
-        first.id = dbInfo.id!
-        sampleList.value.push(dbInfo)
-    }
-    
+   fetchData()
 })
 
 </script>

@@ -327,20 +327,38 @@
                   <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
               </el-form-item>
               <el-form-item label="供应商名称" prop="suppliser">
-                  <el-input v-model="form.suppliser" clearable/>
+                  <el-select
+                        v-model="form.suppliser"
+                        filterable
+                        remote
+                        allow-create
+                        default-first-option
+                        placeholder="点击输入和搜索"
+                        :remote-method="remoteMethod"
+                        :loading="loading"
+                        @change="handleTaxDisabled"
+                        clearable
+                    >
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                    </el-select>
               </el-form-item>
               <el-form-item label="开票" prop="invoicing">
-                  <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
-                      <el-option v-for="dict in invoicingNumList" :key="dict.value"
-                          :value="dict.value" :label="dict.label"></el-option>
-                  </el-select>
-              </el-form-item>
-              <el-form-item label="实际税点" prop="actualTaxRate">
-                  <el-input v-model="form.actualTaxRate" clearable />
-              </el-form-item>
-              <el-form-item label="开票税点" prop="invoicingTaxRate">
-                  <el-input v-model="form.invoicingTaxRate" clearable />
-              </el-form-item>
+                    <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
+                        <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                            :value="dict.value" :label="dict.label" ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="实际税点" prop="actualTaxRate">
+                    <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
+                </el-form-item>
+                <el-form-item label="开票税点" prop="invoicingTaxRate">
+                    <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"placeholder="税点如果是13个点则输入0.13"/>
+                </el-form-item>
               <el-form-item label="按单采购" prop="status">
                 <el-switch v-model="form.status" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
               </el-form-item>
@@ -391,7 +409,7 @@ import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue';
 import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
-import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, getProductSkuList, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation';
+import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductAllSupplier, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation';
 
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
@@ -418,6 +436,59 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
             cursor: 'not-allowed',
             textAlign:'center'
         } 
+   }
+}
+const loading = ref(false) //供应商搜索loading
+const options = ref<any[]>([]) //供应商搜索选项
+const supplierList = ref<any[]>([]) //供应商搜索列表
+const taxDisabled = ref<boolean>(false)
+const remoteMethod = async (query: string) => {
+  if (query) {
+    // 先获取供应商信息
+    const { data } = await getProductAllSupplier({
+        suppliserName: query
+    })
+    console.log(data);
+    supplierList.value = data.map((item: any) => {
+        return { value: `${item}`, label: `${item}` }
+    })
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      options.value = supplierList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    options.value = []
+  }
+}
+const handleTaxDisabled = async (value: string) => {
+   if(value) {
+        const { data } = await getProductSupplier({ suppliserName: value })
+        
+        if(data!==null) {
+            const {actualPTaxRate, actualZTaxRate, invoicingPTaxRate, invoicingZTaxRate, suppliserId } = data
+            taxDisabled.value = true
+            if(form.invoicing === 0) {
+                form.actualTaxRate = actualZTaxRate
+                form.invoicingTaxRate = invoicingZTaxRate
+            } else if(form.invoicing === 1) {
+                form.actualTaxRate = actualPTaxRate
+                form.invoicingTaxRate = invoicingPTaxRate
+            } else {
+                form.actualTaxRate = 0
+                form.invoicingTaxRate = 0
+            }
+        } else {
+            taxDisabled.value = false
+        }
+   }
+}
+const handleInvoicingTaxChange = async (value: number) => {
+   
+   if(form.supplier) {
+       handleTaxDisabled(form.supplier)
    }
 }
 interface Option2 {
@@ -825,18 +896,19 @@ const clickCancle = async (event:any,value:any) =>{
 }
 
 const purchaseOption = ref<any>()
-const queryData = () => {
+const queryData = async () => {
   queryForm.pageNo = 1
-  if(queryForm.keyWord === '') {
-    fetchData()
-  } else {
-    listLoading.value = true
-    let queryList: any = []
-    queryList = list.value.filter((item: any) => item.componentName.includes(queryForm.keyWord, 0))
-    list.value = queryList
-    total.value = list.value.length
-    listLoading.value = false
-  }
+  fetchData()
+  // if(queryForm.keyWord === '') {
+  //   fetchData()
+  // } else {
+  //   listLoading.value = true
+  //   let queryList: any = []
+  //   queryList = list.value.filter((item: any) => item.componentName.includes(queryForm.keyWord, 0))
+  //   list.value = queryList
+  //   total.value = list.value.length
+  //   listLoading.value = false
+  // }
 }
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)

@@ -2,7 +2,7 @@
     <div>
         <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-                height="430" :show-header="false" style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
+                :show-header="false" style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
                 <!-- 第一列固定标签列 -->
                 <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
                     <template #default="{ row }">
@@ -41,7 +41,7 @@
                             {{ row[prop] }} cm
                         </template>
                         <template v-if="row['column0'] === 'productSize'">
-                            {{ convertCmToInches(row[prop]) }} inch
+                            {{ row[prop] }} inch
                         </template>
                         <template
                             v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem' && row['column0'] !== 'packagingSize' && row['column0'] !== 'variantImg' && row['column0'] !== 'productSize'">
@@ -172,14 +172,7 @@ const variantList = ref<any[]>([])
 // 原始数组的长度
 const variantSize = ref<number>(0)
 const moldData = ref<IReviewMoldItem[]>()
-function convertCmToInches(dimensions: string) {
-    // 将字符串拆分为数组
-    const cmArray = dimensions.split('x').map(Number);
-    // 转换为英寸并保留两位小数
-    const inchArray = cmArray.map(cm => (cm * 0.393701).toFixed(2));
-    // 将数组转换回字符串格式
-    return inchArray.join('x');
-}
+
 const labelMap: Record<string, string> = {
     column0: '',
     orderEntryId: '变体编号',

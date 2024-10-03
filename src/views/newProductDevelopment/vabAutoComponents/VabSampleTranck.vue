@@ -6,7 +6,9 @@
         :close-on-click-modal="false"
         :before-close = "props.closeDialogHandler"
         title="样品追踪"
-        width="70%">
+        width="70%"
+        style="padding-bottom: 20px;"
+    >
 
         <el-table 
             :data="sampleTableList" 
@@ -24,7 +26,7 @@
             >
                 <template #default="{row}">
                     <div v-if="item.prop === 'componentImg'">
-                        <el-image v-if="row.componentImg"style="width: 100px; height: 100px" :src="row.componentImg" fit="fill" />
+                        <el-image v-if="row.componentImg"style="width: 50px; height: 50px" :src="row.componentImg" fit="fill" />
                     </div>
 
                     <div v-if="item.prop === 'createTime'">

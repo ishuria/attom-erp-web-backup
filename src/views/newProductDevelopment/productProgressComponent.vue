@@ -80,7 +80,9 @@ const setPreviewList = (imageUrl:string) =>{
     imagePriviewList.value.push(imageUrl)
 }
 
-
+onBeforeMount(async () => {
+    trialCalculationRef.value?.fetchData()
+})
 </script>
 <style lang="scss" scoped>
 .container {
