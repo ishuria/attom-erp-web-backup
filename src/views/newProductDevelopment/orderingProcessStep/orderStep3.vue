@@ -454,17 +454,16 @@
 defineOptions({
     name: 'OrderStep3',
 })
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-import { currencyList, firstLegChannelColumnsNum, invoicingList, estimatedCostAccountingSiteColumnsNum, siteReflectCurrencyAndExchangeRate } from '../indexCommon'
-import wangEditor from '../newProductProgress/wangEditor.vue'
-import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
-import { convertString } from '/@/utils/stringUtils';
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
+import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
-import { getExchangeRate } from '/@/api/devlocal/evaluation';
-import { Crop as TinyCrop } from '@opentiny/vue'
-import { getProductComponentStore } from '/@/api/devlocal/productInformation';
+import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList, siteReflectCurrencyAndExchangeRate } from '../indexCommon'
+import wangEditor from '../newProductProgress/wangEditor.vue'
+import { getExchangeRate } from '/@/api/devlocal/evaluation'
+import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess'
+import { getProductComponentStore } from '/@/api/devlocal/productInformation'
+import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 const props = defineProps<{ step1Data: number }>()
 
@@ -822,7 +821,9 @@ const clickCancle = async (event:any,value:any) =>{
     if (t2){
       t2.classList.remove("none")
     }
-    
+    if (JSON.stringify(_row) === JSON.stringify(value)) {
+      return
+    }
     if (event.type === 'blur') {
 
         await reviewStepNo3ComponentUpdate(value)

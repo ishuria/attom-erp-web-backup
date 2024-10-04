@@ -347,29 +347,34 @@
 </template>
 
 <script lang="ts" setup>
-import {  ArrowDown } from '@element-plus/icons-vue'
-import {getRootElement,getSpecificChildren,getDataAttribute} from '/@/utils/nodeUtils'
-import { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComponentType'
+import { ArrowDown } from '@element-plus/icons-vue'
+import { TableRefs, UploadRequestOptions } from 'element-plus'
 import debounce from 'lodash/debounce'
-import {formatDate} from '/@/utils/dateUtils'
-import {type SortableEvent, VueDraggable} from 'vue-draggable-plus'
-import {getExchangeRate} from '/@/api/devlocal/evaluation'
-import {convertString} from '/@/utils/stringUtils'
-import {getCostAccountingList,addCostAccounting,
-    costAccountingUploadImage,
-    costAccountingUpdateRowSort,costAccountingCopy,
-    costAccountingUpdate,costAccountingDelete,
-    getProgressProductDesc,
-    getProgressPriceInfo,
-    updateProgressProductdesc,
-    updateProgressPriceInfo} from '/@/api/devlocal/progressSample'
+import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
 import {
   estimatedCostAccountingSiteColumns,
   firstLegChannelColumns,
   siteReflectCurrencyAndExchangeRate,
 } from '../indexCommon'
-import { TableRefs, UploadRequestOptions } from 'element-plus'
 import wangEditor from '../newProductProgress/wangEditor.vue'
+import { getExchangeRate } from '/@/api/devlocal/evaluation'
+import {
+  addCostAccounting,
+  costAccountingCopy,
+  costAccountingDelete,
+  costAccountingUpdate,
+  costAccountingUpdateRowSort,
+  costAccountingUploadImage,
+  getCostAccountingList,
+  getProgressPriceInfo,
+  getProgressProductDesc,
+  updateProgressPriceInfo,
+  updateProgressProductdesc
+} from '/@/api/devlocal/progressSample'
+import { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComponentType'
+import { formatDate } from '/@/utils/dateUtils'
+import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 const isDraggingDisabled = ref<boolean>(false)
 

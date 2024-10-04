@@ -132,7 +132,7 @@
                           :loading="peopleLoading"
                           @change="handleSampleRetentionStatus(row, prop)"
                           clearable
-                    
+                          class="center-input"
                         >
                             <el-option
                                 v-for="item in peopleOptions"
@@ -153,7 +153,7 @@
                           :loading="peopleLoading"
                           @change="handleSampleRetentionStatus(row, prop)"
                           clearable
-                        
+                          class="center-input"
                         >
                             <el-option
                                 v-for="item in peopleOptions"
@@ -181,7 +181,7 @@
                     </template>
                     
                     <template v-if="row['column0'] === 'operate'">
-                        <el-link type="primary" :underline="false">导入合并变体SKU的数据</el-link>
+                        <el-link type="primary" :underline="false" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
                     </template>
                 </template>
                 
@@ -204,11 +204,11 @@ defineOptions({
     name: 'OrderStep5',
 })
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
 import type { TableInstance, UploadFile } from 'element-plus'
-import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList, IreviewStepNo5SkuInfoPerfect } from '/@/type/orderProcess/orderProcessType';
-import { getProductAllName } from '~/src/api/devlocal/productInformation';
+import { getProductAllName } from '~/src/api/devlocal/productInformation'
+import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
+import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 const props = defineProps<{ step1Data: number }>()
 // const props = defineProps({
@@ -244,6 +244,35 @@ const remotePeopleMethod = async (query: string) => {
   } else {
     peopleOptions.value = []
   }
+}
+const handleInsertSku = async (row: any, prop: string) => {
+  // console.log(row);
+  // console.log(prop);
+ try {
+  const { data, code } = await reviewInsertSkuInfo({ sku: exchangeList.value[13][prop] })
+   if (data) {
+    exchangeList.value[1][prop] = data.productLength
+    exchangeList.value[2][prop] = data.productWidth
+    exchangeList.value[3][prop] = data.productHeight
+    exchangeList.value[4][prop] = data.material
+    exchangeList.value[5][prop] = data.battery
+    exchangeList.value[6][prop] = data.benchmarkAsin
+    await reviewStepNo5SkuInfoPerfect({
+      productLength: exchangeList.value[1][prop],
+      productWidth: exchangeList.value[2][prop],
+      productHeight: exchangeList.value[3][prop],
+      material: exchangeList.value[4][prop],
+      battery: exchangeList.value[5][prop],
+      benchmarkAsin: exchangeList.value[6][prop],
+      orderEntryId: exchangeList.value[15][prop],
+    })
+    $baseMessage('导入该SKU数据成功', 'success', 'hey')
+  }
+    
+ } catch (error) {
+  console.error(error)
+ }
+  
 }
 const route: any = useRoute()
 const tableRef = ref<TableInstance>()
@@ -374,8 +403,31 @@ const handleVariantsSame = (row: any, index: number) => { //变体值相同的�
       let valuesResult = values.every( item => item === values[0] );
       if (!valuesResult) {
         row.variantsSame = false
+        $baseMessage('当前多个变体值不同，无法勾选。', 'error', 'hey')
       } else if(valuesResult){
         row.variantsSame = true
+        Object.keys(row).forEach(key => {
+          if (key !== 'column0' && key !== 'variantsSame') {
+            row[key] = values[0];
+            const update = async () => {
+              await reviewStepNo5SkuInfoPerfect({
+                productLength: exchangeList.value[1][key],
+                productWidth: exchangeList.value[2][key],
+                productHeight: exchangeList.value[3][key],
+                material: exchangeList.value[4][key],
+                battery: exchangeList.value[5][key],
+                benchmarkAsin: exchangeList.value[6][key],
+                patent: exchangeList.value[7][key],
+                productManager: exchangeList.value[8][key],
+                productDesign: exchangeList.value[9][key],
+                sampleRetentionStatus: exchangeList.value[10][key],
+                checkStatus: exchangeList.value[11][key],
+                orderEntryId: exchangeList.value[15][key],
+              })
+            }
+            update()
+          }
+        });
       }
     }
   }
@@ -491,6 +543,21 @@ const handlePackingUpdate = async (row: any, prop: any) => {
       });
     }
 
+  }else {
+    await reviewStepNo5SkuInfoPerfect({
+              productLength: exchangeList.value[1][prop],
+              productWidth: exchangeList.value[2][prop],
+              productHeight: exchangeList.value[3][prop],
+              material: exchangeList.value[4][prop],
+              battery: exchangeList.value[5][prop],
+              benchmarkAsin: exchangeList.value[6][prop],
+              patent: exchangeList.value[7][prop],
+              productManager: exchangeList.value[8][prop],
+              productDesign: exchangeList.value[9][prop],
+              sampleRetentionStatus: exchangeList.value[10][prop],
+              checkStatus: exchangeList.value[11][prop],
+              orderEntryId: exchangeList.value[15][prop],
+            })
   }
   
 }
@@ -512,7 +579,7 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
               material: exchangeList.value[4][key],
               battery: exchangeList.value[5][key],
               benchmarkAsin: exchangeList.value[6][key],
-              patent: exchangeList.value[7][prop],
+              patent: exchangeList.value[7][key],
               productManager: exchangeList.value[8][key],
               productDesign: exchangeList.value[9][key],
               sampleRetentionStatus: exchangeList.value[10][key],
@@ -524,6 +591,21 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
         } 
       });
     }
+  } else {
+    await reviewStepNo5SkuInfoPerfect({
+              productLength: exchangeList.value[1][prop],
+              productWidth: exchangeList.value[2][prop],
+              productHeight: exchangeList.value[3][prop],
+              material: exchangeList.value[4][prop],
+              battery: exchangeList.value[5][prop],
+              benchmarkAsin: exchangeList.value[6][prop],
+              patent: exchangeList.value[7][prop],
+              productManager: exchangeList.value[8][prop],
+              productDesign: exchangeList.value[9][prop],
+              sampleRetentionStatus: exchangeList.value[10][prop],
+              checkStatus: exchangeList.value[11][prop],
+              orderEntryId: exchangeList.value[15][prop],
+            })
   }
 }
 // 当点击保存的时候
@@ -771,5 +853,18 @@ onMounted(async () => {
 :deep(.center-input) {
  text-align: center;
  text-align-last: center;
+}
+// 设置清除键不跳动
+:deep(.el-select__wrapper) {
+  position: relative;
+  .el-select__inner {
+    padding-right: 18px;
+  }
+  .el-select__suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 </style>

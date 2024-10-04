@@ -13,7 +13,7 @@
     
               <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
               
-                  <el-input v-model="form.variantSku" clearable />
+                  <el-input v-model="form.variantSku" clearable @blur="handleVariantSkuMap"/>
              
               </el-form-item>
      
@@ -82,11 +82,10 @@
 defineOptions({
     name: 'OrderStep1',
 })
-import { IreviewStepNo1SaveOn } from '/@/type/orderProcess/orderProcessType';
-import { reviewProgressId, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess';
+import type { FormInstance } from 'element-plus'
+import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import type { FormInstance } from 'element-plus'
 
 const route: any = useRoute()
 const router = useRouter()
@@ -132,7 +131,12 @@ const rules = reactive<any>({
     },
   ],
 })
-
+// 合并变体的主品名和短描述
+const handleVariantSkuMap = async () => {
+  const { data } = await reviewSkuInfo({ sku: form.variantSku })
+  form.productName = data.productName
+  form.productDesc = data.productDesc
+}
 const handleAddVariants = () => {
     // 新增一个空的变体名和订货数量
     form.variantList.push({
@@ -171,11 +175,12 @@ const handleDelVariants = async (index: number) => {
     form.variantList.splice(index, 1);
   }
 }
-
+let saveBoolean = false
 // 当点击保存的时候
 const handleSubmit = () => {
   formRef.value?.validate((valid: any) => {
     if (valid) {
+      saveBoolean = true
       const saveOn = async () => {
         if (route.query.progressId) {
           const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
@@ -203,46 +208,51 @@ let res: number
 const handleSubmitAndContinue = async () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      const saveOn = async () => {
-        try {
-          if (route.query.progressId) {
-            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
-     
-            if (data) {
-              res = data
-              localStorage.setItem('orderStep1Form', JSON.stringify(form))
-              $baseMessage(
-                "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
-                "success",
-                "hey"
-              )
-              emit('sendDataToStep2', res)
-              emit('change-step', 1)
+      if (saveBoolean) {
+        emit('change-step', 1)
+      } else {
+        const saveOn = async () => {
+          try {
+            if (route.query.progressId) {
+              const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
+      
+              if (data) {
+                res = data
+                localStorage.setItem('orderStep1Form', JSON.stringify(form))
+                $baseMessage(
+                  "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
+                  "success",
+                  "hey"
+                )
+                emit('sendDataToStep2', res)
+                emit('change-step', 1)
+              } else {
+                console.error('API 返回没有 data')
+              }
             } else {
-              console.error('API 返回没有 data')
-            }
-          } else {
-            const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
-            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
-          
-          
-              $baseMessage(
-                "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
-                "success",
-                "hey"
-              )
-   
-              emit('change-step', 1)
-              
-              const {...query} = route.query;
-              router.replace({query: {...query, stepNo: 1}});
+              const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
+              const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
             
+            
+                $baseMessage(
+                  "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
+                  "success",
+                  "hey"
+                )
+    
+                emit('change-step', 1)
+                
+                const {...query} = route.query;
+                router.replace({query: {...query, stepNo: 1}});
+              
+            }
+          } catch (error) {
+            console.error('保存过程出错:', error)
           }
-        } catch (error) {
-          console.error('保存过程出错:', error)
         }
+        saveOn()
       }
-      saveOn()
+   
     } else {
       console.log('表单验证失败')
     }

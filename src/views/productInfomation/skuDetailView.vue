@@ -649,16 +649,13 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { FormInstance, UploadFile } from 'element-plus'
+import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils'
+import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
+import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { Delete, Plus, ZoomIn, Edit, CirclePlusFilled, ArrowDown } from '@element-plus/icons-vue'
-import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
-import { reviewStepNo3ContractTerms, reviewStepNo3PurchaseMatters, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters } from '/@/api/devlocal/orderProcess';
-import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
-import { FormInstance, rowContextKey, UploadFile } from 'element-plus';
-import { currencyList, invoicingList } from '../newProductDevelopment/indexCommon';
-import type { UploadProps } from 'element-plus'
-import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getChangeProductComponent, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductComponentSuppliser, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation';
 
 const route: any = useRoute()
 const router = useRouter()
@@ -1390,11 +1387,6 @@ const fetchComponentData = async () => {
     tableData.value = data
     tableData.value.forEach(async (item: any) => {
         item.unitPrice = formattedPrice(item.unitPrice)
-        // 获取供应商列表
-        const { data: suppliser } = await getProductComponentSuppliser({
-            componentId: item.existingPartsListId
-        })
-        item.suppliserList = suppliser
         if(!item.componentImage) {
             item.hide = false
             item.imageList = []

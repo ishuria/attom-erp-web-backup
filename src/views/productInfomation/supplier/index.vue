@@ -32,7 +32,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" border stripe :data="list" @selection-change="setSelectRows" v-loading="listLoading" @cell-click="changeInput" :cell-style="cellStyle" >
+    <el-table ref="tableRef" border stripe :data="list" @selection-change="setSelectRows" @cell-click="changeInput" :cell-style="cellStyle" >
       <el-table-column align="center" label="供应商ID" width="75" prop="suppliserId">
       </el-table-column>
       <el-table-column align="center" label="供应商名称" min-width="300" prop="suppliser" >
@@ -213,19 +213,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Delete, Plus, Search, Download, Document } from '@element-plus/icons-vue'
-import type { TableInstance, UploadFile } from 'element-plus'
-import { doDelete, getList } from '/@/api/table'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useSettingsStore } from '/@/store/modules/settings'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { handleMatched, handleTabs } from '/@/utils/routes'
-import { downloadProductSupplier, getProductSupplierList, updateProductSupplier, uploadProductSupplierFile, uploadProductSupplierSpecialFile } from '/@/api/devlocal/productInformation'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import {downloadFile} from '/@/api/devlocal/download'
+import { Delete, Document, Download, Plus, Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { UploadUserFile } from 'element-plus'
+import { downloadFile } from '/@/api/devlocal/download'
+import { getProductSupplierList, updateProductSupplier, uploadProductSupplierFile, uploadProductSupplierSpecialFile } from '/@/api/devlocal/productInformation'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 // import * as XLSX from 'xlsx'
-import { BASE_API } from '/@/api/devlocal/api'
 defineOptions({
   name: 'DefaultTable',
 })

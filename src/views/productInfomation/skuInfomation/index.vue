@@ -35,9 +35,9 @@
                 </template>
               </el-table-column>
               <el-table-column label="SKU" prop="sku" width="250">
-                <!-- <template #default="{ row }">
-                  <el-text truncated>{{ row.sku }}</el-text>
-                </template> -->
+                <template #default="{ row }">
+                  <span v-html="row.sku" ></span>
+                </template>
               </el-table-column>   
               <el-table-column label="FNSKUUPC" prop="fnSkuUpc" width="120">
                 <template #header>
@@ -158,11 +158,10 @@
 defineOptions({
   name: 'consumable',
 })
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-import { Search, ArrowDown, Delete, Plus, ZoomIn, MoreFilled  } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus'
-import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation';
-import { IgetProductList } from '/@/type/productInformation/skuInformationType';
+import { ArrowDown, Search } from '@element-plus/icons-vue'
+import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
+import { IgetProductList } from '/@/type/productInformation/skuInformationType'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 
 const listLoading = ref<boolean>(true)
@@ -296,6 +295,11 @@ onMounted(async ()=>{
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.overflow-text {
+  max-height: 81.2px; /* 设置文本的最大高度 */
+  overflow-y: auto; /* 溢出时显示垂直滚动条 */
+  display: block;
 }
 </style>
 

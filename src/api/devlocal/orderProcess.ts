@@ -2,27 +2,29 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { 
-    IreviewComponentId,
-    IreviewId, 
-    IreviewStepNo1Del, 
-    IreviewStepNo1SaveOn, 
-    IreviewStepNo2Savetw, 
-    IreviewStepNo3ComponentListResp, 
-    IreviewStepNo3ComponentUpdate, 
-    IreviewStepNo3UpdateContractTerms, 
-    IreviewStepNo3UpdatePurchaseMatters,
-    IreviewStepNo3VariantListResp,
-    IreviewStepNo3VariantUpdate,
-    IreviewStepNo4ListQualityInspectionResp,
-    IqualityInspectionId,
-    IreviewStepNo4DelQualityInspectionResp,
-    IreviewStepNo4UpdateQualityInspection,
-    IreviewStepNo5SkuInfoPerfect,
-    IreviewStepNo1,
-    IreviewStepNo6SaveSix,
-    IreviewStepNo4SupplierListResp,
-    IreviewStepNo4UpdateSupplier
+import {
+  IqualityInspectionId,
+  IreviewComponentId,
+  IreviewId,
+  IreviewInsertSkuInfoResp,
+  IreviewSkuInfo,
+  IreviewStepNo1,
+  IreviewStepNo1Del,
+  IreviewStepNo1SaveOn,
+  IreviewStepNo2Savetw,
+  IreviewStepNo3ComponentListResp,
+  IreviewStepNo3ComponentUpdate,
+  IreviewStepNo3UpdateContractTerms,
+  IreviewStepNo3UpdatePurchaseMatters,
+  IreviewStepNo3VariantListResp,
+  IreviewStepNo3VariantUpdate,
+  IreviewStepNo4DelQualityInspectionResp,
+  IreviewStepNo4ListQualityInspectionResp,
+  IreviewStepNo4SupplierListResp,
+  IreviewStepNo4UpdateQualityInspection,
+  IreviewStepNo4UpdateSupplier,
+  IreviewStepNo5SkuInfoPerfect,
+  IreviewStepNo6SaveSix
 } from '/@/type/orderProcess/orderProcessType'
 
 /**
@@ -160,6 +162,26 @@ export function reviewGetSkuList(params: IreviewId){
 export function reviewProductManager(params: IreviewId){
   return request({
     url: `${BASE_API}/review/productManager`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 新品订货流程-产品基础信息录入-查询产品名称和描述
+ */
+export function reviewSkuInfo(params: IreviewSkuInfo){
+  return request({
+    url: `${BASE_API}/review/skuInfo`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 新品订货流程-完善sku信息-导入合并变体sku数据查询
+ */
+export function reviewInsertSkuInfo(params: IreviewSkuInfo): Promise<IreviewInsertSkuInfoResp>{
+  return request({
+    url: `${BASE_API}/review/sku/info`,
     method: 'get',
     params
   })

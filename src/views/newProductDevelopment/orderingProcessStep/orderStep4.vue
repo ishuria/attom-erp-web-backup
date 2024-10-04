@@ -146,20 +146,20 @@
   </template>
   
 <script lang="ts" setup>
-import { convertString } from '~/src/utils/stringUtils';
-import { checkTypeList } from '../indexCommon';
-import { 
-    reviewStepNo4AddQualityInspection, 
-    reviewStepNo4DelQualityInspection, 
-    reviewStepNo4ListQualityInspection,
-    reviewStepNo3GetSelectVariantList,
-    reviewStepNo4UpdateQualityInspection,
-    reviewStepNo4SaveFr,
-    reviewStepNo4SupplierList,
-    reviewStepNo4UpdateSupplier
-} from '/@/api/devlocal/orderProcess';
-import { IreviewStepNo4ListQualityInspection, IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType';
-import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils';
+import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils'
+import { convertString } from '~/src/utils/stringUtils'
+import { checkTypeList } from '../indexCommon'
+import {
+  reviewStepNo3GetSelectVariantList,
+  reviewStepNo4AddQualityInspection,
+  reviewStepNo4DelQualityInspection,
+  reviewStepNo4ListQualityInspection,
+  reviewStepNo4SaveFr,
+  reviewStepNo4SupplierList,
+  reviewStepNo4UpdateQualityInspection,
+  reviewStepNo4UpdateSupplier
+} from '/@/api/devlocal/orderProcess'
+import { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
 
 defineOptions({
     name: 'OrderStep4',
@@ -213,13 +213,14 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
         } 
    } else {
        return {
-           textAlign:'center'
+         textAlign: 'center'
        }
    }
 }
 /**
  * 当点击时切换输入框，修改输入
  */
+let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
     if (!cell.children[0].children[0]
@@ -228,7 +229,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
         || !cell.children[0].children[1].classList) {
         return
     }
-    
+    copyRow = JSON.parse(JSON.stringify(row))
     cell.children[0].children[0].classList.remove('none')
     cell.children[0].children[1].classList.add('none')
     
@@ -274,6 +275,9 @@ const supplierClickCancle = async (event: any, value: any) => {
     const t2 = getRootElement(event["srcElement"], ".cell").children[1]
     if (t2) {
         t2.classList.remove("none")
+  }
+  if (JSON.stringify(value) === JSON.stringify(copyRow)) {
+      return
     }
     if (event.type === 'blur') { 
         await reviewStepNo4UpdateSupplier(value)
@@ -438,9 +442,11 @@ onMounted(async () => {
 .none {
     display: none;
 }
-// // 设置行高
-// :deep(.el-table .el-table__body .cell) {
-//   max-height: 32px;
-// }
+// 设置行高
+:deep(.el-table .el-table__body .cell) {
+  min-height: 35px;
+  line-height: 35px;
+  max-height: 35px;
+}
 </style>
   

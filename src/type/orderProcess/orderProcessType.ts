@@ -598,3 +598,20 @@ export interface IreviewStepNo4UpdateSupplier {
     telephone?: string;
     [property: string]: any;
 }
+
+export interface IreviewSkuInfo {
+  sku: string
+}
+export interface IreviewInsertSkuInfoResp {
+  code: number
+  msg: string
+  data: IreviewInsertSkuInfo
+}
+export interface IreviewInsertSkuInfo {
+  productLength?: number
+  productWidth?: number
+  productHeight?: number
+  material?: string
+  battery?: string
+  benchmarkAsin?: string
+}

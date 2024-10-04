@@ -26,7 +26,7 @@
               :data="list" 
               :header-cell-style="{ 'text-align': 'center' }"
               @cell-click="changeInput"
-              v-loading="listLoading"
+           
               :cell-style="cellStyle"
               class="noneHoveTable"
           >
@@ -405,11 +405,11 @@
 defineOptions({
   name: 'consumable',
 })
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue';
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
+import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
-import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductAllSupplier, getProductComponentPurchase, getProductComponentSuppliser, getProductConsumables, getProductConsumablesType, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation';
+import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue'
+import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductAllSupplier, getProductComponentPurchase, getProductConsumables, getProductConsumablesType, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
@@ -448,7 +448,7 @@ const remoteMethod = async (query: string) => {
     const { data } = await getProductAllSupplier({
         suppliserName: query
     })
-    console.log(data);
+    // console.log(data);
     supplierList.value = data.map((item: any) => {
         return { value: `${item}`, label: `${item}` }
     })
@@ -517,7 +517,7 @@ const generateData2 = () => {
 let _compoenntId = ref<number>()
 // 添加其他 SKU 的逻辑
 const handleAddOtherSku = async (row: any) => {
-  console.log(row);
+  // console.log(row);
   
   states.value = []
   initials.value = []
@@ -921,20 +921,36 @@ const fetchData = async () => {
     list.value.forEach(async (item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
         // 获取供应商列表
-        const { data: suppliser } = await getProductComponentSuppliser({
-            componentId: item.existingPartsListId
-        })
-        item.suppliserList = suppliser
-        if(!item.componentImage) {
-            item.hide = false
-            item.imageList = []
-        } else if (item.componentImage){
-            item.hide = true
-            item.imageList = [{ url: item.componentImage }]
-        }
-    })
+      // if (!item.supplierList) {
+      //   const { data: suppliser } = await getProductComponentSuppliser({
+      //       componentId: item.existingPartsListId
+      //   })
+      //     item.suppliserList = suppliser
+      //     if(!item.componentImage) {
+      //         item.hide = false
+      //         item.imageList = []
+      //     } else if (item.componentImage){
+      //         item.hide = true
+      //         item.imageList = [{ url: item.componentImage }]
+      //     }
+      // }
+   
+      
+          if(!item.componentImage) {
+              item.hide = false
+              item.imageList = []
+          } else if (item.componentImage){
+              item.hide = true
+              item.imageList = [{ url: item.componentImage }]
+          }
+        
+  })
+
     listLoading.value = false
 }
+// const fetchSupplierList = async () => {
+
+// }
 const fetchPurchase = async () => { //获取默认采购方
     const { data: purchase } = await getProductComponentPurchase()
     purchaseOption.value = purchase
@@ -974,17 +990,7 @@ onBeforeMount(async ()=>{
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
 }
-#table-height-container {
-    display: flex;
-    flex-direction: column;
-    max-height: calc(80vh - 130px);
-    height: calc(80vh - 130px);
-    padding-bottom: 20px;
-    .el-table {
-        flex: 1; // 使表格占据剩余空间
-        overflow: auto; // 确保表格内容可以滚动
-    }
-}
+
 .transfer-container {
     display: flex;
     justify-content: center; /* 水平居中 */
