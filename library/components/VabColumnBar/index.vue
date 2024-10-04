@@ -90,15 +90,15 @@ const setDefaultOpeneds = () => {
 
 const handleTabClick = () => {
   nextTick(() => {
-    if (tabMenu.value.meta.target === '_blank') {
-      if (route.path !== tabMenu.value.path) {
-        isHashRouterMode ? window.open(`#${tabMenu.value.path}`) : window.open(tabMenu.value.path)
-        router.push('/redirect')
-      }
-    } else if (isExternal(tabMenu.value.path)) {
-      window.open(tabMenu.value.path)
+    const openPath = (path: any, target: string) => (target === '_blank' ? window.open(path) : (location.href = path))
+    if (isExternal(tabMenu.value.path) || tabMenu.value.meta.target === '_blank') {
+      openPath(
+        isExternal(tabMenu.value.path) ? tabMenu.value.path : isHashRouterMode ? `#${tabMenu.value.path}` : tabMenu.value.path,
+        '_blank'
+      )
       router.push('/redirect')
     } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
+
     setDefaultOpeneds()
   })
 }
@@ -110,16 +110,12 @@ onMounted(() => {
       watch(
         route,
         () => {
-          const foldUnfold: any = document.querySelector('.left-panel .fold-unfold')
-          const floatFold: any = document.querySelector('.float-fold')
           if (route.meta.noColumn && theme.value.layout === 'column') {
             if (device.value !== 'mobile') foldSideBar()
-            if (foldUnfold) foldUnfold.style = 'opacity:0'
-            if (floatFold) floatFold.style = 'opacity:0'
+            useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, { id: 'fold-unfold-useStyleTag' })
           } else {
             if (device.value !== 'mobile') openSideBar()
-            if (foldUnfold) foldUnfold.style = 'opacity:1'
-            if (floatFold) floatFold.style = 'opacity:1'
+            useStyleTag('', { id: 'fold-unfold-useStyleTag' })
           }
         },
         {
@@ -345,6 +341,7 @@ onBeforeUnmount(() => {
     .el-tabs {
       position: fixed;
       z-index: 9999;
+      height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height));
 
       .el-tabs__header.is-left {
         margin-right: 0 !important;
@@ -354,7 +351,7 @@ onBeforeUnmount(() => {
           background: var(--el-menu-background-color);
 
           .el-tabs__nav-scroll {
-            height: 100%;
+            height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
             overflow-y: auto;
 
             &::-webkit-scrollbar {
@@ -366,7 +363,7 @@ onBeforeUnmount(() => {
       }
 
       .el-tabs__nav {
-        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height));
+        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
         background: var(--el-menu-background-color);
       }
 
@@ -429,7 +426,7 @@ onBeforeUnmount(() => {
 
   :deep() {
     .fold-unfold,
-    .ri-user-heart-line {
+    .ri-building-line {
       font-size: var(--el-font-size-extra-large);
       color: var(--el-color-white);
       cursor: pointer;

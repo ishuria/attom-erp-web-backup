@@ -76,7 +76,7 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { device, theme } = storeToRefs(settingsStore)
-const { saveTheme, updateTheme, setCssVar } = settingsStore
+const { saveTheme, updateTheme, setCssVar, updateCaughtTabs } = settingsStore
 const show = ref<boolean>(true)
 const route = useRoute()
 const routeName = ref<any>(route.name)
@@ -91,7 +91,9 @@ const buy = () => {
 
 const removeLocalStorage = () => {
   localStorage.clear()
-  location.reload()
+  updateCaughtTabs(false)
+  //@ts-ignore
+  location.reload(true)
 }
 
 const resetTheme = () => {

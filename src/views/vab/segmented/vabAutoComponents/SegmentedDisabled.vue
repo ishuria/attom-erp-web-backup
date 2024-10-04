@@ -1,16 +1,17 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="24">
-      <el-segmented v-model="value" disabled :options="options" style="margin-bottom: var(--el-margin)" />
+      <el-segmented v-model="value1" disabled :options="options" style="margin-bottom: var(--el-margin)" />
     </el-col>
     <el-col :span="24">
-      <el-segmented v-model="value" :options="options" />
+      <el-segmented v-model="value2" :options="options" />
     </el-col>
   </el-row>
 </template>
 
 <script lang="ts" setup>
-const value = ref<string>('Mon')
+const value1 = ref<string>('Mon')
+const value2 = ref<string>('Mon')
 const options = [
   {
     label: '周一',

@@ -43,7 +43,7 @@
                   <el-col v-for="(item, index) in serviceList" :key="index" :span="12">
                     <vab-card class="right-card">
                       <h3>{{ item.title }}</h3>
-                      <vab-icon :icon="item.icon" />
+                      <vab-icon :icon="item.icon" is-custom-svg />
                       <el-button plain round size="large" @click="handleAlert">
                         点击跳转
                         <el-icon class="el-icon--right">
@@ -104,9 +104,14 @@ const menuList = ref<MenuListType[]>([
     active: true,
   },
   {
-    icon: 'artboard-fill',
+    icon: 'building-line',
     title: '门户',
     path: '/portal',
+  },
+  {
+    icon: 'database-2-line',
+    title: '数据大屏',
+    path: '/dataScreen',
   },
   {
     icon: 'admin-fill',
@@ -141,10 +146,10 @@ const iotList = ref<IotListType[]>([
   },
 ])
 const serviceList = ref<ServiceListType[]>([
-  { title: '数据看板', icon: 'artboard-fill' },
-  { title: '日志查询', icon: 'book-read-fill' },
-  { title: '模组', icon: 'box-3-fill' },
-  { title: '服务商', icon: 'briefcase-4-fill' },
+  { title: '数据看板', icon: 'article' },
+  { title: '日志查询', icon: 'wtt' },
+  { title: '模组', icon: 'video' },
+  { title: '服务商', icon: 'wenda' },
 ])
 
 const openWindow = (item: MenuListType) => {
@@ -261,6 +266,7 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
       }
 
       .left-card {
+        color: #f2f2f2;
         background: rgba(255, 255, 255, 0.3);
 
         :deep() {
@@ -277,10 +283,11 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
       }
 
       .right-card {
-        background-image: linear-gradient(to bottom, #718391, #9ba5b2) !important;
+        background: rgba(255, 255, 255, 0.3);
 
         h3 {
-          margin-top: 0px;
+          margin-top: 0;
+          color: #f2f2f2;
         }
 
         :deep() {
@@ -308,19 +315,21 @@ $breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 9
             }
           }
 
-          [class*='ri-'] {
-            font-size: 100px;
+          [class*='vab-icon'] {
+            width: 140px;
+            height: 140px;
             color: var(--el-color-grey);
+            cursor: pointer;
             background-image: linear-gradient(to left, var(--el-color-grey), #718391) !important;
             background-clip: text;
-            -webkit-text-fill-color: transparent;
             transition: all 0.3s;
+            -webkit-text-fill-color: transparent;
           }
 
           &:hover {
-            [class*='ri-'] {
-              font-size: 110px;
+            [class*='vab-icon'] {
               transition: all 0.3s;
+              scale: 1.2;
             }
           }
         }

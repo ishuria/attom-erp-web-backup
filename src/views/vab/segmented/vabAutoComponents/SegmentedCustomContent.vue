@@ -3,9 +3,9 @@
     <template #default="{ item }">
       <div style="padding: calc(var(--el-padding) / 3)">
         <el-icon size="20">
-          <component :is="item.icon" />
+          <component :is="item.icon" v-if="item && typeof item === 'object' && item.icon" />
         </el-icon>
-        <div>{{ item.label }}</div>
+        <div v-if="item && typeof item === 'object' && item.label">{{ item && item.label }}</div>
       </div>
     </template>
   </el-segmented>
@@ -15,7 +15,7 @@ import { Apple, Cherry, Grape, Orange, Pear } from '@element-plus/icons-vue'
 
 const value = ref<string>('Apple')
 
-const options = [
+const options = ref<any>([
   {
     label: '苹果',
     value: 'Apple',
@@ -41,5 +41,5 @@ const options = [
     value: 'Pear',
     icon: Pear,
   },
-]
+])
 </script>

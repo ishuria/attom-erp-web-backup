@@ -1,10 +1,10 @@
 <template>
-  <el-card :body-class="bodyClass" :body-style="bodyStyle" class="vab-card" :shadow="shadow">
-    <template v-if="$slots.header || title" #header>
+  <el-card :body-class="props.bodyClass" :body-style="props.bodyStyle" class="vab-card" :shadow="props.shadow">
+    <template v-if="$slots.header || props.title" #header>
       <slot v-if="$slots.header" name="header"></slot>
-      <template v-else>{{ title }}</template>
+      <template v-else>{{ props.title }}</template>
     </template>
-    <el-skeleton v-if="skeleton" animated :loading="skeletonShow" :rows="skeletonRows">
+    <el-skeleton v-if="props.skeleton" animated :loading="skeletonShow" :rows="props.skeletonRows">
       <template #default>
         <slot></slot>
       </template>
@@ -23,7 +23,7 @@ defineOptions({
   name: 'VabCard',
 })
 
-defineProps({
+const props = defineProps({
   ...ElCard.props,
   shadow: {
     type: String,
@@ -38,10 +38,6 @@ defineProps({
     default: 5, //显示的数量会比传入的数量多 1
   },
   title: {
-    type: String,
-    default: '',
-  },
-  calss: {
     type: String,
     default: '',
   },

@@ -1,5 +1,4 @@
-@import './variables';
-@import 'element-plus/theme-chalk/dark/css-vars.css';
+@use 'element-plus/theme-chalk/dark/css-vars.css' as *;
 
 html.dark > body,
 html.dark > body[class*='vab-theme-'] {
@@ -10,6 +9,7 @@ html.dark > body[class*='vab-theme-'] {
   --el-border-color: #414243;
   --el-menu-background-color: #1d1e1f;
   --el-mask-color: rgba(0, 0, 0, 0.8);
+  --el-background-color: #1d1e1f;
 
   --w-e-textarea-bg-color: #333;
   --w-e-textarea-color: #fff;
@@ -50,12 +50,21 @@ html.dark > body[class*='vab-theme-'] {
     background: rgba(#1d1e1f, 0.9);
   }
 
-  .vab-column-bar .el-tabs .el-tabs__item {
-    color: var(--el-color-grey) !important;
-  }
-
   .vab-column-bar {
+    margin-left: -1px !important;
     border-right: 1px solid var(--el-border-color) !important;
+
+    .el-tabs {
+      border-right: 1px solid var(--el-border-color) !important;
+
+      .el-tabs__nav {
+        background: var(--el-color-white) !important;
+      }
+
+      .el-tabs__item {
+        color: var(--el-color-grey) !important;
+      }
+    }
 
     &-arrow {
       .el-tabs {
@@ -77,19 +86,19 @@ html.dark > body[class*='vab-theme-'] {
     }
   }
 
-  .vab-tabs-content-card .el-tabs__header .el-tabs__item {
-    border: 1px solid var(--el-border-color) !important;
+  .vab-tabs-content-card {
+    .el-tabs__header {
+      .el-tabs__item {
+        border: 1px solid var(--el-border-color) !important;
+      }
+    }
   }
 
-  .vab-column-bar .el-tabs .el-tabs__nav {
-    margin-left: -1px !important;
-    background: var(--el-color-white) !important;
-    border-right: 1px solid var(--el-border-color) !important;
-  }
-
-  .vab-logo-column .logo {
-    background: var(--el-color-white) !important;
-    border-right: 1px solid var(--el-border-color) !important;
+  .vab-logo-column {
+    .logo {
+      background: var(--el-color-white) !important;
+      border-right: 1px solid var(--el-border-color) !important;
+    }
   }
 
   .vab-side-bar {
@@ -103,10 +112,12 @@ html.dark > body[class*='vab-theme-'] {
       height: calc(var(--el-header-height) - 2px);
     }
 
-    .vab-main .right-panel {
-      [class*='ri-'],
-      .username {
-        color: var(--el-color-grey) !important;
+    .vab-main {
+      .right-panel {
+        [class*='ri-'],
+        .username {
+          color: var(--el-color-grey) !important;
+        }
       }
     }
   }

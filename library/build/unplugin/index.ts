@@ -17,6 +17,7 @@ export const createUnPlugin = (env: Record<string, string>) => {
       '@vueuse/core',
       {
         axios: [['default', 'axios']],
+        // '/@/i18n': [['translate']],
       },
     ],
     resolvers: [

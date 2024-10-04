@@ -49,9 +49,10 @@ const save = async () => {
     needRefresh.value = false
     setTimeout(() => {
       show.value = false
-      location.reload()
-    }, 1000 * 2)
-  }, 1000 * 3)
+      //@ts-ignore
+      location.reload(true)
+    }, 1000 * 3)
+  }, 1000 * 7)
 }
 
 const handleShow = () => {

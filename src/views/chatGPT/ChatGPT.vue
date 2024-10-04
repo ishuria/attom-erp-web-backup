@@ -202,7 +202,7 @@ $border-top-color_1: var(--el-color-primary);
 
   :deep(.el-card__body) {
     position: relative;
-    height: calc(var(--el-container-height) - var(--el-padding) - 2px);
+    height: calc(var(--el-container-height) - 2px);
   }
 
   .vab-chat-main {

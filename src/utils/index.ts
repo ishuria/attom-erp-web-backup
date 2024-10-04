@@ -201,3 +201,12 @@ export function shuffle(array: any[]) {
   }
   return array
 }
+
+export function moveElement(array: any, oldIndex: any, newIndex: any) {
+  if (oldIndex < 0 || oldIndex >= array.length) return array
+  if (newIndex < 0 || newIndex >= array.length) return array
+  const element = array[oldIndex]
+  array.splice(oldIndex, 1)
+  array.splice(newIndex, 0, element)
+  return array
+}

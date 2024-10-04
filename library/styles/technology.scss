@@ -14,21 +14,21 @@ html > body.vab-theme-technology {
   --el-text-color-regular: #e5eaf3;
   --el-text-color-secondary: #e5eaf3;
   --el-text-color-placeholder: #e5eaf3;
-  --el-text-color-disabled: #ffffff;
-  --el-border-color-darker: #{rgba(#2c6191, 0.9)};
-  --el-border-color-dark: #{rgba(#2c6191, 0.8)};
-  --el-border-color: #{rgba(#2c6191, 0.9)};
-  --el-border: 1px solid #{rgba(#2c6191, 0.9%)};
-  --el-border-color-light: #{rgba(#2c6191, 0.8)};
-  --el-border-color-lighter: #{rgba(#2c6191, 0.7)};
+  --el-text-color-disabled: #cfd3dc;
+  --el-border-color-darker: #{mix(#ffffff, #2c6191, 10%)};
+  --el-border-color-dark: #{mix(#ffffff, #2c6191, 20%)};
+  --el-border-color: #{mix(#ffffff, #2c6191, 10%)};
+  --el-border: 1px solid #{mix(#ffffff, #2c6191, 10%)};
+  --el-border-color-light: #{mix(#ffffff, #2c6191, 20%)};
+  --el-border-color-lighter: #{mix(#ffffff, #2c6191, 30%)};
   --el-border-color-extra-light: #2c6191;
   --el-fill-color-darker: #2c6191;
   --el-fill-color-dark: #2c6191;
   --el-fill-color: #103171;
-  --el-fill-color-light: #{rgba(#103171, 0.9)};
-  --el-fill-color-lighter: #{rgba(#103171, 0.8)};
-  --el-fill-color-extra-light: #{rgba(#103171, 0.9)};
-  --el-fill-color-blank: #{rgba(#103171, 0.9)};
+  --el-fill-color-light: #{mix(#ffffff, #103171, 10%)};
+  --el-fill-color-lighter: #{mix(#ffffff, #103171, 20%)};
+  --el-fill-color-extra-light: #{mix(#ffffff, #103171, 10%)};
+  --el-fill-color-blank: #{mix(#ffffff, #103171, 1%)};
   --el-mask-color: rgba(16, 49, 113, 0.8);
 
   --w-e-textarea-bg-color: #103171;
@@ -70,12 +70,21 @@ html > body.vab-theme-technology {
     background: var(--el-color-white) !important;
   }
 
-  .vab-column-bar .el-tabs .el-tabs__item {
-    color: var(--el-color-grey) !important;
-  }
-
   .vab-column-bar {
     border-right: 1px solid var(--el-border-color) !important;
+
+    .el-tabs {
+      margin-left: -1px !important;
+      border-right: 1px solid var(--el-border-color) !important;
+
+      .el-tabs__item {
+        color: var(--el-color-grey) !important;
+      }
+
+      .el-tabs__nav {
+        background: var(--el-color-white) !important;
+      }
+    }
 
     &-arrow {
       .el-tabs {
@@ -97,14 +106,12 @@ html > body.vab-theme-technology {
     }
   }
 
-  .vab-tabs-content-card .el-tabs__header .el-tabs__item {
-    border: 1px solid var(--el-border-color) !important;
-  }
-
-  .vab-column-bar .el-tabs .el-tabs__nav {
-    margin-left: -1px !important;
-    background: var(--el-color-white) !important;
-    border-right: 1px solid var(--el-border-color) !important;
+  .vab-tabs-content-card {
+    .el-tabs__header {
+      .el-tabs__item {
+        border: 1px solid var(--el-border-color) !important;
+      }
+    }
   }
 
   .vab-logo-column {
@@ -177,9 +184,13 @@ html > body.vab-theme-technology {
     border-left: 1px solid var(--el-border-color);
   }
 
-  .el-pagination.is-background .btn-prev:disabled,
-  .el-pagination.is-background .btn-next:disabled {
-    background-color: var(--el-pagination-button-bg-color);
+  .el-pagination {
+    &.is-background {
+      .btn-prev:disabled,
+      .btn-next:disabled {
+        background-color: var(--el-pagination-button-bg-color);
+      }
+    }
   }
 
   .el-drawer__header {
@@ -192,9 +203,11 @@ html > body.vab-theme-technology {
     }
   }
 
-  .el-input.is-disabled {
-    .el-input__wrapper {
-      background: #214e85 !important;
+  .el-input {
+    &.is-disabled {
+      .el-input__wrapper {
+        background: #214e85 !important;
+      }
     }
   }
 
@@ -205,17 +218,25 @@ html > body.vab-theme-technology {
       height: calc(var(--el-header-height) - 2px);
     }
 
-    .vab-main .right-panel {
-      [class*='ri-'],
-      .username {
-        color: var(--el-color-grey) !important;
+    .vab-main {
+      .right-panel {
+        [class*='ri-'],
+        .username {
+          color: var(--el-color-grey) !important;
+        }
       }
     }
   }
 
-  .vab-tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
-    color: var(--el-color-grey);
-    background: #123372;
+  .vab-tabs-content-smooth {
+    .el-tabs__header {
+      .el-tabs__item {
+        &:hover {
+          color: var(--el-color-grey);
+          background: #123372;
+        }
+      }
+    }
   }
 
   /* .vab-hey-message */

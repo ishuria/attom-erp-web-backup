@@ -50,6 +50,9 @@
             <el-option v-for="item in tabsBarStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
+        <el-form-item v-if="device !== 'mobile' && theme.showTabs" :label="translate('标签拖拽')">
+          <el-switch v-model="theme.tabDrag" />
+        </el-form-item>
         <el-form-item :label="translate('页脚')">
           <el-switch v-model="theme.showFooter" @change="handleShowFooter" />
         </el-form-item>
@@ -242,14 +245,16 @@ const setDefaultTheme = () => {
   setTimeout(() => {
     loading.close()
     $baseMessage('切换成功', 'success', 'hey')
-    if (device.value === 'mobile') location.reload()
+    //@ts-ignore
+    if (device.value === 'mobile') location.reload(true)
   }, 1000)
 }
 
 const handleSaveTheme = () => {
   saveTheme()
   drawerVisible.value = false
-  //if (device.value === 'mobile') location.reload()
+  //@ts-ignore
+  //if (device.value === 'mobile') location.reload(true)
 }
 
 watch(
@@ -384,7 +389,7 @@ onMounted(() => {
 
                   &:before {
                     position: absolute;
-                    right: 0px;
+                    right: 0;
                     bottom: 1px;
                     z-index: 1;
                     font-family: 'remixicon', sans-serif !important;
@@ -394,8 +399,8 @@ onMounted(() => {
 
                   &:after {
                     position: absolute;
-                    right: 0px;
-                    bottom: 0px;
+                    right: 0;
+                    bottom: 0;
                     content: '';
                     border: 12px dashed transparent;
                     border-right: 12px solid var(--el-color-primary);

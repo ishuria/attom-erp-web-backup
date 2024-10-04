@@ -88,6 +88,7 @@ export const {
   storage,
   successCode,
   supportVisit,
+  tabDrag,
   tabsBarStyle,
   themeName,
   timeout,
@@ -97,4 +98,6 @@ export const {
   tokenName,
   tokenTableName,
   uniqueOpened,
+  columnDrag,
+  rightToolsDrag,
 } = config

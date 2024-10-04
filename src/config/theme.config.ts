@@ -26,6 +26,8 @@ export const themeConfig: ThemeType = {
   tabsBarStyle: 'card',
   //是否显示标签页图标
   showTabsIcon: true,
+  //是否开启标签拖拽（影响性能建议关闭）
+  tabDrag: false,
   //是否开启语言选择组件
   showLanguage: true,
   //是否开启刷新组件
@@ -44,8 +46,8 @@ export const themeConfig: ThemeType = {
   showDark: true,
   //否默认收起左侧菜单
   foldSidebar: false,
-  //是否开启页面动画  value为空：无动画、el-fade-in-linear、el-fade-in、el-zoom-in-center、el-zoom-in-top、el-zoom-in-bottom。
-  pageTransition: 'null',
+  //是否开启页面动画  null、el-fade-in-linear、el-fade-in、el-zoom-in-center、el-zoom-in-top、el-zoom-in-bottom。
+  pageTransition: 'el-fade-in-linear',
   // 圆角（单位px，类型必须为数字）
   radius: 5,
   // 是否开启锁屏
@@ -58,4 +60,6 @@ export const themeConfig: ThemeType = {
   showFontSize: true,
   // 默认字体大小
   fontSize: '14px',
+  // 顶部右侧图标是否允许拖拽（影响性能建议关闭）
+  rightToolsDrag: false,
 }

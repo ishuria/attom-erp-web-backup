@@ -32,14 +32,7 @@
             <el-timeline>
               <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
                 <template v-if="item.waver" #dot>
-                  <span
-                    class="vab-dot"
-                    :class="{
-                      ['vab-dot-' + item.waver]: true,
-                    }"
-                  >
-                    <span></span>
-                  </span>
+                  <vab-dot :type="item.waver" />
                 </template>
                 <vab-card v-if="item.card">
                   <div class="change-log-item" v-html="item.content"></div>
@@ -68,7 +61,7 @@ defineOptions({
 
 // const routesStore = useRoutesStore()
 // const { changeMenuMeta } = routesStore
-const lastTime = dayjs().format('YYYY-MM-DD')
+const lastTime = dayjs().format('YYYY-M-D')
 const commonUrl = `https://vuejs-core.cn`
 const activities = ref<any[]>([])
 
@@ -120,9 +113,9 @@ onBeforeMount(async () => {
 
 // 正式项目如果要用到更新日志模板，请删除以下代码
 onMounted(() => {
-  if (!['localhost', '127', '192', 'beautiful', 'vuejs-core'].some((host) => location.hostname.includes(host)))
+  if (!['localhost', '127', '192', 'vuejs-core'].some((host) => location.hostname.includes(host)))
     $baseMessage('检测到当前演示地址非官方演示地址，即将为您跳转，请稍后', 'warning', 'hey', () => {
-      location.href = 'https:https://vuejs-core.cn/shop-vite/#/changeLog'
+      location.href = 'https://vuejs-core.cn/shop-vite/#/changeLog'
     })
 })
 

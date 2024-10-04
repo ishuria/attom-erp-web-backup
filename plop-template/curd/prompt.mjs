@@ -5,29 +5,30 @@ const notEmpty = (name) => {
   }
 }
 
+const templateName = 'goods'
+
 export default {
   description: '创建curd',
   prompts: [
     {
       type: 'input',
       name: 'name',
-      message: '请输入view名称，然后点击回车',
+      message: '请输入view名称，然后点击回车，view名称必须为单个英文，且不能有特殊字符，如：中文、空格、特殊符号等',
       validate: notEmpty('name'),
     },
   ],
   actions: () => {
-    ///const pathCaseName = '{{ pathCase name }}'
     const properCaseName = '{{ properCase name }}'
     const camelCaseName = '{{ camelCase name }}'
     return [
       {
         type: 'add',
-        path: `src/views/goods/${properCaseName}.vue`,
+        path: `src/views/${templateName}/${properCaseName}.vue`,
         templateFile: './plop-template/curd/index.hbs',
       },
       {
         type: 'add',
-        path: `src/views/goods/vabAutoComponents/${properCaseName}Edit.vue`,
+        path: `src/views/${templateName}/vabAutoComponents/${properCaseName}Edit.vue`,
         templateFile: './plop-template/curd/edit.hbs',
       },
       {

@@ -1,5 +1,5 @@
 <template>
-  <div class="column-table-container no-background-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div class="column-table-container no-background-container auto-height-container" :class="{ 'fullscreen-container': isFullscreen }">
     <el-row :gutter="20">
       <el-col :lg="5" :md="24" :sm="24" :xl="4" :xs="24">
         <vab-card class="auto-height-card">
@@ -22,23 +22,18 @@
                 <el-form-item label="标题">
                   <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
                 </el-form-item>
-                <el-form-item v-show="!fold" label="标题">
-                  <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
+                <el-form-item v-show="!fold" label="作者">
+                  <el-input v-model="queryForm.author" clearable placeholder="请输入作者" />
                 </el-form-item>
-                <el-form-item v-show="!fold" label="标题">
-                  <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
+                <el-form-item v-show="!fold" label="时间">
+                  <el-date-picker v-model="queryForm.datetime" format="YYYY/MM/DD HH:mm:ss" placeholder="请选择时间" type="datetime" />
                 </el-form-item>
-                <el-form-item v-show="!fold" label="标题">
-                  <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-                </el-form-item>
-                <el-form-item v-show="!fold" label="标题">
-                  <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-                </el-form-item>
-                <el-form-item v-show="!fold" label="标题">
-                  <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-                </el-form-item>
-                <el-form-item v-show="!fold" label="标题">
-                  <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
+                <el-form-item v-show="!fold" label="状态">
+                  <el-select v-model="queryForm.status" placeholder="请选择状态">
+                    <el-option label="success" value="published" />
+                    <el-option label="primary" value="draft" />
+                    <el-option label="danger" value="deleted" />
+                  </el-select>
                 </el-form-item>
                 <el-form-item>
                   <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>

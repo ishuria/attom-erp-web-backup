@@ -1,16 +1,16 @@
 <template>
   <blockquote
-    v-if="blockquote"
+    v-if="props.blockquote"
     class="vab-blockquote"
-    :class="isBorder ? 'vab-blockquote-' + type + ' is-border' : 'vab-blockquote-' + type"
+    :class="props.isBorder ? 'vab-blockquote-' + props.type + ' is-border' : 'vab-blockquote-' + props.type"
   >
     <slot></slot>
   </blockquote>
-  <fieldset v-else-if="fieldset" class="vab-fieldset">
-    <legend>{{ title }}</legend>
+  <fieldset v-else-if="props.fieldset" class="vab-fieldset">
+    <legend>{{ props.title }}</legend>
     <slot></slot>
   </fieldset>
-  <el-divider v-else :border-style="borderStyle" :content-position="contentPosition" :direction="direction">
+  <el-divider v-else :border-style="props.borderStyle" :content-position="props.contentPosition" :direction="props.direction">
     <template #default>
       <slot></slot>
     </template>
@@ -24,7 +24,7 @@ defineOptions({
   name: 'VabDivider',
 })
 
-defineProps({
+const props = defineProps({
   ...ElDivider.props,
   blockquote: {
     type: Boolean,

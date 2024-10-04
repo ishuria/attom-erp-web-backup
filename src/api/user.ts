@@ -49,3 +49,10 @@ export const password = (data: FormType) => {
     data,
   })
 }
+
+export const lock = () => {
+  return request({
+    url: '/lock',
+    method: 'get',
+  })
+}

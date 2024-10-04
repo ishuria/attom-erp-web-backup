@@ -17,6 +17,7 @@ import {
   menuWidth,
   pageTransition,
   radius,
+  rightToolsDrag,
   showColorPicker,
   showDark,
   showFontSize,
@@ -32,6 +33,7 @@ import {
   showTabsIcon,
   showTheme,
   showThemeSetting,
+  tabDrag,
   tabsBarStyle,
   themeName,
   title,
@@ -67,7 +69,9 @@ const defaultTheme: ThemeType = {
   tabsBarStyle,
   themeName,
   showFontSize,
+  tabDrag,
   fontSize,
+  rightToolsDrag,
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
@@ -82,10 +86,9 @@ export const useSettingsStore = defineStore('settings', {
     logo: getLocalStorage('logo').logo || logo,
     mode: localStorage.getItem('vueuse-color-scheme') || 'light',
     persistenceTab,
-    theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') } || {
-      ...defaultTheme,
-    },
+    theme: { ...defaultTheme, ...getLocalStorage('shop-vite-theme') },
     title: getLocalStorage('title').title || title,
+    scrollTop: JSON.parse(localStorage.getItem('scrollTop') || '[]'),
   }),
   getters: {
     getCollapse: (state) => state.collapse,
@@ -97,6 +100,7 @@ export const useSettingsStore = defineStore('settings', {
     getMode: (state) => state.mode,
     getTheme: (state) => state.theme,
     getTitle: (state) => state.title,
+    getScrollTop: (state) => state.scrollTop,
   },
   actions: {
     updateState(obj: any) {
@@ -217,6 +221,39 @@ export const useSettingsStore = defineStore('settings', {
     },
     changeTitle(title: string) {
       this.updateState({ title })
+    },
+    updateScrollTop(scrollTop: number, routeName: any) {
+      const originalArray = [...JSON.parse(localStorage.getItem('scrollTop') || '[]')]
+      interface Item {
+        routeName: string
+        scrollTop: number
+      }
+
+      function updateArray(arr: Item[], routeNameToCheck: string, newScrollTopValue: number): Item[] {
+        let found = false
+        const newArr = arr.map((item) => {
+          if (item.routeName === routeNameToCheck) {
+            found = true
+            return {
+              ...item,
+              scrollTop: newScrollTopValue,
+            }
+          }
+          return item
+        })
+        if (!found) {
+          newArr.push({ routeName: routeNameToCheck, scrollTop: newScrollTopValue })
+        }
+        return newArr
+      }
+      const modifiedArray = updateArray(originalArray, routeName, scrollTop)
+      function removeItemsWithZeroScrollTop(arr: Item[]): Item[] {
+        return arr.filter((item) => item.scrollTop !== 0)
+      }
+
+      const filteredArray = removeItemsWithZeroScrollTop(modifiedArray)
+
+      localStorage.setItem('scrollTop', JSON.stringify(filteredArray))
     },
   },
 })

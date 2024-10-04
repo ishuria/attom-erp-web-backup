@@ -23,12 +23,10 @@
       <template #level3="{ slotScope }">
         <a v-for="(level3, index) in slotScope" :key="index" :href="level3.url" @click="handleLink(level3)">
           - {{ translate(level3.meta.title) }}
-          <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" type="danger">
+          <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" :type="level3.meta.badgeType || 'danger'">
             {{ level3.meta.badge }}
           </el-tag>
-          <span v-if="level3.meta && level3.meta.dot" class="vab-dot vab-dot-error">
-            <span></span>
-          </span>
+          <vab-dot v-if="level3.meta && level3.meta.dot" :type="typeof level3.meta.dot === 'string' ? level3.meta.dot : 'danger'" />
         </a>
       </template>
     </fall-menu>
@@ -106,7 +104,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
     const element: any = document.querySelector('.vab-fall-bar .tiny-fall-menu__box')
     const base = 60
     const intervalSize = 48
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < handleRoutes.value.length; i++) {
       const lowerBound = base + i * intervalSize
       const upperBound = lowerBound + intervalSize
       if (mousePosition.value.y > lowerBound && mousePosition.value.y < upperBound) {
@@ -185,6 +183,10 @@ useEventListener('mousemove', (e: MouseEvent) => {
             [class*='ri-'] + span {
               padding-left: 3px;
             }
+
+            &:hover {
+              border-bottom: 0;
+            }
           }
         }
 
@@ -195,12 +197,13 @@ useEventListener('mousemove', (e: MouseEvent) => {
 
       &__box {
         top: 5px;
-        left: var(--el-left-menu-width);
+        left: calc(var(--el-left-menu-width) - 2px);
         min-width: var(--ti-fall-menu-box-width);
         padding: var(--el-padding);
         overflow-y: auto;
         border: 0;
-        border-radius: var(--el-border-radius-base);
+        border-left: 3px solid var(--el-background-color);
+        border-radius: 0 var(--el-border-radius-base) var(--el-border-radius-base) 0;
         box-shadow: none;
         transition:
           all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
@@ -265,7 +268,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
         }
 
         &__box {
-          left: calc(var(--el-left-menu-width-min) + 2px);
+          left: var(--el-left-menu-width-min);
           padding-right: 0;
         }
       }

@@ -3,10 +3,12 @@ declare interface VabRouteMeta {
   activeMenu?: string
   // badge小标签(只支持子级)
   badge?: string
+  // badge小标签类型(只支持子级)
+  badgeType?: 'primary' | 'success' | 'warning' | 'danger'
   // 是否隐藏面包屑
   breadcrumbHidden?: boolean
   // 是否显示小圆点
-  dot?: boolean
+  dot?: boolean | 'primary' | 'success' | 'warning' | 'danger'
   // 动态传参路由是否新开标签页
   dynamicNewTab?: boolean
   // 权限

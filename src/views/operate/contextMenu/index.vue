@@ -50,11 +50,11 @@ const onMenuClick = (value: any) => {
 
 <style lang="scss">
 .mx-context-menu {
-  --mx-menu-backgroud: var(--el-color-white);
-  --mx-menu-hover-backgroud: var(--el-color-primary-light-9);
-  --mx-menu-active-backgroud: var(--el-color-primary-light-9);
-  --mx-menu-open-backgroud: var(--el-color-primary-light-9);
-  --mx-menu-open-hover-backgroud: var(--el-color-primary-light-9);
+  --mx-menu-background: var(--el-color-white);
+  --mx-menu-hover-background: var(--el-color-primary-light-9);
+  --mx-menu-active-background: var(--el-color-primary-light-9);
+  --mx-menu-open-background: var(--el-color-primary-light-9);
+  --mx-menu-open-hover-background: var(--el-color-primary-light-9);
   --mx-menu-divider: var(--el-border-color);
   --mx-menu-text: var(--el-color-grey);
   --mx-menu-hover-text: var(--el-color-primary);
@@ -64,12 +64,12 @@ const onMenuClick = (value: any) => {
   --mx-menu-disabled-text: var(--el-color-grey);
   --mx-menu-icon-size: 16px;
   --mx-menu-shadow-color: rgba(0, 0, 0, 0.1);
-  --mx-menu-backgroud-radius: var(--el-border-radius-base);
-  --mx-menu-shortcut-backgroud: var(--el-color-white);
-  --mx-menu-shortcut-backgroud-hover: var(--el-color-white);
-  --mx-menu-shortcut-backgroud-active: var(--el-color-white);
-  --mx-menu-shortcut-backgroud-open: var(--el-color-white);
-  --mx-menu-shortcut-backgroud-disabled: var(--el-color-white);
+  --mx-menu-background-radius: var(--el-border-radius-base);
+  --mx-menu-shortcut-background: var(--el-color-white);
+  --mx-menu-shortcut-background-hover: var(--el-color-white);
+  --mx-menu-shortcut-background-active: var(--el-color-white);
+  --mx-menu-shortcut-background-open: var(--el-color-white);
+  --mx-menu-shortcut-background-disabled: var(--el-color-white);
   --mx-menu-shortcut-text: var(--el-color-grey);
   --mx-menu-shortcut-text-hover: var(--el-color-primary);
   --mx-menu-shortcut-text-active: var(--el-color-primary);

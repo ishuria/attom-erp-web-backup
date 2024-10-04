@@ -1,44 +1,44 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    :align-center="alignCenter"
-    :append-to="appendTo"
-    :append-to-body="appendToBody"
-    :before-close="beforeClose"
-    :center="center"
-    :class="'vab-dialog-' + theme"
-    :close-on-click-modal="closeOnClickModal"
-    :close-on-press-escape="closeOnPressEscape"
-    :destroy-on-close="destroyOnClose"
-    :draggable="draggable"
+    :align-center="props.lignCenter"
+    :append-to="props.appendTo"
+    :append-to-body="props.appendToBody"
+    :before-close="props.beforeClose"
+    :center="props.center"
+    :class="'vab-dialog-' + props.theme"
+    :close-on-click-modal="props.closeOnClickModal"
+    :close-on-press-escape="props.closeOnPressEscape"
+    :destroy-on-close="props.destroyOnClose"
+    :draggable="props.draggable"
     :fullscreen="isFullscreen"
-    :lock-scroll="lockScroll"
-    :modal="modal"
-    :modal-class="modalClass"
-    :open-delay="openDelay"
-    :overflow="overflow"
-    :show-close="showClose"
+    :lock-scroll="props.ockScroll"
+    :modal="props.modal"
+    :modal-class="props.modalClass"
+    :open-delay="props.openDelay"
+    :overflow="props.overflow"
+    :show-close="props.showClose"
     :style="{
-      transition: animated ? 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),transform 0s' : '',
+      transition: props.animated ? 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),transform 0s' : '',
     }"
-    :top="top"
-    :width="width"
+    :top="props.top"
+    :width="props.width"
     v-bind="$attrs"
   >
     <template #header>
       <slot name="header">
-        <div class="el-dialog__title" @dblclick="setFullscreen">{{ title }}</div>
+        <div class="el-dialog__title" @dblclick="setFullscreen">{{ props.title }}</div>
       </slot>
-      <button v-if="showClose" class="el-dialog__headerbtn" type="button" @click="closeDialog">
+      <button v-if="props.showClose" class="el-dialog__headerbtn" type="button" @click="closeDialog">
         <el-icon class="el-dialog__close">
           <close />
         </el-icon>
       </button>
-      <button v-if="showFullscreen" class="el-dialog__headerbtn" style="right: 51px" type="button" @click="setFullscreen">
+      <button v-if="props.showFullscreen" class="el-dialog__headerbtn" style="right: 51px" type="button" @click="setFullscreen">
         <vab-icon class="el-dialog__close el-dialog__fullscreen" :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
       </button>
     </template>
-    <div v-loading="loading">
+    <div v-loading="props.loading">
       <slot></slot>
     </div>
     <template #footer>

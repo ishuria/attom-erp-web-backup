@@ -15,7 +15,8 @@ export const isCheck = () => {
   ) {
     setInterval(() => {
       localStorage.clear()
-      location.reload()
+      //@ts-ignore
+      location.reload(true)
     }, 50)
     ;(() => {
       function block() {

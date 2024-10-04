@@ -1,28 +1,23 @@
 <template>
-  <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
+  <div class="custom-table-container auto-height-container" :class="{ 'fullscreen-container': isFullscreen }">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item label="标题">
             <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
+          <el-form-item v-show="!fold" label="作者">
+            <el-input v-model="queryForm.author" clearable placeholder="请输入作者" />
           </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
+          <el-form-item v-show="!fold" label="时间">
+            <el-date-picker v-model="queryForm.datetime" format="YYYY/MM/DD HH:mm:ss" placeholder="请选择时间" type="datetime" />
           </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="标题">
-            <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
+          <el-form-item v-show="!fold" label="状态">
+            <el-select v-model="queryForm.status" placeholder="请选择状态">
+              <el-option label="success" value="published" />
+              <el-option label="primary" value="draft" />
+              <el-option label="danger" value="deleted" />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
@@ -54,7 +49,7 @@
           <el-button @click="clickFullScreen">
             <vab-icon :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
           </el-button>
-          <el-popover trigger="hover" :width="165">
+          <el-popover :width="165">
             <el-radio-group v-model="lineHeight">
               <el-radio-button label="large" value="large">大</el-radio-button>
               <el-radio-button label="default" value="default">中</el-radio-button>
@@ -66,13 +61,13 @@
               </el-button>
             </template>
           </el-popover>
-          <el-popover popper-class="custom-table-checkbox" trigger="hover">
+          <el-popover popper-class="custom-table-checkbox">
             <template #reference>
               <el-button>
                 <vab-icon icon="settings-line" />
               </el-button>
             </template>
-            <vab-draggable v-model="columns" :animation="600" ghost-class="ghost" target=".el-checkbox-group">
+            <vab-draggable v-model="columns" :animation="600" target=".el-checkbox-group">
               <el-checkbox-group v-model="checkList">
                 <el-checkbox
                   v-for="item in columns"
@@ -120,7 +115,7 @@
           <span v-if="item.label === '评级'">
             <el-rate v-model="row.rate" disabled />
           </span>
-          <el-popover v-if="item.label === '图片'" placement="top-start" trigger="hover">
+          <el-popover v-if="item.label === '图片'" placement="top-start">
             <el-image :src="row.image" />
             <template #reference>
               <el-image :src="row.image" />

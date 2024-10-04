@@ -27,6 +27,7 @@ const handleCommand = (language: string) => {
   changeLanguage(language)
   locale.value = language
   document.title = getPageTitle(route.meta.title)
-  if (route.path === '/login' || route.path === '/register') location.reload()
+  //@ts-ignore
+  if (route.path === '/login' || route.path === '/register') location.reload(true)
 }
 </script>

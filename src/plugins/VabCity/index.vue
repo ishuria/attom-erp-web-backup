@@ -1,5 +1,5 @@
 <template>
-  <el-popover trigger="hover" :width="400">
+  <el-popover v-model:visible="visible" :width="400">
     <template #reference>
       <el-button>
         <span>{{ currentValue }} - {{ codeToName }}</span>

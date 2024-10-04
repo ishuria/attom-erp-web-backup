@@ -89,6 +89,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '看板',
           icon: 'dashboard-2-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -98,6 +99,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '创作中心',
           icon: 'ancient-gate-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -107,7 +109,8 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '实时监控',
           icon: 'vidicon-2-line',
-          dot: true,
+          dot: 'success',
+          guard: ['Admin'],
         },
       },
       {
@@ -117,6 +120,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '磁贴',
           icon: 'collage-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -126,6 +130,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '独立布局',
           icon: 'layout-masonry-line',
+          guard: ['Admin'],
         },
       },
       {
@@ -137,6 +142,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           icon: 'database-2-line',
           target: '_blank',
           badge: 'Hot',
+          guard: ['Admin'],
         },
       },
       // {
@@ -152,12 +158,13 @@ export const asyncRoutes: VabRouteRecord[] = [
       {
         path: 'application',
         name: 'Application',
-        component: () => import('../views/index/application.vue'),
+        component: () => import('/@/views/index/application.vue'),
         meta: {
           title: '客户端',
           icon: 'apps-2-line',
           noKeepAlive: true,
           dot: true,
+          guard: ['Admin'],
         },
       },
       {
@@ -169,6 +176,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           icon: 'file-word-line',
           noKeepAlive: true,
           badge: '99+',
+          guard: ['Admin'],
         },
       },
     ],
@@ -180,6 +188,7 @@ export const asyncRoutes: VabRouteRecord[] = [
     meta: {
       title: '组件',
       icon: 'code-box-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -212,6 +221,8 @@ export const asyncRoutes: VabRouteRecord[] = [
             component: () => import('/@/views/vab/icon/customSvg.vue'),
             meta: {
               title: '自定义图标',
+              icon: 'vite',
+              isCustomSvg: true,
             },
           },
         ],
@@ -251,7 +262,7 @@ export const asyncRoutes: VabRouteRecord[] = [
             component: () => import('/@/views/vab/table/tabsTable.vue'),
             meta: {
               title: '分类表格',
-              dot: true,
+              dot: 'primary',
             },
           },
           {
@@ -671,7 +682,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '视频播放器',
           guard: ['Admin'],
           icon: 'video-line',
-          dot: true,
+          dot: 'warning',
         },
       },
       {
@@ -732,7 +743,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         meta: {
           title: '抽奖',
           icon: 'award-line',
-          dot: true,
+          dot: 'danger',
         },
       },
       {
@@ -774,6 +785,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           guard: ['Admin'],
           icon: 'water-flash-line',
           badge: 'New',
+          badgeType: 'warning',
         },
       },
       {
@@ -926,6 +938,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           guard: ['Admin'],
           icon: 'notification-badge-line',
           badge: '0',
+          badgeType: 'success',
         },
       },
       {
@@ -950,6 +963,18 @@ export const asyncRoutes: VabRouteRecord[] = [
           dot: true,
         },
       },
+      {
+        path: 'scrollTop',
+        name: 'ScrollTop',
+        component: () => import('/@/views/operate/scrollTop/index.vue'),
+        meta: {
+          title: '滚动条位置记录',
+          guard: ['Admin'],
+          icon: 'scroll-to-bottom-line',
+          dot: true,
+        },
+      },
+
       {
         path: 'dialog',
         name: 'Dialog',
@@ -1024,7 +1049,7 @@ export const asyncRoutes: VabRouteRecord[] = [
           {
             path: 'params/:id',
             name: 'Params',
-            component: () => import('../views/operate/dynamicSegment/params.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/params.vue'),
             meta: {
               hidden: true,
               title: 'Params',
@@ -1034,19 +1059,19 @@ export const asyncRoutes: VabRouteRecord[] = [
           {
             path: 'params/1',
             name: 'Params/1',
-            component: () => import('../views/operate/dynamicSegment/params.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/params.vue'),
             meta: { title: 'Params id=1' },
           },
           {
             path: 'params/2',
             name: 'Params/2',
-            component: () => import('../views/operate/dynamicSegment/params.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/params.vue'),
             meta: { title: 'Params id=2' },
           },
           {
             path: 'query',
             name: 'Query',
-            component: () => import('../views/operate/dynamicSegment/query.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/query.vue'),
             meta: {
               hidden: true,
               title: 'Query',
@@ -1056,13 +1081,13 @@ export const asyncRoutes: VabRouteRecord[] = [
           {
             path: 'query?id=1',
             name: 'Query?id=1',
-            component: () => import('../views/operate/dynamicSegment/query.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/query.vue'),
             meta: { title: 'Query id=1' },
           },
           {
             path: 'query?id=2',
             name: 'Query?id=2',
-            component: () => import('../views/operate/dynamicSegment/query.vue'),
+            component: () => import('/@/views/operate/dynamicSegment/query.vue'),
             meta: { title: 'Query id=2' },
           },
         ],
@@ -1113,6 +1138,7 @@ export const asyncRoutes: VabRouteRecord[] = [
     meta: {
       title: '模板',
       icon: 'clipboard-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -1176,12 +1202,13 @@ export const asyncRoutes: VabRouteRecord[] = [
       {
         path: 'Iot',
         name: 'Iot',
-        component: () => import('../views/template/Iot.vue'),
+        component: () => import('/@/views/template/Iot.vue'),
         meta: {
           title: '物联网',
           icon: 'earthquake-line',
           target: '_blank',
           badge: 'Hot',
+          badgeType: 'primary',
         },
       },
       {
@@ -1258,7 +1285,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         component: () => import('/@/views/setting/personalCenter/index.vue'),
         meta: {
           title: '个人中心',
-          icon: 'map-pin-user-line',
+          icon: 'user-follow-line',
         },
       },
       {
@@ -1388,6 +1415,7 @@ export const asyncRoutes: VabRouteRecord[] = [
     meta: {
       title: '商品',
       icon: 'shopping-bag-3-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -1503,6 +1531,7 @@ export const asyncRoutes: VabRouteRecord[] = [
     meta: {
       title: 'GPT',
       icon: 'chat-1-line',
+      guard: ['Admin'],
     },
     children: [
       {
@@ -1595,8 +1624,9 @@ export const asyncRoutes: VabRouteRecord[] = [
     component: () => import('/@/views/portal/Portal.vue'),
     meta: {
       title: '门户',
-      icon: 'user-heart-line',
+      icon: 'building-line',
       target: '_blank',
+      guard: ['Admin'],
     },
   },
   {
@@ -1615,6 +1645,16 @@ export const asyncRoutes: VabRouteRecord[] = [
     meta: {
       title: '合作伙伴',
       hidden: true,
+    },
+  },
+  {
+    path: '//vuejs-core.cn/authorization/shop-vite.html',
+    name: 'ExternalLink',
+    meta: {
+      title: '外链',
+      target: '_blank',
+      guard: ['Admin'],
+      icon: 'external-link-line',
     },
   },
   {

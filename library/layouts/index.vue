@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar ref="scrollbarRef" wrap-class="scroll-wrap">
+  <el-scrollbar ref="scrollbarRef" wrap-class="scroll-wrap" @scroll="handleScroll">
     <div class="vue-shop-vite-box" :class="{ mobile }">
       <component :is="layout" :collapse="collapse" :device="device" :fixed-header="theme.fixedHeader" :show-tabs="theme.showTabs" />
     </div>
@@ -31,7 +31,7 @@ const { username } = storeToRefs(userStore)
 
 const settingsStore = useSettingsStore()
 const { device, collapse, theme } = storeToRefs(settingsStore)
-const { toggleDevice, foldSideBar, openSideBar, updateTheme } = settingsStore
+const { toggleDevice, foldSideBar, openSideBar, updateTheme, updateScrollTop, getScrollTop: scrollTop } = settingsStore
 const mobile = ref(false)
 let oldLayout = theme.value.layout
 const visibility = useDocumentVisibility()
@@ -43,19 +43,15 @@ Object.getOwnPropertyNames(imports).forEach((key: any) => {
 
 const layout = computed(() => Components[convertToCamelCase(`vab-layout-${theme.value.layout}`)])
 
+const handleScroll = (scroll: any) => {
+  nextTick(() => {
+    updateScrollTop(scroll.scrollTop, route.name)
+  })
+}
 const resizeBody = () => {
   const { width } = useWindowSize()
   mobile.value = width.value - 1 < 992
 }
-
-watch(mobile, (value) => {
-  if (value) {
-    oldLayout = theme.value.layout
-    foldSideBar()
-  } else openSideBar()
-  theme.value.layout = value ? 'vertical' : oldLayout
-  toggleDevice(value ? 'mobile' : 'desktop')
-})
 
 onBeforeMount(() => {
   resizeBody()
@@ -72,14 +68,37 @@ watch(visibility, (current, previous) => {
   if (current === 'visible' && previous === 'hidden') $baseNotify(`尊敬的${username.value}，欢迎回来`, '', 'success', 'bottom-right')
 })
 
+watch(mobile, (value) => {
+  if (value) {
+    oldLayout = theme.value.layout
+    foldSideBar()
+  } else openSideBar()
+  theme.value.layout = value ? 'vertical' : oldLayout
+  toggleDevice(value ? 'mobile' : 'desktop')
+})
+
 watch(
-  route,
-  () => {
+  () => route.name,
+  (newValue) => {
     nextTick(() => {
-      scrollbarRef.value!.setScrollTop(0)
+      // 暂时仅支持 ScrollTop 页面记录滚动条位置
+      if (newValue === 'ScrollTop')
+        setTimeout(() => {
+          const uniqueArray = JSON.parse(localStorage.getItem('scrollTop') || '[]')
+          const pageItem = uniqueArray.find((item: any) => item.routeName === newValue) as any
+          if (pageItem) {
+            scrollbarRef.value!.setScrollTop(pageItem.scrollTop)
+            if (pageItem.scrollTop !== 0) {
+              $baseMessage('已为您滚动至上次停留的页面位置', 'success', 'hey')
+            }
+          } else scrollbarRef.value!.setScrollTop(0)
+        }, 1000)
+      else scrollbarRef.value!.setScrollTop(0)
     })
   },
-  { immediate: true }
+  {
+    immediate: true,
+  }
 )
 </script>
 

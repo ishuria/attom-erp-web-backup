@@ -90,7 +90,7 @@ const props = defineProps({
   },
   renderer: {
     type: String,
-    default: 'CanvasRenderer',
+    default: 'SVGRenderer',
   },
 })
 

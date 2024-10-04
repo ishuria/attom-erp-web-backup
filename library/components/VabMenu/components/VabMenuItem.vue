@@ -9,12 +9,13 @@
     <span :title="translate(itemOrMenu.meta.title)">
       {{ translate(itemOrMenu.meta.title) }}
     </span>
-    <el-tag v-if="itemOrMenu.meta && itemOrMenu.meta.badge" effect="dark" type="danger">
-      {{ itemOrMenu.meta.badge }}
+    <el-tag v-if="itemOrMenu.meta && itemOrMenu.meta.badge" effect="dark" :type="itemOrMenu.meta.badgeType || 'danger'">
+      {{ translate(itemOrMenu.meta.badge) }}
     </el-tag>
-    <span v-if="itemOrMenu.meta && itemOrMenu.meta.dot" class="vab-dot vab-dot-error">
-      <span></span>
-    </span>
+    <vab-dot
+      v-if="itemOrMenu.meta && itemOrMenu.meta.dot"
+      :type="typeof itemOrMenu.meta.dot === 'string' ? itemOrMenu.meta.dot : 'danger'"
+    />
   </el-menu-item>
 </template>
 

@@ -11,42 +11,44 @@
     </template>
     <el-scrollbar>
       <table class="table">
-        <tr>
-          <td>vite</td>
-          <td>
-            <span>{{ devDependencies['vite'] }}</span>
-          </td>
-          <td>typescript</td>
-          <td>
-            <span>{{ devDependencies['typescript'] }}</span>
-          </td>
-          <td>vue</td>
-          <td>
-            <span>{{ dependencies['vue'] }}</span>
-          </td>
-          <td>pinia</td>
-          <td>
-            <span>{{ dependencies['pinia'] }}</span>
-          </td>
-        </tr>
-        <tr>
-          <td>vue-router</td>
-          <td>
-            <span>{{ dependencies['vue-router'] }}</span>
-          </td>
-          <td>element-plus</td>
-          <td>
-            <span>{{ dependencies['element-plus'] }}</span>
-          </td>
-          <td>vueuse</td>
-          <td>
-            <span>{{ dependencies['@vueuse/core'] }}</span>
-          </td>
-          <td>axios</td>
-          <td>
-            <span>{{ dependencies['axios'] }}</span>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td>vite</td>
+            <td>
+              <span>{{ devDependencies['vite'] }}</span>
+            </td>
+            <td>typescript</td>
+            <td>
+              <span>{{ devDependencies['typescript'] }}</span>
+            </td>
+            <td>vue</td>
+            <td>
+              <span>{{ dependencies['vue'] }}</span>
+            </td>
+            <td>pinia</td>
+            <td>
+              <span>{{ dependencies['pinia'] }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td>vue-router</td>
+            <td>
+              <span>{{ dependencies['vue-router'] }}</span>
+            </td>
+            <td>element-plus</td>
+            <td>
+              <span>{{ dependencies['element-plus'] }}</span>
+            </td>
+            <td>vueuse</td>
+            <td>
+              <span>{{ dependencies['@vueuse/core'] }}</span>
+            </td>
+            <td>axios</td>
+            <td>
+              <span>{{ dependencies['axios'] }}</span>
+            </td>
+          </tr>
+        </tbody>
       </table>
       <div class="version-information-rely">
         <el-button

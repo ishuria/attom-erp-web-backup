@@ -40,6 +40,7 @@ declare module 'vue' {
     DrawerCustomizationHeader: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerCustomizationHeader.vue')['default']
     DrawerNestedDrawer: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNestedDrawer.vue')['default']
     DrawerNoTitle: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerNoTitle.vue')['default']
+    ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -99,6 +100,13 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
+<<<<<<< HEAD
+=======
+    ElTimeline: typeof import('element-plus/es')['ElTimeline']
+    ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
+    ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
+    ElTimeSelect: typeof import('element-plus/es')['ElTimeSelect']
+>>>>>>> main
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTransfer: typeof import('element-plus/es')['ElTransfer']
     ElTree: typeof import('element-plus/es')['ElTree']
@@ -214,6 +222,7 @@ declare module 'vue' {
     VabEchartsChart: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEchartsChart.vue')['default']
     VabEchartsChartBar: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEchartsChartBar.vue')['default']
     VabEchartsChartLine: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEchartsChartLine.vue')['default']
+    VabDot: typeof import('./../../components/VabDot/index.vue')['default']
     VabErrorLog: typeof import('./../../components/VabErrorLog/index.vue')['default']
     VabErrorLogContent: typeof import('./../../components/VabErrorLog/components/VabErrorLogContent.vue')['default']
     VabEstimatedCostAccounting: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEstimatedCostAccounting.vue')['default']

@@ -31,11 +31,11 @@
             <p>
               <span class="vab-table-expand-title">执行结果:</span>
               <span v-if="row.executeResult === '登录成功'">
-                <span class="vab-dot vab-dot-success"><span></span></span>
+                <vab-dot type="success" />
                 {{ row.executeResult }}
               </span>
               <span v-else>
-                <span class="vab-dot vab-dot-error"><span></span></span>
+                <vab-dot type="danger" />
                 {{ row.executeResult }}
               </span>
             </p>
@@ -55,11 +55,11 @@
       <el-table-column align="center" label="执行结果" min-width="120" prop="executeResult">
         <template #default="{ row }">
           <span v-if="row.executeResult === '登录成功'">
-            <span class="vab-dot vab-dot-success"><span></span></span>
+            <vab-dot type="success" />
             {{ row.executeResult }}
           </span>
           <span v-else>
-            <span class="vab-dot vab-dot-error"><span></span></span>
+            <vab-dot type="danger" />
             {{ row.executeResult }}
           </span>
         </template>

@@ -29,6 +29,7 @@
 //         meta: {
 //           title: '看板',
 //           icon: 'dashboard-2-line',
+//           guard: ['Admin'],
 //         },
 //       },
 //       {
@@ -38,6 +39,7 @@
 //         meta: {
 //           title: '创作中心',
 //           icon: 'ancient-gate-line',
+//           guard: ['Admin'],
 //         },
 //       },
 //       {
@@ -48,6 +50,7 @@
 //           title: '实时监控',
 //           icon: 'vidicon-2-line',
 //           dot: true,
+//           guard: ['Admin'],
 //         },
 //       },
 //       {
@@ -57,6 +60,7 @@
 //         meta: {
 //           title: '磁贴',
 //           icon: 'collage-line',
+//           guard: ['Admin'],
 //         },
 //       },
 //       {
@@ -66,6 +70,7 @@
 //         meta: {
 //           title: '独立布局',
 //           icon: 'layout-masonry-line',
+//           guard: ['Admin'],
 //         },
 //       },
 //       {
@@ -77,12 +82,13 @@
 //           icon: 'database-2-line',
 //           target: '_blank',
 //           badge: 'Hot',
+//           guard: ['Admin'],
 //         },
 //       },
 //       // {
 //       //   path: 'workbench',
 //       //   name: 'Workbench',
-//       //   component: '/@/views/index/workbench.vue',
+//       //   component:('/@/views/index/workbench.vue'),
 //       //   meta: {
 //       //     title: '工作台',
 //       //     icon: 'artboard-line',
@@ -98,6 +104,7 @@
 //           icon: 'apps-2-line',
 //           noKeepAlive: true,
 //           dot: true,
+//           guard: ['Admin'],
 //         },
 //       },
 //       {
@@ -109,6 +116,7 @@
 //           icon: 'file-word-line',
 //           noKeepAlive: true,
 //           badge: '99+',
+//           guard: ['Admin'],
 //         },
 //       },
 //     ],
@@ -120,6 +128,7 @@
 //     meta: {
 //       title: '组件',
 //       icon: 'code-box-line',
+//       guard: ['Admin'],
 //     },
 //     children: [
 //       {
@@ -152,6 +161,8 @@
 //             component: '/@/views/vab/icon/customSvg.vue',
 //             meta: {
 //               title: '自定义图标',
+//               icon: 'vite',
+//               isCustomSvg: true,
 //             },
 //           },
 //         ],
@@ -964,7 +975,7 @@
 //           {
 //             path: 'params/:id',
 //             name: 'Params',
-//             component: '../views/operate/dynamicSegment/params.vue',
+//             component: '/@/views/operate/dynamicSegment/params.vue',
 //             meta: {
 //               hidden: true,
 //               title: 'Params',
@@ -974,19 +985,19 @@
 //           {
 //             path: 'params/1',
 //             name: 'Params/1',
-//             component: '../views/operate/dynamicSegment/params.vue',
+//             component: '/@/views/operate/dynamicSegment/params.vue',
 //             meta: { title: 'Params id=1' },
 //           },
 //           {
 //             path: 'params/2',
 //             name: 'Params/2',
-//             component: '../views/operate/dynamicSegment/params.vue',
+//             component: '/@/views/operate/dynamicSegment/params.vue',
 //             meta: { title: 'Params id=2' },
 //           },
 //           {
 //             path: 'query',
 //             name: 'Query',
-//             component: '../views/operate/dynamicSegment/query.vue',
+//             component: '/@/views/operate/dynamicSegment/query.vue',
 //             meta: {
 //               hidden: true,
 //               title: 'Query',
@@ -996,13 +1007,13 @@
 //           {
 //             path: 'query?id=1',
 //             name: 'Query?id=1',
-//             component: '../views/operate/dynamicSegment/query.vue',
+//             component: '/@/views/operate/dynamicSegment/query.vue',
 //             meta: { title: 'Query id=1' },
 //           },
 //           {
 //             path: 'query?id=2',
 //             name: 'Query?id=2',
-//             component: '../views/operate/dynamicSegment/query.vue',
+//             component: '/@/views/operate/dynamicSegment/query.vue',
 //             meta: { title: 'Query id=2' },
 //           },
 //         ],
@@ -1053,6 +1064,7 @@
 //     meta: {
 //       title: '模板',
 //       icon: 'clipboard-line',
+//       guard: ['Admin'],
 //     },
 //     children: [
 //       {
@@ -1198,7 +1210,7 @@
 //         component: '/@/views/setting/personalCenter/index.vue',
 //         meta: {
 //           title: '个人中心',
-//           icon: 'map-pin-user-line',
+//           icon: 'user-follow-line',
 //         },
 //       },
 //       {
@@ -1328,6 +1340,7 @@
 //     meta: {
 //       title: '商品',
 //       icon: 'shopping-bag-3-line',
+//       guard: ['Admin'],
 //     },
 //     children: [
 //       {
@@ -1443,6 +1456,7 @@
 //     meta: {
 //       title: 'GPT',
 //       icon: 'chat-1-line',
+//       guard: ['Admin'],
 //     },
 //     children: [
 //       {
@@ -1535,8 +1549,9 @@
 //     component: '/@/views/portal/Portal.vue',
 //     meta: {
 //       title: '门户',
-//       icon: 'user-heart-line',
+//       icon: 'building-line',
 //       target: '_blank',
+//       guard: ['Admin'],
 //     },
 //   },
 //   {
@@ -1555,6 +1570,16 @@
 //     meta: {
 //       title: '合作伙伴',
 //       hidden: true,
+//     },
+//   },
+//   {
+//     path: '//vuejs-core.cn/authorization/shop-vite.html',
+//     name: 'ExternalLink',
+//     meta: {
+//       title: '外链',
+//       target: '_blank',
+//       guard: ['Admin'],
+//       icon: 'external-link-line',
 //     },
 //   },
 //   {
