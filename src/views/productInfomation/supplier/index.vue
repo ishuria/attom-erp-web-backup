@@ -268,9 +268,16 @@ const UploadRequestHandler = async (params: any, row: any) => {
   }
 }
 const handleDownLoadSpecialFile = async (row: any) => {
-  await downloadFile("/product/suppliser/download",{
-    suppliserId: row.suppliserId, 
-  })
+  
+    await downloadFile("/product/suppliser/download",{
+      suppliserId: row.suppliserId, 
+    }).then((res) => {
+      console.log(res);
+      
+    }).catch((error) => {
+      console.error(error);
+      
+    })
 }
 const handleDelFile = (row: any) => {
   row.hide = false

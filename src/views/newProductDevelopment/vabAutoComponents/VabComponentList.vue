@@ -637,7 +637,7 @@ const addSuppliserInfo = async (row: IProgressProdcutComponent) => {
 
     // 必须进行排序，且只有相邻才能跨行
     progressProductList.value.sort((a: IProgressProdcutComponent, b: IProgressProdcutComponent) => a.componentId! - b.componentId!)
-
+    fetchDataComponent()
 }
 
 // 删除供应商，当零件只有一个供应商时，删除供应商连同零件一起删除

@@ -9,7 +9,7 @@
         </el-page-header>
         <el-card class="product-details-card" shadow="never" >
             <el-row :gutter="20">
-                <el-col :span="2" class="custom-upload" style="padding-right: 15px;"> 
+                <el-col :span="2" class="custom-upload"> 
                     <el-upload 
                         list-type="picture-card" 
                         :file-list="sku.imageList" 
@@ -100,7 +100,6 @@
                                         v-model="sku.productManager"
                                         filterable
                                         remote
-                                        allow-create
                                         default-first-option
                                         placeholder="点击输入和搜索"
                                         :remote-method="remotePeopleMethod"
@@ -123,7 +122,6 @@
                                         v-model="sku.productDesign"
                                         filterable
                                         remote
-                                        allow-create
                                         default-first-option
                                         placeholder="点击输入和搜索"
                                         :remote-method="remotePeopleMethod"
@@ -215,7 +213,6 @@
                 :data="tableData"
                 :header-cell-style="{ 'text-align': 'center' }"
                 @cell-click="changeInput"
-         
                 class="noneHoveTable"
             >
                 <el-table-column align="center" label="图片" class="image-wall" min-width="100">
@@ -1484,8 +1481,7 @@ onMounted(async ()=>{
 }
 :deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
     transition: none;  
-    width: 142px;
-    height: 142px;
+
 }
 
 .hide :deep(.el-upload--picture-card) {

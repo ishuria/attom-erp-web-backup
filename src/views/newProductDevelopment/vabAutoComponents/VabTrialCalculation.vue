@@ -536,11 +536,11 @@ const fetchData = async () => {
         first.id = dbInfo.id!
         sampleList.value.push(dbInfo)
     }
-    sampleList.value.forEach((item: any) => {
-            if(item.tariff) {
-                item.tariff = (item.tariff * 100).toFixed(0)
-            }
-        })
+    // sampleList.value.forEach((item: any) => {
+    //         if(item.tariff) {
+    //             item.tariff = (item.tariff * 100).toFixed(0)
+    //         }
+    //     })
 }
 defineExpose({
     fetchData

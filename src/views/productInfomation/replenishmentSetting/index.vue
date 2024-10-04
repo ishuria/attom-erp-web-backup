@@ -20,7 +20,11 @@
         <el-table-column type="selection" width="38" fixed/>
         <el-table-column align="center" label="图片" width="100" prop="skuUrl" >
             <template #default="{ row }">
-                <el-image style="width: 75px; height: 75px" :src="row.skuUrl" fit="fill" data-img="img" />
+                <el-image style="width: 75px; height: 75px" :src="row.skuUrl" fit="fill" data-img="img" >
+                  <template #error>
+                    <el-icon></el-icon>
+                  </template>
+                </el-image>
             </template>
         </el-table-column>
         <el-table-column align="center" label="SKU" min-width="200" prop="sku" />

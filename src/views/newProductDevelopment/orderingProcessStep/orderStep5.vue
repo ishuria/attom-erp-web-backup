@@ -126,12 +126,11 @@
                           v-model="row[prop]"
                           filterable
                           remote
-                          allow-create
                           default-first-option
                           placeholder="点击输入和搜索"
                           :remote-method="remotePeopleMethod"
                           :loading="peopleLoading"
-                          @change="handleInputChange(row, prop)"
+                          @change="handleSampleRetentionStatus(row, prop)"
                           clearable
                     
                         >
@@ -144,20 +143,15 @@
                         </el-select>
                     </template>
                     <template v-if="row['column0'] === 'productDesign'">
-                        <!-- <div class="none">
-                            <el-input type="text" v-model="row[prop]" filterable @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span>  -->
                         <el-select
                           v-model="row[prop]"
                           filterable
                           remote
-                          allow-create
                           default-first-option
                           placeholder="点击输入和搜索"
                           :remote-method="remotePeopleMethod"
                           :loading="peopleLoading"
-                          @change="handleInputChange(row, prop)"
+                          @change="handleSampleRetentionStatus(row, prop)"
                           clearable
                         
                         >
@@ -430,6 +424,7 @@ const handleInputChange = async (row: any, prop: string) => {
               productManager: exchangeList.value[8][key],
               productDesign: exchangeList.value[9][key],
               sampleRetentionStatus: exchangeList.value[10][key],
+              checkStatus: exchangeList.value[11][key],
               orderEntryId: exchangeList.value[15][key],
             })
           }
@@ -437,22 +432,6 @@ const handleInputChange = async (row: any, prop: string) => {
         }
       
       });
-      if (Object.keys(row).length === 3) {
-          await reviewStepNo5SkuInfoPerfect({
-            productLength: exchangeList.value[1][prop],
-              productWidth: exchangeList.value[2][prop],
-              productHeight: exchangeList.value[3][prop],
-              material: exchangeList.value[4][prop],
-              battery: exchangeList.value[5][prop],
-              benchmarkAsin: exchangeList.value[6][prop],
-              patent: exchangeList.value[7][prop],
-              productManager: exchangeList.value[8][prop],
-              productDesign: exchangeList.value[9][prop],
-              sampleRetentionStatus: exchangeList.value[10][prop],
-              orderEntryId: exchangeList.value[15][prop],
-              checkStatus: exchangeList.value[11][prop],
-          })
-        }
     }
   }
 };
@@ -486,6 +465,7 @@ const clickCancle = async (event: any, prop: any) =>{
           productManager: exchangeList.value[8][prop],
           productDesign: exchangeList.value[9][prop],
           sampleRetentionStatus: exchangeList.value[10][prop],
+          checkStatus: exchangeList.value[11][prop],
           orderEntryId: exchangeList.value[15][prop],
         })
     }
@@ -498,7 +478,7 @@ const handlePackingUpdate = async (row: any, prop: any) => {
     // 确保新值非空
     if (newValue !== null && newValue !== undefined && newValue !== '') {
       Object.keys(row).forEach(async key => {
-        if (key !== 'column0' && key !== 'variantsSame' && key !== prop) {
+        if (key !== 'column0' && key !== 'variantsSame') {
           row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
           const update = async () => {
             await reviewStepNo5SkuInfoPerfect({
@@ -509,12 +489,6 @@ const handlePackingUpdate = async (row: any, prop: any) => {
           update()
         }
       });
-      if (Object.keys(row).length === 3) {
-          await reviewStepNo5SkuInfoPerfect({
-              checkStatus: exchangeList.value[11][prop],
-              orderEntryId: exchangeList.value[15][prop],
-          })
-        }
     }
 
   }
@@ -528,7 +502,7 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
     // 确保新值非空
     if (newValue !== null && newValue !== undefined && newValue !== '') {
       Object.keys(row).forEach(async key => {
-        if (key !== 'column0' && key !== 'variantsSame' && key !== prop) {
+        if (key !== 'column0' && key !== 'variantsSame') {
           row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
           const update = async () => {
             await reviewStepNo5SkuInfoPerfect({
@@ -542,18 +516,13 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
               productManager: exchangeList.value[8][key],
               productDesign: exchangeList.value[9][key],
               sampleRetentionStatus: exchangeList.value[10][key],
+              checkStatus: exchangeList.value[11][key],
               orderEntryId: exchangeList.value[15][key],
             })
           }
           update()
         } 
       });
-      if (Object.keys(row).length === 3) {
-          await reviewStepNo5SkuInfoPerfect({
-              sampleRetentionStatus: exchangeList.value[10][prop],
-              orderEntryId: exchangeList.value[15][prop],
-          })
-        }
     }
   }
 }

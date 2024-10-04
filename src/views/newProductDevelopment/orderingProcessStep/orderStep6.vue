@@ -138,7 +138,6 @@
           </el-dialog>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>
         </div>
   </div>
@@ -183,8 +182,16 @@ const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement
 const handleCheckPersonClose = () => {
   checkPersonListVisible.value = false
 }
-const handlePersonSelectConfirm = () => {
+const handlePersonSelectConfirm = async () => {
   checkPersonListVisible.value = false
+  try {
+    const { data } = await reviewStepNo6SaveSix({ reviewId: classReviewId!, reviewPersonId: reviewPersonId.value })
+      if (data === true) {
+        $baseMessage("提交审核成功。","success","hey")
+      }
+  } catch (error) {
+    console.error(error)
+  }
 }
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
@@ -307,22 +314,16 @@ const useTableDataLineToColumn = () => {
     }
   }
 }
-// 当点击保存的时候
-const handleSave = async () => {
-  try {
-    const { data } = await reviewStepNo6SaveSix({ reviewId: classReviewId!, reviewPersonId: reviewPersonId.value })
-    if (data === true) {
-      $baseMessage("当前信息已保存。","success","hey")
-    }
-  } catch (error) {
-    console.error(error)
-  }
-}
+
 // 当点击提交审核的时候
 const handleSaveAndContinue = async () => {
     checkPersonListVisible.value = true
-    const { data }  = await reviewStepNo6PersonList()
-    personList.value = data
+    try {
+      const { data: person }  = await reviewStepNo6PersonList()
+      personList.value = person
+    } catch (error) {
+      console.error(error)
+    }
 }
 // 当点击上一步的时候
 const handleGoback = () => {

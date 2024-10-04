@@ -74,7 +74,7 @@
                                 :autosize="{ minRows: 1, maxRows: 3 }"
                                 @blur="clickCancle($event, row)"
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
-                                @click="handlePriceAndDescClick($index)"
+                          
                              />
                         </div>
                         <span>{{ removeHtmlTags(row.desc) }}</span>
@@ -89,7 +89,7 @@
                                 v-model="row.priceInfo" 
                                 @blur="clickCancle($event, row)" 
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
-                                @click="handlePriceAndDescClick($index)"
+                   
                             />
                         </div>
                         <span>{{ removeHtmlTags(row.priceInfo) }}</span>
@@ -386,9 +386,7 @@ const emit = defineEmits<{
     (e: 'update:imagePreviewVisibale', value: boolean): void
     (e: 'update:priviewListValue', value: string): void
  }>()
-const handlePriceAndDescClick = (index: number) => {
-    _index.value = index
-}
+
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 点击日志弹出富文本框是否显示
@@ -398,26 +396,26 @@ const wangEditorRemarkVisible = ref<boolean>(false)
 const progressLogCopy = ref<string | undefined>('')
 const remarkCopy = ref<string | undefined>('')
 const classify = ref<string>('')
-const _index = ref<number>(0)
+const clickRow = ref<any>()
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {  
-    estimatedCostList.value[_index.value].desc = val
+    clickRow.value.desc = val
   progressLogCopy.value = val
 //   // console.log('点击log执行了');
   await updateProgressProductdesc({
-    accountingId: parseInt(estimatedCostList.value[_index.value].id),
-    productDesc: estimatedCostList.value[_index.value].desc!
+    accountingId: parseInt(clickRow.value.id),
+    productDesc: clickRow.value.desc!
   }) //发送更新数据请求
 }
 const clickRemark = async (val: any) => {
-    estimatedCostList.value[_index.value].priceInfo = val
+    clickRow.value.priceInfo = val
   remarkCopy.value = val
 
   await updateProgressPriceInfo({
-    accountingId: parseInt(estimatedCostList.value[_index.value].id),
-    priceInfo: estimatedCostList.value[_index.value].priceInfo!
+    accountingId: parseInt(clickRow.value.id),
+    priceInfo: clickRow.value.priceInfo!
   }) //发送更新数据请求
 }
 // 去掉 HTML 标签并显示纯文本的方法
@@ -498,7 +496,8 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
         emit("update:priviewListValue",row.imgUrl)
         emit("update:imagePreviewVisibale",true)
     }
-  
+    clickRow.value = row
+    
     if (!cell.children[0].children[0] 
       || !cell.children[0].children[1]
       || !cell.children[0].children[0].classList
