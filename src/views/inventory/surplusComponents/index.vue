@@ -24,89 +24,52 @@
               :header-cell-style="{ 'text-align': 'center' }"
               @cell-click="changeInput"
               class="noneHoveTable"
+              :cell-style="cellStyle"
           >
             
-              <el-table-column align="center" label="图片" class="image-wall" min-width="100">
+              <el-table-column label="图片" class="image-wall" width="100">
                   <template #default="{ row, $index }">
-                      <el-upload 
-                          list-type="picture-card" 
-                          :file-list="row.imageList" 
-                          :class="{ hide: row.hide }"
-                      
-                      >
-                          <el-icon ><Plus /></el-icon>
-                          <template #file="{ file }">
-                              <div>
-                                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                                  <span class="el-upload-list__item-actions">
-                                      <span
-                                          class="el-upload-list__item-preview"
-                                        
-                                      >
-                                          <el-icon><zoom-in /></el-icon>
-                                      </span>
-                                      <span
-                                          class="el-upload-list__item-delete"
-                                      
-                                      >
-                                          <el-icon><Delete /></el-icon>
-                                      </span>
-                                  </span>
-                              </div>
-                          </template>
-                      </el-upload>
+              
+                         
+                      <el-image class="el-upload-list__item-thumbnail" :src="row.url">
+                        <template #error>
+                          <el-icon></el-icon>
+                        </template>
+                      </el-image>
+                               
                   </template>
               </el-table-column>
-              <el-table-column label="零件ID" align="center" prop="sku" width="120"></el-table-column>   
-              <el-table-column label="PO" width="60" prop="quantity" align="center">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.quantity }}</span>
-                  </template>
+              <el-table-column label="零件ID" prop="sku" width="100"></el-table-column>   
+              <el-table-column label="PO" width="60" prop="quantity" >
+   
               </el-table-column>
-              <el-table-column label="零件名" prop="componentName" width="120">
-                  <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
-                  </template>
+              <el-table-column label="零件名" prop="componentName" width="250">
+         
               </el-table-column>
-              <el-table-column label="可用SKU" width="100" prop="componentQuantity" align="center">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.quantity }}</span>
-                  </template>
+              <el-table-column label="可用SKU" width="250" prop="componentQuantity">
+           
               </el-table-column>
-              <el-table-column label="剩余库存" width="100" prop="componentUnit" align="center">
-                  <template #default="{ row }">
-                      <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
-                  </template>
+              <el-table-column label="剩余库存" width="100" prop="componentUnit">
+                
               </el-table-column>
           
-              <el-table-column label="已用库存" prop="taxIncludedPrice" align="center" min-width="80">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.taxIncludedPrice }}</span>
-                  </template>
+              <el-table-column label="已用库存" prop="taxIncludedPrice" min-width="100">
+                
               </el-table-column>    
-              <el-table-column label="使用的PO" width="105px" prop="currency" align="center">
+              <el-table-column label="使用的PO" width="105px" prop="currency" >
  
               </el-table-column>
-              <el-table-column label="单位" width="105px" prop="currency" align="center">
+              <el-table-column label="单位" width="70" prop="currency" >
  
               </el-table-column>
-              <el-table-column align="center" label="仓库" min-width="200" prop="suppliser">
+              <el-table-column label="仓库" min-width="250" prop="suppliser">
               </el-table-column>
-              <el-table-column align="center" label="供应商" min-width="200" prop="suppliser">
+              <el-table-column label="供应商" min-width="250" prop="suppliser">
               </el-table-column>
 
-              <el-table-column align="center" label="采购方" min-width="100" prop="purchaseId">
+              <el-table-column label="采购方" min-width="100" prop="purchaseId">
               </el-table-column>
-              <el-table-column label="不报关" prop="declareCustomsStatus" align="center" min-width="75">
+              <el-table-column label="不报关" prop="declareCustomsStatus" min-width="75">
                   <template #default = "{ row }">
                       <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" />
                   </template>
@@ -130,35 +93,82 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-      
+        <el-table 
+              ref="tableRef" 
+              stripe border 
+              :data="fakeData"
+              :header-cell-style="{ 'text-align': 'center' }"
+              @cell-click="changeInput"
+              class="noneHoveTable"
+              :cell-style="cellStyle"
+          >
+            
+          <el-table-column label="图片" class="image-wall" width="100">
+                  <template #default="{ row, $index }">
+              
+                         
+                      <el-image class="el-upload-list__item-thumbnail" :src="row.url">
+                        <template #error>
+                          <el-icon></el-icon>
+                        </template>
+                      </el-image>
+                               
+                  </template>
+              </el-table-column>
+              <el-table-column label="零件ID" prop="sku" width="100"></el-table-column>   
+              <el-table-column label="PO" width="60" prop="quantity" >
+   
+              </el-table-column>
+              <el-table-column label="零件名" prop="componentName" width="250">
+         
+              </el-table-column>
+              <el-table-column label="可用SKU" width="250" prop="componentQuantity">
+           
+              </el-table-column>
+              <el-table-column label="剩余库存" width="100" prop="componentUnit">
+                
+              </el-table-column>
+          
+              <el-table-column label="已用库存" prop="taxIncludedPrice" min-width="100">
+                
+              </el-table-column>    
+              <el-table-column label="使用的PO" width="105px" prop="currency" >
  
-        <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
+              </el-table-column>
+              <el-table-column label="单位" width="70" prop="currency" >
+ 
+              </el-table-column>
+              <el-table-column label="仓库" min-width="250" prop="suppliser">
+              </el-table-column>
+              <el-table-column label="供应商" min-width="250" prop="suppliser">
+              </el-table-column>
+
+              <el-table-column label="采购方" min-width="100" prop="purchaseId">
+              </el-table-column>
+              <el-table-column label="不报关" prop="declareCustomsStatus" min-width="75">
+                  <template #default = "{ row }">
+                      <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" />
+                  </template>
+              </el-table-column>
+              <template #empty>
+                  <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+              </template>
+          </el-table>
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer @close="" :url-list="imagePriviewList" v-if ="dialogVisible"/>
-    <!-- <wangEditor
-      :title="wangEditorTitle"
-      :wangEditorVisible="wangEditorLogVisible"
-      :content="progressLogCopy"
-      @clickChild="clickLog"
-      @clickBoolean="clickLogBool"
-      :classify="classify"
-    >
-    </wangEditor> -->
   </div>
 </template>
 
 <script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
+import type { TableInstance, TabsPaneContext } from 'element-plus'
+import { ref } from 'vue'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { ref } from 'vue'
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import { IProgressQueryReq, IProgress, IProgressShared, IGetByIdQueryEvaluation, ISelectShare } from '/@/type/progress/progressType'
-
-import type { UploadFile, TabsPaneContext, TableInstance } from 'element-plus'
-
+import { IProgress, IProgressQueryReq } from '/@/type/progress/progressType'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-//   import wangEditor from './wangEditor.vue'
+
 
 
 
@@ -175,7 +185,7 @@ const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
 
 const activeName = ref("0")
-const fixed = ref<string>('right')
+
 const tableRef = ref<TableInstance>()
 const evaluationTableRef = ref<TableInstance>()
 // 表格加载loading状态
@@ -351,7 +361,15 @@ const setPreviewList = (imageUrl:string) =>{
     // console.log(imagePriviewList.value)
 }
 
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+   
+   if  (data.columnIndex !== 3 && data.columnIndex !== 4 && data.columnIndex !== 9 && data.columnIndex !== 10){        
+   
+       return {
+            textAlign:'center'
+        } 
+   }
+}
 
 
 

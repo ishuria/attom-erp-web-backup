@@ -1,0 +1,231 @@
+<template>
+  <el-dialog 
+    v-model="dflag" 
+    :close-on-click-modal="false" 
+    title="添加耗材" 
+    width="40%"
+    class="moldDialog"
+    :before-close="handlerCloseDialog"
+  >
+    <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+    <div id="table-height-container">
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+
+      <el-table 
+        ref="tableRef" 
+        stripe border 
+        :data="list"
+        :header-cell-style="{ 'text-align': 'center' }"
+        @cell-click="changeInput"
+        :cell-style="cellStyle"
+      >
+        <el-table-column  label="图片" class="image-wall" width="100">
+          <template #default="{ row, $index }">
+            
+                  <el-image class="image" :src="row.url" alt="" data-img="img"/>
+
+                  </template>
+              </el-table-column>
+        <el-table-column label="零件ID" width="100" prop="createTime">
+
+        </el-table-column>
+        <el-table-column label="供应商" min-width="200" >
+        </el-table-column>
+        <el-table-column label="耗材名" min-width="200" prop="packagePrecautions">
+        </el-table-column>
+        <el-table-column label="添加数量" min-width="100" prop="packagePrecautions">
+            <template #default="{ row }">
+                <el-input />
+            </template>
+        </el-table-column>
+        <el-table-column label="单位" min-width="70" prop="packagePrecautions">
+        </el-table-column>
+        <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
+      </el-table>
+
+      <vab-pagination
+        :current-page="queryForm.pageNo"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+    </div>
+    <template #footer>
+      <el-button type="danger" @click="handlerCloseDialog">取消</el-button>
+      <el-button type="primary">确认</el-button>
+    </template>
+  </el-dialog>
+  <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+</template>
+
+<script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
+import { delProductQualityInspection } from '/@/api/devlocal/productInformation'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+
+defineOptions({
+  name: 'vabCreateConsumable'
+})
+let props = defineProps<{
+  createConsumableVisible: boolean
+}>();
+const dflag = ref<boolean>(false)
+watchEffect(()=>{
+  dflag.value = props.createConsumableVisible
+  if(dflag.value === true) {
+      // fetchData()
+  }
+}
+)
+/**
+ * 分页
+ */
+const listLoading = ref<boolean>(false)
+const total = ref<number>(0)
+const queryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 20,
+})
+const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = value
+  // fetchData()
+}
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  // fetchData()
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  // fetchData()
+}
+
+const list = ref<any>([])
+
+const tableRef = ref<TableInstance>()
+
+const route: any = useRoute()
+const emit = defineEmits(['update:createConsumableVisible', 'update:tableValue'])
+
+const handlerCloseDialog = () => {
+  dflag.value = false
+  emit('update:createConsumableVisible', dflag.value);
+  emit('update:tableValue', list.value)
+}
+
+
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+ 
+ if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 6){        
+ 
+     return {
+          textAlign:'center'
+      } 
+ }
+}
+
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+    // 处理图片放大预览
+    let el = getSpecificChildren(cell, "img")[0];
+    if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
+      imagePreviewVisible.value = true
+      imagePriviewList.value = []
+      imagePriviewList.value.push(el.src!)
+    }
+}
+
+// 删除
+const handleDelQualityInspection = async (row: any, index: number) => {
+  try {
+      $baseConfirm('确定要删除本条信息吗? ', "系统提示", async () => {
+          try {
+              const { data } = await delProductQualityInspection({ id: row.id! })
+              if (data) {
+                  list.value.splice(index, 1);
+                  // fetchData()
+                  $baseMessage("删除成功！","success","hey")
+              } else {
+                  $baseMessage("删除失败，请重试。", "error", "hey");
+              }
+          } catch (delError) {
+              console.error(delError);
+              $baseMessage("删除操作失败，请重试。", "error", "hey");
+          }
+      });
+  } catch(e){
+      console.log(e as Error)
+ }
+}
+
+
+// /**
+// * 获取样品进度数据
+// */
+// const fetchData = async () => {
+// listLoading.value = true
+// const { data } = await getProductQualityInspection({
+//   skuId: parseInt(route.query.skuId)
+// })
+// list.value = data
+// listLoading.value = false
+// list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
+// }
+
+// onActivated(() => {
+// tableRef.value?.doLayout()
+// })
+
+</script>
+
+<style lang="scss" scoped>
+#table-height-container {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(80vh - 192px);
+  height: calc(80vh - 192px);
+
+  .el-table {
+      flex: 1; // 使表格占据剩余空间
+      overflow: auto; // 确保表格内容可以滚动
+  }
+}
+// // 设置行高
+// :deep(.el-table .el-table__body .cell) {
+//   max-height: 69.8px !important;
+// }
+.custom-checkbox {
+transform: scale(1.2); 
+transform-origin: center;
+}
+.none {
+  display: none;
+}
+.image {
+  width: 75px;
+  height: 75px;
+}
+</style>

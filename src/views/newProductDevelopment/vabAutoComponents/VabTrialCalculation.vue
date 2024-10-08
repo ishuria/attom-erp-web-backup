@@ -9,7 +9,6 @@
                 <el-table 
                     :data="sampleList"
                     @cell-click="sampelTrialTableInputChage"
-                    height="100"
                     border stripe
                     :cell-style="cellStyle" :header-cell-style="{ 'text-align': 'center' }"
                     ref="trialTableRef"
@@ -254,15 +253,15 @@
 </template>
 
 <script lang="ts" setup>
-import {getExchangeRate} from '/@/api/devlocal/evaluation'
-import {convertString} from '/@/utils/stringUtils'
-import {firstLegChannelColumns,estimatedCostAccountingSiteColumns,siteReflectCurrencyAndExchangeRate, } from '../indexCommon'
-import {IProgressEstimatedCostAccounting,IProgressSample } from '/@/type/progress/sampleAndComponentType'
-import {getTrialCalculation,addTrialCalculation,updateTrialCalculation,saveTrialCalculation, getTrialCalculationProductDesc, updateTrialcalculationProductdesc} from '/@/api/devlocal/progressSample'
-import {getRootElement,getSpecificChildren} from '/@/utils/nodeUtils'
-import { TableRefs, TableInstance } from 'element-plus'
-import {formatDate} from '/@/utils/dateUtils'
+import { TableInstance } from 'element-plus'
+import { estimatedCostAccountingSiteColumns, firstLegChannelColumns, siteReflectCurrencyAndExchangeRate, } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
+import { getExchangeRate } from '/@/api/devlocal/evaluation'
+import { addTrialCalculation, getTrialCalculation, getTrialCalculationProductDesc, saveTrialCalculation, updateTrialCalculation, updateTrialcalculationProductdesc } from '/@/api/devlocal/progressSample'
+import { IProgressEstimatedCostAccounting, IProgressSample } from '/@/type/progress/sampleAndComponentType'
+import { formatDate } from '/@/utils/dateUtils'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 const trialTableRef = ref<TableInstance>()
 
