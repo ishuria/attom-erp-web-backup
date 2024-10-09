@@ -3,9 +3,9 @@
         <div class="table-container">
             <vab-query-form>
                 <vab-query-form-left-panel>
-                    <el-button type="primary" @click="handleAddComponent">新增</el-button>
-                    <el-button type="primary">添加零件</el-button>
-                    <el-button type="primary">添加耗材</el-button>
+                    <el-button type="primary" @click="handleCreateComponent">新增</el-button>
+                    <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
+                    <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
                 </vab-query-form-left-panel>
             </vab-query-form>
            
@@ -291,7 +291,18 @@
                 :classify="classify"
             >
             </wangEditor>
-
+            <!-- 添加零件 -->
+            <VabCreateComponent 
+              :createComponentVisible="createComponentVisible"
+              @update:createComponentVisible="handleCloseCreateComponent"
+          
+            />
+            <!-- 添加耗材 -->
+            <VabCreateConsumable 
+              :createConsumableVisible="createConsumableVisible"
+              @update:createConsumableVisible="handleCloseCreateConsumable"
+       
+            />
         </div>
         <div class="table-container">
             <el-table 
@@ -492,6 +503,24 @@ const rules = reactive<any>({
     ],
 
 })
+const createComponentVisible = ref<boolean>(false) //添加零件显示与否
+const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
+// 关闭添加零件对话框
+const handleCloseCreateComponent = (value: boolean) => {
+  createComponentVisible.value = value
+}
+// 关闭添加耗材对话框
+const handleCloseCreateConsumable = (value: boolean) => {
+  createConsumableVisible.value = value
+}
+// 展示添加零件对话框
+const handleAddComponent = () => {
+  createComponentVisible.value = true
+}
+// 展示添加耗材对话框
+const handleAddConsumable = () => {
+  createConsumableVisible.value = true
+}
 // const listLoading = ref<boolean>(true)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
@@ -678,7 +707,7 @@ const handleRemove = async (file: UploadFile, row: any) => {
     }
 }
 // 新增逻辑
-const handleAddComponent = async () => {
+const handleCreateComponent = async () => {
     const newComponent: IreviewStepNo3ComponentList = {
         actualTaxRate: '',
         componentImgUrl: '',

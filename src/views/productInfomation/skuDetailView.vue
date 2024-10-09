@@ -9,7 +9,7 @@
         </el-page-header>
         <el-card class="product-details-card" shadow="never" >
             <el-row :gutter="20">
-                <el-col :span="2" class="custom-upload"> 
+                <el-col :span="2" class="custom-upload" style="padding-right: 0px;padding-left: 0px;"> 
                     <el-upload 
                         list-type="picture-card" 
                         :file-list="sku.imageList" 
@@ -46,14 +46,9 @@
                                     <el-input v-model="sku.sku" placeholder="" disabled></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="6">
-                                <el-form-item label="产品主品名">
-                                    <el-input v-model="sku.productName"  @blur="handleUpdateSku"></el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="6">
-                                <el-form-item label="产品短描述" >
-                                    <el-input v-model="sku.productDesc" @blur="handleUpdateSku"></el-input>
+                            <el-col :span="12">
+                                <el-form-item label="产品名">
+                                    <el-input v-model="mergedProductName" disabled></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -69,7 +64,17 @@
                                     <el-input v-model="sku.europeFnSku" disabled></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="6">
+                            <el-col :span="4">
+                                <el-form-item label="产品主品名">
+                                    <el-input v-model="sku.productName" @blur="handleUpdateSku" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-form-item label="产品短描述">
+                                    <el-input v-model="sku.productDesc" @blur="handleUpdateSku" ></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
                                 <el-form-item label="变体名" >
                                     <el-input v-model="sku.variantName" @blur="handleUpdateSku" ></el-input>
                                 </el-form-item>
@@ -202,9 +207,9 @@
             <div class="comprehensive-table-container">
             <vab-query-form>
                 <vab-query-form-left-panel style="margin-top: 10px;">
-                    <el-button type="primary" @click="handleAddComponent">创建零件</el-button>
-                    <el-button type="primary">添加零件</el-button>
-                    <el-button type="primary">添加耗材</el-button>
+                    <el-button type="primary" @click="handleCreateComponent">创建零件</el-button>
+                    <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
+                    <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
                 </vab-query-form-left-panel>
             </vab-query-form>
             <el-table 
@@ -644,6 +649,18 @@
                 </span>
             </template>
         </el-dialog>
+        <!-- 添加零件 -->
+        <VabCreateComponent 
+          :createComponentVisible="createComponentVisible"
+          @update:createComponentVisible="handleCloseCreateComponent"
+          @update:tableValue="handleTableDataValue"
+        />
+        <!-- 添加耗材 -->
+        <VabCreateConsumable 
+          :createConsumableVisible="createConsumableVisible"
+          @update:createConsumableVisible="handleCloseCreateConsumable"
+          @update:tableValue="handleTableDataValue"
+        />
         <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
     </div>
 </template>
@@ -677,6 +694,28 @@ const form = reactive<any>({
     actualTaxRate: '',
     invoicingTaxRate: '',
 })
+// 产品名 = 产品主品名-产品短描述-变体名
+const mergedProductName = computed(() => {
+  return `${sku.value.productName}-${sku.value.productDesc}-${sku.value.variantName}`
+})
+const createComponentVisible = ref<boolean>(false) //添加零件显示与否
+const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
+// 关闭添加零件对话框
+const handleCloseCreateComponent = (value: boolean) => {
+  createComponentVisible.value = value
+}
+// 关闭添加耗材对话框
+const handleCloseCreateConsumable = (value: boolean) => {
+  createConsumableVisible.value = value
+}
+// 展示添加零件对话框
+const handleAddComponent = () => {
+  createComponentVisible.value = true
+}
+// 展示添加耗材对话框
+const handleAddConsumable = () => {
+  createConsumableVisible.value = true
+}
 const peopleLoading = ref(false) //搜索产品经理和产品设计loading
 const peopleOptions = ref<any[]>([]) //搜索选项
 const peopleList = ref<any[]>([]) //搜索列表
@@ -1024,7 +1063,7 @@ const handlerCloseDialog = () => {
     addComponentVisible.value = false
 }
 const consumableTypeOption = ref<any>()
-const handleAddComponent = async () => { //点击创建零件
+const handleCreateComponent = async () => { //点击创建零件
     addComponentVisible.value = true
     formRef.value?.resetFields()
     const { data } = await getProductConsumablesType() //获取耗材种类
@@ -1428,6 +1467,7 @@ onMounted(async ()=>{
 :deep(.el-card__body) {
     padding-bottom: 2px;
     padding-right: 0;
+    /* padding-left: 0; */
 }
 .product-details-card {
     border: 0;

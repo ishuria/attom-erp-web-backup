@@ -202,6 +202,11 @@ const handleDelQualityInspection = async (row: any, index: number) => {
 </script>
 
 <style lang="scss" scoped>
+.moldDialog  { 
+  .el-dialog__body{
+    padding-top: 0px;
+  }
+}
 #table-height-container {
   display: flex;
   flex-direction: column;

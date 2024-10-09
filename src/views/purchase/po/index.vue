@@ -6,15 +6,15 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
             <el-button type="success" >已付全款</el-button>
-            <el-button type="warning" >分批付款</el-button>
-            <el-button type="danger" >退款</el-button>
-            <el-button type="primary" >总价分摊</el-button>
+            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
             <el-button type="primary" >生成合同</el-button>
-            <el-button type="primary" >聚合合同</el-button>
-            <el-button type="primary" >生成汇款模板</el-button>
-            <el-button type="primary" >降本提成申请</el-button>
-            <el-button type="primary" >自动签收设定</el-button>
-            <el-button type="primary" >删除</el-button>
+            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
+            <el-button type="primary" @click="handleDelPo">删除</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="8">
           <el-form inline :model="queryForm" @submit.prevent>
@@ -37,10 +37,11 @@
           @cell-click="changeInput"
           class="noneHoveTable"
           :cell-style="cellStyle"
+          @selection-change="setSelectRow"
         >
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
-              <el-link type="primary">{{ row.po }}</el-link>
+              <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" prop="createTime" min-width="115"></el-table-column>
@@ -123,7 +124,7 @@
           </el-table-column>
           <el-table-column  label="付款记录" min-width="230" prop="records">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory">{{ row.records }}</el-link>
+              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.records"></el-link>
             </template>
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId">
@@ -152,14 +153,138 @@
         <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
       </el-tab-pane>
       <el-tab-pane label="部分付款" name="1">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="16">
+            <el-button type="success" >已付全款</el-button>
+            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button type="primary" >生成合同</el-button>
+            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
+            <el-button type="primary" @click="handleDelPo">删除</el-button>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="8">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+        </vab-query-form>
+
       </el-tab-pane>
       <el-tab-pane label="已付全款" name="2">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="16">
+            <el-button type="success" >已付全款</el-button>
+            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button type="primary" >生成合同</el-button>
+            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
+            <el-button type="primary" @click="handleDelPo">删除</el-button>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="8">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+        </vab-query-form>
       </el-tab-pane>
       <el-tab-pane label="超额付款" name="3">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="16">
+            <el-button type="success" >已付全款</el-button>
+            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button type="primary" >生成合同</el-button>
+            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
+            <el-button type="primary" @click="handleDelPo">删除</el-button>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="8">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+        </vab-query-form>
       </el-tab-pane>
       <el-tab-pane label="已完结" name="4">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="16">
+            <el-button type="success" >已付全款</el-button>
+            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button type="primary" >生成合同</el-button>
+            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="8">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+        </vab-query-form>
       </el-tab-pane>
       <el-tab-pane label="已删除" name="5">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="16">
+            <el-button type="success" >已付全款</el-button>
+            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button type="primary" >生成合同</el-button>
+            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="8">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+        </vab-query-form>
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer @close="" :url-list="imagePriviewList" v-if ="dialogVisible"/>
@@ -197,7 +322,7 @@
           </el-table-column>
           <el-table-column label="付款百分比" min-width="130" prop="payPercent" >
             <template #default="{ row }">
-              {{ row.payPercent }}
+              {{ row.payPercent }}%
             </template>
           </el-table-column>
           <el-table-column label="操作人" min-width="130" prop="person">
@@ -212,22 +337,155 @@
           </template>
         </el-table>
       </div>
+      <template #footer></template>
+    </el-dialog>
+    <!-- 分批付款 -->
+    <el-dialog
+      v-model="installmentVisible"
+      :close-on-click-modal="false" 
+      title="分批付款" 
+      width="20%"
+      class="moldDialog"
+      :before-close="handleCloseInstallmentDialog"
+    >
+      <el-divider class="divider-margin"/>
+      <el-form label-position="top" label-width="auto" class="form-center">
+        <el-form-item label="百分比">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="金额">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="已付全款" label-position="right">
+          <el-checkbox class="customPay-checkbox"></el-checkbox>
+        </el-form-item>
+      </el-form>
       <template #footer>
-
+        <el-button @click="handleCloseInstallmentDialog">关闭</el-button>
+        <el-button type="primary">确认</el-button>
       </template>
     </el-dialog>
+    <!-- 退款 -->
+    <el-dialog
+      v-model="refundVisible"
+      :close-on-click-modal="false" 
+      title="退款" 
+      width="30%"
+      class="moldDialog"
+      :before-close="handleCloseRefundDialog"
+    >
+      <el-divider class="divider-margin"/>
+      <el-form label-position="top" label-width="auto" class="form-center">
+        <el-form-item label="百分比">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="金额">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="凭证上传">
+          <el-upload action="#" drag multiple class="upload-width">
+            <el-icon class="el-icon--upload">
+              <upload-filled />
+            </el-icon>
+            <div class="el-upload__text">
+              将文件拖拽至此处或
+              <em>点击上传</em>
+            </div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseRefundDialog">关闭</el-button>
+        <el-button type="primary">确认</el-button>
+      </template>
+    </el-dialog>
+    <!-- 总价分摊 -->
+    <el-dialog
+      v-model="totalPriceSharingVisible"
+      :close-on-click-modal="false" 
+      title="总价分摊" 
+      width="20%"
+      class="moldDialog"
+      :before-close="handleCloseTotalPriceSharingDialog"
+    >
+      <el-divider class="divider-margin"/>
+      <el-form label-position="top" label-width="auto" class="form-center">
+        <el-form-item label="总含税价">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="总含税运费">
+          <el-input></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseTotalPriceSharingDialog">关闭</el-button>
+        <el-button type="primary">确认</el-button>
+      </template>
+    </el-dialog>
+    <!-- 聚合合同 -->
+    <el-dialog
+      v-model="mergeContractVisible"
+      :close-on-click-modal="false" 
+      title="聚合合同-请上传需要聚合的合同" 
+      width="30%"
+      class="moldDialog"
+      :before-close="handleCloseMergeContractDialog"
+    >
+      <el-divider class="divider-margin"/>
+      <el-form class="form-center">
+        <el-form-item >
+          <el-upload action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" v-model:file-list="contractList" 
+          drag multiple class="upload-width" :show-file-list="true" :auto-upload="false">
+            <el-icon class="el-icon--upload">
+              <upload-filled />
+            </el-icon>
+            <div class="el-upload__text">
+              将文件拖拽至此处或
+              <em>点击上传</em>
+            </div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseMergeContractDialog">关闭</el-button>
+        <el-button type="primary">确认</el-button>
+      </template>
+    </el-dialog>
+    <!-- 生成汇款模板 -->
+    <el-dialog
+      v-model="generateMoneyTransferVisible"
+      :close-on-click-modal="false" 
+      title="生成汇款模板" 
+      width="35%"
+      class="moldDialog"
+      :before-close="handleCloseGenerateMoneyTransferDialog"
+    >
+      <el-divider class="divider-margin"/>
+      <el-form label-position="top" label-width="auto" class="form-center">
+        <el-form-item label="日期">
+          <el-date-picker v-model="generateMoneyTransferTime" end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="datetimerange" time-format="HH:mm" format="YYYY-MM-DD HH:mm"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseGenerateMoneyTransferDialog">关闭</el-button>
+        <el-button type="primary">确认</el-button>
+      </template>
+    </el-dialog>
+    <!-- 自动签收设定 -->
+    <vab-automatic-signature
+      :automaticSignatureVisible="automaticSignatureVisible"
+      @update:automatic-signature-visible="handleCloseAutomaticSignature"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Search, UploadFilled } from '@element-plus/icons-vue'
+import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IProgress } from '/@/type/progress/progressType'
-
-import type { TableInstance, TabsPaneContext } from 'element-plus'
-
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 //   import wangEditor from './wangEditor.vue'
 
@@ -243,7 +501,7 @@ const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
-const editRef = ref<any>(null)
+const contractList = ref<any>([])
 
 const activeName = ref("0")
 
@@ -253,20 +511,125 @@ const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 // 新品进度列表
 let progressList = ref<IProgress[]>([])
+// 勾选行的数组
+const selectRow = ref<any>([])
 // 付款进度显示与否
 const paymentHistoryVisible = ref<boolean>(false)
+// 分批付款显示与否
+const installmentVisible = ref<boolean>(false)
+// 退款显示与否
+const refundVisible = ref<boolean>(false)
+// 总价分摊显示与否
+const totalPriceSharingVisible = ref<boolean>(false)
+// 聚合合同显示与否
+const mergeContractVisible = ref<boolean>(false)
+// 生成汇款模板显示与否
+const generateMoneyTransferVisible = ref<boolean>(false)
+// 生成汇款日期时间
+const generateMoneyTransferTime = ref<string>('')
+// 自动签收显示与否
+const automaticSignatureVisible = ref<boolean>(false)
+// 付款进度传的row
+const payHistoryRow = ref<any>()
 // 关闭付款进度弹窗
 const handleClosePaymentHistoryDialog = () => {
   paymentHistoryVisible.value = false
+  payHistoryRow.value.records = fakePay
+    .map((item: any) => {
+      const payAmount = item.money - item.money * (item.payPercent / 100); // 计算乘法
+      return `${item.payTime.split(' ')[0]}: ${item.payPercent}%(${payAmount})`;
+    })
+    .join('<br>');
 }
-const handleShowPaymentHistory = () => {
+// 展示付款进度弹窗
+const handleShowPaymentHistory = (row: any) => {
   paymentHistoryVisible.value = true
+  payHistoryRow.value = row
 }
-// 总记录数
-const total = ref<number>(0)
+// 展示分批付款弹窗
+const handleShowInstallment = () => {
+  installmentVisible.value = true
+}
+// 关闭分批付款弹窗
+const handleCloseInstallmentDialog = () => {
+  installmentVisible.value = false
+}
+// 展示退款弹窗
+const handleShowRefund = () => {
+  refundVisible.value = true
+}
+// 关闭退款弹窗
+const handleCloseRefundDialog = () => {
+  refundVisible.value = false
+}
+// 展示总价分摊弹窗
+const handleShowTotalPriceSharing = () => {
+  totalPriceSharingVisible.value = true
+}
+// 关闭总价分摊弹窗
+const handleCloseTotalPriceSharingDialog = () => {
+  totalPriceSharingVisible.value = false
+}
+// 展示聚合合同弹窗
+const handleShowMergeContract = () => {
+  mergeContractVisible.value = true
+}
+// 关闭聚合合同弹窗
+const handleCloseMergeContractDialog = () => {
+  mergeContractVisible.value = false
+}
+// 展示生成汇款模板弹窗
+const handleShowGenerateMoneyTransfer = () => {
+  generateMoneyTransferVisible.value = true
+  generateMoneyTransferTime.value = ''
+}
+// 关闭生成汇款模板弹窗
+const handleCloseGenerateMoneyTransferDialog = () => {
+  generateMoneyTransferVisible.value = false
+}
+// 选中行变化
+const setSelectRow = (value: any) => {
+  selectRow.value = value
+}
+// 降本提成申请PO
+const handleReduceCost = () => {
+  if (selectRow.value.length === 0) {
+    $baseMessage('请选择需要提交降本提成申请的PO', 'warning', 'hey')
+  }
+}
+// 打开自动签收设定弹窗
+const handleShowAutomaticSignature = () => {
+  automaticSignatureVisible.value = true
+}
+// 关闭自动签收设定弹窗
+const handleCloseAutomaticSignature = (value: boolean) => {
+  automaticSignatureVisible.value = value
+}
+// 删除
+const handleDelPo = () => {
+  $baseConfirm('确定要删除该条PO吗? ', "系统提示", async () => {
+     
+       
+    $baseMessage("删除操作失败，请重试。", "error", "hey");
+          
+  });
+}
+// 跳转po详情
+const handlePoDetail = (row: any) => {
+  router.push({
+    path: '/purchase/poDetail',
+    query: {
+      title: "采购订单详情",
+      from: row.po,
+      timestamp: Date.now(),
+    },
+  })
+}
 /**
  * 分页
  */
+// 总记录数
+const total = ref<number>(0)
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
@@ -317,35 +680,18 @@ const queryData = () => {
 //     }
 //   }
 // }
-const handlePlannedPoDetail = (row: any) => {
-router.push({
-      path: '/purchase/plannedPoDetail',
-      query: {
-          title: "采购计划订单详情",
-          timestamp: Date.now(),
-      },
-  })
-}
-const handlePlannedPoCreate = () => {
-router.push({
-      path: '/purchase/plannedPoCreate',
-      query: {
-          title: "采购计划创建",
-          timestamp: Date.now(),
-      },
-  })
-}
+
 const fakePay = [
   {
     payTime: '2024-08-01',
-    money: '22',
-    payPercent: '30%',
+    money: '200',
+    payPercent: '30',
     person: '胡东丽',
   },
   {
-    payTime: '2024-08-01',
-    money: '22',
-    payPercent: '30%',
+    payTime: '2024-08-05',
+    money: '200',
+    payPercent: '20',
     person: '胡东丽',
   },
 ]
@@ -685,7 +1031,6 @@ onBeforeMount(() => {
 :deep(.el-upload-list--picture-card .el-upload-list__item) {
   width: 75px;
   height: 75px;
-  margin: 0 8px 0 0;
   transition: none;
 }
 :deep(.el-upload--picture-card) {
@@ -696,13 +1041,7 @@ onBeforeMount(() => {
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-// 下拉框宽度
-:deep(.el-select--default .el-select__wrapper) {
-  width: 50px;
-  padding-left: 8px;
-  padding-right: 6px;
-  font-size: var(--el-font-size-base);
-}
+
 
 // 控制添加图片图标显示与隐藏
 .hide :deep(.el-upload--picture-card) {
@@ -716,33 +1055,43 @@ onBeforeMount(() => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-.ghost {
-  opacity: 0.5;
-  background: #c8ebfb;
-}
+
 // 开模申请
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
 }
    
-// .shareSelectDialog {
-//   .el-dialog__body {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-//   }
-// }
-:deep(.shareSelectDialog .el-dialog__body) {
-  display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+
 // input框内容居中
 .input-center {
   text-align: center;
   text-align-last: center;
+}
+// 分批付款表单左右margin
+.form-center {
+  margin: 0 20px;
+}
+// 分批付款的已付全款多选框
+.customPay-checkbox {
+  transform: scale(1.3); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
+}
+// 分隔线margin
+.divider-margin {
+  margin-top: 0; 
+  margin-bottom: 20px;
+}
+.upload-width {
+  width: 100%;
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>
 

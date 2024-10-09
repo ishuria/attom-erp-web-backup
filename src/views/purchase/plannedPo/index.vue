@@ -5,7 +5,6 @@
       <el-tab-pane label="待发布" name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
-            
             <el-button type="primary" @click="handlePlannedPoCreate">创建</el-button>
             <el-button type="success" @click="handleAllPublishPo">批量发布</el-button>
             <el-button type="warning" @click="handleAllMOQ">批量未达MOQ</el-button>
@@ -23,7 +22,7 @@
               :cell-style="cellStyle"
               @selection-change="setSelectRows"
           >
-              <el-table-column type="selection" class="custom-checkbox">
+              <el-table-column type="selection" class="custom-checkbox" >
               </el-table-column>
               <el-table-column label="创建日期" prop="createTime" min-width="115"></el-table-column>
               <el-table-column label="请购人" prop="person"></el-table-column>
@@ -260,38 +259,37 @@ const setSelectRows = (value: string) => {
   selectRows.value = value
 }
   
-  defineOptions({
-    name: 'ProgressTable',
-  })
+defineOptions({
+  name: 'ProgressTable',
+})
+
+const router = useRouter()
   
-  const router = useRouter()
+const routesStore = useRoutesStore()
+
   
-  const routesStore = useRoutesStore()
-  const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-  const tabsStore = useTabsStore()
-  const { changeTabsMeta, addVisitedRoute } = tabsStore
-  const editRef = ref<any>(null)
-  
-  const activeName = ref("0")
-  const fixed = ref<string>('right')
-  const tableRef = ref<TableInstance>()
-  const evaluationTableRef = ref<TableInstance>()
-  // 表格加载loading状态
-  const listLoading = ref<boolean>(true)
-  // 新品进度列表
-  let progressList = ref<IProgress[]>([])
-  let tableClickProgressId = ref<number>(0)
-  // 点击上传图标的行下标
-  let tableClickRowIndex = ref<number>(0)
-  // 总记录数
-  const total = ref<number>(0)
-  const queryForm = reactive<IProgressQueryReq>({
-    pageNo: 1,
-    pageSize: 20,
-    productKeyWord: '',
-    status: 0, //查询状态：0表示进行中 1表示已归档
-  })
-// 采购计划col合并方法
+const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
+
+const tabsStore = useTabsStore()
+const { changeTabsMeta, addVisitedRoute } = tabsStore
+const editRef = ref<any>(null)
+
+const activeName = ref("0")
+const tableRef = ref<TableInstance>()
+// 表格加载loading状态
+const listLoading = ref<boolean>(true)
+// 新品进度列表
+let progressList = ref<IProgress[]>([])
+
+// 总记录数
+const total = ref<number>(0)
+const queryForm = reactive<IProgressQueryReq>({
+  pageNo: 1,
+  pageSize: 20,
+  productKeyWord: '',
+  status: 0, //查询状态：0表示进行中 1表示已归档
+})
+//采购计划col合并方法
 // const objectSpanMethod = ({
 //   row,
 //   column,
@@ -323,7 +321,7 @@ const setSelectRows = (value: string) => {
 //       return { rowspan: 0, colspan: 0 };
 //     }
 //   }
-  // }
+// }
 const handleAllMOQ = () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning', 'hey')
@@ -367,21 +365,23 @@ const handlePublishPo = async (row: any) => {
 }
 const handlePlannedPoDetail = (row: any) => {
   router.push({
-        path: '/purchase/plannedPoDetail',
-        query: {
-            title: "采购计划订单详情",
-            timestamp: Date.now(),
-        },
-    })
+    path: '/purchase/poDetail',
+    query: {
+      title: "采购计划订单详情",
+      from: 'plannedPoDetail',
+      timestamp: Date.now(),
+    },
+  })
 }
 const handlePlannedPoCreate = () => {
   router.push({
-        path: '/purchase/plannedPoCreate',
-        query: {
-            title: "采购计划创建",
-            timestamp: Date.now(),
-        },
-    })
+    path: '/purchase/poDetail',
+    query: {
+      title: "采购计划创建",
+      from: 'plannedPoCreate',
+      timestamp: Date.now(),
+    },
+  })
 }
 const fakeData = [
     { 
@@ -735,6 +735,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     transform: scale(1.2); // 放大 20%
     transform-origin: center; // 确保放大从中心开始
   }
+
   .ghost {
     opacity: 0.5;
     background: #c8ebfb;
@@ -758,5 +759,15 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
       align-items: center;
       justify-content: center;
   }
+  /* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+
   </style>
   

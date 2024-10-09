@@ -2,15 +2,18 @@
   <el-dialog 
     v-model="dflag" 
     :close-on-click-modal="false" 
-    title="添加零件" 
-    width="70%"
+    title="自动签收设定" 
+    width="35%"
     class="moldDialog"
     :before-close="handlerCloseDialog"
   >
     <el-divider style="margin-top: 0; margin-bottom: 20px"/>
     <div id="table-height-container">
       <vab-query-form>
-        <vab-query-form-right-panel :span="24">
+        <vab-query-form-left-panel>
+          <el-button type="primary">新增</el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
               <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
@@ -31,28 +34,13 @@
         @cell-click="changeInput"
         :cell-style="cellStyle"
       >
-        <el-table-column  label="图片" class="image-wall" width="100">
-          <template #default="{ row, $index }">
-            
-                  <el-image class="image" :src="row.url" alt="" data-img="img"/>
-
-                  </template>
-              </el-table-column>
-        <el-table-column label="零件ID" width="100" prop="createTime">
+        <el-table-column label="零件" min-width="200" prop="component">
 
         </el-table-column>
-        <el-table-column label="SKU" width="200" prop="sku">
-        </el-table-column>
-        <el-table-column label="供应商" min-width="200" >
-        </el-table-column>
-        <el-table-column label="零件名" min-width="200" prop="packagePrecautions">
-        </el-table-column>
-        <el-table-column label="添加数量" min-width="100" prop="packagePrecautions">
-            <template #default="{ row }">
-                <el-input />
-            </template>
-        </el-table-column>
-        <el-table-column label="单位" min-width="70" prop="packagePrecautions">
+        <el-table-column label="操作" prop="packagePrecautions" min-width="100">
+          <template #default="{ row }">
+            <el-button text type="danger">删除</el-button>
+          </template>
         </el-table-column>
         <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
@@ -68,28 +56,25 @@
       />
     </div>
     <template #footer>
-      <el-button type="danger" @click="handlerCloseDialog">取消</el-button>
-      <el-button type="primary">确认</el-button>
+
     </template>
   </el-dialog>
-  <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection } from '/@/api/devlocal/productInformation'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { delProductQualityInspection } from '/@/api/devlocal/productInformation'
 
 defineOptions({
-  name: 'vabCreateComponent'
+  name: 'vabAutomaticSignature'
 })
 let props = defineProps<{
-  createComponentVisible: boolean
+  automaticSignatureVisible: boolean
 }>();
 const dflag = ref<boolean>(false)
 watchEffect(()=>{
-  dflag.value = props.createComponentVisible
+  dflag.value = props.automaticSignatureVisible
   if(dflag.value === true) {
       // fetchData()
   }
@@ -123,61 +108,27 @@ const list = ref<any>([])
 const tableRef = ref<TableInstance>()
 
 const route: any = useRoute()
-const emit = defineEmits(['update:createComponentVisible', 'update:tableValue'])
+const emit = defineEmits(['update:automaticSignatureVisible', 'update:tableValue'])
 
 const handlerCloseDialog = () => {
   dflag.value = false
-  emit('update:createComponentVisible', dflag.value);
+  emit('update:automaticSignatureVisible', dflag.value);
   emit('update:tableValue', list.value)
 }
 
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
- 
- if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 6){        
- 
+ if  (data.columnIndex === 1){        
      return {
           textAlign:'center'
       } 
  }
 }
-const handleAdd = async () => {
-  try {
-      const newQualityInspection = {
-          skuId: parseInt(route.query.skuId),
-          status: 1,
-          checkType: 0,
-          packagePrecautions: '',
-      }
-      const { data } = await addProductQualityInspection(newQualityInspection)
-      if (data) {
-          const { data: tableData } = await getProductQualityInspection({
-              skuId: parseInt(route.query.skuId)
-          })
-          list.value = tableData
-          list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
-          $baseMessage('新增质检清单成功', 'success', 'hey')
-      }
-  } catch (error) {
-      console.error(error)
-  }
-}
-// 预览图片列表
-const imagePriviewList = ref<string[]>([])
-// 控制预览图片的隐藏显示
-const imagePreviewVisible = ref<boolean>(false)
-// 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
-}
+
+
+
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-      imagePreviewVisible.value = true
-      imagePriviewList.value = []
-      imagePriviewList.value.push(el.src!)
-    }
+
 }
 
 // 删除
@@ -224,11 +175,6 @@ const handleDelQualityInspection = async (row: any, index: number) => {
 </script>
 
 <style lang="scss" scoped>
-.moldDialog  { 
-  .el-dialog__body{
-    padding-top: 0px;
-  }
-}
 #table-height-container {
   display: flex;
   flex-direction: column;
@@ -244,16 +190,8 @@ const handleDelQualityInspection = async (row: any, index: number) => {
 // :deep(.el-table .el-table__body .cell) {
 //   max-height: 69.8px !important;
 // }
-.custom-checkbox {
-transform: scale(1.2); 
-transform-origin: center;
-}
 .none {
   display: none;
-}
-.image {
-  width: 75px;
-  height: 75px;
 }
 
 </style>

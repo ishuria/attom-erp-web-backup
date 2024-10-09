@@ -3,13 +3,14 @@
        <el-page-header  @back="goBack" style="margin-bottom: 0px;">
            <template #content>
                <div class="flex items-center">
-                   <span> <strong>计划详情</strong></span>
+                   <span> <strong>{{ handlePoTitle() }}</strong></span>
+                   <el-button v-if="route.query.from !== 'plannedPoDetail' && route.query.from !== 'plannedPoCreate'" type="primary" style="margin-left: 10px">SKU替换</el-button>
                </div>
            </template>
        </el-page-header>
        <el-card class="product-details-card" shadow="never" >
            <el-row :gutter="20">
-               <el-col :span="2" class="custom-upload" style="padding-right: 0px;padding-left: 0px;"> 
+               <el-col :span="2" class="custom-upload" style="padding-right: 0px;width: 100%"> 
                   <el-form label-position="top">
                     <el-form-item label="订货套数" >
                       <el-input v-model="sku.orderQuantity"></el-input>
@@ -47,17 +48,17 @@
                   </el-form>
                   
                </el-col>
-               <el-col :span="10" style="padding-right: 0px;">
+               <el-col :span="10" style="padding-right: 0px; padding-left: 0">
                    <el-form label-position="top" :inline="true">
                        <el-row style="width: 100%">
                            <el-col :span="12">
                                <el-form-item label="SKU">
-                                   <el-input v-model="sku.sku" placeholder="" disabled></el-input>
+                                   <el-select v-model="sku.sku" placeholder="" :disabled="skuDisabled" filterable></el-select>
                                </el-form-item>
                            </el-col>
                            <el-col :span="12">
                                <el-form-item label="产品名称">
-                                   <el-input v-model="sku.productName"  @blur="handleUpdateSku"></el-input>
+                                   <el-input v-model="sku.productName" @blur="handleUpdateSku" :disabled="productNameDisabled"></el-input>
                                </el-form-item>
                            </el-col>
                        </el-row>
@@ -164,8 +165,8 @@
                <vab-query-form-left-panel style="margin-top: 10px;" :span="24">
                   <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
                   <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
-                  <el-button type="primary">价格更新</el-button>
-                  <el-button type="primary">采购方和不报关更新</el-button>
+                  <el-button v-if="route.query.from !== 'plannedPoCreate'" type="primary">价格更新</el-button>
+                  <el-button v-if="route.query.from !== 'plannedPoCreate'" type="primary">采购方和不报关更新</el-button>
                   
                   <el-text type="danger" class="text-center">注意：零件名修改仅限品名规范修正，严禁将一个零件的名字修改为另外一个零件</el-text>
                  
@@ -452,9 +453,12 @@
                        <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
                    </template>
                </el-table-column>
-               <el-table-column fixed="right" label="操作" width="150" align="center">
+               <el-table-column fixed="right" label="操作" min-width="200" align="center">
                  <template #default="{ row, $index }">
-                   <el-button type="primary">删除</el-button>
+                    <el-space>
+                      <el-button v-if="route.query.from !== 'plannedPoDetail' && route.query.from !== 'plannedPoCreate'" text type="primary">更新价格</el-button>
+                      <el-button text type="danger">删除</el-button>
+                    </el-space>
                  </template>
                </el-table-column>
                <template #empty>
@@ -507,7 +511,7 @@
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { FormInstance, UploadFile } from 'element-plus'
 import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
-import { createProductComponent, delComponentImage, delSkuImage, getProductAllSupplier, getProductSkuDetail, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
+import { createProductComponent, delComponentImage, delSkuImage, getProductAllSupplier, getProductSupplier, updateProductComponent, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
@@ -534,8 +538,31 @@ const form = reactive<any>({
    actualTaxRate: '',
    invoicingTaxRate: '',
 })
-
-
+// 处理编辑框是否可编辑
+const skuDisabled = ref<boolean>(false)
+const productNameDisabled = ref<boolean>(false)
+const handleInputDisabled = () => {
+  if (route.query.from === 'plannedPoDetail') {
+    skuDisabled.value = true
+    productNameDisabled.value = false
+  } else if (route.query.from === 'plannedPoCreate') {
+    skuDisabled.value = false
+    productNameDisabled.value = true
+  } else {
+    skuDisabled.value = true
+    productNameDisabled.value = false
+  }
+}
+// 处理订单详情、创建的标题
+const handlePoTitle = () => {
+  if (route.query.from === 'plannedPoDetail') {
+     return '计划详情'
+  } else if (route.query.from === 'plannedPoCreate') {
+    return '采购计划创建'
+  } else {
+    return route.query.from
+  }
+}
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
 const supplierList = ref<any[]>([]) //供应商搜索列表
@@ -699,7 +726,7 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
 const handleSuppliserChange = async (row: any) => {
    const { data } = await updateProductComponent(row)
    if (data === true) {
-       fetchData()
+      //  fetchData()
       //  fetchComponentData()
    }
 }
@@ -719,25 +746,38 @@ const handleTableDataValue = (value: any) => {
        .map((item: any) => `${item.createTime.split(' ')[0]}: ${item.packagePrecautions}`)
        .join('\n');
 }
-const tableData = ref<any>([])
+const tableData = ref<any>([
+  {
+    componentName: '123',
+    quantity: 33,
+  },
+  {
+    componentName: '123',
+    quantity: 33,
+  },
+    {
+    componentName: '123',
+    quantity: 33,
+  },
+])
 const handleUpdateSku = async () => {
-   await updateProductSku({
-       skuId: sku.value.skuId,
-       productName: sku.value.productName,
-       productDesc: sku.value.productDesc,
-       variantName: sku.value.variantName,
-       defaultRepository: sku.value.defaultRepository,
-       minQuantity: sku.value.minQuantity,
-       numCartons: sku.value.numCartons,
-       productManager: sku.value.productManager,
-       productDesign: sku.value.productDesign,
-   })
+  //  await updateProductSku({
+  //      skuId: sku.value.skuId,
+  //      productName: sku.value.productName,
+  //      productDesc: sku.value.productDesc,
+  //      variantName: sku.value.variantName,
+  //      defaultRepository: sku.value.defaultRepository,
+  //      minQuantity: sku.value.minQuantity,
+  //      numCartons: sku.value.numCartons,
+  //      productManager: sku.value.productManager,
+  //      productDesign: sku.value.productDesign,
+  //  })
 }
 const handleRemarksChange = async () => {
-   await updateProductSkuRemark({
-       skuId: sku.value.skuId,
-       remarks: sku.value.remarks
-   })
+  //  await updateProductSkuRemark({
+  //      skuId: sku.value.skuId,
+  //      remarks: sku.value.remarks
+  //  })
 }
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
@@ -753,19 +793,19 @@ const contractCopy = ref<string>('')
 * 当点击确认时，子组件传递给父组件的新的val
 */
 const clickAttentionConfirm = async (val: any) => {
-   const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
-   if (data === true) {
-       attentionCopy.value = val
-       clickRow.value.purchaseMatters = val
-   }
+  //  const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
+  //  if (data === true) {
+  //      attentionCopy.value = val
+  //      clickRow.value.purchaseMatters = val
+  //  }
    // await updateProductComponent(clickRow.value)
 }
 const clickContractConfirm = async (val: any) => {
-   const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
-   if (data === true) {
-       contractCopy.value = val
-       clickRow.value.contractTerms = val
-   }
+  //  const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
+  //  if (data === true) {
+  //      contractCopy.value = val
+  //      clickRow.value.contractTerms = val
+  //  }
 }
 /**
 * 当点击取消，确认时，子组件传递给父组件 false
@@ -888,7 +928,7 @@ const handleSubmit = async () => {
            if (data) {
                tableData.value.push(newComponent)
               //  fetchComponentData()
-               fetchData()
+              //  fetchData()
                addComponentVisible.value = false
                $baseMessage('创建零件提交成功', 'success', 'hey')
            }
@@ -1009,34 +1049,34 @@ const clickCancle = async (event:any,value:any) =>{
    }
    if (event.type === 'blur') {
        // 执行失去焦点处理逻辑
-       await updateProductComponent({
-           id: value.id,
-           skuId: value.skuId,
-           componentId: value.componentId,
-           existingPartsListId: value.existingPartsListId,
-           suppliserId: value.suppliserId,
-           quantity: value.quantity,
-           unitPrice: value.unitPrice,
-           totalPrice: value.totalPrice,
-           preTaxPrice: value.preTaxPrice,
-           taxIncludedPrice: value.taxIncludedPrice,
-           currency: value.currency,
-           minimumOrderQuantity: value.minimumOrderQuantity,
-           numberFullCartons: value.numberFullCartons,
-           defaultSuppliserId: value.defaultSuppliserId,
-           invoicing: value.invoicing,
-           purchaseId: value.purchaseId,
-           declareCustomsStatus: value.declareCustomsStatus,
-           purchaseLink: value.purchaseLink,
-           defaultRepositoryId: value.defaultRepositoryId,
-           purchaseMatters: value.purchaseMatters,
-           contractTerms: value.contractTerms,
-       })
+      //  await updateProductComponent({
+      //      id: value.id,
+      //      skuId: value.skuId,
+      //      componentId: value.componentId,
+      //      existingPartsListId: value.existingPartsListId,
+      //      suppliserId: value.suppliserId,
+      //      quantity: value.quantity,
+      //      unitPrice: value.unitPrice,
+      //      totalPrice: value.totalPrice,
+      //      preTaxPrice: value.preTaxPrice,
+      //      taxIncludedPrice: value.taxIncludedPrice,
+      //      currency: value.currency,
+      //      minimumOrderQuantity: value.minimumOrderQuantity,
+      //      numberFullCartons: value.numberFullCartons,
+      //      defaultSuppliserId: value.defaultSuppliserId,
+      //      invoicing: value.invoicing,
+      //      purchaseId: value.purchaseId,
+      //      declareCustomsStatus: value.declareCustomsStatus,
+      //      purchaseLink: value.purchaseLink,
+      //      defaultRepositoryId: value.defaultRepositoryId,
+      //      purchaseMatters: value.purchaseMatters,
+      //      contractTerms: value.contractTerms,
+      //  })
       //  fetchComponentData()
    }
 
    // 重新获取实际总成本
-   fetchData()
+  //  fetchData()
 }
 // 处理默认采购方
 const handleDefaultPurchase = async (row: any) => {
@@ -1048,7 +1088,7 @@ const handleDefaultPurchase = async (row: any) => {
        row.declareCustomsStatus = 0
    } 
    await updateProductComponent(row)
-   fetchData()
+  //  fetchData()
   //  fetchComponentData()
 }
 // 处理不报关
@@ -1066,19 +1106,19 @@ const handleDeclareCustoms = async (row: any) => {
        } 
    } else {
        await updateProductComponent(row)
-       fetchData()
+      //  fetchData()
       //  fetchComponentData()
    }
 }
 const handleCurrencyChange = async (row: any) => {
    await updateProductComponent(row)
-   fetchData()
+  //  fetchData()
   //  fetchComponentData()
 }
 const handleInvoicingChange = async (row: any) => {
    const { data } = await updateProductComponent(row)
    if (data === true) {
-       fetchData()
+      //  fetchData()
       //  fetchComponentData()
    }
 }
@@ -1131,22 +1171,22 @@ const goBack = async () => {
   history.back()
 }
 
-// sku详情数据
-const fetchData = async () =>{
+// // sku详情数据
+// const fetchData = async () =>{
 
- const { data } = await getProductSkuDetail({
-   skuId: route.query.skuId
- })
- Object.assign(sku.value, data)
+//  const { data } = await getProductSkuDetail({
+//    skuId: route.query.skuId
+//  })
+//  Object.assign(sku.value, data)
  
- if (!sku.value.skuImgUrl) {
-   sku.value.hide = false
-   sku.value.imageList = []
- } else {
-   sku.value.hide = true
-   sku.value.imageList = [{ url: sku.value.skuImgUrl }]
- }
-}
+//  if (!sku.value.skuImgUrl) {
+//    sku.value.hide = false
+//    sku.value.imageList = []
+//  } else {
+//    sku.value.hide = true
+//    sku.value.imageList = [{ url: sku.value.skuImgUrl }]
+//  }
+// }
 const formattedPrice = (price: string) => {
    return parseFloat(price).toFixed(2)
 }
@@ -1180,12 +1220,9 @@ const purchaseOption = ref<any>()
 //    packingList.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
 //    handleTableDataValue(packingList.value) //初始化质检清单数据
 // }
-// onMounted(async ()=>{
-//  fetchData()
-//  fetchComponentData()
-//  fetchPurchaseAndRepository()
-//  fetchInspection()
-// })
+onMounted(async ()=>{
+  handleInputDisabled()
+})
 </script>
 
 <style scoped>
@@ -1198,6 +1235,7 @@ const purchaseOption = ref<any>()
 :deep(.el-card__body) {
    padding-bottom: 2px;
    padding-right: 0;
+   padding-left: 0;
 }
 .product-details-card {
    border: 0;
@@ -1240,9 +1278,40 @@ const purchaseOption = ref<any>()
    justify-content: center; /* 水平居中 */
    align-items: center; /* 垂直居中，如果需要 */
 }
-:deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
+/* :deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
    transition: none;  
+}
+:deep(.el-upload) {
+  width: 100%;
+  height: 150px;
+} */
+/* :deep(.el-upload) {
+  position: relative;
+  width: 100%; 
+  padding-top: 100%; 
+}
 
+:deep(.el-upload .el-upload-list--picture-card) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+:deep(.el-upload .el-icon) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+} */
+/*图片上传框对齐*/
+.upload-align {
+  margin-top: 30px;
+  width: 100%;
+}
+:deep(.upload-align .el-upload-list--picture-card) {
+  width: 100%;
 }
 
 .hide :deep(.el-upload--picture-card) {
@@ -1267,9 +1336,5 @@ const purchaseOption = ref<any>()
   align-items: center;
   justify-content: center;
 }
-/*图片上传框对齐*/
-.upload-align {
-  margin-top: 30px;
-  width: 100%;
-}
+
 </style>

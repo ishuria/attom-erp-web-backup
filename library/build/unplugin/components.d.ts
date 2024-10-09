@@ -189,6 +189,7 @@ declare module 'vue' {
     VabAlert: typeof import('./../../components/VabAlert/index.vue')['default']
     VabApp: typeof import('./../../components/VabApp/index.vue')['default']
     VabAppMain: typeof import('./../../components/VabAppMain/index.vue')['default']
+    VabAutomaticSignature: typeof import('./../../../src/views/purchase/vabAutoComponents/vabAutomaticSignature.vue')['default']
     VabAvatar: typeof import('./../../components/VabAvatar/index.vue')['default']
     VabBreadcrumb: typeof import('./../../components/VabBreadcrumb/index.vue')['default']
     VabCard: typeof import('./../../components/VabCard/index.vue')['default']
