@@ -1,17 +1,15 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import { 
-    IaddPurchaseCompany, 
-    IgetPurchaseRepositoryResp, 
-    IPurchaserId, 
-    IupdatePurchaseCompany,
-    IaddPurchaseRepository,
-    IRepositoryId,
-    IupdatePurchaseRepository 
+import {
+  IaddPurchaseCompany,
+  IaddPurchaseRepository,
+  IgetPurchaseRepositoryResp,
+  IPurchaserId,
+  IRepositoryId,
+  IupdatePurchaseCompany,
+  IupdatePurchaseRepository
 } from '/@/type/purchase/ourInformationType'
-
-
 
 // 我司信息-查询列表
 export function getPurchaseCompanyList() {

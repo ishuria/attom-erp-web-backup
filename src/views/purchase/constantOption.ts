@@ -17,8 +17,40 @@ export const siteList = [
   },
 ]
 
-export const repositoryOption = [
-  { label: '云舟-川桥路', value: 1 },
-  { label: '云梧舟', value: 2 },
-  { label: '埃托姆', value: 3 },
+export const currencyNumList = [
+  {
+    value: 0,
+    label: 'RMB',
+  },
+  {
+    value: 1,
+    label: 'USD',
+  },
+  {
+    value: 2,
+    label: 'EUR',
+  },
 ]
+export const invoicingNumList = [
+  {
+    value: 0,
+    label: '专票',
+  },
+  {
+    value: 1,
+    label: '普票',
+  },
+  {
+    value: 2,
+    label: '无法开票',
+  },
+ ]
+export type CurrencyCode = 0 | 1 | 2; // 定义币种代码类型
+
+export const currencyMap: Record<CurrencyCode, string> = {
+  0: 'RMB',
+  1: 'USD',
+  2: 'EUR'
+};
+
+
