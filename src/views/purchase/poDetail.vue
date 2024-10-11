@@ -10,10 +10,10 @@
     </el-page-header>
     <el-card class="product-details-card" shadow="never" >
       <el-row :gutter="20">
-        <el-col :span="2" class="custom-upload" style="padding-right: 0px;width: 100%"> 
+        <el-col :span="2" class="custom-upload" style="padding-right: 0px;padding-left: 10px;"> 
           <el-form label-position="top">
             <el-form-item label="订货套数" >
-              <el-input v-model="poDetailData.quantity"></el-input>
+              <el-input v-model="poDetailData.purchaseSkuNumber" @blur="handleUpdateSkuCount"></el-input>
             </el-form-item>
             <el-form-item >
               <el-upload 
@@ -48,12 +48,12 @@
           </el-form>
           
         </el-col>
-        <el-col :span="10" style="padding-right: 0px; padding-left: 0">
+        <el-col :span="10" style="padding-right: 0px;">
           <el-form label-position="top" :inline="true">
             <el-row style="width: 100%">
                 <el-col :span="12">
                     <el-form-item label="SKU">
-                        <el-select v-model="poDetailData.sku" placeholder="" :disabled="skuDisabled" filterable></el-select>
+                        <el-select v-model="poDetailData.sku" :disabled="skuDisabled" filterable @change="handleCreatePlanPo"></el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -79,7 +79,7 @@
             <el-row style="width: 100%">
                 <el-col :span="12">
                   <el-form-item label="PO站点">
-                    <el-select v-model="poDetailData.site" placeholder="请选择站点" @change="handleUpdateSku">
+                    <el-select v-model="poDetailData.site" placeholder="请选择站点" @change="handleUpdatePoSite">
                       <el-option
                         v-for="item in siteList"
                         :label="item.label"
@@ -163,8 +163,8 @@
         <vab-query-form-left-panel style="margin-top: 10px;" :span="24">
           <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
           <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
-          <el-button v-if="route.query.from !== 'plannedPoCreate'" type="primary">价格更新</el-button>
-          <el-button v-if="route.query.from !== 'plannedPoCreate'" type="primary">采购方和不报关更新</el-button>
+          <el-button v-if="route.query.from !== 'plannedPoCreate'" type="primary" @click="handleUpdateAllComponentPrice">价格更新</el-button>
+          <el-button v-if="route.query.from !== 'plannedPoCreate'" type="primary" @click="handleShowUpdatePurchaserDialog">采购方和不报关更新</el-button>
           <el-text type="danger" class="text-center">注意：零件名修改仅限品名规范修正，严禁将一个零件的名字修改为另外一个零件</el-text>
         </vab-query-form-left-panel>
       </vab-query-form>
@@ -464,7 +464,7 @@
         <el-table-column fixed="right" label="操作" min-width="200" align="center">
           <template #default="{ row, $index }">
             <el-space>
-              <el-button v-if="route.query.from !== 'plannedPoDetail' && route.query.from !== 'plannedPoCreate'" text type="primary">更新单价</el-button>
+              <el-button v-if="route.query.from !== 'plannedPoCreate'" text type="primary" @click="handleUpdateComponentPrice(row)">更新单价</el-button>
               <el-button text type="danger" @click="handleDelPoSKuComponent(row, $index)">删除</el-button>
             </el-space>
           </template>
@@ -474,8 +474,8 @@
         </template>
       </el-table>
       <el-footer class="button-center">
-        <el-button type="primary">上一个</el-button>
-        <el-button type="primary">下一个</el-button>
+        <el-button v-if="previousVisible" type="primary" @click="handleFetchPreviousData">上一个</el-button>
+        <el-button v-if="nextVisible" type="primary" @click="handleFetchNextData">下一个</el-button>
         <el-button type="warning">添加SKU</el-button>
         <el-button type="danger" @click="handleDelSKU">删除SKU</el-button>
       </el-footer>
@@ -503,26 +503,57 @@
     <VabCreateComponent 
       :createComponentVisible="createComponentVisible"
       @update:createComponentVisible="handleCloseCreateComponent"
-      @update:tableValue="handleTableDataValue"
+    
     />
     <!-- 添加耗材 -->
     <VabCreateConsumable 
       :createConsumableVisible="createConsumableVisible"
       @update:createConsumableVisible="handleCloseCreateConsumable"
-      @update:tableValue="handleTableDataValue"
+  
     />
+    <!-- 采购方更新 -->
+    <el-dialog
+      title="采购方更新"
+      v-model="updatePurchaserVisible"
+      width="15%"
+      class="dialog"
+      :before-close="handleCloseUpdatePurchaserDialog"
+    >
+      <el-divider class="divider-margin"></el-divider>
+      
+     
+        <el-checkbox
+          v-model="purchaser0"
+          label="更新当前SKU下零件的采购方"
+          size="large"
+        />
+        <el-checkbox
+          v-model="purchaser1"
+          label="更新零件的采购方"
+          size="large"
+        />
+     
+      
+      <template #footer>
+        <span>
+          <el-button @click="updatePurchaserVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleConfirmUpdatePurchaser">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
+     
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import { FormInstance, UploadFile } from 'element-plus'
+import { UploadFile } from 'element-plus'
 import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
-import { delComponentImage, delSkuImage, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
-import { deletePoSkuComponent, getPoContractTerms, getPoDetail, getPoPurchaseMatters, getPoSkuComponentList, getSupplierRate, updatePoContractTerms, updatePoPurchaseMatters, updatePoSkuComponent } from '/@/api/devlocal/purchasePo'
+import { delComponentImage, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
+import { createPlanPo, deletePoSku, deletePoSkuComponent, deleteSkuImg, getPoContractTerms, getPoDetail, getPoPurchaseMatters, getPoSkuComponentList, getPoSkuIdList, getSupplierRate, updateAllComponentPrice, updateBuyerAndCustomsDeclaration, updateComponentPrice, updatePoContractTerms, updatePoPurchaseMatters, updatePoRemarks, updatePoSite, updatePoSkuComponent, updateSkuCount, updateSkuDetail, updateSkuImg } from '/@/api/devlocal/purchasePo'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetPoSkuComponentList, IPurchaseOption, IRepositoryOption } from '/@/type/purchase/po'
+import { IPurchaseOption, IRepositoryOption } from '/@/type/purchase/po'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -535,10 +566,21 @@ const { delVisitedRoute } = tabsStore
 // po详情
 const poDetailData = ref<any>({})
 // PoSku配件数据
-const skuComponentList = ref<IGetPoSkuComponentList[]>([])
-const formRef = ref<FormInstance>()
-const qualityCheckList = ref<any>()
-
+const skuComponentList = ref<any>([])
+// 更新采购方是否可见
+const updatePurchaserVisible = ref<boolean>(false)
+const purchaser0 = ref<boolean>(false)
+  const purchaser1 = ref<boolean>(false)
+// 更新采购方选择的选项列表
+const selectedPurchasers = ref<string[]>([])
+// 控制上一个显示
+const previousVisible = ref<boolean>(false)
+// 控制下一个显示
+const nextVisible = ref<boolean>(false)
+// po的SkuId列表
+const poSkuIdList = ref<number[]>([])
+// 当前skuId在id列表的下标
+const poSkuIdIndex = ref<number>()
 // 处理编辑框是否可编辑
 const skuDisabled = ref<boolean>(false)
 const productNameDisabled = ref<boolean>(false)
@@ -564,6 +606,92 @@ const handlePoTitle = () => {
     return route.query.from
   }
 }
+const createComponentVisible = ref<boolean>(false) //添加零件显示与否
+const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
+//点击添加零件
+const handleAddComponent = async () => { 
+  createComponentVisible.value = true
+}
+//点击添加耗材
+const handleAddConsumable = () => {
+  createConsumableVisible.value = true
+}
+// 关闭添加零件对话框
+const handleCloseCreateComponent = (value: boolean) => {
+  createComponentVisible.value = value
+}
+// 关闭添加耗材对话框
+const handleCloseCreateConsumable = (value: boolean) => {
+  createConsumableVisible.value = value
+}
+// 打开更新采购方对话框
+const handleShowUpdatePurchaserDialog = () => {
+  updatePurchaserVisible.value = true
+}
+// 关闭更新采购方对话框
+const handleCloseUpdatePurchaserDialog = () => {
+  updatePurchaserVisible.value = false
+}   
+
+// 点击更新采购方确认
+const handleConfirmUpdatePurchaser = async () => {
+  // 都不选，点击确认，判断两个都没勾选，就直接报错，必须勾选一个
+  if (!purchaser0.value && !purchaser1.value) {
+    $baseMessage('两个选项至少勾选一个', 'error', 'hey')
+  } else if (purchaser0.value && !purchaser1.value) { //只勾选了第一个，点击确认，可以提交，传递参数0
+    try {
+      const { data } = await updateBuyerAndCustomsDeclaration({
+        poSkuId: parseInt(route.query.poSkuId),
+        type: '0'
+      })
+      if (data === true) {
+        $baseMessage('采购方和不报关更新成功', 'success', 'hey')
+        handleCloseUpdatePurchaserDialog()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  } else if (!purchaser0.value && purchaser1.value) { //只勾选了第二个，点击确认，可以提交，传递参数1
+    try {
+      const { data } = await updateBuyerAndCustomsDeclaration({
+        poSkuId: parseInt(route.query.poSkuId),
+        type: '1'
+      })
+      if (data === true) {
+        $baseMessage('采购方和不报关更新成功', 'success', 'hey')
+        handleCloseUpdatePurchaserDialog()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  } else if (purchaser0.value && purchaser1.value) { //勾选两个，提交0，1
+    try {
+      const { data } = await updateBuyerAndCustomsDeclaration({
+        poSkuId: parseInt(route.query.poSkuId),
+        type: '0,1'
+      })
+      if (data === true) {
+        $baseMessage('采购方和不报关更新成功', 'success', 'hey')
+        handleCloseUpdatePurchaserDialog()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+
+// const handleSubmitOtherSku = async () => {
+//    addOtherSkuVisible.value = false
+//    $baseConfirm('添加后不可逆，无法批量删除，是否继续？', '系统提示', async () => {
+//        const { data } = await addProductComponentOtherSku({
+//            skuIds: `${transferValue.value}`,
+//            componentId: _compoenntId.value!
+//        })
+//        if(data === true) {
+//            $baseMessage('添加到其他SKU成功', 'success', 'hey')
+//        }
+//    });
+// }
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
 const supplierList = ref<any[]>([]) //供应商搜索列表
@@ -589,165 +717,56 @@ const remoteMethod = async (query: string) => {
    options.value = []
  }
 }
-
-
-
-const handleDelSKU = () => {
-  // 只有一个sku的 删除的是po 
-  $baseConfirm('确定要删除PO吗', null, async () => {
-    $baseMessage('发布到PO成功', 'success', 'hey')
-  })
-  // 有多个sku的 删除当前sku
+interface Option2 {
+  key: number
+  label: string
+  initial: number
 }
-// po-sku零配件删除
-const handleDelPoSKuComponent = async (row: any, index: number) => {
-  $baseConfirm('确定要删除该条零件信息吗', "系统提示", async () => {
-    $baseConfirm('确定删除，是否继续？', '系统提示', async () => {
-      try {
-        const { data } = await deletePoSkuComponent({
-          id: row.id
-        });
-        if (data === true) {
-          skuComponentList.value.splice(index, 1)
-          fetchSkuComponent()
-          // fetchData()
-          $baseMessage('该条零件删除成功', 'success', 'hey');
-        }
-      } catch (error) {
-        console.error('删除失败:', error);
-      }
-    });
-  })
-}
-// const handleDel = async (row: any, index: number) => {
-//    $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
-//        $baseConfirm('确定删除，是否继续？', '系统提示', async () => {
-//            const { data } = await delProductComponent({
-//                componentId: row.componentId
-//            })
-//            if (data) {
-//                tableData.value.splice(index, 1)
-//               //  fetchComponentData()
-//                fetchData()
-//                $baseMessage('SKU零配件删除成功', 'success', 'hey')
-//            }
-//        });
-//    })
-// }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if  (data.columnIndex === 1 || data.columnIndex === 6){        
-    return {
-      color: '#bbb',
-      cursor: 'not-allowed',
-      textAlign:'center'
-    } 
+// PO详情SKU订货套数更新
+const handleUpdateSkuCount = async () => {
+  try {
+    await updateSkuCount({
+      poSkuId: poDetailData.value.poSkuId,
+      count: poDetailData.value.purchaseSkuNumber
+    })
+  } catch (error) {
+    console.error(error)
   }
 }
-
-
-// 预览图片列表
-const imagePriviewList = ref<string[]>([])
-// 控制预览图片的隐藏显示
-const imagePreviewVisible = ref<boolean>(false)
-// 图片预览关闭事件
-const imagePreviewClose = () =>{
- imagePreviewVisible.value = false;
-}
-// 图片预览事件
-const handlePreview = (file: UploadFile) => {
-   imagePreviewVisible.value = true
-   imagePriviewList.value = []
-   imagePriviewList.value.push(file.url!)
-}
-/**
-* 图片删除功能
-*/
-const handleRemove = async (file: UploadFile) => {
- try {
-   $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-       const { data } = await delSkuImage({
-           skuId: poDetailData.value.skuId
-       })
-       if (data == true) {
-        poDetailData.value.imageList = []
-        poDetailData.value.hide = false
-           $baseMessage("SKU图片删除成功!","success","hey")
-       }
-   })
-   
- } catch (error) {
-   console.error(error)
- }
-}
-const handleComponentRemove = async (file: UploadFile, row: any) => {
- try {
-   $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-
-       const { data } = await delComponentImage({
-           id: row.id
-       })
-       if (data == true) {
-           row.imageList = []
-           row.hide = false
-           $baseMessage("SKU零配件图片删除成功!","success","hey")
-       }
-   })
-   
- } catch (error) {
-   console.error(error)
- }
-}
-
-const createComponentVisible = ref<boolean>(false) //添加零件显示与否
-const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
-// 关闭添加零件对话框
-const handleCloseCreateComponent = (value: boolean) => {
-  createComponentVisible.value = value
-}
-// 关闭添加耗材对话框
-const handleCloseCreateConsumable = (value: boolean) => {
-  createConsumableVisible.value = value
-}
-   
-const handleTableDataValue = (value: any) => {
-   qualityCheckList.value = value
-       .map((item: any) => `${item.createTime.split(' ')[0]}: ${item.packagePrecautions}`)
-       .join('\n');
-}
-const tableData = ref<any>([
-  {
-    componentName: '123',
-    quantity: 33,
-  },
-  {
-    componentName: '123',
-    quantity: 33,
-  },
-    {
-    componentName: '123',
-    quantity: 33,
-  },
-])
+// 采购sku详情更新
 const handleUpdateSku = async () => {
-  //  await updateProductSku({
-  //      skuId: sku.value.skuId,
-  //      productName: sku.value.productName,
-  //      productDesc: sku.value.productDesc,
-  //      variantName: sku.value.variantName,
-  //      defaultRepository: sku.value.defaultRepository,
-  //      minQuantity: sku.value.minQuantity,
-  //      numCartons: sku.value.numCartons,
-  //      productManager: sku.value.productManager,
-  //      productDesign: sku.value.productDesign,
-  //  })
+  try {
+    await updateSkuDetail({
+      poSkuId: poDetailData.value.poSkuId,
+      productName: poDetailData.value.productName,
+      repositoryId: poDetailData.value.repositoryId,
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
+// 采购PO的站点更新
+const handleUpdatePoSite = async () => {
+  try {
+    await updatePoSite({
+      id: poDetailData.value.id,
+      site: poDetailData.value.site
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 采购PO的备注更新
 const handleRemarksChange = async () => {
-  //  await updateProductSkuRemark({
-  //      skuId: sku.value.skuId,
-  //      remarks: sku.value.remarks
-  //  })
+  try {
+    await updatePoRemarks({
+      id: poDetailData.value.id,
+      remarks: poDetailData.value.poRemarks
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
-
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 分类
@@ -764,15 +783,15 @@ const contractCopy = ref<string>('')
 const clickAttentionConfirm = async (val: any) => {
    const { data } = await updatePoPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
    if (data === true) {
-       attentionCopy.value = val
-       clickRow.value.purchaseMatters = val
+      attentionCopy.value = val
+      clickRow.value.purchaseMatters = val
    }
 }
 const clickContractConfirm = async (val: any) => {
    const { data } = await updatePoContractTerms({ id: clickRow.value.id, contractTerms: val})
    if (data === true) {
-       contractCopy.value = val
-       clickRow.value.contractTerms = val
+      contractCopy.value = val
+      clickRow.value.contractTerms = val
    }
 }
 /**
@@ -790,43 +809,6 @@ const removeHtmlTags = (html: string): string => {
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
 };
-
-
-
-const addComponentVisible = ref<boolean>(false)
-
-
-
-const consumableTypeOption = ref<any>()
-//点击添加零件
-const handleAddComponent = async () => { 
-  createComponentVisible.value = true
-}
-//点击添加耗材
-const handleAddConsumable = () => {
-  createConsumableVisible.value = true
-}
-
-
-// const handleSubmitOtherSku = async () => {
-//    addOtherSkuVisible.value = false
-//    $baseConfirm('添加后不可逆，无法批量删除，是否继续？', '系统提示', async () => {
-//        const { data } = await addProductComponentOtherSku({
-//            skuIds: `${transferValue.value}`,
-//            componentId: _compoenntId.value!
-//        })
-//        if(data === true) {
-//            $baseMessage('添加到其他SKU成功', 'success', 'hey')
-//        }
-//    });
-// }
-interface Option2 {
-  key: number
-  label: string
-  initial: number
-}
-
-
 /**
 * 当点击时切换输入框，修改输入
 */
@@ -906,7 +888,32 @@ const clickCancle = async (event:any,value:any) => {
     updateSkuComponent(value)
   }
 }
-
+// 更新价格
+const handleUpdateAllComponentPrice = async () => {
+  try {
+    const { data } = await updateAllComponentPrice({
+      poSkuId: parseInt(route.query.poSkuId)
+    })
+    if (data === true) {
+      $baseMessage('该SKU下的所有零件价格全部更新成功', 'success', 'hey')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 更新单价
+const handleUpdateComponentPrice = async (row: any) => {
+  try {
+    const { data } = await updateComponentPrice({
+      poSkuComponentId: row.id
+    })
+    if (data === true) {
+      $baseMessage('单价更新成功', 'success', 'hey')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 // 获取供应商税点信息 不需要disabled?
 const fetchSupplierRate = async (row: any) => {
   try {
@@ -967,61 +974,156 @@ const handleDeclareCustoms = async (row: any) => {
     updateSkuComponent(row)
   }
 }
-
-// 点击图标的行的下标
-const clickIconRowIndex = ref<number>()
-/**
-* 点击添加图标事件
-*/
-const handleIconClick = (index: number) => {
- // 获得点击行的下标
- clickIconRowIndex.value = index
+// PO详情删除SKU
+const handleDelSKU = async () => {
+  // 只有一个sku的 删除的是po 
+  if (poSkuIdList.value.length === 1) {
+    $baseConfirm('确定要删除PO吗', '系统提示', async () => {
+      try {
+        const { data } = await deletePoSku({
+          poSkuId: parseInt(route.query.poSkuId)
+        })
+        if (data === true) {
+          $baseMessage('删除PO成功', 'success', 'hey')
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    })
+  } else if (poSkuIdList.value.length > 1) { // 有多个sku的 删除当前sku
+    try {
+      $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
+        const { data } = await deletePoSku({
+          poSkuId: parseInt(route.query.poSkuId)
+        })
+        if (data === true) {
+          $baseMessage('删除SKU成功', 'success', 'hey')
+        }
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
+// po-sku零配件删除
+const handleDelPoSKuComponent = async (row: any, index: number) => {
+  $baseConfirm('确定要删除该条零件信息吗', "系统提示", async () => {
+    $baseConfirm('确定删除，是否继续？', '系统提示', async () => {
+      try {
+        const { data } = await deletePoSkuComponent({
+          id: row.id
+        });
+        if (data === true) {
+          skuComponentList.value.splice(index, 1)
+          fetchSkuComponent()
+          fetchData()
+          $baseMessage('该条零件删除成功', 'success', 'hey');
+        }
+      } catch (error) {
+        console.error('删除失败:', error);
+      }
+    });
+  })
 }
 
+// 预览图片列表
+const imagePriviewList = ref<string[]>([])
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+ imagePreviewVisible.value = false;
+}
+// 图片预览事件
+const handlePreview = (file: UploadFile) => {
+   imagePreviewVisible.value = true
+   imagePriviewList.value = []
+   imagePriviewList.value.push(file.url!)
+}
 /**
 * 上传图片
 */
-const uploadImgForm = ref(new FormData()) as any;
-
 async function uploadImage(params: any) {
   poDetailData.value.hide = true
-   try {
-       uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
-       uploadImgForm.value.append('file', params.file);
-       uploadImgForm.value.append('skuId', poDetailData.value.skuId);
-
-       const { data } = await uploadSkuImage(uploadImgForm.value)
-       
-       poDetailData.value.imageList = [{ url: data }]
-   } catch (error) {
-       console.error(error)
-   }
+  try {
+    let uploadImgForm = new FormData(); // 每次上传前重置 FormData
+    uploadImgForm.append('file', params.file);
+    uploadImgForm.append('poSkuId', poDetailData.value.poSkuId);
+    const { data } = await updateSkuImg(uploadImgForm)
+    poDetailData.value.imageList = [{ url: data }]
+  } catch (error) {
+    console.error(error)
+  }
 }
 async function uploadSkuComponentImage(params: any, row: any) {
    row.hide = true
    try {
-       uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
-       uploadImgForm.value.append('file', params.file);
-       uploadImgForm.value.append('id', row.id);
+      let uploadImgForm = new FormData() // 每次上传前重置 FormData
+       uploadImgForm.append('file', params.file);
+       uploadImgForm.append('id', row.id);
 
-       const { data } = await uploadComponentImage(uploadImgForm.value)
+      //  const { data } = await uploadComponentImage(uploadImgForm.value)
        
-       row.imageList = [{ url: data }]
+      //  row.imageList = [{ url: data }]
    } catch (error) {
        console.error(error)
    }
 }
-// back
-const goBack = async () => {
-  await delVisitedRoute(handleActivePath(route, true))
-  history.back()
+/**
+* 图片删除功能
+*/
+const handleRemove = async (file: UploadFile) => {
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+      const { data } = await deleteSkuImg({
+        poSkuId: poDetailData.value.poSkuId
+      })
+      if (data === true) {
+        poDetailData.value.imageList = []
+        poDetailData.value.hide = false
+        $baseMessage("SKU详情图片删除成功!","success","hey")
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
+const handleComponentRemove = async (file: UploadFile, row: any) => {
+ try {
+   $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
 
-
+       const { data } = await delComponentImage({
+           id: row.id
+       })
+       if (data == true) {
+           row.imageList = []
+           row.hide = false
+           $baseMessage("SKU零配件图片删除成功!","success","hey")
+       }
+   })
+   
+ } catch (error) {
+   console.error(error)
+ }
+}
+// 当点击上一个按钮
+const handleFetchPreviousData = () => {
+  // 获取当前路由的查询参数
+  const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! - 1] };
+  // 使用 router.push 修改路由
+  router.push({ path: '/purchase/poDetail', query });
+}
+// 当点击下一个按钮
+const handleFetchNextData = () => {
+  // 获取当前路由的查询参数
+  const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! + 1] };
+  // 使用 router.push 修改路由
+  router.push({ path: '/purchase/poDetail', query });
+}
+// 价格保留两位小数
 const formattedPrice = (price: string) => {
    return parseFloat(price).toFixed(2)
 }
-
 // 获取采购方和收货仓库
 const repositoryOption = ref<IRepositoryOption[]>([])
 const purchaseOption = ref<IPurchaseOption[]>([])
@@ -1035,7 +1137,7 @@ const fetchPurchaseAndRepository = async () => {
 const fetchSkuComponent = async () => {
   try {
     const { data } = await getPoSkuComponentList({
-      poSkuId: route.query.poSkuId
+      poSkuId: parseInt(route.query.poSkuId)
     })
     if (data) {
       skuComponentList.value = data
@@ -1054,11 +1156,11 @@ const fetchSkuComponent = async () => {
     console.error(error)
   }
 }
-// po详情数据
+// 获取po详情数据
 const fetchData = async () =>{
   try {
     const { data } = await getPoDetail({
-      id: route.query.poSkuId
+      id: parseInt(route.query.poSkuId)
     })
     if (data) {
       poDetailData.value = data
@@ -1075,15 +1177,78 @@ const fetchData = async () =>{
     poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
   }
 }
-onBeforeMount(()=>{
+
+// 获取po的skuId列表
+const fetchPoSkuIdList = async () => {
+  const { data } = await getPoSkuIdList({
+    id: parseInt(route.query.poId)
+  })
+  // console.log(data); // [1, 2, 28] [31] [32]
+  poSkuIdList.value = data
+  handleShowPreviousOrNext()
+}
+
+// 处理上一个还是下一个显示
+const handleShowPreviousOrNext = () => {
+  const lastIndex = poSkuIdList.value.length - 1
+  poSkuIdIndex.value = poSkuIdList.value.findIndex((item: number) => item === parseInt(route.query.poSkuId))
+
+  // 只有一个SKU，都不显示
+  if (lastIndex === 0) {
+    previousVisible.value = false
+    nextVisible.value = false
+  } else if (poSkuIdIndex.value === lastIndex) { // 如果就是末尾的skuId，不显示下一个
+    previousVisible.value = true
+    nextVisible.value = false
+  } else if (poSkuIdIndex.value === 0) { // 如果是第一个，不显示上一个
+    previousVisible.value = false
+    nextVisible.value = true
+  } else {
+    previousVisible.value = true
+    nextVisible.value = true
+  }
+}
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+  if  (data.columnIndex === 1 || data.columnIndex === 6){        
+    return {
+      color: '#bbb',
+      cursor: 'not-allowed',
+      textAlign:'center'
+    } 
+  }
+}
+// 创建planPo
+const handleCreatePlanPo = async () => {
+  try {
+    const { data } = await createPlanPo({
+      sku: poDetailData.value.sku
+    })
+    if (data) {
+      fetchPurchaseAndRepository()
+      poDetailData.value = data?.poSkuDetail
+      skuComponentList.value = data?.componentList
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+// back
+const goBack = async () => {
+  await delVisitedRoute(handleActivePath(route, true))
+  history.back()
+}
+onBeforeMount(() => {
   handleInputDisabled()
-  fetchData()
-  fetchPurchaseAndRepository()
-  fetchSkuComponent()
+  if (route.query.from === 'plannedPoDetail') {
+    fetchPoSkuIdList()
+    fetchData()
+    fetchPurchaseAndRepository()
+    fetchSkuComponent()
+  }
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* :deep(.el-upload--picture-card) {
    --el-upload-picture-card-size: 89.164px;
 } */
@@ -1093,7 +1258,7 @@ onBeforeMount(()=>{
 :deep(.el-card__body) {
    padding-bottom: 2px;
    padding-right: 0;
-   padding-left: 0;
+   /* padding-left: 0; */
 }
 .product-details-card {
    border: 0;
@@ -1166,11 +1331,11 @@ onBeforeMount(()=>{
 /*图片上传框对齐*/
 .upload-align {
   margin-top: 30px;
-  width: 100%;
+
 }
-:deep(.upload-align .el-upload-list--picture-card) {
+/* :deep(.upload-align .el-upload-list--picture-card) {
   width: 100%;
-}
+} */
 
 .hide :deep(.el-upload--picture-card) {
  display: none
@@ -1194,5 +1359,19 @@ onBeforeMount(()=>{
   align-items: center;
   justify-content: center;
 }
-
+// 分隔线margin
+.divider-margin {
+  margin-top: 0; 
+  margin-bottom: 20px;
+}
+// 弹出框的body的padding-top
+:deep(.dialog .el-dialog__body) {
+  padding-top: 0;
+}
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 </style>

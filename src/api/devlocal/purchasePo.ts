@@ -3,18 +3,32 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import {
+  ICreatePlanPoResp,
+  IDeleteSkuImgResp,
   IGetPlanPoListQuery,
   IGetPlanPoListResp,
   IGetPoDetailResp,
+  IGetPoListQuery,
+  IGetPoListResp,
   IGetPoSkuComponentListResp,
   IGetSupplierRateResp,
   IId,
   IIds,
+  IPoId,
+  IPoIds,
+  IPoSkuComponentId,
   IPoSkuId,
+  ISku,
   ISupplierId,
+  IUpdateBuyerAndCustomsDeclaration,
   IUpdatePoContractTerms,
   IUpdatePoPurchaseMatters,
-  IUpdatePoSkuComponent
+  IUpdatePoRemarks,
+  IUpdatePoSite,
+  IUpdatePoSkuComponent,
+  IUpdateSkuCount,
+  IUpdateSkuDetail,
+  IUpdateSkuImgResp
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -66,6 +80,22 @@ export function getSupplierRate(params?: ISupplierId): Promise<IGetSupplierRateR
     params,
   })
 }
+// 获取PO的SKU的ID列表
+export function getPoSkuIdList(params?: IId) {
+  return request({
+    url: `${BASE_API}/purchase/poSkuId/list`,
+    method: 'get',
+    params,
+  })
+}
+// 采购订单 - 查询列表
+export function getPoList(params?: IGetPoListQuery): Promise<IGetPoListResp> {
+  return request({
+    url: `${BASE_API}/purchase/po/list`,
+    method: 'get',
+    params,
+  })
+}
 // 更新po sku 零件采购注意事项
 export function updatePoPurchaseMatters(params?: IUpdatePoPurchaseMatters) {
   return request({
@@ -75,9 +105,17 @@ export function updatePoPurchaseMatters(params?: IUpdatePoPurchaseMatters) {
   })
 }
 // 采购计划-批量删除
-export function deletePlanPo(params?: IIds) {
+export function deleteAllPlanPo(params?: IIds) {
   return request({
     url: `${BASE_API}/purchase/planPo/delete`,
+    method: 'post',
+    params,
+  })
+}
+// 批量发布PO
+export function releaseBatchPlanPo(params?: IPoIds) {
+  return request({
+    url: `${BASE_API}/purchase/batch/release/po`,
     method: 'post',
     params,
   })
@@ -120,5 +158,102 @@ export function updatePoSkuComponent(data: IUpdatePoSkuComponent) {
     url: `${BASE_API}/purchase/po/update`,
     method: 'post',
     data,
+  })
+}
+// 采购sku详情更新(除订货套数外)
+export function updateSkuDetail(data: IUpdateSkuDetail) {
+  return request({
+    url: `${BASE_API}/purchase/sku/update`,
+    method: 'post',
+    data,
+  })
+}
+// 采购PO的站点更新
+export function updatePoSite(params: IUpdatePoSite) {
+  return request({
+    url: `${BASE_API}/purchase/po/site/update`,
+    method: 'post',
+    params,
+  })
+}
+// 采购PO的备注更新
+export function updatePoRemarks(params: IUpdatePoRemarks) {
+  return request({
+    url: `${BASE_API}/purchase/poRemarks/update`,
+    method: 'post',
+    params,
+  })
+}
+// PO-SKU详情图片上传
+export function updateSkuImg(data?: FormData): Promise<IUpdateSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/updateSk/img`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+// PO-SKU详情图片删除
+export function deleteSkuImg(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/updateSk/img/delete`,
+    method: 'post',
+    params,
+  })
+}
+// PO详情删除SKU
+export function deletePoSku(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/delete/po/sku`,
+    method: 'post',
+    params,
+  })
+}
+// 删除PlanPo
+export function deletePlanPo(params?: IPoId): Promise<IDeleteSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/delete/planPo`,
+    method: 'post',
+    params,
+  })
+}
+// PO详情SKU订货套数更新
+export function updateSkuCount(params?: IUpdateSkuCount): Promise<IDeleteSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/sku/count/update`,
+    method: 'post',
+    params,
+  })
+}
+// 更新单价
+export function updateComponentPrice(params?: IPoSkuComponentId): Promise<IDeleteSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/sku/component/price/update`,
+    method: 'post',
+    params,
+  })
+}
+// 价格更新
+export function updateAllComponentPrice(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/update/sku/allComponent/price`,
+    method: 'post',
+    params,
+  })
+}
+// 采购方和不报关更新
+export function updateBuyerAndCustomsDeclaration(params?: IUpdateBuyerAndCustomsDeclaration): Promise<IDeleteSkuImgResp> {
+  return request({
+    url: `${BASE_API}/purchase/update/theBuyerAndCustomsDeclaration`,
+    method: 'post',
+    params,
+  })
+}
+// 创建PlanPO（采购计划）
+export function createPlanPo(params?: ISku): Promise<ICreatePlanPoResp> {
+  return request({
+    url: `${BASE_API}/purchase/create/planPo`,
+    method: 'post',
+    params,
   })
 }

@@ -41,7 +41,7 @@
                       <el-link type="primary" :underline="false" @click="handleUpdateStatus(row)">未达起订量</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="danger" :underline="false">删除</el-link>
+                      <el-link type="danger" :underline="false" @click="handleDelPlannedPo(row)">删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -106,7 +106,7 @@
             <template #default="{ row, $index }">
               <el-space>
                 <el-button link type="primary" @click="handlePlannedPoDetail(row)">详情</el-button>
-                <el-button link type="danger" @click="handleDelPlannedPo(row)">删除</el-button>
+                <el-button link type="danger" @click="handleDelSkuPlannedPo(row)">删除</el-button>
               </el-space>
             </template>
           </el-table-column>
@@ -259,7 +259,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import { deletePlanPo, getPlanPoList, getPoPurchaseMatters, releasePlanPo, updatePlanPoStatus, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
+import { deleteAllPlanPo, deletePlanPo, deletePoSku, getPlanPoList, getPoPurchaseMatters, releaseBatchPlanPo, releasePlanPo, updatePlanPoStatus, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
 import { IGetPlanPoListQuery, IGetPlanPoList } from '/@/type/purchase/po'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -281,8 +281,7 @@ const setSelectRows = (value: string) => {
 }
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
-// 表格加载loading状态
-const listLoading = ref<boolean>(true)
+
 // 采购计划列表
 let plannedPoList = ref<IGetPlanPoList[]>([])
 // 总记录数
@@ -375,6 +374,7 @@ const handleUpdateStatus = async (row: any) => {
       })
       if (data === true) {
         $baseMessage('该条PO未达起订量成功', 'success', 'hey')
+        fetchData()
       }
     })
   } catch (error) {
@@ -390,16 +390,18 @@ const handleAllMOQ = () => {
  
   }
 }
+// 批量删除
 const handleAllDelete = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning', 'hey');
   } else {
-    $baseConfirm('确定要批量删除所选信息吗', null, async () => {
+    $baseConfirm('确定要批量删除所选PO吗', null, async () => {
       const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
       try {
-        const { data } = await deletePlanPo(ids)
+        const { data } = await deleteAllPlanPo(ids)
         if (data === true) {
-          $baseMessage('批量删除成功', 'success', 'hey');
+          $baseMessage('批量删除PO成功', 'success', 'hey');
+          fetchData()
         }
       } catch (error) {
         console.error(error)
@@ -407,23 +409,53 @@ const handleAllDelete = async () => {
     });
   }
 }
-
-const handleDelPlannedPo = (row: any) => {
-    $baseConfirm('确定要删除本条信息吗',"系统提示", async ()=>{
-
-
-        $baseMessage("删除成功！","success","hey")
-
-    }
-)
+// 删除SKU
+const handleDelSkuPlannedPo = (row: any) => {
+  try {
+    $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
+      const { data } = await deletePoSku({
+        poSkuId: row.poSkuId
+      })
+      if (data === true) {
+        $baseMessage('删除SKU成功', 'success', 'hey')
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
-const handleAllPublishPo = () => {
+// 删除planPO
+const handleDelPlannedPo = (row: any) => {
+  try {
+    $baseConfirm('确定要删除当前PO吗', '系统提示', async () => {
+      const { data } = await deletePlanPo({
+        poId: row.id
+      })
+      if (data === true) {
+        $baseMessage('删除PO成功', 'success', 'hey')
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 批量发布PO成功
+const handleAllPublishPo = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning', 'hey')
   } else {
-   
-      $baseMessage('批量发布到PO成功', 'success', 'hey')
-    
+    const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
+    try {
+      const { data } = await releaseBatchPlanPo({
+        poIds: ids
+      })
+      if (data === true) {
+        $baseMessage('批量发布到PO成功', 'success', 'hey')
+        fetchData()
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 // 发布po
@@ -435,6 +467,7 @@ const handlePublishPo = async (row: any) => {
       })
       if (data === true) {
         $baseMessage('发布到PO成功', 'success', 'hey')
+        fetchData()
       }
     })
   } catch (error) {
@@ -448,6 +481,7 @@ const handlePlannedPoDetail = (row: any) => {
       title: "采购计划订单详情",
       from: 'plannedPoDetail',
       poSkuId: row.poSkuId,
+      poId: row.id,
       timestamp: Date.now(),
     },
   })

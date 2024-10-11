@@ -1,11 +1,10 @@
 <template>
-  <h2>采购订单PO</h2>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
       <el-tab-pane label="待付款" name="0">
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
-            <el-button type="success" >已付全款</el-button>
+            <el-button type="success" >已付全款/尾款</el-button>
             <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
             <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
@@ -31,25 +30,32 @@
 
         <el-table 
           ref="tableRef" 
-          stripe border 
-          :data="fakeData"
+          border 
+          :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
-          @cell-click="changeInput"
           class="noneHoveTable"
           :cell-style="cellStyle"
+          @cell-click="changeInput"
           @selection-change="setSelectRow"
         >
+          <el-table-column label="PO操作" prop="selectedRow1">
+            <el-checkbox class="custom-checkbox"></el-checkbox>
+          </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="发布日期" prop="createTime" min-width="115"></el-table-column>
-          <el-table-column label="发布人" prop="person"></el-table-column>
-          <el-table-column label="站点" prop="site" min-width="125"></el-table-column>
+          <el-table-column label="发布日期" prop="createTime" min-width="115">
+            <template #default="{ row }">
+              {{ row.createTime.split(' ')[0] }}
+            </template>
+          </el-table-column>
+          <el-table-column label="发布人" prop="userName"></el-table-column>
+          <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
           <el-table-column label="SKU图片" class="image-wall" width="100">
             <template #default="{ row, $index }">
-               <el-image :src="row.url" fit="fill" :lazy="true" data-img="img">
+               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -57,67 +63,25 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="quantity" >
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                  </div>
-                  <span>{{ row.quantity }}</span>
-              </template>
+          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" >
           </el-table-column>
-          <el-table-column type="selection" class="custom-checkbox"></el-table-column>
-          
+          <el-table-column label="零件操作" prop="selectedRow2" width="90">
+            <el-checkbox class="custom-checkbox"></el-checkbox>
+          </el-table-column>
           <el-table-column label="零件名" prop="componentName" width="250">
-              <template #default="{ row }">
-                  <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
-              </template>
           </el-table-column>
           <el-table-column label="签收日期" prop="createTime" min-width="115"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="componentQuantity" >
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                  </div>
-                  <span>{{ row.quantity }}</span>
-              </template>
+          <el-table-column label="零件数量" width="100" prop="purchaseCount" >
           </el-table-column>
-          <el-table-column label="单位" width="60" prop="componentUnit" >
-              <template #default="{ row }">
-                  <span style="color: rgb(192, 192, 192)">{{ row.componentUnit }}</span>
-              </template>
+          <el-table-column label="单位" width="60" prop="unit" >
           </el-table-column>
-          
           <el-table-column label="含税运费" prop="taxIncludedPrice" min-width="90">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                  </div>
-                  <span>{{ row.taxIncludedPrice }}</span>
-              </template>
           </el-table-column>    
           <el-table-column label="模具含税" prop="taxIncludedPrice" min-width="90">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                  </div>
-                  <span>{{ row.taxIncludedPrice }}</span>
-              </template>
           </el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" min-width="90">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                  </div>
-                  <span>{{ row.taxIncludedPrice }}</span>
-              </template>
           </el-table-column>    
-          <el-table-column label="已付金额" prop="taxIncludedPrice" min-width="90">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                  </div>
-                  <span>{{ row.taxIncludedPrice }}</span>
-              </template>
+          <el-table-column label="已付金额" prop="payPrice" min-width="90">
           </el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
            
@@ -129,28 +93,28 @@
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId">
           </el-table-column>
-          <el-table-column label="不报关" prop="declareCustomsStatus" min-width="75">
+          <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" />
+                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
-          <el-table-column  label="签收物流单号" min-width="130" prop="purchaseId">
+          <el-table-column label="签收物流单号" min-width="130" prop="purchaseId">
           </el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliser">
+          <el-table-column label="供应商" min-width="250" prop="suppliser">
           </el-table-column>
              
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
         </el-table>
-        <!-- <vab-pagination
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
-        /> -->
-        <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
+        /> 
+        <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
       <el-tab-pane label="部分付款" name="1">
         <vab-query-form>
@@ -262,18 +226,7 @@
       </el-tab-pane>
       <el-tab-pane label="已删除" name="5">
         <vab-query-form>
-          <vab-query-form-left-panel :span="16">
-            <el-button type="success" >已付全款</el-button>
-            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
-            <el-button type="danger" @click="handleShowRefund">退款</el-button>
-            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
-            <el-button type="primary" >生成合同</el-button>
-            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
-            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
-            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
-            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="8">
+          <vab-query-form-right-panel :span="24">
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
               <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
@@ -315,17 +268,17 @@
               <span>{{ row.payTime }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="付款金额" min-width="130" prop="money">
+          <el-table-column label="付款金额" min-width="130" prop="payPrice">
             <template #default="{ row }">
-              <el-input v-model="row.money" @blur="" class="input-center"></el-input>
+              <el-input v-model="row.payPrice" @blur="" class="input-center"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="付款百分比" min-width="130" prop="payPercent" >
+          <el-table-column label="付款百分比" min-width="130" prop="percentage" >
             <template #default="{ row }">
-              {{ row.payPercent }}%
+              {{ row.percentage }}%
             </template>
           </el-table-column>
-          <el-table-column label="操作人" min-width="130" prop="person">
+          <el-table-column label="操作人" min-width="130" prop="payUserName">
           </el-table-column>
           <el-table-column label="操作" min-width="100">
             <template #default="{ row }">
@@ -333,7 +286,7 @@
             </template>
           </el-table-column>
           <template #empty>
-              <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
       </div>
@@ -355,9 +308,6 @@
         </el-form-item>
         <el-form-item label="金额">
           <el-input></el-input>
-        </el-form-item>
-        <el-form-item label="已付全款" label-position="right">
-          <el-checkbox class="customPay-checkbox"></el-checkbox>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -463,7 +413,16 @@
       <el-divider class="divider-margin"/>
       <el-form label-position="top" label-width="auto" class="form-center">
         <el-form-item label="日期">
-          <el-date-picker v-model="generateMoneyTransferTime" end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="datetimerange" time-format="HH:mm" format="YYYY-MM-DD HH:mm"/>
+          <el-date-picker 
+            v-model="generateMoneyTransferTime" 
+            end-placeholder="结束日期" 
+            range-separator="至" 
+            start-placeholder="开始日期" 
+            type="datetimerange" 
+            time-format="HH:mm" 
+            format="YYYY-MM-DD HH:mm" 
+            :editable="false"	
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -487,6 +446,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IProgress } from '/@/type/progress/progressType'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { getPoList } from '~/src/api/devlocal/purchasePo'
 //   import wangEditor from './wangEditor.vue'
 
 
@@ -506,7 +466,11 @@ const contractList = ref<any>([])
 const activeName = ref("0")
 
 const tableRef = ref<TableInstance>()
-
+const poList = ref<any>([])
+// 第一个选中的行
+const selectedRow1 = ref<any>([])
+// 第二个选中的行
+const selectedRow2 = ref<any>([])
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 // 新品进度列表
@@ -536,8 +500,8 @@ const handleClosePaymentHistoryDialog = () => {
   paymentHistoryVisible.value = false
   payHistoryRow.value.records = fakePay
     .map((item: any) => {
-      const payAmount = item.money - item.money * (item.payPercent / 100); // 计算乘法
-      return `${item.payTime.split(' ')[0]}: ${item.payPercent}%(${payAmount})`;
+      const payAmount = item.payPrice - item.payPrice * (parseInt(item.percentage) / 100); // 计算乘法
+      return `${item.payTime.split(' ')[0]}: ${item.percentage}%(${payAmount})`;
     })
     .join('<br>');
 }
@@ -633,19 +597,21 @@ const total = ref<number>(0)
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
+  keyWord: '',
+  status: 2, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 // 采购计划col合并方法
 // const objectSpanMethod = ({
@@ -695,85 +661,7 @@ const fakePay = [
     person: '胡东丽',
   },
 ]
-const fakeData = [
-  { 
-    po:'po19627',
-      createTime: '2024-10-08',
-      person: '王豪俊',
-      sku: 'sku123',
-      quantity: 1,
-      componentName: '',
-      componentQuantity: 2,
-      unit: '',
-      taxIncludedPrice: 33,
-      currency: 0,
-      suppliser: '',
-      purchaseId: 9,
-      declareCustomsStatus: 1,
-    purchaseMatters: '',
-    records: '2024-06-21:20%(180.00)'
-  },
-  { 
-      createTime: '',
-      person: '王豪俊',
-      sku: 'sku123',
-      quantity: 1,
-      componentName: '',
-      componentQuantity: 2,
-      unit: '',
-      taxIncludedPrice: 33,
-      currency: 0,
-      suppliser: '',
-      purchaseId: 9,
-      declareCustomsStatus: 1,
-      purchaseMatters: ''
-  },
-  { 
-      createTime: '',
-      person: '王豪俊',
-      sku: 'sku123',
-      quantity: 1,
-      componentName: '',
-      componentQuantity: 2,
-      unit: '',
-      taxIncludedPrice: 33,
-      currency: 0,
-      suppliser: '',
-      purchaseId: 9,
-      declareCustomsStatus: 1,
-      purchaseMatters: ''
-  },
-  { 
-      createTime: '',
-      person: '王豪俊',
-      sku: 'sku123',
-      quantity: 1,
-      componentName: '',
-      componentQuantity: 2,
-      unit: '',
-      taxIncludedPrice: 33,
-      currency: 0,
-      suppliser: '',
-      purchaseId: 9,
-      declareCustomsStatus: 1,
-      purchaseMatters: ''
-  },
-  { 
-      createTime: '',
-      person: '王豪俊',
-      sku: 'sku123',
-      quantity: 1,
-      componentName: '',
-      componentQuantity: 2,
-      unit: '',
-      taxIncludedPrice: 33,
-      currency: 0,
-      suppliser: '',
-      purchaseId: 9,
-      declareCustomsStatus: 1,
-      purchaseMatters: ''
-  },
-]
+
 
 // 图片
 const dialogImageUrl = ref<string>('')
@@ -823,7 +711,7 @@ const setPreviewList = (imageUrl:string) =>{
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if(data.columnIndex !== 5 && data.columnIndex !== 8 && data.columnIndex !== 21)
+  if(data.columnIndex !== 6 && data.columnIndex !== 9 && data.columnIndex !== 22)
     return {
       textAlign:'center'
     } 
@@ -968,7 +856,17 @@ const clickRemarkBool = ( val: any) => {
 
 
 
-
+const fetchData = async () => {
+  try {
+    const { data } = await getPoList(queryForm)
+    if (data) {
+      total.value = data.total
+      poList.value = data.list
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 
 
@@ -976,7 +874,7 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
-  // fetchData()
+  fetchData()
 })
 </script>
 
@@ -1071,11 +969,7 @@ onBeforeMount(() => {
 .form-center {
   margin: 0 20px;
 }
-// 分批付款的已付全款多选框
-.customPay-checkbox {
-  transform: scale(1.3); // 放大 20%
-  transform-origin: center; // 确保放大从中心开始
-}
+
 // 分隔线margin
 .divider-margin {
   margin-top: 0; 

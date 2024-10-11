@@ -206,3 +206,221 @@ export interface IUpdatePoSkuComponent {
   useStockCount?: number;
   [property: string]: any;
 }
+export interface IUpdateSkuDetail {
+  // poSKU的Id
+  poSkuId?: number
+  // sku的采购套数
+  skuPurchaseCount?: number
+  productName?: string
+  // 收货仓库的id
+  repositoryId?: number
+}
+// 采购PO的站点更新
+export interface IUpdatePoSite {
+  id: number
+  site: number
+}
+// 采购PO的备注更新
+export interface IUpdatePoRemarks {
+  id: number
+  remarks: string
+}
+export interface IUpdateSkuImgQuery {
+  poSkuId: number
+  file: File
+}
+export interface IUpdateSkuImgResp {
+  data?: string
+}
+export interface IDeleteSkuImgResp {
+  data?: boolean
+}
+// PO详情SKU订货套数更新
+export interface IUpdateSkuCount {
+  poSkuId: number
+  count: number
+}
+export interface IPoIds {
+  poIds: string
+}
+export interface IPoSkuComponentId {
+  poSkuComponentId: number
+}
+// 采购方和不报关更新
+export interface IUpdateBuyerAndCustomsDeclaration {
+  poSkuId: number
+  // 更新的类型。更新当前SKU下零件的采购方 0。更新零件的采购方 1。两种都选 0,1
+  type: string
+}
+// 删除PlanPo
+export interface IPoId {
+  poId: number
+}
+export interface ISku {
+  sku: string
+}
+// 创建PlanPO（采购计划）
+export interface ICreatePlanPoResp {
+  data?: {
+    poSkuDetail: {
+      id?: number
+      poSkuId?: number
+      sku?: string
+      skuImgUrl?: string
+      productName?: string
+      createTime?: string
+      productManager?: string
+      site?: number
+      repositoryId?: number
+      orderTotalPrice?: number
+      minQuantity?: number
+      numCartons?: number
+      packedTenRecord?: string
+      skuRemarks?: string
+      poRemarks?: string
+    }
+    componentList: IGetPoSkuComponentList[]
+  }
+}
+export interface ICreatePlanPoComponentList {
+
+   actualTaxRate?: number;
+
+   componentName?: string;
+
+   componentUrl?: string;
+
+   contractTerms?: string;
+
+   currency?: number;
+  
+   customsDeclarationStatus?: number;
+ 
+   existingPartsListId?: number;
+ 
+   freight?: string;
+  
+   id?: number;
+  
+   invoicing?: number;
+ 
+   invoicingTaxRate?: number;
+
+   minQuantity?: number;
+
+   moldCost?: string;
+
+   moreCount?: number;
+ 
+   numCartons?: number;
+ 
+   orderNo?: string;
+   poSkuId?: number;
+
+   preTaxPrice?: string;
+
+   purchaseCount?: number;
+ 
+   purchaseId?: number;
+
+   purchaseLink?: string;
+
+   purchaseMatters?: string;
+  
+   repositoryId?: number;
+ 
+   stock?: number;
+
+   suppliserId?: number;
+
+   suppliserList?: SuppliserList[];
+ 
+   taxIncludedPrice?: string;
+
+   totalPrice?: string;
+
+   unit?: string;
+
+   unitPrice?: string;
+
+   useStockCount?: number;
+}
+export interface SuppliserList {
+  id?: number;
+  label?: string;
+  [property: string]: any;
+}
+//采购订单-查询列表
+export interface IGetPoListQuery {
+  keyWord: string
+  // po状态 2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
+  status: number
+  pageNo: number
+  pageSize: number
+}
+export interface IGetPoList {
+
+  componentId?: number;
+ 
+  componentName?: string;
+
+  createTime?: string;
+ 
+  currency?: number;
+ 
+  customsDeclarationStatus?: number;
+  // plan po
+  id?: number;
+  // 已付款金额
+  payPrice?: string;
+  // 付款记录
+  payRecordList?: PayRecordList[];
+  // POSkuId
+  poSkuId?: number;
+  // 采购方名称
+  purchase?: string;
+  // 零件采购数量
+  purchaseCount?: number;
+  // 采购方id
+  purchaseId?: number;
+  // 零件采购注意事项
+  purchaseMatters?: string;
+  // 采购sku数量
+  purchaseSkuNumber?: number;
+  siteId?: number;
+  // 站点名 0 亚马逊US 1 亚马逊DE 2 亚马逊UK  3亚马逊CA  4 沃尔玛US
+  siteName?: string;
+
+  sku?: string;
+
+  skuImageUrl?: string;
+  // 供应商名称
+  suppliser?: string;
+
+  taxIncludedPrice?: string;
+
+  unit?: string;
+  // 请够人/发布人
+  userName?: string;
+}
+export interface PayRecordList {
+  // 付款记录id
+  id?: number;
+  // 付款金额
+  payPrice?: string;
+  // 付款人
+  payUserName?: string;
+  // 百分比
+  percentage?: string;
+  // 退款凭证 默认为图片
+  refundVoucher?: string;
+  // 类型 0付款 1退款
+  type?: number;
+  [property: string]: any;
+}
+export interface IGetPoListResp {
+  data?: {
+    total: number
+    list: IGetPoList[]
+  }
+}
