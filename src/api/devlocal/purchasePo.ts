@@ -3,8 +3,9 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import {
+  IBooleanResp,
   ICreatePlanPoResp,
-  IDeleteSkuImgResp,
+  IGetComponentPayRecordResp,
   IGetPlanPoListQuery,
   IGetPlanPoListResp,
   IGetPoDetailResp,
@@ -21,6 +22,8 @@ import {
   ISku,
   ISupplierId,
   IUpdateBuyerAndCustomsDeclaration,
+  IUpdateComponentAllPay,
+  IUpdateComponentPayPartQuery,
   IUpdatePoContractTerms,
   IUpdatePoPurchaseMatters,
   IUpdatePoRemarks,
@@ -92,6 +95,14 @@ export function getPoSkuIdList(params?: IId) {
 export function getPoList(params?: IGetPoListQuery): Promise<IGetPoListResp> {
   return request({
     url: `${BASE_API}/purchase/po/list`,
+    method: 'get',
+    params,
+  })
+}
+// 零件付款记录详情
+export function getComponentPayRecord(params: IPoSkuComponentId): Promise<IGetComponentPayRecordResp> {
+  return request({
+    url: `${BASE_API}/component/pay/record`,
     method: 'get',
     params,
   })
@@ -194,7 +205,7 @@ export function updateSkuImg(data?: FormData): Promise<IUpdateSkuImgResp> {
   })
 }
 // PO-SKU详情图片删除
-export function deleteSkuImg(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
+export function deleteSkuImg(params?: IPoSkuId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/updateSk/img/delete`,
     method: 'post',
@@ -202,7 +213,7 @@ export function deleteSkuImg(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
   })
 }
 // PO详情删除SKU
-export function deletePoSku(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
+export function deletePoSku(params?: IPoSkuId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/delete/po/sku`,
     method: 'post',
@@ -210,7 +221,7 @@ export function deletePoSku(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
   })
 }
 // 删除PlanPo
-export function deletePlanPo(params?: IPoId): Promise<IDeleteSkuImgResp> {
+export function deletePlanPo(params?: IPoId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/delete/planPo`,
     method: 'post',
@@ -218,7 +229,7 @@ export function deletePlanPo(params?: IPoId): Promise<IDeleteSkuImgResp> {
   })
 }
 // PO详情SKU订货套数更新
-export function updateSkuCount(params?: IUpdateSkuCount): Promise<IDeleteSkuImgResp> {
+export function updateSkuCount(params?: IUpdateSkuCount): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/sku/count/update`,
     method: 'post',
@@ -226,7 +237,7 @@ export function updateSkuCount(params?: IUpdateSkuCount): Promise<IDeleteSkuImgR
   })
 }
 // 更新单价
-export function updateComponentPrice(params?: IPoSkuComponentId): Promise<IDeleteSkuImgResp> {
+export function updateComponentPrice(params?: IPoSkuComponentId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/sku/component/price/update`,
     method: 'post',
@@ -234,7 +245,7 @@ export function updateComponentPrice(params?: IPoSkuComponentId): Promise<IDelet
   })
 }
 // 价格更新
-export function updateAllComponentPrice(params?: IPoSkuId): Promise<IDeleteSkuImgResp> {
+export function updateAllComponentPrice(params?: IPoSkuId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/update/sku/allComponent/price`,
     method: 'post',
@@ -242,7 +253,7 @@ export function updateAllComponentPrice(params?: IPoSkuId): Promise<IDeleteSkuIm
   })
 }
 // 采购方和不报关更新
-export function updateBuyerAndCustomsDeclaration(params?: IUpdateBuyerAndCustomsDeclaration): Promise<IDeleteSkuImgResp> {
+export function updateBuyerAndCustomsDeclaration(params?: IUpdateBuyerAndCustomsDeclaration): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/update/theBuyerAndCustomsDeclaration`,
     method: 'post',
@@ -255,5 +266,29 @@ export function createPlanPo(params?: ISku): Promise<ICreatePlanPoResp> {
     url: `${BASE_API}/purchase/create/planPo`,
     method: 'post',
     params,
+  })
+}
+// 采购订单-删除PO
+export function deletePo(params: IIds): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/po/delete`,
+    method: 'post',
+    params,
+  })
+}
+// 采购订单-已付尾款/全款
+export function updateComponentAllPay(data: IUpdateComponentAllPay) {
+  return request({
+    url: `${BASE_API}/purchase/component/AllPay`,
+    method: 'post',
+    data
+  })
+}
+// 分批付款
+export function updateComponentPayPart(data: IUpdateComponentPayPartQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/component/payPart`,
+    method: 'post',
+    data
   })
 }

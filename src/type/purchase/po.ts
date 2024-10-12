@@ -232,7 +232,7 @@ export interface IUpdateSkuImgQuery {
 export interface IUpdateSkuImgResp {
   data?: string
 }
-export interface IDeleteSkuImgResp {
+export interface IBooleanResp {
   data?: boolean
 }
 // PO详情SKU订货套数更新
@@ -423,4 +423,31 @@ export interface IGetPoListResp {
     total: number
     list: IGetPoList[]
   }
+}
+// 采购订单-已付全款/尾款
+export interface IUpdateComponentAllPay {
+  componentIds: string
+  poIds: string
+}
+// 零件付款记录详情
+export interface IGetComponentPayList {
+  createTime?: string
+  createUser?: string
+  id?: number
+  payPrice?: number
+  percentage?: string
+  poSkuComponentId?: number
+  refundVoucher?: string
+  type?: number
+}
+export interface IGetComponentPayRecordResp {
+  data?: IGetComponentPayList[]
+}
+export interface IUpdateComponentPayPartQuery {
+  componentInfo: {
+    componentIds: string
+    poIds: string
+  }
+  unitPrice: string
+  percentage: string
 }

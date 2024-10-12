@@ -13,7 +13,7 @@
         <el-col :span="2" class="custom-upload" style="padding-right: 0px;padding-left: 10px;"> 
           <el-form label-position="top">
             <el-form-item label="订货套数" >
-              <el-input v-model="poDetailData.purchaseSkuNumber" @blur="handleUpdateSkuCount"></el-input>
+              <el-input v-model="poDetailData.purchaseSkuNumber" @change="handleUpdateSkuCount"></el-input>
             </el-form-item>
             <el-form-item >
               <el-upload 
@@ -53,12 +53,12 @@
             <el-row style="width: 100%">
                 <el-col :span="12">
                     <el-form-item label="SKU">
-                        <el-select v-model="poDetailData.sku" :disabled="skuDisabled" filterable @change="handleCreatePlanPo"></el-select>
+                        <el-select v-model="poDetailData.sku" :disabled="skuDisabled" filterable @change="handleCreatePlanPo" placeholder="选择和搜索SKU" ></el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="产品名称">
-                        <el-input v-model="poDetailData.productName" @blur="handleUpdateSku" :disabled="productNameDisabled"></el-input>
+                        <el-input v-model="poDetailData.productName" @change="handleUpdateSku" :disabled="productNameDisabled"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -143,7 +143,7 @@
                     <el-space>
                         <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
                     </el-space>
-                    <el-input type="textarea" :rows="11" v-model="poDetailData.poRemarks" @blur="handleRemarksChange" resize="none"></el-input>
+                    <el-input type="textarea" :rows="11" v-model="poDetailData.poRemarks" @change="handleRemarksChange" resize="none"></el-input>
                   </el-form-item>
                 </el-col>
             </el-row>
@@ -520,8 +520,6 @@
       :before-close="handleCloseUpdatePurchaserDialog"
     >
       <el-divider class="divider-margin"></el-divider>
-      
-     
         <el-checkbox
           v-model="purchaser0"
           label="更新当前SKU下零件的采购方"
@@ -532,8 +530,6 @@
           label="更新零件的采购方"
           size="large"
         />
-     
-      
       <template #footer>
         <span>
           <el-button @click="updatePurchaserVisible = false">取消</el-button>
@@ -1227,6 +1223,7 @@ const handleCreatePlanPo = async () => {
       fetchPurchaseAndRepository()
       poDetailData.value = data?.poSkuDetail
       skuComponentList.value = data?.componentList
+      // 当点击添加SKU的时候，根据id获取skuId列表，然后决定显示上一个还是下一个    
     }
   } catch (error) {
     console.error(error)
@@ -1239,7 +1236,8 @@ const goBack = async () => {
 }
 onBeforeMount(() => {
   handleInputDisabled()
-  if (route.query.from === 'plannedPoDetail') {
+  // 如果不是创建，两个订单详情都是一样的接口
+  if (route.query.from !== 'plannedPoCreate') {
     fetchPoSkuIdList()
     fetchData()
     fetchPurchaseAndRepository()
@@ -1331,11 +1329,10 @@ onBeforeMount(() => {
 /*图片上传框对齐*/
 .upload-align {
   margin-top: 30px;
-
 }
-/* :deep(.upload-align .el-upload-list--picture-card) {
-  width: 100%;
-} */
+// :deep(.upload-align .el-upload-list--picture-card) {
+//   width: 100%;
+// }
 
 .hide :deep(.el-upload--picture-card) {
  display: none
