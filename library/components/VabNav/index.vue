@@ -85,7 +85,7 @@ watch(
     }
   }
   .comprehensive-tabs {
-    width: calc(100vw - var(--el-left-menu-width) - 575px) !important;
+    width: calc(100vw - var(--el-left-menu-width) - 635px) !important;
   }
 
   &:has(.is-collapse) {
@@ -120,6 +120,9 @@ watch(
     }
 
     .comprehensive-tabs {
+      .el-tabs__item {
+        padding: 0 15px;
+      }
       .el-tabs__nav-next,
       .el-tabs__nav-prev {
         display: flex;
