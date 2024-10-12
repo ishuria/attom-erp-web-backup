@@ -1,6 +1,6 @@
 <template>
   <el-scrollbar class="vab-side-bar" :class="{ 'is-collapse': collapse }">
-    <vab-logo v-if="layout === 'comprehensive' || layout === 'vertical'" class="fixed-logo" />
+    <vab-logo v-if="layout === 'vertical'" class="fixed-logo" />
     <el-menu
       background-color="var(--el-menu-background-color)"
       :collapse="collapse"

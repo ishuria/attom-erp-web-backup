@@ -1,6 +1,7 @@
 html > body.vab-theme-plain {
   --el-menu-background-color: #ffffff;
   --el-menu-color-text: #515a6e;
+  --el-title-color: #515a6e;
 
   @mixin container {
     color: var(--el-menu-color-text) !important;
