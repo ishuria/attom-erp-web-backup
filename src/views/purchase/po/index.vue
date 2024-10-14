@@ -54,9 +54,9 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="100">
+          <el-table-column label="SKU图片" class="image-wall" width="100px">
             <template #default="{ row, $index }">
-               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img">
+               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img" style="width: 55px; height: 55px">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -71,11 +71,11 @@
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收日期" prop="createTime" min-width="115"></el-table-column>
+          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
           <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税运费" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="模具含税" prop="taxIncludedPrice" min-width="90"></el-table-column>    
+          <el-table-column label="含税运费" prop="" min-width="90"></el-table-column>    
+          <el-table-column label="模具含税" prop="" min-width="90"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" min-width="90"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" min-width="90"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
@@ -83,9 +83,9 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="records">
+          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.records"></el-link>
+              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
@@ -94,7 +94,7 @@
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop="purchaseId"></el-table-column>
+          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>    
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -190,9 +190,9 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="records">
+          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.records"></el-link>
+              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
@@ -298,9 +298,9 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="records">
+          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.records"></el-link>
+              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
@@ -405,9 +405,9 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="records">
+          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.records"></el-link>
+              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
@@ -506,9 +506,9 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="records">
+          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.records"></el-link>
+              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
@@ -596,9 +596,9 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="records">
+          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.records"></el-link>
+              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
@@ -645,26 +645,21 @@
           <el-table-column label="付款日期" min-width="120" prop="createTime">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.createTime" @keydown.enter="clickCancle($event, row)" @blur="clickCancle($event, row)"></el-input>
+                <el-input v-model="row.createTime" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)"></el-input>
               </div>
-              <span>{{ row.createTime }}</span>
+              <span>{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
           <el-table-column label="付款金额" min-width="130" prop="payPrice">
             <template #default="{ row }">
-              <el-input v-model="row.payPrice" @blur="" class="input-center"></el-input>
+              <el-input v-model="row.payPrice" @change="handleUpdatePrice(row)" class="input-center"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="付款百分比" min-width="130" prop="percentage" >
-            <template #default="{ row }">
-              {{ row.percentage }}%
-            </template>
-          </el-table-column>
-          <el-table-column label="操作人" min-width="130" prop="createUser">
-          </el-table-column>
+          <el-table-column label="付款百分比" min-width="130" prop="percentage" ></el-table-column>
+          <el-table-column label="操作人" min-width="130" prop="createUser"></el-table-column>
           <el-table-column label="操作" min-width="100">
-            <template #default="{ row }">
-              <el-button text type="danger">删除</el-button>
+            <template #default="{ row, $index }">
+              <el-button text type="danger" @click="handleDelPayRecord(row, $index)">删除</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -694,7 +689,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseInstallmentDialog">关闭</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="handleConfirmInstallment">确认</el-button>
       </template>
     </el-dialog>
     <!-- 退款 -->
@@ -827,7 +822,7 @@ import { ref } from 'vue'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import { deletePo, getComponentPayRecord, getPoList, updateComponentAllPay } from '/@/api/devlocal/purchasePo'
+import { deletePo, delPayRecord, getComponentPayRecord, getPoList, updateComponentAllPay, updateComponentPayPart, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
 
 defineOptions({
@@ -943,9 +938,9 @@ const handleSelectedCompRow = (event: any, row: any) => {
 const handleClosePaymentHistoryDialog = () => {
   paymentHistoryVisible.value = false
   // 生成提取后的付款进度数据显示到表格上
-  payHistoryRow.value.records = paymentProgressList.value
+  payHistoryRow.value.paymentRecord = paymentProgressList.value
     .map((item: any) => {
-      return `${item.payTime.split(' ')[0]}: ${item.percentage}%(${item.payPrice})`;
+      return `${item.createTime}: ${item.percentage}(${item.payPrice})`;
     })
     .join('<br>');
 }
@@ -957,8 +952,36 @@ const handleShowPaymentHistory = async (row: any) => {
     })
     if (data) {
       paymentProgressList.value = data
+      paymentProgressList.value.forEach((item: any) => {
+        item.createTime = item.createTime.split(' ')[0]
+      })
       paymentHistoryVisible.value = true
       payHistoryRow.value = row
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 修改付款进度
+const handleUpdatePrice = async (row: any) => {
+  try {
+    await updatePayRecord({
+      id: row.id,
+      price: row.payPrice
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 删除付款进度
+const handleDelPayRecord = async (row: any, index: number) => {
+  try {
+    const { data } = await delPayRecord({
+      id: row.componentId
+    })
+    if (data === true) {
+      $baseMessage('删除该条付款记录成功', 'success', 'hey')
+      paymentProgressList.value.splice(index, 1)
     }
   } catch (error) {
     console.error(error)
@@ -1025,6 +1048,35 @@ const handleComputePercent = (value: string) => {
 const handleCloseInstallmentDialog = () => {
   installmentFormRef.value?.resetFields()
   installmentVisible.value = false
+}
+// 确认分批付款
+const handleConfirmInstallment = async () => {
+  try {
+    let componentIds: any = []
+    let poIds: any = new Set()
+    selectedCompArray.value.forEach((item: any) => {
+      componentIds.push(item.componentId)
+      poIds.add(item.id)
+    })
+    // ,号连接
+    componentIds = componentIds.join()
+    // 先转为数组，然后,号连接
+    poIds = Array.from(poIds).join()
+    const { data } = await updateComponentPayPart({
+      componentInfo: {
+        componentIds: componentIds,
+        poIds: poIds
+      },
+      unitPrice: installmentForm.price,
+      percentage: installmentForm.percent
+    })
+    if (data === true) {
+      $baseMessage('分批付款成功', 'success', 'hey')
+      handleCloseInstallmentDialog()
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 展示退款弹窗
 const handleShowRefund = () => {
@@ -1202,7 +1254,7 @@ const changePaymentHistoryInput = (row: any, column: any, cell: HTMLTableCellEle
 /**
  * 输入失焦事件
  */
-const clickCancle = async (event: any, value: any) =>{
+const clickCancel = async (event: any, value: any) =>{
 
   const t1 = getRootElement(event["srcElement"],".cell").children[0]
 
@@ -1345,6 +1397,15 @@ const fetchData = async () => {
       listLoading.value = false
       total.value = data.total
       poList.value = data.list
+      // 每个零件的付款进度进行处理
+      poList.value.forEach((item: any) => {      
+        item.payPrice = Number(item.payPrice).toFixed(2)
+        item.paymentRecord = item.payRecordList
+          .map((item: any) => {
+            return `${item.createTime.split(' ')[0]}: ${item.percentage}(${item.payPrice})`;
+          })
+          .join('<br>');
+      })
     }
   } catch (error) {
     console.error(error)

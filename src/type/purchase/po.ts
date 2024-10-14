@@ -229,11 +229,12 @@ export interface IUpdateSkuImgQuery {
   poSkuId: number
   file: File
 }
-export interface IUpdateSkuImgResp {
-  data?: string
-}
+
 export interface IBooleanResp {
   data?: boolean
+}
+export interface IStringResp {
+  data?: string
 }
 // PO详情SKU订货套数更新
 export interface IUpdateSkuCount {
@@ -450,4 +451,72 @@ export interface IUpdateComponentPayPartQuery {
   }
   unitPrice: string
   percentage: string
+}
+export interface IUpdatePayRecord {
+  id: number
+  price: string
+}
+export interface IGetSignatureSettingListQuery {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetSignatureSettingListResp {
+  data?: {
+    total: number
+    list: IGetSignatureSettingList[]
+  }
+}
+export interface IGetSignatureSettingList {
+  id: number
+  existingPartsId: number
+  componentName: string
+}
+export interface IComponentName {
+  componentName: string
+}
+export interface INumberResp {
+  data?: number
+}
+export interface IGetAddComponentListQuery {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+// 添加零件-列表数据获取
+export interface IGetAddComponentList {
+  id: number
+  componentName: string
+  imageUrl: string
+  sku: string
+  suppliserId: number
+  suppliser: string
+  unit: string
+}
+export interface IGetAddComponentListResp {
+  data?: {
+    total: number
+    list: IGetAddComponentList[]
+  }
+}
+
+export interface IGetAddConsumableListQuery {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetAddConsumableList {
+  id: number
+  componentName: string
+  imageUrl: string
+  sku: string
+  suppliserId: number
+  suppliser: string
+  unit: string
+}
+export interface IGetAddConsumableListResp {
+  data?: {
+    total: number
+    list: IGetAddConsumableList[]
+  }
 }

@@ -4,7 +4,12 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import {
   IBooleanResp,
+  IComponentName,
   ICreatePlanPoResp,
+  IGetAddComponentListQuery,
+  IGetAddComponentListResp,
+  IGetAddConsumableListQuery,
+  IGetAddConsumableListResp,
   IGetComponentPayRecordResp,
   IGetPlanPoListQuery,
   IGetPlanPoListResp,
@@ -12,26 +17,30 @@ import {
   IGetPoListQuery,
   IGetPoListResp,
   IGetPoSkuComponentListResp,
+  IGetSignatureSettingListQuery,
+  IGetSignatureSettingListResp,
   IGetSupplierRateResp,
   IId,
   IIds,
+  INumberResp,
   IPoId,
   IPoIds,
   IPoSkuComponentId,
   IPoSkuId,
   ISku,
+  IStringResp,
   ISupplierId,
   IUpdateBuyerAndCustomsDeclaration,
   IUpdateComponentAllPay,
   IUpdateComponentPayPartQuery,
+  IUpdatePayRecord,
   IUpdatePoContractTerms,
   IUpdatePoPurchaseMatters,
   IUpdatePoRemarks,
   IUpdatePoSite,
   IUpdatePoSkuComponent,
   IUpdateSkuCount,
-  IUpdateSkuDetail,
-  IUpdateSkuImgResp
+  IUpdateSkuDetail
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -59,7 +68,7 @@ export function getPoDetail(params: IId): Promise<IGetPoDetailResp> {
     params,
   })
 }
-// 采购计划 - POSKU配件详情表
+// 采购计划 - PO-SKU配件详情表
 export function getPoSkuComponentList(params: IPoSkuId): Promise<IGetPoSkuComponentListResp> {
   return request({
     url: `${BASE_API}/purchase/po/skuComponent/list`,
@@ -102,7 +111,39 @@ export function getPoList(params?: IGetPoListQuery): Promise<IGetPoListResp> {
 // 零件付款记录详情
 export function getComponentPayRecord(params: IPoSkuComponentId): Promise<IGetComponentPayRecordResp> {
   return request({
-    url: `${BASE_API}/component/pay/record`,
+    url: `${BASE_API}/purchase/component/pay/record`,
+    method: 'get',
+    params,
+  })
+}
+// 自动签收零件查询
+export function getSignatureSettingList(params: IGetSignatureSettingListQuery): Promise<IGetSignatureSettingListResp> {
+  return request({
+    url: `${BASE_API}/purchase/signature/setting/list`,
+    method: 'get',
+    params,
+  })
+}
+// 获取自动签收零件信息
+export function getSearchComponent(params: IComponentName) {
+  return request({
+    url: `${BASE_API}/search/component`,
+    method: 'get',
+    params,
+  })
+}
+// 获取添加零件列表
+export function getAddComponentList(params: IGetAddComponentListQuery): Promise<IGetAddComponentListResp> {
+  return request({
+    url: `${BASE_API}/list/component`,
+    method: 'get',
+    params,
+  })
+}
+// 获取添加耗材列表
+export function getAddConsumableList(params: IGetAddConsumableListQuery): Promise<IGetAddConsumableListResp> {
+  return request({
+    url: `${BASE_API}/list/consumables`,
     method: 'get',
     params,
   })
@@ -155,7 +196,7 @@ export function updatePoContractTerms(params: IUpdatePoContractTerms) {
     params,
   })
 }
-// 采购计划 - POSKU零件清单删除
+// 采购计划 - PO-SKU零件清单删除
 export function deletePoSkuComponent(params: IId) {
   return request({
     url: `${BASE_API}/purchase/po/skuComponent/delete`,
@@ -196,7 +237,7 @@ export function updatePoRemarks(params: IUpdatePoRemarks) {
   })
 }
 // PO-SKU详情图片上传
-export function updateSkuImg(data?: FormData): Promise<IUpdateSkuImgResp> {
+export function updateSkuImg(data?: FormData): Promise<IStringResp> {
   return request({
     url: `${BASE_API}/purchase/updateSk/img`,
     method: 'post',
@@ -290,5 +331,54 @@ export function updateComponentPayPart(data: IUpdateComponentPayPartQuery): Prom
     url: `${BASE_API}/purchase/component/payPart`,
     method: 'post',
     data
+  })
+}
+// 采购订单-删除零件的付款记录
+export function delPayRecord(params: IId): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/delete/payRecord`,
+    method: 'post',
+    params
+  })
+}
+// 采购订单-修改零件付款记录
+export function updatePayRecord(params: IUpdatePayRecord): Promise<IBooleanResp> {
+  return request({
+    url: `purchase/update/payRecord`,
+    method: 'post',
+    params
+  })
+}
+// 采购订单 - 自动签收设定 - 新增
+export function addSignatureSettings(params: IId): Promise<INumberResp> {
+  return request({
+    url: `purchase/add/signature/settings`,
+    method: 'post',
+    params
+  })
+}
+// 采购订单 - 自动签收设定 - 删除
+export function delSignatureSettings(params: IId): Promise<IBooleanResp> {
+  return request({
+    url: `purchase/delete/signature/settings`,
+    method: 'post',
+    params
+  })
+}
+// 零件图片上传
+export function uploadComponentImg(data?: FormData): Promise<IStringResp> {
+  return request({
+    url: `${BASE_API}/purchase/po/component/img/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+// 零件图片删除
+export function deleteComponentImg(params?: IId): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/po/component/img/delete`,
+    method: 'post',
+    params,
   })
 }

@@ -33,27 +33,19 @@
       >
         <el-table-column  label="图片" class="image-wall" width="100">
           <template #default="{ row, $index }">
-            
-                  <el-image class="image" :src="row.url" alt="" data-img="img"/>
-
-                  </template>
-              </el-table-column>
-        <el-table-column label="零件ID" width="100" prop="createTime">
-
+            <el-image class="image" :src="row.imageUrl" alt="" data-img="img"/>
+          </template>
         </el-table-column>
-        <el-table-column label="SKU" width="200" prop="sku">
-        </el-table-column>
-        <el-table-column label="供应商" min-width="200" >
-        </el-table-column>
-        <el-table-column label="零件名" min-width="200" prop="packagePrecautions">
-        </el-table-column>
+        <el-table-column label="零件ID" width="100" prop="createTime"></el-table-column>
+        <el-table-column label="SKU" width="200" prop="sku"></el-table-column>
+        <el-table-column label="供应商" min-width="200" prop="suppliser"></el-table-column>
+        <el-table-column label="零件名" min-width="200" prop="componentName"></el-table-column>
         <el-table-column label="添加数量" min-width="100" prop="packagePrecautions">
-            <template #default="{ row }">
-                <el-input />
-            </template>
+          <template #default="{ row }">
+              <el-input />
+          </template>
         </el-table-column>
-        <el-table-column label="单位" min-width="70" prop="packagePrecautions">
-        </el-table-column>
+        <el-table-column label="单位" min-width="70" prop="unit"></el-table-column>
         <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
@@ -72,13 +64,13 @@
       <el-button type="primary">确认</el-button>
     </template>
   </el-dialog>
-  <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+  <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible"/>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection } from '/@/api/devlocal/productInformation'
+import { getAddComponentList } from '/@/api/devlocal/purchasePo'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
@@ -91,7 +83,7 @@ const dflag = ref<boolean>(false)
 watchEffect(()=>{
   dflag.value = props.createComponentVisible
   if(dflag.value === true) {
-      // fetchData()
+    fetchData()
   }
 }
 )
@@ -103,19 +95,20 @@ const total = ref<number>(0)
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
+  keyWord: ''
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 
 const list = ref<any>([])
@@ -133,37 +126,15 @@ const handlerCloseDialog = () => {
 
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
- 
- if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 6){        
- 
-     return {
-          textAlign:'center'
-      } 
- }
-}
-const handleAdd = async () => {
-  try {
-      const newQualityInspection = {
-          skuId: parseInt(route.query.skuId),
-          status: 1,
-          checkType: 0,
-          packagePrecautions: '',
-      }
-      const { data } = await addProductQualityInspection(newQualityInspection)
-      if (data) {
-          const { data: tableData } = await getProductQualityInspection({
-              skuId: parseInt(route.query.skuId)
-          })
-          list.value = tableData
-          list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
-          $baseMessage('新增质检清单成功', 'success', 'hey')
-      }
-  } catch (error) {
-      console.error(error)
+  if (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 6) {        
+    return {
+      textAlign:'center'
+    } 
   }
 }
+
 // 预览图片列表
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
@@ -175,52 +146,26 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     let el = getSpecificChildren(cell, "img")[0];
     if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
       imagePreviewVisible.value = true
-      imagePriviewList.value = []
-      imagePriviewList.value.push(el.src!)
+      imagePreviewList.value = []
+      imagePreviewList.value.push(el.src!)
     }
 }
 
-// 删除
-const handleDelQualityInspection = async (row: any, index: number) => {
-  try {
-      $baseConfirm('确定要删除本条信息吗? ', "系统提示", async () => {
-          try {
-              const { data } = await delProductQualityInspection({ id: row.id! })
-              if (data) {
-                  list.value.splice(index, 1);
-                  // fetchData()
-                  $baseMessage("删除成功！","success","hey")
-              } else {
-                  $baseMessage("删除失败，请重试。", "error", "hey");
-              }
-          } catch (delError) {
-              console.error(delError);
-              $baseMessage("删除操作失败，请重试。", "error", "hey");
-          }
-      });
-  } catch(e){
-      console.log(e as Error)
- }
+/**
+* 获取样品进度数据
+*/
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getAddComponentList(queryForm)
+  if (data) {
+    total.value = data.total
+    list.value = data.list
+    listLoading.value = false
+  }
 }
-
-
-// /**
-// * 获取样品进度数据
-// */
-// const fetchData = async () => {
-// listLoading.value = true
-// const { data } = await getProductQualityInspection({
-//   skuId: parseInt(route.query.skuId)
-// })
-// list.value = data
-// listLoading.value = false
-// list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
-// }
-
-// onActivated(() => {
-// tableRef.value?.doLayout()
-// })
-
+onActivated(() => {
+  tableRef.value?.doLayout()
+})
 </script>
 
 <style lang="scss" scoped>

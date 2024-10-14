@@ -11,7 +11,7 @@
     <div id="table-height-container">
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary">新增</el-button>
+          <el-button type="primary" @click="handleShowAddDialog">新增</el-button>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
@@ -34,12 +34,10 @@
         @cell-click="changeInput"
         :cell-style="cellStyle"
       >
-        <el-table-column label="零件" min-width="200" prop="component">
-
-        </el-table-column>
-        <el-table-column label="操作" prop="packagePrecautions" min-width="100">
-          <template #default="{ row }">
-            <el-button text type="danger">删除</el-button>
+        <el-table-column label="零件" min-width="200" prop="componentName"></el-table-column>
+        <el-table-column label="操作" min-width="100">
+          <template #default="{ row, $index }">
+            <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -55,9 +53,21 @@
         @size-change="handleSizeChange"
       />
     </div>
-    <template #footer>
-
-    </template>
+    <el-dialog
+      v-model="addSignatureSettingsVisible"
+      width="20%"
+      title="新增零件"
+    >
+      <el-form :model="addForm" :rules="addFormRules">
+        <el-form-item label="零件名" prop="componentName">
+          <el-input v-model="addForm.componentName" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
+      </template>
+    </el-dialog>
+    <template #footer></template>
   </el-dialog>
 </template>
 
@@ -65,6 +75,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { delProductQualityInspection } from '/@/api/devlocal/productInformation'
+import { addSignatureSettings, delSignatureSettings, getSearchComponent, getSignatureSettingList } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
   name: 'vabAutomaticSignature'
@@ -76,7 +87,7 @@ const dflag = ref<boolean>(false)
 watchEffect(()=>{
   dflag.value = props.automaticSignatureVisible
   if(dflag.value === true) {
-      // fetchData()
+      fetchData()
   }
 }
 )
@@ -88,23 +99,33 @@ const total = ref<number>(0)
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
+  keyWord: ''
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 
 const list = ref<any>([])
-
+// 新增弹窗是否可见
+const addSignatureSettingsVisible = ref<boolean>(false)
+const addForm = reactive<any>({
+  componentName: ''
+})
+const addFormRules = reactive<any>({
+  componentName: [
+    { required: true, message: '请输入要新增的零件名', trigger: 'blur'}
+  ]
+})
 const tableRef = ref<TableInstance>()
 
 const route: any = useRoute()
@@ -116,13 +137,42 @@ const handlerCloseDialog = () => {
   emit('update:tableValue', list.value)
 }
 
-
+const handleShowAddDialog = () => {
+  addSignatureSettingsVisible.value = true
+}
+const handleConfirmAdd = async () => {
+  try {
+    const { data } = await getSearchComponent({
+      componentName: addForm.componentName
+    })
+    if (data) {
+      const id = data.id
+      const { data: addId } = await addSignatureSettings({
+        id: id
+      })
+      if (addId) {
+        fetchData()
+      }
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleDel = async (row: any, index: number) => {
+  try {
+    const { data } = await delSignatureSettings({
+      id: row.id
+    })
+    if (data === true) {
+      $baseMessage('删除成功', 'success', 'hey')
+      list.value.splice(index, 1)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
- if  (data.columnIndex === 1){        
-     return {
-          textAlign:'center'
-      } 
- }
+  return { 'text-align': 'center'}
 }
 
 
@@ -155,23 +205,21 @@ const handleDelQualityInspection = async (row: any, index: number) => {
 }
 
 
-// /**
-// * 获取样品进度数据
-// */
-// const fetchData = async () => {
-// listLoading.value = true
-// const { data } = await getProductQualityInspection({
-//   skuId: parseInt(route.query.skuId)
-// })
-// list.value = data
-// listLoading.value = false
-// list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
-// }
-
-// onActivated(() => {
-// tableRef.value?.doLayout()
-// })
-
+/**
+* 获取自动签收设定数据
+*/
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getSignatureSettingList(queryForm)
+  if (data) {
+    total.value = data.total
+    list.value = data.list
+  }
+  listLoading.value = false
+}
+onActivated(() => {
+  tableRef.value?.doLayout()
+})
 </script>
 
 <style lang="scss" scoped>

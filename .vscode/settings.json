@@ -70,6 +70,8 @@
     "daterange",
     "datetime",
     "datetimerange",
+    "devlocal",
+    "dflag",
     "douban",
     "doubao",
     "echarts",

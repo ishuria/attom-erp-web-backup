@@ -591,7 +591,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
 /**
  * 输入失焦事件
  */
-const clickCancle = async (event: any, value: any) =>{
+const clickCancel = async (event: any, value: any) =>{
 
   const t1 = getRootElement(event["srcElement"],".cell").children[0]
 
@@ -714,13 +714,6 @@ onBeforeMount(() => {
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-// 下拉框宽度
-:deep(.el-select--default .el-select__wrapper) {
-  width: 50px;
-  padding-left: 8px;
-  padding-right: 6px;
-  font-size: var(--el-font-size-base);
-}
 
 // 控制添加图片图标显示与隐藏
 .hide :deep(.el-upload--picture-card) {
@@ -750,9 +743,9 @@ onBeforeMount(() => {
 // }
 :deep(.shareSelectDialog .el-dialog__body) {
   display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 </style>
