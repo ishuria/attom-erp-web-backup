@@ -325,7 +325,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+      <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
       <vab-pagination
         :current-page="queryForm.pageNo"
         :page-size="queryForm.pageSize"
@@ -365,7 +365,7 @@
     pageSize: 20,
   })
   // 预览图片列表
-  const imagePriviewList = ref<string[]>([])
+  const imagePreviewList = ref<string[]>([])
   // 控制预览图片的隐藏显示
   const imagePreviewVisible = ref<boolean>(false)
   // 图片预览关闭事件
@@ -415,8 +415,8 @@ const queryData = () => {
       let el = getSpecificChildren(cell, "img")[0];
       if (getDataAttribute(el,'img') && el){
         imagePreviewVisible.value = true
-        imagePriviewList.value = []
-        imagePriviewList.value.push(el.src)
+        imagePreviewList.value = []
+        imagePreviewList.value.push(el.src)
       }
       if (!cell.children[0].children[0]
           || !cell.children[0].children[1]

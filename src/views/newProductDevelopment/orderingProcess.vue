@@ -73,7 +73,7 @@
           <order-check-step5 v-if="activeCheck === 4" @changeCheck-step="handleCheckSetStep" @update:imagePreviewVisibale="updateUploadPriviewVisible"
           @update:priviewListValue="setPreviewList"/>
         </div>
-        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
     </div>
 </template>
 
@@ -81,20 +81,20 @@
 defineOptions({
   name: 'OrderingProcess',
 })
-import { handleActivePath } from '/@/utils/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
 import { ref } from 'vue'
+import orderCheckStep1 from './orderingProcessStep/orderCheckStep1.vue'
+import orderCheckStep2 from './orderingProcessStep/orderCheckStep2.vue'
+import orderCheckStep3 from './orderingProcessStep/orderCheckStep3.vue'
+import orderCheckStep4 from './orderingProcessStep/orderCheckStep4.vue'
+import orderCheckStep5 from './orderingProcessStep/orderCheckStep5.vue'
 import orderStep1 from './orderingProcessStep/orderStep1.vue'
 import orderStep2 from './orderingProcessStep/orderStep2.vue'
 import orderStep3 from './orderingProcessStep/orderStep3.vue'
 import orderStep4 from './orderingProcessStep/orderStep4.vue'
 import orderStep5 from './orderingProcessStep/orderStep5.vue'
 import orderStep6 from './orderingProcessStep/orderStep6.vue'
-import orderCheckStep1 from './orderingProcessStep/orderCheckStep1.vue'
-import orderCheckStep2 from './orderingProcessStep/orderCheckStep2.vue'
-import orderCheckStep3 from './orderingProcessStep/orderCheckStep3.vue'
-import orderCheckStep4 from './orderingProcessStep/orderCheckStep4.vue'
-import orderCheckStep5 from './orderingProcessStep/orderCheckStep5.vue'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 
 // route
 const route: any = useRoute()
@@ -113,7 +113,7 @@ const step2ReceivedData = ref<number>(0)
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 // 图片预览关闭事件
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
@@ -124,8 +124,8 @@ const updateUploadPriviewVisible = (newV:boolean) =>{
 }
 // 修改图片预览列表
 const setPreviewList = (imageUrl:string) =>{
-    imagePriviewList.value = []
-    imagePriviewList.value.push(imageUrl)
+    imagePreviewList.value = []
+    imagePreviewList.value.push(imageUrl)
 }
 
 const handleSetStep = (_active: any) => {

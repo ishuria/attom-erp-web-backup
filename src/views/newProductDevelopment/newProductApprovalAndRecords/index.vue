@@ -177,7 +177,7 @@
           @update:trendEchatsList  = "updateTrendEchatsData"
     />
     <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible" />
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
 </template>
 
@@ -353,7 +353,7 @@ const queryData = () => {
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 // 图片预览关闭事件
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false;
@@ -364,8 +364,8 @@ const updateUploadPriviewVisible = () => {
 }
 // 修改图片预览列表
 const setPreviewList = (imageUrl: string) => {
-  imagePriviewList.value = []
-  imagePriviewList.value.push(imageUrl)
+  imagePreviewList.value = []
+  imagePreviewList.value.push(imageUrl)
 }
 
 // 列表col合并方法

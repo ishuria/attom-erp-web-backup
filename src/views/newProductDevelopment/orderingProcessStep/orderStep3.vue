@@ -295,13 +295,13 @@
             <VabCreateComponent 
               :createComponentVisible="createComponentVisible"
               @update:createComponentVisible="handleCloseCreateComponent"
-          
+              @update:tableValue="handleSubmitComponent"
             />
             <!-- 添加耗材 -->
             <VabCreateConsumable 
               :createConsumableVisible="createConsumableVisible"
               @update:createConsumableVisible="handleCloseCreateConsumable"
-       
+              @update:tableValue="handleSubmitConsumable"
             />
         </div>
         <div class="table-container">
@@ -326,7 +326,7 @@
                 </el-table-column>
                 <el-table-column label="汇率" min-width="100" prop="foreignExchange">
                 </el-table-column>
-                <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="120"></el-table-column>
+                <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="125"></el-table-column>
                 <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
                     <template #default="{ row }">
                         <div class="none">
@@ -470,11 +470,30 @@ import type { FormInstance, UploadFile } from 'element-plus'
 import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList, siteReflectCurrencyAndExchangeRate } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getExchangeRate } from '/@/api/devlocal/evaluation'
-import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess'
+import {
+  reviewStepNo3ComponentAdd,
+  reviewStepNo3ComponentCopy,
+  reviewStepNo3ComponentDel,
+  reviewStepNo3ComponentImtDel,
+  reviewStepNo3ComponentList,
+  reviewStepNo3ComponentUpdate,
+  reviewStepNo3ComponentUpload,
+  reviewStepNo3ContractTerms,
+  reviewStepNo3GetSelectVariantList,
+  reviewStepNo3PurchaseMatters,
+  reviewStepNo3SaveTh,
+  reviewStepNo3UpdateContractTerms,
+  reviewStepNo3UpdatePurchaseMatters,
+  reviewStepNo3VariantList,
+  reviewStepNo3VariantUpdate,
+  submitReviewComponent,
+  submitReviewConsumable
+} from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 
 const props = defineProps<{ step1Data: number }>()
 
@@ -512,6 +531,54 @@ const handleCloseCreateComponent = (value: boolean) => {
 // 关闭添加耗材对话框
 const handleCloseCreateConsumable = (value: boolean) => {
   createConsumableVisible.value = value
+}
+// 提交添加零件传递的值
+const handleSubmitComponent = async (value: any) => {
+ 
+ let list: ISubmitPurchaseComponent[] = value.map((item: any): ISubmitPurchaseComponent => {
+   return {
+     componentId: Number(item.id), 
+     sku: item.sku,                   
+     suppliserId: Number(item.suppliserId),   
+     count: Number(item.count)                 
+   }
+ })
+ let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
+ try {
+   const { data } = await submitReviewComponent({
+    reviewId: classReviewId!,
+     list
+   })
+   if (data === true) {
+     $baseMessage('添加零件提交成功', 'success', 'hey')
+     fetchDataComponent()
+   }
+ } catch (error) {
+   console.error(error)
+ }
+}
+// 提交添加耗材传递的值
+const handleSubmitConsumable = async (value: any) => {
+ let list: ISubmitPurchaseConsumable[] = value.map((item: any): ISubmitPurchaseConsumable => {
+   return {
+     componentId: Number(item.id),         
+     suppliserId: Number(item.suppliserId),   
+     count: Number(item.count)                 
+   }
+ })
+ let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
+ try {
+   const { data } = await submitReviewConsumable({
+    reviewId: classReviewId!,
+    list
+   })
+   if (data === true) {
+     $baseMessage('添加耗材提交成功', 'success', 'hey')
+     fetchDataComponent()
+   }
+ } catch (error) {
+   console.error(error)
+ }
 }
 // 展示添加零件对话框
 const handleAddComponent = () => {
@@ -893,7 +960,11 @@ const handleSave = async () => {
     }
     const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
     if (data === true) {
-        $baseMessage("当前信息已保存。","success","hey")
+      $baseMessage("当前信息已保存。", "success", "hey")
+      if (route.query.reviewId) {
+        const { ...query } = route.query;
+        router.replace({ query: { ...query, stepNo: 2 } });
+      }
     }
 }
 const router = useRouter()

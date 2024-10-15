@@ -653,15 +653,15 @@
         <VabCreateComponent 
           :createComponentVisible="createComponentVisible"
           @update:createComponentVisible="handleCloseCreateComponent"
-          @update:tableValue="handleTableDataValue"
+          @update:tableValue="handleSubmitComponent"
         />
         <!-- 添加耗材 -->
         <VabCreateConsumable 
           :createConsumableVisible="createConsumableVisible"
           @update:createConsumableVisible="handleCloseCreateConsumable"
-          @update:tableValue="handleTableDataValue"
+          @update:tableValue="handleSubmitConsumable"
         />
-        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
     </div>
 </template>
 
@@ -670,9 +670,10 @@ import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@elemen
 import { FormInstance, UploadFile } from 'element-plus'
 import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
-import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
+import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, submitProductComponent, submitProductConsumable, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '~/src/type/purchase/po'
 
 const route: any = useRoute()
 const router = useRouter()
@@ -715,6 +716,52 @@ const handleAddComponent = () => {
 // 展示添加耗材对话框
 const handleAddConsumable = () => {
   createConsumableVisible.value = true
+}
+// 提交添加零件传递的值
+const handleSubmitComponent = async (value: any) => {
+ 
+ let list: ISubmitPurchaseComponent[] = value.map((item: any): ISubmitPurchaseComponent => {
+   return {
+     componentId: Number(item.id), 
+     sku: item.sku,                   
+     suppliserId: Number(item.suppliserId),   
+     count: Number(item.count)                 
+   }
+ })
+ try {
+   const { data } = await submitProductComponent({
+    skuId: Number(route.query.skuId),
+     list
+   })
+   if (data === true) {
+     $baseMessage('添加零件提交成功', 'success', 'hey')
+     fetchComponentData()
+   }
+ } catch (error) {
+   console.error(error)
+ }
+}
+// 提交添加耗材传递的值
+const handleSubmitConsumable = async (value: any) => {
+ let list: ISubmitPurchaseConsumable[] = value.map((item: any): ISubmitPurchaseConsumable => {
+   return {
+     componentId: Number(item.id),         
+     suppliserId: Number(item.suppliserId),   
+     count: Number(item.count)                 
+   }
+ })
+ try {
+   const { data } = await submitProductConsumable({
+    skuId: Number(route.query.skuId),
+    list
+   })
+   if (data === true) {
+     $baseMessage('添加耗材提交成功', 'success', 'hey')
+     fetchComponentData()
+   }
+ } catch (error) {
+   console.error(error)
+ }
 }
 const peopleLoading = ref(false) //搜索产品经理和产品设计loading
 const peopleOptions = ref<any[]>([]) //搜索选项
@@ -867,7 +914,7 @@ const invoicingNumList = [
 ]
 
 // 预览图片列表
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
@@ -876,8 +923,8 @@ const imagePreviewClose = () =>{
 }
 const handlePreview = (file: UploadFile) => {
     imagePreviewVisible.value = true
-    imagePriviewList.value = []
-    imagePriviewList.value.push(file.url!)
+    imagePreviewList.value = []
+    imagePreviewList.value.push(file.url!)
 }
 /**
  * 图片删除功能

@@ -363,7 +363,7 @@ handleSubmit<template>
         <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if ="dialogVisible"/>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="dialogVisible" hide-on-click-modal/>
     <wangEditor
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorLogVisible"
@@ -596,14 +596,11 @@ import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
 import debounce from 'lodash/debounce'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from './wangEditor.vue'
-import { convertString } from '~/src/utils/stringUtils'
+import { convertString } from '/@/utils/stringUtils'
 import sampleProgress from './sampleProgress.vue'
 import moldProgress from './moldProgress.vue'
-import progressShare from './progressShare.vue'
-import newEvaluation from './newEvaluation.vue'
 import { indexColumns } from './indexColumns'
-import { IKeyWordTrend } from '~/src/type/evaluation/evaluationType'
-import { getEvaluationTrendList } from '~/src/api/devlocal/evaluation'
+import { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 
 defineOptions({
   name: 'ProgressTable',
@@ -656,7 +653,7 @@ const priorityOptions = [
 const dialogImageUrl = ref<string>('')
 const dialogVisible = ref<boolean>(false)
 const disabled = ref(false)
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
@@ -804,20 +801,20 @@ const handleRemove = async (file: UploadFile, row: any) => {
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
   dialogImageUrl.value = file.url!
   dialogVisible.value = true
-  imagePriviewList.value = []
+  imagePreviewList.value = []
   const i = row.imageList.find((item: any) => item.uid === file.uid)
-  imagePriviewList.value.push(file.url!)
+  imagePreviewList.value.push(file.url!)
   row.imageList.forEach((item: any) => {
     if (item.uid === i.uid) return
-    imagePriviewList.value.push(item.url)
+    imagePreviewList.value.push(item.url)
   })
 }
 // 修改图片预览列表
 const setPreviewList = (imageUrl:string) =>{
     dialogVisible.value = true
-    imagePriviewList.value = []
-    imagePriviewList.value.push(imageUrl)
-    // console.log(imagePriviewList.value)
+    imagePreviewList.value = []
+    imagePreviewList.value.push(imageUrl)
+    // console.log(imagePreviewList.value)
 }
 
 // 图片预览关闭事件

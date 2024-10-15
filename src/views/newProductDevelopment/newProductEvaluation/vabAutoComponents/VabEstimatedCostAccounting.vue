@@ -315,7 +315,7 @@
         </template>
     </el-dialog>
 
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
 
     <vab-upload 
         :upload-visible="uploadPicVisible" 
@@ -396,7 +396,7 @@ const uploadPicVisible = ref<boolean>(false)
 const dataId = ref<string>("")
 const fixed = ref<string>('right')
 const estimatedCostAccountingList = ref<IEstimatedCostAccounting[]>([])
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 const selectRows = ref<IEstimatedCostAccounting[]>([])
 const router = useRouter()
 let {list,evaluationId} = toRefs(props)
@@ -511,9 +511,9 @@ const clickCancle = async (event:any,value:any) =>{
 
 // 获取点击行的table cell下标
 const getCellRowData = (idx:number) =>{
-    imagePriviewList.value = []
+    imagePreviewList.value = []
     imageUploadCellIdx = idx
-    imagePriviewList.value.push(list.value[imageUploadCellIdx].imgUrl)   
+    imagePreviewList.value.push(list.value[imageUploadCellIdx].imgUrl)   
 }
 
 
@@ -629,9 +629,9 @@ const uploadFile = async (options: UploadRequestOptions) => {
     const {data} = await uploadFileBoBakend(formdata);
     if (data){
         $baseMessage("产品成本核算图片上传成功！","success","hey")
-        imagePriviewList.value = []
+        imagePreviewList.value = []
         list.value[imageUploadCellIdx].imgUrl = data
-        imagePriviewList.value.push(data)   
+        imagePreviewList.value.push(data)   
         uploadPicVisible.value = false
     }
   }catch(err){

@@ -356,7 +356,9 @@ const handleSave = async () => {
     try {
         const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
         if (data === true) {
-            $baseMessage("当前信息已保存。","success","hey")
+          $baseMessage("当前信息已保存。", "success", "hey")
+          const {...query} = route.query;
+          router.replace({query: {...query, stepNo: 3}});
         }
     } catch (error) {
         console.error(error)

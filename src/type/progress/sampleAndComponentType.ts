@@ -1,3 +1,5 @@
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
+
 /**
  * 新品进度成零件
  */
@@ -461,4 +463,13 @@ export interface IupdateProgressPriceInfo {
 }
 export interface IgetProgressProductDesc {
   accountingId: number
+}
+export interface ISubmitProgressComponentQuery {
+  progressId: number
+  list: ISubmitPurchaseComponent[]
+}
+
+export interface ISubmitProgressConsumableQuery {
+  progressId: number
+  list: ISubmitPurchaseConsumable[]
 }

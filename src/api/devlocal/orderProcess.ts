@@ -24,8 +24,11 @@ import {
   IreviewStepNo4UpdateQualityInspection,
   IreviewStepNo4UpdateSupplier,
   IreviewStepNo5SkuInfoPerfect,
-  IreviewStepNo6SaveSix
+  IreviewStepNo6SaveSix,
+  ISubmitReviewComponentQuery,
+  ISubmitReviewConsumableQuery
 } from '/@/type/orderProcess/orderProcessType'
+import { IBooleanResp } from '/@/type/purchase/po'
 
 /**
  * 新品进度-开模进度列表
@@ -414,6 +417,22 @@ export function reviewStepNo6SaveSix(params?: IreviewStepNo6SaveSix) {
 export function reviewStepNo4UpdateSupplier(data: IreviewStepNo4UpdateSupplier) {
   return request({
     url: `${BASE_API}/review/stempsNo4/update/suppliser`,
+    method: 'post',
+    data,
+  })
+}
+// 添加零件提交
+export function submitReviewComponent(data?: ISubmitReviewComponentQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/review/submit/component`,
+    method: 'post',
+    data,
+  })
+}
+// 添加耗材提交
+export function submitReviewConsumable(data?: ISubmitReviewConsumableQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/review/submit/consumables`,
     method: 'post',
     data,
   })

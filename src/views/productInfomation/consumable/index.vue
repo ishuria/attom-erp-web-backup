@@ -396,7 +396,7 @@
                 </span>
             </template>
         </el-dialog>
-        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
 
 </template>
@@ -791,7 +791,7 @@ async function uploadImage(params: any, row: any) {
 }
 
 // 预览图片列表
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
@@ -803,8 +803,8 @@ const imagePreviewClose = () =>{
 */
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
   imagePreviewVisible.value = true
-  imagePriviewList.value = []
-  imagePriviewList.value.push(file.url!)
+  imagePreviewList.value = []
+  imagePreviewList.value.push(file.url!)
 }
 /**
 * 图片删除功能

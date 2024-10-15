@@ -186,7 +186,9 @@ const handleSubmit = () => {
           const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
           if (data) {
             localStorage.setItem('orderStep1Form', JSON.stringify(form))
-            $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。","success","hey")
+            $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
+            const {...query} = route.query;
+            router.replace({query: {...query, stepNo: 0}});
           }
         } else {
           const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
@@ -197,6 +199,8 @@ const handleSubmit = () => {
               "success",
               "hey"
             )
+            const {...query} = route.query;
+            router.replace({query: {...query, stepNo: 0}});
           }
         } }
       saveOn()

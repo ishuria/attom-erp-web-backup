@@ -1,3 +1,4 @@
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
 // 新品订货流程-删除变体信息
 export interface IreviewStepNo1Del {
     orderEntryId: number
@@ -614,4 +615,14 @@ export interface IreviewInsertSkuInfo {
   material?: string
   battery?: string
   benchmarkAsin?: string
+}
+
+export interface ISubmitReviewComponentQuery {
+  reviewId: number
+  list: ISubmitPurchaseComponent[]
+}
+
+export interface ISubmitReviewConsumableQuery {
+  reviewId: number
+  list: ISubmitPurchaseConsumable[]
 }

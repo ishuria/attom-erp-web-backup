@@ -76,10 +76,65 @@ export const effectiveCountInputeHandle = (event: Event) => {
     targetElement.blur();
 }
 
-export const inputHandleMouseOver = (evnet: Event) => {
+export const inputHandleMouseOver = (event: Event) => {
     const target = event?.target;
     if (target && (target as HTMLElement).tagName === 'INPUT') {
         const inputElement = target as HTMLInputElement;
         inputElement.select();
     }
+}
+
+// 自适应表格列宽
+/**
+ * 遍历列的所有内容，获取最宽一列的宽度
+ * @param arr
+ */
+export const getMaxLength  = (arr: string[])  => {
+  return arr.reduce((acc: number, item: string) => {
+    if (item) {
+      const calcLen = getTextWidth(item)
+      if (acc < calcLen) {
+        acc = calcLen
+      }
+    }
+    return acc
+  }, 0)
+}
+/**
+ * 使用span标签包裹内容，然后计算span的宽度 width： px
+ * @param valArr
+ */
+export const getTextWidth = (str: string) => {
+  // console.log(str);
+  let width = 0;
+  const html = document.createElement('span');
+  html.innerText = str;
+  html.className = 'getTextWidth';
+  html.style.fontSize = 'var(--el-font-size-base)'; // 设置与表格一致的字体样式
+  html.style.fontFamily = 'Arial, sans-serif'
+  html.style.lineHeight = '23px'
+  document.body.appendChild(html);
+  const element = document.querySelector('.getTextWidth') as HTMLElement;
+  if (element) {
+    width = element.offsetWidth + 2;
+  }
+
+  document.body.removeChild(html); // 清理 DOM
+  return width;
+}
+/**
+ * el-table-column 自适应列宽
+ * @param prop_label: 表名
+ * @param table_data: 表格数据
+ */
+export const flexColumnWidth =  (list: any, label: string, prop: string) => {
+  // console.log('label', label)
+  // console.log('prop', prop)
+  // 1.获取该列的所有数据
+  const arr = list.map((x: any) => x[prop])
+  arr.push(label) // 把每列的表头也加进去算
+  // console.log(arr)
+  // 2.计算每列内容最大的宽度 + 表格的内间距（依据实际情况而定）
+  const maxLength = getMaxLength(arr)
+  return (maxLength + 24) + 'px'
 }

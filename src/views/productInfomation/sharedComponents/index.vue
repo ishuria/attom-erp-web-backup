@@ -130,7 +130,7 @@
                 </span>
             </template>
         </el-dialog>
-        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible"/>
+        <el-image-viewer @close="imagePreviewClose" :url-list="imagePriviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
 
 </template>

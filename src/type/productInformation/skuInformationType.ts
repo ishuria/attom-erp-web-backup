@@ -1,3 +1,5 @@
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
+
 export interface IgetProductListQuery {
     keyWord: string
     haltStatus: number
@@ -1140,4 +1142,14 @@ export interface IexistingPartsListId {
 
 export interface IgetProductAllName {
     name: string
+}
+
+export interface ISubmitProductComponentQuery {
+  skuId: number
+  list: ISubmitPurchaseComponent[]
+}
+
+export interface ISubmitProductConsumableQuery {
+  skuId: number
+  list: ISubmitPurchaseConsumable[]
 }

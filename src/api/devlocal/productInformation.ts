@@ -1,48 +1,51 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import { 
-    IgetProductListQuery, 
-    IgetProductListResp,
-    IupdateProductStatus,
-    ISkuId,
-    IgetProductSkuDetailResp,
-    IupdateProductSku,
-    IupdateProductSkuRemark,
-    IcreateProductComponent,
-    IcomponentId,
-    IupdateProductComponent,
-    IgetChangeProductComponent,
-    IupdateProductComponentName,
-    IaddProductComponentOtherSku,
-    IcreateProductComponentSuppliser,
-    IupdateProductComponentSuppliser,
-    Iid,
-    IcreateConsumables,
-    IgetProductConsumables,
-    IcreateConsumablesSupplier,
-    IupdateConsumablesSupplier,
-    IaddConsumablesOtherSku,
-    IConsumablesType,
-    IupdateProductSupplier,
-    IgetProductSupplierListQuery,
-    IgetProductSupplierListResp,
-    IsuppliserId,
-    IgetProductReplenListQuery,
-    IgetProductReplenListResp,
-    IupdateProductReplenParams,
-    IgetProductCustomsListQuery,
-    IgetProductCustomsListResp,
-    IupdateProductCustoms,
-    IgetProductQualityInspectionResp,
-    IaddProductQualityInspection,
-    ISuppliserName,
-    IsaveProductPurchaseMatters,
-    IsaveProductContractTerms,
-    IgetProductSupplier,
-    IexistingPartsListId,
-    IgetProductAllName
+import {
+  IaddConsumablesOtherSku,
+  IaddProductComponentOtherSku,
+  IaddProductQualityInspection,
+  IcomponentId,
+  IConsumablesType,
+  IcreateConsumables,
+  IcreateConsumablesSupplier,
+  IcreateProductComponent,
+  IcreateProductComponentSuppliser,
+  IexistingPartsListId,
+  IgetChangeProductComponent,
+  IgetProductAllName,
+  IgetProductConsumables,
+  IgetProductCustomsListQuery,
+  IgetProductCustomsListResp,
+  IgetProductListQuery,
+  IgetProductListResp,
+  IgetProductQualityInspectionResp,
+  IgetProductReplenListQuery,
+  IgetProductReplenListResp,
+  IgetProductSkuDetailResp,
+  IgetProductSupplier,
+  IgetProductSupplierListQuery,
+  IgetProductSupplierListResp,
+  Iid,
+  IsaveProductContractTerms,
+  IsaveProductPurchaseMatters,
+  ISkuId,
+  ISubmitProductComponentQuery,
+  ISubmitProductConsumableQuery,
+  IsuppliserId,
+  ISuppliserName,
+  IupdateConsumablesSupplier,
+  IupdateProductComponent,
+  IupdateProductComponentName,
+  IupdateProductComponentSuppliser,
+  IupdateProductCustoms,
+  IupdateProductReplenParams,
+  IupdateProductSku,
+  IupdateProductSkuRemark,
+  IupdateProductStatus,
+  IupdateProductSupplier
 } from '/@/type/productInformation/skuInformationType'
+import { IBooleanResp } from '/@/type/purchase/po'
 
 // SKU信息 - 获取查询列表
 export function getProductList(params: IgetProductListQuery): Promise<IgetProductListResp> {
@@ -504,4 +507,21 @@ export function saveProductContractTerms(params: IsaveProductContractTerms) {
       method: 'post',
       params,
     })
+}
+
+// 添加零件提交
+export function submitProductComponent(data?: ISubmitProductComponentQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/product/submit/component`,
+    method: 'post',
+    data,
+  })
+}
+// 添加耗材提交
+export function submitProductConsumable(data?: ISubmitProductConsumableQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/product/submit/consumables`,
+    method: 'post',
+    data,
+  })
 }

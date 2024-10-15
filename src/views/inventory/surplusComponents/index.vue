@@ -156,7 +156,7 @@
           </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="" :url-list="imagePriviewList" v-if ="dialogVisible"/>
+    <el-image-viewer @close="" :url-list="imagePreviewList" v-if ="dialogVisible" hide-on-click-modal/>
   </div>
 </template>
 
@@ -318,7 +318,7 @@ const fakeData = [
 const dialogImageUrl = ref<string>('')
 const dialogVisible = ref<boolean>(false)
 
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
@@ -356,9 +356,9 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
 // 修改图片预览列表
 const setPreviewList = (imageUrl:string) =>{
     dialogVisible.value = true
-    imagePriviewList.value = []
-    imagePriviewList.value.push(imageUrl)
-    // console.log(imagePriviewList.value)
+    imagePreviewList.value = []
+    imagePreviewList.value.push(imageUrl)
+    // console.log(imagePreviewList.value)
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {

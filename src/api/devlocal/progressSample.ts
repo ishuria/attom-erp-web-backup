@@ -49,9 +49,12 @@ import {
   IgetTrialCalculationProductDesc,
   IupdateProgressProductdesc,
   IupdateProgressPriceInfo,
-  IgetProgressProductDesc
+  IgetProgressProductDesc,
+  ISubmitProgressComponentQuery,
+  ISubmitProgressConsumableQuery
 } from '/@/type/progress/sampleAndComponentType'
-import { IProgressId } from '~/src/type/progress/progressType'
+import { IProgressId } from '/@/type/progress/progressType'
+import { IBooleanResp } from '/@/type/purchase/po'
 
 /**
  * 获取零件清单数据列表
@@ -454,5 +457,22 @@ export function getProgressPriceInfo(params: IgetProgressProductDesc) {
     url: `${BASE_API}/progress/get/priceInfo`,
     method: 'get',
     params,
+  })
+}
+
+// 添加零件提交
+export function submitProgressComponent(data?: ISubmitProgressComponentQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/progress/submit/component`,
+    method: 'post',
+    data,
+  })
+}
+// 添加耗材提交
+export function submitProgressConsumable(data?: ISubmitProgressConsumableQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/progress/submit/consumables`,
+    method: 'post',
+    data,
   })
 }

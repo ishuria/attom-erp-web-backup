@@ -235,7 +235,7 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible"/>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal/>
     <wangEditor
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorLogVisible"

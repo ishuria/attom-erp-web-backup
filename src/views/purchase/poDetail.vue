@@ -176,8 +176,9 @@
         @cell-click="changeInput"
         class="noneHoveTable"
         :cell-style="cellStyle"
+        :cell-class-name="getCellClass"
       >
-        <el-table-column align="center" label="图片" class="image-wall" min-width="100">
+        <el-table-column align="center" label="图片" class="image-wall" width="100">
             <template #default="{ row, $index }">
                 <el-upload 
                     list-type="picture-card" 
@@ -218,7 +219,7 @@
             <span>{{ row.componentName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="订货总数" width="60" prop="purchaseCount" align="center">
+        <el-table-column label="订货总数" prop="purchaseCount" align="center" :width="flexColumnWidth(skuComponentList, '订货总数', 'purchaseCount')">
           <template #header>
             订货<br>总数
           </template>
@@ -229,7 +230,7 @@
             <span>{{ row.purchaseCount }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="多订数量" width="60" prop="moreCount" align="center">
+        <el-table-column label="多订数量" prop="moreCount" align="center" :width="flexColumnWidth(skuComponentList, '多订数量', 'moreCount')">
           <template #header>
             多订<br>数量
           </template>
@@ -240,7 +241,7 @@
             <span>{{ row.moreCount }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="使用已有库存" width="75" prop="useStockCount" align="center">
+        <el-table-column label="使用已有库存" prop="useStockCount" align="center" :width="flexColumnWidth(skuComponentList, '使用已有库存', 'useStockCount')">
           <template #header>
             使用已<br>有库存
           </template>
@@ -251,12 +252,12 @@
             <span>{{ row.useStockCount }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="已有库存" width="60" prop="stock" align="center">
+        <el-table-column label="已有库存" prop="stock" align="center" :width="flexColumnWidth(skuComponentList, '已有库存', 'stock')">
           <template #header>
             已有<br>库存
           </template>
         </el-table-column>
-        <el-table-column label="单位" width="60" prop="unit" align="center">
+        <el-table-column label="单位" prop="unit" align="center" :width="flexColumnWidth(skuComponentList, '单位', 'unit')">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.unit" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -264,7 +265,7 @@
             <span>{{ row.unit }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="出厂单价" prop="unitPrice" min-width="75" align="center">
+        <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂单价', 'unitPrice')">
           <template #header>
             出厂<br>单价
           </template>
@@ -275,7 +276,7 @@
             <span>{{ row.unitPrice }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="出厂总价" prop="totalPrice" min-width="75" align="center">
+        <el-table-column label="出厂总价" prop="totalPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂总价', 'totalPrice')">
           <template #header>
             出厂<br>总价
           </template>
@@ -286,7 +287,7 @@
             <span>{{ row.totalPrice }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="含税运费" prop="freight" align="center" min-width="75">
+        <el-table-column label="含税运费" prop="freight" align="center" :width="flexColumnWidth(skuComponentList, '含税运费', 'freight')">
           <template #header>
               含税<br>运费
           </template>
@@ -297,7 +298,7 @@
             <span>{{ row.freight }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="模具费含税" prop="moldCost" align="center" min-width="75">
+        <el-table-column label="模具费含税" prop="moldCost" align="center" :width="flexColumnWidth(skuComponentList, '模具费含税', 'moldCost')">
           <template #header>
             模具费<br>含税
           </template>
@@ -308,7 +309,7 @@
             <span>{{ row.moldCost }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="75">
+        <el-table-column label="总未税价" prop="preTaxPrice" align="center" :width="flexColumnWidth(skuComponentList, '总未税价', 'preTaxPrice')">
           <template #header>
             总未<br>税价
           </template>
@@ -319,7 +320,7 @@
             <span>{{ row.preTaxPrice }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="75">
+        <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(skuComponentList, '总含税价', 'taxIncludedPrice')">
           <template #header>
               总含<br>税价
           </template>
@@ -503,13 +504,13 @@
     <VabCreateComponent 
       :createComponentVisible="createComponentVisible"
       @update:createComponentVisible="handleCloseCreateComponent"
-    
+      @update:tableValue="handleSubmitComponent"
     />
     <!-- 添加耗材 -->
     <VabCreateConsumable 
       :createConsumableVisible="createConsumableVisible"
       @update:createConsumableVisible="handleCloseCreateConsumable"
-  
+      @update:tableValue="handleSubmitConsumable"
     />
     <!-- 采购方更新 -->
     <el-dialog
@@ -538,7 +539,7 @@
       </template>
     </el-dialog>
      
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible"/>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
 </template>
 
@@ -547,11 +548,12 @@ import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { UploadFile } from 'element-plus'
 import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
 import { getProductAllSupplier, getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
-import { createPlanPo, deleteComponentImg, deletePoSku, deletePoSkuComponent, deleteSkuImg, getPoContractTerms, getPoDetail, getPoPurchaseMatters, getPoSkuComponentList, getPoSkuIdList, getSupplierRate, updateAllComponentPrice, updateBuyerAndCustomsDeclaration, updateComponentPrice, updatePoContractTerms, updatePoPurchaseMatters, updatePoRemarks, updatePoSite, updatePoSkuComponent, updateSkuCount, updateSkuDetail, updateSkuImg, uploadComponentImg } from '/@/api/devlocal/purchasePo'
+import { createPlanPo, deleteComponentImg, deletePoSku, deletePoSkuComponent, deleteSkuImg, getPoContractTerms, getPoDetail, getPoPurchaseMatters, getPoSkuComponentList, getPoSkuIdList, getSupplierRate, submitPurchaseComponent, submitPurchaseConsumable, updateAllComponentPrice, updateBuyerAndCustomsDeclaration, updateComponentPrice, updatePoContractTerms, updatePoPurchaseMatters, updatePoRemarks, updatePoSite, updatePoSkuComponent, updateSkuCount, updateSkuDetail, updateSkuImg, uploadComponentImg } from '/@/api/devlocal/purchasePo'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IPurchaseOption, IRepositoryOption } from '/@/type/purchase/po'
+import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
+import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'
 
@@ -612,9 +614,58 @@ const handleAddComponent = async () => {
 const handleAddConsumable = () => {
   createConsumableVisible.value = true
 }
+
+// 提交添加零件传递的值
+const handleSubmitComponent = async (value: any) => {
+ 
+  let list: ISubmitPurchaseComponent[] = value.map((item: any): ISubmitPurchaseComponent => {
+    return {
+      componentId: Number(item.id), 
+      sku: item.sku,                   
+      suppliserId: Number(item.suppliserId),   
+      count: Number(item.count)                 
+    }
+  })
+  try {
+    const { data } = await submitPurchaseComponent({
+      poId: Number(route.query.poId),
+      poSkuId: Number(route.query.poSkuId),
+      list
+    })
+    if (data === true) {
+      $baseMessage('添加零件提交成功', 'success', 'hey')
+      fetchSkuComponent()
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 // 关闭添加零件对话框
 const handleCloseCreateComponent = (value: boolean) => {
   createComponentVisible.value = value
+}
+// 提交添加耗材传递的值
+const handleSubmitConsumable = async (value: any) => {
+  let list: ISubmitPurchaseConsumable[] = value.map((item: any): ISubmitPurchaseConsumable => {
+    return {
+      componentId: Number(item.id),         
+      suppliserId: Number(item.suppliserId),   
+      count: Number(item.count)                 
+    }
+  })
+  try {
+    const { data } = await submitPurchaseConsumable({
+      poId: Number(route.query.poId),
+      poSkuId: Number(route.query.poSkuId),
+      list
+    })
+    if (data === true) {
+      $baseMessage('添加耗材提交成功', 'success', 'hey')
+      fetchSkuComponent()
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 关闭添加耗材对话框
 const handleCloseCreateConsumable = (value: boolean) => {
@@ -1116,6 +1167,7 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
     console.error(error)
   }
 }
+
 // 当点击上一个按钮
 const handleFetchPreviousData = () => {
   // 获取当前路由的查询参数
@@ -1226,6 +1278,15 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
       textAlign:'center'
     } 
   }
+  // if (data.columnIndex === 0) {
+  //   return 'clear-padding'
+  // }
+}
+const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+
+  // if (data.columnIndex === 0) {
+  //   return 'clear-padding'
+  // }
 }
 // 创建planPo
 const handleCreatePlanPo = async () => {
@@ -1296,7 +1357,7 @@ onBeforeMount(() => {
  height: 75px;
 }
 :deep(.el-table .el-table__body .cell) {
- max-height: 81.2px;
+  max-height: 81.2px;
 }
 .overflow-text {
  max-height: 81.2px; /* 设置文本的最大高度 */
@@ -1313,13 +1374,14 @@ onBeforeMount(() => {
    justify-content: center; /* 水平居中 */
    align-items: center; /* 垂直居中，如果需要 */
 }
-/* :deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
+// 让上面的图片过渡消失
+:deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
    transition: none;  
 }
-:deep(.el-upload) {
-  width: 100%;
-  height: 150px;
-} */
+// :deep(.el-upload) {
+//   width: 100%;
+//   height: 150px;
+// } 
 /* :deep(.el-upload) {
   position: relative;
   width: 100%; 
@@ -1384,5 +1446,9 @@ onBeforeMount(() => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 </style>

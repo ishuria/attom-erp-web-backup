@@ -3,7 +3,7 @@
     v-model="dflag" 
     :close-on-click-modal="false" 
     title="添加耗材" 
-    width="40%"
+    width="55%"
     class="moldDialog"
     :before-close="handlerCloseDialog"
   >
@@ -33,15 +33,15 @@
       >
         <el-table-column  label="图片" class="image-wall" width="100">
           <template #default="{ row, $index }">
-            <el-image class="image" :src="row.imageUrl" alt="" data-img="img"/>
+            <el-image :src="row.imageUrl" alt="" data-img="img" style="width: 75px; height: 75px"/>
           </template>
         </el-table-column>
         <el-table-column label="零件ID" width="100" prop="id"></el-table-column>
         <el-table-column label="供应商" min-width="200" prop="suppliser"></el-table-column>
         <el-table-column label="耗材名" min-width="200" prop="componentName"></el-table-column>
-        <el-table-column label="添加数量" min-width="100" prop="packagePrecautions">
+        <el-table-column label="添加数量" min-width="100" prop="count">
             <template #default="{ row }">
-                <el-input />
+                <el-input v-model="row.count" clearable />
             </template>
         </el-table-column>
         <el-table-column label="单位" min-width="70" prop="unit"></el-table-column>
@@ -60,10 +60,10 @@
     </div>
     <template #footer>
       <el-button type="danger" @click="handlerCloseDialog">取消</el-button>
-      <el-button type="primary">确认</el-button>
+      <el-button type="primary" @click="handleConfirm">确认</el-button>
     </template>
   </el-dialog>
-  <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible"/>
+  <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
 </template>
 
 <script lang="ts" setup>
@@ -121,12 +121,25 @@ const emit = defineEmits(['update:createConsumableVisible', 'update:tableValue']
 const handlerCloseDialog = () => {
   dflag.value = false
   emit('update:createConsumableVisible', dflag.value);
-  emit('update:tableValue', list.value)
+}
+const validateConsumable = (item: any) => {
+  if (!item.count) {
+    $baseMessage('每个耗材的添加数量不能为空', 'error');
+    return false;
+  } 
+  return true; // 所有校验通过
+};
+const handleConfirm = () => {
+  const countAllValid = list.value.every((item: any) => validateConsumable(item));
+  if (countAllValid) {
+    emit('update:tableValue', list.value)
+    dflag.value = false
+    emit('update:createConsumableVisible', dflag.value);
+  }
 }
 
-
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 6){        
+  if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 5){        
     return {
       textAlign:'center'
     } 
@@ -199,8 +212,5 @@ transform-origin: center;
 .none {
   display: none;
 }
-.image {
-  width: 75px;
-  height: 75px;
-}
+
 </style>

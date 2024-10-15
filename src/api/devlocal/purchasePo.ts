@@ -29,6 +29,8 @@ import {
   IPoSkuId,
   ISku,
   IStringResp,
+  ISubmitPurchaseComponentQuery,
+  ISubmitPurchaseConsumableQuery,
   ISupplierId,
   IUpdateBuyerAndCustomsDeclaration,
   IUpdateComponentAllPay,
@@ -380,5 +382,21 @@ export function deleteComponentImg(params?: IId): Promise<IBooleanResp> {
     url: `${BASE_API}/purchase/po/component/img/delete`,
     method: 'post',
     params,
+  })
+}
+// 添加零件提交
+export function submitPurchaseComponent(data?: ISubmitPurchaseComponentQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/submit/component`,
+    method: 'post',
+    data,
+  })
+}
+// 添加耗材提交
+export function submitPurchaseConsumable(data?: ISubmitPurchaseConsumableQuery): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/submit/consumables`,
+    method: 'post',
+    data,
   })
 }

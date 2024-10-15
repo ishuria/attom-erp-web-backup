@@ -7,8 +7,8 @@
                 <el-button type="primary" @click="addSampleHandler">拿样</el-button>
                 <el-button type="primary" @click="sampleTrackHandler">样品追踪</el-button>
                 <el-button type="primary" @click="handleGetLog">开发日志</el-button>
-                <el-button type="primary">添加耗材</el-button>
-                <el-button type="primary">添加零件</el-button>
+                <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
+                <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
 
@@ -70,12 +70,12 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="已有零件id" prop="skuComponentId"  min-width="80">
+            <el-table-column label="已有零件id" prop="existingPartId"  min-width="80">
                 <template #header>
                     已有零<br>件id
                 </template>
                 <template #default="{ row }"  >
-                    <div>{{ row.skuComponentId }}</div>
+                    <div>{{ row.existingPartId }}</div>
                 </template>
             </el-table-column>
 
@@ -356,7 +356,18 @@
             @clickBoolean="clickLogBool" 
             @clickChild="clickLog" 
         />
-
+        <!-- 添加零件 -->
+        <VabCreateComponent 
+          :createComponentVisible="createComponentVisible"
+          @update:createComponentVisible="handleCloseCreateComponent"
+          @update:tableValue="handleSubmitComponent"
+        />
+        <!-- 添加耗材 -->
+        <VabCreateConsumable 
+          :createConsumableVisible="createConsumableVisible"
+          @update:createConsumableVisible="handleCloseCreateConsumable"
+          @update:tableValue="handleSubmitConsumable"
+        />
     </div>
 
 </template>
@@ -374,13 +385,16 @@ import {
     copyComponent, componentUploadImage,
     updateComponenet,
     updateProgressLog,
-    getProgressCalculation
+    getProgressCalculation,
+    submitProgressComponent,
+    submitProgressConsumable
 } from '/@/api/devlocal/progressSample'
-import { getProgressLog,  } from '~/src/api/devlocal/progress'
+import { getProgressLog,  } from '/@/api/devlocal/progress'
 import wangEditor from '../newProductProgress/wangEditor.vue'
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 
 
-// 图片上传显示控制vesiblae
+// 图片上传显示控制
 const uploadPicVisible = ref<boolean>(false)
 // 图片唯一id
 const dataId = ref<string>("")
@@ -390,6 +404,7 @@ const wangEditorVisible = ref<boolean>(false)
 const progressLog = ref<string>('')
 const wangEditorTitle = ref<string>('')
 const classify = ref<string>('')
+const route = useRoute()
 defineComponent({
     name: 'VabComponentList',
 })
@@ -419,6 +434,70 @@ interface SpanMethodProps {
     column: TableColumnCtx<IProgressProdcutComponent>
     rowIndex: number
     columnIndex: number
+}
+const createComponentVisible = ref<boolean>(false) //添加零件显示与否
+const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
+// 关闭添加零件对话框
+const handleCloseCreateComponent = (value: boolean) => {
+  createComponentVisible.value = value
+}
+// 关闭添加耗材对话框
+const handleCloseCreateConsumable = (value: boolean) => {
+  createConsumableVisible.value = value
+}
+// 提交添加零件传递的值
+const handleSubmitComponent = async (value: any) => {
+ 
+ let list: ISubmitPurchaseComponent[] = value.map((item: any): ISubmitPurchaseComponent => {
+   return {
+     componentId: Number(item.id), 
+     sku: item.sku,                   
+     suppliserId: Number(item.suppliserId),   
+     count: Number(item.count)                 
+   }
+ })
+ try {
+   const { data } = await submitProgressComponent({
+    progressId: Number(route.query.progressId),
+     list
+   })
+   if (data === true) {
+     $baseMessage('添加零件提交成功', 'success', 'hey')
+     fetchDataComponent()
+   }
+ } catch (error) {
+   console.error(error)
+ }
+}
+// 提交添加耗材传递的值
+const handleSubmitConsumable = async (value: any) => {
+ let list: ISubmitPurchaseConsumable[] = value.map((item: any): ISubmitPurchaseConsumable => {
+   return {
+     componentId: Number(item.id),         
+     suppliserId: Number(item.suppliserId),   
+     count: Number(item.count)                 
+   }
+ })
+ try {
+   const { data } = await submitProgressConsumable({
+    progressId: Number(route.query.progressId),
+    list
+   })
+   if (data === true) {
+     $baseMessage('添加耗材提交成功', 'success', 'hey')
+     fetchDataComponent()
+   }
+ } catch (error) {
+   console.error(error)
+ }
+}
+// 展示添加零件对话框
+const handleAddComponent = () => {
+  createComponentVisible.value = true
+}
+// 展示添加耗材对话框
+const handleAddConsumable = () => {
+  createConsumableVisible.value = true
 }
 let previous: any = null; 
 let currentGroupIndex = 0; // 当前组索引
@@ -873,7 +952,7 @@ onMounted(async () => {
 }
 
 // 设置行高
-:deep(.el-table .el-table__body .cell) {
+:deep(.noneHoveTable .el-table .el-table__body .cell) {
     max-height: 50px;
 }
 

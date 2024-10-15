@@ -520,3 +520,24 @@ export interface IGetAddConsumableListResp {
     list: IGetAddConsumableList[]
   }
 }
+export interface ISubmitPurchaseComponent {
+  componentId: number
+  sku: string
+  suppliserId: number
+  count: number
+}
+export interface ISubmitPurchaseComponentQuery {
+  poId: number
+  poSkuId: number
+  list: ISubmitPurchaseComponent[]
+}
+export interface ISubmitPurchaseConsumable {
+  componentId: number
+  suppliserId: number
+  count: number
+}
+export interface ISubmitPurchaseConsumableQuery {
+  poId: number
+  poSkuId: number
+  list: ISubmitPurchaseConsumable[]
+}
