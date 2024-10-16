@@ -1052,16 +1052,18 @@ html {
     }
 
     /* 旋转动画 */
-    .rotate {
-      @keyframes rotate {
-        0% {
-          transform: rotate(0);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0);
       }
 
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .rotate {
       animation: rotate 1s linear infinite;
     }
 

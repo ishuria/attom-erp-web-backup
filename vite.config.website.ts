@@ -100,6 +100,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
       preprocessorOptions: {
         scss: {
+          api: 'modern-compiler', // 修复警告: Deprecation Warning: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
           sassOptions: { outputStyle: 'expanded' },
         },
       },
