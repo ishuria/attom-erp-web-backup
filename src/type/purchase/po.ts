@@ -541,3 +541,8 @@ export interface ISubmitPurchaseConsumableQuery {
   poSkuId: number
   list: ISubmitPurchaseConsumable[]
 }
+export interface IPurchaseTotalAp {
+  componentIds: string
+  totalMoney: string
+  totalFreight: string
+}

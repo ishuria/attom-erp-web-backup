@@ -55,9 +55,9 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="100px">
+          <el-table-column label="SKU图片" width="100">
             <template #default="{ row, $index }">
-               <el-image :src="row.skuImageUrl" fit="cover" :lazy="true" data-img="img" style="width: 100%; height: 100%">
+               <el-image :src="row.skuImageUrl" fit="contain" :lazy="true" data-img="img" style="width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -83,7 +83,7 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
+          <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
               <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
@@ -643,6 +643,7 @@
           :header-cell-style="{ 'text-align': 'center' }"
           @cell-click="changePaymentHistoryInput"
           :cell-style="paymentHistoryCellStyle"
+          :cell-class-name="payHistoryCellClass"
         >
           <el-table-column label="付款日期" min-width="120" prop="createTime">
             <template #default="{ row }">
@@ -667,9 +668,9 @@
               <el-tag :type="row.type === 0 ? 'success' : 'danger'">{{ row.type === 0 ? '付款' : '退款' }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="退款凭证" width="100" prop="refundVoucher">
+          <el-table-column label="退款凭证" width="90" prop="refundVoucher">
             <template #default="{ row }">
-              <el-image :src="row.refundVoucher" data-img="img" style="width: 60px; height: 60px">
+              <el-image :src="row.refundVoucher" data-img="img" fit="contain" style="width: 89.2px; height: 86.2px;display: block;">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -730,7 +731,7 @@
           <el-input v-model="refundForm.price" @input="handleComputeRefundPercent" clearable></el-input>
         </el-form-item>
         <el-form-item label="凭证上传">
-          <el-upload action="#" drag multiple class="upload-width">
+          <el-upload action="#" multiple drag class="upload-width" :on-change="onChange" :show-file-list="true" :auto-upload="false">
             <el-icon class="el-icon--upload">
               <upload-filled />
             </el-icon>
@@ -743,7 +744,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseRefundDialog">关闭</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="handleConfirmRefund">确认</el-button>
       </template>
     </el-dialog>
     <!-- 总价分摊 -->
@@ -766,7 +767,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseTotalPriceSharingDialog">关闭</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="handleConfirmTotalPriceSharing">确认</el-button>
       </template>
     </el-dialog>
     <!-- 聚合合同 -->
@@ -837,9 +838,9 @@
 
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
-import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
+import { UploadFile, UploadFiles, type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { deletePo, delPayRecord, getComponentPayRecord, getPoList, updateComponentAllPay, updateComponentPayPart, updatePayRecord } from '/@/api/devlocal/purchasePo'
+import { deletePo, delPayRecord, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
@@ -930,7 +931,29 @@ const generateMoneyTransferTime = ref<string>('')
 const automaticSignatureVisible = ref<boolean>(false)
 // 付款进度传的row
 const payHistoryRow = ref<any>()
- 
+const tableColumnWidth = ref<number>(0)
+const calculateColumnWidth = () => {
+  const records = poList.value.map((row: any) => row.paymentRecord)
+  let maxWidth = 0
+  records.forEach((record: any) => {
+    // 分割成段落
+    const paragraphs = record.split(/<br\s*\/?>/)
+    paragraphs.forEach((paragraph: string) => {
+      const tempDiv = document.createElement('div')
+      tempDiv.style.visibility = 'hidden'
+      tempDiv.style.position = 'absolute'
+      tempDiv.style.whiteSpace = 'nowrap' // 避免换行
+      tempDiv.innerHTML = paragraph // 使用原段落
+      document.body.appendChild(tempDiv)
+      const width = tempDiv.getBoundingClientRect().width
+      if (width > maxWidth) {
+        maxWidth = width
+      }
+      document.body.removeChild(tempDiv)
+    })
+  })  
+  tableColumnWidth.value = maxWidth + 26; // 添加一些额外空间
+}
 // 将选择的po行加入到po数组里
 const handleSelectedPoRow = (event: any, row: any) => {
   const rowId = row.id; // 假设每行都有一个唯一的 id
@@ -947,7 +970,7 @@ const handleSelectedPoRow = (event: any, row: any) => {
 };
 // 将选择的component行加入到component数组里
 const handleSelectedCompRow = (event: any, row: any) => {
-  const rowCompId = row.componentId; 
+  // const rowCompId = row.componentId; 
   if (event) {
     selectedCompRow.value.add(row); // 选中，添加到 Set 中
   } else {
@@ -1146,6 +1169,29 @@ const handleCloseRefundDialog = () => {
   refundRef.value?.resetFields()
   refundVisible.value = false
 }
+const refundFile = ref<any>()
+// 处理上传退款凭证
+const onChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  refundFile.value = uploadFile.raw
+}
+// 确认退款
+const handleConfirmRefund = async () => {
+  try {
+    let formData = new FormData()
+    formData.append('unitPrice', refundForm.price)
+    formData.append('percentage', refundForm.percent)
+    formData.append('file', refundFile.value)
+    formData.append('componentIds', ""+selectedCompArray.value[0].componentId)
+    formData.append('poIds', selectedCompArray.value[0].id)
+    const { data } = await updateComponentRefund(formData)
+    if (data === true) {
+      $baseMessage('退款提交成功', 'success', 'hey')
+      handleCloseRefundDialog()
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 // 展示总价分摊弹窗
 const handleShowTotalPriceSharing = () => {
   // 判断是否选中零件操作
@@ -1159,6 +1205,32 @@ const handleShowTotalPriceSharing = () => {
 const handleCloseTotalPriceSharingDialog = () => {
   totalPriceSharingFormRef.value?.resetFields()
   totalPriceSharingVisible.value = false
+}
+// 提交总价分摊
+const handleConfirmTotalPriceSharing = async () => {
+  let componentIds: any = []
+  let poIds: any = new Set()
+  selectedCompArray.value.forEach((item: any) => {
+    componentIds.push(item.componentId)
+    poIds.add(item.id)
+  })
+  // ,号连接
+  componentIds = componentIds.join()
+  // 先转为数组，然后,号连接
+  poIds = Array.from(poIds).join()
+  try {
+    const { data } = await purchaseTotalAp({
+      componentIds: componentIds,
+      totalMoney: totalPriceSharingForm.tax,
+      totalFreight: totalPriceSharingForm.shippingFee
+    })
+    if (data === true) {
+      $baseMessage('总价分摊提交成功', 'success')
+      handleCloseTotalPriceSharingDialog()
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 处理生成合同
 const handleGenerateContract = () => {
@@ -1269,6 +1341,13 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   }
 }
 const changePaymentHistoryInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
+  }
   if (!cell.children[0].children[0]
       || !cell.children[0].children[1]
       || !cell.children[0].children[0].classList
@@ -1446,6 +1525,7 @@ const fetchData = async () => {
           })
           .join('<br>');
       })
+      calculateColumnWidth()
     }
   } catch (error) {
     console.error(error)
@@ -1453,7 +1533,7 @@ const fetchData = async () => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
 
-  if(data.columnIndex !== 6 && data.columnIndex !== 9 && data.columnIndex !== 18)
+  if(data.columnIndex !== 6 && data.columnIndex !== 9 && data.columnIndex !== 17 && data.columnIndex !== 18)
     return {
       textAlign: 'center',
     } 
@@ -1481,6 +1561,12 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
     }
   }
   if (data.columnIndex === 5) {
+    return 'clear-padding'
+  }
+  return ''
+}
+const payHistoryCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 4) {
     return 'clear-padding'
   }
   return ''
@@ -1548,31 +1634,27 @@ onBeforeMount(() => {
 
         .el-table {
           flex: 1;
+          .clear-padding {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+            .cell {
+              padding-left: 0px !important;
+              padding-right: 0px !important;
+            }
+          }
         }
       }
     }
   }
 }
 
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 75px;
-  height: 75px;
-  transition: none;
-}
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
-}
+
 // // 设置行高
 // :deep(.el-table .el-table__body .cell) {
 //   max-height: 81.2px;
 // }
 
 
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
 // 控制编辑框显示与隐藏
 .none {
   display: none;
@@ -1581,13 +1663,10 @@ onBeforeMount(() => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-
-// 开模申请
+// 弹出框padding
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
 }
-   
-
 // input框内容居中
 .input-center {
   text-align: center;
@@ -1597,7 +1676,6 @@ onBeforeMount(() => {
 .form-center {
   margin: 0 20px;
 }
-
 // 分隔线margin
 .divider-margin {
   margin-top: 0; 
@@ -1610,7 +1688,6 @@ onBeforeMount(() => {
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
 }
-
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
@@ -1622,11 +1699,15 @@ onBeforeMount(() => {
   color: green;
 }
 :deep(.yellow) {
-  color: gold
+  color: #E6A23C
 }
 .el-table :deep(.clear-padding .cell) {
   padding-left: 0px !important;
   padding-right: 0px !important;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }
 </style>
 

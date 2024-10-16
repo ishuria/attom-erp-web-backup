@@ -1,5 +1,5 @@
 <template>
-  <div class="step-form-container">
+  <div class="step-form-container poDetail-container">
     <el-page-header  @back="goBack" style="margin-bottom: 0px;">
       <template #content>
         <div class="flex items-center">
@@ -9,9 +9,9 @@
       </template>
     </el-page-header>
     <el-card class="product-details-card" shadow="never" >
-      <el-row :gutter="20">
-        <el-col :span="2" class="custom-upload" style="padding-right: 0px;padding-left: 10px;"> 
-          <el-form label-position="top">
+      <el-row style="display: flex; width: 100%">
+        <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }"> 
+          <el-form label-position="top" >
             <el-form-item label="订货套数" >
               <el-input v-model="poDetailData.purchaseSkuNumber" @change="handleUpdateSkuCount"></el-input>
             </el-form-item>
@@ -22,33 +22,33 @@
                 :class="{ hide: poDetailData.hide }"
                 :http-request="uploadImage"
                 class="upload-align"
+                :style="{ height: imageColumnHeight + 'px', transition: 'height 1s ease' }"
               >
                 <el-icon ><Plus /></el-icon>
                 <template #file="{ file }">
-                    <div>
-                        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                        <span class="el-upload-list__item-actions">
-                            <span
-                                class="el-upload-list__item-preview"
-                                @click="handlePreview(file)"
-                            >
-                                <el-icon><zoom-in /></el-icon>
-                            </span>
-                            <span
-                                class="el-upload-list__item-delete"
-                                @click="handleRemove(file)"
-                            >
-                                <el-icon><Delete /></el-icon>
-                            </span>
-                        </span>
-                    </div>
+                  <div>
+                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePreview(file)"
+                      >
+                        <el-icon><zoom-in /></el-icon>
+                      </span>
+                      <span
+                        class="el-upload-list__item-delete"
+                        @click="handleRemove(file)"
+                      >
+                        <el-icon><Delete /></el-icon>
+                      </span>
+                    </span>
+                  </div>
                 </template>
               </el-upload>
             </el-form-item>
           </el-form>
-          
         </el-col>
-        <el-col :span="10" style="padding-right: 0px;">
+        <el-col style="flex: 1.3; padding: 0">
           <el-form label-position="top" :inline="true">
             <el-row style="width: 100%">
                 <el-col :span="12">
@@ -65,7 +65,7 @@
 
             <el-row style="width: 100%">
               <el-col :span="12">
-                <el-form-item label="创建日期">
+                <el-form-item label="创建日期" data-label="创建日期">
                   <el-input v-model="poDetailData.createTime" disabled></el-input>
                 </el-form-item>
               </el-col>
@@ -105,7 +105,7 @@
 
             <el-row style="width: 100%">
               <el-col :span="4">
-                <el-form-item label="SKU总含税价">
+                <el-form-item label="SKU总含税价" data-label="SKU总含税价">
                   <el-input v-model="poDetailData.orderTotalPrice" disabled></el-input>
                 </el-form-item>
               </el-col>
@@ -127,11 +127,11 @@
             </el-row>
           </el-form>
         </el-col>
-        <el-col :span="12" style="padding-right: 0px;padding-left: 0px;">
+        <el-col style="flex: 1; padding: 0">
           <el-form label-position="top" >
             <el-row>
               <el-col :span="12">
-                <el-form-item label="">
+                <el-form-item >
                   <el-space>
                       <span style="font-size: var(--el-form-label-font-size);">SKU备注</span>
                   </el-space>
@@ -139,7 +139,7 @@
                 </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="">
+                  <el-form-item style="margin-right: 0">
                     <el-space>
                         <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
                     </el-space>
@@ -178,36 +178,36 @@
         :cell-style="cellStyle"
         :cell-class-name="getCellClass"
       >
-        <el-table-column align="center" label="图片" class="image-wall" width="100">
-            <template #default="{ row, $index }">
-                <el-upload 
-                    list-type="picture-card" 
-                    :file-list="row.imageList" 
-                    :class="{ hide: row.hide }"
-                    :http-request="(file) => uploadSkuComponentImage(file, row)"
-                    class="component-upload"
-                >
-                    <el-icon ><Plus /></el-icon>
-                    <template #file="{ file }">
-                        <div>
-                            <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                            <span class="el-upload-list__item-actions">
-                                <span
-                                    class="el-upload-list__item-preview"
-                                    @click="handlePreview(file)"
-                                >
-                                    <el-icon><zoom-in /></el-icon>
-                                </span>
-                                <span
-                                    class="el-upload-list__item-delete"
-                                    @click="handleComponentRemove(file, row)"
-                                >
-                                    <el-icon><Delete /></el-icon>
-                                </span>
-                            </span>
-                        </div>
-                    </template>
-                </el-upload>
+        <el-table-column align="center" label="图片" width="81.2px">
+            <template #default="{ row }">
+              <el-upload 
+                list-type="picture-card" 
+                :file-list="row.imageList" 
+                :class="{ hide: row.hide }"
+                :http-request="(file) => uploadSkuComponentImage(file, row)"
+                class="component-upload"
+              >
+                <el-icon ><Plus /></el-icon>
+                <template #file="{ file }">
+                  <div>
+                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePreview(file)"
+                      >
+                        <el-icon><zoom-in /></el-icon>
+                      </span>
+                        <span
+                          class="el-upload-list__item-delete"
+                          @click="handleComponentRemove(file, row)"
+                        >
+                        <el-icon><Delete /></el-icon>
+                      </span>
+                    </span>
+                  </div>
+                </template>
+              </el-upload>
             </template>
         </el-table-column>
         <el-table-column label="零件ID" prop="existingPartsListId" width="80"></el-table-column>   
@@ -312,12 +312,6 @@
         <el-table-column label="总未税价" prop="preTaxPrice" align="center" :width="flexColumnWidth(skuComponentList, '总未税价', 'preTaxPrice')">
           <template #header>
             总未<br>税价
-          </template>
-          <template #default="{ row }">
-            <div class="none">
-              <el-input v-model="row.preTaxPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.preTaxPrice }}</span>
           </template>
         </el-table-column>
         <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(skuComponentList, '总含税价', 'taxIncludedPrice')">
@@ -1108,12 +1102,16 @@ const handlePreview = (file: UploadFile) => {
 */
 async function uploadImage(params: any) {
   poDetailData.value.hide = true
+
   try {
     let uploadImgForm = new FormData(); // 每次上传前重置 FormData
     uploadImgForm.append('file', params.file);
     uploadImgForm.append('poSkuId', poDetailData.value.poSkuId);
     const { data } = await updateSkuImg(uploadImgForm)
-    poDetailData.value.imageList = [{ url: data }]
+
+      
+      poDetailData.value.imageList = [{ url: data }]
+    
   } catch (error) {
     console.error(error)
   }
@@ -1126,8 +1124,9 @@ async function uploadSkuComponentImage(params: any, row: any) {
     uploadImgForm.append('id', row.id);
 
     const { data } = await uploadComponentImg(uploadImgForm)
-    
+
     row.imageList = [{ url: data }]
+
   } catch (error) {
     console.error(error)
   }
@@ -1271,22 +1270,19 @@ const handleShowPreviousOrNext = () => {
   }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if  (data.columnIndex === 1 || data.columnIndex === 6){        
+  if  (data.columnIndex === 1 || data.columnIndex === 6 || data.columnIndex === 12){        
     return {
       color: '#bbb',
       cursor: 'not-allowed',
       textAlign:'center'
     } 
   }
-  // if (data.columnIndex === 0) {
-  //   return 'clear-padding'
-  // }
 }
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-
-  // if (data.columnIndex === 0) {
-  //   return 'clear-padding'
-  // }
+  if (data.columnIndex === 0) {
+    return 'clear-padding'
+  }
+  return ''
 }
 // 创建planPo
 const handleCreatePlanPo = async () => {
@@ -1309,6 +1305,18 @@ const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
+const imageColumnHeight = ref<number>(0)
+// 动态设置图片列高度
+const setImageColumnHeight = () => {
+  const createDateInput = document.querySelector('.el-form-item[data-label="创建日期"]');
+  const skuTotalPriceInput = document.querySelector('.el-form-item[data-label="SKU总含税价"]');
+
+  if (createDateInput && skuTotalPriceInput) {
+    const createDateRect = createDateInput.getBoundingClientRect();
+    const skuTotalPriceRect = skuTotalPriceInput.getBoundingClientRect();
+    imageColumnHeight.value = skuTotalPriceRect.bottom - createDateRect.top - 30;
+  }
+};
 onBeforeMount(() => {
   handleInputDisabled()
   // 如果不是创建，两个订单详情都是一样的接口
@@ -1319,24 +1327,34 @@ onBeforeMount(() => {
     fetchSkuComponent()
   }
 })
+onMounted(async () => {
+  await nextTick(); // 确保 DOM 渲染完成
+  setImageColumnHeight();
+  window.addEventListener('resize', setImageColumnHeight);
+});
 </script>
 
 <style lang="scss" scoped>
-/* :deep(.el-upload--picture-card) {
-   --el-upload-picture-card-size: 89.164px;
-} */
+.poDetail-container {
+  :deep() {
+    .product-details-card {
+      border: 0;
+      
+      // 设置el-card的padding和下面表格左右两侧对齐
+      .el-card__body {
+        padding-bottom: 0;
+        padding-right: 0;
+        padding-left: 0; 
+      }
+      
+    }
+    
+  }
+}
+
 :deep(.el-form-item) {
    margin-right: 10px;
 }
-:deep(.el-card__body) {
-   padding-bottom: 2px;
-   padding-right: 0;
-   /* padding-left: 0; */
-}
-.product-details-card {
-   border: 0;
-}
-
 :deep(.moldDialog .el-dialog__body) { 
  padding-top: 0;
 }
@@ -1347,15 +1365,20 @@ onBeforeMount(() => {
 .none {
    display: none;
 }
+// 设置下面表格的图片
 :deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
- width: 75px;
- height: 75px;
+ width: 100%;
+ height: 81.2px;
  transition: none;
+ margin: 0;
+ border-radius: 0;
+ border: 0;
 }
 :deep(.component-upload .el-upload--picture-card) {
- width: 75px;
- height: 75px;
+  width: 78.2px;
+  height: 81.2px;
 }
+// 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
@@ -1364,51 +1387,34 @@ onBeforeMount(() => {
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
  display: block;
 }
-.custom-upload {
-   display: flex;
-   justify-content: center;
-   align-items: flex-start; 
-}
 .transfer-container {
    display: flex;
    justify-content: center; /* 水平居中 */
    align-items: center; /* 垂直居中，如果需要 */
 }
-// 让上面的图片过渡消失
-:deep(.custom-upload .el-upload-list--picture-card .el-upload-list__item) {
-   transition: none;  
-}
-// :deep(.el-upload) {
-//   width: 100%;
-//   height: 150px;
-// } 
-/* :deep(.el-upload) {
-  position: relative;
-  width: 100%; 
-  padding-top: 100%; 
-}
-
-:deep(.el-upload .el-upload-list--picture-card) {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-:deep(.el-upload .el-icon) {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-} */
-/*图片上传框对齐*/
+/* 上面的图片上传框对齐 */
 .upload-align {
   margin-top: 30px;
+  width: 100%;
+  height: 100%;
 }
-// :deep(.upload-align .el-upload-list--picture-card) {
-//   width: 100%;
-// }
+:deep(.upload-align .el-upload-list--picture-card) {
+  width: 100%;
+  height: 100%;
+}
+// 让上面的图片过渡消失
+:deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {
+  transition: none;  
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+// 设置没有图片时上传图标的样式
+:deep(.upload-align .el-upload--picture-card) {
+  width: 100%;
+  height: 100%;
+}
 
 .hide :deep(.el-upload--picture-card) {
  display: none
@@ -1451,4 +1457,9 @@ onBeforeMount(() => {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
+.el-table :deep(.clear-padding) {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
 </style>

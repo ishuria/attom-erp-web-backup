@@ -130,7 +130,7 @@ const validateComponent = (item: any) => {
   return true; // 所有校验通过
 };
 const handleConfirm = () => {
-  const countAllValid = list.value.every((item: any) => validateComponent(item));
+  const countAllValid = list.value.some((item: any) => validateComponent(item));
   if (countAllValid) {
     emit('update:tableValue', list.value)
     dflag.value = false

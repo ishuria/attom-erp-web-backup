@@ -27,6 +27,7 @@ import {
   IPoIds,
   IPoSkuComponentId,
   IPoSkuId,
+  IPurchaseTotalAp,
   ISku,
   IStringResp,
   ISubmitPurchaseComponentQuery,
@@ -396,6 +397,23 @@ export function submitPurchaseComponent(data?: ISubmitPurchaseComponentQuery): P
 export function submitPurchaseConsumable(data?: ISubmitPurchaseConsumableQuery): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/submit/consumables`,
+    method: 'post',
+    data,
+  })
+}
+// 采购订单-退款
+export function updateComponentRefund(data?: FormData): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/component/refund`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+// 采购订单-总价分摊
+export function purchaseTotalAp(data?: IPurchaseTotalAp): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/purchaseTotal/ap`,
     method: 'post',
     data,
   })
