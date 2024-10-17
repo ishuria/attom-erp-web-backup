@@ -43,7 +43,9 @@ import {
   IUpdatePoSite,
   IUpdatePoSkuComponent,
   IUpdateSkuCount,
-  IUpdateSkuDetail
+  IUpdateSkuDetail,
+  IGeneratePoContractQuery,
+  IFileName
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -415,6 +417,23 @@ export function purchaseTotalAp(data?: IPurchaseTotalAp): Promise<IBooleanResp> 
   return request({
     url: `${BASE_API}/purchase/purchaseTotal/ap`,
     method: 'post',
+    data,
+  })
+}
+// 采购订单-生成PO合同
+export function generatePoContract(data: IGeneratePoContractQuery) {
+  return request({
+    url: `${BASE_API}/purchase/generate/contract`,
+    method: 'post',
+    data,
+  })
+}
+// 采购订单-聚合合同
+export function aggregationContract(data: FormData) {
+  return request({
+    url: `${BASE_API}/purchase/aggregation/contract`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
     data,
   })
 }

@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
       <el-tab-pane label="待付款" :name="2">
         <vab-query-form>
-          <vab-query-form-left-panel :span="16">
+          <vab-query-form-left-panel :span="18">
             <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
@@ -15,7 +15,7 @@
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="8">
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
@@ -55,7 +55,10 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" width="100">
+          <el-table-column label="SKU图片" width="86">
+            <template #header>
+              SKU<br>图片
+            </template>
             <template #default="{ row, $index }">
                <el-image :src="row.skuImageUrl" fit="contain" :lazy="true" data-img="img" style="width: 100%; height: 100%">
                 <template #error>
@@ -112,7 +115,7 @@
       </el-tab-pane>
       <el-tab-pane label="部分付款" :name="3">
         <vab-query-form>
-          <vab-query-form-left-panel :span="16">
+          <vab-query-form-left-panel :span="18">
             <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
@@ -124,7 +127,7 @@
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="8">
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
@@ -145,6 +148,7 @@
           :cell-style="cellStyle"
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
+          :cell-class-name="getCellClass"
         >
           <el-table-column label="PO操作" prop="selectedPoRow">
             <template #default="{ row }">
@@ -163,9 +167,12 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="100">
+          <el-table-column label="SKU图片" width="86">
+            <template #header>
+              SKU<br>图片
+            </template>
             <template #default="{ row, $index }">
-               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img">
+               <el-image :src="row.skuImageUrl" fit="contain" :lazy="true" data-img="img" style="width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -173,38 +180,38 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
           <el-table-column label="零件操作" prop="selectedCompRow" width="90">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收日期" prop="createTime" min-width="115"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税运费" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="模具含税" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="含税总价" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="已付金额" prop="payPrice" min-width="90"></el-table-column>    
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
+          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
+          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
+          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
+          <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
               <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
+          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop="purchaseId"></el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>    
+          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
+          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>  
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -216,11 +223,10 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         /> 
-
       </el-tab-pane>
       <el-tab-pane label="已付全款" :name="4">
         <vab-query-form>
-          <vab-query-form-left-panel :span="16">
+          <vab-query-form-left-panel :span="18">
             <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
@@ -232,7 +238,7 @@
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="8">
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
@@ -253,6 +259,7 @@
           :cell-style="cellStyle"
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
+          :cell-class-name="getCellClass"
         >
           <el-table-column label="PO操作" prop="selectedPoRow">
             <template #default="{ row }">
@@ -271,9 +278,12 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="100">
+          <el-table-column label="SKU图片" width="86">
+            <template #header>
+              SKU<br>图片
+            </template>
             <template #default="{ row, $index }">
-               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img">
+               <el-image :src="row.skuImageUrl" fit="contain" :lazy="true" data-img="img" style="width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -281,38 +291,38 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
           <el-table-column label="零件操作" prop="selectedCompRow" width="90">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收日期" prop="createTime" min-width="115"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税运费" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="模具含税" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="含税总价" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="已付金额" prop="payPrice" min-width="90"></el-table-column>    
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
+          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
+          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
+          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
+          <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
               <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
+          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop="purchaseId"></el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>    
+          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
+          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column> 
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -327,7 +337,7 @@
       </el-tab-pane>
       <el-tab-pane label="超额付款" :name="5">
         <vab-query-form>
-          <vab-query-form-left-panel :span="16">
+          <vab-query-form-left-panel :span="18">
             <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
@@ -339,7 +349,7 @@
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="8">
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
@@ -360,6 +370,7 @@
           :cell-style="cellStyle"
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
+          :cell-class-name="getCellClass"
         >
           <el-table-column label="PO操作" prop="selectedPoRow">
             <template #default="{ row }">
@@ -378,9 +389,12 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="100">
+          <el-table-column label="SKU图片" width="86">
+            <template #header>
+              SKU<br>图片
+            </template>
             <template #default="{ row, $index }">
-               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img">
+               <el-image :src="row.skuImageUrl" fit="contain" :lazy="true" data-img="img" style="width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -388,38 +402,39 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
           <el-table-column label="零件操作" prop="selectedCompRow" width="90">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收日期" prop="createTime" min-width="115"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税运费" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="模具含税" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="含税总价" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="已付金额" prop="payPrice" min-width="90"></el-table-column>    
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
+          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
+          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
+          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
+          <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
               <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
+          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop="purchaseId"></el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>    
+          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
+          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
+             
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -434,7 +449,7 @@
       </el-tab-pane>
       <el-tab-pane label="已完结" :name="6">
         <vab-query-form>
-          <vab-query-form-left-panel :span="16">
+          <vab-query-form-left-panel :span="18">
             <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
@@ -445,7 +460,7 @@
             <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="8">
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
@@ -463,10 +478,16 @@
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
-          :cell-style="lastTwoTabCellStyle"
-          :span-method="lastTowTabSpanMethod"
+          :cell-style="cellStyle"
+          :span-method="objectSpanMethod"
           @cell-click="changeInput"
+          :cell-class-name="getCellClass"
         >
+          <el-table-column label="PO操作" prop="selectedPoRow">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
+            </template>
+          </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
@@ -479,9 +500,12 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="100">
+          <el-table-column label="SKU图片" width="86">
+            <template #header>
+              SKU<br>图片
+            </template>
             <template #default="{ row, $index }">
-               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img">
+               <el-image :src="row.skuImageUrl" fit="contain" :lazy="true" data-img="img" style="width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -489,38 +513,39 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
           <el-table-column label="零件操作" prop="selectedCompRow" width="90">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收日期" prop="createTime" min-width="115"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税运费" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="模具含税" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="含税总价" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="已付金额" prop="payPrice" min-width="90"></el-table-column>    
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
+          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
+          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
+          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
+          <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
               <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
+          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop="purchaseId"></el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>    
+          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
+          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
+             
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -553,10 +578,16 @@
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
-          :cell-style="lastTwoTabCellStyle"
-          :span-method="lastTowTabSpanMethod"
+          :cell-style="cellStyle"
+          :span-method="objectSpanMethod"
           @cell-click="changeInput"
+          :cell-class-name="getCellClass"
         >
+          <el-table-column label="PO操作" prop="selectedPoRow">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
+            </template>
+          </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
@@ -569,9 +600,12 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="100">
+          <el-table-column label="SKU图片" width="86">
+            <template #header>
+              SKU<br>图片
+            </template>
             <template #default="{ row, $index }">
-               <el-image :src="row.skuImageUrl" fit="fill" :lazy="true" data-img="img">
+               <el-image :src="row.skuImageUrl" fit="contain" :lazy="true" data-img="img" style="width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -579,38 +613,39 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
           <el-table-column label="零件操作" prop="selectedCompRow" width="90">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收日期" prop="createTime" min-width="115"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税运费" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="模具含税" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="含税总价" prop="taxIncludedPrice" min-width="90"></el-table-column>    
-          <el-table-column label="已付金额" prop="payPrice" min-width="90"></el-table-column>    
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
+          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
+          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
+          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="付款记录" min-width="230" prop="paymentRecord">
+          <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
               <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
             </template>
           </el-table-column>
+          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop="purchaseId"></el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>    
+          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
+          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
+             
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -630,7 +665,7 @@
       v-model="paymentHistoryVisible" 
       :close-on-click-modal="false" 
       title="付款记录" 
-      width="45%"
+      width="40%"
       class="moldDialog"
       :before-close="handleClosePaymentHistoryDialog"
     >
@@ -663,14 +698,14 @@
               {{ row.percentage }}%
             </template>
           </el-table-column>
-          <el-table-column label="类型" min-width="130" prop="type">
+          <el-table-column label="类型" min-width="80" prop="type">
             <template #default="{ row }">
               <el-tag :type="row.type === 0 ? 'success' : 'danger'">{{ row.type === 0 ? '付款' : '退款' }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="退款凭证" width="90" prop="refundVoucher">
             <template #default="{ row }">
-              <el-image :src="row.refundVoucher" data-img="img" fit="contain" style="width: 89.2px; height: 86.2px;display: block;">
+              <el-image :src="row.refundVoucher" data-img="img" fit="contain" style="width: 90px; height: 86.2px;display: block;">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -700,7 +735,7 @@
       :before-close="handleCloseInstallmentDialog"
     >
       <el-divider class="divider-margin"/>
-      <el-form ref="installmentFormRef" label-position="top" label-width="auto" class="form-center" :model="installmentForm">
+      <el-form ref="installmentFormRef" label-position="top" label-width="auto" class="form-center" :model="installmentForm" :rules="installmentFormRules">
         <el-form-item label="百分比" prop="percent">
           <el-input v-model="installmentForm.percent" @input="handleComputePrice" clearable></el-input>
         </el-form-item>
@@ -718,27 +753,46 @@
       v-model="refundVisible"
       :close-on-click-modal="false" 
       title="退款" 
-      width="30%"
+      width="20%"
       class="moldDialog"
       :before-close="handleCloseRefundDialog"
     >
       <el-divider class="divider-margin"/>
-      <el-form ref="refundRef" label-position="top" label-width="auto" class="form-center" :model="refundForm">
+      <el-form ref="refundRef" label-position="top" label-width="auto" class="form-center" :model="refundForm" :rules="refundRules">
         <el-form-item label="百分比" prop="percent">
           <el-input v-model="refundForm.percent" @input="handleComputeRefundPrice" clearable></el-input>
         </el-form-item>
         <el-form-item label="金额" prop="price">
           <el-input v-model="refundForm.price" @input="handleComputeRefundPercent" clearable></el-input>
         </el-form-item>
-        <el-form-item label="凭证上传">
-          <el-upload action="#" multiple drag class="upload-width" :on-change="onChange" :show-file-list="true" :auto-upload="false">
-            <el-icon class="el-icon--upload">
-              <upload-filled />
-            </el-icon>
-            <div class="el-upload__text">
-              将文件拖拽至此处或
-              <em>点击上传</em>
-            </div>
+        <el-form-item label="凭证上传" prop="refundVoucher">
+          <el-upload 
+            list-type="picture-card" 
+            :file-list="refundForm.imageList" 
+            :class="{ hide: refundForm.hide }"
+            :http-request="uploadImage"
+            class="form-upload"
+          >
+            <el-icon ><Plus /></el-icon>
+            <template #file="{ file }">
+              <div>
+                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-preview"
+                    @click="handlePreview(file)"
+                  >
+                    <el-icon><zoom-in /></el-icon>
+                  </span>
+                  <span
+                    class="el-upload-list__item-delete"
+                    @click="handleRefundVoucherRemove"
+                  >
+                    <el-icon><Delete /></el-icon>
+                  </span>
+                </span>
+              </div>
+            </template>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -775,14 +829,14 @@
       v-model="mergeContractVisible"
       :close-on-click-modal="false" 
       title="聚合合同-请上传需要聚合的合同" 
-      width="30%"
+      width="35%"
       class="moldDialog"
       :before-close="handleCloseMergeContractDialog"
     >
       <el-divider class="divider-margin"/>
       <el-form class="form-center">
         <el-form-item >
-          <el-upload action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" v-model:file-list="contractList" 
+          <el-upload action="#" v-model:file-list="contractList" 
           drag multiple class="upload-width" :show-file-list="true" :auto-upload="false">
             <el-icon class="el-icon--upload">
               <upload-filled />
@@ -796,7 +850,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseMergeContractDialog">关闭</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="handleConfirmMergeContract">确认</el-button>
       </template>
     </el-dialog>
     <!-- 生成汇款模板 -->
@@ -837,15 +891,16 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, UploadFilled } from '@element-plus/icons-vue'
+import { Search, UploadFilled, Plus, ZoomIn, Delete  } from '@element-plus/icons-vue'
 import { UploadFile, UploadFiles, type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { deletePo, delPayRecord, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
+import { aggregationContract, deletePo, delPayRecord, generatePoContract, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
+import { downloadFile } from '/@/api/devlocal/download'
 
 defineOptions({
   name: 'poTable',
@@ -857,7 +912,7 @@ const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const tableRef = ref<TableInstance>()
-
+// 合同列表
 const contractList = ref<any>([])
 const activeName = ref<number>(2)
 
@@ -894,6 +949,15 @@ const installmentForm = reactive<any>({
   percent: null,
   price: null
 })
+// 分批付款rule
+const installmentFormRules = reactive<any>({
+  percent: [
+    { required: 'true', message: '请输入百分比', trigger: 'blur' }
+  ],
+  price: [
+    { required: 'true', message: '请输入金额', trigger: 'blur' }
+  ],
+})
 // 分批付款表单ref
 const installmentFormRef = ref<FormInstance>()
 // 退款显示与否
@@ -903,6 +967,18 @@ const refundForm = reactive<any>({
   percent: null,
   price: null,
   refundVoucher: null
+})
+// 退款rule
+const refundRules = reactive<any>({
+  percent: [
+    { required: 'true', message: '请输入百分比', trigger: 'blur' }
+  ],
+  price: [
+    { required: 'true', message: '请输入金额', trigger: 'blur' }
+  ],
+  refundVoucher: [
+    { required: 'true', message: '请上传退款凭证', trigger: 'change' }
+  ]
 })
 // 退款ref
 const refundRef = ref<FormInstance>()
@@ -931,8 +1007,9 @@ const generateMoneyTransferTime = ref<string>('')
 const automaticSignatureVisible = ref<boolean>(false)
 // 付款进度传的row
 const payHistoryRow = ref<any>()
-const tableColumnWidth = ref<number>(0)
+const tableColumnWidth = ref<number>(90)
 const calculateColumnWidth = () => {
+  tableColumnWidth.value = 90
   const records = poList.value.map((row: any) => row.paymentRecord)
   let maxWidth = 0
   records.forEach((record: any) => {
@@ -946,13 +1023,18 @@ const calculateColumnWidth = () => {
       tempDiv.innerHTML = paragraph // 使用原段落
       document.body.appendChild(tempDiv)
       const width = tempDiv.getBoundingClientRect().width
+      // console.log(paragraph, width);
       if (width > maxWidth) {
         maxWidth = width
       }
       document.body.removeChild(tempDiv)
     })
-  })  
-  tableColumnWidth.value = maxWidth + 26; // 添加一些额外空间
+  })
+  if (maxWidth < tableColumnWidth.value) {
+    tableColumnWidth.value = 90
+  } else {
+    tableColumnWidth.value = maxWidth + 26; // 添加一些额外空间
+  }  
 }
 // 将选择的po行加入到po数组里
 const handleSelectedPoRow = (event: any, row: any) => {
@@ -985,12 +1067,12 @@ const handleClosePaymentHistoryDialog = () => {
   // 如果有修改，在重刷数据
   if (flag) {
     fetchData()
-    // 生成提取后的付款进度数据显示到表格上
-    payHistoryRow.value.paymentRecord = paymentProgressList.value
-      .map((item: any) => {
-        return `${item.createTime}: ${item.percentage}%(${item.payPrice})`;
-      })
-      .join('<br>');
+    // // 生成提取后的付款进度数据显示到表格上
+    // payHistoryRow.value.paymentRecord = paymentProgressList.value
+    //   .map((item: any) => {
+    //     return `${item.createTime}: ${item.percentage}%(${item.payPrice})`;
+    //   })
+    //   .join('<br>');
   }
   paymentHistoryVisible.value = false
 }
@@ -1014,7 +1096,6 @@ const handleShowPaymentHistory = async (row: any) => {
     console.error(error)
   }
 }
-
 // 修改付款进度
 const handleUpdatePrice = async (row: any) => {
   try {
@@ -1036,6 +1117,7 @@ const handleDelPayRecord = async (row: any, index: number) => {
       id: row.id
     })
     if (data === true) {
+      flag = true //删除了也是修改
       $baseMessage('删除该条付款记录成功', 'success', 'hey')
       paymentProgressList.value.splice(index, 1)
     }
@@ -1051,22 +1133,15 @@ const handlePaymentPaid = async () => {
     return
   }
   try {
-    let componentIds: any = []
-    let poIds: any = new Set()
-    selectedCompArray.value.forEach((item: any) => {
-      componentIds.push(item.componentId)
-      poIds.add(item.id)
-    })
-    // ,号连接
-    componentIds = componentIds.join()
-    // 先转为数组，然后,号连接
-    poIds = Array.from(poIds).join()
+    let componentIds: string = (selectedCompArray.value.map((item: any) => item.componentId)).join(',');
+    let poIds: string = Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',');
     const { data } = await updateComponentAllPay({
       componentIds: componentIds,
       poIds: poIds
     })
     if (data === true) {
       $baseMessage('已付尾款/全款成功', 'success', 'hey')
+      fetchData() //重新刷新表格
     }
   } catch (error) {
     console.error(error)
@@ -1107,34 +1182,31 @@ const handleCloseInstallmentDialog = () => {
 }
 // 确认分批付款
 const handleConfirmInstallment = async () => {
-  try {
-    let componentIds: any = []
-    let poIds: any = new Set()
-    selectedCompArray.value.forEach((item: any) => {
-      componentIds.push(item.componentId)
-      poIds.add(item.id)
-    })
-    // ,号连接
-    componentIds = componentIds.join()
-    // 先转为数组，然后,号连接
-    poIds = Array.from(poIds).join()
-    const { data } = await updateComponentPayPart({
-      componentInfo: {
-        componentIds: componentIds,
-        poIds: poIds
-      },
-      unitPrice: installmentForm.price,
-      percentage: installmentForm.percent
-    })
-    if (data === true) {
-      $baseMessage('分批付款成功', 'success', 'hey')
-      handleCloseInstallmentDialog()
-      fetchData()
+  installmentFormRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      try {
+        let componentIds: string = (selectedCompArray.value.map((item: any) => item.componentId)).join(',');
+        let poIds: string = Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',');
+        const { data } = await updateComponentPayPart({
+          componentInfo: {
+            componentIds: componentIds,
+            poIds: poIds
+          },
+          unitPrice: installmentForm.price,
+          percentage: installmentForm.percent
+        })
+        if (data === true) {
+          $baseMessage('分批付款成功', 'success', 'hey')
+          handleCloseInstallmentDialog()
+          fetchData() //重新刷新表格
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
-  } catch (error) {
-    console.error(error)
-  }
+  })
 }
+
 // 展示退款弹窗
 const handleShowRefund = () => {
   // 判断是否选中零件操作
@@ -1147,6 +1219,8 @@ const handleShowRefund = () => {
     $baseMessage('退款只能勾选一行', 'warning')
     return
   }
+  refundForm.hide = false
+  refundForm.imageList = []
   refundVisible.value = true
 }
 // 计算退款的金额
@@ -1164,33 +1238,53 @@ const handleComputeRefundPercent = (value: string) => {
     refundForm.percent = (Number(value) / tax * 100).toFixed(2)
   }
 }
+/**
+* 上传图片
+*/
+async function uploadImage(params: any) {
+  refundForm.hide = true
+  refundForm.refundVoucher = params.file
+}
+// 退款凭证图片预览事件
+const handlePreview = (file: UploadFile) => {
+   imagePreviewVisible.value = true
+   imagePreviewList.value = []
+   imagePreviewList.value.push(file.url!)
+}
+// 删除退款凭证
+const handleRefundVoucherRemove = () => {
+  refundForm.imageList = []
+  refundForm.hide = false
+  refundForm.refundVoucher = null
+}
 // 关闭退款弹窗
 const handleCloseRefundDialog = () => {
   refundRef.value?.resetFields()
   refundVisible.value = false
 }
-const refundFile = ref<any>()
-// 处理上传退款凭证
-const onChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
-  refundFile.value = uploadFile.raw
-}
+
 // 确认退款
 const handleConfirmRefund = async () => {
-  try {
-    let formData = new FormData()
-    formData.append('unitPrice', refundForm.price)
-    formData.append('percentage', refundForm.percent)
-    formData.append('file', refundFile.value)
-    formData.append('componentIds', ""+selectedCompArray.value[0].componentId)
-    formData.append('poIds', selectedCompArray.value[0].id)
-    const { data } = await updateComponentRefund(formData)
-    if (data === true) {
-      $baseMessage('退款提交成功', 'success', 'hey')
-      handleCloseRefundDialog()
+  refundRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      try {
+        let formData = new FormData()
+        formData.append('unitPrice', refundForm.price)
+        formData.append('percentage', refundForm.percent)
+        formData.append('file', refundForm.refundVoucher)
+        formData.append('componentIds', ""+selectedCompArray.value[0].componentId)
+        formData.append('poIds', selectedCompArray.value[0].id)
+        const { data } = await updateComponentRefund(formData)
+        if (data === true) {
+          $baseMessage('退款提交成功', 'success', 'hey')
+          handleCloseRefundDialog()
+          fetchData() //重新刷新表格
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
-  } catch (error) {
-    console.error(error)
-  }
+  })
 }
 // 展示总价分摊弹窗
 const handleShowTotalPriceSharing = () => {
@@ -1208,39 +1302,69 @@ const handleCloseTotalPriceSharingDialog = () => {
 }
 // 提交总价分摊
 const handleConfirmTotalPriceSharing = async () => {
-  let componentIds: any = []
-  let poIds: any = new Set()
-  selectedCompArray.value.forEach((item: any) => {
-    componentIds.push(item.componentId)
-    poIds.add(item.id)
-  })
-  // ,号连接
-  componentIds = componentIds.join()
-  // 先转为数组，然后,号连接
-  poIds = Array.from(poIds).join()
-  try {
-    const { data } = await purchaseTotalAp({
-      componentIds: componentIds,
-      totalMoney: totalPriceSharingForm.tax,
-      totalFreight: totalPriceSharingForm.shippingFee
-    })
-    if (data === true) {
-      $baseMessage('总价分摊提交成功', 'success')
-      handleCloseTotalPriceSharingDialog()
+  totalPriceSharingFormRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      let componentIds: string = (selectedCompArray.value.map((item: any) => item.componentId)).join(',');
+      let poIds: string = Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',');
+      try {
+        const { data } = await purchaseTotalAp({
+          componentIds: componentIds,
+          totalMoney: totalPriceSharingForm.tax,
+          totalFreight: totalPriceSharingForm.shippingFee
+        })
+        if (data === true) {
+          $baseMessage('总价分摊提交成功', 'success')
+          handleCloseTotalPriceSharingDialog()
+          fetchData() //重新刷新表格
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
-  } catch (error) {
-    console.error(error)
-  }
+  })
 }
 // 处理生成合同
-const handleGenerateContract = () => {
+const handleGenerateContract = async () => {
   // 如果没有选中行
   if (selectedPORow.value.size === 0) {
     $baseMessage('您未选中PO操作列的任何行', 'warning')
     return
   }
-   
-  
+  // 获取选中的poIds
+  const poIds = selectedPOArray.value.join(',')
+  let poSkuComponentId: number[] = []
+
+  selectedPOArray.value.forEach((id: number) => {
+    const index = selectedCompArray.value.findIndex((item: any) => item.id === id)
+    const idArray = poList.value.filter((item: any) => item.id === id)
+    // 如果零件Id一个也没选，就是传所有
+    if (index === -1) {
+      poSkuComponentId = poSkuComponentId.concat(idArray.map((item: any) => item.componentId))
+    } else { // 如果选了至少一个，就传这个
+      poSkuComponentId = poSkuComponentId.concat(selectedCompArray.value.map((item: any) => item.componentId))
+    }
+  })
+  try {
+    const { data } = await generatePoContract({
+      poIds: poIds,
+      poSkuComponentIds: poSkuComponentId.join(',')
+    })
+    if (data) {
+      $baseMessage('生成合同成功', 'success')
+      // 下载合同
+      data.forEach(async (fileName: string) => {
+        await downloadFile("/purchase/contract/download",{
+          fileName: fileName, 
+        }).then((res) => {
+          console.log(res);
+        }).catch((error) => {
+          console.error(error);
+        })
+      })
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 展示聚合合同弹窗
 const handleShowMergeContract = () => {
@@ -1253,7 +1377,26 @@ const handleShowMergeContract = () => {
 }
 // 关闭聚合合同弹窗
 const handleCloseMergeContractDialog = () => {
+  contractList.value = []
   mergeContractVisible.value = false
+}
+// 确认聚合合同
+const handleConfirmMergeContract = async () => {
+  // console.log(contractList.value);
+  // console.log(formData);
+  try {
+    let formData = new FormData()
+    contractList.value.forEach((item: any) => {
+      formData.append('files', item.raw)
+    })
+    const { data } = await aggregationContract(formData)
+    if (data) {
+      handleCloseMergeContractDialog()
+      $baseMessage('聚合合同成功', 'success')
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 展示生成汇款模板弹窗
 const handleShowGenerateMoneyTransfer = () => {
@@ -1279,11 +1422,6 @@ const handleReduceCost = () => {
 }
 // 打开自动签收设定弹窗
 const handleShowAutomaticSignature = () => {
-  // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
-    $baseMessage('您未选中零件操作列的任何行', 'warning')
-    return
-  }
   automaticSignatureVisible.value = true
 }
 // 关闭自动签收设定弹窗
@@ -1304,6 +1442,7 @@ const handleDelPo = async () => {
       const { data } = await deletePo(ids)
       if (data === true) {
         $baseMessage("删除该条PO成功", "success", "hey");
+        fetchData() //重新刷新表格
       }
     } catch (error) {
       console.error(error)
@@ -1312,6 +1451,7 @@ const handleDelPo = async () => {
 }
 // 跳转po详情
 const handlePoDetail = (row: any) => {
+  // console.log(queryForm.pageNo);
   router.push({
     path: '/purchase/poDetail',
     query: {
@@ -1322,6 +1462,7 @@ const handlePoDetail = (row: any) => {
       timestamp: Date.now(),
     },
   })
+  localStorage.setItem('pageNo', queryForm.pageNo)
 }
 
 
@@ -1394,6 +1535,9 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
     queryForm.status = Number(tab.props.name);  
   }
   fetchData()
+  activeName.value = queryForm.status
+  // console.log(activeName.value);
+  localStorage.setItem('activeName', ""+activeName.value)
 }
 //采购订单col合并方法
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -1587,7 +1731,18 @@ const paymentHistoryCellStyle = (data: { row: any, column: any, rowIndex: number
 onActivated(() => { 
   tableRef.value?.doLayout()
 })
+const route = useRoute()
 onBeforeMount(() => {
+  const pageNo = localStorage.getItem('pageNo')
+  // console.log(pageNo);
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  const _activeName = localStorage.getItem('activeName')
+  if (_activeName) {
+    activeName.value = Number(_activeName)
+    queryForm.status = Number(_activeName)
+  }
   fetchData()
 })
 </script>
@@ -1653,8 +1808,15 @@ onBeforeMount(() => {
 // :deep(.el-table .el-table__body .cell) {
 //   max-height: 81.2px;
 // }
-
-
+.hide :deep(.el-upload--picture-card) {
+ display: none
+}
+// 让图片过渡消失
+:deep(.form-upload .el-upload-list--picture-card .el-upload-list__item) {
+  transition: none;  
+  margin: 0;
+  padding: 0;
+}
 // 控制编辑框显示与隐藏
 .none {
   display: none;

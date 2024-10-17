@@ -546,3 +546,10 @@ export interface IPurchaseTotalAp {
   totalMoney: string
   totalFreight: string
 }
+export interface IGeneratePoContractQuery {
+  poIds: string
+  poSkuComponentIds: string
+}
+export interface IFileName {
+  fileName: string
+}

@@ -30,10 +30,11 @@
         :header-cell-style="{ 'text-align': 'center' }"
         @cell-click="changeInput"
         :cell-style="cellStyle"
+        :cell-class-name="getCellStyle"
       >
-        <el-table-column  label="图片" class="image-wall" width="100">
+        <el-table-column  label="图片" class="image-wall" width="82">
           <template #default="{ row, $index }">
-            <el-image :src="row.imageUrl" alt="" data-img="img" style="width: 75px; height: 75px"/>
+            <el-image :src="row.imageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%"/>
           </template>
         </el-table-column>
         <el-table-column label="零件ID" width="100" prop="id"></el-table-column>
@@ -87,6 +88,12 @@ watchEffect(()=>{
   }
 }
 )
+const getCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 0) {
+    return 'clear-padding'
+  }
+  return ''
+}
 /**
  * 分页
  */
@@ -209,6 +216,12 @@ transform-origin: center;
 .none {
   display: none;
 }
-
-
+.el-table :deep(.clear-padding .cell) {
+  padding-left: 0;
+  padding-right: 0;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
 </style>

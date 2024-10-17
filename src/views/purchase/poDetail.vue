@@ -22,7 +22,7 @@
                 :class="{ hide: poDetailData.hide }"
                 :http-request="uploadImage"
                 class="upload-align"
-                :style="{ height: imageColumnHeight + 'px', transition: 'height 1s ease' }"
+                :style="{ height: imageColumnHeight + 'px' }"
               >
                 <el-icon ><Plus /></el-icon>
                 <template #file="{ file }">
@@ -1108,27 +1108,28 @@ async function uploadImage(params: any) {
     uploadImgForm.append('file', params.file);
     uploadImgForm.append('poSkuId', poDetailData.value.poSkuId);
     const { data } = await updateSkuImg(uploadImgForm)
-
-      
-      poDetailData.value.imageList = [{ url: data }]
-    
+    // poDetailData.value.imageList = [{ url: data }]
+    Object.assign(poDetailData.value.imageList, [{ url: data }])
   } catch (error) {
     console.error(error)
+    poDetailData.value.hide = false
   }
 }
 async function uploadSkuComponentImage(params: any, row: any) {
-  row.hide = true
+  
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
     uploadImgForm.append('file', params.file);
     uploadImgForm.append('id', row.id);
 
     const { data } = await uploadComponentImg(uploadImgForm)
+    row.hide = true
 
-    row.imageList = [{ url: data }]
-
+    Object.assign(row.imageList, [{ url: data }])
+    
   } catch (error) {
     console.error(error)
+    row.hide = false
   }
 }
 /**
@@ -1327,10 +1328,8 @@ onBeforeMount(() => {
     fetchSkuComponent()
   }
 })
-onMounted(async () => {
-  await nextTick(); // 确保 DOM 渲染完成
+onMounted(() => {
   setImageColumnHeight();
-  window.addEventListener('resize', setImageColumnHeight);
 });
 </script>
 
@@ -1366,17 +1365,25 @@ onMounted(async () => {
    display: none;
 }
 // 设置下面表格的图片
-:deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
+.component-upload {
+  width: 81px;
+  height: 81.2px;
+}
+.component-upload :deep( .el-upload-list--picture-card) {
  width: 100%;
- height: 81.2px;
+ height: 100%;
+}
+.component-upload :deep( .el-upload-list--picture-card .el-upload-list__item) {
+ width: 100%;
+ height: 100%;
  transition: none;
  margin: 0;
  border-radius: 0;
  border: 0;
 }
-:deep(.component-upload .el-upload--picture-card) {
-  width: 78.2px;
-  height: 81.2px;
+.component-upload :deep( .el-upload--picture-card) {
+  width: 100%;
+  height: 100%;
 }
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
