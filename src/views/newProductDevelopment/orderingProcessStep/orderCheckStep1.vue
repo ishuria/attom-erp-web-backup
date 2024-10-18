@@ -87,10 +87,11 @@ let form = reactive<any>({
   ],
 })
 defineExpose({ form });
-
+const router = useRouter()
 // 当点击下一步的时候
 const handleSubmitAndContinue = () => {
-    emit('changeCheck-step', 1)
+  emit('changeCheck-step', 1)
+  // router.replace({ query: { ...route.query, stepNo: 2 }});
 }
 // 当点击退出的时候
 const handleGoback = async () => {

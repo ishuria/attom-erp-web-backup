@@ -309,9 +309,11 @@ const useTableDataLineToColumn = () => {
   }
 }
 const route: any = useRoute()
+const router = useRouter()
 // 当点击保存的时候
 const handleSave = async () => {
-  $baseMessage("完成","success","hey")
+  $baseMessage("完成", "success", "hey")
+  // router.replace({ query: { ...route.query, stepNo: 4 }});
 }
 // 当点击提交审核的时候
 const handleSaveAndContinue = async () => {

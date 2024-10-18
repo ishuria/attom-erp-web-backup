@@ -18,7 +18,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -55,7 +55,7 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" width="86">
+          <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
@@ -81,7 +81,7 @@
           <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="货币" width="90" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -130,7 +130,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -167,7 +167,7 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" width="86">
+          <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
@@ -193,7 +193,7 @@
           <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="货币" width="90" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -241,7 +241,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -278,7 +278,7 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" width="86">
+          <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
@@ -304,7 +304,7 @@
           <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="货币" width="90" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -352,7 +352,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -389,7 +389,7 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" width="86">
+          <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
@@ -415,7 +415,7 @@
           <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="货币" width="90" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -463,7 +463,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -478,16 +478,11 @@
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
-          :cell-style="cellStyle"
+          :cell-style="lastTwoTabCellStyle"
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
-          :cell-class-name="getCellClass"
+          :cell-class-name="getLastTwoCellClass"
         >
-          <el-table-column label="PO操作" prop="selectedPoRow">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
-            </template>
-          </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
@@ -500,7 +495,7 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" width="86">
+          <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
@@ -526,7 +521,7 @@
           <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="货币" width="90" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -563,7 +558,7 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -578,16 +573,11 @@
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
-          :cell-style="cellStyle"
+          :cell-style="lastTwoTabCellStyle"
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
-          :cell-class-name="getCellClass"
+          :cell-class-name="getLastTwoCellClass"
         >
-          <el-table-column label="PO操作" prop="selectedPoRow">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
-            </template>
-          </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
@@ -600,7 +590,7 @@
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" width="86">
+          <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
@@ -626,7 +616,7 @@
           <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="货币" width="90" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
@@ -665,7 +655,7 @@
       v-model="paymentHistoryVisible" 
       :close-on-click-modal="false" 
       title="付款记录" 
-      width="40%"
+      width="50%"
       class="moldDialog"
       :before-close="handleClosePaymentHistoryDialog"
     >
@@ -676,18 +666,10 @@
           stripe border 
           :data="paymentProgressList"
           :header-cell-style="{ 'text-align': 'center' }"
-          @cell-click="changePaymentHistoryInput"
           :cell-style="paymentHistoryCellStyle"
           :cell-class-name="payHistoryCellClass"
         >
-          <el-table-column label="付款日期" min-width="120" prop="createTime">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.createTime" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)"></el-input>
-              </div>
-              <span>{{ row.createTime.split(' ')[0] }}</span>
-            </template>
-          </el-table-column>
+          <el-table-column label="付款日期" min-width="180" prop="createTime"></el-table-column>
           <el-table-column label="付款金额" min-width="130" prop="payPrice">
             <template #default="{ row }">
               <el-input v-model="row.payPrice" @change="handleUpdatePrice(row)" class="input-center"></el-input>
@@ -874,12 +856,13 @@
             time-format="HH:mm" 
             format="YYYY-MM-DD HH:mm" 
             :editable="false"	
+            value-format="YYYY-MM-DD HH:mm"
           />
         </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="handleCloseGenerateMoneyTransferDialog">关闭</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="handleConfirmGenerateMoneyTransfer">确认</el-button>
       </template>
     </el-dialog>
     <!-- 自动签收设定 -->
@@ -891,16 +874,16 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, UploadFilled, Plus, ZoomIn, Delete  } from '@element-plus/icons-vue'
-import { UploadFile, UploadFiles, type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
+import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
+import { UploadFile, type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { aggregationContract, deletePo, delPayRecord, generatePoContract, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
+import { downloadFile } from '/@/api/devlocal/download'
+import { aggregationContract, deletePo, delPayRecord, generatePoContract, generateRemittance, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
-import { downloadFile } from '/@/api/devlocal/download'
 
 defineOptions({
   name: 'poTable',
@@ -1086,7 +1069,6 @@ const handleShowPaymentHistory = async (row: any) => {
     if (data) {
       paymentProgressList.value = data
       paymentProgressList.value.forEach((item: any) => {
-        item.createTime = item.createTime.split(' ')[0]
         item.percentage = parseInt(item.percentage.replace('%', ''));
       })
       paymentHistoryVisible.value = true
@@ -1353,7 +1335,7 @@ const handleGenerateContract = async () => {
       $baseMessage('生成合同成功', 'success')
       // 下载合同
       data.forEach(async (fileName: string) => {
-        await downloadFile("/purchase/contract/download",{
+        await downloadFile("/purchase/download",{
           fileName: fileName, 
         }).then((res) => {
           console.log(res);
@@ -1412,6 +1394,33 @@ const handleShowGenerateMoneyTransfer = () => {
 const handleCloseGenerateMoneyTransferDialog = () => {
   generateMoneyTransferVisible.value = false
 }
+// 确认汇款
+const handleConfirmGenerateMoneyTransfer = async () => { 
+  const startTime = generateMoneyTransferTime.value[0]
+  const endTime = generateMoneyTransferTime.value[1]
+  try {
+    const { data } = await generateRemittance({
+      startTime: startTime,
+      endTime: endTime
+    })
+    if (data) {
+      $baseMessage('生成汇款模板成功', 'success')
+      generateMoneyTransferVisible.value = false
+      // 下载合同
+      data.forEach(async (fileName: string) => {
+        await downloadFile("/purchase/download",{
+          fileName: fileName, 
+        }).then((res) => {
+          console.log(res);
+        }).catch((error) => {
+          console.error(error);
+        })
+      })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 // 降本提成申请PO
 const handleReduceCost = () => {
   // 判断是否选中零件操作
@@ -1436,10 +1445,10 @@ const handleDelPo = async () => {
   }
   $baseConfirm('确定要删除该条PO吗? ', "系统提示", async () => {
     try {
-      const ids = selectedPOArray.value.join()
+      const ids = selectedPOArray.value.join(',')
       // console.log(ids);
       
-      const { data } = await deletePo(ids)
+      const { data } = await deletePo({ ids: ids })
       if (data === true) {
         $baseMessage("删除该条PO成功", "success", "hey");
         fetchData() //重新刷新表格
@@ -1463,11 +1472,8 @@ const handlePoDetail = (row: any) => {
     },
   })
   localStorage.setItem('pageNo', queryForm.pageNo)
+  localStorage.setItem('pageSize', queryForm.pageSize)
 }
-
-
-
-
 
 /**
  * 当点击时切换输入框，修改输入
@@ -1634,7 +1640,7 @@ const lastTowTabSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
 const total = ref<number>(0)
 const queryForm = reactive<any>({
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 50,
   keyWord: '',
   status: 2, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
 })
@@ -1683,12 +1689,11 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     } 
   
 }
-const lastTwoTabCellStyle = ({row, column, rowIndex, columnIndex}: any): any => {
-  if (columnIndex === 5 && columnIndex !== 8 && columnIndex !== 21) {
+const lastTwoTabCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
+  if(data.columnIndex !== 5 && data.columnIndex !== 16 && data.columnIndex !== 17)
     return {
-      textAlign:'center'
+      textAlign: 'center',
     } 
-  }
 }
 // 设置零件名显示样式和图片撑满样式
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
@@ -1709,6 +1714,12 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
+const getLastTwoCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 4) {
+    return 'clear-padding'
+  }
+  return ''
+}
 const payHistoryCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 4) {
     return 'clear-padding'
@@ -1716,7 +1727,7 @@ const payHistoryCellClass = (data: { row: any, column: any, rowIndex: number, co
   return ''
 }
 const paymentHistoryCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
-  if (data.columnIndex === 2 || data.columnIndex === 5) {
+  if (data.columnIndex === 0 ||data.columnIndex === 2 || data.columnIndex === 5) {
     return {
       color: '#bbb',
       cursor: 'not-allowed',
@@ -1731,12 +1742,16 @@ const paymentHistoryCellStyle = (data: { row: any, column: any, rowIndex: number
 onActivated(() => { 
   tableRef.value?.doLayout()
 })
-const route = useRoute()
+
 onBeforeMount(() => {
+  selectedPORow.value = new Set()
+  selectedCompRow.value = new Set()
   const pageNo = localStorage.getItem('pageNo')
+  const pageSize = localStorage.getItem('pageSize')
   // console.log(pageNo);
-  if (pageNo) {
+  if (pageSize) {
     queryForm.pageNo = Number(pageNo)
+    queryForm.pageSize = Number(pageSize)
   }
   const _activeName = localStorage.getItem('activeName')
   if (_activeName) {
@@ -1804,10 +1819,10 @@ onBeforeMount(() => {
 }
 
 
-// // 设置行高
-// :deep(.el-table .el-table__body .cell) {
-//   max-height: 81.2px;
-// }
+// 设置行高
+:deep(.el-table .el-table__body .cell) {
+  max-height: 81.2px;
+}
 .hide :deep(.el-upload--picture-card) {
  display: none
 }
@@ -1855,10 +1870,10 @@ onBeforeMount(() => {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 :deep(.red) {
-  color: red
+  color: #FD4E4E;
 }
 :deep(.green) {
-  color: green;
+  color: #13CE66;
 }
 :deep(.yellow) {
   color: #E6A23C

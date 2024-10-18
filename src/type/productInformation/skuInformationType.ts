@@ -1153,3 +1153,9 @@ export interface ISubmitProductConsumableQuery {
   skuId: number
   list: ISubmitPurchaseConsumable[]
 }
+
+export interface IGetProductAllReadyCOmponentListQuery {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}

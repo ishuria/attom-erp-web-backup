@@ -53,7 +53,24 @@
             <el-row style="width: 100%">
                 <el-col :span="12">
                     <el-form-item label="SKU">
-                        <el-select v-model="poDetailData.sku" :disabled="skuDisabled" filterable @change="handleCreatePlanPo" placeholder="选择和搜索SKU" ></el-select>
+                      <el-select
+                        v-model="poDetailData.sku"
+                        :disabled="skuDisabled"
+                        filterable
+                        remote
+                        default-first-option
+                        placeholder="点击输入和搜索"
+                        :remote-method="remotePeopleMethod"
+                        :loading="skuLoading"
+                        @change="handleCreatePlanPo"
+                      >
+                        <el-option
+                          v-for="item in skuOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -471,7 +488,7 @@
       <el-footer class="button-center">
         <el-button v-if="previousVisible" type="primary" @click="handleFetchPreviousData">上一个</el-button>
         <el-button v-if="nextVisible" type="primary" @click="handleFetchNextData">下一个</el-button>
-        <el-button type="warning">添加SKU</el-button>
+        <el-button type="warning" @click="handleAddSKU">添加SKU</el-button>
         <el-button type="danger" @click="handleDelSKU">删除SKU</el-button>
       </el-footer>
     </div>
@@ -532,17 +549,48 @@
         </span>
       </template>
     </el-dialog>
-     
+    <!-- 添加 SKU -->
+    <vab-dialog
+      title="添加SKU"
+      v-model="addSKUVisible"
+      width="20%"
+    >
+      <el-form ref="addSkuFormRef" :model="addSkuForm">
+        <el-form-item label="选择要添加的SKU">
+          <el-select
+            v-model="addSkuForm.sku"
+            filterable
+            remote
+            default-first-option
+            placeholder="点击输入和搜索"
+            :remote-method="remotePeopleMethod"
+            :loading="skuLoading"
+            clearable
+          >
+            <el-option
+              v-for="item in skuOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseAddSku">取消</el-button>
+        <el-button type="primary" @click="handleConfirmAddSKU">确认</el-button>
+      </template>
+    </vab-dialog>
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import { UploadFile } from 'element-plus'
+import { FormInstance, UploadFile } from 'element-plus'
 import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
 import { getProductAllSupplier, getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
-import { createPlanPo, deleteComponentImg, deletePoSku, deletePoSkuComponent, deleteSkuImg, getPoContractTerms, getPoDetail, getPoPurchaseMatters, getPoSkuComponentList, getPoSkuIdList, getSupplierRate, submitPurchaseComponent, submitPurchaseConsumable, updateAllComponentPrice, updateBuyerAndCustomsDeclaration, updateComponentPrice, updatePoContractTerms, updatePoPurchaseMatters, updatePoRemarks, updatePoSite, updatePoSkuComponent, updateSkuCount, updateSkuDetail, updateSkuImg, uploadComponentImg } from '/@/api/devlocal/purchasePo'
+import { addPoSKU, createPlanPo, deleteComponentImg, deletePoSku, deletePoSkuComponent, deleteSkuImg, getPoContractTerms, getPoDetail, getPoPurchaseMatters, getPoSkuComponentList, getPoSkuIdList, getPoSkuList, getSupplierRate, submitPurchaseComponent, submitPurchaseConsumable, updateAllComponentPrice, updateBuyerAndCustomsDeclaration, updateComponentPrice, updatePoContractTerms, updatePoPurchaseMatters, updatePoRemarks, updatePoSite, updatePoSkuComponent, updateSkuCount, updateSkuDetail, updateSkuImg, uploadComponentImg } from '/@/api/devlocal/purchasePo'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
@@ -550,6 +598,10 @@ import { handleActivePath } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'
+
+defineOptions({
+  name: 'poDetailTable',
+})
 
 const route: any = useRoute()
 const router = useRouter()
@@ -559,6 +611,52 @@ const { delVisitedRoute } = tabsStore
 const poDetailData = ref<any>({})
 // PoSku配件数据
 const skuComponentList = ref<any>([])
+// 添加SKU是否可见
+const addSKUVisible = ref<boolean>(false)
+// 添加SKU表单
+const addSkuForm = reactive<any>({
+  sku: ''
+})
+const addSkuFormRef = ref<FormInstance>()
+const skuLoading = ref(false) //搜索SKU-loading
+const skuOptions = ref<any[]>([]) //搜索选项
+const skuList = ref<any[]>([]) //搜索列表
+const remotePeopleMethod = async (query: string) => {
+  if (query) {
+    const { data } = await getPoSkuList({
+        sku: query
+    })
+
+    skuList.value = data.map((item: any) => {
+        return { value: `${item}`, label: `${item}` }
+    })
+    skuLoading.value = true
+    setTimeout(() => {
+      skuLoading.value = false
+      skuOptions.value = skuList.value.filter((item) => {
+            return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    skuOptions.value = []
+  }
+}
+const handleCloseAddSku = () => {
+  addSkuFormRef.value?.resetFields()
+  addSKUVisible.value = false
+}
+// 确认添加sku
+const handleConfirmAddSKU = async () => {
+  const { data: addPoSkuData } = await addPoSKU({
+    poId: poDetailData.value.id,
+    sku: addSkuForm.sku
+  })
+  if (addPoSkuData) {
+    $baseMessage('添加SKU成功', 'success')
+    handleCloseAddSku()
+    router.replace({ query: { ...route.query, poSkuId: addPoSkuData.poSkuDetail.poSkuId }})
+  }
+}
 // 更新采购方是否可见
 const updatePurchaserVisible = ref<boolean>(false)
 const purchaser0 = ref<boolean>(false)
@@ -611,19 +709,22 @@ const handleAddConsumable = () => {
 
 // 提交添加零件传递的值
 const handleSubmitComponent = async (value: any) => {
- 
-  let list: ISubmitPurchaseComponent[] = value.map((item: any): ISubmitPurchaseComponent => {
-    return {
-      componentId: Number(item.id), 
-      sku: item.sku,                   
-      suppliserId: Number(item.suppliserId),   
-      count: Number(item.count)                 
+  let list: ISubmitPurchaseComponent[] = []
+  value.forEach((item: any): any => {
+    if (item.count) {
+      list.push({
+        componentId: Number(item.id), 
+        sku: item.sku,                   
+        suppliserId: Number(item.suppliserId),   
+        count: Number(item.count)                 
+      }) 
     }
   })
+
   try {
     const { data } = await submitPurchaseComponent({
-      poId: Number(route.query.poId),
-      poSkuId: Number(route.query.poSkuId),
+      poId: poDetailData.value.id,
+      poSkuId: poDetailData.value.poSkuId,
       list
     })
     if (data === true) {
@@ -640,17 +741,20 @@ const handleCloseCreateComponent = (value: boolean) => {
 }
 // 提交添加耗材传递的值
 const handleSubmitConsumable = async (value: any) => {
-  let list: ISubmitPurchaseConsumable[] = value.map((item: any): ISubmitPurchaseConsumable => {
-    return {
+  let list: ISubmitPurchaseConsumable[] = []
+  value.forEach((item: any): any => {
+    if (item.count) {
+      list.push({
       componentId: Number(item.id),         
       suppliserId: Number(item.suppliserId),   
       count: Number(item.count)                 
+    }) 
     }
   })
   try {
     const { data } = await submitPurchaseConsumable({
-      poId: Number(route.query.poId),
-      poSkuId: Number(route.query.poSkuId),
+      poId: poDetailData.value.id,
+      poSkuId: poDetailData.value.poSkuId,
       list
     })
     if (data === true) {
@@ -721,48 +825,6 @@ const handleConfirmUpdatePurchaser = async () => {
   }
 }
 
-// const handleSubmitOtherSku = async () => {
-//    addOtherSkuVisible.value = false
-//    $baseConfirm('添加后不可逆，无法批量删除，是否继续？', '系统提示', async () => {
-//        const { data } = await addProductComponentOtherSku({
-//            skuIds: `${transferValue.value}`,
-//            componentId: _componentId.value!
-//        })
-//        if(data === true) {
-//            $baseMessage('添加到其他SKU成功', 'success', 'hey')
-//        }
-//    });
-// }
-const loading = ref(false) //供应商搜索loading
-const options = ref<any[]>([]) //供应商搜索选项
-const supplierList = ref<any[]>([]) //供应商搜索列表
-const taxDisabled = ref<boolean>(false)
-const remoteMethod = async (query: string) => {
- if (query) {
-   // 先获取供应商信息
-   const { data } = await getProductAllSupplier({
-       suppliserName: query
-   })
-
-   supplierList.value = data.map((item: any) => {
-       return { value: `${item}`, label: `${item}` }
-   })
-   loading.value = true
-   setTimeout(() => {
-     loading.value = false
-     options.value = supplierList.value.filter((item) => {
-       return item.label.toLowerCase().includes(query.toLowerCase())
-     })
-   }, 200)
- } else {
-   options.value = []
- }
-}
-interface Option2 {
-  key: number
-  label: string
-  initial: number
-}
 // PO详情SKU订货套数更新
 const handleUpdateSkuCount = async () => {
   try {
@@ -1031,6 +1093,10 @@ const handleDeclareCustoms = async (row: any) => {
     updateSkuComponent(row)
   }
 }
+// 添加SKU
+const handleAddSKU = async () => {
+  addSKUVisible.value = true
+}
 // PO详情删除SKU
 const handleDelSKU = async () => {
   // 只有一个sku的 删除的是po 
@@ -1038,10 +1104,11 @@ const handleDelSKU = async () => {
     $baseConfirm('确定要删除PO吗', '系统提示', async () => {
       try {
         const { data } = await deletePoSku({
-          poSkuId: parseInt(route.query.poSkuId)
+          poSkuId: poDetailData.value.poSkuId
         })
         if (data === true) {
           $baseMessage('删除PO成功', 'success', 'hey')
+          goBack()
         }
       } catch (error) {
         console.error(error)
@@ -1051,10 +1118,19 @@ const handleDelSKU = async () => {
     try {
       $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
         const { data } = await deletePoSku({
-          poSkuId: parseInt(route.query.poSkuId)
+          poSkuId: poDetailData.value.poSkuId
         })
         if (data === true) {
           $baseMessage('删除SKU成功', 'success', 'hey')
+          // 如果是最后一个 就去上一个
+          if (poSkuIdIndex.value === poSkuIdList.value.length - 1 ) {
+            const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! - 1] };
+            router.push({ path: '/purchase/poDetail', query });
+          } else {
+            // 如果是第一个或者和中间 就去下一个
+            const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! + 1] };
+            router.push({ path: '/purchase/poDetail', query });
+          }
         }
       })
     } catch (error) {
@@ -1245,7 +1321,7 @@ const fetchPoSkuIdList = async () => {
   const { data } = await getPoSkuIdList({
     id: parseInt(route.query.poId)
   })
-  // console.log(data); // [1, 2, 28] [31] [32]
+  // console.log(data); // [1, 2, 28]或者[31]或者[32]
   poSkuIdList.value = data
   handleShowPreviousOrNext()
 }
@@ -1254,12 +1330,15 @@ const fetchPoSkuIdList = async () => {
 const handleShowPreviousOrNext = () => {
   const lastIndex = poSkuIdList.value.length - 1
   poSkuIdIndex.value = poSkuIdList.value.findIndex((item: number) => item === parseInt(route.query.poSkuId))
-
-  // 只有一个SKU，都不显示
-  if (lastIndex === 0) {
+  if (lastIndex === -1) {
     previousVisible.value = false
     nextVisible.value = false
-  } else if (poSkuIdIndex.value === lastIndex) { // 如果就是末尾的skuId，不显示下一个
+  }
+  // 只有一个SKU，都不显示
+  else if (lastIndex === 0) {
+    previousVisible.value = false
+    nextVisible.value = false
+  } else if (poSkuIdIndex.value === lastIndex && lastIndex !== -1) { // 如果就是末尾的skuId，不显示下一个
     previousVisible.value = true
     nextVisible.value = false
   } else if (poSkuIdIndex.value === 0) { // 如果是第一个，不显示上一个
@@ -1288,14 +1367,48 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
 // 创建planPo
 const handleCreatePlanPo = async () => {
   try {
+
+
     const { data } = await createPlanPo({
       sku: poDetailData.value.sku
     })
     if (data) {
+    
+        // router.push({ name: 'poDetailTable', params: { sku: poDetailData.value.sku } });
+       
+     
+
+      // 将数据显示在页面上
+      Object.assign(poDetailData.value, data.poSkuDetail)
+      poDetailData.value.createTime = poDetailData.value.createTime.split(' ')[0]
+
+      if (!poDetailData.value.skuImgUrl) {
+        poDetailData.value.hide = false
+        poDetailData.value.imageList = []
+      } else {
+        poDetailData.value.hide = true
+        poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
+      }
+      Object.assign(skuComponentList.value, data.componentList)
+      skuComponentList.value.forEach((item: any) => {
+        item.unitPrice = formattedPrice(item.unitPrice)
+        if(!item.componentUrl) {
+            item.hide = false
+            item.imageList = []
+        } else if (item.componentUrl){
+            item.hide = true
+            item.imageList = [{ url: item.componentUrl }]
+        }
+      })
       fetchPurchaseAndRepository()
-      poDetailData.value = data?.poSkuDetail
-      skuComponentList.value = data?.componentList
+      const { data: skuIdList } = await getPoSkuIdList({
+        id: data.poSkuDetail.poSkuId!
+      })
+      // console.log(data); // [1, 2, 28]或者[31]或者[32]
+      poSkuIdList.value = skuIdList
+      handleShowPreviousOrNext()
       // 当点击添加SKU的时候，根据id获取skuId列表，然后决定显示上一个还是下一个    
+      
     }
   } catch (error) {
     console.error(error)

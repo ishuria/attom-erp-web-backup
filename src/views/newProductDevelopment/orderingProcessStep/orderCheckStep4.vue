@@ -156,10 +156,11 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     }
 }
 
-
+const router = useRouter()
 // 当点击保存的时候
 const handleSave = () => {
   emit('changeCheck-step', 4)
+  // router.replace({ query: { ...route.query, stepNo: 4 }});
 }
 
 // 当点击上一步的时候

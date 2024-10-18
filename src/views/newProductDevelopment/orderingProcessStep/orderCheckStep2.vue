@@ -26,7 +26,7 @@
                         <el-image width="75px" height="75px" :src="row.componentImgUrl" data-img="img" />
                     </template>
                 </el-table-column>
-                <el-table-column label="零件ID" align="center" min-width="70" prop="reviewComponentId" width="100">
+                <el-table-column label="零件ID" align="center" min-width="70" prop="" width="100">
                 </el-table-column>   
                 <el-table-column label="零件名" prop="componentName" width="120">
                 </el-table-column>
@@ -249,11 +249,11 @@
 defineOptions({
     name: 'OrderCheckStep2',
 })
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-import { currencyList, firstLegChannelColumnsNum, invoicingList, estimatedCostAccountingSiteColumnsNum, siteReflectCurrencyAndExchangeRate } from '../indexCommon'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
+import { currencyList, firstLegChannelColumnsNum, invoicingList, estimatedCostAccountingSiteColumnsNum } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { reviewStepNo3ComponentAdd, reviewStepNo3ComponentCopy, reviewStepNo3ComponentDel, reviewStepNo3ComponentImtDel, reviewStepNo3ComponentList, reviewStepNo3ComponentUpdate, reviewStepNo3ComponentUpload, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3SaveTh, reviewStepNo3UpdateContractTerms, reviewStepNo3UpdatePurchaseMatters, reviewStepNo3VariantList, reviewStepNo3VariantUpdate } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList, IreviewStepNo3VariantListResp } from '/@/type/orderProcess/orderProcessType';
+import { reviewStepNo3ComponentList, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess';
+import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType';
 import { convertString } from '/@/utils/stringUtils';
 
 const emit = defineEmits<{ 
@@ -338,10 +338,11 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     }
 }
 
-
+const router = useRouter()
 // 当点击下一步的时候
 const handleSave = async () => {
-    emit('changeCheck-step', 2)
+  emit('changeCheck-step', 2)
+  // router.replace({ query: { ...route.query, stepNo: 2 }});
 }
 
 // 当点击上一步的时候

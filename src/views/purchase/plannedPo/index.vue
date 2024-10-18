@@ -12,7 +12,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -30,6 +30,7 @@
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
           @selection-change="setSelectRows"
+          :cell-class-name="getCellClass"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="150" >
@@ -64,14 +65,17 @@
           </el-table-column>
           <el-table-column label="请购人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
+          <el-table-column label="SKU图片" width="82">
+            <template #header>
+              SKU<br>图片
+            </template>
+            <template #default="{ row, $index }">
+              <el-image :src="row.skuImageUrl" data-img="img" style="width: 100%; height: 100%">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
+            </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="150"></el-table-column>   
           <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
@@ -88,7 +92,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchase"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" />
+                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
           <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="250">
@@ -127,7 +131,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -145,6 +149,7 @@
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
           @selection-change="setSelectRows"
+          :cell-class-name="getCellClass"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="150" >
@@ -179,14 +184,17 @@
           </el-table-column>
           <el-table-column label="请购人" prop="userName"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="125"></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
+          <el-table-column label="SKU图片" width="82">
+            <template #header>
+              SKU<br>图片
+            </template>
+            <template #default="{ row, $index }">
+              <el-image :src="row.skuImageUrl" data-img="img" style="width: 100%; height: 100%">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
+            </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="150"></el-table-column>   
           <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
@@ -203,7 +211,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchase"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" />
+                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
               </template>
           </el-table-column>
           <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="250">
@@ -284,7 +292,7 @@ let plannedPoList = ref<IGetPlanPoList[]>([])
 const total = ref<number>(0)
 const queryForm = reactive<IGetPlanPoListQuery>({
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 50,
   keyWord: '',
   status: 0, //po状态 0待发布 1未达起订量
 })
@@ -300,6 +308,12 @@ const handleCurrentChange = (value: number) => {
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
+}
+const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 5) {
+    return 'clear-padding'
+  }
+  return ''
 }
 //采购计划col合并方法
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -394,7 +408,7 @@ const handleAllDelete = async () => {
     $baseConfirm('确定要批量删除所选PO吗', null, async () => {
       const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
       try {
-        const { data } = await deleteAllPlanPo(ids)
+        const { data } = await deleteAllPlanPo({ids: ids})
         if (data === true) {
           $baseMessage('批量删除PO成功', 'success', 'hey');
           fetchData()
@@ -414,6 +428,7 @@ const handleDelSkuPlannedPo = (row: any) => {
       })
       if (data === true) {
         $baseMessage('删除SKU成功', 'success', 'hey')
+        fetchData()
       }
     })
   } catch (error) {
@@ -429,6 +444,7 @@ const handleDelPlannedPo = (row: any) => {
       })
       if (data === true) {
         $baseMessage('删除PO成功', 'success', 'hey')
+        fetchData()
       }
     })
   } catch (error) {
@@ -481,6 +497,8 @@ const handlePlannedPoDetail = (row: any) => {
       timestamp: Date.now(),
     },
   })
+  localStorage.setItem('pagePlanPoNo', "" + queryForm.pageNo)
+  localStorage.setItem('pagePlanPoSize', "" + queryForm.pageSize)
 }
 const handlePlannedPoCreate = () => {
   router.push({
@@ -517,21 +535,11 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name);  
   }
+  activeName.value = queryForm.status
+  localStorage.setItem('activePlanPoName', ""+activeName.value)
   fetchData()
 }
-//   // 处理已归档
-//   const handleArchived = async (progressId: number) => {
-//     const { data } = await updateProgressArchive({ progressId })
-//     if (data === true) {
-//       const index = progressList.value.findIndex((item: any) => item.progressId === progressId)
-//       progressList.value.splice(index, 1)
-//       $baseMessage("此条新品进度信息已归档成功!","success","hey")
-//     }
-    
-//     // activeName.value = "1"
-//   }
 
-  
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
   if (data.columnIndex !== 6 && data.columnIndex !== 8 && data.columnIndex !== 13 && data.columnIndex !== 16) {
     return {
@@ -648,6 +656,20 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
+  const pageNo = localStorage.getItem('pagePlanPoNo')
+  const pageSize = localStorage.getItem('pagePlanPoSize')
+  // console.log(pageNo);
+  if (pageNo && pageSize) {
+    Object.assign(queryForm, {
+      pageNo: Number(pageNo),
+      pageSize: Number(pageSize),
+    });
+  }
+  const _activeName = localStorage.getItem('activePlanPoName')
+  if (_activeName) {
+    activeName.value = Number(_activeName)
+    queryForm.status = Number(_activeName)
+  }
   fetchData()
 })
 </script>
@@ -747,6 +769,13 @@ onBeforeMount(() => {
   align-items: center;
   justify-content: center;
 }
-
+.el-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-left: 0;
+  padding-right: 0;
+}
 </style>
   

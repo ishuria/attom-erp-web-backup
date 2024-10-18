@@ -84,7 +84,7 @@
 defineOptions({
     name: 'OrderCheckStep3',
 })
-import { convertString } from '~/src/utils/stringUtils';
+import { convertString } from '/@/utils/stringUtils';
 import { checkTypeList } from '../indexCommon';
 import { 
     reviewStepNo4ListQualityInspection,
@@ -107,10 +107,11 @@ interface IGetSelectVariantsStringList {
 const variantsSelectStringList = ref<IGetSelectVariantsStringList[]>([])
 // 质检清单列表
 const qualityInspectionList = ref<IreviewStepNo4ListQualityInspection[]>([])
-
+const router = useRouter()
 // 当点击下一步的时候
 const handleSaveAndContinue = () => {
-    emit('changeCheck-step', 3)
+  emit('changeCheck-step', 3)
+  // router.replace({ query: { ...route.query, stepNo: 3 }});
 }
 // 当点击上一步的时候
 const handleGoback = () => {

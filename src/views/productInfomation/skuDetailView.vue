@@ -734,13 +734,16 @@ const handleAddConsumable = () => {
 // 提交添加零件传递的值
 const handleSubmitComponent = async (value: any) => {
  
- let list: ISubmitPurchaseComponent[] = value.map((item: any): ISubmitPurchaseComponent => {
-   return {
-     componentId: Number(item.id), 
-     sku: item.sku,                   
-     suppliserId: Number(item.suppliserId),   
-     count: Number(item.count)                 
-   }
+  let list: ISubmitPurchaseComponent[] = []
+  value.map((item: any): any => {
+    if (item.count) {
+      list.push({
+        componentId: Number(item.id), 
+        sku: item.sku,                   
+        suppliserId: Number(item.suppliserId),   
+        count: Number(item.count)                 
+      })
+    }
  })
  try {
    const { data } = await submitProductComponent({
@@ -757,12 +760,15 @@ const handleSubmitComponent = async (value: any) => {
 }
 // 提交添加耗材传递的值
 const handleSubmitConsumable = async (value: any) => {
- let list: ISubmitPurchaseConsumable[] = value.map((item: any): ISubmitPurchaseConsumable => {
-   return {
-     componentId: Number(item.id),         
-     suppliserId: Number(item.suppliserId),   
-     count: Number(item.count)                 
-   }
+  let list: ISubmitPurchaseConsumable[] = []
+  value.map((item: any): any => {
+    if (item.count) {
+      list.push({
+        componentId: Number(item.id),         
+        suppliserId: Number(item.suppliserId),   
+        count: Number(item.count)                 
+      })
+    }
  })
  try {
    const { data } = await submitProductConsumable({

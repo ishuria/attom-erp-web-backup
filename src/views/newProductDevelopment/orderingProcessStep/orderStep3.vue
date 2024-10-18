@@ -535,13 +535,17 @@ const handleCloseCreateConsumable = (value: boolean) => {
 // 提交添加零件传递的值
 const handleSubmitComponent = async (value: any) => {
  
- let list: ISubmitPurchaseComponent[] = value.map((item: any): ISubmitPurchaseComponent => {
-   return {
-     componentId: Number(item.id), 
-     sku: item.sku,                   
-     suppliserId: Number(item.suppliserId),   
-     count: Number(item.count)                 
-   }
+  let list: ISubmitPurchaseComponent[] = []
+  value.map((item: any): any => {
+    if (item.count) {
+      list.push({
+        componentId: Number(item.id), 
+        sku: item.sku,                   
+        suppliserId: Number(item.suppliserId),   
+        count: Number(item.count)                 
+      })
+    }
+    
  })
  let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
  try {
@@ -559,11 +563,14 @@ const handleSubmitComponent = async (value: any) => {
 }
 // 提交添加耗材传递的值
 const handleSubmitConsumable = async (value: any) => {
- let list: ISubmitPurchaseConsumable[] = value.map((item: any): ISubmitPurchaseConsumable => {
-   return {
-     componentId: Number(item.id),         
-     suppliserId: Number(item.suppliserId),   
-     count: Number(item.count)                 
+  let list: ISubmitPurchaseConsumable[] = []
+  value.map((item: any): any => {
+    if (item.count) {
+      list.push({
+        componentId: Number(item.id),         
+        suppliserId: Number(item.suppliserId),   
+        count: Number(item.count)                 
+      })
    }
  })
  let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;

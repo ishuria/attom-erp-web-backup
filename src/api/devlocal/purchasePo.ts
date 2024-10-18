@@ -45,7 +45,9 @@ import {
   IUpdateSkuCount,
   IUpdateSkuDetail,
   IGeneratePoContractQuery,
-  IFileName
+  IFileName,
+  IAddPoSKUQuery,
+  IGenerateRemittance
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -149,6 +151,14 @@ export function getAddComponentList(params: IGetAddComponentListQuery): Promise<
 export function getAddConsumableList(params: IGetAddConsumableListQuery): Promise<IGetAddConsumableListResp> {
   return request({
     url: `${BASE_API}/list/consumables`,
+    method: 'get',
+    params,
+  })
+}
+// 采购添加SKU-根据输入查询所有的sku列表
+export function getPoSkuList(params: ISku) {
+  return request({
+    url: `${BASE_API}/purchase/poSku/list`,
     method: 'get',
     params,
   })
@@ -434,6 +444,22 @@ export function aggregationContract(data: FormData) {
     url: `${BASE_API}/purchase/aggregation/contract`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+// 添加SKU提交确定按钮
+export function addPoSKU(params: IAddPoSKUQuery): Promise<ICreatePlanPoResp>  {
+  return request({
+    url: `${BASE_API}/purchase/add/po/sku`,
+    method: 'post',
+    params,
+  })
+}
+// 采购订单-生成汇款模板
+export function generateRemittance(data: IGenerateRemittance) {
+  return request({
+    url: `${BASE_API}/purchase/generate/remittance`,
+    method: 'post',
     data,
   })
 }

@@ -43,7 +43,8 @@ import {
   IupdateProductSku,
   IupdateProductSkuRemark,
   IupdateProductStatus,
-  IupdateProductSupplier
+  IupdateProductSupplier,
+  IGetProductAllReadyCOmponentListQuery
 } from '/@/type/productInformation/skuInformationType'
 import { IBooleanResp } from '/@/type/purchase/po'
 
@@ -523,5 +524,14 @@ export function submitProductConsumable(data?: ISubmitProductConsumableQuery): P
     url: `${BASE_API}/product/submit/consumables`,
     method: 'post',
     data,
+  })
+}
+
+// 获取已有零件库数据
+export function getProductAllReadyCOmponentList(params: IGetProductAllReadyCOmponentListQuery) {
+  return request({
+    url: `${BASE_API}/product/already/component/list`,
+    method: 'get',
+    params,
   })
 }

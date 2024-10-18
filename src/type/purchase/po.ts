@@ -553,3 +553,13 @@ export interface IGeneratePoContractQuery {
 export interface IFileName {
   fileName: string
 }
+// 添加SKU提交确定按钮
+export interface IAddPoSKUQuery {
+  poId: number
+  sku: string
+}
+
+export interface IGenerateRemittance {
+  startTime: string
+  endTime: string
+}
