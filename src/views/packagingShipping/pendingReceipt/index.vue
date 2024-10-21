@@ -26,6 +26,7 @@
           :cell-style="cellStyle"
           @cell-click="changeInput"
           @selection-change="setSelectRows"
+          :cell-class-name="getCellClass"
         >
           <el-table-column fixed="left" label="仓库操作" width="150" >
             <template #default="{ row, $index }">
@@ -42,40 +43,46 @@
               </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="付款日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+          <el-table-column label="零件图片" class="image-wall" width="82">
+            <template #header>
+              零件<br>图片
             </template>
-          </el-table-column>
-          <el-table-column label="PO日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+            <template #default="{ row, $index }">
+              <el-image :src="row.skuImageUrl" data-img="img" fit="contain" style="width: 100%; height: 100%">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
             </template>
-          </el-table-column>
-          <el-table-column label="剩余可售" prop="userName" min-width="100"></el-table-column>
-          <el-table-column label="零件图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
           <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
           <el-table-column label="收货仓库" width="100" prop="unit" ></el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
+          <el-table-column label="PO日期" prop="createTime" min-width="115">
+            <template #default="{ row }">
+              {{ row.createTime.split(' ')[0] }}
+            </template>
+          </el-table-column>
+          <el-table-column label="付款日期" prop="createTime" min-width="115">
+            <template #default="{ row }">
+              {{ row.createTime.split(' ')[0] }}
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU图片" class="image-wall" width="82">
+            <template #header>
+              SKU<br>图片
+            </template>
+            <template #default="{ row, $index }">
+              <el-image :src="row.skuImageUrl" data-img="img" fit="contain" style="width: 100%; height: 100%">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
+            </template>
           </el-table-column>
           <el-table-column label="SKU" prop="taxIncludedPrice" min-width="80"></el-table-column>    
+          <el-table-column label="剩余可售" prop="userName" min-width="100"></el-table-column>
           <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>
           <el-table-column label="生产完成日期" prop="finishedTime" min-width="190">
@@ -89,18 +96,13 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="跟单内容" prop="purchaseMatters" min-width="150">
+          <el-table-column label="跟单日志" prop="purchaseMatters" min-width="250">
               <template #default="{ row }">
                   <div class="none">
                       <el-input type="text" v-model="row.purchaseMatters"  />
                   </div>
                   <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
               </template>
-          </el-table-column>
-          <el-table-column label="跟单日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
           </el-table-column>
           <el-table-column fixed="right" label="采购操作" width="190" >
             <template #default="{ row, $index }">
@@ -146,6 +148,7 @@
           class="noneHoveTable"
           :cell-style="cellStyle2"
           @cell-click="changeInput"
+          :cell-class-name="getCellClass2"
         >
           <el-table-column label="签收日期" prop="createTime" min-width="115">
             <template #default="{ row }">
@@ -163,25 +166,31 @@
               {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
+          <el-table-column label="SKU图片" class="image-wall" width="82">
+            <template #header>
+              SKU<br>图片
+            </template>
+            <template #default="{ row, $index }">
+              <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
+            </template>
           </el-table-column>
           <el-table-column label="SKU" prop="taxIncludedPrice" min-width="150"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>  
-          <el-table-column label="零件图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
+          <el-table-column label="零件图片" class="image-wall" min-width="82">
+            <template #header>
+              零件<br>图片
+            </template>
+            <template #default="{ row, $index }">
+                <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
+                  <template #error>
+                    <el-icon></el-icon>
+                  </template>
+                </el-image>
+            </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
           <el-table-column label="签收数量" prop="userName" min-width="100"></el-table-column>
@@ -253,7 +262,7 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible"/>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal />
     <wangEditor
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorLogVisible"
@@ -300,7 +309,8 @@ const fakeData = [
     po: 'PO19627',
     createTime: '2024-10-14',
     sku: 'HOM-0020-WHT碗架-木把手白色',
-    siteName: '亚马逊美国US'
+    siteName: '亚马逊美国US',
+    skuImageUrl: 'https://picsum.photos/200'
   }
 ]
 // 采购计划列表
@@ -502,7 +512,7 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
 
   
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 8 && data.columnIndex !== 11 && data.columnIndex !== 13 && data.columnIndex !== 14) {
+  if (data.columnIndex !== 5 && data.columnIndex !== 8 && data.columnIndex !== 12 && data.columnIndex !== 14) {
     return {
       textAlign:'center'
     } 
@@ -619,6 +629,18 @@ const removeHtmlTags = (html: string): string => {
 //     console.error(error)
 //   }
 // }  
+const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 4 || data.columnIndex === 11) {
+    return 'clear-padding'
+  }
+  return ''
+}
+const getCellClass2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 4 || data.columnIndex === 7) {
+    return 'clear-padding'
+  }
+  return ''
+}
 onActivated(() => { 
   tableRef.value?.doLayout()
 })
@@ -669,45 +691,39 @@ onBeforeMount(() => {
 
         .el-table {
           flex: 1;
+          .el-table__body {
+            .cell {
+              max-height: 81.2px;
+            }
+          }
+          .clear-padding {
+            padding-top: 0px;
+            padding-bottom: 0px;
+          }
+          .clear-padding .cell {
+            padding-left: 0px;
+            padding-right: 0px;
+          }
         }
+      }
+      .custom-checkbox {
+        transform: scale(1.2); // 放大 20%
+        transform-origin: center; // 确保放大从中心开始
+      }
+      // 控制编辑框显示与隐藏
+      .none {
+        display: none;
       }
     }
   }
 }
 
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 75px;
-  height: 75px;
-  margin: 0 8px 0 0;
-  transition: none;
-}
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
-}
-// 设置行高
-:deep(.el-table .el-table__body .cell) {
-  max-height: 81.2px;
-}
 
+// // 控制添加图片图标显示与隐藏
+// .hide :deep(.el-upload--picture-card) {
+//   display: none
+// }
 
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
-// 控制编辑框显示与隐藏
-.none {
-  display: none;
-}
-.custom-checkbox {
-  transform: scale(1.2); // 放大 20%
-  transform-origin: center; // 确保放大从中心开始
-}
-
-// 开模申请
-:deep(.moldDialog .el-dialog__body) { 
-  padding-top: 0;
-}
 
 </style>
   

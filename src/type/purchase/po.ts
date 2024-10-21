@@ -563,3 +563,68 @@ export interface IGenerateRemittance {
   startTime: string
   endTime: string
 }
+export interface IGetOrderMoreComponentQuery {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetOrderMoreComponentResp {
+  data?: {
+    total: number
+    list: IGetOrderMoreComponent[]
+  }
+}
+export interface IGetOrderMoreComponent {
+  /**
+   * 采购方
+   */
+  companyAbbreviation?: string;
+  /**
+   * po sku 零件id
+   */
+  componentId?: number;
+  /**
+   * 零件名
+   */
+  componentName?: string;
+  /**
+   * 零件图片
+   */
+  componentUrl?: string;
+  /**
+   * 报关状态 0不报关 1报关
+   */
+  customsDeclarationStatus?: number;
+  /**
+   * 已有零件id
+   */
+  existingPartsId?: number;
+  /**
+   * id
+   */
+  id?: number;
+  /**
+   * po号
+   */
+  po?: string;
+  /**
+   * 仓库名
+   */
+  repositoryName?: string;
+  /**
+   * 剩余库存
+   */
+  residueStock?: number;
+  /**
+   * 供应商名
+   */
+  suppliserName?: string;
+  /**
+   * 单位
+   */
+  unit?: string;
+  /**
+   * 已使用库存
+   */
+  useCount?: number;
+}

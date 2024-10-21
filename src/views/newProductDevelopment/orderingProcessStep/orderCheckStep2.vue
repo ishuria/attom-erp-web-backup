@@ -249,12 +249,18 @@
 defineOptions({
     name: 'OrderCheckStep2',
 })
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
-import { currencyList, firstLegChannelColumnsNum, invoicingList, estimatedCostAccountingSiteColumnsNum } from '../indexCommon'
+import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { reviewStepNo3ComponentList, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType';
-import { convertString } from '/@/utils/stringUtils';
+import { reviewStepNo3ComponentList, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { handleActivePath } from '/@/utils/routes'
+import { convertString } from '/@/utils/stringUtils'
+const route: any = useRoute()
+const router = useRouter()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 
 const emit = defineEmits<{ 
     (e: 'changeCheck-step', value: number): void
@@ -305,7 +311,7 @@ const removeHtmlTags = (html: string): string => {
   return div.textContent || div.innerText || '';
 };
 
-const route: any = useRoute()
+
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -338,11 +344,11 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     }
 }
 
-const router = useRouter()
 // 当点击下一步的时候
 const handleSave = async () => {
   emit('changeCheck-step', 2)
-  // router.replace({ query: { ...route.query, stepNo: 2 }});
+  await delVisitedRoute(handleActivePath(route, true))
+  router.replace({ query: { ...route.query, stepNo: 2 }});
 }
 
 // 当点击上一步的时候

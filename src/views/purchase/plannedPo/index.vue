@@ -31,6 +31,7 @@
           @cell-click="changeInput"
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
+          @row-click="handleScroll"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="150" >
@@ -140,7 +141,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
-          ref="tableRef" 
+      
           border 
           :data="plannedPoList"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -207,8 +208,8 @@
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
-          <el-table-column  label="采购方" min-width="100" prop="purchase"></el-table-column>
+          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>
+          <el-table-column label="采购方" min-width="100" prop="purchase"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
@@ -264,7 +265,7 @@ import { deleteAllPlanPo, deletePlanPo, deletePoSku, getPlanPoList, getPoPurchas
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
 
@@ -497,9 +498,14 @@ const handlePlannedPoDetail = (row: any) => {
       timestamp: Date.now(),
     },
   })
-  localStorage.setItem('pagePlanPoNo', "" + queryForm.pageNo)
-  localStorage.setItem('pagePlanPoSize', "" + queryForm.pageSize)
+
+
+
+  sessionStorage.setItem('pagePlanPoNo', "" + queryForm.pageNo)
+  sessionStorage.setItem('pagePlanPoSize', "" + queryForm.pageSize)
+  sessionStorage.setItem('planPoKeyWord', queryForm.keyWord)
 }
+
 const handlePlannedPoCreate = () => {
   router.push({
     path: '/purchase/poDetail',
@@ -536,7 +542,7 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
     queryForm.status = Number(tab.props.name);  
   }
   activeName.value = queryForm.status
-  localStorage.setItem('activePlanPoName', ""+activeName.value)
+  sessionStorage.setItem('activePlanPoName', ""+activeName.value)
   fetchData()
 }
 
@@ -596,25 +602,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   }
 }
 
-/**
- * 输入失焦事件
- */
-const clickCancel = async (event: any, value: any) =>{
-
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
-    }
-  }
-
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  // await updateProgressManage({...value})
-}
   
 /**
  * 当点击确认时，子组件传递给父组件的新的val
@@ -656,22 +643,36 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
-  const pageNo = localStorage.getItem('pagePlanPoNo')
-  const pageSize = localStorage.getItem('pagePlanPoSize')
+  const pageNo = sessionStorage.getItem('pagePlanPoNo')
+  const pageSize = sessionStorage.getItem('pagePlanPoSize')
+  const keyWord = sessionStorage.getItem('planPoKeyWord')
   // console.log(pageNo);
   if (pageNo && pageSize) {
     Object.assign(queryForm, {
       pageNo: Number(pageNo),
       pageSize: Number(pageSize),
+      keyWord: keyWord
     });
   }
-  const _activeName = localStorage.getItem('activePlanPoName')
+  const _activeName = sessionStorage.getItem('activePlanPoName')
   if (_activeName) {
     activeName.value = Number(_activeName)
     queryForm.status = Number(_activeName)
   }
   fetchData()
 })
+const onScroll = (data: { scrollTop: number, scrollLeft: number }) => {
+  console.log(1);
+  
+console.log(data.scrollLeft, data.scrollTop);
+
+}
+const handleScroll = () => {
+  const tableBodyWrapper = document.querySelector('.el-scrollbar__wrap');
+  if (tableBodyWrapper) {
+    console.log('tableScrollPosition', tableBodyWrapper.scrollTop);
+  }
+};
 </script>
   
 <style lang="scss" scoped>
@@ -754,15 +755,7 @@ onBeforeMount(() => {
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
 }
-    
-// .shareSelectDialog {
-//   .el-dialog__body {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-//   }
-// }
+
 :deep(.shareSelectDialog .el-dialog__body) {
   display: flex;
   flex-direction: column;

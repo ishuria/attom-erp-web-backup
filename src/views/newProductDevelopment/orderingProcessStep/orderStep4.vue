@@ -146,8 +146,6 @@
   </template>
   
 <script lang="ts" setup>
-import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils'
-import { convertString } from '~/src/utils/stringUtils'
 import { checkTypeList } from '../indexCommon'
 import {
   reviewStepNo3GetSelectVariantList,
@@ -159,14 +157,22 @@ import {
   reviewStepNo4UpdateQualityInspection,
   reviewStepNo4UpdateSupplier
 } from '/@/api/devlocal/orderProcess'
+import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { handleActivePath } from '/@/utils/routes'
+import { convertString } from '/@/utils/stringUtils'
 
+const route: any = useRoute()
+const router = useRouter()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 defineOptions({
     name: 'OrderStep4',
 })
 const props = defineProps<{ step1Data: number }>()
 const emit = defineEmits(['change-step'])
-const route: any = useRoute()
+
 // const listLoading = ref<boolean>(true)
 const list = ref<any>([])
 // 查询下拉变体列表
@@ -341,10 +347,7 @@ const handleDelQualityInspection = async (row: IreviewStepNo4ListQualityInspecti
         console.log(e as Error)
    }
 }
-const generateCheckType = (num: number) => {
-    const i = checkTypeList.find((item: any) => item.value === num)
-    return i?.label
-}
+
 // 当点击保存的时候
 const handleSave = async () => {
     let classReviewId: number | undefined
@@ -357,6 +360,7 @@ const handleSave = async () => {
         const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
         if (data === true) {
           $baseMessage("当前信息已保存。", "success", "hey")
+          await delVisitedRoute(handleActivePath(route, true))
           const {...query} = route.query;
           router.replace({query: {...query, stepNo: 3}});
         }
@@ -364,7 +368,7 @@ const handleSave = async () => {
         console.error(error)
     }
 }
-const router = useRouter()
+
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
     let classReviewId: number | undefined
@@ -379,6 +383,7 @@ const handleSaveAndContinue = async () => {
             $baseMessage("当前信息已保存。","success","hey")
             emit('change-step', 4)
             if (route.query.reviewId) {
+              await delVisitedRoute(handleActivePath(route, true))
                 const {...query} = route.query;
                 router.replace({query: {...query, stepNo: 4}});
             }

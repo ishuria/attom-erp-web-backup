@@ -80,17 +80,23 @@
 </template>
   
 <script lang="ts" setup>
-import { IComponentAdd } from '/@/type/orderProcess/orderProcessType';
-import { getComponentList } from '/@/api/devlocal/progressSample';
-import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils';
-import { currencyList } from '../indexCommon';
-import { reviewProgressId, reviewStepNo2Savetw } from '~/src/api/devlocal/orderProcess';
-import { convertString } from '~/src/utils/stringUtils';
+import { currencyList } from '../indexCommon'
+import { reviewProgressId, reviewStepNo2Savetw } from '/@/api/devlocal/orderProcess'
+import { getComponentList } from '/@/api/devlocal/progressSample'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { IComponentAdd } from '/@/type/orderProcess/orderProcessType'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { handleActivePath } from '/@/utils/routes'
+
+const route: any = useRoute()
+const router = useRouter()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 
 defineOptions({
     name: 'OrderStep2',
 })
-const route: any = useRoute()
+
 const props = defineProps<{ step1Data: number | undefined }>()
 
 const emit = defineEmits<{ 
@@ -154,36 +160,37 @@ const fetchDataComponent = async () =>{
 onMounted(async ()=>{
     fetchDataComponent()
 })
-const router = useRouter()
+
 // 当点击跳过的时候
 const handleSkip = () => {
     emit('change-step', 2)
 }
 // 当点击继续的时候
 const handleContinue = async () => {
-    selectRows.value.forEach((item: any) => {
-        suppliserIds.value.push(item.supplierId)
-    })
+  selectRows.value.forEach((item: any) => {
+    suppliserIds.value.push(item.supplierId)
+  })
 
-    const id = suppliserIds.value + ""
-    let classReviewId: number | undefined
-    try {
-        if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-            classReviewId = props.step1Data
-        } else {
-            classReviewId = route.query.reviewId
-        }
-        const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: classReviewId})
-        if (data === true) {
-            emit('change-step', 2)
-            if (route.query.reviewId) {
-                const {...query} = route.query;
-                router.replace({query: {...query, stepNo: 2}});
-            }
-        }
-    } catch (error) {
-        console.error(error)
+  const id = suppliserIds.value + ""
+  let classReviewId: number | undefined
+  try {
+    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+      classReviewId = props.step1Data
+    } else {
+      classReviewId = route.query.reviewId
     }
+    const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: classReviewId})
+    if (data === true) {
+      emit('change-step', 2)
+      if (route.query.reviewId) {
+          await delVisitedRoute(handleActivePath(route, true))
+          const {...query} = route.query;
+          router.replace({query: {...query, stepNo: 2}});
+        }
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 当点击上一步的时候
 const handleGoback = () => {

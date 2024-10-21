@@ -494,7 +494,13 @@ import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3Vari
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { handleActivePath } from '/@/utils/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
 
+const route: any = useRoute()
+const router = useRouter()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 const props = defineProps<{ step1Data: number }>()
 
 const emit = defineEmits<{ 
@@ -603,7 +609,7 @@ const variantsList = ref<IreviewStepNo3VariantList[]>([])
 // 查询下拉变体列表
 const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 const list = ref<any>([])
-const route: any = useRoute()
+
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 分类
@@ -969,12 +975,13 @@ const handleSave = async () => {
     if (data === true) {
       $baseMessage("当前信息已保存。", "success", "hey")
       if (route.query.reviewId) {
+        await delVisitedRoute(handleActivePath(route, true))
         const { ...query } = route.query;
         router.replace({ query: { ...query, stepNo: 2 } });
       }
     }
 }
-const router = useRouter()
+
 // 当点击保存并继续的时候
 // 校验每个组件项的函数
 const validateComponent = (item: any) => {
@@ -1083,17 +1090,14 @@ const handleSaveAndContinue = async () => {
             if (data === true) {
                 $baseMessage("当前信息已保存。", "success", "hey");
                 emit('change-step', 3);
-                if (route.query.reviewId) {
+              if (route.query.reviewId) {
+                await delVisitedRoute(handleActivePath(route, true))
                     const { ...query } = route.query;
                     router.replace({ query: { ...query, stepNo: 3 } });
                 }
             }
         } else {
             $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
-            // const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
-            // if (data === true) {
-            //     emit('change-step', 3);
-            // }
         }
     }
 };

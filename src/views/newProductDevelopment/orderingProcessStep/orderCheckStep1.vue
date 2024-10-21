@@ -89,9 +89,10 @@ let form = reactive<any>({
 defineExpose({ form });
 const router = useRouter()
 // 当点击下一步的时候
-const handleSubmitAndContinue = () => {
+const handleSubmitAndContinue = async () => {
   emit('changeCheck-step', 1)
-  // router.replace({ query: { ...route.query, stepNo: 2 }});
+  await delVisitedRoute(handleActivePath(route, true))
+  router.replace({ query: { ...route.query, stepNo: 1 }});
 }
 // 当点击退出的时候
 const handleGoback = async () => {

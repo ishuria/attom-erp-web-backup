@@ -84,16 +84,22 @@
 defineOptions({
     name: 'OrderCheckStep3',
 })
-import { convertString } from '/@/utils/stringUtils';
-import { checkTypeList } from '../indexCommon';
-import { 
-    reviewStepNo4ListQualityInspection,
-    reviewStepNo3GetSelectVariantList,
-    reviewStepNo4SupplierList,
-} from '/@/api/devlocal/orderProcess';
-import { IreviewStepNo4ListQualityInspection, IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType';
+import { checkTypeList } from '../indexCommon'
+import {
+  reviewStepNo3GetSelectVariantList,
+  reviewStepNo4ListQualityInspection,
+  reviewStepNo4SupplierList,
+} from '/@/api/devlocal/orderProcess'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
+import { handleActivePath } from '/@/utils/routes'
+import { convertString } from '/@/utils/stringUtils'
 
 const route: any = useRoute()
+const router = useRouter()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
+
 const emit = defineEmits(['changeCheck-step'])
 // const listLoading = ref<boolean>(true)
 const list = ref<any>([])
@@ -107,11 +113,12 @@ interface IGetSelectVariantsStringList {
 const variantsSelectStringList = ref<IGetSelectVariantsStringList[]>([])
 // 质检清单列表
 const qualityInspectionList = ref<IreviewStepNo4ListQualityInspection[]>([])
-const router = useRouter()
+
 // 当点击下一步的时候
-const handleSaveAndContinue = () => {
+const handleSaveAndContinue = async () => {
   emit('changeCheck-step', 3)
-  // router.replace({ query: { ...route.query, stepNo: 3 }});
+  await delVisitedRoute(handleActivePath(route, true))
+  router.replace({ query: { ...route.query, stepNo: 3 }});
 }
 // 当点击上一步的时候
 const handleGoback = () => {

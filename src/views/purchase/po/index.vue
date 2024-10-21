@@ -1471,8 +1471,9 @@ const handlePoDetail = (row: any) => {
       timestamp: Date.now(),
     },
   })
-  localStorage.setItem('pageNo', queryForm.pageNo)
-  localStorage.setItem('pageSize', queryForm.pageSize)
+  sessionStorage.setItem('pageNo', queryForm.pageNo)
+  sessionStorage.setItem('pageSize', queryForm.pageSize)
+  sessionStorage.setItem('keyWord', queryForm.keyWord)
 }
 
 /**
@@ -1487,35 +1488,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     imagePreviewList.value.push(el.src!)
   }
 }
-const changePaymentHistoryInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
-  }
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
-  }
-}
+
 /**
  * 输入失焦事件
  */
@@ -1543,7 +1516,7 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   fetchData()
   activeName.value = queryForm.status
   // console.log(activeName.value);
-  localStorage.setItem('activeName', ""+activeName.value)
+  sessionStorage.setItem('activeName', ""+activeName.value)
 }
 //采购订单col合并方法
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -1746,14 +1719,18 @@ onActivated(() => {
 onBeforeMount(() => {
   selectedPORow.value = new Set()
   selectedCompRow.value = new Set()
-  const pageNo = localStorage.getItem('pageNo')
-  const pageSize = localStorage.getItem('pageSize')
+  const pageNo = sessionStorage.getItem('pageNo')
+  const pageSize = sessionStorage.getItem('pageSize')
+  const keyWord = sessionStorage.getItem('keyWord')
   // console.log(pageNo);
-  if (pageSize) {
-    queryForm.pageNo = Number(pageNo)
-    queryForm.pageSize = Number(pageSize)
+  if (pageNo && pageSize) {
+    Object.assign(queryForm, {
+      pageNo: Number(pageNo),
+      pageSize: Number(pageSize),
+      keyWord: keyWord
+    });
   }
-  const _activeName = localStorage.getItem('activeName')
+  const _activeName = sessionStorage.getItem('activeName')
   if (_activeName) {
     activeName.value = Number(_activeName)
     queryForm.status = Number(_activeName)

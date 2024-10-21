@@ -47,7 +47,9 @@ import {
   IGeneratePoContractQuery,
   IFileName,
   IAddPoSKUQuery,
-  IGenerateRemittance
+  IGenerateRemittance,
+  IGetOrderMoreComponentQuery,
+  IGetOrderMoreComponentResp
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -461,5 +463,13 @@ export function generateRemittance(data: IGenerateRemittance) {
     url: `${BASE_API}/purchase/generate/remittance`,
     method: 'post',
     data,
+  })
+}
+// 多订零件库存查询
+export function getOrderMoreComponent(params: IGetOrderMoreComponentQuery): Promise<IGetOrderMoreComponentResp> {
+  return request({
+    url: `${BASE_API}/purchase/orderMore/component`,
+    method: 'get',
+    params,
   })
 }

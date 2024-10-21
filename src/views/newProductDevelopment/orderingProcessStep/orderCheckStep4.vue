@@ -103,10 +103,17 @@ defineOptions({
   name: 'OrderCheckStep4',
 })
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-import type { TableInstance, UploadFile } from 'element-plus'
-import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList, IreviewStepNo5SkuInfoPerfect } from '/@/type/orderProcess/orderProcessType';
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
+import type { TableInstance } from 'element-plus'
+import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList } from '/@/api/devlocal/orderProcess';
+import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType';
+import { handleActivePath } from '/@/utils/routes'
+import { useTabsStore } from '/@/store/modules/tabs';
+
+const route: any = useRoute()
+const router = useRouter()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 
 // const props = defineProps({
 //     formData: Object
@@ -156,11 +163,12 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     }
 }
 
-const router = useRouter()
+
 // 当点击保存的时候
-const handleSave = () => {
+const handleSave = async () => {
   emit('changeCheck-step', 4)
-  // router.replace({ query: { ...route.query, stepNo: 4 }});
+  await delVisitedRoute(handleActivePath(route, true))
+  router.replace({ query: { ...route.query, stepNo: 4 }});
 }
 
 // 当点击上一步的时候
@@ -238,7 +246,7 @@ return {
 }
 // 转换后的列的数据
 let columnsChange: any
-const route: any = useRoute()
+
 // 异步获取变体数据
 const fetchVariantList = async () => {
 try {

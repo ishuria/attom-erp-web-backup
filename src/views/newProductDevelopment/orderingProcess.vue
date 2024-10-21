@@ -159,6 +159,10 @@ onMounted(() => {
   
   } else {
     active.value = parseInt(route.query.stepNo) //编辑进去的
+    activeCheck.value = parseInt(route.query.stepNo) //查看进去的
+    if (parseInt(route.query.stepNo) === 5) { //查看
+      activeCheck.value = 0
+    }
   }
 });
 

@@ -209,6 +209,12 @@ import { getProductAllName } from '~/src/api/devlocal/productInformation'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { handleActivePath } from '~/src/utils/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
+const route: any = useRoute()
+const router = useRouter()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 
 const props = defineProps<{ step1Data: number }>()
 // const props = defineProps({
@@ -274,7 +280,7 @@ const handleInsertSku = async (row: any, prop: string) => {
  }
   
 }
-const route: any = useRoute()
+
 const tableRef = ref<TableInstance>()
 const photoSampleOptions = [
     { label: '已有拍照样品,大货无需留样', value: 0 },
@@ -620,6 +626,7 @@ const handleSave = async () => {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
       $baseMessage("当前信息已保存。", "success", "hey")
+      await delVisitedRoute(handleActivePath(route, true))
       const {...query} = route.query;
       router.replace({query: {...query, stepNo: 4}});
     }
@@ -627,7 +634,7 @@ const handleSave = async () => {
     console.error(error)
   }
 }
-const router = useRouter()
+
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
   let classReviewId: number | undefined
@@ -642,9 +649,11 @@ const handleSaveAndContinue = async () => {
       $baseMessage("当前信息已保存。","success","hey")
       emit('change-step', 5)
       if (route.query.reviewId) {
-                const {...query} = route.query;
-                router.replace({query: {...query, stepNo: 5}});
-            }
+        await delVisitedRoute(handleActivePath(route, true))
+
+        const {...query} = route.query;
+        router.replace({query: {...query, stepNo: 5}});
+      }
     }
   } catch (error) {
     console.error(error)
