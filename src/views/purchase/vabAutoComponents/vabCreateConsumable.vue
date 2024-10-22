@@ -70,9 +70,8 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { delProductQualityInspection } from '/@/api/devlocal/productInformation'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { getAddConsumableList } from '~/src/api/devlocal/purchasePo'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'vabCreateConsumable'
@@ -130,11 +129,10 @@ const handlerCloseDialog = () => {
   emit('update:createConsumableVisible', dflag.value);
 }
 const validateConsumable = (item: any) => {
-  if (!item.count) {
-    $baseMessage('每个耗材的添加数量不能为空', 'error');
-    return false;
+  if (item.count) {
+    return true;
   } 
-  return true; // 所有校验通过
+  return false;
 };
 const handleConfirm = () => {
   const countAllValid = list.value.some((item: any) => validateConsumable(item));
@@ -142,6 +140,8 @@ const handleConfirm = () => {
     emit('update:tableValue', list.value)
     dflag.value = false
     emit('update:createConsumableVisible', dflag.value);
+  } else {
+    $baseMessage('至少填写一个耗材的添加数量', 'warning');
   }
 }
 
@@ -162,13 +162,13 @@ const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-      imagePreviewVisible.value = true
-      imagePreviewList.value = []
-      imagePreviewList.value.push(el.src!)
-    }
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
+  }
 }
 
 

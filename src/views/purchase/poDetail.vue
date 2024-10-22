@@ -1,6 +1,9 @@
 <template>
   <div class="step-form-container poDetail-container">
     <el-page-header  @back="goBack" style="margin-bottom: 0px;">
+      <template #title>
+        退出
+      </template>
       <template #content>
         <div class="flex items-center">
           <span> <strong>{{ handlePoTitle() }}</strong></span>
@@ -13,7 +16,7 @@
         <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }"> 
           <el-form label-position="top" >
             <el-form-item label="订货套数" >
-              <el-input v-model="poDetailData.purchaseSkuNumber" @change="handleUpdateSkuCount"></el-input>
+              <el-input v-model="poDetailData.purchaseSkuNumber" @change="handleUpdateSkuCount" :disabled="createDisabled"></el-input>
             </el-form-item>
             <el-form-item >
               <el-upload 
@@ -75,7 +78,7 @@
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="产品名称">
-                        <el-input v-model="poDetailData.productName" @change="handleUpdateSku" :disabled="productNameDisabled"></el-input>
+                        <el-input v-model="poDetailData.productName" @change="handleUpdateSku" :disabled="productNameDisabled || createDisabled"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -96,7 +99,7 @@
             <el-row style="width: 100%">
                 <el-col :span="12">
                   <el-form-item label="PO站点">
-                    <el-select v-model="poDetailData.site" placeholder="请选择站点" @change="handleUpdatePoSite">
+                    <el-select v-model="poDetailData.site" placeholder="请选择站点" @change="handleUpdatePoSite" :disabled="createDisabled">
                       <el-option
                         v-for="item in siteList"
                         :label="item.label"
@@ -108,7 +111,7 @@
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="收货仓库">
-                        <el-select v-model="poDetailData.repositoryId" placeholder="请选择收货仓库" @change="handleUpdateSku">
+                        <el-select v-model="poDetailData.repositoryId" placeholder="请选择收货仓库" @change="handleUpdateSku" :disabled="createDisabled">
                             <el-option
                                 v-for="item in repositoryOption"
                                 :label="item.label"
@@ -160,7 +163,7 @@
                     <el-space>
                         <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
                     </el-space>
-                    <el-input type="textarea" :rows="11" v-model="poDetailData.poRemarks" @change="handleRemarksChange" resize="none"></el-input>
+                    <el-input type="textarea" :rows="11" v-model="poDetailData.poRemarks" @change="handleRemarksChange" resize="none" :disabled="createDisabled"></el-input>
                   </el-form-item>
                 </el-col>
             </el-row>
@@ -169,6 +172,9 @@
       </el-row>
     </el-card>
     <el-page-header  @back="goBack" style="margin-bottom: 0px;">
+      <template #title>
+        退出
+      </template>
       <template #content>
         <div class="flex items-center">
           <span> <strong> SKU零配件清单（与开票一致） </strong></span>
@@ -380,7 +386,7 @@
         </el-table-column>
         <el-table-column label="开票" prop="oem" align="center" width="130">
           <template #default = "{ row }">
-            <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleSupplierAndInvoicingChange(row)">
+            <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleSupplierAndInvoicingChange(row)" @focus="handleGetRow(row)">
               <el-option v-for="dict in invoicingNumList" :key="dict.value"
                   :value="dict.value" :label="dict.label"></el-option>
             </el-select>
@@ -410,7 +416,7 @@
         </el-table-column>
         <el-table-column align="center" label="采购方" min-width="130" prop="purchaseId">
           <template #default="{row}">
-            <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleDefaultPurchase(row)">
+            <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleDefaultPurchase(row)" @focus="handleGetRow(row)">
               <el-option 
                 v-for="item in purchaseOption"
                 :label="item.label"
@@ -609,6 +615,8 @@ const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
+// 创建进来的，需要判断sku填没填，没填就都disabled掉
+const createDisabled = ref<boolean>(false)
 // po详情
 const poDetailData = ref<any>({})
 // PoSku配件数据
@@ -683,6 +691,7 @@ const handleInputDisabled = () => {
   } else if (route.query.from === 'plannedPoCreate') {
     skuDisabled.value = false
     productNameDisabled.value = true
+    createDisabled.value = true
   } else {
     skuDisabled.value = true
     productNameDisabled.value = false
@@ -702,10 +711,22 @@ const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
 //点击添加零件
 const handleAddComponent = async () => { 
+  if (route.query.from === 'plannedPoCreate') {
+    if (!poDetailData.value.sku) {
+      $baseMessage('请先创建采购计划', 'warning')
+      return
+    }
+  }
   createComponentVisible.value = true
 }
 //点击添加耗材
 const handleAddConsumable = () => {
+  if (route.query.from === 'plannedPoCreate') {
+    if (!poDetailData.value.sku) {
+      $baseMessage('请先创建采购计划', 'warning')
+      return
+    }
+  }
   createConsumableVisible.value = true
 }
 
@@ -1001,12 +1022,12 @@ const clickCancel = async (event:any,value:any) => {
   if (t2){
     t2.classList.remove("none")
   }
-  if(JSON.stringify(value) === JSON.stringify(copyRow)) {
+  if (JSON.stringify(value) === JSON.stringify(copyRow)) {
       return 
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateSkuComponent(value) 
+    updateSkuComponent(value) 
   }
 }
 // 零件table blur事件
@@ -1024,7 +1045,7 @@ const clickOtherCancel = async (event:any,value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateSkuComponent(value) 
+    updateSkuComponent(value) 
     fetchSkuComponent()
   }
 }
@@ -1060,62 +1081,90 @@ const fetchSupplierRate = async (row: any) => {
     const { data: supplierTax } = await getSupplierRate({
       suppliserId: row.suppliserId
     })
-    if (supplierTax) {
-      const { suppliserId, actualZTaxRate, invoicingZTaxRate, actualPTaxRate, invoicingPTaxRate } = supplierTax
-      if(row.invoicing === 0) {
-        row.actualTaxRate = actualZTaxRate
-        row.invoicingTaxRate = invoicingZTaxRate
-      } else if(row.invoicing === 1) {
-        row.actualTaxRate = actualPTaxRate
-        row.invoicingTaxRate = invoicingPTaxRate
-      } else {
-        row.actualTaxRate = 0
-        row.invoicingTaxRate = 0
-      }
-    }
+    // if (supplierTax) {
+    //   const { suppliserId, actualZTaxRate, invoicingZTaxRate, actualPTaxRate, invoicingPTaxRate } = supplierTax
+    //   if(row.invoicing === 0) {
+    //     row.actualTaxRate = actualZTaxRate
+    //     row.invoicingTaxRate = invoicingZTaxRate
+    //   } else if(row.invoicing === 1) {
+    //     row.actualTaxRate = actualPTaxRate
+    //     row.invoicingTaxRate = invoicingPTaxRate
+    //   } else {
+    //     row.actualTaxRate = 0
+    //     row.invoicingTaxRate = 0
+    //   }
+    // }
   } catch (error) {
     console.error(error)
   }
 }
 // 修改默认供应商
 const handleSupplierAndInvoicingChange = async (row: any) => {
-  updateSkuComponent(row)
-  fetchSupplierRate(row)
+  try {
+    const { data } = await updatePoSkuComponent(row)
+    if (data === true) {
+      fetchSkuComponent()
+      fetchData()
+    }
+  } catch (error) {  
+    row.invoicing = originalRow.invoicing
+    console.error(error)
+  }
+  // fetchSupplierRate(row)
 }
 // // 修改开票类型
 // const handleInvoicingChange = async (row: any) => {
 //   updateSkuComponent(row)
 //   fetchSupplierRate(row)
 // }
+let originalRow: any
+const handleGetRow = (row: any) => {
+  originalRow = { ...row }
+}
 // 修改默认采购方
 const handleDefaultPurchase = async (row: any) => {
-  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  if(item!.type === 0) { //如果选择了为买单的采购方
-    row.customsDeclarationStatus = 1 //自动勾选不报关
-  } else if(row.purchaseId === 2) { //选择了埃托姆
-    row.customsDeclarationStatus = 0
-  } 
-  updateSkuComponent(row)
+  // const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  // if(item!.type === 0) { //如果选择了为买单的采购方
+  //   row.customsDeclarationStatus = 1 //自动勾选不报关
+  // } else if(row.purchaseId === 2) { //选择了埃托姆
+  //   row.customsDeclarationStatus = 0
+  // } 
+  try {
+    const { data } = await updatePoSkuComponent(row)
+    if (data === true) {
+      fetchSkuComponent()
+      fetchData()
+    }
+  } catch (error) {  
+    row.purchaseId = originalRow.purchaseId
+    console.error(error)
+  }
 }
 // 处理不报关
 const handleDeclareCustoms = async (row: any) => {
-  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  if(item!.type === 0) { //如果选择了为买单的采购方
-    if(row.customsDeclarationStatus === 0) {
-      row.customsDeclarationStatus = 1
-      $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+  // const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  // if(item!.type === 0) { //如果选择了为买单的采购方
+  //   if(row.customsDeclarationStatus === 0) {
+  //     row.customsDeclarationStatus = 1
+  //     $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+  //   }
+  // } else if(row.purchaseId === 2) { //选择了埃托姆
+  //   if(row.customsDeclarationStatus === 1) {
+  //     row.customsDeclarationStatus = 0
+  //     $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
+  //   } 
+  // } else {
+    // updateSkuComponent(row)
+  // }
+  try {
+    const { data } = await updatePoSkuComponent(row)
+    if (data === true) {
+      fetchSkuComponent()
+      fetchData()
     }
-  } else if(row.purchaseId === 2) { //选择了埃托姆
-    if(row.customsDeclarationStatus === 1) {
-      row.customsDeclarationStatus = 0
-      $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
-    } 
-  } else {
-    try {
-      await updateSkuComponent(row)
-    } catch (error) {
-      console.error(error)
-    }
+  } catch (error) {  
+    row.customsDeclarationStatus = row.customsDeclarationStatus === 0 ? 1 : 0
+    console.error(error)
   }
 }
 // 添加SKU
@@ -1401,8 +1450,8 @@ const handleCreatePlanPo = async () => {
     })
     if (data) {
     
-        // router.push({ name: 'poDetailTable', params: { sku: poDetailData.value.sku } });
-       
+      // router.push({ name: 'poDetailTable', params: { sku: poDetailData.value.sku } });
+      createDisabled.value = false
      
 
       // 将数据显示在页面上
@@ -1444,7 +1493,11 @@ const handleCreatePlanPo = async () => {
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
-  history.back()
+  if (route.query.from === 'plannedPoDetail' || route.query.from === 'plannedPoCreate') {
+    router.push({ path: '/purchase/plannedPo' });
+  } else {
+    router.push({ path: '/purchase/po' });
+  } 
 }
 const imageColumnHeight = ref<number>(0)
 // 动态设置图片列高度

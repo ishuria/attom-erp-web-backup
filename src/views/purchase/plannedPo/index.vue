@@ -31,7 +31,6 @@
           @cell-click="changeInput"
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
-          @row-click="handleScroll"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="150" >
@@ -141,7 +140,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
-      
+          ref="tableRef2"
           border 
           :data="plannedPoList"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -286,6 +285,7 @@ const setSelectRows = (value: string) => {
 }
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
+const tableRef2 = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 // 采购计划列表
 let plannedPoList = ref<IGetPlanPoList[]>([])
@@ -498,12 +498,20 @@ const handlePlannedPoDetail = (row: any) => {
       timestamp: Date.now(),
     },
   })
+  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
+  const wrapRef = scrollBarRef.wrapRef
+  const wrapRef2 = scrollBarRef2.wrapRef
+  const plannedPoStatus = {
+    scrollTop: wrapRef.scrollTop,
+    scrollTop2: wrapRef2.scrollTop,
+    pageNo: queryForm.pageNo,
+    pageSize: queryForm.pageSize,
+    keyWord: queryForm.keyWord,
+    activeName: activeName.value
+  }
 
-
-
-  sessionStorage.setItem('pagePlanPoNo', "" + queryForm.pageNo)
-  sessionStorage.setItem('pagePlanPoSize', "" + queryForm.pageSize)
-  sessionStorage.setItem('planPoKeyWord', queryForm.keyWord)
+  sessionStorage.setItem('plannedPoStatus', JSON.stringify(plannedPoStatus))
 }
 
 const handlePlannedPoCreate = () => {
@@ -542,7 +550,6 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
     queryForm.status = Number(tab.props.name);  
   }
   activeName.value = queryForm.status
-  sessionStorage.setItem('activePlanPoName', ""+activeName.value)
   fetchData()
 }
 
@@ -643,36 +650,48 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
-  const pageNo = sessionStorage.getItem('pagePlanPoNo')
-  const pageSize = sessionStorage.getItem('pagePlanPoSize')
-  const keyWord = sessionStorage.getItem('planPoKeyWord')
-  // console.log(pageNo);
+  const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
+  const pageNo = savedStatus.pageNo
+  const pageSize = savedStatus.pageSize
+  const keyWord = savedStatus.keyWord
+  
   if (pageNo && pageSize) {
     Object.assign(queryForm, {
-      pageNo: Number(pageNo),
-      pageSize: Number(pageSize),
+      pageNo: pageNo,
+      pageSize: pageSize,
       keyWord: keyWord
     });
   }
-  const _activeName = sessionStorage.getItem('activePlanPoName')
+  const _activeName = savedStatus.activeName
   if (_activeName) {
-    activeName.value = Number(_activeName)
-    queryForm.status = Number(_activeName)
+    activeName.value = _activeName
+    queryForm.status = _activeName
   }
   fetchData()
 })
-const onScroll = (data: { scrollTop: number, scrollLeft: number }) => {
-  console.log(1);
-  
-console.log(data.scrollLeft, data.scrollTop);
-
-}
-const handleScroll = () => {
-  const tableBodyWrapper = document.querySelector('.el-scrollbar__wrap');
-  if (tableBodyWrapper) {
-    console.log('tableScrollPosition', tableBodyWrapper.scrollTop);
+const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
+  if (scrollBarPosition) {
+    const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+    const wrapRef = scrollBarRef.wrapRef
+    setTimeout(() => {
+      wrapRef.scrollTop = scrollBarPosition;
+    }, 50)
   }
-};
+}
+onMounted(() => {
+  nextTick(() => {
+    const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
+    const scrollBarPosition = savedStatus.scrollTop
+    const scrollBarPosition2 = savedStatus.scrollTop2
+    if (scrollBarPosition) {
+      setScrollPosition(scrollBarPosition, tableRef)
+    }
+    if (scrollBarPosition2) {
+      setScrollPosition(scrollBarPosition2, tableRef2)
+    }
+  });
+});
+
 </script>
   
 <style lang="scss" scoped>

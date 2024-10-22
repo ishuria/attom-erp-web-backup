@@ -140,7 +140,7 @@
         </vab-query-form>
 
         <el-table 
-          ref="tableRef" 
+          ref="tableRef2"
           border 
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -251,7 +251,7 @@
         </vab-query-form>
 
         <el-table 
-          ref="tableRef" 
+          ref="tableRef3"
           border 
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -362,7 +362,7 @@
         </vab-query-form>
 
         <el-table 
-          ref="tableRef" 
+          ref="tableRef4"
           border 
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -473,13 +473,13 @@
         </vab-query-form>
 
         <el-table 
-          ref="tableRef" 
+          ref="tableRef5"
           border 
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
           :cell-style="lastTwoTabCellStyle"
-          :span-method="objectSpanMethod"
+          :span-method="lastTowTabSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getLastTwoCellClass"
         >
@@ -568,13 +568,13 @@
         </vab-query-form>
 
         <el-table 
-          ref="tableRef" 
+          ref="tableRef6"
           border 
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
           :cell-style="lastTwoTabCellStyle"
-          :span-method="objectSpanMethod"
+          :span-method="lastTowTabSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getLastTwoCellClass"
         >
@@ -662,7 +662,7 @@
       <el-divider style="margin-top: 0; margin-bottom: 20px"/>
       <div >
         <el-table 
-          ref="tableRef" 
+
           stripe border 
           :data="paymentProgressList"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -895,6 +895,11 @@ const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const tableRef = ref<TableInstance>()
+const tableRef2 = ref<TableInstance>()
+const tableRef3 = ref<TableInstance>()
+const tableRef4 = ref<TableInstance>()
+const tableRef5 = ref<TableInstance>()
+const tableRef6 = ref<TableInstance>()
 // 合同列表
 const contractList = ref<any>([])
 const activeName = ref<number>(2)
@@ -1471,9 +1476,31 @@ const handlePoDetail = (row: any) => {
       timestamp: Date.now(),
     },
   })
-  sessionStorage.setItem('pageNo', queryForm.pageNo)
-  sessionStorage.setItem('pageSize', queryForm.pageSize)
-  sessionStorage.setItem('keyWord', queryForm.keyWord)
+  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
+  const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
+  const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef;
+  const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef;
+  const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef;
+  const wrapRef = scrollBarRef.wrapRef
+  const wrapRef2 = scrollBarRef2.wrapRef
+  const wrapRef3 = scrollBarRef3.wrapRef
+  const wrapRef4 = scrollBarRef4.wrapRef
+  const wrapRef5 = scrollBarRef5.wrapRef
+  const wrapRef6 = scrollBarRef6.wrapRef
+  const poStatus = {
+    scrollTop: wrapRef.scrollTop,
+    scrollTop2: wrapRef2.scrollTop,
+    scrollTop3: wrapRef3.scrollTop,
+    scrollTop4: wrapRef4.scrollTop,
+    scrollTop5: wrapRef5.scrollTop,
+    scrollTop6: wrapRef6.scrollTop,
+    pageNo: queryForm.pageNo,
+    pageSize: queryForm.pageSize,
+    keyWord: queryForm.keyWord,
+    activeName: activeName.value
+  };
+  sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
 }
 
 /**
@@ -1515,8 +1542,6 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   }
   fetchData()
   activeName.value = queryForm.status
-  // console.log(activeName.value);
-  sessionStorage.setItem('activeName', ""+activeName.value)
 }
 //采购订单col合并方法
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -1719,24 +1744,82 @@ onActivated(() => {
 onBeforeMount(() => {
   selectedPORow.value = new Set()
   selectedCompRow.value = new Set()
-  const pageNo = sessionStorage.getItem('pageNo')
-  const pageSize = sessionStorage.getItem('pageSize')
-  const keyWord = sessionStorage.getItem('keyWord')
-  // console.log(pageNo);
+  const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
+  const pageNo = savedStatus.pageNo
+  const pageSize = savedStatus.pageSize
+  const keyWord = savedStatus.keyWord
+  const _activeName = savedStatus.activeName
   if (pageNo && pageSize) {
     Object.assign(queryForm, {
-      pageNo: Number(pageNo),
-      pageSize: Number(pageSize),
+      pageNo: pageNo,
+      pageSize: pageSize,
       keyWord: keyWord
     });
   }
-  const _activeName = sessionStorage.getItem('activeName')
   if (_activeName) {
-    activeName.value = Number(_activeName)
-    queryForm.status = Number(_activeName)
+    activeName.value = _activeName
+    queryForm.status = _activeName
   }
   fetchData()
 })
+const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
+  if (scrollBarPosition) {
+    const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+    const wrapRef = scrollBarRef.wrapRef
+    setTimeout(() => {
+      wrapRef.scrollTop = scrollBarPosition;
+    }, 50)
+  }
+}
+onMounted(() => {
+  nextTick(() => {
+    const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
+    const scrollBarPosition = savedStatus.scrollTop
+    const scrollBarPosition2 = savedStatus.scrollTop2
+    const scrollBarPosition3 = savedStatus.scrollTop3
+    const scrollBarPosition4 = savedStatus.scrollTop4
+    const scrollBarPosition5 = savedStatus.scrollTop5
+    const scrollBarPosition6 = savedStatus.scrollTop6
+    if (scrollBarPosition) {
+      setScrollPosition(scrollBarPosition, tableRef)
+    }
+    if (scrollBarPosition2) {
+      setScrollPosition(scrollBarPosition2, tableRef2)
+    }
+    if (scrollBarPosition3) {
+      setScrollPosition(scrollBarPosition3, tableRef3)
+    }
+    if (scrollBarPosition4) {
+      setScrollPosition(scrollBarPosition4, tableRef4)
+    }
+    if (scrollBarPosition5) {
+      setScrollPosition(scrollBarPosition5, tableRef5)
+    }
+    if (scrollBarPosition6) {
+      setScrollPosition(scrollBarPosition6, tableRef6)
+    }
+    // const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+    // const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
+    // const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
+    // const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef;
+    // const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef;
+    // const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef;
+    // const wrapRef = scrollBarRef.wrapRef
+    // const wrapRef2 = scrollBarRef2.wrapRef
+    // const wrapRef3 = scrollBarRef3.wrapRef
+    // const wrapRef4 = scrollBarRef4.wrapRef
+    // const wrapRef5 = scrollBarRef5.wrapRef
+    // const wrapRef6 = scrollBarRef6.wrapRef
+    // setTimeout(() => {
+    //   wrapRef.scrollTop = scrollBarPosition;
+    //   wrapRef2.scrollTop = scrollBarPosition2;
+    //   wrapRef3.scrollTop = scrollBarPosition3;
+    //   wrapRef4.scrollTop = scrollBarPosition4;
+    //   wrapRef5.scrollTop = scrollBarPosition5;
+    //   wrapRef6.scrollTop = scrollBarPosition6;
+    // }, 50)
+  });
+});
 </script>
 
 <style lang="scss" scoped>

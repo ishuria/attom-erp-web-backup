@@ -4,7 +4,7 @@
       <el-tab-pane label="待签收" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">批量签收</el-button>
+            <el-button type="primary" @click="handleAllSigned">批量签收</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -28,18 +28,35 @@
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
         >
-          <el-table-column fixed="left" label="仓库操作" width="150" >
+          <el-table-column fixed="left" label="仓库操作" width="110" >
             <template #default="{ row, $index }">
-              <el-space>
-                <el-button link type="primary">签收</el-button>
-                <el-button link type="primary">打印</el-button>
-              </el-space>
+              <el-dropdown>
+                <el-button text type="primary" >
+                  签收
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item>
+                      <el-link type="primary" :underline="false" >签收</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-link type="primary" :underline="false" @click="modifyPendingVisible = true">修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-link type="primary" :underline="false" >打印</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <el-table-column type="selection" fixed="left"></el-table-column>
           <el-table-column label="外发" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" />
+                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
               </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
@@ -56,6 +73,7 @@
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
+          <el-table-column label="签收数量" width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
           <el-table-column label="收货仓库" width="100" prop="unit" ></el-table-column>
@@ -85,12 +103,12 @@
           <el-table-column label="剩余可售" prop="userName" min-width="100"></el-table-column>
           <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>
-          <el-table-column label="生产完成日期" prop="finishedTime" min-width="190">
+          <el-table-column label="生产完成日期" prop="finishedTime" min-width="170">
             <template #default="{ row }">
               <el-date-picker
                 v-model="row.finishedTime"
                 type="date"
-                placeholder="选择生产完成日期"
+                placeholder="请选择日期"
                 size="large"
                 style="width: 100%"
               />
@@ -103,14 +121,6 @@
                   </div>
                   <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
               </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="采购操作" width="190" >
-            <template #default="{ row, $index }">
-              <el-space>
-                <el-button link type="primary">录入跟单</el-button>
-                <el-button link type="primary">跟单记录</el-button>
-              </el-space>
-            </template>
           </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
@@ -127,7 +137,7 @@
       <el-tab-pane label="已签收" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">入库单导出</el-button>
+            <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -155,7 +165,29 @@
               {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
+          <el-table-column label="外发" prop="customsDeclarationStatus" min-width="75">
+              <template #default = "{ row }">
+                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
+              </template>
+          </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
+          <el-table-column label="零件图片" class="image-wall" min-width="82">
+            <template #header>
+              零件<br>图片
+            </template>
+            <template #default="{ row, $index }">
+                <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
+                  <template #error>
+                    <el-icon></el-icon>
+                  </template>
+                </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
+          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
+          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
+          <el-table-column label="收货仓库" width="120" prop="unit" ></el-table-column>
+          <el-table-column label="签收物流单号" width="130" prop="unit" ></el-table-column>
           <el-table-column label="PO日期" prop="createTime" min-width="115">
             <template #default="{ row }">
               {{ row.createTime.split(' ')[0] }}
@@ -179,44 +211,20 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="taxIncludedPrice" min-width="150"></el-table-column>
-          <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>  
-          <el-table-column label="零件图片" class="image-wall" min-width="82">
-            <template #header>
-              零件<br>图片
-            </template>
-            <template #default="{ row, $index }">
-                <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
-                  <template #error>
-                    <el-icon></el-icon>
-                  </template>
-                </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收数量" prop="userName" min-width="100"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="收货仓库" width="120" prop="unit" ></el-table-column>
           <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
-          <el-table-column label="生产完成日期" prop="createTime" min-width="140">
+          <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>  
+          <el-table-column label="生产完成日期" prop="finishedTime" min-width="170">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              <el-date-picker
+                v-model="row.finishedTime"
+                type="date"
+                placeholder="请选择日期"
+                size="large"
+                style="width: 100%"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="跟单内容" prop="purchaseMatters" min-width="150">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.purchaseMatters"  />
-                  </div>
-                  <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
-              </template>
-          </el-table-column>
-          <el-table-column label="跟单日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="日志" prop="purchaseMatters" min-width="250">
+          <el-table-column label="跟单日志" prop="purchaseMatters" min-width="250">
               <template #default="{ row }">
                   <div class="none">
                       <el-input type="text" v-model="row.purchaseMatters"  />
@@ -239,7 +247,7 @@
                       <el-link type="primary" :underline="false" >打印面单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >修改</el-link>
+                      <el-link type="primary" :underline="false" @click="modifyVisible = true">修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="danger" :underline="false" >取消签收</el-link>
@@ -272,14 +280,117 @@
       :classify="classify"
     >
     </wangEditor>
+    <!-- 待签收修改 -->
+    <vab-dialog
+      title="修改"
+      width="40%"
+      v-model="modifyPendingVisible"
+      @close="closeModifyPendingDialog"
+    >
+      <el-table
+        border
+        :data="fakeModify"
+        :header-cell-style="{ textAlign: 'center' }"
+        :cell-style="cellStyle3"
+        @cell-click="changeModifyInput"
+      >
+        <el-table-column label="签收日期" prop="signedDate"></el-table-column>
+        <el-table-column label="签收数量" prop="quantity">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.quantity" clearable @blur="clickModifyCancel($event, row)" />
+            </div>
+            <span>{{ row.quantity }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="单号" prop="number">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.number" clearable @blur="clickModifyCancel($event, row)" />
+            </div>
+            <span>{{ row.number }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="{ row }">
+            <el-button text type="danger">删除并取消签收</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button @click="closeModifyPendingDialog">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 已签收修改 -->
+    <vab-dialog
+      title="修改"
+      width="40%"
+      v-model="modifyVisible"
+      @close="closeModifyDialog"
+    >
+      <el-table
+        border
+        :data="fakeModify"
+        :header-cell-style="{ textAlign: 'center' }"
+        :cell-style="cellStyle4"
+        @cell-click="changeModifyInput"
+      >
+        <el-table-column label="签收日期" prop="signedDate"></el-table-column>
+        <el-table-column label="签收数量" prop="quantity"></el-table-column>
+        <el-table-column label="单号" prop="number">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.number" clearable @blur="clickModifyCancel($event, row)" />
+            </div>
+            <span>{{ row.number }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="{ row }">
+            <el-button text type="danger">删除并取消签收</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button @click="closeModifyDialog">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 入库单导出 -->
+    <vab-dialog
+      title="入库单导出"
+      width="25%"
+      v-model="receiptExportVisible"
+      @close="closeReceiptExport"
+    >
+      <el-form ref="receiptExportFormRef" :model="receiptExportForm">
+        <el-form-item label="日期" label-width="70px" prop="date">
+          <el-date-picker 
+            v-model="receiptExportForm.date" 
+            end-placeholder="结束日期" 
+            range-separator="至" 
+            start-placeholder="开始日期" 
+            type="daterange" 
+            format="YYYY-MM-DD" 
+            :editable="false"	
+            value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="closeReceiptExport">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
   
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import type { TableInstance, TabsPaneContext } from 'element-plus'
+import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { deleteAllPlanPo, deletePlanPo, deletePoSku, getPoPurchaseMatters, releaseBatchPlanPo, releasePlanPo, updatePlanPoStatus, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
+import { getPoPurchaseMatters, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
@@ -287,7 +398,7 @@ import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 defineOptions({
-  name: 'PlannedPoTable',
+  name: 'pendingReceiptTable',
 })
 
 const router = useRouter()
@@ -304,6 +415,58 @@ const setSelectRows = (value: string) => {
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
+// 修改弹窗是否可见
+const modifyVisible = ref<boolean>(false)
+// 待签收弹窗是否可见
+const modifyPendingVisible = ref<boolean>(false)
+// 关闭修改弹窗
+const closeModifyDialog = () => {
+  modifyVisible.value = false
+}
+// 关闭修改弹窗
+const closeModifyPendingDialog = () => {
+  modifyPendingVisible.value = false
+}
+
+const fakeModify = [
+  {
+    signedDate: '2024-10-02',
+    quantity: 50,
+    number: 'SF1111111'
+  },
+  {
+    signedDate: '2024-10-04',
+    quantity: 50,
+    number: 'SF1111112'
+  },
+  {
+    signedDate: '2024-10-02',
+    quantity: 50,
+    number: 'SF1111111'
+  },
+]
+// 入库单导出表单
+const receiptExportForm = reactive<any>({
+  date: ''
+})
+
+const receiptExportFormRef = ref<FormInstance>()
+// 入库单导出是否可见
+const receiptExportVisible = ref<boolean>(false)
+// 打开入库单导出弹窗
+const handleShowReceiptExport = () => {
+  receiptExportVisible.value = true
+}
+const closeReceiptExport = () => {
+  receiptExportFormRef.value?.resetFields()
+  receiptExportVisible.value = false
+}
+// 批量签收
+const handleAllSigned = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning')
+  }
+}
 const fakeData = [
   {
     po: 'PO19627',
@@ -311,7 +474,21 @@ const fakeData = [
     sku: 'HOM-0020-WHT碗架-木把手白色',
     siteName: '亚马逊美国US',
     skuImageUrl: 'https://picsum.photos/200'
-  }
+  },
+  {
+    po: 'PO19627',
+    createTime: '2024-10-14',
+    sku: 'HOM-0020-WHT碗架-木把手白色',
+    siteName: '亚马逊美国US',
+    skuImageUrl: 'https://picsum.photos/200'
+  },
+  {
+    po: 'PO19627',
+    createTime: '2024-10-14',
+    sku: 'HOM-0020-WHT碗架-木把手白色',
+    siteName: '亚马逊美国US',
+    skuImageUrl: 'https://picsum.photos/200'
+  },
 ]
 // 采购计划列表
 let plannedPoList = ref<IGetPlanPoList[]>([])
@@ -339,138 +516,9 @@ const queryData = () => {
 
 
 
-//
-// 处理未达起订量
-const handleUpdateStatus = async (row: any) => {
-  try {
-    $baseConfirm('确定该条PO未达起订量吗', null, async () => {
-      const { data } = await updatePlanPoStatus({
-        id: row.id
-      })
-      if (data === true) {
-        $baseMessage('该条PO未达起订量成功', 'success', 'hey')
-        // fetchData()
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handleAllMOQ = () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning', 'hey')
-  } else {
 
-      $baseMessage('批量处理成功', 'success', 'hey')
- 
-  }
-}
-// 批量删除
-const handleAllDelete = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning', 'hey');
-  } else {
-    $baseConfirm('确定要批量删除所选PO吗', null, async () => {
-      const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
-      try {
-        const { data } = await deleteAllPlanPo(ids)
-        if (data === true) {
-          $baseMessage('批量删除PO成功', 'success', 'hey');
-          // fetchData()
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    });
-  }
-}
-// 删除SKU
-const handleDelSkuPlannedPo = (row: any) => {
-  try {
-    $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
-      const { data } = await deletePoSku({
-        poSkuId: row.poSkuId
-      })
-      if (data === true) {
-        $baseMessage('删除SKU成功', 'success', 'hey')
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-// 删除planPO
-const handleDelPlannedPo = (row: any) => {
-  try {
-    $baseConfirm('确定要删除当前PO吗', '系统提示', async () => {
-      const { data } = await deletePlanPo({
-        poId: row.id
-      })
-      if (data === true) {
-        $baseMessage('删除PO成功', 'success', 'hey')
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-// 批量发布PO成功
-const handleAllPublishPo = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning', 'hey')
-  } else {
-    const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
-    try {
-      const { data } = await releaseBatchPlanPo({
-        poIds: ids
-      })
-      if (data === true) {
-        $baseMessage('批量发布到PO成功', 'success', 'hey')
-        // fetchData()
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-}
-// 发布po
-const handlePublishPo = async (row: any) => {
-  try {
-    $baseConfirm('确定要发布到PO吗', null, async () => {
-      const { data } = await releasePlanPo({
-        id: row.id
-      })
-      if (data === true) {
-        $baseMessage('发布到PO成功', 'success', 'hey')
-        // fetchData()
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handlePlannedPoDetail = (row: any) => {
-  router.push({
-    path: '/purchase/poDetail',
-    query: {
-      title: "采购计划订单详情",
-      from: 'plannedPoDetail',
-      poSkuId: row.poSkuId,
-      poId: row.id,
-      timestamp: Date.now(),
-    },
-  })
-}
-const handlePlannedPoCreate = () => {
-  router.push({
-    path: '/purchase/poDetail',
-    query: {
-      title: "采购计划创建",
-      from: 'plannedPoCreate',
-      timestamp: Date.now(),
-    },
-  })
-}
+
+
 
   
 // 弹出框的标题
@@ -512,17 +560,41 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
 
   
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 8 && data.columnIndex !== 12 && data.columnIndex !== 14) {
+  if (data.columnIndex !== 5 && data.columnIndex !== 9 && data.columnIndex !== 13 && data.columnIndex !== 15) {
     return {
       textAlign:'center'
     } 
   }
 }
 const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 8 && data.columnIndex !== 12 && data.columnIndex !== 13) {
+  if (data.columnIndex !== 4 && data.columnIndex !== 7 && data.columnIndex !== 12 && data.columnIndex !== 13) {
     return {
       textAlign:'center'
     } 
+  }
+}
+const cellStyle3 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
+  if (data.columnIndex === 0) {
+    return {
+      textAlign: 'center',
+      color: '#bbb',
+      cursor: 'not-allowed'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
+}
+const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
+  if (data.columnIndex === 0 || data.columnIndex === 1) {
+    return {
+      textAlign: 'center',
+      color: '#bbb',
+      cursor: 'not-allowed'
+    }
+  }
+  return {
+    textAlign: 'center'
   }
 }
 /**
@@ -572,7 +644,38 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     }
   }
 }
-
+/**
+ * 当点击修改时切换输入框，修改输入
+ */
+const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+  if (!cell.children[0].children[0]
+      || !cell.children[0].children[1]
+      || !cell.children[0].children[0].classList
+      || !cell.children[0].children[1].classList) {
+    return
+  }
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+  // 自动聚焦
+  const inputElement = getSpecificChildren(cell, "input")[0];
+  if (inputElement) {
+    inputElement.focus()
+    inputElement.select()
+  }
+}
+const clickModifyCancel = async (event: any, value: any) =>{
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    if (t1.classList[0] !== "el-select") {
+      t1.classList.add("none")
+    }
+  }
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  // await updateProgressManage({...value})
+}
 /**
  * 输入失焦事件
  */
@@ -630,13 +733,13 @@ const removeHtmlTags = (html: string): string => {
 //   }
 // }  
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex === 4 || data.columnIndex === 11) {
+  if (data.columnIndex === 4 || data.columnIndex === 12) {
     return 'clear-padding'
   }
   return ''
 }
 const getCellClass2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex === 4 || data.columnIndex === 7) {
+  if (data.columnIndex === 3 || data.columnIndex === 11) {
     return 'clear-padding'
   }
   return ''
@@ -706,24 +809,26 @@ onBeforeMount(() => {
           }
         }
       }
-      .custom-checkbox {
+      .el-checkbox {
         transform: scale(1.2); // 放大 20%
         transform-origin: center; // 确保放大从中心开始
       }
-      // 控制编辑框显示与隐藏
-      .none {
-        display: none;
-      }
+     
     }
   }
 }
-
-
-// // 控制添加图片图标显示与隐藏
-// .hide :deep(.el-upload--picture-card) {
-//   display: none
+// 控制编辑框显示与隐藏
+.none {
+  display: none;
+}
+// /* 取消没有条纹的行的悬停背景色 */
+// :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+//   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
 // }
 
-
+// /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+// :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+//   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+// }
 </style>
   

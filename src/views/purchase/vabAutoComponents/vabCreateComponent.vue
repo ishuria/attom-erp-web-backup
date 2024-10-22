@@ -130,11 +130,10 @@ const handlerCloseDialog = () => {
   emit('update:createComponentVisible', dflag.value);
 }
 const validateComponent = (item: any) => {
-  if (!item.count) {
-    $baseMessage('每个零件的添加数量不能为空', 'error');
-    return false;
+  if (item.count) {
+    return true;
   } 
-  return true; // 所有校验通过
+  return false; 
 };
 const handleConfirm = () => {
   const countAllValid = list.value.some((item: any) => validateComponent(item));
@@ -142,6 +141,8 @@ const handleConfirm = () => {
     emit('update:tableValue', list.value)
     dflag.value = false
     emit('update:createComponentVisible', dflag.value);
+  } else {
+    $baseMessage('至少填写一个零件的添加数量', 'warning');
   }
 }
 
