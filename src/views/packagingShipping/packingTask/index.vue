@@ -1,22 +1,20 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
-      <el-tab-pane label="已到货" :name="0">
+      <el-tab-pane label="待打包" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-space>
-              <el-button type="primary">当前任务加人</el-button>
-              <el-button type="primary">下班人员</el-button>
-              <el-button type="primary">开始任务</el-button>
-              <el-button type="primary">结束任务</el-button>
-              <el-button type="primary">工作量预估</el-button>
-              
-              <span>站点</span>
-              <el-select placeholder="请选择站点" @change="">
-                  <!-- <el-option v-for="dict in replenishmentSiteColumns" :key="dict.value"
-                      :value="dict.value" :label="dict.label"></el-option> -->
-              </el-select>
-            </el-space>
+            <el-form inline>
+              <el-form-item>
+                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button type="primary" class="button-margin">工作量预估</el-button>
+              </el-form-item>
+              <el-form-item label="站点" >
+                <el-select placeholder="请选择站点" clearable class="button-margin"></el-select>
+              </el-form-item>
+            </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -33,9 +31,10 @@
           ref="tableRef" 
           stripe border 
           :data="fakeData"
-          :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
+          :header-cell-style="headerCellStyle"
           :cell-style="cellStyle"
+          :cell-class-name="cellClassName"
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
@@ -48,25 +47,30 @@
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
           <el-table-column label="订单总数" prop="createTime" min-width="115"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>
-          <el-table-column label="产品图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
+          <el-table-column label="产品图片" class="image-wall" width="77">
+            <template #header>
+              产品<br>图片
+            </template>
+            <template #default="{ row, $index }">
+              <el-image :src="row.url" data-img="img" style="display: block; width: 100%; height: 100%" fit="contain">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
+            </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="taxIncludedPrice" min-width="180"></el-table-column>   
+          <el-table-column label="SKU" prop="taxIncludedPrice" min-width="200"></el-table-column>   
           <el-table-column prop="isPriorityPacking" label="优先打包" min-width="100">
-          </el-table-column>
-          <el-table-column label="任务数" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="推荐数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="已装箱数" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="清点质检" prop="qualityInspection"> 
             <template #default="{ row }">
-              <el-switch v-model="row.qualityInspection" :active-value="1" :inactive-value="0" @change="" style="--el-switch-on-color: #13ce66;">
-              </el-switch>
+              <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+            </template>
+          </el-table-column>
+          <el-table-column label="任务数" width="100" prop="taskCount" ></el-table-column>
+          <el-table-column label="推荐数量" width="100" prop="count" ></el-table-column>
+          <el-table-column label="已装箱数" width="100" prop="purchaseCount" ></el-table-column>
+          <el-table-column label="清点质检" prop="qualityInspection" min-width="100"> 
+            <template #default="{ row }">
+              <el-switch v-model="row.qualityInspection" :active-value="1" :inactive-value="0" @change="handleShowPackingCount" style="--el-switch-on-color: #13ce66;"></el-switch>
             </template>
           </el-table-column>
           <el-table-column label="实际完成数量" width="130" prop="unit" ></el-table-column>
@@ -79,41 +83,16 @@
               </template>
           </el-table-column>    
           <el-table-column  label="产品经理" min-width="100" prop="suppliser"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="150" >
+          <el-table-column fixed="right" label="操作" width="450" >
             <template #default="{ row, $index }">
-              <el-dropdown>
-                <el-button text type="primary" @click="handleShowPartsList">
-                  零件清单
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleShowPartsList">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport">质检报告</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >条形码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >尺寸录入</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >拆分数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+              <el-space>
+                <el-button link type="primary">条码文件夹</el-button>
+                <el-button link type="primary" @click="handleShowPartsList">零件清单</el-button>
+                <el-button link type="primary" @click="handleShowQualityInspectionReport">质检</el-button>
+                <el-button link type="primary">生成条形码</el-button>
+                <el-button link type="primary">拆分</el-button>
+                <el-button link type="primary" @click="handleShowModify">修改</el-button>
+              </el-space>
             </template>
           </el-table-column>
           <template #empty>
@@ -128,15 +107,25 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="零头" :name="1">
+      <el-tab-pane label="进行中" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">入库单导出</el-button>
+            <el-form inline>
+              <el-form-item>
+                <el-button type="primary" class="button-margin" @click="handleShowCurrentTask">当前任务加人</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button type="primary" class="button-margin">工作量预估</el-button>
+              </el-form-item>
+              <el-form-item label="站点" >
+                <el-select placeholder="请选择站点" clearable class="button-margin"></el-select>
+              </el-form-item>
+            </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -144,112 +133,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          ref="tableRef" 
-          stripe border 
-          :data="fakeData"
-          :header-cell-style="{ 'text-align': 'center' }"
-          class="noneHoveTable"
-          :cell-style="cellStyle2"
-          @cell-click="changeInput"
-        >
-          <el-table-column label="签收日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="PO日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="taxIncludedPrice" min-width="150"></el-table-column>
-          <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>  
-          <el-table-column label="零件图片" class="image-wall" min-width="100">
-              <template #default="{ row, $index }">
-                  <el-image :src="row.skuImageUrl" data-img="img">
-                    <template #error>
-                      <el-icon></el-icon>
-                    </template>
-                  </el-image>
-              </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收数量" prop="userName" min-width="100"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="收货仓库" width="120" prop="unit" ></el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
-          <el-table-column label="生产完成日期" prop="createTime" min-width="140">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="跟单内容" prop="purchaseMatters" min-width="150">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.purchaseMatters"  />
-                  </div>
-                  <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
-              </template>
-          </el-table-column>
-          <el-table-column label="跟单日期" prop="createTime" min-width="115">
-            <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="日志" prop="purchaseMatters" min-width="250">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.purchaseMatters"  />
-                  </div>
-                  <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
-              </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150" >
-            <template #default="{ row, $index }">
-              <el-dropdown>
-                <el-button text type="primary" >
-                  打印面单
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >打印面单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="danger" :underline="false" >取消签收</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+
         <vab-pagination 
           :current-page="queryForm.pageNo" 
           :page-size="queryForm.pageSize" 
@@ -258,10 +142,144 @@
           @size-change="handleSizeChange" 
         />
       </el-tab-pane>
-      <el-tab-pane label="售后" :name="2"></el-tab-pane>
-      <el-tab-pane label="未到货" :name="3"></el-tab-pane>
+      <el-tab-pane label="已完成" :name="2">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item>
+                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button type="primary" class="button-margin">工作量预估</el-button>
+              </el-form-item>
+              <el-form-item label="站点" >
+                <el-select placeholder="请选择站点" clearable class="button-margin"></el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <vab-pagination 
+          :current-page="queryForm.pageNo" 
+          :page-size="queryForm.pageSize" 
+          :total="total"
+          @current-change="handleCurrentChange" 
+          @size-change="handleSizeChange" 
+        />
+      </el-tab-pane>
+      <el-tab-pane label="零头" :name="3">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item>
+                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button type="primary" class="button-margin">工作量预估</el-button>
+              </el-form-item>
+              <el-form-item label="站点" >
+                <el-select placeholder="请选择站点" clearable class="button-margin"></el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <vab-pagination 
+          :current-page="queryForm.pageNo" 
+          :page-size="queryForm.pageSize" 
+          :total="total"
+          @current-change="handleCurrentChange" 
+          @size-change="handleSizeChange" 
+        />
+      </el-tab-pane>
+      <el-tab-pane label="售后" :name="4">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item>
+                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button type="primary" class="button-margin">工作量预估</el-button>
+              </el-form-item>
+              <el-form-item label="站点" >
+                <el-select placeholder="请选择站点" clearable class="button-margin"></el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <vab-pagination 
+          :current-page="queryForm.pageNo" 
+          :page-size="queryForm.pageSize" 
+          :total="total"
+          @current-change="handleCurrentChange" 
+          @size-change="handleSizeChange" 
+        />
+      </el-tab-pane>
+      <el-tab-pane label="未到货" :name="5">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item>
+                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
+                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button type="primary" class="button-margin">工作量预估</el-button>
+              </el-form-item>
+              <el-form-item label="站点" >
+                <el-select placeholder="请选择站点" clearable class="button-margin"></el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <vab-pagination 
+          :current-page="queryForm.pageNo" 
+          :page-size="queryForm.pageSize" 
+          :total="total"
+          @current-change="handleCurrentChange" 
+          @size-change="handleSizeChange" 
+        />
+      </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible"/>
+
     <wangEditor
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorLogVisible"
@@ -273,68 +291,335 @@
     </wangEditor>
     <!-- 零件清单 -->
     <vab-dialog
-      title="每套SKU包含的零配件清单"
+      title="零配件清单"
       v-model="dialogPartsListTableVisible"
-      width="650px"
+      width="45%"
     >
       <el-table
         border stripe
         :data="fakePartsList"
         :header-cell-style="{ textAlign: 'center' }"
         :cell-style="partsListCellStyle"
+        :cell-class-name="partsListCellClassName"
         max-height="500px"
+        @cell-click="changePartsListInput"
       >
         <el-table-column label="零件ID" prop="id"></el-table-column>
-        <el-table-column label="图片" prop="img">
+        <el-table-column label="图片" prop="img" width="60">
           <template #default="{ row }">
-            <el-image :src="row.url">
+            <el-image :src="row.url" data-img="img" fit="contain" style="display: block; width: 100%; height: 100%">
               <template #error>
                 <el-icon></el-icon>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="零件名" prop="componentName"></el-table-column>
-        <el-table-column label="数量" prop="quantity"></el-table-column>
+        <el-table-column label="零件名" prop="componentName" min-width="200"></el-table-column>
+        <el-table-column label="总数" prop="quantity"></el-table-column>
+        <el-table-column label="每套SKU数量" prop="quantity" min-width="130"></el-table-column>
         <el-table-column label="单位" prop="unit"></el-table-column>
         <el-table-column label="收货仓库" prop="repository" min-width="100"></el-table-column>
         <el-table-column label="签收日期" prop="signTime" min-width="120"></el-table-column>
       </el-table>
-      <template #footer>
-        <el-button type="danger" @click="closePartsList">取消</el-button>
-        <el-button type="primary">确认</el-button>
-      </template>
+      <template #footer></template>
     </vab-dialog>
     <!-- 质检报告 -->
     <vab-dialog
       title="质检报告"
       v-model="qualityInspectionReportVisible"
-      width="650px"
+      width="40%"
+      @close="closeQualityInspection"
     >
-      <el-form label-position="left" label-width="auto">
+      <el-form ref="qualityInspectionFormRef" :model="qualityInspectionForm" label-position="left" label-width="auto" style="margin-right: 30px; margin-left: 30px;">
         <el-form-item label="SKU" prop="sku" >
-          <el-input disabled />
+          <el-input v-model="qualityInspectionForm.sku" disabled />
         </el-form-item>
         <el-form-item label="产品名称" prop="productName" >
-          <el-input disabled />
+          <el-input v-model="qualityInspectionForm.productName" disabled />
         </el-form-item>
-        <el-form-item label="包装尺寸(cm)" prop="productName" inline>
-          <el-input/> × <el-input/> × <el-input/>
+        <el-form-item label="包装尺寸(cm)" prop="packingSize" inline>
+          <el-row style="display: flex;">
+            <el-col style="flex: 1">
+              <el-input v-model="qualityInspectionForm.length" placeholder="长" />
+            </el-col>
+            <el-col style="flex: 0.1">
+              &nbsp;×&nbsp;
+            </el-col>
+            <el-col style="flex: 1">
+              <el-input v-model="qualityInspectionForm.width" placeholder="宽" />
+            </el-col>
+            <el-col style="flex: 0.1">
+              &nbsp;×&nbsp;
+            </el-col>
+            <el-col style="flex: 1">
+              <el-input v-model="qualityInspectionForm.height" placeholder="高" />
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="包装重量(g)" prop="packingWeight">
+          <el-input v-model="qualityInspectionForm.packingWeight" />
+        </el-form-item>
+        <el-form-item>
+          <el-table
+            border stripe
+            :data="fakeQualityData"
+            :cell-style="qualityInspectionCellStyle"
+            :header-cell-style="{ textAlign: 'center' }"
+            max-height="300px"
+            @cell-click="changeQualityInspectionInput"
+          >
+            <el-table-column label="质检项目" prop="project" min-width="330"></el-table-column>
+            <el-table-column label="检查类型" prop="type" min-width="100"></el-table-column>
+            <el-table-column label="通过" prop="pass" min-width="50">
+              <template #default="{ row }">
+                <el-checkbox v-model="row.pass" @change="" :true-value="1" :false-value="0" ></el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column label="备注" prop="remark" min-width="150">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.remark" @onBlur="clickQualityInspectionCancel" />
+                </div>
+                <span>{{ row.remark }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form-item>
+        <el-form-item label="产品经理打包数量" prop="packingCount">
+          <el-input v-model="qualityInspectionForm.packingCount" clearable />
+        </el-form-item>
+        <el-form-item label="其他反馈" prop="other">
+          <el-input type="textarea" placeholder="请输入" v-model="qualityInspectionForm.other" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="danger" @click="closePartsList">取消</el-button>
-        <el-button type="primary">保存</el-button>
+        <div class="left-buttons">
+          <el-button type="success">下载</el-button>
+          <el-button type="warning">保存</el-button>
+        </div>
+        <div>
+          <el-button type="danger" @click="closeQualityInspection">取消</el-button>
+          <el-button type="success">提交</el-button>
+        </div>
+      </template>
+
+    </vab-dialog>
+    <!-- 当前任务加人 - 人员选择 -->
+    <vab-dialog
+      title="人员选择"
+      width="20%"
+      v-model="currentTaskVisible"
+    >
+      <el-table 
+        border stripe
+        :data="fakePerson"
+        :header-cell-style="{ textAlign: 'center' }"
+        :cell-class-name="personSelectCellClassName"
+        class="person-select"
+        @cell-click="changePartsListInput"
+        @selection-change="setSelectPersonRows"
+      >
+        <el-table-column label="姓名" prop="name" align="center" min-width="100"></el-table-column>
+        <el-table-column label="头像" prop="avatar" align="center" width="65">
+          <template #default="{ row }">
+            <el-image :src="row.avatar" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <template #error>
+                <el-icon></el-icon>
+              </template>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column type="selection" align="center" width="80"></el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button type="danger" @click="currentTaskVisible = false">取消</el-button>
+        <el-button type="success" @click="handleConfirmCurrentTask">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 下班人员 - 人员选择 -->
+    <vab-dialog
+      title="人员选择"
+      width="20%"
+      v-model="getOffWorkVisible"
+    >
+      <el-table 
+        border stripe
+        :data="fakePerson"
+        :header-cell-style="{ textAlign: 'center' }"
+        :cell-class-name="personSelectCellClassName"
+        class="person-select"
+        @cell-click="changePartsListInput"
+        @selection-change="setSelectPersonRows"
+      >
+        <el-table-column label="姓名" prop="name" align="center" min-width="100"></el-table-column>
+        <el-table-column label="头像" prop="avatar" align="center" width="65">
+          <template #default="{ row }">
+            <el-image :src="row.avatar" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <template #error>
+                <el-icon></el-icon>
+              </template>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column type="selection" align="center" width="80"></el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button type="danger" @click="handleCloseGetOffWork">取消</el-button>
+        <el-button type="success" @click="handleConfirmGetOffWork">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 开始任务 - 人员选择 -->
+    <vab-dialog
+      title="人员选择"
+      width="20%"
+      v-model="personSelectVisible"
+    >
+      <el-table 
+        border stripe
+        :data="fakePerson"
+        :header-cell-style="{ textAlign: 'center' }"
+        :cell-class-name="personSelectCellClassName"
+        class="person-select"
+        @cell-click="changePartsListInput"
+        @selection-change="setSelectPersonRows"
+      >
+        <el-table-column label="姓名" prop="name" align="center" min-width="100"></el-table-column>
+        <el-table-column label="头像" prop="avatar" align="center" width="65">
+          <template #default="{ row }">
+            <el-image :src="row.avatar" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <template #error>
+                <el-icon></el-icon>
+              </template>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column type="selection" align="center" width="80"></el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button type="danger" @click="personSelectVisible = false">取消</el-button>
+        <el-button type="success" @click="handleShowQualityProject">确定</el-button>
+      </template>
+    </vab-dialog>
+     <!-- 结束任务 - 人员选择 -->
+     <vab-dialog
+      title="人员选择"
+      width="20%"
+      v-model="finishTaskVisible"
+    >
+      <el-table 
+        border stripe
+        :data="fakePerson"
+        :header-cell-style="{ textAlign: 'center' }"
+        :cell-class-name="personSelectCellClassName"
+        class="person-select"
+        @cell-click="changePartsListInput"
+        @selection-change="setSelectPersonRows"
+      >
+        <el-table-column label="姓名" prop="name" align="center" min-width="100"></el-table-column>
+        <el-table-column label="头像" prop="avatar" align="center" width="65">
+          <template #default="{ row }">
+            <el-image :src="row.avatar" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <template #error>
+                <el-icon></el-icon>
+              </template>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column type="selection" align="center" width="80"></el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button type="danger" @click="finishTaskVisible = false">取消</el-button>
+        <el-button type="success" @click="handleConfirmFinishTask">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 开始任务 - 质检项目 -->
+    <vab-dialog
+      title="质检项目"
+      width="40%"
+      v-model="qualityProjectVisible"
+    >
+      <el-table
+        border stripe
+        :header-cell-style="{ textAlign: 'center' }"
+        :data="fakeQualityProject"
+        class="qualityProject"
+      >
+        <el-table-column label="检查类型" prop="type" min-width="100"></el-table-column>
+        <el-table-column label="打包注意事项" prop="matters" min-width="300"></el-table-column>
+        <el-table-column label="提醒" prop="remind" min-width="50" align="center">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.remind" :true-value="1" :false-value="0" />
+          </template>
+        </el-table-column>
+        <el-table-column label="修改日期" prop="date" min-width="110" align="center"></el-table-column>
+      </el-table>
+    </vab-dialog>
+    <!-- 修改 -->
+    <vab-dialog
+      title="修改"
+      width="20%"
+      v-model="modifyVisible"
+      @close="closeModifyDialog"
+    >
+      <el-form ref="modifyFormRef" :model="modifyForm" :rules="modifyRules" label-position="right" label-width="auto" style="margin-left: 20px; margin-right: 20px;">
+        <el-form-item label="站点" prop="site">
+          <el-select v-model="modifyForm.site" placeholder="请选择站点" />
+        </el-form-item>
+        <el-form-item label="任务数" prop="taskCount">
+          <el-input v-model="modifyForm.taskCount" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="closeModifyDialog">取消</el-button>
+        <el-button type="success">确认</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 点击清点质检 -->
+    <vab-dialog
+      title="打包总数"
+      width="20%"
+      v-model="packingCountVisible"
+    >
+      <el-form :model="packingCountForm" label-position="left" label-width="auto" style="margin-left: 20px; margin-right: 20px">
+        <el-form-item label="任务数量">
+          <el-input disabled />
+        </el-form-item>
+        <el-form-item label="好" prop="good">
+          <el-input v-model="packingCountForm.good" clearable/>
+        </el-form-item>
+        <el-form-item label="留样" prop="sample">
+          <el-input v-model="packingCountForm.sample" clearable/>
+        </el-form-item>
+        <el-form-item label="坏" prop="bad">
+          <el-input v-model="packingCountForm.bad" clearable/>
+        </el-form-item>
+        <el-form-item label="缺" prop="less">
+          <el-input disabled />
+        </el-form-item>
+        <el-form-item label="多">
+          <el-input disabled />
+        </el-form-item>
+        <el-form-item label="打包总数">
+          <el-input disabled />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input type="textarea" v-model="packingCountForm.remark" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="danger">取消</el-button>
+        <el-button type="success">确认</el-button>
+      </template>
+    </vab-dialog>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal />
   </div>
 </template>
   
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import type { TableInstance, TabsPaneContext } from 'element-plus'
+import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { deleteAllPlanPo, deletePlanPo, deletePoSku, getPoPurchaseMatters, releaseBatchPlanPo, releasePlanPo, updatePlanPoStatus, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
+import { updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
@@ -351,83 +636,110 @@ const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
-
+// 打包选中的行
 const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
+// 人员选择选中的行
+const selectPersonRows = ref<any>([])
+const setSelectPersonRows = (value: string) => {
+  selectPersonRows.value = value
+}
+// 下班人员选中的行
+const selectGetOffRows = ref<any>([])
+
+// 任务加人选中的行
+// 结束任务选中的行
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
+// 预览图片列表
+const imagePreviewList = ref<string[]>([])
+// 控制预览图片的隐藏显示
+const imagePreviewVisible = ref<boolean>(false)
+// 图片预览关闭事件
+const imagePreviewClose = () =>{
+  imagePreviewVisible.value = false;
+}
 const fakeData = [
   {
     po: 'PO19627',
     createTime: '2024-10-14',
     sku: 'HOM-0020-WHT碗架-木把手白色',
-    siteName: '亚马逊美国US'
+    siteName: '亚马逊美国US',
+    taskCount: 100,
+    count: 200,
+    url: 'https://picsum.photos/200'
+  },
+  {
+    po: 'PO19627',
+    createTime: '2024-10-14',
+    sku: 'HOM-0020-WHT碗架-木把手白色',
+    siteName: '亚马逊美国US',
+    taskCount: 100,
+    count: 200,
+    url: 'https://picsum.photos/200'
+  },
+  {
+    po: 'PO19627',
+    createTime: '2024-10-14',
+    sku: 'HOM-0020-WHT碗架-木把手白色',
+    siteName: '亚马逊美国US',
+    taskCount: 100,
+    count: 200,
+    url: 'https://picsum.photos/200'
   }
 ]
 const fakePartsList = [
   {
-    componentName: '1'
+    componentName: '1',
+    url: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
+    componentName: '1',
+    url: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
+    componentName: '1',
+    url: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
+    componentName: '1',
+    url: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
+    componentName: '1',
+    url: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
+    componentName: '1',
+    url: 'https://picsum.photos/200'
+  },
+]
+const fakePerson = [
+  {
+    name: 'Lily',
+    avatar: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
+    name: 'John',
+    avatar: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
+    name: 'Mike',
+    avatar: 'https://picsum.photos/200'
   },
   {
-    componentName: '1'
-  },
-  {
-    componentName: '1'
-  },
-  {
-    componentName: '1'
-  },
-  {
-    componentName: '1'
-  },
-  {
-    componentName: '1'
-  },
-  {
-    componentName: '1'
-  },
-  {
-    componentName: '1'
-  },
-  {
-    componentName: '1'
+    name: 'Monica',
+    avatar: 'https://picsum.photos/200'
   },
 ]
 // 零件清单表格是否可见
 const dialogPartsListTableVisible = ref<boolean>(false)
-// 质检报告是否可见
-const qualityInspectionReportVisible = ref<boolean>(false)
 // 展示零件清单
 const handleShowPartsList = () => {
   dialogPartsListTableVisible.value = true
-}
-// 关闭零件清单
-const closePartsList = () => {
-  dialogPartsListTableVisible.value = false
 }
 // 零件清单cellStyle
 const partsListCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
@@ -437,9 +749,255 @@ const partsListCellStyle = (data: { row: any, column: any, rowIndex: number, col
     }
   }
 }
+// 零件清单去掉padding
+const partsListCellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
+}
+// 零件清单放大预览
+const changePartsListInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0]
+  if (getDataAttribute(el, 'img') && el) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
+  }
+}
+// 质检报告是否可见
+const qualityInspectionReportVisible = ref<boolean>(false)
+// 质检报告表单
+const qualityInspectionForm = reactive<any>({
+
+})
+const fakeQualityData = [
+  {
+    project: '检查产品配件是否齐全，外观是否有破损和划痕。',
+    type: '抽检10%',
+    pass: 1,
+    remark: '未通过'    
+  },
+  {
+    project: '检查产品配件是否齐全，外观是否有破损和划痕。',
+    type: '抽检10%',
+    pass: 1,
+    remark: '未通过'    
+  },
+  {
+    project: '检查产品配件是否齐全，外观是否有破损和划痕。',
+    type: '抽检10%',
+    pass: 1,
+    remark: '未通过'    
+  },
+  {
+    project: '检查产品配件是否齐全，外观是否有破损和划痕。',
+    type: '抽检10%',
+    pass: 1,
+    remark: '未通过'    
+  },
+  {
+    project: '检查产品配件是否齐全，外观是否有破损和划痕。',
+    type: '抽检10%',
+    pass: 1,
+    remark: '未通过'    
+  },
+  {
+    project: '检查产品配件是否齐全，外观是否有破损和划痕。',
+    type: '抽检10%',
+    pass: 1,
+    remark: '未通过'    
+  },
+]
+const qualityInspectionFormRef = ref<FormInstance>()
 // 展示质检报告
 const handleShowQualityInspectionReport = () => {
   qualityInspectionReportVisible.value = true
+}
+// 关闭质检报告
+const closeQualityInspection = () => {
+  qualityInspectionFormRef.value?.resetFields()
+  qualityInspectionReportVisible.value = false
+}
+// 质检报告cellStyle
+const qualityInspectionCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}) => {
+  if (data.columnIndex === 2) {
+    return {
+      textAlign: 'center' as 'center'
+    }
+  }
+}
+// 质检报告修改
+const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+
+  if (!cell.children[0].children[0]
+      || !cell.children[0].children[1]
+      || !cell.children[0].children[0].classList
+      || !cell.children[0].children[1].classList) {
+    return
+  }
+
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+
+  // 自动聚焦
+  const inputElement = getSpecificChildren(cell, "input")[0];
+  if (inputElement) {
+    inputElement.focus()
+    inputElement.select()
+  }
+}
+// 质检报告修改输入失焦事件
+const clickQualityInspectionCancel = async (event: any, value: any) => {
+
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    if (t1.classList[0] !== "el-select") {
+      t1.classList.add("none")
+    }
+  }
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  // await updateProgressManage({...value})
+}
+// 开始任务人员选择展示与否
+const personSelectVisible = ref<boolean>(false)
+// 下班人员标识
+const getOffWorkVisible = ref<boolean>(false)
+// 结束任务标识
+const finishTaskVisible = ref<boolean>(false)
+// 当前任务标识
+const currentTaskVisible = ref<boolean>(false)
+// 当前任务加人显示
+const handleShowCurrentTask = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning')
+    return
+  }
+  selectPersonRows.value = []
+  currentTaskVisible.value = true
+}
+// 下班人员显示
+const handleShowGetOffWork = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning')
+    return
+  }
+  getOffWorkVisible.value = true
+}
+// 点击开始任务
+const handleShowStartTask = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning')
+    return
+  }
+  personSelectVisible.value = true
+}
+// 结束任务显示
+const handleShowFinishTask = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning')
+    return
+  }
+  finishTaskVisible.value = true
+}
+// 质检项目展示与否
+const qualityProjectVisible = ref<boolean>(false)
+// 质检项目数据
+const fakeQualityProject = [
+  {
+    type: '全检',
+    matters: '检查产品配件是否齐全，外观是否有破损和划痕。',
+    remind: 1,
+    date: '2024-10-22'
+  }
+]
+// 人员选择的padding
+const personSelectCellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
+}
+// 当前任务加人的确定
+const handleConfirmCurrentTask = () => {
+  if (selectPersonRows.value.length === 0) {
+    $baseMessage('您未选中任何人员', 'warning')
+    return
+  }
+  currentTaskVisible.value = false
+}
+// 下班人员的取消
+const handleCloseGetOffWork = () => {
+  console.log(selectPersonRows.value);
+  
+  // selectPersonRows.value = []
+  // console.log(selectPersonRows.value);
+  
+  getOffWorkVisible.value = false
+}
+// 下班人员的确定
+const handleConfirmGetOffWork = () => {
+  if (selectPersonRows.value.length === 0) {
+    $baseMessage('您未选中任何人员', 'warning')
+    return
+  }
+  handleCloseGetOffWork()
+}
+// 结束任务的确定
+const handleConfirmFinishTask = () => {
+  if (selectPersonRows.value.length === 0) {
+    $baseMessage('您未选中任何人员', 'warning')
+    return
+  }
+  finishTaskVisible.value = false
+}
+// 点击人员选择后的
+const handleShowQualityProject = () => {
+  if (selectPersonRows.value.length === 0) {
+    $baseMessage('您未选中任何人员', 'warning')
+    return
+  }
+  personSelectVisible.value = false
+  qualityProjectVisible.value = true
+}
+// 修改显示与否
+const modifyVisible = ref<boolean>(false)
+// 展示修改
+const handleShowModify = () => {
+  modifyVisible.value = true
+}
+// 修改的表单
+const modifyForm = reactive<any>({
+  site: '',
+  taskCount: ''
+})
+// 修改的rule
+const modifyRules = reactive<any>({
+  site: [{ required: true, message: '请选择站点', trigger: 'change' }],
+  taskCount: [{ required: true, message: '请输入任务数', trigger: 'blur' }]
+})
+const modifyFormRef = ref<FormInstance>()
+// 关闭修改弹窗
+const closeModifyDialog = () => {
+  modifyFormRef.value?.resetFields()
+  modifyVisible.value = false
+}
+// 打包总数是否可见
+const packingCountVisible = ref<boolean>(false)
+// 打包总数form
+const packingCountForm = reactive<any>({
+
+})
+// 展示打包总数
+const handleShowPackingCount = (value: any) => {
+  // 点击了清单质检
+  if (value === 1) {
+    packingCountVisible.value = true
+  }
 }
 
 
@@ -470,138 +1028,7 @@ const queryData = () => {
 
 
 
-//
-// 处理未达起订量
-const handleUpdateStatus = async (row: any) => {
-  try {
-    $baseConfirm('确定该条PO未达起订量吗', null, async () => {
-      const { data } = await updatePlanPoStatus({
-        id: row.id
-      })
-      if (data === true) {
-        $baseMessage('该条PO未达起订量成功', 'success', 'hey')
-        // fetchData()
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handleAllMOQ = () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning', 'hey')
-  } else {
 
-      $baseMessage('批量处理成功', 'success', 'hey')
- 
-  }
-}
-// 批量删除
-const handleAllDelete = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning', 'hey');
-  } else {
-    $baseConfirm('确定要批量删除所选PO吗', null, async () => {
-      const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
-      try {
-        const { data } = await deleteAllPlanPo(ids)
-        if (data === true) {
-          $baseMessage('批量删除PO成功', 'success', 'hey');
-          // fetchData()
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    });
-  }
-}
-// 删除SKU
-const handleDelSkuPlannedPo = (row: any) => {
-  try {
-    $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
-      const { data } = await deletePoSku({
-        poSkuId: row.poSkuId
-      })
-      if (data === true) {
-        $baseMessage('删除SKU成功', 'success', 'hey')
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-// 删除planPO
-const handleDelPlannedPo = (row: any) => {
-  try {
-    $baseConfirm('确定要删除当前PO吗', '系统提示', async () => {
-      const { data } = await deletePlanPo({
-        poId: row.id
-      })
-      if (data === true) {
-        $baseMessage('删除PO成功', 'success', 'hey')
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-// 批量发布PO成功
-const handleAllPublishPo = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning', 'hey')
-  } else {
-    const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
-    try {
-      const { data } = await releaseBatchPlanPo({
-        poIds: ids
-      })
-      if (data === true) {
-        $baseMessage('批量发布到PO成功', 'success', 'hey')
-        // fetchData()
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-}
-// 发布po
-const handlePublishPo = async (row: any) => {
-  try {
-    $baseConfirm('确定要发布到PO吗', null, async () => {
-      const { data } = await releasePlanPo({
-        id: row.id
-      })
-      if (data === true) {
-        $baseMessage('发布到PO成功', 'success', 'hey')
-        // fetchData()
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-const handlePlannedPoDetail = (row: any) => {
-  router.push({
-    path: '/purchase/poDetail',
-    query: {
-      title: "采购计划订单详情",
-      from: 'plannedPoDetail',
-      poSkuId: row.poSkuId,
-      poId: row.id,
-      timestamp: Date.now(),
-    },
-  })
-}
-const handlePlannedPoCreate = () => {
-  router.push({
-    path: '/purchase/poDetail',
-    query: {
-      title: "采购计划创建",
-      from: 'plannedPoCreate',
-      timestamp: Date.now(),
-    },
-  })
-}
 
   
 // 弹出框的标题
@@ -612,14 +1039,7 @@ const progressLogCopy = ref<string | undefined>('')
 const classify = ref<string>('')
 
 
-// 预览图片列表
-const imagePreviewList = ref<string[]>([])
-// 控制预览图片的隐藏显示
-const imagePreviewVisible = ref<boolean>(false)
-// 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
-}
+
   
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   plannedPoList.value = []
@@ -629,33 +1049,44 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   }
   // fetchData()
 }
-//   // 处理已归档
-//   const handleArchived = async (progressId: number) => {
-//     const { data } = await updateProgressArchive({ progressId })
-//     if (data === true) {
-//       const index = progressList.value.findIndex((item: any) => item.progressId === progressId)
-//       progressList.value.splice(index, 1)
-//       $baseMessage("此条新品进度信息已归档成功!","success","hey")
-//     }
-    
-//     // activeName.value = "1"
-//   }
+// 表头样式
+const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 8) {
+    return { color: '#4E88F3', textAlign: 'center' as 'center' };
+  }
+  if (data.columnIndex === 9) {
+    return { color: '#13CE66', textAlign: 'center' as 'center' };
+  }
+  return { textAlign: 'center' as 'center' };
+};
+// 打包表格样式 
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
+  if (data.columnIndex === 8) {
+    return {
+      color: '#4E88F3',
+      textAlign: 'center'
+    }
+  }
+  if (data.columnIndex === 9) {
+    return {
+      color: '#13CE66',
+      textAlign: 'center'
+    }
+  }
+  if (data.columnIndex !== 6 && data.columnIndex !== 13) {
+    return {
+      textAlign:'center'
+    } 
+  }
+}
+// 图片取消padding
+const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 5) {
+    return 'clear-padding'
+  }
+  return ''
+}
 
-  
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 8 && data.columnIndex !== 11 && data.columnIndex !== 13 && data.columnIndex !== 14) {
-    return {
-      textAlign:'center'
-    } 
-  }
-}
-const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 8 && data.columnIndex !== 12 && data.columnIndex !== 13) {
-    return {
-      textAlign:'center'
-    } 
-  }
-}
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -679,10 +1110,10 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
 
   if (column.property == 'purchaseMatters') {
     clickRow.value = row
-    const { data } = await getPoPurchaseMatters({ id: row.componentId })
-    progressLogCopy.value = data
-    row.purchaseMatters = data
-    wangEditorTitle.value = '编辑零件采购注意事项'
+    // const { data } = await getPoPurchaseMatters({ id: row.componentId })
+    // progressLogCopy.value = data
+    // row.purchaseMatters = data
+    wangEditorTitle.value = '编辑打包注意事项'
     classify.value = 'purchaseMatters'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } else {
@@ -810,46 +1241,64 @@ onBeforeMount(() => {
 
         .el-table {
           flex: 1;
+          .clear-padding {
+            padding-top: 0;
+            padding-bottom: 0;
+            .cell {
+              padding-left: 0;
+              padding-right: 0;
+            }
+          }
+        }
+        .el-checkbox {
+          transform: scale(1.2); // 放大 20%
+          transform-origin: center; // 确保放大从中心开始
+        }
+        .none {
+          display: none;
+        }
+        .button-margin {
+          margin-bottom: 10px;
         }
       }
     }
   }
 }
-
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 75px;
-  height: 75px;
-  margin: 0 8px 0 0;
-  transition: none;
-}
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
-}
-// 设置行高
-:deep(.el-table .el-table__body .cell) {
-  max-height: 81.2px;
-}
-
-
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
-// 控制编辑框显示与隐藏
-.none {
-  display: none;
-}
-.custom-checkbox {
+.person-select :deep(.el-checkbox) {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-
-// 开模申请
-:deep(.moldDialog .el-dialog__body) { 
-  padding-top: 0;
+.qualityProject :deep(.el-checkbox) {
+  transform: scale(1.2); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
+}
+// // 设置行高
+// :deep(.el-table .el-table__body .cell) {
+//   min-height: 60px;
+// }
+.el-table :deep(.clear-padding .cell) {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.none {
+  display: none;
+}
+.left-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
 }
 
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
 </style>
-  
-
