@@ -186,7 +186,7 @@
                 </el-table-column>
                 <el-table-column label="添加日期" prop="createTime" align="center" min-width="120">
                     <template #default = "{ row }">
-                        <span>{{ row.createTime.split(' ')[0] }}</span>
+                        <span>{{ row.createTime ? row.createTime.split(' ')[0] : '' }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="添加人员" prop="createUserName" align="center" min-width="100">
@@ -650,28 +650,28 @@ const formattedPrice = (price: string) => {
 }
 const purchaseOption = ref<any>()
 const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getProductListSuppliser({
-        componentId: route.query.componentId
-    })
-    list.value = data
-    list.value.forEach((item: any) => {
-        item.unitPrice = formattedPrice(item.unitPrice)
-        if(!item.componentImage) {
-            item.hide = false
-            item.imageList = []
-        } else if(item.componentImage) {
-            item.hide = true
-            item.imageList = [{ url: item.componentImage}]
-        }
-    })
-    listLoading.value = false
+  listLoading.value = true
+  const { data } = await getProductListSuppliser({
+      componentId: route.query.componentId
+  })
+  list.value = data
+  list.value.forEach((item: any) => {
+      item.unitPrice = formattedPrice(item.unitPrice)
+      if(!item.componentImage) {
+          item.hide = false
+          item.imageList = []
+      } else if(item.componentImage) {
+          item.hide = true
+          item.imageList = [{ url: item.componentImage}]
+      }
+  })
+  listLoading.value = false
 }
 const fetchPurchaseAndRepository = async () => {
     const { data: purchase } = await getProductComponentPurchase()
     purchaseOption.value = purchase
 }
-onBeforeMount(async () => {
+onBeforeMount(() => {
   fetchData()
   fetchPurchaseAndRepository()
 })

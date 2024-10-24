@@ -332,32 +332,32 @@
     >
       <el-form ref="qualityInspectionFormRef" :model="qualityInspectionForm" label-position="left" label-width="auto" style="margin-right: 30px; margin-left: 30px;">
         <el-form-item label="SKU" prop="sku" >
-          <el-input v-model="qualityInspectionForm.sku" disabled />
+          <el-input v-model="qualityInspectionForm.sku" disabled style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="产品名称" prop="productName" >
-          <el-input v-model="qualityInspectionForm.productName" disabled />
+          <el-input v-model="qualityInspectionForm.productName" disabled style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="包装尺寸(cm)" prop="packingSize" inline>
           <el-row style="display: flex;">
             <el-col style="flex: 1">
-              <el-input v-model="qualityInspectionForm.length" placeholder="长" />
+              <el-input v-model.trim="qualityInspectionForm.length" placeholder="长" clearable/>
             </el-col>
             <el-col style="flex: 0.1">
               &nbsp;×&nbsp;
             </el-col>
             <el-col style="flex: 1">
-              <el-input v-model="qualityInspectionForm.width" placeholder="宽" />
+              <el-input v-model.trim="qualityInspectionForm.width" placeholder="宽" clearable/>
             </el-col>
             <el-col style="flex: 0.1">
               &nbsp;×&nbsp;
             </el-col>
             <el-col style="flex: 1">
-              <el-input v-model="qualityInspectionForm.height" placeholder="高" />
+              <el-input v-model.trim="qualityInspectionForm.height" placeholder="高" clearable/>
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="包装重量(g)" prop="packingWeight">
-          <el-input v-model="qualityInspectionForm.packingWeight" />
+          <el-input v-model.trim="qualityInspectionForm.packingWeight" clearable style="margin-right: 0"/>
         </el-form-item>
         <el-form-item>
           <el-table
@@ -367,18 +367,19 @@
             :header-cell-style="{ textAlign: 'center' }"
             max-height="300px"
             @cell-click="changeQualityInspectionInput"
+            class="quality-inspection"
           >
             <el-table-column label="质检项目" prop="project" min-width="330"></el-table-column>
             <el-table-column label="检查类型" prop="type" min-width="100"></el-table-column>
-            <el-table-column label="通过" prop="pass" min-width="50">
+            <el-table-column label="通过" prop="pass" min-width="50" >
               <template #default="{ row }">
-                <el-checkbox v-model="row.pass" @change="" :true-value="1" :false-value="0" ></el-checkbox>
+                <el-checkbox v-model="row.pass" @change="" :true-value="1" :false-value="0"></el-checkbox>
               </template>
             </el-table-column>
             <el-table-column label="备注" prop="remark" min-width="150">
               <template #default="{ row }">
                 <div class="none">
-                  <el-input v-model="row.remark" @onBlur="clickQualityInspectionCancel" />
+                  <el-input v-model="row.remark" @blur="clickQualityInspectionCancel($event, row)" />
                 </div>
                 <span>{{ row.remark }}</span>
               </template>
@@ -386,10 +387,10 @@
           </el-table>
         </el-form-item>
         <el-form-item label="产品经理打包数量" prop="packingCount">
-          <el-input v-model="qualityInspectionForm.packingCount" clearable />
+          <el-input v-model.trim="qualityInspectionForm.packingCount" clearable style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="其他反馈" prop="other">
-          <el-input type="textarea" placeholder="请输入" v-model="qualityInspectionForm.other" />
+          <el-input type="textarea" placeholder="请输入其他反馈" v-model="qualityInspectionForm.other" :rows="2" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -402,22 +403,23 @@
           <el-button type="success">提交</el-button>
         </div>
       </template>
-
     </vab-dialog>
     <!-- 当前任务加人 - 人员选择 -->
     <vab-dialog
       title="人员选择"
       width="20%"
       v-model="currentTaskVisible"
+      @close="handleCloseCurrentTask"
     >
       <el-table 
+        ref="currentTaskTableRef"
         border stripe
         :data="fakePerson"
         :header-cell-style="{ textAlign: 'center' }"
         :cell-class-name="personSelectCellClassName"
         class="person-select"
         @cell-click="changePartsListInput"
-        @selection-change="setSelectPersonRows"
+        @selection-change="setSelectTaskAddRows"
       >
         <el-table-column label="姓名" prop="name" align="center" min-width="100"></el-table-column>
         <el-table-column label="头像" prop="avatar" align="center" width="65">
@@ -432,7 +434,7 @@
         <el-table-column type="selection" align="center" width="80"></el-table-column>
       </el-table>
       <template #footer>
-        <el-button type="danger" @click="currentTaskVisible = false">取消</el-button>
+        <el-button type="danger" @click="handleCloseCurrentTask">取消</el-button>
         <el-button type="success" @click="handleConfirmCurrentTask">确定</el-button>
       </template>
     </vab-dialog>
@@ -441,15 +443,17 @@
       title="人员选择"
       width="20%"
       v-model="getOffWorkVisible"
+      @close="handleCloseGetOffWork"
     >
       <el-table 
+      ref="getOffWorkTableRef"
         border stripe
         :data="fakePerson"
         :header-cell-style="{ textAlign: 'center' }"
         :cell-class-name="personSelectCellClassName"
         class="person-select"
         @cell-click="changePartsListInput"
-        @selection-change="setSelectPersonRows"
+        @selection-change="setSelectGetOffRows"
       >
         <el-table-column label="姓名" prop="name" align="center" min-width="100"></el-table-column>
         <el-table-column label="头像" prop="avatar" align="center" width="65">
@@ -473,8 +477,10 @@
       title="人员选择"
       width="20%"
       v-model="personSelectVisible"
+      @close="handleCloseStartTask"
     >
       <el-table 
+        ref="startTaskTableRef"
         border stripe
         :data="fakePerson"
         :header-cell-style="{ textAlign: 'center' }"
@@ -496,7 +502,7 @@
         <el-table-column type="selection" align="center" width="80"></el-table-column>
       </el-table>
       <template #footer>
-        <el-button type="danger" @click="personSelectVisible = false">取消</el-button>
+        <el-button type="danger" @click="handleCloseStartTask">取消</el-button>
         <el-button type="success" @click="handleShowQualityProject">确定</el-button>
       </template>
     </vab-dialog>
@@ -505,15 +511,17 @@
       title="人员选择"
       width="20%"
       v-model="finishTaskVisible"
+      @close="handleCloseFinishTask"
     >
       <el-table 
+        ref="finishTaskTableRef"
         border stripe
         :data="fakePerson"
         :header-cell-style="{ textAlign: 'center' }"
         :cell-class-name="personSelectCellClassName"
         class="person-select"
         @cell-click="changePartsListInput"
-        @selection-change="setSelectPersonRows"
+        @selection-change="setSelectFinishTaskRows"
       >
         <el-table-column label="姓名" prop="name" align="center" min-width="100"></el-table-column>
         <el-table-column label="头像" prop="avatar" align="center" width="65">
@@ -528,7 +536,7 @@
         <el-table-column type="selection" align="center" width="80"></el-table-column>
       </el-table>
       <template #footer>
-        <el-button type="danger" @click="finishTaskVisible = false">取消</el-button>
+        <el-button type="danger" @click="handleCloseFinishTask">取消</el-button>
         <el-button type="success" @click="handleConfirmFinishTask">确定</el-button>
       </template>
     </vab-dialog>
@@ -574,49 +582,115 @@
         <el-button type="success">确认</el-button>
       </template>
     </vab-dialog>
-    <!-- 点击清点质检 -->
+    <!-- 点击清点质检 - 打包总数 -->
     <vab-dialog
       title="打包总数"
-      width="20%"
+      width="25%"
       v-model="packingCountVisible"
+      class="packingTotal"
     >
-      <el-form :model="packingCountForm" label-position="left" label-width="auto" style="margin-left: 20px; margin-right: 20px">
+      <el-form ref="packingCountFormRef" :model="packingCountForm" label-position="left" label-width="auto" style="margin-left: 20px; margin-right: 0px">
         <el-form-item label="任务数量">
-          <el-input disabled />
+          <el-col :span="18">
+            <el-input v-model="packingCountForm.taskCount" disabled  ></el-input>
+          </el-col>
         </el-form-item>
         <el-form-item label="好" prop="good">
-          <el-input v-model="packingCountForm.good" clearable/>
+          <div style="width: 75%; margin-right: 10px;">
+            <el-input v-model.trim="packingCountForm.good" clearable/>
+          </div>
+          <div style="width: 10%; display: flex; align-items: center">
+            <el-icon :size="23" class="add-icon" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><CirclePlus /></el-icon>
+          </div>
         </el-form-item>
         <el-form-item label="留样" prop="sample">
-          <el-input v-model="packingCountForm.sample" clearable/>
+          <el-col :span="18">
+            <el-input v-model.trim="packingCountForm.sample" clearable/>
+          </el-col>
         </el-form-item>
         <el-form-item label="坏" prop="bad">
-          <el-input v-model="packingCountForm.bad" clearable/>
+          <el-col :span="18" style="margin-right: 10px;">
+            <el-input v-model.trim="packingCountForm.bad" clearable/>
+          </el-col>
+          <el-button type="primary" @click="handleShowDetails">明细</el-button>
         </el-form-item>
-        <el-form-item label="缺" prop="less">
-          <el-input disabled />
+        <el-form-item label="缺">
+          <el-col :span="18">
+            <el-input v-model="lackCount" disabled />
+          </el-col>
         </el-form-item>
         <el-form-item label="多">
-          <el-input disabled />
+          <el-col :span="18">
+            <el-input v-model="manyCount" disabled />
+          </el-col>
         </el-form-item>
         <el-form-item label="打包总数">
-          <el-input disabled />
+          <el-col :span="18">
+            <el-input v-model="packingTotal" disabled />
+          </el-col>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input type="textarea" v-model="packingCountForm.remark" />
+          <el-col :span="18">
+            <el-input type="textarea" v-model="packingCountForm.remark" :rows="2" style="margin-bottom: 18px"/>
+          </el-col>
+          <el-col :span="18">
+            <el-input type="textarea" :rows="4" disabled/>
+          </el-col>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="danger">取消</el-button>
+        <el-button type="danger" @click="packingCountVisible = false">取消</el-button>
         <el-button type="success">确认</el-button>
       </template>
+    </vab-dialog>
+    <!-- 增加 -->
+    <vab-dialog
+      title="增加"
+      v-model="addVisible"
+      @close="handleCloseAdd"
+      width="17%"
+    >
+      <el-form ref="addFormRef" :model="addForm" label-width="auto" label-position="left" style="margin-left: 20px; margin-right: 20px">
+        <el-form-item label="好" prop="good">
+          <el-input v-model.trim="addForm.good" clearable />
+        </el-form-item>
+        <el-form-item label="留样" prop="sample">
+          <el-input v-model.trim="addForm.sample" clearable />
+        </el-form-item>
+        <el-form-item label="坏" prop="bad">
+          <el-input v-model.trim="addForm.bad" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseAdd">取消</el-button>
+        <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
+      </template>
+    </vab-dialog>
+    <vab-dialog
+      title="明细"
+      width="40%"
+      v-model="detailsVisible"
+    >
+      <el-table
+        stripe border
+        :header-cell-style="{ textAlign: 'center' }"
+        :data="fakeDetails"
+        :cell-style="detailsCellStyle"
+      >
+        <el-table-column label="零件ID" min-width="100" prop="id"></el-table-column>
+        <el-table-column label="零件名" min-width="200" prop="componentName"></el-table-column>
+        <el-table-column label="订货总数" min-width="100" prop="total"></el-table-column>
+        <el-table-column label="单位" min-width="70" prop="unit"></el-table-column>
+        <el-table-column label="缺" min-width="100" prop="lack"></el-table-column>
+        <el-table-column label="坏" min-width="100" prop="bad"></el-table-column>
+      </el-table>
     </vab-dialog>
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal />
   </div>
 </template>
   
 <script lang="ts" setup>
-import { ArrowDown, Search } from '@element-plus/icons-vue'
+import { ArrowDown, Search, CirclePlus } from '@element-plus/icons-vue'
 import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import { updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
@@ -641,16 +715,26 @@ const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
-// 人员选择选中的行
+// 开始任务人员选择选中的行
 const selectPersonRows = ref<any>([])
 const setSelectPersonRows = (value: string) => {
   selectPersonRows.value = value
 }
 // 下班人员选中的行
 const selectGetOffRows = ref<any>([])
-
+const setSelectGetOffRows = (value: string) => {
+  selectGetOffRows.value = value
+}
 // 任务加人选中的行
+const selectTaskAddRows = ref<any>([])
+const setSelectTaskAddRows = (value: string) => {
+  selectTaskAddRows.value = value
+}
 // 结束任务选中的行
+const selectFinishTaskRows = ref<any>([])
+const setSelectFinishTaskRows = (value: string) => {
+  selectFinishTaskRows.value = value
+}
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
@@ -734,6 +818,16 @@ const fakePerson = [
     name: 'Monica',
     avatar: 'https://picsum.photos/200'
   },
+]
+const fakeDetails = [
+  {
+    id: 1,
+    componentName: '零件330',
+    total: 99,
+    unit: '个',
+    lack: 3,
+    bad: 6
+  }
 ]
 // 零件清单表格是否可见
 const dialogPartsListTableVisible = ref<boolean>(false)
@@ -865,12 +959,16 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
 }
 // 开始任务人员选择展示与否
 const personSelectVisible = ref<boolean>(false)
+const startTaskTableRef = ref<TableInstance>()
 // 下班人员标识
 const getOffWorkVisible = ref<boolean>(false)
+const getOffWorkTableRef = ref<TableInstance>()
 // 结束任务标识
 const finishTaskVisible = ref<boolean>(false)
+const finishTaskTableRef = ref<TableInstance>()
 // 当前任务标识
 const currentTaskVisible = ref<boolean>(false)
+const currentTaskTableRef = ref<TableInstance>()
 // 当前任务加人显示
 const handleShowCurrentTask = () => {
   if (selectRows.value.length === 0) {
@@ -922,40 +1020,51 @@ const personSelectCellClassName = (data: { row: any, column: any, rowIndex: numb
   }
   return ''
 }
+// 当前任务加人的取消
+const handleCloseCurrentTask = () => {
+  currentTaskTableRef.value?.clearSelection()
+  currentTaskVisible.value = false
+}
 // 当前任务加人的确定
 const handleConfirmCurrentTask = () => {
-  if (selectPersonRows.value.length === 0) {
+  if (selectTaskAddRows.value.length === 0) {
     $baseMessage('您未选中任何人员', 'warning')
     return
   }
-  currentTaskVisible.value = false
+  handleCloseCurrentTask()
 }
 // 下班人员的取消
-const handleCloseGetOffWork = () => {
-  console.log(selectPersonRows.value);
-  
-  // selectPersonRows.value = []
-  // console.log(selectPersonRows.value);
-  
+const handleCloseGetOffWork = async () => {
+  getOffWorkTableRef.value?.clearSelection()
   getOffWorkVisible.value = false
 }
 // 下班人员的确定
-const handleConfirmGetOffWork = () => {
-  if (selectPersonRows.value.length === 0) {
+const handleConfirmGetOffWork = () => {  
+  if (selectGetOffRows.value.length === 0) {
     $baseMessage('您未选中任何人员', 'warning')
     return
   }
   handleCloseGetOffWork()
 }
+// 结束任务的取消
+const handleCloseFinishTask = () => {
+  finishTaskTableRef.value?.clearSelection()
+  finishTaskVisible.value = false
+}
 // 结束任务的确定
 const handleConfirmFinishTask = () => {
-  if (selectPersonRows.value.length === 0) {
+  if (selectFinishTaskRows.value.length === 0) {
     $baseMessage('您未选中任何人员', 'warning')
     return
   }
-  finishTaskVisible.value = false
+  handleCloseFinishTask()
 }
-// 点击人员选择后的
+// 开始任务的取消
+const handleCloseStartTask = () => {
+  startTaskTableRef.value?.clearSelection()
+  personSelectVisible.value = false
+}
+// 点击开始任务-人员选择后的质检项目
 const handleShowQualityProject = () => {
   if (selectPersonRows.value.length === 0) {
     $baseMessage('您未选中任何人员', 'warning')
@@ -988,10 +1097,66 @@ const closeModifyDialog = () => {
 }
 // 打包总数是否可见
 const packingCountVisible = ref<boolean>(false)
-// 打包总数form
-const packingCountForm = reactive<any>({
-
+// 增加是否可见
+const addVisible = ref<boolean>(false)
+interface IAddForm {
+  good: number | null
+  sample: number | null
+  bad: number | null
+}
+// 增加form
+const addForm = reactive<IAddForm>({
+  good: null,
+  sample: null,
+  bad: null
 })
+// 增加form-ref
+const addFormRef = ref<FormInstance>()
+// 明细是否可见
+const detailsVisible = ref<boolean>(false)
+// 点击增加按钮
+const handleShowAdd = () => {
+  addVisible.value = true
+}
+// 点击明细
+const handleShowDetails = () => {
+  detailsVisible.value = true
+}
+// 关闭增加
+const handleCloseAdd = () => {
+  addFormRef.value?.resetFields()
+  addVisible.value = false
+}
+// 增加确认
+const handleConfirmAdd = () => {
+  let good = Number(addForm.good)
+  let sample = Number(addForm.sample)
+  let bad = Number(addForm.bad)
+  let pGood = Number(packingCountForm.good)
+  packingCountForm.good = pGood + good
+  let pSample = Number(packingCountForm.sample)
+  packingCountForm.sample = pSample + sample
+  let pBad = Number(packingCountForm.bad)
+  packingCountForm.bad = pBad + bad
+  handleCloseAdd()
+}
+interface IPackingCountForm {
+  taskCount: number
+  good: number | null
+  sample: number | null
+  bad: number | null
+  remark: string
+}
+// 打包总数form
+const packingCountForm = reactive<IPackingCountForm>({
+  taskCount: 10,
+  good: null,
+  sample: null,
+  bad: null,
+  remark: ''
+})
+// 打包总数formRef
+const packingCountFormRef = ref<FormInstance>()
 // 展示打包总数
 const handleShowPackingCount = (value: any) => {
   // 点击了清单质检
@@ -999,9 +1164,27 @@ const handleShowPackingCount = (value: any) => {
     packingCountVisible.value = true
   }
 }
-
-
-
+// 缺的数量
+const lackCount: ComputedRef<number> = computed(() => {
+  let good = Number(packingCountForm.good)
+  let bad = Number(packingCountForm.bad)
+  let taskCount = Number(packingCountForm.taskCount)
+  return taskCount - good - bad
+})
+// 多的数量
+const manyCount = computed(() => {
+  let good = Number(packingCountForm.good)
+  let taskCount = Number(packingCountForm.taskCount)
+  if (good > taskCount) {
+    return good - taskCount
+  }
+})
+// 打包总数数量
+const packingTotal: ComputedRef<number> = computed(() => {  
+  let good = Number(packingCountForm.good)
+  let bad = Number(packingCountForm.bad)
+  return good + bad
+})
 // 采购计划列表
 let plannedPoList = ref<IGetPlanPoList[]>([])
 // 总记录数
@@ -1077,6 +1260,14 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     return {
       textAlign:'center'
     } 
+  }
+}
+// 明细表格样式
+const detailsCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex !== 1) {
+    return {
+      textAlign: 'center' as 'center'
+    }
   }
 }
 // 图片取消padding
@@ -1264,6 +1455,10 @@ onBeforeMount(() => {
     }
   }
 }
+.quality-inspection :deep(.el-checkbox) {
+  transform: scale(1.2); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
+}
 .person-select :deep(.el-checkbox) {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
@@ -1300,5 +1495,20 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+
+.el-input {
+  flex: 1; /* 输入框占满可用空间 */
+  margin-right: 10px; /* 输入框和按钮之间的间距 */
+}
+.packingTotal {
+  .el-dialog :deep(.el-dialog__body) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.add-icon:hover {
+  color: var(--el-color-primary); 
 }
 </style>
