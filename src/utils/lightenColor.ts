@@ -13,7 +13,7 @@ export const lightenColor = (color: any, amount: any) => {
 }
 
 export const lightenColorChrome = (color: any, amount: any) => {
-  const browser = window.navigator
+  const browser = globalThis.navigator
   const versionMatch = browser.userAgent.match(/Chrome\/(\d+.\d+)/)
   if (versionMatch && Number.parseFloat(versionMatch[1]) >= 111) return `color-mix(in srgb, ${color} ${100 - amount}%, white)`
   else {

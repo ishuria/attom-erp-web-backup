@@ -1,20 +1,13 @@
-module.exports = {
+const { defineConfig } = require('eslint-define-config')
+
+module.exports = defineConfig({
   root: true,
   env: {
     node: true,
     browser: true,
     'vue/setup-compiler-macros': true,
   },
-  extends: [
-    'vue-global-api',
-    'eslint:recommended',
-    'plugin:vue/vue3-recommended',
-    '@vue/eslint-config-typescript/recommended',
-    'plugin:prettier/recommended',
-    '@vue/eslint-config-prettier',
-    '@element-plus/eslint-config',
-    'plugin:unicorn/recommended',
-  ],
+  extends: ['@element-plus/eslint-config', 'plugin:unicorn/recommended'],
   globals: {
     defineOptions: 'writable',
   },
@@ -42,7 +35,6 @@ module.exports = {
     'prefer-const': 'off',
     'prefer-template': 'error',
     'prettier/prettier': 'error',
-
     'unicorn/consistent-function-scoping': 'off',
     'unicorn/escape-case': 'off',
     'unicorn/filename-case': 'off',
@@ -72,7 +64,6 @@ module.exports = {
     'unicorn/prefer-ternary': 'off',
     'unicorn/prefer-top-level-await': 'off',
     'unicorn/prevent-abbreviations': 'off',
-
     'vue/multi-word-component-names': 'off',
     'vue/no-reserved-component-names': 'off',
     'vue/no-setup-props-destructure': 'off',
@@ -113,4 +104,4 @@ module.exports = {
       },
     ],
   },
-}
+})

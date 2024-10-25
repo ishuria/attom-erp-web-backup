@@ -8,7 +8,7 @@ export default {
     const { title } = useSettingsStore(pinia)
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if (!!window.ActiveXObject || 'ActiveXObject' in window) {
+    if (!!globalThis.ActiveXObject || 'ActiveXObject' in globalThis) {
       ElMessageBox({
         title: '温馨提示',
         message:

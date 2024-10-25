@@ -6,7 +6,7 @@
   </el-upload>
 
   <vab-dialog v-model="dialogVisible" append-to-body>
-    <img style="width: 100%;" alt="Preview Image" :src="dialogImageUrl" />
+    <img alt="Preview Image" :src="dialogImageUrl" style="width: 100%" />
   </vab-dialog>
 </template>
 

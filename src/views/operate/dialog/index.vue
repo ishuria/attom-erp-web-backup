@@ -26,7 +26,7 @@
         <el-checkbox v-model="form.center" label="开启header、footer居中" />
         <el-checkbox v-model="form.closeOnClickModal" label="开启点击遮罩关闭" />
         <el-checkbox v-model="form.closeOnPressEscape" label="开启ESC按键关闭" />
-        <el-checkbox v-model="form.openInTab" @change="handleOpenInTab" label="在内容页弹框（不影响tab页切换，不推荐）" />
+        <el-checkbox v-model="form.openInTab" label="在内容页弹框（不影响tab页切换，不推荐）" @change="handleOpenInTab" />
       </el-form-item>
       <el-form-item class="hidden-xs-only" label="弹窗宽度（30% - 60%）">
         <el-slider v-model="form.width" :disabled="form.fullscreen" :max="60" :min="30" style="width: 345px" />
@@ -51,14 +51,14 @@
       :destroy-on-close="true"
       :draggable="form.draggable"
       :fullscreen="form.fullscreen"
+      :lock-scroll="form.lockScroll"
       :modal="form.modal"
+      :open-in-tab="form.openInTab"
       :show-fullscreen="form.showFullscreen"
       :theme="form.theme"
       :title="form.title"
       :top="form.top + 'vh'"
       :width="form.width + '%'"
-      :openInTab="form.openInTab"
-      :lockScroll="form.lockScroll"
     >
       {{ form.content }}
       <template #footer>
