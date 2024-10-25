@@ -628,3 +628,276 @@ export interface IGetOrderMoreComponent {
    */
   useCount?: number;
 }
+
+// 创建planPo修改订货套数
+export interface IUpdateCreateSkuCountRequest {
+  /**
+   * poSKU零件信息
+   */
+  componentList?: ComponentList[];
+  /**
+   * 新的sku订货套数
+   */
+  newPurchaseSkuNumber?: number;
+  /**
+   * 旧的sku订货套数
+   */
+  oldPurchaseSkuNumber?: number;
+}
+
+export interface ComponentList {
+  /**
+   * 实际税点
+   */
+  actualTaxRate?: number;
+  /**
+   * 零件名
+   */
+  componentName?: string;
+  /**
+   * 图片
+   */
+  componentUrl?: string;
+  /**
+   * 合同条款
+   */
+  contractTerms?: string;
+  /**
+   * 货币 0RMB 1USD 2EUR
+   */
+  currency?: number;
+  /**
+   * 报关 0报关  1不报关
+   */
+  customsDeclarationStatus?: number;
+  /**
+   * 已有零件id
+   */
+  existingPartsListId?: number;
+  /**
+   * 含税运费
+   */
+  freight?: string;
+  /**
+   * 开票 0专票 1普票 2无法开票
+   */
+  invoicing?: number;
+  /**
+   * 开票税点
+   */
+  invoicingTaxRate?: number;
+  /**
+   * 起订量
+   */
+  minQuantity?: number;
+  /**
+   * 含税模具费
+   */
+  moldCost?: string;
+  /**
+   * 多订数量
+   */
+  moreCount?: number;
+  /**
+   * 整箱数
+   */
+  numCartons?: number;
+  /**
+   * 订单号
+   */
+  orderNo?: string;
+  /**
+   * 总未税价
+   */
+  preTaxPrice?: string;
+  /**
+   * 零件订货总数
+   */
+  purchaseCount?: number;
+  /**
+   * 采购方id
+   */
+  purchaseId?: number;
+  /**
+   * 采购链接
+   */
+  purchaseLink?: string;
+  /**
+   * 零件采购注意事项
+   */
+  purchaseMatters?: string;
+  /**
+   * 收货仓库Id
+   */
+  repositoryId?: number;
+  /**
+   * 已有库存
+   */
+  stock?: number;
+  /**
+   * 供应商id
+   */
+  suppliserId?: number;
+  /**
+   * 当前零件的所有供应商信息
+   */
+  suppliserList?: SuppliserList[];
+  /**
+   * 总含税价
+   */
+  taxIncludedPrice?: string;
+  /**
+   * 出厂总价
+   */
+  totalPrice?: string;
+  /**
+   * 单位
+   */
+  unit?: string;
+  /**
+   * 出厂单价
+   */
+  unitPrice?: string;
+  /**
+   * 使用已有库存数量
+   */
+  useStockCount?: number;
+}
+
+export interface IUpdateCreateSkuCountResponse {
+
+  code?: number;
+
+  data?: {
+    componentList?: ComponentList[];
+    /**
+     * sku总含税价
+     */
+    skuTotalPrice?: string;
+  }
+
+  msg?: string;
+}
+
+// 创建planPo修改零件
+export interface IUpdateCreateComponentRequest {
+  /**
+   * 实际税点
+   */
+  actualTaxRate?: number;
+  /**
+   * 零件名
+   */
+  componentName?: string;
+  /**
+   * 图片
+   */
+  componentUrl?: string;
+  /**
+   * 合同条款
+   */
+  contractTerms?: string;
+  /**
+   * 货币 0RMB 1USD 2EUR
+   */
+  currency?: number;
+  /**
+   * 报关 0报关  1不报关
+   */
+  customsDeclarationStatus?: number;
+  /**
+   * 已有零件id
+   */
+  existingPartsListId?: number;
+  /**
+   * 含税运费
+   */
+  freight?: string;
+  /**
+   * 开票 0专票 1普票 2无法开票
+   */
+  invoicing?: number;
+  /**
+   * 开票税点
+   */
+  invoicingTaxRate?: number;
+  /**
+   * 起订量
+   */
+  minQuantity?: number;
+  /**
+   * 含税模具费
+   */
+  moldCost?: string;
+  /**
+   * 多订数量
+   */
+  moreCount?: number;
+  /**
+   * 整箱数
+   */
+  numCartons?: number;
+  /**
+   * 订单号
+   */
+  orderNo?: string;
+  /**
+   * 总未税价
+   */
+  preTaxPrice?: string;
+  /**
+   * 零件订货总数
+   */
+  purchaseCount?: number;
+  /**
+   * 采购方id
+   */
+  purchaseId?: number;
+  /**
+   * 采购链接
+   */
+  purchaseLink?: string;
+  /**
+   * 零件采购注意事项
+   */
+  purchaseMatters?: string;
+  /**
+   * 收货仓库Id
+   */
+  repositoryId?: number;
+  /**
+   * 已有库存
+   */
+  stock?: number;
+  /**
+   * 供应商id
+   */
+  suppliserId?: number;
+  /**
+   * 当前零件的所有供应商信息
+   */
+  suppliserList?: SuppliserList[];
+  /**
+   * 总含税价
+   */
+  taxIncludedPrice?: string;
+  /**
+   * 出厂总价
+   */
+  totalPrice?: string;
+  /**
+   * 单位
+   */
+  unit?: string;
+  /**
+   * 出厂单价
+   */
+  unitPrice?: string;
+  /**
+   * 使用已有库存数量
+   */
+  useStockCount?: number;
+}
+
+
+

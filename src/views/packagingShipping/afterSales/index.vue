@@ -94,9 +94,9 @@
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="contactedCellStyle"
           class="noneHoveTable"
-          :cell-class-name="pendingCellClassName"
+          :cell-class-name="contactedCellClassName"
           :data="fakeTableData"
-          @cell-click="pendingInputChange"
+          @cell-click="contactedInputChange"
         >
           <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
           <el-table-column label="订货日期" min-width="115"></el-table-column>
@@ -124,19 +124,19 @@
           <el-table-column label="好" prop="good"></el-table-column>
           <el-table-column label="多"></el-table-column>
           <el-table-column label="留样"></el-table-column>
-          <el-table-column label="缺"></el-table-column>
-          <el-table-column label="坏"></el-table-column>
-          <el-table-column label="待售后￥" min-width="100"></el-table-column>
-          <el-table-column label="已退款￥" min-width="100">
+          <el-table-column label="缺" prop="lack"></el-table-column>
+          <el-table-column label="坏" prop="bad"></el-table-column>
+          <el-table-column label="待售后￥" min-width="100" prop="pendingSale"></el-table-column>
+          <el-table-column label="已退款￥" min-width="100" prop="refund">
             <template #default="{ row }">
-              <el-input />
+              <el-input v-model="row.refund" clearable />
             </template>
           </el-table-column>
           <el-table-column label="当前售后方式" min-width="150" prop="type">
             <template #default="{ row }">
               <el-select v-model="row.type" style="min-width: 100%">
                 <el-option 
-                  v-for="item in currentAfterSalesOption"
+                  v-for="item in afterSalesOption"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -144,14 +144,54 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="凭证上传" min-width="100"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="200"></el-table-column>
-          <el-table-column label="售后日志" min-width="200"></el-table-column>
+          <el-table-column label="凭证上传" width="82">
+            <template #header>
+              凭证<br>上传
+            </template>
+            <template #default="{ row }">
+              <el-upload 
+                list-type="picture-card" 
+                :file-list="row.imageList" 
+                :class="{ hide: row.hide }"
+                class="component-upload"
+              >
+                <el-icon ><Plus /></el-icon>
+                <template #file="{ file }">
+                  <div>
+                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePreview(file)"
+                      >
+                        <el-icon><zoom-in /></el-icon>
+                      </span>
+                        <span
+                          class="el-upload-list__item-delete"
+                 
+                        >
+                        <el-icon><Delete /></el-icon>
+                      </span>
+                    </span>
+                  </div>
+                </template>
+              </el-upload>
+            </template>
+          </el-table-column>
+          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
+          <el-table-column label="售后日志" min-width="220" prop="afterSalesLog">
+            <template #default="{ row }">
+              <!-- <div class="none">
+                <el-input v-model="row.afterSalesLog" />
+              </div> -->
+              <span class="overflow-text">{{ removeHtmlTags(row.afterSalesLog) }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="200" fixed="right">
             <template #default="{ row }">
               <el-space>
                 <el-button type="primary" text >采购申请</el-button>
-                <el-button type="primary" text>归档</el-button>
+                <el-button type="primary" text @click="handleArchive(row)">归档</el-button>
               </el-space>
             </template>
           </el-table-column>
@@ -185,9 +225,9 @@
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="contactedCellStyle"
           class="noneHoveTable"
-          :cell-class-name="pendingCellClassName"
+          :cell-class-name="contactedCellClassName"
           :data="fakeTableData"
-          @cell-click="pendingInputChange"
+          @cell-click="contactedInputChange"
         >
           <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
           <el-table-column label="订货日期" min-width="115"></el-table-column>
@@ -223,7 +263,7 @@
             <template #default="{ row }">
               <el-select v-model="row.type" style="min-width: 100%" disabled>
                 <el-option 
-                  v-for="item in currentAfterSalesOption"
+                  v-for="item in afterSalesOption"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -231,12 +271,22 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="凭证上传" min-width="100"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="200"></el-table-column>
-          <el-table-column label="售后日志" min-width="200"></el-table-column>
-          <el-table-column label="操作" width="120" fixed="right">
+          <el-table-column label="凭证上传" width="82">
+            <template #header>
+              凭证<br>上传
+            </template>
             <template #default="{ row }">
-              <el-button type="primary" text>采购申请</el-button>
+              <el-image :src="row.url" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+                <template #error>
+                  <el-icon></el-icon>
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
+          <el-table-column label="售后日志" min-width="220" prop="afterSalesLog">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.afterSalesLog) }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -302,7 +352,7 @@
           <el-table-column label="缺"></el-table-column>
           <el-table-column label="坏"></el-table-column>
           <el-table-column label="待售后￥" min-width="100"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="200"></el-table-column>
+          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
             <template #default="{ row }">
               <el-space>
@@ -343,7 +393,7 @@
           class="noneHoveTable"
           :cell-class-name="badDebtsCellClassName"
           :data="fakeTableData"
-          @cell-click="pendingInputChange"
+          @cell-click="contactedInputChange"
         >
           <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
           <el-table-column label="订货日期" min-width="115"></el-table-column>
@@ -381,8 +431,12 @@
           </el-table-column>
           <el-table-column label="已退款￥" min-width="100"></el-table-column>
           <el-table-column label="坏账金额￥" min-width="110"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="200"></el-table-column>
-          <el-table-column label="售后日志" min-width="260"></el-table-column>
+          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
+          <el-table-column label="售后日志" min-width="220" prop="afterSalesLog">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.afterSalesLog) }}</span>
+            </template>
+          </el-table-column>
         </el-table>
         <vab-pagination 
           :current-page="queryForm.pageNo" 
@@ -396,7 +450,7 @@
     <!-- 移动到已联系 -->
     <vab-dialog
       title="已联系"
-      width="20%"
+      width="23%"
       v-model="moveVisible"
       @close="closeMove"
     >
@@ -413,7 +467,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="contactedForm.remark" type="textarea" />
+          <el-input v-model="contactedForm.remark" type="textarea" resize="none"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -454,7 +508,7 @@
     <!-- 售后日志 -->
     <vab-dialog
       title="售后日志"
-      width="60%"
+      width="57%"
       v-model="afterSalesLogVisible"
     >
       <el-table
@@ -463,28 +517,40 @@
         :cell-style="afterSalesLogCellStyle"
         :data="fakePurchaseData"
       >
-        <el-table-column label="反馈日期"></el-table-column>
+        <el-table-column label="反馈日期" min-width="115"></el-table-column>
         <el-table-column label="任务ID" prop="id" min-width="70"></el-table-column>
-        <el-table-column label="任务数" ></el-table-column>
-        <el-table-column label="好"></el-table-column>
-        <el-table-column label="多" ></el-table-column>
-        <el-table-column label="留样" ></el-table-column>
-        <el-table-column label="缺" ></el-table-column>
-        <el-table-column label="坏" ></el-table-column>
-        <el-table-column label="待售后￥"></el-table-column>
-        <el-table-column label="备注" min-width="150"></el-table-column>
+        <el-table-column label="任务数" min-width="100"></el-table-column>
+        <el-table-column label="好" min-width="100"></el-table-column>
+        <el-table-column label="多" min-width="100"></el-table-column>
+        <el-table-column label="留样" min-width="100"></el-table-column>
+        <el-table-column label="缺" min-width="100"></el-table-column>
+        <el-table-column label="坏" min-width="100"></el-table-column>
+        <el-table-column label="待售后￥" min-width="100"></el-table-column>
+        <el-table-column label="备注" min-width="180"></el-table-column>
       </el-table>
     </vab-dialog>
+    <wangEditor
+      :title="wangEditorTitle"
+      :wangEditorVisible="wangEditorLogVisible"
+      :content="LogCopy"
+      @clickChild="confirmEditorLog"
+      @clickBoolean="cancelEditorLog"
+      :classify="classify"
+    />
     <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Search, ArrowDown } from '@element-plus/icons-vue'
-import type { TableInstance } from 'element-plus'
+import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import type { TableInstance, UploadFile } from 'element-plus'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { removeHtmlTags } from '/@/utils/tableColum'
+import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
+
+
 defineOptions({
   name: 'afterSalesTable',
 })
@@ -515,7 +581,10 @@ const fakeTableData = [
     sku: 'HOME-0020-WHT 碗架-木把手白色',
     url: 'https://picsum.photos/200',
     poTotal: 2,
-    good: 3
+    good: 3,
+    lack: 10,
+    bad: 4,
+    pendingSale: 6
   },
   {
     time: '2024-10-24',
@@ -523,7 +592,10 @@ const fakeTableData = [
     sku: 'HOME-0020-WHT 碗架-木把手白色',
     url: 'https://picsum.photos/200',
     poTotal: 2,
-    good: 1
+    good: 1,
+    lack: 10,
+    bad: 4,
+    pendingSale: 6
   }
 ]
 const fakePurchaseData = [
@@ -542,13 +614,7 @@ const afterSalesOption = [
   { label: '需要采购', value: 4 },
   { label: '待定', value: 5 },
 ]
-// 当前售后方式选项
-const currentAfterSalesOption = [
-  { label: '退款', value: 0 },
-  { label: '随大货补寄', value: 1 },
-  { label: '单独补寄', value: 2 },
-  { label: '采购', value: 3 },
-]
+
 const contactedForm = reactive<any>({
   type: 0,
   remark: ''
@@ -603,18 +669,35 @@ const queryData = () => {
   // fetchData()
 }
 
-const statusFilter = (status: string | number) => {
-  const statusMap: any = {
-    published: 'success',
-    draft: 'primary',
-    deleted: 'danger',
+// 处理归档
+const handleArchive = (row: any) => {
+  // 如果已退款>=待售后，则归类为已完成。
+  if (row.refund >= row.pendingSale) {
+    
+  } else {
+    $baseConfirm(`有${row.bad+row.lack}套产品，${row.pendingSale}金额会被记为坏账，是否继续？`, '系统提示', async () => {
+      // 归类为坏账
+    })
   }
-  return statusMap[status]
+
 }
 
-
-
-
+const wangEditorTitle = ref<string>('')
+const classify = ref<string>('')
+const wangEditorLogVisible = ref<boolean>(false)
+const LogCopy = ref<string>('')
+const cancelEditorLog = () => {
+  wangEditorLogVisible.value = false
+}
+const confirmEditorLog = (val: any) => {
+  // const { data } = await updatePoContractTerms({ id: clickRow.value.existingPartsListId, contractTerms: val})
+  //  if (data === true) {
+  //      contractCopy.value = val
+  //      clickRow.value.contractTerms = val
+  //  }
+  LogCopy.value = val
+  clickRow.value.afterSalesLog = val
+}
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () => {
@@ -630,7 +713,30 @@ const pendingInputChange = (row: any, column: any, cell: HTMLTableCellElement, e
     imagePreviewList.value.push(el.src!)
   }
 }
-
+const clickRow = ref<any>()
+const contactedInputChange = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0]
+  if (getDataAttribute(el, 'img') && el) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
+  }
+  if (column.property === 'afterSalesLog') {
+    clickRow.value = row
+    // const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.id })
+    LogCopy.value = row.afterSalesLog
+    // row.afterSalesLog = data
+    wangEditorTitle.value = '编辑售后日志'
+    classify.value = 'afterSalesLog'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+  }
+}
+const handlePreview = (file: UploadFile) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(file.url!)
+}
 // 待联系cellStyle
 const pendingCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex !== 4 && data.columnIndex !== 6 && data.columnIndex !== 14) {
@@ -642,6 +748,19 @@ const pendingCellStyle = (data: { row: any, column: any, rowIndex: number, colum
 // 前四个tab去掉padding和颜色显示
 const pendingCellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => { 
   if (data.columnIndex === 3) {
+    return 'clear-padding'
+  }
+  if (data.columnIndex === 8) {
+    if (data.row.good >= data.row.poTotal) {
+      return 'green'
+    }
+    return 'red'
+  }
+  return ''
+}
+// 已联系和已完成去掉padding和颜色显示
+const contactedCellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => { 
+  if (data.columnIndex === 3 || data.columnIndex === 16) {
     return 'clear-padding'
   }
   if (data.columnIndex === 8) {
@@ -765,5 +884,31 @@ onBeforeMount(() => {
 }
 :deep(.green) {
   color: #67C23A;
+}
+// 设置下面表格的图片
+.component-upload {
+  width: 81px;
+  height: 81.2px;
+}
+.component-upload :deep( .el-upload-list--picture-card) {
+ width: 100%;
+ height: 100%;
+}
+.component-upload :deep( .el-upload-list--picture-card .el-upload-list__item) {
+ width: 100%;
+ height: 100%;
+ transition: none;
+ margin: 0;
+ border-radius: 0;
+ border: 0;
+}
+.component-upload :deep( .el-upload--picture-card) {
+  width: 100%;
+  height: 100%;
+}
+.overflow-text {
+  max-height: 65.2px;
+  overflow-y: auto;
+  display: block;
 }
 </style>

@@ -51,3 +51,64 @@ declare interface UserModuleType {
   token: string | boolean
   username: string
 }
+
+interface ComponentList {
+  actualTaxRate?: number;
+  componentName?: string;
+  componentUrl?: string;
+  contractTerms?: string;
+  currency?: number;
+  customsDeclarationStatus?: number;
+  existingPartsListId?: number;
+  freight?: string;
+  id?: number;
+  invoicing?: number;
+  invoicingTaxRate?: number;
+  minQuantity?: number;
+  moldCost?: string;
+  moreCount?: number;
+  numCartons?: number;
+  orderNo?: string;
+  poSkuId?: number;
+  preTaxPrice?: string;
+  purchaseCount?: number;
+  purchaseId?: number;
+  purchaseLink?: string;
+  purchaseMatters?: string;
+  repositoryId?: number;
+  stock?: number;
+  suppliserId?: number;
+  suppliserList?: SuppliserList[];
+  taxIncludedPrice?: string;
+  totalPrice?: string;
+  unit?: string;
+  unitPrice?: string;
+  useStockCount?: number;
+  [property: string]: any;
+}
+declare interface SkuType {
+  id: number
+  poDetailData: {
+    createTime?: string
+    id?: number
+    minQuantity?: number
+    numCartons?: number
+    orderTotalPrice?: string
+    packedTenRecord?: string
+    poRemarks?: string
+    poSkuId?: number
+    productManager?: string
+    productName?: string
+    purchaseSkuNumber?: number
+    repositoryId?: number
+    site?: number
+    sku?: string
+    skuImgUrl?: string
+    skuRemarks?: string
+    [property: string]: any;
+  }
+  skuComponentList: ComponentList[]
+}
+declare interface SkuModuleType {
+  data: SkuType[]
+}

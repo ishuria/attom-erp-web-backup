@@ -3,14 +3,19 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import {
+  IAddPoSKUQuery,
   IBooleanResp,
   IComponentName,
   ICreatePlanPoResp,
+  IGeneratePoContractQuery,
+  IGenerateRemittance,
   IGetAddComponentListQuery,
   IGetAddComponentListResp,
   IGetAddConsumableListQuery,
   IGetAddConsumableListResp,
   IGetComponentPayRecordResp,
+  IGetOrderMoreComponentQuery,
+  IGetOrderMoreComponentResp,
   IGetPlanPoListQuery,
   IGetPlanPoListResp,
   IGetPoDetailResp,
@@ -44,12 +49,9 @@ import {
   IUpdatePoSkuComponent,
   IUpdateSkuCount,
   IUpdateSkuDetail,
-  IGeneratePoContractQuery,
-  IFileName,
-  IAddPoSKUQuery,
-  IGenerateRemittance,
-  IGetOrderMoreComponentQuery,
-  IGetOrderMoreComponentResp
+  IUpdateCreateSkuCountRequest,
+  IUpdateCreateSkuCountResponse,
+  IUpdateCreateComponentRequest
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -471,5 +473,30 @@ export function getOrderMoreComponent(params: IGetOrderMoreComponentQuery): Prom
     url: `${BASE_API}/purchase/orderMore/component`,
     method: 'get',
     params,
+  })
+}
+
+// 获取产品SKU信息
+export function getPurchaseSKU(params: ISku) {
+  return request({
+    url: `${BASE_API}/purchase/getSku`,
+    method: 'post',
+    params,
+  })
+}
+// 创建planPo修改订货套数
+export function updateCreateSkuCount(data?: IUpdateCreateSkuCountRequest): Promise<IUpdateCreateSkuCountResponse> {
+  return request({
+    url: `${BASE_API}/purchase/calculation/skuPurchaseCount`,
+    method: 'post',
+    data,
+  })
+}
+// 创建planPo修改零件
+export function updateCreateComponent(data?: IUpdateCreateComponentRequest) {
+  return request({
+    url: `${BASE_API}/purchase/skuComponent/change`,
+    method: 'post',
+    data,
   })
 }

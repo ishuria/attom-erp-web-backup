@@ -390,7 +390,7 @@
           <el-input v-model.trim="qualityInspectionForm.packingCount" clearable style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="其他反馈" prop="other">
-          <el-input type="textarea" placeholder="请输入其他反馈" v-model="qualityInspectionForm.other" :rows="2" />
+          <el-input type="textarea" placeholder="请输入其他反馈" v-model="qualityInspectionForm.other" :rows="2" resize="none" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -631,10 +631,10 @@
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-col :span="18">
-            <el-input type="textarea" v-model="packingCountForm.remark" :rows="2" style="margin-bottom: 18px"/>
+            <el-input type="textarea" v-model="packingCountForm.remark" :rows="2" style="margin-bottom: 18px" resize="none"/>
           </el-col>
           <el-col :span="18">
-            <el-input type="textarea" :rows="4" disabled/>
+            <el-input type="textarea" :rows="4" disabled resize="none" />
           </el-col>
         </el-form-item>
       </el-form>

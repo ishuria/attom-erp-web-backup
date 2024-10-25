@@ -20,7 +20,7 @@
         <el-table 
           ref="tableRef" 
           stripe border 
-          :data="fakeData"
+          :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
           :cell-style="cellStyle"
@@ -54,9 +54,9 @@
             </template>
           </el-table-column>
           <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="外发" prop="customsDeclarationStatus" min-width="75">
+          <el-table-column label="外发" prop="outsourced" min-width="60">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
+                  <el-checkbox v-model="row.outsourced" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
               </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
@@ -65,26 +65,26 @@
               零件<br>图片
             </template>
             <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" fit="contain" style="width: 100%; height: 100%">
+              <el-image :src="row.componentUrl" data-img="img" fit="contain" style="width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="签收数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="收货仓库" width="100" prop="unit" ></el-table-column>
-          <el-table-column label="PO日期" prop="createTime" min-width="115">
+          <el-table-column label="零件名" prop="componentName" min-width="250"></el-table-column>
+          <el-table-column label="签收数量" min-width="100" prop="signCount" ></el-table-column>
+          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" ></el-table-column>
+          <el-table-column label="单位" min-width="60" prop="unit" ></el-table-column>
+          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" ></el-table-column>
+          <el-table-column label="PO日期" prop="poDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="付款日期" prop="createTime" min-width="115">
+          <el-table-column label="付款日期" prop="payDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="SKU图片" class="image-wall" width="82">
@@ -99,14 +99,18 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="taxIncludedPrice" min-width="80"></el-table-column>    
-          <el-table-column label="剩余可售" prop="userName" min-width="100"></el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
-          <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>
-          <el-table-column label="生产完成日期" prop="finishedTime" min-width="170">
+          <el-table-column label="SKU" prop="sku" min-width="160"></el-table-column>    
+          <el-table-column label="剩余可售" prop="sellableDay" min-width="100"></el-table-column>
+          <el-table-column  label="供应商" min-width="250" prop="suppliserName"></el-table-column>
+          <el-table-column label="站点" prop="site" min-width="100">
+            <template #default="{ row }">
+              {{ siteMap[row.site as siteValue] }}
+            </template>
+          </el-table-column>
+          <el-table-column label="生产完成日期" prop="produceCompletionDate" min-width="170">
             <template #default="{ row }">
               <el-date-picker
-                v-model="row.finishedTime"
+                v-model="row.produceCompletionDate"
                 type="date"
                 placeholder="请选择日期"
                 size="large"
@@ -114,12 +118,9 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="跟单日志" prop="purchaseMatters" min-width="250">
+          <el-table-column label="跟单日志" prop="log" min-width="250">
               <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.purchaseMatters"  />
-                  </div>
-                  <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                  <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
               </template>
           </el-table-column>
           <template #empty>
@@ -153,49 +154,49 @@
         <el-table 
           ref="tableRef" 
           stripe border 
-          :data="fakeData"
+          :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
           :cell-style="cellStyle2"
           @cell-click="changeInput"
           :cell-class-name="getCellClass2"
         >
-          <el-table-column label="签收日期" prop="createTime" min-width="115">
+          <el-table-column label="签收日期" prop="signDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="外发" prop="customsDeclarationStatus" min-width="75">
+          <el-table-column label="外发" prop="outsourced" min-width="60">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
+                  <el-checkbox v-model="row.outsourced" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
               </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="零件图片" class="image-wall" min-width="82">
+          <el-table-column label="零件图片" min-width="82">
             <template #header>
               零件<br>图片
             </template>
             <template #default="{ row, $index }">
-                <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
+                <el-image :src="row.componentUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
                   <template #error>
                     <el-icon></el-icon>
                   </template>
                 </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="收货仓库" width="120" prop="unit" ></el-table-column>
-          <el-table-column label="签收物流单号" width="130" prop="unit" ></el-table-column>
-          <el-table-column label="PO日期" prop="createTime" min-width="115">
+          <el-table-column label="零件名" prop="componentName" min-width="250"></el-table-column>
+          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" ></el-table-column>
+          <el-table-column label="单位" min-width="60" prop="unit" ></el-table-column>
+          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" ></el-table-column>
+          <el-table-column label="签收物流单号" width="130" prop="" ></el-table-column>
+          <el-table-column label="PO日期" prop="poDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="付款日期" prop="createTime" min-width="115">
+          <el-table-column label="付款日期" prop="payDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="SKU图片" class="image-wall" width="82">
@@ -210,13 +211,17 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="taxIncludedPrice" min-width="150"></el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
-          <el-table-column label="站点" prop="siteName" min-width="140"></el-table-column>  
-          <el-table-column label="生产完成日期" prop="finishedTime" min-width="170">
+          <el-table-column label="SKU" prop="sku" min-width="160"></el-table-column>
+          <el-table-column  label="供应商" min-width="250" prop="suppliserName"></el-table-column>
+          <el-table-column label="站点" prop="site" min-width="100">
+            <template #default="{ row }">
+              {{ siteMap[row.site as siteValue] }}
+            </template>
+          </el-table-column>  
+          <el-table-column label="生产完成日期" prop="produceCompletionDate" min-width="170">
             <template #default="{ row }">
               <el-date-picker
-                v-model="row.finishedTime"
+                v-model="row.produceCompletionDate"
                 type="date"
                 placeholder="请选择日期"
                 size="large"
@@ -224,12 +229,9 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="跟单日志" prop="purchaseMatters" min-width="250">
+          <el-table-column label="跟单日志" prop="log" min-width="250">
               <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.purchaseMatters"  />
-                  </div>
-                  <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
               </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150" >
@@ -396,6 +398,9 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
+import { getSignList } from '/@/api/devlocal/packagingShipping'
+import { IGetSignList } from '/@/type/packagingShipping/packagingType'
+import { siteMap, siteValue } from '../constantOption'
 
 defineOptions({
   name: 'pendingReceiptTable',
@@ -412,6 +417,7 @@ const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
+const list = ref<IGetSignList[]>([])
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
@@ -498,7 +504,7 @@ const queryForm = reactive<IGetPlanPoListQuery>({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
-  status: 0, //po状态 0待发布 1未达起订量
+  status: 0, //0待签收 1签收
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -719,19 +725,15 @@ const removeHtmlTags = (html: string): string => {
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
 };
-// const fetchData = async () => {
-//   try {
-//     listLoading.value = true
-//     const { data } = await getPlanPoList(queryForm)
-//     if (data) {
-//       listLoading.value = false
-//       total.value = data.total
-//       plannedPoList.value = data.list
-//     }
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }  
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getSignList(queryForm)
+  if (data) {
+    list.value = data.list!
+    total.value = data.total!
+  }
+  listLoading.value = false
+}
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 4 || data.columnIndex === 12) {
     return 'clear-padding'
@@ -748,7 +750,7 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
-  // fetchData()
+  fetchData()
 })
 </script>
   

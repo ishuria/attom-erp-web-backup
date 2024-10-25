@@ -82,7 +82,7 @@
           <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
           <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税价" prop="taxIncludedPrice" min-width="80"></el-table-column>    
+          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
@@ -201,7 +201,7 @@
           <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
           <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税价" prop="taxIncludedPrice" min-width="80"></el-table-column>    
+          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
@@ -267,7 +267,7 @@ import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
-
+import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'PlannedPoTable',
 })

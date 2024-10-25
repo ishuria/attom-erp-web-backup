@@ -138,3 +138,10 @@ export const flexColumnWidth =  (list: any, label: string, prop: string) => {
   const maxLength = getMaxLength(arr)
   return (maxLength + 24) + 'px'
 }
+
+// 去掉 HTML 标签并显示纯文本的方法
+export const removeHtmlTags = (html: string): string => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+};
