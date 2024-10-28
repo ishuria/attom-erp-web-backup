@@ -226,7 +226,7 @@
               <span>{{ row.componentName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="订货总数" prop="purchaseCount" align="center" :width="flexColumnWidth(skuComponentList, '订货', 'purchaseCount')">
+          <el-table-column label="订货总数" prop="purchaseCount" align="center" :width="flexColumnWidth(skuComponentList, '订货总数', 'purchaseCount')">
             <template #header>
               订货<br>总数
             </template>
@@ -272,7 +272,7 @@
               <span>{{ row.unit }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂', 'unitPrice')">
+          <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂单价', 'unitPrice')">
             <template #header>
               出厂<br>单价
             </template>
@@ -283,7 +283,7 @@
               <span>{{ row.unitPrice }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="出厂总价" prop="totalPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂', 'totalPrice')">
+          <el-table-column label="出厂总价" prop="totalPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂总价', 'totalPrice')">
             <template #header>
               出厂<br>总价
             </template>
@@ -321,7 +321,7 @@
               总未<br>税价
             </template>
           </el-table-column>
-          <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(skuComponentList, '总含', 'taxIncludedPrice')">
+          <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(skuComponentList, '总含税价', 'taxIncludedPrice')">
             <template #header>
                 总含<br>税价
             </template>
@@ -1026,12 +1026,12 @@
       <el-divider class="divider-margin"></el-divider>
         <el-checkbox
           v-model="purchaser0"
-          label="更新当前SKU下零件的采购方"
+          label="更新SKU库"
           size="large"
         />
         <el-checkbox
           v-model="purchaser1"
-          label="更新零件的采购方"
+          label="更新零件库"
           size="large"
         />
       <template #footer>
@@ -1118,7 +1118,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
-import { _addSku, _clearSKUs, _updateSku } from '/@/utils/sku'
+import { _addSku, _clearSKUs } from '/@/utils/sku'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'

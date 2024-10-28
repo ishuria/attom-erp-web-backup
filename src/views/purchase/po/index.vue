@@ -37,10 +37,19 @@
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
+        
         >
-          <el-table-column label="PO操作" prop="selectedPoRow">
+          <!-- <el-table-column type="selection" >
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
+              <el-checkbox @change="handleSelectedPoRow($event, row)"></el-checkbox>
+            </template>
+          </el-table-column> -->
+          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllPoRow($event)" />
+            </template>
+            <template #default="{ row }">
+              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
@@ -69,9 +78,12 @@
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
-          <el-table-column label="零件操作" prop="selectedCompRow" width="90">
+          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllCompRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
@@ -95,7 +107,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
           <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
@@ -150,9 +162,12 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
         >
-          <el-table-column label="PO操作" prop="selectedPoRow">
+          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllPoRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
@@ -181,9 +196,12 @@
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
-          <el-table-column label="零件操作" prop="selectedCompRow" width="90">
+          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllCompRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
@@ -207,7 +225,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
           <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
@@ -261,9 +279,12 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
         >
-          <el-table-column label="PO操作" prop="selectedPoRow">
+          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllPoRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
@@ -292,9 +313,12 @@
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
-          <el-table-column label="零件操作" prop="selectedCompRow" width="90">
+          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllCompRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
@@ -318,7 +342,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
           <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
@@ -372,9 +396,12 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
         >
-          <el-table-column label="PO操作" prop="selectedPoRow">
+          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllPoRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedPoRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="PO" prop="po" min-width="100">
@@ -403,9 +430,12 @@
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
-          <el-table-column label="零件操作" prop="selectedCompRow" width="90">
+          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllCompRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
@@ -429,7 +459,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" disabled/>
               </template>
           </el-table-column>
           <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
@@ -509,9 +539,12 @@
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
-          <el-table-column label="零件操作" prop="selectedCompRow" width="90">
+          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllCompRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
@@ -535,7 +568,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
           <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
@@ -604,9 +637,12 @@
           </el-table-column>
           <el-table-column label="SKU" prop="sku" width="180"></el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"></el-table-column>
-          <el-table-column label="零件操作" prop="selectedCompRow" width="90">
+          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllCompRow($event)" />
+            </template>
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" @change="handleSelectedCompRow($event, row)"></el-checkbox>
+              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
@@ -630,7 +666,7 @@
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+                  <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
           <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
@@ -1027,17 +1063,47 @@ const calculateColumnWidth = () => {
 // 将选择的po行加入到po数组里
 const handleSelectedPoRow = (event: any, row: any) => {
   const rowId = row.id; // 假设每行都有一个唯一的 id
-  
   if (event) {
     selectedPORow.value.add(rowId); // 选中，添加到 Set 中
   } else {
     selectedPORow.value.delete(rowId); // 取消选中，从 Set 中删除
   }
-  
   // 将 Set 转换回数组
   selectedPOArray.value = Array.from(selectedPORow.value);
- 
 };
+const handleSelectAllPoRow = (event: any) => {
+  if (event) {
+    poList.value.forEach((item: any) => {
+      item.selectedPoRow = true
+      selectedPORow.value.add(item.id);
+    })
+    // console.log(selectedPORow.value);
+  } else {
+    poList.value.forEach((item: any) => {
+      item.selectedPoRow = false
+    })
+    selectedPORow.value.clear()
+    // console.log(selectedPORow.value);
+  }
+  selectedPOArray.value = Array.from(selectedPORow.value);
+}
+const handleSelectAllCompRow = (event: any) => {
+  if (event) {
+    poList.value.forEach((item: any) => {
+      item.selectedCompRow = true
+      selectedCompRow.value.add(item);
+    })
+    console.log(selectedCompRow.value);
+  } else {
+    poList.value.forEach((item: any) => {
+      item.selectedCompRow = false
+    })
+    selectedCompRow.value.clear()
+    console.log(selectedCompRow.value);
+    
+  }
+  selectedCompArray.value = Array.from(selectedCompRow.value);
+}
 // 将选择的component行加入到component数组里
 const handleSelectedCompRow = (event: any, row: any) => {
   // const rowCompId = row.componentId; 
@@ -1167,6 +1233,25 @@ const handleCloseInstallmentDialog = () => {
   installmentFormRef.value?.resetFields()
   installmentVisible.value = false
 }
+const clearTableSelect = () => {
+  selectedPORow.value.clear()
+  selectedCompRow.value.clear()
+  // if (activeName.value === 2) {
+  //   selectedPORow.value.clear()
+  //   selectedCompRow.value.clear()
+  // } else if (activeName.value === 3) {
+  //   tableRef2.value?.clearSelection()
+  // } else if (activeName.value === 4) {
+  //   tableRef3.value?.clearSelection()
+  // } else if (activeName.value === 5) {
+  //   tableRef4.value?.clearSelection()
+  // } else if (activeName.value === 6) {
+  //   tableRef5.value?.clearSelection()
+  // } else if (activeName.value === 7) {
+  //   tableRef6.value?.clearSelection()
+  // }
+  
+}
 // 确认分批付款
 const handleConfirmInstallment = async () => {
   installmentFormRef.value?.validate(async (valid: any) => {
@@ -1186,6 +1271,9 @@ const handleConfirmInstallment = async () => {
           $baseMessage('分批付款成功', 'success', 'hey')
           handleCloseInstallmentDialog()
           fetchData() //重新刷新表格
+          // console.log(activeName.value);
+          // console.log(typeof activeName.value);
+          clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -1266,6 +1354,7 @@ const handleConfirmRefund = async () => {
           $baseMessage('退款提交成功', 'success', 'hey')
           handleCloseRefundDialog()
           fetchData() //重新刷新表格
+          clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -1303,6 +1392,7 @@ const handleConfirmTotalPriceSharing = async () => {
           $baseMessage('总价分摊提交成功', 'success')
           handleCloseTotalPriceSharingDialog()
           fetchData() //重新刷新表格
+          clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -1337,6 +1427,7 @@ const handleGenerateContract = async () => {
       poSkuComponentIds: poSkuComponentId.join(',')
     })
     if (data) {
+      clearTableSelect()
       $baseMessage('生成合同成功', 'success')
       // 下载合同
       data.forEach(async (fileName: string) => {
@@ -1536,7 +1627,8 @@ const clickCancel = async (event: any, value: any) =>{
   // await updateProgressManage({...value})
 }
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
-  poList.value = []
+  Object.assign(poList.value, [])
+  // tableRef.value?.clearSelection()
   if (tab.props.name !== undefined) {
     queryForm.status = Number(tab.props.name);  
   }
@@ -1896,7 +1988,7 @@ onMounted(() => {
 .none {
   display: none;
 }
-.custom-checkbox {
+.noneHoveTable :deep(.el-checkbox) {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }

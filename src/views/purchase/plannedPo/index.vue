@@ -33,7 +33,7 @@
           :cell-class-name="getCellClass"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
-          <el-table-column fixed="left" label="PO操作" width="150" >
+          <el-table-column fixed="left" label="PO操作" width="105" >
             <template #default="{ row, $index }">
               <el-dropdown>
                 <el-button text type="primary" @click="handlePublishPo(row)">
@@ -77,18 +77,18 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" width="150"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku')"></el-table-column>   
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')"></el-table-column>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')"></el-table-column>
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')"></el-table-column>
+          <el-table-column label="单位" width="60" prop="unit"></el-table-column>
           <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="货币" width="80" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliser"></el-table-column>
+          <el-table-column  label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')"></el-table-column>
           <el-table-column  label="采购方" min-width="100" prop="purchase"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
@@ -103,7 +103,7 @@
                   <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
               </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150" >
+          <el-table-column fixed="right" label="SKU操作" width="150" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-button link type="primary" @click="handlePlannedPoDetail(row)">详情</el-button>
@@ -127,6 +127,7 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="danger" @click="handleAllDelete">批量删除</el-button>
+            <el-button type="success" @click="handleAllPublishPo">批量发布</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -152,7 +153,7 @@
           :cell-class-name="getCellClass"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
-          <el-table-column fixed="left" label="PO操作" width="150" >
+          <el-table-column fixed="left" label="PO操作" width="105" >
             <template #default="{ row, $index }">
               <el-dropdown>
                 <el-button text type="primary" @click="handlePublishPo(row)">
@@ -196,18 +197,18 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" width="150"></el-table-column>   
-          <el-table-column label="数量" width="60" prop="purchaseSkuNumber" ></el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="零件数量" width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" width="60" prop="unit" ></el-table-column>
-          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')"></el-table-column>    
-          <el-table-column label="货币" width="105px" prop="currency">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku')"></el-table-column>   
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')"></el-table-column>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')"></el-table-column>
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')"></el-table-column>
+          <el-table-column label="单位" width="60" prop="unit"></el-table-column>
+          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')"></el-table-column>       
+          <el-table-column label="货币" width="80" prop="currency">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column>
+          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')"></el-table-column>
           <el-table-column label="采购方" min-width="100" prop="purchase"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
@@ -222,7 +223,7 @@
                   <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
               </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150" >
+          <el-table-column fixed="right" label="SKU操作" width="150" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-button link type="primary" @click="handlePlannedPoDetail(row)">详情</el-button>
@@ -311,7 +312,7 @@ const queryData = () => {
   fetchData()
 }
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex === 5) {
+  if (data.columnIndex === 5 || data.columnIndex === 1) {
     return 'clear-padding'
   }
   return ''

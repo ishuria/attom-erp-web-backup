@@ -1,14 +1,12 @@
 <template>
-  <el-dialog 
+  <vab-dialog 
     v-model="dflag" 
-    :close-on-click-modal="false" 
     title="添加耗材" 
     width="55%"
-    class="moldDialog"
-    :before-close="handlerCloseDialog"
+    top="5%"
+    @close="handlerCloseDialog"
   >
-    <el-divider style="margin-top: 0; margin-bottom: 20px"/>
-    <div id="table-height-container">
+ 
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="queryForm" @submit.prevent>
@@ -31,6 +29,7 @@
         @cell-click="changeInput"
         :cell-style="cellStyle"
         :cell-class-name="getCellStyle"
+        max-height="550px"
       >
         <el-table-column  label="图片" class="image-wall" width="82">
           <template #default="{ row, $index }">
@@ -58,12 +57,12 @@
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
-    </div>
+
     <template #footer>
       <el-button type="danger" @click="handlerCloseDialog">取消</el-button>
       <el-button type="primary" @click="handleConfirm">确认</el-button>
     </template>
-  </el-dialog>
+  </vab-dialog>
   <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
 </template>
 

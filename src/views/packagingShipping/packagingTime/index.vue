@@ -6,8 +6,13 @@
           <vab-query-form-left-panel>
             <el-button type="primary">请假申请</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
+          <vab-query-form-right-panel >
             <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item >
+                <el-select placeholder="选择人员" style="margin-right: 10px">
+
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
@@ -22,6 +27,7 @@
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="cellStyle"
           :data="fakeData"
+          class="leftTable"
         >
           <el-table-column label="姓名" prop="name" min-width="100"></el-table-column>
           <el-table-column label="开始时间" min-width="120"></el-table-column>
@@ -39,12 +45,15 @@
       </el-col>
       <el-col :span="7" >
         <vab-query-form>
-          <vab-query-form-left-panel style="margin-bottom: 10px;">
+          <vab-query-form-left-panel :span="20" style="margin-bottom: 10px;">
             <el-date-picker
               v-model="date"
               type="date"
               placeholder="选择日期"
             />
+            <el-select placeholder="选择人员" style="margin-left: 10px">
+
+            </el-select>
           </vab-query-form-left-panel>
         </vab-query-form>
         <el-table
@@ -124,5 +133,8 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 :deep(.center-table tr:last-child td), 
 :deep(.center-table tr:last-child th) {
   text-align: center !important;
+}
+.leftTable :deep(.el-table__body .cell) {
+  min-height: 23px;
 }
 </style>

@@ -167,7 +167,7 @@
       </el-table-column>
       <el-table-column label="使用特定合同模板" prop="templateStatus" align="center" min-width="90">
         <template #default = "{ row }">
-            <el-checkbox v-model="row.templateStatus" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handlePackingChange(row)"/>
+            <el-checkbox v-model="row.templateStatus" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handleTemplateStatus(row)"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="特定模板" min-width="100" prop="templateUrl" >
@@ -327,7 +327,17 @@ const handlePackingChange = async (row: any) => {
   await updateProductSupplier(row)
   fetchData()
 }
-
+const handleTemplateStatus = async (row: any) => {
+  if (row.templateStatus === 1) {
+    if (row.fileList.length === 0) {
+      $baseMessage('未上传特定模板，无法勾选。', 'error')
+      row.templateStatus = 0
+      return
+    }
+  }
+  await updateProductSupplier(row)
+  fetchData()
+}
 
 const fetchData = async () => {
   listLoading.value = true

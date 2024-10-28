@@ -28,29 +28,13 @@
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
         >
-          <el-table-column fixed="left" label="仓库操作" width="110" >
+          <el-table-column fixed="left" label="仓库操作" width="150" >
             <template #default="{ row, $index }">
-              <el-dropdown>
-                <el-button text type="primary" >
-                  签收
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >签收</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="modifyPendingVisible = true">修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >打印</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+              <el-space>
+                <el-link type="primary" :underline="false" @click="handleSignComponent(row)">签收</el-link>
+                <el-link type="primary" :underline="false" @click="handleGetSignRecord(row)">修改</el-link>
+                <el-link type="primary" :underline="false" >打印</el-link>
+              </el-space>
             </template>
           </el-table-column>
           <el-table-column type="selection" fixed="left"></el-table-column>
@@ -115,13 +99,15 @@
                 placeholder="请选择日期"
                 size="large"
                 style="width: 100%"
+                value-format="YYYY-MM-DD"
+                @change="changeProductDate(row)"
               />
             </template>
           </el-table-column>
           <el-table-column label="跟单日志" prop="log" min-width="250">
-              <template #default="{ row }">
-                  <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
-              </template>
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
+            </template>
           </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
@@ -161,6 +147,31 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass2"
         >
+          <el-table-column fixed="left" label="操作" width="150" >
+            <template #default="{ row, $index }">
+              <el-dropdown>
+                <el-button text type="primary" >
+                  打印面单
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item>
+                      <el-link type="primary" :underline="false" >打印面单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-link type="primary" :underline="false" @click="handleGetSignedRecord(row)">修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <el-link type="danger" :underline="false" @click="handleIfShowRecord(row)">取消签收</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </el-table-column>
           <el-table-column label="签收日期" prop="signDate" min-width="115">
             <template #default="{ row }">
               {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
@@ -226,39 +237,17 @@
                 placeholder="请选择日期"
                 size="large"
                 style="width: 100%"
+                value-format="YYYY-MM-DD"
+                @change="changeProductDate(row)"
               />
             </template>
           </el-table-column>
           <el-table-column label="跟单日志" prop="log" min-width="250">
-              <template #default="{ row }">
-                <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
-              </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150" >
-            <template #default="{ row, $index }">
-              <el-dropdown>
-                <el-button text type="primary" >
-                  打印面单
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >打印面单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="modifyVisible = true">修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="danger" :underline="false" >取消签收</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
             </template>
           </el-table-column>
+          
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -291,37 +280,41 @@
     >
       <el-table
         border
-        :data="fakeModify"
+        :data="pendingSignRecord"
         :header-cell-style="{ textAlign: 'center' }"
         :cell-style="cellStyle3"
         @cell-click="changeModifyInput"
       >
-        <el-table-column label="签收日期" prop="signedDate"></el-table-column>
-        <el-table-column label="签收数量" prop="quantity">
+        <el-table-column label="签收日期" prop="createTime">
           <template #default="{ row }">
-            <div class="none">
-              <el-input v-model="row.quantity" clearable @blur="clickModifyCancel($event, row)" />
-            </div>
-            <span>{{ row.quantity }}</span>
+            {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="单号" prop="number">
+        <el-table-column label="签收数量" prop="signCount">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.number" clearable @blur="clickModifyCancel($event, row)" />
+              <el-input v-model="row.signCount" clearable @keyup.enter="clickModifyCountCancel($event, row)" @blur="clickModifyCountCancel($event, row)" />
             </div>
-            <span>{{ row.number }}</span>
+            <span>{{ row.signCount }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="单号" prop="signOrder">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.signOrder" clearable @keyup.enter="clickModifyOrderCancel($event, row)" @blur="clickModifyOrderCancel($event, row)" />
+            </div>
+            <span>{{ row.signOrder }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template #default="{ row }">
-            <el-button text type="danger">删除并取消签收</el-button>
+          <template #default="{ row, $index }">
+            <el-button text type="danger" @click="handleDeleteSignRecord(row, $index)">删除并取消签收</el-button>
           </template>
         </el-table-column>
       </el-table>
       <template #footer>
         <el-button @click="closeModifyPendingDialog">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="closeModifyPendingDialog">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 已签收修改 -->
@@ -333,30 +326,34 @@
     >
       <el-table
         border
-        :data="fakeModify"
+        :data="signedRecord"
         :header-cell-style="{ textAlign: 'center' }"
         :cell-style="cellStyle4"
         @cell-click="changeModifyInput"
       >
-        <el-table-column label="签收日期" prop="signedDate"></el-table-column>
-        <el-table-column label="签收数量" prop="quantity"></el-table-column>
-        <el-table-column label="单号" prop="number">
+        <el-table-column label="签收日期" prop="createTime">
+          <template #default="{ row }">
+            {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="签收数量" prop="signCount"></el-table-column>
+        <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.number" clearable @blur="clickModifyCancel($event, row)" />
+              <el-input v-model="row.signOrder" clearable @keyup.enter="clickModifyOrderCancel($event, row)"  @blur="clickModifyOrderCancel($event, row)" />
             </div>
-            <span>{{ row.number }}</span>
+            <span>{{ row.signOrder }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template #default="{ row }">
-            <el-button text type="danger">删除并取消签收</el-button>
+          <template #default="{ row, $index }">
+            <el-button text type="danger" @click="handleDeleteSignedRecord(row, $index)">删除并取消签收</el-button>
           </template>
         </el-table-column>
       </el-table>
       <template #footer>
         <el-button @click="closeModifyDialog">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="closeModifyPendingDialog">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 入库单导出 -->
@@ -392,15 +389,27 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { getPoPurchaseMatters, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
+import { siteMap, siteValue } from '../constantOption'
+import {
+  deleteSign,
+  deleteSignRecord,
+  getSignList,
+  getSignLog,
+  getSignRecord,
+  signBatch,
+  signComponent,
+  signMoreRecord,
+  updateProductDate,
+  updateRecordCount,
+  updateRecordOrder,
+  updateSignLog
+} from '/@/api/devlocal/packagingShipping'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import { getSignList } from '/@/api/devlocal/packagingShipping'
-import { IGetSignList } from '/@/type/packagingShipping/packagingType'
-import { siteMap, siteValue } from '../constantOption'
 
 defineOptions({
   name: 'pendingReceiptTable',
@@ -468,34 +477,90 @@ const closeReceiptExport = () => {
   receiptExportVisible.value = false
 }
 // 批量签收
-const handleAllSigned = () => {
+const handleAllSigned = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning')
   }
+  const signIds = selectRows.value.map((item: any) => item.signId).join(',')
+  const { data } = await signBatch({
+    signIds: signIds
+  })
+  if (data) {
+    $baseMessage('批量签收成功', 'success')
+    fetchData()
+  }
 }
-const fakeData = [
-  {
-    po: 'PO19627',
-    createTime: '2024-10-14',
-    sku: 'HOM-0020-WHT碗架-木把手白色',
-    siteName: '亚马逊美国US',
-    skuImageUrl: 'https://picsum.photos/200'
-  },
-  {
-    po: 'PO19627',
-    createTime: '2024-10-14',
-    sku: 'HOM-0020-WHT碗架-木把手白色',
-    siteName: '亚马逊美国US',
-    skuImageUrl: 'https://picsum.photos/200'
-  },
-  {
-    po: 'PO19627',
-    createTime: '2024-10-14',
-    sku: 'HOM-0020-WHT碗架-木把手白色',
-    siteName: '亚马逊美国US',
-    skuImageUrl: 'https://picsum.photos/200'
-  },
-]
+// 签收
+const handleSignComponent = async (row: any) => {
+  const { data } = await signComponent({
+    signId: row.signId,
+    signCount: row.signCount,
+    signOrder: row.signOrder
+  })
+  if (data) {
+    $baseMessage('签收成功', 'success')
+    fetchData()
+  }
+}
+// 待签收表格
+const pendingSignRecord = ref<any>([])
+// 已签收表格
+const signedRecord = ref<any>([])
+// 查询签收记录
+const handleGetSignRecord = async (row: any) => {
+  modifyPendingVisible.value = true
+  const { data } = await getSignRecord({
+    signId: row.signId
+  })
+  if (data) {
+    pendingSignRecord.value = data
+  }
+}
+const handleGetSignedRecord = async (row: any) => {
+  modifyVisible.value = true
+  const { data } = await getSignRecord({
+    signId: row.signId
+  })
+  if (data) {
+    signedRecord.value = data
+  }
+}
+const handleDeleteSignRecord = async (row: any, index: number) => {
+  $baseConfirm('确定删除并取消签收吗', '系统提示', async () => {
+    const { data } = await deleteSignRecord({
+      signRecordId: row.id
+    })
+    if (data) {
+      pendingSignRecord.value.splice(index, 1)
+    }
+  })
+}
+const handleDeleteSignedRecord = async (row: any, index: number) => {
+  $baseConfirm('确定删除并取消签收吗', '系统提示', async () => {
+    const { data } = await deleteSignRecord({
+      signRecordId: row.id
+    })
+    if (data) {
+      signedRecord.value.splice(index, 1)
+    }
+  })
+}
+const handleIfShowRecord = async (row: any) => {
+  const { data } = await signMoreRecord({
+    signId: row.signId
+  })
+  if (data === true) {
+    handleGetSignedRecord(row)
+  } else {
+    const { data } = await deleteSign({
+      signId: row.signId
+    })
+    if (data) {
+      $baseMessage('取消签收成功', 'success')
+    }
+  }
+}
+
 // 采购计划列表
 let plannedPoList = ref<IGetPlanPoList[]>([])
 // 总记录数
@@ -509,17 +574,24 @@ const queryForm = reactive<IGetPlanPoListQuery>({
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
-
+const changeProductDate = async (row: any) => {
+  await updateProductDate({
+    signId: row.signId,
+    date: row.produceCompletionDate
+  })
+  // console.log(row.produceCompletionDate);
+  
+}
 
 
 
@@ -545,12 +617,12 @@ const imagePreviewClose = () =>{
 }
   
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
-  plannedPoList.value = []
+  Object.assign(list.value, [])
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name);  
   }
-  // fetchData()
+  fetchData()
 }
 //   // 处理已归档
 //   const handleArchived = async (progressId: number) => {
@@ -608,29 +680,29 @@ const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-
+  console.log(column);
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
+  if (getDataAttribute(el, 'img') && el) {
     imagePreviewVisible.value = true
     imagePreviewList.value = []
     imagePreviewList.value.push(el.src!)
   }
 
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
-  }
+  // if (!cell.children[0].children[0]
+  //     || !cell.children[0].children[1]
+  //     || !cell.children[0].children[0].classList
+  //     || !cell.children[0].children[1].classList) {
+  //   return
+  // }
 
-  if (column.property == 'purchaseMatters') {
+  if (column.property === 'log') {
     clickRow.value = row
-    const { data } = await getPoPurchaseMatters({ id: row.componentId })
+    const { data } = await getSignLog({ signId: row.signId })
     progressLogCopy.value = data
-    row.purchaseMatters = data
-    wangEditorTitle.value = '编辑零件采购注意事项'
-    classify.value = 'purchaseMatters'
+    row.log = data
+    wangEditorTitle.value = '编辑跟单日志'
+    classify.value = 'signLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } else {
     cell.children[0].children[0].classList.remove('none')
@@ -669,7 +741,7 @@ const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellEleme
     inputElement.select()
   }
 }
-const clickModifyCancel = async (event: any, value: any) =>{
+const clickModifyCountCancel = async (event: any, value: any) =>{
   const t1 = getRootElement(event["srcElement"],".cell").children[0]
   if (t1){
     if (t1.classList[0] !== "el-select") {
@@ -680,7 +752,30 @@ const clickModifyCancel = async (event: any, value: any) =>{
   if (t2){
     t2.classList.remove("none")
   }
-  // await updateProgressManage({...value})
+  if (event.type === 'blur') {
+    await updateRecordCount({
+      signRecordId: value.id,
+      count: value.signCount
+    })
+  }
+}
+const clickModifyOrderCancel = async (event: any, value: any) =>{
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    if (t1.classList[0] !== "el-select") {
+      t1.classList.add("none")
+    }
+  }
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  if (event.type === 'blur') {
+    await updateRecordOrder({
+      signRecordId: value.id,
+      order: value.signOrder
+    })
+  }
 }
 /**
  * 输入失焦事件
@@ -706,10 +801,10 @@ const clickCancel = async (event: any, value: any) =>{
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {
-  const { data } = await updatePoPurchaseMatters({ id: clickRow.value.componentId, purchaseMatters: val})
+  const { data } = await updateSignLog({ signId: clickRow.value.signId, log: val})
   if (data === true) {
     progressLogCopy.value = val
-    clickRow.value.purchaseMatters = val
+    clickRow.value.log = val
   }
   
 }

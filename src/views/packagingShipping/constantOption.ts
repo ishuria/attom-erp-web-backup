@@ -6,4 +6,27 @@ export const siteMap: Record<siteValue, string> = {
   2: '亚马逊UK',
   3: '亚马逊CA',
   4: '沃尔玛US'
-};
+}
+
+export const siteOption = [
+  {
+    label: '亚马逊US',
+    value: 0
+  },
+  {
+    label: '亚马逊DE',
+    value: 1
+  },
+  {
+    label: '亚马逊UK',
+    value: 2
+  },
+  {
+    label: '亚马逊CA',
+    value: 3
+  },
+  {
+    label: '沃尔玛US',
+    value: 4
+  },
+]

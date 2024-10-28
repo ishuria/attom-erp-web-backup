@@ -136,7 +136,7 @@ export const flexColumnWidth =  (list: any, label: string, prop: string) => {
   // console.log(arr)
   // 2.计算每列内容最大的宽度 + 表格的内间距（依据实际情况而定）
   const maxLength = getMaxLength(arr)
-  return (maxLength + 24) + 'px'
+  return (maxLength + 25) + 'px'
 }
 
 // 去掉 HTML 标签并显示纯文本的方法

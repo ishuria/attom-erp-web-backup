@@ -1,6 +1,6 @@
 <template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待联系" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
@@ -23,18 +23,26 @@
           :cell-style="pendingCellStyle"
           class="noneHoveTable"
           :cell-class-name="pendingCellClassName"
-          :data="fakeTableData"
+          :data="list"
           @cell-click="pendingInputChange"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
-          <el-table-column label="订货日期" min-width="115"></el-table-column>
+          <el-table-column label="反馈日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              {{ row.createTime ? row.createTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订货日期" min-width="115" prop="orderTime">
+            <template #default="{ row }">
+              {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
           <el-table-column label="PO" min-width="115" prop="po"></el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.url" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -42,25 +50,33 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" min-width="200" prop="sku"></el-table-column>
-          <el-table-column label="停产" prop="status" min-width="60">
+          <el-table-column label="停产" prop="productionHaltStatus" min-width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.status" :true-value="1" :false-value="0" disabled></el-checkbox>
+              <el-checkbox v-model="row.productionHaltStatus" :true-value="1" :false-value="0" disabled></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200"></el-table-column>
-          <el-table-column label="PO总数" prop="poTotal"></el-table-column>
-          <el-table-column label="好" prop="good"></el-table-column>
-          <el-table-column label="多"></el-table-column>
-          <el-table-column label="留样"></el-table-column>
-          <el-table-column label="缺"></el-table-column>
-          <el-table-column label="坏"></el-table-column>
-          <el-table-column label="待售后￥" min-width="100"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="200"></el-table-column>
+          <el-table-column label="供应商" min-width="200" prop="suppliser">
+            <template #default="{ row }">
+              <span v-html="row.suppliser"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="PO总数" prop="purchaseSkuNumber"></el-table-column>
+          <el-table-column label="好" prop="goodCount"></el-table-column>
+          <el-table-column label="多" prop="manyCount"></el-table-column>
+          <el-table-column label="留样" prop="keepSampleCount"></el-table-column>
+          <el-table-column label="缺" prop="lackCount"></el-table-column>
+          <el-table-column label="坏" prop="badCount"></el-table-column>
+          <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
+          <el-table-column label="打包反馈备注" min-width="200" prop="remark">
+            <template #default="{ row }">
+              <span v-html="row.remark"></span>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
             <template #default="{ row }">
               <el-space>
                 <el-button type="primary" text @click="showMove">移动到已联系</el-button>
-                <el-button type="primary" text @click="showAfterSalesLog">售后日志</el-button>
+                <el-button type="primary" text @click="showAfterSalesLog(row)">售后日志</el-button>
               </el-space>
             </template>
           </el-table-column>
@@ -95,18 +111,26 @@
           :cell-style="contactedCellStyle"
           class="noneHoveTable"
           :cell-class-name="contactedCellClassName"
-          :data="fakeTableData"
+          :data="list"
           @cell-click="contactedInputChange"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
-          <el-table-column label="订货日期" min-width="115"></el-table-column>
+          <el-table-column label="反馈日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              {{ row.createTime ? row.createTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订货日期" min-width="115" prop="orderTime">
+            <template #default="{ row }">
+              {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
           <el-table-column label="PO" min-width="115" prop="po"></el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.url" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -114,27 +138,31 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" min-width="200" prop="sku"></el-table-column>
-          <el-table-column label="停产" prop="status" min-width="60">
+          <el-table-column label="停产" prop="productionHaltStatus" min-width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.status" :true-value="1" :false-value="0" disabled></el-checkbox>
+              <el-checkbox v-model="row.productionHaltStatus" :true-value="1" :false-value="0" disabled></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200"></el-table-column>
-          <el-table-column label="PO总数" prop="poTotal"></el-table-column>
-          <el-table-column label="好" prop="good"></el-table-column>
-          <el-table-column label="多"></el-table-column>
-          <el-table-column label="留样"></el-table-column>
-          <el-table-column label="缺" prop="lack"></el-table-column>
-          <el-table-column label="坏" prop="bad"></el-table-column>
-          <el-table-column label="待售后￥" min-width="100" prop="pendingSale"></el-table-column>
-          <el-table-column label="已退款￥" min-width="100" prop="refund">
+          <el-table-column label="供应商" min-width="200" prop="suppliser">
             <template #default="{ row }">
-              <el-input v-model="row.refund" clearable />
+              <span v-html="row.suppliser"></span>
             </template>
           </el-table-column>
-          <el-table-column label="当前售后方式" min-width="150" prop="type">
+          <el-table-column label="PO总数" prop="purchaseSkuNumber"></el-table-column>
+          <el-table-column label="好" prop="goodCount"></el-table-column>
+          <el-table-column label="多" prop="manyCount"></el-table-column>
+          <el-table-column label="留样" prop="keepSampleCount"></el-table-column>
+          <el-table-column label="缺" prop="lackCount"></el-table-column>
+          <el-table-column label="坏" prop="badCount"></el-table-column>
+          <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
+          <el-table-column label="已退款￥" min-width="100" prop="refundAmount">
             <template #default="{ row }">
-              <el-select v-model="row.type" style="min-width: 100%">
+              <el-input v-model="row.refundAmount" clearable @change="handleUpdateAfterSales(row)"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="当前售后方式" min-width="150" prop="afterSalesMethod">
+            <template #default="{ row }">
+              <el-select v-model="row.afterSalesMethod" style="min-width: 100%" @change="handleUpdateAfterSales(row)">
                 <el-option 
                   v-for="item in afterSalesOption"
                   :key="item.value"
@@ -154,6 +182,7 @@
                 :file-list="row.imageList" 
                 :class="{ hide: row.hide }"
                 class="component-upload"
+                :http-request="(file) => uploadImage(file, row)"
               >
                 <el-icon ><Plus /></el-icon>
                 <template #file="{ file }">
@@ -168,7 +197,7 @@
                       </span>
                         <span
                           class="el-upload-list__item-delete"
-                 
+                          @click="handleRemove(row)"
                         >
                         <el-icon><Delete /></el-icon>
                       </span>
@@ -178,13 +207,9 @@
               </el-upload>
             </template>
           </el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
-          <el-table-column label="售后日志" min-width="220" prop="afterSalesLog">
+          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
             <template #default="{ row }">
-              <!-- <div class="none">
-                <el-input v-model="row.afterSalesLog" />
-              </div> -->
-              <span class="overflow-text">{{ removeHtmlTags(row.afterSalesLog) }}</span>
+              <span v-html="row.remark"></span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200" fixed="right">
@@ -226,18 +251,26 @@
           :cell-style="contactedCellStyle"
           class="noneHoveTable"
           :cell-class-name="contactedCellClassName"
-          :data="fakeTableData"
+          :data="list"
           @cell-click="contactedInputChange"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
-          <el-table-column label="订货日期" min-width="115"></el-table-column>
+          <el-table-column label="反馈日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              {{ row.createTime ? row.createTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订货日期" min-width="115" prop="orderTime">
+            <template #default="{ row }">
+              {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
           <el-table-column label="PO" min-width="115" prop="po"></el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.url" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -245,23 +278,27 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" min-width="200" prop="sku"></el-table-column>
-          <el-table-column label="停产" prop="status" min-width="60">
+          <el-table-column label="停产" prop="productionHaltStatus" min-width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.status" :true-value="1" :false-value="0" disabled></el-checkbox>
+              <el-checkbox v-model="row.productionHaltStatus" :true-value="1" :false-value="0" disabled></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200"></el-table-column>
-          <el-table-column label="PO总数" prop="poTotal"></el-table-column>
-          <el-table-column label="好" prop="good"></el-table-column>
-          <el-table-column label="多"></el-table-column>
-          <el-table-column label="留样"></el-table-column>
-          <el-table-column label="缺"></el-table-column>
-          <el-table-column label="坏"></el-table-column>
-          <el-table-column label="待售后￥" min-width="100"></el-table-column>
-          <el-table-column label="已退款￥" min-width="100"></el-table-column>
-          <el-table-column label="当前售后方式" min-width="150" prop="type">
+          <el-table-column label="供应商" min-width="200" prop="suppliser">
             <template #default="{ row }">
-              <el-select v-model="row.type" style="min-width: 100%" disabled>
+              <span v-html="row.suppliser"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="PO总数" prop="purchaseSkuNumber"></el-table-column>
+          <el-table-column label="好" prop="goodCount"></el-table-column>
+          <el-table-column label="多" prop="manyCount"></el-table-column>
+          <el-table-column label="留样" prop="keepSampleCount"></el-table-column>
+          <el-table-column label="缺" prop="lackCount"></el-table-column>
+          <el-table-column label="坏" prop="badCount"></el-table-column>
+          <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
+          <el-table-column label="已退款￥" min-width="100" prop="refundAmount"></el-table-column>
+          <el-table-column label="当前售后方式" min-width="150" prop="afterSalesMethod">
+            <template #default="{ row }">
+              <el-select v-model="row.afterSalesMethod" style="min-width: 100%" disabled>
                 <el-option 
                   v-for="item in afterSalesOption"
                   :key="item.value"
@@ -283,10 +320,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
-          <el-table-column label="售后日志" min-width="220" prop="afterSalesLog">
+          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.afterSalesLog) }}</span>
+              <span v-html="row.remark"></span>
             </template>
           </el-table-column>
         </el-table>
@@ -320,18 +356,26 @@
           :cell-style="pendingCellStyle"
           class="noneHoveTable"
           :cell-class-name="pendingCellClassName"
-          :data="fakeTableData"
+          :data="list"
           @cell-click="pendingInputChange"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
-          <el-table-column label="订货日期" min-width="115"></el-table-column>
+          <el-table-column label="反馈日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              {{ row.createTime ? row.createTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订货日期" min-width="115" prop="orderTime">
+            <template #default="{ row }">
+              {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
           <el-table-column label="PO" min-width="115" prop="po"></el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.url" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -339,25 +383,33 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" min-width="200" prop="sku"></el-table-column>
-          <el-table-column label="停产" prop="status" min-width="60">
+          <el-table-column label="停产" prop="productionHaltStatus" min-width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.status" :true-value="1" :false-value="0" disabled></el-checkbox>
+              <el-checkbox v-model="row.productionHaltStatus" :true-value="1" :false-value="0" disabled></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200"></el-table-column>
-          <el-table-column label="PO总数" prop="poTotal"></el-table-column>
-          <el-table-column label="好" prop="good"></el-table-column>
-          <el-table-column label="多"></el-table-column>
-          <el-table-column label="留样"></el-table-column>
-          <el-table-column label="缺"></el-table-column>
-          <el-table-column label="坏"></el-table-column>
-          <el-table-column label="待售后￥" min-width="100"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
+          <el-table-column label="供应商" min-width="200" prop="suppliser">
+            <template #default="{ row }">
+              <span v-html="row.suppliser"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="PO总数" prop="purchaseSkuNumber"></el-table-column>
+          <el-table-column label="好" prop="goodCount"></el-table-column>
+          <el-table-column label="多" prop="manyCount"></el-table-column>
+          <el-table-column label="留样" prop="keepSampleCount"></el-table-column>
+          <el-table-column label="缺" prop="lackCount"></el-table-column>
+          <el-table-column label="坏" prop="badCount"></el-table-column>
+          <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
+          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
+            <template #default="{ row }">
+              <span v-html="row.remark"></span>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
             <template #default="{ row }">
               <el-space>
                 <el-button type="primary" text @click="showMove">移动到已联系</el-button>
-                <el-button type="primary" text @click="showAfterSalesLog">售后日志</el-button>
+                <el-button type="primary" text @click="showAfterSalesLog(row)">售后日志</el-button>
               </el-space>
             </template>
           </el-table-column>
@@ -392,18 +444,26 @@
           :cell-style="contactedCellStyle"
           class="noneHoveTable"
           :cell-class-name="badDebtsCellClassName"
-          :data="fakeTableData"
+          :data="list"
           @cell-click="contactedInputChange"
         >
-          <el-table-column label="反馈日期" min-width="115" prop="time"></el-table-column>
-          <el-table-column label="订货日期" min-width="115"></el-table-column>
+          <el-table-column label="反馈日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              {{ row.createTime ? row.createTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订货日期" min-width="115" prop="orderTime">
+            <template #default="{ row }">
+              {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
+            </template>
+          </el-table-column>
           <el-table-column label="PO" min-width="115" prop="po"></el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.url" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -411,30 +471,38 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" min-width="200" prop="sku"></el-table-column>
-          <el-table-column label="停产" prop="status" min-width="60">
+          <el-table-column label="停产" prop="productionHaltStatus" min-width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.status" :true-value="1" :false-value="0" disabled></el-checkbox>
+              <el-checkbox v-model="row.productionHaltStatus" :true-value="1" :false-value="0" disabled></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200"></el-table-column>
-          <el-table-column label="PO总数" prop="poTotal"></el-table-column>
+          <el-table-column label="供应商" min-width="200" prop="suppliser">
+            <template #default="{ row }">
+              <span v-html="row.suppliser"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="PO总数" prop="purchaseSkuNumber"></el-table-column>
           <el-table-column label="任务数"></el-table-column>
-          <el-table-column label="好" prop="good"></el-table-column>
-          <el-table-column label="多"></el-table-column>
-          <el-table-column label="留样"></el-table-column>
-          <el-table-column label="缺"></el-table-column>
-          <el-table-column label="坏"></el-table-column>
-          <el-table-column label="待售后￥(含税)" min-width="100">
+          <el-table-column label="好" prop="goodCount"></el-table-column>
+          <el-table-column label="多" prop="manyCount"></el-table-column>
+          <el-table-column label="留样" prop="keepSampleCount"></el-table-column>
+          <el-table-column label="缺" prop="lackCount"></el-table-column>
+          <el-table-column label="坏" prop="badCount"></el-table-column>
+          <el-table-column label="待售后￥(含税)" min-width="100" prop="salesPrice">
             <template #header>
               待售后￥<br>(含税)
             </template>
           </el-table-column>
-          <el-table-column label="已退款￥" min-width="100"></el-table-column>
-          <el-table-column label="坏账金额￥" min-width="110"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180"></el-table-column>
-          <el-table-column label="售后日志" min-width="220" prop="afterSalesLog">
+          <el-table-column label="已退款￥" min-width="100" prop="refundAmount"></el-table-column>
+          <el-table-column label="坏账金额￥" min-width="110" prop="badDebtPrice"></el-table-column>
+          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.afterSalesLog) }}</span>
+              <span v-html="row.remark"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="120" fixed="right">
+            <template #default="{ row }">
+              <el-button type="primary" text @click="showAfterSalesLog(row)">售后日志</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -515,18 +583,22 @@
         border stripe
         :header-cell-style="{ textAlign: 'center' }"
         :cell-style="afterSalesLogCellStyle"
-        :data="fakePurchaseData"
+        :data="afterSalesLogList"
       >
-        <el-table-column label="反馈日期" min-width="115"></el-table-column>
-        <el-table-column label="任务ID" prop="id" min-width="70"></el-table-column>
+        <el-table-column label="反馈日期" min-width="115" prop="createTime">
+          <template #default="{ row }">
+            {{ row.createTime ? row.createTime.split(' ')[0] : ''}}
+          </template>
+        </el-table-column>
+        <el-table-column label="任务ID" min-width="70" prop="taskId"></el-table-column>
         <el-table-column label="任务数" min-width="100"></el-table-column>
-        <el-table-column label="好" min-width="100"></el-table-column>
-        <el-table-column label="多" min-width="100"></el-table-column>
-        <el-table-column label="留样" min-width="100"></el-table-column>
-        <el-table-column label="缺" min-width="100"></el-table-column>
-        <el-table-column label="坏" min-width="100"></el-table-column>
-        <el-table-column label="待售后￥" min-width="100"></el-table-column>
-        <el-table-column label="备注" min-width="180"></el-table-column>
+        <el-table-column label="好" min-width="100" prop="goodCount"></el-table-column>
+        <el-table-column label="多" min-width="100" prop="manyCount"></el-table-column>
+        <el-table-column label="留样" min-width="100" prop="keepSampleCount"></el-table-column>
+        <el-table-column label="缺" min-width="100" prop="lackCount"></el-table-column>
+        <el-table-column label="坏" min-width="100" prop="badCount"></el-table-column>
+        <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
+        <el-table-column label="备注" min-width="180" prop="remark"></el-table-column>
       </el-table>
     </vab-dialog>
     <wangEditor
@@ -543,11 +615,11 @@
 
 <script lang="ts" setup>
 import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
-import type { TableInstance, UploadFile } from 'element-plus'
+import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
+import { archiveAfterSales, badDebtAfterSales, checkAfterSalesArchive, deleteAfterSales, getAfterSalesList, getAfterSalesLog, updateAfterSales, uploadAfterSales } from '~/src/api/devlocal/packagingShipping'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
-import { removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 
@@ -573,31 +645,9 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
+  status: 0
 })
-const fakeTableData = [
-  {
-    time: '2024-10-24',
-    po: 'PO12345',
-    sku: 'HOME-0020-WHT 碗架-木把手白色',
-    url: 'https://picsum.photos/200',
-    poTotal: 2,
-    good: 3,
-    lack: 10,
-    bad: 4,
-    pendingSale: 6
-  },
-  {
-    time: '2024-10-24',
-    po: 'PO12345',
-    sku: 'HOME-0020-WHT 碗架-木把手白色',
-    url: 'https://picsum.photos/200',
-    poTotal: 2,
-    good: 1,
-    lack: 10,
-    bad: 4,
-    pendingSale: 6
-  }
-]
+
 const fakePurchaseData = [
   {
     id: 123
@@ -610,11 +660,19 @@ const afterSalesOption = [
   { label: '退款', value: 0 },
   { label: '随大货补寄', value: 1 },
   { label: '单独补寄', value: 2 },
-  { label: '无法售后', value: 3 },
-  { label: '需要采购', value: 4 },
-  { label: '待定', value: 5 },
+  { label: '采购', value: 3 },
+  { label: '无法售后', value: 4 },
+  { label: '需要采购', value: 5 },
 ]
 
+// 已联系修改
+const handleUpdateAfterSales = async (row: any) => {
+  await updateAfterSales({
+    id: row.id,
+    salesPrice: row.refundAmount,
+    salesMethod: row.afterSalesMethod
+  })
+}
 const contactedForm = reactive<any>({
   type: 0,
   remark: ''
@@ -631,8 +689,14 @@ const closeMove = () => {
 }
 // 售后日志可见
 const afterSalesLogVisible = ref<boolean>(false)
+// 售后日志列表
+const afterSalesLogList = ref<any>()
 // 售后日志展示
-const showAfterSalesLog = () => {
+const showAfterSalesLog = async (row: any) => {
+  const { data } = await getAfterSalesLog({
+    poId: row.poId
+  })
+  afterSalesLogList.value = data
   afterSalesLogVisible.value = true
 }
 // 采购申请可见
@@ -641,45 +705,109 @@ const purchaseRequisitionVisible = ref<boolean>(false)
 const showPurchaseRequisition = () => {
   purchaseRequisitionVisible.value = true
 }
-const handleClick = () => {
-  queryData()
-}
+async function uploadImage(params: any, row: any) {
+  try {
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', params.file);
+    uploadImgForm.append('id', row.id);
 
-// const fetchData = async () => {
-//   listLoading.value = true
-//   const { data } = await getList(queryForm)
-//   list.value = data.list
-//   total.value = data.total
-//   listLoading.value = false
-// }
+    const { data } = await uploadAfterSales(uploadImgForm)
+    row.hide = true
+
+    Object.assign(row.imageList, [{ url: data }])
+    
+  } catch (error) {
+    console.error(error)
+  }
+}
+async function handleRemove(row: any) {
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+      const { data } = await deleteAfterSales({
+          id: row.id
+      })
+      if (data) {
+          row.imageList = []
+          row.hide = false
+          $baseMessage("图片删除成功!","success","hey")
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleTabClick = (tab: TabsPaneContext, event: Event) => {
+  // Object.assign(list.value, [])
+  if (tab.props.name !== undefined) {
+    queryForm.status = Number(tab.props.name);  
+  }
+  fetchData()
+}
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getAfterSalesList(queryForm)
+  if (data) {
+    list.value = data.list
+    total.value = data.total
+    listLoading.value = false
+    list.value.forEach((item: any) => {
+      item.suppliser = item.suppliser.replace(/,/g, '<br>');
+      item.remark = item.remark.replace(/,/g, '<br>');
+      item.hide = false
+      item.imageList = []
+    })
+  }
+}
 
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 
 // 处理归档
-const handleArchive = (row: any) => {
-  // 如果已退款>=待售后，则归类为已完成。
-  if (row.refund >= row.pendingSale) {
+const handleArchive = async (row: any) => {
+  // // 如果已退款>=待售后，则归类为已完成。
+  // if (row.refundAmount >= row.salesPrice) {
     
+  // } else {
+  //   $baseConfirm(`有${row.badCount+row.lackCount}套产品，${row.salesPrice}金额会被记为坏账，是否继续？`, '系统提示', async () => {
+  //     // 归类为坏账
+  //   })
+  // }
+  const { data } = await checkAfterSalesArchive({
+    id: row.id
+  })
+  if (data) {
+    const { data: archive } = await archiveAfterSales({
+      id: row.id
+    })
+    if (archive) {
+      $baseMessage('已成功归档到已完成', 'success')
+      fetchData()
+    }
   } else {
-    $baseConfirm(`有${row.bad+row.lack}套产品，${row.pendingSale}金额会被记为坏账，是否继续？`, '系统提示', async () => {
+    $baseConfirm(`有${row.badCount+row.lackCount}套产品，${row.salesPrice}金额会被记为坏账，是否继续？`, '系统提示', async () => {
       // 归类为坏账
+      const { data: badDebt } = await badDebtAfterSales({
+        id: row.id
+      })
+      if (badDebt) {
+        $baseMessage('已成功归档到坏账', 'success')
+        fetchData()
+      }
     })
   }
-
 }
 
 const wangEditorTitle = ref<string>('')
@@ -751,7 +879,7 @@ const pendingCellClassName = (data: { row: any, column: any, rowIndex: number, c
     return 'clear-padding'
   }
   if (data.columnIndex === 8) {
-    if (data.row.good >= data.row.poTotal) {
+    if (data.row.goodCount >= data.row.purchaseSkuNumber) {
       return 'green'
     }
     return 'red'
@@ -764,7 +892,7 @@ const contactedCellClassName = (data: { row: any, column: any, rowIndex: number,
     return 'clear-padding'
   }
   if (data.columnIndex === 8) {
-    if (data.row.good >= data.row.poTotal) {
+    if (data.row.goodCount >= data.row.purchaseSkuNumber) {
       return 'green'
     }
     return 'red'
@@ -777,7 +905,7 @@ const badDebtsCellClassName = (data: { row: any, column: any, rowIndex: number, 
     return 'clear-padding'
   }
   if (data.columnIndex === 9) {
-    if (data.row.good >= data.row.poTotal) {
+    if (data.row.goodCount >= data.row.purchaseSkuNumber) {
       return 'green'
     }
     return 'red'
@@ -806,7 +934,7 @@ onActivated(() => {
 })
 
 onBeforeMount(() => {
-  // fetchData()
+  fetchData()
 })
 </script>
 
