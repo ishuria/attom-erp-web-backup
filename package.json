@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "10.2.0",
+  "version": "10.2.5",
   "private": true,
   "author": "github.com/zxwk1998",
   "scripts": {
@@ -20,7 +20,7 @@
     "global:install": "npm i -g nrm cnpm npm-check-updates pnpm",
     "globle:update": "ncu -g",
     "module:install": "pnpm i",
-    "module:update": "ncu -u --reject vite-plugin-mock,eslint,vue-echarts,chokidar && npm run module:install",
+    "module:update": "ncu -u --reject vite-plugin-mock,eslint,vue-echarts,chokidar,sass,@opentiny/vue && npm run module:install",
     "module:reinstall": "rimraf node_modules && npm run module:install",
     "git": "start ./git.sh",
     "generate-pwa-assets": "pwa-assets-generator",
@@ -51,7 +51,7 @@
     "pinia": "^2.2.4",
     "qs": "^6.13.0",
     "sortablejs": "^1.15.3",
-    "typeit": "^8.8.6",
+    "typeit": "^8.8.7",
     "vsv-context-menu": "^1.4.2",
     "vsv-icon": "^1.2.2",
     "vue": "^3.5.12",
@@ -109,7 +109,7 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-unplugin": "^1.8.0",
     "vite-plugin-vitebar": "^0.0.8",
-    "vue-tsc": "^2.1.6"
+    "vue-tsc": "^2.1.8"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
