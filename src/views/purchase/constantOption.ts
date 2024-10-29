@@ -1,19 +1,23 @@
 export const siteList = [
   {
     label: '亚马逊美国US',
-    value: 0
+    value: 0,
   },
   {
     label: '亚马逊英国UK',
-    value: 1
+    value: 1,
   },
   {
     label: '亚马逊德国DE',
-    value: 2
+    value: 2,
+  },
+  {
+    label: '亚马逊加拿大CA',
+    value: 3,
   },
   {
     label: '沃尔玛美国US',
-    value: 3
+    value: 4,
   },
 ]
 
@@ -44,13 +48,11 @@ export const invoicingNumList = [
     value: 2,
     label: '无法开票',
   },
- ]
-export type CurrencyCode = 0 | 1 | 2; // 定义币种代码类型
+]
+export type CurrencyCode = 0 | 1 | 2 // 定义币种代码类型
 
 export const currencyMap: Record<CurrencyCode, string> = {
   0: 'RMB',
   1: 'USD',
-  2: 'EUR'
-};
-
-
+  2: 'EUR',
+}
