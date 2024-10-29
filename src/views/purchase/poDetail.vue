@@ -226,7 +226,7 @@
               <span>{{ row.componentName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="订货总数" prop="purchaseCount" align="center" :width="flexColumnWidth(skuComponentList, '订货总数', 'purchaseCount')">
+          <el-table-column label="订货总数" prop="purchaseCount" align="center" :width="flexColumnWidth(skuComponentList, '订货', 'purchaseCount')">
             <template #header>
               订货<br>总数
             </template>
@@ -272,7 +272,7 @@
               <span>{{ row.unit }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂单价', 'unitPrice')">
+          <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂', 'unitPrice')">
             <template #header>
               出厂<br>单价
             </template>
@@ -283,7 +283,7 @@
               <span>{{ row.unitPrice }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="出厂总价" prop="totalPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂总价', 'totalPrice')">
+          <el-table-column label="出厂总价" prop="totalPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂', 'totalPrice')">
             <template #header>
               出厂<br>总价
             </template>
@@ -321,7 +321,7 @@
               总未<br>税价
             </template>
           </el-table-column>
-          <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(skuComponentList, '总含税价', 'taxIncludedPrice')">
+          <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(skuComponentList, '总含', 'taxIncludedPrice')">
             <template #header>
                 总含<br>税价
             </template>
@@ -583,7 +583,7 @@
               <el-row style="width: 100%">
                   <el-col :span="12">
                     <el-form-item label="PO站点">
-                      <el-select v-model="poDetailData.site" placeholder="请选择站点" :disabled="createDisabled">
+                      <el-select v-model="poDetailData.site" placeholder="请选择站点" :disabled="createDisabled" @change="updateCreate">
                         <el-option
                           v-for="item in siteList"
                           :label="item.label"
@@ -595,7 +595,7 @@
                   </el-col>
                   <el-col :span="12">
                       <el-form-item label="收货仓库">
-                          <el-select v-model="poDetailData.repositoryId" placeholder="请选择收货仓库" :disabled="createDisabled">
+                          <el-select v-model="poDetailData.repositoryId" placeholder="请选择收货仓库" :disabled="createDisabled" @change="updateCreate">
                               <el-option
                                   v-for="item in repositoryOption"
                                   :label="item.label"
@@ -647,7 +647,7 @@
                       <el-space>
                           <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
                       </el-space>
-                      <el-input type="textarea" :rows="11" v-model="poDetailData.poRemarks" resize="none" :disabled="createDisabled"></el-input>
+                      <el-input type="textarea" :rows="11" v-model="poDetailData.poRemarks" resize="none" :disabled="createDisabled" @change="updateCreate"></el-input>
                     </el-form-item>
                   </el-col>
               </el-row>
@@ -730,7 +730,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.purchaseCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input class="reduce-input" v-model="row.purchaseCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.purchaseCount }}</span>
             </template>
@@ -832,7 +832,7 @@
           </el-table-column>    
           <el-table-column label="货币" width="105px" prop="currency">
             <template #default="{ row }">
-              <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;">
+              <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="updateCreate">
                 <el-option v-for="dict in currencyNumList" :key="dict.value"
                     :value="dict.value" :label="dict.label"></el-option>
               </el-select>
@@ -856,7 +856,7 @@
           </el-table-column>
           <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
             <template #default="{row}">
-              <el-select v-model="row.suppliserId" >
+              <el-select v-model="row.suppliserId" @change="updateCreate">
                 <el-option 
                   v-for="item in row.suppliserList"
                   :label="item.label"
@@ -868,7 +868,7 @@
           </el-table-column>
           <el-table-column label="开票" prop="oem" align="center" width="130">
             <template #default = "{ row }">
-              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;">
+              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="updateCreate">
                 <el-option v-for="dict in invoicingNumList" :key="dict.value"
                     :value="dict.value" :label="dict.label"></el-option>
               </el-select>
@@ -898,7 +898,7 @@
           </el-table-column>
           <el-table-column align="center" label="采购方" min-width="130" prop="purchaseId">
             <template #default="{row}">
-              <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;">
+              <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="updateCreate">
                 <el-option 
                   v-for="item in purchaseOption"
                   :label="item.label"
@@ -910,7 +910,7 @@
           </el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" align="center" min-width="75">
             <template #default = "{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox"/>
+              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" @change="updateCreate" class="custom-checkbox"/>
             </template>
           </el-table-column>
           <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
@@ -944,7 +944,7 @@
           </el-table-column> 
           <el-table-column  label="收货仓库" prop="repositoryId" min-width="160">
             <template #default="{ row }">
-              <el-select v-model="row.repositoryId" placeholder="输入和搜索收货仓库" style="min-width: 100%;" filterable>
+              <el-select v-model="row.repositoryId" placeholder="输入和搜索收货仓库" style="min-width: 100%;" filterable @change="updateCreate">
                 <el-option 
                   v-for="item in repositoryOption"
                   :label="item.label"
@@ -963,12 +963,9 @@
               <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" min-width="200" align="center">
+          <el-table-column fixed="right" label="操作" min-width="100" align="center">
             <template #default="{ row, $index }">
-              <el-space>
-                <el-button v-if="route.query.from !== 'plannedPoCreate'" text type="primary" @click="handleUpdateComponentPrice(row)">更新单价</el-button>
-                <el-button text type="danger" @click="handleDelPoSKuComponent(row, $index)">删除</el-button>
-              </el-space>
+              <el-button text type="danger" @click="handleDelPoSKuComponent(row, $index)">删除</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -976,15 +973,358 @@
           </template>
         </el-table>
         <el-footer class="button-center">
-          <el-button v-if="previousVisible" type="primary" @click="handleFetchPreviousData">上一个</el-button>
-          <el-button v-if="nextVisible" type="primary" @click="handleFetchNextData">下一个</el-button>
+          <el-button v-if="createPreviousVisible" type="primary" @click="handleFetchCreatePrevious">上一个</el-button>
+          <el-button v-if="createNextVisible" type="primary" @click="handleFetchCreateNext">下一个</el-button>
           <el-button type="warning" @click="handleAddSKU">添加SKU</el-button>
-          <el-button type="danger" @click="handleDelSKU" :disabled="createDisabled">删除SKU</el-button>
-          <el-button type="success" :disabled="createDisabled">创建SKU</el-button>
+          <el-button type="danger" @click="handleDelCreateSKU" :disabled="createDisabled">删除SKU</el-button>
+          <el-button type="success" :disabled="createDisabled" @click="createSku">创建SKU</el-button>
         </el-footer>
       </div>
     </div>
+    <div :class="{ none : deleteNone }">
+      <el-page-header  @back="goBack" style="margin-bottom: 0px;">
+        <template #title>
+          退出
+        </template>
+        <template #content>
+          <div class="flex items-center">
+            <span> <strong>{{ route.query.from }}</strong></span>
+          </div>
+        </template>
+      </el-page-header>
+      <el-card class="product-details-card" shadow="never" >
+        <el-row style="display: flex; width: 100%">
+          <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }"> 
+            <el-form label-position="top" >
+              <el-form-item label="订货套数" >
+                <el-input v-model="poDetailData.purchaseSkuNumber" disabled></el-input>
+              </el-form-item>
+              <el-form-item >
+                <el-upload 
+                  list-type="picture-card" 
+                  :file-list="poDetailData.imageList" 
+                  :class="{ hide: poDetailData.hide }"
+                  :http-request="uploadImage"
+                  class="upload-align"
+                  :style="{ height: imageColumnHeight + 'px' }"
+                >
+                  <el-icon ><Plus /></el-icon>
+                  <template #file="{ file }">
+                    <div>
+                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                      <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-preview"
+                          @click="handlePreview(file)"
+                        >
+                          <el-icon><zoom-in /></el-icon>
+                        </span>
+                      </span>
+                    </div>
+                  </template>
+                </el-upload>
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col style="flex: 1.3; padding: 0">
+            <el-form label-position="top" :inline="true">
+              <el-row style="width: 100%">
+                  <el-col :span="12">
+                      <el-form-item label="SKU">
+                        <el-input v-model="poDetailData.sku" disabled/>
+                      </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                      <el-form-item label="产品名称">
+                          <el-input v-model="poDetailData.productName" disabled></el-input>
+                      </el-form-item>
+                  </el-col>
+              </el-row>
 
+              <el-row style="width: 100%">
+                <el-col :span="12">
+                  <el-form-item label="创建日期" data-label="创建日期3">
+                    <el-input v-model="poDetailData.createTime" disabled></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="产品经理">
+                    <el-input v-model="poDetailData.productManager" disabled></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
+              <el-row style="width: 100%">
+                  <el-col :span="12">
+                    <el-form-item label="PO站点">
+                      <el-select v-model="poDetailData.site" placeholder="请选择站点" disabled>
+                        <el-option
+                          v-for="item in siteList"
+                          :label="item.label"
+                          :value="item.value"
+                          :key="item.value"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                      <el-form-item label="收货仓库">
+                          <el-select v-model="poDetailData.repositoryId" placeholder="请选择收货仓库" disabled>
+                              <el-option
+                                  v-for="item in repositoryOption"
+                                  :label="item.label"
+                                  :value="item.id"
+                                  :key="item.id"
+                              ></el-option>
+                          </el-select>
+                      </el-form-item>
+                  </el-col>
+              </el-row>
+
+              <el-row style="width: 100%">
+                <el-col :span="4">
+                  <el-form-item label="SKU总含税价" data-label="SKU总含税价3">
+                    <el-input v-model="poDetailData.orderTotalPrice" disabled></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item label="起订量" >
+                    <el-input v-model="poDetailData.minQuantity" disabled></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item label="整箱数" >
+                    <el-input v-model="poDetailData.numCartons" disabled></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12"> 
+                  <el-form-item label="我方打包整箱数(近10次)">
+                    <el-input v-model="poDetailData.packedTenRecord" disabled></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </el-col>
+          <el-col style="flex: 1; padding: 0">
+            <el-form label-position="top" >
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item >
+                    <el-space>
+                        <span style="font-size: var(--el-form-label-font-size);">SKU备注</span>
+                    </el-space>
+                    <el-input type="textarea" :rows="11" v-model="poDetailData.skuRemarks" disabled resize="none"></el-input>
+                  </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item style="margin-right: 0">
+                      <el-space>
+                          <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
+                      </el-space>
+                      <el-input type="textarea" :rows="11" v-model="poDetailData.poRemarks" resize="none" disabled></el-input>
+                    </el-form-item>
+                  </el-col>
+              </el-row>
+            </el-form>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-page-header  @back="goBack" style="margin-bottom: 15px;">
+        <template #title>
+          退出
+        </template>
+        <template #content>
+          <div class="flex items-center">
+            <span> <strong> SKU零配件清单（与开票一致） </strong></span>
+          </div>
+        </template>
+      </el-page-header>
+      <div class="comprehensive-table-container">
+        <el-table 
+          ref="tableRef" 
+          stripe border 
+          :data="skuComponentList"
+          :header-cell-style="{ 'text-align': 'center' }"
+          @cell-click="changeCreateInput"
+          class="noneHoveTable"
+          :cell-class-name="getCellClass"
+        >
+          <el-table-column align="center" label="图片" width="81.2px" fixed="left">
+              <template #default="{ row }">
+                <el-upload 
+                  list-type="picture-card" 
+                  :file-list="row.imageList" 
+                  :class="{ hide: row.hide }"
+                  :http-request="(file) => uploadSkuComponentImage(file, row)"
+                  class="component-upload"
+                >
+                  <el-icon ><Plus /></el-icon>
+                  <template #file="{ file }">
+                    <div>
+                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                      <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-preview"
+                          @click="handlePreview(file)"
+                        >
+                          <el-icon><zoom-in /></el-icon>
+                        </span>
+                      </span>
+                    </div>
+                  </template>
+                </el-upload>
+              </template>
+          </el-table-column>
+          <el-table-column label="零件ID" prop="existingPartsListId" width="80" fixed="left" align="center"></el-table-column>   
+          <el-table-column label="零件名" prop="componentName" width="200" fixed="left"></el-table-column>
+          <el-table-column label="订货总数" prop="purchaseCount" align="center" :width="flexColumnWidth(skuComponentList, '订货', 'purchaseCount')">
+            <template #header>
+              订货<br>总数
+            </template>
+          </el-table-column>
+          <el-table-column label="多订数量" prop="moreCount" align="center" :width="flexColumnWidth(skuComponentList, '多订', 'moreCount')">
+            <template #header>
+              多订<br>数量
+            </template>
+          </el-table-column>
+          <el-table-column label="使用已有库存" prop="useStockCount" align="center" :width="flexColumnWidth(skuComponentList, '使用已', 'useStockCount')">
+            <template #header>
+              使用已<br>有库存
+            </template>
+          </el-table-column>
+          <el-table-column label="已有库存" prop="stock" align="center" :width="flexColumnWidth(skuComponentList, '已有', 'stock')">
+            <template #header>
+              已有<br>库存
+            </template>
+          </el-table-column>
+          <el-table-column label="单位" prop="unit" align="center" :width="flexColumnWidth(skuComponentList, '单位', 'unit')"></el-table-column>
+          <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂', 'unitPrice')">
+            <template #header>
+              出厂<br>单价
+            </template>
+          </el-table-column>
+          <el-table-column label="出厂总价" prop="totalPrice" align="center" :width="flexColumnWidth(skuComponentList, '出厂', 'totalPrice')">
+            <template #header>
+              出厂<br>总价
+            </template>
+          </el-table-column>
+          <el-table-column label="含税运费" prop="freight" align="center" :width="flexColumnWidth(skuComponentList, '含税', 'freight')">
+            <template #header>
+                含税<br>运费
+            </template>
+          </el-table-column>
+          <el-table-column label="模具费含税" prop="moldCost" align="center" :width="flexColumnWidth(skuComponentList, '模具费', 'moldCost')">
+            <template #header>
+              模具费<br>含税
+            </template>
+          </el-table-column>
+          <el-table-column label="总未税价" prop="preTaxPrice" align="center" :width="flexColumnWidth(skuComponentList, '总未', 'preTaxPrice')">
+            <template #header>
+              总未<br>税价
+            </template>
+          </el-table-column>
+          <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(skuComponentList, '总含', 'taxIncludedPrice')">
+            <template #header>
+                总含<br>税价
+            </template>
+          </el-table-column>    
+          <el-table-column label="货币" width="105px" prop="currency">
+            <template #default="{ row }">
+              <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" disabled>
+                <el-option v-for="dict in currencyNumList" :key="dict.value"
+                    :value="dict.value" :label="dict.label"></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column  label="订单号" prop="orderNo" min-width="100" align="center"></el-table-column>
+          <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
+            <template #default="{row}">
+              <el-select v-model="row.suppliserId" disabled>
+                <el-option 
+                  v-for="item in row.suppliserList"
+                  :label="item.label"
+                  :value="item.id"
+                  :key="item.id"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="开票" prop="oem" align="center" width="130">
+            <template #default = "{ row }">
+              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" disabled>
+                <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                    :value="dict.value" :label="dict.label"></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
+            <template #header>
+                实际<br>税点
+            </template>
+          </el-table-column>
+          <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
+            <template #header>
+                开票<br>税点
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="采购方" min-width="130" prop="purchaseId">
+            <template #default="{row}">
+              <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" disabled>
+                <el-option 
+                  v-for="item in purchaseOption"
+                  :label="item.label"
+                  :value="item.id"
+                  :key="item.id"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="不报关" prop="customsDeclarationStatus" align="center" min-width="75">
+            <template #default = "{ row }">
+              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" disabled class="custom-checkbox"/>
+            </template>
+          </el-table-column>
+          <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+            <template #default="{ row }">
+              <span>
+                <el-text truncated>
+                  {{ row.purchaseLink }}
+                </el-text>
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="起订量" prop="minQuantity" align="center" min-width="73"></el-table-column> 
+          <el-table-column label="整箱数" prop="numCartons" align="center" min-width="73"></el-table-column> 
+          <el-table-column  label="收货仓库" prop="repositoryId" min-width="160">
+            <template #default="{ row }">
+              <el-select v-model="row.repositoryId" placeholder="输入和搜索收货仓库" style="min-width: 100%;" filterable disabled>
+                <el-option 
+                  v-for="item in repositoryOption"
+                  :label="item.label"
+                  :value="item.id"
+                  :key="item.id"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="合同条款" prop="contractTerms" min-width="200">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+          </template>
+        </el-table>
+      </div>
+    </div>
     <wangEditor
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorAttentionVisible"
@@ -1084,6 +1424,7 @@ import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import {
   addPoSKU,
+  createPlanPo,
   deleteComponentImg,
   deletePoSku,
   deletePoSkuComponent,
@@ -1118,7 +1459,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
-import { _addSku, _clearSKUs } from '/@/utils/sku'
+import { _addSku, _clearSKUs, _deleteSku, _updateSku } from '/@/utils/sku'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'
@@ -1131,7 +1472,8 @@ defineOptions({
 const detailsNone = ref<boolean>(false)
 // 创建div显示与否
 const createNone = ref<boolean>(true)
-
+// 已删除显示与否
+const deleteNone = ref<boolean>(true)
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
@@ -1179,17 +1521,13 @@ const handleCloseAddSku = () => {
 
 const skuStore = useSkuStore();
 const skuData = skuStore.getSkuData;
+const tempCurId = ref<string>('')
 // 选择sku的请求和赋值
 const afterGetSku = async (_sku: string) => {
   const { data } = await getPurchaseSKU({
     sku: _sku
   })
   if (data) {
-    // 存入新的数据
-    let newSku = { id: skuData.length, poDetailData: poDetailData.value, skuComponentList: skuComponentList.value }; 
-    _addSku(newSku)
-    console.log(1, skuData);
-    
     // 选择了sku或者添加了SKU，其他输入框就不用disable
     createDisabled.value = false
     // 获取旧的订货套数
@@ -1217,7 +1555,17 @@ const afterGetSku = async (_sku: string) => {
           item.imageList = [{ url: item.componentUrl }]
       }
     })
-  
+    // 存入新的数据
+    tempCurId.value = crypto.randomUUID()
+    // 深拷贝对象，避免引用问题
+    const newSku = {
+      poDetailData: JSON.parse(JSON.stringify(poDetailData.value)),
+      skuComponentList: JSON.parse(JSON.stringify(skuComponentList.value))
+    };
+    _addSku(newSku, tempCurId.value)
+    console.log('存入新数据', skuData);
+    console.log(tempCurId.value);
+    handleShowCreatePreviousOrNext()
     fetchPurchaseAndRepository()
   }
 }
@@ -1228,13 +1576,8 @@ const handleConfirmAddSKU = async () => {
     // 如果是创建，就是和上面一样的接口
     if (route.query.from === 'plannedPoCreate') {
       // 存入新的数据
-      // let newSku = { id: Date.now(), poDetailData: poDetailData.value, skuComponentList: skuComponentList.value }; 
-      // _addSku(newSku)
-      // console.log(1, skuData);
       afterGetSku(addSkuForm.sku)
-      // let newSku = { id: Date.now(), poDetailData: poDetailData.value, skuComponentList: skuComponentList.value }; 
-      // _addSku(newSku)
-      // console.log(2, skuData);
+
       $baseMessage('添加SKU成功', 'success')
       handleCloseAddSku()
     } else {
@@ -1262,6 +1605,10 @@ const selectedPurchasers = ref<string[]>([])
 const previousVisible = ref<boolean>(false)
 // 控制下一个显示
 const nextVisible = ref<boolean>(false)
+// 创建的上一个显示
+const createPreviousVisible = ref<boolean>(false)
+// 创建的下一个显示
+const createNextVisible = ref<boolean>(false)
 // po的SkuId列表
 const poSkuIdList = ref<number[]>([])
 // 当前skuId在id列表的下标
@@ -1447,8 +1794,8 @@ const handleUpdateCreateSkuCount = async () => {
       oldPurchaseNumber.value = Number(poDetailData.value.purchaseSkuNumber)
       poDetailData.value.orderTotalPrice = data.skuTotalPrice
       Object.assign(skuComponentList.value, data.componentList)
-      // let newValue = { id: , poDetailData: poDetailData.value, skuComponentList: skuComponentList.value }; 
-      // _updateSku(skuData.length, )
+      updateCreate()
+      
       skuComponentList.value.forEach((item: any) => {
         item.unitPrice = formattedPrice(item.unitPrice)
         if(!item.componentUrl) {
@@ -1463,6 +1810,11 @@ const handleUpdateCreateSkuCount = async () => {
   } catch (error) {
     console.error(error)
   }
+}
+const updateCreate = () => {
+  let newValue = { tempId: tempCurId.value, poDetailData: poDetailData.value, skuComponentList: skuComponentList.value }; 
+  _updateSku(newValue)
+  console.log('更新', skuData);
 }
 // 采购sku详情更新
 const handleUpdateSku = async () => {
@@ -1681,6 +2033,7 @@ const clickCreateOtherCancel = async (event: any, value: any) => {
   if (t2){
     t2.classList.remove("none")
   }
+  updateCreate()
 }
 // 创建blur修改
 const clickCreateCancel = async (event:any,value:any) => {
@@ -1711,6 +2064,7 @@ const clickCreateCancel = async (event:any,value:any) => {
           item.imageList = [{ url: item.componentUrl }]
       }
     })
+    updateCreate()
   }
 }
 
@@ -1807,12 +2161,12 @@ const handleGetRow = (row: any) => {
 }
 // 修改默认采购方
 const handleDefaultPurchase = async (row: any) => {
-  // const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  // if(item!.type === 0) { //如果选择了为买单的采购方
-  //   row.customsDeclarationStatus = 1 //自动勾选不报关
-  // } else if(row.purchaseId === 2) { //选择了埃托姆
-  //   row.customsDeclarationStatus = 0
-  // } 
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if(item!.type === 0) { //如果选择了为买单的采购方
+    row.customsDeclarationStatus = 1 //自动勾选不报关
+  } else if(row.purchaseId === 2) { //选择了埃托姆
+    row.customsDeclarationStatus = 0
+  } 
   try {
     const { data } = await updatePoSkuComponent(row)
     if (data === true) {
@@ -1826,20 +2180,20 @@ const handleDefaultPurchase = async (row: any) => {
 }
 // 处理不报关
 const handleDeclareCustoms = async (row: any) => {
-  // const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  // if(item!.type === 0) { //如果选择了为买单的采购方
-  //   if(row.customsDeclarationStatus === 0) {
-  //     row.customsDeclarationStatus = 1
-  //     $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
-  //   }
-  // } else if(row.purchaseId === 2) { //选择了埃托姆
-  //   if(row.customsDeclarationStatus === 1) {
-  //     row.customsDeclarationStatus = 0
-  //     $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
-  //   } 
-  // } else {
-    // updateSkuComponent(row)
-  // }
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if(item!.type === 0) { //如果选择了为买单的采购方
+    if(row.customsDeclarationStatus === 0) {
+      row.customsDeclarationStatus = 1
+      $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+    }
+  } else if(row.purchaseId === 2) { //选择了埃托姆
+    if(row.customsDeclarationStatus === 1) {
+      row.customsDeclarationStatus = 0
+      $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
+    } 
+  } else {
+    updateSkuComponent(row)
+  }
   try {
     const { data } = await updatePoSkuComponent(row)
     if (data === true) {
@@ -1854,6 +2208,55 @@ const handleDeclareCustoms = async (row: any) => {
 // 添加SKU
 const handleAddSKU = async () => {
   addSKUVisible.value = true
+}
+const handleDelCreateSKU = () => {
+  let length = skuData.length
+  let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
+  if (length === 1) {
+    _deleteSku(tempCurId.value)
+    $baseMessage('删除SKU成功', 'success')
+    Object.assign(poDetailData.value, {})
+    skuComponentList.value = []
+    handleShowCreatePreviousOrNext()
+  } else {
+    console.log('删除前的id', tempCurId.value);
+    
+    _deleteSku(tempCurId.value)
+    $baseMessage('删除SKU成功', 'success')
+    console.log('删除后的', skuData);
+    if (length === 2) {
+      if (index === 0) {
+        handleFetchCreateNext()
+      } else if (index === 1) {
+        handleFetchCreatePrevious()
+      }
+    } else {
+      if (index === 0) {
+        handleFetchCreateNext()
+      } else if (index === length - 1) {
+        handleFetchCreatePrevious()
+      } else {
+        handleFetchCreatePrevious()
+      }
+    }
+  }
+}
+// 创建SKU
+const createSku = async () => {
+  const createReq = skuData.map((item: any) => {
+    const transformedItem = {
+      componentList: item.skuComponentList,
+      poSkuDetail: item.poDetailData, // 替换键名
+    };
+    return transformedItem;
+  });
+
+
+  const { data } = await createPlanPo(createReq)
+  if (data) {
+    $baseMessage('创建SKU成功', 'success') 
+    goBack()
+  }
 }
 // PO详情删除SKU
 const handleDelSKU = async () => {
@@ -1909,6 +2312,7 @@ const handleDelPoSKuComponent = async (row: any, index: number) => {
           fetchSkuComponent()
           fetchData()
           $baseMessage('该条零件删除成功', 'success', 'hey');
+          _deleteSku(tempCurId.value)
         }
       } catch (error) {
         console.error('删除失败:', error);
@@ -1949,6 +2353,13 @@ async function uploadImage(params: any) {
     poDetailData.value.hide = false
   }
 }
+// async function uploadCreateImage(params: any) {
+//   poDetailData.value.hide = true
+//   console.log(params);
+
+//   Object.assign(poDetailData.value.imageList, [{ url: params.file }])
+
+// }
 async function uploadSkuComponentImage(params: any, row: any) {
   
   try {
@@ -2002,6 +2413,64 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
   }
 }
 
+// 当点击创建的上一个按钮
+const handleFetchCreatePrevious = () => {
+  let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
+  console.log('index', index);
+
+  tempCurId.value = skuData[index-1].tempId
+  // 将数据显示在页面上
+  Object.assign(poDetailData.value, skuData[index-1].poDetailData)
+    poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
+
+    if (!poDetailData.value.skuImgUrl) {
+      poDetailData.value.hide = false
+      poDetailData.value.imageList = []
+    } else {
+      poDetailData.value.hide = true
+      poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
+    }
+    Object.assign(skuComponentList.value, skuData[index-1].skuComponentList)
+    skuComponentList.value.forEach((item: any) => {
+      item.unitPrice = formattedPrice(item.unitPrice)
+      if(!item.componentUrl) {
+          item.hide = false
+          item.imageList = []
+      } else if (item.componentUrl){
+          item.hide = true
+          item.imageList = [{ url: item.componentUrl }]
+      }
+    })
+    handleShowCreatePreviousOrNext()
+}
+// 当点击创建的下一个按钮
+const handleFetchCreateNext = () => {
+  let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
+  tempCurId.value = skuData[index+1].tempId
+  // 将数据显示在页面上
+  Object.assign(poDetailData.value, skuData[index+1].poDetailData)
+    poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
+
+    if (!poDetailData.value.skuImgUrl) {
+      poDetailData.value.hide = false
+      poDetailData.value.imageList = []
+    } else {
+      poDetailData.value.hide = true
+      poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
+    }
+    Object.assign(skuComponentList.value, skuData[index+1].skuComponentList)
+    skuComponentList.value.forEach((item: any) => {
+      item.unitPrice = formattedPrice(item.unitPrice)
+      if(!item.componentUrl) {
+          item.hide = false
+          item.imageList = []
+      } else if (item.componentUrl){
+          item.hide = true
+          item.imageList = [{ url: item.componentUrl }]
+      }
+    })
+    handleShowCreatePreviousOrNext()
+}
 // 当点击上一个按钮
 const handleFetchPreviousData = async () => {
   // 获取当前路由的查询参数
@@ -2110,6 +2579,24 @@ const handleShowPreviousOrNext = () => {
     nextVisible.value = true
   }
 }
+// 处理创建的上一个还是下一个
+const handleShowCreatePreviousOrNext = () => {
+  let length = skuData.length;
+  let lastIndex = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
+  if (length === 0 || length === 1) {
+    createPreviousVisible.value = false
+    createNextVisible.value = false
+  } else if (length - 1 === lastIndex) {
+    createPreviousVisible.value = true
+    createNextVisible.value = false
+  } else if (lastIndex === 0) {
+    createPreviousVisible.value = false
+    createNextVisible.value = true
+  } else {
+    createPreviousVisible.value = true
+    createNextVisible.value = true
+  }
+}
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
   if  (data.columnIndex === 1 || data.columnIndex === 6 || data.columnIndex === 12){        
     return {
@@ -2122,6 +2609,9 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
+  }
+  if (data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 5 || data.columnIndex === 8 || data.columnIndex === 9 || data.columnIndex === 13) {
+    return 'reduce-padding'
   }
   return ''
 }
@@ -2150,6 +2640,7 @@ const goBack = async () => {
   } else {
     router.push({ path: '/purchase/po' });
   } 
+  _clearSKUs()
 }
 const imageColumnHeight = ref<number>(0)
 // 动态设置 详情 的图片列高度
@@ -2174,11 +2665,28 @@ const setImageColumnHeight2 = () => {
     imageColumnHeight.value = skuTotalPriceRect.bottom - createDateRect.top - 30;
   }
 };
+// 动态设置 已删除进来的 的图片列高度
+const setImageColumnHeight3 = () => {
+  const createDateInput = document.querySelector('.el-form-item[data-label="创建日期3"]');
+  const skuTotalPriceInput = document.querySelector('.el-form-item[data-label="SKU总含税价3"]');
+
+  if (createDateInput && skuTotalPriceInput) {
+    const createDateRect = createDateInput.getBoundingClientRect();
+    const skuTotalPriceRect = skuTotalPriceInput.getBoundingClientRect();
+    imageColumnHeight.value = skuTotalPriceRect.bottom - createDateRect.top - 30;
+  }
+};
 onBeforeMount(() => {
   // 如果不是创建，订单详情div显示
   if (route.query.from !== 'plannedPoCreate') {
+    if (route.query.del === 'true') {
+      deleteNone.value = false 
+      detailsNone.value = true
+    } else {
+      deleteNone.value = true
+      detailsNone.value = false
+    }
     createNone.value = true
-    detailsNone.value = false
     fetchPoSkuIdList()
     fetchData()
     fetchPurchaseAndRepository()
@@ -2190,12 +2698,15 @@ onBeforeMount(() => {
     // 是创建的话，创建div显示
     createNone.value = false
     detailsNone.value = true
-    _clearSKUs() //一进页面只清空一次
+    // _clearSKUs() //一进页面只清空一次
+    handleShowCreatePreviousOrNext()
   }
 })
 
 onMounted(() => {
-  if (route.query.from === 'plannedPoCreate') { //设置图片列宽度高度
+  if (route.query.del === 'true') {
+    setImageColumnHeight3() 
+  } else if (route.query.from === 'plannedPoCreate') { //设置图片列宽度高度
     setImageColumnHeight2()
   } else {
     setImageColumnHeight();
@@ -2331,12 +2842,18 @@ onMounted(() => {
   align-items: center;
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.el-table :deep(.reduce-padding .cell) {
+  padding-left: 2px;
+  padding-right: 2px;
 }
 .el-table :deep(.clear-padding) {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
-
+// .el-table :deep(.reduce-input .cell .el-input .el-input__wrapper) {
+//   padding: 0 !important;
+// }
 </style>

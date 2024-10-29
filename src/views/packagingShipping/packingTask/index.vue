@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
-      <el-tab-pane label="待打包" :name="0">
+      <el-tab-pane label="待打包" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
@@ -119,7 +119,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="进行中" :name="1">
+      <el-tab-pane label="进行中" :name="5">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
@@ -473,7 +473,7 @@
           @size-change="handleSizeChange" 
         />
       </el-tab-pane>
-      <el-tab-pane label="售后" :name="4">
+      <el-tab-pane label="售后" :name="6">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
@@ -591,7 +591,7 @@
           @size-change="handleSizeChange" 
         />
       </el-tab-pane>
-      <el-tab-pane label="未到货" :name="5">
+      <el-tab-pane label="未到货" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
@@ -982,9 +982,11 @@
         :data="fakeQualityProject"
         class="qualityProject"
       >
+        <el-table-column label="SKU" prop="sku"></el-table-column>
+        <el-table-column label="图片"></el-table-column>
         <el-table-column label="检查类型" prop="type" min-width="100" align="center"></el-table-column>
         <el-table-column label="打包注意事项" prop="matters" min-width="300"></el-table-column>
-        <el-table-column label="提醒" prop="remind" min-width="50" align="center">
+        <el-table-column label="需质检" prop="remind" min-width="50" align="center">
           <template #default="{ row }">
             <el-checkbox v-model="row.remind" :true-value="1" :false-value="0" />
           </template>
@@ -1025,6 +1027,7 @@
       width="25%"
       v-model="packingCountVisible"
       class="packingTotal"
+      :before-close="closePackingCount"
     >
       <el-form ref="packingCountFormRef" :model="packingCountForm" label-position="left" label-width="auto" style="margin-left: 20px; margin-right: 0px">
         <el-form-item label="任务数量" prop="packageTaskCount">
@@ -1196,7 +1199,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { checkTypeList } from '../../newProductDevelopment/indexCommon'
-import { addQualityCheck, checkGoOffWork, confirmCurrentTaskAddPerson, confirmEndTask, confirmGoOffWork, confirmStartMoreTask, confirmStartTask, getEndTaskList, getFreeList, getGoOffWorkList, getPackageComponentList, getPackageInspection, getPackageTaskList, getQualityCheck, getStartTaskList, splitPackageTask, submitPackageInspection, updatePackageInspection, updatePackageTask, updatePriorityPackaging } from '/@/api/devlocal/packagingShipping'
+import { addQualityCheck, checkGoOffWork, confirmCurrentTaskAddPerson, confirmEndTask, confirmGoOffWork, confirmStartMoreTask, confirmStartTask, getEndTaskList, getFreeList, getGoOffWorkList, getPackageComponentList, getPackageInspection, getPackageTaskList, getQualityCheck, getSkuQualityList, getStartTaskList, splitPackageTask, submitPackageInspection, updatePackageInspection, updatePackageTask, updatePriorityPackaging } from '/@/api/devlocal/packagingShipping'
 import { IGetPackageTaskListQuery, IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import { siteMap, siteOption, siteValue } from '../constantOption'
 import { downloadFile } from '~/src/api/devlocal/download'
@@ -1563,9 +1566,7 @@ const handleConfirmFinishTask = async () => {
     return
   }
   const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
-  const ids = selectFinishTaskRows.value.map((item: any) => item.id).join(',')
   const { data } = await confirmEndTask({
-    ids: ids,
     userIds: userIds
   })
   if (data) {
@@ -1578,6 +1579,8 @@ const handleCloseStartTask = () => {
   startTaskTableRef.value?.clearSelection()
   personSelectVisible.value = false
 }
+// 开始任务确定后的质检列表
+const skuQualityList = ref<any>([])
 // 点击开始任务-人员选择后的质检项目
 const handleShowQualityProject = async () => {
   if (selectPersonRows.value.length === 0) {
@@ -1585,7 +1588,6 @@ const handleShowQualityProject = async () => {
     return
   }
   personSelectVisible.value = false
-  qualityProjectVisible.value = true
   const taskIds = selectRows.value.map((item: any) => item.id).join(',')
   const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
   if (selectRows.value.length > 1) {
@@ -1599,8 +1601,10 @@ const handleShowQualityProject = async () => {
       startTaskUserIds: startTaskUserIds
     })
   }
-  
-  
+  qualityProjectVisible.value = true
+  // const { data } = await getSkuQualityList({
+  //   id: 
+  // })
 }
 // 修改优先打包
 const handleUpdatePriority = async (row: any) => {

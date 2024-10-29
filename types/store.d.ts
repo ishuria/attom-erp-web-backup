@@ -87,7 +87,7 @@ interface ComponentList {
   [property: string]: any;
 }
 declare interface SkuType {
-  id: number
+  tempId: string
   poDetailData: {
     createTime?: string
     id?: number

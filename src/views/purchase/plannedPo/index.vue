@@ -31,6 +31,7 @@
           @cell-click="changeInput"
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="105" >
@@ -151,6 +152,7 @@
           @cell-click="changeInput"
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="105" >
@@ -168,7 +170,7 @@
                       <el-link type="primary" :underline="false" @click="handlePublishPo(row)">发布PO</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleUpdateStatus(row)">达到起订量</el-link>
+                      <el-link type="primary" :underline="false" @click="handleUpdateRStatus(row)">达到起订量</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item>
                       <el-link type="danger" :underline="false" @click="handleDelPlannedPo(row)">删除</el-link>
@@ -261,14 +263,14 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { deleteAllPlanPo, deletePlanPo, deletePoSku, getPlanPoList, getPoPurchaseMatters, releaseBatchPlanPo, releasePlanPo, updatePlanPoStatus, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
+import { deleteAllPlanPo, deletePlanPo, deletePoSku, getPlanPoList, getPoPurchaseMatters, planPoNrMoq, planPorMoq, releaseBatchPlanPo, releasePlanPo, updatePlanPoStatus, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
-import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'PlannedPoTable',
 })
@@ -362,21 +364,21 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   return { rowspan: 1, colspan: 1 };
 }
 
-// let previous: any = null; 
-// let currentGroupIndex = 0; // 当前组索引
+let previous: any = null; 
+let currentGroupIndex = 0; // 当前组索引
 
-// const stripedRowClass = (_row: any) => {
-//   const { row } = _row;
-//   const currentId = row.id;
-//   // 检查当前行是否与上一行不同
-//   if (currentId !== previous) {
-//     previous = currentId; 
-//     currentGroupIndex++; 
-//   }
-//   // 根据当前组索引设置条纹样式
-//   return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
-// };
-//
+const stripedRowClass = (_row: any) => {
+  const { row } = _row;
+  const currentId = row.id;
+  // 检查当前行是否与上一行不同
+  if (currentId !== previous) {
+    previous = currentId; 
+    currentGroupIndex++; 
+  }
+  // 根据当前组索引设置条纹样式
+  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
+};
+
 // 处理未达起订量
 const handleUpdateStatus = async (row: any) => {
   try {
@@ -393,13 +395,38 @@ const handleUpdateStatus = async (row: any) => {
     console.error(error)
   }
 }
-const handleAllMOQ = () => {
+// 处理达起订量
+const handleUpdateRStatus = async (row: any) => {
+  try {
+    $baseConfirm('确定该条PO达到起订量吗', null, async () => {
+      const { data } = await planPorMoq({
+        id: row.id
+      })
+      if (data === true) {
+        $baseMessage('该条PO达到起订量成功', 'success', 'hey')
+        fetchData()
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleAllMOQ = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning', 'hey')
   } else {
-
-      $baseMessage('批量处理成功', 'success', 'hey')
- 
+    const ids = selectRows.value.map((item: any) => item.id).join(',') // 组合 ID
+    try {
+      const { data } = await planPoNrMoq({
+        ids: ids
+      })
+      if (data === true) {
+        $baseMessage('批量未达起订量成功', 'success', 'hey')
+        fetchData()
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 // 批量删除
@@ -790,5 +817,14 @@ onMounted(() => {
   padding-left: 0;
   padding-right: 0;
 }
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+
 </style>
   

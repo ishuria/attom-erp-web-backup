@@ -241,8 +241,7 @@ export interface IGetEndTaskListResp {
 }
 
 export interface IConfirmEndTask {
-  ids: string
-  userIds: string
+  userIds?: string
 }
 
 export interface IUserIds {
@@ -648,4 +647,110 @@ export interface IUpdateAfterSales {
 export interface IConfirmStartMoreTask {
   taskIds: string
   startTaskUserIds: string
+}
+
+export interface IGetPackageTimeListReq {
+  userId: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetPackageTimeListResp {
+  data?: {
+    list?: IGetPackageTimeList[];
+    total?: number;
+  }
+}
+
+export interface IGetPackageTimeList {
+  /**
+   * 结束时间
+   */
+  endTime?: string;
+  /**
+   * id
+   */
+  id?: number;
+  /**
+   * 姓名
+   */
+  name?: string;
+  /**
+   * PO
+   */
+  po?: string;
+  /**
+   * 产品名称
+   */
+  productName?: string;
+  /**
+   * sku
+   */
+  sku?: string;
+  /**
+   * 开始时间
+   */
+  startTime?: string;
+  /**
+   * 工作时长
+   */
+  workerHouse?: number;
+}
+
+export interface IUpdatePackageTime {
+  id: number
+  startTime: string
+  endTime: string
+}
+
+export interface IGetPackageTimeDayRequest {
+  /**
+   * 结束时间
+   */
+  endTime?: string;
+  /**
+   * 当前页 默认1
+   */
+  pageNo: number;
+  /**
+   * 每页大小 默认20
+   */
+  pageSize: number;
+  /**
+   * 开始时间
+   */
+  startTime?: string;
+  /**
+   * 用户id
+   */
+  userId?: number;
+  [property: string]: any;
+}
+
+export interface IGetPackageTimeDayResp {
+  data?: {
+    list?: IGetPackageTimeDay[];
+    total?: number;
+  }
+}
+
+export interface IGetPackageTimeDay {
+  /**
+   * id
+   */
+  id?: number;
+  /**
+   * 姓名
+   */
+  name?: string;
+  /**
+   * 时间
+   */
+  time?: string;
+  /**
+   * 工作时长
+   */
+  workerHouse?: number;
+  [property: string]: any;
 }

@@ -7,19 +7,34 @@ export const useSkuStore = defineStore('sku', {
     getSkuData: (state) => state.data,
   },
   actions: {
-    clearSKUs() {
-      this.data = []
+    // 添加新的 SKU
+    addSku(newSku: any, tempId: string) {
+      const skuWithId = JSON.parse(JSON.stringify(newSku)); // 深拷贝对象
+      skuWithId.tempId = tempId; // 添加临时 ID
+
+      // const skuWithId = { ...newSku, tempId: tempId }; // 给新 SKU 生成 tempId
+      this.data.push(skuWithId)
     },
-    addSku(value: SkuType) {
-      this.data.push(value)
-    },
-    updateSku(id: number, newValue: SkuType) {
-      const index = this.data.findIndex(sku => sku.id === id); // 假设 SKU 有一个唯一的 id
+    // 更新 SKU
+    updateSku(updatedSku: SkuType) {
+      const index = this.data.findIndex((sku) => sku.tempId === updatedSku.tempId);
       if (index !== -1) {
-        this.data[index] = { ...this.data[index], ...newValue }; // 更新 SKU 数据
-      } else {
-        console.error(`SKU with id ${id} not found.`);
+        this.data[index] = updatedSku;
       }
     },
+    // 删除 SKU
+    deleteSku(tempId: string) {
+      // const index = this.data.findIndex((item) => item.tempId === tempId)
+      // this.data.splice(index, 1)
+      console.log('进入 deleteSku，tempId:', tempId); // 检查是否被调用
+      this.data = this.data.filter((sku) => sku.tempId !== tempId);
+      console.log('删除后的数据:', this.data);
+      
+    },
+    // 清空 sku
+    clearSKUs() {
+      this.data = []
+    }
   },
 })
+

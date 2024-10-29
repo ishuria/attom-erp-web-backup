@@ -37,7 +37,12 @@ import {
   IGetAfterSalesListResp,
   IGetAfterSalesLogResp,
   IUpdateAfterSales,
-  IConfirmStartMoreTask
+  IConfirmStartMoreTask,
+  IGetPackageTimeListReq,
+  IGetPackageTimeListResp,
+  IUpdatePackageTime,
+  IGetPackageTimeDayRequest,
+  IGetPackageTimeDayResp
 } from '/@/type/packagingShipping/packagingType'
 
 export function getSignList(params: IGetSignListQuery): Promise<IGetSignListResp> {
@@ -365,6 +370,38 @@ export function badDebtAfterSales(params: IId): Promise<IStringResp> {
   return request({
     url: `${BASE_API}/after/sales/badDebt`,
     method: 'post',
+    params
+  })
+}
+// 查询打包工时列表
+export function getPackageTimeList(params: IGetPackageTimeListReq): Promise<IGetPackageTimeListResp> {
+  return request({
+    url: `${BASE_API}/package/time/list`,
+    method: 'get',
+    params
+  })
+}
+// 打包工时修改
+export function updatePackageTime(data: IUpdatePackageTime): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/time/update`,
+    method: 'post',
+    data
+  })
+}
+// 打包工时统计列表查询
+export function getPackageTimeDay(params: IGetPackageTimeDayRequest): Promise<IGetPackageTimeDayResp> {
+  return request({
+    url: `${BASE_API}/package/time/day`,
+    method: 'get',
+    params
+  })
+}
+// 开始任务确定-sku质检列表
+export function getSkuQualityList(params: IId): Promise<IGetPackageTimeDayResp> {
+  return request({
+    url: `${BASE_API}/package/task/skuQualityList`,
+    method: 'get',
     params
   })
 }

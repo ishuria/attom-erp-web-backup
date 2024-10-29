@@ -37,7 +37,7 @@
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
-        
+          :row-class-name="stripedRowClass"
         >
           <!-- <el-table-column type="selection" >
             <template #default="{ row }">
@@ -100,7 +100,7 @@
           </el-table-column>
           <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
+              <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
@@ -161,6 +161,7 @@
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -218,7 +219,7 @@
           </el-table-column>
           <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
+              <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
@@ -278,6 +279,7 @@
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -335,7 +337,7 @@
           </el-table-column>
           <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
+              <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
@@ -395,6 +397,7 @@
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -452,7 +455,7 @@
           </el-table-column>
           <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
+              <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
@@ -512,6 +515,7 @@
           :span-method="lastTowTabSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getLastTwoCellClass"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
@@ -561,7 +565,7 @@
           </el-table-column>
           <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
+              <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
@@ -610,10 +614,11 @@
           :span-method="lastTowTabSpanMethod"
           @cell-click="changeInput"
           :cell-class-name="getLastTwoCellClass"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
-              <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+              <el-link type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" prop="createTime" min-width="115">
@@ -659,7 +664,7 @@
           </el-table-column>
           <el-table-column  label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></el-link>
+              <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
@@ -708,7 +713,7 @@
           <el-table-column label="付款日期" min-width="180" prop="createTime"></el-table-column>
           <el-table-column label="付款金额" min-width="130" prop="payPrice">
             <template #default="{ row }">
-              <el-input v-model="row.payPrice" @change="handleUpdatePrice(row)" class="input-center"></el-input>
+              <el-input v-model="row.payPrice" @change="handleUpdatePrice(row)" class="input-center" :disabled="delDisabled"></el-input>
             </template>
           </el-table-column>
           <el-table-column label="付款百分比" min-width="130" prop="percentage" >
@@ -731,7 +736,7 @@
             </template>
           </el-table-column>
           <el-table-column label="操作人" min-width="130" prop="createUser"></el-table-column>
-          <el-table-column label="操作" min-width="100">
+          <el-table-column label="操作" min-width="100" prop="operate" v-if="!delDisabled" >
             <template #default="{ row, $index }">
               <el-button text type="danger" @click="handleDelPayRecord(row, $index)">删除</el-button>
             </template>
@@ -917,7 +922,7 @@ import { downloadFile } from '/@/api/devlocal/download'
 import { aggregationContract, deletePo, delPayRecord, generatePoContract, generateRemittance, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
 
@@ -954,8 +959,7 @@ const poList = ref<any>([])
 const selectedPORow = ref<Set<number>>(new Set())
 // po选中的行转化为数组
 const selectedPOArray = ref<any>([])
-// component选中的行
-const selectedCompRow = ref<Set<any>>(new Set())
+
 // component选中的行转化为数组
 const selectedCompArray = ref<any>([])
 // 表格加载loading状态
@@ -1071,6 +1075,7 @@ const handleSelectedPoRow = (event: any, row: any) => {
   // 将 Set 转换回数组
   selectedPOArray.value = Array.from(selectedPORow.value);
 };
+// 全选po操作列
 const handleSelectAllPoRow = (event: any) => {
   if (event) {
     poList.value.forEach((item: any) => {
@@ -1087,33 +1092,31 @@ const handleSelectAllPoRow = (event: any) => {
   }
   selectedPOArray.value = Array.from(selectedPORow.value);
 }
+// 将选择的component行加入到component数组里
+const handleSelectedCompRow = (event: any, row: any) => {
+  if (event) {
+    selectedCompArray.value.push(row); 
+  } else {
+    const index = selectedCompArray.value.findIndex((item: any) => item.componentId === row.componentId)
+    selectedCompArray.value.splice(index, 1)
+  }
+};
+// 全选零件操作列
 const handleSelectAllCompRow = (event: any) => {
   if (event) {
     poList.value.forEach((item: any) => {
       item.selectedCompRow = true
-      selectedCompRow.value.add(item);
+      selectedCompArray.value.push(item);
     })
-    console.log(selectedCompRow.value);
+    // console.log(selectedCompRow.value);
   } else {
     poList.value.forEach((item: any) => {
       item.selectedCompRow = false
     })
-    selectedCompRow.value.clear()
-    console.log(selectedCompRow.value);
-    
+    selectedCompArray.value = []
+    // console.log(selectedCompRow.value);
   }
-  selectedCompArray.value = Array.from(selectedCompRow.value);
 }
-// 将选择的component行加入到component数组里
-const handleSelectedCompRow = (event: any, row: any) => {
-  // const rowCompId = row.componentId; 
-  if (event) {
-    selectedCompRow.value.add(row); // 选中，添加到 Set 中
-  } else {
-    selectedCompRow.value.delete(row); // 取消选中，从 Set 中删除
-  }
-  selectedCompArray.value = Array.from(selectedCompRow.value);
-};
 // 付款进度是否修改
 let flag = false
 // 关闭付款进度弹窗
@@ -1130,8 +1133,15 @@ const handleClosePaymentHistoryDialog = () => {
   }
   paymentHistoryVisible.value = false
 }
+// 付款进度是否可编辑
+const delDisabled = ref<boolean>(false)
 // 展示付款进度弹窗
 const handleShowPaymentHistory = async (row: any) => {
+  if (activeName.value === 7) {
+    delDisabled.value = true
+  } else {
+    delDisabled.value = false
+  }
   flag = false
   try {
     const { data } = await getComponentPayRecord({
@@ -1181,7 +1191,7 @@ const handleDelPayRecord = async (row: any, index: number) => {
 // 处理已付尾款/全款
 const handlePaymentPaid = async () => {
   // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
+  if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行', 'warning')
     return
   }
@@ -1203,10 +1213,10 @@ const handlePaymentPaid = async () => {
 // 展示分批付款弹窗
 const handleShowInstallment = () => {
   // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
+  if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行', 'warning')
     return
-  } else if (selectedCompRow.value.size === 1) { //只选择了一行，全展示
+  } else if (selectedCompArray.value.length === 1) { //只选择了一行，全展示
     installmentMoneyVisible.value = true
   } else {
     installmentMoneyVisible.value = false
@@ -1233,24 +1243,18 @@ const handleCloseInstallmentDialog = () => {
   installmentFormRef.value?.resetFields()
   installmentVisible.value = false
 }
+// 清除表格选择
 const clearTableSelect = () => {
-  selectedPORow.value.clear()
-  selectedCompRow.value.clear()
-  // if (activeName.value === 2) {
-  //   selectedPORow.value.clear()
-  //   selectedCompRow.value.clear()
-  // } else if (activeName.value === 3) {
-  //   tableRef2.value?.clearSelection()
-  // } else if (activeName.value === 4) {
-  //   tableRef3.value?.clearSelection()
-  // } else if (activeName.value === 5) {
-  //   tableRef4.value?.clearSelection()
-  // } else if (activeName.value === 6) {
-  //   tableRef5.value?.clearSelection()
-  // } else if (activeName.value === 7) {
-  //   tableRef6.value?.clearSelection()
-  // }
   
+  poList.value.forEach((item: any) => {
+    item.selectedPoRow = false
+  })
+  selectedPORow.value.clear()
+
+  selectedCompArray.value.forEach((item: any) => {
+    item.selectedCompRow = false
+  })
+  selectedCompArray.value = []
 }
 // 确认分批付款
 const handleConfirmInstallment = async () => {
@@ -1271,9 +1275,7 @@ const handleConfirmInstallment = async () => {
           $baseMessage('分批付款成功', 'success', 'hey')
           handleCloseInstallmentDialog()
           fetchData() //重新刷新表格
-          // console.log(activeName.value);
-          // console.log(typeof activeName.value);
-          clearTableSelect()
+          // clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -1285,12 +1287,12 @@ const handleConfirmInstallment = async () => {
 // 展示退款弹窗
 const handleShowRefund = () => {
   // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
+  if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行', 'warning')
     return
   }
   // 如果勾选多个零件行，报错
-  if (selectedCompRow.value.size > 1) {
+  if (selectedCompArray.value.length > 1) {
     $baseMessage('退款只能勾选一行', 'warning')
     return
   }
@@ -1354,7 +1356,7 @@ const handleConfirmRefund = async () => {
           $baseMessage('退款提交成功', 'success', 'hey')
           handleCloseRefundDialog()
           fetchData() //重新刷新表格
-          clearTableSelect()
+          // clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -1365,7 +1367,7 @@ const handleConfirmRefund = async () => {
 // 展示总价分摊弹窗
 const handleShowTotalPriceSharing = () => {
   // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
+  if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行', 'warning')
     return
   }
@@ -1392,7 +1394,7 @@ const handleConfirmTotalPriceSharing = async () => {
           $baseMessage('总价分摊提交成功', 'success')
           handleCloseTotalPriceSharingDialog()
           fetchData() //重新刷新表格
-          clearTableSelect()
+          // clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -1447,7 +1449,7 @@ const handleGenerateContract = async () => {
 // 展示聚合合同弹窗
 const handleShowMergeContract = () => {
   // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
+  if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行', 'warning')
     return
   }
@@ -1471,6 +1473,7 @@ const handleConfirmMergeContract = async () => {
     if (data) {
       handleCloseMergeContractDialog()
       $baseMessage('聚合合同成功', 'success')
+      clearTableSelect()
     }
   } catch (error) {
     console.error(error)
@@ -1479,7 +1482,7 @@ const handleConfirmMergeContract = async () => {
 // 展示生成汇款模板弹窗
 const handleShowGenerateMoneyTransfer = () => {
   // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
+  if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行', 'warning')
     return
   }
@@ -1501,6 +1504,7 @@ const handleConfirmGenerateMoneyTransfer = async () => {
     })
     if (data) {
       $baseMessage('生成汇款模板成功', 'success')
+      clearTableSelect()
       generateMoneyTransferVisible.value = false
       // 下载合同
       data.forEach(async (fileName: string) => {
@@ -1520,7 +1524,7 @@ const handleConfirmGenerateMoneyTransfer = async () => {
 // 降本提成申请PO
 const handleReduceCost = () => {
   // 判断是否选中零件操作
-  if (selectedCompRow.value.size === 0) {
+  if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行', 'warning')
     return
   }
@@ -1548,6 +1552,7 @@ const handleDelPo = async () => {
       if (data === true) {
         $baseMessage("删除该条PO成功", "success", "hey");
         fetchData() //重新刷新表格
+        // clearTableSelect()
       }
     } catch (error) {
       console.error(error)
@@ -1567,6 +1572,7 @@ const handlePoDetail = (row: any) => {
       timestamp: Date.now(),
     },
   })
+  
   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
   const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
   const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
@@ -1593,7 +1599,47 @@ const handlePoDetail = (row: any) => {
   };
   sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
 }
-
+// 跳转po详情
+const handleDelPoDetail = (row: any) => {
+  // console.log(queryForm.pageNo);
+  router.push({
+    path: '/purchase/poDetail',
+    query: {
+      title: "采购订单详情",
+      from: row.po,
+      poSkuId: row.poSkuId,
+      poId: row.id,
+      timestamp: Date.now(),
+      del: 'true'
+    },
+  })
+  
+  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
+  const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
+  const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef;
+  const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef;
+  const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef;
+  const wrapRef = scrollBarRef.wrapRef
+  const wrapRef2 = scrollBarRef2.wrapRef
+  const wrapRef3 = scrollBarRef3.wrapRef
+  const wrapRef4 = scrollBarRef4.wrapRef
+  const wrapRef5 = scrollBarRef5.wrapRef
+  const wrapRef6 = scrollBarRef6.wrapRef
+  const poStatus = {
+    scrollTop: wrapRef.scrollTop,
+    scrollTop2: wrapRef2.scrollTop,
+    scrollTop3: wrapRef3.scrollTop,
+    scrollTop4: wrapRef4.scrollTop,
+    scrollTop5: wrapRef5.scrollTop,
+    scrollTop6: wrapRef6.scrollTop,
+    pageNo: queryForm.pageNo,
+    pageSize: queryForm.pageSize,
+    keyWord: queryForm.keyWord,
+    activeName: activeName.value
+  };
+  sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
+}
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -1607,25 +1653,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   }
 }
 
-/**
- * 输入失焦事件
- */
-const clickCancel = async (event: any, value: any) =>{
-
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
-    }
-  }
-
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  // await updateProgressManage({...value})
-}
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   Object.assign(poList.value, [])
   // tableRef.value?.clearSelection()
@@ -1755,16 +1782,24 @@ const fetchData = async () => {
       listLoading.value = false
       total.value = data.total
       poList.value = data.list
+      selectedPORow.value.clear()
+      selectedCompArray.value = []
       // 每个零件的付款进度进行处理
-      poList.value.forEach((item: any) => {      
-        item.payPrice = Number(item.payPrice).toFixed(2)
+      poList.value.forEach((item: any) => {
+        item.selectedCompRow = false
+        item.selectedPoRow = false      
+        item.payPrice = Number(item.payPrice).toFixed(2);
         item.paymentRecord = item.payRecordList
-          .map((item: any) => {
-            const percentage = parseInt(item.percentage.replace('%', '')); // 去掉%并转换为整数
-            return `${item.createTime.split(' ')[0]}: ${percentage}%(${item.payPrice})`;
+          .map((record: any) => {
+            const percentage = parseInt(record.percentage.replace('%', '')); // 去掉%并转换为整数
+            const createTime = record.createTime.split(' ')[0];
+            return `
+              <span class="create-time">${createTime}</span>: 
+              <span class="percentage">${percentage}%</span>
+              <span class="pay-price">(${record.payPrice})</span>`;
           })
           .join('<br>');
-      })
+      });
       calculateColumnWidth()
     }
   } catch (error) {
@@ -1785,6 +1820,20 @@ const lastTwoTabCellStyle = (data: { row: any, column: any, rowIndex: number, co
       textAlign: 'center',
     } 
 }
+let previous: any = null; 
+let currentGroupIndex = 0; // 当前组索引
+
+const stripedRowClass = (_row: any) => {
+  const { row } = _row;
+  const currentId = row.id;
+  // 检查当前行是否与上一行不同
+  if (currentId !== previous) {
+    previous = currentId; 
+    currentGroupIndex++; 
+  }
+  // 根据当前组索引设置条纹样式
+  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
+};
 // 设置零件名显示样式和图片撑满样式
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.column.property === 'componentName') {
@@ -1835,7 +1884,7 @@ onActivated(() => {
 
 onBeforeMount(() => {
   selectedPORow.value = new Set()
-  selectedCompRow.value = new Set()
+  selectedCompArray.value = []
   const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
   const pageNo = savedStatus.pageNo
   const pageSize = savedStatus.pageSize
@@ -1969,7 +2018,14 @@ onMounted(() => {
     }
   }
 }
-
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
 
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
@@ -2013,14 +2069,7 @@ onMounted(() => {
 .upload-width {
   width: 100%;
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
+
 :deep(.red) {
   color: #FD4E4E;
 }
@@ -2037,6 +2086,24 @@ onMounted(() => {
 .el-table :deep(.clear-padding) {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
+}
+:deep(.create-time) {
+  color: #4E88F3; /* 设置 createTime 的颜色 */
+}
+
+:deep(.percentage) {
+  color: #24ADA1; /* 设置 percentage 的颜色 */
+}
+
+:deep(.pay-price) {
+  color: #8D5FCC; /* 设置 payPrice 的颜色 */
+}
+.hover-opacity {
+  transition: opacity 0.3s; /* 添加过渡效果 */
+}
+
+.hover-opacity:hover {
+  opacity: 0.5; /* Hover 时透明度 */
 }
 </style>
 

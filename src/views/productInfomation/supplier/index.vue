@@ -261,23 +261,23 @@ const UploadRequestHandler = async (params: any, row: any) => {
   const { data } = await uploadProductSupplierSpecialFile(uploadForm)
   if (data === true) {
     $baseMessage('特定合同模板上传成功', 'success', 'hey')
+    row.fileList = [{ url: data }]
   }
 }
 const handleDownLoadSpecialFile = async (row: any) => {
-  
-    await downloadFile("/product/suppliser/download",{
-      suppliserId: row.suppliserId, 
-    }).then((res) => {
-      console.log(res);
-      
-    }).catch((error) => {
-      console.error(error);
-      
-    })
+  await downloadFile("/product/suppliser/download",{
+    suppliserId: row.suppliserId, 
+  }).then((res) => {
+    console.log(res);
+  }).catch((error) => {
+    console.error(error);
+  })
 }
-const handleDelFile = (row: any) => {
+const handleDelFile = async (row: any) => {
   row.hide = false
   row.fileList = []
+  row.templateStatus = 0
+  await updateProductSupplier(row)
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   

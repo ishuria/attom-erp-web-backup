@@ -321,11 +321,11 @@ export function updateBuyerAndCustomsDeclaration(params?: IUpdateBuyerAndCustoms
   })
 }
 // 创建PlanPO（采购计划）
-export function createPlanPo(params?: ISku): Promise<ICreatePlanPoResp> {
+export function createPlanPo(data?: any){
   return request({
     url: `${BASE_API}/purchase/create/planPo`,
     method: 'post',
-    params,
+    data,
   })
 }
 // 采购订单-删除PO
@@ -498,5 +498,22 @@ export function updateCreateComponent(data?: IUpdateCreateComponentRequest) {
     url: `${BASE_API}/purchase/skuComponent/change`,
     method: 'post',
     data,
+  })
+}
+
+// 采购计划-批量未达起订量
+export function planPoNrMoq(params?: IIds) {
+  return request({
+    url: `${BASE_API}/purchase/planPo/nr/moq`,
+    method: 'post',
+    params,
+  })
+}
+// 采购计划-达起订量
+export function planPorMoq(params?: IId) {
+  return request({
+    url: `${BASE_API}/purchase/planPo/r/moq`,
+    method: 'post',
+    params,
   })
 }
