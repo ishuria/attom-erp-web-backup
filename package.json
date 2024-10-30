@@ -48,7 +48,7 @@
     "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
-    "pinia": "^2.2.4",
+    "pinia": "^2.2.5",
     "qs": "^6.13.0",
     "sortablejs": "^1.15.3",
     "typeit": "^8.8.7",

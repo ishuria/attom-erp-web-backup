@@ -34,7 +34,7 @@ module.exports = defineConfig({
     'no-return-await': 'off',
     'prefer-const': 'off',
     'prefer-template': 'error',
-    'prettier/prettier': 'error',
+    'prettier/prettier': 'off',
     'unicorn/consistent-function-scoping': 'off',
     'unicorn/escape-case': 'off',
     'unicorn/filename-case': 'off',
