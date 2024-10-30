@@ -9,7 +9,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -31,7 +31,7 @@
           <el-table-column fixed="left" label="仓库操作" width="150" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-link type="primary" :underline="false" @click="handleSignComponent(row)">签收</el-link>
+                <el-link type="primary" :underline="false" @click="showSignDialog(row)">签收</el-link>
                 <el-link type="primary" :underline="false" @click="handleGetSignRecord(row)">修改</el-link>
                 <el-link type="primary" :underline="false" >打印</el-link>
               </el-space>
@@ -129,7 +129,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -382,6 +382,25 @@
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 签收 -->
+    <vab-dialog
+      title="签收"
+      v-model="signVisible"
+      @close="closeSignDialog"
+      width="20%"
+    >
+      <el-form ref="signFormRef" :model="signForm" label-position="right" label-width="auto" :rules="signRules">
+        <el-form-item label="签收数量" prop="signCount">
+          <el-input v-model="signForm.signCount" clearable />
+        </el-form-item>
+        <el-form-item label="签收物流单号" prop="signOrder">
+          <el-input v-model="signForm.signOrder" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="confirmSign">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
   
@@ -407,7 +426,7 @@ import {
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetSignList } from '/@/type/packagingShipping/packagingType'
-import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
+import { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
@@ -430,6 +449,40 @@ const list = ref<IGetSignList[]>([])
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
+// 签收可见
+const signVisible = ref<boolean>(false)
+// 签收form
+const signForm = reactive<any>({
+  signCount: '',
+  signOrder: ''
+})
+const signRules = reactive<any>({
+  signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }]
+})
+const signFormRef = ref<FormInstance>()
+const copyRow = ref<any>()
+// 展示签收弹窗
+const showSignDialog = (row: any) => {
+  signVisible.value = true
+  copyRow.value = row
+}
+// 关闭签收弹窗
+const closeSignDialog = () => {
+  signFormRef.value?.resetFields()
+  signVisible.value = false
+}
+// 确认签收
+const confirmSign = async () => {
+  const { data } = await signComponent({
+    signId: copyRow.value.signId,
+    signCount: signForm.signCount,
+    signOrder: signForm.signOrder
+  })
+  if (data) {
+    $baseMessage('签收成功', 'success')
+    fetchData()
+  }
+}
 // 修改弹窗是否可见
 const modifyVisible = ref<boolean>(false)
 // 待签收弹窗是否可见
@@ -443,23 +496,6 @@ const closeModifyPendingDialog = () => {
   modifyPendingVisible.value = false
 }
 
-const fakeModify = [
-  {
-    signedDate: '2024-10-02',
-    quantity: 50,
-    number: 'SF1111111'
-  },
-  {
-    signedDate: '2024-10-04',
-    quantity: 50,
-    number: 'SF1111112'
-  },
-  {
-    signedDate: '2024-10-02',
-    quantity: 50,
-    number: 'SF1111111'
-  },
-]
 // 入库单导出表单
 const receiptExportForm = reactive<any>({
   date: ''
@@ -490,18 +526,7 @@ const handleAllSigned = async () => {
     fetchData()
   }
 }
-// 签收
-const handleSignComponent = async (row: any) => {
-  const { data } = await signComponent({
-    signId: row.signId,
-    signCount: row.signCount,
-    signOrder: row.signOrder
-  })
-  if (data) {
-    $baseMessage('签收成功', 'success')
-    fetchData()
-  }
-}
+
 // 待签收表格
 const pendingSignRecord = ref<any>([])
 // 已签收表格
@@ -561,8 +586,7 @@ const handleIfShowRecord = async (row: any) => {
   }
 }
 
-// 采购计划列表
-let plannedPoList = ref<IGetPlanPoList[]>([])
+
 // 总记录数
 const total = ref<number>(0)
 const queryForm = reactive<IGetPlanPoListQuery>({
@@ -594,11 +618,6 @@ const changeProductDate = async (row: any) => {
 }
 
 
-
-
-
-
-  
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
 // 点击日志弹出富文本框是否显示
@@ -624,19 +643,7 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   }
   fetchData()
 }
-//   // 处理已归档
-//   const handleArchived = async (progressId: number) => {
-//     const { data } = await updateProgressArchive({ progressId })
-//     if (data === true) {
-//       const index = progressList.value.findIndex((item: any) => item.progressId === progressId)
-//       progressList.value.splice(index, 1)
-//       $baseMessage("此条新品进度信息已归档成功!","success","hey")
-//     }
-    
-//     // activeName.value = "1"
-//   }
 
-  
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
   if (data.columnIndex !== 5 && data.columnIndex !== 9 && data.columnIndex !== 13 && data.columnIndex !== 15) {
     return {
@@ -680,7 +687,7 @@ const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  console.log(column);
+  // console.log(column);
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el, 'img') && el) {
@@ -688,13 +695,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     imagePreviewList.value = []
     imagePreviewList.value.push(el.src!)
   }
-
-  // if (!cell.children[0].children[0]
-  //     || !cell.children[0].children[1]
-  //     || !cell.children[0].children[0].classList
-  //     || !cell.children[0].children[1].classList) {
-  //   return
-  // }
 
   if (column.property === 'log') {
     clickRow.value = row
@@ -704,10 +704,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     wangEditorTitle.value = '编辑跟单日志'
     classify.value = 'signLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
-  } else {
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-  }
+  } 
 
   // 自动聚焦
   const inputElement = getSpecificChildren(cell, "input")[0];
@@ -928,4 +925,3 @@ onBeforeMount(() => {
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
 </style>
-  

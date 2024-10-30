@@ -12,7 +12,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -133,7 +133,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -263,7 +263,19 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { deleteAllPlanPo, deletePlanPo, deletePoSku, getPlanPoList, getPoPurchaseMatters, planPoNrMoq, planPorMoq, releaseBatchPlanPo, releasePlanPo, updatePlanPoStatus, updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
+import {
+  deleteAllPlanPo,
+  deletePlanPo,
+  deletePoSku,
+  getPlanPoList,
+  getPoPurchaseMatters,
+  planPoNrMoq,
+  planPorMoq,
+  releaseBatchPlanPo,
+  releasePlanPo,
+  updatePlanPoStatus,
+  updatePoPurchaseMatters
+} from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
@@ -678,23 +690,36 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
-  const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
-  const pageNo = savedStatus.pageNo
-  const pageSize = savedStatus.pageSize
-  const keyWord = savedStatus.keyWord
-  
-  if (pageNo && pageSize) {
-    Object.assign(queryForm, {
-      pageNo: pageNo,
-      pageSize: pageSize,
-      keyWord: keyWord
-    });
+  // 是否清空保存的状态
+  let flag = false
+  console.log(tabsStore.getVisitedRoutes);
+  tabsStore.getVisitedRoutes.forEach((item: any) => {
+    if (item.name === 'PlannedPo') {
+      flag = true
+    }
+  })
+  if (flag) {
+    const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
+    const pageNo = savedStatus.pageNo
+    const pageSize = savedStatus.pageSize
+    const keyWord = savedStatus.keyWord
+    
+    if (pageNo && pageSize) {
+      Object.assign(queryForm, {
+        pageNo: pageNo,
+        pageSize: pageSize,
+        keyWord: keyWord
+      });
+    }
+    const _activeName = savedStatus.activeName
+    if (_activeName) {
+      activeName.value = _activeName
+      queryForm.status = _activeName
+    }
+  } else {
+    sessionStorage.removeItem('plannedPoStatus')
   }
-  const _activeName = savedStatus.activeName
-  if (_activeName) {
-    activeName.value = _activeName
-    queryForm.status = _activeName
-  }
+
   fetchData()
 })
 const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
@@ -717,7 +742,7 @@ onMounted(() => {
     if (scrollBarPosition2) {
       setScrollPosition(scrollBarPosition2, tableRef2)
     }
-  });
+  });  
 });
 
 </script>

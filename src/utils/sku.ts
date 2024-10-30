@@ -1,7 +1,6 @@
 import { useSkuStore } from "/@/store/modules/sku"
 
 const skuStore = useSkuStore();
-const skuData = skuStore.getSkuData;
 
 export const _addSku = (newSku: any, tempId: string) => {
   skuStore.addSku(newSku, tempId); // 调用 addSku 方法

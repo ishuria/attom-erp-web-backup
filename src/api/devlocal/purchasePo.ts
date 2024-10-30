@@ -41,6 +41,9 @@ import {
   IUpdateBuyerAndCustomsDeclaration,
   IUpdateComponentAllPay,
   IUpdateComponentPayPartQuery,
+  IUpdateCreateComponentRequest,
+  IUpdateCreateSkuCountRequest,
+  IUpdateCreateSkuCountResponse,
   IUpdatePayRecord,
   IUpdatePoContractTerms,
   IUpdatePoPurchaseMatters,
@@ -48,10 +51,7 @@ import {
   IUpdatePoSite,
   IUpdatePoSkuComponent,
   IUpdateSkuCount,
-  IUpdateSkuDetail,
-  IUpdateCreateSkuCountRequest,
-  IUpdateCreateSkuCountResponse,
-  IUpdateCreateComponentRequest
+  IUpdateSkuDetail
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -363,7 +363,7 @@ export function delPayRecord(params: IId): Promise<IBooleanResp> {
 // 采购订单-修改零件付款记录
 export function updatePayRecord(params: IUpdatePayRecord): Promise<IBooleanResp> {
   return request({
-    url: `purchase/update/payRecord`,
+    url: `${BASE_API}/purchase/update/payRecord`,
     method: 'post',
     params
   })
@@ -371,7 +371,7 @@ export function updatePayRecord(params: IUpdatePayRecord): Promise<IBooleanResp>
 // 采购订单 - 自动签收设定 - 新增
 export function addSignatureSettings(params: IId): Promise<INumberResp> {
   return request({
-    url: `purchase/add/signature/settings`,
+    url: `${BASE_API}/purchase/add/signature/settings`,
     method: 'post',
     params
   })
@@ -379,7 +379,7 @@ export function addSignatureSettings(params: IId): Promise<INumberResp> {
 // 采购订单 - 自动签收设定 - 删除
 export function delSignatureSettings(params: IId): Promise<IBooleanResp> {
   return request({
-    url: `purchase/delete/signature/settings`,
+    url: `${BASE_API}/purchase/delete/signature/settings`,
     method: 'post',
     params
   })

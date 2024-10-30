@@ -16,7 +16,7 @@
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
             </el-form-item>
             <el-form-item>
               <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
@@ -57,10 +57,26 @@
       v-model="addSignatureSettingsVisible"
       width="20%"
       title="新增零件"
+      :before-close="closeAddDialog"
     >
-      <el-form :model="addForm" :rules="addFormRules">
+      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules">
         <el-form-item label="零件名" prop="componentName">
-          <el-input v-model="addForm.componentName" clearable></el-input>
+          <el-select
+            v-model="addForm.componentName"
+            filterable
+            remote
+            default-first-option
+            placeholder="点击输入和搜索"
+            :remote-method="remotePeopleMethod"
+            :loading="skuLoading"
+          >
+            <el-option
+              v-for="item in skuOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -73,7 +89,7 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import type { TableInstance } from 'element-plus'
+import { FormInstance, type TableInstance } from 'element-plus'
 import { delProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { addSignatureSettings, delSignatureSettings, getSearchComponent, getSignatureSettingList } from '/@/api/devlocal/purchasePo'
 
@@ -91,6 +107,30 @@ watchEffect(()=>{
   }
 }
 )
+
+const skuLoading = ref(false) //搜索SKU-loading
+const skuOptions = ref<any[]>([]) //搜索选项
+const nameList = ref<any[]>([]) //搜索列表
+const remotePeopleMethod = async (query: string) => {
+  if (query) {
+    const { data } = await getSearchComponent({
+      componentName: query
+    })
+
+    nameList.value = data.map((item: any) => {
+        return { value: item.id, label: item.label }
+    })
+    skuLoading.value = true
+    setTimeout(() => {
+      skuLoading.value = false
+      skuOptions.value = nameList.value.filter((item) => {
+            return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    skuOptions.value = []
+  }
+}
 /**
  * 分页
  */
@@ -118,6 +158,7 @@ const queryData = () => {
 const list = ref<any>([])
 // 新增弹窗是否可见
 const addSignatureSettingsVisible = ref<boolean>(false)
+const addFormRef = ref<FormInstance>()
 const addForm = reactive<any>({
   componentName: ''
 })
@@ -140,19 +181,18 @@ const handlerCloseDialog = () => {
 const handleShowAddDialog = () => {
   addSignatureSettingsVisible.value = true
 }
+const closeAddDialog = () => {
+  addFormRef.value?.resetFields()
+  addSignatureSettingsVisible.value = false
+}
 const handleConfirmAdd = async () => {
   try {
-    const { data } = await getSearchComponent({
-      componentName: addForm.componentName
+    const { data } = await addSignatureSettings({
+      id: addForm.componentName
     })
     if (data) {
-      const id = data.id
-      const { data: addId } = await addSignatureSettings({
-        id: id
-      })
-      if (addId) {
-        fetchData()
-      }
+      closeAddDialog()
+      fetchData()
     }
   } catch (error) {
     console.error(error)

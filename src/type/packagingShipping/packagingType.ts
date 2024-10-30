@@ -147,7 +147,7 @@ export interface ISignRecordId {
 
 export interface IGetPackageTaskListQuery {
   keyWord: string
-  site: number //0 亚马逊US 1 亚马逊DE 2 亚马逊UK 3亚马逊CA 4 沃尔玛US
+  site: number | undefined //0 亚马逊US 1 亚马逊DE 2 亚马逊UK 3亚马逊CA 4 沃尔玛US
   status: number //0未到货 1待打包 2已完成 3零头 4售后 5进行中
   pageNo: number
   pageSize: number
@@ -753,4 +753,25 @@ export interface IGetPackageTimeDay {
    */
   workerHouse?: number;
   [property: string]: any;
+}
+
+export interface IIds {
+  ids: string
+}
+
+export interface IGetPackageTaskingList {
+  keyWord: string
+  site: number
+  pageNo: number
+  pageSize: number
+}
+
+export interface IUpdateSalesStatus {
+  id: number
+  status: number
+}
+
+export interface IUpdateAfterSalesLog {
+  id?: number
+  log?: string
 }

@@ -10,7 +10,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" native-type="submit" type="primary"
@@ -213,7 +213,10 @@ const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
 }
-const queryData = async () => {
+const queryData = () => {
+  // queryForm.keyWord = queryForm.keyWord.replace(/\r|\n|\r/g, '') // 移除换行符
+  console.log(queryForm.keyWord);
+  
   queryForm.pageNo = 1
   fetchData()
   // if(!queryForm.keyWord) {

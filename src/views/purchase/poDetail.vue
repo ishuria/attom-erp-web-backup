@@ -508,9 +508,9 @@
                   list-type="picture-card" 
                   :file-list="poDetailData.imageList" 
                   :class="{ hide: poDetailData.hide }"
-                  :http-request="uploadImage"
                   class="upload-align"
                   :style="{ height: imageColumnHeight + 'px' }"
+                  :disabled="true"
                 >
                   <el-icon ><Plus /></el-icon>
                   <template #file="{ file }">
@@ -523,12 +523,12 @@
                         >
                           <el-icon><zoom-in /></el-icon>
                         </span>
-                        <span
+                        <!-- <span
                           class="el-upload-list__item-delete"
                           @click="handleRemove(file)"
                         >
                           <el-icon><Delete /></el-icon>
-                        </span>
+                        </span> -->
                       </span>
                     </div>
                   </template>
@@ -689,8 +689,8 @@
                   list-type="picture-card" 
                   :file-list="row.imageList" 
                   :class="{ hide: row.hide }"
-                  :http-request="(file) => uploadSkuComponentImage(file, row)"
                   class="component-upload"
+                  :disabled="true"
                 >
                   <el-icon ><Plus /></el-icon>
                   <template #file="{ file }">
@@ -703,12 +703,12 @@
                         >
                           <el-icon><zoom-in /></el-icon>
                         </span>
-                          <span
+                          <!-- <span
                             class="el-upload-list__item-delete"
                             @click="handleComponentRemove(file, row)"
                           >
                           <el-icon><Delete /></el-icon>
-                        </span>
+                        </span> -->
                       </span>
                     </div>
                   </template>
@@ -898,7 +898,7 @@
           </el-table-column>
           <el-table-column align="center" label="采购方" min-width="130" prop="purchaseId">
             <template #default="{row}">
-              <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="updateCreate">
+              <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleCreateDefaultPurchase(row)">
                 <el-option 
                   v-for="item in purchaseOption"
                   :label="item.label"
@@ -910,7 +910,7 @@
           </el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" align="center" min-width="75">
             <template #default = "{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" @change="updateCreate" class="custom-checkbox"/>
+              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" @change="handleCreateCustoms(row)" class="custom-checkbox"/>
             </template>
           </el-table-column>
           <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
@@ -965,7 +965,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" min-width="100" align="center">
             <template #default="{ row, $index }">
-              <el-button text type="danger" @click="handleDelPoSKuComponent(row, $index)">删除</el-button>
+              <el-button text type="danger" @click="handleCreateDelComponent($index)">删除</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -1388,7 +1388,7 @@
       width="20%"
     >
       <el-form ref="addSkuFormRef" :model="addSkuForm" style="margin-left: 20px; margin-right: 20px">
-        <el-form-item label="选择要添加的SKU">
+        <el-form-item label="选择要添加的SKU" prop="sku">
           <el-select
             v-model="addSkuForm.sku"
             filterable
@@ -1563,7 +1563,7 @@ const afterGetSku = async (_sku: string) => {
       skuComponentList: JSON.parse(JSON.stringify(skuComponentList.value))
     };
     _addSku(newSku, tempCurId.value)
-    console.log('存入新数据', skuData);
+    console.log('存入新数据', skuStore.getSkuData);
     console.log(tempCurId.value);
     handleShowCreatePreviousOrNext()
     fetchPurchaseAndRepository()
@@ -1648,6 +1648,9 @@ const handleAddConsumable = () => {
 
 // 提交添加零件传递的值
 const handleSubmitComponent = async (value: any) => {
+  if (route.query.from === 'plannedPoCreate') {
+    return
+  }
   let list: ISubmitPurchaseComponent[] = []
   value.forEach((item: any): any => {
     if (item.count) {
@@ -1659,7 +1662,7 @@ const handleSubmitComponent = async (value: any) => {
       }) 
     }
   })
-
+  
   try {
     const { data } = await submitPurchaseComponent({
       poId: poDetailData.value.id,
@@ -1680,6 +1683,9 @@ const handleCloseCreateComponent = (value: boolean) => {
 }
 // 提交添加耗材传递的值
 const handleSubmitConsumable = async (value: any) => {
+  if (route.query.from === 'plannedPoCreate') {
+    return
+  }
   let list: ISubmitPurchaseConsumable[] = []
   value.forEach((item: any): any => {
     if (item.count) {
@@ -1814,7 +1820,7 @@ const handleUpdateCreateSkuCount = async () => {
 const updateCreate = () => {
   let newValue = { tempId: tempCurId.value, poDetailData: poDetailData.value, skuComponentList: skuComponentList.value }; 
   _updateSku(newValue)
-  console.log('更新', skuData);
+  console.log('更新', skuStore.getSkuData);
 }
 // 采购sku详情更新
 const handleUpdateSku = async () => {
@@ -1883,12 +1889,18 @@ const clickAttentionConfirm = async (val: any) => {
    
   attentionCopy.value = val
   clickRow.value.purchaseMatters = val
+  if (route.query.from === 'plannedPoCreate') {
+   updateCreate() 
+  }
 }
 const clickContractConfirm = async (val: any) => {
   const { data } = await updatePoContractTerms({ id: clickRow.value.id, contractTerms: val})
   
   contractCopy.value = val
   clickRow.value.contractTerms = val
+  if (route.query.from === 'plannedPoCreate') {
+   updateCreate() 
+  }
 }
 /**
 * 当点击取消，确认时，子组件传递给父组件 false
@@ -2178,6 +2190,32 @@ const handleDefaultPurchase = async (row: any) => {
     console.error(error)
   }
 }
+// 创建修改采购方
+const handleCreateDefaultPurchase = (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if(item!.type === 0) { //如果选择了为买单的采购方
+    row.customsDeclarationStatus = 1 //自动勾选不报关
+  } else if(row.purchaseId === 2) { //选择了埃托姆
+    row.customsDeclarationStatus = 0
+  }
+  updateCreate() 
+}
+// 创建修改不报关
+const handleCreateCustoms = (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if(item!.type === 0) { //如果选择了为买单的采购方
+    if(row.customsDeclarationStatus === 0) {
+      row.customsDeclarationStatus = 1
+      $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+    }
+  } else if(row.purchaseId === 2) { //选择了埃托姆
+    if(row.customsDeclarationStatus === 1) {
+      row.customsDeclarationStatus = 0
+      $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
+    } 
+  }
+  updateCreate()
+}
 // 处理不报关
 const handleDeclareCustoms = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
@@ -2210,40 +2248,43 @@ const handleAddSKU = async () => {
   addSKUVisible.value = true
 }
 const handleDelCreateSKU = () => {
+  const skuData = skuStore.getSkuData
   let length = skuData.length
   let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
+  // 删除：如果只有一个，删除后就全为空
   if (length === 1) {
     _deleteSku(tempCurId.value)
     $baseMessage('删除SKU成功', 'success')
-    Object.assign(poDetailData.value, {})
+    poDetailData.value = {}
     skuComponentList.value = []
     handleShowCreatePreviousOrNext()
+    createDisabled.value = true
   } else {
+    // 如果大于一个，那就是两个及两个以上，先删除
     console.log('删除前的id', tempCurId.value);
-    
     _deleteSku(tempCurId.value)
     $baseMessage('删除SKU成功', 'success')
-    console.log('删除后的', skuData);
-    if (length === 2) {
-      if (index === 0) {
-        handleFetchCreateNext()
-      } else if (index === 1) {
-        handleFetchCreatePrevious()
-      }
+    console.log('删除后的', skuStore.getSkuData);
+    console.log('删除前的length', length);
+    console.log('删除前的index', index);
+    
+    // 如果删除之前的index是0，就是跳到下一个
+    if (index === 0) {
+      tempCurId.value = skuData[index + 1].tempId
+      Object.assign(poDetailData.value, skuData[index + 1].poDetailData)
+      Object.assign(skuComponentList.value, skuData[index + 1].skuComponentList)
+      handleShowCreatePreviousOrNext()
     } else {
-      if (index === 0) {
-        handleFetchCreateNext()
-      } else if (index === length - 1) {
-        handleFetchCreatePrevious()
-      } else {
-        handleFetchCreatePrevious()
-      }
+      tempCurId.value = skuData[index - 1].tempId
+      Object.assign(poDetailData.value, skuData[index - 1].poDetailData)
+      Object.assign(skuComponentList.value, skuData[index - 1].skuComponentList)
+      handleShowCreatePreviousOrNext()
     }
   }
 }
 // 创建SKU
 const createSku = async () => {
-  const createReq = skuData.map((item: any) => {
+  const createReq = skuStore.getSkuData.map((item: any) => {
     const transformedItem = {
       componentList: item.skuComponentList,
       poSkuDetail: item.poDetailData, // 替换键名
@@ -2299,6 +2340,11 @@ const handleDelSKU = async () => {
     }
   }
 }
+// 零件创建删除
+const handleCreateDelComponent = (index: number) => {
+  skuComponentList.value.splice(index, 1)
+  updateCreate()
+}
 // po-sku零配件删除
 const handleDelPoSKuComponent = async (row: any, index: number) => {
   $baseConfirm('确定要删除该条零件信息吗', "系统提示", async () => {
@@ -2312,7 +2358,6 @@ const handleDelPoSKuComponent = async (row: any, index: number) => {
           fetchSkuComponent()
           fetchData()
           $baseMessage('该条零件删除成功', 'success', 'hey');
-          _deleteSku(tempCurId.value)
         }
       } catch (error) {
         console.error('删除失败:', error);
@@ -2415,8 +2460,9 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
 
 // 当点击创建的上一个按钮
 const handleFetchCreatePrevious = () => {
+  const skuData = skuStore.getSkuData
   let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
-  console.log('index', index);
+  // console.log('index', index);
 
   tempCurId.value = skuData[index-1].tempId
   // 将数据显示在页面上
@@ -2445,6 +2491,7 @@ const handleFetchCreatePrevious = () => {
 }
 // 当点击创建的下一个按钮
 const handleFetchCreateNext = () => {
+  const skuData = skuStore.getSkuData
   let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
   tempCurId.value = skuData[index+1].tempId
   // 将数据显示在页面上
@@ -2581,8 +2628,8 @@ const handleShowPreviousOrNext = () => {
 }
 // 处理创建的上一个还是下一个
 const handleShowCreatePreviousOrNext = () => {
-  let length = skuData.length;
-  let lastIndex = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
+  let length = skuStore.getSkuData.length;
+  let lastIndex = skuStore.getSkuData.findIndex((item: any) => item.tempId === tempCurId.value)
   if (length === 0 || length === 1) {
     createPreviousVisible.value = false
     createNextVisible.value = false
@@ -2694,7 +2741,7 @@ onBeforeMount(() => {
   } else if (route.query.from === 'plannedPoCreate') {
     // 一进来 disable掉
     createDisabled.value = true
-    
+    fetchPurchaseAndRepository()
     // 是创建的话，创建div显示
     createNone.value = false
     detailsNone.value = true

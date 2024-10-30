@@ -9,7 +9,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -24,7 +24,7 @@
           class="noneHoveTable"
           :cell-class-name="pendingCellClassName"
           :data="list"
-          @cell-click="pendingInputChange"
+          @cell-click="contactedInputChange"
         >
           <el-table-column label="反馈日期" min-width="115" prop="createTime">
             <template #default="{ row }">
@@ -67,16 +67,21 @@
           <el-table-column label="缺" prop="lackCount"></el-table-column>
           <el-table-column label="坏" prop="badCount"></el-table-column>
           <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="200" prop="remark">
+          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
               <span v-html="row.remark"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="售后日志" prop="salesLog" min-width="200">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
             <template #default="{ row }">
               <el-space>
-                <el-button type="primary" text @click="showMove">移动到已联系</el-button>
-                <el-button type="primary" text @click="showAfterSalesLog(row)">售后日志</el-button>
+                <el-link type="primary" :underline="false" @click="showMove(row)">移动到已联系</el-link>
+                <el-link type="primary" :underline="false" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -97,7 +102,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -207,9 +212,14 @@
               </el-upload>
             </template>
           </el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
+          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
               <span v-html="row.remark"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="售后日志" prop="salesLog" min-width="200">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200" fixed="right">
@@ -237,7 +247,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -313,16 +323,21 @@
               凭证<br>上传
             </template>
             <template #default="{ row }">
-              <el-image :src="row.url" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+              <el-image :src="row.voucherUrl" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
+          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
               <span v-html="row.remark"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="售后日志" prop="salesLog" min-width="200">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -342,7 +357,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -357,7 +372,7 @@
           class="noneHoveTable"
           :cell-class-name="pendingCellClassName"
           :data="list"
-          @cell-click="pendingInputChange"
+          @cell-click="contactedInputChange"
         >
           <el-table-column label="反馈日期" min-width="115" prop="createTime">
             <template #default="{ row }">
@@ -400,16 +415,21 @@
           <el-table-column label="缺" prop="lackCount"></el-table-column>
           <el-table-column label="坏" prop="badCount"></el-table-column>
           <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
+          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
               <span v-html="row.remark"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="售后日志" prop="salesLog" min-width="200">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
             <template #default="{ row }">
               <el-space>
-                <el-button type="primary" text @click="showMove">移动到已联系</el-button>
-                <el-button type="primary" text @click="showAfterSalesLog(row)">售后日志</el-button>
+                <el-link type="primary" :underline="false" @click="showMove(row)">移动到已联系</el-link>
+                <el-link type="primary" :underline="false" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -430,7 +450,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -495,14 +515,19 @@
           </el-table-column>
           <el-table-column label="已退款￥" min-width="100" prop="refundAmount"></el-table-column>
           <el-table-column label="坏账金额￥" min-width="110" prop="badDebtPrice"></el-table-column>
-          <el-table-column label="打包反馈备注" min-width="180" prop="remark">
+          <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
               <span v-html="row.remark"></span>
             </template>
           </el-table-column>
+          <el-table-column label="售后日志" prop="salesLog" min-width="200">
+            <template #default="{ row }">
+              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="120" fixed="right">
             <template #default="{ row }">
-              <el-button type="primary" text @click="showAfterSalesLog(row)">售后日志</el-button>
+              <el-button type="primary" text @click="showAfterSalesLog(row)">打包反馈日志</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -534,13 +559,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="contactedForm.remark" type="textarea" resize="none"/>
-        </el-form-item>
       </el-form>
       <template #footer>
         <el-button type="danger" @click="closeMove">取消</el-button>
-        <el-button type="success">确定</el-button>
+        <el-button type="success" @click="confirmContacted">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 采购申请 -->
@@ -573,9 +595,9 @@
         <el-button type="success">提交审批</el-button>
       </template>
     </vab-dialog>
-    <!-- 售后日志 -->
+    <!-- 打包反馈日志 -->
     <vab-dialog
-      title="售后日志"
+      title="打包反馈日志"
       width="57%"
       v-model="afterSalesLogVisible"
     >
@@ -591,13 +613,14 @@
           </template>
         </el-table-column>
         <el-table-column label="任务ID" min-width="70" prop="taskId"></el-table-column>
-        <el-table-column label="任务数" min-width="100"></el-table-column>
+        <el-table-column label="任务数" min-width="100" prop="packageTaskCount"></el-table-column>
         <el-table-column label="好" min-width="100" prop="goodCount"></el-table-column>
         <el-table-column label="多" min-width="100" prop="manyCount"></el-table-column>
         <el-table-column label="留样" min-width="100" prop="keepSampleCount"></el-table-column>
         <el-table-column label="缺" min-width="100" prop="lackCount"></el-table-column>
         <el-table-column label="坏" min-width="100" prop="badCount"></el-table-column>
         <el-table-column label="待售后￥" min-width="100" prop="salesPrice"></el-table-column>
+        <el-table-column label="日志类型" prop="logType" min-width="100"></el-table-column>
         <el-table-column label="备注" min-width="180" prop="remark"></el-table-column>
       </el-table>
     </vab-dialog>
@@ -616,7 +639,20 @@
 <script lang="ts" setup>
 import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
-import { archiveAfterSales, badDebtAfterSales, checkAfterSalesArchive, deleteAfterSales, getAfterSalesList, getAfterSalesLog, updateAfterSales, uploadAfterSales } from '~/src/api/devlocal/packagingShipping'
+import { removeHtmlTags } from '~/src/utils/tableColum'
+import {
+  archiveAfterSales,
+  badDebtAfterSales,
+  checkAfterSalesArchive,
+  deleteAfterSales,
+  getAfterSalesList,
+  getAfterSalesLog,
+  getAfterSalesLogs,
+  updateAfterSales,
+  updateAfterSalesLog,
+  updateSalesStatus,
+  uploadAfterSales
+} from '/@/api/devlocal/packagingShipping'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
@@ -664,7 +700,17 @@ const afterSalesOption = [
   { label: '无法售后', value: 4 },
   { label: '需要采购', value: 5 },
 ]
-
+const confirmContacted = async () => {
+  const { data } = await updateSalesStatus({
+    id: copyRow.value.id,
+    status: contactedForm.type,
+  })
+  if (data) {
+    $baseMessage('移动到已联系成功', 'success')
+    closeMove()
+    fetchData()
+  }
+}
 // 已联系修改
 const handleUpdateAfterSales = async (row: any) => {
   await updateAfterSales({
@@ -675,11 +721,12 @@ const handleUpdateAfterSales = async (row: any) => {
 }
 const contactedForm = reactive<any>({
   type: 0,
-  remark: ''
 })
 const contactedFormRef = ref<any>()
+const copyRow = ref<any>()
 // 移动到已联系展示
-const showMove = () => {
+const showMove = (row: any) => {
+  copyRow.value = row
   moveVisible.value = true
 }
 // 关闭移动到已联系
@@ -754,7 +801,13 @@ const fetchData = async () => {
       item.suppliser = item.suppliser.replace(/,/g, '<br>');
       item.remark = item.remark.replace(/,/g, '<br>');
       item.hide = false
-      item.imageList = []
+      if(!item.voucherUrl) {
+          item.hide = false
+          item.imageList = []
+      } else if (item.voucherUrl){
+          item.hide = true
+          item.imageList = [{ url: item.voucherUrl }]
+      }
     })
   }
 }
@@ -817,14 +870,12 @@ const LogCopy = ref<string>('')
 const cancelEditorLog = () => {
   wangEditorLogVisible.value = false
 }
-const confirmEditorLog = (val: any) => {
-  // const { data } = await updatePoContractTerms({ id: clickRow.value.existingPartsListId, contractTerms: val})
-  //  if (data === true) {
-  //      contractCopy.value = val
-  //      clickRow.value.contractTerms = val
-  //  }
-  LogCopy.value = val
-  clickRow.value.afterSalesLog = val
+const confirmEditorLog = async (val: any) => {
+  const { data } = await updateAfterSalesLog({ id: clickRow.value.id, log: val})
+   if (data) {
+    LogCopy.value = val
+    clickRow.value.salesLog = val
+  }
 }
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
@@ -833,16 +884,6 @@ const imagePreviewClose = () => {
 }
 // 待联系点击输入框
 const pendingInputChange = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0]
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
-}
-const clickRow = ref<any>()
-const contactedInputChange = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0]
   if (getDataAttribute(el, 'img') && el) {
@@ -860,6 +901,25 @@ const contactedInputChange = (row: any, column: any, cell: HTMLTableCellElement,
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
 }
+const clickRow = ref<any>()
+const contactedInputChange = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0]
+  if (getDataAttribute(el, 'img') && el) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
+  }
+  if (column.property === 'salesLog') {
+    clickRow.value = row
+    const { data } = await getAfterSalesLogs({ id: row.id })
+    LogCopy.value = row.salesLog
+    row.salesLog = data
+    wangEditorTitle.value = '编辑售后日志'
+    classify.value = 'salesLog'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+  }
+}
 const handlePreview = (file: UploadFile) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
@@ -867,7 +927,7 @@ const handlePreview = (file: UploadFile) => {
 }
 // 待联系cellStyle
 const pendingCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex !== 4 && data.columnIndex !== 6 && data.columnIndex !== 14) {
+  if (data.columnIndex !== 4 && data.columnIndex !== 6 && data.columnIndex !== 14 && data.columnIndex !== 15) {
     return {
       textAlign: 'center' as 'center'
     }

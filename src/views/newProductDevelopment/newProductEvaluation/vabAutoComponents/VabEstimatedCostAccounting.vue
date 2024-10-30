@@ -100,7 +100,11 @@
                                 @keydown.enter="effectiveCountInputeHandle($event,row)"
                             />
                         </div>
-                        <span>{{ row.url1688 }}</span>
+                        <span>
+                          <el-text truncated>
+                            {{ row.url1688 }}
+                          </el-text>
+                        </span>
                     </template>
                 </el-table-column>
 
@@ -193,18 +197,20 @@
                         <span>{{ row.packaging }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="120">
+                <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
                     <template #default="{ row }">
                         <el-select 
                             v-model="row.firstMileChannel" 
                             placeholder="请选择头程渠道"
                             @change="handlerEstimatendChange(row)"
+                            style="min-width: 100%"
                         >
                             <el-option 
                                 v-for="dict in firstLegChannelColumns" 
                                 :key="dict.value" 
                                 :value="dict.value"
                                 :label="dict.label"
+                                
                             >
                             </el-option>
                         </el-select>

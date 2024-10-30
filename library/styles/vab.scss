@@ -38,6 +38,22 @@ html {
     color: var(--el-color-black);
     background: var(--el-background-color);
 
+    /* 横向滚动条的滑块 */
+    .el-scrollbar__bar.is-horizontal .el-scrollbar__thumb {
+      border-radius: 6px; /* 滑块的圆角 */
+    }
+    /* 纵向滚动条的滑块 */
+    .el-scrollbar__bar.is-vertical .el-scrollbar__thumb {
+      border-radius: 6px;
+    }
+    /* 修改滑块宽度 */
+    .el-scrollbar__bar.is-horizontal {
+      height: 12px;
+    }
+    .el-scrollbar__bar.is-vertical  {
+      width: 12px;
+    }
+    
     &.color-weakness {
       filter: invert(80%);
     }
@@ -907,7 +923,7 @@ html {
 
       .el-scrollbar {
         //margin-right: -20px;
-
+        
         .vab-auto-box {
           flex: 1;
           width: 100%;

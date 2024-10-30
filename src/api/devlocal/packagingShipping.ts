@@ -5,18 +5,28 @@ import {
   IAddQualityCheckReq,
   IBooleanResp,
   IConfirmEndTask,
+  IConfirmStartMoreTask,
   IConfirmStartTask,
+  IGetAfterSalesListReq,
+  IGetAfterSalesListResp,
+  IGetAfterSalesLogResp,
   IGetEndTaskListResp,
   IGetPackageComponentListResp,
   IGetPackageInspectionResp,
+  IGetPackageTaskingList,
   IGetPackageTaskListQuery,
   IGetPackageTaskListResp,
+  IGetPackageTimeDayRequest,
+  IGetPackageTimeDayResp,
+  IGetPackageTimeListReq,
+  IGetPackageTimeListResp,
   IGetQualityCheckResp,
   IGetSignListQuery,
   IGetSignListResp,
   IGetSignRecordResp,
   IGetStartTaskListResp,
   IId,
+  IIds,
   IPoId,
   ISignComponent,
   ISignId,
@@ -24,25 +34,19 @@ import {
   ISignRecordId,
   ISplitPackageTask,
   IStringResp,
+  IUpdateAfterSales,
+  IUpdateAfterSalesLog,
   IUpdatePackageInspection,
   IUpdatePackageInspectionDetail,
   IUpdatePackageTask,
+  IUpdatePackageTime,
   IUpdatePriorityPackaging,
   IUpdateProductDate,
   IUpdateRecordCount,
   IUpdateRecordOrder,
+  IUpdateSalesStatus,
   IUpdateSignLog,
-  IUserIds,
-  IGetAfterSalesListReq,
-  IGetAfterSalesListResp,
-  IGetAfterSalesLogResp,
-  IUpdateAfterSales,
-  IConfirmStartMoreTask,
-  IGetPackageTimeListReq,
-  IGetPackageTimeListResp,
-  IUpdatePackageTime,
-  IGetPackageTimeDayRequest,
-  IGetPackageTimeDayResp
+  IUserIds
 } from '/@/type/packagingShipping/packagingType'
 
 export function getSignList(params: IGetSignListQuery): Promise<IGetSignListResp> {
@@ -319,7 +323,7 @@ export function getAfterSalesList(params: IGetAfterSalesListReq): Promise<IGetAf
 // 售后-售后质检记录
 export function getAfterSalesLog(params: IPoId): Promise<IGetAfterSalesLogResp> {
   return request({
-    url: `${BASE_API}/after/sales/log`,
+    url: `${BASE_API}/after/sales/package/log`,
     method: 'get',
     params
   })
@@ -398,10 +402,44 @@ export function getPackageTimeDay(params: IGetPackageTimeDayRequest): Promise<IG
   })
 }
 // 开始任务确定-sku质检列表
-export function getSkuQualityList(params: IId): Promise<IGetPackageTimeDayResp> {
+export function getSkuQualityList(params: IIds) {
   return request({
     url: `${BASE_API}/package/task/skuQualityList`,
     method: 'get',
     params
+  })
+}
+// 查询当前账号进行中的打包任务
+export function getPackageTaskingList(params: IGetPackageTaskingList): Promise<IGetPackageTaskListResp> {
+  return request({
+    url: `${BASE_API}/package/tasking/list`,
+    method: 'get',
+    params
+  })
+}
+
+// 售后-待联系移动到已联系
+export function updateSalesStatus(params: IUpdateSalesStatus): Promise<IStringResp> {
+  return request({
+    url: `${BASE_API}/after/sales/status/update`,
+    method: 'post',
+    params
+  })
+}
+
+// 售后日志查询
+export function getAfterSalesLogs(params: IId): Promise<IStringResp> {
+  return request({
+    url: `${BASE_API}/after/sales/log`,
+    method: 'get',
+    params
+  })
+}
+// 售后日志修改保存
+export function updateAfterSalesLog(data: IUpdateAfterSalesLog): Promise<IStringResp> {
+  return request({
+    url: `${BASE_API}/after/sales/update/log`,
+    method: 'post',
+    data
   })
 }

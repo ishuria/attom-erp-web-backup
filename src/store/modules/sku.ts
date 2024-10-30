@@ -24,12 +24,11 @@ export const useSkuStore = defineStore('sku', {
     },
     // 删除 SKU
     deleteSku(tempId: string) {
+      // console.log('进入 deleteSku，tempId:', tempId) // 检查是否被调用
       // const index = this.data.findIndex((item) => item.tempId === tempId)
       // this.data.splice(index, 1)
-      console.log('进入 deleteSku，tempId:', tempId); // 检查是否被调用
       this.data = this.data.filter((sku) => sku.tempId !== tempId);
-      console.log('删除后的数据:', this.data);
-      
+      // console.log('删除后的数据:', this.data);
     },
     // 清空 sku
     clearSKUs() {

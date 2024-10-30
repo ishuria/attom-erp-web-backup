@@ -12,7 +12,7 @@
                 <el-button type="primary" class="button-margin">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="请选择站点" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
                     v-for="item in siteOption"
                     :label="item.label"
@@ -26,7 +26,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -52,7 +52,7 @@
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="createTime" min-width="115"></el-table-column>
+          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
           <el-table-column label="站点" prop="sendSite" min-width="110">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
@@ -89,21 +89,21 @@
             </template>
           </el-table-column>
           <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemark" min-width="250">
+          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
             <template #default="{ row }">
-              <el-link @click="packingMattersVisible = true">{{ row.packageRemark }}</el-link>
+              <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>    
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="450" >
+          <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-button link type="primary">条码文件夹</el-button>
-                <el-button link type="primary" @click="handleShowPartsList(row)">零件清单</el-button>
-                <el-button link type="primary" @click="handleShowQualityInspectionReport(row)">质检</el-button>
-                <el-button link type="primary">生成条形码</el-button>
-                <el-button link type="primary" @click="showSplitTask(row)">拆分</el-button>
-                <el-button link type="primary" @click="handleShowModify(row)">修改</el-button>
+                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
+                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -130,7 +130,7 @@
                 <el-button type="primary" class="button-margin">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="请选择站点" clearable class="button-margin" @change="queryData">
+                <el-select v-model="taskingForm.site" placeholder="全部" clearable class="button-margin" @change="queryTaskingData">
                   <el-option 
                     v-for="item in siteOption"
                     :label="item.label"
@@ -142,12 +142,12 @@
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
+            <el-form inline :model="taskingForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="taskingForm.keyWord" @input="queryTaskingData" @keyup.enter.native="queryTaskingData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryTaskingData"></el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -155,7 +155,7 @@
         <el-table 
           ref="tableRef" 
           stripe border 
-          :data="list"
+          :data="taskingList"
           class="noneHoveTable"
           :header-cell-style="headerCellStyle"
           :cell-style="cellStyle"
@@ -170,7 +170,7 @@
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="createTime" min-width="115"></el-table-column>
+          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
           <el-table-column label="站点" prop="sendSite" min-width="110">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
@@ -207,21 +207,21 @@
             </template>
           </el-table-column>
           <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemark" min-width="250">
+          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
             <template #default="{ row }">
-              <el-link @click="packingMattersVisible = true">{{ row.packageRemark }}</el-link>
+              <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>    
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="450" >
+          <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-button link type="primary">条码文件夹</el-button>
-                <el-button link type="primary" @click="handleShowPartsList(row)">零件清单</el-button>
-                <el-button link type="primary" @click="handleShowQualityInspectionReport(row)">质检</el-button>
-                <el-button link type="primary">生成条形码</el-button>
-                <el-button link type="primary" @click="showSplitTask(row)">拆分</el-button>
-                <el-button link type="primary" @click="handleShowModify(row)">修改</el-button>
+                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
+                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -230,11 +230,11 @@
           </template>
         </el-table>
         <vab-pagination 
-          :current-page="queryForm.pageNo" 
-          :page-size="queryForm.pageSize" 
-          :total="total"
-          @current-change="handleCurrentChange" 
-          @size-change="handleSizeChange" 
+          :current-page="taskingForm.pageNo" 
+          :page-size="taskingForm.pageSize" 
+          :total="taskingTotal"
+          @current-change="handleTaskingCurrentChange" 
+          @size-change="handleTaskingSizeChange" 
         />
       </el-tab-pane>
       <el-tab-pane label="已完成" :name="2">
@@ -248,7 +248,7 @@
                 <el-button type="primary" class="button-margin">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="请选择站点" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
                     v-for="item in siteOption"
                     :label="item.label"
@@ -262,7 +262,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -288,7 +288,7 @@
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="createTime" min-width="115"></el-table-column>
+          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
           <el-table-column label="站点" prop="sendSite" min-width="110">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
@@ -325,21 +325,21 @@
             </template>
           </el-table-column>
           <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemark" min-width="250">
+          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
             <template #default="{ row }">
-              <el-link @click="packingMattersVisible = true">{{ row.packageRemark }}</el-link>
+              <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
-          </el-table-column>    
+          </el-table-column>     
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="450" >
+          <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-button link type="primary">条码文件夹</el-button>
-                <el-button link type="primary" @click="handleShowPartsList(row)">零件清单</el-button>
-                <el-button link type="primary" @click="handleShowQualityInspectionReport(row)">质检</el-button>
-                <el-button link type="primary">生成条形码</el-button>
-                <el-button link type="primary" @click="showSplitTask(row)">拆分</el-button>
-                <el-button link type="primary" @click="handleShowModify(row)">修改</el-button>
+                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
+                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -366,7 +366,7 @@
                 <el-button type="primary" class="button-margin">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="请选择站点" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
                     v-for="item in siteOption"
                     :label="item.label"
@@ -380,7 +380,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -406,7 +406,7 @@
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="createTime" min-width="115"></el-table-column>
+          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
           <el-table-column label="站点" prop="sendSite" min-width="110">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
@@ -443,21 +443,21 @@
             </template>
           </el-table-column>
           <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemark" min-width="250">
+          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
             <template #default="{ row }">
-              <el-link @click="packingMattersVisible = true">{{ row.packageRemark }}</el-link>
+              <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
-          </el-table-column>    
+          </el-table-column>      
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="450" >
+          <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-button link type="primary">条码文件夹</el-button>
-                <el-button link type="primary" @click="handleShowPartsList(row)">零件清单</el-button>
-                <el-button link type="primary" @click="handleShowQualityInspectionReport(row)">质检</el-button>
-                <el-button link type="primary">生成条形码</el-button>
-                <el-button link type="primary" @click="showSplitTask(row)">拆分</el-button>
-                <el-button link type="primary" @click="handleShowModify(row)">修改</el-button>
+                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
+                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -473,7 +473,7 @@
           @size-change="handleSizeChange" 
         />
       </el-tab-pane>
-      <el-tab-pane label="售后" :name="6">
+      <el-tab-pane label="售后" :name="4">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
@@ -484,7 +484,7 @@
                 <el-button type="primary" class="button-margin">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="请选择站点" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
                     v-for="item in siteOption"
                     :label="item.label"
@@ -498,7 +498,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -524,7 +524,7 @@
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="createTime" min-width="115"></el-table-column>
+          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
           <el-table-column label="站点" prop="sendSite" min-width="110">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
@@ -561,21 +561,21 @@
             </template>
           </el-table-column>
           <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemark" min-width="250">
+          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
             <template #default="{ row }">
-              <el-link @click="packingMattersVisible = true">{{ row.packageRemark }}</el-link>
+              <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
-          </el-table-column>    
+          </el-table-column>     
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="450" >
+          <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-button link type="primary">条码文件夹</el-button>
-                <el-button link type="primary" @click="handleShowPartsList(row)">零件清单</el-button>
-                <el-button link type="primary" @click="handleShowQualityInspectionReport(row)">质检</el-button>
-                <el-button link type="primary">生成条形码</el-button>
-                <el-button link type="primary" @click="showSplitTask(row)">拆分</el-button>
-                <el-button link type="primary" @click="handleShowModify(row)">修改</el-button>
+                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
+                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -596,13 +596,12 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
                 <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
                 <el-button type="primary" class="button-margin">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="请选择站点" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
                     v-for="item in siteOption"
                     :label="item.label"
@@ -616,7 +615,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -642,7 +641,7 @@
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="createTime" min-width="115"></el-table-column>
+          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
           <el-table-column label="站点" prop="sendSite" min-width="110">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
@@ -679,21 +678,21 @@
             </template>
           </el-table-column>
           <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemark" min-width="250">
+          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
             <template #default="{ row }">
-              <el-link @click="packingMattersVisible = true">{{ row.packageRemark }}</el-link>
+              <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
-          </el-table-column>    
+          </el-table-column>   
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="450" >
+          <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-button link type="primary">条码文件夹</el-button>
-                <el-button link type="primary" @click="handleShowPartsList(row)">零件清单</el-button>
-                <el-button link type="primary" @click="handleShowQualityInspectionReport(row)">质检</el-button>
-                <el-button link type="primary">生成条形码</el-button>
-                <el-button link type="primary" @click="showSplitTask(row)">拆分</el-button>
-                <el-button link type="primary" @click="handleShowModify(row)">修改</el-button>
+                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
+                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -711,15 +710,6 @@
       </el-tab-pane>
     </el-tabs>
 
-    <wangEditor
-      :title="wangEditorTitle"
-      :wangEditorVisible="wangEditorLogVisible"
-      :content="progressLogCopy"
-      @clickChild="clickLog"
-      @clickBoolean="clickLogBool"
-      :classify="classify"
-    >
-    </wangEditor>
     <!-- 零件清单 -->
     <vab-dialog
       title="零配件清单"
@@ -979,19 +969,34 @@
       <el-table
         border stripe
         :header-cell-style="{ textAlign: 'center' }"
-        :data="fakeQualityProject"
+        :data="skuQualityList"
         class="qualityProject"
+        :cell-class-name="projectCellClassName"
+        @cell-click="changeProjectInput"
+        :span-method="objectSpanMethod"
       >
-        <el-table-column label="SKU" prop="sku"></el-table-column>
-        <el-table-column label="图片"></el-table-column>
-        <el-table-column label="检查类型" prop="type" min-width="100" align="center"></el-table-column>
-        <el-table-column label="打包注意事项" prop="matters" min-width="300"></el-table-column>
-        <el-table-column label="需质检" prop="remind" min-width="50" align="center">
+        <el-table-column label="SKU" prop="sku" min-width="100"></el-table-column>
+        <el-table-column label="图片" width="82">
           <template #default="{ row }">
-            <el-checkbox v-model="row.remind" :true-value="1" :false-value="0" />
+            <el-image :src="row.skuImageUrl" fit="contain" style="width: 100%; height: 100%; display: block" data-img="img">
+              <template #error>
+                <el-icon></el-icon>
+              </template>
+            </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="修改日期" prop="date" min-width="110" align="center"></el-table-column>
+        <el-table-column label="检查类型" prop="type" min-width="100" align="center"></el-table-column>
+        <el-table-column label="打包注意事项" prop="packagePrecautions" min-width="300"></el-table-column>
+        <el-table-column label="需质检" prop="status" min-width="80" align="center">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.status" :true-value="1" :false-value="0" />
+          </template>
+        </el-table-column>
+        <el-table-column label="修改日期" prop="updateTime" min-width="110" align="center">
+          <template #default="{ row }">
+            {{ row.updateTime ? row.updateTime.split(' ')[0] : '' }}
+          </template>
+        </el-table-column>
       </el-table>
     </vab-dialog>
     <!-- 修改 -->
@@ -1002,7 +1007,7 @@
       @close="closeModifyDialog"
     >
       <el-form ref="modifyFormRef" :model="modifyForm" :rules="modifyRules" label-position="right" label-width="auto" style="margin-left: 20px; margin-right: 20px;">
-        <el-form-item label="站点" prop="site">
+        <el-form-item label="站点" prop="site" style="width: 97%">
           <el-select v-model="modifyForm.site" placeholder="请选择站点" clearable>
             <el-option 
               v-for="item in siteOption"
@@ -1024,19 +1029,19 @@
     <!-- 点击清点质检 - 打包总数 -->
     <vab-dialog
       title="打包总数"
-      width="25%"
+      width="22%"
       v-model="packingCountVisible"
       class="packingTotal"
       :before-close="closePackingCount"
     >
       <el-form ref="packingCountFormRef" :model="packingCountForm" label-position="left" label-width="auto" style="margin-left: 20px; margin-right: 0px">
         <el-form-item label="任务数量" prop="packageTaskCount">
-          <el-col :span="18">
+          <div style="width: 85%;">
             <el-input v-model="packingCountForm.packageTaskCount" disabled  ></el-input>
-          </el-col>
+          </div>
         </el-form-item>
         <el-form-item label="好" prop="goodCount">
-          <div style="width: 75%; margin-right: 10px;">
+          <div style="width: 85%; margin-right: 10px;">
             <el-input v-model.trim="packingCountForm.goodCount" clearable/>
           </div>
           <div style="width: 10%; display: flex; align-items: center">
@@ -1044,43 +1049,42 @@
           </div>
         </el-form-item>
         <el-form-item label="留样" prop="keepSampleCount">
-          <el-col :span="18">
+          <div style="width: 85%;">
             <el-input v-model.trim="packingCountForm.keepSampleCount" clearable/>
-          </el-col>
+          </div>
         </el-form-item>
         <el-form-item label="坏" prop="badCount">
-          <el-col :span="18" style="margin-right: 10px;">
+          <div style="width: 85%;">
             <el-input v-model.trim="packingCountForm.badCount" clearable/>
-          </el-col>
-          <el-button type="primary" @click="handleShowDetails">明细</el-button>
+          </div>
+          <!-- <el-button type="primary" @click="handleShowDetails">明细</el-button> -->
         </el-form-item>
         <el-form-item label="缺">
-          <el-col :span="18">
+          <div style="width: 85%;">
             <el-input v-model="lackCount" disabled />
-          </el-col>
+          </div>
         </el-form-item>
         <el-form-item label="多">
-          <el-col :span="18">
+          <div style="width: 85%;">
             <el-input v-model="manyCount" disabled />
-          </el-col>
+          </div>
         </el-form-item>
         <el-form-item label="打包总数">
-          <el-col :span="18">
+          <div style="width: 85%;">
             <el-input v-model="packingTotal" disabled />
-          </el-col>
+          </div>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-col :span="18">
+          <div style="width: 85%;">
             <el-input type="textarea" v-model="packingCountForm.remark" :rows="2" style="margin-bottom: 18px" resize="none"/>
-          </el-col>
-          <el-col :span="18">
-            <el-input type="textarea" :rows="4" disabled resize="none" />
-          </el-col>
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="danger" @click="closePackingCount">取消</el-button>
-        <el-button type="success" @click="confirmQualityCheck">确认</el-button>
+        <div style="margin-right: 10px">
+          <el-button type="danger" @click="closePackingCount">取消</el-button>
+          <el-button type="success" @click="confirmQualityCheck">确认</el-button>
+        </div>
       </template>
     </vab-dialog>
     <!-- 增加 -->
@@ -1125,49 +1129,6 @@
         <el-table-column label="坏" min-width="100" prop="bad"></el-table-column>
       </el-table>
     </vab-dialog>
-    <!-- 打包注意事项 -->
-    <vab-dialog
-      width="40%"
-      v-model="packingMattersVisible"
-      @close="closePackingMatters"
-    >
-      <el-table 
-        ref="tableRef" 
-        stripe border 
-        :data="fakePackingMatters"
-        :header-cell-style="{ 'text-align': 'center' }"
-        @cell-click="changeInput"
-        :cell-style="cellStyle"
-      >
-        <el-table-column label="修改日期" width="140" prop="createTime" align="center">
-          <template #default="{ row }">
-            <span>{{ row.createTime ? row.createTime.split(' ')[0] : '' }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="需质检" width="90" prop="status" align="center">
-          <template #default="{ row }">
-            <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox" @change=""></el-checkbox>
-          </template>
-        </el-table-column>
-        <el-table-column label="检查类型" min-width="40" align="center">
-          <template #default="{ row }">
-            <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" disabled>
-              <el-option
-                v-for="item in checkTypeList"
-                :label="item.label"
-                :value="item.value"
-                :key="item.value"
-              ></el-option>
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions"></el-table-column>
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
-        </template>
-      </el-table>
- 
-    </vab-dialog>
     <!-- 打包任务的拆分 -->
     <vab-dialog
       title="拆分"
@@ -1190,19 +1151,39 @@
 </template>
   
 <script lang="ts" setup>
-import { ArrowDown, Search, CirclePlus } from '@element-plus/icons-vue'
+import { CirclePlus, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { updatePoPurchaseMatters } from '/@/api/devlocal/purchasePo'
+import { siteMap, siteOption, siteValue } from '../constantOption'
+import { downloadFile } from '/@/api/devlocal/download'
+import {
+  addQualityCheck,
+  checkGoOffWork,
+  confirmCurrentTaskAddPerson,
+  confirmEndTask,
+  confirmGoOffWork,
+  confirmStartMoreTask,
+  confirmStartTask,
+  getEndTaskList,
+  getFreeList,
+  getGoOffWorkList,
+  getPackageComponentList,
+  getPackageInspection,
+  getPackageTaskingList,
+  getPackageTaskList,
+  getQualityCheck,
+  getSkuQualityList,
+  getStartTaskList,
+  splitPackageTask,
+  submitPackageInspection,
+  updatePackageInspection,
+  updatePackageTask,
+  updatePriorityPackaging
+} from '/@/api/devlocal/packagingShipping'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import { checkTypeList } from '../../newProductDevelopment/indexCommon'
-import { addQualityCheck, checkGoOffWork, confirmCurrentTaskAddPerson, confirmEndTask, confirmGoOffWork, confirmStartMoreTask, confirmStartTask, getEndTaskList, getFreeList, getGoOffWorkList, getPackageComponentList, getPackageInspection, getPackageTaskList, getQualityCheck, getSkuQualityList, getStartTaskList, splitPackageTask, submitPackageInspection, updatePackageInspection, updatePackageTask, updatePriorityPackaging } from '/@/api/devlocal/packagingShipping'
 import { IGetPackageTaskListQuery, IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
-import { siteMap, siteOption, siteValue } from '../constantOption'
-import { downloadFile } from '~/src/api/devlocal/download'
+import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'packingTaskTable',
@@ -1262,12 +1243,7 @@ const fakeDetails = [
     bad: 6
   }
 ]
-const fakePackingMatters = [
-  {
-    createTime: '2024-10-28',
 
-  }
-]
 // 零件清单表格是否可见
 const dialogPartsListTableVisible = ref<boolean>(false)
 // 零件清单列表
@@ -1519,6 +1495,7 @@ const handleConfirmCurrentTask = async () => {
     $baseMessage('当前任务加人成功', 'success')
   }
   handleCloseCurrentTask()
+  selectRows.value = []
 }
 // 下班人员的取消
 const handleCloseGetOffWork = async () => {
@@ -1553,6 +1530,7 @@ const handleConfirmGetOffWork = async () => {
     }
   }
   handleCloseGetOffWork()
+  selectRows.value = []
 }
 // 结束任务的取消
 const handleCloseFinishTask = () => {
@@ -1573,6 +1551,7 @@ const handleConfirmFinishTask = async () => {
     $baseMessage('结束任务成功', 'success')
   }
   handleCloseFinishTask()
+  selectRows.value = []
 }
 // 开始任务的取消
 const handleCloseStartTask = () => {
@@ -1587,7 +1566,7 @@ const handleShowQualityProject = async () => {
     $baseMessage('您未选中任何人员', 'warning')
     return
   }
-  personSelectVisible.value = false
+  
   const taskIds = selectRows.value.map((item: any) => item.id).join(',')
   const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
   if (selectRows.value.length > 1) {
@@ -1595,16 +1574,23 @@ const handleShowQualityProject = async () => {
       taskIds: taskIds,
       startTaskUserIds: startTaskUserIds
     })
+    personSelectVisible.value = false
   } else {
     const { data } = await confirmStartTask({
-      taskId: selectRows.value.id,
+      taskId: Number(taskIds),
       startTaskUserIds: startTaskUserIds
     })
+    personSelectVisible.value = false
   }
-  qualityProjectVisible.value = true
-  // const { data } = await getSkuQualityList({
-  //   id: 
-  // })
+  fetchData()
+  const { data } = await getSkuQualityList({
+    ids: taskIds
+  })
+  if (data) {
+    skuQualityList.value = data
+    qualityProjectVisible.value = true
+    selectRows.value = []
+  }
 }
 // 修改优先打包
 const handleUpdatePriority = async (row: any) => {
@@ -1696,9 +1682,7 @@ const handleConfirmAdd = () => {
 }
 
 // 打包总数form
-const packingCountForm = reactive<IGetQualityCheck>({
-
-})
+const packingCountForm = reactive<IGetQualityCheck>({})
 // 打包总数formRef
 const packingCountFormRef = ref<FormInstance>()
 let copyRow = ref<any>()
@@ -1814,15 +1798,7 @@ const confirmSplitTask = async () => {
   })
 }
 
-// 打包注意事项展示
-const packingMattersVisible = ref<boolean>(false)
-// 关闭打包注意事项
-const closePackingMatters = () => {
-  packingMattersVisible.value = false
-  // fakePackingMatters.value = fakePackingMatters
-  //   .map((item: any) => `${item.createTime.split(' ')[0]}: ${item.packagePrecautions}`)
-  //   .join('\n');
-}
+
 
 // 总记录数
 const total = ref<number>(0)
@@ -1831,7 +1807,7 @@ const queryForm = reactive<IGetPackageTaskListQuery>({
   pageSize: 20,
   keyWord: '',
   status: 0, // 0未到货 1待打包 2已完成 3零头 4售后 5进行中
-  site: 0 //0 亚马逊US 1 亚马逊DE 2 亚马逊UK 3亚马逊CA 4 沃尔玛US
+  site: undefined //0 亚马逊US 1 亚马逊DE 2 亚马逊UK 3亚马逊CA 4 沃尔玛US
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -1846,29 +1822,54 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
+const handleTaskingSizeChange = (value: number) => {
+  taskingForm.pageNo = 1
+  taskingForm.pageSize = value
+  fetchTaskingData()
+}
+const handleTaskingCurrentChange = (value: number) => {
+  taskingForm.pageNo = value
+  fetchTaskingData()
+}
+const queryTaskingData = () => {
+  taskingForm.pageNo = 1
+  fetchTaskingData()
+}
 
 
 
-
-
-  
-// 弹出框的标题
-const wangEditorTitle = ref<string>('')
-// 点击日志弹出富文本框是否显示
-const wangEditorLogVisible = ref<boolean>(false)
-const progressLogCopy = ref<string | undefined>('')
-const classify = ref<string>('')
-
-
-
-  
+const taskingForm = reactive<any>({
+  keyWord: '',
+  site: undefined,
+  pageNo: 1,
+  pageSize: 20
+})
+const taskingList = ref<any>([])
+const taskingTotal = ref<number>(0)
+const fetchTaskingData = async () => {
+  listLoading.value = true
+  const { data } = await getPackageTaskingList(taskingForm)
+  if (data) {
+    taskingTotal.value = data.total!
+    taskingList.value = data.list
+    taskingList.value.forEach((item: any) => {
+      item.packageRemarkList = item.packageRemarkList.join('<br>')
+    })
+    listLoading.value = false
+  }
+}  
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
-  Object.assign(list.value, [])
+  list.value = []
+  selectRows.value = []
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name);  
   }
-  fetchData()
+  if (queryForm.status !== 5) {
+    fetchData()
+  } else if (queryForm.status === 5) {
+    fetchTaskingData()
+  }
 }
 // 表头样式
 const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
@@ -1915,7 +1916,22 @@ const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIn
   }
   return ''
 }
-
+// 质检项目去掉padding
+const projectCellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
+}
+// 质检项目的图片预览
+const changeProjectInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el, 'img') && el) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
+  }
+}
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -1937,19 +1953,10 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     return
   }
 
-  if (column.property == 'purchaseMatters') {
-    clickRow.value = row
-    // const { data } = await getPoPurchaseMatters({ id: row.componentId })
-    // progressLogCopy.value = data
-    // row.purchaseMatters = data
-    wangEditorTitle.value = '编辑打包注意事项'
-    classify.value = 'purchaseMatters'
-    wangEditorLogVisible.value = !wangEditorLogVisible.value
-  } else {
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-  }
-
+ 
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+  
   // 自动聚焦
   const inputElement = getSpecificChildren(cell, "input")[0];
   if (inputElement) {
@@ -1963,50 +1970,36 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     }
   }
 }
-
-/**
- * 输入失焦事件
- */
-const clickCancel = async (event: any, value: any) =>{
-
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
+// 开始确定选择后的的质检列表col合并方法
+const objectSpanMethod = ({
+    row,
+    column,
+    rowIndex,
+    columnIndex,
+}: any) => {
+  // 设置需要合并的列
+  if (columnIndex === 0 && columnIndex === 1) {
+    // 获取当前row的零件id
+    const id = row.id;
+    // 默认不跨行
+    let rowspan = 1;
+    // 遍历后端返回的数据
+    for (let i = rowIndex + 1; i < skuQualityList.value.length; i++) {
+      // 如果零件id一样需要合并
+      if (skuQualityList.value[i].id === id) {
+        rowspan++;
+      } else {
+        break;
+      }
+    }
+    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+    if (rowIndex === 0 || skuQualityList.value[rowIndex - 1].id !== id) {
+      return { rowspan, colspan: 1 };
+    } else {
+      return { rowspan: 0, colspan: 0 };
     }
   }
-
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  // await updateProgressManage({...value})
 }
-  
-/**
- * 当点击确认时，子组件传递给父组件的新的val
- */
-const clickLog = async (val: any) => {
-  const { data } = await updatePoPurchaseMatters({ id: clickRow.value.componentId, purchaseMatters: val})
-  if (data === true) {
-    progressLogCopy.value = val
-    clickRow.value.purchaseMatters = val
-  }
-  
-}
-/**
- * 当点击取消，确认时，子组件传递给父组件 false
- */
-const clickLogBool = ( val: any) => {
-  wangEditorLogVisible.value = val
-}
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
 const fetchData = async () => {
   try {
     listLoading.value = true
@@ -2015,6 +2008,9 @@ const fetchData = async () => {
       listLoading.value = false
       total.value = data.total!
       list.value = data.list
+      list.value.forEach((item: any) => {
+        item.packageRemarkList = item.packageRemarkList.join('<br>')
+      })
     }
   } catch (error) {
     console.error(error)
@@ -2124,6 +2120,7 @@ onBeforeMount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 30px;
 }
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
@@ -2148,5 +2145,10 @@ onBeforeMount(() => {
 }
 .add-icon:hover {
   color: var(--el-color-primary); 
+}
+.overflow-text {
+  max-height: 60px;
+  display: block;
+  overflow-y: auto;
 }
 </style>
