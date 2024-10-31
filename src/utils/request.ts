@@ -199,9 +199,14 @@ const downloadDeal = (type: string, data: any, headers: any, defaultFileName = '
       // 提取文件名
       let fileName = defaultFileName
       if (contentDisposition) {
-        const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/)
-        if (fileNameMatch.length > 1) {
-          fileName = fileNameMatch[1].trim().replace(/_+$/, '')
+        const fileNameMatch = contentDisposition.match(/filename\*?=['"]?UTF-8['"]?''([^;\r\n]+)/)
+        if (fileNameMatch) {
+          fileName = decodeURIComponent(fileNameMatch[1])
+        } else {
+          const fallbackFileNameMatch = contentDisposition.match(/filename=['"]?([^;\r\n]+)['"]?/)
+          if (fallbackFileNameMatch) {
+            fileName = fallbackFileNameMatch[1]
+          }
         }
       }
 
