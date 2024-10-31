@@ -514,7 +514,6 @@
             </template>
           </el-table-column>
           <el-table-column label="PO总数" prop="purchaseSkuNumber"></el-table-column>
-          <el-table-column label="任务数"></el-table-column>
           <el-table-column label="好" prop="goodCount"></el-table-column>
           <el-table-column label="多" prop="manyCount"></el-table-column>
           <el-table-column label="留样" prop="keepSampleCount"></el-table-column>
