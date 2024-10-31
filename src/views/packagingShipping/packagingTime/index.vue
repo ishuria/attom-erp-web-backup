@@ -127,14 +127,14 @@
       v-model="modifyVisible"
       @close="closeModify"
     >
-      <el-form  ref="modifyFormRef" :model="modifyForm" :rules="modifyRules" style="margin-left: 20px; margin-right: 20px">
+      <el-form  ref="modifyFormRef" :model="modifyForm" style="margin-left: 20px; margin-right: 20px">
         <el-form-item label="开始时间" prop="startTime">
           <el-date-picker
             v-model="modifyForm.startTime"
             type="datetime"
             placeholder="选择开始时间"
-            format="YYYY-MM-DD hh:mm"
-            value-format="YYYY-MM-DD hh:mm"
+            format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm"
           />
         </el-form-item>
         <el-form-item label="结束时间" prop="endTime">
@@ -142,8 +142,8 @@
             v-model="modifyForm.endTime"
             type="datetime"
             placeholder="选择结束时间"
-            format="YYYY-MM-DD hh:mm"
-            value-format="YYYY-MM-DD hh:mm"
+            format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm"
           />
         </el-form-item>
       </el-form>
@@ -175,7 +175,10 @@ function getDefaultStringTime(): [string, string] {
 }
 // 修改可见
 const modifyVisible = ref<boolean>(false)
-const modifyForm = reactive<any>({})
+const modifyForm = reactive<any>({
+  startTime: '',
+  endTime: ''
+})
 const modifyFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
 // 修改展示

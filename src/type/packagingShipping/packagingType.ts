@@ -370,6 +370,7 @@ export interface IAddQualityCheckReq {
 export interface ISplitPackageTask {
   taskId: number
   splitCount: number
+  site: number
 }
 
 export interface IUpdatePackageTask {
@@ -774,4 +775,8 @@ export interface IUpdateSalesStatus {
 export interface IUpdateAfterSalesLog {
   id?: number
   log?: string
+}
+
+export interface ITaskId {
+  taskId: number
 }

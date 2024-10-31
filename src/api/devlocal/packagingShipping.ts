@@ -34,6 +34,7 @@ import {
   ISignRecordId,
   ISplitPackageTask,
   IStringResp,
+  ITaskId,
   IUpdateAfterSales,
   IUpdateAfterSalesLog,
   IUpdatePackageInspection,
@@ -441,5 +442,20 @@ export function updateAfterSalesLog(data: IUpdateAfterSalesLog): Promise<IString
     url: `${BASE_API}/after/sales/update/log`,
     method: 'post',
     data
+  })
+}
+// 打包条形码文件夹
+export function getBarCodePath(params: ITaskId): Promise<IStringResp> {
+  return request({
+    url: `${BASE_API}/package/task/getBarCodePath`,
+    method: 'get',
+    params
+  })
+}
+// 获取打包站点列表
+export function getPackageSiteList() {
+  return request({
+    url: `${BASE_API}/package/site/list`,
+    method: 'get',
   })
 }

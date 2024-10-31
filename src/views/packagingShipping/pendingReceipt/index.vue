@@ -199,7 +199,11 @@
           <el-table-column label="零件数量" min-width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="单位" min-width="60" prop="unit" ></el-table-column>
           <el-table-column label="收货仓库" min-width="120" prop="repositoryName" ></el-table-column>
-          <el-table-column label="签收物流单号" width="130" prop="" ></el-table-column>
+          <el-table-column label="签收物流单号" width="130" prop="signOrder" >
+            <template #default="{ row }">
+              <span class="overflow-text" v-html="row.signOrder"></span>
+            </template>
+          </el-table-column>
           <el-table-column label="PO日期" prop="poDate" min-width="115">
             <template #default="{ row }">
               {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
@@ -652,7 +656,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   }
 }
 const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 4 && data.columnIndex !== 7 && data.columnIndex !== 12 && data.columnIndex !== 13) {
+  if (data.columnIndex !== 5 && data.columnIndex !== 9 && data.columnIndex !== 14 && data.columnIndex !== 17) {
     return {
       textAlign:'center'
     } 
@@ -823,6 +827,11 @@ const fetchData = async () => {
   if (data) {
     list.value = data.list!
     total.value = data.total!
+    list.value.forEach((item: any) => {
+      if (item.signOrder) {
+        item.signOrder = item.signOrder.replace(/,/g, '<br>');
+      }
+    })
   }
   listLoading.value = false
 }
@@ -833,7 +842,7 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 const getCellClass2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex === 3 || data.columnIndex === 11) {
+  if (data.columnIndex === 4 || data.columnIndex === 12) {
     return 'clear-padding'
   }
   return ''
@@ -914,6 +923,11 @@ onBeforeMount(() => {
 // 控制编辑框显示与隐藏
 .none {
   display: none;
+}
+.overflow-text {
+  max-height: 65.2px;
+  overflow-y: auto;
+  display: block;
 }
 // /* 取消没有条纹的行的悬停背景色 */
 // :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {

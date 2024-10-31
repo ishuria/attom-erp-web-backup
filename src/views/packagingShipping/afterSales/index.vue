@@ -85,6 +85,9 @@
               </el-space>
             </template>
           </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
         </el-table>
         <vab-pagination 
           :current-page="queryForm.pageNo" 
@@ -230,6 +233,9 @@
               </el-space>
             </template>
           </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
         </el-table>
         <vab-pagination 
           :current-page="queryForm.pageNo" 
@@ -340,6 +346,9 @@
               <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
             </template>
           </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
         </el-table>
         <vab-pagination 
           :current-page="queryForm.pageNo" 
@@ -433,6 +442,9 @@
               </el-space>
             </template>
           </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
         </el-table>
         <vab-pagination 
           :current-page="queryForm.pageNo" 
@@ -530,6 +542,9 @@
               <el-button type="primary" text @click="showAfterSalesLog(row)">打包反馈日志</el-button>
             </template>
           </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
         </el-table>
         <vab-pagination 
           :current-page="queryForm.pageNo" 
@@ -799,7 +814,10 @@ const fetchData = async () => {
     listLoading.value = false
     list.value.forEach((item: any) => {
       item.suppliser = item.suppliser.replace(/,/g, '<br>');
-      item.remark = item.remark.replace(/,/g, '<br>');
+      // item.remark = item.remark.replace(/,/g, '<br>');
+      item.remark = item.remark.split(', ').map((item: string) => {
+          return item.split(' ')[0] + item.slice(item.indexOf('：'));
+      }).join('<br>');
       item.hide = false
       if(!item.voucherUrl) {
           item.hide = false

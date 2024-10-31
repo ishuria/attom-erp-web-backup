@@ -32,6 +32,7 @@
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="105" >
@@ -153,6 +154,7 @@
           @selection-change="setSelectRows"
           :cell-class-name="getCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <el-table-column type="selection" class="custom-checkbox" fixed="left"></el-table-column>
           <el-table-column fixed="left" label="PO操作" width="105" >
@@ -554,7 +556,7 @@ const handlePlannedPoDetail = (row: any) => {
   sessionStorage.setItem('plannedPoStatus', JSON.stringify(plannedPoStatus))
 }
 
-const handlePlannedPoCreate = () => {
+const handlePlannedPoCreate = async () => {
   router.push({
     path: '/purchase/poDetail',
     query: {
@@ -690,36 +692,25 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
-  // 是否清空保存的状态
-  let flag = false
-  console.log(tabsStore.getVisitedRoutes);
-  tabsStore.getVisitedRoutes.forEach((item: any) => {
-    if (item.name === 'PlannedPo') {
-      flag = true
-    }
-  })
-  if (flag) {
-    const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
-    const pageNo = savedStatus.pageNo
-    const pageSize = savedStatus.pageSize
-    const keyWord = savedStatus.keyWord
-    
-    if (pageNo && pageSize) {
-      Object.assign(queryForm, {
-        pageNo: pageNo,
-        pageSize: pageSize,
-        keyWord: keyWord
-      });
-    }
-    const _activeName = savedStatus.activeName
-    if (_activeName) {
-      activeName.value = _activeName
-      queryForm.status = _activeName
-    }
-  } else {
-    sessionStorage.removeItem('plannedPoStatus')
-  }
 
+  const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
+  const pageNo = savedStatus.pageNo
+  const pageSize = savedStatus.pageSize
+  const keyWord = savedStatus.keyWord
+  
+  if (pageNo && pageSize) {
+    Object.assign(queryForm, {
+      pageNo: pageNo,
+      pageSize: pageSize,
+      keyWord: keyWord
+    });
+  }
+  const _activeName = savedStatus.activeName
+  if (_activeName) {
+    activeName.value = _activeName
+    queryForm.status = _activeName
+  }
+  
   fetchData()
 })
 const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
@@ -728,7 +719,7 @@ const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
     const wrapRef = scrollBarRef.wrapRef
     setTimeout(() => {
       wrapRef.scrollTop = scrollBarPosition;
-    }, 50)
+    }, 40)
   }
 }
 onMounted(() => {
@@ -744,7 +735,12 @@ onMounted(() => {
     }
   });  
 });
-
+onUnmounted(() => {
+  let length = tabsStore.getVisitedRoutes.length
+  if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {
+    sessionStorage.removeItem('plannedPoStatus')
+  }
+})
 </script>
   
 <style lang="scss" scoped>
@@ -818,7 +814,7 @@ onMounted(() => {
 .none {
   display: none;
 }
-.custom-checkbox {
+.noneHoveTable :deep(.el-checkbox) {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }

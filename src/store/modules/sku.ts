@@ -1,11 +1,11 @@
-// 存储创建的sku和添加sku后的sku
+// 存储采购计划创建：创建的sku和添加sku后的sku，以及更新、删除、清空的功能
 export const useSkuStore = defineStore('sku', {
   state: (): SkuModuleType => ({
     data: [],
   }),
-  getters: {
-    getSkuData: (state) => state.data,
-  },
+  // getters: {
+  //   getSkuData: (state) => state.data,
+  // },
   actions: {
     // 添加新的 SKU
     addSku(newSku: any, tempId: string) {

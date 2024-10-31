@@ -975,7 +975,7 @@
         <el-footer class="button-center">
           <el-button v-if="createPreviousVisible" type="primary" @click="handleFetchCreatePrevious">上一个</el-button>
           <el-button v-if="createNextVisible" type="primary" @click="handleFetchCreateNext">下一个</el-button>
-          <el-button type="warning" @click="handleAddSKU">添加SKU</el-button>
+          <el-button type="warning" @click="handleCreateAddSKU">添加SKU</el-button>
           <el-button type="danger" @click="handleDelCreateSKU" :disabled="createDisabled">删除SKU</el-button>
           <el-button type="success" :disabled="createDisabled" @click="createSku">创建SKU</el-button>
         </el-footer>
@@ -1454,6 +1454,7 @@ import {
   updateSkuImg,
   uploadComponentImg
 } from '/@/api/devlocal/purchasePo'
+import { useRoutesStore } from '/@/store/modules/routes'
 import { useSkuStore } from '/@/store/modules/sku'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
@@ -1477,7 +1478,8 @@ const deleteNone = ref<boolean>(true)
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
+const { changeTabsMeta, delVisitedRoute } = tabsStore
+
 // 创建进来的，需要判断sku填没填，没填就都disabled掉
 const createDisabled = ref<boolean>(false)
 // po详情
@@ -1520,7 +1522,7 @@ const handleCloseAddSku = () => {
 }
 
 const skuStore = useSkuStore();
-const skuData = skuStore.getSkuData;
+
 const tempCurId = ref<string>('')
 // 选择sku的请求和赋值
 const afterGetSku = async (_sku: string) => {
@@ -1563,10 +1565,10 @@ const afterGetSku = async (_sku: string) => {
       skuComponentList: JSON.parse(JSON.stringify(skuComponentList.value))
     };
     _addSku(newSku, tempCurId.value)
-    console.log('存入新数据', skuStore.getSkuData);
+    console.log('存入新数据', skuStore.data);
     console.log(tempCurId.value);
     handleShowCreatePreviousOrNext()
-    fetchPurchaseAndRepository()
+    // fetchPurchaseAndRepository()
   }
 }
 // 确认添加sku
@@ -1818,9 +1820,13 @@ const handleUpdateCreateSkuCount = async () => {
   }
 }
 const updateCreate = () => {
-  let newValue = { tempId: tempCurId.value, poDetailData: poDetailData.value, skuComponentList: skuComponentList.value }; 
-  _updateSku(newValue)
-  console.log('更新', skuStore.getSkuData);
+  const newSku = {
+    tempId: tempCurId.value,
+    poDetailData: JSON.parse(JSON.stringify(poDetailData.value)),
+    skuComponentList: JSON.parse(JSON.stringify(skuComponentList.value))
+  };
+  _updateSku(newSku)
+  console.log('更新', skuStore.data);
 }
 // 采购sku详情更新
 const handleUpdateSku = async () => {
@@ -2243,12 +2249,25 @@ const handleDeclareCustoms = async (row: any) => {
     console.error(error)
   }
 }
+const handleCreateAddSKU = () => {
+  if (skuStore.data.length >= 1) {
+    if (poDetailData.value.site == null) {
+      $baseMessage('请选择PO站点', 'error')
+      return
+    } 
+    if (poDetailData.value.repositoryId == null) {
+      $baseMessage('请选择收货仓库', 'error')
+      return
+    } 
+  }
+  addSKUVisible.value = true
+}
 // 添加SKU
 const handleAddSKU = async () => {
   addSKUVisible.value = true
 }
 const handleDelCreateSKU = () => {
-  const skuData = skuStore.getSkuData
+  const skuData = skuStore.data
   let length = skuData.length
   let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
   // 删除：如果只有一个，删除后就全为空
@@ -2264,7 +2283,7 @@ const handleDelCreateSKU = () => {
     console.log('删除前的id', tempCurId.value);
     _deleteSku(tempCurId.value)
     $baseMessage('删除SKU成功', 'success')
-    console.log('删除后的', skuStore.getSkuData);
+    console.log('删除后的', skuStore.data);
     console.log('删除前的length', length);
     console.log('删除前的index', index);
     
@@ -2284,19 +2303,34 @@ const handleDelCreateSKU = () => {
 }
 // 创建SKU
 const createSku = async () => {
-  const createReq = skuStore.getSkuData.map((item: any) => {
+  let flag = false
+  // 遍历data的所有
+  skuStore.data.forEach((item: any) => {
+    if (item.poDetailData.site == null) {
+      $baseMessage(`请选择${item.poDetailData.sku}的PO站点`, 'error')
+      flag = true
+      return
+    }
+    if (item.poDetailData.repositoryId == null) {
+      $baseMessage(`请选择${item.poDetailData.sku}的收货仓库`, 'error')
+      flag = true
+      return
+    }
+  })
+  if (!flag) {
+    const createReq = skuStore.data.map((item: any) => {
     const transformedItem = {
       componentList: item.skuComponentList,
       poSkuDetail: item.poDetailData, // 替换键名
-    };
-    return transformedItem;
-  });
+      };
+      return transformedItem;
+    });
 
-
-  const { data } = await createPlanPo(createReq)
-  if (data) {
-    $baseMessage('创建SKU成功', 'success') 
-    goBack()
+    const { data } = await createPlanPo(createReq)
+    if (data) {
+      $baseMessage('创建SKU成功', 'success') 
+      goBack()
+    }
   }
 }
 // PO详情删除SKU
@@ -2460,7 +2494,7 @@ const handleComponentRemove = async (file: UploadFile, row: any) => {
 
 // 当点击创建的上一个按钮
 const handleFetchCreatePrevious = () => {
-  const skuData = skuStore.getSkuData
+  const skuData = skuStore.data
   let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
   // console.log('index', index);
 
@@ -2491,7 +2525,7 @@ const handleFetchCreatePrevious = () => {
 }
 // 当点击创建的下一个按钮
 const handleFetchCreateNext = () => {
-  const skuData = skuStore.getSkuData
+  const skuData = skuStore.data
   let index = skuData.findIndex((item: any) => item.tempId === tempCurId.value)
   tempCurId.value = skuData[index+1].tempId
   // 将数据显示在页面上
@@ -2628,8 +2662,8 @@ const handleShowPreviousOrNext = () => {
 }
 // 处理创建的上一个还是下一个
 const handleShowCreatePreviousOrNext = () => {
-  let length = skuStore.getSkuData.length;
-  let lastIndex = skuStore.getSkuData.findIndex((item: any) => item.tempId === tempCurId.value)
+  let length = skuStore.data.length;
+  let lastIndex = skuStore.data.findIndex((item: any) => item.tempId === tempCurId.value)
   if (length === 0 || length === 1) {
     createPreviousVisible.value = false
     createNextVisible.value = false
@@ -2667,14 +2701,6 @@ const oldPurchaseNumber = ref<number>()
 const handleCreatePlanPo = async () => {
   try {
     afterGetSku(poDetailData.value.sku)
-    
-      // const { data: skuIdList } = await getPoSkuIdList({
-      //   id: data.poSkuDetail.poSkuId!
-      // })
-      // console.log(data); // [1, 2, 28]或者[31]或者[32]
-      // poSkuIdList.value = skuIdList
-      // handleShowPreviousOrNext()
-      // 当点击添加SKU的时候，根据id获取skuId列表，然后决定显示上一个还是下一个    
   } catch (error) {
     console.error(error)
   }
@@ -2723,9 +2749,16 @@ const setImageColumnHeight3 = () => {
     imageColumnHeight.value = skuTotalPriceRect.bottom - createDateRect.top - 30;
   }
 };
+
 onBeforeMount(() => {
   // 如果不是创建，订单详情div显示
   if (route.query.from !== 'plannedPoCreate') {
+    const routesStore = useRoutesStore()
+    // 改变路由激活到采购订单
+    if (route.query.from !== 'plannedPoDetail') {
+      // console.log(routesStore.getTabMenu)
+      routesStore.changeActiveMenu('/purchase/po')
+    }
     if (route.query.del === 'true') {
       deleteNone.value = false 
       detailsNone.value = true
@@ -2751,6 +2784,14 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
+  let title: string = ''
+  if (route.query.from === 'plannedPoCreate') {
+    title = '采购计划创建'
+  } else if (route.query.from === 'plannedPoDetail') {
+    title = '采购计划详情'
+  } else {
+    title = route.query.from
+  }
   if (route.query.del === 'true') {
     setImageColumnHeight3() 
   } else if (route.query.from === 'plannedPoCreate') { //设置图片列宽度高度
@@ -2758,6 +2799,12 @@ onMounted(() => {
   } else {
     setImageColumnHeight();
   }
+  changeTabsMeta({
+    title: 'PO详情',
+    meta: {
+      title: title,
+    },
+  })
 });
 </script>
 

@@ -670,17 +670,17 @@
 <script lang="ts" setup>
 import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { FormInstance, UploadFile } from 'element-plus'
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '~/src/type/purchase/po'
 import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, submitProductComponent, submitProductConsumable, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '~/src/type/purchase/po'
 
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
+const { delVisitedRoute, changeTabsMeta } = tabsStore
 const formRef = ref<FormInstance>()
 const qualityCheckList = ref<any>()
 const form = reactive<any>({
@@ -1523,6 +1523,12 @@ onBeforeMount(()=>{
 })
 onMounted(() => {
   setImageColumnHeight();
+  changeTabsMeta({
+    title: 'SKU详情',
+    meta: {
+      title: `${route.query.title}`,
+    },
+  })
 });
 </script>
 

@@ -38,6 +38,7 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <!-- <el-table-column type="selection" >
             <template #default="{ row }">
@@ -89,8 +90,8 @@
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
           <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
-          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
-          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税运费" prop="freight" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="moldCost" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="90" prop="currency">
@@ -162,6 +163,7 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -208,8 +210,8 @@
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
           <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
-          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
-          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税运费" prop="freight" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="moldCost" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="90" prop="currency">
@@ -280,6 +282,7 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -326,8 +329,8 @@
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
           <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
-          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
-          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税运费" prop="freight" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="moldCost" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="90" prop="currency">
@@ -398,6 +401,7 @@
           @cell-click="changeInput"
           :cell-class-name="getCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -444,8 +448,8 @@
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
           <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
-          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
-          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税运费" prop="freight" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="moldCost" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="90" prop="currency">
@@ -516,6 +520,7 @@
           @cell-click="changeInput"
           :cell-class-name="getLastTwoCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
@@ -554,8 +559,8 @@
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
           <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
-          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
-          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税运费" prop="freight" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="moldCost" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="90" prop="currency">
@@ -615,6 +620,7 @@
           @cell-click="changeInput"
           :cell-class-name="getLastTwoCellClass"
           :row-class-name="stripedRowClass"
+          v-loading="listLoading"
         >
           <el-table-column label="PO" prop="po" min-width="100">
             <template #default="{ row }">
@@ -653,8 +659,8 @@
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')"></el-table-column>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')"></el-table-column>
           <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')"></el-table-column>
-          <el-table-column label="含税运费" prop="" min-width="100"></el-table-column>    
-          <el-table-column label="模具含税" prop="" min-width="100"></el-table-column>    
+          <el-table-column label="含税运费" prop="freight" min-width="100"></el-table-column>    
+          <el-table-column label="模具含税" prop="moldCost" min-width="100"></el-table-column>    
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')"></el-table-column>    
           <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')"></el-table-column>    
           <el-table-column label="货币" width="90" prop="currency">
@@ -881,7 +887,7 @@
       v-model="generateMoneyTransferVisible"
       :close-on-click-modal="false" 
       title="生成汇款模板" 
-      width="35%"
+      width="30%"
       class="moldDialog"
       :before-close="handleCloseGenerateMoneyTransferDialog"
     >
@@ -1405,24 +1411,30 @@ const handleConfirmTotalPriceSharing = async () => {
 // 处理生成合同
 const handleGenerateContract = async () => {
   // 如果没有选中行
-  if (selectedPORow.value.size === 0) {
-    $baseMessage('您未选中PO操作列的任何行', 'warning')
+  if (selectedPORow.value.size === 0 && selectedCompArray.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning')
     return
   }
   // 获取选中的poIds
   const poIds = selectedPOArray.value.join(',')
   let poSkuComponentId: number[] = []
-
-  selectedPOArray.value.forEach((id: number) => {
-    const index = selectedCompArray.value.findIndex((item: any) => item.id === id)
-    const idArray = poList.value.filter((item: any) => item.id === id)
-    // 如果零件Id一个也没选，就是传所有
-    if (index === -1) {
-      poSkuComponentId = poSkuComponentId.concat(idArray.map((item: any) => item.componentId))
-    } else { // 如果选了至少一个，就传这个
-      poSkuComponentId = poSkuComponentId.concat(selectedCompArray.value.map((item: any) => item.componentId))
-    }
-  })
+  // console.log('poIds', poIds);
+  // 如果poId没选
+  if (!poIds) {
+    poSkuComponentId = selectedCompArray.value.map((item: any) => item.componentId)
+  } else {
+    selectedPOArray.value.forEach((id: number) => {
+      const index = selectedCompArray.value.findIndex((item: any) => item.id === id)
+      const idArray = poList.value.filter((item: any) => item.id === id)
+      // 如果零件Id一个也没选，就是传所有
+      if (index === -1) {
+        poSkuComponentId = poSkuComponentId.concat(idArray.map((item: any) => item.componentId))
+      } else { // 如果选了至少一个，就传这个
+        poSkuComponentId = poSkuComponentId.concat(selectedCompArray.value.map((item: any) => item.componentId))
+      }
+    })
+  }
+    
   try {
     const { data } = await generatePoContract({
       poIds: poIds,
@@ -1448,11 +1460,6 @@ const handleGenerateContract = async () => {
 }
 // 展示聚合合同弹窗
 const handleShowMergeContract = () => {
-  // 判断是否选中零件操作
-  if (selectedCompArray.value.length === 0) {
-    $baseMessage('您未选中零件操作列的任何行', 'warning')
-    return
-  }
   mergeContractVisible.value = true
 }
 // 关闭聚合合同弹窗
@@ -1471,9 +1478,22 @@ const handleConfirmMergeContract = async () => {
     })
     const { data } = await aggregationContract(formData)
     if (data) {
-      handleCloseMergeContractDialog()
       $baseMessage('聚合合同成功', 'success')
+      handleCloseMergeContractDialog()
       clearTableSelect()
+      // 下载合同
+      await downloadFile("/purchase/download",{
+        fileName: data, 
+      }).then((res) => {
+        console.log(res);
+      }).catch((error) => {
+        console.error(error);
+      })
+      // data.forEach(async (fileName: string) => {
+        
+      // })
+    } else {
+      $baseMessage('聚合合同失败', 'error')
     }
   } catch (error) {
     console.error(error)
@@ -1481,11 +1501,6 @@ const handleConfirmMergeContract = async () => {
 }
 // 展示生成汇款模板弹窗
 const handleShowGenerateMoneyTransfer = () => {
-  // 判断是否选中零件操作
-  if (selectedCompArray.value.length === 0) {
-    $baseMessage('您未选中零件操作列的任何行', 'warning')
-    return
-  }
   generateMoneyTransferVisible.value = true
   generateMoneyTransferTime.value = ''
 }
@@ -1495,6 +1510,10 @@ const handleCloseGenerateMoneyTransferDialog = () => {
 }
 // 确认汇款
 const handleConfirmGenerateMoneyTransfer = async () => { 
+  if (!generateMoneyTransferTime.value) {
+    $baseMessage('请先填写汇款日期', 'error')
+    return
+  }
   const startTime = generateMoneyTransferTime.value[0]
   const endTime = generateMoneyTransferTime.value[1]
   try {
@@ -1961,6 +1980,12 @@ onMounted(() => {
     // }, 50)
   });
 });
+onUnmounted(() => {
+  let length = tabsStore.getVisitedRoutes.length
+  if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {
+    sessionStorage.removeItem('poStatus')
+  }
+})
 </script>
 
 <style lang="scss" scoped>

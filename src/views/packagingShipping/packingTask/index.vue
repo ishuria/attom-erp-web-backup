@@ -14,10 +14,10 @@
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
-                    v-for="item in siteOption"
+                    v-for="item in siteList"
                     :label="item.label"
-                    :value="item.value"
-                    :key="item.value"
+                    :value="item.id"
+                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -98,7 +98,7 @@
           <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
@@ -132,10 +132,10 @@
               <el-form-item label="站点" prop="site">
                 <el-select v-model="taskingForm.site" placeholder="全部" clearable class="button-margin" @change="queryTaskingData">
                   <el-option 
-                    v-for="item in siteOption"
+                    v-for="item in siteList"
                     :label="item.label"
-                    :value="item.value"
-                    :key="item.value"
+                    :value="item.id"
+                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -216,7 +216,7 @@
           <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
@@ -250,10 +250,10 @@
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
-                    v-for="item in siteOption"
+                    v-for="item in siteList"
                     :label="item.label"
-                    :value="item.value"
-                    :key="item.value"
+                    :value="item.id"
+                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -334,7 +334,7 @@
           <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
@@ -368,10 +368,10 @@
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
-                    v-for="item in siteOption"
+                    v-for="item in siteList"
                     :label="item.label"
-                    :value="item.value"
-                    :key="item.value"
+                    :value="item.id"
+                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -452,7 +452,7 @@
           <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
@@ -486,10 +486,10 @@
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
-                    v-for="item in siteOption"
+                    v-for="item in siteList"
                     :label="item.label"
-                    :value="item.value"
-                    :key="item.value"
+                    :value="item.id"
+                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -570,7 +570,7 @@
           <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
@@ -603,10 +603,10 @@
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
                   <el-option 
-                    v-for="item in siteOption"
+                    v-for="item in siteList"
                     :label="item.label"
-                    :value="item.value"
-                    :key="item.value"
+                    :value="item.id"
+                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -687,7 +687,7 @@
           <el-table-column fixed="right" label="操作" width="420" >
             <template #default="{ row, $index }">
               <el-space>
-                <el-link type="primary" :underline="false">条码文件夹</el-link>
+                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
@@ -1010,10 +1010,10 @@
         <el-form-item label="站点" prop="site" style="width: 97%">
           <el-select v-model="modifyForm.site" placeholder="请选择站点" clearable>
             <el-option 
-              v-for="item in siteOption"
+              v-for="item in siteList"
               :label="item.label"
-              :value="item.value"
-              :key="item.value"
+              :value="item.id"
+              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -1136,9 +1136,19 @@
       width="20%"
       @close="closeSplitTask"
     >
-      <el-form ref="splitTaskFormRef" :model="splitTaskForm" style="margin-left: 20px; margin-right: 20px" :rules="splitRules">
+      <el-form ref="splitTaskFormRef" :model="splitTaskForm" style="margin-left: 20px; margin-right: 20px" :rules="splitRules" label-position="right" label-width="auto">
         <el-form-item label="拆分的数量" prop="splitCount">
           <el-input v-model="splitTaskForm.splitCount" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="站点" prop="site" style="width: 97.5%">
+          <el-select v-model="splitTaskForm.site" clearable placeholder="请选择站点">
+            <el-option 
+              v-for="item in siteList"
+              :label="item.label"
+              :value="item.id"
+              :key="item.id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -1154,7 +1164,7 @@
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { siteMap, siteOption, siteValue } from '../constantOption'
+import { siteMap, siteValue } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
   addQualityCheck,
@@ -1164,11 +1174,13 @@ import {
   confirmGoOffWork,
   confirmStartMoreTask,
   confirmStartTask,
+  getBarCodePath,
   getEndTaskList,
   getFreeList,
   getGoOffWorkList,
   getPackageComponentList,
   getPackageInspection,
+  getPackageSiteList,
   getPackageTaskingList,
   getPackageTaskList,
   getQualityCheck,
@@ -1248,6 +1260,12 @@ const fakeDetails = [
 const dialogPartsListTableVisible = ref<boolean>(false)
 // 零件清单列表
 const partsList = ref<any>([])
+// 打包条形码文件夹
+const getPackageCodePath = async (row: any) => {
+  const { data } = await getBarCodePath({
+    taskId: row.id
+  })
+}
 // 展示零件清单
 const handleShowPartsList = async (row: any) => {
   const { data } = await getPackageComponentList({
@@ -1773,7 +1791,8 @@ const splitTaskForm = reactive<any>({
   splitCount: null
 })
 const splitRules = reactive<any>({
-  splitCount: [{ required: true, message: '请填写拆分数量', trigger: 'blur' }]
+  splitCount: [{ required: true, message: '请填写拆分数量', trigger: 'blur' }],
+  site: [{ required: true, message: '请选择站点', trigger: 'change' }]
 })
 const splitTaskFormRef = ref<FormInstance>()
 // 关闭拆分
@@ -1787,7 +1806,8 @@ const confirmSplitTask = async () => {
     if (valid) {
       const { data } = await splitPackageTask({
         taskId: copyRow.value.id,
-        splitCount: splitTaskForm.splitCount
+        splitCount: splitTaskForm.splitCount,
+        site: splitTaskForm.site
       })
       if (data) {
         $baseMessage('拆分打包任务成功', 'success')
@@ -2019,8 +2039,14 @@ const fetchData = async () => {
 onActivated(() => { 
   tableRef.value?.doLayout()
 })
+const siteList = ref<any>([])
+const getSiteList = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+}
 onBeforeMount(() => {
   fetchData()
+  getSiteList()
 })
 </script>
   

@@ -173,7 +173,7 @@ const handleSkuDetail = (row: any) => {
   router.push({
     path: '/productInfomation/skuDetailView',
     query: {
-      title: "SKU详情",
+      title: `${row.sku.split('<br/>')[0]}`,
       skuId: row.skuId,
       timestamp: Date.now(),
     },
