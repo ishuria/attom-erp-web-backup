@@ -105,13 +105,13 @@
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
-          <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
+          <el-table-column  label="采购方" min-width="100" prop="purchase"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
+          <el-table-column label="签收日期" prop="signDate" min-width="115"></el-table-column>
           <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
              
           <template #empty>
@@ -734,7 +734,7 @@
           </el-table-column>
           <el-table-column label="退款凭证" width="90" prop="refundVoucher">
             <template #default="{ row }">
-              <el-image :src="row.refundVoucher" data-img="img" fit="contain" style="width: 90px; height: 86.2px;display: block;">
+              <el-image :src="row.refundVoucher" data-img="img" fit="contain" style="display: block;width: 90px; height: 86.2px;">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -2080,8 +2080,8 @@ onUnmounted(() => {
             padding-top: 0px !important;
             padding-bottom: 0px !important;
             .cell {
-              padding-left: 0px !important;
               padding-right: 0px !important;
+              padding-left: 0px !important;
             }
           }
         }
@@ -2107,9 +2107,9 @@ onUnmounted(() => {
 }
 // 让图片过渡消失
 :deep(.form-upload .el-upload-list--picture-card .el-upload-list__item) {
-  transition: none;  
+  padding: 0;  
   margin: 0;
-  padding: 0;
+  transition: none;
 }
 // 控制编辑框显示与隐藏
 .none {
@@ -2151,8 +2151,8 @@ onUnmounted(() => {
   color: #E6A23C
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0px !important;
   padding-right: 0px !important;
+  padding-left: 0px !important;
 }
 .el-table :deep(.clear-padding) {
   padding-top: 0px !important;
