@@ -113,7 +113,7 @@
                         <span>{{ row.numberFullCartons }}</span>
                     </template>
                 </el-table-column> 
-                <el-table-column align="center" label="供应商" min-width="140" prop="suppliser">
+                <el-table-column align="center" label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')">
                     <template #default="{row}">
                         <span style="color: rgb(192, 192, 192)">{{ row.suppliser }}</span>
                     </template>
@@ -279,12 +279,13 @@
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 
-import { Delete, Plus, ZoomIn, Edit, CirclePlusFilled, ArrowDown } from '@element-plus/icons-vue'
+import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { FormInstance, UploadFile } from 'element-plus'
+import { flexColumnWidth } from '~/src/utils/tableColum'
+import { currencyNumList } from '../newProductDevelopment/indexCommon'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
-import { FormInstance, UploadFile } from 'element-plus';
-import { currencyList, currencyNumList, invoicingList } from '../newProductDevelopment/indexCommon';
-import { delComponentImage, getProductComponentPurchase, getProductListSuppliser, uploadComponentImage, createProductComponentSuppliser, updateProductComponentSuppliser, createConsumablesSupplier, saveProductPurchaseMatters, saveProductContractTerms, getProductSupplier, getProductAllSupplier } from '/@/api/devlocal/productInformation';
+import { createConsumablesSupplier, createProductComponentSuppliser, delComponentImage, getProductAllSupplier, getProductComponentPurchase, getProductListSuppliser, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponentSuppliser, uploadComponentImage } from '/@/api/devlocal/productInformation'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 const route: any = useRoute()
 const tabsStore = useTabsStore()

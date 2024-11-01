@@ -900,10 +900,10 @@
             range-separator="至" 
             start-placeholder="开始日期" 
             type="datetimerange" 
-            time-format="HH:mm" 
             format="YYYY-MM-DD HH:mm" 
             :editable="false"	
             value-format="YYYY-MM-DD HH:mm"
+            :default-time="defaultTime2"
           />
         </el-form-item>
       </el-form>
@@ -924,6 +924,7 @@
 import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
 import { UploadFile, type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
+import { handleMatched, handleTabs } from '~/src/utils/routes'
 import { downloadFile } from '/@/api/devlocal/download'
 import { aggregationContract, deletePo, delPayRecord, generatePoContract, generateRemittance, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
@@ -950,6 +951,10 @@ const tableRef6 = ref<TableInstance>()
 // 合同列表
 const contractList = ref<any>([])
 const activeName = ref<number>(2)
+  const defaultTime2: [Date, Date] = [
+  new Date(2000, 1, 1, 0, 0, 0),
+  new Date(2000, 2, 1, 23, 59, 59),
+] // '12:00:00', '08:00:00'
 
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
@@ -1141,8 +1146,10 @@ const handleClosePaymentHistoryDialog = () => {
 }
 // 付款进度是否可编辑
 const delDisabled = ref<boolean>(false)
+const copyRow = ref<any>()
 // 展示付款进度弹窗
 const handleShowPaymentHistory = async (row: any) => {
+  copyRow.value = row
   if (activeName.value === 7) {
     delDisabled.value = true
   } else {
@@ -1183,7 +1190,8 @@ const handleUpdatePrice = async (row: any) => {
 const handleDelPayRecord = async (row: any, index: number) => {
   try {
     const { data } = await delPayRecord({
-      id: row.id
+      id: row.id,
+      poId: copyRow.value.id
     })
     if (data === true) {
       flag = true //删除了也是修改
@@ -1579,19 +1587,19 @@ const handleDelPo = async () => {
   });
 }
 // 跳转po详情
-const handlePoDetail = (row: any) => {
+const handlePoDetail = async (row: any) => {
   // console.log(queryForm.pageNo);
-  router.push({
-    path: '/purchase/poDetail',
-    query: {
-      title: "采购订单详情",
-      from: row.po,
-      poSkuId: row.poSkuId,
-      poId: row.id,
-      timestamp: Date.now(),
-    },
-  })
-  
+  // router.push({
+  //   path: '/purchase/poDetail',
+  //   query: {
+  //     title: "采购订单详情",
+  //     from: row.po,
+  //     poSkuId: row.poSkuId,
+  //     poId: row.id,
+  //     timestamp: Date.now(),
+  //   },
+  // })
+
   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
   const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
   const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
@@ -1617,6 +1625,37 @@ const handlePoDetail = (row: any) => {
     activeName: activeName.value
   };
   sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
+  
+  const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
+  const tab = handleTabs({
+    ...matched.at(-1),
+    query: {
+      title: `${row.po}`,
+      from: row.po,
+      poSkuId: row.poSkuId,
+      poId: row.id,
+      // timestamp: Date.now(),
+    },
+  })
+  if (tab) {
+    await router.push({
+      path: '/purchase/poDetail',
+      query: {
+        title: `${row.po}`,
+        from: row.po,
+        poSkuId: row.poSkuId,
+        poId: row.id,
+        // timestamp: Date.now(),
+      },
+    })
+    await changeTabsMeta({
+      title: 'PO详情',
+      meta: {
+        title: `${tab.query.from}`,
+      },
+    })
+  }
+  // console.log(tabsStore.getVisitedRoutes);
 }
 // 跳转po详情
 const handleDelPoDetail = (row: any) => {
@@ -1812,10 +1851,17 @@ const fetchData = async () => {
           .map((record: any) => {
             const percentage = parseInt(record.percentage.replace('%', '')); // 去掉%并转换为整数
             const createTime = record.createTime.split(' ')[0];
-            return `
-              <span class="create-time">${createTime}</span>: 
-              <span class="percentage">${percentage}%</span>
-              <span class="pay-price">(${record.payPrice})</span>`;
+            if (percentage < 0) {
+              return `
+                <span class="create-time">${createTime}</span>: 
+                <span class="red">${percentage}%</span>
+                <span class="pay-price">(${record.payPrice})</span>`;
+            } else {
+              return `
+                <span class="create-time">${createTime}</span>: 
+                <span class="percentage">${percentage}%</span>
+                <span class="pay-price">(${record.payPrice})</span>`;
+            }
           })
           .join('<br>');
       });

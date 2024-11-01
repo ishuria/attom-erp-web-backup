@@ -155,12 +155,12 @@
                 </el-col>
                 <el-col :span="4">
                     <el-form-item label="起订量" >
-                        <el-input v-model="sku.minQuantity" @blur="handleUpdateSku"></el-input>
+                        <el-input type="number" v-model="sku.minQuantity" @blur="handleUpdateSku"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
                     <el-form-item label="整箱数" >
-                        <el-input v-model="sku.numCartons" @blur="handleUpdateSku"></el-input>
+                        <el-input type="number" v-model="sku.numCartons" @blur="handleUpdateSku"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12"> 
@@ -267,7 +267,7 @@
         <el-table-column label="数量" width="60" prop="quantity" align="center">
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="number" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.quantity }}</span>
             </template>
@@ -283,7 +283,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="number" v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.unitPrice }}</span>
             </template>
@@ -295,7 +295,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.totalPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row,)" />
+                    <el-input type="number" v-model="row.totalPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row,)" />
                 </div>
                 <span>{{ row.totalPrice }}</span>
             </template>
@@ -314,7 +314,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="number" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.taxIncludedPrice }}</span>
             </template>
@@ -330,7 +330,7 @@
         <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="73">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        <el-input type="number" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                 <span>{{ row.minimumOrderQuantity }}</span>
             </template>
@@ -338,7 +338,7 @@
         <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="73">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        <el-input type="number" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
                     </div>
                 <span>{{ row.numberFullCartons }}</span>
             </template>
@@ -514,7 +514,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item v-if="form.type === 0" label="零件名" prop="componentName">
-                <el-input v-model="form.componentName" clearable
+                <el-input v-model="form.componentName" clearable placeholder="必须遵守格式规范：品名-规格参数"
   
                 ></el-input>
             </el-form-item>
@@ -567,6 +567,7 @@
                     :remote-method="remoteMethod"
                     :loading="loading"
                     @change="handleTaxDisabled"
+                    @blur="handleInput"
                     clearable
                 >
                     <el-option
@@ -753,6 +754,7 @@ const handleSubmitComponent = async (value: any) => {
    if (data === true) {
      $baseMessage('添加零件提交成功', 'success', 'hey')
      fetchComponentData()
+     fetchData()
    }
  } catch (error) {
    console.error(error)
@@ -778,6 +780,7 @@ const handleSubmitConsumable = async (value: any) => {
    if (data === true) {
      $baseMessage('添加耗材提交成功', 'success', 'hey')
      fetchComponentData()
+     fetchData()
    }
  } catch (error) {
    console.error(error)
@@ -831,7 +834,17 @@ const remoteMethod = async (query: string) => {
     options.value = []
   }
 }
+// 处理远程搜索不重复选择
+const handleInput = (e: any) => {
+  const value = e.target.value
+  if (value) {
+    form.supplier = e.target.value
+  }
+}
 const handleTaxDisabled = async (value: string) => {
+  console.log(value);
+  
+  form.supplier = value; // 自动设置为新输入的值
    if(value) {
         const { data } = await getProductSupplier({ suppliserName: value })
         
@@ -1619,5 +1632,12 @@ onMounted(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+:deep(input::-webkit-outer-spin-button),
+:deep(input::-webkit-inner-spin-button) {
+  -webkit-appearance: none;
+}
+:deep(input[type="number"]) {
+  -moz-appearance: textfield;
 }
 </style>

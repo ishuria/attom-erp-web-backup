@@ -899,5 +899,8 @@ export interface IUpdateCreateComponentRequest {
   useStockCount?: number;
 }
 
-
+export interface IDelPayRecord {
+  id: number
+  poId: number
+}
 

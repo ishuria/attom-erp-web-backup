@@ -20,6 +20,7 @@
         <el-table 
           ref="tableRef" 
           stripe border 
+          v-loading="listLoading"
           :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
@@ -129,7 +130,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
@@ -140,6 +141,7 @@
         <el-table 
           ref="tableRef" 
           stripe border 
+          v-loading="listLoading"
           :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
           class="noneHoveTable"
@@ -484,6 +486,7 @@ const confirmSign = async () => {
   })
   if (data) {
     $baseMessage('签收成功', 'success')
+    closeSignDialog()
     fetchData()
   }
 }

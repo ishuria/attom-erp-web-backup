@@ -34,14 +34,17 @@
                     <el-image style="width: 75px; height: 75px" v-if="row.skuImgUrl":src="row.skuImgUrl" fit="fill" data-img="img" />
                 </template>
               </el-table-column>
-              <el-table-column label="SKU" prop="sku" width="250">
+              <el-table-column label="SKU" prop="sku" :min-width="tableColumnWidth">
                 <template #default="{ row }">
                   <span v-html="row.sku" ></span>
                 </template>
               </el-table-column>   
-              <el-table-column label="FNSKUUPC" prop="fnSkuUpc" width="120">
+              <el-table-column label="FNSKUUPC" prop="fnSkuUpc" :width="FNSKUColumnWidth" >
                 <template #header>
                   FNSKU<br>UPC
+                </template>
+                <template #default="{ row }">
+                  <span v-html="row.fnSkuUpc"></span>
                 </template>
               </el-table-column>
               <el-table-column label="产品经理" prop="productManager" min-width="90"></el-table-column>
@@ -160,8 +163,12 @@ defineOptions({
 })
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
 import { IgetProductList } from '/@/type/productInformation/skuInformationType'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { handleMatched, handleTabs } from '/@/utils/routes'
+import { calculateBrColumnWidth } from '/@/utils/tableColum'
 
 
 const listLoading = ref<boolean>(true)
@@ -169,15 +176,29 @@ const listLoading = ref<boolean>(true)
 const list = ref<any>([])
 const route: any = useRoute()
 const router = useRouter()
-const handleSkuDetail = (row: any) => {
-  router.push({
-    path: '/productInfomation/skuDetailView',
-    query: {
-      title: `${row.sku.split('<br/>')[0]}`,
-      skuId: row.skuId,
-      timestamp: Date.now(),
-    },
+const routesStore = useRoutesStore()
+const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
+const tabsStore = useTabsStore()
+const { changeTabsMeta, addVisitedRoute } = tabsStore
+const handleSkuDetail = async (row: any) => {
+  const query = { title: `${row.sku.split('<br/>')[0]}`, skuId: row.skuId }
+  const matched = handleMatched(allRoutes.value, '/productInfomation/skuDetailView')
+  const tab = handleTabs({
+    ...matched.at(-1),
+    query: query
   })
+  if (tab) {
+    await router.push({
+      path: '/productInfomation/skuDetailView',
+      query: query
+    })
+    await changeTabsMeta({
+      title: 'SKU详情',
+      meta: {
+        title: `${tab.query.title}`,
+      },
+    })
+  }
 }
 const handleHideStopProduction = () => {
   if (queryForm.haltStatus === 0) {
@@ -230,6 +251,8 @@ const queryData = () => {
   //       listLoading.value = false
   //   }
 }
+const tableColumnWidth = ref<number>(90)
+const FNSKUColumnWidth = ref<number>(90)
 
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
@@ -257,7 +280,13 @@ const fetchData = async () =>{
   const { data } = await getProductList(queryForm)
   list.value = data.list
   total.value = data.total
+  list.value.forEach((item: any) => {
+    item.fnSkuUpc = item.fnSkuUpc.replace(/,/g, '<br>')
+  })
   listLoading.value = false
+  // calculateColumnWidth()
+  tableColumnWidth.value = calculateBrColumnWidth(list.value, (row: any) => row.sku, 70);
+  FNSKUColumnWidth.value = calculateBrColumnWidth(list.value, (row: any) => row.fnSkuUpc, 70);
 }
 onMounted(async ()=>{
   fetchData()

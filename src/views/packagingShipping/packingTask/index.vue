@@ -37,6 +37,7 @@
         <el-table 
           ref="tableRef" 
           stripe border 
+          v-loading="listLoading"
           :data="list"
           class="noneHoveTable"
           :header-cell-style="headerCellStyle"
@@ -155,6 +156,7 @@
         <el-table 
           ref="tableRef" 
           stripe border 
+          v-loading="listLoading"
           :data="taskingList"
           class="noneHoveTable"
           :header-cell-style="headerCellStyle"
@@ -273,6 +275,7 @@
         <el-table 
           ref="tableRef" 
           stripe border 
+          v-loading="listLoading"
           :data="list"
           class="noneHoveTable"
           :header-cell-style="headerCellStyle"
@@ -392,6 +395,7 @@
           ref="tableRef" 
           stripe border 
           :data="list"
+          v-loading="listLoading"
           class="noneHoveTable"
           :header-cell-style="headerCellStyle"
           :cell-style="cellStyle"
@@ -510,6 +514,7 @@
           ref="tableRef" 
           stripe border 
           :data="list"
+          v-loading="listLoading"
           class="noneHoveTable"
           :header-cell-style="headerCellStyle"
           :cell-style="cellStyle"
@@ -627,6 +632,7 @@
           ref="tableRef" 
           stripe border 
           :data="list"
+          v-loading="listLoading"
           class="noneHoveTable"
           :header-cell-style="headerCellStyle"
           :cell-style="cellStyle"
@@ -1232,7 +1238,7 @@ const selectFinishTaskRows = ref<any>([])
 const setSelectFinishTaskRows = (value: string) => {
   selectFinishTaskRows.value = value
 }
-const activeName = ref<number>(0)
+const activeName = ref<number>(1)
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -1826,7 +1832,7 @@ const queryForm = reactive<IGetPackageTaskListQuery>({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
-  status: 0, // 0未到货 1待打包 2已完成 3零头 4售后 5进行中
+  status: 1, // 0未到货 1待打包 2已完成 3零头 4售后 5进行中
   site: undefined //0 亚马逊US 1 亚马逊DE 2 亚马逊UK 3亚马逊CA 4 沃尔玛US
 })
 const handleSizeChange = (value: number) => {

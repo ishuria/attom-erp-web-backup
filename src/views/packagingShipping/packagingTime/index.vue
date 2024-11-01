@@ -185,6 +185,8 @@ const copyRow = ref<any>()
 const showModify = (row: any) => {
   modifyVisible.value = true
   copyRow.value = row
+  modifyForm.startTime = row.startTime
+  modifyForm.endTime = row.endTime
 }
 const closeModify = () => {
   modifyFormRef.value?.resetFields()

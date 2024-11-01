@@ -282,6 +282,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
@@ -529,17 +530,8 @@ const handlePublishPo = async (row: any) => {
     console.error(error)
   }
 }
-const handlePlannedPoDetail = (row: any) => {
-  router.push({
-    path: '/purchase/poDetail',
-    query: {
-      title: "采购计划订单详情",
-      from: 'plannedPoDetail',
-      poSkuId: row.poSkuId,
-      poId: row.id,
-      timestamp: Date.now(),
-    },
-  })
+const handlePlannedPoDetail = async (row: any) => {
+
   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
   const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
   const wrapRef = scrollBarRef.wrapRef
@@ -554,17 +546,72 @@ const handlePlannedPoDetail = (row: any) => {
   }
 
   sessionStorage.setItem('plannedPoStatus', JSON.stringify(plannedPoStatus))
+
+  const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
+  const tab = handleTabs({
+    ...matched.at(-1),
+    query: {
+      title: "采购计划订单详情",
+      from: 'plannedPoDetail',
+      poSkuId: row.poSkuId,
+      poId: row.id,
+      // timestamp: Date.now(),
+    },
+  })
+  if (tab) {
+    await router.push({
+      path: '/purchase/poDetail',
+      query: {
+        title: "采购计划订单详情",
+        from: 'plannedPoDetail',
+        poSkuId: row.poSkuId,
+        poId: row.id,
+        // timestamp: Date.now(),
+      },
+    })
+    await changeTabsMeta({
+      title: 'PO详情',
+      meta: {
+        title: `${tab.query.title}`,
+      },
+    })
+  }
 }
 
 const handlePlannedPoCreate = async () => {
-  router.push({
-    path: '/purchase/poDetail',
+  // router.push({
+  //   path: '/purchase/poDetail',
+  //   query: {
+  //     title: "采购计划创建",
+  //     from: 'plannedPoCreate',
+  //     timestamp: Date.now(),
+  //   },
+  // })
+  const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
+  const tab = handleTabs({
+    ...matched.at(-1),
     query: {
       title: "采购计划创建",
       from: 'plannedPoCreate',
-      timestamp: Date.now(),
+      // timestamp: Date.now(),
     },
   })
+  if (tab) {
+    await router.push({
+      path: '/purchase/poDetail',
+      query: {
+        title: "采购计划创建",
+        from: 'plannedPoCreate',
+        // timestamp: Date.now(),
+      },
+    })
+    await changeTabsMeta({
+      title: 'PO详情',
+      meta: {
+        title: `${tab.query.title}`,
+      },
+    })
+  }
 }
 
   

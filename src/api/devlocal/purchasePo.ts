@@ -51,7 +51,8 @@ import {
   IUpdatePoSite,
   IUpdatePoSkuComponent,
   IUpdateSkuCount,
-  IUpdateSkuDetail
+  IUpdateSkuDetail,
+  IDelPayRecord
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -353,7 +354,7 @@ export function updateComponentPayPart(data: IUpdateComponentPayPartQuery): Prom
   })
 }
 // 采购订单-删除零件的付款记录
-export function delPayRecord(params: IId): Promise<IBooleanResp> {
+export function delPayRecord(params: IDelPayRecord): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/delete/payRecord`,
     method: 'post',

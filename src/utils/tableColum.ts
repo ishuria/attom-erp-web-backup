@@ -144,4 +144,42 @@ export const removeHtmlTags = (html: string): string => {
   const div = document.createElement('div');
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
-};
+}
+
+
+
+/**
+ * 计算指定内容的列宽
+ * @param {Array} rows - 包含行数据的数组
+ * @param {Function} getContent - 提取内容的回调函数，用于从每行数据中获取需要计算宽度的字段值
+ * @param {number} baseWidth - 默认的列宽
+ * @param {number} padding - 额外添加的宽度（默认值：26）
+ * @returns {number} - 计算后的列宽
+ */
+export function calculateBrColumnWidth(rows: any, getContent: any, baseWidth = 90, padding = 26) {
+  let maxWidth = baseWidth;
+
+  rows.forEach((row: any) => {
+    // 使用回调函数获取内容
+    const content = getContent(row);
+    const paragraphs = content.split(/<br\s*\/?>/);
+
+    paragraphs.forEach((paragraph: any) => {
+      const tempDiv = document.createElement('div');
+      tempDiv.style.visibility = 'hidden';
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.whiteSpace = 'nowrap';
+      tempDiv.innerHTML = paragraph;
+      document.body.appendChild(tempDiv);
+
+      const width = tempDiv.getBoundingClientRect().width;
+      if (width > maxWidth) {
+        maxWidth = width;
+      }
+      document.body.removeChild(tempDiv);
+    });
+  });
+
+  return maxWidth + padding;
+}
+

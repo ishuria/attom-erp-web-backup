@@ -232,7 +232,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.purchaseCount" @keyup.enter="clickOtherCancel($event, row)" @blur="clickOtherCancel($event, row)" />
+                <el-input type="number" v-model="row.purchaseCount" @keyup.enter="clickOtherCancel($event, row)" @blur="clickOtherCancel($event, row)" />
               </div>
               <span>{{ row.purchaseCount }}</span>
             </template>
@@ -243,7 +243,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.moreCount" @keyup.enter="clickOtherCancel($event, row)" @blur="clickOtherCancel($event, row)" />
+                <el-input type="number" v-model="row.moreCount" @keyup.enter="clickOtherCancel($event, row)" @blur="clickOtherCancel($event, row)" />
               </div>
               <span>{{ row.moreCount }}</span>
             </template>
@@ -254,7 +254,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.useStockCount" @keyup.enter="clickOtherCancel($event, row)" @blur="clickOtherCancel($event, row)" />
+                <el-input type="number" v-model="row.useStockCount" @keyup.enter="clickOtherCancel($event, row)" @blur="clickOtherCancel($event, row)" />
               </div>
               <span>{{ row.useStockCount }}</span>
             </template>
@@ -278,7 +278,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.unitPrice }}</span>
             </template>
@@ -289,7 +289,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.totalPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.totalPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.totalPrice }}</span>
             </template>
@@ -300,7 +300,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.freight" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.freight" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.freight }}</span>
             </template>
@@ -311,7 +311,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.moldCost" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.moldCost" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.moldCost }}</span>
             </template>
@@ -327,7 +327,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.taxIncludedPrice }}</span>
             </template>
@@ -382,7 +382,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.actualTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.actualTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.actualTaxRate }}</span>
             </template>
@@ -393,7 +393,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.invoicingTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.invoicingTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.invoicingTaxRate }}</span>
             </template>
@@ -431,7 +431,7 @@
           <el-table-column label="起订量" prop="minQuantity" align="center" min-width="73">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.minQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.minQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.minQuantity }}</span>
             </template>
@@ -439,7 +439,7 @@
           <el-table-column label="整箱数" prop="numCartons" align="center" min-width="73">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.numCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input type="number" v-model="row.numCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.numCartons }}</span>
             </template>
@@ -668,9 +668,9 @@
       <div class="comprehensive-table-container">
         <vab-query-form>
           <vab-query-form-left-panel style="margin-top: 10px;" :span="24">
-            <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
+            <!-- <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
             <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
-            <el-text type="danger" class="text-center">注意：零件名修改仅限品名规范修正，严禁将一个零件的名字修改为另外一个零件</el-text>
+            <el-text type="danger" class="text-center">注意：零件名修改仅限品名规范修正，严禁将一个零件的名字修改为另外一个零件</el-text> -->
           </vab-query-form-left-panel>
         </vab-query-form>
         <el-table 
@@ -730,7 +730,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input class="reduce-input" v-model="row.purchaseCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" class="reduce-input" v-model="row.purchaseCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.purchaseCount }}</span>
             </template>
@@ -741,7 +741,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.moreCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.moreCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.moreCount }}</span>
             </template>
@@ -752,7 +752,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.useStockCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.useStockCount" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.useStockCount }}</span>
             </template>
@@ -776,7 +776,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.unitPrice" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.unitPrice" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.unitPrice }}</span>
             </template>
@@ -787,7 +787,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.totalPrice" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.totalPrice" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.totalPrice }}</span>
             </template>
@@ -798,7 +798,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.freight" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.freight" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.freight }}</span>
             </template>
@@ -809,7 +809,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.moldCost" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.moldCost" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.moldCost }}</span>
             </template>
@@ -825,7 +825,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.taxIncludedPrice" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.taxIncludedPrice" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.taxIncludedPrice }}</span>
             </template>
@@ -880,7 +880,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.actualTaxRate" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.actualTaxRate" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.actualTaxRate }}</span>
             </template>
@@ -891,7 +891,7 @@
             </template>
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.invoicingTaxRate" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
+                <el-input type="number" v-model="row.invoicingTaxRate" @keyup.enter="clickCreateCancel($event, row)" @blur="clickCreateCancel($event, row)" />
               </div>
               <span>{{ row.invoicingTaxRate }}</span>
             </template>
@@ -929,7 +929,7 @@
           <el-table-column label="起订量" prop="minQuantity" align="center" min-width="73">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.minQuantity" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
+                <el-input type="number" v-model="row.minQuantity" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
               </div>
               <span>{{ row.minQuantity }}</span>
             </template>
@@ -937,7 +937,7 @@
           <el-table-column label="整箱数" prop="numCartons" align="center" min-width="73">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.numCartons" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
+                <el-input type="number" v-model="row.numCartons" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
               </div>
               <span>{{ row.numCartons }}</span>
             </template>
@@ -977,7 +977,7 @@
           <el-button v-if="createNextVisible" type="primary" @click="handleFetchCreateNext">下一个</el-button>
           <el-button type="warning" @click="handleCreateAddSKU">添加SKU</el-button>
           <el-button type="danger" @click="handleDelCreateSKU" :disabled="createDisabled">删除SKU</el-button>
-          <el-button type="success" :disabled="createDisabled" @click="createSku">创建SKU</el-button>
+          <el-button type="success" :disabled="createDisabled" @click="createSku">创建PO</el-button>
         </el-footer>
       </div>
     </div>
@@ -1364,6 +1364,7 @@
       :before-close="handleCloseUpdatePurchaserDialog"
     >
       <el-divider class="divider-margin"></el-divider>
+      <div style="margin-left: 20px; margin-right: 20px;">
         <el-checkbox
           v-model="purchaser0"
           label="更新SKU库"
@@ -1374,6 +1375,7 @@
           label="更新零件库"
           size="large"
         />
+      </div>
       <template #footer>
         <span>
           <el-button @click="updatePurchaserVisible = false">取消</el-button>
@@ -1459,7 +1461,7 @@ import { useSkuStore } from '/@/store/modules/sku'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import { handleActivePath } from '/@/utils/routes'
+import { handleActivePath, handleMatched, handleTabs } from '/@/utils/routes'
 import { _addSku, _clearSKUs, _deleteSku, _updateSku } from '/@/utils/sku'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -1478,8 +1480,9 @@ const deleteNone = ref<boolean>(true)
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
+const routesStore = useRoutesStore()
 const { changeTabsMeta, delVisitedRoute } = tabsStore
-
+const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 // 创建进来的，需要判断sku填没填，没填就都disabled掉
 const createDisabled = ref<boolean>(false)
 // po详情
@@ -1521,8 +1524,14 @@ const handleCloseAddSku = () => {
   addSKUVisible.value = false
 }
 
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 const skuStore = useSkuStore();
-
 const tempCurId = ref<string>('')
 // 选择sku的请求和赋值
 const afterGetSku = async (_sku: string) => {
@@ -1558,7 +1567,7 @@ const afterGetSku = async (_sku: string) => {
       }
     })
     // 存入新的数据
-    tempCurId.value = crypto.randomUUID()
+    tempCurId.value = generateUUID()
     // 深拷贝对象，避免引用问题
     const newSku = {
       poDetailData: JSON.parse(JSON.stringify(poDetailData.value)),
@@ -1571,6 +1580,8 @@ const afterGetSku = async (_sku: string) => {
     // fetchPurchaseAndRepository()
   }
 }
+
+
 // 确认添加sku
 const handleConfirmAddSKU = async () => {
   try {
@@ -1674,6 +1685,7 @@ const handleSubmitComponent = async (value: any) => {
     if (data === true) {
       $baseMessage('添加零件提交成功', 'success', 'hey')
       fetchSkuComponent()
+      fetchData()
     }
   } catch (error) {
     console.error(error)
@@ -1707,6 +1719,7 @@ const handleSubmitConsumable = async (value: any) => {
     if (data === true) {
       $baseMessage('添加耗材提交成功', 'success', 'hey')
       fetchSkuComponent()
+      fetchData()
     }
   } catch (error) {
     console.error(error)
@@ -2107,29 +2120,33 @@ const clickOtherCancel = async (event:any,value:any) => {
 }
 // 更新价格
 const handleUpdateAllComponentPrice = async () => {
-  try {
-    const { data } = await updateAllComponentPrice({
-      poSkuId: parseInt(route.query.poSkuId)
-    })
-    if (data === true) {
-      $baseMessage('该SKU下的所有零件价格全部更新成功', 'success', 'hey')
+  $baseConfirm('确定要更新价格吗？', null, async () => {
+    try {
+      const { data } = await updateAllComponentPrice({
+        poSkuId: parseInt(route.query.poSkuId)
+      })
+      if (data === true) {
+        $baseMessage('该SKU下的所有零件价格全部更新成功', 'success', 'hey')
+      }
+    } catch (error) {
+      console.error(error)
     }
-  } catch (error) {
-    console.error(error)
-  }
+  })
 }
 // 更新单价
 const handleUpdateComponentPrice = async (row: any) => {
-  try {
-    const { data } = await updateComponentPrice({
-      poSkuComponentId: row.id
-    })
-    if (data === true) {
-      $baseMessage('单价更新成功', 'success', 'hey')
+  $baseConfirm('确定要更新单价吗？', null, async () => {
+    try {
+      const { data } = await updateComponentPrice({
+        poSkuComponentId: row.id
+      })
+      if (data === true) {
+        $baseMessage('单价更新成功', 'success', 'hey')
+      }
+    } catch (error) {
+      console.error(error)
     }
-  } catch (error) {
-    console.error(error)
-  }
+  })
 }
 // 获取供应商税点信息 不需要disabled?
 const fetchSupplierRate = async (row: any) => {
@@ -2280,12 +2297,12 @@ const handleDelCreateSKU = () => {
     createDisabled.value = true
   } else {
     // 如果大于一个，那就是两个及两个以上，先删除
-    console.log('删除前的id', tempCurId.value);
+    // console.log('删除前的id', tempCurId.value);
     _deleteSku(tempCurId.value)
     $baseMessage('删除SKU成功', 'success')
-    console.log('删除后的', skuStore.data);
-    console.log('删除前的length', length);
-    console.log('删除前的index', index);
+    // console.log('删除后的', skuStore.data);
+    // console.log('删除前的length', length);
+    // console.log('删除前的index', index);
     
     // 如果删除之前的index是0，就是跳到下一个
     if (index === 0) {
@@ -2319,16 +2336,16 @@ const createSku = async () => {
   })
   if (!flag) {
     const createReq = skuStore.data.map((item: any) => {
-    const transformedItem = {
-      componentList: item.skuComponentList,
-      poSkuDetail: item.poDetailData, // 替换键名
+      const transformedItem = {
+        componentList: item.skuComponentList,
+        poSkuDetail: item.poDetailData, // 替换键名
       };
       return transformedItem;
     });
 
     const { data } = await createPlanPo(createReq)
     if (data) {
-      $baseMessage('创建SKU成功', 'success') 
+      $baseMessage('创建PO成功', 'success') 
       goBack()
     }
   }
@@ -2557,16 +2574,48 @@ const handleFetchPreviousData = async () => {
   // 获取当前路由的查询参数
   const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! - 1] };
   await delVisitedRoute(handleActivePath(route, true))
-  // 使用 router.push 修改路由
-  router.push({ path: '/purchase/poDetail', query });
+  // 修改路由
+  const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
+  const tab = handleTabs({
+    ...matched.at(-1),
+    query: query
+  })
+  if (tab) {
+    await router.push({
+      path: '/purchase/poDetail',
+      query: query
+    })
+    await changeTabsMeta({
+      title: 'PO详情',
+      meta: {
+        title: `${tab.query.title}`,
+      },
+    })
+  }
 }
 // 当点击下一个按钮
 const handleFetchNextData = async () => {
   // 获取当前路由的查询参数
   const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! + 1] };
   await delVisitedRoute(handleActivePath(route, true))
-  // 使用 router.push 修改路由
-  router.push({ path: '/purchase/poDetail', query });
+  // 修改路由
+  const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
+  const tab = handleTabs({
+    ...matched.at(-1),
+    query: query
+  })
+  if (tab) {
+    await router.push({
+      path: '/purchase/poDetail',
+      query: query
+    })
+    await changeTabsMeta({
+      title: 'PO详情',
+      meta: {
+        title: `${tab.query.title}`,
+      },
+    })
+  }
 }
 // 价格保留两位小数
 const formattedPrice = (price: string) => {
@@ -2778,8 +2827,10 @@ onBeforeMount(() => {
     // 是创建的话，创建div显示
     createNone.value = false
     detailsNone.value = true
-    // _clearSKUs() //一进页面只清空一次
+    _clearSKUs() //一进页面只清空一次
     handleShowCreatePreviousOrNext()
+    console.log(skuStore.data);
+    
   }
 })
 
@@ -2788,7 +2839,7 @@ onMounted(() => {
   if (route.query.from === 'plannedPoCreate') {
     title = '采购计划创建'
   } else if (route.query.from === 'plannedPoDetail') {
-    title = '采购计划详情'
+    title = '采购计划订单详情'
   } else {
     title = route.query.from
   }
@@ -2950,4 +3001,12 @@ onMounted(() => {
 // .el-table :deep(.reduce-input .cell .el-input .el-input__wrapper) {
 //   padding: 0 !important;
 // }
+:deep(input::-webkit-outer-spin-button),
+:deep(input::-webkit-inner-spin-button) {
+  -webkit-appearance: none;
+}
+:deep(input[type="number"]) {
+  -moz-appearance: textfield;
+}
+
 </style>
