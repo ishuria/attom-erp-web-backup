@@ -1364,7 +1364,7 @@
       :before-close="handleCloseUpdatePurchaserDialog"
     >
       <el-divider class="divider-margin"></el-divider>
-      <div style="margin-left: 20px; margin-right: 20px;">
+      <div style=" margin-right: 20px;margin-left: 20px;">
         <el-checkbox
           v-model="purchaser0"
           label="更新SKU库"
@@ -1389,7 +1389,7 @@
       v-model="addSKUVisible"
       width="20%"
     >
-      <el-form ref="addSkuFormRef" :model="addSkuForm" style="margin-left: 20px; margin-right: 20px">
+      <el-form ref="addSkuFormRef" :model="addSkuForm" style=" margin-right: 20px;margin-left: 20px">
         <el-form-item label="选择要添加的SKU" prop="sku">
           <el-select
             v-model="addSkuForm.sku"
@@ -1451,6 +1451,7 @@ import {
   updatePoRemarks,
   updatePoSite,
   updatePoSkuComponent,
+  updatePoSkuComponentSuppliser,
   updateSkuCount,
   updateSkuDetail,
   updateSkuImg,
@@ -2174,11 +2175,19 @@ const fetchSupplierRate = async (row: any) => {
 // 修改默认供应商
 const handleSupplierAndInvoicingChange = async (row: any) => {
   try {
-    const { data } = await updatePoSkuComponent(row)
+    const { data } = await updatePoSkuComponentSuppliser({
+      poId:parseInt(route.query.poId),
+      poSkuId: parseInt(route.query.poSkuId),
+      poSkuComponentId: row.id,
+      existAlreadyComponentId: row.existingPartsListId,
+      suppliserId: row.suppliserId,
+      invoicing:row.invoicing 
+    })
     if (data === true) {
       fetchSkuComponent()
       fetchData()
     }
+    // const { data } = await updatePoSkuComponent(row)
   } catch (error) {  
     row.invoicing = originalRow.invoicing
     console.error(error)
@@ -2867,8 +2876,8 @@ onMounted(() => {
       
       // 设置el-card的padding和下面表格左右两侧对齐
       .el-card__body {
-        padding-bottom: 0;
         padding-right: 0;
+        padding-bottom: 0;
         padding-left: 0; 
       }
       
@@ -2902,10 +2911,10 @@ onMounted(() => {
 .component-upload :deep( .el-upload-list--picture-card .el-upload-list__item) {
  width: 100%;
  height: 100%;
- transition: none;
  margin: 0;
- border-radius: 0;
  border: 0;
+ border-radius: 0;
+ transition: none;
 }
 .component-upload :deep( .el-upload--picture-card) {
   width: 100%;
@@ -2916,32 +2925,32 @@ onMounted(() => {
   max-height: 81.2px;
 }
 .overflow-text {
+ display: block;
  max-height: 81.2px; /* 设置文本的最大高度 */
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
- display: block;
 }
 .transfer-container {
    display: flex;
-   justify-content: center; /* 水平居中 */
    align-items: center; /* 垂直居中，如果需要 */
+   justify-content: center; /* 水平居中 */
 }
 /* 上面的图片上传框对齐 */
 .upload-align {
-  margin-top: 30px;
   width: 100%;
   height: 100%;
+  margin-top: 30px;
 }
 :deep(.upload-align .el-upload-list--picture-card) {
   width: 100%;
   height: 100%;
 }
 // 让上面的图片过渡消失
-:deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {
-  transition: none;  
+:deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {  
   width: 100%;
   height: 100%;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  transition: none;
 }
 // 设置没有图片时上传图标的样式
 :deep(.upload-align .el-upload--picture-card) {
@@ -2962,9 +2971,9 @@ onMounted(() => {
  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 .text-center {
+  margin: 0 10px calc(var(--el-margin) / 2) 0 !important;
   line-height: 1; 
   text-align: center;
-  margin: 0 10px calc(var(--el-margin) / 2) 0 !important;
 }
 .button-center {
   display: flex;
@@ -2983,16 +2992,16 @@ onMounted(() => {
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0px;
   padding-right: 0px;
+  padding-left: 0px;
 }
 .el-table :deep(.reduce-padding .cell) {
-  padding-left: 2px;
   padding-right: 2px;
+  padding-left: 2px;
 }
 .el-table :deep(.clear-padding) {
   padding-top: 0px;

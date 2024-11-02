@@ -7,6 +7,7 @@ import {
   IBooleanResp,
   IComponentName,
   ICreatePlanPoResp,
+  IDelPayRecord,
   IGeneratePoContractQuery,
   IGenerateRemittance,
   IGetAddComponentListQuery,
@@ -50,9 +51,9 @@ import {
   IUpdatePoRemarks,
   IUpdatePoSite,
   IUpdatePoSkuComponent,
+  IUpdatePoSkuComponentSuppliser,
   IUpdateSkuCount,
   IUpdateSkuDetail,
-  IDelPayRecord
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
@@ -232,6 +233,16 @@ export function updatePoSkuComponent(data: IUpdatePoSkuComponent) {
     data,
   })
 }
+
+// 采购计划-po sku 零件供应商修改
+export function updatePoSkuComponentSuppliser(data: IUpdatePoSkuComponentSuppliser) {
+  return request({
+    url: `${BASE_API}/purchase/po/component/suppliser/update`,
+    method: 'post',
+    data,
+  })
+}
+
 // 采购sku详情更新(除订货套数外)
 export function updateSkuDetail(data: IUpdateSkuDetail) {
   return request({
@@ -322,7 +333,7 @@ export function updateBuyerAndCustomsDeclaration(params?: IUpdateBuyerAndCustoms
   })
 }
 // 创建PlanPO（采购计划）
-export function createPlanPo(data?: any){
+export function createPlanPo(data?: any) {
   return request({
     url: `${BASE_API}/purchase/create/planPo`,
     method: 'post',
@@ -342,7 +353,7 @@ export function updateComponentAllPay(data: IUpdateComponentAllPay) {
   return request({
     url: `${BASE_API}/purchase/component/AllPay`,
     method: 'post',
-    data
+    data,
   })
 }
 // 分批付款
@@ -350,7 +361,7 @@ export function updateComponentPayPart(data: IUpdateComponentPayPartQuery): Prom
   return request({
     url: `${BASE_API}/purchase/component/payPart`,
     method: 'post',
-    data
+    data,
   })
 }
 // 采购订单-删除零件的付款记录
@@ -358,7 +369,7 @@ export function delPayRecord(params: IDelPayRecord): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/delete/payRecord`,
     method: 'post',
-    params
+    params,
   })
 }
 // 采购订单-修改零件付款记录
@@ -366,7 +377,7 @@ export function updatePayRecord(params: IUpdatePayRecord): Promise<IBooleanResp>
   return request({
     url: `${BASE_API}/purchase/update/payRecord`,
     method: 'post',
-    params
+    params,
   })
 }
 // 采购订单 - 自动签收设定 - 新增
@@ -374,7 +385,7 @@ export function addSignatureSettings(params: IId): Promise<INumberResp> {
   return request({
     url: `${BASE_API}/purchase/add/signature/settings`,
     method: 'post',
-    params
+    params,
   })
 }
 // 采购订单 - 自动签收设定 - 删除
@@ -382,7 +393,7 @@ export function delSignatureSettings(params: IId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/purchase/delete/signature/settings`,
     method: 'post',
-    params
+    params,
   })
 }
 // 零件图片上传
@@ -453,7 +464,7 @@ export function aggregationContract(data: FormData) {
   })
 }
 // 添加SKU提交确定按钮
-export function addPoSKU(params: IAddPoSKUQuery): Promise<ICreatePlanPoResp>  {
+export function addPoSKU(params: IAddPoSKUQuery): Promise<ICreatePlanPoResp> {
   return request({
     url: `${BASE_API}/purchase/add/po/sku`,
     method: 'post',

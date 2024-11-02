@@ -93,62 +93,62 @@ export interface IPoSkuId {
 }
 export interface IGetPoSkuComponentList {
   // 实际税点
-  actualTaxRate: number;
+  actualTaxRate: number
   // 零件名
-  componentName: string;
+  componentName: string
   // 零件图片地址
-  componentUrl: string;
+  componentUrl: string
   // 合同条款
-  contractTerms: string;
+  contractTerms: string
   // 币种 0RMB 1USD 2EUR
-  currency: number;
+  currency: number
   // 报关状态 0 报关 1不报关
-  customsDeclarationStatus: number;
+  customsDeclarationStatus: number
   // 已有零件id
-  existingPartsListId: number;
+  existingPartsListId: number
   // 含税运费
-  freight: string;
+  freight: string
   // id
-  id: number;
+  id: number
   // 开票类型 0专票 1普票 2不开票
-  invoicing: number;
+  invoicing: number
   // 开票税点
-  invoicingTaxRate: number;
+  invoicingTaxRate: number
   // 起订量
-  minQuantity: number;
+  minQuantity: number
   // 模具费
-  moldCost: string;
+  moldCost: string
   // 多订数量
-  moreCount: null;
+  moreCount: null
   // 整箱数
-  numCartons: number;
+  numCartons: number
   // 订单号
-  orderNo: string;
+  orderNo: string
   // po sku的id
-  poSkuId: number;
+  poSkuId: number
   // 总未税价
-  preTaxPrice: string;
+  preTaxPrice: string
   // 零件订货总数
-  purchaseCount: number;
+  purchaseCount: number
   // 采购方id
-  purchaseId: number;
+  purchaseId: number
   // 采购链接
-  purchaseLink: string;
-  purchaseMatters: string;
+  purchaseLink: string
+  purchaseMatters: string
   // 收货仓库id
-  repositoryId: number;
+  repositoryId: number
   // 已有库存
-  stock: string;
+  stock: string
   // 总含税价
-  taxIncludedPrice: string;
+  taxIncludedPrice: string
   // 出厂总价
-  totalPrice: string;
+  totalPrice: string
   // 单位
-  unit: string;
+  unit: string
   // 出厂单价
-  unitPrice: string;
+  unitPrice: string
   // 使用已有库存数量
-  useStockCount: number;
+  useStockCount: number
   suppliserId: number
   suppliserList: any
 }
@@ -183,29 +183,59 @@ export interface IGetSupplierRateResp {
 }
 // 采购计划-po sku 零件修改
 export interface IUpdatePoSkuComponent {
-  componentName?: string;
-  currency?: number;
-  customsDeclarationStatus?: number;
-  freight?: number;
-  id?: number;
-  invoicing?: number;
-  minQuantity?: number;
-  moldCost?: number;
-  moreCount?: number;
-  numCartons?: number;
-  orderNo?: string;
-  purchaseCount?: number;
-  purchaseId?: number;
-  purchaseLink?: string;
-  repositoryId?: number;
-  suppliserId?: number;
-  taxIncludedPrice?: number;
-  totalPrice?: number;
-  unit?: string;
-  unitPrice?: number;
-  useStockCount?: number;
-  [property: string]: any;
+  componentName?: string
+  currency?: number
+  customsDeclarationStatus?: number
+  freight?: number
+  id?: number
+  invoicing?: number
+  minQuantity?: number
+  moldCost?: number
+  moreCount?: number
+  numCartons?: number
+  orderNo?: string
+  purchaseCount?: number
+  purchaseId?: number
+  purchaseLink?: string
+  repositoryId?: number
+  suppliserId?: number
+  taxIncludedPrice?: number
+  totalPrice?: number
+  unit?: string
+  unitPrice?: number
+  useStockCount?: number
+  [property: string]: any
 }
+
+// 采购计划-po sku 零件修改
+export interface IUpdatePoSkuComponentSuppliser {
+  /**
+   * Po的ID
+   */
+  poId: number
+  /**
+   * Po SKU的ID
+   */
+  poSkuId: number
+  /**
+   * Po Sku 零件的ID
+   */
+  poSkuComponentId: number
+  /**
+   * 已有零件的ID
+   */
+  existAlreadyComponentId: number
+  /**
+   * 供应商的ID
+   */
+  suppliserId: number
+
+  /**
+   * 开票类型
+   */
+  invoicing: number
+}
+
 export interface IUpdateSkuDetail {
   // poSKU的Id
   poSkuId?: number
@@ -284,72 +314,71 @@ export interface ICreatePlanPoResp {
   }
 }
 export interface ICreatePlanPoComponentList {
+  actualTaxRate?: number
 
-   actualTaxRate?: number;
+  componentName?: string
 
-   componentName?: string;
+  componentUrl?: string
 
-   componentUrl?: string;
+  contractTerms?: string
 
-   contractTerms?: string;
+  currency?: number
 
-   currency?: number;
-  
-   customsDeclarationStatus?: number;
- 
-   existingPartsListId?: number;
- 
-   freight?: string;
-  
-   id?: number;
-  
-   invoicing?: number;
- 
-   invoicingTaxRate?: number;
+  customsDeclarationStatus?: number
 
-   minQuantity?: number;
+  existingPartsListId?: number
 
-   moldCost?: string;
+  freight?: string
 
-   moreCount?: number;
- 
-   numCartons?: number;
- 
-   orderNo?: string;
-   poSkuId?: number;
+  id?: number
 
-   preTaxPrice?: string;
+  invoicing?: number
 
-   purchaseCount?: number;
- 
-   purchaseId?: number;
+  invoicingTaxRate?: number
 
-   purchaseLink?: string;
+  minQuantity?: number
 
-   purchaseMatters?: string;
-  
-   repositoryId?: number;
- 
-   stock?: number;
+  moldCost?: string
 
-   suppliserId?: number;
+  moreCount?: number
 
-   suppliserList?: SuppliserList[];
- 
-   taxIncludedPrice?: string;
+  numCartons?: number
 
-   totalPrice?: string;
+  orderNo?: string
+  poSkuId?: number
 
-   unit?: string;
+  preTaxPrice?: string
 
-   unitPrice?: string;
+  purchaseCount?: number
 
-   useStockCount?: number;
+  purchaseId?: number
+
+  purchaseLink?: string
+
+  purchaseMatters?: string
+
+  repositoryId?: number
+
+  stock?: number
+
+  suppliserId?: number
+
+  suppliserList?: SuppliserList[]
+
+  taxIncludedPrice?: string
+
+  totalPrice?: string
+
+  unit?: string
+
+  unitPrice?: string
+
+  useStockCount?: number
 }
 export interface SuppliserList {
-  id?: number;
-  label?: string;
-  [property: string]: any;
+  id?: number
+  label?: string
+  [property: string]: any
 }
 //采购订单-查询列表
 export interface IGetPoListQuery {
@@ -360,64 +389,63 @@ export interface IGetPoListQuery {
   pageSize: number
 }
 export interface IGetPoList {
+  componentId?: number
 
-  componentId?: number;
- 
-  componentName?: string;
+  componentName?: string
 
-  createTime?: string;
- 
-  currency?: number;
- 
-  customsDeclarationStatus?: number;
+  createTime?: string
+
+  currency?: number
+
+  customsDeclarationStatus?: number
   // plan po
-  id?: number;
+  id?: number
   // 已付款金额
-  payPrice?: string;
+  payPrice?: string
   // 付款记录
-  payRecordList?: PayRecordList[];
+  payRecordList?: PayRecordList[]
   // POSkuId
-  poSkuId?: number;
+  poSkuId?: number
   // 采购方名称
-  purchase?: string;
+  purchase?: string
   // 零件采购数量
-  purchaseCount?: number;
+  purchaseCount?: number
   // 采购方id
-  purchaseId?: number;
+  purchaseId?: number
   // 零件采购注意事项
-  purchaseMatters?: string;
+  purchaseMatters?: string
   // 采购sku数量
-  purchaseSkuNumber?: number;
-  siteId?: number;
+  purchaseSkuNumber?: number
+  siteId?: number
   // 站点名 0 亚马逊US 1 亚马逊DE 2 亚马逊UK  3亚马逊CA  4 沃尔玛US
-  siteName?: string;
+  siteName?: string
 
-  sku?: string;
+  sku?: string
 
-  skuImageUrl?: string;
+  skuImageUrl?: string
   // 供应商名称
-  suppliser?: string;
+  suppliser?: string
 
-  taxIncludedPrice?: string;
+  taxIncludedPrice?: string
 
-  unit?: string;
+  unit?: string
   // 请够人/发布人
-  userName?: string;
+  userName?: string
 }
 export interface PayRecordList {
   // 付款记录id
-  id?: number;
+  id?: number
   // 付款金额
-  payPrice?: string;
+  payPrice?: string
   // 付款人
-  payUserName?: string;
+  payUserName?: string
   // 百分比
-  percentage?: string;
+  percentage?: string
   // 退款凭证 默认为图片
-  refundVoucher?: string;
+  refundVoucher?: string
   // 类型 0付款 1退款
-  type?: number;
-  [property: string]: any;
+  type?: number
+  [property: string]: any
 }
 export interface IGetPoListResp {
   data?: {
@@ -578,55 +606,55 @@ export interface IGetOrderMoreComponent {
   /**
    * 采购方
    */
-  companyAbbreviation?: string;
+  companyAbbreviation?: string
   /**
    * po sku 零件id
    */
-  componentId?: number;
+  componentId?: number
   /**
    * 零件名
    */
-  componentName?: string;
+  componentName?: string
   /**
    * 零件图片
    */
-  componentUrl?: string;
+  componentUrl?: string
   /**
    * 报关状态 0不报关 1报关
    */
-  customsDeclarationStatus?: number;
+  customsDeclarationStatus?: number
   /**
    * 已有零件id
    */
-  existingPartsId?: number;
+  existingPartsId?: number
   /**
    * id
    */
-  id?: number;
+  id?: number
   /**
    * po号
    */
-  po?: string;
+  po?: string
   /**
    * 仓库名
    */
-  repositoryName?: string;
+  repositoryName?: string
   /**
    * 剩余库存
    */
-  residueStock?: number;
+  residueStock?: number
   /**
    * 供应商名
    */
-  suppliserName?: string;
+  suppliserName?: string
   /**
    * 单位
    */
-  unit?: string;
+  unit?: string
   /**
    * 已使用库存
    */
-  useCount?: number;
+  useCount?: number
 }
 
 // 创建planPo修改订货套数
@@ -634,149 +662,148 @@ export interface IUpdateCreateSkuCountRequest {
   /**
    * poSKU零件信息
    */
-  componentList?: ComponentList[];
+  componentList?: ComponentList[]
   /**
    * 新的sku订货套数
    */
-  newPurchaseSkuNumber?: number;
+  newPurchaseSkuNumber?: number
   /**
    * 旧的sku订货套数
    */
-  oldPurchaseSkuNumber?: number;
+  oldPurchaseSkuNumber?: number
 }
 
 export interface ComponentList {
   /**
    * 实际税点
    */
-  actualTaxRate?: number;
+  actualTaxRate?: number
   /**
    * 零件名
    */
-  componentName?: string;
+  componentName?: string
   /**
    * 图片
    */
-  componentUrl?: string;
+  componentUrl?: string
   /**
    * 合同条款
    */
-  contractTerms?: string;
+  contractTerms?: string
   /**
    * 货币 0RMB 1USD 2EUR
    */
-  currency?: number;
+  currency?: number
   /**
    * 报关 0报关  1不报关
    */
-  customsDeclarationStatus?: number;
+  customsDeclarationStatus?: number
   /**
    * 已有零件id
    */
-  existingPartsListId?: number;
+  existingPartsListId?: number
   /**
    * 含税运费
    */
-  freight?: string;
+  freight?: string
   /**
    * 开票 0专票 1普票 2无法开票
    */
-  invoicing?: number;
+  invoicing?: number
   /**
    * 开票税点
    */
-  invoicingTaxRate?: number;
+  invoicingTaxRate?: number
   /**
    * 起订量
    */
-  minQuantity?: number;
+  minQuantity?: number
   /**
    * 含税模具费
    */
-  moldCost?: string;
+  moldCost?: string
   /**
    * 多订数量
    */
-  moreCount?: number;
+  moreCount?: number
   /**
    * 整箱数
    */
-  numCartons?: number;
+  numCartons?: number
   /**
    * 订单号
    */
-  orderNo?: string;
+  orderNo?: string
   /**
    * 总未税价
    */
-  preTaxPrice?: string;
+  preTaxPrice?: string
   /**
    * 零件订货总数
    */
-  purchaseCount?: number;
+  purchaseCount?: number
   /**
    * 采购方id
    */
-  purchaseId?: number;
+  purchaseId?: number
   /**
    * 采购链接
    */
-  purchaseLink?: string;
+  purchaseLink?: string
   /**
    * 零件采购注意事项
    */
-  purchaseMatters?: string;
+  purchaseMatters?: string
   /**
    * 收货仓库Id
    */
-  repositoryId?: number;
+  repositoryId?: number
   /**
    * 已有库存
    */
-  stock?: number;
+  stock?: number
   /**
    * 供应商id
    */
-  suppliserId?: number;
+  suppliserId?: number
   /**
    * 当前零件的所有供应商信息
    */
-  suppliserList?: SuppliserList[];
+  suppliserList?: SuppliserList[]
   /**
    * 总含税价
    */
-  taxIncludedPrice?: string;
+  taxIncludedPrice?: string
   /**
    * 出厂总价
    */
-  totalPrice?: string;
+  totalPrice?: string
   /**
    * 单位
    */
-  unit?: string;
+  unit?: string
   /**
    * 出厂单价
    */
-  unitPrice?: string;
+  unitPrice?: string
   /**
    * 使用已有库存数量
    */
-  useStockCount?: number;
+  useStockCount?: number
 }
 
 export interface IUpdateCreateSkuCountResponse {
-
-  code?: number;
+  code?: number
 
   data?: {
-    componentList?: ComponentList[];
+    componentList?: ComponentList[]
     /**
      * sku总含税价
      */
-    skuTotalPrice?: string;
+    skuTotalPrice?: string
   }
 
-  msg?: string;
+  msg?: string
 }
 
 // 创建planPo修改零件
@@ -784,123 +811,122 @@ export interface IUpdateCreateComponentRequest {
   /**
    * 实际税点
    */
-  actualTaxRate?: number;
+  actualTaxRate?: number
   /**
    * 零件名
    */
-  componentName?: string;
+  componentName?: string
   /**
    * 图片
    */
-  componentUrl?: string;
+  componentUrl?: string
   /**
    * 合同条款
    */
-  contractTerms?: string;
+  contractTerms?: string
   /**
    * 货币 0RMB 1USD 2EUR
    */
-  currency?: number;
+  currency?: number
   /**
    * 报关 0报关  1不报关
    */
-  customsDeclarationStatus?: number;
+  customsDeclarationStatus?: number
   /**
    * 已有零件id
    */
-  existingPartsListId?: number;
+  existingPartsListId?: number
   /**
    * 含税运费
    */
-  freight?: string;
+  freight?: string
   /**
    * 开票 0专票 1普票 2无法开票
    */
-  invoicing?: number;
+  invoicing?: number
   /**
    * 开票税点
    */
-  invoicingTaxRate?: number;
+  invoicingTaxRate?: number
   /**
    * 起订量
    */
-  minQuantity?: number;
+  minQuantity?: number
   /**
    * 含税模具费
    */
-  moldCost?: string;
+  moldCost?: string
   /**
    * 多订数量
    */
-  moreCount?: number;
+  moreCount?: number
   /**
    * 整箱数
    */
-  numCartons?: number;
+  numCartons?: number
   /**
    * 订单号
    */
-  orderNo?: string;
+  orderNo?: string
   /**
    * 总未税价
    */
-  preTaxPrice?: string;
+  preTaxPrice?: string
   /**
    * 零件订货总数
    */
-  purchaseCount?: number;
+  purchaseCount?: number
   /**
    * 采购方id
    */
-  purchaseId?: number;
+  purchaseId?: number
   /**
    * 采购链接
    */
-  purchaseLink?: string;
+  purchaseLink?: string
   /**
    * 零件采购注意事项
    */
-  purchaseMatters?: string;
+  purchaseMatters?: string
   /**
    * 收货仓库Id
    */
-  repositoryId?: number;
+  repositoryId?: number
   /**
    * 已有库存
    */
-  stock?: number;
+  stock?: number
   /**
    * 供应商id
    */
-  suppliserId?: number;
+  suppliserId?: number
   /**
    * 当前零件的所有供应商信息
    */
-  suppliserList?: SuppliserList[];
+  suppliserList?: SuppliserList[]
   /**
    * 总含税价
    */
-  taxIncludedPrice?: string;
+  taxIncludedPrice?: string
   /**
    * 出厂总价
    */
-  totalPrice?: string;
+  totalPrice?: string
   /**
    * 单位
    */
-  unit?: string;
+  unit?: string
   /**
    * 出厂单价
    */
-  unitPrice?: string;
+  unitPrice?: string
   /**
    * 使用已有库存数量
    */
-  useStockCount?: number;
+  useStockCount?: number
 }
 
 export interface IDelPayRecord {
   id: number
   poId: number
 }
-
