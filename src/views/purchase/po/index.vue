@@ -111,8 +111,11 @@
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="signDate" min-width="115"></el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
+          <el-table-column label="签收日期" prop="signDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
              
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -231,8 +234,12 @@
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>  
+          <el-table-column label="签收日期" prop="signDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+    
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -350,8 +357,12 @@
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column> 
+          <el-table-column label="签收日期" prop="signDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -469,8 +480,11 @@
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
+          <el-table-column label="签收日期" prop="signDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
              
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -580,8 +594,11 @@
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
+          <el-table-column label="签收日期" prop="signDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
              
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -680,8 +697,11 @@
                   <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0"  disabled/>
               </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="" min-width="115"></el-table-column>
-          <el-table-column label="签收物流单号" min-width="130" prop=""></el-table-column>
+          <el-table-column label="签收日期" prop="signDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
              
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
