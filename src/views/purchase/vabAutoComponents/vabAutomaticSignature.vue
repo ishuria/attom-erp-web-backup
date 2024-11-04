@@ -3,7 +3,7 @@
     v-model="dflag" 
     :close-on-click-modal="false" 
     title="自动签收设定" 
-    width="35%"
+    width="30%"
     class="moldDialog"
     :before-close="handlerCloseDialog"
   >
@@ -34,7 +34,8 @@
         @cell-click="changeInput"
         :cell-style="cellStyle"
       >
-        <el-table-column label="零件" min-width="200" prop="componentName"></el-table-column>
+        <el-table-column label="零件ID" min-width="100" prop="existingPartsId"></el-table-column>
+        <el-table-column label="零件" min-width="350" prop="componentName"></el-table-column>
         <el-table-column label="操作" min-width="100">
           <template #default="{ row, $index }">
             <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>

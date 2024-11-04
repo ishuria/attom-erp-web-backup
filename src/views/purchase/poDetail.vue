@@ -17,7 +17,7 @@
           <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }"> 
             <el-form label-position="top" >
               <el-form-item label="订货套数" >
-                <el-input v-model="poDetailData.purchaseSkuNumber" @change="handleUpdateSkuCount"></el-input>
+                <el-input v-model="poDetailData.purchaseSkuNumber" @change="handleUpdateSkuCount"  :disabled="orderCount" ></el-input>
               </el-form-item>
               <el-form-item >
                 <el-upload 
@@ -370,7 +370,7 @@
           </el-table-column>
           <el-table-column label="开票" prop="oem" align="center" width="130">
             <template #default = "{ row }">
-              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleSupplierAndInvoicingChange(row)" @focus="handleGetRow(row)">
+              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)" @focus="handleGetRow(row)">
                 <el-option v-for="dict in invoicingNumList" :key="dict.value"
                     :value="dict.value" :label="dict.label"></el-option>
               </el-select>
@@ -868,7 +868,7 @@
           </el-table-column>
           <el-table-column label="开票" prop="oem" align="center" width="130">
             <template #default = "{ row }">
-              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="updateCreate">
+              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleUpdateInvoicing(row)">
                 <el-option v-for="dict in invoicingNumList" :key="dict.value"
                     :value="dict.value" :label="dict.label"></el-option>
               </el-select>
@@ -1789,7 +1789,8 @@ const handleConfirmUpdatePurchaser = async () => {
 // PO详情SKU订货套数更新
 const handleUpdateSkuCount = async () => {
   try {
-    const { data} =  await updateSkuCount({
+    const { data } = await updateSkuCount({
+      poId: Number(route.query.poId),
       poSkuId: poDetailData.value.poSkuId,
       count: poDetailData.value.purchaseSkuNumber
     })
@@ -2194,11 +2195,21 @@ const handleSupplierAndInvoicingChange = async (row: any) => {
   }
   // fetchSupplierRate(row)
 }
-// // 修改开票类型
-// const handleInvoicingChange = async (row: any) => {
-//   updateSkuComponent(row)
-//   fetchSupplierRate(row)
-// }
+// 修改开票类型
+const handleInvoicingChange = async (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if (item!.label === 'Attom') {
+    if (row.invoicing !== 2) {
+      $baseMessage('采购方为attom，无法开票', 'error')
+      row.invoicing = 2
+    }
+  }
+  const { data } = await updatePoSkuComponent(row)
+  if (data === true) {
+    fetchSkuComponent()
+    fetchData()
+  }
+}
 let originalRow: any
 const handleGetRow = (row: any) => {
   originalRow = { ...row }
@@ -2206,11 +2217,14 @@ const handleGetRow = (row: any) => {
 // 修改默认采购方
 const handleDefaultPurchase = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  if(item!.type === 0) { //如果选择了为买单的采购方
+  if (item!.type === 0) { //如果选择了为买单的采购方
     row.customsDeclarationStatus = 1 //自动勾选不报关
-  } else if(row.purchaseId === 2) { //选择了埃托姆
+  }
+  if (item!.label === '埃托姆') { //选择了埃托姆
     row.customsDeclarationStatus = 0
-  } 
+  } else if (item!.label === 'Attom') { //选择了attom，开票变成无法开票
+    row.invoicing = 2
+  }
   try {
     const { data } = await updatePoSkuComponent(row)
     if (data === true) {
@@ -2222,13 +2236,27 @@ const handleDefaultPurchase = async (row: any) => {
     console.error(error)
   }
 }
+// 创建修改开票
+const handleUpdateInvoicing = (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if (item!.label === 'Attom') {
+    if (row.invoicing !== 2) {
+      $baseMessage('采购方为attom，无法开票', 'error')
+      row.invoicing = 2
+    }
+  }
+  updateCreate() 
+}
 // 创建修改采购方
 const handleCreateDefaultPurchase = (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
   if(item!.type === 0) { //如果选择了为买单的采购方
     row.customsDeclarationStatus = 1 //自动勾选不报关
-  } else if(row.purchaseId === 2) { //选择了埃托姆
+  }
+  if(item!.label === '埃托姆') { //选择了埃托姆
     row.customsDeclarationStatus = 0
+  } else if (item!.label === 'Attom') { //选择了attom，开票变成无法开票
+    row.invoicing = 2
   }
   updateCreate() 
 }
@@ -2807,7 +2835,8 @@ const setImageColumnHeight3 = () => {
     imageColumnHeight.value = skuTotalPriceRect.bottom - createDateRect.top - 30;
   }
 };
-
+// 订货套数是否可改
+const orderCount = ref<boolean>(false)
 onBeforeMount(() => {
   // 如果不是创建，订单详情div显示
   if (route.query.from !== 'plannedPoCreate') {
@@ -2815,6 +2844,7 @@ onBeforeMount(() => {
     // 改变路由激活到采购订单
     if (route.query.from !== 'plannedPoDetail') {
       // console.log(routesStore.getTabMenu)
+      orderCount.value = true
       routesStore.changeActiveMenu('/purchase/po')
     }
     if (route.query.del === 'true') {

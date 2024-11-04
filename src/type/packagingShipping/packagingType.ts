@@ -343,7 +343,7 @@ export interface IAddQualityCheckReq {
   /**
    * 好的数量
    */
-  goodCount: number;
+  goodCount?: number;
   /**
    * 留样数量
    */
@@ -364,6 +364,7 @@ export interface IAddQualityCheckReq {
    * 打包任务id
    */
   taskId: number;
+  status?: number
   [property: string]: any;
 }
 
@@ -375,8 +376,9 @@ export interface ISplitPackageTask {
 
 export interface IUpdatePackageTask {
   taskId: number
-  packageTaskCount?: number
-  site: number
+  reduceTaskId: number
+  increaseTaskId: number
+  transferPackageTaskCount: number
 }
 
 export interface IUpdatePackageInspection {
@@ -779,4 +781,16 @@ export interface IUpdateAfterSalesLog {
 
 export interface ITaskId {
   taskId: number
+}
+
+export interface IGetPackageTaskSplitList {
+  data: IPackageTaskSplitOption[]
+}
+export interface IPackageTaskSplitOption {
+  id: number
+  label: string
+}
+export interface IUpdatePackageTaskSite {
+  taskId: number
+  site: number
 }

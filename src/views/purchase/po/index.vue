@@ -709,12 +709,13 @@
       <el-divider style="margin-top: 0; margin-bottom: 20px"/>
       <div >
         <el-table 
-
           stripe border 
           :data="paymentProgressList"
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="paymentHistoryCellStyle"
           :cell-class-name="payHistoryCellClass"
+          @cell-click="changeInput"
+          class="payRecord"
         >
           <el-table-column label="付款日期" min-width="180" prop="createTime"></el-table-column>
           <el-table-column label="付款金额" min-width="130" prop="payPrice">
@@ -732,9 +733,9 @@
               <el-tag :type="row.type === 0 ? 'success' : 'danger'">{{ row.type === 0 ? '付款' : '退款' }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="退款凭证" width="90" prop="refundVoucher">
+          <el-table-column label="退款凭证" width="89" prop="refundVoucher">
             <template #default="{ row }">
-              <el-image :src="row.refundVoucher" data-img="img" fit="contain" style="display: block;width: 90px; height: 86.2px;">
+              <el-image :src="row.refundVoucher" data-img="img" fit="contain" style="display: block; width: 89px; height: 82px;">
                 <template #error>
                   <el-icon></el-icon>
                 </template>
@@ -1704,7 +1705,7 @@ const handleDelPoDetail = (row: any) => {
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
+  if (getDataAttribute(el, 'img') && el) {
     imagePreviewVisible.value = true
     imagePreviewList.value = []
     imagePreviewList.value.push(el.src!)
@@ -2102,6 +2103,11 @@ onUnmounted(() => {
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
+// 设置付款记录表的行高
+// :deep(.payRecord .el-table__body .cell) {
+//   min-height: 72.2px;
+//   line-height: 72.2px;
+// }
 .hide :deep(.el-upload--picture-card) {
  display: none
 }

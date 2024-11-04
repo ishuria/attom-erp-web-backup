@@ -268,6 +268,7 @@ export interface IStringResp {
 }
 // PO详情SKU订货套数更新
 export interface IUpdateSkuCount {
+  poId: number
   poSkuId: number
   count: number
 }

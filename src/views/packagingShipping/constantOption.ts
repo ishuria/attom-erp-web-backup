@@ -1,11 +1,12 @@
-export type siteValue = 0 | 1 | 2 | 3 | 4; 
+export type siteValue = 0 | 1 | 2 | 3 | 4 | 5; 
 
 export const siteMap: Record<siteValue, string> = {
-  0: '亚马逊US',
-  1: '亚马逊DE',
-  2: '亚马逊UK',
-  3: '亚马逊CA',
-  4: '沃尔玛US'
+  0: '亚马逊US美国',
+  1: '亚马逊UK英国',
+  2: '亚马逊DE德国',
+  3: '亚马逊CA加拿大',
+  4: '沃尔玛US美国',
+  5: '沃尔玛MX墨西哥',
 }
 
 export const siteOption = [

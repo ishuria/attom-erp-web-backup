@@ -207,6 +207,7 @@ const confirmModify = async () => {
       if (data) {
         $baseMessage('修改成功', 'success')
         closeModify()
+        fetchData()
       }
     }
   })

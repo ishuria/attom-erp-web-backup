@@ -134,7 +134,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="150"></el-table-column>
+          <el-table-column label="SKU" prop="sku" min-width="170"></el-table-column>
           <el-table-column label="发货数" prop="" min-width="100"></el-table-column>
           <el-table-column label="已接收数量" prop="" min-width="110"></el-table-column>
           <el-table-column label="缺数" prop="" min-width="80"></el-table-column>

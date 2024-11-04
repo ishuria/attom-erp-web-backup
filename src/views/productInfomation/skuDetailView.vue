@@ -1261,18 +1261,16 @@ const handleAddOtherSku = async (row: any) => {
 }
 
 const handleDel = async (row: any, index: number) => {
-    $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
-        $baseConfirm('确定删除，是否继续？', '系统提示', async () => {
-            const { data } = await delProductComponent({
-                componentId: row.componentId
-            })
-            if (data) {
-                tableData.value.splice(index, 1)
-                fetchComponentData()
-                fetchData()
-                $baseMessage('SKU零配件删除成功', 'success', 'hey')
-            }
-        });
+    $baseConfirm('确定要删除零件信息吗',"系统提示", async () => {
+      const { data } = await delProductComponent({
+          componentId: row.componentId
+      })
+      if (data) {
+          tableData.value.splice(index, 1)
+          fetchComponentData()
+          fetchData()
+          $baseMessage('SKU零配件删除成功', 'success', 'hey')
+      }
     })
 }
 /**
@@ -1377,16 +1375,18 @@ const clickCancle = async (event:any,value:any) =>{
 }
 // 处理默认采购方
 const handleDefaultPurchase = async (row: any) => {
-    const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-    if(item.type === 0) { //如果选择了为买单的采购方
-        row.declareCustomsStatus = 1 //自动勾选不报关
-    }
-    if(row.purchaseId === 2) { //选择了埃托姆
-        row.declareCustomsStatus = 0
-    } 
-    await updateProductComponent(row)
-    fetchData()
-    fetchComponentData()
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if(item.type === 0) { //如果选择了为买单的采购方
+    row.declareCustomsStatus = 1 //自动勾选不报关
+  }
+  if(item.label === '埃托姆') { //选择了埃托姆
+    row.declareCustomsStatus = 0
+  } else if (item.label === 'Attom') { //选择了attom，开票变成无法开票
+    row.invoicing = 2
+  }
+  await updateProductComponent(row)
+  fetchData()
+  fetchComponentData()
 }
 // 处理不报关
 const handleDeclareCustoms = async (row: any) => {
@@ -1413,6 +1413,13 @@ const handleCurrencyChange = async (row: any) => {
     fetchComponentData()
 }
 const handleInvoicingChange = async (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if (item.label === 'Attom') {
+    if (row.invoicing !== 2) {
+      $baseMessage('采购方为attom，无法开票', 'error')
+      row.invoicing = 2
+    }
+  }
     const { data } = await updateProductComponent(row)
     if (data === true) {
         fetchData()

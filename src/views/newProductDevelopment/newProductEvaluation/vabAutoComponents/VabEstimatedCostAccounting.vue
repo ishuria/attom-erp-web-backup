@@ -32,9 +32,9 @@
 
                 <el-table-column prop="createTime" label="日期" min-width="110" />
 
-                <el-table-column prop="site" label="站点" min-width="120">
+                <el-table-column prop="site" label="站点" min-width="140">
                     <template #default="{ row }">
-                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)">
+                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%">
                             <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
                                 :value="dict.value" :label="dict.label"></el-option>
                         </el-select>

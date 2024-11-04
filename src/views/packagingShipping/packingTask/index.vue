@@ -54,7 +54,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
           <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="110">
+          <el-table-column label="站点" prop="sendSite" min-width="145">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -96,7 +96,7 @@
             </template>
           </el-table-column>    
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="420" >
+          <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
@@ -104,7 +104,8 @@
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -173,7 +174,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
           <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="110">
+          <el-table-column label="站点" prop="sendSite" min-width="145">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -215,7 +216,7 @@
             </template>
           </el-table-column>    
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="420" >
+          <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
@@ -223,7 +224,8 @@
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -292,7 +294,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
           <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="110">
+          <el-table-column label="站点" prop="sendSite" min-width="145">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -334,7 +336,7 @@
             </template>
           </el-table-column>     
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="420" >
+          <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
@@ -342,7 +344,8 @@
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -411,7 +414,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
           <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="110">
+          <el-table-column label="站点" prop="sendSite" min-width="145">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -453,7 +456,7 @@
             </template>
           </el-table-column>      
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="420" >
+          <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
@@ -461,7 +464,8 @@
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -530,7 +534,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
           <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="110">
+          <el-table-column label="站点" prop="sendSite" min-width="145">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -572,7 +576,7 @@
             </template>
           </el-table-column>     
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="420" >
+          <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
@@ -580,7 +584,8 @@
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -648,7 +653,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
           <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="110">
+          <el-table-column label="站点" prop="sendSite" min-width="145">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -690,7 +695,7 @@
             </template>
           </el-table-column>   
           <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
-          <el-table-column fixed="right" label="操作" width="420" >
+          <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
@@ -698,7 +703,8 @@
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
                 <el-link type="primary" :underline="false">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -1005,9 +1011,9 @@
         </el-table-column>
       </el-table>
     </vab-dialog>
-    <!-- 修改 -->
+    <!-- 站点修改 -->
     <vab-dialog
-      title="修改"
+      title="站点修改"
       width="20%"
       v-model="modifyVisible"
       @close="closeModifyDialog"
@@ -1023,13 +1029,50 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="任务数" prop="packageTaskCount">
+        <!-- <el-form-item label="任务数" prop="packageTaskCount">
           <el-input v-model="modifyForm.packageTaskCount" clearable />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <template #footer>
         <el-button type="primary" @click="closeModifyDialog">取消</el-button>
         <el-button type="success" @click="confirmUpdateTask">确认</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 任务数修改 -->
+      <vab-dialog
+      title="任务数修改"
+      width="23%"
+      v-model="modifyTaskVisible"
+      @close="closeModifyTask"
+    >
+      <el-form ref="modifyTaskFormRef" :model="modifyTaskForm" :rules="modifyTaskRules" label-position="right" label-width="auto" style="margin-left: 20px; margin-right: 20px;">
+        <el-form-item label="数量减少的任务" prop="reduceTaskId" style="width: 97.5%">
+          <el-select v-model="modifyTaskForm.reduceTaskId" placeholder="请选择数量减少的任务" clearable @change="reduceTaskChange">
+            <el-option 
+              v-for="item in taskSplitOption"
+              :label="item.label"
+              :value="item.id"
+              :key="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="转移数量" prop="transferPackageTaskCount">
+          <el-input-number v-model="modifyTaskForm.transferPackageTaskCount" placeholder="请输入" clearable :max="maxCount" />
+        </el-form-item>
+        <el-form-item label="数量增加的任务" prop="increaseTaskId" style="width: 97.5%">
+          <el-select v-model="modifyTaskForm.increaseTaskId" placeholder="" clearable :disabled="addTaskDisabled" >
+            <el-option 
+              v-for="item in addTaskOption"
+              :label="item.label"
+              :value="item.id"
+              :key="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="closeModifyTask">取消</el-button>
+        <el-button type="success" @click="confirmModifyTask">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 点击清点质检 - 打包总数 -->
@@ -1116,6 +1159,7 @@
         <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 明细 -->
     <vab-dialog
       title="明细"
       width="40%"
@@ -1188,7 +1232,9 @@ import {
   getPackageInspection,
   getPackageSiteList,
   getPackageTaskingList,
+  getPackageTaskIsSplit,
   getPackageTaskList,
+  getPackageTaskSplitList,
   getQualityCheck,
   getSkuQualityList,
   getStartTaskList,
@@ -1196,11 +1242,12 @@ import {
   submitPackageInspection,
   updatePackageInspection,
   updatePackageTask,
+  updatePackageTaskSite,
   updatePriorityPackaging
 } from '/@/api/devlocal/packagingShipping'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetPackageTaskListQuery, IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
+import { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
@@ -1213,6 +1260,71 @@ const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
+
+// 任务书修改form
+const modifyTaskForm = reactive<any>({})
+const modifyTaskFormRef = ref<FormInstance>()
+const modifyTaskVisible = ref<boolean>(false)
+const closeModifyTask = () => {
+  modifyTaskFormRef.value?.resetFields()
+  modifyTaskVisible.value = false
+}
+const confirmModifyTask = async () => {
+  modifyTaskFormRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      const { data } = await updatePackageTask({
+        taskId: copyRow.value.id,
+        reduceTaskId: modifyTaskForm.reduceTaskId,
+        increaseTaskId: modifyTaskForm.increaseTaskId,
+        transferPackageTaskCount: Number(modifyTaskForm.transferPackageTaskCount)
+      })
+      if (data) {
+        closeModifyTask()
+        $baseMessage('修改任务数成功', 'success', 'hey')
+        fetchData()
+      }
+    }
+  })
+}
+// 任务拆分列表
+const taskSplitOption = ref<IPackageTaskSplitOption[]>([])
+// 任务数增加列表
+const addTaskOption = ref<IPackageTaskSplitOption[]>([])
+// 任务数增加数量的禁止
+const addTaskDisabled = ref<boolean>(true)
+// 转移数量的最大值
+const maxCount = ref<number>(0)
+const reduceTaskChange = (value: any) => {
+  const item = taskSplitOption.value.find((item: IPackageTaskSplitOption) => item.id === value)
+  const numberAfterColon = item!.label.match(/(?<=:)\d+/)?.[0];
+  maxCount.value = Number(numberAfterColon)
+  // console.log(maxCount.value);
+  
+  addTaskOption.value = taskSplitOption.value.filter((item: IPackageTaskSplitOption) => item.id !== value)
+  addTaskDisabled.value = false
+}
+const handleShowModifyTask = async (row: any) => {
+  const { data } = await getPackageTaskIsSplit({
+    taskId: row.id
+  })
+  if (data === true) {
+    copyRow.value = row
+    addTaskDisabled.value = true
+    modifyTaskVisible.value = true
+    const { data: taskSplitData } = await getPackageTaskSplitList({
+      taskId: row.id
+    })
+    taskSplitOption.value = taskSplitData
+  } else {
+    $baseMessage('此PO只有一条打包任务，无法修改任务数', 'error')
+  }
+}
+// 任务数修改rule
+const modifyTaskRules = reactive<any>({
+  reduceTaskId: [{ required: true, message: '请选择数量减少的任务', trigger: 'change' }],
+  transferPackageTaskCount: [{ required: true, message: '请输入转移数量', trigger: 'blur' }],
+  increaseTaskId: [{ required: true, message: '请选择数量增加的任务', trigger: 'change' }],
+})
 // 打包选中的行
 const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
@@ -1632,8 +1744,7 @@ const handleShowModify = (row: any) => {
 }
 // 修改的表单
 const modifyForm = reactive<any>({
-  site: 0,
-  packageTaskCount: null
+  site: undefined
 })
 // 修改的rule
 const modifyRules = reactive<any>({
@@ -1648,10 +1759,9 @@ const closeModifyDialog = () => {
 }
 // 确认修改
 const confirmUpdateTask = async () => {
-  const { data } = await updatePackageTask({
+  const { data } = await updatePackageTaskSite({
     taskId: copyRow.value.id,
     site: modifyForm.site,
-    packageTaskCount: modifyForm.packageTaskCount
   })
   if (data) {
     $baseMessage('修改打包任务成功', 'success')
@@ -1720,12 +1830,20 @@ const handleShowPackingCount = async (row: any) => {
       id: row.id
     })
     Object.assign(packingCountForm, data)
-    if (!data?.packageTaskCount) {
-      packingCountForm.packageTaskCount = 0
+    if (!data!.id) {
+      packingCountForm.packageTaskCount = row.packageTaskCount
     }
+    // if (!data?.packageTaskCount) {
+    //   packingCountForm.packageTaskCount = 0
+    // }
     lackCount.value = data?.lackCount!
     manyCount.value = data?.manyCount
     
+  } else {
+    await addQualityCheck({
+      taskId: row.id,
+      status: row.qualityCheckStatus
+    })
   }
 }
 // 清点质检的取消
@@ -1742,7 +1860,8 @@ const confirmQualityCheck = async () => {
     keepSampleCount: packingCountForm.keepSampleCount,
     lackCount: lackCount.value,
     badCount: packingCountForm.badCount,
-    remark: packingCountForm.remark
+    remark: packingCountForm.remark,
+    status: copyRow.value.qualityCheckStatus
   })
   if (data) {
     $baseMessage('添加质检信息成功', 'success')

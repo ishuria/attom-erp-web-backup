@@ -16,6 +16,7 @@ import {
   IGetPackageTaskingList,
   IGetPackageTaskListQuery,
   IGetPackageTaskListResp,
+  IGetPackageTaskSplitList,
   IGetPackageTimeDayRequest,
   IGetPackageTimeDayResp,
   IGetPackageTimeListReq,
@@ -40,6 +41,7 @@ import {
   IUpdatePackageInspection,
   IUpdatePackageInspectionDetail,
   IUpdatePackageTask,
+  IUpdatePackageTaskSite,
   IUpdatePackageTime,
   IUpdatePriorityPackaging,
   IUpdateProductDate,
@@ -457,5 +459,30 @@ export function getPackageSiteList() {
   return request({
     url: `${BASE_API}/package/site/list`,
     method: 'get',
+  })
+}
+
+// 打包任务修改-前置条件
+export function getPackageTaskIsSplit(params: ITaskId): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/task/isSplit`,
+    method: 'get',
+    params
+  })
+}
+// 打包任务数修改-查询任务拆分列表
+export function getPackageTaskSplitList(params: ITaskId): Promise<IGetPackageTaskSplitList> {
+  return request({
+    url: `${BASE_API}/package/task/split/list`,
+    method: 'get',
+    params
+  })
+}
+// 打包任务-站点修改
+export function updatePackageTaskSite(data: IUpdatePackageTaskSite): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/task/site/update`,
+    method: 'post',
+    data
   })
 }

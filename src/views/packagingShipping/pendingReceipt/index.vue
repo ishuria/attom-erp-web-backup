@@ -320,7 +320,7 @@
       </el-table>
       <template #footer>
         <el-button @click="closeModifyPendingDialog">取消</el-button>
-        <el-button type="primary" @click="closeModifyPendingDialog">确定</el-button>
+        <el-button type="primary" @click="confirmModifyPending">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 已签收修改 -->
@@ -359,7 +359,7 @@
       </el-table>
       <template #footer>
         <el-button @click="closeModifyDialog">取消</el-button>
-        <el-button type="primary" @click="closeModifyPendingDialog">确定</el-button>
+        <el-button type="primary" @click="confirmModify">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 入库单导出 -->
@@ -498,11 +498,18 @@ const modifyPendingVisible = ref<boolean>(false)
 const closeModifyDialog = () => {
   modifyVisible.value = false
 }
+const confirmModify = () => {
+  closeModifyDialog()
+  fetchData()
+}
 // 关闭修改弹窗
 const closeModifyPendingDialog = () => {
   modifyPendingVisible.value = false
 }
-
+const confirmModifyPending = () => {
+  closeModifyPendingDialog()
+  fetchData()
+}
 // 入库单导出表单
 const receiptExportForm = reactive<any>({
   date: ''
