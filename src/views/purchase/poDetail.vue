@@ -2436,21 +2436,19 @@ const handleCreateDelComponent = (index: number) => {
 // po-sku零配件删除
 const handleDelPoSKuComponent = async (row: any, index: number) => {
   $baseConfirm('确定要删除该条零件信息吗', "系统提示", async () => {
-    $baseConfirm('确定删除，是否继续？', '系统提示', async () => {
-      try {
-        const { data } = await deletePoSkuComponent({
-          id: row.id
-        });
-        if (data === true) {
-          skuComponentList.value.splice(index, 1)
-          fetchSkuComponent()
-          fetchData()
-          $baseMessage('该条零件删除成功', 'success', 'hey');
-        }
-      } catch (error) {
-        console.error('删除失败:', error);
+    try {
+      const { data } = await deletePoSkuComponent({
+        id: row.id
+      });
+      if (data === true) {
+        skuComponentList.value.splice(index, 1)
+        fetchSkuComponent()
+        fetchData()
+        $baseMessage('该条零件删除成功', 'success', 'hey');
       }
-    });
+    } catch (error) {
+      console.error('删除失败:', error);
+    }
   })
 }
 

@@ -25,18 +25,18 @@
       <el-table-column label="FBA SHIPMENT ID" prop="id" min-width="180"></el-table-column>
       <el-table-column label="站点" min-width="100"></el-table-column>
       <el-table-column label="状态" min-width="100"></el-table-column>
-      <el-table-column label="运输渠道" min-width="100"></el-table-column>
-      <el-table-column label="发货日期" min-width="100"></el-table-column>
+      <el-table-column label="运输渠道" min-width="200"></el-table-column>
+      <el-table-column label="发货日期" min-width="115"></el-table-column>
       <el-table-column label="原始预计入库" min-width="130"></el-table-column>
       <el-table-column label="最新预计入库" min-width="130"></el-table-column>
-      <el-table-column label="上架日期" min-width="100"></el-table-column>
+      <el-table-column label="上架日期" min-width="115"></el-table-column>
       <el-table-column label="实际时效" min-width="100"></el-table-column>
       <el-table-column label="时效预估误差" min-width="130"></el-table-column>
       <el-table-column label="接收完成天数" min-width="130"></el-table-column>
       <el-table-column label="发货总数" min-width="100"></el-table-column>
       <el-table-column label="已接收数" min-width="100"></el-table-column>
-      <el-table-column label="缺数" min-width="100"></el-table-column>
-      <el-table-column label="箱数" min-width="100"></el-table-column>
+      <el-table-column label="缺数" min-width="80"></el-table-column>
+      <el-table-column label="箱数" min-width="80"></el-table-column>
       <el-table-column label="体积(m3)" min-width="100"></el-table-column>
       <el-table-column label="重量(kg)" min-width="100"></el-table-column>
       <el-table-column label="备注" min-width="100"></el-table-column>
@@ -106,11 +106,11 @@
       width="20%"
       @close="closeUpdateStorageTime"
     >
-      <el-form ref="storageTimeFormRef" :model="storageTimeForm" style="margin-left: 20px; margin-right: 20px">
+      <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-left: 20px; margin-right: 20px">
         <el-form-item label="预计入库时间" prop="date">
           <el-date-picker 
             type="date" 
-            placeholder="选择入库时间" 
+            placeholder="选择预计入库时间" 
             format="YYYY-MM-DD"
             v-model="storageTimeForm.date"
             value-format="YYYY-MM-DD"
@@ -120,37 +120,36 @@
       </el-form>
       <template #footer>
         <el-button @click="closeUpdateStorageTime">取消</el-button>
-        <el-button type="primary" >确定</el-button>
+        <el-button type="primary" @click="confirmUpdateStorageTime">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 筛选 -->
     <vab-dialog
       title="筛选"
       v-model="filterVisible"
-      width="22%"
+      width="26%"
+      @close="closeFilter"
     >
-      <el-form label-position="right" label-width="auto" :model="filterForm" >
+      <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="margin-left: 10px; margin-right: 10px">
         <el-form-item label="缺数">
-      
-          <!-- 最小值输入框 -->
-          <el-input-number
-            v-model="filterForm.number1"
-            :min="0"
-         
-            placeholder="最小值"
-        
-          />
-          <span style="margin: 0 20px;">至</span>
-          <!-- 最大值输入框 -->
-          <el-input-number
-            v-model="filterForm.number2"
-            :min="0"
-            placeholder="最大值"
-            @change=""
-          />
-  
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number1"
+              :min="0"
+              placeholder="最小值"
+              style="width: 45%"
+            />
+            <span style="margin: 0 20px; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number2"
+              :min="0"
+              placeholder="最大值"
+              @change=""
+              style="width: 45%"
+            />
+          </div>
         </el-form-item>
-        <el-form-item label="发货日期">
+        <el-form-item label="发货日期" prop="date1">
           <el-date-picker 
             v-model="filterForm.date1"
             end-placeholder="结束日期" 
@@ -162,7 +161,7 @@
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
-        <el-form-item label="上架日期">
+        <el-form-item label="上架日期" prop="date2">
           <el-date-picker 
             v-model="filterForm.date2"
             end-placeholder="结束日期" 
@@ -176,8 +175,8 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button>取消</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button @click="closeFilter">取消</el-button>
+        <el-button type="primary" @click="confirmFilter">确认</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -224,11 +223,15 @@ const filterVisible = ref<boolean>(false)
 const storageTimeForm = reactive<any>({
   date: ''
 })
+// 入库时间rule
+const storageTimeRule = reactive<any>({
+  date: [{ required: true, message: '请选择预计入库时间', trigger: 'change' }]
+})
 // 筛选表单
 const filterForm = reactive<any>({
 
 })
-
+const filterFormRef = ref<FormInstance>()
 const storageTimeFormRef = ref<FormInstance>()
 // 展示明细
 const showDetails = () => {
@@ -243,6 +246,28 @@ const closeUpdateStorageTime = () => {
   storageTimeFormRef.value?.resetFields()
   storageTimeVisible.value = false
 }
+// 确定修改预计入库时间
+const confirmUpdateStorageTime = () => {
+  storageTimeFormRef.value?.validate((isValid: boolean) => {
+    if (isValid) {
+      closeUpdateStorageTime()
+    }
+  })
+}
+// 关闭筛选对话框
+const closeFilter = () => {
+  filterForm.number1 = undefined
+  filterForm.number2 = undefined
+  filterFormRef.value?.resetFields()
+  filterVisible.value = false
+}
+// 确认筛选
+const confirmFilter = () => {
+  if (filterForm.number1 > filterForm.number2) {
+    $baseMessage('最小值不能大于最大值，请重新填写', 'error')
+    return
+  }
+}
 const queryData = () => {
   queryForm.pageNo = 1
 
@@ -256,8 +281,10 @@ const handleSizeChange = (value: number) => {
 
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  return {
-    textAlign: 'center' as 'center'
+  if (data.columnIndex !== 0 && data.columnIndex !== 3) {
+    return {
+      textAlign: 'center' as 'center'
+    }
   }
 }
 const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
@@ -284,6 +311,5 @@ const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIn
 .flex {
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 </style>

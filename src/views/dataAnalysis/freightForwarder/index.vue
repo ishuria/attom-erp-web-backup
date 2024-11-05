@@ -1,3 +1,739 @@
 <template>
-  <h1>freightForwarder</h1>
+  <div class="comprehensive-table-container auto-height-container">
+    <vab-query-form>
+      <vab-query-form-left-panel>
+        <el-button type="primary" @click="addNewChannelVisible = true">新增渠道</el-button>
+        <el-button type="primary" @click="addForwarderVisible = true">新增货代</el-button>
+        <el-button type="primary" @click="showForwarderList">货代清单</el-button>
+        <el-button type="primary" @click="showFeeNameSetting">货代费用名设定</el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" type="primary" :loading="listLoading" native-type="submit" @click="queryData"></el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+    <el-table
+      border stripe
+      :header-cell-style="{ textAlign: 'center' }"
+      :data="fakeData"
+    >
+      <el-table-column label="渠道全名" prop="" align="center"></el-table-column>
+      <el-table-column label="当前价格" prop="price" align="center"></el-table-column>
+      <el-table-column label="近10次时效" prop="" align="center"></el-table-column>
+      <el-table-column label="名义时效" prop="" align="center"></el-table-column>
+      <el-table-column label="累计发货次数" prop="" align="center"></el-table-column>
+      <el-table-column label="安全天数" prop="day" align="center">
+        <template #default="{ row }">
+          <el-input v-model="row.day" class="input-center"  />
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="360" fixed="right" align="center">
+        <template #default="{ row }">
+          <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
+          <el-link type="primary" :underline="false" @click="showCopy(row)">复制</el-link>
+          <el-link type="primary" :underline="false">价格趋势</el-link>
+          <el-link type="primary" :underline="false">时效趋势</el-link>
+          <el-link type="primary" :underline="false">安全天数计算</el-link>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
+    <vab-pagination 
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <!-- 货代费用名设定 -->
+    <vab-dialog
+      title="货代费用名设定"
+      v-model="feeNameSettingVisible"
+      width="40%"
+      top="3%"
+    >
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-select>
+         
+          </el-select>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-button type="primary">新增费用</el-button>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table
+        border stripe
+        :header-cell-style="{ textAlign: 'center' }"
+        :data="feeNameSettingData"
+        class="feeNameSettingTable"
+        :cell-style="feeNameSettingCellStyle"
+        @cell-click="changeInputFeeSetting"
+         style="max-height: 70vh; overflow: auto;"
+      >
+        <el-table-column label="我们的费用名" prop="name" min-width="180">
+          <template #default="{ row, $index}">
+            <div v-if="$index > 12" class="none">
+              <el-input v-model="row.name" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)"/>
+            </div>
+            <span>{{ row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="货代账单费用名" prop="billName" min-width="180">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.billName" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)"/>
+            </div>
+            <span>{{ row.billName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="合并报关后可合并" prop="" min-width="100">
+          <template #header>
+            合并报关<br>后可合并
+          </template>
+          <template #default="{ row }">
+            <el-checkbox :true-value="1" :false-value="0" />
+          </template>
+        </el-table-column>
+        <el-table-column label="合并清关后可合并" prop="" min-width="100">
+          <template #header>
+            合并清关<br>后可合并
+          </template>
+          <template #default="{ row }">
+            <el-checkbox :true-value="1" :false-value="0" />
+          </template>
+        </el-table-column>
+        <el-table-column label="运费核对默认展示" prop="" min-width="100">
+          <template #header>
+            运费核对<br>默认展示
+          </template>
+          <template #default="{ row }">
+            <el-checkbox :true-value="1" :false-value="0" />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="80">
+          <template #default="{ row, $index }">
+            <el-link v-if="$index > 12" type="danger" :underline="false">删除</el-link>
+            <span v-if="$index <= 12">{{ '-' }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </vab-dialog>
+    <!-- 新增货代 -->
+    <vab-dialog
+      title="新增货代"
+      width="20%"
+      v-model="addForwarderVisible"
+      @close="closeAddForwarder"
+    >
+      <el-form 
+        ref="addForwarderFormRef" 
+        :model="addForwarderForm" 
+        :rules="addForwarderRule"
+        label-width="auto" 
+        label-position="right" 
+        style="margin-left: 20px; margin-right: 20px;"
+      >
+        <el-form-item label="货代公司全名" prop="fullName">
+          <el-input v-model="addForwarderForm.fullName" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="货代简称" prop="abbreviation">
+          <el-input v-model="addForwarderForm.abbreviation" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="closeAddForwarder">取消</el-button>
+        <el-button type="primary" @click="confirmAddForwarder">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 货代清单 -->
+    <vab-dialog
+      title="货代清单"
+      width="25%"
+      v-model="forwarderListVisible"
+    >
+      <el-table border stripe :header-cell-style="{ textAlign: 'center' }" @cell-click="changeInputForwarderList" :data="fakeForwarderList" >
+        <el-table-column label="货代公司全名" prop="fullName">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.fullName" @keypress.enter="clickCancelForwarderList($event, row)" @blur="clickCancelForwarderList($event, row)"/>
+            </div>
+            <span>{{ row.fullName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="货代简称" prop="abbreviation">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.abbreviation" @keypress.enter="clickCancelForwarderList($event, row)" @blur="clickCancelForwarderList($event, row)"/>
+            </div>
+            <span>{{ row.abbreviation }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </vab-dialog>
+    <!-- 新增渠道 -->
+    <vab-dialog
+      title="新增渠道"
+      width="38%"
+      v-model="addNewChannelVisible"
+      top="5%"
+      class="addNewChannel"
+      @close="closeAddNewChannel"
+    >
+      <div style="max-height: 60vh; overflow: auto;">
+        <el-form ref="addNewChannelFormRef" :model="addNewChannelForm" label-width="auto" label-position="right" style="margin-left: 10px; margin-right: 10px;">
+          <el-form-item label="渠道名">
+            <div style="display: flex; gap: 1%; align-items: center;">
+              <el-select placeholder="货代简称" style="flex: 1"/>
+              <span>-</span>
+              <el-input placeholder="货物类型" style="flex: 1"/>
+              <span>-</span>
+              <el-input placeholder="渠道名" style="flex: 1"/>
+              <span>-</span>
+              <el-input placeholder="目的地" style="flex: 1"/>
+            </div>
+          </el-form-item>
+          <el-form-item label="名义时效" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="当前价格(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="当前价格(m3)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="体积系数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="重量系数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="起运量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="起运量(m3)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="最低单箱计费重量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="最大单箱重量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="单票最大运量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="单票最大运量(m3)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单报关费(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单免费品名个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单每续页个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单每续页费用(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税报关费(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税免费品名个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税每续页个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税每续页费用(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="清关费(USD)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="清关免费个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="清关每续页个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="清关每续页费用(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="FDA申报(USD)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="EPA申报(USD)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="DOT申报(USD)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="是否包关税" prop="includeTariff">
+            <el-select v-model="addNewChannelForm.includeTariff">
+              <el-option 
+                v-for="item in includeTariffOption"
+                :label="item.label"
+                :value="item.value"
+                :key="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button @click="closeAddNewChannel">取消</el-button>
+        <el-button type="primary" @click="confirmAddNewChannel">确认</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 修改or复制 -->
+    <vab-dialog
+      :title="modifyOrCopy === 'modify' ? '修改' : '复制'"
+      width="38%"
+      v-model="modifyOrCopyVisible"
+      top="5%"
+      class="addNewChannel"
+    >
+      <div style="max-height: 60vh; overflow: auto;">
+        <el-form ref="addNewChannelFormRef" :model="addNewChannelForm" label-width="auto" label-position="right" style="margin-left: 10px; margin-right: 10px;">
+          <el-form-item label="渠道名">
+            <div style="display: flex; gap: 1%; align-items: center;">
+              <el-select placeholder="货代简称" style="flex: 1"/>
+              <span>-</span>
+              <el-input placeholder="货物类型" style="flex: 1"/>
+              <span>-</span>
+              <el-input placeholder="渠道名" style="flex: 1"/>
+              <span>-</span>
+              <el-input placeholder="目的地" style="flex: 1"/>
+            </div>
+          </el-form-item>
+          <el-form-item label="名义时效" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="当前价格(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="当前价格(m3)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="体积系数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="重量系数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="起运量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="起运量(m3)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="最低单箱计费重量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="最大单箱重量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="单票最大运量(kg)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="单票最大运量(m3)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单报关费(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单免费品名个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单每续页个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="买单每续页费用(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税报关费(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税免费品名个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税每续页个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="退税每续页费用(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item :label="modifyOrCopy === 'modify' ? '清关费' : '清关费(USD)'" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <!-- 新加货币选项 -->
+          <el-form-item label="货币" prop="" v-if="modifyOrCopy === 'modify'"> 
+            <el-select placeholder="请选择货币" ></el-select>
+          </el-form-item>
+          <el-form-item label="清关免费个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="清关每续页个数" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="清关每续页费用(RMB)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="FDA申报(USD)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="EPA申报(USD)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="DOT申报(USD)" prop="">
+            <el-input clearable />
+          </el-form-item>
+          <el-form-item label="是否包关税" prop="">
+            <el-select>
+              <el-option 
+                v-for="item in includeTariffOption"
+                :label="item.label"
+                :value="item.value"
+                :key="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <template #footer>
+        <el-button @click="modifyOrCopyVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmModifyOrCopy">确认</el-button>
+      </template>
+    </vab-dialog>
+  </div>
 </template>
+
+<script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
+import { FormInstance, FormRules } from 'element-plus'
+import { CSSProperties } from 'vue'
+import { includeTariffOption } from '../../packagingShipping/constantOption'
+import { IAddForwarder } from '/@/type/packagingShipping/shippedType'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+
+
+const queryForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const total = ref<number>(0)
+const listLoading = ref<boolean>(true)
+// 货代费用名设定可见
+const feeNameSettingVisible = ref<boolean>(false)
+// 新增货代可见
+const addForwarderVisible = ref<boolean>(false)
+// 新增货代表单
+const addForwarderForm = reactive<IAddForwarder>({
+  fullName: '',
+  abbreviation: ''
+})
+const addForwarderFormRef = ref<FormInstance>()
+const addForwarderRule = reactive<FormRules<IAddForwarder>>({
+  fullName: [{ required: true, message: '请输入货代公司全名', trigger: 'blur' }],
+  abbreviation: [{ required: true, message: '请输入货代简称', trigger: 'blur' }],
+})
+// 货代清单可见
+const forwarderListVisible = ref<boolean>(false)
+// 新增渠道可见
+const addNewChannelVisible = ref<boolean>(false)
+// 新增渠道表单
+const addNewChannelForm = reactive<any>({
+  includeTariff: 0
+})
+const addNewChannelFormRef = ref<FormInstance>()
+// 修改or复制可见
+const modifyOrCopyVisible = ref<boolean>(false)
+// 标记修改还是复制
+const modifyOrCopy = ref<string>('')
+// 展示货代展示货代费用名
+const showFeeNameSetting = () => {
+  feeNameSettingVisible.value = true
+}
+// 关闭新增货代弹窗
+const closeAddForwarder = () => {
+  addForwarderVisible.value = false
+  addForwarderFormRef.value?.resetFields()
+}
+// 确认新增货代
+const confirmAddForwarder = () => {
+  addForwarderFormRef.value?.validate((isValid: boolean) => {
+    if (isValid) {
+      closeAddForwarder()
+    }
+  })
+}
+// 展示货代清单
+const showForwarderList = () => {
+  forwarderListVisible.value = true
+}
+// 关闭新增渠道
+const closeAddNewChannel = () => {
+  addNewChannelFormRef.value?.resetFields()
+  addNewChannelVisible.value = false
+}
+// 确认新增渠道
+const confirmAddNewChannel = () => {
+  addNewChannelFormRef.value?.validate((isValid: boolean) => {
+    if (isValid) {
+      //执行新增渠道逻辑
+      closeAddNewChannel()
+    }
+  })
+}
+// 展示修改
+const showModify = (row: any) => {
+  modifyOrCopyVisible.value = true
+  modifyOrCopy.value = 'modify'
+}
+// 展示复制
+const showCopy = (row: any) => {
+  modifyOrCopyVisible.value = true
+  modifyOrCopy.value = 'copy'
+}
+// 确认修改或复制
+const confirmModifyOrCopy = () => {
+  if (modifyOrCopy.value === 'modify') {
+    // 执行修改逻辑
+  } else if (modifyOrCopy.value === 'copy') {
+    // 执行复制逻辑
+  }
+}
+
+const queryData = () => {
+  queryForm.pageNo = 1
+  // fetchData()
+}
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  // fetchData()
+}
+const handleSizeChange = (value: number) => {
+  queryForm.pageSize = value
+  // fetchData()
+}
+
+const fakeData = [
+  {
+    price: 33,
+    day: 6
+  }
+]
+const feeNameSettingData = [
+  {
+    name: '运费（买单）',
+    billName: '海运费'
+  },
+  {
+    name: '运费（退税）',
+    billName: '海运费'
+  },
+  {
+    name: '送仓费',
+    billName: ''
+  },
+  {
+    name: '买单报关费',
+    billName: '报关费'
+  },
+  {
+    name: '退税报关费',
+    billName: '报关费'
+  },
+  {
+    name: '续页费（买单）',
+    billName: '续页费'
+  },
+  {
+    name: '续页费（退税）',
+    billName: '续页费'
+  },
+  {
+    name: '清关费',
+    billName: '单独清关费'
+  },
+  {
+    name: '清关分类费',
+    billName: '清关分类费'
+  },
+  {
+    name: '关税',
+    billName: '关税'
+  },
+  {
+    name: 'FDA申报费',
+    billName: 'FDA申报费'
+  },
+  {
+    name: 'EPA申报费',
+    billName: 'EPA申报费'
+  },
+  {
+    name: 'DOT申报费',
+    billName: ''
+  },
+  {
+    name: 'DOT申报费',
+    billName: ''
+  },
+  {
+    name: 'DOT申报费',
+    billName: ''
+  },
+  {
+    name: 'DOT申报费',
+    billName: ''
+  },
+]
+const fakeForwarderList = [
+  {
+    fullName: '全称1',
+    abbreviation: '简称1'
+  }
+]
+let copyRow: any
+/**
+ * @description 货代费用名设定表格的点击编辑
+ */
+const changeInputFeeSetting = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+  
+  if (!cell.children[0].children[0]
+    || !cell.children[0].children[1]
+    || !cell.children[0].children[0].classList
+    || !cell.children[0].children[1].classList) {
+    return
+  }
+
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+  copyRow = { ...row } //浅拷贝
+  // 自动聚焦
+  const inputElement = getSpecificChildren(cell, "input")[0];
+  if (inputElement) {
+    inputElement.focus()
+    inputElement.select()
+  } else {
+    const textareaElement = getSpecificChildren(cell, "textarea")[0];
+    if (textareaElement){
+      textareaElement.focus()
+      textareaElement.select()
+    }
+  }
+}
+/**
+ * @description 货代费用名设定点击取消编辑框
+ */
+const clickCancel = async (event: any, row: any) => {
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    t1.classList.add("none")
+  }
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  if (JSON.stringify(row) === JSON.stringify(copyRow)) return 
+
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑, 发送更新请求
+   
+  }
+}
+/**
+ * @description 货代清单表格的点击编辑
+ */
+ const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+  
+  if (!cell.children[0].children[0]
+    || !cell.children[0].children[1]
+    || !cell.children[0].children[0].classList
+    || !cell.children[0].children[1].classList) {
+    return
+  }
+
+  cell.children[0].children[0].classList.remove('none')
+  cell.children[0].children[1].classList.add('none')
+  copyRow = { ...row } //浅拷贝
+  // 自动聚焦
+  const inputElement = getSpecificChildren(cell, "input")[0];
+  if (inputElement) {
+    inputElement.focus()
+    inputElement.select()
+  } else {
+    const textareaElement = getSpecificChildren(cell, "textarea")[0];
+    if (textareaElement){
+      textareaElement.focus()
+      textareaElement.select()
+    }
+  }
+ }
+/**
+ * @description 货代清单点击取消编辑框
+ */
+ const clickCancelForwarderList = async (event: any, row: any) => {
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    t1.classList.add("none")
+  }
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  if (JSON.stringify(row) === JSON.stringify(copyRow)) return 
+
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑, 发送更新请求
+   
+  }
+}
+/**
+ * @description 货代费用名设定的表格样式
+ * @param data
+ * @return CSSProperties 返回特定样式
+ */
+const feeNameSettingCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (data.columnIndex === 0 && data.rowIndex <= 12) {
+    return {
+      color: '#bbb',
+      cursor: 'not-allowed',
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+:deep(.input-center) {
+  text-align: center;
+  text-align-last: center;
+}
+.feeNameSettingTable :deep(.el-checkbox) {
+  transform: scale(1.3);
+  transform-origin: center;
+}
+.none {
+  display: none;
+}
+:deep(.addNewChannel .el-dialog__body) {
+  padding-top: 10px;
+}
+</style>
