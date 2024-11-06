@@ -246,6 +246,7 @@ declare module 'vue' {
     VabNav: typeof import('./../../components/VabNav/index.vue')['default']
     VabNotice: typeof import('./../../components/VabNotice/index.vue')['default']
     VabPackaging: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabPackaging.vue')['default']
+    VabPackingDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabPackingDialog.vue')['default']
     VabPackingPrecautions: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabPackingPrecautions.vue')['default']
     VabPagination: typeof import('./../../components/VabPagination/index.vue')['default']
     VabPaneSplit: typeof import('./../../../src/plugins/VabPaneSplit/index.vue')['default']

@@ -42,3 +42,14 @@ export const includeTariffOption = [
     value: 1
   },
 ]
+
+export const printerOption = [
+  {
+    label: '打印机1',
+    value: 0
+  },
+  {
+    label: '打印机2',
+    value: 1
+  },
+]

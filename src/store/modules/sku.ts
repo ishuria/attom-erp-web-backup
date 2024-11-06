@@ -1,4 +1,6 @@
-// 存储采购计划创建：创建的sku和添加sku后的sku，以及更新、删除、清空的功能
+/**
+ * @description 存储采购计划创建：创建的sku和添加sku后的sku，以及更新、删除、清空的功能
+ */
 export const useSkuStore = defineStore('sku', {
   state: (): SkuModuleType => ({
     data: [],
@@ -11,8 +13,6 @@ export const useSkuStore = defineStore('sku', {
     addSku(newSku: any, tempId: string) {
       const skuWithId = JSON.parse(JSON.stringify(newSku)); // 深拷贝对象
       skuWithId.tempId = tempId; // 添加临时 ID
-
-      // const skuWithId = { ...newSku, tempId: tempId }; // 给新 SKU 生成 tempId
       this.data.push(skuWithId)
     },
     // 更新 SKU
@@ -25,8 +25,6 @@ export const useSkuStore = defineStore('sku', {
     // 删除 SKU
     deleteSku(tempId: string) {
       // console.log('进入 deleteSku，tempId:', tempId) // 检查是否被调用
-      // const index = this.data.findIndex((item) => item.tempId === tempId)
-      // this.data.splice(index, 1)
       this.data = this.data.filter((sku) => sku.tempId !== tempId);
       // console.log('删除后的数据:', this.data);
     },
