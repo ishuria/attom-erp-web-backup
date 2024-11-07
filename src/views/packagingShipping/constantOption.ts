@@ -53,3 +53,10 @@ export const printerOption = [
     value: 1
   },
 ]
+
+export const addressOption = [
+  {
+    label: 'Haojun Wang',
+    value: 0
+  }
+]

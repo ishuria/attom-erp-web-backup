@@ -7,3 +7,11 @@ export interface IAddForwarder {
   fullName: string
   abbreviation: string
 }
+
+/**
+ * @description 站点列表类型
+ */
+export interface ISiteOption {
+  label: string
+  id: number
+}

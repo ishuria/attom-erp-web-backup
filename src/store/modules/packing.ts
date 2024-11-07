@@ -8,9 +8,19 @@ export const usePackingStore = defineStore('packing', {
   actions: {
     // 添加装箱的数据
     addPacking(newPacking: any, tempId: string) {
-      const packingWithId = JSON.parse(JSON.stringify(newPacking)); // 深拷贝对象
-      packingWithId.tempId = tempId; // 添加临时 ID
-      this.packingData.push(packingWithId)
+     
+      // 判断是否已存在相同的 fnSku
+      const exists = this.packingData.find(item => item.fnSku === newPacking.fnSku)
+
+      if (exists) {
+        $baseMessage(`已经存在相同的 ${newPacking.fnSku}，请重新输入`, 'error')
+        return true
+      } else {
+        const packingWithId = JSON.parse(JSON.stringify(newPacking)); // 深拷贝对象
+        packingWithId.tempId = tempId; // 添加临时 ID
+        this.packingData.push(packingWithId)
+        return false
+      }
     },
     // 更新 装箱
     updatePacking(updatedPacking: PackingType) {

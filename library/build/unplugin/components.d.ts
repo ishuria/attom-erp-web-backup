@@ -243,6 +243,7 @@ declare module 'vue' {
     VabMagnifier: typeof import('./../../../src/plugins/VabMagnifier/index.vue')['default']
     VabMenu: typeof import('./../../components/VabMenu/index.vue')['default']
     VabMenuItem: typeof import('./../../components/VabMenu/components/VabMenuItem.vue')['default']
+    VabModifyDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabModifyDialog.vue')['default']
     VabNav: typeof import('./../../components/VabNav/index.vue')['default']
     VabNotice: typeof import('./../../components/VabNotice/index.vue')['default']
     VabPackaging: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabPackaging.vue')['default']
