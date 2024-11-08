@@ -74,7 +74,7 @@
         </el-form>
       </el-col>
       <el-col :span="12">
-        <el-image src="https://picsum.photos/200/200" style="width: 300px; height: 300px">
+        <el-image src="https://picsum.photos/200/200" style="width: 300px; height: 300px; cursor: pointer;" @click="imagePreviewShow('https://picsum.photos/200/200')">
           <template #error>
             <el-icon></el-icon>
           </template>
@@ -93,9 +93,24 @@
     v-model="inspectionVisible"
     top="10vh"
   >
-    <el-table :data="fakeData" border stripe :header-cell-style="{ textAlign: 'center' }" max-height="60vh" >
+    <el-table 
+      :data="fakeData" 
+      border stripe  
+      class="noneHoveTable" 
+      :header-cell-style="{ textAlign: 'center' }"
+      max-height="60vh" 
+      :cell-class-name="cellClassName"
+    >
       <el-table-column label="PO" prop="po" min-width="100" align="center"></el-table-column>
-      <el-table-column label="产品图片" prop="" width="70" align="center"></el-table-column>
+      <el-table-column label="产品图片" prop="" width="70" align="center">
+        <template #default="{ row }">
+          <el-image :src="row.url" style="width: 70px; height: 70px; display: block" @click="imagePreviewShow(row.url)">
+            <template #error>
+              <el-icon></el-icon>
+            </template>
+          </el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="到货状态" prop="" min-width="100" align="center"></el-table-column>
       <el-table-column label="任务数" prop="" min-width="90" align="center"></el-table-column>
       <el-table-column label="站点" prop="" min-width="100" align="center"></el-table-column>
@@ -169,18 +184,54 @@
       </div>
     </template>
   </vab-dialog>
+  <!-- 增加 -->
+  <vab-dialog
+    title="增加"
+    v-model="addVisible"
+    @close="handleCloseAdd"
+    width="17%"
+  >
+    <el-form ref="addFormRef" :model="addForm" label-width="auto" label-position="left" style="margin-left: 20px; margin-right: 20px">
+      <el-form-item label="好" prop="good">
+        <el-input v-model.trim="addForm.good" clearable />
+      </el-form-item>
+      <el-form-item label="留样" prop="sample">
+        <el-input v-model.trim="addForm.sample" clearable />
+      </el-form-item>
+      <el-form-item label="坏" prop="bad">
+        <el-input v-model.trim="addForm.bad" clearable />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="handleCloseAdd">取消</el-button>
+      <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
+    </template>
+  </vab-dialog>
+  <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
 </template>
 
 <script lang="ts" setup>
 import { FormInstance } from 'element-plus'
 import { ISiteOption } from '/@/type/packagingShipping/shippedType'
 import { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
+import { CirclePlus } from '@element-plus/icons-vue'
 
 const dflag = ref<boolean>(false)
 // 新增可见
 const addNewVisible = ref<boolean>(false)
 const addVisible = ref<boolean>(false)
 const siteList = ref<ISiteOption[]>([])
+// 图片预览
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
+const imagePreviewShow = (url: string) => {
+  imagePreviewList.value = []
+  imagePreviewVisible.value = true
+  imagePreviewList.value.push(url)
+}
 let props = defineProps<{
   modifyVisible: boolean
 }>()
@@ -199,6 +250,19 @@ const modifyFormRules = reactive<any>({
 const addNewForm = reactive<any>({
 
 })
+interface IAddForm {
+  good: number | null
+  sample: number | null
+  bad: number | null
+}
+// 增加form
+const addForm = reactive<IAddForm>({
+  good: null,
+  sample: null,
+  bad: null
+})
+// 增加form-ref
+const addFormRef = ref<FormInstance>()
 // 清点质检可见
 const inspectionVisible = ref<boolean>(false)
 const packingCountVisible = ref<boolean>(false)
@@ -275,6 +339,24 @@ const packingTotal = computed({
 
   }
 })
+// 关闭增加
+const handleCloseAdd = () => {
+  addFormRef.value?.resetFields()
+  addVisible.value = false
+}
+// 增加确认
+const handleConfirmAdd = () => {
+  let good = Number(addForm.good)
+  let sample = Number(addForm.sample)
+  let bad = Number(addForm.bad)
+  let pGood = Number(packingCountForm.goodCount)
+  packingCountForm.goodCount = pGood + good
+  let pSample = Number(packingCountForm.keepSampleCount)
+  packingCountForm.keepSampleCount = pSample + sample
+  let pBad = Number(packingCountForm.badCount)
+  packingCountForm.badCount = pBad + bad
+  handleCloseAdd()
+}
 // 清点质检的取消
 const closePackingCount = () => {
   packingCountVisible.value = false
@@ -300,4 +382,24 @@ const fakeData = [
     po: 'PO123'
   }
 ]
+const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
+}
 </script>
+
+<style lang="scss" scoped>
+.add-icon:hover {
+  color: var(--el-color-primary); 
+}
+.noneHoveTable :deep(.clear-padding) {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.noneHoveTable :deep(.clear-padding .cell) {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+</style>

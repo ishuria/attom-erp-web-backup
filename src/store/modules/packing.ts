@@ -9,11 +9,11 @@ export const usePackingStore = defineStore('packing', {
     // 添加装箱的数据
     addPacking(newPacking: any, tempId: string) {
      
-      // 判断是否已存在相同的 fnSku
-      const exists = this.packingData.find(item => item.fnSku === newPacking.fnSku)
+      // 判断是否已存在相同的 fnSkuOrUpc
+      const exists = this.packingData.find(item => item.fnSkuOrUpc === newPacking.fnSkuOrUpc)
 
       if (exists) {
-        $baseMessage(`已经存在相同的 ${newPacking.fnSku}，请重新输入`, 'error')
+        $baseMessage(`已经存在相同的 ${newPacking.fnSkuOrUpc}，请重新输入`, 'error')
         return true
       } else {
         const packingWithId = JSON.parse(JSON.stringify(newPacking)); // 深拷贝对象

@@ -10,8 +10,8 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form ref="packingFormRef" :model="packingForm" :rules="packingFormRules" label-position="top">
-          <el-form-item :label="props.upcOrFnSku" prop="fnSku">
-            <el-input ref="barcodeInput" v-model="packingForm.fnSku" :disabled="barcodeDisabled" @keydown.enter="handleKeyPress" @blur="handleCodeChange" clearable />
+          <el-form-item :label="upcOrFnSku" prop="fnSkuOrUpc">
+            <el-input ref="barcodeInput" v-model="packingForm.fnSkuOrUpc" :disabled="barcodeDisabled" @keydown.enter="handleKeyPress" clearable />
           </el-form-item>
           <el-form-item label="SKU" prop="sku">
             <el-input v-model="packingForm.sku" disabled />
@@ -25,7 +25,7 @@
         </el-form>
       </el-col>
       <el-col :span="12">
-        <el-image :src="packingForm.url" style="width: 300px; height: 300px">
+        <el-image :src="packingForm.skuImageUrl" style="width: 300px; height: 300px; cursor: pointer; border: 2px #DCDFE6 solid; border-radius: 2%;" @click="imagePreviewShow(packingForm.skuImageUrl!)">
           <template #error>
             <el-icon></el-icon>
           </template>
@@ -43,32 +43,32 @@
   <!-- 确认 -->
   <vab-dialog
     title="确认"
-    width="35%"
+    width="660px"
     v-model="confirmVisible"
-    :before-close="closeConfirm"
+    :before-close="goBack"
   >
-    <el-form style="margin-left: 1px; margin-right: 1px">
-      <el-form-item label="数量(箱)">
-        <el-input style="width: 100%" clearable />
+    <el-form :model="confirmForm" :rules="confirmFormRules" style="margin-left: 1px; margin-right: 1px">
+      <el-form-item label="数量(箱)" prop="encaseCount">
+        <el-input v-model="confirmForm.encaseCount" style="width: 100%" clearable />
       </el-form-item>
     </el-form>
     <vab-query-form style="margin-top: 20px">
       <vab-query-form-right-panel :span="24">
-        <el-form inline>
+        <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input placeholder="请输入搜索关键词" clearable />
+            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keydown.enter.native="queryData" placeholder="请输入搜索关键词" clearable />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary"></el-button>
+            <el-button :icon="Search" type="primary" native-type="submit" @click="queryData"></el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table border stripe :data="fakeData" :header-cell-style="{ textAlign: 'center' }" min-height="20vh" max-height="30vh">
+    <el-table border stripe :data="list" :header-cell-style="{ textAlign: 'center' }" height="22vh" max-height="30vh">
       <el-table-column label="SKU" prop="sku" min-width="200"></el-table-column>
-      <el-table-column label="FNSKU" prop="" min-width="100"></el-table-column>
-      <el-table-column label="Description" prop="" min-width="200"></el-table-column>
-      <el-table-column label="数量" prop="" min-width="70" align="center"></el-table-column>
+      <el-table-column :label="upcOrFnSku" prop="fnSkuOrUpc" min-width="100"></el-table-column>
+      <el-table-column label="Description" prop="productName" min-width="200"></el-table-column>
+      <el-table-column label="数量" prop="count" min-width="70" align="center"></el-table-column>
     </el-table>
     <vab-pagination 
       :current-page="queryForm.pageNo"
@@ -79,53 +79,84 @@
     />
     <template #footer>
       <div style="text-align: center;">
-        <el-button type="primary">保存并打印条形码</el-button>
+        <el-button type="primary" @click="saveAndPrint">保存并打印条形码</el-button>
         <el-button @click="goBack">返回</el-button>
         <el-button @click="closeConfirm">关闭</el-button>
       </div>
     </template>
   </vab-dialog>
+  <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
+import { FormInstance, FormRules } from 'element-plus'
+import { getEncasementSku, submitEncasementSku } from '/@/api/devlocal/encasement'
 import { usePackingStore } from '/@/store/modules/packing'
-import { _addPacking, _clearPacking, _deletePacking, _updatePacking } from '/@/utils/packing'
+import { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
+import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 
 let props = defineProps<{
   packingVisible: boolean
-  upcOrFnSku: string
+  site: number | undefined
+  encasementNo: number
 }>()
 const dflag = ref<boolean>(false)
+const upcOrFnSku = ref<string>('FNSKU')
+
 // 上一个显示与否
 const previousVisible = ref<boolean>(false)
+// 图片预览
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
+const imagePreviewShow = (url: string) => {
+  imagePreviewList.value = []
+  imagePreviewVisible.value = true
+  imagePreviewList.value.push(url)
+}
+// 确认的form
+const confirmForm = reactive<{encaseCount: number | undefined}>({
+  encaseCount: undefined
+})
+const confirmFormRules = reactive<FormRules<{encaseCount: number | undefined}>>({
+  encaseCount: [{ required: true, message: '请输入箱数', trigger: 'blur' }]
+})
+// 扫描完的disabled
+const barcodeDisabled = ref<boolean>(false)
 watchEffect(() => {
   dflag.value = props.packingVisible
+  if (props.site === 4) {
+    upcOrFnSku.value = 'UPC'
+  }
   if (dflag.value) {
     // 首次打开先清空
     _clearPacking()
     // 第一次 上一个按钮隐藏，下一个按钮是一直存在
     previousVisible.value = false
-    // 表单也先清空
-    packingFormRef.value?.resetFields()
+    barcodeDisabled.value = false
   }
 })
 const emit = defineEmits(['update:packingVisible'])
 const handleCloseDialog = () => {
   dflag.value = false
   emit('update:packingVisible', dflag.value);
+  // 表单也先清空
+  packingFormRef.value?.resetFields()
+  packingForm.skuImageUrl = ''
 }
-const packingForm = reactive<any>({
-  fnSku: '',
+const packingForm = reactive<IEncasementProduct>({
+  fnSkuOrUpc: '',
   sku: '',
   productName: '',
   count: undefined,
-  url: 'https://picsum.photos/200/200'
+  skuImageUrl: ''
 })
 const packingFormRef = ref<FormInstance>()
 const packingFormRules = computed(() => ({
-  fnSku: [{ required: true, message: `请输入${props.upcOrFnSku}`, trigger: 'blur' }],
+  fnSkuOrUpc: [{ required: true, message: `请输入${upcOrFnSku.value}`, trigger: 'blur' }],
   count: [{ required: true, message: '请输入数量', trigger: 'blur' }]
 }));
 const tempCurId = ref<string>('')
@@ -137,46 +168,61 @@ const packingCount = ref<HTMLInputElement | null>(null)
 // 确认可见
 const confirmVisible = ref<boolean>(false)
 
+
 const total = ref<number>(0)
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20
 })
+const list = ref<EncasementDetailList[]>([])
+const filteredData = computed(() => {
+  if (!queryForm.keyWord) return packingStore.packingData;  // 如果没有输入 SKU，返回所有数据
+  return packingStore.packingData.filter(item => 
+    item.sku.toLowerCase().includes(queryForm.keyWord.toLowerCase())  // 根据 SKU 字段过滤
+  );
+});
+const queryData = () => {
+  queryForm.pageNo = 1
+  // 过滤数据：根据 SKU 字段过滤
+
+  list.value = filteredData.value
+}
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
+  fetchData()
+}
+const fetchData = () => {
+  list.value = packingStore.packingData.slice(
+    (queryForm.pageNo - 1) * queryForm.pageSize,
+    queryForm.pageNo * queryForm.pageSize
+  );
+  total.value = packingStore.packingData.length
 }
 // 展示确认
 const showConfirm = () => {
+  // 先判断存入数据是否为空
   if (packingStore.packingData.length !== 0) {
     // 校验所有存储的是否是已填
-    const valid = packingStore.packingData.every((item: PackingType) => {
-      // 确保 fnSku 和 count 都有值，且 count 不是 0
-      return item.fnSku && item.count != null && item.count !== 0;
-    });
-    console.log(packingStore.packingData);
-    
-    if (!valid) {
-      // 根据具体情况生成错误消息
-      const missingFields = packingStore.packingData
-        .filter(item => !item.fnSku || item.count == null || item.count === 0)
-        .map(item => {
-          const missing = [];
-          if (!item.fnSku) missing.push('fnSku');
-          if (item.count == null || item.count === 0) missing.push('数量');
-          return missing.join(' 和 ');
-        });
-
-        // 如果有未填写的字段
-        $baseMessage(`${missingFields.join('，')}不能为空`, 'error');
-        return;
+    const countValid = packingStore.packingData.every((item: PackingType) => { return item.count != null && item.count !== 0; })
+    if (!countValid) {
+      $baseMessage(`数量不能为空`, 'error');
+      return
+    }
+    const upcOrFnSkuValid = packingStore.packingData.every((item: PackingType) => { return item.fnSkuOrUpc })
+   
+    if (!upcOrFnSkuValid) {
+      $baseMessage(`${upcOrFnSku.value}不能为空`, 'error');
+      return
     }
     confirmVisible.value = true
+    fetchData()
   } else {
-    $baseMessage(`请先填写${props.upcOrFnSku}字段`, 'error')
+    $baseMessage(`请先填写${upcOrFnSku.value}`, 'error')
   }
 }
 // 确认的返回
@@ -185,8 +231,25 @@ const goBack = () => {
 }
 // 关闭确认
 const closeConfirm = () => {
+  confirmForm.encaseCount = undefined
   confirmVisible.value = false
   handleCloseDialog()
+}
+// 保存并打印
+const saveAndPrint = async () => {
+  if (confirmForm.encaseCount != undefined && confirmForm.encaseCount != null) {
+    const { data } = await submitEncasementSku({
+      encaseCount: confirmForm.encaseCount,
+      encasementNo: props.encasementNo,
+      site: props.site,
+      encasementDetailList: packingStore.packingData
+    })
+    if (data) {
+      $baseMessage('保存并打印条形码成功', 'success')
+    }
+  } else {
+    $baseMessage('请先输入箱数', 'error')
+  }
 }
 // 打开装箱时自动聚焦到FNSKU输入框
 const handlePackingOpen = () => {
@@ -203,59 +266,43 @@ function generateUUID() {
     return v.toString(16);
   });
 }
-let isHandlingCodeChange = false
-// 扫描完的disabled
-const barcodeDisabled = ref<boolean>(false)
+
+
 // 监听回车键扫描事件（包括用户回车和扫枪回车）
-const handleKeyPress = (event: any) => {
+const handleKeyPress = async (event: any) => {
 
   if (event.code === 'Enter') {
     const barcodeValue = (event.target as HTMLInputElement).value
-    packingForm.fnSku = barcodeValue;
+    packingForm.fnSkuOrUpc = barcodeValue;
 
     // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
-    isHandlingCodeChange = true
-    tempCurId.value = generateUUID()
-    let flag = _addPacking(packingForm, tempCurId.value)
-    if (flag) {
+    const { data } = await getEncasementSku({
+      site: props.site!,
+      fnSkuOrUpc: packingForm.fnSkuOrUpc
+    })
+    if (data) {
+      Object.assign(packingForm, data)
+      tempCurId.value = generateUUID()
+      let flag = _addPacking(packingForm, tempCurId.value)
+      if (flag) {
+        // 如果是有相同的，就清空
+        packingFormRef.value?.resetFields()
+        packingForm.skuImageUrl = ''  
+        return
+      }
       console.log('packingData', packingStore.packingData)
-      packingForm.fnSku = ''
-      return
-    }
-    
-    console.log('packingData', packingStore.packingData)
-    // packingFormRef.value?.resetFields()
-    // barcodeInput.value?.blur()
-    barcodeDisabled.value = true
-    if (packingCount.value) {
-      packingCount.value.focus()
-      packingCount.value.select()
+      barcodeDisabled.value = true
+      if (packingCount.value) {
+        packingCount.value.focus()
+        packingCount.value.select()
+      }
+    } else {
+      packingForm.fnSkuOrUpc = ''
+      $baseMessage(`找不到该${upcOrFnSku}，请重新扫描`, 'error')
     }
   }
 }
-// 用户自己输入的blur
-const handleCodeChange = () => {
-  if (isHandlingCodeChange) {
-    isHandlingCodeChange = false
-    return
-  }
 
-  // 如果用户取消输入框的输入，那么直接删除这个数据
-  if (!packingForm.fnSku) {
-    _deletePacking(tempCurId.value)
-    return
-  }
-  // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
-   
-  tempCurId.value = generateUUID()
-  let flag = _addPacking(packingForm, tempCurId.value)
-  if(flag) {
-    packingForm.fnSku = ''
-    return
-  }
-  barcodeDisabled.value = true
-  console.log('packingData', packingStore.packingData)
-}
 // 更新表单
 const handleUpdate = () => {
   const updatePacking = { tempId: tempCurId.value, ...packingForm }
@@ -278,6 +325,8 @@ const switchPrevious = () => {
       Object.assign(packingForm, data[index - 1])
       // id赋值
       tempCurId.value = data[index - 1].tempId
+      // 扫抢扫码不能输入
+      barcodeDisabled.value = true
     }
   })
 }
@@ -292,12 +341,13 @@ const switchNext = () => {
       const index = data.findIndex((item: PackingType) => item.tempId === tempCurId.value)
       if (length - 1 === index) { // 如果就是最后一个，创建一个新的
         packingFormRef.value?.resetFields()
-        tempCurId.value = 'null'
+        packingForm.skuImageUrl = ''
         console.log('最后一个下一个后的数据', packingStore.packingData)
         // 上一个按钮展示
         previousVisible.value = true
         // 聚焦到FNSKU
         barcodeInput.value?.focus()
+        // 扫枪扫码可以输入
         barcodeDisabled.value = false
       } else { // 如果是中间的，就再跳到下一个
         Object.assign(packingForm, data[index + 1])
@@ -306,34 +356,11 @@ const switchNext = () => {
         console.log('中间的下一个后的数据', packingStore.packingData);
         // 上一个按钮展示
         previousVisible.value = true
+        // 扫抢扫码不能输入
+        barcodeDisabled.value = true
       }
     }
   })
 }
-const fakeData = [
-  {
-    sku: '1111111111111111111111111'
-  },
-  {
-    sku: '1111111111111111111111111'
-  },
-  {
-    sku: '1111111111111111111111111'
-  },
-  {
-    sku: '1111111111111111111111111'
-  },
-  {
-    sku: '1111111111111111111111111'
-  },
-  {
-    sku: '1111111111111111111111111'
-  },
-  {
-    sku: '1111111111111111111111111'
-  },
-  {
-    sku: '1111111111111111111111111'
-  },
-]
+
 </script>

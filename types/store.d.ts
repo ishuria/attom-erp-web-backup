@@ -115,11 +115,11 @@ declare interface SkuModuleType {
 
 declare interface PackingType {
   tempId: string
-  fnSku: string
-  SKU: string
+  fnSkuOrUpc: string
+  sku: string
   productName: string
-  count: number
-  url: string
+  count?: number
+  skuImageUrl: string
 }
 declare interface PackingModuleType {
   packingData: PackingType[]

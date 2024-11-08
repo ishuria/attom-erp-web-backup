@@ -10,11 +10,6 @@ export const _updatePacking = (newValue: PackingType) => {
   packingStore.updatePacking(newValue)
 }
 
-export const _deletePacking = (tempId: string) => {
-  // console.log('删除id', tempId);
-  packingStore.deletePacking(tempId)
-}
-
 export const _clearPacking = () => {
   packingStore.clearPacking()
 }

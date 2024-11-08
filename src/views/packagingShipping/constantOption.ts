@@ -54,9 +54,13 @@ export const printerOption = [
   },
 ]
 
-export const addressOption = [
+export const unitOption = [
   {
-    label: 'Haojun Wang',
+    label: 'cm/kg',
     value: 0
-  }
+  },
+  {
+    label: 'in/Ib',
+    value: 0
+  },
 ]
