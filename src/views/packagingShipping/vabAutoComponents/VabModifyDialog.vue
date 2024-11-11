@@ -5,27 +5,28 @@
     width="35%"
     v-model="dflag"
     top="7vh"
+    @close="handleCloseDialog"
   >
     <el-form ref="modifyFormRef" :model="modifyForm" label-position="right" label-width="auto" style="margin-left: 3px; margin-right: 3px">
       <el-form-item label="数量(箱)" prop="" >
         <el-input clearable />
       </el-form-item>
-      <el-form-item label="毛重(kg)" prop="" >
-        <el-input clearable />
+      <el-form-item label="毛重(kg)" prop="grossWeight" >
+        <el-input v-model="modifyForm.grossWeight" clearable />
       </el-form-item>
-      <el-form-item label="长(cm)" prop="" >
-        <el-input clearable />
+      <el-form-item label="长(cm)" prop="length" >
+        <el-input v-model="modifyForm.length" clearable />
       </el-form-item>
-      <el-form-item label="宽(cm)" prop="" >
-        <el-input clearable />
+      <el-form-item label="宽(cm)" prop="width" >
+        <el-input v-model="modifyForm.width" clearable />
       </el-form-item>
-      <el-form-item label="高(cm)" prop="" >
-        <el-input clearable />
+      <el-form-item label="高(cm)" prop="height" >
+        <el-input v-model="modifyForm.height" clearable />
       </el-form-item>
-      <el-form-item label="站点" prop="" >
-        <el-select placeholder="请选择站点">
+      <el-form-item label="站点" prop="siteId" >
+        <el-select v-model="modifyForm.siteId" placeholder="请选择站点">
           <el-option 
-            v-for="item in siteList"
+            v-for="item in props._siteList"
             :label="item.label"
             :value="item.id"
             :key="item.id"
@@ -34,15 +35,15 @@
       </el-form-item>
     </el-form>
     <el-button type="primary" @click="addNewVisible = true" style="margin-top: 10px; margin-bottom: 10px">新增</el-button>
-    <el-table border stripe :header-cell-style="{ textAlign: 'center' }" :data="fakeData" max-height="35vh">
-      <el-table-column label="SKU" prop="sku" min-width="220"></el-table-column>
-      <el-table-column label="FNSKU" prop="" min-width="100"></el-table-column>
-      <el-table-column label="说明" prop="" min-width="100"></el-table-column>
-      <el-table-column label="数量" prop="" min-width="70" align="center"></el-table-column>
+    <el-table border stripe :header-cell-style="{ textAlign: 'center' }" :data="skuDetailList" max-height="35vh">
+      <el-table-column label="SKU" prop="sku" min-width="100"></el-table-column>
+      <el-table-column label="FNSKU" prop="fnSkuOrUpc" min-width="140"></el-table-column>
+      <el-table-column label="说明" prop="productName" min-width="160"></el-table-column>
+      <el-table-column label="数量" prop="count" min-width="50" align="center"></el-table-column>
       <el-table-column label="操作" width="140" align="center" fixed="right">
-        <template #default="{ row }">
-          <el-link type="danger" :underline="false">删除</el-link>
-          <el-link type="primary" :underline="false" @click="showInspection">清点质检</el-link>
+        <template #default="{ row, $index }">
+          <el-link type="danger" :underline="false" @click="handleDelEncasementDetail(row, $index)">删除</el-link>
+          <el-link type="primary" :underline="false" @click="showInspection(row)">清点质检</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -55,22 +56,23 @@
     />
     <template #footer>
       <el-button @click="handleCloseDialog">取消</el-button>
-      <el-button type="primary">确认</el-button>
+      <el-button type="primary" @click="confirmUpdateEncasement">确认</el-button>
     </template>
   </vab-dialog>
-  <!-- 新增 -->
+  <!-- 新增新的明细 -->
   <vab-dialog
     title="新增"
     width="660px"
     v-model="addNewVisible"
+    @close="closeAddNewDetail"
   >
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form label-position="top" :model="addNewForm">
-          <el-form-item label="FNSKU"><el-input disabled /></el-form-item>
-          <el-form-item label="SKU"><el-input disabled /></el-form-item>
-          <el-form-item label="产品名称"><el-input disabled /></el-form-item>
-          <el-form-item label="数量"><el-input v-model="addNewForm.count" clearable /></el-form-item>
+        <el-form ref="addNewFormRef" :rules="addNewFormRules" label-position="top" :model="addNewForm">
+          <el-form-item label="FNSKU" prop="fnSkuOrUpc"><el-input v-model="addNewForm.fnSkuOrUpc" disabled /></el-form-item>
+          <el-form-item label="SKU" prop="sku"><el-input v-model="addNewForm.sku" disabled /></el-form-item>
+          <el-form-item label="产品名称" prop="productName"><el-input v-model="addNewForm.productName" disabled /></el-form-item>
+          <el-form-item label="数量" prop="count"><el-input v-model="addNewForm.count" clearable /></el-form-item>
         </el-form>
       </el-col>
       <el-col :span="12">
@@ -82,19 +84,19 @@
       </el-col>
     </el-row>
     <template #footer>
-      <el-button>取消</el-button>
-      <el-button type="primary">确认</el-button>
+      <el-button @click="closeAddNewDetail">取消</el-button>
+      <el-button type="primary" @click="confirmAddNewDetail">确认</el-button>
     </template>
   </vab-dialog>
   <!-- 清点质检 -->
   <vab-dialog
     title="清点质检"
-    width="40%"
+    width="45%"
     v-model="inspectionVisible"
     top="10vh"
   >
     <el-table 
-      :data="fakeData" 
+      :data="inspectionList" 
       border stripe  
       class="noneHoveTable" 
       :header-cell-style="{ textAlign: 'center' }"
@@ -102,25 +104,25 @@
       :cell-class-name="cellClassName"
     >
       <el-table-column label="PO" prop="po" min-width="100" align="center"></el-table-column>
-      <el-table-column label="产品图片" prop="" width="70" align="center">
+      <el-table-column label="产品图片" prop="skuImageUrl" width="70" align="center">
         <template #default="{ row }">
-          <el-image :src="row.url" style="width: 70px; height: 70px; display: block" @click="imagePreviewShow(row.url)">
+          <el-image :src="row.skuImageUrl" style="width: 70px; height: 70px; display: block" @click="imagePreviewShow(row.url)">
             <template #error>
               <el-icon></el-icon>
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="到货状态" prop="" min-width="100" align="center"></el-table-column>
-      <el-table-column label="任务数" prop="" min-width="90" align="center"></el-table-column>
-      <el-table-column label="站点" prop="" min-width="100" align="center"></el-table-column>
-      <el-table-column label="已装箱数" prop="" min-width="100" align="center"></el-table-column>
+      <el-table-column label="到货状态" prop="taskStatus" min-width="100" align="center"></el-table-column>
+      <el-table-column label="任务数" prop="packageTaskCount" min-width="90" align="center"></el-table-column>
+      <el-table-column label="站点" prop="siteName" min-width="130" align="center"></el-table-column>
+      <el-table-column label="已装箱数" prop="boxNumber" min-width="100" align="center"></el-table-column>
       <el-table-column label="清点质检" prop="qualityCheckStatus" min-width="100" align="center">
         <template #default="{ row }">
           <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" @change="handleShowPackingCount(row)" style="--el-switch-on-color: #13ce66;"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="实际完成数" prop="" min-width="110"></el-table-column>
+      <el-table-column label="实际完成数" prop="actualCompleted" min-width="110" align="center"></el-table-column>
     </el-table>
   </vab-dialog>
   <!-- 点击清点质检 - 打包总数 -->
@@ -211,16 +213,18 @@
 </template>
 
 <script lang="ts" setup>
-import { FormInstance } from 'element-plus'
-import { ISiteOption } from '/@/type/packagingShipping/shippedType'
+import { FormInstance, FormRules } from 'element-plus'
+import { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
 import { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import { CirclePlus } from '@element-plus/icons-vue'
+import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementUpdate, updateEncasement } from '/@/api/devlocal/encasement'
 
 const dflag = ref<boolean>(false)
 // 新增可见
 const addNewVisible = ref<boolean>(false)
 const addVisible = ref<boolean>(false)
-const siteList = ref<ISiteOption[]>([])
+const skuDetailList = ref<ISkuDetailList[]>([])
+const inspectionList = ref<IGetEncasementInspection[]>([])
 // 图片预览
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
@@ -234,11 +238,22 @@ const imagePreviewShow = (url: string) => {
 }
 let props = defineProps<{
   modifyVisible: boolean
+  encasementId: number
+  _siteList: ISiteOption[]
 }>()
+const fetchData = async () => {
+  const { data } = await getEncasementUpdate({
+    encasementId: props.encasementId
+  })
+  if (data) {
+    Object.assign(modifyForm, data)
+    skuDetailList.value = data.list
+  }
+}
 watchEffect(() => {
   dflag.value = props.modifyVisible
   if (dflag.value) {
-   
+    fetchData()
   }
 })
 // 修改表单
@@ -247,8 +262,11 @@ const modifyFormRef = ref<FormInstance>()
 const modifyFormRules = reactive<any>({
 
 })
-const addNewForm = reactive<any>({
-
+// 新增新的明细
+const addNewForm = reactive<any>({})
+const addNewFormRef = ref<FormInstance>()
+const addNewFormRules = reactive<FormRules<IAddDetailEncasementReq>>({
+  count: [{ required: true, message: '请输入数量', trigger: 'blur' }]
 })
 interface IAddForm {
   good: number | null
@@ -267,8 +285,14 @@ const addFormRef = ref<FormInstance>()
 const inspectionVisible = ref<boolean>(false)
 const packingCountVisible = ref<boolean>(false)
 // 展示清点质检
-const showInspection = () => {
+const showInspection = async (row: ISkuDetailList) => {
   inspectionVisible.value = true
+  const { data } = await getEncasementInspection({
+    id: row.id!,
+    sku: row.sku!
+  })
+  inspectionList.value = data
+  
 }
 // 展示清点质检
 const handleShowPackingCount = (row: any) => {
@@ -301,6 +325,34 @@ const handleCloseDialog = () => {
   dflag.value = false
   emit('update:modifyVisible', dflag.value);
 }
+// 装箱修改确认
+const confirmUpdateEncasement = async () => {
+  const { data } = await updateEncasement({
+    id: props.encasementId,
+    grossWeight: modifyForm.grossWeight,
+    length: modifyForm.length,
+    width: modifyForm.width,
+    height: modifyForm.height,
+    site: modifyForm.siteId
+  })
+  if (data) {
+    $baseMessage('修改成功', 'success')
+    handleCloseDialog()
+  }
+}
+// 删除装箱明细
+const handleDelEncasementDetail = async (row: any, index: number) => {
+  $baseConfirm('确定要删除装箱明细吗？', null, async () => {
+    const { data } = await delEncasementInspection({
+      encasementDetailId: row.id
+    })
+    if (data) {
+      $baseMessage('删除成功', 'success')
+      skuDetailList.value.splice(index, 1)
+    }
+  })
+}
+
 // 打包总数form
 const packingCountForm = reactive<IGetQualityCheck>({})
 // 缺的数量
@@ -364,6 +416,26 @@ const closePackingCount = () => {
 }
 const handleShowAdd = () => {
   addVisible.value = true
+}
+// 关闭新增新的明细
+const closeAddNewDetail = () => {
+  addNewFormRef.value?.resetFields()
+  addNewVisible.value = false
+}
+// 确认新增新的明细
+const confirmAddNewDetail = async () => {
+  const { data } = await addDetailEncasement({
+    id: props.encasementId,
+    fnSkuOrUpc: addNewForm.fnSkuOrUpc,
+    sku: addNewForm.sku,
+    productName: addNewForm.productName,
+    count: addNewForm.count
+  })
+  if (data) {
+    $baseMessage('新增成功', 'success')
+    fetchData()
+    closeAddNewDetail()
+  }
 }
 const queryForm = reactive<any>({
   keyWord: '',

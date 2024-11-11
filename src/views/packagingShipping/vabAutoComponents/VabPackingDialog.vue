@@ -246,6 +246,8 @@ const saveAndPrint = async () => {
     })
     if (data) {
       $baseMessage('保存并打印条形码成功', 'success')
+      goBack()
+      handleCloseDialog()
     }
   } else {
     $baseMessage('请先输入箱数', 'error')

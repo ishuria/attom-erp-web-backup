@@ -358,7 +358,7 @@
           </el-table-column>
           <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
             <template #default="{row}">
-              <el-select v-model="row.suppliserId" placeholder="" @change="handleSupplierAndInvoicingChange(row)">
+              <el-select v-model="row.suppliserId" placeholder="" @focus="handleGetRow(row)" @change="handleSupplierAndInvoicingChange(row)">
                 <el-option 
                   v-for="item in row.suppliserList"
                   :label="item.label"
@@ -2190,7 +2190,7 @@ const handleSupplierAndInvoicingChange = async (row: any) => {
     }
     // const { data } = await updatePoSkuComponent(row)
   } catch (error) {  
-    row.invoicing = originalRow.invoicing
+    row.suppliserId = originalRow.suppliserId
     console.error(error)
   }
   // fetchSupplierRate(row)
@@ -2202,12 +2202,14 @@ const handleInvoicingChange = async (row: any) => {
     if (row.invoicing !== 2) {
       $baseMessage('采购方为attom，无法开票', 'error')
       row.invoicing = 2
-    }
+    } 
   }
   const { data } = await updatePoSkuComponent(row)
   if (data === true) {
     fetchSkuComponent()
     fetchData()
+  } else {
+    row.invoicing = originalRow.invoicing
   }
 }
 let originalRow: any

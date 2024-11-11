@@ -190,3 +190,177 @@ export interface EncasementDetailList {
 export interface IBooleanRes {
   data: boolean
 }
+export interface IStringRes {
+  data: string
+}
+/**
+ * @description 装箱修改
+ */
+export interface IUpdateEncasementReq {
+  id?: number
+  grossWeight?: number
+  length?: number
+  width?: number
+  height?: number
+  site?: number
+}
+/**
+ * @description 装箱-修改页面-新增新的明细
+ */
+export interface IAddDetailEncasementReq {
+  id?: number
+  fnSkuOrUpc?: string
+  sku?: string
+  productName?: string
+  count?: number
+}
+
+export interface IEncasementId {
+  encasementId: number
+}
+
+export interface IGetEncasementUpdateRes {
+  code?: number
+  data?: {
+    /**
+     * 装箱id
+     */
+    encasementId?: number
+    /**
+     * 毛重
+     */
+    grossWeight?: number
+
+    height?: number
+
+    length?: number;
+    /**
+     * sku明细列表
+     */
+    list: ISkuDetailList[]
+
+    siteId?: number
+
+    width?: number
+  }
+  msg?: string
+}
+
+export interface ISkuDetailList {
+  /**
+   * 数量
+   */
+  count?: number;
+  /**
+   * FNSKU
+   */
+  fnSkuOrUpc?: string;
+  /**
+   * 主键
+   */
+  id?: number;
+  /**
+   * 产品名
+   */
+  productName?: string;
+  /**
+   * SKU
+   */
+  sku?: string;
+}
+
+export interface IGetEncasementInspectionReq {
+  sku: string
+  id: number
+}
+
+export interface IGetEncasementInspectionRes {
+  data: IGetEncasementInspection[]
+}
+export interface IGetEncasementInspection {
+  taskId: number
+  po: string
+  skuImageUrl: string
+  taskStatus: string
+  packageTaskCount: number
+  siteName: string
+  boxNumber: number
+  qualityCheckStatus: number
+  actualCompleted: number | null
+}
+
+export interface IEncasementDetailId {
+  encasementDetailId: number
+}
+
+export interface IUpdateEncasementShipmentDateReq {
+  encasementIds: string
+  shipmentDate: string
+}
+
+export interface ISplitEncasementReq {
+  encasementId: number
+  splitCount: number
+}
+export interface IEncasementIds {
+  encasementIds: string
+}
+
+/**
+ * @description 发货亚马逊生成模板文件
+ */
+export interface IGenerateTemplateFile1Req {
+  encasementIds: string
+  type: number
+}
+
+/**
+ * @description 发货完成提交
+ */
+export interface IConfirmEncasementShipmentsReq {
+  /**
+   * 货代渠道id
+   */
+  channel?: number;
+  /**
+   * 合同号
+   */
+  contractNumber?: string;
+  /**
+   * 装箱id
+   */
+  encasementIds?: string;
+  /**
+   * 发货号
+   */
+  shipmentId?: string;
+  /**
+   * 发货的站点
+   */
+  site?: number;
+  /**
+   * 模板文件1的名称
+   */
+  templateFile1Name?: string;
+  /**
+   * 模板文件2的名称
+   */
+  templateFile2Name?: string;
+  /**
+   * 模板文件3的名称
+   */
+  templateFile3Name?: string;
+  /**
+   * 类型 1cm/kg 2in/ln
+   */
+  type?: number;
+}
+
+export interface IFileName {
+  fileName: string
+}
+export interface ISplitEncasementCsv {
+  fileName: string
+  date: string
+  remarks: string
+}

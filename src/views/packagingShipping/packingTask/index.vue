@@ -804,7 +804,7 @@
           <el-table-column label="检查类型" prop="type" min-width="100"></el-table-column>
           <el-table-column label="通过" prop="pass" min-width="50" >
             <template #default="{ row }">
-              <el-checkbox v-model="row.pass" :true-value="1" :false-value="0" @change="updatePackageInspectionDetail(row)"></el-checkbox>
+              <el-checkbox v-model="row.pass" :true-value="1" :false-value="0" @change="handleUpdatePackageInspectionDetail(row)"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="备注" prop="remark" min-width="150">
@@ -1241,6 +1241,7 @@ import {
   splitPackageTask,
   submitPackageInspection,
   updatePackageInspection,
+  updatePackageInspectionDetail,
   updatePackageTask,
   updatePackageTaskSite,
   updatePriorityPackaging
@@ -1476,7 +1477,7 @@ const downloadInspection = async () => {
   })
 }
 // 质检报告详情修改
-const updatePackageInspectionDetail = async (row: any) => {
+const handleUpdatePackageInspectionDetail = async (row: any) => {
   await updatePackageInspectionDetail({
     id: row.id,
     pass: row.pass,

@@ -57,10 +57,10 @@ export const printerOption = [
 export const unitOption = [
   {
     label: 'cm/kg',
-    value: 0
+    value: 1
   },
   {
     label: 'in/Ib',
-    value: 0
+    value: 2
   },
 ]

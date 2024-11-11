@@ -24,7 +24,7 @@
               stripe border 
               :data="list" 
               :header-cell-style="{ 'text-align': 'center' }"
-              :cell-style="{ 'text-align': 'center' }"
+              :cell-style="cellStyle"
               @cell-click="changeInput"
               v-loading="listLoading"
               class="noneHoveTable"
@@ -162,6 +162,7 @@ defineOptions({
   name: 'consumable',
 })
 import { ArrowDown, Search } from '@element-plus/icons-vue'
+import { CSSProperties } from 'vue'
 import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -273,7 +274,16 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     imagePreviewList.value.push(el.src)
   }
 }
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (data.columnIndex !== 1) {
+    return {
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'left'
+  }
+}
 // 获取拿样零件添加数据
 const fetchData = async () =>{
   listLoading.value = true
