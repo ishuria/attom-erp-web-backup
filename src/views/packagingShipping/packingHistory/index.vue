@@ -17,28 +17,28 @@
       class="noneHoveTable"
       :header-cell-style="{ textAlign: 'center' }"
       :cell-style="cellStyle"
-      :data="fakeData"
+      :data="list"
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection"></el-table-column>
-      <el-table-column label="发货计划" prop="" min-width="100"></el-table-column>
-      <el-table-column label="装箱日期" prop="" min-width="115"></el-table-column>
-      <el-table-column label="装箱人员" prop="" min-width="100"></el-table-column>
-      <el-table-column label="箱数" prop="" min-width="90"></el-table-column>
-      <el-table-column label="SHIPMENT ID" prop="" min-width="130"></el-table-column>
-      <el-table-column label="毛重(kg)" prop="" min-width="100"></el-table-column>
-      <el-table-column label="长(cm)" prop="" min-width="90"></el-table-column>
-      <el-table-column label="宽(cm)" prop="" min-width="90"></el-table-column>
-      <el-table-column label="高(cm)" prop="" min-width="90"></el-table-column>
-      <el-table-column label="总重量(kg)" prop="" min-width="110"></el-table-column>
-      <el-table-column label="总体积(m3)" prop="" min-width="110"></el-table-column>
-      <el-table-column label="箱规号" prop="" min-width="100"></el-table-column>
-      <el-table-column label="站点" prop="" min-width="100"></el-table-column>
+      <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="100"></el-table-column>
+      <el-table-column label="装箱日期" prop="createTime" min-width="115"></el-table-column>
+      <el-table-column label="装箱人员" prop="encasementUser" min-width="100"></el-table-column>
+      <el-table-column label="箱数" prop="numberOfBoxes" min-width="90"></el-table-column>
+      <el-table-column label="SHIPMENT ID" prop="shipmentId" min-width="130"></el-table-column>
+      <el-table-column label="毛重(kg)" prop="grossWeight" min-width="100"></el-table-column>
+      <el-table-column label="长(cm)" prop="length" min-width="90"></el-table-column>
+      <el-table-column label="宽(cm)" prop="width" min-width="90"></el-table-column>
+      <el-table-column label="高(cm)" prop="height" min-width="90"></el-table-column>
+      <el-table-column label="总重量(kg)" prop="totalWeight" min-width="110"></el-table-column>
+      <el-table-column label="总体积(m3)" prop="totalVolume" min-width="110"></el-table-column>
+      <el-table-column label="箱规号" prop="encasementNo" min-width="100"></el-table-column>
+      <el-table-column label="站点" prop="planSiteName" min-width="100"></el-table-column>
       <el-table-column label="SKU" prop="sku" min-width="300"></el-table-column>
-      <el-table-column label="Description" prop="" min-width="300"></el-table-column>
-      <el-table-column label="数量" prop="" min-width="90"></el-table-column>
-      <el-table-column label="产品总数" prop="" min-width="100"></el-table-column>
-      <el-table-column label="备注" prop="" min-width="100"></el-table-column>
+      <el-table-column label="Description" prop="description" min-width="300"></el-table-column>
+      <el-table-column label="数量" prop="number" min-width="90"></el-table-column>
+      <el-table-column label="产品总数" prop="productTotalNumber" min-width="100"></el-table-column>
+      <el-table-column label="备注" prop="remarks" min-width="100"></el-table-column>
       <el-table-column label="操作" fixed="right" width="180">
         <template #default="{ row }">
           <el-dropdown>
@@ -51,18 +51,18 @@
             <template #dropdown>
               <el-dropdown-menu>
               <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">下载模板文件</el-link>
+                  <el-link type="primary" :underline="false" @click="handleDownloadFile1(row)">下载模板文件</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">下载装箱文件</el-link>
+                  <el-link type="primary" :underline="false" @click="handleDownloadFile2(row)">下载装箱文件</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">下载装箱表格</el-link>
+                  <el-link type="primary" :underline="false" @click="handleDownloadFile3(row)">下载装箱表格</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-link style="display: none" type="primary" :underline="false" @click="">下载沃尔玛文件</el-link>
+          <el-link style="display: none" type="primary" :underline="false" @click="handleDownloadFile4(row)">下载沃尔玛文件</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -82,6 +82,10 @@
 <script lang="ts" setup>
 import { Search, ArrowDown } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
+import { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
+import { getShippedEncasementList } from '/@/api/devlocal/encasement'
+import { downloadFile } from '~/src/api/devlocal/download'
+
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyWord: '',
@@ -89,18 +93,63 @@ const queryForm = reactive<any>({
   pageSize: 20
 })
 const total = ref<number>(0)
+const list = ref<IGetShippedEncasementList[]>([])
 const queryData = () => {
   queryForm.pageNo = 1
+  fetchData()
 }
 const selectRows = ref<any>([])
 const setSelectRows = (value: any) => {
   selectRows.value = value
 }
+
+// 下载模板文件
+const handleDownloadFile1 = async (row: IGetShippedEncasementList) => {
+  await downloadFile('/shipment/download/file1', {
+    encasementId: row.id
+  }).then((res) => {
+    console.log(res);
+  }).catch((error) => {
+    console.log(error);
+  })
+}
+// 已装箱发货列表-下载装箱文件
+const handleDownloadFile2 = async (row: IGetShippedEncasementList) => {
+  await downloadFile('/shipment/download/file2', {
+    encasementId: row.id
+  }).then((res) => {
+    console.log(res);
+  }).catch((error) => {
+    console.log(error);
+  })
+}
+// 已装箱发货列表-下载装箱表格文件
+const handleDownloadFile3 = async (row: IGetShippedEncasementList) => {
+  await downloadFile('/shipment/download/file3', {
+    encasementId: row.id
+  }).then((res) => {
+    console.log(res);
+  }).catch((error) => {
+    console.log(error);
+  })
+}
+// 已装箱发货列表-walmart
+const handleDownloadFile4 = async (row: IGetShippedEncasementList) => {
+  await downloadFile('/shipment/download/walmart/file', {
+    encasementId: row.id
+  }).then((res) => {
+    console.log(res);
+  }).catch((error) => {
+    console.log(error);
+  })
+}
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
+  fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   if (data.columnIndex !== 13 && data.columnIndex !== 14) {
@@ -112,65 +161,14 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'left'
   }
 }
-const fakeData = [
-  {
-    sku: 'NiHealth-0045-6ColAdultKF',
-    boxNumber: 10,
-    po: 'PO123'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-  {
-    sku: 'NiHealth-0045-6ColAdultKF'
-  },
-]
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getShippedEncasementList(queryForm)
+  total.value = data?.total!
+  list.value = data?.list!
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>

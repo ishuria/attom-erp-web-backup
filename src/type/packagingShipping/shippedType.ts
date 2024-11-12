@@ -364,3 +364,291 @@ export interface ISplitEncasementCsv {
   date: string
   remarks: string
 }
+export interface OptionType {
+  id: number
+  label: string
+}
+
+export interface IGetChannelListRes {
+  data: OptionType[]
+}
+
+export interface IGetShippedEncasementListRes {
+  data?: {
+    list?: IGetShippedEncasementList[]
+    total?: number
+  }
+}
+
+export interface IGetShippedEncasementList {
+  /**
+   * 装箱日期
+   */
+  createTime?: string;
+  /**
+   * 描述
+   */
+  description?: string;
+  /**
+   * 箱规号
+   */
+  encasementNo?: string;
+  /**
+   * 装箱人员
+   */
+  encasementUser?: string;
+  /**
+   * 毛重
+   */
+  grossWeight?: number;
+  /**
+   * 高
+   */
+  height?: number;
+  /**
+   * 主键id
+   */
+  id?: number;
+  /**
+   * 长
+   */
+  length?: number;
+  /**
+   * 数量
+   */
+  number?: number;
+  /**
+   * 箱数
+   */
+  numberOfBoxes?: number;
+  /**
+   * 计划站点名称
+   */
+  planSiteName?: string;
+  /**
+   * 发货的平台
+   */
+  platform?: string;
+  /**
+   * 产品总数
+   */
+  productTotalNumber?: number;
+  /**
+   * 备注
+   */
+  remarks?: string;
+  shipmentId?: string;
+  /**
+   * 发货计划日期
+   */
+  shipmentPlanDate?: string;
+  /**
+   * 实际站点名称
+   */
+  siteName?: string;
+  /**
+   * sku
+   */
+  sku?: string;
+  /**
+   * 总体积
+   */
+  totalVolume?: number;
+  /**
+   * 总重量kg
+   */
+  totalWeight?: number;
+  /**
+   * 宽
+   */
+  width?: number;
+}
+
+export interface IAddFreightForwarderType {
+  fullName: string
+  abbreviation: string
+}
+
+export interface IUpdateFreightForwarderType {
+  id: number
+  fullName: string
+  abbreviation: string
+}
+
+export interface ITypeId {
+  typeId: number
+}
+
+export interface IId {
+  id: number
+}
+export interface IUpdateCostFreightForwarderReq {
+  /**
+   * 报关合并状态 0不合并 1合并
+   */
+  bgStatus?: number;
+  /**
+   * 账单费用名
+   */
+  billCostName?: string;
+  /**
+   * 费用名
+   */
+  costName?: string;
+  /**
+   * 运费核对默认状态 0不展示 1展示
+   */
+  costShowStatus?: number;
+  /**
+   * 主键id
+   */
+  id?: number;
+  /**
+   * 清关合并 0不合并 1合并
+   */
+  qgStatus?: number;
+}
+
+export interface IAddChannelFreightForwarderReq {
+  /**
+   * 渠道名
+   */
+  channelName?: string;
+  /**
+   * 买单每续页个数
+   */
+  countBill?: number;
+  /**
+   * 当前价格(体积)
+   */
+  currentPriceVolume?: number;
+  /**
+   * 当前价格(重量)
+   */
+  currentPriceWeight?: number;
+  /**
+   * 清关币种
+   */
+  customsClearanceCurrency?: number;
+  /**
+   * 清关费
+   */
+  customsClearanceFee?: number;
+  /**
+   * 清关免费个数
+   */
+  customsClearanceFreeCount?: number;
+  /**
+   * 清关每续页个数费用
+   */
+  customsClearancePageCost?: number;
+  /**
+   * 清关每续页个数
+   */
+  customsClearancePageCount?: number;
+  /**
+   * 买单报关费
+   */
+  customsDeclarationFeeBill?: number;
+  /**
+   * 目的地
+   */
+  destination?: string;
+  /**
+   * DOT申报(USD)
+   */
+  dot?: number;
+  /**
+   * EPA申报(USD)
+   */
+  epa?: number;
+  /**
+   * FDA申报(USD)
+   */
+  fad?: number;
+  /**
+   * 买单免费品名个数
+   */
+  freeCountBill?: number;
+  /**
+   * 货代类型id
+   */
+  freightForwarderId?: number;
+  /**
+   * 货代主键id
+   */
+  id?: number;
+  /**
+   * 是否包含关税 0不包含 1包含
+   */
+  includeTariffs?: number;
+  /**
+   * 名义时效
+   */
+  nominalLimitation?: number;
+  /**
+   * 买单每续页费用
+   */
+  purchaseOrderCostPerRenewal?: number;
+  /**
+   * 最大单箱计费重量
+   */
+  singleBoxBillingWeightMax?: number;
+  /**
+   * 最低单箱计费重量
+   */
+  singleBoxBillingWeightMin?: number;
+  /**
+   * 状态 0正常 1归档
+   */
+  status?: number;
+  /**
+   * 单票最大运量(体积)
+   */
+  takeOffQuantityMaxVolume?: number;
+  /**
+   * 单票最大运量(重量)
+   */
+  takeOffQuantityMaxWeight?: number;
+  /**
+   * 起运量(体积)
+   */
+  takeOffQuantityVolume?: number;
+  /**
+   * 起运量(重量)
+   */
+  takeOffQuantityWeight?: number;
+  /**
+   * 退税每续页个数
+   */
+  taxRefundCustomsCount?: number;
+  /**
+   * 退税报关费
+   */
+  taxRefundCustomsFee?: number;
+  /**
+   * 退税免费品名个数
+   */
+  taxRefundCustomsFreeCount?: number;
+  /**
+   * 退税每续页费用
+   */
+  taxRefundPerRenewalPageFee?: number;
+  /**
+   * 货代类型
+   */
+  types?: string;
+  /**
+   * 体积系数
+   */
+  volumeFactor?: number;
+  /**
+   * 重量系数
+   */
+  weightFactor?: number;
+}
+
+export interface IUpdateSafeDaysFreightForwarder {
+  id: number
+  safeDays: string
+}

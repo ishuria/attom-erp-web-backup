@@ -106,7 +106,7 @@
       <el-table-column label="PO" prop="po" min-width="100" align="center"></el-table-column>
       <el-table-column label="产品图片" prop="skuImageUrl" width="70" align="center">
         <template #default="{ row }">
-          <el-image :src="row.skuImageUrl" style="width: 70px; height: 70px; display: block" @click="imagePreviewShow(row.url)">
+          <el-image :src="row.skuImageUrl" style="width: 70px; height: 70px; display: block" @click="imagePreviewShow(row.skuImageUrl)">
             <template #error>
               <el-icon></el-icon>
             </template>
@@ -182,7 +182,7 @@
     <template #footer>
       <div style="margin-right: 10px">
         <el-button type="danger" @click="closePackingCount">取消</el-button>
-        <el-button type="success" @click="">确认</el-button>
+        <el-button type="success" @click="confirmQualityCheck">确认</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -213,11 +213,12 @@
 </template>
 
 <script lang="ts" setup>
-import { FormInstance, FormRules } from 'element-plus'
-import { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
-import { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import { CirclePlus } from '@element-plus/icons-vue'
+import { FormInstance, FormRules } from 'element-plus'
+import { addQualityCheck, getQualityCheck } from '~/src/api/devlocal/packagingShipping'
 import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementUpdate, updateEncasement } from '/@/api/devlocal/encasement'
+import { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
+import { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
 
 const dflag = ref<boolean>(false)
 // 新增可见
@@ -225,6 +226,7 @@ const addNewVisible = ref<boolean>(false)
 const addVisible = ref<boolean>(false)
 const skuDetailList = ref<ISkuDetailList[]>([])
 const inspectionList = ref<IGetEncasementInspection[]>([])
+const list = ref<any>()
 // 图片预览
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
@@ -248,7 +250,15 @@ const fetchData = async () => {
   if (data) {
     Object.assign(modifyForm, data)
     skuDetailList.value = data.list
+    fetchSkuData()
   }
+}
+const fetchSkuData = () => {
+  list.value = skuDetailList.value.slice(
+    (queryForm.pageNo - 1) * queryForm.pageSize,
+    queryForm.pageNo * queryForm.pageSize
+  );
+  total.value = skuDetailList.value.length
 }
 watchEffect(() => {
   dflag.value = props.modifyVisible
@@ -294,30 +304,44 @@ const showInspection = async (row: ISkuDetailList) => {
   inspectionList.value = data
   
 }
+// 清点质检的确认
+const confirmQualityCheck = async () => {
+  const { data } = await addQualityCheck({
+    taskId: copyRow.value.taskId,
+    goodCount: packingCountForm.goodCount!,
+    manyCount: manyCount.value,
+    keepSampleCount: packingCountForm.keepSampleCount,
+    lackCount: lackCount.value,
+    badCount: packingCountForm.badCount,
+    remark: packingCountForm.remark,
+    status: copyRow.value.qualityCheckStatus
+  })
+  if (data) {
+    $baseMessage('添加质检信息成功', 'success')
+    packingCountVisible.value = false
+  }
+}
+const copyRow = ref<any>()
 // 展示清点质检
-const handleShowPackingCount = (row: any) => {
+const handleShowPackingCount = async (row: any) => {
   // 点击了清单质检
   if (row.qualityCheckStatus === 1) {
     packingCountVisible.value = true
-    // copyRow.value = row
-    // const { data } = await getQualityCheck({
-    //   id: row.id
-    // })
-    // Object.assign(packingCountForm, data)
-    // if (!data!.id) {
-    //   packingCountForm.packageTaskCount = row.packageTaskCount
-    // }
-    // if (!data?.packageTaskCount) {
-    //   packingCountForm.packageTaskCount = 0
-    // }
-    // lackCount.value = data?.lackCount!
-    // manyCount.value = data?.manyCount
-    
+    copyRow.value = row
+    const { data } = await getQualityCheck({
+      id: row.taskId
+    })
+    Object.assign(packingCountForm, data)
+    if (!data!.id) {
+      packingCountForm.packageTaskCount = row.packageTaskCount
+    }
+    lackCount.value = data?.lackCount!
+    manyCount.value = data?.manyCount
   } else {
-    // await addQualityCheck({
-    //   taskId: row.id,
-    //   status: row.qualityCheckStatus
-    // })
+    await addQualityCheck({
+      taskId: row.taskId,
+      status: row.qualityCheckStatus
+    })
   }
 }
 const emit = defineEmits(['update:modifyVisible'])
@@ -412,7 +436,7 @@ const handleConfirmAdd = () => {
 // 清点质检的取消
 const closePackingCount = () => {
   packingCountVisible.value = false
-  // copyRow.value.qualityCheckStatus = 0
+  copyRow.value.qualityCheckStatus = 0
 }
 const handleShowAdd = () => {
   addVisible.value = true
@@ -444,16 +468,14 @@ const queryForm = reactive<any>({
 })
 const total = ref<number>(0)
 const handleCurrentChange = (value: number) => {
-
+  queryForm.pageNo = value
+  fetchSkuData()
 }
 const handleSizeChange = (value: number) => {
-
+  queryForm.pageSize = value
+  fetchSkuData()
 }
-const fakeData = [
-  {
-    po: 'PO123'
-  }
-]
+
 const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 1) {
     return 'clear-padding'

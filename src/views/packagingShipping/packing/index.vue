@@ -166,13 +166,10 @@
       @close="closeShipmentAmazon"
     >
       <el-form ref="shipmentAmazonFormRef" :model="shipmentAmazonForm" label-position="top">
-        <el-form-item style="margin-bottom: 0px">
+        <el-form-item style="margin-bottom: 10px">
           <el-text>
             {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
           </el-text>
-        </el-form-item>
-        <el-form-item style="margin-bottom: 10px">
-          <el-text>{{ `选中的所有箱子的货值为：` }}</el-text>
         </el-form-item>
         <el-form-item>
           <el-select v-model="shipmentAmazonForm.type" >
@@ -187,7 +184,7 @@
         <el-form-item style="margin-bottom: 10px">
           <el-space >
             <el-button @click="handleGenerateFile1">生成模板文件</el-button>
-            <el-button @click="handleDownloadFile">下载模板文件</el-button>
+            <el-button :disabled="file2Disabled" @click="handleDownloadFile">下载模板文件</el-button>
           </el-space>
         </el-form-item>
      
@@ -209,8 +206,8 @@
   
         <el-form-item>
           <el-space>
-            <el-button @click="handleDownloadEncasementFile">下载装箱文件</el-button>
-            <el-button @click="handleGenerateFile3">下载装箱表格</el-button>
+            <el-button :disabled="file3Disabled" @click="handleDownloadEncasementFile">下载装箱文件</el-button>
+            <el-button :disabled="file3Disabled" @click="handleGenerateFile3">下载装箱表格</el-button>
           </el-space>
         </el-form-item>
       
@@ -231,8 +228,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="货代渠道" prop="channel">
-          <el-select v-model="shipmentAmazonForm.channel" clearable >
-
+          <el-select v-model="shipmentAmazonForm.channel" clearable placeholder="请选择货代渠道">
+            <el-option 
+              v-for="item in channelList"
+              :label="item.label"
+              :value="item.id"
+              :key="item.id"
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -398,9 +400,9 @@ import { FormInstance, FormRules } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { downloadFile } from '~/src/api/devlocal/download'
 import { printerOption, unitOption } from '../constantOption'
-import { confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
+import { confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
-import { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption } from '/@/type/packagingShipping/shippedType'
+import { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 
 const listLoading = ref<boolean>(false)
 const list = ref<IEncasementList[]>([])
@@ -503,6 +505,10 @@ const shippingPlanningFormRules = reactive<any>({
 // 上传拆分表单
 const uploadSplitForm = reactive<any>({})
 const uploadSplitFormRef = ref<FormInstance>()
+// 禁止下载模板文件
+const file2Disabled = ref<boolean>(true)
+// 禁止下载装箱文件和装箱表格
+const file3Disabled = ref<boolean>(true)
 // 修改箱数
 const handleBoxNumberChange = async (currentValue: number | undefined, oldValue: number | undefined, row: IEncasementList) => {
   if (currentValue! > oldValue!) {
@@ -543,6 +549,7 @@ const handleGenerateFile1 = async () => {
     type: shipmentAmazonForm.type
   })
   fileName.value = data
+  file2Disabled.value = false
 }
 // 下载模板文件
 const handleDownloadFile = async () => {
@@ -581,6 +588,7 @@ const UploadRequestHandler = async () => {
   formData.append('type', shipmentAmazonForm.type)
   const { data } = await uploadGenerateTemplateFile2(formData)
   fileName2.value = data
+  file3Disabled.value = false
 }
 // 下载装箱文件
 const handleDownloadEncasementFile = async () => {
@@ -784,10 +792,18 @@ const handlePackingClose = (value: boolean) => {
   packingVisible.value = value
 }
 const setSelectRows = (value: IEncasementList[]) => {
-  selectRows.value = value  
+  // 使用 Map 来去重，因为 Map 会根据键值唯一性自动去重
+  const uniqueRows = Array.from(
+    new Map(value.map(item => [item.id, item])).values()
+  );
+
+  // 更新 selectRows 为去重后的数组
+  selectRows.value = uniqueRows;
 }
+// 货代渠道列表
+const channelList = ref<OptionType[]>([])
 // 展示发货亚马逊
-const showShippingAmazon = () => {
+const showShippingAmazon = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'error')
     return
@@ -797,6 +813,10 @@ const showShippingAmazon = () => {
     $baseMessage('总箱数不能大于500，请重新勾选', 'error')
     return
   }
+  const { data } = await getChannelList()
+  channelList.value = data
+  file2Disabled.value = true
+  file3Disabled.value = true
   shippingAmazonVisible.value = true
 }
 // 展示发货沃尔玛

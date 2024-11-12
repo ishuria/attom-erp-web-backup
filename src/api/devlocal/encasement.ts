@@ -2,7 +2,9 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 import {
+  IAddChannelFreightForwarderReq,
   IAddDetailEncasementReq,
+  IAddFreightForwarderType,
   IBooleanRes,
   IBoxNumber,
   IConfirmEncasementShipmentsReq,
@@ -11,6 +13,7 @@ import {
   IEncasementIds,
   IFileName,
   IGenerateTemplateFile1Req,
+  IGetChannelListRes,
   IGetEncasementInspectionReq,
   IGetEncasementInspectionRes,
   IGetEncasementListReq,
@@ -18,12 +21,18 @@ import {
   IGetEncasementSkuReq,
   IGetEncasementSkuRes,
   IGetEncasementUpdateRes,
+  IGetShippedEncasementListRes,
+  IId,
   ISplitEncasementCsv,
   ISplitEncasementReq,
   IStringRes,
   ISubmitEncasementSkuReq,
+  ITypeId,
+  IUpdateCostFreightForwarderReq,
   IUpdateEncasementReq,
-  IUpdateEncasementShipmentDateReq
+  IUpdateEncasementShipmentDateReq,
+  IUpdateFreightForwarderType,
+  IUpdateSafeDaysFreightForwarder
 } from '/@/type/packagingShipping/shippedType'
 
 /**
@@ -276,5 +285,143 @@ export const splitEncasementCsv = (data: ISplitEncasementCsv): Promise<IBooleanR
     url: `${BASE_API}/encasement/csv/split`,
     method: 'post',
     data
+  })
+}
+/**
+ * @description 货代渠道下拉列表
+ */
+export const getChannelList = (): Promise<IGetChannelListRes> => {
+  return request({
+    url: `${BASE_API}/channel/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 已发货装箱列表查询列表查询
+ */
+export const getShippedEncasementList = (params: IGetEncasementListReq): Promise<IGetShippedEncasementListRes> => {
+  return request({
+    url: `${BASE_API}/shipment/encasement/list`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description 货代下拉数据列表获取
+ */
+export const getFreightForwarderSelect = () => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/select`,
+    method: 'get',
+  })
+}
+/**
+ * @description 获取货代清单列表
+ */
+export const getFreightForwarderTypeList = () => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/type/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 添加货代类型
+ */
+export const addFreightForwarderType = (params: IAddFreightForwarderType): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/type/add`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 货代清单类型修改
+ */
+export const updateFreightForwarderType = (data: IUpdateFreightForwarderType): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/type/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 新增费用设定
+ */
+export const addCostFreightForwarder = (params: ITypeId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/add/cost`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 删除费用设定
+ */
+export const delCostFreightForwarder = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/cost/del`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 费用的修改
+ */
+export const updateCostFreightForwarder = (data: IUpdateCostFreightForwarderReq): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/cost/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 货代费用新增渠道
+ */
+export const addChannelFreightForwarder = (data: IAddChannelFreightForwarderReq): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/channel/add`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 货代费用渠道修改
+ */
+export const updateChannelFreightForwarder = (data: IAddChannelFreightForwarderReq): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/channel/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 货代渠道复制
+ */
+export const copyChannelFreightForwarder = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/channel/copy`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 渠道安全天数修改
+ */
+export const updateSafeDaysFreightForwarder = (params: IUpdateSafeDaysFreightForwarder): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/channel/safeDays/update`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 渠道安全天数
+ */
+export const safeDaysChannelFreightForwarder = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/channel/safeDays`,
+    method: 'post',
+    params
   })
 }

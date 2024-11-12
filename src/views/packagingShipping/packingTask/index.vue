@@ -761,6 +761,7 @@
       v-model="qualityInspectionReportVisible"
       width="40%"
       @close="closeQualityInspection"
+      top="10vh"
     >
       <el-form ref="qualityInspectionFormRef" :model="qualityInspectionForm" label-position="left" label-width="auto" style="margin-right: 30px; margin-left: 30px;">
         <el-form-item label="SKU" prop="sku" >
@@ -770,22 +771,27 @@
           <el-input v-model="qualityInspectionForm.productName" disabled style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="包装尺寸(cm)" prop="packingSize" inline>
-          <el-row style="display: flex;">
-            <el-col style="flex: 1">
-              <el-input v-model.trim="qualityInspectionForm.packageLength" placeholder="长" clearable/>
-            </el-col>
-            <el-col style="flex: 0.1">
-              &nbsp;×&nbsp;
-            </el-col>
-            <el-col style="flex: 1">
-              <el-input v-model.trim="qualityInspectionForm.packageWidth" placeholder="宽" clearable/>
-            </el-col>
-            <el-col style="flex: 0.1">
-              &nbsp;×&nbsp;
-            </el-col>
-            <el-col style="flex: 1">
-              <el-input v-model.trim="qualityInspectionForm.packageHeight" placeholder="高" clearable/>
-            </el-col>
+          <el-row style="display: flex; gap: 1%; align-items: center; width: 100%;">
+            <el-input
+              v-model.trim="qualityInspectionForm.packageLength"
+              placeholder="长"
+              clearable
+              style="flex: 1; margin-right: 0"
+            />
+            <span style="display: inline-block; text-align: center; font-size: 1.5em;">×</span>
+            <el-input
+              v-model.trim="qualityInspectionForm.packageWidth"
+              placeholder="宽"
+              clearable
+              style="flex: 1; margin-right: 0"
+            />
+            <span style="display: inline-block; text-align: center; font-size: 1.5em;">×</span>
+            <el-input
+              v-model.trim="qualityInspectionForm.packageHeight"
+              placeholder="高"
+              clearable
+              style="flex: 1; margin-right: 0"
+            />
           </el-row>
         </el-form-item>
         <el-form-item label="包装重量(g)" prop="packageWeight">
