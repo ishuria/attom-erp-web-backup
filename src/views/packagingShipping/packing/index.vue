@@ -41,6 +41,7 @@
       border 
       class="noneHoveTable"
       :header-cell-style="{ textAlign: 'center' }"
+      :row-class-name="stripedRowClass"
       :cell-style="cellStyle"
       :data="list"
       @selection-change="setSelectRows"
@@ -881,6 +882,20 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'left'
   }
 }
+let previous: any = null; 
+let currentGroupIndex = 0; // 当前组索引
+
+const stripedRowClass = (_row: any) => {
+  const { row } = _row;
+  const currentId = row.id;
+  // 检查当前行是否与上一行不同
+  if (currentId !== previous) {
+    previous = currentId; 
+    currentGroupIndex++; 
+  }
+  // 根据当前组索引设置条纹样式
+  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
+};
 // 装箱合并方法
 const objectSpanMethod = ({
     row,

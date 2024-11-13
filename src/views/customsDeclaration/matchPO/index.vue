@@ -63,15 +63,18 @@
       <el-table-column label="操作" width="110" fixed="right">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button text type="primary" @click="showMatch">
-              匹配
+            <el-button text type="primary" @click="showCheck">
+              查看
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-              <el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="showCheck">查看</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="showMatch">匹配</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -178,80 +181,16 @@
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
-    <vab-dialog
-      title="匹配"
-      v-model="matchVisible"
-      class="dialog"
-      top="10vh"
-      width="90%"
-    >
-      <div style="margin-bottom: 15px">
-        <el-button type="primary" style="margin-right: 10px">清空全部</el-button>
-        <el-text>
-          {{ `SKU：品名：剩余未匹配数量：` }}
-        </el-text>
-      </div>
-      <el-table
-        border
-        :header-cell-style="{ textAlign: 'center' }"
-        :cell-style="matchStyle"
-        :data="fakeData"
-      >
-        <el-table-column label="SKU">
-          <el-table-column label="匹配的PO" prop="po" min-width="100"></el-table-column>
-          <el-table-column label="站点" prop="" min-width="115"></el-table-column>
-          <el-table-column label="打包完成数(好)" prop="" min-width="140"></el-table-column>
-          <el-table-column label="打包任务数" prop="" min-width="110"></el-table-column>
-          <el-table-column label="打包任务状态" prop="" min-width="130"></el-table-column>
-          <el-table-column label="SKU实际数量" prop="" min-width="130">
-            <template #default="{ row }">
-              <el-input clearable />
-            </template>
-          </el-table-column>
-        </el-table-column>
-        <el-table-column label="零件">
-          <el-table-column label="零件名" prop="" min-width="200"></el-table-column>
-          <el-table-column label="实际数量" prop="" min-width="100">
-            <template #default="{ row }">
-              <el-input clearable />
-            </template>
-          </el-table-column>
-          <el-table-column label="退税报关数量" prop="" min-width="130">
-            <template #default="{ row }">
-              <el-input clearable />
-            </template>
-          </el-table-column>
-          <el-table-column label="剩余可报" prop="" min-width="100"></el-table-column>
-          <el-table-column label="PO总数" prop="" min-width="90"></el-table-column>
-          <el-table-column label="采购方" prop="" min-width="90"></el-table-column>
-          <el-table-column label="不报关" prop="" min-width="90">
-            <template #default="{ row }">
-              <el-checkbox :true-value="1" :false-value="0" />
-            </template>
-          </el-table-column>
-          <el-table-column label="已发未报" prop="" min-width="100"></el-table-column>
-          <el-table-column label="已报未发" prop="" min-width="100"></el-table-column>
-        </el-table-column>
-        <el-table-column label="操作" width="140" fixed="right">
-          <template #default="{ row }">
-            <el-link type="primary" :underline="false">填入全部</el-link>
-            <el-link type="primary" :underline="false">清空</el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div style="text-align: center; margin-top: 20px">
-        <el-text>
-          {{ `剩余SKU：`}}
-        </el-text>
-      </div>
-      <template #footer>
-        <div style="text-align: center;">
-          <el-button type="warning">上一个</el-button>
-          <el-button type="success">关闭</el-button>
-          <el-button type="warning">下一个</el-button>
-        </div>
-      </template>
-    </vab-dialog>
+    <!-- 匹配 -->
+    <VabMatchDialog 
+      :matchVisible="matchVisible"
+      @update-match-visible="handleCloseMatch"
+    />
+    <!-- 查看 -->
+    <VabCheckDialog 
+      :checkVisible="checkVisible"
+      @update-check-visible="handleCloseCheck"
+    />
   </div>
 </template>
 
@@ -271,6 +210,8 @@ const listLoading = ref<boolean>(false)
 const firstLegFreightVisible = ref<boolean>(false)
 // 匹配可见
 const matchVisible = ref<boolean>(false)
+// 查看可见
+const checkVisible = ref<boolean>(false)
 // 展示头程运费
 const showFirstLegFreight = () => {
   firstLegFreightVisible.value = true
@@ -282,6 +223,18 @@ const closeFirstLegFreight = () => {
 // 展示匹配
 const showMatch = () => {
   matchVisible.value = true
+}
+// 关闭匹配
+const handleCloseMatch = (value: boolean) => {
+  matchVisible.value = value
+}
+// 展示查看
+const showCheck = () => {
+  checkVisible.value = true
+}
+// 关闭查看
+const handleCloseCheck = (value: boolean) => {
+  checkVisible.value = value
 }
 const queryData = () => {
   queryForm.pageNo = 1
@@ -318,16 +271,7 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
     textAlign: 'center'
   }
 }
-const matchStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-  if (data.columnIndex !== 6) {
-    return {
-      textAlign: 'center'
-    }
-  }
-  return {
-    textAlign: 'left'
-  }
-}
+
 </script>
 
 <style lang="scss" scoped>
