@@ -4,13 +4,16 @@
     v-model="dflag"
     top="10vh"
     class="dialog"
-    width="60%"
+    width="70%"
     @close="closeCheck"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="showSentButNotReported">已发未报</el-button>
         <el-button type="primary">清空</el-button>
+        <el-text style="font-weight: 600; margin: 0 10px calc(var(--el-margin) / 2) 0;">
+          Shipment ID：<span :style="{ color: 'var(--el-color-primary)' }">123</span>  
+        </el-text>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -31,7 +34,7 @@
       class="noneHoveTable"
     >
       <el-table-column label="SKU" prop="" min-width="200"></el-table-column>
-      <el-table-column label="描述" prop="" min-width="100"></el-table-column>
+      <el-table-column label="描述" prop="" min-width="130"></el-table-column>
       <el-table-column label="装箱个数" prop="" min-width="100"></el-table-column>
       <el-table-column label="站点" prop="" min-width="100"></el-table-column>
       <el-table-column label="当前匹配PO" prop="" min-width="120"></el-table-column>

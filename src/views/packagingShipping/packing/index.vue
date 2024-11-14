@@ -968,4 +968,14 @@ onBeforeMount(() => {
 .text-center {
   margin: 0 10px calc(var(--el-margin) / 2) 0;
 }
+
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
 </style>
