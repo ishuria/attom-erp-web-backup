@@ -147,7 +147,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="text-align: center; margin-top: 20px">
+    <div style=" margin-top: 20px;text-align: center">
       <el-text style="font-weight: 600">
         剩余SKU：<span :style="{ color: 'var(--el-color-danger)'}">18个</span>
       </el-text>
@@ -412,7 +412,7 @@ const handleSizeChange = (value: number) => {
 const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1; // 默认不跨行
 
-  if (columnIndex === 0 || columnIndex === 12) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 12) {
     const id = row.id;
 
     // 遍历后面的行，检查相同的 PO ID
@@ -431,7 +431,7 @@ const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
   }
 
   // 合并 SKU 行
-  if (columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+  if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
     const pId = row.pId;
 
     // 遍历后面的行，检查相同的 SKU ID
@@ -463,20 +463,20 @@ const objectSpanMethod2 = ({
   // 设置需要合并的列
   if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5 || columnIndex === 15) {
     // 获取当前row的零件id
-    const id = row.poId;
+    const id = row.mId;
     // 默认不跨行
     let rowspan = 1;
     // 遍历后端返回的数据
     for (let i = rowIndex + 1; i < matchList.value.length; i++) {
       // 如果零件id一样需要合并
-      if (matchList.value[i].poId === id) {
+      if (matchList.value[i].mId === id) {
         rowspan++;
       } else {
         break;
       }
     }
     // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || matchList.value[rowIndex - 1].poId !== id) {
+    if (rowIndex === 0 || matchList.value[rowIndex - 1].mId !== id) {
       return { rowspan, colspan: 1 };
     } else {
       return { rowspan: 0, colspan: 0 };
