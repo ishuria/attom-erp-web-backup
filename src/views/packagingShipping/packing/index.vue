@@ -10,7 +10,7 @@
         <el-button type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
         <el-button type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
         <el-button type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
-        <el-select placeholder="请选择打印机"  clearable style="margin: 0 10px calc(var(--el-margin) / 2) 0">
+        <el-select placeholder="请选择打印机" clearable style="margin: 0 10px calc(var(--el-margin) / 2) 0">
           <el-option 
             v-for="item in printerOption"
             :label="item.label"
@@ -47,7 +47,7 @@
       @selection-change="setSelectRows"
       :span-method="objectSpanMethod"
     >
-      <el-table-column type="selection"></el-table-column>
+      <el-table-column type="selection" fixed="left"></el-table-column>
       <el-table-column label="发货计划" prop="shipmentDate" min-width="100"></el-table-column>
       <el-table-column label="装箱日期" prop="createTime" min-width="115">
         <template #default="{ row }">
@@ -62,8 +62,8 @@
       <el-table-column label="总体积(m3)" prop="totalVolume" min-width="110"></el-table-column>
       <el-table-column label="箱规号" prop="encasementNo" min-width="110"></el-table-column>
       <el-table-column label="站点" prop="site" min-width="100"></el-table-column>
-      <el-table-column label="SKU" prop="sku" min-width="300"></el-table-column>
-      <el-table-column label="Description" prop="description" min-width="300"></el-table-column>
+      <el-table-column label="SKU" prop="sku" min-width="300" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
+      <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"></el-table-column>
       <el-table-column label="箱数" prop="numberOfBoxes" min-width="150">
         <template #default="{ row }">
           <el-input-number v-model="row.numberOfBoxes" 
@@ -399,11 +399,12 @@
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { FormInstance, FormRules } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { downloadFile } from '~/src/api/devlocal/download'
 import { printerOption, unitOption } from '../constantOption'
+import { downloadFile } from '/@/api/devlocal/download'
 import { confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const listLoading = ref<boolean>(false)
 const list = ref<IEncasementList[]>([])

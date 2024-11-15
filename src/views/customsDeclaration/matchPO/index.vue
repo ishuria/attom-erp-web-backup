@@ -31,7 +31,7 @@
           {{  row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="合同编号" prop="contractNumber" min-width="135">
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')">
         <template #default="{ row }">
           <el-input v-model="row.contractNumber"  clearable />
         </template>
@@ -81,16 +81,22 @@
       </el-table-column>
       <el-table-column label="状态" prop="status" min-width="160">
         <template #default="{ row }">
-          {{ row.matchStatus === 0 ? '待匹配' : '已匹配' }}<br />
-          {{ row.packArchiveStatus === 0 ? '待打包归档' : '已打包归档' }}<br />
-          {{ row.taxRefundStatus === 0 ? '待归档到退税关联' : '已归档到退税关联' }}
+          <span :style="{ color: row.matchStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
+            {{ row.matchStatus === 0 ? '待匹配' : '已匹配' }}
+          </span><br />
+          <span :style="{ color: row.packArchiveStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
+            {{ row.packArchiveStatus === 0 ? '待打包归档' : '已打包归档' }}
+          </span><br />
+          <span :style="{ color: row.taxRefundStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
+            {{ row.taxRefundStatus === 0 ? '待归档到退税关联' : '已归档到退税关联' }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="110" fixed="right">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="showMatch(row)">
-              查看
+              匹配
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
@@ -101,7 +107,7 @@
                   <el-link type="primary" :underline="false" @click="showCheck">查看</el-link>
                 </el-dropdown-item> -->
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="showMatch(row)">查看</el-link>
+                  <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">打包归档</el-link>
@@ -109,9 +115,9 @@
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <!-- <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="showForwarderChannel">修改货代渠道</el-link>
-                </el-dropdown-item>
+                </el-dropdown-item> -->
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="showFirstLegFreight">头程运费</el-link>
                 </el-dropdown-item>
@@ -217,6 +223,8 @@
       :matchVisible="matchVisible"
       :status="status"
       :shipId="shipId"
+      :disabled1="disabled1"
+      :disabled2="disabled2"
       @update-match-visible="handleCloseMatch"
     />
     <!-- 查看 -->
@@ -251,6 +259,7 @@ import { FormInstance } from 'element-plus'
 import { getMatchPoList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { getChannelList } from '~/src/api/devlocal/encasement'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 
 const queryForm = reactive<any>({
   keyWord: '',
@@ -299,20 +308,31 @@ const showFirstLegFreight = () => {
 const closeFirstLegFreight = () => {
   firstLegFreightVisible.value = false
 }
+// 开始匹配按钮是否禁用,所有按钮不显示
+const disabled1 = ref<boolean>(false)
+// 开始匹配禁用,所有按钮显示
+const disabled2 = ref<boolean>(true)
 // 展示匹配
 const showMatch = (row: IGetMatchPoList) => {
   status.value = row.packArchiveStatus!
   shipId.value = row.id!
+  if (row.lockStatus === 0) { //0 0 / 0 1 开始匹配显示,所有按钮不显示
+    disabled1.value = false
+    if (row.status === 0) {
+      disabled2.value = true // 没有点开始匹配,所有按钮不显示
+    } else if (row.status === 1) {
+      disabled2.value = false // 开始匹配禁止,所有按钮显示
+    }
+  } else if (row.lockStatus === 1) { // 1 0
+    disabled1.value = true //开始匹配禁用, 所有按钮不显示
+  }
   matchVisible.value = true
 }
 // 关闭匹配
 const handleCloseMatch = (value: boolean) => {
   matchVisible.value = value
 }
-// 展示查看
-const showCheck = () => {
-  checkVisible.value = true
-}
+
 // 关闭查看
 const handleCloseCheck = (value: boolean) => {
   checkVisible.value = value
@@ -360,7 +380,6 @@ const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   if (data.columnIndex === 16) {
     return {
       textAlign: 'left',
-      color: 'red'
     }
   }
   return {
@@ -373,7 +392,13 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
-const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (data.columnIndex === 3 || data.columnIndex === 6) {
+    return {
+      fontWeight: '600',
+      textAlign: 'center'
+    }
+  }
   return {
     textAlign: 'center'
   }

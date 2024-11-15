@@ -21,16 +21,16 @@
     <el-table
       border stripe
       :header-cell-style="{ textAlign: 'center' }"
-      :data="fakeData"
+      :data="list"
     >
-      <el-table-column label="渠道全名" prop="" align="center"></el-table-column>
+      <el-table-column label="渠道全名" prop="channelName" align="center"></el-table-column>
       <el-table-column label="当前价格" prop="price" align="center"></el-table-column>
-      <el-table-column label="近10次时效" prop="" align="center"></el-table-column>
-      <el-table-column label="名义时效" prop="" align="center"></el-table-column>
-      <el-table-column label="累计发货次数" prop="" align="center"></el-table-column>
-      <el-table-column label="安全天数" prop="day" align="center">
+      <el-table-column label="近10次时效" prop="tenCountTime" align="center"></el-table-column>
+      <el-table-column label="名义时效" prop="nominalLimitation" align="center"></el-table-column>
+      <el-table-column label="累计发货次数" prop="cumulativeCount" align="center"></el-table-column>
+      <el-table-column label="安全天数" prop="safeDays" align="center">
         <template #default="{ row }">
-          <el-input v-model="row.day" class="input-center" @change="modifySafeDays(row)" />
+          <el-input v-model="row.safeDays" class="input-center" @change="modifySafeDays(row)" />
         </template>
       </el-table-column>
       <el-table-column label="操作" width="360" fixed="right" align="center">
@@ -59,15 +59,22 @@
       v-model="feeNameSettingVisible"
       width="40%"
       top="3%"
+      class="dialog"
     >
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-select>
-         
+          <span style="font-size: var(--el-font-size-base); margin-right: 8px;">货代简称</span>
+          <el-select v-model="selectId" @change="fetchFeeNameSetting">
+            <el-option 
+              v-for="item in selectList"
+              :label="item.label"
+              :value="item.id"
+              :key="item.id"
+            />
           </el-select>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
-          <el-button type="primary">新增费用</el-button>
+          <el-button type="primary" @click="handleAddNewFee">新增费用</el-button>
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table
@@ -100,7 +107,7 @@
             合并报关<br>后可合并
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.bgStatus" :true-value="1" :false-value="0" />
+            <el-checkbox v-model="row.bgStatus" :true-value="1" :false-value="0" @change="modifyFeeNameSetting(row)" />
           </template>
         </el-table-column>
         <el-table-column label="合并清关后可合并" prop="qgStatus" min-width="100">
@@ -108,7 +115,7 @@
             合并清关<br>后可合并
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.qgStatus" :true-value="1" :false-value="0" />
+            <el-checkbox v-model="row.qgStatus" :true-value="1" :false-value="0" @change="modifyFeeNameSetting(row)"/>
           </template>
         </el-table-column>
         <el-table-column label="运费核对默认展示" prop="costShowStatus" min-width="100">
@@ -116,7 +123,7 @@
             运费核对<br>默认展示
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.costShowStatus" :true-value="1" :false-value="0" />
+            <el-checkbox v-model="row.costShowStatus" :true-value="1" :false-value="0" @change="modifyFeeNameSetting(row)"/>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="80">
@@ -186,7 +193,7 @@
       width="38%"
       v-model="addNewChannelVisible"
       top="5%"
-      class="addNewChannel"
+      class="dialog"
       @close="closeAddNewChannel"
     >
       <div style="max-height: 60vh; overflow: auto;">
@@ -313,7 +320,7 @@
       class="addNewChannel"
     >
       <div style="max-height: 60vh; overflow: auto;">
-        <el-form ref="addNewChannelFormRef" :model="updateForm" label-width="auto" label-position="right" style="margin-left: 10px; margin-right: 10px;">
+        <el-form :model="updateForm" label-width="auto" label-position="right" style="margin-left: 10px; margin-right: 10px;">
           <el-form-item label="渠道名">
             <div style="display: flex; gap: 1%; align-items: center;">
               <el-select v-model="updateForm.freightForwarderId" placeholder="货代简称" style="flex: 1">
@@ -394,7 +401,14 @@
           </el-form-item>
           <!-- 新加货币选项 -->
           <el-form-item label="货币" prop="customsClearanceCurrency" v-if="modifyOrCopy === 'modify'"> 
-            <el-select v-model="updateForm.customsClearanceCurrency" placeholder="请选择货币" ></el-select>
+            <el-select v-model="updateForm.customsClearanceCurrency" placeholder="请选择货币" >
+              <el-option 
+                v-for="item in currencyNumList"
+                :label="item.label"
+                :value="item.value"
+                :key="item.value"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="清关免费个数" prop="customsClearanceFreeCount">
             <el-input v-model="updateForm.customsClearanceFreeCount" clearable />
@@ -439,18 +453,31 @@ import { Search } from '@element-plus/icons-vue'
 import { FormInstance, FormRules } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { includeTariffOption } from '../../packagingShipping/constantOption'
-import { addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getFreightForwarderSelect, getFreightForwarderTypeList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
-import { IAddForwarder, OptionType } from '/@/type/packagingShipping/shippedType'
+import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
+import { IAddForwarder, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
-
-const queryForm = reactive<any>({
+const currencyNumList = [
+  {
+    value: 0,
+    label: 'RMB',
+  },
+  {
+    value: 1,
+    label: 'USD',
+  },
+  {
+    value: 2,
+    label: 'EUR',
+  },
+]
+const queryForm = reactive<IGetForwarderListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20
 })
 const total = ref<number>(0)
-const list = ref<any>([])
+const list = ref<IGetForwarderList[]>([])
 const listLoading = ref<boolean>(true)
 // 货代费用名设定可见
 const feeNameSettingVisible = ref<boolean>(false)
@@ -478,7 +505,7 @@ const feeNameSettingList = ref<any>([])
 const addNewChannelVisible = ref<boolean>(false)
 // 新增渠道表单
 const addNewChannelForm = reactive<any>({
-  includeTariff: 0
+  includeTariffs: 0
 })
 // 修改或复制表单
 const updateForm = reactive<any>({})
@@ -487,9 +514,29 @@ const addNewChannelFormRef = ref<FormInstance>()
 const modifyOrCopyVisible = ref<boolean>(false)
 // 标记修改还是复制
 const modifyOrCopy = ref<string>('')
+const selectId = ref<number>(0)
 // 展示货代展示货代费用名
-const showFeeNameSetting = () => {
+const showFeeNameSetting = async () => {
   feeNameSettingVisible.value = true
+  // 初始化为第一个选项的id
+  selectId.value = selectList.value[0].id
+  fetchFeeNameSetting()
+}
+const fetchFeeNameSetting = async () => {
+  const { data: res } = await getForwarderCostList({
+    id: selectId.value
+  })
+  feeNameSettingData.value = res
+}
+// 新增费用设定
+const handleAddNewFee = async () => {
+  const { data } = await addCostFreightForwarder({
+    typeId: selectId.value
+  })
+  if (data) {
+    $baseMessage('新增费用成功', 'success')
+    fetchFeeNameSetting()
+  }
 }
 // 关闭新增货代弹窗
 const closeAddForwarder = () => {
@@ -520,6 +567,7 @@ const delFeeSetting = (row: any, index: number) => {
     if (data) {
       $baseMessage('删除成功', 'success')
       feeNameSettingList.value.splice(index, 1)
+      fetchFeeNameSetting()
     }
   })
 }
@@ -539,24 +587,38 @@ const closeAddNewChannel = () => {
   addNewChannelVisible.value = false
 }
 // 确认新增渠道
-const confirmAddNewChannel = () => {
-  addNewChannelFormRef.value?.validate((isValid: boolean) => {
+const confirmAddNewChannel = async () => {
+  addNewChannelFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       //执行新增渠道逻辑
-      closeAddNewChannel()
+      const { data } = await addChannelFreightForwarder(addNewChannelForm)
+      if (data) {
+        $baseMessage('新增渠道成功', 'success')
+        closeAddNewChannel()
+      }
     }
   })
+}
+// 获取修改的列表
+const fetchUpdateList = async (id: number) => {
+  const { data } = await getUpdateForwarderList({
+    id: id
+  })
+  Object.assign(updateForm, data)
 }
 // 展示修改
 const showModify = (row: any) => {
   modifyOrCopyVisible.value = true
   modifyOrCopy.value = 'modify'
+  fetchUpdateList(row.id)
 }
 // 展示复制
 const showCopy = (row: any) => {
   modifyOrCopyVisible.value = true
   modifyOrCopy.value = 'copy'
+  fetchUpdateList(row.id)
 }
+
 // 确认修改或复制
 const confirmModifyOrCopy = async () => {
   if (modifyOrCopy.value === 'modify') {
@@ -573,6 +635,7 @@ const confirmModifyOrCopy = async () => {
       $baseMessage('货代费用渠道复制成功', 'success')
       modifyOrCopyVisible.value = false
       // 刷新数据
+      fetchData()
     }
   }
 }
@@ -592,103 +655,26 @@ const calculateSafeDays = async (row: any) => {
     $baseMessage('计算成功', 'success')
   }
 }
-// 新增渠道
+// 展示新增渠道
 const handleShowAddChannel = async () => {
   addNewChannelVisible.value = true
-  const { data } = await getFreightForwarderSelect()
-  selectList.value = data
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
-const fakeData = [
-  {
-    price: 33,
-    day: 6
-  }
-]
-const feeNameSettingData = [
-  {
-    name: '运费（买单）',
-    billName: '海运费'
-  },
-  {
-    name: '运费（退税）',
-    billName: '海运费'
-  },
-  {
-    name: '送仓费',
-    billName: ''
-  },
-  {
-    name: '买单报关费',
-    billName: '报关费'
-  },
-  {
-    name: '退税报关费',
-    billName: '报关费'
-  },
-  {
-    name: '续页费（买单）',
-    billName: '续页费'
-  },
-  {
-    name: '续页费（退税）',
-    billName: '续页费'
-  },
-  {
-    name: '清关费',
-    billName: '单独清关费'
-  },
-  {
-    name: '清关分类费',
-    billName: '清关分类费'
-  },
-  {
-    name: '关税',
-    billName: '关税'
-  },
-  {
-    name: 'FDA申报费',
-    billName: 'FDA申报费'
-  },
-  {
-    name: 'EPA申报费',
-    billName: 'EPA申报费'
-  },
-  {
-    name: 'DOT申报费',
-    billName: ''
-  },
-  {
-    name: 'DOT申报费',
-    billName: ''
-  },
-  {
-    name: 'DOT申报费',
-    billName: ''
-  },
-  {
-    name: 'DOT申报费',
-    billName: ''
-  },
-]
-const fakeForwarderList = [
-  {
-    fullName: '全称1',
-    abbreviation: '简称1'
-  }
-]
+
+const feeNameSettingData = ref<IGetForwarderCostList[]>([])
+
 let copyRow: any
 /**
  * @description 货代费用名设定表格的点击编辑
@@ -734,7 +720,28 @@ const clickCancel = async (event: any, row: any) => {
 
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑, 发送更新请求
-    await updateCostFreightForwarder(row)
+    await updateCostFreightForwarder({
+      id: row.id,
+      costName: row.costName,
+      billCostName: row.billCostName,
+      bgStatus: row.bgStatus,
+      qgStatus: row.qgStatus,
+      costShowStatus: row.costShowStatus
+    })
+  }
+}
+const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
+  try {
+    await updateCostFreightForwarder({
+      id: row.id,
+      costName: row.costName,
+      billCostName: row.billCostName,
+      bgStatus: row.bgStatus,
+      qgStatus: row.qgStatus,
+      costShowStatus: row.costShowStatus
+    })
+  } catch (error) {
+    console.error(error)
   }
 }
 /**
@@ -805,9 +812,21 @@ const feeNameSettingCellStyle = (data: { row: any, column: any, rowIndex: number
     textAlign: 'center'
   }
 }
-
+// 获取货代简称列表
+const fetchSelectList = async () => {
+  const { data } = await getFreightForwarderSelect()
+  selectList.value = data
+}
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getForwarderList(queryForm)
+  total.value = data?.total!
+  list.value = data?.list!
+  listLoading.value = false
+}
 onBeforeMount(() => {
-  // fetchData()
+  fetchData()
+  fetchSelectList()
 })
 </script>
 
@@ -823,7 +842,7 @@ onBeforeMount(() => {
 .none {
   display: none;
 }
-:deep(.addNewChannel .el-dialog__body) {
+:deep(.dialog .el-dialog__body) {
   padding-top: 10px;
 }
 :deep(.listTable .el-table__body .cell) {

@@ -652,3 +652,102 @@ export interface IUpdateSafeDaysFreightForwarder {
   id: number
   safeDays: string
 }
+export interface IGetForwarderCostListRes {
+  code: number
+  data: IGetForwarderCostList[]
+  /**
+   * 消息
+   */
+  msg: string
+}
+
+export interface IGetForwarderCostList {
+  /**
+   * 合并报关状态 1勾选
+   */
+  bgStatus: number;
+  /**
+   * 账单费用名
+   */
+  billCostName: string;
+  /**
+   * 费用名
+   */
+  costName: string;
+  /**
+   * 运费核对默认状态 0不展示 1展示
+   */
+  costShowStatus: number;
+  /**
+   * 主键id
+   */
+  id: number;
+  /**
+   * 清关合并 0不合并 1合并
+   */
+  qgStatus: number;
+  /**
+   * 是否可以删除 0不可以 1可以
+   */
+  status: number;
+  /**
+   * 货代类型id
+   */
+  typeId: number;
+}
+
+export interface IGetForwarderListReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetForwarderListRes {
+  data?: {
+    list?: IGetForwarderList[]
+    total?: number
+  }
+}
+
+export interface IGetForwarderList {
+  /**
+   * 渠道名
+   */
+  channelName?: string;
+  /**
+   * 累计次数
+   */
+  cumulativeCount?: number;
+  /**
+   * 目的地
+   */
+  destination?: string;
+  /**
+   * 主键id
+   */
+  id?: number;
+  /**
+   * 货代简称
+   */
+  name?: string;
+  /**
+   * 名义时效
+   */
+  nominalLimitation?: number;
+  /**
+   * 当前价格
+   */
+  price?: string;
+  /**
+   * 安全天数
+   */
+  safeDays?: number;
+  /**
+   * 近10次时效
+   */
+  tenCountTime?: number;
+  /**
+   * 货代类型
+   */
+  types?: string;
+}

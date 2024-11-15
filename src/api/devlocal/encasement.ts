@@ -21,6 +21,9 @@ import {
   IGetEncasementSkuReq,
   IGetEncasementSkuRes,
   IGetEncasementUpdateRes,
+  IGetForwarderCostListRes,
+  IGetForwarderListReq,
+  IGetForwarderListRes,
   IGetShippedEncasementListRes,
   IId,
   ISplitEncasementCsv,
@@ -422,6 +425,36 @@ export const safeDaysChannelFreightForwarder = (params: IId): Promise<IBooleanRe
   return request({
     url: `${BASE_API}/freight/forwarder/channel/safeDays`,
     method: 'post',
+    params
+  })
+}
+/**
+ * @description 货代费用名设定数据列表获取
+ */
+export const getForwarderCostList = (params: IId): Promise<IGetForwarderCostListRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/cost/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 货代列表获取
+ */
+export const getForwarderList = (params: IGetForwarderListReq): Promise<IGetForwarderListRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 货代修改详情获取
+ */
+export const getUpdateForwarderList = (params: IId) => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/get`,
+    method: 'get',
     params
   })
 }

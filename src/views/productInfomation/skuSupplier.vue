@@ -281,7 +281,7 @@ import { handleActivePath } from '/@/utils/routes'
 
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { FormInstance, UploadFile } from 'element-plus'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import { flexColumnWidth } from '/@/utils/tableColum'
 import { currencyNumList } from '../newProductDevelopment/indexCommon'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { createConsumablesSupplier, createProductComponentSuppliser, delComponentImage, getProductAllSupplier, getProductComponentPurchase, getProductListSuppliser, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponentSuppliser, uploadComponentImage } from '/@/api/devlocal/productInformation'

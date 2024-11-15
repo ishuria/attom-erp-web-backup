@@ -15,63 +15,65 @@ export interface IGetMatchPoList {
   /**
    * 货代渠道id
    */
-  channelId?: number;
+  channelId?: number
   /**
    * 合同编号
    */
-  contractNumber?: string;
+  contractNumber?: string
   /**
    * 货代单号
    */
-  freightForwardingNumber?: string;
+  freightForwardingNumber?: string
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 匹配状态 0待匹配 1已匹配
    */
-  matchStatus?: number;
+  matchStatus?: number
   /**
    * 打包归档状态 0待打包归档 1已打包归档
    */
-  packArchiveStatus?: number;
+  packArchiveStatus?: number
   /**
    * 运费状态 0未付 1部分付 2全付
    */
-  payStatus?: number;
+  payStatus?: number
   /**
    * referenceID
    */
-  referenceId?: string;
+  referenceId?: string
   /**
    * 发货日期
    */
-  shipmentDate?: string;
+  shipmentDate?: string
   /**
    * shipmentId
    */
-  shipmentId?: string;
+  shipmentId?: string
   /**
    * 站点
    */
-  site?: string;
+  site?: string
   /**
    * 退税状态 0待归档到退税关联 1已归档到退税关联
    */
-  taxRefundStatus?: number;
+  taxRefundStatus?: number
   /**
    * 产品总数
    */
-  totalNumber?: number;
+  totalNumber?: number
   /**
    * 体积m³
    */
-  volume?: number;
+  volume?: number
   /**
    * 重量kg
    */
-  weight?: number;
+  weight?: number
+  lockStatus: number | null
+  status: number | null
 }
 
 export interface IGetMatchPackageListReq {
@@ -289,4 +291,81 @@ export interface IClearMatchComponent {
 export interface IClearAllMatchComponent {
   mIds: string
   id: number
+}
+
+export interface IGetMatchSentListRes {
+  data: {
+    list: IGetMatchSentList[]
+    total: number
+  }
+}
+
+export interface IGetMatchSentList {
+  /**
+   * 零件名
+   */
+  componentName?: string;
+  /**
+   * 描述
+   */
+  desc?: string;
+  /**
+   * 主键id
+   */
+  id?: number;
+  /**
+   * po号
+   */
+  po?: string;
+  /**
+   * po的零件id
+   */
+  poComponentId?: number;
+  /**
+   * po的id
+   */
+  poId?: number;
+  /**
+   * 采购方
+   */
+  purchase?: string;
+  /**
+   * SKU
+   */
+  sku?: string;
+  /**
+   * 已报未发数量
+   */
+  ybwfCount?: number;
+  /**
+   * 已发未报数量
+   */
+  yfwbCount?: number;
+  [property: string]: any;
+}
+
+export interface IId {
+  id: number
+}
+export interface IIds {
+  ids: string
+}
+
+export interface IClearUnlockMatchShipment {
+  id: number
+  ids: string
+}
+export interface ISubmitMatchSentList {
+  id: number
+  idList: number[]
+}
+
+export interface IUpdateMatchQuality {
+  mId: number
+  taskId: number
+  goodCount: number
+  manyCount: number
+  keepSampleCount: number
+  lackCount: number
+  badCount: number
 }
