@@ -7,6 +7,7 @@ export const indexColumns = [
   {
     label: '评估人',
     prop: 'evaluatorName',
+    minWidth: 110,
   },
   {
     label: '评估日期',
@@ -67,6 +68,7 @@ export const indexColumns = [
   {
     label: '关键词首页评分',
     prop: 'keyWordScore',
+    minWidth: 120
   },
   {
     label: '总分',

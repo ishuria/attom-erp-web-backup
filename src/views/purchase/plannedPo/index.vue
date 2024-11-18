@@ -893,6 +893,10 @@ onUnmounted(() => {
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
-
+.overflow-text {
+ display: block;
+ max-height: 81.2px; /* 设置文本的最大高度 */
+ overflow-y: auto; /* 溢出时显示垂直滚动条 */
+}
 </style>
   

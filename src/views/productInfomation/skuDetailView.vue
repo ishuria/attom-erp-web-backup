@@ -200,11 +200,11 @@
     </el-card>
         
     <el-page-header  @back="goBack" style="margin-bottom: 0px;">
-        <template #content>
-            <div class="flex items-center">
-                <span> <strong> SKU零配件清单（与开票一致） </strong></span>
-            </div>
-        </template>
+      <template #content>
+        <div class="flex items-center">
+          <span> <strong> SKU零配件清单（与开票一致） </strong></span>
+        </div>
+      </template>
     </el-page-header>
     <div class="comprehensive-table-container">
       <vab-query-form>
@@ -1090,48 +1090,73 @@ const removeHtmlTags = (html: string): string => {
 
 
 const rules = reactive({
-    type: [
-        { required: true, message: '请选择类型', trigger: 'change' },
-    ],
-    componentName: [
-        { required: true, message: '请填写零件名', trigger: 'blur' },
-    ],
-    materialType: [
-        { required: true, message: '请选择耗材种类', trigger: 'change' },
-    ],
-    size: [
-        { required: true, message: '请填写耗材尺寸', trigger: 'blur' },
-        { validator: validateNoSpaces, trigger: 'blur' },
-    ],
-    unit: [
-        { required: true, message: '请填写尺寸单位', trigger: 'blur' },
-        { validator: validateNoSpaces, trigger: 'blur' },
-    ],
-    specification: [
-        { required: true, message: '请填写规格和说明', trigger: 'blur' },
-        { validator: validateNoSpaces, trigger: 'blur' },
-    ],
-    componentUnit: [
-        { required: true, message: '请填写零件单位', trigger: 'blur' },
-        { validator: validateNoSpaces, trigger: 'blur' },
-    ],
-    supplier: [
-        { required: true, message: '请输入供应商', trigger: 'blur' },
-        { validator: validateNoSpaces, trigger: 'blur' },
-    ],
-    invoicing: [
-        { required: true, message: '请选择开票类型', trigger: 'change' },
-    ],
-    actualTaxRate: [
-        { required: true, message: '请填写实际税点', trigger: 'blur' },
-        { validator: validateNoSpaces, trigger: 'blur' },
-    ],
-    invoicingTaxRate: [
-        { required: true, message: '请填写开票税点', trigger: 'blur' },
-        { validator: validateNoSpaces, trigger: 'blur' },
-    ],
+  type: [
+    { required: true, message: '请选择类型', trigger: 'change' },
+  ],
+  componentName: [
+    { required: true, message: '请填写零件名', trigger: 'blur' },
+  ],
+  materialType: [
+    { required: true, message: '请选择耗材种类', trigger: 'change' },
+  ],
+  size: [
+    { required: true, message: '请填写耗材尺寸', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
+  ],
+  unit: [
+    { required: true, message: '请填写尺寸单位', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
+  ],
+  specification: [
+    { required: true, message: '请填写规格和说明', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
+  ],
+  componentUnit: [
+    { required: true, message: '请填写零件单位', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
+  ],
+  supplier: [
+    { required: true, message: '请输入供应商', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
+  ],
+  invoicing: [
+    { required: true, message: '请选择开票类型', trigger: 'change' },
+  ],
+  actualTaxRate: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (form.invoicing !== 2 && (!value || value === '')) {
+          callback(new Error('请填写实际税点'));
+        } else {
+          callback();
+        }
+        if (/\s/.test(value)) {
+          callback(new Error('输入不能包含空格'));
+        } else {
+          callback();
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  invoicingTaxRate: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (form.invoicing !== 2 && (!value || value === '')) {
+          callback(new Error('请填写开票税点'));
+        } else {
+          callback();
+        }
+        if (/\s/.test(value)) {
+          callback(new Error('输入不能包含空格'));
+        } else {
+          callback();
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
 });
-
 
 const addComponentVisible = ref<boolean>(false)
 

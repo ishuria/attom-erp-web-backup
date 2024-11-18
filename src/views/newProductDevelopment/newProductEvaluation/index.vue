@@ -19,15 +19,12 @@
               <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                @click="queryData"></el-button>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
             </el-form-item>
           </el-form>
-
         </div>
       </vab-query-form-right-panel>
     </vab-query-form>
-
 
     <el-table ref="tableRef" 
       v-loading="listLoading" 
@@ -36,52 +33,52 @@
       :stripe="true"
       @cell-click="keyWordTrendCellClick"
     >
-        <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-          :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
-          <template #default="{ row }">
-            <div v-if="item.label === '关键词趋势'">
-              <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
-            </div>
-          </template>
-        </el-table-column>
-
-        <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
-          <template #default="{ row }">
-            <el-dropdown>
-              <el-button text type="primary"  @click="handleClick(row)">
-                产品核算推进
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false" @click="handleClick(row)">产品核算推进</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false" @click="toUpdateEvaluation(row)">查看和修改</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false" @click="cliekFontSearchKeyWord(row)"
-                      v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item v-if="row.userId === currentLoginUserId">
-                    <el-link type="primary" :underline="false" @click="sharedEvaluation(row)">共享</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false" @click="getBenchmarkScoreDetail(row.idNo)"
-                      v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
-        </el-table-column>
-
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+      <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+        :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+        <template #default="{ row }">
+          <div v-if="item.label === '关键词趋势'">
+            <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
+          </div>
         </template>
+      </el-table-column>
+
+      <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
+        <template #default="{ row }">
+          <el-dropdown>
+            <el-button text type="primary"  @click="handleClick(row)">
+              产品核算推进
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="handleClick(row)">产品核算推进</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="toUpdateEvaluation(row)">查看和修改</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="cliekFontSearchKeyWord(row)"
+                    v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item v-if="row.userId === currentLoginUserId">
+                  <el-link type="primary" :underline="false" @click="sharedEvaluation(row)">共享</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="getBenchmarkScoreDetail(row.idNo)"
+                    v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+      </el-table-column>
+
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
     </el-table>
     <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />

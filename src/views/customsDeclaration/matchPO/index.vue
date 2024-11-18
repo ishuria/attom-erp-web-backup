@@ -228,10 +228,10 @@
       @update-match-visible="handleCloseMatch"
     />
     <!-- 查看 -->
-    <VabCheckDialog 
+    <!-- <VabCheckDialog 
       :checkVisible="checkVisible"
       @update-check-visible="handleCloseCheck"
-    />
+    /> -->
     <!-- 修改货代渠道 -->
     <vab-dialog
       title="修改货代渠道"

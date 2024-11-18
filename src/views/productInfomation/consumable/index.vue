@@ -1,404 +1,397 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
-      <vab-query-form>
-        <vab-query-form-top-panel>
-          <h2>耗材信息</h2>
-        </vab-query-form-top-panel>
-          <vab-query-form-left-panel>
-              <el-button type="primary" @click="handleAddConsumable">创建耗材</el-button>
-              <el-button type="primary" @click="handleConsumableType">耗材种类</el-button>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
-              <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                  @click="queryData"></el-button>
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-      </vab-query-form>
-          <el-table 
-              ref="tableRef" 
-              stripe border 
-              :data="list" 
-              :header-cell-style="{ 'text-align': 'center' }"
-              @cell-click="changeInput"
-           
-              :cell-style="cellStyle"
-              class="noneHoveTable"
-          >
-              <el-table-column align="center" label="图片" class="image-wall" min-width="100">
-                  <template #default="{ row, $index }">
-                      <el-upload 
-                          list-type="picture-card" 
-                          :file-list="row.imageList" 
-                          :class="{ hide: row.hide }"
-                          :http-request="(File) => uploadImage(File, row)"
-                      >
-                          <el-icon ><Plus /></el-icon>
-                          <template #file="{ file }">
-                              <div>
-                                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                                  <span class="el-upload-list__item-actions">
-                                      <span
-                                          class="el-upload-list__item-preview"
-                                          @click="handlePictureCardPreview(file, row)"
-                                      >
-                                          <el-icon><zoom-in /></el-icon>
-                                      </span>
-                                      <span
-                                          class="el-upload-list__item-delete"
-                                          @click="handleRemove(file, row)"
-                                      >
-                                          <el-icon><Delete /></el-icon>
-                                      </span>
-                                  </span>
-                              </div>
-                          </template>
-                      </el-upload>
-                  </template>
-              </el-table-column>
-              <el-table-column label="零件ID" align="center" min-width="70" prop="existingPartsListId" width="100">
-                  <template #default="{ row }">
-                      <span >{{ row.existingPartsListId }}</span>
-                  </template>
-              </el-table-column>   
-              <el-table-column label="耗材名" prop="componentName" width="120">
-                  <template #default="{ row }">
-                      <span >{{ row.componentName }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="按单采购" prop="status" align="center" min-width="90">
-                <template #default = "{ row }">
-                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handleConsumablesUpdate(row)"/>
-                </template>
-              </el-table-column>
-              <el-table-column label="单位"  min-width="70" prop="unit" align="center">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.unit" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.unit }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="出厂单价" prop="unitPrice" min-width="70" align="center">
-                  <template #header>
-                      出厂<br>单价
-                  </template>
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.unitPrice }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="未税价" prop="preTaxPrice" align="center" min-width="80">
-                  <template #default="{ row }">
-                      <span >{{ row.preTaxPrice }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="含税价" prop="taxIncludedPrice" align="center" min-width="80">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>{{ row.taxIncludedPrice }}</span>
-                  </template>
-              </el-table-column>    
-              <el-table-column label="货币" width="110px" prop="currency">
-                  <template #default="{ row }">
-                      <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
-                          <el-option v-for="dict in currencyNumList" :key="dict.value"
-                              :value="dict.value" :label="dict.label"></el-option>
-                      </el-select>
-                  </template>
-              </el-table-column>
-              <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="100">
-                  <template #default="{ row }">
-                      <div class="none">
-                              <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                          </div>
-                      <span>{{ row.minimumOrderQuantity }}</span>
-                  </template>
-              </el-table-column> 
-              <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="100">
-                  <template #default="{ row }">
-                      <div class="none">
-                              <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                          </div>
-                      <span>{{ row.numberFullCartons }}</span>
-                  </template>
-              </el-table-column> 
-              <el-table-column align="center" label="默认供应商" min-width="200" prop="suppliserId">
-                  <template #default="{row}">
-                      <el-select placeholder="请选择默认供应商" v-model="row.suppliserId" style="min-width: 100%;"  @change="handleConsumablesUpdate(row)">
-                        <el-option 
-                                v-for="item in row.suppliserList"
-                                :label="item.label"
-                                :value="item.id"
-                                :key="item.id"
-                            />
-                      </el-select>
-                  </template>
-              </el-table-column>
-              <el-table-column label="开票" prop="oem" align="center" width="130">
-                    <template #default = "{ row }">
-                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
-                            <el-option v-for="dict in invoicingNumList" :key="dict.value"
-                                :value="dict.value" :label="dict.label"></el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-              <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
-                  <template #header>
-                      实际<br>税点
-                  </template>
-                  <template #default="{ row }">
-                      <span >{{ row.actualTaxRate }}</span>
-                  </template>
-              </el-table-column>
-
-              <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
-                  <template #header>
-                      开票<br>税点
-                  </template>
-                  <template #default="{ row }">
-                      <span >{{ row.invoicingTaxRate }}</span>
-                  </template>
-              </el-table-column>
-
-              <el-table-column align="center" label="默认采购方" min-width="160" prop="purchaseId">
-                <template #default="{row}">
-               
-                    <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
-                          <el-option 
-                              v-for="item in purchaseOption"
-                              :label="item.label"
-                              :value="item.id"
-                              :key="item.id"
-                          />
-                      </el-select>
-                 
-                </template>
-              </el-table-column>
-              <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                      </div>
-                      <span>
-                          <el-text truncated>
-                              {{ row.purchaseLink }}
-                          </el-text>
-                      </span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.purchaseMatters"  />
-                      </div>
-                      <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="合同条款" prop="contractTerms" min-width="200">
-                  <template #default="{ row }">
-                      <div class="none">
-                          <el-input type="text" v-model="row.contractTerms"  />
-                      </div>
-                      <span>{{ removeHtmlTags(row.contractTerms) }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column align="center" fixed="right" label="操作" width="150">
-                  <template #default="{ row }">
-                    <el-dropdown>
-                      <el-button text type="primary" @click="handleSupplier(row)">
-                        供应商
-                        <el-icon class="el-icon--right">
-                          <arrow-down />
-                        </el-icon>
-                      </el-button>
-                      <template #dropdown>
-                        <el-dropdown-menu>
-                          <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
-                          </el-dropdown-item>
-                          <el-dropdown-item>
-                            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row)">添加到SKU</el-link>
-                          </el-dropdown-item>
-                        </el-dropdown-menu>
-                      </template>
-                    </el-dropdown>
-                  </template>
-              </el-table-column>
-          <template #empty>
-              <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
-          </template>
-      </el-table>
-      <vab-pagination
-        :current-page="queryForm.pageNo"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
-      <wangEditor
-          :title="wangEditorTitle"
-          :wangEditorVisible="wangEditorAttentionVisible"
-          :content="attentionCopy"
-          @clickChild="clickAttentionConfirm"
-          @clickBoolean="clickAttentionCancel"
-          :classify="classify"
-      >
-      </wangEditor>
-      <wangEditor
-          :title="wangEditorTitle"
-          :wangEditorVisible="wangEditorContractVisible"
-          :content="contractCopy"
-          @clickChild="clickContractConfirm"
-          @clickBoolean="clickContractCancel"
-          :classify="classify"
-      >
-      </wangEditor>
-    <el-dialog 
-        v-model="consumableVisible" 
-        :close-on-click-modal="false" 
-        title="耗材种类" 
-        width="33%"
-        class="moldDialog"
-        :before-close="handlerCloseDialog"
+    <vab-query-form>
+      <vab-query-form-top-panel>
+        <h2>耗材信息</h2>
+      </vab-query-form-top-panel>
+      <vab-query-form-left-panel>
+        <el-button type="primary" @click="handleAddConsumable">创建耗材</el-button>
+        <el-button type="primary" @click="handleConsumableType">耗材种类</el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+    <el-table 
+      ref="tableRef" 
+      stripe border 
+      :data="list" 
+      :header-cell-style="{ 'text-align': 'center' }"
+      @cell-click="changeInput"
+      :cell-style="cellStyle"
+      class="noneHoveTable"
     >
-        <el-divider style="margin-top: 0; margin-bottom: 20px"/>
-        <div id="table-height-container">
-            <el-row :gutter="20" style="margin-bottom: 20px">
-                <el-col :span="20">
-                    <el-input v-model="consumableTypeForm.consumableType" @keyup.enter.native="handleAddConsumableType" clearable placeholder="请输入新增耗材种类" />      
-                </el-col>
-                <el-col :span="4">
-                    <el-button type="primary" @click="handleAddConsumableType">新增</el-button>
-                </el-col>          
-            </el-row>
+      <el-table-column label="图片" class="image-wall" min-width="100">
+        <template #default="{ row, $index }">
+          <el-upload 
+            list-type="picture-card" 
+            :file-list="row.imageList" 
+            :class="{ hide: row.hide }"
+            :http-request="(File) => uploadImage(File, row)"
+          >
+            <el-icon ><Plus /></el-icon>
+            <template #file="{ file }">
+              <div>
+                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-preview"
+                    @click="handlePictureCardPreview(file, row)"
+                  >
+                    <el-icon><zoom-in /></el-icon>
+                  </span>
+                  <span
+                    class="el-upload-list__item-delete"
+                    @click="handleRemove(file, row)"
+                  >
+                    <el-icon><Delete /></el-icon>
+                  </span>
+                </span>
+              </div>
+            </template>
+          </el-upload>
+        </template>
+      </el-table-column>
+      <el-table-column label="零件ID" min-width="70" prop="existingPartsListId" width="100">
+          <template #default="{ row }">
+              <span >{{ row.existingPartsListId }}</span>
+          </template>
+      </el-table-column>   
+      <el-table-column label="耗材名" prop="componentName" :width="calculateBrColumnWidth(list, (row: any) => row.componentName, 50)">
+        <template #default="{ row }">
+          <div v-html="row.componentName"></div>
+        </template>
+      </el-table-column>
+      <el-table-column label="按单采购" prop="status" min-width="90">
+        <template #default = "{ row }">
+            <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox"  @change="handleConsumablesUpdate(row)"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="单位"  min-width="70" prop="unit">
+          <template #default="{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.unit" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              </div>
+              <span>{{ row.unit }}</span>
+          </template>
+      </el-table-column>
+      <el-table-column label="出厂单价" prop="unitPrice" min-width="70" >
+          <template #header>
+              出厂<br>单价
+          </template>
+          <template #default="{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              </div>
+              <span>{{ row.unitPrice }}</span>
+          </template>
+      </el-table-column>
+      <el-table-column label="未税价" prop="preTaxPrice" min-width="80">
+          <template #default="{ row }">
+              <span >{{ row.preTaxPrice }}</span>
+          </template>
+      </el-table-column>
+      <el-table-column label="含税价" prop="taxIncludedPrice" min-width="80">
+          <template #default="{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              </div>
+              <span>{{ row.taxIncludedPrice }}</span>
+          </template>
+      </el-table-column>    
+      <el-table-column label="货币" width="110px" prop="currency">
+          <template #default="{ row }">
+              <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
+                  <el-option v-for="dict in currencyNumList" :key="dict.value"
+                      :value="dict.value" :label="dict.label"></el-option>
+              </el-select>
+          </template>
+      </el-table-column>
+      <el-table-column label="起订量" prop="minimumOrderQuantity" min-width="100">
+          <template #default="{ row }">
+              <div class="none">
+                      <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                  </div>
+              <span>{{ row.minimumOrderQuantity }}</span>
+          </template>
+      </el-table-column> 
+      <el-table-column label="整箱数" prop="numberFullCartons" min-width="100">
+          <template #default="{ row }">
+              <div class="none">
+                      <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                  </div>
+              <span>{{ row.numberFullCartons }}</span>
+          </template>
+      </el-table-column> 
+      <el-table-column align="center" label="默认供应商" min-width="200" prop="suppliserId">
+          <template #default="{row}">
+              <el-select placeholder="请选择默认供应商" v-model="row.suppliserId" style="min-width: 100%;"  @change="handleConsumablesUpdate(row)">
+                <el-option 
+                        v-for="item in row.suppliserList"
+                        :label="item.label"
+                        :value="item.id"
+                        :key="item.id"
+                    />
+              </el-select>
+          </template>
+      </el-table-column>
+      <el-table-column label="开票" prop="oem" width="130">
+            <template #default = "{ row }">
+                <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
+                    <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                        :value="dict.value" :label="dict.label"></el-option>
+                </el-select>
+            </template>
+        </el-table-column>
+      <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60">
+          <template #header>
+              实际<br>税点
+          </template>
+          <template #default="{ row }">
+              <span >{{ row.actualTaxRate }}</span>
+          </template>
+      </el-table-column>
+
+      <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60">
+          <template #header>
+              开票<br>税点
+          </template>
+          <template #default="{ row }">
+              <span >{{ row.invoicingTaxRate }}</span>
+          </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="默认采购方" min-width="160" prop="purchaseId">
+        <template #default="{row}">
         
-            <el-table 
-                ref="tableRef" 
-                stripe border   
-                :header-cell-style="{ 'text-align': 'center' }"
-                :data="consumableTypeData"
-            >
-                <el-table-column label="耗材种类" prop="consumablesName">
-                    
-                </el-table-column>
-                <el-table-column align="center" fixed="right" label="操作" width="120">
-                    <template #default="{ row, $index }">
-                        <el-link type="danger" :underline="false" @click="handleDelConsumableType(row, $index)">删除</el-link>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" />
-                </template>
-            </el-table>
-  
-            <!-- <vab-pagination
-                :current-page="consumableTypeQueryForm.pageNo"
-                :page-size="consumableTypeQueryForm.pageSize"
-                :total="consumableTypeTotal"
-                @current-change="handleConsumableTypeSizeChange"
-                @size-change="handleConsumableTypeCurrentChange"
-            /> -->
-        </div>
+            <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleConsumablesUpdate(row)">
+                  <el-option 
+                      v-for="item in purchaseOption"
+                      :label="item.label"
+                      :value="item.id"
+                      :key="item.id"
+                  />
+              </el-select>
+          
+        </template>
+      </el-table-column>
+      <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+          <template #default="{ row }">
+              <div class="none">
+                  <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              </div>
+              <span>
+                  <el-text truncated>
+                      {{ row.purchaseLink }}
+                  </el-text>
+              </span>
+          </template>
+      </el-table-column>
+      <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.purchaseMatters"  />
+            </div>
+            <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="合同条款" prop="contractTerms" min-width="200">
+        <template #default="{ row }">
+            <div class="none">
+                <el-input type="text" v-model="row.contractTerms"  />
+            </div>
+            <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" fixed="right" label="操作" width="150">
+        <template #default="{ row }">
+          <el-dropdown>
+            <el-button text type="primary" @click="handleSupplier(row)">
+              供应商
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="handleAddOtherSku(row)">添加到SKU</el-link>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+      </template>
+    </el-table>
+    <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <wangEditor
+      :title="wangEditorTitle"
+      :wangEditorVisible="wangEditorAttentionVisible"
+      :content="attentionCopy"
+      @clickChild="clickAttentionConfirm"
+      @clickBoolean="clickAttentionCancel"
+      :classify="classify"
+    >
+    </wangEditor>
+    <wangEditor
+      :title="wangEditorTitle"
+      :wangEditorVisible="wangEditorContractVisible"
+      :content="contractCopy"
+      @clickChild="clickContractConfirm"
+      @clickBoolean="clickContractCancel"
+      :classify="classify"
+    >
+    </wangEditor>
+    <el-dialog 
+      v-model="consumableVisible" 
+      :close-on-click-modal="false" 
+      title="耗材种类" 
+      width="33%"
+      class="moldDialog"
+      :before-close="handlerCloseDialog"
+    >
+      <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+      <div id="table-height-container">
+        <el-row :gutter="20" style="margin-bottom: 20px">
+          <el-col :span="20">
+            <el-input v-model="consumableTypeForm.consumableType" @keyup.enter.native="handleAddConsumableType" clearable placeholder="请输入新增耗材种类" />      
+          </el-col>
+          <el-col :span="4">
+            <el-button type="primary" @click="handleAddConsumableType">新增</el-button>
+          </el-col>          
+        </el-row>
+      
+        <el-table 
+          ref="tableRef" 
+          stripe border   
+          :header-cell-style="{ 'text-align': 'center' }"
+          :data="consumableTypeData"
+        >
+          <el-table-column label="耗材种类" prop="consumablesName"></el-table-column>
+          <el-table-column align="center" fixed="right" label="操作" width="120">
+            <template #default="{ row, $index }">
+              <el-link type="danger" :underline="false" @click="handleDelConsumableType(row, $index)">删除</el-link>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <!-- <vab-pagination
+          :current-page="consumableTypeQueryForm.pageNo"
+          :page-size="consumableTypeQueryForm.pageSize"
+          :total="consumableTypeTotal"
+          @current-change="handleConsumableTypeSizeChange"
+          @size-change="handleConsumableTypeCurrentChange"
+        /> -->
+      </div>
     </el-dialog>
     <el-dialog 
-            v-model="addConsumableVisible" 
-            :close-on-click-modal="false" 
-            title="创建耗材" 
-            width="500"
-            class="moldDialog"
-            :before-close="handlerAddCloseDialog"
-        >
-            <el-divider style="margin-top: 0;"/>
-            <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
-              <el-form-item label="零件名" prop="componentName">
-                    <el-input v-model="form.componentName" clearable />
-                </el-form-item>  
-              <el-form-item label="零件单位" prop="unit">
-                  <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
-              </el-form-item>
-              <el-form-item label="供应商名称" prop="suppliser">
-                  <el-select
-                        v-model="form.suppliser"
-                        filterable
-                        remote
-                        allow-create
-                        default-first-option
-                        placeholder="点击输入和搜索"
-                        :remote-method="remoteMethod"
-                        :loading="loading"
-                        @change="handleTaxDisabled"
-                        clearable
-                    >
-                        <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                        />
-                    </el-select>
-              </el-form-item>
-              <el-form-item label="开票" prop="invoicing">
-                    <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
-                        <el-option v-for="dict in invoicingNumList" :key="dict.value"
-                            :value="dict.value" :label="dict.label" ></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="实际税点" prop="actualTaxRate">
-                    <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
-                </el-form-item>
-                <el-form-item label="开票税点" prop="invoicingTaxRate">
-                    <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"placeholder="税点如果是13个点则输入0.13"/>
-                </el-form-item>
-              <el-form-item label="按单采购" prop="status">
-                <el-switch v-model="form.status" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
-              </el-form-item>
-            </el-form>
-            <template #footer>
-                <span>
-                    <el-button @click="addConsumableVisible = false">退出</el-button>
-                    <el-button type="primary" @click="handleSubmit">确认</el-button>
-                </span>
-            </template>
-        </el-dialog>
-           <!-- 添加到其它SKU -->
-           <el-dialog 
-            v-model="addOtherSkuVisible" 
-            :close-on-click-modal="false" 
-            title="零件复制到其他SKU" 
-            width="800"
-            class="moldDialog"
-            :before-close="handlerOtherSkuCloseDialog"
-        >
-            <el-divider style="margin-top: 0;"/>
-            <div class="transfer-container">
-                <el-transfer 
-                    v-model="transferValue" 
-                    :data="transferData" 
-                   
-                    filterable 
-                    :titles="['源列', '目的列']"
-                />
-            </div>
-            <template #footer>
-                <span>
-                    <el-button @click="addOtherSkuVisible = false">取消</el-button>
-                    <el-button type="primary" @click="handleSubmitOtherSku">确认</el-button>
-                </span>
-            </template>
-        </el-dialog>
-        <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+      v-model="addConsumableVisible" 
+      :close-on-click-modal="false" 
+      title="创建耗材" 
+      width="500"
+      class="moldDialog"
+      :before-close="handlerAddCloseDialog"
+    >
+      <el-divider style="margin-top: 0;"/>
+      <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
+        <el-form-item label="零件名" prop="componentName">
+          <el-input v-model="form.componentName" clearable />
+        </el-form-item>  
+        <el-form-item label="零件单位" prop="unit">
+          <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
+        </el-form-item>
+        <el-form-item label="供应商名称" prop="suppliser">
+          <el-select
+            v-model="form.suppliser"
+            filterable
+            remote
+            allow-create
+            default-first-option
+            placeholder="点击输入和搜索"
+            :remote-method="remoteMethod"
+            :loading="loading"
+            @change="handleTaxDisabled"
+            clearable
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="开票" prop="invoicing">
+          <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
+            <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                :value="dict.value" :label="dict.label" ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="实际税点" prop="actualTaxRate">
+          <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
+        </el-form-item>
+        <el-form-item label="开票税点" prop="invoicingTaxRate">
+          <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"placeholder="税点如果是13个点则输入0.13"/>
+        </el-form-item>
+        <el-form-item label="按单采购" prop="status">
+          <el-switch v-model="form.status" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span>
+          <el-button @click="addConsumableVisible = false">退出</el-button>
+          <el-button type="primary" @click="handleSubmit">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 添加到其它SKU -->
+    <el-dialog 
+      v-model="addOtherSkuVisible" 
+      :close-on-click-modal="false" 
+      title="零件复制到其他SKU" 
+      width="800"
+      class="moldDialog"
+      :before-close="handlerOtherSkuCloseDialog"
+    >
+      <el-divider style="margin-top: 0;"/>
+      <div class="transfer-container">
+        <el-transfer 
+          v-model="transferValue" 
+          :data="transferData" 
+          filterable 
+          :titles="['源列', '目的列']"
+        />
+      </div>
+      <template #footer>
+        <span>
+          <el-button @click="addOtherSkuVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleSubmitOtherSku">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -407,6 +400,8 @@ defineOptions({
 })
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
+import { CSSProperties } from 'vue'
+import { calculateBrColumnWidth } from '~/src/utils/tableColum'
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductAllSupplier, getProductComponentPurchase, getProductConsumables, getProductConsumablesType, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation'
 import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
@@ -427,16 +422,24 @@ const handleAddConsumableType = async () => {
     await getProductConsumablesType()
   }
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-   
-   if  (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 6 || data.columnIndex === 13 || data.columnIndex === 14){        
-   
-       return {
-            color: '#bbb',
-            cursor: 'not-allowed',
-            textAlign:'center'
-        } 
-   }
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if  (data.columnIndex === 1 || data.columnIndex === 6 || data.columnIndex === 13 || data.columnIndex === 14){        
+    return {
+      color: '#bbb',
+      cursor: 'not-allowed',
+      textAlign:'center'
+    } 
+  }
+  if (data.columnIndex === 2) {
+    return {
+      color: '#bbb',
+      cursor: 'not-allowed',
+      textAlign:'left'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
 }
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
@@ -486,6 +489,7 @@ const handleTaxDisabled = async (value: string) => {
    }
 }
 const handleInvoicingTaxChange = async (value: number) => {
+   console.log(value);
    
    if(form.supplier) {
        handleTaxDisabled(form.supplier)
@@ -581,25 +585,44 @@ const invoicingNumList = [
   },
 ]
 const rules = reactive({
-    componentName: [
-        { required: true, message: '请填写零件名', trigger: 'blur' },
-    ],
-    unit: [
-        { required: true, message: '请填写零件单位', trigger: 'blur' },
-    ],
-    suppliser: [
-        { required: true, message: '请填写供应商名称', trigger: 'blur' },
-    ],
-    invoicing: [
-        { required: true, message: '请选择开票类型', trigger: 'change' },
-    ],
-    actualTaxRate: [
-        { required: true, message: '请填写实际税点', trigger: 'blur' },
-    ],
-    invoicingTaxRate: [
-        { required: true, message: '请填写开票税点', trigger: 'blur' },
-    ],
+  componentName: [
+    { required: true, message: '请填写零件名', trigger: 'blur' },
+  ],
+  unit: [
+    { required: true, message: '请填写零件单位', trigger: 'blur' },
+  ],
+  suppliser: [
+    { required: true, message: '请填写供应商名称', trigger: 'blur' },
+  ],
+  invoicing: [
+    { required: true, message: '请选择开票类型', trigger: 'change' },
+  ],
+  actualTaxRate: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (form.invoicing !== 2 && (!value || value === '')) {
+          callback(new Error('请填写实际税点'));
+        } else {
+          callback();
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  invoicingTaxRate: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (form.invoicing !== 2 && (!value || value === '')) {
+          callback(new Error('请填写开票税点'));
+        } else {
+          callback();
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
 });
+
 const handleSubmit = async () => {
     formRef.value?.validate(async (valid: any) => {
         if (valid) {
@@ -914,39 +937,22 @@ const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
 }
 const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getProductConsumables(queryForm)
-    list.value = data.list
-    total.value = data.total
-    list.value.forEach(async (item: any) => {
-      item.unitPrice = formattedPrice(item.unitPrice)
-        // 获取供应商列表
-      // if (!item.supplierList) {
-      //   const { data: suppliser } = await getProductComponentSuppliser({
-      //       componentId: item.existingPartsListId
-      //   })
-      //     item.suppliserList = suppliser
-      //     if(!item.componentImage) {
-      //         item.hide = false
-      //         item.imageList = []
-      //     } else if (item.componentImage){
-      //         item.hide = true
-      //         item.imageList = [{ url: item.componentImage }]
-      //     }
-      // }
-   
-      
-          if(!item.componentImage) {
-              item.hide = false
-              item.imageList = []
-          } else if (item.componentImage){
-              item.hide = true
-              item.imageList = [{ url: item.componentImage }]
-          }
-        
+  listLoading.value = true
+  const { data } = await getProductConsumables(queryForm)
+  list.value = data.list
+  total.value = data.total
+  list.value.forEach((item: any) => {
+    item.unitPrice = formattedPrice(item.unitPrice)
+    item.componentName = item.componentName.replace(/，/g, '<br />')
+    if(!item.componentImage) {
+      item.hide = false
+      item.imageList = []
+    } else if (item.componentImage){
+      item.hide = true
+      item.imageList = [{ url: item.componentImage }]
+    }
   })
-
-    listLoading.value = false
+  listLoading.value = false
 }
 // const fetchSupplierList = async () => {
 
@@ -955,7 +961,7 @@ const fetchPurchase = async () => { //获取默认采购方
     const { data: purchase } = await getProductComponentPurchase()
     purchaseOption.value = purchase
 }
-onBeforeMount(async ()=>{
+onBeforeMount(()=>{
   fetchPurchase()
   fetchData()
 })

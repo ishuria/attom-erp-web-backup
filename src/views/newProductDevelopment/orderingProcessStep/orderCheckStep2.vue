@@ -1,249 +1,248 @@
 <template>
-    <div class="container">
-        <div class="table-container">
-            <el-table 
-                ref="tableRef" 
-                stripe border 
-                :data="componentList" 
-                :header-cell-style="{ 'text-align': 'center' }"
-                @cell-click="changeInput"
-                height="400"
-            >
-                <el-table-column align="center" label="属于变体" min-width="140" prop="variant">
-                    <template #default="{ row }">
-                        <el-select v-model="row.variant" placeholder="请选择变体"  style="min-width: 100%;" disabled>
-                            <el-option
-                                v-for="item in variantsSelectList"
-                                :label="item.label"
-                                :key="item.id"
-                                :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="零件图片" min-width="100">
-                    <template #default="{ row, $index }">
-                        <el-image width="75px" height="75px" :src="row.componentImgUrl" data-img="img" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="零件ID" align="center" min-width="70" prop="" width="100">
-                </el-table-column>   
-                <el-table-column label="零件名" prop="componentName" width="120">
-                </el-table-column>
-                <el-table-column label="每个SKU需要数量"  width="100" prop="quantity" align="center">
-                    <template #header>
-                        每个SKU<br>需要数量
-                    </template>
-                </el-table-column>
-                <el-table-column label="单位"  min-width="70" prop="componentUnit" align="center">
-                </el-table-column>
-                <el-table-column label="出厂单价" prop="unitPrice" min-width="70" align="center">
-                    <template #header>
-                        出厂<br>单价
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="出厂总价" prop="totalPrice" min-width="70" align="center">
-                    <template #header>
-                        出厂<br>总价
-                    </template>
-                </el-table-column>
-                <el-table-column label="每个SKU运费(含税)" prop="freight" align="center" min-width="100">
-                    <template #header>
-                        每个SKU<br>运费(含税)
-                    </template>
-                </el-table-column>    
-                <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="70">
-                    <template #header>
-                        总未<br>税价
-                    </template>
-                </el-table-column>
-                <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="70">
-                    <template #header>
-                        总含<br>税价
-                    </template>
-                </el-table-column>    
-                <el-table-column label="货币" width="110px" prop="currency">
-                    <template #default="{ row }">
-                        <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" disabled>
-                            <el-option v-for="dict in currencyList" :key="dict.value"
-                                :value="dict.value" :label="dict.label"></el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="100">
-                </el-table-column> 
-                <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="100">
-                </el-table-column> 
-                <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
-                </el-table-column>
-                <el-table-column label="开票" prop="oem" align="center" width="140">
-                    <template #default = "{ row }">
-                        <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" disabled>
-                            <el-option v-for="dict in invoicingList" :key="dict.value"
-                                :value="dict.value" :label="dict.label"></el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
-                    <template #header>
-                        实际<br>税点
-                    </template>
-                </el-table-column>
-
-                <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
-                    <template #header>
-                        开票<br>税点
-                    </template>
-                </el-table-column>
-
-                
-                <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
-                    <template #default="{ row }">
-                        <span>
-                            <el-text truncated>
-                                {{ row.purchaseLink }}
-                            </el-text>
-                        </span>
-                    </template>
-                </el-table-column>
-                <el-table-column  label="收货仓库" prop="remarks" min-width="100">
-                    <el-select 
-                        v-model="list.componentInfo!" 
-                        value-key="id"
-                        placeholder="请选择收货仓库"
-                        filterable
-                        clearable
-                        allow-create
-                        :reserve-keyword = "false"
-                        disabled
-                    >
-                        <el-option v-for="val,idx in list" :label="val.label!" :value="val" :key="val.id!"/>
-                    </el-select>
-                </el-table-column>
-                <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
-                    <template #default="{ row }">
-                        <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="合同条款" prop="contractTerms" min-width="200">
-                    <template #default="{ row }">
-                        <span>{{ removeHtmlTags(row.contractTerms) }}</span>
-                    </template>
-                </el-table-column>
-            <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+  <div class="container">
+    <div class="table-container">
+      <el-table 
+        ref="tableRef" 
+        stripe border 
+        :data="componentList" 
+        :header-cell-style="{ 'text-align': 'center' }"
+        @cell-click="changeInput"
+      >
+        <el-table-column align="center" label="属于变体" min-width="140" prop="variant">
+            <template #default="{ row }">
+                <el-select v-model="row.variant" placeholder="请选择变体"  style="min-width: 100%;" disabled>
+                    <el-option
+                        v-for="item in variantsSelectList"
+                        :label="item.label"
+                        :key="item.id"
+                        :value="item.id"
+                    ></el-option>
+                </el-select>
             </template>
-        </el-table>
-        <vab-alert type="error">
-            <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
-            <h3>--为了精准核算利润，运费需要准确填写。</h3>
-        </vab-alert>
-        <wangEditor
-            :title="wangEditorTitle"
-            :wangEditorVisible="wangEditorAttentionVisible"
-            :content="attentionCopy"
-            @clickBoolean="clickAttentionCancel"
-            @clickChild="clickAttentionConfirm"
-            :classify="classify"
-        >
-        </wangEditor>
-        <wangEditor
-            :title="wangEditorTitle"
-            :wangEditorVisible="wangEditorContractVisible"
-            :content="contractCopy"
-            @clickBoolean="clickContractCancel"
-            @clickChild="clickContractConfirm"
-            :classify="classify"
-        >
-        </wangEditor>
+        </el-table-column>
+        <el-table-column align="center" label="零件图片" min-width="100">
+            <template #default="{ row, $index }">
+                <el-image width="75px" height="75px" :src="row.componentImgUrl" data-img="img" />
+            </template>
+        </el-table-column>
+        <el-table-column label="零件ID" align="center" min-width="70" prop="" width="100">
+        </el-table-column>   
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
+        </el-table-column>
+        <el-table-column label="每个SKU需要数量"  width="100" prop="quantity" align="center">
+            <template #header>
+                每个SKU<br>需要数量
+            </template>
+        </el-table-column>
+        <el-table-column label="单位"  min-width="70" prop="componentUnit" align="center">
+        </el-table-column>
+        <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(componentList, '出厂', 'unitPrice')">
+            <template #header>
+                出厂<br>单价
+            </template>
+        </el-table-column>
+
+        <el-table-column label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')" align="center">
+            <template #header>
+                出厂<br>总价
+            </template>
+        </el-table-column>
+        <el-table-column label="每个SKU运费(含税)" prop="freight" align="center" min-width="100">
+            <template #header>
+                每个SKU<br>运费(含税)
+            </template>
+        </el-table-column>    
+        <el-table-column label="总未税价" prop="preTaxPrice" align="center" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
+            <template #header>
+                总未<br>税价
+            </template>
+        </el-table-column>
+        <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(componentList, '总含', 'taxIncludedPrice')">
+            <template #header>
+                总含<br>税价
+            </template>
+        </el-table-column>    
+        <el-table-column label="货币" width="110px" prop="currency">
+            <template #default="{ row }">
+                <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" disabled>
+                    <el-option v-for="dict in currencyList" :key="dict.value"
+                        :value="dict.value" :label="dict.label"></el-option>
+                </el-select>
+            </template>
+        </el-table-column>
+        <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="100">
+        </el-table-column> 
+        <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="100">
+        </el-table-column> 
+        <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
+        </el-table-column>
+        <el-table-column label="开票" prop="oem" align="center" width="140">
+            <template #default = "{ row }">
+                <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" disabled>
+                    <el-option v-for="dict in invoicingList" :key="dict.value"
+                        :value="dict.value" :label="dict.label"></el-option>
+                </el-select>
+            </template>
+        </el-table-column>
+        <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
+            <template #header>
+                实际<br>税点
+            </template>
+        </el-table-column>
+
+        <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
+            <template #header>
+                开票<br>税点
+            </template>
+        </el-table-column>
+
+        
+        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+            <template #default="{ row }">
+                <span>
+                    <el-text truncated>
+                        {{ row.purchaseLink }}
+                    </el-text>
+                </span>
+            </template>
+        </el-table-column>
+        <el-table-column  label="收货仓库" prop="remarks" min-width="100">
+            <el-select 
+                v-model="list.componentInfo!" 
+                value-key="id"
+                placeholder="请选择收货仓库"
+                filterable
+                clearable
+                allow-create
+                :reserve-keyword = "false"
+                disabled
+            >
+                <el-option v-for="val,idx in list" :label="val.label!" :value="val" :key="val.id!"/>
+            </el-select>
+        </el-table-column>
+        <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
+            <template #default="{ row }">
+                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="合同条款" prop="contractTerms" min-width="200">
+            <template #default="{ row }">
+                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+            </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+        </template>
+      </el-table>
+      <vab-alert type="error">
+        <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
+        <h3>--为了精准核算利润，运费需要准确填写。</h3>
+      </vab-alert>
+      <wangEditor
+        :title="wangEditorTitle"
+        :wangEditorVisible="wangEditorAttentionVisible"
+        :content="attentionCopy"
+        @clickBoolean="clickAttentionCancel"
+        @clickChild="clickAttentionConfirm"
+        :classify="classify"
+      >
+      </wangEditor>
+      <wangEditor
+        :title="wangEditorTitle"
+        :wangEditorVisible="wangEditorContractVisible"
+        :content="contractCopy"
+        @clickBoolean="clickContractCancel"
+        @clickChild="clickContractConfirm"
+        :classify="classify"
+      >
+      </wangEditor>
     </div>
     <div class="table-container">
-        <el-table 
-            ref="tableRef" 
-            stripe border 
-            :data="variantsList" 
-            :header-cell-style="{ 'text-align': 'center' }"
-            @cell-click="changeInput"
-            :cell-style="{ 'text-align': 'center' }"
-        >
-            <el-table-column label="变体" min-width="100" prop="variant" align="center"></el-table-column>
-            <el-table-column prop="site" label="站点" min-width="135">
-                <template #default="{ row }">
-                    <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" disabled>
-                        <el-option v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
-                                :value="dict.value" :label="dict.label"></el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column label="外汇币种" min-width="100" prop="currencyType">
-            </el-table-column>
-            <el-table-column label="汇率" min-width="100" prop="foreignExchange">
-            </el-table-column>
-            <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="120"></el-table-column>
-            <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
-            </el-table-column>
+      <el-table 
+          ref="tableRef" 
+          stripe border 
+          :data="variantsList" 
+          :header-cell-style="{ 'text-align': 'center' }"
+          @cell-click="changeInput"
+          :cell-style="{ 'text-align': 'center' }"
+      >
+          <el-table-column label="变体" min-width="100" prop="variant" align="center"></el-table-column>
+          <el-table-column prop="site" label="站点" min-width="135">
+              <template #default="{ row }">
+                  <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" disabled>
+                      <el-option v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
+                              :value="dict.value" :label="dict.label"></el-option>
+                  </el-select>
+              </template>
+          </el-table-column>
+          <el-table-column label="外汇币种" min-width="100" prop="currencyType">
+          </el-table-column>
+          <el-table-column label="汇率" min-width="100" prop="foreignExchange">
+          </el-table-column>
+          <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="120"></el-table-column>
+          <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
+          </el-table-column>
 
-            <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
-            </el-table-column>
+          <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
+          </el-table-column>
 
-            <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
-            </el-table-column>
+          <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
+          </el-table-column>
 
-            <el-table-column prop="weight" label="重量(g)">
-            </el-table-column>
-            <el-table-column label="尾程$"  min-width="70" prop="lastMile" ></el-table-column>
-            <el-table-column label="头程￥"  width="90" prop="firstMile" ></el-table-column>    
-            <el-table-column label="打包￥"  width="90" prop="packagingPrice" >
-            </el-table-column>
-            <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
-                <template #default="{ row }">
-                    <el-select 
-                        v-model="row.firstMileChannel" 
-                        placeholder="请选择头程渠道"
-                        style="min-width: 100%"
-                        disabled
-                    >
-                        <el-option 
-                            v-for="dict in firstLegChannelColumnsNum" 
-                            :key="dict.value" 
-                            :value="dict.value"
-                            :label="dict.label"
-                        >
-                        </el-option>
-                    </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice">
-            </el-table-column>
-            <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
-            <el-table-column prop="roi" label="ROI"></el-table-column>
-            <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
-            </el-table-column>
-            <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
-            </el-table-column>
-            <el-table-column prop="tariff" label="关税%">
-                <template #default="{row}">
-                    {{ row.tariff ? row.tariff+'%' : '' }}
-                </template>
-            </el-table-column>
-            <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
-            <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140"></el-table-column>
-            <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
-            </template>
-        </el-table>
-        <vab-alert type="error">
-            <h3>--请输入精确的产品包装尺寸（精确到小数点后1位），重量（精确到整数）和最终售价。</h3>
-            <h3>--如果开专票则实际产品成本=总含税价/(1+开票税点)；如果开普票则则实际产品成本=总含税价</h3>
-        </vab-alert>
+          <el-table-column prop="weight" label="重量(g)">
+          </el-table-column>
+          <el-table-column label="尾程$"  min-width="70" prop="lastMile" ></el-table-column>
+          <el-table-column label="头程￥"  width="90" prop="firstMile" ></el-table-column>    
+          <el-table-column label="打包￥"  width="90" prop="packagingPrice" >
+          </el-table-column>
+          <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
+              <template #default="{ row }">
+                  <el-select 
+                      v-model="row.firstMileChannel" 
+                      placeholder="请选择头程渠道"
+                      style="min-width: 100%"
+                      disabled
+                  >
+                      <el-option 
+                          v-for="dict in firstLegChannelColumnsNum" 
+                          :key="dict.value" 
+                          :value="dict.value"
+                          :label="dict.label"
+                      >
+                      </el-option>
+                  </el-select>
+              </template>
+          </el-table-column>
+          <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice">
+          </el-table-column>
+          <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
+          <el-table-column prop="roi" label="ROI"></el-table-column>
+          <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
+          </el-table-column>
+          <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
+          </el-table-column>
+          <el-table-column prop="tariff" label="关税%">
+              <template #default="{row}">
+                  {{ row.tariff ? row.tariff+'%' : '' }}
+              </template>
+          </el-table-column>
+          <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
+          <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140"></el-table-column>
+          <template #empty>
+              <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+          </template>
+      </el-table>
+      <vab-alert type="error">
+        <h3>--请输入精确的产品包装尺寸（精确到小数点后1位），重量（精确到整数）和最终售价。</h3>
+        <h3>--如果开专票则实际产品成本=总含税价/(1+开票税点)；如果开普票则则实际产品成本=总含税价</h3>
+      </vab-alert>
     </div>
-        <div class="pay-button-group">
-            <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">下一步</el-button>
-        </div>
+    <div class="pay-button-group">
+      <el-button @click="handleGoback">上一步</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSave">下一步</el-button>
     </div>
-  </template>
+  </div>
+</template>
   
 <script lang="ts" setup>
 defineOptions({
@@ -257,6 +256,7 @@ import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3Vari
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()

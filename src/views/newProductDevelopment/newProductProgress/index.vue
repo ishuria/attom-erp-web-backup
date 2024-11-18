@@ -116,15 +116,13 @@ handleSubmit<template>
               </div>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
-          </el-table-column>
+          </el-table-column>      
           <el-table-column label="开发日志" prop="progressLog" min-width="500">
             <template #default = "{ row }">
               <div class="none" >
-                <el-input type="textarea" autofocus v-model="row.progressLog" :autosize="{ minRows: 3, maxRows: 9 }" />
-              </div>
-              <span>
-                  {{ removeHtmlTags(row.progressLog) }}
-              </span>
+                <el-input type="textarea" v-model="row.progressLog" />
+              </div>      
+              <span class="overflow-text">{{ removeHtmlTags(row.progressLog) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip min-width="100">
@@ -135,9 +133,11 @@ handleSubmit<template>
           <el-table-column label="备注" prop="remark" >
             <template #default = "{ row }">
               <div class="none">
-                  <el-input type="textarea" autofocus v-model="row.remark" :autosize="{ minRows: 3, maxRows: 9 }" />
-                </div>
-                <span>{{ removeHtmlTags(row.remark) }}</span>
+                <el-input type="textarea" v-model="row.remark"/>
+              </div>
+              <el-tooltip :content="removeHtmlTags(row.remark)" popper-class="custom-tooltip" effect="dark" placement="top">
+                <span class="overflow-text">{{ removeHtmlTags(row.remark) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="90">
@@ -567,40 +567,39 @@ handleSubmit<template>
 </template>
 
 <script lang="ts" setup>
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
+import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
+import debounce from 'lodash/debounce'
 import { ref } from 'vue'
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import { IProgressQueryReq, IProgress, IProgressShared, IGetByIdQueryEvaluation, ISelectShare } from '/@/type/progress/progressType'
+import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
+import { indexColumns } from './indexColumns'
+import moldProgress from './moldProgress.vue'
+import sampleProgress from './sampleProgress.vue'
+import wangEditor from './wangEditor.vue'
 import {
+  copyProgress,
   deleteImage,
-  getList,
-  getProgressMoldList,
   getByIdQueryEvaluation,
+  getList,
+  getProgressComponentList,
+  getProgressFilter,
+  getProgressLog,
+  getProgressPersonList,
+  getProgressSharelist,
+  getProgressSuppliserList,
+  updateProgressArchive,
   updateProgressImgSort,
   updateProgressManage,
   updateProgressMoldAdd,
-  uploadFile,
-  getProgressSharelist,
-  copyProgress,
-  getProgressComponentList,
-  getProgressSuppliserList,
   updateProgressSharelist,
-  updateProgressArchive,
-  getProgressPersonList,
-  getProgressFilter,
-  getProgressLog
+  uploadFile
 } from '/@/api/devlocal/progress'
-import type { UploadFile, TabsPaneContext, TableInstance } from 'element-plus'
-import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
-import debounce from 'lodash/debounce'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import wangEditor from './wangEditor.vue'
-import { convertString } from '/@/utils/stringUtils'
-import sampleProgress from './sampleProgress.vue'
-import moldProgress from './moldProgress.vue'
-import { indexColumns } from './indexColumns'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
 import { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
+import { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
+import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
   name: 'ProgressTable',
@@ -1415,7 +1414,11 @@ onBeforeMount(() => {
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
 }
-   
+// .overflow-text {
+//   max-height: 60px;
+//   display: block;
+//   overflow-y: auto;
+// }
 // .shareSelectDialog {
 //   .el-dialog__body {
 //     display: flex;
@@ -1430,4 +1433,17 @@ onBeforeMount(() => {
     align-items: center;
     justify-content: center;
 }
+.overflow-text {
+ display: block;
+ max-height: 81.2px; /* 设置文本的最大高度 */
+ overflow-y: auto; /* 溢出时显示垂直滚动条 */
+}
+:deep(.custom-tooltip .el-tooltip__popper) {
+  min-width: 100px;
+  max-width: 100px !important;
+  height: 100px !important;
+  overflow: auto !important;
+}
+
+
 </style>

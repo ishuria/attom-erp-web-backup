@@ -146,8 +146,6 @@ export const removeHtmlTags = (html: string): string => {
   return div.textContent || div.innerText || '';
 }
 
-
-
 /**
  * 计算指定内容的列宽
  * @param {Array} rows - 包含行数据的数组
@@ -182,4 +180,3 @@ export function calculateBrColumnWidth(rows: any, getContent: any, baseWidth = 9
 
   return maxWidth + padding;
 }
-

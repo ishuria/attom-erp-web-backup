@@ -85,6 +85,7 @@
     top="7vh"
     width="90%"
     v-model="match2Visible"
+    @close="handleCloseMatch2"
   >
 
     <div style="margin-bottom: 15px">
@@ -114,20 +115,20 @@
         <el-table-column label="打包任务状态" prop="status" min-width="130"></el-table-column>
         <el-table-column label="SKU实际数量" prop="skuActualCount" min-width="130">
           <template #default="{ row }">
-            <el-input type="number" :min="0" :max="row.goodCount" v-model="row.skuActualCount" @change="handleUpdateSkuCount(row)" clearable />
+            <el-input type="number" :min="0" :max="row.goodCount" v-model="row.skuActualCount" @focus="handleFocus(row)" @change="handleUpdateSkuCount(row)" />
           </template>
         </el-table-column>
       </el-table-column>
       <el-table-column label="零件">
         <el-table-column label="零件名" prop="componentName" min-width="200"></el-table-column>
         <el-table-column label="实际数量" prop="componentActualCount" min-width="100">
-          <template #default="{ row }">
-            <el-input type="number" :min="0" v-model="row.componentActualCount" clearable @change="handleUpdateComponentCount(row)" />
-          </template>
+          <!-- <template #default="{ row }">
+            <el-input type="number" :min="0" v-model="row.componentActualCount" @change="handleUpdateComponentCount(row)" />
+          </template> -->
         </el-table-column>
         <el-table-column label="退税报关数量" prop="customsDeclarationCount" min-width="130">
           <template #default="{ row }">
-            <el-input v-model="row.customsDeclarationCount" :min="0" type="number" @change="handleUpdateComponentCustomCount(row)" clearable />
+            <el-input v-model="row.customsDeclarationCount" :min="0" type="number" @focus="handleFocus(row)" @change="handleUpdateComponentCustomCount(row)" />
           </template>
         </el-table-column>
         <el-table-column label="剩余可报" prop="reportable" min-width="100"></el-table-column>
@@ -157,7 +158,7 @@
     <template #footer>
       <div style="text-align: center;">
         <el-button type="warning">上一个</el-button>
-        <el-button type="success" @click="match2Visible = false">关闭</el-button>
+        <el-button type="success" @click="handleCloseMatch2">关闭</el-button>
         <el-button type="warning">下一个</el-button>
       </div>
     </template>
@@ -340,6 +341,11 @@ const matchList = ref<IGetMatchPackageList[]>([])
 const _sku = ref<string>('')
 const _desc = ref<string>('')
 const _id = ref<number>(0)
+// 关闭匹配2
+const handleCloseMatch2 = () => {
+  match2Visible.value = false
+  fetchData()
+}
 // 已发未报的多选
 const selectRows = ref<IGetMatchSentList[]>([]) 
 const setSelectRows = (value: IGetMatchSentList[]) => {
@@ -431,6 +437,7 @@ const confirmQualityCheck = async () => {
   if (data) {
     $baseMessage('修正质检信息成功', 'success')
     packingCountVisible.value = false
+    fetchMatchData()
   }
 }
 // 缺的数量
@@ -484,7 +491,8 @@ const handleStartMatch = async () => {
 const fetchMatchData = async () => {
   const { data } = await getMatchPackageList({
     sku: _sku.value,
-    status: props.status
+    status: props.status,
+    matchId: _id.value
   })
   matchList.value = data
 }
@@ -558,8 +566,14 @@ const fetchSentData = async () => {
 const handleCloseCheck = () => {
   emit('updateMatchVisible', false)
 }
+const _skuActualCount = ref<number>()
+const _customsDeclarationCount = ref<number>()
+const handleFocus = (row: IGetMatchPackageList) => {
+  _skuActualCount.value = row.skuActualCount
+  _customsDeclarationCount.value = row.customsDeclarationCount
+}
 // 修改SKU实际数量
-const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
+const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {  
   try {
     const { data } = await updateMatchSkuActualCount({
       id: _id.value,
@@ -572,7 +586,7 @@ const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
       fetchMatchData()
     }
   } catch (error) {
-    console.error(error)
+    row.skuActualCount = _skuActualCount.value!
   }
 }
 // 修改零件的实际数量
@@ -604,27 +618,25 @@ const handleUpdateComponentCustomCount = async (row: IGetMatchPackageList) => {
       fetchMatchData()
     }
   } catch (error) {
-    console.error(error)
+    row.customsDeclarationCount = _customsDeclarationCount.value!
   }
 }
 // 填入全部
 const handleInsertAll = async (row: IGetMatchPackageList) => {
-  $baseConfirm('确定要填入全部吗?', null, async () => {
-    try {
-      const { data } = await insertAllMatchComponent({
-        id: _id.value,
-        poId: row.poId,
-        sku: row.sku,
-        mId: row.mId
-      })
-      if (data) {
-        $baseMessage('填入全部成功', 'success')
-        fetchMatchData()
-      }
-    } catch (error) {
-      console.error(error)
+  try {
+    const { data } = await insertAllMatchComponent({
+      id: _id.value,
+      poId: row.poId,
+      sku: row.sku,
+      mId: row.mId
+    })
+    if (data) {
+      $baseMessage('填入全部成功', 'success')
+      fetchMatchData()
     }
-  })
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 查看匹配的清空
 const handleCheckClear = async (row: IGetCheckMatchList) => {

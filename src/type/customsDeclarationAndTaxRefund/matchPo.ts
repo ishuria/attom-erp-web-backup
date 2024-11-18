@@ -79,6 +79,7 @@ export interface IGetMatchPoList {
 export interface IGetMatchPackageListReq {
   sku: string
   status: number
+  matchId: number
 }
 export interface IGetMatchPackageListRes {
   code: number;
