@@ -111,7 +111,7 @@
       class="dialog"
       @close="closeBoxNumber"
     >
-      <el-form ref="boxNumberFormRef" :model="boxNumberForm" :rules="boxNumberFormRules" label-position="right" label-width="auto" style="margin-left: 10px; margin-right: 10px">
+      <el-form ref="boxNumberFormRef" :model="boxNumberForm" :rules="boxNumberFormRules" label-position="right" label-width="auto" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="箱号" prop="boxNumber">
           <el-input v-model="boxNumberForm.boxNumber" disabled />
         </el-form-item>
@@ -252,7 +252,7 @@
       width="20%"
       @close="closeShippingPlanning"
     >
-      <el-form ref="shippingPlanningFormRef" :model="shippingPlanningForm" style="margin-left: 10px; margin-right: 10px" class="noneHoveTable">
+      <el-form ref="shippingPlanningFormRef" :model="shippingPlanningForm" style=" margin-right: 10px;margin-left: 10px" class="noneHoveTable">
         <el-form-item label="发货计划" prop="date">
           <el-date-picker  type="date" placeholder="选择发货计划日期" clearable>
           </el-date-picker>
@@ -277,7 +277,7 @@
       width="20%"
       @close="closeShippingPlan"
     >
-      <el-form ref="shippingPlanFormRef" :model="shippingPlanForm" :rules="shippingPlanFormRules" style="margin-left: 10px; margin-right: 10px">
+      <el-form ref="shippingPlanFormRef" :model="shippingPlanForm" :rules="shippingPlanFormRules" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="发货计划" prop="date">
           <el-date-picker 
             type="date" 
@@ -302,7 +302,7 @@
       top="10vh"
       @close="closeUploadSplit"
     >
-      <el-form ref="uploadSplitFormRef" :model="uploadSplitForm" label-position="top" style="margin-left: 10px; margin-right: 10px">
+      <el-form ref="uploadSplitFormRef" :model="uploadSplitForm" label-position="top" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="日期" prop="date">
           <el-date-picker v-model="uploadSplitForm.date" type="date" value-format="YYYY-MM-DD" clearable style="width: 100%" />
         </el-form-item>
@@ -364,7 +364,7 @@
       width="20%"
       v-model="printVisible"
     >
-      <el-form style="margin-left: 10px; margin-right: 10px;">
+      <el-form style=" margin-right: 10px;margin-left: 10px;">
         <el-form-item label="打印数量">
           <el-input v-model="printCount" clearable />
         </el-form-item>
@@ -381,7 +381,7 @@
       width="20%"
       v-model="splitVisible"
     >
-      <el-form ref="splitFormRef" :model="splitForm" :rules="splitFormRules" style="margin-left: 10px; margin-right: 10px;">
+      <el-form ref="splitFormRef" :model="splitForm" :rules="splitFormRules" style=" margin-right: 10px;margin-left: 10px;">
         <el-form-item label="拆分数量" prop="splitCount">
           <el-input v-model="splitForm.splitCount" clearable />
         </el-form-item>
@@ -905,7 +905,7 @@ const objectSpanMethod = ({
     columnIndex,
 }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 11 && columnIndex !== 12) {
+  if (columnIndex !== 11 && columnIndex !== 12 && columnIndex !== 14 && columnIndex !== 15) {
     // 获取当前row的零件id
     const id = row.id;
     // 默认不跨行
