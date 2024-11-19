@@ -373,8 +373,9 @@ import {
 } from '/@/api/devlocal/progressSample'
 import { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
+import { isEqual } from 'lodash'
 
 const isDraggingDisabled = ref<boolean>(false)
 
@@ -449,19 +450,22 @@ let imageUploadCellIdx = 0
 
 
 // 输入input blur事件
-const clickCancle = async (event:any,value:IProgressEstimatedCostAccounting) =>{
+const clickCancle = async (event:any, value:IProgressEstimatedCostAccounting) => {
 
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
-    if (t1){
-        t1.classList.add("none")
-    }
+  const rootElement = getRootElement(event.srcElement, ".cell");
 
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-        t2.classList.remove("none")
-    }
-    isDraggingDisabled.value = false
-    await costAccountingUpdate({...value, tariff: ""+parseFloat(value.tariff!) / 100})
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  isDraggingDisabled.value = false
+  await costAccountingUpdate({...value, tariff: ""+parseFloat(value.tariff!) / 100})
 }
 
 // 鼠标enter事件
@@ -490,27 +494,33 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
         }
     }
 }
-
+let copyRow: any
 // 成本核算单击表格修改
 const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-    
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+  
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+      emit("update:priviewListValue",row.imgUrl)
+      emit("update:imagePreviewVisibale",true)
+  }
+  clickRow.value = row
+  
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
-        emit("update:priviewListValue",row.imgUrl)
-        emit("update:imagePreviewVisibale",true)
-    }
-    clickRow.value = row
-    
-    if (!cell.children[0].children[0] 
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList
-    ){
-      return
-    }
-    
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
   if (column.property === 'desc') {
     const { data } = await getProgressProductDesc({ accountingId: row.id })
     progressLogCopy.value = data
@@ -525,26 +535,7 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
     wangEditorTitle.value = '编辑价格信息'
     classify.value = 'priceInfo'
     wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
-  } else {
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-  }
-  
-    // 自动聚焦
-    const inputElement = getSpecificChildren(cell, "input")[0];
-    if (inputElement) {
-        inputElement.select()
-        inputElement.focus()
-        isDraggingDisabled.value = true
-    } else {
-      const textareaElement = getSpecificChildren(cell, "textarea")[0];
-      if (textareaElement){
-        textareaElement.select()
-        textareaElement.focus()
-        isDraggingDisabled.value = true
-      }
-    }
-    
+  } 
 }
 
 // 进度成本核算修改站点

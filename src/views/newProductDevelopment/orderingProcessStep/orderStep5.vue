@@ -208,7 +208,7 @@ import type { TableInstance, UploadFile } from 'element-plus'
 import { getProductAllName } from '~/src/api/devlocal/productInformation'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '~/src/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 const route: any = useRoute()
@@ -368,27 +368,18 @@ const labelMap: Record<string, string> = {
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
 
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-      inputElement.focus()
-      inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
 }
 // 处理变体值相同
@@ -498,18 +489,20 @@ const handleInputChange = async (row: any, prop: string) => {
  */
 const clickCancle = async (event: any, prop: any) =>{
 
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
+    const rootElement = getRootElement(event.srcElement, ".cell");
 
-    if (t1){
-        if (t1.classList[0] !== "el-select") {
-            t1.classList.add("none")
+    if (rootElement) {
+      const t1 = rootElement.children[0];
+      const t2 = rootElement.children[1];
+
+      if (t1) {
+        if (t1.classList[0] !== 'el-select') {
+          t1.classList.add("none");
         }
+      }
+      if (t2) t2.classList.remove("none");
     }
 
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-        t2.classList.remove("none")
-    }
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
         await reviewStepNo5SkuInfoPerfect({

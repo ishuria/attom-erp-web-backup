@@ -9,9 +9,9 @@
   >
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" :disabled="disabled1 || (!disabled1 && !disabled2)" @click="handleStartMatch">开始匹配</el-button>
-        <el-button v-if="!disabled1 && !disabled2" type="primary" @click="showSentButNotReported">已发未报</el-button>
-        <el-button v-if="!disabled1 && !disabled2" type="primary" @click="handleClearCheckAll">清空全部</el-button>
+        <el-button v-if="!disabled3" type="primary" :disabled="disabled1 || (!disabled1 && !disabled2)" @click="handleStartMatch">开始匹配</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="primary" @click="showSentButNotReported">已发未报</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="primary" @click="handleClearCheckAll">清空全部</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -57,7 +57,7 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="操作" width="150" fixed="right" v-if="!disabled1 && !disabled2">
+      <el-table-column label="操作" width="150" fixed="right" v-if="!disabled3 && (!disabled1 && !disabled2)">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="handleShowMatch2(row)">匹配</el-link>
           <el-link type="danger" :underline="false" @click="handleCheckClear(row)">清空</el-link>
@@ -74,8 +74,8 @@
     />
     <template #footer>
       <div style="text-align: center;">
-        <el-button v-if="!disabled1 && !disabled2" type="danger" @click="handleUnlockAndClear">清空解锁并取消</el-button>
-        <el-button v-if="!disabled1 && !disabled2" type="success" @click="handleConfirmCheckMatch">确定</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="danger" @click="handleUnlockAndClear">清空解锁并取消</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="success" @click="handleConfirmCheckMatch">确定</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -311,17 +311,20 @@ const dflag = ref<boolean>(false)
 const match2Visible = ref<boolean>(false)
 const disabled1 = ref<boolean>(false)
 const disabled2 = ref<boolean>(true)
+const disabled3 = ref<boolean>(false)
 let props = defineProps<{
   matchVisible: boolean
   status: number
   shipId: number
   disabled1: boolean
   disabled2: boolean
+  disabled3: boolean
 }>()
 watchEffect(() => {
   dflag.value = props.matchVisible
   disabled1.value = props.disabled1
   disabled2.value = props.disabled2
+  disabled3.value = props.disabled3
   if (dflag.value === true) {
     fetchData()
   }
@@ -344,6 +347,7 @@ const _id = ref<number>(0)
 // 关闭匹配2
 const handleCloseMatch2 = () => {
   match2Visible.value = false
+  matchList.value = []
   fetchData()
 }
 // 已发未报的多选
@@ -496,7 +500,7 @@ const fetchMatchData = async () => {
   })
   matchList.value = data
 }
-const handleShowMatch2 = async (row: any) => {
+const handleShowMatch2 = (row: any) => {
   match2Visible.value = true
   _sku.value = row.sku
   _desc.value = row.desc

@@ -23,7 +23,7 @@ export const getRootElement = (element:any, rootSelector:any) => {
  * @param selector 指定元素子节点
  */
 export const getSpecificChildren = (element:any, selector:any) => {
-    return element.querySelectorAll(selector);
+  return element.querySelectorAll(selector);
 }
 
 /**
@@ -42,3 +42,22 @@ export const getDataAttribute = (element:any, dataAttr:string) => {
     // 使用 dataset 来获取自定义属性值
     return element.dataset ? element.dataset[dataAttr] : undefined;
 }
+
+
+/**
+ * @description 聚焦并全选输入框或文本框
+ * @param cell HTMLTableCellElement
+ */
+export const focusAndSelectInput = (cell: HTMLTableCellElement) => {
+  const inputElement = getSpecificChildren(cell, 'input')[0];
+  if (inputElement) {
+    inputElement.focus();
+    inputElement.select();
+  } else {
+    const textareaElement = getSpecificChildren(cell, 'textarea')[0];
+    if (textareaElement) {
+      textareaElement.focus();
+      textareaElement.select();
+    }
+  }
+};

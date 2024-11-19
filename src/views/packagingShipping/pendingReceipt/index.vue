@@ -433,8 +433,9 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import { IGetPlanPoListQuery } from '/@/type/purchase/po'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
+import { isEqual } from 'lodash'
 
 defineOptions({
   name: 'pendingReceiptTable',
@@ -719,49 +720,41 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     classify.value = 'signLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } 
-
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
-  }
 }
+
+let _row: any
 /**
  * 当点击修改时切换输入框，修改输入
  */
 const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
+
+  _row = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
 }
 const clickModifyCountCancel = async (event: any, value: any) =>{
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
-    }
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
   }
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
+  if (isEqual(_row, value)) {
+    return
   }
   if (event.type === 'blur') {
     await updateRecordCount({
@@ -771,15 +764,17 @@ const clickModifyCountCancel = async (event: any, value: any) =>{
   }
 }
 const clickModifyOrderCancel = async (event: any, value: any) =>{
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
-    }
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
   }
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
+  if (isEqual(_row, value)) {
+    return
   }
   if (event.type === 'blur') {
     await updateRecordOrder({
@@ -788,26 +783,7 @@ const clickModifyOrderCancel = async (event: any, value: any) =>{
     })
   }
 }
-/**
- * 输入失焦事件
- */
-const clickCancel = async (event: any, value: any) =>{
 
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
-    }
-  }
-
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  // await updateProgressManage({...value})
-}
-  
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */

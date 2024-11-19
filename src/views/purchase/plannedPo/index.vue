@@ -281,7 +281,7 @@ import {
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -654,6 +654,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
+let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
   // 处理图片放大预览
@@ -664,11 +665,20 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     imagePreviewList.value.push(el.src!)
   }
 
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
 
   if (column.property == 'purchaseMatters') {
@@ -679,22 +689,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     wangEditorTitle.value = '编辑零件采购注意事项'
     classify.value = 'purchaseMatters'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
-  } else {
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-  }
-
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
   }
 }
 

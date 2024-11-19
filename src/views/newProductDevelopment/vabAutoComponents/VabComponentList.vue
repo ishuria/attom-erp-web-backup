@@ -13,7 +13,7 @@
         </vab-query-form>
 
         <el-table ref="progressComponentTable" :data="progressProductList" border :row-class-name="stripedRowClass"
-            @cell-click="componentTableInputChage" :span-method="objectSpanMethod" :cell-style="cellStyle"
+            @cell-click="componentTableInputChange" :span-method="objectSpanMethod" :cell-style="cellStyle"
             :header-cell-style="{ 'text-align': 'center' }" class="noneHoveTable" >
 
             <el-table-column align="center" fixed="left" label="零件操作" width="120px">
@@ -374,7 +374,7 @@
 
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-import { getRootElement, getSpecificChildren, getDataAttribute } from '/@/utils/nodeUtils'
+import { getRootElement, getSpecificChildren, getDataAttribute, focusAndSelectInput } from '/@/utils/nodeUtils'
 import { currencyList, invoicingList } from '../indexCommon'
 import { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
 import type { TableColumnCtx, TableRefs, UploadRequestOptions } from 'element-plus'
@@ -392,6 +392,7 @@ import {
 import { getProgressLog,  } from '/@/api/devlocal/progress'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { isEqual } from 'lodash'
 
 
 // 图片上传显示控制
@@ -771,69 +772,61 @@ const copyComponentInfo = async (row: IProgressProdcutComponent) => {
 let clickColumn: any
 let rowCopy: any
 // 零件清单table单击修改
-const componentTableInputChage = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const componentTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
 
-    // 不能被修改cell的下标
-    if (column.no === 3) return
-    clickColumn = column
-    rowCopy = JSON.parse(JSON.stringify(row))
+  // 不能被修改cell的下标
+  if (column.no === 3) return
+  clickColumn = column
+  rowCopy = JSON.parse(JSON.stringify(row))
 
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-        emit("update:priviewListValue", row.componentImg)
-        emit("update:imagePreviewVisibale", true)
-    }
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
+      emit("update:priviewListValue", row.componentImg)
+      emit("update:imagePreviewVisibale", true)
+  }
 
-    if (!cell.children[0].children[0]
-        || !cell.children[0].children[1]
-        || !cell.children[0].children[0].classList
-        || !cell.children[0].children[1].classList
-    ) {
-        return
-    }
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
 
-    // 自动聚焦
-    const inputElement = getSpecificChildren(cell, "input")[0];
-    if (inputElement) {
-        inputElement.select()
-        inputElement.focus()
-    } else {
-        const textareaElement = getSpecificChildren(cell, "textarea")[0];
-        if (textareaElement) {
-            textareaElement.select()
-            textareaElement.focus()
-        }
-    }
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
 }
 
 // 零件清单table blur事件
 const componentClickCancle = async (event: any, value: IProgressProdcutComponent) => {
 
+  const rootElement = getRootElement(event.srcElement, ".cell");
 
-    const t1 = getRootElement(event["srcElement"], ".cell").children[0]
-    if (t1) {
-        t1.classList.add("none")
-    }
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
 
-    const t2 = getRootElement(event["srcElement"], ".cell").children[1]
-    if (t2) {
-        t2.classList.remove("none")
-    }
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(rowCopy, value)) {
+    return
+  }
 
-    const query: IProgressProdcutComponent = {
-        progressId: value.progressId,
-        supplierId: value.supplierId,
-        componentId: value.componentId,
-        [clickColumn.property]: value[clickColumn.property],
-    }
+  const query: IProgressProdcutComponent = {
+      progressId: value.progressId,
+      supplierId: value.supplierId,
+      componentId: value.componentId,
+      [clickColumn.property]: value[clickColumn.property],
+  }
 
-    await updateComponenet(value)
-    fetchDataComponent()
-    props.trialCalculationData?.()
+  await updateComponenet(value)
+  fetchDataComponent()
+  props.trialCalculationData?.()
 }
 
 // 计入成本change

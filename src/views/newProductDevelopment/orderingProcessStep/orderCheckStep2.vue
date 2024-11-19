@@ -318,30 +318,30 @@ const removeHtmlTags = (html: string): string => {
 const clickRow = ref<any>()
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && el){
-      emit("update:priviewListValue", row.componentImgUrl)
-      emit("update:imagePreviewVisibale", true)
-    }
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el,'img') && el){
+    emit("update:priviewListValue", row.componentImgUrl)
+    emit("update:imagePreviewVisibale", true)
+  }
 
-    if (column.property == 'purchaseMatters') {
-        // 查询零件采购注意事项
-        clickRow.value = row
-        const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
-        attentionCopy.value = data
-        row.purchaseMatters = data
-        wangEditorTitle.value = '零件采购注意事项'
-        classify.value = 'purchaseMatters'
-        wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
-    } else if (column.property == 'contractTerms'){
-            clickRow.value = row
-            const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
-            contractCopy.value = data
-            row.contractTerms = data
-            wangEditorTitle.value = '合同条款'
-            classify.value = 'contractTerms'
-            wangEditorContractVisible.value = !wangEditorContractVisible.value
-    }
+  if (column.property == 'purchaseMatters') {
+    // 查询零件采购注意事项
+    clickRow.value = row
+    const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
+    attentionCopy.value = data
+    row.purchaseMatters = data
+    wangEditorTitle.value = '零件采购注意事项'
+    classify.value = 'purchaseMatters'
+    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
+  } else if (column.property == 'contractTerms'){
+    clickRow.value = row
+    const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
+    contractCopy.value = data
+    row.contractTerms = data
+    wangEditorTitle.value = '合同条款'
+    classify.value = 'contractTerms'
+    wangEditorContractVisible.value = !wangEditorContractVisible.value
+  }
 }
 
 // 当点击下一步的时候

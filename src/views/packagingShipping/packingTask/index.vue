@@ -1219,6 +1219,7 @@
 <script lang="ts" setup>
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
+import { isEqual } from 'lodash'
 import { ref } from 'vue'
 import { siteMap, siteValue } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1255,7 +1256,7 @@ import {
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'packingTaskTable',
@@ -1501,36 +1502,43 @@ const qualityInspectionCellStyle = (data: { row: any, column: any, rowIndex: num
 // 质检报告修改
 const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
 
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
+  _row = JSON.parse(JSON.stringify(row));
 
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
+
 }
 // 质检报告修改输入失焦事件
 const clickQualityInspectionCancel = async (event: any, value: any) => {
 
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) {
+      if (t1.classList[0] !== 'el-select') {
+        t1.classList.add("none");
+      }
     }
+    if (t2) t2.classList.remove("none");
   }
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
+  if (isEqual(_row, value)) {
+    return
   }
+
   if (event.type === 'blur') {
     await updatePackageInspectionDetail({
       id: value.id,
@@ -2088,6 +2096,7 @@ const changeProjectInput = (row: any, column: any, cell: HTMLTableCellElement, e
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
+let _row: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
   // 处理图片放大预览
@@ -2096,30 +2105,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     imagePreviewVisible.value = true
     imagePreviewList.value = []
     imagePreviewList.value.push(el.src!)
-  }
-
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
-  }
-
- 
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
-  
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
   }
 }
 // 开始确定选择后的的质检列表col合并方法

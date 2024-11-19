@@ -213,6 +213,7 @@
                                 type="text" 
                                 v-model="row.tariff" 
                                 @blur="clickCancle($event, row)" 
+                                @keydown.enter="effectiveCountInputeHandle($event,row)"
                             />
                         </div>
                         <span>{{ row.tariff ? row.tariff+'%' : '' }}</span>
@@ -254,13 +255,14 @@
 
 <script lang="ts" setup>
 import { TableInstance } from 'element-plus'
+import { isEqual } from 'lodash'
 import { estimatedCostAccountingSiteColumns, firstLegChannelColumns, siteReflectCurrencyAndExchangeRate, } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getExchangeRate } from '/@/api/devlocal/evaluation'
 import { addTrialCalculation, getTrialCalculation, getTrialCalculationProductDesc, saveTrialCalculation, updateTrialCalculation, updateTrialcalculationProductdesc } from '/@/api/devlocal/progressSample'
 import { IProgressEstimatedCostAccounting, IProgressSample } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 
 const trialTableRef = ref<TableInstance>()
@@ -435,61 +437,53 @@ const getTrialCalculationHandler = async ():Promise<IProgressSample> => {
     return data
 }
 
+let copyRow: any
 // 拿样清单成本试算修改
-const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
     
-    // // 不能被修改cell的下标
-    // if(column.no === 1 || column.no === 2 || column.no === 3 || column.no === 8 || column.no === 22) return
-  
-  
-    if (!cell.children[0].children[0] 
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList
-    ){
-      return
-    }
-  
-    if (column.property === 'desc') {
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
+
+  if (column.property === 'desc') {
     const { data } = await getTrialCalculationProductDesc({ id: row.id })
     row.desc = data
     progressLogCopy.value = data
     wangEditorTitle.value = '编辑产品描述'
     classify.value = 'desc'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
-    } else {
-        cell.children[0].children[0].classList.remove('none')
-        cell.children[0].children[1].classList.add('none')
-    }
-  
-    // 自动聚焦
-    const inputElement = getSpecificChildren(cell, "input")[0];
-    if (inputElement) {
-        inputElement.select()
-        inputElement.focus()
-    } else {
-      const textareaElement = getSpecificChildren(cell, "textarea")[0];
-      if (textareaElement){
-        textareaElement.select()
-        textareaElement.focus()
-      }
-    }
   }
+}
   
 
 // 输入input blur事件
 const clickCancle = async (event:any,value:IProgressSample) =>{  
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
-    if (t1){
-        t1.classList.add("none")
-    }
+  const rootElement = getRootElement(event.srcElement, ".cell");
 
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-        t2.classList.remove("none")
-    }
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
     
-    await updateTrialCalculation({...value, tariff: ""+parseInt(value.tariff!) / 100})
+  await updateTrialCalculation({...value, tariff: ""+parseInt(value.tariff!) / 100})
 }
 
 const fetchData = async () => {

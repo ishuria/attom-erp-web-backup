@@ -1461,12 +1461,13 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useSkuStore } from '/@/store/modules/sku'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath, handleMatched, handleTabs } from '/@/utils/routes'
 import { _addSku, _clearSKUs, _deleteSku, _updateSku } from '/@/utils/sku'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'
+import { isEqual } from 'lodash'
 
 defineOptions({
   name: 'poDetailTable',
@@ -1945,13 +1946,21 @@ const clickRow = ref<any>()
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   
-  if (!cell.children[0].children[0]
-    || !cell.children[0].children[1]
-    || !cell.children[0].children[0].classList
-    || !cell.children[0].children[1].classList) {
-    return
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
-  copyRow = JSON.parse(JSON.stringify(row))
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row
@@ -1969,33 +1978,25 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     wangEditorTitle.value = '合同条款'
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
-  } else {
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-  }
-
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
   }
 }
 const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   
-  if (!cell.children[0].children[0]
-    || !cell.children[0].children[1]
-    || !cell.children[0].children[0].classList
-    || !cell.children[0].children[1].classList) {
-    return
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
-  copyRow = JSON.parse(JSON.stringify(row))
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row
@@ -2009,22 +2010,6 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
     wangEditorTitle.value = '合同条款'
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
-  } else {
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-  }
-
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
   }
 }
 // 修改po-sku零件信息
@@ -2040,17 +2025,18 @@ const updateSkuComponent = async (row: any) => {
   }
 }
 // 零件table blur事件
-const clickCancel = async (event:any,value:any) => {
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    t1.classList.add("none")
+const clickCancel = async (event:any, value:any) => {
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
   }
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  if (JSON.stringify(value) === JSON.stringify(copyRow)) {
-      return 
+  if (isEqual(copyRow, value)) {
+    return
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
@@ -2058,28 +2044,33 @@ const clickCancel = async (event:any,value:any) => {
   }
 }
 const clickCreateOtherCancel = async (event: any, value: any) => {
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    t1.classList.add("none")
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
   }
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
+  if (isEqual(copyRow, value)) {
+    return
   }
   updateCreate()
 }
 // 创建blur修改
 const clickCreateCancel = async (event:any,value:any) => {
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    t1.classList.add("none")
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
   }
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  if (JSON.stringify(value) === JSON.stringify(copyRow)) {
-      return 
+  if (isEqual(copyRow, value)) {
+    return
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
@@ -2103,16 +2094,17 @@ const clickCreateCancel = async (event:any,value:any) => {
 
 // 零件table blur事件
 const clickOtherCancel = async (event:any,value:any) => {
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    t1.classList.add("none")
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
   }
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
-  }
-  if(JSON.stringify(value) === JSON.stringify(copyRow)) {
-      return 
+  if (isEqual(copyRow, value)) {
+    return
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑

@@ -284,6 +284,8 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'left'
   }
 }
+
+
 // 获取拿样零件添加数据
 const fetchData = async () =>{
   listLoading.value = true
@@ -298,9 +300,11 @@ const fetchData = async () =>{
   tableColumnWidth.value = calculateBrColumnWidth(list.value, (row: any) => row.sku, 70);
   FNSKUColumnWidth.value = calculateBrColumnWidth(list.value, (row: any) => row.fnSkuUpc, 70);
 }
-onMounted(async ()=>{
-  fetchData()
-})
+
+// 在组件加载时执行
+onBeforeMount(() => {
+  fetchData();  // 执行数据获取
+});
 </script>
 
 <style lang="scss" scoped>

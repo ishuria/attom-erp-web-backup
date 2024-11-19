@@ -225,6 +225,7 @@
       :shipId="shipId"
       :disabled1="disabled1"
       :disabled2="disabled2"
+      :disabled3="disabled3"
       @update-match-visible="handleCloseMatch"
     />
     <!-- 查看 -->
@@ -258,8 +259,8 @@ import { currencyOption } from '../constantOption'
 import { FormInstance } from 'element-plus'
 import { getMatchPoList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
-import { getChannelList } from '~/src/api/devlocal/encasement'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import { getChannelList } from '/@/api/devlocal/encasement'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const queryForm = reactive<any>({
   keyWord: '',
@@ -312,10 +313,17 @@ const closeFirstLegFreight = () => {
 const disabled1 = ref<boolean>(false)
 // 开始匹配禁用,所有按钮显示
 const disabled2 = ref<boolean>(true)
+// 控制所有按钮不显示
+const disabled3 = ref<boolean>(false)
 // 展示匹配
 const showMatch = (row: IGetMatchPoList) => {
   status.value = row.packArchiveStatus!
   shipId.value = row.id!
+  if (row.packArchiveStatus === 1) {
+    disabled3.value = true
+  } else if (row.packArchiveStatus === 0) {
+    disabled3.value = false
+  }
   if (row.lockStatus === 0) { //0 0 / 0 1 开始匹配显示,所有按钮不显示
     disabled1.value = false
     if (row.status === 0) {

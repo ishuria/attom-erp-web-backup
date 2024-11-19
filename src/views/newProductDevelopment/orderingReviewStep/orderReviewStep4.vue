@@ -124,7 +124,6 @@ const imagePreviewClose = () =>{
 // table单击修改
 const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     // 处理图片放大预览
-    console.log(cell);
     
     let el = getSpecificChildren(cell, "img")[0];
     if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){

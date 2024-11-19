@@ -14,8 +14,7 @@ handleSubmit<template>
                 <el-input v-model.trim="queryForm.productKeyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                  @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -31,7 +30,7 @@ handleSubmit<template>
         >
           <el-table-column label="优先级" prop="priority" align="center" min-width="75">
             <template #default = "{ row }">
-              <el-select size="default" v-model="row.priority" @blur="clickCancle($event, row)">
+              <el-select size="default" v-model="row.priority" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)">
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
@@ -93,8 +92,8 @@ handleSubmit<template>
           <el-table-column label="产品" prop="product" min-width="160">
             <template #default = "{ row }">
               <div class="none">
-                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 3, maxRows: 7 }"
-                    @blur="clickCancle($event, row)" />
+                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 1, maxRows: 2 }" @keyup.enter="clickCancel($event, row)"
+                    @blur="clickCancel($event, row)" />
                 </div>
                 <span v-html="formattedProgressLog(row.product)"></span>
             </template>
@@ -112,17 +111,20 @@ handleSubmit<template>
           <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" min-width="90">
             <template #default = "{ row }">
               <div class="none">
-                <el-input type="textarea" autofocus v-model="row.currentPhaseStatus" :autosize="{ minRows: 3, maxRows: 9 }"   @blur="clickCancle($event, row)"/>
+                <el-input type="textarea" autofocus v-model="row.currentPhaseStatus" :autosize="{ minRows: 1, maxRows: 2 }" @keyup.enter="clickCancel($event, row)"  @blur="clickCancel($event, row)"/>
               </div>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
           </el-table-column>      
-          <el-table-column label="开发日志" prop="progressLog" min-width="500">
+          <el-table-column label="开发日志" prop="progressLog" show-overflow-tooltip min-width="500">
             <template #default = "{ row }">
               <div class="none" >
                 <el-input type="textarea" v-model="row.progressLog" />
               </div>      
-              <span class="overflow-text">{{ removeHtmlTags(row.progressLog) }}</span>
+              <span>{{ removeHtmlTags(row.progressLog) }}</span>
+              <!-- <el-tooltip :content="removeHtmlTags(row.progressLog)" effect="dark" placement="top">
+                <span>{{ removeHtmlTags(row.progressLog) }}</span>
+              </el-tooltip> -->
             </template>
           </el-table-column>
           <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip min-width="100">
@@ -130,20 +132,21 @@ handleSubmit<template>
               <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="remark" >
+          <el-table-column label="备注" prop="remark" show-overflow-tooltip>
             <template #default = "{ row }">
               <div class="none">
                 <el-input type="textarea" v-model="row.remark"/>
               </div>
-              <el-tooltip :content="removeHtmlTags(row.remark)" popper-class="custom-tooltip" effect="dark" placement="top">
-                <span class="overflow-text">{{ removeHtmlTags(row.remark) }}</span>
-              </el-tooltip>
+              <span>{{ removeHtmlTags(row.remark) }}</span>
+              <!-- <el-tooltip :content="removeHtmlTags(row.remark)" effect="dark" placement="top">
+                <span>{{ removeHtmlTags(row.remark) }}</span>
+              </el-tooltip> -->
             </template>
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="90">
             <template #default = "{ row }">
               <div class="none">
-                  <el-input type="text" v-model="row.targetMonthlySales" @blur="clickCancle($event, row)" />
+                  <el-input type="text" v-model="row.targetMonthlySales" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.targetMonthlySales }}</span>
             </template>
@@ -235,7 +238,7 @@ handleSubmit<template>
         >
           <el-table-column label="优先级" prop="priority" align="center" min-width="75">
             <template #default = "{ row }">
-              <el-select size="default" v-model="row.priority" @blur="clickCancle($event, row)" disabled>
+              <el-select size="default" v-model="row.priority" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" disabled>
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
@@ -569,6 +572,7 @@ handleSubmit<template>
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
+import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import { ref } from 'vue'
 import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
@@ -598,7 +602,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
@@ -908,6 +912,7 @@ const fetchData = async () => {
   })
 }
 
+let _row: any
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -915,16 +920,21 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
 
   // 获取行的下标
   tableClickIdx.value = progressList.value.indexOf(row)
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-    return
-  }
-  // console.log(cell.children[0].children[0])
-  // console.log(cell.children[0].children[1])
-  // console.log(cell.children[0].children[2])
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  _row = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
   if (column.property == 'progressLog') {
     const { data } = await getProgressLog({ progressId: row.progressId })
     // progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
@@ -937,22 +947,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     wangEditorTitle.value = '编辑备注'
     classify.value = 'remark'
     wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
-  } else {
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-  }
-
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-      inputElement.focus()
-      inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
   }
 }
 const handleCheckbox = async (value: any) => {
@@ -964,21 +958,27 @@ const handleCheckbox = async (value: any) => {
 /**
  * 输入失焦事件
  */
-const clickCancle = async (event: any, value: any) =>{
+const clickCancel = async (event: any, value: any) =>{
 
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  const rootElement = getRootElement(event.srcElement, ".cell");
 
-  if (t1){
-    if (t1.classList[0] !== "el-select") {
-      t1.classList.add("none")
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+    
+    if (t1) {
+      if (t1.classList[0] !== 'el-select') {
+        t1.classList.add("none");
+      }
     }
+    if (t2) t2.classList.remove("none");
   }
-
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
+  if (isEqual(_row, value)) {
+    return
   }
-  await updateProgressManage({...value})
+  if (event.type === 'blur') {
+    await updateProgressManage({...value})
+  }
 }
 
 /**
@@ -1438,12 +1438,4 @@ onBeforeMount(() => {
  max-height: 81.2px; /* 设置文本的最大高度 */
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
-:deep(.custom-tooltip .el-tooltip__popper) {
-  min-width: 100px;
-  max-width: 100px !important;
-  height: 100px !important;
-  overflow: auto !important;
-}
-
-
 </style>

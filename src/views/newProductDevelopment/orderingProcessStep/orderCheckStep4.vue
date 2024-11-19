@@ -155,12 +155,11 @@ skuMerge: '合并变体的SKU',
 }
 
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-
   let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && el){
-      emit("update:priviewListValue", el.src)
-      emit("update:imagePreviewVisibale", true)
-    }
+  if (getDataAttribute(el,'img') && el){
+    emit("update:priviewListValue", el.src)
+    emit("update:imagePreviewVisibale", true)
+  }
 }
 
 

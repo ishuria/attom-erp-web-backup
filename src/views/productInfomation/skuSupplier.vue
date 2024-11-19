@@ -285,7 +285,8 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 import { currencyNumList } from '../newProductDevelopment/indexCommon'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { createConsumablesSupplier, createProductComponentSuppliser, delComponentImage, getProductAllSupplier, getProductComponentPurchase, getProductListSuppliser, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponentSuppliser, uploadComponentImage } from '/@/api/devlocal/productInformation'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { isEqual } from 'lodash'
 
 const route: any = useRoute()
 const tabsStore = useTabsStore()
@@ -497,88 +498,78 @@ const handlePreview = (file: any) => {
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
+let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
-    // let el = getSpecificChildren(cell, "img")[0];
-    // if (getDataAttribute(el,'img') && el){
-    //   emit("update:priviewListValue", row.componentImg.url)
-    //   emit("update:imagePreviewVisibale", true)
-    // }
-    if (!cell.children[0].children[0]
-        || !cell.children[0].children[1]
-        || !cell.children[0].children[0].classList
-        || !cell.children[0].children[1].classList) {
-        return
-    }
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
-    if (column.property == 'purchaseMatters') {
-        // 查询零件采购注意事项
-        clickRow.value = row
-        // const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
-        attentionCopy.value = row.purchaseMatters
-        // row.purchaseMatters = data
-        wangEditorTitle.value = '零件采购注意事项'
-        classify.value = 'purchaseMatters'
-        wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
-    } else if (column.property == 'contractTerms'){
-            clickRow.value = row
-            // const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
-            contractCopy.value = row.contractTerms
-            // row.contractTerms = data
-            wangEditorTitle.value = '合同条款'
-            classify.value = 'contractTerms'
-            wangEditorContractVisible.value = !wangEditorContractVisible.value
-    } else {
-            cell.children[0].children[0].classList.remove('none')
-            cell.children[0].children[1].classList.add('none')
-    }
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
 
+  copyRow = JSON.parse(JSON.stringify(row));
 
-    // 自动聚焦
-    const inputElement = getSpecificChildren(cell, "input")[0];
-    if (inputElement) {
-        inputElement.focus()
-        inputElement.select()
-    } else {
-        const textareaElement = getSpecificChildren(cell, "textarea")[0];
-        if (textareaElement){
-            textareaElement.focus()
-            textareaElement.select()
-        }
-    }
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
+
+  if (column.property == 'purchaseMatters') {
+    // 查询零件采购注意事项
+    clickRow.value = row
+    // const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
+    attentionCopy.value = row.purchaseMatters
+    // row.purchaseMatters = data
+    wangEditorTitle.value = '零件采购注意事项'
+    classify.value = 'purchaseMatters'
+    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
+  } else if (column.property == 'contractTerms'){
+    clickRow.value = row
+    // const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
+    contractCopy.value = row.contractTerms
+    // row.contractTerms = data
+    wangEditorTitle.value = '合同条款'
+    classify.value = 'contractTerms'
+    wangEditorContractVisible.value = !wangEditorContractVisible.value
+  }
 }
 // 零件table blur事件
 const clickCancle = async (event:any,value:any) =>{
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
-    if (t1){
-      t1.classList.add("none")
-    }
-  
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-      t2.classList.remove("none")
-    }
-    
-    if (event.type === 'blur') {
-        // 执行失去焦点处理逻辑
-        await updateProductComponentSuppliser({
-            id: value.id,
-            skuId: parseInt(route.query.skuId),
-            componentId:  parseInt(route.query.componentId),
-            defaultSuppliserId: value.suppliserId,
-            unitPrice: value.unitPrice,
-            taxIncludedPrice: value.taxIncludedPrice,
-            currency: value.currency,
-            minimumOrderQuantity: value.minimumOrderQuantity,
-            numberFullCartons: value.numberFullCartons,
-            invoicing: value.invoicing,
-            purchaseId: value.purchaseId,
-            purchaseLink: value.purchaseLink,
-            purchaseMatters: value.purchaseMatters,
-            contractTerms: value.contractTerms
-        })
-        fetchData()
-    }
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+      // 执行失去焦点处理逻辑
+    await updateProductComponentSuppliser({
+      id: value.id,
+      skuId: parseInt(route.query.skuId),
+      componentId:  parseInt(route.query.componentId),
+      defaultSuppliserId: value.suppliserId,
+      unitPrice: value.unitPrice,
+      taxIncludedPrice: value.taxIncludedPrice,
+      currency: value.currency,
+      minimumOrderQuantity: value.minimumOrderQuantity,
+      numberFullCartons: value.numberFullCartons,
+      invoicing: value.invoicing,
+      purchaseId: value.purchaseId,
+      purchaseLink: value.purchaseLink,
+      purchaseMatters: value.purchaseMatters,
+      contractTerms: value.contractTerms
+    })
+    fetchData()
+  }
 }
 const handleCurrencyChange = async (row: any) => {
     await updateProductComponentSuppliser({...row, defaultSuppliserId: row.suppliserId, skuId: parseInt(route.query.skuId), componentId: parseInt(route.query.componentId)})

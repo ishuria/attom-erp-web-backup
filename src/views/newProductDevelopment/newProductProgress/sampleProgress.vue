@@ -30,7 +30,7 @@
                 border stripe 
                 :data="sampleList" 
                 :header-cell-style="{ 'text-align': 'center' }"
-                @cell-click="sampleTableInputChage"
+                @cell-click="sampleTableInputChange"
             >
                 <el-table-column align="center" label="图片" min-width="100">
                     <template #default="{ row }">
@@ -234,7 +234,7 @@ const handleSampleReceipt = async (row: any) => {
 
 
 // 拿样table单击事件
-const sampleTableInputChage = (row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const sampleTableInputChange = (row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     if (getSpecificChildren(cell, ".el-image")[0]){
         emit("update:priviewListValue", row.componentImg)
     }

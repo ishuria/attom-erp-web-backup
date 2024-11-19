@@ -127,7 +127,7 @@ export const getTextWidth = (str: string) => {
  * @param prop_label: 表名
  * @param table_data: 表格数据
  */
-export const flexColumnWidth =  (list: any, label: string, prop: string) => {
+export const flexColumnWidth =  (list: any, label: string, prop: string, padding = 25) => {
   // console.log('label', label)
   // console.log('prop', prop)
   // 1.获取该列的所有数据
@@ -136,7 +136,7 @@ export const flexColumnWidth =  (list: any, label: string, prop: string) => {
   // console.log(arr)
   // 2.计算每列内容最大的宽度 + 表格的内间距（依据实际情况而定）
   const maxLength = getMaxLength(arr)
-  return (maxLength + 25) + 'px'
+  return (maxLength + padding) + 'px'
 }
 
 // 去掉 HTML 标签并显示纯文本的方法

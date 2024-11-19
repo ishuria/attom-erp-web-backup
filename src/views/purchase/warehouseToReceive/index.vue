@@ -152,9 +152,10 @@ import type { FormInstance, TableInstance } from 'element-plus'
 
 import { useRoutesStore } from '/@/store/modules/routes'
 
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { addPurchaseRepository, delPurchaseRepository, getPurchaseRepository, updatePurchaseRepository } from '/@/api/devlocal/purchase';
 import { IgetPurchaseRepository } from '/@/type/purchase/ourInformationType';
+import { isEqual } from 'lodash'
   
 defineOptions({
     name: 'WarehouseToReceive',
@@ -235,50 +236,47 @@ const handleSubmit = async () => {
     else $baseMessage('表单提交失败', 'error', 'hey')
   })
 }
+let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
     
-    if (!cell.children[0].children[0]
-        || !cell.children[0].children[1]
-        || !cell.children[0].children[0].classList
-        || !cell.children[0].children[1].classList) {
-        return
-    }
-  
-    cell.children[0].children[0].classList.remove('none')
-    cell.children[0].children[1].classList.add('none')
-    
-    // 自动聚焦
-    const inputElement = getSpecificChildren(cell, "input")[0];
-    if (inputElement) {
-        inputElement.focus()
-        inputElement.select()
-    } else {
-        const textareaElement = getSpecificChildren(cell, "textarea")[0];
-        if (textareaElement){
-            textareaElement.focus()
-            textareaElement.select()
-        }
-    }
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
-  // 零件table blur事件
-  const clickCancle = async (event:any,value:any) =>{
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
-    if (t1){
-      t1.classList.add("none")
-    }
-  
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-      t2.classList.remove("none")
-    }
-    let _status = null
-    if (event.type === 'blur') {
-        // 执行失去焦点处理逻辑
-        if (value.status === '正常') _status = 0
-        else if (value.status === '停用') _status = 1
-        await updatePurchaseRepository({...value, status: _status})
-    }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
+}
+// 零件table blur事件
+const clickCancle = async (event:any,value:any) =>{
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  let _status = null
+  if (event.type === 'blur') {
+      // 执行失去焦点处理逻辑
+      if (value.status === '正常') _status = 0
+      else if (value.status === '停用') _status = 1
+      await updatePurchaseRepository({...value, status: _status})
+  }
+}
 const handleCharacteristicChange = async (row: any) => {
   let _status = null
   if (row.status === '正常') _status = 0

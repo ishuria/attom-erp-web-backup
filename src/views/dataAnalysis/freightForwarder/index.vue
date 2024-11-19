@@ -455,7 +455,7 @@ import { CSSProperties } from 'vue'
 import { includeTariffOption } from '../../packagingShipping/constantOption'
 import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
 import { IAddForwarder, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
-import { getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 const currencyNumList = [
   {
@@ -681,27 +681,18 @@ let copyRow: any
  */
 const changeInputFeeSetting = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   
-  if (!cell.children[0].children[0]
-    || !cell.children[0].children[1]
-    || !cell.children[0].children[0].classList
-    || !cell.children[0].children[1].classList) {
-    return
-  }
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
   copyRow = { ...row } //浅拷贝
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
 }
 /**
@@ -747,31 +738,19 @@ const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
 /**
  * @description 货代清单表格的点击编辑
  */
- const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  
-  if (!cell.children[0].children[0]
-    || !cell.children[0].children[1]
-    || !cell.children[0].children[0].classList
-    || !cell.children[0].children[1].classList) {
-    return
+const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
-
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
   copyRow = { ...row } //浅拷贝
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-    inputElement.focus()
-    inputElement.select()
-  } else {
-    const textareaElement = getSpecificChildren(cell, "textarea")[0];
-    if (textareaElement){
-      textareaElement.focus()
-      textareaElement.select()
-    }
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+    focusAndSelectInput(cell);
   }
- }
+}
 /**
  * @description 货代清单点击取消编辑框
  */

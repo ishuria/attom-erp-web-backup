@@ -259,7 +259,7 @@
                 <span style="color: rgb(192, 192, 192)">{{ row.existingPartsListId }}</span>
             </template>
         </el-table-column>   
-        <el-table-column label="零件名" prop="componentName" width="200">
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(tableData, '零件名', 'componentName')">
             <template #default="{ row }">
                 <span style="color: rgb(192, 192, 192)">{{ row.componentName }}</span>
             </template>
@@ -267,7 +267,7 @@
         <el-table-column label="数量" width="60" prop="quantity" align="center">
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="number" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="number" v-model="row.quantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.quantity }}</span>
             </template>
@@ -283,7 +283,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="number" v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="number" v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.unitPrice }}</span>
             </template>
@@ -295,7 +295,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="number" v-model="row.totalPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row,)" />
+                    <el-input type="number" v-model="row.totalPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row,)" />
                 </div>
                 <span>{{ row.totalPrice }}</span>
             </template>
@@ -314,7 +314,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="number" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="number" v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.taxIncludedPrice }}</span>
             </template>
@@ -330,7 +330,7 @@
         <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="73">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="number" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        <el-input type="number" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                     </div>
                 <span>{{ row.minimumOrderQuantity }}</span>
             </template>
@@ -338,7 +338,7 @@
         <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="73">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="number" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        <el-input type="number" v-model="row.numberFullCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                     </div>
                 <span>{{ row.numberFullCartons }}</span>
             </template>
@@ -401,7 +401,7 @@
         <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>
                     <el-text truncated>
@@ -671,12 +671,14 @@
 <script lang="ts" setup>
 import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { FormInstance, UploadFile } from 'element-plus'
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '~/src/type/purchase/po'
-import { getRootElement, getSpecificChildren } from '~/src/utils/nodeUtils'
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { getRootElement, focusAndSelectInput } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, submitProductComponent, submitProductConsumable, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { isEqual } from 'lodash'
 
 const route: any = useRoute()
 const router = useRouter()
@@ -1304,100 +1306,96 @@ const handleDel = async (row: any, index: number) => {
 const clickRow = ref<any>()
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-    
-    // let el = getSpecificChildren(cell, "img")[0];
-    // if (getDataAttribute(el,'img') && el){
-    //   emit("update:priviewListValue", row.componentImg.url)
-    //   emit("update:imagePreviewVisibale", true)
-    // }
-    if (!cell.children[0].children[0]
-        || !cell.children[0].children[1]
-        || !cell.children[0].children[0].classList
-        || !cell.children[0].children[1].classList) {
-        return
-    }
-    copyRow = JSON.parse(JSON.stringify(row))
-    if (column.property == 'purchaseMatters') {
-        // 查询零件采购注意事项
-        clickRow.value = row
-        // const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.id })
-        attentionCopy.value = row.purchaseMatters
-        // row.purchaseMatters = data
-        wangEditorTitle.value = '零件采购注意事项'
-        classify.value = 'purchaseMatters'
-        wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
-    } else if (column.property == 'contractTerms'){
-            clickRow.value = row
-            // const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.id })
-            contractCopy.value = row.contractTerms
-            // row.contractTerms = data
-            wangEditorTitle.value = '合同条款'
-            classify.value = 'contractTerms'
-            wangEditorContractVisible.value = !wangEditorContractVisible.value
-    } else {
-            cell.children[0].children[0].classList.remove('none')
-            cell.children[0].children[1].classList.add('none')
-    }
+  // 解构 row 和 column 属性，便于后续使用
+  const { purchaseMatters, contractTerms } = row;
+  const { property } = column;
 
+  // 缓存 cell 内部的 DOM 元素，避免重复访问
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
-    // 自动聚焦
-    const inputElement = getSpecificChildren(cell, "input")[0];
-    if (inputElement) {
-        inputElement.focus()
-        inputElement.select()
-    } else {
-        const textareaElement = getSpecificChildren(cell, "textarea")[0];
-        if (textareaElement){
-            textareaElement.focus()
-            textareaElement.select()
-        }
-    }
+  // 如果任一元素不存在，直接返回
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  // 如果是第一次点击（firstChild 有 'none' 类名），执行以下逻辑
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    // 聚焦并全选输入框或文本框
+    focusAndSelectInput(cell);
+  }
+
+  // 根据 column 的属性执行不同的逻辑
+  if (property === 'purchaseMatters') {
+    clickRow.value = row;
+    attentionCopy.value = purchaseMatters;
+    wangEditorTitle.value = '零件采购注意事项';
+    classify.value = 'purchaseMatters';
+    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value;
+  } else if (property === 'contractTerms') {
+    clickRow.value = row;
+    contractCopy.value = contractTerms;
+    wangEditorTitle.value = '合同条款';
+    classify.value = 'contractTerms';
+    wangEditorContractVisible.value = !wangEditorContractVisible.value;
+  } 
 }
-// 零件table blur事件
-const clickCancle = async (event:any,value:any) =>{
-    const t1 = getRootElement(event["srcElement"],".cell").children[0]
-    if (t1){
-      t1.classList.add("none")
-    }
-  
-    const t2 = getRootElement(event["srcElement"],".cell").children[1]
-    if (t2){
-      t2.classList.remove("none")
-    }
-    if(JSON.stringify(value) === JSON.stringify(copyRow)) {
-        return 
-    }
-    if (event.type === 'blur') {
-        // 执行失去焦点处理逻辑
-        await updateProductComponent({
-            id: value.id,
-            skuId: value.skuId,
-            componentId: value.componentId,
-            existingPartsListId: value.existingPartsListId,
-            suppliserId: value.suppliserId,
-            quantity: value.quantity,
-            unitPrice: value.unitPrice,
-            totalPrice: value.totalPrice,
-            preTaxPrice: value.preTaxPrice,
-            taxIncludedPrice: value.taxIncludedPrice,
-            currency: value.currency,
-            minimumOrderQuantity: value.minimumOrderQuantity,
-            numberFullCartons: value.numberFullCartons,
-            defaultSuppliserId: value.defaultSuppliserId,
-            invoicing: value.invoicing,
-            purchaseId: value.purchaseId,
-            declareCustomsStatus: value.declareCustomsStatus,
-            purchaseLink: value.purchaseLink,
-            defaultRepositoryId: value.defaultRepositoryId,
-            purchaseMatters: value.purchaseMatters,
-            contractTerms: value.contractTerms,
-        })
-        fetchComponentData()
-    }
+// 处理零件table blur事件
+const clickCancel = async (event: any, value: any) => {
+  // 获取根元素，避免重复调用 getRootElement
+  const rootElement = getRootElement(event.srcElement, ".cell");
 
-    // 重新获取实际总成本
-    fetchData()
-}
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    // 更新 t1 和 t2 的 class
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+
+  // 只有在数据变化时才处理更新
+  if (isEqual(value, copyRow)) {
+    return; // 数据没有变化，不执行更新
+  }
+
+  if (event.type === 'blur') {
+    // 执行失去焦点时的处理逻辑
+    await updateProductComponent({
+      id: value.id,
+      skuId: value.skuId,
+      componentId: value.componentId,
+      existingPartsListId: value.existingPartsListId,
+      suppliserId: value.suppliserId,
+      quantity: value.quantity,
+      unitPrice: value.unitPrice,
+      totalPrice: value.totalPrice,
+      preTaxPrice: value.preTaxPrice,
+      taxIncludedPrice: value.taxIncludedPrice,
+      currency: value.currency,
+      minimumOrderQuantity: value.minimumOrderQuantity,
+      numberFullCartons: value.numberFullCartons,
+      defaultSuppliserId: value.defaultSuppliserId,
+      invoicing: value.invoicing,
+      purchaseId: value.purchaseId,
+      declareCustomsStatus: value.declareCustomsStatus,
+      purchaseLink: value.purchaseLink,
+      defaultRepositoryId: value.defaultRepositoryId,
+      purchaseMatters: value.purchaseMatters,
+      contractTerms: value.contractTerms,
+    })
+    // 数据更新后，重新获取组件数据
+    fetchComponentData()
+  }
+  // 重新获取实际总成本
+  fetchData()
+};
+
 // 处理默认采购方
 const handleDefaultPurchase = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
