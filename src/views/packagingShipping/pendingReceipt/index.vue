@@ -87,7 +87,7 @@
           <el-table-column label="SKU" prop="sku" min-width="160"></el-table-column>    
           <el-table-column label="剩余可售" prop="sellableDay" min-width="100"></el-table-column>
           <el-table-column  label="供应商" min-width="250" prop="suppliserName"></el-table-column>
-          <el-table-column label="站点" prop="site" min-width="100">
+          <el-table-column label="站点" prop="site" min-width="120">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
             </template>
@@ -107,8 +107,14 @@
           </el-table-column>
           <el-table-column label="跟单日志" prop="log" min-width="250">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.log) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.log) }}</span>
+              </el-tooltip>
             </template>
+
           </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
@@ -250,8 +256,14 @@
           </el-table-column>
           <el-table-column label="跟单日志" prop="log" min-width="250">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.log) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.log) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.log) }}</span>
+              </el-tooltip>
             </template>
+
           </el-table-column>
           
           <template #empty>
@@ -436,6 +448,7 @@ import { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { isEqual } from 'lodash'
+import { removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'pendingReceiptTable',
@@ -703,14 +716,6 @@ const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   // console.log(column);
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
-
   if (column.property === 'log') {
     clickRow.value = row
     const { data } = await getSignLog({ signId: row.signId })
@@ -720,6 +725,13 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     classify.value = 'signLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } 
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el, 'img') && el) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
+  }
 }
 
 let _row: any
@@ -801,12 +813,7 @@ const clickLog = async (val: any) => {
 const clickLogBool = ( val: any) => {
   wangEditorLogVisible.value = val
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getSignList(queryForm)

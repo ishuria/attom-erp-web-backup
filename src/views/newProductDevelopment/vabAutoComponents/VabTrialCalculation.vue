@@ -45,17 +45,12 @@
 
                 <el-table-column label="产品描述" min-width="200" prop="desc">
                     <template #default="{ row, $index }">
-                        <div class="none">
-                            <el-input 
-                                type="textarea" 
-                                autofocus 
-                                v-model="row.desc" 
-                                :autosize="{ minRows: 3, maxRows: 9 }"
-                                @blur="clickCancle($event, row)"
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
+                      <el-tooltip content=" " effect="dark" placement="top">
+                        <template #content>
+                          <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.desc) }}</div>
+                        </template>
                         <span @click="handleDescClick($index)">{{ removeHtmlTags(row.desc) }}</span>
+                      </el-tooltip>
                     </template>
                 </el-table-column>
 
@@ -264,6 +259,7 @@ import { IProgressEstimatedCostAccounting, IProgressSample } from '/@/type/progr
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
+import { removeHtmlTags } from '/@/utils/tableColum'
 
 const trialTableRef = ref<TableInstance>()
 
@@ -301,12 +297,6 @@ const handleDescClick = (index: number) => {
   }) //发送更新数据请求
 }
 
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
@@ -440,7 +430,14 @@ const getTrialCalculationHandler = async ():Promise<IProgressSample> => {
 let copyRow: any
 // 拿样清单成本试算修改
 const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-    
+  if (column.property === 'desc') {
+    const { data } = await getTrialCalculationProductDesc({ id: row.id })
+    row.desc = data
+    progressLogCopy.value = data
+    wangEditorTitle.value = '编辑产品描述'
+    classify.value = 'desc'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+  }
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -455,15 +452,6 @@ const sampelTrialTableInputChage = async(row: any, column: any, cell: HTMLTableC
     secondChild.classList.add('none');
 
     focusAndSelectInput(cell);
-  }
-
-  if (column.property === 'desc') {
-    const { data } = await getTrialCalculationProductDesc({ id: row.id })
-    row.desc = data
-    progressLogCopy.value = data
-    wangEditorTitle.value = '编辑产品描述'
-    classify.value = 'desc'
-    wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
 }
   

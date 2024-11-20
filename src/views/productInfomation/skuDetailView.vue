@@ -398,7 +398,7 @@
                 <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleDeclareCustoms(row)"/>
             </template>
         </el-table-column>
-        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" show-overflow-tooltip >
             <template #default="{ row }">
                 <div class="none">
                     <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -424,20 +424,24 @@
             </template>
         </el-table-column>
         <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.purchaseMatters"  />
-                </div>
-                <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
-            </template>
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+              </template>
+              <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column label="合同条款" prop="contractTerms" min-width="200">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.contractTerms"  />
-                </div>
-                <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
-            </template>
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+              </template>
+              <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="{ row, $index }">
@@ -673,7 +677,7 @@ import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@elemen
 import { FormInstance, UploadFile } from 'element-plus'
 import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { getRootElement, focusAndSelectInput } from '/@/utils/nodeUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, submitProductComponent, submitProductConsumable, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -1083,13 +1087,6 @@ const clickAttentionCancel = (val: any) => {
 const clickContractCancel = (val: any) => {
   wangEditorContractVisible.value = val
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
-
 
 const rules = reactive({
   type: [
@@ -1309,7 +1306,20 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   // 解构 row 和 column 属性，便于后续使用
   const { purchaseMatters, contractTerms } = row;
   const { property } = column;
-
+  // 根据 column 的属性执行不同的逻辑
+  if (property === 'purchaseMatters') {
+    clickRow.value = row;
+    attentionCopy.value = purchaseMatters;
+    wangEditorTitle.value = '零件采购注意事项';
+    classify.value = 'purchaseMatters';
+    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value;
+  } else if (property === 'contractTerms') {
+    clickRow.value = row;
+    contractCopy.value = contractTerms;
+    wangEditorTitle.value = '合同条款';
+    classify.value = 'contractTerms';
+    wangEditorContractVisible.value = !wangEditorContractVisible.value;
+  } 
   // 缓存 cell 内部的 DOM 元素，避免重复访问
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -1330,20 +1340,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     focusAndSelectInput(cell);
   }
 
-  // 根据 column 的属性执行不同的逻辑
-  if (property === 'purchaseMatters') {
-    clickRow.value = row;
-    attentionCopy.value = purchaseMatters;
-    wangEditorTitle.value = '零件采购注意事项';
-    classify.value = 'purchaseMatters';
-    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value;
-  } else if (property === 'contractTerms') {
-    clickRow.value = row;
-    contractCopy.value = contractTerms;
-    wangEditorTitle.value = '合同条款';
-    classify.value = 'contractTerms';
-    wangEditorContractVisible.value = !wangEditorContractVisible.value;
-  } 
 }
 // 处理零件table blur事件
 const clickCancel = async (event: any, value: any) => {

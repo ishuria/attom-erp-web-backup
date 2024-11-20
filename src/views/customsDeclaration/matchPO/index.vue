@@ -81,7 +81,14 @@
       </el-table-column>
       <el-table-column label="状态" prop="status" min-width="160">
         <template #default="{ row }">
-          <span :style="{ color: row.matchStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
+          <span 
+            :style="{ 
+              color: row.lockStatus === 0 && row.status === 1 
+                ? 'var(--el-color-warning)'  // 黄色 
+                : row.matchStatus === 0 
+                  ? 'var(--el-color-danger)' // 红色 
+                  : 'var(--el-color-success)' // 绿色 
+            }">
             {{ row.matchStatus === 0 ? '待匹配' : '已匹配' }}
           </span><br />
           <span :style="{ color: row.packArchiveStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
@@ -110,7 +117,7 @@
                   <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">打包归档</el-link>
+                  <el-link type="primary" :underline="false" @click="handleArchivePackage(row)">打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">退税归档</el-link>
@@ -125,7 +132,7 @@
                   <el-link type="primary" :underline="false" @click="">合同导入</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">撤销打包归档</el-link>
+                  <el-link type="primary" :underline="false" @click="handleCancelArchivePackage(row)">撤销打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">撤销退税归档</el-link>
@@ -257,7 +264,7 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { CSSProperties, VNode } from 'vue'
 import { currencyOption } from '../constantOption'
 import { FormInstance } from 'element-plus'
-import { getMatchPoList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { archivePackageShipment, cancelArchivePackageShipment, getMatchPoList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -293,6 +300,30 @@ const forwarderChannelFormRef = ref<FormInstance>()
 const forwarderChannelFormRules = reactive<any>({
   forwarderChannel: [{ required: true, message: '请输入货代渠道', trigger: 'blur' }]
 })
+// 打包归档
+const handleArchivePackage = async (row: any) => {
+  $baseConfirm('确定要打包归档吗？', null, async () => {
+    const { data } = await archivePackageShipment({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('打包归档成功', 'success')
+      fetchData()
+    }
+  })
+}
+// 撤销打包归档
+const handleCancelArchivePackage = async (row: any) => {
+  $baseConfirm('确定要撤销打包归档吗?', null, async () => {
+    const { data } = await cancelArchivePackageShipment({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('撤销打包归档成功', 'success')
+      fetchData()
+    }
+  })
+}
 // 关闭货代渠道
 const closeForwarderChannel = () => {
   updateForwarderChannelVisible.value = false
@@ -339,6 +370,7 @@ const showMatch = (row: IGetMatchPoList) => {
 // 关闭匹配
 const handleCloseMatch = (value: boolean) => {
   matchVisible.value = value
+  fetchData()
 }
 
 // 关闭查看

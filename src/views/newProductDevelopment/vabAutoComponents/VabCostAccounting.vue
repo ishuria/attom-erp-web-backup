@@ -1,354 +1,343 @@
 <template>
+  <!-- 成本核算 -->
+  <div style="width: 100%; padding-top:15px; flex-grow: 2" >
+      
+    <el-divider style="margin:10px 0"/>
+      
+    <vab-query-form >
+      <vab-query-form-left-panel>
+        <el-button type="primary" @click="addRowCostAccounting">新增成本核算</el-button>
+      </vab-query-form-left-panel>
+    </vab-query-form>
 
-    <!-- 成本核算 -->
-    <div style="width: 100%; padding-top:15px; flex-grow: 2" >
+    <VueDraggable
+      v-model="estimatedCostList"
+      :animation="150"
+      ghostClass="ghost"
+      target="tbody"
+      @end="onEnd"
+      :disabled="isDraggingDisabled"
+    >
+      <el-table 
+        ref="costAccountingTable"
+        :data="estimatedCostList"
+        :cell-style="cellStyle"
+        border stripe
+        @cell-click="costAccountingChangeInput"
+        :header-cell-style="{ 'text-align': 'center' }"
+        class="noneHoveTable"
+      >
+
+        <el-table-column prop="createTime" label="日期" min-width="110">
+            <template #default="{row}">
+                <span>{{ formatDate(new Date(row.createTime)) }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="站点" min-width="135">
+            <template #default="{ row }">
+                <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
+                    <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
+                        :value="dict.value" :label="dict.label"></el-option>
+                </el-select>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="外汇币种" min-width="100">
+            <template #default="{ row }">
+                <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="汇率">
+            <template #default="{ row }">
+                <span>{{row.foreignExchange}}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column  label="图片">
+            <template v-slot="scope">
+                <div>
+                    <el-image v-if="scope.row.imgUrl" style="width: 50px; height: 50px" :src="scope.row.imgUrl" fit="fill" data-img="img" />
+                </div>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="产品描述" min-width="250" prop="desc">
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.desc) }}</div>
+              </template>
+              <span>{{ removeHtmlTags(row.desc) }}</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="价格信息" min-width="250" prop="priceInfo">
+          <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.priceInfo) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.priceInfo) }}</span>
+              </el-tooltip>
+            </template>
+        </el-table-column>
+
+        <!-- <el-table-column label="1688链接" min-width="140">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.url1688" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.url1688 }}</span>
+            </template>
+        </el-table-column> -->
+
+        <el-table-column label="产品价格￥" min-width="120">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.price" 
+                        @blur="clickCancle($event, row)"
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.price }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="长" min-width="70">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.length" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.length }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column  label="宽" min-width="70">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.width" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.width }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column  label="高" min-width="70">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.height" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.height }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column  label="重量">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.weight" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.weight }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column prop="lastMile" label="尾程" />
+
+        <el-table-column prop="firstMile" label="头程">
+        </el-table-column>
+
+        <el-table-column  label="打包">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.packaging" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.packaging }}</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="头程渠道" min-width="140">
+            <template #default="{ row }">
+                <el-select 
+                    v-model="row.firstMileChannel" 
+                    placeholder="请选择头程渠道"
+                    @change="handlerEstimatendChange(row)"
+                    style="min-width: 100%;"
+                >
+                    <el-option 
+                        v-for="dict in firstLegChannelColumns" 
+                        :key="dict.value" 
+                        :value="dict.value"
+                        :label="dict.label"
+                    >
+                    </el-option>
+                </el-select>
+            </template>
+        </el-table-column>
+        <el-table-column  label="售价">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.sellingPrice" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.sellingPrice }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column prop="grossMarginRate" label="毛利率" />
         
-        <el-divider style="margin:10px 0"/>
-        
-        <vab-query-form >
-            <vab-query-form-left-panel>
-                <el-button type="primary" @click="addRowCostAccounting">新增成本核算</el-button>
-            </vab-query-form-left-panel>
-        </vab-query-form>
 
-        <VueDraggable
-           
-            v-model="estimatedCostList"
-            :animation="150"
-            ghostClass="ghost"
-            target="tbody"
-            @end="onEnd"
-            :disabled="isDraggingDisabled"
-        >
-            <el-table 
-                ref="costAccountingTable"
-                :data="estimatedCostList"
-                :cell-style="cellStyle"
-                border stripe
-                @cell-click="costAccountingChangeInput"
-                :header-cell-style="{ 'text-align': 'center' }"
-                class="noneHoveTable"
-            >
+        <el-table-column prop="roi" label="ROI" />
 
-                <el-table-column prop="createTime" label="日期" min-width="110">
-                    <template #default="{row}">
-                        <span>{{ formatDate(new Date(row.createTime)) }}</span>
+        <el-table-column label="重量系数" min-width="100">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.weightCoefficient" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.weightCoefficient }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="体积系数" min-width="100">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.volumeCoefficient" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.volumeCoefficient }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="关税%">
+            <template #default="{ row }">
+                <div class="none">
+                    <el-input 
+                        type="text" 
+                        v-model="row.tariff" 
+                        @blur="clickCancle($event, row)" 
+                        @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    />
+                </div>
+                <span>{{ row.tariff ? row.tariff : '' }}{{ row.tariff ? '%' : '' }}</span>
+            </template>
+        </el-table-column>
+
+        <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
+        </el-table-column>
+
+        <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140">
+        </el-table-column>
+
+
+        <el-table-column align="center" fixed="right" label="操作" width="120px">
+            <template v-slot="scope">
+                <el-dropdown>
+                    <el-button text type="primary">
+                        逆算
+                        <el-icon class="el-icon--right">
+                            <arrow-down />
+                        </el-icon>
+                    </el-button>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item>
+                                <el-link type="primary" :underline="false">逆算</el-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <el-link type="primary" :underline="false" @click="costAccountImageUpload(scope.row,scope.$index)">上传图片</el-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <el-link type="primary" :underline="false" @click="costAccountCopy(scope.row)">复制</el-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item>
+                                <el-link type="primary" :underline="false" @click="costAccountDelete(scope.row)">删除</el-link>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
                     </template>
-                </el-table-column>
+                </el-dropdown>
+            </template>
+        </el-table-column>
+      </el-table>
+    </VueDraggable>
 
-                <el-table-column label="站点" min-width="135">
-                    <template #default="{ row }">
-                        <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
-                            <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value"
-                                :value="dict.value" :label="dict.label"></el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="外汇币种" min-width="100">
-                    <template #default="{ row }">
-                        <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="汇率">
-                    <template #default="{ row }">
-                        <span>{{row.foreignExchange}}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column  label="图片">
-                    <template v-slot="scope">
-                        <div>
-                            <el-image v-if="scope.row.imgUrl" style="width: 50px; height: 50px" :src="scope.row.imgUrl" fit="fill" data-img="img" />
-                        </div>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="产品描述" min-width="250" prop="desc">
-                    <template #default="{ row, $index }">
-                        <div class="none">
-                            <el-input 
-                                type="textarea" 
-                                autofocus v-model="row.desc" 
-                                :autosize="{ minRows: 1, maxRows: 3 }"
-                                @blur="clickCancle($event, row)"
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                          
-                             />
-                        </div>
-                        <span>{{ removeHtmlTags(row.desc) }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="价格信息" min-width="250" prop="priceInfo">
-                    <template #default="{ row, $index }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.priceInfo" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                   
-                            />
-                        </div>
-                        <span>{{ removeHtmlTags(row.priceInfo) }}</span>
-                    </template>
-                </el-table-column>
-
-                <!-- <el-table-column label="1688链接" min-width="140">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.url1688" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.url1688 }}</span>
-                    </template>
-                </el-table-column> -->
-
-                <el-table-column label="产品价格￥" min-width="120">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.price" 
-                                @blur="clickCancle($event, row)"
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.price }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="长" min-width="70">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.length" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.length }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column  label="宽" min-width="70">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.width" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.width }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column  label="高" min-width="70">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.height" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.height }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column  label="重量">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.weight" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.weight }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="lastMile" label="尾程" />
-
-                <el-table-column prop="firstMile" label="头程">
-                </el-table-column>
-
-                <el-table-column  label="打包">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.packaging" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.packaging }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="头程渠道" min-width="140">
-                    <template #default="{ row }">
-                        <el-select 
-                            v-model="row.firstMileChannel" 
-                            placeholder="请选择头程渠道"
-                            @change="handlerEstimatendChange(row)"
-                            style="min-width: 100%;"
-                        >
-                            <el-option 
-                                v-for="dict in firstLegChannelColumns" 
-                                :key="dict.value" 
-                                :value="dict.value"
-                                :label="dict.label"
-                            >
-                            </el-option>
-                        </el-select>
-                    </template>
-                </el-table-column>
-                <el-table-column  label="售价">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.sellingPrice" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.sellingPrice }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="grossMarginRate" label="毛利率" />
-                
-
-                <el-table-column prop="roi" label="ROI" />
-
-                <el-table-column label="重量系数" min-width="100">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.weightCoefficient" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.weightCoefficient }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="体积系数" min-width="100">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.volumeCoefficient" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.volumeCoefficient }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column label="关税%">
-                    <template #default="{ row }">
-                        <div class="none">
-                            <el-input 
-                                type="text" 
-                                v-model="row.tariff" 
-                                @blur="clickCancle($event, row)" 
-                                @keydown.enter="effectiveCountInputeHandle($event,row)"
-                            />
-                        </div>
-                        <span>{{ row.tariff ? row.tariff : '' }}{{ row.tariff ? '%' : '' }}</span>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
-                </el-table-column>
-
-                <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140">
-                </el-table-column>
-
-
-                <el-table-column align="center" fixed="right" label="操作" width="120px">
-                    <template v-slot="scope">
-                        <el-dropdown>
-                            <el-button text type="primary">
-                                逆算
-                                <el-icon class="el-icon--right">
-                                    <arrow-down />
-                                </el-icon>
-                            </el-button>
-                            <template #dropdown>
-                                <el-dropdown-menu>
-                                    <el-dropdown-item>
-                                        <el-link type="primary" :underline="false">逆算</el-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item>
-                                        <el-link type="primary" :underline="false" @click="costAccountImageUpload(scope.row,scope.$index)">上传图片</el-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item>
-                                        <el-link type="primary" :underline="false" @click="costAccountCopy(scope.row)">复制</el-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item>
-                                        <el-link type="primary" :underline="false" @click="costAccountDelete(scope.row)">删除</el-link>
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </template>
-                        </el-dropdown>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </VueDraggable>
-
-        <vab-upload 
-            :upload-visible="costAccoutingVisible" 
-            title="上传图片" 
-            :is-multiple="false"
-            :fileListFlag = "false"
-            :dataId = "dataId"
-            @update:uploadVisible = "costAccountingUpdateUploadPicVisible"
-            :upload-file="costAccountingUploadImageFile"
-        />
-        <!-- 产品描述显示 -->
-        <wangEditor 
-            :wangEditorVisible="wangEditorLogVisible" 
-            :title="wangEditorTitle" 
-            :content="progressLogCopy"
-            :classify='classify' 
-            @clickBoolean="clickLogBool" 
-            @clickChild="clickLog" 
-        />
-        <!-- 价格信息显示 -->
-        <wangEditor 
-                :wangEditorVisible="wangEditorRemarkVisible" 
-                :title="wangEditorTitle" 
-                :content="remarkCopy"
-                :classify='classify' 
-                @clickBoolean="clickRemarkBool" 
-                @clickChild="clickRemark" 
-            />
-
-    </div>
+    <vab-upload 
+      :upload-visible="costAccoutingVisible" 
+      title="上传图片" 
+      :is-multiple="false"
+      :fileListFlag = "false"
+      :dataId = "dataId"
+      @update:uploadVisible = "costAccountingUpdateUploadPicVisible"
+      :upload-file="costAccountingUploadImageFile"
+    />
+    <!-- 产品描述显示 -->
+    <wangEditor 
+      :wangEditorVisible="wangEditorLogVisible" 
+      :title="wangEditorTitle" 
+      :content="progressLogCopy"
+      :classify='classify' 
+      @clickBoolean="clickLogBool" 
+      @clickChild="clickLog" 
+    />
+    <!-- 价格信息显示 -->
+    <wangEditor 
+      :wangEditorVisible="wangEditorRemarkVisible" 
+      :title="wangEditorTitle" 
+      :content="remarkCopy"
+      :classify='classify' 
+      @clickBoolean="clickRemarkBool" 
+      @clickChild="clickRemark" 
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import { TableRefs, UploadRequestOptions } from 'element-plus'
+import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
 import {
@@ -375,7 +364,7 @@ import { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComp
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
-import { isEqual } from 'lodash'
+import { removeHtmlTags } from '/@/utils/tableColum'
 
 const isDraggingDisabled = ref<boolean>(false)
 
@@ -424,12 +413,7 @@ const clickRemark = async (val: any) => {
     priceInfo: clickRow.value.priceInfo!
   }) //发送更新数据请求
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
+
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
@@ -497,7 +481,21 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 let copyRow: any
 // 成本核算单击表格修改
 const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  
+  if (column.property === 'desc') {
+    const { data } = await getProgressProductDesc({ accountingId: row.id })
+    progressLogCopy.value = data
+    row.desc = data
+    wangEditorTitle.value = '编辑产品描述'
+    classify.value = 'desc'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+  } else if (column.property === 'priceInfo'){
+    const { data } = await getProgressPriceInfo({ accountingId: row.id })
+    remarkCopy.value = data
+    row.priceInfo = data
+    wangEditorTitle.value = '编辑价格信息'
+    classify.value = 'priceInfo'
+    wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
+  } 
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
@@ -521,21 +519,7 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
 
     focusAndSelectInput(cell);
   }
-  if (column.property === 'desc') {
-    const { data } = await getProgressProductDesc({ accountingId: row.id })
-    progressLogCopy.value = data
-    row.desc = data
-    wangEditorTitle.value = '编辑产品描述'
-    classify.value = 'desc'
-    wangEditorLogVisible.value = !wangEditorLogVisible.value
-  } else if (column.property === 'priceInfo'){
-    const { data } = await getProgressPriceInfo({ accountingId: row.id })
-    remarkCopy.value = data
-    row.priceInfo = data
-    wangEditorTitle.value = '编辑价格信息'
-    classify.value = 'priceInfo'
-    wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
-  } 
+
 }
 
 // 进度成本核算修改站点

@@ -139,12 +139,38 @@ export const flexColumnWidth =  (list: any, label: string, prop: string, padding
   return (maxLength + padding) + 'px'
 }
 
-// 去掉 HTML 标签并显示纯文本的方法
+const decodeHtmlEntities = (html: string): string => {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = html;
+  return textarea.value;
+};
+
+/**
+ * @description 去掉html标签，保留换行
+ * @param html 
+ * @returns 
+ */
 export const removeHtmlTags = (html: string): string => {
   const div = document.createElement('div');
   div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-}
+
+  // 解码 HTML 实体
+  let textWithBreaks = decodeHtmlEntities(div.innerHTML);
+
+  // 替换换行相关标签为换行符
+  textWithBreaks = textWithBreaks
+    .replace(/<br\s*\/?>/gi, '\n') // 替换 <br> 标签为换行符
+    .replace(/<\/(p|div|h[1-6]|li)>/gi, '\n') // 替换块级标签结束为换行符
+    .replace(/<ul>|<ol>/gi, '\n') // 替换列表开始为换行符
+    .replace(/<\/?[^>]+(>|$)/g, ''); // 去除其他 HTML 标签
+
+  // 替换多余的换行符
+  textWithBreaks = textWithBreaks
+    .replace(/\n\s*\n/g, '\n') // 去除多余的连续换行符
+    .trim(); // 去掉首尾多余换行符
+
+  return textWithBreaks;
+};
 
 /**
  * 计算指定内容的列宽

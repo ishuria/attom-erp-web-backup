@@ -116,19 +116,30 @@
                 allow-create
                 :reserve-keyword = "false"
                 disabled
+                style="min-width: 100%"
             >
                 <el-option v-for="val,idx in list" :label="val.label!" :value="val" :key="val.id!"/>
             </el-select>
         </el-table-column>
         <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
-            <template #default="{ row }">
-                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
-            </template>
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+              </template>
+              <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column label="合同条款" prop="contractTerms" min-width="200">
-            <template #default="{ row }">
-                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
-            </template>
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+              </template>
+              <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -256,7 +267,7 @@ import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3Vari
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
@@ -304,25 +315,12 @@ const clickAttentionCancel = (val: any) => {
 const clickContractCancel = (val: any) => {
   wangEditorContractVisible.value = val
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
-
 
 /**
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-    
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el,'img') && el){
-    emit("update:priviewListValue", row.componentImgUrl)
-    emit("update:imagePreviewVisibale", true)
-  }
 
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
@@ -342,6 +340,12 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
   }
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el,'img') && el){
+    emit("update:priviewListValue", row.componentImgUrl)
+    emit("update:imagePreviewVisibale", true)
+  }
+
 }
 
 // 当点击下一步的时候

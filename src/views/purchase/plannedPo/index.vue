@@ -98,12 +98,14 @@
               </template>
           </el-table-column>
           <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="250">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input type="text" v-model="row.purchaseMatters"  />
-                  </div>
-                  <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
-              </template>
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <el-table-column fixed="right" label="SKU操作" width="150" >
             <template #default="{ row, $index }">
@@ -283,7 +285,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { CurrencyCode, currencyMap } from '/@/views/purchase/constantOption'
 defineOptions({
@@ -656,7 +658,15 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-
+  if (column.property == 'purchaseMatters') {
+    clickRow.value = row
+    const { data } = await getPoPurchaseMatters({ id: row.componentId })
+    progressLogCopy.value = data
+    row.purchaseMatters = data
+    wangEditorTitle.value = '编辑零件采购注意事项'
+    classify.value = 'purchaseMatters'
+    wangEditorLogVisible.value = !wangEditorLogVisible.value
+  }
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
@@ -681,15 +691,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     focusAndSelectInput(cell);
   }
 
-  if (column.property == 'purchaseMatters') {
-    clickRow.value = row
-    const { data } = await getPoPurchaseMatters({ id: row.componentId })
-    progressLogCopy.value = data
-    row.purchaseMatters = data
-    wangEditorTitle.value = '编辑零件采购注意事项'
-    classify.value = 'purchaseMatters'
-    wangEditorLogVisible.value = !wangEditorLogVisible.value
-  }
 }
 
   
@@ -710,12 +711,7 @@ const clickLog = async (val: any) => {
 const clickLogBool = ( val: any) => {
   wangEditorLogVisible.value = val
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
+
 const fetchData = async () => {
   try {
     listLoading.value = true

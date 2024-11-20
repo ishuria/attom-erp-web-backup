@@ -93,7 +93,7 @@
       <el-text style="font-weight: 600; font-size: var(--el-font-size-base);">
         SKU：<span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>  
         品名：<span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>  
-        剩余未匹配数量：<span :style="{ color: 'var(--el-color-danger)' }">100</span>
+        剩余未匹配数量：<span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
       </el-text>
     </div>
 
@@ -121,11 +121,7 @@
       </el-table-column>
       <el-table-column label="零件">
         <el-table-column label="零件名" prop="componentName" min-width="200"></el-table-column>
-        <el-table-column label="实际数量" prop="componentActualCount" min-width="100">
-          <!-- <template #default="{ row }">
-            <el-input type="number" :min="0" v-model="row.componentActualCount" @change="handleUpdateComponentCount(row)" />
-          </template> -->
-        </el-table-column>
+        <el-table-column label="实际数量" prop="componentActualCount" min-width="100"></el-table-column>
         <el-table-column label="退税报关数量" prop="customsDeclarationCount" min-width="130">
           <template #default="{ row }">
             <el-input v-model="row.customsDeclarationCount" :min="0" type="number" @focus="handleFocus(row)" @change="handleUpdateComponentCustomCount(row)" />
@@ -152,7 +148,7 @@
     </el-table>
     <div style=" margin-top: 20px;text-align: center">
       <el-text style="font-weight: 600; font-size: var(--el-font-size-base);">
-        剩余SKU：<span :style="{ color: 'var(--el-color-danger)'}">18个</span>
+        剩余SKU：<span :style="{ color: 'var(--el-color-danger)'}">{{ lastSku }}个</span>
       </el-text>
     </div>
     <template #footer>
@@ -500,11 +496,20 @@ const fetchMatchData = async () => {
   })
   matchList.value = data
 }
+// 剩余未匹配数
+
+// 剩余未匹配数的初始值
+const _originalCount = ref<number>(0)
+// 剩余SKU数
+const lastSku = ref<number>(0)
 const handleShowMatch2 = (row: any) => {
   match2Visible.value = true
   _sku.value = row.sku
   _desc.value = row.desc
   _id.value = row.id
+  _originalCount.value = row.encasementCount
+  const index = idList.value.findIndex((item: any) => item === row.id)
+  lastSku.value = list.value.length - index - 1
   fetchMatchData()
 }
 // 已发未报的展示
@@ -578,6 +583,9 @@ const handleFocus = (row: IGetMatchPackageList) => {
 }
 // 修改SKU实际数量
 const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {  
+  if (row.goodCount == null || row.goodCount == undefined) {
+    $baseMessage('当前打包显示的打包任务没有好的数量，不能输入数量！', 'error')
+  }
   try {
     const { data } = await updateMatchSkuActualCount({
       id: _id.value,
@@ -593,6 +601,13 @@ const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
     row.skuActualCount = _skuActualCount.value!
   }
 }
+const _encasementCount = computed(() => {
+  let num = 0
+  matchList.value.forEach((item: any) => {
+    num += item.skuActualCount
+  })
+  return _originalCount.value - num
+})
 // 修改零件的实际数量
 const handleUpdateComponentCount = async (row: IGetMatchPackageList) => {
   try {
@@ -766,11 +781,17 @@ const handleConfirmCheckMatch = async () => {
     console.error(error)
   }
 }
+const idList = ref<any[]>([])
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getCheckMatchList({...queryForm, shipId: props.shipId})
   total.value = data.total
   list.value = data.list
+  let idSet = new Set()
+  list.value.forEach((item: any) => {
+    idSet.add(item.id)
+  })
+  idList.value = Array.from(idSet)
   listLoading.value = false
 }
 const queryData = () => {

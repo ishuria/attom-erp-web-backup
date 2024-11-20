@@ -26,6 +26,7 @@
         :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
         :cell-class-name="getCellStyle"
         @selection-change="handleSelectionChange"
+        max-height="65vh"
       >
         <el-table-column type="selection" width="38" />
         <el-table-column prop="createTime" label="日期" min-width="110" />
@@ -56,44 +57,35 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="产品描述" show-overflow-tooltip min-width="140">
+        <el-table-column label="产品描述" prop="desc" min-width="200">
           <template #default="{ row }">
-            <div class="none">
-              <el-input 
-                type="textarea" 
-                autofocus v-model="row.desc"
-             
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
-            </div>
-            <span>{{ row.desc }}</span>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ row.desc }}</div>
+              </template>
+              <span>{{ row.desc }}</span>
+            </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="priceInfo" label="价格信息" show-overflow-tooltip min-width="140">
+
+        <el-table-column prop="priceInfo" label="价格信息" min-width="200">
           <template #default="{ row }">
-            <div class="none">
-              <el-input 
-                type="textarea" 
-                v-model="row.priceInfo"
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
-            </div>
-            <span>{{ row.priceInfo }}</span>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ row.priceInfo }}</div>
+              </template>
+              <span>{{ row.priceInfo }}</span>
+            </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="url1688" label="1688链接" show-overflow-tooltip min-width="140">
+        <el-table-column prop="url1688" label="1688链接" min-width="200">
           <template #default="{ row }">
-            <div class="none">
-              <el-input 
-                type="textarea"
-                v-model="row.url1688" 
-                @blur="clickCancle($event, row)" 
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
-            </div>
-            <span>{{ row.url1688 }}</span>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="white-space: pre-wrap;">{{ row.url1688 }}</div>
+              </template>
+              <span>{{ row.url1688 }}</span>
+            </el-tooltip>
           </template>
         </el-table-column>
 
@@ -210,9 +202,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
-        <el-table-column prop="roi" label="ROI"></el-table-column>
+        <el-table-column prop="roi" label="ROI" min-width="60"></el-table-column>
 
-        <el-table-column prop="weightCoefficient" label="重量系数">
+        <el-table-column prop="weightCoefficient" label="重量系数" min-width="60">
           <template #header>
             重量<br />系数
           </template>
@@ -228,7 +220,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="volumeCoefficient" label="体积系数">
+        <el-table-column prop="volumeCoefficient" label="体积系数" min-width="60">
           <template #header>
             体积<br />系数
           </template>
@@ -244,7 +236,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="tariff" label="关税%">
+        <el-table-column prop="tariff" label="关税%" min-width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input 
@@ -257,7 +249,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="platformCommission" label="平台佣金"></el-table-column>
-        <el-table-column prop="storageFee" label="仓储费2个月$">
+        <el-table-column prop="storageFee" label="仓储费2个月$" min-width="80">
           <template #header>
             仓储费<br />2个月$
           </template>
@@ -307,6 +299,42 @@
     @update:uploadVisible = "updateUploadPicVisible"
     :upload-file="uploadFile"
   />
+  <!-- 产品描述 -->
+  <vab-dialog
+    title="产品描述"
+    width="25%"
+    v-model="productDescriptionVisible"
+  >
+    <el-input type="textarea" v-model="productDescription" :rows="20" />
+    <template #footer>
+      <el-button @click="productDescriptionVisible = false">取消</el-button>
+      <el-button type="primary" @click="confirmUpdate1Dialog">确认</el-button>
+    </template>
+  </vab-dialog>
+  <!-- 价格信息 -->
+  <vab-dialog
+    title="价格信息"
+    width="25%"
+    v-model="priceInformationVisible"
+  >
+    <el-input type="textarea" v-model="priceInformation" :rows="20" />
+    <template #footer>
+      <el-button @click="priceInformationVisible = false">取消</el-button>
+      <el-button type="primary" @click="confirmUpdate2Dialog">确认</el-button>
+    </template>
+  </vab-dialog>
+  <!-- 1688链接 -->
+  <vab-dialog
+    title="1688链接"
+    width="25%"
+    v-model="link1688Visible"
+  >
+    <el-input type="textarea" v-model="link1688" :rows="20" />
+    <template #footer>
+      <el-button @click="link1688Visible = false">取消</el-button>
+      <el-button type="primary" @click="confirmUpdate3Dialog">确认</el-button>
+    </template>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -336,11 +364,11 @@ import {
 import { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
 
 import { ElLink, ElMessageBox, UploadRequestOptions } from 'element-plus'
+import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import { uploadFileBoBakend } from '/@/api/devlocal/evaluation'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
-import { isEqual } from 'lodash'
 
 
 defineOptions({
@@ -353,6 +381,16 @@ let props = defineProps<{
     list: IEstimatedCostAccounting[]
     callParentMethod: (id:number) => void
 }>();
+
+// 产品描述可见
+const productDescriptionVisible = ref<boolean>(false)
+const productDescription = ref<string>('')
+// 价格信息可见
+const priceInformationVisible = ref<boolean>(false)
+const priceInformation = ref<string>('')
+// 1688链接可见
+const link1688Visible = ref<boolean>(false)
+const link1688 = ref<string>('')
 
 const dList = ref<IEstimatedCostAccounting[]>([])
 const dflag = ref<boolean>(false)
@@ -439,9 +477,22 @@ const handlerAddRowCost = async () => {
 }
 
 let _row: any
+let clickRow: any
 // 修改输入
 const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-    
+  clickRow = row
+  if (column.property === 'desc') {
+    productDescription.value = row.desc
+    productDescriptionVisible.value = true
+  }
+  if (column.property === 'priceInfo') {
+    priceInformation.value = row.priceInfo
+    priceInformationVisible.value = true
+  }
+  if (column.property === 'url1688') {
+    link1688.value = row.url1688
+    link1688Visible.value = true
+  }
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
@@ -466,6 +517,24 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
 
 }
 
+// 产品描述的确认修改
+const confirmUpdate1Dialog = async () => {
+  await updateEstimatedCostAccounting({ ...clickRow, desc: productDescription.value, tariff: clickRow.tariff / 100 })
+  clickRow.desc = productDescription.value
+  productDescriptionVisible.value = false
+}
+// 价格信息的确认修改
+const confirmUpdate2Dialog = async () => {
+  await updateEstimatedCostAccounting({ ...clickRow, priceInfo: priceInformation.value, tariff: clickRow.tariff / 100 })
+  clickRow.priceInfo = priceInformation.value
+  priceInformationVisible.value = false
+}
+// 1688链接的确认修改
+const confirmUpdate3Dialog = async () => {
+  await updateEstimatedCostAccounting({ ...clickRow, url1688: link1688.value, tariff: clickRow.tariff / 100 })
+  clickRow.url1688 = link1688.value
+  link1688Visible.value = false
+}
 // 相当于输入input blur事件
 const clickCancle = async (event:any,value:any) =>{
 

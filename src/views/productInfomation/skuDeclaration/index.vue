@@ -195,8 +195,9 @@ import type { TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { updateProductCustoms } from '/@/api/devlocal/productInformation'
 import { useRoutesStore } from '/@/store/modules/routes'
-import { getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth } from '/@/utils/tableColum'
+import { isEqual } from 'lodash'
 
 defineOptions({
   name: 'skuDeclaration',
@@ -281,6 +282,7 @@ const headerCellStyle = (data: { row: any, column: any, rowIndex: number, column
     textAlign: 'center'
   }
 }
+let copyRow: any
 // table单击修改
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   let el = getSpecificChildren(cell, "img")[0];
@@ -289,40 +291,35 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     imagePreviewList.value = []
     imagePreviewList.value.push(el.src)
   }
-  if (!cell.children[0].children[0]
-      || !cell.children[0].children[1]
-      || !cell.children[0].children[0].classList
-      || !cell.children[0].children[1].classList) {
-      return
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
   }
 
-  cell.children[0].children[0].classList.remove('none')
-  cell.children[0].children[1].classList.add('none')
-  
-  // 自动聚焦
-  const inputElement = getSpecificChildren(cell, "input")[0];
-  if (inputElement) {
-      inputElement.focus()
-      inputElement.select()
-  } else {
-      const textareaElement = getSpecificChildren(cell, "textarea")[0];
-      if (textareaElement){
-          textareaElement.focus()
-          textareaElement.select()
-      }
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
 }
 // 零件table blur事件
-const clickCancle = async (event:any,value:any) =>{
+const clickCancle = async (event: any, value: any) => {
   
-  const t1 = getRootElement(event["srcElement"],".cell").children[0]
-  if (t1){
-    t1.classList.add("none")
-  }
+  const rootElement = getRootElement(event.srcElement, ".cell");
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
 
-  const t2 = getRootElement(event["srcElement"],".cell").children[1]
-  if (t2){
-    t2.classList.remove("none")
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
   }
 
   if (event.type === 'blur') {

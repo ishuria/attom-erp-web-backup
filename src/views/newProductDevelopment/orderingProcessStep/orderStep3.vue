@@ -239,18 +239,22 @@
         </el-table-column>
         <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
             <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.purchaseMatters"  />
-                </div>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                </template>
                 <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              </el-tooltip>
             </template>
         </el-table-column>
         <el-table-column label="合同条款" prop="contractTerms" min-width="200">
             <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.contractTerms"  />
-                </div>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+                </template>
                 <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+              </el-tooltip>
             </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="150">
@@ -483,7 +487,7 @@ import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/pur
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const route: any = useRoute()
 const router = useRouter()
@@ -614,12 +618,6 @@ const clickAttentionCancel = (val: any) => {
 const clickContractCancel = (val: any) => {
   wangEditorContractVisible.value = val
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
 
 // 零件信息完善与售价核对修改站点
 const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
@@ -838,23 +836,6 @@ let _row: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
   const { property } = column;
-
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
-
-  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
-  }
-
-  _row = JSON.parse(JSON.stringify(row));
-
-  if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
-
-    focusAndSelectInput(cell);
-  }
-
   if (property === 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row;
@@ -873,6 +854,21 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     classify.value = 'contractTerms';
     wangEditorContractVisible.value = !wangEditorContractVisible.value;
   } 
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  _row = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
 }
 // 零件table blur事件
 const clickCancle = async (event:any,value:any) =>{

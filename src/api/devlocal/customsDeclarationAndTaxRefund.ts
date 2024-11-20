@@ -211,3 +211,23 @@ export const updateMatchQuality = (data: IUpdateMatchQuality): Promise<IBooleanR
     data
   })
 }
+/**
+ * @description 匹配PO、报关资料-打包归档
+ */
+export const archivePackageShipment = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/package/archive`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关资料-撤销打包归档
+ */
+export const cancelArchivePackageShipment = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/package/cancel/archive`,
+    method: 'post',
+    params
+  })
+}

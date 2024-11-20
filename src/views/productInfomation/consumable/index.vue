@@ -182,7 +182,7 @@
           
         </template>
       </el-table-column>
-      <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+      <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" show-overflow-tooltip >
           <template #default="{ row }">
               <div class="none">
                   <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
@@ -196,18 +196,22 @@
       </el-table-column>
       <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
         <template #default="{ row }">
-            <div class="none">
-                <el-input type="text" v-model="row.purchaseMatters"  />
-            </div>
+          <el-tooltip content=" " effect="dark" placement="top">
+            <template #content>
+              <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+            </template>
             <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="合同条款" prop="contractTerms" min-width="200">
         <template #default="{ row }">
-            <div class="none">
-                <el-input type="text" v-model="row.contractTerms"  />
-            </div>
+          <el-tooltip content=" " effect="dark" placement="top">
+            <template #content>
+              <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+            </template>
             <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="150">
@@ -401,7 +405,7 @@ defineOptions({
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { calculateBrColumnWidth } from '~/src/utils/tableColum'
+import { calculateBrColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductAllSupplier, getProductComponentPurchase, getProductConsumables, getProductConsumablesType, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
@@ -763,13 +767,6 @@ const clickAttentionCancel = (val: any) => {
 const clickContractCancel = (val: any) => {
   wangEditorContractVisible.value = val
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
-
 
 const handleConsumablesUpdate = async (row: any) => {
   await updateConsumablesSupplier({
@@ -857,22 +854,8 @@ const handleRemove = async (file: UploadFile, row: any) => {
 */
 let copyRow: any
 const clickRow = ref<any>()
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
 
-  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
-  }
-
-  copyRow = JSON.parse(JSON.stringify(row));
-
-  if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
-
-    focusAndSelectInput(cell);
-  }
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row
@@ -891,6 +874,23 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
   }
+
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
+  
 }
 
 // table blur事件

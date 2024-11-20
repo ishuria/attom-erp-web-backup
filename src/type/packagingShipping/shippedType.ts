@@ -751,3 +751,95 @@ export interface IGetForwarderList {
    */
   types?: string;
 }
+
+export interface IGetShipmentArrivedListReq {
+  keyWord: string
+  status: number
+  pageNo: number
+  pageSize: number
+  site: number
+}
+
+export interface IGetShipmentArrivedListRes {
+  data?: {
+    list?:  IGetShipmentArrivedList[]
+    total?: number
+  }
+}
+
+export interface IGetShipmentArrivedList {
+  /**
+   * 实际到货日期
+   */
+  actualArrivalDate?: string
+  /**
+   * 实际数量
+   */
+  actualCount?: number
+  /**
+   * 货代渠道名
+   */
+  channelName?: string
+  /**
+   * 延误天数
+   */
+  delayDays?: number
+  /**
+   * sku的描述
+   */
+  description?: string
+  /**
+   * 货代单号
+   */
+  freightForwardingNumber?: string
+  /**
+   * 外发id
+   */
+  id?: number
+  /**
+   * 初始预计到货日期
+   */
+  initialArrivalDate?: string
+  /**
+   * 最新预计到货日期
+   */
+  latestArrivalDate?: string
+  /**
+   * 丢货 0没有丢货 1丢货
+   */
+  lostGoodsStatus?: number
+  /**
+   * po号
+   */
+  po?: string
+  /**
+   * 发货日期
+   */
+  shipmentDate?: string
+  /**
+   * SHIPMENT_ID
+   */
+  shipmentId?: string
+  /**
+   * sku发货总数
+   */
+  shipmentTotalCount?: number
+  /**
+   * 站点
+   */
+  site?: string
+  /** 
+   * sku
+   */
+  sku?: string
+  /**
+   * sku图片地址
+   */
+  skuImgUrl?: string
+  // 已接收数
+  receiptsCount?: number
+  // 缺数
+  lackCount?: number
+  // 已接收天数
+  acceptDays?: number
+}

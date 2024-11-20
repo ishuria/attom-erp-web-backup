@@ -30,7 +30,7 @@ handleSubmit<template>
         >
           <el-table-column label="优先级" prop="priority" align="center" min-width="75">
             <template #default = "{ row }">
-              <el-select size="default" v-model="row.priority" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)">
+              <el-select size="default" style="min-width: 100%" v-model="row.priority" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)">
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
@@ -116,31 +116,34 @@ handleSubmit<template>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
           </el-table-column>      
-          <el-table-column label="开发日志" prop="progressLog" show-overflow-tooltip min-width="500">
-            <template #default = "{ row }">
-              <div class="none" >
-                <el-input type="textarea" v-model="row.progressLog" />
-              </div>      
-              <span>{{ removeHtmlTags(row.progressLog) }}</span>
-              <!-- <el-tooltip :content="removeHtmlTags(row.progressLog)" effect="dark" placement="top">
+          <el-table-column label="开发日志" prop="progressLog" min-width="500">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.progressLog) }}</div>
+                </template>
                 <span>{{ removeHtmlTags(row.progressLog) }}</span>
-              </el-tooltip> -->
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip min-width="100">
-            <template #default = "{ row }">
-              <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+          <el-table-column label="参与人员" prop="sharerName" align="center" min-width="100">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+                </template>
+                <span style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="remark" show-overflow-tooltip>
-            <template #default = "{ row }">
-              <div class="none">
-                <el-input type="textarea" v-model="row.remark"/>
-              </div>
-              <span>{{ removeHtmlTags(row.remark) }}</span>
-              <!-- <el-tooltip :content="removeHtmlTags(row.remark)" effect="dark" placement="top">
+          <el-table-column label="备注" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
                 <span>{{ removeHtmlTags(row.remark) }}</span>
-              </el-tooltip> -->
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="90">
@@ -320,18 +323,33 @@ handleSubmit<template>
             </template>
           </el-table-column>
           <el-table-column label="开发日志" prop="progressLog" min-width="500">
-            <template #default = "{ row }">
-              <span> {{ removeHtmlTags(row.progressLog) }}</span>
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.progressLog) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.progressLog) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" align="center" show-overflow-tooltip width="100">
-            <template #default = "{ row }">
-              <div style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+          <el-table-column label="参与人员" prop="sharerName" align="center" min-width="100">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+                </template>
+                <span style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="remark" >
-            <template #default = "{ row }">
-              <span>{{ removeHtmlTags(row.remark) }}</span>
+          <el-table-column label="备注" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.remark) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="85">
@@ -572,7 +590,6 @@ handleSubmit<template>
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
-import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import { ref } from 'vue'
 import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
@@ -604,6 +621,7 @@ import { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
+import { removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProgressTable',
@@ -917,24 +935,9 @@ let _row: any
  * 当点击时切换输入框，修改输入
  */
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-
+  
   // 获取行的下标
   tableClickIdx.value = progressList.value.indexOf(row)
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
-
-  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
-  }
-
-  _row = JSON.parse(JSON.stringify(row));
-
-  if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
-
-    focusAndSelectInput(cell);
-  }
   if (column.property == 'progressLog') {
     const { data } = await getProgressLog({ progressId: row.progressId })
     // progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
@@ -948,6 +951,24 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     classify.value = 'remark'
     wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
   }
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  _row = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    
+    
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+    
+    focusAndSelectInput(cell);
+  }
+  
 }
 const handleCheckbox = async (value: any) => {
   // console.log(value);
@@ -965,20 +986,11 @@ const clickCancel = async (event: any, value: any) =>{
   if (rootElement) {
     const t1 = rootElement.children[0];
     const t2 = rootElement.children[1];
-    
-    if (t1) {
-      if (t1.classList[0] !== 'el-select') {
-        t1.classList.add("none");
-      }
-    }
+
+    if (t1) t1.classList.add("none");
     if (t2) t2.classList.remove("none");
   }
-  if (isEqual(_row, value)) {
-    return
-  }
-  if (event.type === 'blur') {
-    await updateProgressManage({...value})
-  }
+  await updateProgressManage({...value})
 }
 
 /**
@@ -998,12 +1010,7 @@ const clickRemark = async (val: any) => {
   // console.log('点击remark执行了');
   await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
+
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
@@ -1386,13 +1393,7 @@ onBeforeMount(() => {
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-// 下拉框宽度
-:deep(.el-select--default .el-select__wrapper) {
-  width: 50px;
-  padding-left: 8px;
-  padding-right: 6px;
-  font-size: var(--el-font-size-base);
-}
+
 
 // 控制添加图片图标显示与隐藏
 .hide :deep(.el-upload--picture-card) {
@@ -1438,4 +1439,6 @@ onBeforeMount(() => {
  max-height: 81.2px; /* 设置文本的最大高度 */
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
+
+
 </style>

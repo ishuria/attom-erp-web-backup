@@ -350,10 +350,12 @@
           </el-table-column>
           <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
             <template #default="{ row }">
-              <div class="none">
-                <el-input type="text" v-model="row.purchaseMatters"  />
-              </div>
-              <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
@@ -415,7 +417,7 @@
               <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleDeclareCustoms(row)"/>
             </template>
           </el-table-column>
-          <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+          <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" show-overflow-tooltip >
             <template #default="{ row }">
               <div class="none">
                 <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -459,10 +461,12 @@
 
           <el-table-column label="合同条款" prop="contractTerms" min-width="200">
             <template #default="{ row }">
-              <div class="none">
-                <el-input type="text" v-model="row.contractTerms"  />
-              </div>
-              <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" min-width="200" align="center">
@@ -848,10 +852,12 @@
           </el-table-column>
           <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
             <template #default="{ row }">
-              <div class="none">
-                <el-input type="text" v-model="row.purchaseMatters"  />
-              </div>
-              <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
@@ -913,7 +919,7 @@
               <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" @change="handleCreateCustoms(row)" class="custom-checkbox"/>
             </template>
           </el-table-column>
-          <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+          <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" show-overflow-tooltip>
             <template #default="{ row }">
               <div class="none">
                 <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
@@ -957,10 +963,12 @@
 
           <el-table-column label="合同条款" prop="contractTerms" min-width="200">
             <template #default="{ row }">
-              <div class="none">
-                <el-input type="text" v-model="row.contractTerms"  />
-              </div>
-              <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" min-width="100" align="center">
@@ -1239,7 +1247,12 @@
           <el-table-column  label="订单号" prop="orderNo" min-width="100" align="center"></el-table-column>
           <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
@@ -1289,7 +1302,7 @@
               <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" disabled class="custom-checkbox"/>
             </template>
           </el-table-column>
-          <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+          <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" show-overflow-tooltip>
             <template #default="{ row }">
               <span>
                 <el-text truncated>
@@ -1316,7 +1329,12 @@
 
           <el-table-column label="合同条款" prop="contractTerms" min-width="200">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.contractTerms) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <template #empty>
@@ -1422,6 +1440,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { FormInstance, UploadFile } from 'element-plus'
+import { isEqual } from 'lodash'
 import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import {
@@ -1461,13 +1480,12 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useSkuStore } from '/@/store/modules/sku'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
-import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath, handleMatched, handleTabs } from '/@/utils/routes'
 import { _addSku, _clearSKUs, _deleteSku, _updateSku } from '/@/utils/sku'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'
-import { isEqual } from 'lodash'
 
 defineOptions({
   name: 'poDetailTable',
@@ -1933,34 +1951,14 @@ const clickAttentionCancel = (val: any) => {
 const clickContractCancel = (val: any) => {
   wangEditorContractVisible.value = val
 }
-// 去掉 HTML 标签并显示纯文本的方法
-const removeHtmlTags = (html: string): string => {
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
-};
+
 /**
 * 当点击时切换输入框，修改输入
 */
 const clickRow = ref<any>()
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
 
-  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
-  }
-
-  copyRow = JSON.parse(JSON.stringify(row));
-
-  if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
-
-    focusAndSelectInput(cell);
-  }
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row
@@ -1979,9 +1977,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
   }
-}
-const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -1997,6 +1992,8 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
 
     focusAndSelectInput(cell);
   }
+}
+const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row
@@ -2010,6 +2007,21 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
     wangEditorTitle.value = '合同条款'
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
+  }
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
   }
 }
 // 修改po-sku零件信息

@@ -18,7 +18,7 @@
     </vab-query-form>
 
     <el-table ref="tableRef" :header-cell-style="{ 'text-align': 'center' }" border :data="dataList" 
-      @cell-click="reviewTableInputChage" :span-method="objectSpanMethod" :row-class-name="stripedRowClass" class="noneHoveTable">
+      @cell-click="reviewTableInputChange" :span-method="objectSpanMethod" :row-class-name="stripedRowClass" class="noneHoveTable">
       <el-table-column label="提交日期" prop="createTime" align="center" width="110">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.createTime)) }}</span>
@@ -233,7 +233,7 @@ const formattedProgressLog = (str: string) => {
     .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
 // table单击修改
-const reviewTableInputChage = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const reviewTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {

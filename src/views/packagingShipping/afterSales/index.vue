@@ -74,7 +74,12 @@
           </el-table-column>
           <el-table-column label="售后日志" prop="salesLog" min-width="200">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
@@ -222,7 +227,12 @@
           </el-table-column>
           <el-table-column label="售后日志" prop="salesLog" min-width="200">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200" fixed="right">
@@ -343,7 +353,12 @@
           </el-table-column>
           <el-table-column label="售后日志" prop="salesLog" min-width="200">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <template #empty>
@@ -431,7 +446,12 @@
           </el-table-column>
           <el-table-column label="售后日志" prop="salesLog" min-width="200">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="260" fixed="right">
@@ -533,7 +553,12 @@
           </el-table-column>
           <el-table-column label="售后日志" prop="salesLog" min-width="200">
             <template #default="{ row }">
-              <span class="overflow-text">{{ removeHtmlTags(row.salesLog) }}</span>
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="120" fixed="right">
@@ -920,13 +945,6 @@ const pendingInputChange = (row: any, column: any, cell: HTMLTableCellElement, e
 }
 const clickRow = ref<any>()
 const contactedInputChange = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0]
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
   if (column.property === 'salesLog') {
     clickRow.value = row
     const { data } = await getAfterSalesLogs({ id: row.id })
@@ -935,6 +953,13 @@ const contactedInputChange = async (row: any, column: any, cell: HTMLTableCellEl
     wangEditorTitle.value = '编辑售后日志'
     classify.value = 'salesLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
+  }
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0]
+  if (getDataAttribute(el, 'img') && el) {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src!)
   }
 }
 const handlePreview = (file: UploadFile) => {

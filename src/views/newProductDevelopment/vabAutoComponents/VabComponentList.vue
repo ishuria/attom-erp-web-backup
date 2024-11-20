@@ -282,7 +282,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="采购链接" prop="purchaseLink" min-width="140">
+            <el-table-column label="采购链接" prop="purchaseLink" show-overflow-tooltip min-width="140">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
@@ -300,7 +300,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="备注" prop="remarks">
+            <el-table-column label="备注" prop="remarks" show-overflow-tooltip >
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
@@ -310,7 +310,9 @@
                             @keydown.enter="effectiveCountInputeHandle($event,row)"
                         />
                     </div>
-                    <span>{{ row.remarks }}</span>
+                    <span><el-text truncated>
+                            {{ row.remarks }}
+                        </el-text></span>
                 </template>
             </el-table-column>
 

@@ -24,6 +24,8 @@ import {
   IGetForwarderCostListRes,
   IGetForwarderListReq,
   IGetForwarderListRes,
+  IGetShipmentArrivedListReq,
+  IGetShipmentArrivedListRes,
   IGetShippedEncasementListRes,
   IId,
   ISplitEncasementCsv,
@@ -454,6 +456,17 @@ export const getForwarderList = (params: IGetForwarderListReq): Promise<IGetForw
 export const getUpdateForwarderList = (params: IId) => {
   return request({
     url: `${BASE_API}/freight/forwarder/get`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * @description 已发货 - 获取列表数据
+ */
+export const getShipmentArrivedList = (params: IGetShipmentArrivedListReq): Promise<IGetShipmentArrivedListRes> => {
+  return request({
+    url: `${BASE_API}/shipment/arrived/list`,
     method: 'get',
     params
   })
