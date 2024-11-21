@@ -23,7 +23,7 @@
       :header-cell-style="{ textAlign: 'center' }"
       :data="list"
     >
-      <el-table-column label="渠道全名" prop="channelName" align="center"></el-table-column>
+      <el-table-column label="渠道全名" prop="channelName" align="left"></el-table-column>
       <el-table-column label="当前价格" prop="price" align="center"></el-table-column>
       <el-table-column label="近10次时效" prop="tenCountTime" align="center"></el-table-column>
       <el-table-column label="名义时效" prop="nominalLimitation" align="center"></el-table-column>
@@ -668,6 +668,7 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
 }

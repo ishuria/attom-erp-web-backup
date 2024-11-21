@@ -85,7 +85,7 @@
     top="7vh"
     width="90%"
     v-model="match2Visible"
-    @close="handleCloseMatch2"
+    :before-close="handleCloseMatch2"
   >
 
     <div style="margin-bottom: 15px">
@@ -115,16 +115,16 @@
         <el-table-column label="打包任务状态" prop="status" min-width="130"></el-table-column>
         <el-table-column label="SKU实际数量" prop="skuActualCount" min-width="130">
           <template #default="{ row }">
-            <el-input type="number" :min="0" :max="row.goodCount" v-model="row.skuActualCount" @focus="handleFocus(row)" @change="handleUpdateSkuCount(row)" />
+            <el-input type="number" @wheel.stop.prevent :min="0" :max="row.goodCount" v-model="row.skuActualCount" @focus="handleFocus(row)" @change="handleUpdateSkuCount(row)" />
           </template>
         </el-table-column>
       </el-table-column>
       <el-table-column label="零件">
-        <el-table-column label="零件名" prop="componentName" min-width="200"></el-table-column>
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')"></el-table-column>
         <el-table-column label="实际数量" prop="componentActualCount" min-width="100"></el-table-column>
         <el-table-column label="退税报关数量" prop="customsDeclarationCount" min-width="130">
           <template #default="{ row }">
-            <el-input v-model="row.customsDeclarationCount" :min="0" type="number" @focus="handleFocus(row)" @change="handleUpdateComponentCustomCount(row)" />
+            <el-input v-model="row.customsDeclarationCount" @wheel.stop.prevent :min="0" type="number" @focus="handleFocus(row)" @change="handleUpdateComponentCustomCount(row)" />
           </template>
         </el-table-column>
         <el-table-column label="剩余可报" prop="reportable" min-width="100"></el-table-column>
@@ -300,7 +300,7 @@ import { CSSProperties } from 'vue'
 import { getQualityCheck } from '~/src/api/devlocal/packagingShipping'
 import { IGetQualityCheck } from '~/src/type/packagingShipping/packagingType'
 import { flexColumnWidth } from '~/src/utils/tableColum'
-import { clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, insertAllMatchComponent, lockMatchShipment, submitMatchShipment, updateMatchComponentActualCount, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, insertAllMatchComponent, lockMatchShipment, submitMatchShipment, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetCheckMatchList, IGetMatchPackageList, IGetMatchSentList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 
 const dflag = ref<boolean>(false)
@@ -344,6 +344,7 @@ const _id = ref<number>(0)
 const handleCloseMatch2 = () => {
   match2Visible.value = false
   matchList.value = []
+  Object.assign(changedItems, {});
   fetchData()
 }
 // 已发未报的多选
@@ -495,8 +496,16 @@ const fetchMatchData = async () => {
     matchId: _id.value
   })
   matchList.value = data
+  matchList.value.forEach((item: any) => {
+    if ((item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined)
+      || (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined)) {
+      changedItems[item.mId] = {
+        skuActualCount: Number(item.skuActualCount) || 0,
+        customsDeclarationCount: Number(item.customsDeclarationCount) || 0,
+      };
+    }
+  })
 }
-// 剩余未匹配数
 
 // 剩余未匹配数的初始值
 const _originalCount = ref<number>(0)
@@ -507,9 +516,14 @@ const handleShowMatch2 = (row: any) => {
   _sku.value = row.sku
   _desc.value = row.desc
   _id.value = row.id
-  _originalCount.value = row.encasementCount
+  _originalCount.value = Number(row.encasementCount)
+  // list.value.forEach((item: any) => {
+  //   if (item.id === row.id) {
+  //     _originalCount.value -= Number(item.skuActualCount)
+  //   }
+  // })
   const index = idList.value.findIndex((item: any) => item === row.id)
-  lastSku.value = list.value.length - index - 1
+  lastSku.value = idList.value.length - index - 1
   fetchMatchData()
 }
 // 已发未报的展示
@@ -531,6 +545,7 @@ const handleCurrentSentChange = (value: number) => {
   fetchSentData()
 }
 const handleSizeSentChange = (value: number) => {
+  querySentForm.pageNo = 1
   querySentForm.pageSize = value
   fetchSentData()
 }
@@ -575,55 +590,66 @@ const fetchSentData = async () => {
 const handleCloseCheck = () => {
   emit('updateMatchVisible', false)
 }
-const _skuActualCount = ref<number>()
-const _customsDeclarationCount = ref<number>()
+
+// 用于存储改变过的项
+const changedItems = reactive<Record<string, { 
+  skuActualCount: number
+  customsDeclarationCount: number
+}>>({});
+
 const handleFocus = (row: IGetMatchPackageList) => {
-  _skuActualCount.value = row.skuActualCount
-  _customsDeclarationCount.value = row.customsDeclarationCount
-}
-// 修改SKU实际数量
-const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {  
-  if (row.goodCount == null || row.goodCount == undefined) {
-    $baseMessage('当前打包显示的打包任务没有好的数量，不能输入数量！', 'error')
+  // 如果该 mId 不存在于 changedItems 中，初始化记录
+  if (!(row.mId in changedItems)) {
+    changedItems[row.mId] = {
+      skuActualCount: Number(row.skuActualCount) || 0,
+      customsDeclarationCount: Number(row.customsDeclarationCount) || 0,
+    };
   }
+};
+const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
+  
+  if (row.goodCount == null || row.goodCount == undefined) {
+    $baseMessage('当前打包显示的打包任务没有好的数量，不能输入数量！', 'error');
+    if (row.mId in changedItems) {
+      const previousValues = changedItems[row.mId];
+      row.skuActualCount = previousValues.skuActualCount;
+      row.customsDeclarationCount = previousValues.customsDeclarationCount;
+    }
+    return;
+  }
+
   try {
     const { data } = await updateMatchSkuActualCount({
       id: _id.value,
       poId: row.poId,
       sku: row.sku,
       mId: row.mId,
-      skuCount: row.skuActualCount
-    })
+      skuCount: row.skuActualCount,
+    });
+
     if (data) {
-      fetchMatchData()
+      fetchMatchData();
+      changedItems[row.mId] = {
+        skuActualCount: Number(row.skuActualCount), // 更新修改值
+        customsDeclarationCount: Number(row.customsDeclarationCount),
+      };
     }
-  } catch (error) {
-    row.skuActualCount = _skuActualCount.value!
+  } catch (error: any) {
+    // 恢复修改前的值
+    if (row.mId in changedItems) {
+      const previousValues = changedItems[row.mId];
+      row.skuActualCount = previousValues.skuActualCount;
+      row.customsDeclarationCount = previousValues.customsDeclarationCount;
+    }
   }
 }
+
 const _encasementCount = computed(() => {
-  let num = 0
-  matchList.value.forEach((item: any) => {
-    num += item.skuActualCount
-  })
-  return _originalCount.value - num
-})
-// 修改零件的实际数量
-const handleUpdateComponentCount = async (row: IGetMatchPackageList) => {
-  try {
-    const { data } = await updateMatchComponentActualCount({
-      id: _id.value,
-      mId: row.mId,
-      dId: row.dId,
-      count: row.componentActualCount
-    })
-    if (data) {
-      fetchMatchData()
-    }
-  } catch (error) {
-    console.error(error)
-  }
-}
+  // 初始值减去所有修改过的 skuActualCount
+  const changedTotal = Object.values(changedItems).reduce((sum, count) => sum + count.skuActualCount, 0);
+  return _originalCount.value - changedTotal;
+});
+
 // 修改零件的退税报关数量
 const handleUpdateComponentCustomCount = async (row: IGetMatchPackageList) => {
   try {
@@ -635,9 +661,18 @@ const handleUpdateComponentCustomCount = async (row: IGetMatchPackageList) => {
     })
     if (data) {
       fetchMatchData()
+      changedItems[row.mId] = {
+        skuActualCount: Number(row.skuActualCount), // 更新修改值
+        customsDeclarationCount: Number(row.customsDeclarationCount),
+      };
     }
   } catch (error) {
-    row.customsDeclarationCount = _customsDeclarationCount.value!
+    // 恢复修改前的值
+    if (row.mId in changedItems) {
+      const previousValues = changedItems[row.mId];
+      row.skuActualCount = previousValues.skuActualCount;
+      row.customsDeclarationCount = previousValues.customsDeclarationCount;
+    }
   }
 }
 // 填入全部
@@ -803,6 +838,7 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
 }
@@ -895,7 +931,7 @@ const stripedRowClass = (_row: any) => {
     currentGroupIndex++; 
   }
   // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'striped' : '';
+  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
 };
 let previous2: any = null; 
 let currentGroupIndex2 = 0; // 当前组索引
@@ -909,7 +945,7 @@ const stripedRowClass2 = (_row: any) => {
     currentGroupIndex2++; 
   }
   // 根据当前组索引设置条纹样式
-  return currentGroupIndex2 % 2 === 0 ? 'striped' : '';
+  return currentGroupIndex2 % 2 === 0 ? 'el-table__row--striped' : '';
 };
 
 const match1Style = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
@@ -946,12 +982,12 @@ const sentCellStyle = (data: { row: any, column: any, rowIndex: number, columnIn
 
 <style lang="scss" scoped>
 /* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.striped) > td.el-table__cell) {
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
 }
 
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.striped > td.el-table__cell) {
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 :deep(.striped) {

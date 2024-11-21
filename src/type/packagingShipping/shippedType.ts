@@ -843,3 +843,200 @@ export interface IGetShipmentArrivedList {
   // 已接收天数
   acceptDays?: number
 }
+
+export interface IUpdateLostGoodsStatus {
+  id: number
+  // 丢货状态 0没丢货 1丢货
+  status: number 
+}
+
+export interface IGetShipmentFbaListReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetShipmentFbaListRes {
+  data?: {
+    list?: IGetShipmentFbaList[]
+    total?: number
+  }
+}
+
+export interface IGetShipmentFbaList {
+  /**
+   * 已接受天数
+   */
+  acceptDays?: number
+  /**
+   * 接受完成天数
+   */
+  acceptFinishDays?: number
+  /**
+   * 实际到货日期，上架日期
+   */
+  actualArrivalDate?: string
+  /**
+   * 实际延误
+   */
+  actualDelay?: number
+  /**
+   * 实际时效
+   */
+  actualTimeliness?: number
+  /**
+   * 运输渠道
+   */
+  channelName?: string
+  /**
+   * 已延误
+   */
+  delayed?: number
+  /**
+   * shipmentId
+   */
+  fbaShipmentId?: string
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 初始预计入库日期
+   */
+  initialArrivalDate?: string
+  /**
+   * 缺数
+   */
+  lackCount?: number
+  /**
+   * 最新预计入库日期
+   */
+  latestArrivalDate?: string
+  /**
+   * 丢货标记 0没丢货 1丢货
+   */
+  lostGoodsStatus?: number
+  /**
+   * 已接收数
+   */
+  receiptsCount?: number
+  /**
+   * 备注
+   */
+  remarks?: string
+  /**
+   * 站点
+   */
+  site?: string
+  /**
+   * 状态
+   */
+  status?: number
+  /**
+   * 时效 0计入时效 1不计入
+   */
+  timelinessStatus?: number
+  // 发货日期
+  shipmentDate?: string
+  // 箱数
+  totalEncasementCount?: number
+  // 发货总数
+  totalCount?: number
+  // 重量
+  weight?: number
+  // 体积
+  volume?: number
+}
+
+export interface IUpdateShipmentFbaDate {
+  id: number
+  date: string
+}
+
+export interface IGetShipmentFbaDetailListReq {
+  id: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetShipmentFbaDetailListRes {
+  data?: {
+    list?: IGetShipmentFbaDetailList[]
+    total?: number
+  }
+}
+
+export interface IGetShipmentFbaDetailList {
+  /**
+   * 已接收天数
+   */
+  acceptDays?: number;
+  /**
+   * 实际数量
+   */
+  actualCount?: number;
+  /**
+   * sku的描述
+   */
+  description?: string;
+  /**
+   * 缺数
+   */
+  lackCount?: number;
+  /**
+   * po号
+   */
+  po?: string;
+  /**
+   * 已接收数
+   */
+  receiptsCount?: number;
+  /**
+   * sku发货总数
+   */
+  shipmentTotalCount?: number;
+  /**
+   * sku
+   */
+  sku?: string;
+  /**
+   * sku图片地址
+   */
+  skuImgUrl?: string;
+}
+
+export interface IFilterShipmentFbaList {
+  /**
+   * 上架日期结束
+   */
+  arrivalDateEnd?: string;
+  /**
+   * 上架日期开始
+   */
+  arrivalDateStart?: string;
+  /**
+   * 缺数结束
+   */
+  lackCountEnd?: number;
+  /**
+   * 缺数开始
+   */
+  lackCountStart?: number;
+  /**
+   * 当前页 默认1
+   */
+  pageNo?: number;
+  /**
+   * 每页大小 默认20
+   */
+  pageSize?: number;
+  /**
+   * 发货日期结束
+   */
+  shipmentDateEnd?: string;
+  /**
+   * 发货日期开始
+   */
+  shipmentDateStart?: string;
+}

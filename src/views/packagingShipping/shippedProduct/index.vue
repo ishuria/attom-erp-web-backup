@@ -75,7 +75,7 @@
           <el-table-column label="发货总数" prop="shipmentTotalCount" min-width="100"></el-table-column>
           <el-table-column label="丢货" prop="lostGoodsStatus" min-width="60">
             <template #default="{ row }">
-              <el-checkbox v-model="row.lostGoodsStatus" :true-value="1" :false-value="0" />
+              <el-checkbox v-model="row.lostGoodsStatus" :true-value="1" :false-value="0" @change="handleUpdateLostGoodsStatus(row)" />
             </template>
           </el-table-column>
           <el-table-column label="站点" prop="site" min-width="120"></el-table-column>
@@ -126,10 +126,11 @@
         <el-table 
           ref="tableRef" 
           border 
-          :data="fakeData" 
+          :data="list" 
           :header-cell-style="{ textAlign: 'center' }"
-          :cell-class-name="cellClassName"
+          :cell-class-name="cellClassName2"
           class="noneHoveTable"
+          :span-method="objectSpanMethod2"
         >
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
             <template #header>
@@ -143,7 +144,11 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="170"></el-table-column>
+          <el-table-column label="SKU" prop="sku" min-width="170">
+            <template #default="{ row }">
+              {{ row.sku }}<br />{{ row.description }}
+            </template>
+          </el-table-column>
           <el-table-column label="发货总数" prop="shipmentTotalCount" min-width="100"></el-table-column>
           <el-table-column label="已接收数" prop="receiptsCount" min-width="110"></el-table-column>
           <el-table-column label="缺数" prop="lackCount" min-width="80"></el-table-column>
@@ -173,11 +178,11 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
+import { getShipmentArrivedList, updateLostGoodsStatus } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetShipmentArrivedListReq } from '/@/type/packagingShipping/shippedType'
-import { getShipmentArrivedList } from '/@/api/devlocal/encasement'
+import { IGetShipmentArrivedList, IGetShipmentArrivedListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -194,7 +199,7 @@ const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
 const tableRef = ref<TableInstance>()
-const list = ref<any>([])
+const list = ref<IGetShipmentArrivedList[]>([])
 const listLoading = ref<boolean>(true)
 
 const total = ref<number>(0)
@@ -222,13 +227,22 @@ const handleClick = (tab: TabsPaneContext) => {
   queryForm.status = Number(tab.props.name)
   queryData()
 }
+// 修改丢货状态
+const handleUpdateLostGoodsStatus = async (row: IGetShipmentArrivedList) => {
+  try {
+    const { data } = await updateLostGoodsStatus({
+      id: row.id!,
+      status: row.lostGoodsStatus!
+    })
+  } catch (error) {
+    
+  }
+}
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getShipmentArrivedList(queryForm)
-  if (data) {
-    list.value = data.list
-    total.value = data.total!
-  }
+  list.value = data?.list!
+  total.value = data?.total!
   listLoading.value = false
 }
 
@@ -279,15 +293,17 @@ const cellClassName = (data: {row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
-
-const fakeData = [
-  {
-    po: 'PO19627',
-    sku: 'HOME-0020-WHT',
-    imgUrl: 'https://picsum.photos/200/200'
+const cellClassName2 = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.columnIndex === 0) {
+    return 'clear-padding'
+  } 
+  if (data.columnIndex !== 1) {
+    return 'text-center'
   }
-]
-// 零件清单列表col合并方法
+  return ''
+}
+
+// 已发货（未到货）col合并方法
 const objectSpanMethod = ({
     row,
     column,
@@ -296,6 +312,35 @@ const objectSpanMethod = ({
 }: any) => {
   // 设置需要合并的列
   if (columnIndex !== 11 && columnIndex !== 12) {
+    const id = row.id;
+    // 默认不跨行
+    let rowspan = 1;
+    // 遍历后端返回的数据
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      // 如果零件id一样需要合并
+      if (list.value[i].id === id) {
+        rowspan++;
+      } else {
+        break;
+      }
+    }
+    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+    if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
+      return { rowspan, colspan: 1 };
+    } else {
+      return { rowspan: 0, colspan: 0 };
+    }
+  }
+}
+// 已发货（接收中）col合并方法
+const objectSpanMethod2 = ({
+    row,
+    column,
+    rowIndex,
+    columnIndex,
+}: any) => {
+  // 设置需要合并的列
+  if (columnIndex !== 6 && columnIndex !== 7) {
     const id = row.id;
     // 默认不跨行
     let rowspan = 1;
@@ -395,7 +440,7 @@ onBeforeMount(() => {
         }
         .noneHoveTable {
           .el-checkbox {
-            transform: scale(1.2);
+            transform: scale(1.5);
             transform-origin: center;
           }
         }
@@ -403,5 +448,6 @@ onBeforeMount(() => {
     }
   }
 }
+
 </style>
 

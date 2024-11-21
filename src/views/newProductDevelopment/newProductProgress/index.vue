@@ -120,7 +120,7 @@ handleSubmit<template>
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.progressLog) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.progressLog) }}</span>
               </el-tooltip>
@@ -130,7 +130,7 @@ handleSubmit<template>
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
                 <span style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
               </el-tooltip>
@@ -140,7 +140,7 @@ handleSubmit<template>
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.remark) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.remark) }}</span>
               </el-tooltip>
@@ -1439,6 +1439,9 @@ onBeforeMount(() => {
  max-height: 81.2px; /* 设置文本的最大高度 */
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
-
-
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
+}
 </style>

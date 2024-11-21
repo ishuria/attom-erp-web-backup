@@ -79,7 +79,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" min-width="160">
+      <el-table-column label="状态" prop="status" min-width="120">
         <template #default="{ row }">
           <span 
             :style="{ 
@@ -95,7 +95,7 @@
             {{ row.packArchiveStatus === 0 ? '待打包归档' : '已打包归档' }}
           </span><br />
           <span :style="{ color: row.taxRefundStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
-            {{ row.taxRefundStatus === 0 ? '待归档到退税关联' : '已归档到退税关联' }}
+            {{ row.taxRefundStatus === 0 ? '待出库归档' : '已出库归档' }}
           </span>
         </template>
       </el-table-column>
@@ -120,6 +120,9 @@
                   <el-link type="primary" :underline="false" @click="handleArchivePackage(row)">打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="">出库归档</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">退税归档</el-link>
                 </el-dropdown-item>
                 <!-- <el-dropdown-item>
@@ -133,6 +136,9 @@
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="handleCancelArchivePackage(row)">撤销打包归档</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="">撤销出库</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">撤销退税归档</el-link>
@@ -390,6 +396,7 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
 }
@@ -412,14 +419,9 @@ const fakeData = [
 ]
 const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
 
-  if (data.columnIndex === 9) {
+  if (data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 16) {
     return {
       textAlign: 'left'
-    }
-  }
-  if (data.columnIndex === 16) {
-    return {
-      textAlign: 'left',
     }
   }
   return {
@@ -469,13 +471,6 @@ onBeforeMount(() => {
 :deep(.dialog .el-dialog__body) {
   padding-top: 5px;
 }
-// :deep(input::-webkit-outer-spin-button),
-// :deep(input::-webkit-inner-spin-button) {
-//   -webkit-appearance: none;
-// }
-// :deep(input[type="number"]) {
-//   -moz-appearance: textfield;
-// }
 .el-table :deep(.reduce-padding .cell) {
   padding-right: 3px;
   padding-left: 3px;
@@ -511,5 +506,14 @@ onBeforeMount(() => {
 :deep(.checkbox-green .el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-color-success);
   border-color: var(--el-color-success);
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>

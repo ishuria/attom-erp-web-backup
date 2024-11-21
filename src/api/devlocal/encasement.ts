@@ -12,6 +12,7 @@ import {
   IEncasementId,
   IEncasementIds,
   IFileName,
+  IFilterShipmentFbaList,
   IGenerateTemplateFile1Req,
   IGetChannelListRes,
   IGetEncasementInspectionReq,
@@ -26,6 +27,10 @@ import {
   IGetForwarderListRes,
   IGetShipmentArrivedListReq,
   IGetShipmentArrivedListRes,
+  IGetShipmentFbaDetailListReq,
+  IGetShipmentFbaDetailListRes,
+  IGetShipmentFbaListReq,
+  IGetShipmentFbaListRes,
   IGetShippedEncasementListRes,
   IId,
   ISplitEncasementCsv,
@@ -37,7 +42,9 @@ import {
   IUpdateEncasementReq,
   IUpdateEncasementShipmentDateReq,
   IUpdateFreightForwarderType,
-  IUpdateSafeDaysFreightForwarder
+  IUpdateLostGoodsStatus,
+  IUpdateSafeDaysFreightForwarder,
+  IUpdateShipmentFbaDate
 } from '/@/type/packagingShipping/shippedType'
 
 /**
@@ -468,6 +475,56 @@ export const getShipmentArrivedList = (params: IGetShipmentArrivedListReq): Prom
   return request({
     url: `${BASE_API}/shipment/arrived/list`,
     method: 'get',
+    params
+  })
+}
+/**
+ * @description 已发货 - 修改丢货状态
+ */
+export const updateLostGoodsStatus = (params: IUpdateLostGoodsStatus): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/lostGoods/status`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description FBA-获取数据列表
+ */
+export const getShipmentFbaList = (params: IGetShipmentFbaListReq): Promise<IGetShipmentFbaListRes> => {
+  return request({
+    url: `${BASE_API}/shipment/fba/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description FBA货件-修改最新预计入库时间
+ */
+export const updateShipmentFbaDate = (params: IUpdateShipmentFbaDate): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/fba/date/update`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description FBA货件-明细列表
+ */
+export const getShipmentFbaDetailList = (params: IGetShipmentFbaDetailListReq): Promise<IGetShipmentFbaDetailListRes> => {
+  return request({
+    url: `${BASE_API}/shipment/fba/detail/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description FBA-筛选获取列表
+ */
+export const filterShipmentFbaList = (params: IFilterShipmentFbaList): Promise<IGetShipmentFbaListRes> => {
+  return request({
+    url: `${BASE_API}/shipment/fba/filter/list`,
+    method: 'post',
     params
   })
 }

@@ -22,23 +22,27 @@
     >
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="100"></el-table-column>
-      <el-table-column label="装箱日期" prop="createTime" min-width="115"></el-table-column>
+      <el-table-column label="装箱日期" prop="createTime" min-width="115">
+        <template #default="{ row }">
+          {{ formatDate(new Date(row.createTime)) }}
+        </template>
+      </el-table-column>
       <el-table-column label="装箱人员" prop="encasementUser" min-width="100"></el-table-column>
       <el-table-column label="箱数" prop="numberOfBoxes" min-width="90"></el-table-column>
-      <el-table-column label="SHIPMENT ID" prop="shipmentId" min-width="130"></el-table-column>
+      <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')"></el-table-column>
       <el-table-column label="毛重(kg)" prop="grossWeight" min-width="100"></el-table-column>
       <el-table-column label="长(cm)" prop="length" min-width="90"></el-table-column>
       <el-table-column label="宽(cm)" prop="width" min-width="90"></el-table-column>
       <el-table-column label="高(cm)" prop="height" min-width="90"></el-table-column>
       <el-table-column label="总重量(kg)" prop="totalWeight" min-width="110"></el-table-column>
       <el-table-column label="总体积(m3)" prop="totalVolume" min-width="110"></el-table-column>
-      <el-table-column label="箱规号" prop="encasementNo" min-width="100"></el-table-column>
-      <el-table-column label="站点" prop="planSiteName" min-width="100"></el-table-column>
-      <el-table-column label="SKU" prop="sku" min-width="300"></el-table-column>
-      <el-table-column label="Description" prop="description" min-width="300"></el-table-column>
+      <el-table-column label="箱规号" prop="encasementNo" min-width="110"></el-table-column>
+      <el-table-column label="站点" prop="planSiteName" min-width="130"></el-table-column>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
+      <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"></el-table-column>
       <el-table-column label="数量" prop="number" min-width="90"></el-table-column>
       <el-table-column label="产品总数" prop="productTotalNumber" min-width="100"></el-table-column>
-      <el-table-column label="备注" prop="remarks" min-width="100"></el-table-column>
+      <el-table-column label="备注" prop="remarks" min-width="100" show-overflow-tooltip ></el-table-column>
       <el-table-column label="操作" fixed="right" width="180">
         <template #default="{ row }">
           <el-dropdown>
@@ -84,7 +88,9 @@ import { Search, ArrowDown } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
 import { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
 import { getShippedEncasementList } from '/@/api/devlocal/encasement'
-import { downloadFile } from '~/src/api/devlocal/download'
+import { downloadFile } from '/@/api/devlocal/download'
+import { formatDate } from '/@/utils/dateUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({
@@ -148,11 +154,12 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex !== 13 && data.columnIndex !== 14) {
+  if (data.columnIndex !== 5 && data.columnIndex !== 12 && data.columnIndex !== 13 && data.columnIndex !== 14 && data.columnIndex !== 15) {
     return {
       textAlign: 'center'
     }
@@ -172,3 +179,19 @@ onBeforeMount(() => {
   fetchData()
 })
 </script>
+
+<style lang="scss" scoped>
+.el-table :deep(.el-checkbox) {
+  transform: scale(1.3);
+  transform-origin: center;
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+</style>

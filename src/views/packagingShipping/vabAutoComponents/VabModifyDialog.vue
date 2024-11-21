@@ -472,6 +472,7 @@ const handleCurrentChange = (value: number) => {
   fetchSkuData()
 }
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchSkuData()
 }

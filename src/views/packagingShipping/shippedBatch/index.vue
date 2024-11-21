@@ -18,44 +18,70 @@
     <el-table
       border stripe
       :header-cell-style="{ textAlign: 'center' }"
-      :data="fakeData"
+      :data="list"
       class="noneHoveTable"
       :cell-style="cellStyle"
     >
-      <el-table-column label="FBA SHIPMENT ID" prop="id" min-width="180"></el-table-column>
-      <el-table-column label="站点" min-width="100"></el-table-column>
-      <el-table-column label="状态" min-width="100"></el-table-column>
-      <el-table-column label="运输渠道" min-width="200"></el-table-column>
-      <el-table-column label="发货日期" min-width="115"></el-table-column>
-      <el-table-column label="原始预计入库" min-width="130"></el-table-column>
-      <el-table-column label="最新预计入库" min-width="130"></el-table-column>
-      <el-table-column label="上架日期" min-width="115"></el-table-column>
-      <el-table-column label="实际时效" min-width="100"></el-table-column>
-      <el-table-column label="时效预估误差" min-width="130"></el-table-column>
-      <el-table-column label="接收完成天数" min-width="130"></el-table-column>
-      <el-table-column label="发货总数" min-width="100"></el-table-column>
-      <el-table-column label="已接收数" min-width="100"></el-table-column>
-      <el-table-column label="缺数" min-width="80"></el-table-column>
-      <el-table-column label="箱数" min-width="80"></el-table-column>
-      <el-table-column label="体积(m3)" min-width="100"></el-table-column>
-      <el-table-column label="重量(kg)" min-width="100"></el-table-column>
-      <el-table-column label="备注" min-width="100"></el-table-column>
-      <el-table-column label="不计入渠道时效" min-width="140">
+      <el-table-column label="FBA SHIPMENT ID" prop="fbaShipmentId" min-width="180"></el-table-column>
+      <el-table-column label="站点" prop="site" min-width="130"></el-table-column>
+      <el-table-column label="状态" prop="status" min-width="100"></el-table-column>
+      <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')"></el-table-column>
+      <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
         <template #default="{ row }">
-          <el-checkbox :true-value="1" :false-value="0" />
+          {{ formatDate(new Date(row.shipmentDate)) }}
         </template>
       </el-table-column>
-      <el-table-column label="丢货标记" min-width="100">
+      <el-table-column label="原始预计入库" prop="initialArrivalDate" min-width="130">
         <template #default="{ row }">
-          <el-checkbox :true-value="1" :false-value="0" />
+          {{ formatDate(new Date(row.initialArrivalDate)) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width="340">
+      <el-table-column label="最新预计入库" prop="latestArrivalDate" min-width="130">
+        <template #default="{ row }">
+          {{ formatDate(new Date(row.latestArrivalDate)) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="上架日期" prop="actualArrivalDate" min-width="115">
+        <template #default="{ row }">
+          {{ formatDate(new Date(row.actualArrivalDate)) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="实际时效" prop="actualTimeliness" min-width="100"></el-table-column>
+      <el-table-column label="已延误" prop="delayed" min-width="100"></el-table-column>
+      <el-table-column label="实际延误" prop="actualDelay" min-width="130">
+        <template #default="{ row }">
+          <span :style="{ color: row.actualDelay <= 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }" >{{  row.actualDelay }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="已接收天数" prop="acceptDays" min-width="130"></el-table-column>
+      <el-table-column label="接收完成天数" prop="acceptFinishDays" min-width="130"></el-table-column>
+      <el-table-column label="发货总数" prop="totalCount" min-width="100"></el-table-column>
+      <el-table-column label="已接收数" prop="receiptsCount" min-width="100"></el-table-column>
+      <el-table-column label="缺数" prop="lackCount" min-width="80">
+        <template #default="{ row }">
+          <span :style="{ color: row.lackCount > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }" >{{  row.lackCount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="箱数" prop="totalEncasementCount" min-width="80"></el-table-column>
+      <el-table-column label="体积(m3)" prop="volume" min-width="100"></el-table-column>
+      <el-table-column label="重量(kg)" prop="weight" min-width="100"></el-table-column>
+      <el-table-column label="备注" prop="remarks" min-width="100" show-overflow-tooltip ></el-table-column>
+      <el-table-column label="不计入渠道时效" prop="timelinessStatus" min-width="140">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.timelinessStatus" :true-value="1" :false-value="0" />
+        </template>
+      </el-table-column>
+      <el-table-column label="丢货标记" prop="lostGoodsStatus" min-width="100">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.lostGoodsStatus" :true-value="1" :false-value="0" />
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" width="370">
         <template #default="{ row }">
           <el-space>
-            <el-link type="primary" :underline="false" @click="showDetails">明细</el-link>
+            <el-link type="primary" :underline="false" @click="showDetails(row)">明细</el-link>
             <el-link type="primary" :underline="false" >SKU运费均摊明细</el-link>
-            <el-link type="primary" :underline="false" @click="showUpdateStorageTime">修改预计入库时间</el-link>
+            <el-link type="primary" :underline="false" @click="showUpdateStorageTime(row)">修改最新预计入库时间</el-link>
           </el-space>
         </template>
       </el-table-column>
@@ -75,42 +101,66 @@
     <vab-dialog
       title="明细"
       v-model="detailsVisible"
+      top="10vh"
     >
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="detailQueryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model.trim="detailQueryForm.keyWord" @input="detailQueryData" @keyup.enter.native="detailQueryData" clearable placeholder="请输入搜索关键词" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="detailListLoading" native-type="submit" type="primary" @click="detailQueryData"></el-button>
+          </el-form-item>
+        </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
       <el-table 
         border stripe 
         :header-cell-style="{ textAlign: 'center' }" 
         :cell-class-name="cellClassName"
         class="detailsTable"
-        :data="fakeDetailsData"
+        :data="detailList"
       >
         <el-table-column label="图片" width="70">
           <template #default="{ row }">
-            <el-image :src="row.url" fit="contain" style="width: 70px; height: 70px; display: block" @click="showImagePreview(row)">
+            <el-image :src="row.skuImgUrl" fit="contain" style="width: 70px; height: 70px; display: block" @click="showImagePreview(row)">
               <template #error>
                 <el-icon></el-icon>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="SKU" min-width="200"></el-table-column>
-        <el-table-column label="PO" min-width="100" align="center"></el-table-column>
-        <el-table-column label="发货数量" min-width="100" align="center"></el-table-column>
-        <el-table-column label="已接收数量" min-width="110" align="center"></el-table-column>
-        <el-table-column label="缺数" min-width="100" align="center"></el-table-column>
+        <el-table-column label="SKU" prop="sku" min-width="200">
+          <template #default="{ row }">
+            {{ row.sku }}<br />{{ row.description }}
+          </template>
+        </el-table-column>
+        <el-table-column label="PO" min-width="100" prop="po" align="center"></el-table-column>
+        <el-table-column label="发货数量" min-width="100" prop="shipmentTotalCount" align="center"></el-table-column>
+        <el-table-column label="已接收数量" min-width="110" prop="receiptsCount" align="center"></el-table-column>
+        <el-table-column label="缺数" min-width="100" prop="lackCount" align="center"></el-table-column>
       </el-table>
+      <vab-pagination 
+        :current-page="detailQueryForm.pageNo" 
+        :page-size="detailQueryForm.pageSize" 
+        :total="detailTotal"
+        @current-change="handleDetailCurrentChange" 
+        @size-change="handleDetailSizeChange" 
+      />
     </vab-dialog>
     <!-- 修改预计入库时间 -->
     <vab-dialog
-      title="修改预计入库时间"
+      title="修改最新预计入库时间"
       v-model="storageTimeVisible"
       width="20%"
       @close="closeUpdateStorageTime"
     >
       <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-left: 20px; margin-right: 20px">
-        <el-form-item label="预计入库时间" prop="date">
+        <el-form-item label="最新预计入库时间" prop="date">
           <el-date-picker 
             type="date" 
-            placeholder="选择预计入库时间" 
+            placeholder="选择最新预计入库时间" 
             format="YYYY-MM-DD"
             v-model="storageTimeForm.date"
             value-format="YYYY-MM-DD"
@@ -185,24 +235,31 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
 import { FormInstance } from 'element-plus'
+import { IGetShipmentFbaList, IGetShipmentFbaListReq } from '/@/type/packagingShipping/shippedType'
+import { filterShipmentFbaList, getShipmentFbaDetailList, getShipmentFbaList, updateShipmentFbaDate } from '/@/api/devlocal/encasement'
+import { formatDate } from '/@/utils/dateUtils'
+import { CSSProperties } from 'vue'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const listLoading = ref<boolean>(true)
-const queryForm = reactive<any>({
+const queryForm = reactive<IGetShipmentFbaListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20
 })
+const list = ref<IGetShipmentFbaList[]>([])
 const total = ref<number>(0)
-const fakeData = [
-  {
-    id: 1
-  }
-]
-const fakeDetailsData = [
-  {
-    url: 'https://picsum.photos/200/200'
-  }
-]
+
+// 明细
+const detailListLoading = ref<boolean>(false)
+const detailQueryForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const detailList = ref<any>([])
+const detailTotal = ref<number>(0)
+
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<any>([])
 const imagePreviewClose = () => {
@@ -210,7 +267,7 @@ const imagePreviewClose = () => {
 }
 const showImagePreview = (row: any) => {
   imagePreviewList.value = []
-  imagePreviewList.value.push(row.url)
+  imagePreviewList.value.push(row.skuImgUrl)
   imagePreviewVisible.value = true
 }
 // 明细可见
@@ -233,24 +290,47 @@ const filterForm = reactive<any>({
 })
 const filterFormRef = ref<FormInstance>()
 const storageTimeFormRef = ref<FormInstance>()
+// 传给明细的id
+const _id = ref<number>(0)
 // 展示明细
-const showDetails = () => {
+const showDetails = (row: IGetShipmentFbaList) => {
   detailsVisible.value = true
+  fetchDetailData()
 }
+const fetchDetailData = async () => {
+  detailListLoading.value = true
+  const { data } = await getShipmentFbaDetailList({
+    id: _id.value,
+    ...detailQueryForm
+  })
+  detailTotal.value = data?.total!
+  detailList.value = data?.list!
+  detailListLoading.value = false
+}
+let _row: IGetShipmentFbaList
 // 展示修改预计入库时间
-const showUpdateStorageTime = () => {
+const showUpdateStorageTime = (row: IGetShipmentFbaList) => {
+  _row = row
   storageTimeVisible.value = true
+  storageTimeForm.date = row.latestArrivalDate
 }
 // 关闭修改入库时间对话框
 const closeUpdateStorageTime = () => {
-  storageTimeFormRef.value?.resetFields()
   storageTimeVisible.value = false
 }
 // 确定修改预计入库时间
-const confirmUpdateStorageTime = () => {
-  storageTimeFormRef.value?.validate((isValid: boolean) => {
+const confirmUpdateStorageTime = async () => {
+  storageTimeFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      closeUpdateStorageTime()
+      const { data } = await updateShipmentFbaDate({
+        id: _row.id!,
+        date: storageTimeForm.date
+      })
+      if (data) {
+        $baseMessage('修改最新预计入库时间成功！', 'success')
+        closeUpdateStorageTime()
+        fetchData()
+      }
     }
   })
 }
@@ -262,29 +342,62 @@ const closeFilter = () => {
   filterVisible.value = false
 }
 // 确认筛选
-const confirmFilter = () => {
+const confirmFilter = async () => {
   if (filterForm.number1 > filterForm.number2) {
     $baseMessage('最小值不能大于最大值，请重新填写', 'error')
     return
   }
+  const { data } = await filterShipmentFbaList({
+    pageNo: queryForm.pageNo,
+    pageSize: queryForm.pageSize,
+    lackCountStart: filterForm.number1,
+    lackCountEnd: filterForm.number2,
+    shipmentDateStart: filterForm.date1[0],
+    shipmentDateEnd: filterForm.date1[1],
+    arrivalDateStart: filterForm.date2[0],
+    arrivalDateEnd: filterForm.date2[1]
+  })
+  if (data) {
+    $baseMessage('筛选成功!', 'success')
+    filterVisible.value = false
+    fetchData()
+  }
 }
 const queryData = () => {
   queryForm.pageNo = 1
-
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
+  fetchData()
+}
+const detailQueryData = () => {
+  detailQueryForm.pageNo = 1
+  fetchDetailData()
+}
+const handleDetailCurrentChange = (value: number) => {
+  detailQueryForm.pageNo = value
+  fetchDetailData()
+}
+const handleDetailSizeChange = (value: number) => {
+  detailQueryForm.pageNo = 1
+  detailQueryForm.pageSize = value
+  fetchDetailData()
 }
 
-
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex !== 0 && data.columnIndex !== 3) {
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (data.columnIndex !== 0 && data.columnIndex !== 3 && data.columnIndex !== 19) {
     return {
-      textAlign: 'center' as 'center'
+      textAlign: 'center'
     }
+  }
+  return {
+    textAlign: 'left'
   }
 }
 const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
@@ -293,6 +406,16 @@ const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIn
   }
   return ''
 }
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getShipmentFbaList(queryForm)
+  list.value = data?.list!
+  total.value = data?.total!
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
