@@ -182,23 +182,24 @@
           
         </template>
       </el-table-column>
-      <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" show-overflow-tooltip >
-          <template #default="{ row }">
-              <div class="none">
-                  <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-              </div>
-              <span>
-                  <el-text truncated>
-                      {{ row.purchaseLink }}
-                  </el-text>
-              </span>
-          </template>
+      <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" >
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+          </div>
+          <el-tooltip effect="dark" content="" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row.purchaseLink }}</div>
+            </template>
+            <el-text truncated>{{ row.purchaseLink }}</el-text>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
         <template #default="{ row }">
           <el-tooltip content=" " effect="dark" placement="top">
             <template #content>
-              <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+              <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
             </template>
             <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
           </el-tooltip>
@@ -208,7 +209,7 @@
         <template #default="{ row }">
           <el-tooltip content=" " effect="dark" placement="top">
             <template #content>
-              <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+              <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
             </template>
             <span>{{ removeHtmlTags(row.contractTerms) }}</span>
           </el-tooltip>
@@ -1005,6 +1006,12 @@ onBeforeMount(()=>{
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>
 

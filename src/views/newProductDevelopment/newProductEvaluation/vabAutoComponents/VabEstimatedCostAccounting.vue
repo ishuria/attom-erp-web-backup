@@ -61,7 +61,7 @@
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
-                <div style="white-space: pre-wrap;">{{ row.desc }}</div>
+                <div class="custom-tooltip">{{ row.desc }}</div>
               </template>
               <span>{{ row.desc }}</span>
             </el-tooltip>
@@ -72,7 +72,7 @@
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
-                <div style="white-space: pre-wrap;">{{ row.priceInfo }}</div>
+                <div class="custom-tooltip">{{ row.priceInfo }}</div>
               </template>
               <span>{{ row.priceInfo }}</span>
             </el-tooltip>
@@ -82,7 +82,7 @@
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
-                <div style="white-space: pre-wrap;">{{ row.url1688 }}</div>
+                <div class="custom-tooltip">{{ row.url1688 }}</div>
               </template>
               <span>{{ row.url1688 }}</span>
             </el-tooltip>
@@ -735,5 +735,10 @@ const updateUploadPicVisible = (newV:boolean) =>{
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 75px;
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>

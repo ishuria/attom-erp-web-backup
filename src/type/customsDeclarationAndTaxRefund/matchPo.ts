@@ -370,3 +370,20 @@ export interface IUpdateMatchQuality {
   lackCount: number
   badCount: number
 }
+
+export interface IUpdateShipment {
+  id: number
+  contractNumber?: string
+  referenceId?: string
+  shipmentNumber?: string
+}
+
+export interface IUpdateShipmentFreightFee {
+  id: number
+  freightFee: string
+}
+
+export interface IUpdateShipmentPay {
+  id: number
+  status: number
+}

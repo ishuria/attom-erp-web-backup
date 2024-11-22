@@ -18,7 +18,10 @@ import {
   ISubmitMatchSentList,
   IUpdateMatchComponentActualCount,
   IUpdateMatchQuality,
-  IUpdateMatchSkuCount
+  IUpdateMatchSkuCount,
+  IUpdateShipment,
+  IUpdateShipmentFreightFee,
+  IUpdateShipmentPay
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 
 /**
@@ -227,6 +230,36 @@ export const archivePackageShipment = (params: IId): Promise<IBooleanRes> => {
 export const cancelArchivePackageShipment = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/package/cancel/archive`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关资料修改合同编号、reference id 货代单号
+ */
+export const updateShipment = (data: IUpdateShipment): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 匹配PO、报关资料退税运费修改
+ */
+export const updateShipmentFreightFee = (params: IUpdateShipmentFreightFee): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/update/freightFee`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关资料付款状态修改
+ */
+export const updateShipmentPay = (params: IUpdateShipmentPay): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/update/pay`,
     method: 'post',
     params
   })

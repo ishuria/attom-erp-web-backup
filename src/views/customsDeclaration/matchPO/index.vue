@@ -33,19 +33,19 @@
       </el-table-column>
       <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')">
         <template #default="{ row }">
-          <el-input v-model="row.contractNumber"  clearable />
+          <el-input v-model="row.contractNumber" @change="handleUpdateContractNumber(row)" clearable />
         </template>
       </el-table-column>
       <el-table-column label="Shipment ID" prop="shipmentId" min-width="160"></el-table-column>
       <el-table-column label="Reference ID" prop="referenceId" min-width="130">
         <template #default="{ row }">
-          <el-input v-model="row.referenceId" clearable />
+          <el-input v-model="row.referenceId" clearable @change="handleUpdateReferenceId(row)" />
         </template>
       </el-table-column>
       <el-table-column label="站点" prop="site" min-width="130"></el-table-column>
       <el-table-column label="货代单号" prop="freightForwardingNumber" min-width="120">
         <template #default="{ row }">
-          <el-input v-model="row.freightForwardingNumber" clearable />
+          <el-input v-model="row.freightForwardingNumber" clearable @change="handleUpdateFreightForwardingNumber(row)"/>
         </template>
       </el-table-column>
       <el-table-column label="合并报关" prop="" min-width="100"></el-table-column>
@@ -65,18 +65,22 @@
       <el-table-column label="产品总数" prop="totalNumber" min-width="100"></el-table-column>
       <el-table-column label="重量" prop="weight" min-width="70"></el-table-column>
       <el-table-column label="体积" prop="volume" min-width="70"></el-table-column>
+      <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
       <el-table-column label="预估运费" prop="" min-width="100"></el-table-column>
       <el-table-column label="实际运费" prop="" min-width="100"></el-table-column>
       <el-table-column label="已付运费" prop="payStatus" min-width="100">
         <template #default="{ row }">
-          <el-checkbox 
-            :true-value="1" 
-            :false-value="0"
-            :class="{ 
-              'checkbox-yellow': row.payStatus === 1, 
-              'checkbox-green': row.payStatus === 2 
-            }"
-          />
+          <el-checkbox-group>
+            <el-checkbox 
+              v-model="row.payStatus"
+              :class="{ 
+                'checkbox-blue': row.payStatus === 0,
+                'checkbox-yellow': row.payStatus === 1, 
+                'checkbox-green': row.payStatus === 2 
+              }"
+              @change="handleUpdatePayStatus(row)"
+            />
+          </el-checkbox-group>
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="status" min-width="120">
@@ -110,9 +114,6 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <!-- <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="showCheck">查看</el-link>
-                </el-dropdown-item> -->
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
                 </el-dropdown-item>
@@ -125,11 +126,11 @@
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">退税归档</el-link>
                 </el-dropdown-item>
-                <!-- <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="showForwarderChannel">修改货代渠道</el-link>
-                </el-dropdown-item> -->
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="showFirstLegFreight">头程运费</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">合同导入</el-link>
@@ -241,11 +242,6 @@
       :disabled3="disabled3"
       @update-match-visible="handleCloseMatch"
     />
-    <!-- 查看 -->
-    <!-- <VabCheckDialog 
-      :checkVisible="checkVisible"
-      @update-check-visible="handleCloseCheck"
-    /> -->
     <!-- 修改货代渠道 -->
     <vab-dialog
       title="修改货代渠道"
@@ -262,6 +258,23 @@
         <el-button type="primary">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 修改退税运费 -->
+    <vab-dialog
+      title="更新退税运费"
+      width="20%"
+      v-model="freightFeeVisible"
+      @close="closeFreightFee"
+    >
+      <el-form ref="freightFeeFormRef" :model="freightFeeForm" :rules="freightFeeFormRules" style="margin-left: 20px; margin-right: 20px;">
+        <el-form-item label="退税运费" prop="freightFee">
+          <el-input v-model.trim="freightFeeForm.freightFee" type="number" :min="0" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="closeFreightFee">取消</el-button>
+        <el-button type="primary" @click="confirmFreightFee">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -270,7 +283,7 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { CSSProperties, VNode } from 'vue'
 import { currencyOption } from '../constantOption'
 import { FormInstance } from 'element-plus'
-import { archivePackageShipment, cancelArchivePackageShipment, getMatchPoList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { archivePackageShipment, cancelArchivePackageShipment, getMatchPoList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -297,6 +310,93 @@ const matchVisible = ref<boolean>(false)
 const checkVisible = ref<boolean>(false)
 const status = ref<number>(0)
 const shipId = ref<number>(0)
+// 退税运费修改可见
+const freightFeeVisible = ref<boolean>(false)
+const freightFeeForm = reactive<any>({})
+const freightFeeFormRef = ref<FormInstance>()
+const freightFeeFormRules = reactive<any>({
+  freightFee: [{ required: true, message: '请输入退税运费', trigger: 'blur' }]
+})
+const handleChecked = (row: any) => {
+  if (row.payStatus === 1 || row.payStatus === 2) {
+    return true
+  }
+  return false
+}
+
+
+// 状态值：0 - 未付, 1 - 部分付, 2 - 全付
+const statusValue = {
+  UNPAID: 0,    // 未付
+  PARTIAL: 1,   // 部分付
+  FULL: 2       // 全付
+};
+
+// 初始状态为未付
+const checked = ref(false);
+const currentStatus = ref(statusValue.UNPAID);
+const checkboxClass = ref('checkbox-blue');
+
+// 状态切换处理函数
+const handleChange = () => {
+  // 根据当前状态切换
+  if (currentStatus.value === statusValue.UNPAID) {
+    currentStatus.value = statusValue.PARTIAL;
+    checkboxClass.value = "status-partial";
+  } else if (currentStatus.value === statusValue.PARTIAL) {
+    currentStatus.value = statusValue.FULL;
+    checkboxClass.value = "status-full";
+  } else {
+    currentStatus.value = statusValue.UNPAID;
+    checkboxClass.value = "status-unpaid";
+  }
+
+  // 更新 checked 值：1 或 2 时勾选，0 时未勾选
+  checked.value = currentStatus.value !== statusValue.UNPAID;
+};
+
+let copyRow: any
+const showFreightFee = (row: any) => {
+  freightFeeVisible.value = true
+  copyRow = row
+  freightFeeForm.freightFee = row.freightFee
+}
+const closeFreightFee = () => {
+  freightFeeVisible.value = false
+}
+const confirmFreightFee = async () => {
+  const { data } = await updateShipmentFreightFee({
+    id: copyRow.id,
+    freightFee: freightFeeForm.freightFee
+  })
+  if (data) {
+    $baseMessage('更新退税运费成功!', 'success')
+    closeFreightFee()
+    copyRow.freightFee = freightFeeForm.freightFee
+  }
+}
+const handleFocus = (row: any) => {
+  console.log(row.payStatus);
+  
+}
+// 修改付款状态
+const handleUpdatePayStatus = async (row: any) => {
+  console.log(row.payStatus);
+  let newStatus: number
+  if (row.payStatus === 0) {
+    newStatus = 2; // 未选中 -> 全付
+  } else if (row.payStatus === 2) {
+    newStatus = 0; // 全付 -> 未选中
+  } else if (row.payStatus === 1) {
+    newStatus = 0; // 部分付 -> 未选中
+  }
+  // await updateShipmentPay({
+  //   id: row.id,
+  //   status: row.payStatus
+  // })
+}
+
+
 // 修改货代渠道可见
 const updateForwarderChannelVisible = ref<boolean>(false)
 const forwarderChannelForm = reactive<any>({
@@ -306,6 +406,27 @@ const forwarderChannelFormRef = ref<FormInstance>()
 const forwarderChannelFormRules = reactive<any>({
   forwarderChannel: [{ required: true, message: '请输入货代渠道', trigger: 'blur' }]
 })
+// 修改合同编号
+const handleUpdateContractNumber = async (row: any) => {
+  await updateShipment({
+    id: row.id,
+    contractNumber: row.contractNumber
+  })
+}
+// 修改referenceId
+const handleUpdateReferenceId = async (row: any) => {
+  await updateShipment({
+    id: row.id,
+    referenceId: row.referenceId
+  })
+}
+// 修改货代单号
+const handleUpdateFreightForwardingNumber = async (row: any) => {
+  await updateShipment({
+    id: row.id,
+    shipmentNumber: row.freightForwardingNumber
+  })
+}
 // 打包归档
 const handleArchivePackage = async (row: any) => {
   $baseConfirm('确定要打包归档吗？', null, async () => {
@@ -419,7 +540,7 @@ const fakeData = [
 ]
 const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
 
-  if (data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 16) {
+  if (data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 17) {
     return {
       textAlign: 'left'
     }
@@ -492,6 +613,20 @@ onBeforeMount(() => {
 :deep(.checkbox-yellow .el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-color-warning);
   border-color: var(--el-color-warning);
+}
+.checkbox-blue {
+  :deep() {
+    .el-checkbox__inner {
+      &:hover {
+        border-color: var(--el-color-primary);
+      }
+    }
+  }
+}
+// 选中且不被禁用的样式
+:deep(.checkbox-blue .el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: var(--el-color-primary);
+  border-color: var(--el-color-primary);
 }
 .checkbox-green {
   :deep() {

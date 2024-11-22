@@ -42,7 +42,16 @@
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"></el-table-column>
       <el-table-column label="数量" prop="number" min-width="90"></el-table-column>
       <el-table-column label="产品总数" prop="productTotalNumber" min-width="100"></el-table-column>
-      <el-table-column label="备注" prop="remarks" min-width="100" show-overflow-tooltip ></el-table-column>
+      <el-table-column label="备注" prop="remarks" min-width="100" >
+        <template #default="{ row }">
+          <el-tooltip effect="dark" content="" placement="top">
+            <template #content>
+              <div class="custom-tooltip" >{{ row.remarks }}</div>
+            </template>
+            <el-text truncated>{{ row.remarks }}</el-text>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" fixed="right" width="180">
         <template #default="{ row }">
           <el-dropdown>

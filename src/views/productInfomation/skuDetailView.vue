@@ -398,17 +398,18 @@
                 <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleDeclareCustoms(row)"/>
             </template>
         </el-table-column>
-        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" show-overflow-tooltip >
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-                </div>
-                <span>
-                    <el-text truncated>
-                        {{ row.purchaseLink }}
-                    </el-text>
-                </span>
-            </template>
+        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <el-tooltip effect="dark" content="" placement="top">
+              <template #content>
+                <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
+              </template>
+              <el-text truncated>{{ row.purchaseLink }}</el-text>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column  label="默认收货仓库" prop="defaultRepositoryId" min-width="160">
             <template #default="{ row }">
@@ -427,7 +428,7 @@
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
-                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </template>
               <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
             </el-tooltip>
@@ -437,7 +438,7 @@
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
-                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
               </template>
               <span>{{ removeHtmlTags(row.contractTerms) }}</span>
             </el-tooltip>
@@ -1665,5 +1666,10 @@ onMounted(() => {
 }
 :deep(input[type="number"]) {
   -moz-appearance: textfield;
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>

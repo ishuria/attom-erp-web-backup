@@ -5,6 +5,7 @@ import {
   IaddConsumablesOtherSku,
   IaddProductComponentOtherSku,
   IaddProductQualityInspection,
+  IBooleanResp,
   IcomponentId,
   IConsumablesType,
   IcreateConsumables,
@@ -13,7 +14,11 @@ import {
   IcreateProductComponentSuppliser,
   IexistingPartsListId,
   IgetChangeProductComponent,
+  IGetCustomsClearanceRatioRes,
+  IGetCustomsClearanceSkuListReq,
+  IGetCustomsClearanceSkuListRes,
   IgetProductAllName,
+  IGetProductAllReadyCOmponentListQuery,
   IgetProductConsumables,
   IgetProductCustomsListQuery,
   IgetProductCustomsListResp,
@@ -35,6 +40,9 @@ import {
   IsuppliserId,
   ISuppliserName,
   IupdateConsumablesSupplier,
+  IUpdateCustomsClearanceRatioReq,
+  IUpdateCustomsClearanceSku,
+  IUpdateProductAlreadyComponent,
   IupdateProductComponent,
   IupdateProductComponentName,
   IupdateProductComponentSuppliser,
@@ -44,9 +52,8 @@ import {
   IupdateProductSkuRemark,
   IupdateProductStatus,
   IupdateProductSupplier,
-  IGetProductAllReadyCOmponentListQuery
+  IUpdateProductCustomsClearanceStatus
 } from '/@/type/productInformation/skuInformationType'
-import { IBooleanResp } from '/@/type/purchase/po'
 
 // SKU信息 - 获取查询列表
 export function getProductList(params: IgetProductListQuery): Promise<IgetProductListResp> {
@@ -533,5 +540,77 @@ export function getProductAllReadyCOmponentList(params: IGetProductAllReadyCOmpo
     url: `${BASE_API}/product/already/component/list`,
     method: 'get',
     params,
+  })
+}
+/**
+ * @description 已有零件库-更新系数
+ * @param params 
+ * @returns 
+ */
+export function updateProductAlreadyComponent(params: IUpdateProductAlreadyComponent): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/product/already/component/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
+ * @description SKU报关属性-获取SKU报关属性列表
+ * @param params 
+ * @returns 
+ */
+export function getCustomsClearanceSkuList(params: IGetCustomsClearanceSkuListReq): Promise<IGetCustomsClearanceSkuListRes> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/list`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * @description SKU报关属性-修改
+ * @param params 
+ * @returns 
+ */
+export function updateCustomsClearanceSku(data: IUpdateCustomsClearanceSku): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/update`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * @description 清关价格系数获取
+ * @param params 
+ * @returns 
+ */
+export function getCustomsClearanceRatio(): Promise<IGetCustomsClearanceRatioRes> {
+  return request({
+    url: `${BASE_API}/customs/clearance/ratio`,
+    method: 'get',
+  })
+}
+/**
+ * @description 清关修改价格系数
+ * @param params 
+ * @returns 
+ */
+export function updateCustomsClearanceRatio(data: IUpdateCustomsClearanceRatioReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/customs/clearance/ratio/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 零件报关信息 - 报关重量使用开票重量修改
+ * @param params 
+ * @returns 
+ */
+export function updateProductCustomsClearanceStatus(params: IUpdateProductCustomsClearanceStatus): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/product/customs/clearance/status/update`,
+    method: 'post',
+    params
   })
 }

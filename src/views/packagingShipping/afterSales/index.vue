@@ -76,7 +76,7 @@
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.salesLog) }}</span>
               </el-tooltip>
@@ -229,7 +229,7 @@
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.salesLog) }}</span>
               </el-tooltip>
@@ -355,7 +355,7 @@
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.salesLog) }}</span>
               </el-tooltip>
@@ -448,7 +448,7 @@
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.salesLog) }}</span>
               </el-tooltip>
@@ -555,7 +555,7 @@
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.salesLog) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.salesLog) }}</span>
               </el-tooltip>
@@ -1140,5 +1140,10 @@ onBeforeMount(() => {
   max-height: 65.2px;
   overflow-y: auto;
   display: block;
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>

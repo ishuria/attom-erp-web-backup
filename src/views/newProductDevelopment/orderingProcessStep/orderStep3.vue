@@ -241,7 +241,7 @@
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
               </el-tooltip>
@@ -251,7 +251,7 @@
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.contractTerms) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.contractTerms) }}</span>
               </el-tooltip>
@@ -1176,6 +1176,11 @@ onMounted(()=>{
 :deep(.el-upload--picture-card) {
   width: 75px;
   height: 75px;
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>
   

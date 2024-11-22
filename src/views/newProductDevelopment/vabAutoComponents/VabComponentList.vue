@@ -282,38 +282,40 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="采购链接" prop="purchaseLink" show-overflow-tooltip min-width="140">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            type="text" 
-                            v-model="row.purchaseLink"
-                            @blur="componentClickCancle($event, row)"
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
-                        />
-                    </div>
-                    <span>
-                        <el-text truncated>
-                            {{ row.purchaseLink }}
-                        </el-text>
-                    </span>
-                </template>
+            <el-table-column label="采购链接" prop="purchaseLink" min-width="140">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input 
+                    v-model="row.purchaseLink"
+                    @blur="componentClickCancle($event, row)"
+                    @keydown.enter="effectiveCountInputeHandle($event,row)"
+                  />
+                </div>  
+                <el-tooltip effect="dark" content="" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
+                  </template>
+                  <el-text truncated>{{ row.purchaseLink }}</el-text>
+                </el-tooltip>
+              </template>
             </el-table-column>
 
-            <el-table-column label="备注" prop="remarks" show-overflow-tooltip >
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            type="text" 
-                            v-model="row.remarks" 
-                            @blur="componentClickCancle($event, row)"
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
-                        />
-                    </div>
-                    <span><el-text truncated>
-                            {{ row.remarks }}
-                        </el-text></span>
-                </template>
+            <el-table-column label="备注" prop="remarks" >
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input 
+                    v-model="row.remarks" 
+                    @blur="componentClickCancle($event, row)"
+                    @keydown.enter="effectiveCountInputeHandle($event,row)"
+                  />
+                </div>
+                <el-tooltip effect="dark" content="" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip" >{{ row.remarks }}</div>
+                  </template>
+                  <el-text truncated>{{ row.remarks }}</el-text>
+                </el-tooltip>
+              </template>
             </el-table-column>
 
             <el-table-column align="center" fixed="right" label="供应商操作" width="120px">
@@ -975,5 +977,9 @@ onMounted(async () => {
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
-
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
+}
 </style>

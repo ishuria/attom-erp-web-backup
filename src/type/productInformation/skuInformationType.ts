@@ -1159,3 +1159,232 @@ export interface IGetProductAllReadyCOmponentListQuery {
   pageNo: number
   pageSize: number
 }
+
+export interface IUpdateProductAlreadyComponent {
+  id: number
+  ratio: string
+}
+
+export interface IBooleanResp {
+  data: boolean
+}
+
+export interface IGetCustomsClearanceSkuListReq {
+  keyWord: string
+  status: number
+  pageNo: number
+  pageSize: number
+}
+export interface IGetCustomsClearanceSkuListRes {
+  data?: {
+    list?: IGetCustomsClearanceSkuList[];
+    total?: number;
+  }
+}
+
+export interface IGetCustomsClearanceSkuList {
+  /**
+   * 品牌
+   */
+  brank?: string;
+  /**
+   * 英文清关品名
+   */
+  clearanceNameEn?: string;
+  /**
+   * 中文清关品名
+   */
+  clearanceNameZh?: string;
+  /**
+   * 申报要素
+   */
+  declarationElements?: string;
+  /**
+   * 申报要素缩写
+   */
+  declarationElementsAbbreviation?: string;
+  /**
+   * SKU描述
+   */
+  description?: string;
+  /**
+   * 欧洲FNSKU
+   */
+  europeFnSku?: string;
+  /**
+   * HS
+   */
+  hs?: string;
+  /**
+   * HTS欧洲
+   */
+  htsEurope?: string;
+  /**
+   * HTS美国
+   */
+  htsUs?: string;
+  /**
+   * sku报关id
+   */
+  id?: number;
+  /**
+   * 制造商英文地址
+   */
+  manufacturerAddressEn?: string;
+  /**
+   * 制造商英文名称
+   */
+  manufacturerEn?: string;
+  /**
+   * 材质英文
+   */
+  materialEn?: string;
+  /**
+   * 材质中文
+   */
+  materialZh?: string;
+  /**
+   * 北美FNSKU
+   */
+  northAmericaFnSku?: string;
+  /**
+   * SKU
+   */
+  sku?: string;
+  /**
+   * SKU图片
+   */
+  skuImgUrl?: string;
+  /**
+   * UPC
+   */
+  upc?: string;
+  /**
+   * 用途英文
+   */
+  usageEn?: string;
+  /**
+   * 用途中文
+   */
+  usageZh?: string;
+}
+
+export interface IUpdateCustomsClearanceSku {
+  /**
+   * 品牌
+   */
+  brank?: string;
+  /**
+   * 英文清关品名
+   */
+  clearanceNameEn?: string;
+  /**
+   * 中文清关品名
+   */
+  clearanceNameZh?: string;
+  /**
+   * 申报要素
+   */
+  declarationElements?: string;
+  /**
+   * 申报要素缩写
+   */
+  declarationElementsAbbreviation?: string;
+  /**
+   * HS
+   */
+  hs?: string;
+  /**
+   * HTS欧洲
+   */
+  htsEurope?: string;
+  /**
+   * HTS美国
+   */
+  htsUs?: string;
+  /**
+   * sku报关id
+   */
+  id?: number;
+  /**
+   * 制造商英文地址
+   */
+  manufacturerAddressEn?: string;
+  /**
+   * 制造商英文名称
+   */
+  manufacturerEn?: string;
+  /**
+   * 材质英文
+   */
+  materialEn?: string;
+  /**
+   * 材质中文
+   */
+  materialZh?: string;
+  /**
+   * 出口退税税率
+   */
+  taxRate?: number;
+  /**
+   * 用途英文
+   */
+  usageEn?: string;
+  /**
+   * 用途中文
+   */
+  usageZh?: string;
+}
+export interface IGetCustomsClearanceRatioRes {
+  data?: {
+    /**
+     * 清关系数
+     */
+    customClearanceCoefficient?: number;
+    id?: number;
+    /**
+     * 随机大价格系数
+     */
+    maxProcurementCoefficient?: number;
+    /**
+     * 随机最小价格系数
+     */
+    minProcurementCoefficient?: number;
+    /**
+     * 销售价格系数1
+     */
+    salesCoefficient1?: number;
+    /**
+     * 销售价格系数2
+     */
+    salesCoefficient2?: number;
+  }
+}
+
+export interface IUpdateCustomsClearanceRatioReq {
+  /**
+   * 清关系数
+   */
+  customClearanceCoefficient?: number;
+  /**
+   * 随机大价格系数
+   */
+  maxProcurementCoefficient?: number;
+  /**
+   * 随机最小价格系数
+   */
+  minProcurementCoefficient?: number;
+  /**
+   * 销售价格系数1
+   */
+  salesCoefficient1?: number;
+  /**
+   * 销售价格系数2
+   */
+  salesCoefficient2?: number;
+}
+
+export interface IUpdateProductCustomsClearanceStatus {
+  id: number
+  status: number
+}

@@ -67,7 +67,7 @@
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
-                <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.desc) }}</div>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.desc) }}</div>
               </template>
               <span>{{ removeHtmlTags(row.desc) }}</span>
             </el-tooltip>
@@ -78,7 +78,7 @@
           <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.priceInfo) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.priceInfo) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.priceInfo) }}</span>
               </el-tooltip>
@@ -737,5 +737,10 @@ onMounted(async ()=>{
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>

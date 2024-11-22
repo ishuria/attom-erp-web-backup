@@ -98,18 +98,16 @@
           <span>{{ row.unit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报关重量使用开票重量" min-width="130">
-        <template #header>
-          报关重量<br />使用开票重量
-        </template>
+      <el-table-column label="报关重量使用开票重量" prop="status" min-width="190">
         <template #default="{ row }">
-          <el-select style="min-width: 100%">
+          <el-select v-model="row.status" style="min-width: 100%" @change="handleUpdateStatus(row)">
             <el-option 
               v-for="item in option"
               :label="item.label"
               :value="item.value"
               :key="item.value"
             />
+
           </el-select>
         </template>
       </el-table-column>
@@ -282,7 +280,6 @@
           <span>{{ row.usageEn }}</span>
         </template>
       </el-table-column> -->
-      
       <el-table-column align="center" label="云舟采购价(RMB)" min-width="120" prop="purchasePrice" >
         <template #header>
           云舟采购价<br>(RMB)
@@ -346,36 +343,36 @@
       width="47em"
       @close="closePriceCoefficientSetting"
     >
-    <el-form :model="priceCoefficientSettingForm" >
-      <el-form-item>
-        <el-text>
-          云舟采购单价 = PO含税单价￥ × Random（
-          <el-input style="width: 10em;" placeholder="随机最小价格系数" clearable></el-input> &nbsp;
-          <el-input style="width: 10em;" placeholder="随机最大价格系数" clearable></el-input>
-          ）
-        </el-text>
-      </el-form-item>
-      <el-form-item>
-        <el-text>
-          云舟销售单价 = PO未税单价￥ / 当前汇率 ×
-          <el-input style="width: 6em;" placeholder="价格系数" clearable></el-input>
-          + 预估运费 ×
-          <el-input style="width: 6em;" placeholder="价格系数" clearable></el-input>
-        </el-text>
-      </el-form-item>
-      <el-form-item>
-        <el-text>
-          SKU清关单价 = PO未税单价￥ / 当前汇率 ×
-          <el-input style="width: 6em;" placeholder="价格系数" clearable></el-input>
-        </el-text>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <div style="text-align: center;">
-        <el-button type="danger" @click="closePriceCoefficientSetting">取消</el-button>
-        <el-button type="success">确定</el-button>
-      </div>
-    </template>
+      <el-form :model="priceCoefficientSettingForm" >
+        <el-form-item>
+          <el-text>
+            云舟采购单价 = PO含税单价￥ × Random（
+            <el-input v-model="priceCoefficientSettingForm.minProcurementCoefficient" style="width: 10em;" placeholder="随机最小价格系数" clearable></el-input> &nbsp;
+            <el-input v-model="priceCoefficientSettingForm.maxProcurementCoefficient" style="width: 10em;" placeholder="随机最大价格系数" clearable></el-input>
+            ）
+          </el-text>
+        </el-form-item>
+        <el-form-item>
+          <el-text>
+            云舟销售单价 = PO未税单价￥ / 当前汇率 ×
+            <el-input v-model="priceCoefficientSettingForm.salesCoefficient1" style="width: 6em;" placeholder="价格系数" clearable></el-input>
+            + 预估运费 ×
+            <el-input v-model="priceCoefficientSettingForm.salesCoefficient2" style="width: 6em;" placeholder="价格系数" clearable></el-input>
+          </el-text>
+        </el-form-item>
+        <el-form-item>
+          <el-text>
+            SKU清关单价 = PO未税单价￥ / 当前汇率 ×
+            <el-input v-model="priceCoefficientSettingForm.customClearanceCoefficient" style="width: 6em;" placeholder="价格系数" clearable></el-input>
+          </el-text>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="text-align: center;">
+          <el-button type="danger" @click="closePriceCoefficientSetting">取消</el-button>
+          <el-button type="success" @click="confirmPriceCoefficientSetting">确定</el-button>
+        </div>
+      </template>
     </vab-dialog>
   </div>
 </template>
@@ -383,12 +380,12 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
+import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
-import { getProductCustomsList, updateProductCustoms } from '/@/api/devlocal/productInformation'
+import { getCustomsClearanceRatio, getProductCustomsList, updateCustomsClearanceRatio, updateProductCustoms, updateProductCustomsClearanceStatus } from '/@/api/devlocal/productInformation'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
-import { isEqual } from 'lodash'
 
 defineOptions({
   name: 'sharedComponents',
@@ -425,12 +422,28 @@ const priceCoefficientSettingForm = reactive<any>({
 
 })
 // 打开价格系数设定
-const showPriceCoefficientSetting = () => {
+const showPriceCoefficientSetting = async () => {
   priceCoefficientSettingVisible.value = true
+  const { data } = await getCustomsClearanceRatio()
+  Object.assign(priceCoefficientSettingForm, data)
 }
 // 关闭价格系数设定
 const closePriceCoefficientSetting = () => {
   priceCoefficientSettingVisible.value = false
+}
+// 确认价格系数
+const confirmPriceCoefficientSetting = async () => {
+  const { data } = await updateCustomsClearanceRatio({
+    minProcurementCoefficient: priceCoefficientSettingForm.minProcurementCoefficient,
+    maxProcurementCoefficient: priceCoefficientSettingForm.maxProcurementCoefficient,
+    salesCoefficient1: priceCoefficientSettingForm.salesCoefficient1,
+    salesCoefficient2: priceCoefficientSettingForm.salesCoefficient2,
+    customClearanceCoefficient: priceCoefficientSettingForm.customClearanceCoefficient
+  })
+  if (data) {
+    $baseMessage('价格系数修改成功', 'success')
+    closePriceCoefficientSetting()
+  }
 }
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
@@ -586,6 +599,12 @@ const clickCancle = async (event:any,value:any) =>{
     await updateProductCustoms(value)
     fetchData()
   }
+}
+const handleUpdateStatus = async (row: any) => {
+  const { data } = await updateProductCustomsClearanceStatus({
+    id: row.id,
+    status: row.status
+  })
 }
 const handleCustomsChange = async (row: any) => {
   await updateProductCustoms(row)

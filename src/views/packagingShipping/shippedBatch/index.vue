@@ -65,7 +65,16 @@
       <el-table-column label="箱数" prop="totalEncasementCount" min-width="80"></el-table-column>
       <el-table-column label="体积(m3)" prop="volume" min-width="100"></el-table-column>
       <el-table-column label="重量(kg)" prop="weight" min-width="100"></el-table-column>
-      <el-table-column label="备注" prop="remarks" min-width="100" show-overflow-tooltip ></el-table-column>
+      <el-table-column label="备注" prop="remarks" min-width="100" >
+        <template #default="{ row }">
+          <el-tooltip effect="dark" content="" placement="top">
+            <template #content>
+              <div class="custom-tooltip" >{{ row.remarks }}</div>
+            </template>
+            <el-text truncated>{{ row.remarks }}</el-text>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="不计入渠道时效" prop="timelinessStatus" min-width="140">
         <template #default="{ row }">
           <el-checkbox v-model="row.timelinessStatus" :true-value="1" :false-value="0" />

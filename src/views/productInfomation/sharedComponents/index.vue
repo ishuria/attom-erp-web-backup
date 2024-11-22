@@ -20,13 +20,12 @@
       stripe border 
       :data="list" 
       :header-cell-style="{ 'text-align': 'center' }"
-      @cell-click="changeInput"
-
       class="noneHoveTable"
+      @cell-click="cellClick"
     >
       <el-table-column label="图片" width="94">
         <template #default="{ row, $index }">
-          <el-image :src="row.imageUrl" fit="contain" style="width: 100%; height: 100%">
+          <el-image :src="row.imageUrl" fit="fill" style="width: 100%; height: 100%" @click="handleImagePreview(row.imageUrl)" >
             <template #error>
               <el-icon></el-icon>
             </template>
@@ -41,11 +40,19 @@
         </template>
       </el-table-column>
       <el-table-column label="默认供应商" min-width="200" prop="suppliser"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="230">
+      <el-table-column label="云舟采购价格系数" prop="ratio" min-width="80">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.ratio" clearable @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.ratio }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <el-space>
-            <el-button text type="primary" @click="handleSupplier(row)">供应商</el-button>
-            <el-button text type="primary" @click="handleAddOtherSku(row)">添加到SKU</el-button>
+            <el-link :underline="false" type="primary" @click="handleSupplier(row)">供应商</el-link>
+            <el-link :underline="false" type="primary" @click="handleAddOtherSku(row)">添加到SKU</el-link>
           </el-space>
         </template>
       </el-table-column>
@@ -94,10 +101,10 @@
 defineOptions({
   name: 'consumable',
 })
-import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
-
-import { addConsumablesOtherSku, getProductAllReadyCOmponentList, getProductSkuList } from '/@/api/devlocal/productInformation'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { Search } from '@element-plus/icons-vue'
+import { isEqual } from 'lodash'
+import { addConsumablesOtherSku, getProductAllReadyCOmponentList, getProductSkuList, updateProductAlreadyComponent } from '/@/api/devlocal/productInformation'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
@@ -107,16 +114,59 @@ const consumableTypeForm = reactive({
     consumableType: ''
 })
 
-// const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-//   if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 5){        
-//     return {    
-//       textAlign: 'center',
-//     } 
-//   }
-// }
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+  if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 5){        
+    return {    
+      textAlign: 'center',
+    } 
+  }
+}
 
+let copyRow: any
+const cellClick = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
 
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
+}
+// table blur事件
+const clickCancel = async (event: any, value: any) => {
+  // 获取根元素，避免重复调用 getRootElement
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    // 更新 t1 和 t2 的 class
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+
+  // 只有在数据变化时才处理更新
+  if (isEqual(value, copyRow)) {
+    return; // 数据没有变化，不执行更新
+  }
+
+  if (event.type === 'blur') {
+    // 执行失去焦点时的处理逻辑
+    await updateProductAlreadyComponent({
+      id: value.id,
+      ratio: value.ratio
+    })
+  }
+};
 
 interface Option2 {
   key: number
@@ -211,17 +261,10 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-/**
-* 当点击时切换输入框，修改输入
-*/
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
+const handleImagePreview = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url!)
 }
 
 const queryData = () => {
@@ -246,9 +289,7 @@ onBeforeMount(()=>{
 </script>
 
 <style lang="scss" scoped>
-.none {
-  display: none;
-}
+
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   min-height: 75.6px;
@@ -256,10 +297,7 @@ onBeforeMount(()=>{
   align-items: center;
   justify-content: center;
 }
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
+
 .custom-checkbox {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
@@ -279,6 +317,9 @@ onBeforeMount(()=>{
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.none {
+  display: none;
 }
 </style>
 

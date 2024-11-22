@@ -47,7 +47,7 @@
                     <template #default="{ row, $index }">
                       <el-tooltip content=" " effect="dark" placement="top">
                         <template #content>
-                          <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.desc) }}</div>
+                          <div class="custom-tooltip">{{ removeHtmlTags(row.desc) }}</div>
                         </template>
                         <span @click="handleDescClick($index)">{{ removeHtmlTags(row.desc) }}</span>
                       </el-tooltip>
@@ -558,4 +558,9 @@ onMounted(async ()=>{
 // :deep(.el-table .el-table__body tr:first-child td) {
 //   border-top: none; /* 去掉第一行的上边框 */
 // }
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
+}
 </style>
