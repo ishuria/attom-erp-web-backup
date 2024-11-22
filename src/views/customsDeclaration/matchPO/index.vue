@@ -70,9 +70,11 @@
       <el-table-column label="实际运费" prop="" min-width="100"></el-table-column>
       <el-table-column label="已付运费" prop="payStatus" min-width="100">
         <template #default="{ row }">
-          <el-checkbox-group>
+      
             <el-checkbox 
               v-model="row.payStatus"
+              :true-value="1"
+              :false-value="0"
               :class="{ 
                 'checkbox-blue': row.payStatus === 0,
                 'checkbox-yellow': row.payStatus === 1, 
@@ -80,7 +82,7 @@
               }"
               @change="handleUpdatePayStatus(row)"
             />
-          </el-checkbox-group>
+        
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="status" min-width="120">
@@ -381,15 +383,15 @@ const handleFocus = (row: any) => {
 }
 // 修改付款状态
 const handleUpdatePayStatus = async (row: any) => {
-  console.log(row.payStatus);
-  let newStatus: number
-  if (row.payStatus === 0) {
-    newStatus = 2; // 未选中 -> 全付
-  } else if (row.payStatus === 2) {
-    newStatus = 0; // 全付 -> 未选中
-  } else if (row.payStatus === 1) {
-    newStatus = 0; // 部分付 -> 未选中
-  }
+  // console.log(row.payStatus);
+  // let newStatus: number
+  // if (row.payStatus === 0) {
+  //   newStatus = 2; // 未选中 -> 全付
+  // } else if (row.payStatus === 2) {
+  //   newStatus = 0; // 全付 -> 未选中
+  // } else if (row.payStatus === 1) {
+  //   newStatus = 0; // 部分付 -> 未选中
+  // }
   // await updateShipmentPay({
   //   id: row.id,
   //   status: row.payStatus
