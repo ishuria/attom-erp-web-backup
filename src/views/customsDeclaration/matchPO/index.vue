@@ -123,10 +123,10 @@
                   <el-link type="primary" :underline="false" @click="handleArchivePackage(row)">打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">出库归档</el-link>
+                  <el-link type="primary" :underline="false" @click="">退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">退税归档</el-link>
+                  <el-link type="primary" :underline="false" @click="">出库归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="showFirstLegFreight">头程运费</el-link>
@@ -141,10 +141,10 @@
                   <el-link type="primary" :underline="false" @click="handleCancelArchivePackage(row)">撤销打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">撤销出库</el-link>
+                  <el-link type="primary" :underline="false" @click="">撤销退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">撤销退税归档</el-link>
+                  <el-link type="primary" :underline="false" @click="">撤销出库</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="">撤销装箱(删除)</el-link>
@@ -250,7 +250,7 @@
       width="20%"
       v-model="updateForwarderChannelVisible"
     >
-      <el-form ref="forwarderChannelFormRef" :model="forwarderChannelForm" :rules="forwarderChannelFormRules" label-position="top" style="margin-left: 10px; margin-right: 10px">
+      <el-form ref="forwarderChannelFormRef" :model="forwarderChannelForm" :rules="forwarderChannelFormRules" label-position="top" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="货代渠道" prop="forwarderChannel">
           <el-input v-model="forwarderChannelForm.forwarderChannel" clearable />
         </el-form-item>
@@ -267,7 +267,7 @@
       v-model="freightFeeVisible"
       @close="closeFreightFee"
     >
-      <el-form ref="freightFeeFormRef" :model="freightFeeForm" :rules="freightFeeFormRules" style="margin-left: 20px; margin-right: 20px;">
+      <el-form ref="freightFeeFormRef" :model="freightFeeForm" :rules="freightFeeFormRules" style=" margin-right: 20px;margin-left: 20px;">
         <el-form-item label="退税运费" prop="freightFee">
           <el-input v-model.trim="freightFeeForm.freightFee" type="number" :min="0" clearable />
         </el-form-item>
@@ -282,12 +282,12 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import { CSSProperties, VNode } from 'vue'
-import { currencyOption } from '../constantOption'
 import { FormInstance } from 'element-plus'
-import { archivePackageShipment, cancelArchivePackageShipment, getMatchPoList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import { CSSProperties } from 'vue'
+import { currencyOption } from '../constantOption'
+import { archivePackageShipment, cancelArchivePackageShipment, getMatchPoList, updateShipment, updateShipmentFreightFee } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getChannelList } from '/@/api/devlocal/encasement'
+import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const queryForm = reactive<any>({

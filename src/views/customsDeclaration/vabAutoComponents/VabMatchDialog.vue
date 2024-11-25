@@ -74,8 +74,8 @@
     />
     <template #footer>
       <div style="text-align: center;">
-        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="danger" @click="handleUnlockAndClear">清空解锁并撤销退税归档</el-button>
-        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="success" @click="handleConfirmCheckMatch">确认匹配结果并退税归档</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="danger" @click="handleUnlockAndClear">清空解锁</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="success" @click="handleConfirmCheckMatch">确认匹配结果</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -90,7 +90,7 @@
 
     <div style="margin-bottom: 15px">
       <el-button type="primary" style="margin-right: 10px" @click="handleClearAll">清空全部</el-button>
-      <el-text style="font-weight: 600; font-size: var(--el-font-size-base);">
+      <el-text style=" font-size: var(--el-font-size-base);font-weight: 600;">
         SKU：<span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>  
         品名：<span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>  
         剩余未匹配数量：<span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
@@ -147,7 +147,7 @@
       </el-table-column>
     </el-table>
     <div style=" margin-top: 20px;text-align: center">
-      <el-text style="font-weight: 600; font-size: var(--el-font-size-base);">
+      <el-text style=" font-size: var(--el-font-size-base);font-weight: 600;">
         剩余SKU：<span :style="{ color: 'var(--el-color-danger)'}">{{ lastSku }}个</span>
       </el-text>
     </div>
@@ -221,7 +221,7 @@
     class="packingTotal"
     :before-close="closePackingCount"
   >
-    <el-form ref="packingCountFormRef" :model="packingCountForm" label-position="left" label-width="auto" style="margin-left: 20px; margin-right: 0px">
+    <el-form ref="packingCountFormRef" :model="packingCountForm" label-position="left" label-width="auto" style=" margin-right: 0px;margin-left: 20px">
       <el-form-item label="任务数量" prop="packageTaskCount">
         <div style="width: 85%;">
           <el-input v-model="packingCountForm.packageTaskCount" disabled  ></el-input>
@@ -231,7 +231,7 @@
         <div style="width: 85%; margin-right: 10px;">
           <el-input v-model.trim="packingCountForm.goodCount" clearable/>
         </div>
-        <div style="width: 10%; display: flex; align-items: center">
+        <div style=" display: flex; align-items: center;width: 10%">
           <el-icon :size="23" class="add-icon" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><CirclePlus /></el-icon>
         </div>
       </el-form-item>
@@ -275,7 +275,7 @@
     @close="handleCloseAdd"
     width="17%"
   >
-    <el-form ref="addFormRef" :model="addForm" label-width="auto" label-position="left" style="margin-left: 20px; margin-right: 20px">
+    <el-form ref="addFormRef" :model="addForm" label-width="auto" label-position="left" style=" margin-right: 20px;margin-left: 20px">
       <el-form-item label="好" prop="good">
         <el-input v-model.trim="addForm.good" clearable />
       </el-form-item>
