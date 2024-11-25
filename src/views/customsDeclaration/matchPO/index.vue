@@ -2,8 +2,8 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary">报关资料生成</el-button>
-        <el-button type="primary">清关资料生成</el-button>
+        <el-button type="primary" @click="handleGenerateDeclaration">报关资料生成</el-button>
+        <el-button type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -17,6 +17,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
+      ref="tableRef"
       border stripe
       :header-cell-style="{ textAlign: 'center' }"
       class="noneHoveTable"
@@ -36,7 +37,7 @@
           <el-input v-model="row.contractNumber" @change="handleUpdateContractNumber(row)" clearable />
         </template>
       </el-table-column>
-      <el-table-column label="Shipment ID" prop="shipmentId" min-width="160"></el-table-column>
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')"></el-table-column>
       <el-table-column label="Reference ID" prop="referenceId" min-width="130">
         <template #default="{ row }">
           <el-input v-model="row.referenceId" clearable @change="handleUpdateReferenceId(row)" />
@@ -70,22 +71,14 @@
       <el-table-column label="实际运费" prop="" min-width="100"></el-table-column>
       <el-table-column label="已付运费" prop="payStatus" min-width="100">
         <template #default="{ row }">
-      
-            <el-checkbox 
-              v-model="row.payStatus"
-              :true-value="1"
-              :false-value="0"
-              :class="{ 
-                'checkbox-blue': row.payStatus === 0,
-                'checkbox-yellow': row.payStatus === 1, 
-                'checkbox-green': row.payStatus === 2 
-              }"
-              @change="handleUpdatePayStatus(row)"
-            />
-        
+          <el-checkbox 
+            v-model="row.payStatus"
+            :class="handleColorSwitch(row)"
+            @change="handleUpdatePayStatus(row)"
+          />
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" min-width="120">
+      <el-table-column label="状态" prop="status" min-width="160">
         <template #default="{ row }">
           <span 
             :style="{ 
@@ -101,7 +94,10 @@
             {{ row.packArchiveStatus === 0 ? '待打包归档' : '已打包归档' }}
           </span><br />
           <span :style="{ color: row.taxRefundStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
-            {{ row.taxRefundStatus === 0 ? '待出库归档' : '已出库归档' }}
+            {{ row.taxRefundStatus === 0 ? '待归档到退税管理' : '已归档到退税管理' }}
+          </span>
+          <span :style="{ color: row.outboundStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
+            {{ row.outboundStatus === 0 ? '待出库归档' : '已出库归档' }}
           </span>
         </template>
       </el-table-column>
@@ -129,7 +125,7 @@
                   <el-link type="primary" :underline="false" @click="">出库归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="showFirstLegFreight">头程运费</el-link>
+                  <el-link type="primary" :underline="false" @click="showFirstLegFreight(row)">头程运费</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
@@ -147,7 +143,7 @@
                   <el-link type="primary" :underline="false" @click="">撤销出库</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">撤销装箱(删除)</el-link>
+                  <el-link type="primary" :underline="false" @click="handleCancelEncasement(row)">撤销装箱(删除)</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -167,15 +163,15 @@
     />
     <!-- 头程运费 -->
     <vab-dialog
-      title="运费明细 | 货代单号： | 自测重量： | 自测体积： "
+      :title="`运费明细 | 货代单号：${_freightForwardingNumber} | 自测重量：${_weight} | 自测体积：${_volume}`"
       width="65%"
       v-model="firstLegFreightVisible"
-      top="10vh"
+      top="7vh"
       class="dialog"
     >
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary">添加费用</el-button>
+          <el-button type="primary" @click="handleAddCost">添加费用</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
       <el-table
@@ -185,16 +181,18 @@
         show-summary
         :cell-style="firstLegFreightStyle"
         @close="closeFirstLegFreight"
-        :data="fakeData"
+        :data="costList"
+        max-height="70vh"
+        :summary-method="handleSummaryMethod"
       >
-        <el-table-column label="费用名" prop="" min-width="100"></el-table-column>
-        <el-table-column label="数量" prop="" min-width="70"></el-table-column>
-        <el-table-column label="单价" prop="" min-width="70"></el-table-column>
-        <el-table-column label="预估总费用" prop="" min-width="110"></el-table-column>
-        <el-table-column label="暂估汇率" prop="" min-width="100"></el-table-column>
-        <el-table-column label="货币" prop="" min-width="100">
+        <el-table-column label="费用名" prop="costName" :width="flexColumnWidth(costList, '费用名', 'costName')"></el-table-column>
+        <el-table-column label="数量" prop="count" min-width="70"></el-table-column>
+        <el-table-column label="单价" prop="unitPrice" min-width="70"></el-table-column>
+        <el-table-column label="预估总费用" prop="estimateCost" min-width="110"></el-table-column>
+        <el-table-column label="暂估汇率" prop="estimateExchangeRate" min-width="100"></el-table-column>
+        <el-table-column label="货币" prop="currency" min-width="100">
           <template #default="{ row }">
-            <el-select style="min-width: 100%;">
+            <el-select v-model="row.currency" style="min-width: 100%;">
               <el-option 
                 v-for="item in currencyOption"
                 :label="item.label"
@@ -204,19 +202,19 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="实际总费用" prop="" min-width="110"></el-table-column>
-        <el-table-column label="实际汇率" prop="" min-width="100"></el-table-column>
-        <el-table-column label="差额" prop="price" min-width="90">
+        <el-table-column label="实际总费用" prop="actualCost" min-width="110"></el-table-column>
+        <el-table-column label="实际汇率" prop="actualExchangeRate" min-width="100"></el-table-column>
+        <el-table-column label="差额" prop="difference" min-width="90">
           <template #default="{ row }">
-            <span :style="{ color: row.price > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.price }}%</span>
+            <span :style="{ color: row.difference > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="已付" prop="" min-width="90">
+        <el-table-column label="已付" prop="payStatus" min-width="90">
           <template #default="{ row }">
-            <el-checkbox :true-value="1" :false-value="0" />
+            <el-checkbox v-model="row.payStatus" :true-value="1" :false-value="0" />
           </template>
         </el-table-column>
-        <el-table-column label="付款日期" prop="" min-width="115"></el-table-column>
+        <el-table-column label="付款日期" prop="payDate" min-width="115"></el-table-column>
         <el-table-column label="合并报关/清关" prop="" min-width="130"></el-table-column>
         <el-table-column label="SKU运费分摊方式" prop="" min-width="100">
           <template #header>
@@ -282,14 +280,15 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
+import { FormInstance, TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { currencyOption } from '../constantOption'
-import { archivePackageShipment, cancelArchivePackageShipment, getMatchPoList, updateShipment, updateShipmentFreightFee } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, getMatchPoList, getShipmentCostList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+const tableRef = ref<TableInstance>()
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
@@ -308,8 +307,6 @@ const forwarderOption = ref<any>([])
 const firstLegFreightVisible = ref<boolean>(false)
 // 匹配可见
 const matchVisible = ref<boolean>(false)
-// 查看可见
-const checkVisible = ref<boolean>(false)
 const status = ref<number>(0)
 const shipId = ref<number>(0)
 // 退税运费修改可见
@@ -319,44 +316,44 @@ const freightFeeFormRef = ref<FormInstance>()
 const freightFeeFormRules = reactive<any>({
   freightFee: [{ required: true, message: '请输入退税运费', trigger: 'blur' }]
 })
-const handleChecked = (row: any) => {
-  if (row.payStatus === 1 || row.payStatus === 2) {
-    return true
-  }
-  return false
+// 撤销装箱
+const handleCancelEncasement = async (row: any) => {
+  $baseConfirm('确定要撤销装箱（删除）吗', null, async () => {
+    const { data } = await cancelShipmentEncasement({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('撤销装箱（删除）成功！', 'success')
+      fetchData()
+    }
+  })
 }
-
-
-// 状态值：0 - 未付, 1 - 部分付, 2 - 全付
-const statusValue = {
-  UNPAID: 0,    // 未付
-  PARTIAL: 1,   // 部分付
-  FULL: 2       // 全付
-};
-
-// 初始状态为未付
-const checked = ref(false);
-const currentStatus = ref(statusValue.UNPAID);
-const checkboxClass = ref('checkbox-blue');
-
-// 状态切换处理函数
-const handleChange = () => {
-  // 根据当前状态切换
-  if (currentStatus.value === statusValue.UNPAID) {
-    currentStatus.value = statusValue.PARTIAL;
-    checkboxClass.value = "status-partial";
-  } else if (currentStatus.value === statusValue.PARTIAL) {
-    currentStatus.value = statusValue.FULL;
-    checkboxClass.value = "status-full";
-  } else {
-    currentStatus.value = statusValue.UNPAID;
-    checkboxClass.value = "status-unpaid";
+// 报关资料生成
+const handleGenerateDeclaration = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选择任何行！', 'error')
+    return
   }
-
-  // 更新 checked 值：1 或 2 时勾选，0 时未勾选
-  checked.value = currentStatus.value !== statusValue.UNPAID;
-};
-
+  // 判断选中的行的是否都是已归档到退税管理
+  const valid = selectRows.value.every((item: any) => item.taxRefundStatus === 1)
+  if (!valid) {
+    $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成报关资料！', 'error')
+    return
+  }
+}
+// 清关资料生成
+const handleGenerateClearance = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选择任何行！', 'error')
+    return
+  }
+    // 判断选中的行的是否都是已归档到退税管理
+    const valid = selectRows.value.every((item: any) => item.taxRefundStatus === 1)
+  if (!valid) {
+    $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成清关资料！', 'error')
+    return
+  }
+}
 let copyRow: any
 const showFreightFee = (row: any) => {
   freightFeeVisible.value = true
@@ -377,27 +374,20 @@ const confirmFreightFee = async () => {
     copyRow.freightFee = freightFeeForm.freightFee
   }
 }
-const handleFocus = (row: any) => {
-  console.log(row.payStatus);
-  
-}
-// 修改付款状态
-const handleUpdatePayStatus = async (row: any) => {
-  // console.log(row.payStatus);
-  // let newStatus: number
-  // if (row.payStatus === 0) {
-  //   newStatus = 2; // 未选中 -> 全付
-  // } else if (row.payStatus === 2) {
-  //   newStatus = 0; // 全付 -> 未选中
-  // } else if (row.payStatus === 1) {
-  //   newStatus = 0; // 部分付 -> 未选中
-  // }
-  // await updateShipmentPay({
-  //   id: row.id,
-  //   status: row.payStatus
-  // })
-}
 
+// 修改付款状态
+const handleUpdatePayStatus = async (row: any) => {  
+  const item = payStatusList.value.find((item: any) => item.id === row.id)
+  if (row.payStatus === true) {
+    item!.payStatus = 2
+  } else {
+    item!.payStatus = 0
+  }
+  await updateShipmentPay({
+    id: row.id,
+    status: item?.payStatus!
+  })
+}
 
 // 修改货代渠道可见
 const updateForwarderChannelVisible = ref<boolean>(false)
@@ -461,9 +451,36 @@ const closeForwarderChannel = () => {
 const showForwarderChannel = () => {
   updateForwarderChannelVisible.value = true
 }
-// 展示头程运费
-const showFirstLegFreight = () => {
+const costList = ref<any>([])
+const _shipId = ref<number>()
+const _freightForwardingNumber = ref<string>('')
+const _weight = ref<number>()
+const _volume = ref<number>()
+// 新增费用
+const handleAddCost = async () => {
+  const { data } = await addShipmentCost({
+    shipId: _shipId.value!
+  })
+  if (data) {
+    $baseMessage('添加费用成功！', 'success')
+    fetchCostData(_shipId.value!)
+  }
+}
+const fetchCostData = async (id: number) => {
   firstLegFreightVisible.value = true
+  const { data } = await getShipmentCostList({
+    shipId: id
+  })
+  costList.value = data
+}
+// 展示头程运费
+const showFirstLegFreight = async (row: any) => {
+  costList.value = []
+  _shipId.value = row.id
+  _freightForwardingNumber.value = row.freightForwardingNumber
+  _weight.value = row.weight
+  _volume.value = row.volume
+  fetchCostData(row.id)
 }
 // 关闭头程运费
 const closeFirstLegFreight = () => {
@@ -502,14 +519,43 @@ const handleCloseMatch = (value: boolean) => {
   fetchData()
 }
 
-// 关闭查看
-const handleCloseCheck = (value: boolean) => {
-  checkVisible.value = value
-}
+
 // 头程运费：合计的方法
-const handleSummaryMethod = (data: { columns: any[], data: any[] }) => {
-  
-}
+const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] }): any[] => {
+  const sums: any[] = [];
+
+  columns.forEach((column, index) => {
+    // 第一列显示'合计'
+    if (index === 0) {
+      sums[index] = '合计';
+      return;
+    }
+
+    // 获取该列的所有值
+    if (column.property === 'estimateCost' || column.property === 'estimateExchangeRate') {
+      const values = data.map((item) => {
+        // 计算每一行的合计值：预估总费用 * 暂估汇率
+        const estimateCost = Number(item['estimateCost']);
+        const estimateExchangeRate = Number(item['estimateExchangeRate']);
+        return estimateCost * estimateExchangeRate;
+      });
+
+      // 计算所有值的合计
+      sums[index] = `${values.reduce((prev, curr) => {
+        const value = Number(curr);
+        if (!Number.isNaN(value)) {
+          return prev + curr; // 累加有效的数值
+        } else {
+          return prev;
+        }
+      }, 0)}`;
+    } else {
+      sums[index] = ''; // 如果不是 'estimateCost' 或 'estimateExchangeRate' 列，设置为空
+    }
+  });
+
+  return sums;
+};
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
@@ -558,7 +604,26 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 3 || data.columnIndex === 6) {
+  if (data.columnIndex === 0) {
+    return {
+      textAlign: 'left',
+      cursor: 'not-allowed'
+    }
+  }
+  if (data.columnIndex === 3) {
+    return {
+      fontWeight: '600',
+      textAlign: 'center',
+      cursor: 'not-allowed'
+    }
+  }
+  if (data.columnIndex === 8 || data.columnIndex === 10 || data.columnIndex === 11) {
+    return {
+      textAlign: 'center',
+      cursor: 'not-allowed'
+    }
+  }
+  if(data.columnIndex === 6) {
     return {
       fontWeight: '600',
       textAlign: 'center'
@@ -568,11 +633,31 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
     textAlign: 'center'
   }
 }
+const payStatusList = ref<{ id: number, payStatus: number }[]>([])
+const handleColorSwitch = (row: any) => {
+  const item = payStatusList.value.find((item: any) => item.id === row.id)
+  if (item?.payStatus === 0) {
+    return 'checkbox-blue'
+  } else if (item?.payStatus === 1) {
+    return 'checkbox-yellow'
+  } else {
+    return 'checkbox-green'
+  }
+}
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getMatchPoList(queryForm)
   total.value = data.total
   list.value = data.list
+  list.value.forEach((item: any) => {
+    payStatusList.value.push(
+      {
+        id: item.id,
+        payStatus: item.payStatus
+      }
+    )
+    item.payStatus = !!item.payStatus   
+  })
   listLoading.value = false
 }
 // 获取货代渠道
@@ -583,6 +668,9 @@ const fetchChannelOption = async () => {
 onBeforeMount(() => {
   fetchData()
   fetchChannelOption()
+})
+onActivated(() => {
+  tableRef.value?.doLayout()
 })
 </script>
 

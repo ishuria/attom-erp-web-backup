@@ -153,9 +153,9 @@
     </div>
     <template #footer>
       <div style="text-align: center;">
-        <el-button type="warning">上一个</el-button>
+        <el-button v-if="previousVisible" type="warning" @click="fetchPreviousMatchData">上一个</el-button>
         <el-button type="success" @click="handleCloseMatch2">关闭</el-button>
-        <el-button type="warning">下一个</el-button>
+        <el-button v-if="nextVisible" type="warning" @click="fetchNextMatchData" >下一个</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -196,7 +196,7 @@
       <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
       <el-table-column label="未报已发" prop="yfwbCount" min-width="100"></el-table-column>
       <el-table-column label="已报未发" prop="ybwfCount" min-width="100"></el-table-column>
-      <el-table-column label="agent" prop="purchase" min-width="90"></el-table-column>
+      <el-table-column label="采购方" prop="purchase" min-width="90"></el-table-column>
       <el-table-column label="备注" prop="" min-width="100"></el-table-column>
     </el-table>
     <vab-pagination 
@@ -505,27 +505,89 @@ const fetchMatchData = async () => {
       customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
     }
   })
-  console.log(skuActualCountMap);
-  
 }
-
+// 上一个显示
+const previousVisible = ref<boolean>(false)
+// 下一个显示
+const nextVisible = ref<boolean>(false)
 // 剩余未匹配数的初始值
 const _originalCount = ref<number>(0)
 // 剩余SKU数
 const lastSku = ref<number>(0)
+// 点击上一个
+const fetchPreviousMatchData = async () => {
+  const index = idList.value.findIndex((item: any) => item === _id.value)
+  _id.value = idList.value[index - 1]
+  const item = list.value.find((item: any) => item.id === _id.value)
+  _sku.value = item!.sku
+  _originalCount.value = Number(item!.encasementCount)
+  Object.keys(skuActualCountMap).forEach(key => delete skuActualCountMap[key]);
+  Object.keys(customsDeclarationCountMap).forEach(key => delete customsDeclarationCountMap[key]);
+  const { data } = await getMatchPackageList({
+    sku: _sku.value,
+    status: props.status,
+    matchId: _id.value
+  })
+  matchList.value = data
+  matchList.value.forEach((item: any) => {
+    if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
+      skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
+    }
+    if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
+      customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
+    }
+  })
+  handleShowPreviousOrNext(_id.value)
+}
+// 点击下一个
+const fetchNextMatchData = async () => {
+  const index = idList.value.findIndex((item: any) => item === _id.value)
+  _id.value = idList.value[index + 1]
+  const item = list.value.find((item: any) => item.id === _id.value)
+  _sku.value = item!.sku
+  _originalCount.value = Number(item!.encasementCount)
+  Object.keys(skuActualCountMap).forEach(key => delete skuActualCountMap[key]);
+  Object.keys(customsDeclarationCountMap).forEach(key => delete customsDeclarationCountMap[key]);
+  const { data } = await getMatchPackageList({
+    sku: _sku.value,
+    status: props.status,
+    matchId: _id.value
+  })
+  matchList.value = data
+  matchList.value.forEach((item: any) => {
+    if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
+      skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
+    }
+    if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
+      customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
+    }
+  })    
+  handleShowPreviousOrNext(_id.value)
+}
+const handleShowPreviousOrNext = (id: number) => {
+  const length = idList.value.length
+  const index = idList.value.findIndex((item: any) => item === id)
+  lastSku.value = length - index - 1
+  // 处理上一个还是下一个显示
+  if (index === 0) {
+    previousVisible.value = false
+    nextVisible.value = true
+  } else if (index === length - 1) {
+    previousVisible.value = true
+    nextVisible.value = false
+  } else {
+    previousVisible.value = true
+    nextVisible.value = true
+  }
+}
 const handleShowMatch2 = (row: any) => {
   match2Visible.value = true
   _sku.value = row.sku
   _desc.value = row.desc
   _id.value = row.id
   _originalCount.value = Number(row.encasementCount)
-  // list.value.forEach((item: any) => {
-  //   if (item.id === row.id) {
-  //     _originalCount.value -= Number(item.skuActualCount)
-  //   }
-  // })
-  const index = idList.value.findIndex((item: any) => item === row.id)
-  lastSku.value = idList.value.length - index - 1
+
+  handleShowPreviousOrNext(row.id)
   fetchMatchData()
 }
 // 已发未报的展示
@@ -818,6 +880,9 @@ const fetchData = async () => {
     idSet.add(item.id)
   })
   idList.value = Array.from(idSet)
+  list.value.sort((a, b) => {
+    return a.id - b.id;
+  })  
   listLoading.value = false
 }
 const queryData = () => {
@@ -834,49 +899,50 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 
-// 匹配1col合并方法
+/**
+ * @description 支持非连续的相同值合并以及处理两种合并逻辑
+ */
 const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
-  let rowspan = 1; // 默认不跨行
-
+  let rowspan = 1 // 默认不跨行
+ 
   if (columnIndex === 0 || columnIndex === 1 || columnIndex === 12) {
-    const id = row.id;
+    const id = row.id
 
-    // 遍历后面的行，检查相同的 PO ID
     for (let i = rowIndex + 1; i < list.value.length; i++) {
       if (list.value[i].id === id) {
-        rowspan++;
+        rowspan++
       } else {
-        break;
+        break
       }
     }
+    // rowspan = list.value.filter(item => item.id === id).length
 
     // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
     return rowIndex === 0 || list.value[rowIndex - 1].id !== id
       ? { rowspan, colspan: 1 }
-      : { rowspan: 0, colspan: 0 };
+      : { rowspan: 0, colspan: 0 }
   }
 
-  // 合并 SKU 行
   if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
-    const pId = row.pId;
+    const pId = row.pId
+    const id = row.id
 
-    // 遍历后面的行，检查相同的 SKU ID
     for (let i = rowIndex + 1; i < list.value.length; i++) {
-      if (list.value[i].pId === pId && list.value[i].id === row.id) {
-        rowspan++;
+      if (list.value[i].pId === pId && list.value[i].id === id) {
+        rowspan++
       } else {
-        break;
+        break
       }
     }
 
     // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
     return rowIndex === 0 || list.value[rowIndex - 1].pId !== pId || list.value[rowIndex - 1].id !== row.id
       ? { rowspan, colspan: 1 }
-      : { rowspan: 0, colspan: 0 };
+      : { rowspan: 0, colspan: 0 }
   }
 
   // 对于其他列，默认返回不合并
-  return { rowspan: 1, colspan: 1 };
+  return { rowspan: 1, colspan: 1 }
 }
 
 //匹配2合并

@@ -242,7 +242,7 @@ const saveAndPrint = async () => {
     const { data } = await submitEncasementSku({
       encaseCount: confirmForm.encaseCount,
       encasementNo: props.encasementNo,
-      site: props.site,
+      planSite: props.site,
       encasementDetailList: packingStore.packingData
     })
     if (data) {

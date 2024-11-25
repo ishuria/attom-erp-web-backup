@@ -669,7 +669,7 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name);  
   }
-  fetchData()
+  queryData()
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {

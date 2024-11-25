@@ -387,3 +387,7 @@ export interface IUpdateShipmentPay {
   id: number
   status: number
 }
+
+export interface IShipId {
+  shipId: number
+}

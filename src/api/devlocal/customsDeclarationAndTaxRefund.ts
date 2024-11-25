@@ -21,7 +21,8 @@ import {
   IUpdateMatchSkuCount,
   IUpdateShipment,
   IUpdateShipmentFreightFee,
-  IUpdateShipmentPay
+  IUpdateShipmentPay,
+  IShipId
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 
 /**
@@ -260,6 +261,36 @@ export const updateShipmentFreightFee = (params: IUpdateShipmentFreightFee): Pro
 export const updateShipmentPay = (params: IUpdateShipmentPay): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/update/pay`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 头程运费-获取数据列表
+ */
+export const getShipmentCostList = (params: IShipId) => {
+  return request({
+    url: `${BASE_API}/shipment/cost/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关资料-撤销装箱
+ */
+export const cancelShipmentEncasement = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/cancel/encasement`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 头程运费-添加费用
+ */
+export const addShipmentCost = (params: IShipId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/cost/add`,
     method: 'post',
     params
   })

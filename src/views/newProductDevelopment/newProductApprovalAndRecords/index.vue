@@ -182,16 +182,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown,Search } from '@element-plus/icons-vue'
+import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableInstance } from 'element-plus'
-import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
-import { IReviewQueryReq, IReviewQueryResp, IReviewQueryItem } from '/@/type/review/review'
-import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
-import { formatDate } from '/@/utils/dateUtils'
 import { getByIdQueryEvaluation } from '~/src/api/devlocal/progress'
-import { IGetByIdQueryEvaluation } from '~/src/type/progress/progressType'
 import { IKeyWordTrend } from '~/src/type/evaluation/evaluationType'
+import { IGetByIdQueryEvaluation } from '~/src/type/progress/progressType'
+import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
 import { indexColumns } from '../newProductProgress/indexColumns'
+import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
+import { IReviewQueryItem, IReviewQueryReq } from '/@/type/review/review'
+import { formatDate } from '/@/utils/dateUtils'
 defineOptions({
   name: 'DefaultTable',
 })
@@ -427,7 +427,6 @@ onActivated(() => {
 onBeforeMount(() => {
   fetchData()
 })
-
 </script>
 
 <style lang="scss" scoped>

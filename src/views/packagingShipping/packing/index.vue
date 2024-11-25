@@ -48,7 +48,11 @@
       :span-method="objectSpanMethod"
     >
       <el-table-column type="selection" fixed="left"></el-table-column>
-      <el-table-column label="发货计划" prop="shipmentDate" min-width="100"></el-table-column>
+      <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="100">
+        <template #default="{ row }">
+          {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
       <el-table-column label="装箱日期" prop="createTime" min-width="115">
         <template #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
@@ -710,6 +714,7 @@ const confirmSplit = async () => {
       if (data) {
         $baseMessage('拆分成功', 'success')
         closeUploadSplit()
+        fetchData()
       }
     }
   })
@@ -724,7 +729,7 @@ const confirmShippingPlan = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   const { data } = await updateEncasementShipmentDate({
     encasementIds: encasementIds,
-    shipmentDate: shippingPlanForm.date
+    shipmentPlanDate: shippingPlanForm.date
   })
   if (data) {
     $baseMessage('修改发货计划成功', 'success')
@@ -747,6 +752,7 @@ const showModify = (row: IEncasementList) => {
 // 关闭修改
 const closeModify = (value: boolean) => {
   modifyVisible.value = value
+  fetchData()
 }
 
 // 展示箱号

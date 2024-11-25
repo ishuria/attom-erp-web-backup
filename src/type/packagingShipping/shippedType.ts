@@ -166,7 +166,7 @@ export interface ISubmitEncasementSkuReq {
   /**
    * 站点
    */
-  site?: number;
+  planSite?: number;
 }
 
 export interface EncasementDetailList {
@@ -295,7 +295,7 @@ export interface IEncasementDetailId {
 
 export interface IUpdateEncasementShipmentDateReq {
   encasementIds: string
-  shipmentDate: string
+  shipmentPlanDate: string
 }
 
 export interface ISplitEncasementReq {

@@ -5,11 +5,11 @@
     width="35%"
     v-model="dflag"
     top="7vh"
-    @close="handleCloseDialog"
+    :before-close="handleCloseDialog"
   >
     <el-form ref="modifyFormRef" :model="modifyForm" label-position="right" label-width="auto" style="margin-left: 3px; margin-right: 3px">
-      <el-form-item label="数量(箱)" prop="" >
-        <el-input clearable />
+      <el-form-item label="数量(箱)" prop="boxNumber" >
+        <el-input v-model="modifyForm.boxNumber" clearable />
       </el-form-item>
       <el-form-item label="毛重(kg)" prop="grossWeight" >
         <el-input v-model="modifyForm.grossWeight" clearable />

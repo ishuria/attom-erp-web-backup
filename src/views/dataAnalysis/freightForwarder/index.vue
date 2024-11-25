@@ -87,8 +87,8 @@
          style="max-height: 70vh; overflow: auto;"
       >
         <el-table-column label="我们的费用名" prop="costName" min-width="180">
-          <template #default="{ row, $index}">
-            <div v-if="$index > 12" class="none">
+          <template #default="{ row }">
+            <div v-if="row.status === 1" class="none">
               <el-input v-model="row.costName" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)"/>
             </div>
             <span>{{ row.costName }}</span>
@@ -128,8 +128,8 @@
         </el-table-column>
         <el-table-column label="操作" width="80">
           <template #default="{ row, $index }">
-            <el-link v-if="$index > 12" type="danger" :underline="false" @click="delFeeSetting(row, $index)">删除</el-link>
-            <span v-if="$index <= 12">{{ '-' }}</span>
+            <el-link v-if="row.status === 1" type="danger" :underline="false" @click="delFeeSetting(row, $index)">删除</el-link>
+            <span v-if="row.status === 0">{{ '-' }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -781,7 +781,7 @@ const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCe
  * @return CSSProperties 返回特定样式
  */
 const feeNameSettingCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0 && data.rowIndex <= 12) {
+  if (data.columnIndex === 0 && data.row.status === 0) {
     return {
       color: '#bbb',
       cursor: 'not-allowed',
