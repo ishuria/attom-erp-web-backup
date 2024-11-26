@@ -87,7 +87,7 @@
           <el-table-column label="SKU" prop="sku" min-width="160"></el-table-column>    
           <el-table-column label="剩余可售" prop="sellableDay" min-width="100"></el-table-column>
           <el-table-column  label="供应商" min-width="250" prop="suppliserName"></el-table-column>
-          <el-table-column label="站点" prop="site" min-width="120">
+          <el-table-column label="站点" prop="site" min-width="130">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
             </template>

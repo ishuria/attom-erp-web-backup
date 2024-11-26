@@ -6,7 +6,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" clearable placeholder="请选择站点" @change="queryData">
+                <el-select v-model="queryForm.site" placeholder="请选择站点" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
                     :label="item.label"
@@ -37,6 +37,7 @@
           :cell-class-name="cellClassName"
           class="noneHoveTable"
           :span-method="objectSpanMethod"
+          :row-class-name="stripedRowClass"
         >
           <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
             <template #default="{ row }">
@@ -235,8 +236,22 @@ const handleUpdateLostGoodsStatus = async (row: IGetShipmentArrivedList) => {
       status: row.lostGoodsStatus!
     })
   } catch (error) {
-    
+    row.lostGoodsStatus = row.lostGoodsStatus === 1 ? 0 : 1
   }
+}
+let previous: any = null 
+let currentGroupIndex = 0 // 当前组索引
+
+const stripedRowClass = (_row: any) => {
+  const { row } = _row
+  const currentId = row.id
+  // 检查当前行是否与上一行不同
+  if (currentId !== previous) {
+    previous = currentId
+    currentGroupIndex++
+  }
+  // 根据当前组索引设置条纹样式
+  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : ''
 }
 const fetchData = async () => {
   listLoading.value = true
@@ -261,28 +276,6 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-
-const statusFilter = (status: string | number) => {
-  const statusMap: any = {
-    published: 'success',
-    draft: 'primary',
-    deleted: 'danger',
-  }
-  return statusMap[status]
-}
-
-const setSelectRows = (value: string) => {
-  selectRows.value = value
-}
-
-const handleAdd = () => {
-  editRef.value.showEdit()
-}
-
-const handleEdit = (row = {}) => {
-  editRef.value.showEdit(row)
-}
-
 
 const cellClassName = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 4) {
@@ -448,6 +441,14 @@ onBeforeMount(() => {
     }
   }
 }
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
 
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
 </style>
 

@@ -53,7 +53,7 @@
       <el-table-column label="合并清关" prop="" min-width="100"></el-table-column>
       <el-table-column label="货代渠道" prop="channelId" min-width="180">
         <template #default="{ row }">
-          <el-select v-model="row.channelId" clearable >
+          <el-select v-model="row.channelId" >
             <el-option 
               v-for="item in forwarderOption"
               :label="item.label"
@@ -184,12 +184,34 @@
         :data="costList"
         max-height="70vh"
         :summary-method="handleSummaryMethod"
+        @cell-click="cellClick"
       >
         <el-table-column label="费用名" prop="costName" :width="flexColumnWidth(costList, '费用名', 'costName')"></el-table-column>
-        <el-table-column label="数量" prop="count" min-width="70"></el-table-column>
-        <el-table-column label="单价" prop="unitPrice" min-width="70"></el-table-column>
+        <el-table-column label="数量" prop="count" min-width="70">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.count"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.count }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="单价" prop="unitPrice" min-width="70">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.unitPrice"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.unitPrice }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="预估总费用" prop="estimateCost" min-width="110"></el-table-column>
-        <el-table-column label="暂估汇率" prop="estimateExchangeRate" min-width="100"></el-table-column>
+        <el-table-column label="暂估汇率" prop="estimateExchangeRate" min-width="100">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.estimateExchangeRate"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.estimateExchangeRate }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="货币" prop="currency" min-width="100">
           <template #default="{ row }">
             <el-select v-model="row.currency" style="min-width: 100%;">
@@ -202,8 +224,22 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="实际总费用" prop="actualCost" min-width="110"></el-table-column>
-        <el-table-column label="实际汇率" prop="actualExchangeRate" min-width="100"></el-table-column>
+        <el-table-column label="实际总费用" prop="actualCost" min-width="110">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.actualCost"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.actualCost }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="实际汇率" prop="actualExchangeRate" min-width="100">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.actualExchangeRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.actualExchangeRate }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="差额" prop="difference" min-width="90">
           <template #default="{ row }">
             <span :style="{ color: row.difference > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
@@ -228,8 +264,8 @@
         </el-table-column>
       </el-table>
       <template #footer>
-        <el-button @click="closeFirstLegFreight">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button @click="closeFirstLegFreight" type="danger">取消</el-button>
+        <el-button type="success">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 匹配 -->
@@ -283,10 +319,12 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { FormInstance, TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { currencyOption } from '../constantOption'
-import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, getMatchPoList, getShipmentCostList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, generateCustomsDeclaration, getMatchPoList, getShipmentCostList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { isEqual } from 'lodash'
 
 const tableRef = ref<TableInstance>()
 const queryForm = reactive<any>({
@@ -329,7 +367,7 @@ const handleCancelEncasement = async (row: any) => {
   })
 }
 // 报关资料生成
-const handleGenerateDeclaration = () => {
+const handleGenerateDeclaration = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选择任何行！', 'error')
     return
@@ -339,6 +377,13 @@ const handleGenerateDeclaration = () => {
   if (!valid) {
     $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成报关资料！', 'error')
     return
+  }
+  const ids = selectRows.value.map((item: any) => item.id).join(',')
+  const { data } = await generateCustomsDeclaration({
+    ids: ids
+  })
+  if (data) {
+    $baseMessage('生成报关资料成功！', 'success')
   }
 }
 // 清关资料生成
@@ -467,11 +512,15 @@ const handleAddCost = async () => {
   }
 }
 const fetchCostData = async (id: number) => {
-  firstLegFreightVisible.value = true
-  const { data } = await getShipmentCostList({
-    shipId: id
-  })
-  costList.value = data
+  try {
+    const { data } = await getShipmentCostList({
+      shipId: id
+    })
+    costList.value = data
+    firstLegFreightVisible.value = true
+  } catch (error) {
+    firstLegFreightVisible.value = false
+  }
 }
 // 展示头程运费
 const showFirstLegFreight = async (row: any) => {
@@ -519,43 +568,80 @@ const handleCloseMatch = (value: boolean) => {
   fetchData()
 }
 
+// 头程运费点击编辑
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  const firstChild = cell?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[1];
 
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return;
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row));
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    focusAndSelectInput(cell);
+  }
+}
+const clickCancel = (event: Event, value: any) => {
+  const rootElement = getRootElement(event.target, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+}
 // 头程运费：合计的方法
 const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] }): any[] => {
-  const sums: any[] = [];
+  const sums: any[] = []
 
   columns.forEach((column, index) => {
     // 第一列显示'合计'
     if (index === 0) {
-      sums[index] = '合计';
-      return;
-    }
-
-    // 获取该列的所有值
-    if (column.property === 'estimateCost' || column.property === 'estimateExchangeRate') {
+      sums[index] = h('div', { style: { fontWeight: '600' } }, [
+        '总计',
+      ])
+      return
+    } else if (index === 5) {
+      sums[index] = h('div', { style: { fontWeight: '600' } }, [
+        'RMB',
+      ])
+      return
+    } else if (index === 3) {
       const values = data.map((item) => {
         // 计算每一行的合计值：预估总费用 * 暂估汇率
-        const estimateCost = Number(item['estimateCost']);
-        const estimateExchangeRate = Number(item['estimateExchangeRate']);
-        return estimateCost * estimateExchangeRate;
-      });
+        const estimateCost = Number(item['estimateCost'])
+        const estimateExchangeRate = Number(item['estimateExchangeRate'])
+        return estimateCost * estimateExchangeRate
+      })
 
       // 计算所有值的合计
-      sums[index] = `${values.reduce((prev, curr) => {
-        const value = Number(curr);
-        if (!Number.isNaN(value)) {
-          return prev + curr; // 累加有效的数值
-        } else {
-          return prev;
-        }
-      }, 0)}`;
+      sums[index] = h('div', { style: { fontWeight: '600' } }, [
+        `${values.reduce((prev, curr) => {
+          const value = Number(curr);
+          if (!Number.isNaN(value)) {
+            return prev + curr // 累加有效的数值
+          } else {
+            return prev
+          }
+        }, 0)}`,
+      ])
     } else {
-      sums[index] = ''; // 如果不是 'estimateCost' 或 'estimateExchangeRate' 列，设置为空
+      sums[index] = '' // 如果不是 'estimateCost' 或 'estimateExchangeRate' 列，设置为空
     }
-  });
+  })
 
-  return sums;
-};
+  return sums
+}
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
@@ -570,22 +656,6 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 
-const fakeData = [
-  {
-    shipmentId: '123',
-    po: 'PO123',
-    status: '1',
-    price: -2,
-    payStatus: 1
-  },
-  {
-    shipmentId: '123',
-    po: 'PO123',
-    status: '1',
-    price: -2,
-    payStatus: 2
-  },
-]
 const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
 
   if (data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 17) {
@@ -609,21 +679,18 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
       textAlign: 'left',
       cursor: 'not-allowed'
     }
-  }
-  if (data.columnIndex === 3) {
+  } else if (data.columnIndex === 3) {
     return {
       fontWeight: '600',
       textAlign: 'center',
       cursor: 'not-allowed'
     }
-  }
-  if (data.columnIndex === 8 || data.columnIndex === 10 || data.columnIndex === 11) {
+  } else if (data.columnIndex === 8 || data.columnIndex === 10 || data.columnIndex === 11) {
     return {
       textAlign: 'center',
       cursor: 'not-allowed'
     }
-  }
-  if(data.columnIndex === 6) {
+  } else if (data.columnIndex === 6) {
     return {
       fontWeight: '600',
       textAlign: 'center'
@@ -740,5 +807,8 @@ onActivated(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.none {
+  display: none;
 }
 </style>

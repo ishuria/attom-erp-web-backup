@@ -218,7 +218,7 @@
               </template>
           </el-table-column>
           <el-table-column label="零件ID" prop="existingPartsListId" width="80" fixed="left"></el-table-column>   
-          <el-table-column label="零件名" prop="componentName" width="200" fixed="left">
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(skuComponentList, '零件名', 'componentName')" fixed="left">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.componentName" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -431,7 +431,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="起订量" prop="minQuantity" align="center" min-width="73">
+          <el-table-column label="起订量" prop="minQuantity" align="center" min-width="80">
             <template #default="{ row }">
               <div class="none">
                 <el-input type="number" v-model="row.minQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -439,7 +439,7 @@
               <span>{{ row.minQuantity }}</span>
             </template>
           </el-table-column> 
-          <el-table-column label="整箱数" prop="numCartons" align="center" min-width="73">
+          <el-table-column label="整箱数" prop="numCartons" align="center" min-width="80">
             <template #default="{ row }">
               <div class="none">
                 <el-input type="number" v-model="row.numCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -721,7 +721,7 @@
               </template>
           </el-table-column>
           <el-table-column label="零件ID" prop="existingPartsListId" width="80" fixed="left"></el-table-column>   
-          <el-table-column label="零件名" prop="componentName" width="200" fixed="left">
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(skuComponentList, '零件名', 'componentName')" fixed="left">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.componentName" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
@@ -934,7 +934,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="起订量" prop="minQuantity" align="center" min-width="73">
+          <el-table-column label="起订量" prop="minQuantity" align="center" min-width="80">
             <template #default="{ row }">
               <div class="none">
                 <el-input type="number" v-model="row.minQuantity" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
@@ -942,7 +942,7 @@
               <span>{{ row.minQuantity }}</span>
             </template>
           </el-table-column> 
-          <el-table-column label="整箱数" prop="numCartons" align="center" min-width="73">
+          <el-table-column label="整箱数" prop="numCartons" align="center" min-width="80">
             <template #default="{ row }">
               <div class="none">
                 <el-input type="number" v-model="row.numCartons" @keyup.enter="clickCreateOtherCancel($event, row)" @blur="clickCreateOtherCancel($event, row)" />
@@ -1186,7 +1186,7 @@
               </template>
           </el-table-column>
           <el-table-column label="零件ID" prop="existingPartsListId" width="80" fixed="left" align="center"></el-table-column>   
-          <el-table-column label="零件名" prop="componentName" width="200" fixed="left"></el-table-column>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(skuComponentList, '零件名', 'componentName')" fixed="left"></el-table-column>
           <el-table-column label="订货总数" prop="purchaseCount" align="center" :width="flexColumnWidth(skuComponentList, '订货', 'purchaseCount')">
             <template #header>
               订货<br>总数
@@ -1315,8 +1315,8 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="起订量" prop="minQuantity" align="center" min-width="73"></el-table-column> 
-          <el-table-column label="整箱数" prop="numCartons" align="center" min-width="73"></el-table-column> 
+          <el-table-column label="起订量" prop="minQuantity" align="center" min-width="80"></el-table-column> 
+          <el-table-column label="整箱数" prop="numCartons" align="center" min-width="80"></el-table-column> 
           <el-table-column  label="收货仓库" prop="repositoryId" min-width="160">
             <template #default="{ row }">
               <el-select v-model="row.repositoryId" placeholder="输入和搜索收货仓库" style="min-width: 100%;" filterable disabled>

@@ -15,14 +15,14 @@ import {
   IId,
   IIds,
   IInsertAllMatchComponent,
+  IShipId,
   ISubmitMatchSentList,
   IUpdateMatchComponentActualCount,
   IUpdateMatchQuality,
   IUpdateMatchSkuCount,
   IUpdateShipment,
   IUpdateShipmentFreightFee,
-  IUpdateShipmentPay,
-  IShipId
+  IUpdateShipmentPay
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 
 /**
@@ -291,6 +291,16 @@ export const cancelShipmentEncasement = (params: IId): Promise<IBooleanRes> => {
 export const addShipmentCost = (params: IShipId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/cost/add`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关资料-生成报关资料
+ */
+export const generateCustomsDeclaration = (params: IIds) => {
+  return request({
+    url: `${BASE_API}/shipment/generate/customs/declaration`,
     method: 'post',
     params
   })

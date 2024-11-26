@@ -159,6 +159,7 @@
       <el-text >
         {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
       </el-text>
+      <br />
       <el-button type="primary" style="margin-top: 20px" @click="handleEncasementWalmart">生成模板文件</el-button>
     </vab-dialog>
     <!-- 发货（亚马逊）-->

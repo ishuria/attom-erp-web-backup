@@ -21,13 +21,17 @@
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection"></el-table-column>
-      <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="100"></el-table-column>
+      <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="120">
+        <template #default="{ row }">
+          {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
       <el-table-column label="装箱日期" prop="createTime" min-width="115">
         <template #default="{ row }">
           {{ formatDate(new Date(row.createTime)) }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱人员" prop="encasementUser" min-width="100"></el-table-column>
+      <el-table-column label="装箱人员" prop="encasementUser" :width="flexColumnWidth(list, '装箱人员', 'encasementUser')"></el-table-column>
       <el-table-column label="箱数" prop="numberOfBoxes" min-width="90"></el-table-column>
       <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')"></el-table-column>
       <el-table-column label="毛重(kg)" prop="grossWeight" min-width="100"></el-table-column>
@@ -100,6 +104,7 @@ import { getShippedEncasementList } from '/@/api/devlocal/encasement'
 import { downloadFile } from '/@/api/devlocal/download'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { split } from 'lodash'
 
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({

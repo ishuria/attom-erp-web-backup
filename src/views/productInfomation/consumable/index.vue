@@ -64,7 +64,7 @@
               <span >{{ row.existingPartsListId }}</span>
           </template>
       </el-table-column>   
-      <el-table-column label="耗材名" prop="componentName" :width="calculateBrColumnWidth(list, (row: any) => row.componentName, 50)">
+      <el-table-column label="耗材名" prop="componentName" :width="flexColumnWidth(list, '耗材名', 'componentName')">
         <template #default="{ row }">
           <div v-html="row.componentName"></div>
         </template>
@@ -276,11 +276,11 @@
     >
       <el-divider style="margin-top: 0; margin-bottom: 20px"/>
       <div id="table-height-container">
-        <el-row :gutter="20" style="margin-bottom: 20px">
-          <el-col :span="20">
+        <el-row :gutter="20" style="margin-bottom: 20px; display: flex;">
+          <el-col style="flex: 6">
             <el-input v-model="consumableTypeForm.consumableType" @keyup.enter.native="handleAddConsumableType" clearable placeholder="请输入新增耗材种类" />      
           </el-col>
-          <el-col :span="4">
+          <el-col style="flex: 0.5">
             <el-button type="primary" @click="handleAddConsumableType">新增</el-button>
           </el-col>          
         </el-row>
@@ -309,6 +309,7 @@
           @size-change="handleConsumableTypeCurrentChange"
         /> -->
       </div>
+      <template #footer></template>
     </el-dialog>
     <el-dialog 
       v-model="addConsumableVisible" 
@@ -405,12 +406,12 @@ defineOptions({
 })
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
+import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
-import { calculateBrColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { addConsumablesOtherSku, addConsumablesType, createConsumables, delComponentImage, delConsumablesType, getProductAllSupplier, getProductComponentPurchase, getProductConsumables, getProductConsumablesType, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateConsumablesSupplier, uploadComponentImage } from '/@/api/devlocal/productInformation'
-import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import { isEqual } from 'lodash'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
@@ -939,7 +940,6 @@ const fetchData = async () => {
   total.value = data.total
   list.value.forEach((item: any) => {
     item.unitPrice = formattedPrice(item.unitPrice)
-    item.componentName = item.componentName.replace(/，/g, '<br />')
     if(!item.componentImage) {
       item.hide = false
       item.imageList = []
