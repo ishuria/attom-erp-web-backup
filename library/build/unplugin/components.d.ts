@@ -220,6 +220,7 @@ declare module 'vue' {
     VabCreateComponent: typeof import('./../../../src/views/purchase/vabAutoComponents/vabCreateComponent.vue')['default']
     VabCreateConsumable: typeof import('./../../../src/views/purchase/vabAutoComponents/vabCreateConsumable.vue')['default']
     VabDark: typeof import('./../../components/VabDark/index.vue')['default']
+    VabDetailDialog: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabDetailDialog.vue')['default']
     VabDialog: typeof import('./../../components/VabDialog/index.vue')['default']
     VabDivider: typeof import('./../../components/VabDivider/index.vue')['default']
     VabDot: typeof import('./../../components/VabDot/index.vue')['default']
