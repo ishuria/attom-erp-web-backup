@@ -32,7 +32,7 @@
     "@logicflow/core": "^2.0.8",
     "@logicflow/extension": "^2.0.12",
     "@lucky-canvas/vue": "^0.1.11",
-    "@opentiny/vue": "^3.18.0",
+    "@opentiny/vue": "3.18.0",
     "@vueuse/core": "^12.0.0",
     "@vueuse/head": "^2.0.0",
     "@wangeditor/editor": "^5.1.23",
