@@ -239,6 +239,7 @@ declare module 'vue' {
     VabHeader: typeof import('./../../components/VabHeader/index.vue')['default']
     VabIcon: typeof import('./../../../src/plugins/VabIcon/index.vue')['default']
     VabIconSelector: typeof import('./../../../src/plugins/VabIconSelector/index.vue')['default']
+    VabInvoiceMatching: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabInvoiceMatching.vue')['default']
     VabLanguage: typeof import('./../../components/VabLanguage/index.vue')['default']
     VabLink: typeof import('./../../components/VabLink/index.vue')['default']
     VabLock: typeof import('./../../components/VabLock/index.vue')['default']
