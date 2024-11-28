@@ -16,7 +16,7 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" @input="queryData" @keydown.enter.native="queryData"  placeholder="请输入搜索关键词" clearable />
+            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keydown.enter.native="queryData"  placeholder="请输入搜索关键词" clearable />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :icon="Search" native-type="submit" :loading="listLoading" @click="queryData"></el-button>
@@ -124,7 +124,7 @@
         <el-table-column label="实际数量" prop="componentActualCount" min-width="100"></el-table-column>
         <el-table-column label="退税报关数量" prop="customsDeclarationCount" min-width="130">
           <template #default="{ row }">
-            <el-input v-model="row.customsDeclarationCount" @wheel.stop.prevent :min="0" type="number" @focus="handleFocus(row)" @change="handleUpdateComponentCustomCount(row)" />
+            <el-input v-model="row.customsDeclarationCount" :disabled="row.customsDeclarationStatus === 1" @wheel.stop.prevent :min="0" type="number" @focus="handleFocus(row)" @change="handleUpdateComponentCustomCount(row)" />
           </template>
         </el-table-column>
         <el-table-column label="剩余可报" prop="reportable" min-width="100"></el-table-column>
@@ -899,9 +899,6 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 
-/**
- * @description 支持非连续的相同值合并以及处理两种合并逻辑
- */
 const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
  

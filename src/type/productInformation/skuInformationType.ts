@@ -1,175 +1,127 @@
 import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
 
 export interface IgetProductListQuery {
-    keyWord: string
-    haltStatus: number
-    pageNo: number
-    pageSize: number
+  keyWord: string
+  haltStatus: number
+  pageNo: number
+  pageSize: number
 }
 export interface IgetProductList {
-    skuId: number
-    sku: string
-    skuImgUrl: string
-    fnSkuUpc: string
-    productionHaltStatus: number
-    priorityPacking: number
-    packagePhotograph: number
-    procurementCost: number
-    dilapidationCost: number
-    packingCost: number
-    freightFeeCost: number
-    currency: string
-    length: number
-    width: number
-    height: number
-    weight: number
-    avgTime: number
-    avgFluctuation: string
-    weightCoefficient: number
-    volumeCoefficient: number
-    customsDeclaration: string
-    invoiceIssuType: string
-    productManager: string
+  skuId: number
+  sku: string
+  skuImgUrl: string
+  fnSkuUpc: string
+  productionHaltStatus: number
+  priorityPacking: number
+  packagePhotograph: number
+  procurementCost: number
+  dilapidationCost: number
+  packingCost: number
+  freightFeeCost: number
+  currency: string
+  length: number
+  width: number
+  height: number
+  weight: number
+  avgTime: number
+  avgFluctuation: string
+  weightCoefficient: number
+  volumeCoefficient: number
+  customsDeclaration: string
+  invoiceIssuType: string
+  productManager: string
 }
 export interface IgetProductListResp {
-    code: number
-    msg: string
-    data: {
-        total: number
-        list: IgetProductList[]
-    }
+  code: number
+  msg: string
+  data: {
+      total: number
+      list: IgetProductList[]
+  }
 }
 
 // SKU信息-sku停产、优先打包、打包拍照状态修改参数
 export interface IupdateProductStatus {
-    skuId: number
-    haltStatus: number
-    photographStatus: number
-    priorityStatus: number
+  skuId: number
+  haltStatus: number
+  photographStatus: number
+  priorityStatus: number
 }
 export interface ISkuId {
-    skuId: number
+  skuId: number
 }
 // SKU详情-获取详情返回
 export interface IgetProductSkuDetailResp {
-    code: number
-    msg: string
-    data: IgetProductSkuDetail[]
+  code: number
+  msg: string
+  data: IgetProductSkuDetail[]
 }
 
 export interface IgetProductSkuDetail {
-     /**
-     * 默认仓库 1云舟-川桥路 2云梧舟 3埃托姆
-     */
-     defaultRepository?: number;
-     /**
-      * 欧洲FNSKU
-      */
-     europeFnSku?: string;
-     /**
-      * 起订量
-      */
-     minQuantity?: number;
-     /**
-      * 北美FNSKU
-      */
-     northAmericaFnSku?: string;
-     /**
-      * 整箱数
-      */
-     numCartons?: number;
-     /**
-      * 实际总成本
-      */
-     procurementCost?: number;
-     /**
-      * 产品短描述
-      */
-     productDesc?: string;
-     /**
-      * 产品设计
-      */
-     productDesign?: string;
-     /**
-      * 产品经理
-      */
-     productManager?: string;
-     /**
-      * 产品名
-      */
-     productName?: string;
-     /**
-      * 质检清单
-      */
-     qualityChecklist?: string;
-     /**
-      * 备注
-      */
-     remarks?: string;
-     /**
-      * sku
-      */
-     sku?: string;
-     /**
-      * sku表主键id
-      */
-     skuId?: number;
-     /**
-      * sku图片地址
-      */
-     skuImgUrl?: string;
-     /**
-      * upc
-      */
-     upc?: string;
-     /**
-      * 变体名
-      */
-     variantName?: string;
+  // 默认仓库 1云舟-川桥路 2云梧舟 3埃托姆
+  defaultRepository?: number
+  // 欧洲FNSKU
+  europeFnSku?: string
+  // 起订量
+  minQuantity?: number
+  // 北美FNSKU
+  northAmericaFnSku?: string
+  // 整箱数
+  numCartons?: number
+  // 实际总成本
+  procurementCost?: number
+  // 产品短描述
+  productDesc?: string
+  // 产品设计
+  productDesign?: string
+  // 产品经理
+  productManager?: string
+  // 产品名
+  productName?: string
+  // 质检清单
+  qualityChecklist?: string
+  // 备注
+  remarks?: string
+  // sku
+  sku?: string
+  // sku表主键id
+  skuId?: number
+  // sku图片地址
+  skuImgUrl?: string
+  // upc
+  upc?: string
+  // 变体名
+  variantName?: string
 }
 
 export interface IupdateProductSku {
-    /**
-     * 默认仓库 1 云舟 2 云梧舟 3 埃托姆
-    */
-    defaultRepository?: number;
-    /**
-    * 起订量
-    */
-    minQuantity?: number;
-    /**
-    * 整箱数
-    */
-    numCartons?: number;
-    /**
-    * 产品短描述
-    */
-    productDesc?: string;
-    /**
-    * 产品设计
-    */
-    productDesign?: string;
-    /**
-    * 产品经理
-    */
-    productManager?: string;
-    /**
-    * 产品名
-    */
-    productName?: string;
-    /**
-    * skuId
-    */
-    skuId?: number;
-    /**
-    * 变体名
-    */
-    variantName?: string;
+  // 默认仓库 1 云舟 2 云梧舟 3 埃托姆
+  defaultRepository?: number
+  // 起订量
+  minQuantity?: number
+  // 整箱数
+  numCartons?: number
+  // 产品短描述
+  productDesc?: string
+  // 产品设计
+  productDesign?: string
+  // 产品经理
+  productManager?: string
+  /**
+  * 产品名
+  */
+  productName?: string
+  /**
+  * skuId
+  */
+  skuId?: number
+  // 变体名
+  variantName?: string
 }
 
 export interface IupdateProductSkuRemark {
-    skuId: number
-    remarks: string
+  skuId: number
+  remarks: string
 }
 
 // SKU详情-创建零件
@@ -213,7 +165,7 @@ export interface IcreateProductComponent {
 }
 
 export interface IcomponentId {
-    componentId: number
+  componentId: number
 }
 // SKU详情-修改零件
 export interface IupdateProductComponent {
@@ -305,31 +257,31 @@ export interface IupdateProductComponent {
 }
 // SKU详情-默认供应商、开票下拉修改
 export interface IgetChangeProductComponent {
-    skuId: number
-    existingPartsListId: number
-    suppliserId: number
+  skuId: number
+  existingPartsListId: number
+  suppliserId: number
 }
 
 export interface IupdateProductComponentName {
-    existingPartsListId: number
-    componentName: string
+  existingPartsListId: number
+  componentName: string
 }
 
 // SKU详情-添加到其他sku
 export interface IaddProductComponentOtherSku {
-    skuIds: string
-    componentId: number
+  skuIds: string
+  componentId: number
 }
 
 // SKU供应商信息 - 添加供应商
 export interface IcreateProductComponentSuppliser {
-    skuId?: number
-    existingPartsListId?: number
-    unit?: string
-    suppliser?: string
-    invoicing?: number
-    actualTaxRate?: string
-    invoicingTaxRate?: string
+  skuId?: number
+  existingPartsListId?: number
+  unit?: string
+  suppliser?: string
+  invoicing?: number
+  actualTaxRate?: string
+  invoicingTaxRate?: string
 }
 
 export interface IupdateProductComponentSuppliser {
@@ -951,197 +903,130 @@ export interface IgetProductCustomsListResp {
 }
 // 零件报关信息 - 修改零件报关信息
 export interface IupdateProductCustoms {
-    /**
-     * 品牌
-     */
-    brank?: string;
-    /**
-     * 清关价格(USD)
-     */
-    clearancePrice?: number;
-    /**
-     * 零件总量(g)
-     */
-    componentWeight?: number;
-    /**
-     * 云舟采购合同名
-     */
-    contractName?: string;
-    /**
-     * 每套有多少开票单位
-     */
-    count?: number;
-    /**
-     * 报关覆盖实际重量 0 × 1√
-     */
-    coveredWeightStatus?: number;
-    /**
-     * 创建者id
-     */
-    createUserId?: number;
-    /**
-     * 我国报关品名
-     */
-    customsDeclarationNameZh?: string;
-    /**
-     * 报关状态 0报关 1不报关
-     */
-    customsDeclarationStatus?: string;
-    /**
-     * 申报要素
-     */
-    declarationElements?: string;
-    /**
-     * 申报要素缩写
-     */
-    declarationElementsAbbreviation?: string;
-    /**
-     * 欧洲FNSKU
-     */
-    europeFnSku?: string;
-    /**
-     * HS
-     */
-    hs?: string;
-    /**
-     * HTS欧洲
-     */
-    htsEurope?: string;
-    /**
-     * HTS美国
-     */
-    htsUs?: string;
-    /**
-     * 零件报关id
-     */
-    id?: number;
-    /**
-     * 制造商英文地址
-     */
-    manufacturerAddressEn?: string;
-    /**
-     * 制造商英文名称
-     */
-    manufacturerEn?: string;
-    /**
-     * 材质英文
-     */
-    materialEn?: string;
-    /**
-     * 材质中文
-     */
-    materialZh?: string;
-    /**
-     * 北美FNSKU
-     */
-    northAmericaFnSku?: string;
-    /**
-     * 装箱单英文清关品名
-     */
-    packageClearanceNameEn?: string;
-    /**
-     * 装箱单中文清关品名
-     */
-    packageClearanceNameZh?: string;
-    /**
-     * 货源地
-     */
-    placeOrigin?: string;
-    /**
-     * 采购价(RMB)
-     */
-    purchasePrice?: number;
-    /**
-     * 销售价(USD)
-     */
-    salePrice?: number;
-    /**
-     * 每套多少法定第1单位
-     */
-    statutoryCount?: number;
-    /**
-     * 法定第1单位
-     */
-    statutoryUnit?: string;
-    /**
-     * 出口退税税率
-     */
-    taxRate?: number;
-    /**
-     * 开票型号
-     */
-    type?: string;
-    /**
-     * 开票单位
-     */
-    unit?: string;
-    /**
-     * UPC
-     */
-    upc?: string;
-    /**
-     * 用途英文
-     */
-    usageEn?: string;
-    /**
-     * 用途中文
-     */
-    usageZh?: string;
-    [property: string]: any;
+  // 品牌
+  brank?: string
+  // 清关价格(USD)
+  clearancePrice?: number
+  // 零件总量(g)
+  componentWeight?: number
+  // 云舟采购合同名
+  contractName?: string
+  // 每套有多少开票单位
+  count?: number
+  // 报关覆盖实际重量 0 × 1√
+  coveredWeightStatus?: number
+  // 创建者id
+  createUserId?: number
+  // 我国报关品名
+  customsDeclarationNameZh?: string
+  // 报关状态 0报关 1不报关
+  customsDeclarationStatus?: string
+  // 申报要素
+  declarationElements?: string
+  // 申报要素缩写
+  declarationElementsAbbreviation?: string
+  // 欧洲FNSKU
+  europeFnSku?: string
+  // HS
+  hs?: string
+  // HTS欧洲
+  htsEurope?: string
+  // HTS美国
+  htsUs?: string
+  // 零件报关id
+  id?: number
+  // 制造商英文地址
+  manufacturerAddressEn?: string
+  // 制造商英文名称
+  manufacturerEn?: string
+  // 材质英文
+  materialEn?: string
+  // 材质中文
+  materialZh?: string
+  // 北美FNSKU
+  northAmericaFnSku?: string
+  // 装箱单英文清关品名
+  packageClearanceNameEn?: string
+  // 装箱单中文清关品名
+  packageClearanceNameZh?: string
+  // 货源地
+  placeOrigin?: string
+  // 采购价(RMB)
+  purchasePrice?: number
+  // 销售价(USD)
+  salePrice?: number
+  // 每套多少法定第1单位
+  statutoryCount?: number
+  // 法定第1单位
+  statutoryUnit?: string
+  // 出口退税税率
+  taxRate?: number
+  // 开票型号
+  type?: string
+  // 开票单位
+  unit?: string
+  // UPC
+  upc?: string
+  // 用途英文
+  usageEn?: string
+  // 用途中文
+  usageZh?: string
+  pId?: number
+  [property: string]: any
 }
 // SKU质检清单-查询
 export interface IgetProductQualityInspection {
-    checkType: number
-    id: number
-    packagePrecautions: string
-    skuId: number
-    status: number
+  checkType: number
+  id: number
+  packagePrecautions: string
+  skuId: number
+  status: number
 }
 export interface IgetProductQualityInspectionResp {
-    code: number
-    msg: string
-    data: IgetProductQualityInspection[]
+  code: number
+  msg: string
+  data: IgetProductQualityInspection[]
 }
 
 export interface IaddProductQualityInspection {
-    skuId?: number
-    status?: number
-    checkType?: number
-    packagePrecautions?: string
+  skuId?: number
+  status?: number
+  checkType?: number
+  packagePrecautions?: string
 }
 
 export interface ISuppliserName {
-    suppliserName: string
+  suppliserName: string
 }
 // SKU零配件清单-保存采购注意事项
 export interface IsaveProductPurchaseMatters {
-    id: number
-    purchaseMatters: string
+  id: number
+  purchaseMatters: string
 }
 
 export interface IsaveProductContractTerms {
-    id: number
-    contractTerms: string
+  id: number
+  contractTerms: string
 }
 
 export interface IgetProductSupplier {
-    code: number
-    msg: string
-    data: {
-        actualPTaxRate: number
-        actualZTaxRate: number
-        invoicingPTaxRate: number
-        invoicingZTaxRate: number
-        suppliserId: number
-    }
+  code: number
+  msg: string
+  data: {
+      actualPTaxRate: number
+      actualZTaxRate: number
+      invoicingPTaxRate: number
+      invoicingZTaxRate: number
+      suppliserId: number
+  }
 }
 
 export interface IexistingPartsListId {
-    existingPartsListId: number
+  existingPartsListId: number
 }
 
 export interface IgetProductAllName {
-    name: string
+  name: string
 }
 
 export interface ISubmitProductComponentQuery {
@@ -1177,8 +1062,8 @@ export interface IGetCustomsClearanceSkuListReq {
 }
 export interface IGetCustomsClearanceSkuListRes {
   data?: {
-    list?: IGetCustomsClearanceSkuList[];
-    total?: number;
+    list?: IGetCustomsClearanceSkuList[]
+    total?: number
   }
 }
 
@@ -1186,202 +1071,182 @@ export interface IGetCustomsClearanceSkuList {
   /**
    * 品牌
    */
-  brank?: string;
+  brank?: string
   /**
    * 英文清关品名
    */
-  clearanceNameEn?: string;
+  clearanceNameEn?: string
   /**
    * 中文清关品名
    */
-  clearanceNameZh?: string;
+  clearanceNameZh?: string
   /**
    * 申报要素
    */
-  declarationElements?: string;
+  declarationElements?: string
   /**
    * 申报要素缩写
    */
-  declarationElementsAbbreviation?: string;
+  declarationElementsAbbreviation?: string
   /**
    * SKU描述
    */
-  description?: string;
+  description?: string
   /**
    * 欧洲FNSKU
    */
-  europeFnSku?: string;
+  europeFnSku?: string
   /**
    * HS
    */
-  hs?: string;
+  hs?: string
   /**
    * HTS欧洲
    */
-  htsEurope?: string;
+  htsEurope?: string
   /**
    * HTS美国
    */
-  htsUs?: string;
+  htsUs?: string
   /**
    * sku报关id
    */
-  id?: number;
+  id?: number
   /**
    * 制造商英文地址
    */
-  manufacturerAddressEn?: string;
+  manufacturerAddressEn?: string
   /**
    * 制造商英文名称
    */
-  manufacturerEn?: string;
+  manufacturerEn?: string
   /**
    * 材质英文
    */
-  materialEn?: string;
+  materialEn?: string
   /**
    * 材质中文
    */
-  materialZh?: string;
+  materialZh?: string
   /**
    * 北美FNSKU
    */
-  northAmericaFnSku?: string;
+  northAmericaFnSku?: string
   /**
    * SKU
    */
-  sku?: string;
+  sku?: string
   /**
    * SKU图片
    */
-  skuImgUrl?: string;
+  skuImgUrl?: string
   /**
    * UPC
    */
-  upc?: string;
+  upc?: string
   /**
    * 用途英文
    */
-  usageEn?: string;
+  usageEn?: string
   /**
    * 用途中文
    */
-  usageZh?: string;
+  usageZh?: string
 }
 
 export interface IUpdateCustomsClearanceSku {
   /**
    * 品牌
    */
-  brank?: string;
+  brank?: string
   /**
    * 英文清关品名
    */
-  clearanceNameEn?: string;
+  clearanceNameEn?: string
   /**
    * 中文清关品名
    */
-  clearanceNameZh?: string;
+  clearanceNameZh?: string
   /**
    * 申报要素
    */
-  declarationElements?: string;
+  declarationElements?: string
   /**
    * 申报要素缩写
    */
-  declarationElementsAbbreviation?: string;
+  declarationElementsAbbreviation?: string
   /**
    * HS
    */
-  hs?: string;
+  hs?: string
   /**
    * HTS欧洲
    */
-  htsEurope?: string;
+  htsEurope?: string
   /**
    * HTS美国
    */
-  htsUs?: string;
+  htsUs?: string
   /**
    * sku报关id
    */
-  id?: number;
+  id?: number
   /**
    * 制造商英文地址
    */
-  manufacturerAddressEn?: string;
+  manufacturerAddressEn?: string
   /**
    * 制造商英文名称
    */
-  manufacturerEn?: string;
+  manufacturerEn?: string
   /**
    * 材质英文
    */
-  materialEn?: string;
+  materialEn?: string
   /**
    * 材质中文
    */
-  materialZh?: string;
+  materialZh?: string
   /**
    * 出口退税税率
    */
-  taxRate?: number;
+  taxRate?: number
   /**
    * 用途英文
    */
-  usageEn?: string;
+  usageEn?: string
   /**
    * 用途中文
    */
-  usageZh?: string;
+  usageZh?: string
 }
 export interface IGetCustomsClearanceRatioRes {
   data?: {
-    /**
-     * 清关系数
-     */
-    customClearanceCoefficient?: number;
+    // 清关系数
+    customClearanceCoefficient?: number
     id?: number;
-    /**
-     * 随机大价格系数
-     */
-    maxProcurementCoefficient?: number;
-    /**
-     * 随机最小价格系数
-     */
-    minProcurementCoefficient?: number;
-    /**
-     * 销售价格系数1
-     */
-    salesCoefficient1?: number;
-    /**
-     * 销售价格系数2
-     */
-    salesCoefficient2?: number;
+    // 随机大价格系数
+    maxProcurementCoefficient?: number
+    // 随机最小价格系数
+    minProcurementCoefficient?: number
+    // 销售价格系数1
+    salesCoefficient1?: number
+    // 销售价格系数2
+    salesCoefficient2?: number
   }
 }
 
 export interface IUpdateCustomsClearanceRatioReq {
-  /**
-   * 清关系数
-   */
-  customClearanceCoefficient?: number;
-  /**
-   * 随机大价格系数
-   */
-  maxProcurementCoefficient?: number;
-  /**
-   * 随机最小价格系数
-   */
-  minProcurementCoefficient?: number;
-  /**
-   * 销售价格系数1
-   */
-  salesCoefficient1?: number;
-  /**
-   * 销售价格系数2
-   */
-  salesCoefficient2?: number;
+  // 清关系数
+  customClearanceCoefficient?: number
+  // 随机大价格系数
+  maxProcurementCoefficient?: number
+  // 随机最小价格系数
+  minProcurementCoefficient?: number
+  // 销售价格系数1
+  salesCoefficient1?: number
+  // 销售价格系数2
+  salesCoefficient2?: number
 }
 
 export interface IUpdateProductCustomsClearanceStatus {

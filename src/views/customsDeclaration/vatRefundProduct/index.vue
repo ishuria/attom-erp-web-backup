@@ -27,7 +27,7 @@
       <vab-query-form-right-panel :span="4">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter.native="queryData" @input="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter.native="queryData" @input="queryData" />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" type="primary" native-type="submit" :loading="listLoading" @click="queryData"></el-button>

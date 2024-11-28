@@ -20,10 +20,20 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" class="noneHoveTable" border stripe :data="list" @cell-click="changeInput" :header-cell-style="headerCellStyle" v-loading="listLoading" :cell-style="cellStyle">
-      <el-table-column align="center" label="图片" width="105" prop="skuImgUrl" fixed="left">
+    <el-table 
+      ref="tableRef" 
+      class="noneHoveTable" 
+      border stripe 
+      :data="list" 
+      @cell-click="changeInput" 
+      :header-cell-style="headerCellStyle" 
+      v-loading="listLoading" 
+      :cell-style="cellStyle"
+      :cell-class-name="cellClassName"
+    >
+      <el-table-column label="图片" width="75" prop="skuImgUrl" fixed="left">
         <template #default="{ row }">
-          <el-image style="width: 75px; height: 75px" :src="row.skuImgUrl" fit="fill" data-img="img" >
+          <el-image style="width: 75px; height: 75px; display: block;" :src="row.skuImgUrl" fit="fill" @click="showImagePreview(row.skuImgUrl)">
             <template #error>
               <div class="image-slot">
                 <el-icon></el-icon>
@@ -33,22 +43,22 @@
         </template>
       </el-table-column>
       <el-table-column label="SKU品名" prop="sku" :width="flexColumnWidth(list, 'SKU品名', 'sku')" fixed="left"></el-table-column>
-      <el-table-column align="center" label="UPC" min-width="70" prop="upc" >
+      <el-table-column label="UPC" min-width="70" prop="upc" >
         <template #default="{ row }">
           <div v-html="row.upc"></div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="北美FNSKU" :width="calculateBrColumnWidth(list, (row: any)=>row.northAmericaFnSku, 90)" prop="northAmericaFnSku" >
+      <el-table-column label="北美FNSKU" :width="calculateBrColumnWidth(list, (row: any)=>row.northAmericaFnSku, 90)" prop="northAmericaFnSku" >
         <template #default="{ row }">
           <div v-html="row.northAmericaFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="欧洲FNSKU" :width="calculateBrColumnWidth(list, (row: any)=>row.europeFnSku, 90)" prop="europeFnSku" >
+      <el-table-column label="欧洲FNSKU" :width="calculateBrColumnWidth(list, (row: any)=>row.europeFnSku, 90)" prop="europeFnSku" >
         <template #default="{ row }">
           <div v-html="row.europeFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="品牌" prop="brank" align="center" min-width="80">
+      <el-table-column label="品牌" prop="brank" min-width="80">
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.brank" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -56,7 +66,7 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="HTS美国" min-width="100" prop="htsUs" >
+      <el-table-column label="HTS美国" min-width="100" prop="htsUs" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.htsUs" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -64,7 +74,7 @@
           <span>{{ row.htsUs }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="HTS欧洲" min-width="100" prop="htsEurope" >
+      <el-table-column label="HTS欧洲" min-width="100" prop="htsEurope" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.htsEurope" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -72,7 +82,7 @@
           <span>{{ row.htsEurope }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="制造商英文名称" min-width="140" prop="manufacturerEn" >
+      <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.manufacturerEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -80,7 +90,7 @@
           <span>{{ row.manufacturerEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="制造商英文地址" min-width="140" prop="manufacturerAddressEn" >
+      <el-table-column label="制造商英文地址" min-width="140" prop="manufacturerAddressEn" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.manufacturerAddressEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -88,7 +98,7 @@
           <span>{{ row.manufacturerAddressEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="英文清关品名" min-width="180" prop="clearanceNameEn" >
+      <el-table-column label="英文清关品名" min-width="180" prop="clearanceNameEn" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.clearanceNameEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -96,7 +106,7 @@
           <span>{{ row.clearanceNameEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="中文清关品名" min-width="180" prop="clearanceNameZh" >
+      <el-table-column label="中文清关品名" min-width="180" prop="clearanceNameZh" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.clearanceNameZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -104,7 +114,7 @@
           <span>{{ row.clearanceNameZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="材质比例(英文)" min-width="140" prop="materialEn" >
+      <el-table-column label="材质比例(英文)" min-width="140" prop="materialEn" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.materialEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -112,7 +122,7 @@
           <span>{{ row.materialEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="材质比例(中文)" min-width="140" prop="materialZh" >
+      <el-table-column label="材质比例(中文)" min-width="140" prop="materialZh" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.materialZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -120,7 +130,7 @@
           <span>{{ row.materialZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用途(中文)" min-width="100" prop="usageZh" >
+      <el-table-column label="用途(中文)" min-width="100" prop="usageZh" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.usageZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -128,7 +138,7 @@
           <span>{{ row.usageZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="用途(英文)" min-width="100" prop="usageEn" >
+      <el-table-column label="用途(英文)" min-width="100" prop="usageEn" >
         <template #default="{ row }">
           <div class="none">
               <el-input type="text" v-model="row.usageEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -256,6 +266,11 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
+const showImagePreview = (url: string) => {
+  imagePreviewList.value = []
+  imagePreviewVisible.value = true
+  imagePreviewList.value.push(url)
+}
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
@@ -289,13 +304,6 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   }
 }
 const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 6 || data.columnIndex === 7 || data.columnIndex === 8 || data.columnIndex === 9 || data.columnIndex === 10
-    || data.columnIndex === 11 || data.columnIndex === 12 || data.columnIndex === 13 || data.columnIndex === 14 || data.columnIndex === 15
-  ) {
-    return {
-      color: 'var(--el-color-danger)'
-    }
-  }
   return {
     textAlign: 'center'
   }
@@ -303,12 +311,6 @@ const headerCellStyle = (data: { row: any, column: any, rowIndex: number, column
 let copyRow: any
 // table单击修改
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el,'img') && el){
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src)
-  }
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -372,7 +374,12 @@ const fetchData = async () => {
     item.europeFnSku = item.europeFnSku.replace(/,/g, '<br />')
   })
 }
-
+const cellClassName = (data: {row: any, column: any, rowIndex: number, columnIndex: number}) => {
+  if (data.columnIndex === 0) {
+    return 'clear-padding'
+  }
+  return ''
+}
 onActivated(() => {
   tableRef.value?.doLayout()
 })
@@ -403,6 +410,14 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>
   

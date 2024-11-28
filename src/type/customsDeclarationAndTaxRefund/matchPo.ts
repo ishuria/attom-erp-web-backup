@@ -6,8 +6,8 @@ export interface IGetMatchPoListReq {
 
 export interface IGetMatchPoListRes {
   data: {
-    list: IGetMatchPoList[];
-    total: number;
+    list: IGetMatchPoList[]
+    total: number
   }
 }
 
@@ -82,82 +82,82 @@ export interface IGetMatchPackageListReq {
   matchId: number
 }
 export interface IGetMatchPackageListRes {
-  code: number;
-  data: IGetMatchPackageList[];
-  msg: string;
+  code: number
+  data: IGetMatchPackageList[]
+  msg: string
 }
 
 export interface IGetMatchPackageList {
   /**
    * 零件实际数量
    */
-  componentActualCount: number;
+  componentActualCount: number
   /**
    * 零件名
    */
-  componentName: string;
+  componentName: string
   /**
    * 报关状态 0报关 1不报关
    */
-  customsDeclarationStatus: number;
+  customsDeclarationStatus: number
   customsDeclarationCount: number
   /**
    * 描述
    */
-  description: string;
+  description: string
   /**
    * 详情id
    */
-  dId: number;
+  dId: number
   /**
    * 好的数量
    */
-  goodCount: null;
+  goodCount: null
   /**
    * id
    */
-  mId: number;
+  mId: number
   /**
    * 打包任务数
    */
-  packageTaskCount: number;
+  packageTaskCount: number
   /**
    * po
    */
-  po: string;
+  po: string
   /**
    * po的零件id
    */
-  poComponentId: number;
+  poComponentId: number
   /**
    * po的id
    */
-  poId: number;
+  poId: number
   /**
    * 采购方
    */
-  purchase: string;
+  purchase: string
   /**
    * po的零件订货总数
    */
-  purchaseCount: null;
-  purchaseId: null;
+  purchaseCount: null
+  purchaseId: null
   /**
    * 剩余可报数量
    */
-  reportable: number;
+  reportable: number
   /**
    * 站点名称
    */
-  siteName: string;
+  siteName: string
   /**
    * sku
    */
-  sku: string;
+  sku: string
   /**
    * sku实际数量
    */
-  skuActualCount: number;
+  skuActualCount: number
   /**
    * 打包任务状态
    */
@@ -179,8 +179,8 @@ export interface IGetMatchPackageList {
 export interface IGetCheckMatchListRes {
   code: number
   data: {
-    list: IGetCheckMatchList[];
-    total: number;
+    list: IGetCheckMatchList[]
+    total: number
   }
   msg: string
 }
@@ -189,75 +189,75 @@ export interface IGetCheckMatchList {
   /**
    * 零件实际数
    */
-  actualComponentCount: null;
+  actualComponentCount: null
   /**
    * 零件部分的id
    */
-  cId: number | null;
+  cId: number | null
   /**
    * 零件名
    */
-  componentName: string;
+  componentName: string
   /**
    * 退税报关数量
    */
-  customsDeclarationCount: number | null;
+  customsDeclarationCount: number | null
   /**
    * 报关状态
    */
-  customsDeclarationStatus: null;
+  customsDeclarationStatus: null
   /**
    * sku的描述
    */
-  desc: string;
+  desc: string
   /**
    * 装箱个数
    */
-  encasementCount: number;
+  encasementCount: number
   /**
    * 已发未报标识
    */
-  flag: boolean;
+  flag: boolean
   /**
    * id
    */
-  id: number;
+  id: number
   /**
    * sku匹配id
    */
-  pId: number | null;
+  pId: number | null
   /**
    * po号
    */
-  po: string;
+  po: string
   /**
    * po零件id
    */
-  poComponentId: null;
+  poComponentId: null
   /**
    * po的id
    */
-  poId: number | null;
+  poId: number | null
   /**
    * 采购方
    */
-  purchase: string;
+  purchase: string
   /**
    * po零件采购总数
    */
-  purchaseCount: number | null;
+  purchaseCount: number | null
   /**
    * 站点
    */
-  site: string;
+  site: string
   /**
    * sku
    */
-  sku: string;
+  sku: string
   /**
    * sku实际完成数量
    */
-  skuActualCount: null;
+  skuActualCount: null
 }
 
 export interface IBooleanRes {
@@ -305,44 +305,44 @@ export interface IGetMatchSentList {
   /**
    * 零件名
    */
-  componentName?: string;
+  componentName?: string
   /**
    * 描述
    */
-  desc?: string;
+  desc?: string
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * po号
    */
-  po?: string;
+  po?: string
   /**
    * po的零件id
    */
-  poComponentId?: number;
+  poComponentId?: number
   /**
    * po的id
    */
-  poId?: number;
+  poId?: number
   /**
    * 采购方
    */
-  purchase?: string;
+  purchase?: string
   /**
    * SKU
    */
-  sku?: string;
+  sku?: string
   /**
    * 已报未发数量
    */
-  ybwfCount?: number;
+  ybwfCount?: number
   /**
    * 已发未报数量
    */
-  yfwbCount?: number;
-  [property: string]: any;
+  yfwbCount?: number
+  [property: string]: any
 }
 
 export interface IId {

@@ -49,13 +49,13 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku"></el-table-column>
+          <el-table-column label="SKU" :width="flexColumnWidth(list, 'SKU', 'sku')" prop="sku"></el-table-column>
           <el-table-column label="停产" prop="productionHaltStatus" min-width="60">
             <template #default="{ row }">
               <el-checkbox v-model="row.productionHaltStatus" :true-value="1" :false-value="0" disabled></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200" prop="suppliser">
+          <el-table-column label="供应商" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)" prop="suppliser">
             <template #default="{ row }">
               <span v-html="row.suppliser"></span>
             </template>
@@ -678,7 +678,6 @@
 <script lang="ts" setup>
 import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
-import { removeHtmlTags } from '~/src/utils/tableColum'
 import {
   archiveAfterSales,
   badDebtAfterSales,
@@ -695,6 +694,7 @@ import {
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 
@@ -827,7 +827,7 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   if (tab.props.name !== undefined) {
     queryForm.status = Number(tab.props.name);  
   }
-  fetchData()
+  queryData()
 }
 const fetchData = async () => {
   listLoading.value = true

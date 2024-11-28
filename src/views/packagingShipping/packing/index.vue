@@ -48,7 +48,7 @@
       :span-method="objectSpanMethod"
     >
       <el-table-column type="selection" fixed="left"></el-table-column>
-      <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="100">
+      <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="115">
         <template #default="{ row }">
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
