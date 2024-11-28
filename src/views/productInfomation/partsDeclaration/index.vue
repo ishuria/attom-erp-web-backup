@@ -36,7 +36,7 @@
     >
       <el-table-column label="图片" width="75" prop="componentImgUrl" fixed="left">
         <template #default="{ row }">
-          <el-image style="width: 75px; height: 75px; display: block;" :src="row.componentImgUrl" fit="fill" @click="showImagePreview(row.componentImgUrl)">
+          <el-image style=" display: block;width: 75px; height: 75px;" :src="row.componentImgUrl" fit="fill" @click="showImagePreview(row.componentImgUrl)">
             <template #error>
               <div class="image-slot">
                 <el-icon></el-icon>
@@ -682,7 +682,7 @@ const objectSpanMethod = ({
     columnIndex,
 }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 0 && columnIndex !== 3 && columnIndex !== 7 && columnIndex !== 9 && columnIndex !== 10 && columnIndex !== 11
+  if (columnIndex !== 0 && columnIndex !== 3 && columnIndex !== 7 && columnIndex !== 8 && columnIndex !== 9 && columnIndex !== 10 && columnIndex !== 11
     && columnIndex !== 12 && columnIndex !== 13 && columnIndex !== 16) {
     // 获取当前row的零件id
     const pId = row.pId;
@@ -772,8 +772,8 @@ onBeforeMount(() => {
   padding-bottom: 0;
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 </style>
   
