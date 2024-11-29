@@ -1,6 +1,7 @@
 <template>
   <vab-dialog
     title="发票匹配"
+    v-model="dflag"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
@@ -26,28 +27,34 @@
       :header-cell-style="{ textAlign: 'center' }"
       :cell-style="cellStyle"
     >
-      <el-table-column label="购方名称"></el-table-column>
-      <el-table-column label="发票代码"></el-table-column>
-      <el-table-column label="发票号码"></el-table-column>
-      <el-table-column label="供应商"></el-table-column>
-      <el-table-column label="开票品名"></el-table-column>
-      <el-table-column label="规格型号"></el-table-column>
-      <el-table-column label="发票数量"></el-table-column>
-      <el-table-column label="发票单位"></el-table-column>
-      <el-table-column label="发票含税金额"></el-table-column>
-      <el-table-column label="发票未税金额"></el-table-column>
-      <el-table-column label="发票图片"></el-table-column>
-      <el-table-column label="匹配合同号"></el-table-column>
-      <el-table-column label="匹配PO"></el-table-column>
-      <el-table-column label="报关数量"></el-table-column>
-      <el-table-column label="报关单位"></el-table-column>
+      <el-table-column label="购方名称" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票代码" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票号码" prop="" min-width=""></el-table-column>
+      <el-table-column label="供应商" prop="" min-width=""></el-table-column>
+      <el-table-column label="开票品名" prop="" min-width=""></el-table-column>
+      <el-table-column label="规格型号" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票数量" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票单位" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票含税金额" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票未税金额" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票图片" prop="" min-width=""></el-table-column>
+      <el-table-column label="匹配合同号" prop="" min-width=""></el-table-column>
+      <el-table-column label="匹配PO" prop="" min-width=""></el-table-column>
+      <el-table-column label="报关数量" prop="" min-width=""></el-table-column>
+      <el-table-column label="报关单位" prop="" min-width=""></el-table-column>
       <el-table-column label="操作">
         <template #default="{ row }">
           <el-link :underline="false" type="primary" >匹配</el-link>
           <el-link :underline="false" type="primary" >查看报关记录</el-link>
+          <el-link :underline="false" type="primary" >清空</el-link>
+          <el-link :underline="false" type="danger" >删除</el-link>
         </template>
       </el-table-column>
     </el-table>
+    <template #footer>
+      <el-button>取消</el-button>
+      <el-button type="primary">确认</el-button>
+    </template>
     <vab-pagination 
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageNo"
@@ -59,9 +66,19 @@
 </template>
 
 <script lang="ts" setup>
+defineOptions({
+  name: 'VabInvoiceMatching'
+})
 import { Search } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
 
+const dflag = ref<boolean>(false)
+const props = defineProps<{
+  invoiceMatchingVisible: boolean
+}>()
+watchEffect(() => {
+  dflag.value = props.invoiceMatchingVisible
+})
 const total = ref<number>(0)
 
 const queryForm = reactive<any>({
@@ -83,7 +100,7 @@ const handleSizeChange = (value: number) => {
   // fetchData()
 }
 const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-  if (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3) {
+  if (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4) {
     return {
       textAlign: 'left'
     }

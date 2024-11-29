@@ -2026,9 +2026,9 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
     queryForm.status = Number(tab.props.name);  
   }
   if (queryForm.status !== 5) {
-    fetchData()
+    queryData()
   } else if (queryForm.status === 5) {
-    fetchTaskingData()
+    queryTaskingData()
   }
 }
 // 表头样式

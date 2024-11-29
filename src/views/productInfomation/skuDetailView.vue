@@ -44,43 +44,43 @@
           <el-form label-position="top" :inline="true">
             <el-row style="width: 100%">
               <el-col :span="12">
-                  <el-form-item label="SKU" data-label="SKU">
-                      <el-input v-model="sku.sku" placeholder="" disabled></el-input>
-                  </el-form-item>
+                <el-form-item label="SKU" data-label="SKU">
+                  <el-input v-model="sku.sku" placeholder="" disabled></el-input>
+                </el-form-item>
               </el-col>
               <el-col :span="12">
-                  <el-form-item label="产品名">
-                      <el-input v-model="mergedProductName" disabled></el-input>
-                  </el-form-item>
+                <el-form-item label="产品名">
+                  <el-input v-model="mergedProductName" disabled></el-input>
+                </el-form-item>
               </el-col>
             </el-row>
 
             <el-row style="width: 100%">
-                <el-col :span="6">
-                    <el-form-item label="北美FNSKU">
-                        <el-input v-model="sku.northAmericaFnSku" disabled></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="欧洲FNSKU">
-                        <el-input v-model="sku.europeFnSku" disabled></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item label="产品主品名">
-                        <el-input v-model="sku.productName" @blur="handleUpdateSku" ></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item label="产品短描述">
-                        <el-input v-model="sku.productDesc" @blur="handleUpdateSku" ></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item label="变体名" >
-                        <el-input v-model="sku.variantName" @blur="handleUpdateSku" ></el-input>
-                    </el-form-item>
-                </el-col>
+              <el-col :span="6">
+                <el-form-item label="北美FNSKU">
+                  <el-input v-model="sku.northAmericaFnSku" disabled></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="欧洲FNSKU">
+                  <el-input v-model="sku.europeFnSku" disabled></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="产品主品名">
+                  <el-input v-model="sku.productName" @blur="handleUpdateSku" ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="产品短描述">
+                  <el-input v-model="sku.productDesc" @blur="handleUpdateSku" ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="变体名" >
+                  <el-input v-model="sku.variantName" @blur="handleUpdateSku" ></el-input>
+                </el-form-item>
+              </el-col>
             </el-row>
 
             <el-row style="width: 100%">
@@ -173,28 +173,28 @@
         </el-col>
         
         <el-col style="flex: 1; padding: 0">
-            <el-form label-position="top" >
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item >
-                            <el-space>
-                                <span style="font-size: var(--el-form-label-font-size);">质检清单</span>
-                                <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handlePacking"><Edit /></el-icon>
-                            </el-space>
-                            <el-input type="textarea" :rows="11" v-model="qualityCheckList" disabled resize="none"></el-input>
+          <el-form label-position="top" >
+            <el-row>
+              <el-col :span="12">
+                <el-form-item >
+                  <el-space>
+                    <span style="font-size: var(--el-form-label-font-size);">质检清单</span>
+                    <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handlePacking"><Edit /></el-icon>
+                  </el-space>
+                  <el-input type="textarea" :rows="11" v-model="qualityCheckList" disabled resize="none"></el-input>
                 </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item style="margin-right: 0">
-                            <el-space>
-                                <span style="font-size: var(--el-form-label-font-size);">产品经理自己看的备注</span>
-                                <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handleManagerRemarks"><CirclePlusFilled /></el-icon>
-                            </el-space>
-                            <el-input type="textarea" :rows="11" v-model="sku.remarks" @blur="handleRemarksChange" resize="none"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item style="margin-right: 0">
+                    <el-space>
+                      <span style="font-size: var(--el-form-label-font-size);">产品经理自己看的备注</span>
+                      <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handleManagerRemarks"><CirclePlusFilled /></el-icon>
+                    </el-space>
+                    <el-input type="textarea" :rows="11" v-model="sku.remarks" @blur="handleRemarksChange" resize="none"></el-input>
+                  </el-form-item>
+                </el-col>
+            </el-row>
+          </el-form>
         </el-col>
       </el-row>
     </el-card>
@@ -496,7 +496,7 @@
       :classify="classify"
     >
     </wangEditor>
-    <!-- 创建零件 -->
+    <!-- 创建零件 / 耗材 -->
     <el-dialog 
         v-model="addComponentVisible" 
         :close-on-click-modal="false" 
@@ -505,102 +505,99 @@
         class="moldDialog"
         :before-close="handlerCloseDialog"
     >
-        <el-divider style="margin-top: 0;"/>
-        <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 480px; margin: 0 auto;" :rules="rules" >
-            <el-form-item label="类型" prop="type">
-                <el-select v-model="form.type">
-                    <el-option
-                        v-for="item in componentType"
-                        :key="item.value"
-                        :value="item.value"
-                        :label="item.label"
-                    >
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item v-if="form.type === 0" label="零件名" prop="componentName">
-                <el-input v-model="form.componentName" clearable placeholder="必须遵守格式规范：品名-规格参数"
-  
-                ></el-input>
-            </el-form-item>
-            <el-form-item v-if="form.type === 1" label="耗材名" prop="consumableName">
-                <el-input
-                    v-model="mergedPartName"
-                    disabled
-                    clearable
-                ></el-input>
-            </el-form-item>
-            <el-form-item v-if="form.type === 1" label="耗材种类" prop="materialType">
-                <el-select v-model="form.materialType" clearable placeholder="请选择耗材种类" >
-                    <el-option
-                        v-for="item in consumableTypeOption"
-                        :label="item.consumablesName"
-                        :value="item.id"
-                        :key="item.id"
-                    ></el-option>
-                </el-select>
-            </el-form-item>
-            <el-row style="margin-bottom: 18px;" v-if="form.type === 1" >
-                <el-col :span="12">
-                    <el-form-item label="耗材尺寸" prop="size">
-                        <el-input v-model="form.size" clearable placeholder="22x15x10"/>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="尺寸单位" prop="unit">
-                        <el-input v-model="form.unit" clearable placeholder="cm" />
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-form-item v-if="form.type === 1" label="规格/说明" prop="specification">
-                <el-input v-model="form.specification" clearable placeholder="三层加硬空白"/>
-            </el-form-item>
-            <el-form-item label="按单采购" v-if="form.type === 1" prop="isSinglePurchase" >
-                <el-switch v-model="form.isSinglePurchase" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
-            </el-form-item>
-            <el-form-item label="零件单位" prop="componentUnit">
-                <el-input v-model="form.componentUnit" clearable placeholder="套, 个, 只, 片等" />
-            </el-form-item>
-            <el-form-item label="供应商" prop="supplier">
-                <el-select
-                    v-model="form.supplier"
-                    filterable
-                    remote
-                    allow-create
-                    default-first-option
-                    placeholder="点击输入和搜索"
-                    :remote-method="remoteMethod"
-                    :loading="loading"
-                    @change="handleTaxDisabled"
-                    @blur="handleInput"
-                    clearable
-                >
-                    <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    />
-                </el-select>
-            </el-form-item>
-            <el-form-item label="开票" prop="invoicing">
-                <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
-                    <el-option v-for="dict in invoicingNumList" :key="dict.value"
-                        :value="dict.value" :label="dict.label" ></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="实际税点" prop="actualTaxRate">
-                <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
-            </el-form-item>
-            <el-form-item label="开票税点" prop="invoicingTaxRate">
-                <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"placeholder="税点如果是13个点则输入0.13"/>
-            </el-form-item>
+      <template #header>
+        <span style="padding-left: 20px">{{ form.type === 0 ? '创建零件' : '创建耗材' }}</span>
+      </template>
+      <el-divider style="margin-top: 0;"/>
+      <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 480px; margin: 0 auto;" :rules="rules" >
+          <el-form-item label="类型" prop="type">
+              <el-select v-model="form.type">
+                  <el-option
+                      v-for="item in componentType"
+                      :key="item.value"
+                      :value="item.value"
+                      :label="item.label"
+                  >
+                  </el-option>       
+              </el-select>
+          </el-form-item>
+          <el-form-item v-if="form.type === 0" label="零件名" prop="componentName">
+            <el-input v-model="form.componentName" clearable placeholder="必须遵守格式规范：品名-规格参数"></el-input>
+          </el-form-item>
+          <el-form-item v-if="form.type === 1" label="耗材名" prop="consumableName">
+            <el-input v-model="mergedPartName" disabled></el-input>
+          </el-form-item>
+          <el-form-item v-if="form.type === 1" label="耗材种类" prop="materialType">
+            <el-select v-model="form.materialType" clearable placeholder="请选择耗材种类" >
+              <el-option
+                v-for="item in consumableTypeOption"
+                :label="item.consumablesName"
+                :value="item.id"
+                :key="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-row style="margin-bottom: 18px;" v-if="form.type === 1" >
+            <el-col :span="12">
+              <el-form-item label="耗材尺寸" prop="size">
+                <el-input v-model="form.size" clearable placeholder="22x15x10"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="尺寸单位" prop="unit">
+                <el-input v-model="form.unit" clearable placeholder="cm" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item v-if="form.type === 1" label="规格/说明" prop="specification">
+            <el-input v-model="form.specification" clearable placeholder="三层加硬空白"/>
+          </el-form-item>
+          <el-form-item label="按单采购" v-if="form.type === 1" prop="isSinglePurchase" >
+            <el-switch v-model="form.isSinglePurchase" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
+          </el-form-item>
+          <el-form-item label="零件单位" prop="componentUnit">
+            <el-input v-model="form.componentUnit" clearable placeholder="套, 个, 只, 片等" />
+          </el-form-item>
+          <el-form-item label="供应商" prop="supplier">
+            <el-select
+              v-model="form.supplier"
+              filterable
+              remote
+              allow-create
+              default-first-option
+              placeholder="点击输入和搜索"
+              :remote-method="remoteMethod"
+              :loading="loading"
+              @change="handleTaxDisabled"
+              @blur="handleInput"
+              clearable
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="开票" prop="invoicing">
+            <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
+              <el-option v-for="dict in invoicingNumList" :key="dict.value"
+                  :value="dict.value" :label="dict.label" ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item v-show="taxVisible" label="实际税点" prop="actualTaxRate">
+            <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
+          </el-form-item>
+          <el-form-item v-show="taxVisible" label="开票税点" prop="invoicingTaxRate">
+            <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"placeholder="税点如果是13个点则输入0.13"/>
+          </el-form-item>
         </el-form>
         <template #footer>
-            <span>
-                <el-button @click="addComponentVisible = false">退出</el-button>
-                <el-button type="primary" @click="handleSubmit">确认</el-button>
-            </span>
+          <span>
+            <el-button @click="addComponentVisible = false">退出</el-button>
+            <el-button type="primary" @click="handleSubmit">确认</el-button>
+          </span>
         </template>
     </el-dialog>
     <!-- 打包注意事项 -->
@@ -676,14 +673,14 @@
 <script lang="ts" setup>
 import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { FormInstance, UploadFile } from 'element-plus'
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
-import { getRootElement, focusAndSelectInput } from '/@/utils/nodeUtils'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { isEqual } from 'lodash'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, submitProductComponent, submitProductConsumable, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
-import { isEqual } from 'lodash'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const route: any = useRoute()
 const router = useRouter()
@@ -849,7 +846,6 @@ const handleInput = (e: any) => {
   }
 }
 const handleTaxDisabled = async (value: string) => {
-  console.log(value);
   
   form.supplier = value; // 自动设置为新输入的值
    if(value) {
@@ -873,11 +869,18 @@ const handleTaxDisabled = async (value: string) => {
         }
    }
 }
+// 修改创建零件，创建耗材的开票
+const taxVisible = ref<boolean>(true)
 const handleInvoicingTaxChange = async (value: number) => {
-   
-    if(form.supplier) {
-        handleTaxDisabled(form.supplier)
-    }
+  // 当选择的是创建耗材，并且选择无法开票的时候，才隐藏开票税点和实际税点
+  if (form.type === 1 && value === 2) {
+    taxVisible.value = false
+  } else {
+    taxVisible.value = true
+  }
+  if (form.supplier) {
+    handleTaxDisabled(form.supplier)
+  }
 }
 const componentNameForm = reactive<any>({
     componentName: ''
@@ -1169,10 +1172,12 @@ const handlerCloseDialog = () => {
 }
 const consumableTypeOption = ref<any>()
 const handleCreateComponent = async () => { //点击创建零件
-    addComponentVisible.value = true
-    formRef.value?.resetFields()
-    const { data } = await getProductConsumablesType() //获取耗材种类
-    consumableTypeOption.value = data  
+  addComponentVisible.value = true
+  formRef.value?.resetFields()
+  const { data } = await getProductConsumablesType() //获取耗材种类
+  consumableTypeOption.value = data  
+  // 初始化开票税点和实际税点的显示
+  taxVisible.value = true
 }
 
 function validateNoSpaces (rule: any, value: any, callback: any) {

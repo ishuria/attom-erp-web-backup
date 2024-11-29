@@ -77,7 +77,7 @@
       <el-table-column label="单位"  min-width="70" prop="unit">
           <template #default="{ row }">
               <div class="none">
-                  <el-input type="text" v-model="row.unit" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                  <el-input type="text" v-model="row.unit" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.unit }}</span>
           </template>
@@ -88,7 +88,7 @@
           </template>
           <template #default="{ row }">
               <div class="none">
-                  <el-input type="text" v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                  <el-input type="text" v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.unitPrice }}</span>
           </template>
@@ -101,7 +101,7 @@
       <el-table-column label="含税价" prop="taxIncludedPrice" min-width="80">
           <template #default="{ row }">
               <div class="none">
-                  <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                  <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
               <span>{{ row.taxIncludedPrice }}</span>
           </template>
@@ -117,7 +117,7 @@
       <el-table-column label="起订量" prop="minimumOrderQuantity" min-width="100">
           <template #default="{ row }">
               <div class="none">
-                      <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                      <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                   </div>
               <span>{{ row.minimumOrderQuantity }}</span>
           </template>
@@ -125,7 +125,7 @@
       <el-table-column label="整箱数" prop="numberFullCartons" min-width="100">
           <template #default="{ row }">
               <div class="none">
-                      <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                      <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                   </div>
               <span>{{ row.numberFullCartons }}</span>
           </template>
@@ -185,7 +185,7 @@
       <el-table-column  label="采购链接" prop="purchaseLink" min-width="140" >
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+            <el-input v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <el-tooltip effect="dark" content="" placement="top">
             <template #content>
@@ -301,29 +301,51 @@
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
-        <!-- <vab-pagination
-          :current-page="consumableTypeQueryForm.pageNo"
-          :page-size="consumableTypeQueryForm.pageSize"
-          :total="consumableTypeTotal"
-          @current-change="handleConsumableTypeSizeChange"
-          @size-change="handleConsumableTypeCurrentChange"
-        /> -->
       </div>
       <template #footer></template>
     </el-dialog>
+    <!-- 创建耗材 -->
     <el-dialog 
       v-model="addConsumableVisible" 
       :close-on-click-modal="false" 
       title="创建耗材" 
-      width="500"
+      width="570"
       class="moldDialog"
       :before-close="handlerAddCloseDialog"
     >
       <el-divider style="margin-top: 0;"/>
-      <el-form ref="formRef" class="demo-form" label-position="right" label-width="120" :model="form" style="margin: 0 auto;" :rules="rules" >
-        <el-form-item label="零件名" prop="componentName">
-          <el-input v-model="form.componentName" clearable />
+      <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="margin-left: 10px; margin-right: 10px" :rules="rules" >
+        <el-form-item label="耗材名" prop="componentName">
+          <el-input v-model="mergedPartName" disabled />
         </el-form-item>  
+        <el-form-item label="耗材种类" prop="materialType">
+          <el-select v-model="form.materialType" clearable placeholder="请选择耗材种类" >
+            <el-option
+              v-for="item in consumableTypeOption"
+              :label="item.consumablesName"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-row style="margin-bottom: 18px;">
+          <el-col :span="12">
+            <el-form-item label="耗材尺寸" prop="size">
+              <el-input v-model="form.size" clearable placeholder="22x15x10"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="尺寸单位" prop="sizeUnit">
+              <el-input v-model="form.sizeUnit" clearable placeholder="cm" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="规格/说明" prop="specification">
+          <el-input v-model="form.specification" clearable placeholder="三层加硬空白"/>
+        </el-form-item>
+          <el-form-item label="按单采购" prop="status">
+        <el-switch v-model="form.status" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
+        </el-form-item>
         <el-form-item label="零件单位" prop="unit">
           <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
         </el-form-item>
@@ -338,6 +360,7 @@
             :remote-method="remoteMethod"
             :loading="loading"
             @change="handleTaxDisabled"
+            @blur="handleInput"
             clearable
           >
             <el-option
@@ -354,14 +377,11 @@
                 :value="dict.value" :label="dict.label" ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="实际税点" prop="actualTaxRate">
+        <el-form-item v-show="taxVisible" label="实际税点" prop="actualTaxRate">
           <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
         </el-form-item>
-        <el-form-item label="开票税点" prop="invoicingTaxRate">
-          <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled"placeholder="税点如果是13个点则输入0.13"/>
-        </el-form-item>
-        <el-form-item label="按单采购" prop="status">
-          <el-switch v-model="form.status" style="--el-switch-on-color: #13ce66;" :active-value="1" :inactive-value="0"/>
+        <el-form-item v-show="taxVisible" label="开票税点" prop="invoicingTaxRate">
+          <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -456,11 +476,11 @@ const remoteMethod = async (query: string) => {
   if (query) {
     // 先获取供应商信息
     const { data } = await getProductAllSupplier({
-        suppliserName: query
+      suppliserName: query
     })
     // console.log(data);
     supplierList.value = data.map((item: any) => {
-        return { value: `${item}`, label: `${item}` }
+      return { value: `${item}`, label: `${item}` }
     })
     loading.value = true
     setTimeout(() => {
@@ -473,34 +493,56 @@ const remoteMethod = async (query: string) => {
     options.value = []
   }
 }
-const handleTaxDisabled = async (value: string) => {
-   if(value) {
-        const { data } = await getProductSupplier({ suppliserName: value })
-        
-        if(data!==null) {
-            const {actualPTaxRate, actualZTaxRate, invoicingPTaxRate, invoicingZTaxRate, suppliserId } = data
-            taxDisabled.value = true
-            if(form.invoicing === 0) {
-                form.actualTaxRate = actualZTaxRate
-                form.invoicingTaxRate = invoicingZTaxRate
-            } else if(form.invoicing === 1) {
-                form.actualTaxRate = actualPTaxRate
-                form.invoicingTaxRate = invoicingPTaxRate
-            } else {
-                form.actualTaxRate = 0
-                form.invoicingTaxRate = 0
-            }
-        } else {
-            taxDisabled.value = false
-        }
-   }
+// 处理远程搜索不重复选择
+const handleInput = (e: any) => {
+  const value = e.target.value
+  if (value) {
+    form.supplier = e.target.value
+  }
 }
+const handleTaxDisabled = async (value: string) => {
+  if(value) {
+    const { data } = await getProductSupplier({ suppliserName: value })
+    
+    if(data!==null) {
+      const {actualPTaxRate, actualZTaxRate, invoicingPTaxRate, invoicingZTaxRate, suppliserId } = data
+      taxDisabled.value = true
+      if(form.invoicing === 0) {
+        form.actualTaxRate = actualZTaxRate
+        form.invoicingTaxRate = invoicingZTaxRate
+      } else if(form.invoicing === 1) {
+        form.actualTaxRate = actualPTaxRate
+        form.invoicingTaxRate = invoicingPTaxRate
+      } else {
+        form.actualTaxRate = 0
+        form.invoicingTaxRate = 0
+      }
+    } else {
+      taxDisabled.value = false
+    }
+  }
+}
+// 耗材名自动生成
+const mergedPartName = computed(() => {
+  let type = ''
+  if (form.materialType) {
+    const i = consumableTypeOption.value.find((item: any) => item.id === form.materialType)
+    type = i.consumablesName
+  }
+  
+  return `${type}-${form.size}-${form.sizeUnit}-${form.specification}`
+})
+// 开票税点和实际税点可见
+const taxVisible = ref<boolean>(true)
 const handleInvoicingTaxChange = async (value: number) => {
-   console.log(value);
-   
-   if(form.supplier) {
-       handleTaxDisabled(form.supplier)
-   }
+  if (value === 2) {
+    taxVisible.value = false
+  } else {
+    taxVisible.value = true
+  }
+  if(form.supplier) {
+    handleTaxDisabled(form.supplier)
+  }
 }
 interface Option2 {
   key: number
@@ -565,17 +607,24 @@ const handlerAddCloseDialog = () => {
 }
 const formRef = ref<FormInstance>()
 const form = reactive<any>({
-    componentName: '',
-    unit: '',
-    suppliser: '',
-    invoicing: 0,
-    actualTaxRate: '',
-    invoicingTaxRate: '',
-    status: 0,
+  componentName: '',
+  unit: '',
+  suppliser: '',
+  invoicing: 0,
+  actualTaxRate: '',
+  invoicingTaxRate: '',
+  status: 0,
+  size: '',
+  sizeUnit: '',
+  specification: ''
 })
-const handleAddConsumable = () => {
+const consumableTypeOption = ref<any>([])
+const handleAddConsumable = async () => {
   addConsumableVisible.value = true
   formRef.value?.resetFields()
+  const { data } = await getProductConsumablesType() //获取耗材种类
+  consumableTypeOption.value = data  
+  taxVisible.value = true
 }
 const invoicingNumList = [
   {
@@ -591,12 +640,32 @@ const invoicingNumList = [
     label: '无法开票',
   },
 ]
+function validateNoSpaces (rule: any, value: any, callback: any) {
+  if (/\s/.test(value)) {
+    callback(new Error('输入不能包含空格'));
+  } else {
+    callback();
+  }
+}
 const rules = reactive({
-  componentName: [
-    { required: true, message: '请填写零件名', trigger: 'blur' },
+  materialType: [
+    { required: true, message: '请选择耗材种类', trigger: 'change' },
+  ],
+  size: [
+    { required: true, message: '请填写耗材尺寸', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
+  ],
+  sizeUnit: [
+    { required: true, message: '请填写尺寸单位', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
   ],
   unit: [
     { required: true, message: '请填写零件单位', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
+  ],
+  specification: [
+    { required: true, message: '请填写规格和说明', trigger: 'blur' },
+    { validator: validateNoSpaces, trigger: 'blur' },
   ],
   suppliser: [
     { required: true, message: '请填写供应商名称', trigger: 'blur' },
@@ -604,11 +673,24 @@ const rules = reactive({
   invoicing: [
     { required: true, message: '请选择开票类型', trigger: 'change' },
   ],
+  // actualTaxRate: [
+  //   { required: true, message: '请填写实际税点', trigger: 'blur' },
+  //   { validator: validateNoSpaces, trigger: 'blur' },
+  // ],
+  // invoicingTaxRate: [
+  //   { required: true, message: '请填写开票税点', trigger: 'blur' },
+  //   { validator: validateNoSpaces, trigger: 'blur' },
+  // ]
   actualTaxRate: [
     {
       validator: (rule: any, value: any, callback: any) => {
         if (form.invoicing !== 2 && (!value || value === '')) {
           callback(new Error('请填写实际税点'));
+        } else {
+          callback();
+        }
+        if (/\s/.test(value)) {
+          callback(new Error('输入不能包含空格'));
         } else {
           callback();
         }
@@ -624,6 +706,11 @@ const rules = reactive({
         } else {
           callback();
         }
+        if (/\s/.test(value)) {
+          callback(new Error('输入不能包含空格'));
+        } else {
+          callback();
+        }
       },
       trigger: 'blur',
     },
@@ -631,32 +718,30 @@ const rules = reactive({
 });
 
 const handleSubmit = async () => {
-    formRef.value?.validate(async (valid: any) => {
-        if (valid) {
-          
-          try {
-            const newConsumable = {
-              componentName: form.componentName,
-              unit: form.unit,
-              suppliser: form.suppliser,
-              invoicing: form.invoicing,
-              actualTaxRate: form.actualTaxRate,
-              invoicingTaxRate: form.invoicingTaxRate,
-              status: form.status,
-            }
-            const { data } = await createConsumables(newConsumable)
-            if (data) {
-                list.value.push(newConsumable)
-                fetchData()
-                addConsumableVisible.value = false
-                $baseMessage('创建耗材提交成功', 'success', 'hey')
-            }
-          } catch (error) {
-            console.error(error)
-          }
+  formRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      try {
+        const newConsumable = {
+          componentName: mergedPartName.value,
+          unit: form.unit,
+          suppliser: form.suppliser,
+          invoicing: form.invoicing,
+          actualTaxRate: form.actualTaxRate,
+          invoicingTaxRate: form.invoicingTaxRate,
+          status: form.status,
         }
-    
-    })
+        const { data } = await createConsumables(newConsumable)
+        if (data) {
+          list.value.push(newConsumable)
+          fetchData()
+          addConsumableVisible.value = false
+          $baseMessage('创建耗材提交成功', 'success', 'hey')
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  })
 }
 
 interface consumableType {
@@ -682,13 +767,13 @@ const currencyNumList = [
 const list = ref<any>([])
 const consumableVisible = ref<boolean>(false)
 const handlerCloseDialog = () => {
-    consumableVisible.value = false
+  consumableVisible.value = false
 }
 const handleConsumableType = async () => {
-    consumableVisible.value = true
-    const { data } = await getProductConsumablesType() //获取耗材种类
-    consumableTypeForm.consumableType = ''
-    consumableTypeData.value = data
+  consumableVisible.value = true
+  const { data } = await getProductConsumablesType() //获取耗材种类
+  consumableTypeForm.consumableType = ''
+  consumableTypeData.value = data
 }
 const handleDelConsumableType = async (row: any, index: number) => {
   $baseConfirm('确定要删除耗材种类吗', '系统提示', async () => {
@@ -700,7 +785,6 @@ const handleDelConsumableType = async (row: any, index: number) => {
       $baseMessage('删除耗材种类成功', 'success', 'hey')
     }
   })
-  
 }
 const route: any = useRoute()
 // 弹出框的标题
@@ -732,16 +816,16 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const handleSupplier = (row: any) => {
-    router.push({
-        path: '/productInfomation/skuSupplier',
-        query: {
-          title: "SKU供应商",
-          componentId: row.existingPartsListId,
-          componentName: row.componentName,
-          from: "consumable",
-          timestamp: Date.now(),
-        },
-    })
+  router.push({
+    path: '/productInfomation/skuSupplier',
+    query: {
+      title: "SKU供应商",
+      componentId: row.existingPartsListId,
+      componentName: row.componentName,
+      from: "consumable",
+      timestamp: Date.now(),
+    },
+  })
 }
 /**
 * 当点击确认时，子组件传递给父组件的新的val
@@ -749,15 +833,15 @@ const handleSupplier = (row: any) => {
 const clickAttentionConfirm = async (val: any) => {
   const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
   if (data === true) {
-      attentionCopy.value = val
-      clickRow.value.purchaseMatters = val
+    attentionCopy.value = val
+    clickRow.value.purchaseMatters = val
   }
 }
 const clickContractConfirm = async (val: any) => {
   const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
   if (data === true) {
-      contractCopy.value = val
-      clickRow.value.contractTerms = val
+    contractCopy.value = val
+    clickRow.value.contractTerms = val
   }
 }
 /**
@@ -772,45 +856,43 @@ const clickContractCancel = (val: any) => {
 
 const handleConsumablesUpdate = async (row: any) => {
   await updateConsumablesSupplier({
-        id: row.id,
-        componentId:row.existingPartsListId,
-        componentUnit:row.unit,
-        defaultSuppliserId: row.suppliserId,
-        unitPrice: row.unitPrice,
-        taxIncludedPrice: row.taxIncludedPrice,
-        currency: row.currency,
-        minimumOrderQuantity: row.minimumOrderQuantity,
-        numberFullCartons: row.numberFullCartons,
-        invoicing: row.invoicing,
-        purchaseId: row.purchaseId,
-        purchaseLink: row.purchaseLink,
-        purchaseMatters: row.purchaseMatters,
-        contractTerms: row.contractTerms,
-        status:row.status
-      })
-      fetchData()
+    id: row.id,
+    componentId:row.existingPartsListId,
+    componentUnit:row.unit,
+    defaultSuppliserId: row.suppliserId,
+    unitPrice: row.unitPrice,
+    taxIncludedPrice: row.taxIncludedPrice,
+    currency: row.currency,
+    minimumOrderQuantity: row.minimumOrderQuantity,
+    numberFullCartons: row.numberFullCartons,
+    invoicing: row.invoicing,
+    purchaseId: row.purchaseId,
+    purchaseLink: row.purchaseLink,
+    purchaseMatters: row.purchaseMatters,
+    contractTerms: row.contractTerms,
+    status:row.status
+  })
+  fetchData()
 }
 
 /**
 * 上传图片
 */
 async function uploadImage(params: any, row: any) {
-    try {
-        
-        const uploadForm = new FormData(); // 每次上传前重置 FormData
-        uploadForm.append('file', params.file);
-        uploadForm.append('id', row.id);
+  try {
+    const uploadForm = new FormData(); // 每次上传前重置 FormData
+    uploadForm.append('file', params.file);
+    uploadForm.append('id', row.id);
 
-        const { data } = await uploadComponentImage(uploadForm)
-        row.hide = true
-        if (data) {
-          
-          row.imageList = [{ url: data }]
-          $baseMessage('图片上传成功', 'success', 'hey')
-        }
-    } catch (error) {
-        console.error(error)
+    const { data } = await uploadComponentImage(uploadForm)
+    row.hide = true
+    if (data) {
+      row.imageList = [{ url: data }]
+      $baseMessage('图片上传成功', 'success', 'hey')
     }
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 // 预览图片列表
@@ -835,15 +917,14 @@ const handlePictureCardPreview = (file: UploadFile, row: any) => {
 const handleRemove = async (file: UploadFile, row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-
-        const { data } = await delComponentImage({
-            id: row.id
-        })
-        if (data == true) {
-            row.imageList = []
-            row.hide = false
-            $baseMessage("图片删除成功!","success","hey")
-        }
+      const { data } = await delComponentImage({
+        id: row.id
+      })
+      if (data == true) {
+        row.imageList = []
+        row.hide = false
+        $baseMessage("图片删除成功!","success","hey")
+      }
     })
     
   } catch (error) {
@@ -896,7 +977,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
 }
 
 // table blur事件
-const clickCancle = async (event:any,value:any) =>{
+const clickCancel = async (event:any,value:any) =>{
   const rootElement = getRootElement(event.srcElement, ".cell");
 
   if (rootElement) {
@@ -919,19 +1000,9 @@ const purchaseOption = ref<any>()
 const queryData = async () => {
   queryForm.pageNo = 1
   fetchData()
-  // if(queryForm.keyWord === '') {
-  //   fetchData()
-  // } else {
-  //   listLoading.value = true
-  //   let queryList: any = []
-  //   queryList = list.value.filter((item: any) => item.componentName.includes(queryForm.keyWord, 0))
-  //   list.value = queryList
-  //   total.value = list.value.length
-  //   listLoading.value = false
-  // }
 }
 const formattedPrice = (price: string) => {
-    return parseFloat(price).toFixed(2)
+  return parseFloat(price).toFixed(2)
 }
 const fetchData = async () => {
   listLoading.value = true
@@ -950,9 +1021,7 @@ const fetchData = async () => {
   })
   listLoading.value = false
 }
-// const fetchSupplierList = async () => {
 
-// }
 const fetchPurchase = async () => { //获取默认采购方
     const { data: purchase } = await getProductComponentPurchase()
     purchaseOption.value = purchase

@@ -5,7 +5,7 @@
         <h2>云舟退税管理</h2>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel :span="20">
-        <el-button type="primary">发票匹配</el-button>
+        <el-button type="primary" @click="showInvoiceMatching">发票匹配</el-button>
         <el-button type="primary">批次利润率</el-button>
         <el-button type="primary">出口发票生成（云舟）</el-button>
         <el-button type="primary">出口发票生成（埃托姆）</el-button>
@@ -120,6 +120,9 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <!-- <vab-invoice-matching 
+      :invoice-matching-visible="invoiceMatchingVisible"
+    /> -->
   </div>
 </template>
 
@@ -130,9 +133,9 @@ defineOptions({
 })
 
 import { Search } from '@element-plus/icons-vue'
+import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { isEqual } from 'lodash'
 
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -143,6 +146,12 @@ const queryForm = reactive<any>({
   pageSize: 20
 })
 let copyRow: any
+// 发票匹配可见
+const invoiceMatchingVisible = ref<boolean>(false)
+// 展示发票匹配
+const showInvoiceMatching = () => {
+  invoiceMatchingVisible.value = true
+}
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -232,5 +241,8 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 }
 .none {
   display: none;
+}
+.el-table :deep(.cell) {
+  min-width: 32px;
 }
 </style>

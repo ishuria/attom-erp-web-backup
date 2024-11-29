@@ -1,6 +1,6 @@
 <template>
   <vab-dialog
-    title="明细"
+    title="明细 | 合同编号"
     v-model="dflag"
     width="97%"
     top="10vh"
@@ -27,51 +27,51 @@
       :cell-style="cellStyle"
       :data="fakeData"
     >
-      <el-table-column label="报关品名" prop="" min-width=""></el-table-column>
-      <el-table-column label="报关数量" prop="" min-width=""></el-table-column>
-      <el-table-column label="报关单位" prop="" min-width=""></el-table-column>
-      <el-table-column label="CIF售价$" prop="" min-width=""></el-table-column>
-      <el-table-column label="运费$" prop="" min-width=""></el-table-column>
-      <el-table-column label="FOB售价$" prop="" min-width=""></el-table-column>
-      <el-table-column label="汇率" prop="" min-width=""></el-table-column>
-      <el-table-column label="人民币售价￥" prop="" min-width="">
+      <el-table-column label="报关品名" prop="" min-width="100"></el-table-column>
+      <el-table-column label="报关数量" prop="" min-width="100"></el-table-column>
+      <el-table-column label="报关单位" prop="" min-width="100"></el-table-column>
+      <el-table-column label="CIF售价$" prop="" min-width="105"></el-table-column>
+      <el-table-column label="运费$" prop="" min-width="95"></el-table-column>
+      <el-table-column label="FOB售价$" prop="" min-width="105"></el-table-column>
+      <el-table-column label="汇率" prop="" min-width="90"></el-table-column>
+      <el-table-column label="人民币售价￥" prop="" min-width="130">
         <template #header>
           人民币<br />售价￥
         </template>
       </el-table-column>
-      <el-table-column label="含税成本￥" prop="" min-width="">
+      <el-table-column label="含税成本￥" prop="" min-width="110">
         <template #header>
           含税<br />成本￥
         </template>
       </el-table-column>
-      <el-table-column label="退税后成本￥" prop="" min-width="">
+      <el-table-column label="退税后成本￥" prop="" min-width="130">
         <template #header>
           退税后<br />成本￥
         </template>
       </el-table-column>
-      <el-table-column label="利润￥" prop="" min-width=""></el-table-column>
-      <el-table-column label="利润率" prop="" min-width=""></el-table-column>
-      <el-table-column label="退税额￥" prop="" min-width=""></el-table-column>
-      <el-table-column label="供应商" prop="" min-width=""></el-table-column>
-      <el-table-column label="供应商税号展示" prop="" min-width="">
+      <el-table-column label="利润￥" prop="" min-width="100"></el-table-column>
+      <el-table-column label="利润率" prop="" min-width="100"></el-table-column>
+      <el-table-column label="退税额￥" prop="" min-width="100"></el-table-column>
+      <el-table-column label="供应商" prop="" min-width="100"></el-table-column>
+      <el-table-column label="供应商税号展示" prop="" min-width="110">
         <template #header>
           供应商<br />税号展示
         </template>
       </el-table-column>
-      <el-table-column label="PO" prop="po" min-width=""></el-table-column>
-      <el-table-column label="发票匹配日期" prop="" min-width="">
+      <el-table-column label="PO" prop="po" min-width="90"></el-table-column>
+      <el-table-column label="发票匹配日期" prop="" min-width="100">
         <template #header>
           发票匹<br />配日期
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" prop="" min-width=""></el-table-column>
-      <el-table-column label="发票号码" prop="" min-width=""></el-table-column>
-      <el-table-column label="发票数量" prop="" min-width=""></el-table-column>
-      <el-table-column label="发票文件" prop="" min-width=""></el-table-column>
-      <el-table-column label="SKU" prop="" min-width=""></el-table-column>
-      <el-table-column label="PO零件数" prop="" min-width=""></el-table-column>
-      <el-table-column label="shipmentID" prop="" min-width=""></el-table-column>
-      <el-table-column label="付款记录" prop="" min-width=""></el-table-column>
+      <el-table-column label="发票代码" prop="" min-width="100"></el-table-column>
+      <el-table-column label="发票号码" prop="" min-width="100"></el-table-column>
+      <el-table-column label="发票数量" prop="" min-width="100"></el-table-column>
+      <el-table-column label="发票文件" prop="" min-width="100"></el-table-column>
+      <el-table-column label="SKU" prop="" min-width="90"></el-table-column>
+      <el-table-column label="PO零件数" prop="" min-width="110"></el-table-column>
+      <el-table-column label="shipmentID" prop="" min-width="130"></el-table-column>
+      <el-table-column label="付款记录" prop="" min-width="100"></el-table-column>
     </el-table>
     <template #footer></template>
   </vab-dialog>
@@ -122,7 +122,11 @@ const headerCellStyle = (data: { row: any, column: any, rowIndex: number, column
   }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 15) {
+  if (data.columnIndex === 0 || data.columnIndex === 13) {
+    return {
+      textAlign: 'left'
+    }
+  } else if (data.columnIndex === 15) {
     return {
       color: 'var(--el-color-danger)',
       textAlign: 'center'

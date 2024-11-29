@@ -46,7 +46,7 @@
       <el-table-column label="备注" prop="" min-width="90"></el-table-column>
       <el-table-column label="操作" fixed="right" width="100">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="showInOrDe">调增调减</el-link>
+          <el-link type="primary" :underline="false" @click="">调增调减</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -68,29 +68,45 @@
     >
       <el-form :model="inOrDeForm" label-position="top" style="margin-left: 20px; margin-right: 20px" >
         <el-form-item label="到货日期">
-          <el-input disabled />
+          <div style="width: 83%">
+            <el-input disabled />
+          </div>
         </el-form-item>
         <el-form-item label="供应商">
-          <el-input disabled />
+          <div style="width: 83%">
+            <el-input disabled />
+          </div>
         </el-form-item>
         <el-form-item label="PO">
-          <el-input disabled />
+          <div style="width: 83%">
+            <el-input disabled />
+          </div>
         </el-form-item>
         <el-form-item label="SKU">
-          <el-input disabled />
+          <div style="width: 83%">
+            <el-input disabled />
+          </div>
         </el-form-item>
         <el-form-item label="品名">
-          <el-input disabled />
+          <div style="width: 83%">
+            <el-input disabled />
+          </div>
         </el-form-item>
         <el-form-item label="shipmentID">
-          <el-input disabled />
+          <div style="width: 83%">
+            <el-input disabled />
+          </div>
         </el-form-item>
         <el-form-item label="调整数量">
-          <el-input />
+          <div style="width: 83%; margin-right: 30px">
+            <el-input />
+          </div>
+          <span class="custom-checkbox" style="width: 10%; color: var(--el-color-danger)"><el-checkbox>红冲</el-checkbox></span>
         </el-form-item>
-        <!-- <el-checkbox>红冲</el-checkbox> -->
         <el-form-item label="调整价格">
-          <el-input />
+          <div style="width: 83%">
+            <el-input />
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -151,3 +167,10 @@ const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: 
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.custom-checkbox :deep(.el-checkbox) {
+  transform: scale(1.5);
+  transform-origin: center;
+}
+</style>
