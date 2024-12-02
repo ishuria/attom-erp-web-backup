@@ -46,7 +46,7 @@
       <el-table-column label="备注" prop="" min-width="90"></el-table-column>
       <el-table-column label="操作" fixed="right" width="100">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="">调增调减</el-link>
+          <el-link type="primary" :underline="false" @click="showInOrDe">调增调减</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -101,7 +101,11 @@
           <div style="width: 83%; margin-right: 30px">
             <el-input />
           </div>
-          <span class="custom-checkbox" style="width: 10%; color: var(--el-color-danger)"><el-checkbox>红冲</el-checkbox></span>
+          <span class="custom-checkbox" style="width: 10%;">
+            <el-checkbox
+              :true-value="1" :false-value="0"
+            ><span style="color: var(--el-color-danger)">红冲</span></el-checkbox>
+          </span>
         </el-form-item>
         <el-form-item label="调整价格">
           <div style="width: 83%">
@@ -170,7 +174,7 @@ const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: 
 
 <style lang="scss" scoped>
 .custom-checkbox :deep(.el-checkbox) {
-  transform: scale(1.5);
+  transform: scale(1.3);
   transform-origin: center;
 }
 </style>

@@ -9,6 +9,7 @@
     <vab-query-form>
       <vab-query-form-left-panel :span="6">
         <el-date-picker
+          v-model="queryForm.date"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
@@ -78,8 +79,20 @@ const closeBatchProfitMargin = () => {
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  date: getDefaultStringTime()
 })
+// 日期初始化
+function getDefaultStringTime(): [string, string] {
+  const today = new Date();
+  const lastMonthDate = new Date(today.getFullYear(), today.getMonth(), 2);
+  // 今天的日期
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  // 格式化为字符串形式
+  const formattedLastMonthDate = lastMonthDate.toISOString().split('T')[0];
+  const formattedTodayDate = todayDate.toISOString().split('T')[0];
+  return [formattedLastMonthDate, formattedTodayDate];
+}
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const queryData = () => {

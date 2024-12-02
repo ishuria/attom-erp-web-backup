@@ -172,7 +172,7 @@
     </el-table>
     <template #footer>
       <div style="text-align: center;">
-        <el-button>取消</el-button>
+        <el-button @click="closeInvoiceMatching">取消</el-button>
         <el-button type="primary">确认</el-button>
       </div>
     </template>
