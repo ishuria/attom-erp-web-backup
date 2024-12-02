@@ -4,12 +4,12 @@
       <vab-query-form-left-panel :span="18">
         <el-button type="primary" @click="showBoxNumber">开始装箱</el-button>
         <el-button type="primary" @click="showShippingAmazon">发货(亚马逊)</el-button>
+        <el-button type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
         <el-button type="primary" @click="shippingPlanningVisible = true">发货规划</el-button>
         <el-button type="primary" @click="handleUnlockEncasement">解锁</el-button>
         <el-button type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
         <el-button type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
         <el-button type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
-        <el-button type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
         <el-select placeholder="请选择打印机" clearable style="margin: 0 10px calc(var(--el-margin) / 2) 0">
           <el-option 
             v-for="item in printerOption"
@@ -70,10 +70,11 @@
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"></el-table-column>
       <el-table-column label="箱数" prop="numberOfBoxes" min-width="150">
         <template #default="{ row }">
-          <el-input-number v-model="row.numberOfBoxes" 
-          @change="(newValue, oldValue) => handleBoxNumberChange(newValue, oldValue, row)" 
-          style="width: 100%;" 
-          @keydown.prevent="handleKeyDown" 
+          <el-input-number 
+            v-model="row.numberOfBoxes" 
+            @change="(newValue, oldValue) => handleBoxNumberChange(newValue, oldValue, row)" 
+            style="width: 100%;" 
+            @keydown.prevent="handleKeyDown" 
         />
         </template>
       </el-table-column>
@@ -520,18 +521,24 @@ const file3Disabled = ref<boolean>(true)
 const handleBoxNumberChange = async (currentValue: number | undefined, oldValue: number | undefined, row: IEncasementList) => {
   if (currentValue! > oldValue!) {
     try {
-      await plusEncasementCount({
+      const { data } = await plusEncasementCount({
         encasementId: row.id!
       })
+      if (data) {
+        fetchData()
+      }
     } catch (error) {
       // 还原回原来的值
       row.numberOfBoxes = oldValue
     }
   } else if (currentValue! < oldValue!) {
     try {
-      await reduceEncasementCount({
+      const { data } = await reduceEncasementCount({
         encasementId: row.id!
       })
+      if (data) {
+        fetchData()
+      }
     } catch (error) {
       row.numberOfBoxes = oldValue
     }

@@ -3,9 +3,11 @@
     title="批次利润率"
     width="80%"
     v-model="dflag"
+    top="10vh"
+    @close="closeBatchProfitMargin"
   >
     <vab-query-form>
-      <vab-query-form-top-panel>
+      <vab-query-form-left-panel :span="6">
         <el-date-picker
           type="daterange"
           range-separator="至"
@@ -14,8 +16,8 @@
           style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0;"
         >
         </el-date-picker>
-      </vab-query-form-top-panel>
-      <vab-query-form-right-panel>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel :span="18">
         <el-form inline :model="queryForm" @submit.prevent >
           <el-form-item>
             <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter.native="queryData" @input="queryData" />
@@ -29,6 +31,7 @@
     <el-table
       border
       :cell-style="cellStyle"
+      :header-cell-style="{ textAlign: 'center' }"
     >
       <el-table-column label="出库日期" prop="" min-width=""></el-table-column>
       <el-table-column label="合同编号" prop="" min-width=""></el-table-column>
@@ -66,6 +69,12 @@ const props = defineProps<{
 watchEffect(() => {
   dflag.value = props.batchProfitMarginVisible
 })
+const emit = defineEmits<{
+  updateBatchProfitMarginVisible: [value: boolean]
+}>()
+const closeBatchProfitMargin = () => {
+  emit('updateBatchProfitMarginVisible', false)
+}
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,

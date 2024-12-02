@@ -111,12 +111,12 @@ const queryData = () => {
   // fetchData()
 }
 const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex !== 13 && data.columnIndex !== 14 && data.columnIndex !== 15 && data.columnIndex !== 21 && data.columnIndex !== 24) {
-    return {
-      color: 'rgb(83, 186, 177)',
-      textAlign: 'center'
-    }
-  }
+  // if (data.columnIndex !== 13 && data.columnIndex !== 14 && data.columnIndex !== 15 && data.columnIndex !== 21 && data.columnIndex !== 24) {
+  //   return {
+  //     color: 'rgb(83, 186, 177)',
+  //     textAlign: 'center'
+  //   }
+  // }
   return {
     textAlign: 'center'
   }
