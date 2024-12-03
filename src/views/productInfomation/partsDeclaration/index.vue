@@ -1,9 +1,6 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel>
-        <h2>零件报关信息</h2>
-      </vab-query-form-top-panel>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleStatus1Change">{{ queryForm.status1 === 0 ? '展示停产' : '隐藏停产' }}</el-button>
         <el-button type="primary" @click="handleStatus2Change">{{ queryForm.status2 === 0 ? '展示不报关' : '隐藏不报关' }}</el-button>

@@ -46,14 +46,14 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handlePublishPo(row)">发布PO</el-link>
+                    <el-dropdown-item @click="handlePublishPo(row)">
+                      <el-link type="primary" :underline="false" >发布PO</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleUpdateStatus(row)">未达起订量</el-link>
+                    <el-dropdown-item @click="handleUpdateStatus(row)">
+                      <el-link type="primary" :underline="false" >未达起订量</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="danger" :underline="false" @click="handleDelPlannedPo(row)">删除</el-link>
+                    <el-dropdown-item @click="handleDelPlannedPo(row)">
+                      <el-link type="danger" :underline="false" >删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -170,14 +170,14 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handlePublishPo(row)">发布PO</el-link>
+                    <el-dropdown-item @click="handlePublishPo(row)">
+                      <el-link type="primary" :underline="false" >发布PO</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleUpdateRStatus(row)">达到起订量</el-link>
+                    <el-dropdown-item @click="handleUpdateRStatus(row)">
+                      <el-link type="primary" :underline="false" >达到起订量</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="danger" :underline="false" @click="handleDelPlannedPo(row)">删除</el-link>
+                    <el-dropdown-item @click="handleDelPlannedPo(row)">
+                      <el-link type="danger" :underline="false" >删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>

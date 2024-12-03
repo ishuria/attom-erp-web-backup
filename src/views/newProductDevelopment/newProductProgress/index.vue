@@ -171,26 +171,26 @@ handleSubmit<template>
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleSampleCostting(row)">拿样与核算</el-link>
+                    <el-dropdown-item @click="handleSampleCostting(row)">
+                      <el-link type="primary" :underline="false" >拿样与核算</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="addProgressMold(row.progressId)">开模申请</el-link>
+                    <el-dropdown-item @click="addProgressMold(row.progressId)">
+                      <el-link type="primary" :underline="false" >开模申请</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleOrderProcess(row)">订大货申请</el-link>
+                    <el-dropdown-item @click="handleOrderProcess(row)">
+                      <el-link type="primary" :underline="false" >订大货申请</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleCopyProgress(row)">复制</el-link>
+                    <el-dropdown-item @click="handleCopyProgress(row)">
+                      <el-link type="primary" :underline="false" >复制</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleGetShareList(row.progressId)">共享</el-link>
+                    <el-dropdown-item @click="handleGetShareList(row.progressId)">
+                      <el-link type="primary" :underline="false" >共享</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleGetEvaluationById(row.evaluationId)">查看新款评估</el-link>
+                    <el-dropdown-item @click="handleGetEvaluationById(row.evaluationId)">
+                      <el-link type="primary" :underline="false" >查看新款评估</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleArchived(row.progressId)">归档</el-link>
+                    <el-dropdown-item @click="handleArchived(row.progressId)">
+                      <el-link type="primary" :underline="false" >归档</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>

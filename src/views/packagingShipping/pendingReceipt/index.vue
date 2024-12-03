@@ -169,11 +169,11 @@
                     <el-dropdown-item>
                       <el-link type="primary" :underline="false" >打印面单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="primary" :underline="false" @click="handleGetSignedRecord(row)">修改</el-link>
+                    <el-dropdown-item @click="handleGetSignedRecord(row)">
+                      <el-link type="primary" :underline="false" >修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-link type="danger" :underline="false" @click="handleIfShowRecord(row)">取消签收</el-link>
+                    <el-dropdown-item @click="handleIfShowRecord(row)">
+                      <el-link type="danger" :underline="false" >取消签收</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>

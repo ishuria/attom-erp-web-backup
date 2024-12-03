@@ -3,8 +3,6 @@
     <vab-query-form>
       <vab-query-form-top-panel >
         <el-button type="primary">导出</el-button>
-        <el-button type="primary">导出埃托姆</el-button>
-        <el-button type="primary">汇率</el-button>
         <el-button type="primary">入库核对</el-button>
         <el-button type="primary">未匹配发票汇总</el-button>
       </vab-query-form-top-panel>

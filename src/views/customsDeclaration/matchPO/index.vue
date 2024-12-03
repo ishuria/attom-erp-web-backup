@@ -112,38 +112,38 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
+                <el-dropdown-item @click="showMatch(row)">
+                  <el-link type="primary" :underline="false" >匹配</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleArchivePackage(row)">打包归档</el-link>
+                <el-dropdown-item @click="handleArchivePackage(row)">
+                  <el-link type="primary" :underline="false" >打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">退税归档</el-link>
+                <el-dropdown-item @click="">
+                  <el-link type="primary" :underline="false">退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">出库归档</el-link>
+                <el-dropdown-item @click="">
+                  <el-link type="primary" :underline="false" >出库归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="showFirstLegFreight(row)">头程运费</el-link>
+                <el-dropdown-item @click="showFirstLegFreight(row)">
+                  <el-link type="primary" :underline="false" >头程运费</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
+                <el-dropdown-item @click="showFreightFee(row)">
+                  <el-link type="primary" :underline="false" >退税运费</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">合同导入</el-link>
+                <el-dropdown-item @click="">
+                  <el-link type="primary" :underline="false" >合同导入</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleCancelArchivePackage(row)">撤销打包归档</el-link>
+                <el-dropdown-item @click="handleCancelArchivePackage(row)">
+                  <el-link type="primary" :underline="false" >撤销打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">撤销退税归档</el-link>
+                <el-dropdown-item @click="">
+                  <el-link type="primary" :underline="false" >撤销退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="">撤销出库</el-link>
+                <el-dropdown-item @click="">
+                  <el-link type="primary" :underline="false">撤销出库</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleCancelEncasement(row)">撤销装箱(删除)</el-link>
+                <el-dropdown-item @click="handleCancelEncasement(row)">
+                  <el-link type="primary" :underline="false">撤销装箱(删除)</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -216,10 +216,10 @@
           <template #default="{ row }">
             <el-select v-model="row.currency" style="min-width: 100%;">
               <el-option 
-                v-for="item in currencyOption"
+                v-for="item in currencyList"
                 :label="item.label"
-                :value="item.value"
-                :key="item.value"
+                :value="item.id"
+                :key="item.id"
               />
             </el-select>
           </template>
@@ -318,13 +318,13 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { FormInstance, TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { currencyOption } from '../constantOption'
-import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, generateCustomsDeclaration, getMatchPoList, getShipmentCostList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { isEqual } from 'lodash'
+import { downloadFileP } from '/@/api/devlocal/download'
 
 const tableRef = ref<TableInstance>()
 const queryForm = reactive<any>({
@@ -383,20 +383,53 @@ const handleGenerateDeclaration = async () => {
     ids: ids
   })
   if (data) {
-    $baseMessage('生成报关资料成功！', 'success')
+    data.forEach(async (fileName: string) => {
+      try {
+        await downloadFileP('/shipment/download', {
+          fileName: fileName
+        }).then((res) => {
+          console.log(res);
+        }).catch((error) => {
+          console.error(error);
+        })
+        $baseMessage('生成报关资料成功！', 'success')
+      } catch (error) {
+        $baseMessage('生成报关资料失败！', 'error')
+      }
+    })
   }
 }
 // 清关资料生成
-const handleGenerateClearance = () => {
+const handleGenerateClearance = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选择任何行！', 'error')
     return
   }
-    // 判断选中的行的是否都是已归档到退税管理
-    const valid = selectRows.value.every((item: any) => item.taxRefundStatus === 1)
+  // 判断选中的行的是否都是已归档到退税管理
+  const valid = selectRows.value.every((item: any) => item.taxRefundStatus === 1)
   if (!valid) {
     $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成清关资料！', 'error')
     return
+  }
+  const ids = selectRows.value.map((item: any) => item.id).join(',')
+  const { data } = await generateTaxRefund({
+    ids: ids
+  })
+  if (data) {
+    data.forEach(async (fileName: string) => {
+      try {
+        await downloadFileP('/shipment/download', {
+          fileName: fileName
+        }).then((res) => {
+          console.log(res);
+        }).catch((error) => {
+          console.error(error);
+        })
+        $baseMessage('生成清关资料成功！', 'success')
+      } catch (error) {
+        $baseMessage('生成清关资料失败！', 'error')
+      }
+    })
   }
 }
 let copyRow: any
@@ -522,6 +555,8 @@ const fetchCostData = async (id: number) => {
     firstLegFreightVisible.value = false
   }
 }
+
+const currencyList = ref<{ id: number, label: string}[]>([])
 // 展示头程运费
 const showFirstLegFreight = async (row: any) => {
   costList.value = []
@@ -530,6 +565,8 @@ const showFirstLegFreight = async (row: any) => {
   _weight.value = row.weight
   _volume.value = row.volume
   fetchCostData(row.id)
+  const { data } = await getShipmentLegCurrencyList()
+  currencyList.value = data
 }
 // 关闭头程运费
 const closeFirstLegFreight = () => {

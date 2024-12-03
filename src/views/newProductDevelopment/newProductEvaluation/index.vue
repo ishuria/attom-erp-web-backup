@@ -26,15 +26,22 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" 
+    <el-table 
+      ref="tableRef" 
       v-loading="listLoading" 
       :border="true" 
       :data="evaluationList" 
       :stripe="true"
       @cell-click="keyWordTrendCellClick"
     >
-      <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-        :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+      <el-table-column 
+        v-for="(item, index) in indexColumns" 
+        :key="index" 
+        align="center" 
+        :label="item.label"
+        :prop="item.prop" 
+        :min-width="item.minWidth || 100" width="auto"
+      >
         <template #default="{ row }">
           <div v-if="item.label === '关键词趋势'">
             <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
@@ -53,22 +60,20 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleClick(row)">产品核算推进</el-link>
+                <el-dropdown-item @click="handleClick(row)">
+                  <el-link type="primary" :underline="false" >产品核算推进</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="toUpdateEvaluation(row)">查看和修改</el-link>
+                <el-dropdown-item @click="toUpdateEvaluation(row)">
+                  <el-link type="primary" :underline="false" >查看和修改</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="cliekFontSearchKeyWord(row)"
-                    v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
+                <el-dropdown-item @click="cliekFontSearchKeyWord(row)">
+                  <el-link type="primary" :underline="false" v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-if="row.userId === currentLoginUserId">
-                  <el-link type="primary" :underline="false" @click="sharedEvaluation(row)">共享</el-link>
+                <el-dropdown-item v-if="row.userId === currentLoginUserId" @click="sharedEvaluation(row)">
+                  <el-link type="primary" :underline="false" >共享</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="getBenchmarkScoreDetail(row.idNo)"
-                    v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
+                <el-dropdown-item @click="getBenchmarkScoreDetail(row.idNo)">
+                  <el-link type="primary" :underline="false" v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -100,12 +105,12 @@
 
     <!-- 关键词趋势图表 -->
      <vab-trend 
-        :trendEchatsVisible="keyWordTrendEchatsVisible"
-        :keyWord = "inputKeyWord"
-        :trnedData = "trendEcahts"
-        @update:visibleValue = "updateTrendVisibleValue"
-        @update:clearnInputKeyWord = "cleanKeyWordTrendData"
-        @update:trendEchatsList  = "updateTrendEchatsData"
+      :trendEchatsVisible="keyWordTrendEchatsVisible"
+      :keyWord = "inputKeyWord"
+      :trnedData = "trendEcahts"
+      @update:visibleValue = "updateTrendVisibleValue"
+      @update:clearnInputKeyWord = "cleanKeyWordTrendData"
+      @update:trendEchatsList  = "updateTrendEchatsData"
      />
 
     <el-dialog v-model="scoreParametersVisible" :close-on-click-modal="false" title="评分参数" width="500"
@@ -160,12 +165,12 @@
       :callParentMethod="fetchEstimatedCostAccounting"
     />
 
-     <!-- 成本核算默认方式 -->
-     <vab-cost-accounting-param 
-     :flag="costAccountingeParamVisible"
-     @update:visibleValue = "updatecostAccountingeParamVisible"
-     :data = "costAccountingFrom"
-     />
+    <!-- 成本核算默认方式 -->
+      <vab-cost-accounting-param 
+      :flag="costAccountingeParamVisible"
+      @update:visibleValue = "updatecostAccountingeParamVisible"
+      :data = "costAccountingFrom"
+    />
 
   </div>
 </template>

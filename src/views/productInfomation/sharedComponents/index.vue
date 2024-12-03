@@ -1,9 +1,6 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel>
-        <h2>已有零件库</h2>
-      </vab-query-form-top-panel>
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>

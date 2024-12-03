@@ -1,9 +1,6 @@
 <template>
     <div class="comprehensive-table-container auto-height-container">
       <vab-query-form>
-        <vab-query-form-top-panel>
-          <h2>收货仓库</h2>
-        </vab-query-form-top-panel>
         <vab-query-form-left-panel :span="24">
           <el-button type="primary" @click="handleAdd">新增仓库</el-button>
         </vab-query-form-left-panel>

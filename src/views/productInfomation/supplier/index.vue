@@ -1,9 +1,6 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel>
-        <h2>供应商</h2>
-      </vab-query-form-top-panel>
       <vab-query-form-left-panel>
         <el-button type="primary">
           <el-upload

@@ -67,14 +67,14 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-              <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleDownloadFile1(row)">下载模板文件</el-link>
+              <el-dropdown-item @click="handleDownloadFile1(row)">
+                  <el-link type="primary" :underline="false" >下载模板文件</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleDownloadFile2(row)">下载装箱文件</el-link>
+                <el-dropdown-item @click="handleDownloadFile2(row)">
+                  <el-link type="primary" :underline="false" >下载装箱文件</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleDownloadFile3(row)">下载装箱表格</el-link>
+                <el-dropdown-item @click="handleDownloadFile3(row)">
+                  <el-link type="primary" :underline="false" >下载装箱表格</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -101,7 +101,7 @@ import { Search, ArrowDown } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
 import { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
 import { getShippedEncasementList } from '/@/api/devlocal/encasement'
-import { downloadFile } from '/@/api/devlocal/download'
+import { downloadFile, downloadFileP } from '/@/api/devlocal/download'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { split } from 'lodash'
@@ -125,7 +125,7 @@ const setSelectRows = (value: any) => {
 
 // 下载模板文件
 const handleDownloadFile1 = async (row: IGetShippedEncasementList) => {
-  await downloadFile('/shipment/download/file1', {
+  await downloadFileP('/shipment/download/file1', {
     encasementId: row.id
   }).then((res) => {
     console.log(res);
@@ -135,7 +135,7 @@ const handleDownloadFile1 = async (row: IGetShippedEncasementList) => {
 }
 // 已装箱发货列表-下载装箱文件
 const handleDownloadFile2 = async (row: IGetShippedEncasementList) => {
-  await downloadFile('/shipment/download/file2', {
+  await downloadFileP('/shipment/download/file2', {
     encasementId: row.id
   }).then((res) => {
     console.log(res);
@@ -145,7 +145,7 @@ const handleDownloadFile2 = async (row: IGetShippedEncasementList) => {
 }
 // 已装箱发货列表-下载装箱表格文件
 const handleDownloadFile3 = async (row: IGetShippedEncasementList) => {
-  await downloadFile('/shipment/download/file3', {
+  await downloadFileP('/shipment/download/file3', {
     encasementId: row.id
   }).then((res) => {
     console.log(res);
@@ -155,7 +155,7 @@ const handleDownloadFile3 = async (row: IGetShippedEncasementList) => {
 }
 // 已装箱发货列表-walmart
 const handleDownloadFile4 = async (row: IGetShippedEncasementList) => {
-  await downloadFile('/shipment/download/walmart/file', {
+  await downloadFileP('/shipment/download/walmart/file', {
     encasementId: row.id
   }).then((res) => {
     console.log(res);

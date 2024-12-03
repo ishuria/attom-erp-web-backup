@@ -1,9 +1,6 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel>
-        <h2>SKU报关信息</h2>
-      </vab-query-form-top-panel>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleStatus1Change">{{ queryForm.status === 0 ? '展示停产' : '隐藏停产' }}</el-button>
         <el-button type="primary" @click="showPriceCoefficientSetting" >价格系数设定</el-button>
@@ -58,26 +55,26 @@
           <div v-html="row.europeFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="品牌" prop="brank" min-width="80">
+      <el-table-column label="品牌" prop="brank" :width="flexColumnWidth(list, '品牌', 'brank')">
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.brank" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.brank" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HTS美国" min-width="100" prop="htsUs" >
+      <el-table-column label="HTS美国" :width="flexColumnWidth(list, 'HTS美国', 'htsUs')" prop="htsUs" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.htsUs" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.htsUs" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.htsUs }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HTS欧洲" min-width="100" prop="htsEurope" >
+      <el-table-column label="HTS欧洲" :width="flexColumnWidth(list, 'HTS欧洲', 'htsEurope')" prop="htsEurope" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.htsEurope" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.htsEurope" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.htsEurope }}</span>
         </template>
@@ -85,63 +82,81 @@
       <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.manufacturerEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input 
+              v-model="row.manufacturerEn" 
+              @blur="clickCancel($event, row)"
+              @keydown.enter="clickCancel($event,row)"
+            />
           </div>
-          <span>{{ row.manufacturerEn }}</span>
+          <el-tooltip effect="dark" content="" placement="top">
+            <template #content>
+              <div class="custom-tooltip" >{{ row.manufacturerEn }}</div>
+            </template>
+            <el-text truncated>{{ row.manufacturerEn }}</el-text>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="制造商英文地址" min-width="140" prop="manufacturerAddressEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.manufacturerAddressEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input 
+              v-model="row.manufacturerAddressEn" 
+              @blur="clickCancel($event, row)"
+              @keydown.enter="clickCancel($event,row)"
+            />
           </div>
-          <span>{{ row.manufacturerAddressEn }}</span>
+          <el-tooltip effect="dark" content="" placement="top">
+            <template #content>
+              <div class="custom-tooltip" >{{ row.manufacturerAddressEn }}</div>
+            </template>
+            <el-text truncated>{{ row.manufacturerAddressEn }}</el-text>
+          </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="英文清关品名" min-width="180" prop="clearanceNameEn" >
+      <el-table-column label="英文清关品名" :width="flexColumnWidth(list, '英文清关品名', 'clearanceNameEn')" prop="clearanceNameEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.clearanceNameEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.clearanceNameEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.clearanceNameEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="中文清关品名" min-width="180" prop="clearanceNameZh" >
+      <el-table-column label="中文清关品名" :width="flexColumnWidth(list, '中文清关品名', 'clearanceNameZh')" prop="clearanceNameZh" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.clearanceNameZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.clearanceNameZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.clearanceNameZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="材质比例(英文)" min-width="140" prop="materialEn" >
+      <el-table-column label="材质比例(英文)" :width="flexColumnWidth(list, '材质比例(英文)', 'materialEn')" prop="materialEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.materialEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.materialEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.materialEn }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="材质比例(中文)" min-width="140" prop="materialZh" >
+      <el-table-column label="材质比例(中文)" :width="flexColumnWidth(list, '材质比例(中文)', 'materialZh')" prop="materialZh" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.materialZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.materialZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.materialZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用途(中文)" min-width="100" prop="usageZh" >
+      <el-table-column label="用途(中文)" :width="flexColumnWidth(list, '用途(中文)', 'usageZh')" prop="usageZh" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.usageZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.usageZh" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.usageZh }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用途(英文)" min-width="100" prop="usageEn" >
+      <el-table-column label="用途(英文)" :width="flexColumnWidth(list, '用途(英文)', 'usageEn')" prop="usageEn" >
         <template #default="{ row }">
           <div class="none">
-              <el-input type="text" v-model="row.usageEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.usageEn" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
           </div>
           <span>{{ row.usageEn }}</span>
         </template>
@@ -297,6 +312,10 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
       cursor: 'not-allowed',
       textAlign:'left'
     }
+  } else if (data.columnIndex === 10 || data.columnIndex === 11) {
+    return {
+      textAlign: 'left'
+    }
   } else {
     return {
       textAlign:'center'
@@ -418,6 +437,11 @@ onBeforeMount(() => {
 .el-table :deep(.clear-padding .cell) {
   padding-left: 0;
   padding-right: 0;
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>
   

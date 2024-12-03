@@ -6,6 +6,7 @@
           <vab-query-form-left-panel :span="20">
             <el-button type="primary" @click="showInvoiceMatching">发票匹配</el-button>
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
+            <el-button type="primary" >云舟催票文件</el-button>
             <el-button type="primary">云舟开票导出</el-button>
             <el-button type="primary">埃托姆开票导出</el-button>
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0;">

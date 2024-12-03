@@ -18,3 +18,13 @@ export function downloadFile(url:string, params:any) {
     responseType: 'blob', // 确保响应类型为二进制流
   });;
 }
+
+export function downloadFileP(url:string, params:any) {
+
+  return request({
+    method: 'POST',
+    url: `${BASE_API}${url}`,
+    params: params,
+    responseType: 'blob', // 确保响应类型为二进制流
+  });;
+}

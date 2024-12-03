@@ -1,9 +1,6 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <h3>
-        新品审核与记录
-      </h3>
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
@@ -115,15 +112,17 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleOrderProcess(row)">{{ (row.reviewStatus === 0 || row.reviewStatus === 2) ? '编辑' : '查看' }}</el-link>
+                <el-dropdown-item @click="handleOrderProcess(row)">
+                  <el-link type="primary" :underline="false" >{{ (row.reviewStatus === 0 || row.reviewStatus === 2) ? '编辑' : '查看' }}</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item
-                  v-if="row.reviewStatus === 1 || row.reviewStatus === 2 || row.reviewStatus === 3 || row.reviewStatus === 4 || row.reviewStatus === 5">
-                  <el-link type="primary" :underline="false" @click="handleOrderReview(row)">审批和PO发布</el-link>
+                  v-if="row.reviewStatus === 1 || row.reviewStatus === 2 || row.reviewStatus === 3 || row.reviewStatus === 4 || row.reviewStatus === 5"
+                  @click="handleOrderReview(row)"
+                >
+                  <el-link type="primary" :underline="false" >审批和PO发布</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleGetScoreById(row.reviewMainId)">分数明细</el-link>
+                <el-dropdown-item @click="handleGetScoreById(row.reviewMainId)">
+                  <el-link type="primary" :underline="false" >分数明细</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -159,7 +158,7 @@
             <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
                 :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
                 <template #default="{ row }">
-                    <div  v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
+                    <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
                       <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
                     </div>
                 </template>

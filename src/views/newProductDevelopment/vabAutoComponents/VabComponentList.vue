@@ -27,17 +27,14 @@
                         </el-button>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item>
-                                    <el-link type="primary" :underline="false"
-                                    @click="uploadProdcutProgressImage(scope.row, scope.$index)">上传图片</el-link>
+                                <el-dropdown-item @click="uploadProdcutProgressImage(scope.row, scope.$index)">
+                                    <el-link type="primary" :underline="false">上传图片</el-link>
                                 </el-dropdown-item>
-                                <el-dropdown-item>
-                                    <el-link type="primary" :underline="false"
-                                        @click="addSuppliserInfo(scope.row)">新增供应商</el-link>
+                                <el-dropdown-item @click="addSuppliserInfo(scope.row)">
+                                    <el-link type="primary" :underline="false">新增供应商</el-link>
                                 </el-dropdown-item>
-                                <el-dropdown-item>
-                                    <el-link type="primary" :underline="false"
-                                        @click="copyComponentInfo(scope.row)">复制</el-link>
+                                <el-dropdown-item @click="copyComponentInfo(scope.row)">
+                                    <el-link type="primary" :underline="false">复制</el-link>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>

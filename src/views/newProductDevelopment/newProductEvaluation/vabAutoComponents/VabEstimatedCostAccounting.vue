@@ -269,14 +269,14 @@
                   <el-dropdown-item>
                     <el-link type="primary" :underline="false">逆算</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false" @click="handlerPicUpload(scope.row,scope.$index)">上传图片</el-link>
+                  <el-dropdown-item @click="handlerPicUpload(scope.row,scope.$index)">
+                    <el-link type="primary" :underline="false" >上传图片</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false" @click="handlerCopyData(scope.row)">复制</el-link>
+                  <el-dropdown-item @click="handlerCopyData(scope.row)">
+                    <el-link type="primary" :underline="false" >复制</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false" @click="handlerDelete(scope.row)">删除</el-link>
+                  <el-dropdown-item @click="handlerDelete(scope.row)">
+                    <el-link type="primary" :underline="false" >删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>

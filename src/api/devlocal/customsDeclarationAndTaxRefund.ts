@@ -305,3 +305,22 @@ export const generateCustomsDeclaration = (params: IIds) => {
     params
   })
 }
+/**
+ * @description 匹配PO-清关资料生成
+ */
+export const generateTaxRefund = (params: IIds) => {
+  return request({
+    url: `${BASE_API}/shipment/generate/taxRefund`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关清关资料-头程运费币种
+ */
+export const getShipmentLegCurrencyList = () => {
+  return request({
+    url: `${BASE_API}/shipment/leg/currencyList`,
+    method: 'get',
+  })
+}

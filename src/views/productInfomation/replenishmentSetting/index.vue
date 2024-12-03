@@ -1,9 +1,6 @@
 <template>
     <div class="comprehensive-table-container auto-height-container">
       <vab-query-form>
-        <vab-query-form-top-panel>
-          <h2>产品补货计算参数</h2>
-        </vab-query-form-top-panel>
         <vab-query-form-left-panel :span="24">
             <el-space>
                 <span>站点</span>

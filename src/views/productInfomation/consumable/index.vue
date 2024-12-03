@@ -1,9 +1,6 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel>
-        <h2>耗材信息</h2>
-      </vab-query-form-top-panel>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleAddConsumable">创建耗材</el-button>
         <el-button type="primary" @click="handleConsumableType">耗材种类</el-button>
@@ -226,11 +223,11 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
+                <el-dropdown-item @click="handleSupplier(row)">
+                  <el-link type="primary" :underline="false">供应商</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" :underline="false" @click="handleAddOtherSku(row)">添加到SKU</el-link>
+                <el-dropdown-item @click="handleAddOtherSku(row)">
+                  <el-link type="primary" :underline="false" >添加到SKU</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
