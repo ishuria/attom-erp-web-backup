@@ -49,8 +49,16 @@
           <el-input v-model="row.freightForwardingNumber" clearable @change="handleUpdateFreightForwardingNumber(row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="合并报关" prop="" min-width="100"></el-table-column>
-      <el-table-column label="合并清关" prop="" min-width="100"></el-table-column>
+      <el-table-column label="合并报关" prop="mergeCustomsDeclarationList" :width="calculateBrColumnWidth(list, (row: any) => row.mergeCustomsDeclarationList)">
+        <template #default="{ row }">
+          <span v-html="row.mergeCustomsDeclarationList"></span>
+        </template>
+      </el-table-column>
+      <el-table-column label="合并清关" prop="mergeCustomsClearanceList" :width="calculateBrColumnWidth(list, (row: any) => row.mergeCustomsClearanceList)">
+        <template #default="{ row }">
+          <span v-html="row.mergeCustomsClearanceList"></span>
+        </template>
+      </el-table-column>
       <el-table-column label="货代渠道" prop="channelId" min-width="180">
         <template #default="{ row }">
           <el-select v-model="row.channelId" >
@@ -164,10 +172,11 @@
     <!-- 头程运费 -->
     <vab-dialog
       :title="`运费明细 | 货代单号：${_freightForwardingNumber} | 自测重量：${_weight} | 自测体积：${_volume}`"
-      width="65%"
+      width="85%"
       v-model="firstLegFreightVisible"
       top="7vh"
       class="dialog"
+      :draggable="false"
     >
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -214,7 +223,7 @@
         </el-table-column>
         <el-table-column label="货币" prop="currency" min-width="100">
           <template #default="{ row }">
-            <el-select v-model="row.currency" style="min-width: 100%;">
+            <el-select v-model="row.currency" style="min-width: 100%;" @change="handleUpdateLegCurrency(row)">
               <el-option 
                 v-for="item in currencyList"
                 :label="item.label"
@@ -242,31 +251,53 @@
         </el-table-column>
         <el-table-column label="差额" prop="difference" min-width="90">
           <template #default="{ row }">
-            <span :style="{ color: row.difference > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
+            <span :style="{ color: row.difference >= 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
           </template>
         </el-table-column>
         <el-table-column label="已付" prop="payStatus" min-width="90">
           <template #default="{ row }">
-            <el-checkbox v-model="row.payStatus" :true-value="1" :false-value="0" />
+            <el-checkbox v-model="row.payStatus" :true-value="1" :false-value="0" @change="handleUpdateLegPayStatus(row)" />
           </template>
         </el-table-column>
-        <el-table-column label="付款日期" prop="payDate" min-width="115"></el-table-column>
-        <el-table-column label="合并报关/清关" prop="" min-width="130"></el-table-column>
+        <el-table-column label="付款日期" prop="payDate" min-width="180"></el-table-column>
+        <el-table-column label="合并报关" prop="bgStatus" min-width="100">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.bgStatus" :true-value="1" :false-value="0" @change="handleUpdateBgStatus(row)" />
+          </template>
+        </el-table-column>
+        <el-table-column label="合并报关的货代单号" prop="mergeCustomsDeclarationList" :width="calculateBrColumnWidth(costList, (row: any) => row.mergeCustomsDeclarationList)">
+          <template #header>
+            合并报关的<br />货代单号
+          </template>
+          <template #default="{ row }">
+            <span v-html="row.mergeCustomsDeclarationList"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="合并清关" prop="qgStatus" min-width="100">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.qgStatus" :true-value="1" :false-value="0" @change="handleUpdateQgStatus(row)" />
+          </template>
+        </el-table-column>
+        <el-table-column label="合并清关的货代单号" prop="mergeCustomsClearanceList" :width="calculateBrColumnWidth(costList, (row: any) => row.mergeCustomsClearanceList)">
+          <template #header>
+            合并清关的<br />货代单号
+          </template>
+          <template #default="{ row }">
+            <span v-html="row.mergeCustomsClearanceList"></span>
+          </template>
+        </el-table-column>
         <el-table-column label="SKU运费分摊方式" prop="" min-width="100">
           <template #header>
             SKU运费<br>分摊方式
           </template>
         </el-table-column>
         <el-table-column label="操作" width="90">
-          <template #default="{ row }">
-            <el-link type="danger" :underline="false">删除</el-link>
+          <template #default="{ row, $index }">
+            <el-link type="danger" :underline="false" @click="handleDelLeg($index, row)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
-      <template #footer>
-        <el-button @click="closeFirstLegFreight" type="danger">取消</el-button>
-        <el-button type="success">确定</el-button>
-      </template>
+      <template #footer></template>
     </vab-dialog>
     <!-- 匹配 -->
     <VabMatchDialog 
@@ -318,10 +349,10 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { FormInstance, TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateShipment, updateShipmentFreightFee, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentFreightFee, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { isEqual } from 'lodash'
 import { downloadFileP } from '/@/api/devlocal/download'
@@ -544,12 +575,56 @@ const handleAddCost = async () => {
     fetchCostData(_shipId.value!)
   }
 }
+// 修改头程运费合并报关
+const handleUpdateBgStatus = async (row: any) => {
+  await updateBgShipmentLeg({
+    id: row.id,
+    status: row.bgStatus
+  })
+}
+// 修改头程运费合并清关
+const handleUpdateQgStatus = async (row: any) => {
+  await updateQgShipmentLeg({
+    id: row.id,
+    status: row.qgStatus
+  })
+}
+// 修改头程运费已付状态
+const handleUpdateLegPayStatus = async (row: any) => {
+  await updateShipmentLegPay({
+    id: row.id,
+    status: row.payStatus
+  })
+}
+// 修改头程运费货币
+const handleUpdateLegCurrency = async (row: any) => {
+  await updateShipmentLegCurrency({
+    id: row.id,
+    currency: row.currency
+  })
+}
+// 删除头程运费
+const handleDelLeg = async (index: number, row: any) => {
+  $baseConfirm('确定要删除费用吗?', null, async () => {
+    const { data } = await delShipmentLeg({
+      id: row.id
+    })
+    if (data) {
+      costList.value.splice(index, 1)
+      $baseMessage('删除费用成功！', 'success')
+    }
+  })
+}
 const fetchCostData = async (id: number) => {
   try {
     const { data } = await getShipmentCostList({
       shipId: id
     })
     costList.value = data
+    costList.value.forEach((item: any) => {
+      item.mergeCustomsDeclarationList = item.mergeCustomsDeclarationList.join(',').replace(',', '<br />')
+      item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join(','.replace(',', '<br />'))
+    })
     firstLegFreightVisible.value = true
   } catch (error) {
     firstLegFreightVisible.value = false
@@ -623,7 +698,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
     focusAndSelectInput(cell);
   }
 }
-const clickCancel = (event: Event, value: any) => {
+const clickCancel = async (event: Event, value: any) => {
   const rootElement = getRootElement(event.target, ".cell");
 
   if (rootElement) {
@@ -635,6 +710,16 @@ const clickCancel = (event: Event, value: any) => {
   }
   if (isEqual(copyRow, value)) {
     return
+  }
+  if (event.type === 'blur') {
+    await updateShipmentLeg({
+      id: value.id,
+      count: value.count,
+      unitPrice: value.unitPrice,
+      estimateRate: value.estimateExchangeRate,
+      actualRate: value.actualExchangeRate,
+      cost: value.actualCost
+    })
   }
 }
 // 头程运费：合计的方法
@@ -670,7 +755,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
           } else {
             return prev
           }
-        }, 0)}`,
+        }, 0).toFixed(2)}`,
       ])
     } else {
       sums[index] = '' // 如果不是 'estimateCost' 或 'estimateExchangeRate' 列，设置为空
@@ -695,7 +780,7 @@ const handleSizeChange = (value: number) => {
 
 const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
 
-  if (data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 17) {
+  if (data.columnIndex === 7 || data.columnIndex === 8 || data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 17) {
     return {
       textAlign: 'left'
     }
@@ -711,7 +796,7 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0) {
+  if (data.columnIndex === 0 || data.columnIndex === 12 || data.columnIndex === 14) {
     return {
       textAlign: 'left',
       cursor: 'not-allowed'
@@ -722,7 +807,7 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
       textAlign: 'center',
       cursor: 'not-allowed'
     }
-  } else if (data.columnIndex === 8 || data.columnIndex === 10 || data.columnIndex === 11) {
+  } else if (data.columnIndex === 8 || data.columnIndex === 10) {
     return {
       textAlign: 'center',
       cursor: 'not-allowed'
@@ -732,9 +817,10 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
       fontWeight: '600',
       textAlign: 'center'
     }
-  }
-  return {
-    textAlign: 'center'
+  } else {
+    return {
+      textAlign: 'center'
+    }
   }
 }
 const payStatusList = ref<{ id: number, payStatus: number }[]>([])
@@ -760,7 +846,9 @@ const fetchData = async () => {
         payStatus: item.payStatus
       }
     )
-    item.payStatus = !!item.payStatus   
+    item.payStatus = !!item.payStatus
+    item.mergeCustomsDeclarationList = item.mergeCustomsDeclarationList.join(',').replace(',', '<br />')
+    item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join(',').replace(',', '<br />')
   })
   listLoading.value = false
 }

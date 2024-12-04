@@ -391,3 +391,31 @@ export interface IUpdateShipmentPay {
 export interface IShipId {
   shipId: number
 }
+
+export interface IUpdateShipmentLegPay {
+  id: number
+  status: number
+}
+
+export interface IUpdateShipmentLegCurrency {
+  id: number
+  currency: number
+}
+
+export interface IStringRes {
+  data: string
+}
+
+export interface IUpdateShipmentLeg {
+  id: number
+  count: string
+  unitPrice: string
+  estimateRate: string
+  actualRate: string
+  cost: string
+}
+
+export interface IUpdateBgShipmentLeg {
+  id: number
+  status: number
+}

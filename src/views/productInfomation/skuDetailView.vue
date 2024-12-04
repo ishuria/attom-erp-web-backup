@@ -250,14 +250,35 @@
         :cell-style="cellStyle"
         @cell-click="changeInput"
         class="noneHoveTable"
+        :cell-class-name="clearPadding"
       >
-        <!-- <el-table-column
-          v-for="(item, index) in finallyColumns"
+        <el-table-column
+          v-for="(item, index) in checkList"
           :key="index"
           :label="item.label"
-          :min-width="item.minWidth || 100"
+          :min-width="item.minWidth || flexColumnWidth(tableData, '零件名', 'componentName')"
           :prop="item.prop"
         >
+          <template #header>
+            <span v-if="item.label === '出厂单价'">
+              出厂<br />单价
+            </span>
+            <span v-if="item.label === '出厂总价'">
+              出厂<br />总价
+            </span>
+            <span v-if="item.label === '总未税价'">
+              总未<br />税价
+            </span>
+            <span v-if="item.label === '总含税价'">
+              总含<br />税价
+            </span>
+            <span v-if="item.label === '实际税点'">
+              实际<br />税点
+            </span>
+            <span v-if="item.label === '开票税点'">
+              开票<br />税点
+            </span>
+          </template>
           <template #default="{ row }">
             <span v-if="item.label === '图片'">
               <el-upload 
@@ -266,258 +287,138 @@
                 :class="{ hide: row.hide }"
                 :http-request="(file) => uploadSkuComponentImage(file, row)"
                 class="component-upload"
+                
               >
-                <el-icon ><Plus /></el-icon>
+                <el-icon><Plus /></el-icon>
                 <template #file="{ file }">
-                    <div>
-                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                            class="el-upload-list__item-preview"
-                            @click="handlePreview(file)"
-                        >
-                            <el-icon><zoom-in /></el-icon>
-                        </span>
-                        <span
-                            class="el-upload-list__item-delete"
-                            @click="handleComponentRemove(file, row)"
-                        >
-                            <el-icon><Delete /></el-icon>
-                        </span>
-                      </span>
-                    </div>
+                  <img  class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                  <span class="el-upload-list__item-actions">
+                    <span class="el-upload-list__item-preview" @click="handlePreview(file)">
+                      <el-icon><zoom-in /></el-icon>
+                    </span>
+                    <span class="el-upload-list__item-delete" @click="handleComponentRemove(file, row)">
+                      <el-icon><Delete /></el-icon>
+                    </span>
+                  </span>
                 </template>
               </el-upload>
             </span>
-            <el-popover v-if="item.label === '图片'" placement="top-start">
-              <el-image :src="row.image" />
-              <template #reference>
-                <el-image :src="row.image" />
-              </template>
-            </el-popover>
-            <span v-else>{{ row[item.prop] }}</span>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="图片" class="image-wall" min-width="100">
-          <template #default="{ row }">
-            <el-upload 
-              list-type="picture-card" 
-              :file-list="row.imageList" 
-              :class="{ hide: row.hide }"
-              :http-request="(file) => uploadSkuComponentImage(file, row)"
-              class="component-upload"
-            >
-              <el-icon ><Plus /></el-icon>
-              <template #file="{ file }">
-                  <div>
-                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                    <span class="el-upload-list__item-actions">
-                      <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                      >
-                          <el-icon><zoom-in /></el-icon>
-                      </span>
-                      <span
-                          class="el-upload-list__item-delete"
-                          @click="handleComponentRemove(file, row)"
-                      >
-                          <el-icon><Delete /></el-icon>
-                      </span>
-                    </span>
-                  </div>
-              </template>
-            </el-upload>
-          </template>
-        </el-table-column>
-        <el-table-column label="零件ID" prop="existingPartsListId" width="80">
-            <template #default="{ row }">
-                <span >{{ row.existingPartsListId }}</span>
-            </template>
-        </el-table-column>   
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(tableData, '零件名', 'componentName')">
-            <template #default="{ row }">
-                <span >{{ row.componentName }}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="数量" width="60" prop="quantity">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="number" v-model="row.quantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.quantity }}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="单位" width="60" prop="componentUnit">
-            <template #default="{ row }">
-                <span >{{ row.componentUnit }}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="出厂单价" prop="unitPrice" min-width="75">
-            <template #header>
-                出厂<br>单价
-            </template>
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="number" v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.unitPrice }}</span>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="出厂总价" prop="totalPrice" min-width="75">
-            <template #header>
-                出厂<br>总价
-            </template>
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="number" v-model="row.totalPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row,)" />
-                </div>
-                <span>{{ row.totalPrice }}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="总未税价" prop="preTaxPrice" min-width="75">
-            <template #header>
-                总未<br>税价
-            </template>
-            <template #default="{ row }">
-                <span >{{ row.preTaxPrice }}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" min-width="75">
-            <template #header>
-                总含<br>税价
-            </template>
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="number" v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.taxIncludedPrice }}</span>
-            </template>
-        </el-table-column>    
-        <el-table-column label="货币" width="105px" prop="currency">
-            <template #default="{ row }">
-                <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
-                    <el-option v-for="dict in currencyNumList" :key="dict.value"
-                        :value="dict.value" :label="dict.label"></el-option>
-                </el-select>
-            </template>
-        </el-table-column>
-        <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="73">
-            <template #default="{ row }">
-                <div class="none">
-                        <el-input type="number" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-                    </div>
-                <span>{{ row.minimumOrderQuantity }}</span>
-            </template>
-        </el-table-column> 
-        <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="73">
-            <template #default="{ row }">
-                <div class="none">
-                        <el-input type="number" v-model="row.numberFullCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-                    </div>
-                <span>{{ row.numberFullCartons }}</span>
-            </template>
-        </el-table-column> 
-        <el-table-column align="center" label="默认供应商" min-width="205" prop="defaultSuppliserId">
-            <template #default="{row}">
-                <el-select v-model="row.defaultSuppliserId" placeholder=""  @change="handleSuppliserChange(row)">
-                    <el-option 
-                        v-for="item in row.suppliserList"
-                        :label="item.label"
-                        :value="item.id"
-                        :key="item.id"
-                    />
-                </el-select>
-            </template>
-        </el-table-column>
-        <el-table-column label="开票" prop="invoicing" align="center" width="130">
-            <template #default = "{ row }">
-                <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)">
-                    <el-option v-for="dict in invoicingNumList" :key="dict.value"
-                        :value="dict.value" :label="dict.label"></el-option>
-                </el-select>
-            </template>
-        </el-table-column>
-        <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" >
-            <template #header>
-                实际<br>税点
-            </template>
-            <template #default="{ row }">
-                <span>{{ row.actualTaxRate }}</span>
-            </template>
-        </el-table-column>
-
-        <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60">
-            <template #header>
-                开票<br>税点
-            </template>
-            <template #default="{ row }">
-                <span>{{ row.invoicingTaxRate }}</span>
-            </template>
-        </el-table-column>
-
-        <el-table-column  label="默认采购方" min-width="130" prop="purchaseId">
-            <template #default="{row}">
-                <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleDefaultPurchase(row)">
-                    <el-option 
-                        v-for="item in purchaseOption"
-                        :label="item.label"
-                        :value="item.id"
-                        :key="item.id"
-                    />
-                </el-select>
-            </template>
-        </el-table-column>
-        <el-table-column label="不报关" prop="declareCustomsStatus" min-width="75">
-            <template #default = "{ row }">
-                <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleDeclareCustoms(row)"/>
-            </template>
-        </el-table-column>
-        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
-          <template #default="{ row }">
-            <div class="none">
-              <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-            </div>
-            <el-tooltip effect="dark" content="" placement="top">
-              <template #content>
-                <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
-              </template>
-              <el-text truncated>{{ row.purchaseLink }}</el-text>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-        <el-table-column  label="默认收货仓库" prop="defaultRepositoryId" min-width="160">
-            <template #default="{ row }">
-                <!-- <el-input v-model="row.defaultRepositoryId" clearable /> -->
-                <el-select v-model="row.defaultRepositoryId" placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" filterable @change="handleCurrencyChange(row)">
-                    <el-option 
-                        v-for="item in repositoryOption"
-                        :label="item.label"
-                        :value="item.id"
-                        :key="item.id"
-                    />
-                </el-select>
-            </template>
-        </el-table-column>
-        <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
-          <template #default="{ row }">
-            <el-tooltip content=" " effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
-              </template>
-              <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
-            </el-tooltip>
-          </template>
-        </el-table-column>
-        <el-table-column label="合同条款" prop="contractTerms" min-width="200">
-          <template #default="{ row }">
-            <el-tooltip content=" " effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
-              </template>
-              <span>{{ removeHtmlTags(row.contractTerms) }}</span>
-            </el-tooltip>
+            <span v-if="item.label === '数量'">
+              <div class="none">
+                <el-input type="number" v-model="row.quantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.quantity }}</span>
+            </span>
+            <span v-if="item.label === '出厂单价'">
+              <div class="none">
+                <el-input type="number" v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.unitPrice }}</span>
+            </span>
+            <span v-if="item.label === '出厂总价'">
+              <div class="none">
+                <el-input type="number" v-model="row.totalPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row,)" />
+              </div>
+              <span>{{ row.totalPrice }}</span>
+            </span>
+            <span v-if="item.label === '总含税价'">
+              <div class="none">
+                <el-input type="number" v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.taxIncludedPrice }}</span>
+            </span>
+            <span v-if="item.label === '货币'">
+              <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
+                  <el-option 
+                    v-for="dict in currencyNumList" 
+                    :key="dict.value"
+                    :value="dict.value" 
+                    :label="dict.label"
+                  ></el-option>
+              </el-select>
+            </span>
+            <span v-if="item.label === '起订量'">
+              <div class="none">
+                <el-input type="number" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.minimumOrderQuantity }}</span>
+            </span>
+            <span v-if="item.label === '整箱数'">
+              <div class="none">
+                <el-input type="number" v-model="row.numberFullCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.numberFullCartons }}</span>
+            </span>
+            <span v-if="item.label === '默认供应商'">
+              <el-select v-model="row.defaultSuppliserId" @change="handleSuppliserChange(row)">
+                <el-option 
+                  v-for="item in row.suppliserList"
+                  :label="item.label"
+                  :value="item.id"
+                  :key="item.id"
+                />
+              </el-select>
+            </span>
+            <span v-if="item.label === '开票'">
+              <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)">
+                <el-option 
+                  v-for="dict in invoicingNumList" 
+                  :key="dict.value"
+                  :value="dict.value" 
+                  :label="dict.label"
+                ></el-option>
+              </el-select>
+            </span>
+            <span v-if="item.label === '默认采购方'">
+              <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%;" @change="handleDefaultPurchase(row)">
+                <el-option 
+                  v-for="item in purchaseOption"
+                  :label="item.label"
+                  :value="item.id"
+                  :key="item.id"
+                />
+              </el-select>
+            </span>
+            <span v-if="item.label === '不报关'">
+              <el-checkbox v-model="row.declareCustomsStatus" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleDeclareCustoms(row)"/>
+            </span>
+            <span v-if="item.label === '采购链接'">
+              <div class="none">
+                <el-input v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <el-tooltip effect="dark" content="" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
+                </template>
+                <el-text truncated>{{ row.purchaseLink }}</el-text>
+              </el-tooltip>
+            </span>
+            <span v-if="item.label === '默认收货仓库'">
+              <el-select v-model="row.defaultRepositoryId" placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" filterable @change="handleCurrencyChange(row)">
+                <el-option 
+                  v-for="item in repositoryOption"
+                  :label="item.label"
+                  :value="item.id"
+                  :key="item.id"
+                />
+              </el-select>
+            </span>
+            <span v-if="item.label === '零件采购注意事项'">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              </el-tooltip>
+            </span>
+            <span v-if="item.label === '合同条款'">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
+                </template>
+                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+              </el-tooltip>
+            </span>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150" >
@@ -549,7 +450,7 @@
           </template>
         </el-table-column>
         <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
         </template>
       </el-table>
     </div>
@@ -800,19 +701,17 @@ const mergedProductName = computed(() => {
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
 
-const checkList = ref<any>([])
 const columns = ref<any>([
   {
     label: '图片',
-    prop: 'img',
+    prop: 'componentImage',
     disableCheck: true,
     checked: true,
-    minWidth: 200,
+    minWidth: 79,
   },
   {
     label: '零件ID',
     prop: 'existingPartsListId',
-    sortable: true,
     checked: true,
     minWidth: 80,
   },
@@ -821,157 +720,142 @@ const columns = ref<any>([
     prop: 'componentName',
     disableCheck: true,
     checked: true,
-    minWidth: flexColumnWidth(tableData.value, '零件名', 'componentName'),
+    minWidth: null,
   },
   {
     label: '数量',
     prop: 'quantity',
-    sortable: true,
     checked: true,
     minWidth: 60,
   },
   {
     label: '单位',
     prop: 'componentUnit',
-    sortable: true,
     checked: true,
-    minWidth: 200,
+    minWidth: 60,
   },
   {
     label: '出厂单价',
     prop: 'unitPrice',
-    sortable: true,
     checked: true,
-    minWidth: 75,
+    minWidth: 80,
   },
   {
     label: '出厂总价',
     prop: 'totalPrice',
-    sortable: true,
     checked: true,
-    minWidth: 75,
+    minWidth: 80,
   },
   {
     label: '总未税价',
     prop: 'preTaxPrice',
-    sortable: true,
     checked: true,
     minWidth: 75,
   },
   {
     label: '总含税价',
     prop: 'taxIncludedPrice',
-    sortable: true,
     checked: true,
     minWidth: 100,
   },
   {
     label: '货币',
     prop: 'currency',
-    sortable: true,
     checked: true,
     minWidth: 105,
   },
   {
     label: '起订量',
     prop: 'minimumOrderQuantity',
-    sortable: true,
     checked: true,
-    minWidth: 73,
+    minWidth: 75,
   },
   {
     label: '整箱数',
     prop: 'numberFullCartons',
-    sortable: true,
     checked: true,
-    minWidth: 73,
+    minWidth: 75,
   },
   {
     label: '默认供应商',
     prop: 'defaultSuppliserId',
-    sortable: true,
     checked: true,
     minWidth: 205,
   },
   {
     label: '开票',
     prop: 'invoicing',
-    sortable: true,
     checked: true,
     minWidth: 130,
   },
   {
     label: '实际税点',
     prop: 'actualTaxRate',
-    sortable: true,
     checked: true,
     minWidth: 60,
   },
   {
     label: '开票税点',
     prop: 'invoicingTaxRate',
-    sortable: true,
     checked: true,
     minWidth: 60,
   },
   {
     label: '默认采购方',
     prop: 'purchaseId',
-    sortable: true,
     checked: true,
     minWidth: 130,
   },
   {
     label: '不报关',
     prop: 'declareCustomsStatus',
-    sortable: true,
     checked: true,
     minWidth: 75,
   },
   {
     label: '采购链接',
     prop: 'purchaseLink',
-    sortable: true,
     checked: true,
     minWidth: 140,
   },
   {
     label: '默认收货仓库',
     prop: 'defaultRepositoryId',
-    sortable: true,
     checked: true,
     minWidth: 160,
   },
   {
     label: '零件采购注意事项',
     prop: 'purchaseMatters',
-    sortable: true,
     checked: true,
     minWidth: 200,
   },
   {
     label: '合同条款',
     prop: 'contractTerms',
-    sortable: true,
     checked: true,
     minWidth: 200,
   },
 ])
-const finallyColumns = computed(() => columns.value.filter((item: any) => checkList.value.includes(item.label)))
+const checkList = ref<any>(columns.value.filter((item: any) => item.checked));
+// 监听 columns 顺序变化
+watch(columns, () => {
+  checkList.value = columns.value.filter((item: any) => item.checked);
+}, { deep: true })
+
 const handleChecked = (item: any) => {
   item.checked = !item.checked
-  const index = checkList.value.findIndex((i: any) => i.label === item.label)
-  if (item.checked) {
-    // 如果checkList没有的话添加
-    if (index === -1) {
-      checkList.value.push(item)
-    }
-  } else {
+  if (item.checked) { // 如果是要不隐藏
+    // 添加到 checkList，按照 columns 的顺序插入
+    const index = columns.value.findIndex((i: any) => i.label === item.label);
+    checkList.value.splice(index, 0, item);
+  } else { // 如果是要隐藏
+    // 从 checkList 中移除
+    const index = checkList.value.findIndex((i: any) => i.label === item.label);
     if (index !== -1) {
-      checkList.value.splice(index, 1)
+      checkList.value.splice(index, 1);
     }
   }
-  console.log(checkList.value);
 }
 // 关闭添加零件对话框
 const handleCloseCreateComponent = (value: boolean) => {
@@ -1575,8 +1459,8 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     wangEditorContractVisible.value = !wangEditorContractVisible.value;
   } 
   // 缓存 cell 内部的 DOM 元素，避免重复访问
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0].children[0];
+  const secondChild = cell?.children[0]?.children[0].children[1];
 
   // 如果任一元素不存在，直接返回
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
@@ -1601,8 +1485,8 @@ const clickCancel = async (event: any, value: any) => {
   const rootElement = getRootElement(event.srcElement, ".cell");
 
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0].children[0];
+    const t2 = rootElement.children[0].children[1];
 
     // 更新 t1 和 t2 的 class
     if (t1) t1.classList.add("none");
@@ -1809,23 +1693,34 @@ const fetchInspection = async () => { //获取质检清单数据
     handleTableDataValue(packingList.value) //初始化质检清单数据
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 4 || data.columnIndex === 14 || data.columnIndex === 15) {
+  if (data.column.property === 'existingPartsListId' || data.column.property === 'componentUnit' || data.column.property === 'preTaxPrice' ||
+    data.column.property === 'actualTaxRate' || data.column.property === 'invoicingTaxRate') {
     return {
       textAlign: 'center',
       color: '#bbb',
       cursor: 'not-allowed'
     }
-  } else if (data.columnIndex === 2) {
+  } else if (data.column.property === 'componentName') {
     return {
       textAlign: 'left',
       color: '#bbb',
       cursor: 'not-allowed'
+    }
+  } else if (data.column.property === 'purchaseMatters' || data.column.property === 'contractTerms' || data.column.property === 'purchaseLink') {
+    return {
+      textAlign: 'left'
     }
   } else {
     return {
       textAlign: 'center'
     }
   }
+}
+const clearPadding = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): string => {
+  if (data.column.property === 'componentImage') {
+    return 'clear-padding'
+  }
+  return ''
 }
 onBeforeMount(()=>{
   fetchData()
@@ -1872,25 +1767,21 @@ onMounted(() => {
   width: 75px;
   height: 75px;
   transition: none;
+  margin: 0;
 }
 :deep(.component-upload .el-upload--picture-card) {
   width: 75px;
   height: 75px;
 }
 :deep(.el-table .el-table__body .cell) {
-  max-height: 81.2px;
+  line-height: inherit;
 }
 .overflow-text {
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
   display: block;
 }
-/* .custom-upload {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; 
-    margin-top: 30px;
-} */
+
 .transfer-container {
     display: flex;
     justify-content: center; /* 水平居中 */
@@ -1954,5 +1845,12 @@ onMounted(() => {
   background-color: #f2f2f2; /* 浅灰色背景 */
   color: var(--el-color-primary);
 }
-
+.el-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-left: 0;
+  padding-right: 0;
+}
 </style>

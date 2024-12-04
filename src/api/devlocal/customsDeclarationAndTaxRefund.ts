@@ -16,12 +16,17 @@ import {
   IIds,
   IInsertAllMatchComponent,
   IShipId,
+  IStringRes,
   ISubmitMatchSentList,
+  IUpdateBgShipmentLeg,
   IUpdateMatchComponentActualCount,
   IUpdateMatchQuality,
   IUpdateMatchSkuCount,
   IUpdateShipment,
   IUpdateShipmentFreightFee,
+  IUpdateShipmentLeg,
+  IUpdateShipmentLegCurrency,
+  IUpdateShipmentLegPay,
   IUpdateShipmentPay
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 
@@ -322,5 +327,66 @@ export const getShipmentLegCurrencyList = () => {
   return request({
     url: `${BASE_API}/shipment/leg/currencyList`,
     method: 'get',
+  })
+}
+/**
+ * @description 匹配PO、报关清关资料-头程运费付款状态修改
+ */
+export const updateShipmentLegPay = (params: IUpdateShipmentLegPay): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/leg/pay`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关清关资料-头程运费货币修改
+ */
+export const updateShipmentLegCurrency = (params: IUpdateShipmentLegCurrency): Promise<IStringRes> => {
+  return request({
+    url: `${BASE_API}/shipment/leg/currency`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关清关资料-头程运费删除
+ */
+export const delShipmentLeg = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/leg/delete`,
+    method: 'post',
+    params
+  })
+}
+
+/**
+ * @description 匹配PO、报关清关资料-头程运费修改
+ */
+export const updateShipmentLeg = (data: IUpdateShipmentLeg): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/leg/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 匹配PO、报关清关资料-头程运费报关状态修改
+ */
+export const updateBgShipmentLeg = (params: IUpdateBgShipmentLeg): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/leg/bg`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关清关资料-头程运费清关状态修改
+ */
+export const updateQgShipmentLeg = (params: IUpdateBgShipmentLeg): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/leg/qg`,
+    method: 'post',
+    params
   })
 }
