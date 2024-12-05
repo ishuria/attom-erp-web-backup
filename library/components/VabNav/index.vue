@@ -76,12 +76,15 @@ watch(
 
 <style lang="scss">
 .vab-layout-comprehensive {
+
+
   .vab-side-bar {
     top: var(--el-nav-height) !important;
+    z-index: calc(var(--el-z-index) + 11);
     padding-top: 0 !important;
 
     .el-scrollbar__view {
-      margin-top: calc(0px - var(--el-nav-height) + var(--el-margin) / 2) !important ;
+      margin-top: calc(0px - var(--el-nav-height) + var(--el-margin) / 2) !important;
     }
   }
   .comprehensive-tabs {
