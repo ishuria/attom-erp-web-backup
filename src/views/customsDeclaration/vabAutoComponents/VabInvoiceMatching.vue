@@ -14,7 +14,7 @@
         <el-switch 
           v-model="setNumber" 
           :active-value="1" :inactive-value="0" 
-          style="--el-switch-on-color: var(--el-color-success); margin: 0 10px calc(var(--el-margin) / 2) 0;" 
+          style="margin: 0 10px calc(var(--el-margin) / 2) 0;" 
           active-text="发票号码去重"
         ></el-switch>
       </vab-query-form-left-panel>

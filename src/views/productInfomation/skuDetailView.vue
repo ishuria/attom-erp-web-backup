@@ -221,13 +221,14 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columns" :animation="600" handle=".handle">
+              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove">
                 <div
                   v-for="item in columns"
                   :key="item.label"
                   style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
+                  :class="{'non-draggable': item.disableCheck}" 
                 >
-                  <vab-icon class="handle" icon="draggable" style="margin-right: 5px"/>
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
                   <span style="flex: 1">{{ item.label }}</span>
                   <span v-if="item.disableCheck" style="display: flex; align-items: center;" class="icon-hover">
                     <el-icon><View /></el-icon>
@@ -256,8 +257,10 @@
           v-for="(item, index) in checkList"
           :key="index"
           :label="item.label"
+          :width="item.width"
           :min-width="item.minWidth || flexColumnWidth(tableData, '零件名', 'componentName')"
           :prop="item.prop"
+          :fixed="item.isFixed"
         >
           <template #header>
             <span v-if="item.label === '出厂单价'">
@@ -286,8 +289,7 @@
                 :file-list="row.imageList" 
                 :class="{ hide: row.hide }"
                 :http-request="(file) => uploadSkuComponentImage(file, row)"
-                class="component-upload"
-                
+                class="component-upload" 
               >
                 <el-icon><Plus /></el-icon>
                 <template #file="{ file }">
@@ -701,19 +703,24 @@ const mergedProductName = computed(() => {
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
 
+const handleMove = (event: any) => {
+  const { related  } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false; // 禁止移动到目标
+  }
+
+  return true; // 允许其他操作
+}
 const columns = ref<any>([
   {
     label: '图片',
     prop: 'componentImage',
     disableCheck: true,
     checked: true,
-    minWidth: 79,
-  },
-  {
-    label: '零件ID',
-    prop: 'existingPartsListId',
-    checked: true,
-    minWidth: 80,
+    width: 75,
+    isFixed: 'left'
   },
   {
     label: '零件名',
@@ -721,6 +728,13 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: null,
+    isFixed: 'left'
+  },
+  {
+    label: '零件ID',
+    prop: 'existingPartsListId',
+    checked: true,
+    minWidth: 80,
   },
   {
     label: '数量',
@@ -837,25 +851,12 @@ const columns = ref<any>([
     minWidth: 200,
   },
 ])
-const checkList = ref<any>(columns.value.filter((item: any) => item.checked));
-// 监听 columns 顺序变化
-watch(columns, () => {
-  checkList.value = columns.value.filter((item: any) => item.checked);
-}, { deep: true })
 
+const checkList = computed(() => {
+  return columns.value.filter((item: any) => item.checked);
+})
 const handleChecked = (item: any) => {
   item.checked = !item.checked
-  if (item.checked) { // 如果是要不隐藏
-    // 添加到 checkList，按照 columns 的顺序插入
-    const index = columns.value.findIndex((i: any) => i.label === item.label);
-    checkList.value.splice(index, 0, item);
-  } else { // 如果是要隐藏
-    // 从 checkList 中移除
-    const index = checkList.value.findIndex((i: any) => i.label === item.label);
-    if (index !== -1) {
-      checkList.value.splice(index, 1);
-    }
-  }
 }
 // 关闭添加零件对话框
 const handleCloseCreateComponent = (value: boolean) => {
@@ -1459,8 +1460,8 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
     wangEditorContractVisible.value = !wangEditorContractVisible.value;
   } 
   // 缓存 cell 内部的 DOM 元素，避免重复访问
-  const firstChild = cell?.children[0]?.children[0].children[0];
-  const secondChild = cell?.children[0]?.children[0].children[1];
+  const firstChild = cell?.children[0]?.children[0]?.children[0];
+  const secondChild = cell?.children[0]?.children[0]?.children[1];
 
   // 如果任一元素不存在，直接返回
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
@@ -1716,9 +1717,12 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     }
   }
 }
-const clearPadding = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): string => {
-  if (data.column.property === 'componentImage') {
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  const label = data.column.label
+  if (label === '图片') {
     return 'clear-padding'
+  } else if (label === '数量' || label === '出厂单价' || label === '出厂总价' || label === '总含税价') {
+    return 'reduce-padding'
   }
   return ''
 }
@@ -1763,15 +1767,26 @@ onMounted(() => {
 .none {
     display: none;
 }
-:deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
+
+.component-upload {
   width: 75px;
   height: 75px;
+}
+.component-upload :deep( .el-upload-list--picture-card) {
+ width: 100%;
+ height: 100%;
+}
+:deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
+  width: 100%;
+  height: 100%;
   transition: none;
   margin: 0;
+  border: 0;
+  border-radius: 0;
 }
 :deep(.component-upload .el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
+  width: 100%;
+  height: 100%;
 }
 :deep(.el-table .el-table__body .cell) {
   line-height: inherit;
@@ -1845,12 +1860,19 @@ onMounted(() => {
   background-color: #f2f2f2; /* 浅灰色背景 */
   color: var(--el-color-primary);
 }
-.el-table :deep(.clear-padding) {
-  padding-top: 0;
-  padding-bottom: 0;
-}
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0;
-  padding-right: 0;
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.el-table :deep(.reduce-padding .cell) {
+  padding-right: 2px;
+  padding-left: 2px;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.disabled-handle {
+  cursor: not-allowed;
 }
 </style>

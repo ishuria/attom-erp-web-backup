@@ -103,7 +103,11 @@
           <el-table-column label="发票代码" prop="" min-width="100"></el-table-column>
           <el-table-column label="发票号码" prop="" min-width="100"></el-table-column>
           <el-table-column label="发票数量" prop="" min-width="100"></el-table-column>
-          <el-table-column label="发票文件" prop="" min-width="100"></el-table-column>
+          <el-table-column label="发票文件" prop="" min-width="160">
+            <template #default="{ row }">
+              <el-button style="min-width: 100%;">预览发票文件</el-button>
+            </template>
+          </el-table-column>
           <el-table-column label="SKU" prop="" min-width="100"></el-table-column>
           <el-table-column label="PO零件数" prop="" min-width="100"></el-table-column>
           <el-table-column label="shipmentID" prop="" min-width="130"></el-table-column>

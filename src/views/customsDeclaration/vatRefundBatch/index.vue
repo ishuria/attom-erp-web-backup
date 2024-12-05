@@ -32,9 +32,7 @@
           <el-table-column label="合同编号" prop="" min-width="200"></el-table-column>
           <el-table-column label="未到发票" prop="" min-width="100"></el-table-column>
           <el-table-column label="发票总数" prop="" min-width="100"></el-table-column>
-          <el-table-column label="退税完成" prop="" min-width="100">
-            <el-checkbox :true-value="1" :false-value="0"></el-checkbox>
-          </el-table-column>
+          <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
           <el-table-column label="备注" prop="remark" min-width="300">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
@@ -45,8 +43,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="220">
+          <el-table-column label="操作" fixed="right" width="290">
             <template #default="{ row }">
+              <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
               <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
               <el-link type="primary" :underline="false" @click="showInvoiceCollection(row)">发票归集</el-link>
               <el-link type="success" :underline="false">退税完成</el-link>
@@ -77,9 +76,7 @@
           <el-table-column label="合同编号" prop="" min-width="200"></el-table-column>
           <el-table-column label="未到发票" prop="" min-width="100"></el-table-column>
           <el-table-column label="发票总数" prop="" min-width="100"></el-table-column>
-          <el-table-column label="退税完成" prop="" min-width="100">
-            <el-checkbox :true-value="1" :false-value="0" disabled ></el-checkbox>
-          </el-table-column>
+          <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
           <el-table-column label="备注" prop="remark" min-width="300">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
@@ -137,6 +134,23 @@
         <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 修改退税运费 -->
+    <vab-dialog
+      title="更新退税运费"
+      width="20%"
+      v-model="freightFeeVisible"
+      @close="closeFreightFee"
+    >
+      <el-form ref="freightFeeFormRef" :model="freightFeeForm" :rules="freightFeeFormRules" style=" margin-right: 20px;margin-left: 20px;">
+        <el-form-item label="退税运费" prop="freightFee">
+          <el-input v-model.trim="freightFeeForm.freightFee" type="number" :min="0" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="closeFreightFee">取消</el-button>
+        <el-button type="primary" @click="confirmFreightFee">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -146,10 +160,39 @@ defineOptions({
 })
 import { FormInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
+import { updateShipmentFreightFee } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 
 const activeName = ref<number>(0)
 const handleClick = () => {
 
+}
+
+// 退税运费修改可见
+const freightFeeVisible = ref<boolean>(false)
+const freightFeeForm = reactive<any>({})
+const freightFeeFormRef = ref<FormInstance>()
+const freightFeeFormRules = reactive<any>({
+  freightFee: [{ required: true, message: '请输入退税运费', trigger: 'blur' }]
+})
+let copyRow: any
+const showFreightFee = (row: any) => {
+  freightFeeVisible.value = true
+  copyRow = row
+  freightFeeForm.freightFee = row.freightFee
+}
+const closeFreightFee = () => {
+  freightFeeVisible.value = false
+}
+const confirmFreightFee = async () => {
+  const { data } = await updateShipmentFreightFee({
+    id: copyRow.id,
+    freightFee: freightFeeForm.freightFee
+  })
+  if (data) {
+    $baseMessage('更新退税运费成功!', 'success')
+    closeFreightFee()
+    copyRow.freightFee = freightFeeForm.freightFee
+  }
 }
 // 修改备注可见
 const updateRemarkVisible = ref<boolean>(false)

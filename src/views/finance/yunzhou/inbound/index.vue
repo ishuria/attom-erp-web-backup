@@ -66,7 +66,7 @@
       v-model="inOrDeVisible"
       width="25%"
     >
-      <el-form :model="inOrDeForm" label-position="top" style="margin-left: 20px; margin-right: 20px" >
+      <el-form class="inOrDeForm" :model="inOrDeForm" label-position="top" style="margin-left: 20px; margin-right: 20px" >
         <el-form-item label="到货日期">
           <div style="width: 83%">
             <el-input disabled />
@@ -99,17 +99,15 @@
         </el-form-item>
         <el-form-item label="调整数量">
           <div style="width: 83%; margin-right: 30px">
-            <el-input />
+            <el-input type="number" />
           </div>
           <span class="custom-checkbox" style="width: 10%;">
-            <el-checkbox
-              :true-value="1" :false-value="0"
-            ><span style="color: var(--el-color-danger)">红冲</span></el-checkbox>
+            <el-checkbox :true-value="1" :false-value="0">红冲</el-checkbox>
           </span>
         </el-form-item>
         <el-form-item label="调整价格">
           <div style="width: 83%">
-            <el-input />
+            <el-input type="number" />
           </div>
         </el-form-item>
       </el-form>
@@ -173,8 +171,19 @@ const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: 
 </script>
 
 <style lang="scss" scoped>
-.custom-checkbox :deep(.el-checkbox) {
-  transform: scale(1.3);
-  transform-origin: center;
+.inOrDeForm {
+  :deep() {
+    .el-checkbox {
+      transform: scale(1.3);
+      transform-origin: center;
+    }
+    .el-checkbox__input.is-checked + .el-checkbox__label {
+      color: var(--el-color-danger);
+    }
+    // .el-checkbox__input.is-checked .el-checkbox__inner {
+    //   color: var(--el-color-danger);
+    //   border-color: var(--el-color-danger);
+    // }
+  }
 }
 </style>

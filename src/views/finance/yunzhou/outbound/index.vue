@@ -4,7 +4,7 @@
       <vab-query-form-top-panel >
         <el-button type="primary">导出</el-button>
         <el-button type="primary">入库核对</el-button>
-        <el-button type="primary">未匹配发票汇总</el-button>
+        <el-button type="primary" @click="showSummary">未匹配发票汇总</el-button>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel :span="6">
         <el-date-picker type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" ></el-date-picker>
@@ -41,7 +41,7 @@
       <el-table-column label="操作" prop="" width="140">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
-          <el-link type="primary" :underline="false">调增调减</el-link>
+          <el-link type="primary" :underline="false" @click="showInOrDe(row)">调增调减</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -74,6 +74,100 @@
         <el-button type="primary" @click="confirmModify">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 调增调减 -->
+    <vab-dialog
+      title="调增调减"
+      v-model="inOrDeVisible"
+      width="25%"
+      top="10vh"
+    >
+      <el-form class="inOrDeForm" label-position="top" style="margin-left: 20px; margin-right: 20px">
+        <el-form-item label="到货日期">
+          <div style="width: 80%">
+            <el-input disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="供应商">
+          <div style="width: 80%">
+            <el-input disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="PO">
+          <div style="width: 80%">
+            <el-input disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="SKU">
+          <div style="width: 80%">
+            <el-input disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="品名">
+          <div style="width: 80%">
+            <el-input disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="Shipment Id">
+          <div style="width: 80%">
+            <el-input disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="调整数量">
+          <div style="width: 80%; margin-right: 20px;">
+            <el-input type="number" />
+          </div>
+          <span style="width: 5%;">
+            <el-checkbox>红冲</el-checkbox>
+          </span>
+        </el-form-item>
+        <el-form-item label="调整未税总价￥">
+          <div style="width: 80%">
+            <el-input type="number" />
+          </div>
+        </el-form-item>
+        <el-form-item label="调整销售价格$">
+          <div style="width: 80%">
+            <el-input type="number" />
+          </div>
+        </el-form-item>
+        <el-form-item label="调整销售价格￥">
+          <div style="width: 80%">
+            <el-input disabled />
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button>取消</el-button>
+        <el-button type="primary">确认</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 未匹配发票汇总 -->
+    <vab-dialog
+      title="出库单数据汇总"
+      v-model="summaryVisible"
+    >
+      <el-table border stripe :header-cell-style="{ textAlign: 'center' }">
+        <el-table-column label="供应商" prop=""></el-table-column>
+        <el-table-column label="总未税价" prop=""></el-table-column>
+        <el-table-column label="总CIF$" prop=""></el-table-column>
+        <el-table-column label="操作">
+          <template #default="{ row }">
+            <el-link type="primary" :underline="false">明细</el-link>
+          </template>
+        </el-table-column>
+      </el-table>
+    </vab-dialog>
+    <vab-dialog
+      title="明细"
+      v-model="detailVisible"
+    >
+      <el-table border stripe :header-cell-style="{ textAlign: 'center' }">
+        <el-table-column label="出货日期"></el-table-column>
+        <el-table-column label="PO"></el-table-column>
+        <el-table-column label="未税价"></el-table-column>
+        <el-table-column label="CIF$"></el-table-column>
+      </el-table>
+    </vab-dialog>
   </div>
 </template>
 
@@ -89,7 +183,18 @@ const queryForm = reactive<any>({
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-
+// 未匹配发票汇总
+const summaryVisible = ref<boolean>(false)
+const showSummary = () => {
+  summaryVisible.value = true
+}
+// 明细可见
+const detailVisible = ref<boolean>(false)
+// 调增调减展示
+const inOrDeVisible = ref<boolean>(false)
+const showInOrDe = (row: any) => {
+  inOrDeVisible.value = true
+}
 // 修改false
 const modifyVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({
@@ -141,3 +246,21 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.inOrDeForm {
+  :deep() {
+    .el-checkbox {
+      transform: scale(1.3);
+      transform-origin: center;
+    }
+    .el-checkbox__input.is-checked + .el-checkbox__label {
+      color: var(--el-color-danger);
+    }
+    // .el-checkbox__input.is-checked .el-checkbox__inner {
+    //   color: var(--el-color-danger);
+    //   border-color: var(--el-color-danger);
+    // }
+  }
+}
+</style>

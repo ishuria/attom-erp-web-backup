@@ -104,7 +104,7 @@
               <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
+          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"></el-table-column> 
           <el-table-column  label="采购方" min-width="100" prop="purchase"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
@@ -227,7 +227,7 @@
               <div class="hover-opacity" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord" style="cursor: pointer;"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser"></el-table-column> 
+          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"></el-table-column> 
           <el-table-column  label="采购方" min-width="100" prop="purchaseId"></el-table-column>
           <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
               <template #default = "{ row }">
@@ -1901,7 +1901,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   
 }
 const lastTwoTabCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
-  if(data.columnIndex !== 5 && data.columnIndex !== 16 && data.columnIndex !== 17)
+  if(data.columnIndex !== 5 && data.columnIndex !== 8 && data.columnIndex !== 16 && data.columnIndex !== 17)
     return {
       textAlign: 'center',
     } 

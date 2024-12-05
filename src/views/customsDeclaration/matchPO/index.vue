@@ -74,7 +74,7 @@
       <el-table-column label="产品总数" prop="totalNumber" min-width="100"></el-table-column>
       <el-table-column label="重量" prop="weight" min-width="70"></el-table-column>
       <el-table-column label="体积" prop="volume" min-width="70"></el-table-column>
-      <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
+     
       <el-table-column label="预估运费" prop="" min-width="100"></el-table-column>
       <el-table-column label="实际运费" prop="" min-width="100"></el-table-column>
       <el-table-column label="已付运费" prop="payStatus" min-width="100">
@@ -134,9 +134,6 @@
                 </el-dropdown-item>
                 <el-dropdown-item @click="showFirstLegFreight(row)">
                   <el-link type="primary" :underline="false" >头程运费</el-link>
-                </el-dropdown-item>
-                <el-dropdown-item @click="showFreightFee(row)">
-                  <el-link type="primary" :underline="false" >退税运费</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="">
                   <el-link type="primary" :underline="false" >合同导入</el-link>
@@ -325,23 +322,6 @@
         <el-button type="primary">确认</el-button>
       </template>
     </vab-dialog>
-    <!-- 修改退税运费 -->
-    <vab-dialog
-      title="更新退税运费"
-      width="20%"
-      v-model="freightFeeVisible"
-      @close="closeFreightFee"
-    >
-      <el-form ref="freightFeeFormRef" :model="freightFeeForm" :rules="freightFeeFormRules" style=" margin-right: 20px;margin-left: 20px;">
-        <el-form-item label="退税运费" prop="freightFee">
-          <el-input v-model.trim="freightFeeForm.freightFee" type="number" :min="0" clearable />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="closeFreightFee">取消</el-button>
-        <el-button type="primary" @click="confirmFreightFee">确认</el-button>
-      </template>
-    </vab-dialog>
   </div>
 </template>
 
@@ -378,13 +358,7 @@ const firstLegFreightVisible = ref<boolean>(false)
 const matchVisible = ref<boolean>(false)
 const status = ref<number>(0)
 const shipId = ref<number>(0)
-// 退税运费修改可见
-const freightFeeVisible = ref<boolean>(false)
-const freightFeeForm = reactive<any>({})
-const freightFeeFormRef = ref<FormInstance>()
-const freightFeeFormRules = reactive<any>({
-  freightFee: [{ required: true, message: '请输入退税运费', trigger: 'blur' }]
-})
+
 // 撤销装箱
 const handleCancelEncasement = async (row: any) => {
   $baseConfirm('确定要撤销装箱（删除）吗', null, async () => {
@@ -464,25 +438,6 @@ const handleGenerateClearance = async () => {
   }
 }
 let copyRow: any
-const showFreightFee = (row: any) => {
-  freightFeeVisible.value = true
-  copyRow = row
-  freightFeeForm.freightFee = row.freightFee
-}
-const closeFreightFee = () => {
-  freightFeeVisible.value = false
-}
-const confirmFreightFee = async () => {
-  const { data } = await updateShipmentFreightFee({
-    id: copyRow.id,
-    freightFee: freightFeeForm.freightFee
-  })
-  if (data) {
-    $baseMessage('更新退税运费成功!', 'success')
-    closeFreightFee()
-    copyRow.freightFee = freightFeeForm.freightFee
-  }
-}
 
 // 修改付款状态
 const handleUpdatePayStatus = async (row: any) => {  
@@ -780,7 +735,7 @@ const handleSizeChange = (value: number) => {
 
 const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
 
-  if (data.columnIndex === 7 || data.columnIndex === 8 || data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 17) {
+  if (data.columnIndex === 7 || data.columnIndex === 8 || data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 16) {
     return {
       textAlign: 'left'
     }
