@@ -3,7 +3,7 @@
     <vab-query-form>
       <vab-query-form-top-panel >
         <el-button type="primary">导出</el-button>
-        <el-button type="primary">入库核对</el-button>
+        <el-button type="primary" @click="showWhVerify">入库核对</el-button>
         <el-button type="primary" @click="showSummary">未匹配发票汇总</el-button>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel :span="6">
@@ -145,14 +145,15 @@
     <vab-dialog
       title="出库单数据汇总"
       v-model="summaryVisible"
+      width="40%"
     >
-      <el-table border stripe :header-cell-style="{ textAlign: 'center' }">
-        <el-table-column label="供应商" prop=""></el-table-column>
-        <el-table-column label="总未税价" prop=""></el-table-column>
-        <el-table-column label="总CIF$" prop=""></el-table-column>
-        <el-table-column label="操作">
+      <el-table border stripe :header-cell-style="{ textAlign: 'center' }" :data="fakeData" >
+        <el-table-column label="供应商" prop="" min-width="200"></el-table-column>
+        <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="100"></el-table-column>
+        <el-table-column label="总CIF$" prop="" align="center" min-width="100"></el-table-column>
+        <el-table-column label="操作" align="center" width="80">
           <template #default="{ row }">
-            <el-link type="primary" :underline="false">明细</el-link>
+            <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -160,13 +161,54 @@
     <vab-dialog
       title="明细"
       v-model="detailVisible"
+      width="30%"
     >
-      <el-table border stripe :header-cell-style="{ textAlign: 'center' }">
-        <el-table-column label="出货日期"></el-table-column>
-        <el-table-column label="PO"></el-table-column>
-        <el-table-column label="未税价"></el-table-column>
-        <el-table-column label="CIF$"></el-table-column>
+      <el-table border stripe :header-cell-style="{ textAlign: 'center' }" :data="fakeData">
+        <el-table-column label="出货日期" min-width="120" align="center"></el-table-column>
+        <el-table-column label="PO" prop="po" min-width="100" align="center"></el-table-column>
+        <el-table-column label="未税价" min-width="100" align="center"></el-table-column>
+        <el-table-column label="CIF$" min-width="100" align="center"></el-table-column>
       </el-table>
+    </vab-dialog>
+    <!-- 入库核对 -->
+    <vab-dialog
+      title="入库核对"
+      v-model="whVerifyVisible"
+    >
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="whVerifyForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model.trim="whVerifyForm.keyWord" clearable placeholder="请输入搜索关键词" @input="whQueryData" @keyup.enter.native="whQueryData" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :icon="Search" :loading="whVerifyListLoading" native-type="submit" @click="whQueryData" ></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table
+        border
+        :header-cell-style="{ textAlign: 'center' }"
+        :data="fakeData"
+      >
+        <el-table-column label="出库日期" prop="" min-width="" align="center"></el-table-column>
+        <el-table-column label="供应商名称" prop="" min-width=""></el-table-column>
+        <el-table-column label="PO" prop="po" min-width=""></el-table-column>
+        <el-table-column label="SKU" prop="" min-width=""></el-table-column>
+        <el-table-column label="品名" prop="" min-width=""></el-table-column>
+        <el-table-column label="数量" prop="" min-width="" align="center"></el-table-column>
+        <el-table-column label="Shipment ID" prop="" min-width=""></el-table-column>
+        <el-table-column label="合同编号" prop="" min-width=""></el-table-column>
+        <el-table-column label="错误类型" prop="" min-width=""></el-table-column>
+      </el-table>
+      <vab-pagination 
+        :current-page="whVerifyForm.pageNo"
+        :page-size="whVerifyForm.pageNo"
+        :total="whTotal"
+        @current-change="handleWhCurrentChange"
+        @size-change="handleWhSizeChange"
+      />
     </vab-dialog>
   </div>
 </template>
@@ -183,6 +225,31 @@ const queryForm = reactive<any>({
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
+// 入库核对
+const whVerifyVisible = ref<boolean>(false)
+const whVerifyForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const whVerifyListLoading = ref<boolean>(false)
+const whQueryData = () => {
+  whVerifyForm.pageNo = 1
+  // fetchWhData()
+}
+const whTotal = ref<number>(0)
+const handleWhCurrentChange = (value: number) => {
+  whVerifyForm.pageNo = value
+  // fetchWhData()
+}
+const handleWhSizeChange = (value: number) => {
+  whVerifyForm.pageNo = 1
+  whVerifyForm.pageSize = value
+  // fetchWhData()
+}
+const showWhVerify = () => {
+  whVerifyVisible.value = true
+}
 // 未匹配发票汇总
 const summaryVisible = ref<boolean>(false)
 const showSummary = () => {
@@ -190,6 +257,9 @@ const showSummary = () => {
 }
 // 明细可见
 const detailVisible = ref<boolean>(false)
+const showDetail = (row: any) => {
+  detailVisible.value = true
+}
 // 调增调减展示
 const inOrDeVisible = ref<boolean>(false)
 const showInOrDe = (row: any) => {
@@ -214,7 +284,8 @@ const confirmModify = () => {
 }
 const fakeData = [
   {
-    po: 'PO123456'
+    po: 'PO123456',
+    preTaxPrice: '333'
   }
 ]
 

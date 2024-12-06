@@ -9,8 +9,6 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
-        <el-button type="primary" @click="clearAllPO">清空全部PO</el-button>
-        <el-button type="danger" @click="handleDelAll">全部删除</el-button>
         <el-switch 
           v-model="setNumber" 
           :active-value="1" :inactive-value="0" 

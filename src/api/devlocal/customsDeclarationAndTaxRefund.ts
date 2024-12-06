@@ -390,3 +390,25 @@ export const updateQgShipmentLeg = (params: IUpdateBgShipmentLeg): Promise<IBool
     params
   })
 }
+
+/**
+ * @description 匹配PO、报关资料-退税归档
+ */
+export const archiveTaxRefund = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/archive`,
+    method: 'post',
+    params
+  })
+}
+
+/**
+ * @description 匹配PO、报关资料-撤销退税归档
+ */
+export const cancelArchiveTaxRefund = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/cancel/archive`,
+    method: 'post',
+    params
+  })
+}

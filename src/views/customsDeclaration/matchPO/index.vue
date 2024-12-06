@@ -126,7 +126,7 @@
                 <el-dropdown-item @click="handleArchivePackage(row)">
                   <el-link type="primary" :underline="false" >打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="">
+                <el-dropdown-item @click="handleArchiveTaxRefund(row)">
                   <el-link type="primary" :underline="false">退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="">
@@ -141,7 +141,7 @@
                 <el-dropdown-item @click="handleCancelArchivePackage(row)">
                   <el-link type="primary" :underline="false" >撤销打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="">
+                <el-dropdown-item @click="handleCancelArchiveTaxRefund(row)">
                   <el-link type="primary" :underline="false" >撤销退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="">
@@ -329,7 +329,7 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { FormInstance, TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { addShipmentCost, archivePackageShipment, cancelArchivePackageShipment, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentFreightFee, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addShipmentCost, archivePackageShipment, archiveTaxRefund, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentFreightFee, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -349,6 +349,29 @@ const listLoading = ref<boolean>(false)
 const selectRows = ref<any>([])
 const setSelectRows = (value: any) => {
   selectRows.value = value
+}
+// 退税归档
+const handleArchiveTaxRefund = (row: any) => {
+  $baseConfirm('确定要退税归档吗？', null, async () => {
+    const { data } = await archiveTaxRefund({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('退税归档成功！', 'success')
+      fetchData()
+    }
+  })
+}
+const handleCancelArchiveTaxRefund = (row: any) => {
+  $baseConfirm('确定要撤销退税归档吗？', null, async () => {
+    const { data } = await cancelArchiveTaxRefund({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('撤销退税归档成功！', 'success')
+      fetchData()
+    }
+  })
 }
 // 货代渠道选项
 const forwarderOption = ref<any>([])

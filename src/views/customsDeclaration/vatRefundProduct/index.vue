@@ -112,6 +112,11 @@
           <el-table-column label="PO零件数" prop="" min-width="100"></el-table-column>
           <el-table-column label="shipmentID" prop="" min-width="130"></el-table-column>
           <el-table-column label="付款记录" prop="" min-width="160"></el-table-column>
+          <el-table-column label="操作" width="100" fixed="right">
+            <template #default="{ row }">
+              <el-link :underline="false" type="danger">删除匹配</el-link>
+            </template>
+          </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty"></el-empty>
           </template>

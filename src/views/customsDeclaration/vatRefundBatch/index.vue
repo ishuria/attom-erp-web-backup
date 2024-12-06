@@ -142,7 +142,7 @@
       @close="closeFreightFee"
     >
       <el-form ref="freightFeeFormRef" :model="freightFeeForm" :rules="freightFeeFormRules" style=" margin-right: 20px;margin-left: 20px;">
-        <el-form-item label="退税运费" prop="freightFee">
+        <el-form-item label="退税运费$" prop="freightFee">
           <el-input v-model.trim="freightFeeForm.freightFee" type="number" :min="0" clearable />
         </el-form-item>
       </el-form>
