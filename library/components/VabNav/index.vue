@@ -76,11 +76,9 @@ watch(
 
 <style lang="scss">
 .vab-layout-comprehensive {
-
-
   .vab-side-bar {
     top: var(--el-nav-height) !important;
-    z-index: calc(var(--el-z-index) + 11);
+    z-index: calc(var(--el-z-index) + 3);
     padding-top: 0 !important;
 
     .el-scrollbar__view {
@@ -102,7 +100,7 @@ watch(
   }
 
   .fixed-header:has(.vab-nav-comprehensive) {
-    z-index: calc(var(--el-z-index) + 10) !important;
+    z-index: calc(var(--el-z-index) + 2) !important;
     width: 100vw !important;
     border-bottom: 0 !important;
 

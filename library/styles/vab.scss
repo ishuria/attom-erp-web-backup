@@ -868,6 +868,8 @@ html {
       position: fixed !important;
       inset: 0 !important;
       z-index: calc(var(--el-z-index) + 3) !important;
+      width: 100vw !important;
+      height: calc(var(--vh, 1vh) * 100) !important;
       padding: 0 !important;
       margin: 0 !important;
       border: 0 !important;
