@@ -9,12 +9,6 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
-        <el-switch 
-          v-model="setNumber" 
-          :active-value="1" :inactive-value="0" 
-          style="margin: 0 10px calc(var(--el-margin) / 2) 0;" 
-          active-text="发票号码去重"
-        ></el-switch>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -36,6 +30,11 @@
       class="noneHoveTable"
       :cell-class-name="clearPadding"
     >
+      <el-table-column label="操作" fixed="left">
+        <template #default="{ row }">
+          <el-link :underline="false" type="danger" >删除</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="购方名称" prop="" min-width="100">
         <template #default="{ row }">
           <div class="none">
@@ -160,11 +159,10 @@
           <span>{{  }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="160" fixed="right">
+      <el-table-column label="操作" width="130" fixed="right">
         <template #default="{ row }">
           <el-link :underline="false" type="primary" @click="showMatch(row)">匹配</el-link>
           <el-link :underline="false" type="primary" >清空</el-link>
-          <el-link :underline="false" type="danger" >删除</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -249,9 +247,9 @@
       <el-table-column label="SKU" prop="" min-width="100"></el-table-column>
       <el-table-column label="零件名" prop="" min-width="100"></el-table-column>
       <el-table-column label="shipment ID" prop="" min-width="120"></el-table-column>
-      <el-table-column label="匹配" prop="" min-width="80">
+      <el-table-column label="匹配" prop="status" min-width="80">
         <template #default="{ row }">
-          <el-checkbox />
+          <el-radio class="custom-radio" v-model="matchStatus" :label="row.id" size="large">{{ '' }}</el-radio>
         </template>
       </el-table-column>
     </el-table>
@@ -265,7 +263,7 @@
     <template #footer>
       <div style="text-align: center;">
         <el-button>取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="handleConfirm">确定</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -307,14 +305,40 @@ const showImagePreview = (url: string) => {
 }
 // 匹配可见
 const matchVisible = ref<boolean>(false)
-// 发票号码去重
-const setNumber = ref<number>(0)
+const matchStatus = ref<number>(0)
 const total = ref<number>(0)
 
 const fakeData = [
   {
-    po: 'PO1234'
-  }
+    po: 'PO1234',
+    status: 1,
+    id: 1
+  },
+  {
+    po: 'PO1234',
+    status: 0,
+    id: 2
+  },
+  {
+    po: 'PO1234',
+    status: 1,
+    id: 3
+  },
+  {
+    po: 'PO1234',
+    status: 0,
+    id: 4
+  },
+  {
+    po: 'PO1234',
+    status: 1,
+    id: 5
+  },
+  {
+    po: 'PO1234',
+    status: 0,
+    id: 6
+  },
 ]
 // 上传发票可见
 const uploadInvoiceVisible = ref<boolean>(false)
@@ -346,6 +370,9 @@ const handleMatchSizeChange = (value: number) => {
   // fetchMatchData()
 }
 
+const handleConfirm = () => {
+  console.log(matchStatus.value)
+}
 // 展示匹配
 const showMatch = (row: any) => {
   matchVisible.value = true
@@ -413,7 +440,7 @@ const handleSizeChange = (value: number) => {
   // fetchData()
 }
 const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-  if (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4) {
+  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 5) {
     return {
       textAlign: 'left'
     }
@@ -458,6 +485,11 @@ const clearPadding = (data: {row: any, column: any, rowIndex: number, columnInde
     .el-checkbox {
       transform: scale(1.3);
       transform-origin: center;
+    }
+    .custom-radio {
+      transform: scale(1.3);
+      transform-origin: center;
+      margin-right: -10px;
     }
   }
 }
