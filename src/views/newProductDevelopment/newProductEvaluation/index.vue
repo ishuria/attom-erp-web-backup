@@ -88,20 +88,18 @@
     <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />
 
-    <el-dialog v-model="keyWordTrendVisible" :close-on-click-modal="false" title="关键词趋势" width="500">
-      <el-form>
+    <vab-dialog v-model="keyWordTrendVisible" title="关键词趋势" width="500">
+      <el-form style="margin-left: 3px; margin-right: 3px;">
         <el-form-item label="关键词">
           <el-input autocomplete="off" v-model="inputKeyWord" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="searchKeyWordTrend">
-            查询
-          </el-button>
-        </div>
+        <el-button type="primary" @click="searchKeyWordTrend">
+          查询
+        </el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
 
     <!-- 关键词趋势图表 -->
      <vab-trend 

@@ -40,13 +40,13 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">筛选</el-button>
+            <el-button type="primary" @click="filterVisible = true">筛选</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">运营分类设定</el-button>
+            <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
           </el-form-item>
           <el-form-item >
-            <el-button type="primary" >关键词排名趋势</el-button>
+            <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
           </el-form-item>
           <el-form-item >
             <el-text style="margin-left: 10px; font-weight: 600;">数据更新时间：2024年12月22日14:02</el-text>
@@ -96,6 +96,7 @@
       :cell-style="cellStyle"
       :cell-class-name="clearPadding" 
       :data="fakeData"
+      :cell-click="cellClick"
     >
       <el-table-column
         v-for="(item, index) in checkList"
@@ -103,7 +104,7 @@
         :label="item.label"
         :prop="item.prop"
         :width="item.width"
-        :minWidth="item.minWidth || 100"
+        :minWidth="handleWidth(item)"
         :fixed="item.isFixed"
       >
         <template #header>
@@ -119,6 +120,23 @@
               </template>
             </el-image>
           </span>
+          <span v-if="item.label === 'SKU'">
+            {{ row.sku }}
+            <div style="display: flex; align-items: center;">
+              <span >{{ row.rate }}</span>
+              <span><el-rate v-model="row.rate" disabled /></span>
+              <span style="color: #36788C">{{ 484 }}</span>
+            </div>
+          </span>
+          <span v-if="item.label === 'ASIN'">
+            <el-link type="primary">{{ row.asin }}</el-link>
+          </span>
+          <span v-if="item.label === '父体ASIN'">
+            <el-link type="primary">{{ row.pAsin }}</el-link>
+          </span>
+          <span v-if="item.label === '销量趋势(点击看明细)'">
+
+          </span>
           <span v-if="item.label === '运营分类'">
             <el-select style="min-width: 100%;">
               <el-option 
@@ -131,20 +149,148 @@
           </span>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty"></el-empty>
+      </template>
     </el-table>
+    <vab-pagination 
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
     <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hideOnClickModal/>
+    <!-- 运营分类 -->
+    <VabOperationalClassify 
+      :opeClassifyVisible="opeClassifyVisible"
+      @updateVisible="closeOpeClassify"
+    />
+    <!-- 筛选 -->
+    <vab-dialog
+      title="筛选"
+      v-model="filterVisible"
+      width="27%"
+    >
+      <el-form
+        ref="filterFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="filterForm"
+        style="width: 100%; margin-right: 10px"
+      >
+        <el-form-item label="广告点击次数">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number1"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number2"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="上新天数">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number3"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number4"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="图片数量筛选">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number5"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number6"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button type="danger" @click="clearFilterForm">清空</el-button>
+          <el-button type="primary">确认</el-button>
+          <el-button>取消</el-button>
+        </div>
+      </template>
+    </vab-dialog>
+    <!-- 关键词 -->
+    <vab-dialog
+      title="关键词排名趋势"
+      width="20%"
+      v-model="keyWordTrendVisible"
+    >
+      <el-form label-position="top" >
+        <el-form-item label="关键词">
+          <el-input clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="queryKeyWordTrend">查询</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 关键词趋势图表 -->
+    <vab-dialog
+      title="关键词排名趋势图"
+      v-model="keywordTrendChartVisible"
+    >
+      <vab-query-form>
+        <vab-query-form-left-panel :span="6" >
+          <el-select>
+            <el-option 
+              v-for="item in keyWordTrendOption"
+              :label="item.label"
+              :key="item.value"
+              :value="item.value"
+            />
+          </el-select>
+        </vab-query-form-left-panel>
+      </vab-query-form>
+      <vab-chart />    
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Search, View, Hide } from '@element-plus/icons-vue'
+defineOptions({
+  name: 'productPerformance',
+})
+import { Hide, Search, View } from '@element-plus/icons-vue'
+import { FormInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const fakeData = ref<any>([
   {
     componentImage: 'https://picsum.photos/200/200',
     sku: 'SKU12345',
+    rate: 4.7,
     asin: 'B08N5M7S6K',
     pAsin: 'B08N5M7S6K',
     trend: '点击看明细',
@@ -153,7 +299,7 @@ const fakeData = ref<any>([
     todaySellD: 1500,
     todayAd: 10,
     ad: 500,
-    pieChart: 'https://example.com/piechart1.png',
+    pieChart: '',
     seasonalCoefficient: 1.5,
     classify: '电子产品',
     sRank: 5,
@@ -212,6 +358,7 @@ const fakeData = ref<any>([
   {
     componentImage: 'https://picsum.photos/200/200',
     sku: 'SKU67890',
+    rate: 4.9,
     asin: 'B08XYZ1234',
     pAsin: 'B08XYZ1234',
     trend: '点击看明细',
@@ -220,7 +367,7 @@ const fakeData = ref<any>([
     todaySellD: 2500,
     todayAd: 15,
     ad: 800,
-    pieChart: 'https://example.com/piechart2.png',
+    pieChart: '',
     seasonalCoefficient: 1.8,
     classify: '家居用品',
     sRank: 3,
@@ -300,14 +447,18 @@ const columns = ref<any>([
   {
     label: 'ASIN',
     prop: 'asin',
+    disableCheck: true,
     checked: true,
     minWidth: 80,
+    isFixed: 'left'
   },
   {
     label: '父体ASIN',
     prop: 'pAsin',
+    disableCheck: true,
     checked: true,
     minWidth: 110,
+    isFixed: 'left'
   },
   {
     label: '销量趋势(点击看明细)',
@@ -732,6 +883,63 @@ const classOption = [
     value: 1
   }
 ]
+const keyWordTrendOption = [
+  {
+    label: '全部',
+    value: -1
+  },
+  {
+    label: '近半年',
+    value: 0
+  },
+  {
+    label: '近一年',
+    value: 1
+  },
+  {
+    label: '近两年',
+    value: 2
+  }
+]
+// 运营分类设定可见
+const opeClassifyVisible = ref<boolean>(false)
+const showOpeClassify = () => {
+  opeClassifyVisible.value = true
+}
+const closeOpeClassify = (value: boolean) => {
+  opeClassifyVisible.value = false
+}
+// 筛选可见
+const filterVisible = ref<boolean>(false)
+const filterFormRef = ref<FormInstance>()
+const filterForm = reactive<any>({
+
+})
+const clearFilterForm = () => {
+  // 每个都置空
+}
+// 关键词趋势
+const keyWordTrendVisible = ref<boolean>(false)
+// 关键词趋势图表
+const keywordTrendChartVisible = ref<boolean>(false)
+const queryKeyWordTrend = () => {
+  keywordTrendChartVisible.value = true
+}
+// 处理自适应宽度
+const handleWidth = (item: any) => {
+  if (item.label === 'SKU') {
+    return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-SK', 'sku')
+  } else if (item.label === 'ASIN') {
+    return flexColumnWidth(fakeData.value, 'ASIN', 'asin')
+  } else if (item.label === '父体ASIN') {
+    return flexColumnWidth(fakeData.value, '父体ASIN', 'pAsin')
+  } else {
+    return item.minWidth
+  }
+}
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+
+}
 const handleChecked = (item: any) => {
   item.checked = !item.checked
 }
@@ -757,7 +965,9 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value.push(url)
 }
 const queryForm = reactive<any>({
-
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -817,5 +1027,11 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 }
 .disabled-handle {
   cursor: not-allowed;
+}
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
 }
 </style>

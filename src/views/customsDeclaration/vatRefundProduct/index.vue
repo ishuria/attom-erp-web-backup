@@ -6,7 +6,7 @@
           <vab-query-form-left-panel :span="20">
             <el-button type="primary" @click="showInvoiceMatching">发票匹配</el-button>
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
-            <el-button type="primary" >云舟催票文件</el-button>
+            <el-button type="primary" @click="ticketReminderVisible = true">云舟催票文件</el-button>
             <el-button type="primary">云舟开票导出</el-button>
             <el-button type="primary">埃托姆开票导出</el-button>
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0;">
@@ -105,7 +105,7 @@
           <el-table-column label="发票数量" prop="" min-width="100"></el-table-column>
           <el-table-column label="发票文件" prop="" min-width="160">
             <template #default="{ row }">
-              <el-button style="min-width: 100%;">预览发票文件</el-button>
+              <el-button style="min-width: 100%;" @click="pdfVisible = true">预览发票文件</el-button>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="" min-width="100"></el-table-column>
@@ -207,14 +207,60 @@
         />
       </el-tab-pane>
     </el-tabs>
+    <!-- 发票匹配 -->
     <vab-invoice-matching 
-        :invoice-matching-visible="invoiceMatchingVisible"
-        @update-invoice-matching-visible="closeInvoiceMatching"
-      />
-      <vab-batch-profit-margin 
-        :batch-profit-margin-visible="batchProfitMarginVisible"
-        @update-batch-profit-margin-visible="closeBatchProfitMargin"
-      />
+      :invoice-matching-visible="invoiceMatchingVisible"
+      @update-invoice-matching-visible="closeInvoiceMatching"
+    />
+    <!-- 批次利润率 -->
+    <vab-batch-profit-margin 
+      :batch-profit-margin-visible="batchProfitMarginVisible"
+      @update-batch-profit-margin-visible="closeBatchProfitMargin"
+    />
+    <!-- 云舟催票文件 -->
+    <vab-dialog
+      title="生成云舟催票文件"
+      v-model="ticketReminderVisible"
+      width="25%"
+      @close="closeTicketReminder"
+    >
+      <el-form ref="ticketReminderFormRef" :model="ticketReminderForm" label-position="top">
+        <el-form-item label="付款日期" prop="">
+          <el-date-picker 
+            type="daterange"
+            start-placeholder="最早付款日期"
+            end-placeholder="最晚付款日期"
+            range-separator="至"
+          />
+        </el-form-item>
+        <el-form-item label="供应商" prop="">
+          <el-input />
+        </el-form-item>
+        <el-form-item label="仅已报关" prop="">
+          <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+        </el-form-item>
+        <el-form-item label="采购方" prop="">
+          <el-select ></el-select>
+        </el-form-item>
+        <vab-alert type="error">
+          注意:系统生成催收文件的开票数量是按照PO数量，如果和供应商沟通拆分开票的系统无法识别，需要你手动处理。且当拆分的任何一张发票报关后，发票催收会跳过这个PO。
+        </vab-alert>
+      </el-form>
+      <template #footer>
+        <el-button >取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 预览pdf -->
+    <vab-dialog
+      v-model="pdfVisible"
+      @close="pdfVisible = false"
+      top="5vh"
+    >
+      <div class="pdf-container" >
+        <vab-pdf source="https://gcore.jsdelivr.net/gh/zxwk1998/image/demo.pdf" @loaded="" @page-loaded="" />
+      </div>
+    </vab-dialog>
   </div>
 </template>
 
@@ -227,8 +273,20 @@ defineOptions({
 import { Search } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
+import VabPdf from '/@/plugins/VabPdf'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { FormInstance } from 'element-plus'
 
+const dialogWidth = ref<number>(0)
+// 当 PDF 加载完成时获取宽度
+const onPdfLoaded = (pdf: any) => {
+  console.log(pdf);
+}
+// 当某一页加载完成时触发
+const onPageLoaded = (page: any) => {
+  const viewport = page.getViewport({ scale: 1 }); // 获取页面的视口信息
+  dialogWidth.value = viewport.width; // 设置弹窗宽度为 PDF 页面宽度
+};
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -261,6 +319,18 @@ const closeInvoiceMatching = (value: boolean) => {
 const closeBatchProfitMargin = (value: boolean) => {
   batchProfitMarginVisible.value = value
 }
+// 云舟催票文件
+const ticketReminderVisible = ref<boolean>(false)
+const ticketReminderForm = reactive<any>({
+
+})
+const ticketReminderFormRef = ref<FormInstance>()
+const closeTicketReminder = () => {
+  ticketReminderFormRef.value?.resetFields()
+  ticketReminderVisible.value = false
+}
+// pdf 可见
+const pdfVisible = ref<boolean>(false)
 // 批次利润率可见
 const batchProfitMarginVisible = ref<boolean>(false)
 // 展示批次利润率
@@ -411,6 +481,10 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
         }
       }
     }
+  }
+  .el-dialog .el-checkbox {
+    transform: scale(1.3);
+    transform-origin: center;
   }
 }
 </style>

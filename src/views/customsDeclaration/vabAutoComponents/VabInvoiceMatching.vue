@@ -448,6 +448,7 @@ const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: 
   return {
     textAlign: 'center'
   }
+  // 发票数量和发票单位与报关数量和报关单位不一致，报关数量和单位就标红
 }
 const matchCellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
   if (data.columnIndex === 0 || data.columnIndex === 12 || data.columnIndex === 13 || data.columnIndex === 14) {
