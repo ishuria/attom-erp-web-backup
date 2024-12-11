@@ -12,8 +12,8 @@ const clipboardError = (text: any) => {
  * @description 复制数据
  * @param text
  */
-export default function handleClipboard(text: string) {
-  const { isSupported, copy } = useClipboard()
+const handleClipboard = (text: string) => {
+  const { isSupported, copy } = useClipboard({ legacy: true })
   if (!isSupported) usePermission('clipboard-write')
 
   copy(text)
@@ -24,3 +24,5 @@ export default function handleClipboard(text: string) {
       clipboardError(text)
     })
 }
+
+export default handleClipboard
