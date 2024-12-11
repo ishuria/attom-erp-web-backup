@@ -412,3 +412,24 @@ export const cancelArchiveTaxRefund = (params: IId): Promise<IBooleanRes> => {
     params
   })
 }
+
+/**
+ * @description 匹配PO、报关资料-出库归档
+ */
+export const archiveOutbound = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/outbound/archive`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 匹配PO、报关资料-撤销出库归档
+ */
+export const cancelArchiveOutbound = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/outbound/cancel`,
+    method: 'post',
+    params
+  })
+}

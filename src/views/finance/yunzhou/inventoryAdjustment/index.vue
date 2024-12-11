@@ -1,9 +1,6 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel>
-        <el-button type="primary">导出</el-button>
-      </vab-query-form-top-panel>
       <vab-query-form-left-panel :span="4">
         <el-date-picker 
           type="daterange"
@@ -37,16 +34,15 @@
       <el-table-column label="调整数量" prop="" min-width="100" align="center"></el-table-column>
       <el-table-column label="调整未税价格" prop="" min-width="120" align="center"></el-table-column>
       <el-table-column label="含税总价￥" prop="" min-width="110" align="center"></el-table-column>
-      <el-table-column label="销售价格￥" prop="" min-width="110" align="center"></el-table-column>
       <el-table-column label="Shipment ID" prop="" min-width="130"></el-table-column>
       <el-table-column label="合同编号" prop="" min-width="150"></el-table-column>
       <el-table-column label="备注" prop="" min-width="200"></el-table-column>
-      <el-table-column label="操作" prop="" width="160" align="center">
+      <!-- <el-table-column label="操作" prop="" width="160" align="center">
         <template #default="{ row }">
           <el-button type="primary" text @click="showModify(row)">修改</el-button>
           <el-button type="danger" text>删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <template #empty>
         <el-empty class="vab-data-empty"></el-empty>
       </template>

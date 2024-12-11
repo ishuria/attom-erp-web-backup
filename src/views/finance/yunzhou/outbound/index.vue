@@ -26,24 +26,25 @@
       :cell-style="cellStyle"
       :data="fakeData"
     >
-      <el-table-column label="出库日期" prop="" min-width="115"></el-table-column>
+      <el-table-column label="报关单出库日期" prop="" min-width="115"></el-table-column>
       <el-table-column label="供应商名称" prop="" min-width="150"></el-table-column>
       <el-table-column label="PO" prop="po" min-width="90"></el-table-column>
       <el-table-column label="产品名称/型号" prop="" min-width="170"></el-table-column>
-      <el-table-column label="品名" prop="" min-width="200"></el-table-column>
-      <el-table-column label="数量" prop="" min-width="80"></el-table-column>
+      <el-table-column label="报关品名" prop="" min-width="200"></el-table-column>
+      <el-table-column label="零件名" prop="" min-width="200"></el-table-column>
+      <el-table-column label="零件数量" prop="" min-width="80"></el-table-column>
       <el-table-column label="未税总价￥" prop="" min-width="110"></el-table-column>
       <el-table-column label="含税总价￥" prop="" min-width="110"></el-table-column>
       <el-table-column label="销售价格$" prop="" min-width="110"></el-table-column>
       <el-table-column label="Shipment ID" prop="" min-width="130"></el-table-column>
       <el-table-column label="合同编号" prop="" min-width="150"></el-table-column>
       <el-table-column label="备注" prop="" min-width="150"></el-table-column>
-      <el-table-column label="操作" prop="" width="140">
+      <!-- <el-table-column label="操作" prop="" width="140">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
           <el-link type="primary" :underline="false" @click="showInOrDe(row)">调增调减</el-link>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <template #empty>
         <el-empty class="vab-data-empty"></el-empty>
       </template>

@@ -72,25 +72,11 @@
               <span></span>
             </template>
           </el-table-column>
-          <el-table-column label="CIF售价$" prop="" min-width="120">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input type="number" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-              </div>
-              <span></span>
-            </template>
-          </el-table-column>
+          <el-table-column label="CIF售价$" prop="" min-width="120"></el-table-column>
           <el-table-column label="运费$" prop="" min-width="100"></el-table-column>
           <el-table-column label="FOB售价$" prop="" min-width="120"></el-table-column>
           <el-table-column label="汇率" prop="" min-width="90"></el-table-column>
-          <el-table-column label="人民币售价￥" prop="" min-width="130">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input type="number" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-              </div>
-              <span></span>
-            </template>
-          </el-table-column>
+          <el-table-column label="人民币售价￥" prop="" min-width="130"></el-table-column>
           <el-table-column label="含税成本￥" prop="" min-width="110"></el-table-column>
           <el-table-column label="退税后成本￥" prop="" min-width="130"></el-table-column>
           <el-table-column label="利润￥" prop="" min-width="100"></el-table-column>
@@ -236,12 +222,12 @@
         <el-form-item label="供应商" prop="">
           <el-input />
         </el-form-item>
-        <el-form-item label="仅已报关" prop="">
+        <!-- <el-form-item label="仅已报关" prop="">
           <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
         </el-form-item>
         <el-form-item label="采购方" prop="">
           <el-select ></el-select>
-        </el-form-item>
+        </el-form-item> -->
         <vab-alert type="error">
           注意:系统生成催收文件的开票数量是按照PO数量，如果和供应商沟通拆分开票的系统无法识别，需要你手动处理。且当拆分的任何一张发票报关后，发票催收会跳过这个PO。
         </vab-alert>
@@ -413,7 +399,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
       textAlign: 'left'
     }
   }
-  if (data.columnIndex !== 4 && data.columnIndex !== 5 && data.columnIndex !== 6 && data.columnIndex !== 7 && data.columnIndex !== 11) {
+  if (data.columnIndex !== 4 && data.columnIndex !== 5 && data.columnIndex !== 6) {
     return {
       cursor: 'not-allowed',
       textAlign: 'center'

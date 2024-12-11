@@ -96,7 +96,7 @@
       :cell-style="cellStyle"
       :cell-class-name="clearPadding" 
       :data="fakeData"
-      :cell-click="cellClick"
+      @cell-click="cellClick"
     >
       <el-table-column
         v-for="(item, index) in checkList"
@@ -135,12 +135,12 @@
             <el-link type="primary">{{ row.pAsin }}</el-link>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
-
+            <span>点击</span>
           </span>
           <span v-if="item.label === '运营分类'">
             <el-select style="min-width: 100%;">
               <el-option 
-                v-for="item in classOption"
+                v-for="item in opeClassOption"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -284,8 +284,10 @@ import { Hide, Search, View } from '@element-plus/icons-vue'
 import { FormInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { levelOption, opeClassOption } from '../constantOption'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+const router = useRouter()
 const fakeData = ref<any>([
   {
     componentImage: 'https://picsum.photos/200/200',
@@ -827,20 +829,7 @@ const columns = ref<any>([
     minWidth: 100,
   },
 ])
-const levelOption = [
-  {
-    label: 'SKU',
-    value: 0
-  },
-  {
-    label: 'ASIN',
-    value: 1
-  },
-  {
-    label: '父体ASIN',
-    value: 2
-  }
-]
+
 const operationsOption = [
   {
     label: '全部',
@@ -873,16 +862,7 @@ const developerOption = [
     value: 3
   },
 ]
-const classOption = [
-  {
-    label: '每日关注',
-    value: 0
-  },
-  {
-    label: '停产',
-    value: 1
-  }
-]
+
 const keyWordTrendOption = [
   {
     label: '全部',
@@ -938,7 +918,11 @@ const handleWidth = (item: any) => {
   }
 }
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-
+  if (column.label === '销量趋势(点击看明细)') {
+    router.push({
+      path: '/storeOperations/productAnalysis',
+    })
+  }
 }
 const handleChecked = (item: any) => {
   item.checked = !item.checked

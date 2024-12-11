@@ -40,15 +40,12 @@
       <el-table-column label="品名" prop="" min-width="90"></el-table-column>
       <el-table-column label="数量" prop="" min-width="90"></el-table-column>
       <el-table-column label="价格" prop="" min-width="90"></el-table-column>
-      <el-table-column label="发票价格" prop="" min-width="100"></el-table-column>
-      <el-table-column label="价格差额" prop="" min-width="100"></el-table-column>
-      <el-table-column label="发票" prop="" min-width="90"></el-table-column>
       <el-table-column label="备注" prop="" min-width="90"></el-table-column>
-      <el-table-column label="操作" fixed="right" width="100">
+      <!-- <el-table-column label="操作" fixed="right" width="100">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showInOrDe">调增调减</el-link>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <template #empty>
         <el-empty class="vab-data-empty"></el-empty>
       </template>

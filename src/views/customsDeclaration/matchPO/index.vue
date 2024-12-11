@@ -129,7 +129,7 @@
                 <el-dropdown-item @click="handleArchiveTaxRefund(row)">
                   <el-link type="primary" :underline="false">退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="">
+                <el-dropdown-item @click="handleArchiveOutbound(row)">
                   <el-link type="primary" :underline="false" >出库归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="showFirstLegFreight(row)">
@@ -144,7 +144,7 @@
                 <el-dropdown-item @click="handleCancelArchiveTaxRefund(row)">
                   <el-link type="primary" :underline="false" >撤销退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="">
+                <el-dropdown-item @click="handleCancelArchiveOutbound(row)">
                   <el-link type="primary" :underline="false">撤销出库</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelEncasement(row)">
@@ -329,7 +329,7 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { FormInstance, TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { addShipmentCost, archivePackageShipment, archiveTaxRefund, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentFreightFee, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentFreightFee, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -526,6 +526,30 @@ const handleCancelArchivePackage = async (row: any) => {
     })
     if (data) {
       $baseMessage('撤销打包归档成功', 'success')
+      fetchData()
+    }
+  })
+}
+// 出库归档
+const handleArchiveOutbound = async (row: any) => {
+  $baseConfirm('确定要出库归档吗？', null, async () => {
+    const { data } = await archiveOutbound({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('出库归档成功', 'success')
+      fetchData()
+    }
+  })
+}
+// 撤销出库归档
+const handleCancelArchiveOutbound = async (row: any) => {
+  $baseConfirm('确定要撤销出库归档吗?', null, async () => {
+    const { data } = await cancelArchiveOutbound({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('撤销出库归档成功', 'success')
       fetchData()
     }
   })
