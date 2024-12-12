@@ -7,7 +7,7 @@
             <el-select />
           </el-form-item>
           <el-form-item label="展示级别">
-            <el-select v-model="queryForm.level" style="width: 7em;" >
+            <el-select v-model="level" style="width: 7em;" >
               <el-option 
                 v-for="item in levelOption"
                 :key="item.value"
@@ -120,19 +120,38 @@
               </template>
             </el-image>
           </span>
-          <span v-if="item.label === 'SKU'">
+          <!-- SKU 展示-->
+          <span v-if="item.label === 'SKU' && level === 0">
             {{ row.sku }}
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 4px;">
               <span >{{ row.rate }}</span>
               <span><el-rate v-model="row.rate" disabled /></span>
               <span style="color: #36788C">{{ 484 }}</span>
             </div>
           </span>
-          <span v-if="item.label === 'ASIN'">
+          <span v-if="item.label === 'ASIN' && level === 0">
             <el-link type="primary">{{ row.asin }}</el-link>
           </span>
-          <span v-if="item.label === '父体ASIN'">
+          <span v-if="item.label === '父体ASIN'&& level === 0">
             <el-link type="primary">{{ row.pAsin }}</el-link>
+          </span>
+          <!-- ASIN 展示 -->
+          <span v-if="item.label === 'ASIN' && level === 1">
+            <el-link type="primary">{{ row.asin }}</el-link>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span >{{ row.rate }}</span>
+              <span><el-rate v-model="row.rate" disabled /></span>
+              <span style="color: #36788C">{{ 484 }}</span>
+            </div>
+          </span>
+          <!-- 父体ASIN 展示 -->
+          <span v-if="item.label === '父体ASIN' && level === 2">
+            <el-link type="primary">{{ row.pAsin }}</el-link>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span >{{ row.rate }}</span>
+              <span><el-rate v-model="row.rate" disabled /></span>
+              <span style="color: #36788C">{{ 484 }}</span>
+            </div>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
             <span>点击</span>
@@ -355,7 +374,8 @@ const fakeData = ref<any>([
     suggestions: '增加广告投放',
     status: '正常',
     productDes: '这是一款电子产品',
-    person: '张三'
+    person: '张三',
+    id: 1
   },
   {
     componentImage: 'https://picsum.photos/200/200',
@@ -423,11 +443,87 @@ const fakeData = ref<any>([
     suggestions: '增加促销活动',
     status: '待处理',
     productDes: '这是一款家居用品',
-    person: '李四'
-  }
+    person: '李四',
+    id: 2
+  },
+  {
+    componentImage: 'https://picsum.photos/200/200',
+    sku: 'SKU12345',
+    rate: 4.7,
+    asin: 'B08N5M7S6K',
+    pAsin: 'B08N5M7S6K',
+    trend: '点击看明细',
+    todaySell: 100,
+    todayOrder: 50,
+    todaySellD: 1500,
+    todayAd: 10,
+    ad: 500,
+    pieChart: '',
+    seasonalCoefficient: 1.5,
+    classify: '电子产品',
+    sRank: 5,
+    bRank: 2,
+    topProduct: 200,
+    remark: '备注信息1',
+    monthlyStorageFee: 100,
+    currentPrice: 29.99,
+    trialGrossProfit: 10.5,
+    fba: '是',
+    conversion: 12,
+    click: 300,
+    totalConvert: 25,
+    monthlySell: 1500,
+    monthlyNetProfit: 5000,
+    monthlySales: 45000,
+    monthlyNetInterestRate: 11.1,
+    monthlyAdSales: 1500,
+    monthlyAdSpend: 800,
+    monthlyAd: 30,
+    monthlyACOS: 15,
+    monthlyTACOS: 10,
+    yearACOS: 12,
+    yearTACOS: 8,
+    removeValue: 100,
+    remove: 5,
+    replaceValue: 200,
+    replace: 10,
+    monthlyReturns: 3,
+    monthlyRefund: 2,
+    VOCSatisfaction: 90,
+    VOCDefectP: 1,
+    VOCDefect: 10,
+    VOCOrder: 200,
+    newReleases: 20,
+    storageAge: 30,
+    remainingStock: 100,
+    receiving: 50,
+    recentlyStorage: 200,
+    totalStorage: 500,
+    stockSale: 300,
+    saleTransit: 100,
+    outOfStock: 0,
+    order: 150,
+    sign: '已签收',
+    monthlyAvailabilityRate: 95,
+    lowFeeDays: 5,
+    estimatedFees: 2000,
+    profitLossPrice: 18,
+    profitPrice: 22,
+    suggestions: '增加广告投放',
+    status: '正常',
+    productDes: '这是一款电子产品',
+    person: '张三',
+    id: 3
+  },
 ])
 const checkList = computed(() => {
-  return columns.value.filter((_: any) => _.checked)
+  if (level.value === 0) {
+    return columns.value.filter((_: any) => _.checked)
+  } else if (level.value === 1) {
+    return columnsAsin.value.filter((_: any) => _.checked)
+  } else if (level.value === 2) {
+    return columnsParentAsin.value.filter((_: any) => _.checked)
+  }
 })
 const columns = ref<any>([
   {
@@ -451,7 +547,7 @@ const columns = ref<any>([
     prop: 'asin',
     disableCheck: true,
     checked: true,
-    minWidth: 80,
+    minWidth: 100,
     isFixed: 'left'
   },
   {
@@ -829,7 +925,790 @@ const columns = ref<any>([
     minWidth: 100,
   },
 ])
-
+const columnsAsin = ref<any>([
+  {
+    label: '图片',
+    prop: 'componentImage',
+    disableCheck: true,
+    checked: true,
+    width: 75,
+    isFixed: 'left'
+  },
+  {
+    label: 'ASIN',
+    prop: 'asin',
+    disableCheck: true,
+    checked: true,
+    minWidth: 80,
+    isFixed: 'left'
+  },
+  {
+    label: 'SKU',
+    prop: 'sku',
+    disableCheck: true,
+    checked: true,
+    minWidth: 100,
+    isFixed: 'left'
+  },
+  {
+    label: '销量趋势(点击看明细)',
+    prop: 'trend',
+    checked: true,
+    minWidth: 120,
+  },
+  {
+    label: '今销#',
+    prop: 'todaySell',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '今单#',
+    prop: 'todayOrder',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '今销$',
+    prop: 'todaySellD',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '今广%',
+    prop: 'todayAd',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '广告',
+    prop: 'ad',
+    checked: true,
+    minWidth: 80,
+  },
+  {
+    label: '饼图',
+    prop: 'pieChart',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '季节系数',
+    prop: 'seasonalCoefficient',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '运营分类',
+    prop: 'classify',
+    checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '小类排名',
+    prop: 'sRank',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '大类排名',
+    prop: 'bRank',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '头部产品#',
+    prop: 'topProduct',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '运营备注',
+    prop: 'remark',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月仓储费',
+    prop: 'monthlyStorageFee',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '当前售价',
+    prop: 'currentPrice',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '试算毛利',
+    prop: 'trialGrossProfit',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: 'FBA',
+    prop: 'fba',
+    checked: true,
+    minWidth: 80,
+  },
+  {
+    label: '2周广告转化',
+    prop: 'conversion',
+    checked: true,
+    minWidth: 120,
+  },
+  {
+    label: '2周广告点击',
+    prop: 'click',
+    checked: true,
+    minWidth: 120,
+  },
+  {
+    label: '2周总转化',
+    prop: 'totalConvert',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '月销量',
+    prop: 'monthlySell',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '月净利润',
+    prop: 'monthlyNetProfit',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月销售额',
+    prop: 'monthlySales',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月净利率',
+    prop: 'monthlyNetInterestRate',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月广告销售',
+    prop: 'monthlyAdSales',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '月广告支出',
+    prop: 'monthlyAdSpend',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '月广告%',
+    prop: 'monthlyAd',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月ACOS',
+    prop: 'monthlyACOS',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月TACOS',
+    prop: 'monthlyTACOS',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '1年ACOS',
+    prop: 'yearACOS',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '1年TACOS',
+    prop: 'yearTACOS',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '移除货值',
+    prop: 'removeValue',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '移除%',
+    prop: 'remove',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '替换货值',
+    prop: 'replaceValue',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '替换%',
+    prop: 'replace',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '月退货%',
+    prop: 'monthlyReturns',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月退款%',
+    prop: 'monthlyRefund',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: 'VOC满意度',
+    prop: 'VOCSatisfaction',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: 'VOC缺陷%',
+    prop: 'VOCDefectP',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: 'VOC缺陷#',
+    prop: 'VOCDefect',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: 'VOC总订单',
+    prop: 'VOCOrder',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '上新',
+    prop: 'newReleases',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '库龄',
+    prop: 'storageAge',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '剩余库存',
+    prop: 'remainingStock',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '接收中',
+    prop: 'receiving',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '最近入库',
+    prop: 'recentlyStorage',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '总入库',
+    prop: 'totalStorage',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '库存可售',
+    prop: 'stockSale',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '可售含在途',
+    prop: 'saleTransit',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '断货',
+    prop: 'outOfStock',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '订货#',
+    prop: 'order',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '签收',
+    prop: 'sign',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '月有货率',
+    prop: 'monthlyAvailabilityRate',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '低量仓储费天数',
+    prop: 'lowFeeDays',
+    checked: true,
+    minWidth: 140,
+  },
+  {
+    label: '预估下月仓储费',
+    prop: 'estimatedFees',
+    checked: true,
+    minWidth: 140,
+  },
+  {
+    label: '盈亏售价',
+    prop: 'profitLossPrice',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '30毛利售价',
+    prop: 'profitPrice',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '操作建议',
+    prop: 'suggestions',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '状态',
+    prop: 'status',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '产品描述',
+    prop: 'productDes',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '产品经理',
+    prop: 'person',
+    checked: true,
+    minWidth: 100,
+  },
+])
+const columnsParentAsin = ref<any>([
+  {
+    label: '图片',
+    prop: 'componentImage',
+    disableCheck: true,
+    checked: true,
+    width: 75,
+    isFixed: 'left'
+  },
+  {
+    label: '父体ASIN',
+    prop: 'pAsin',
+    disableCheck: true,
+    checked: true,
+    minWidth: 110,
+    isFixed: 'left'
+  },
+  {
+    label: 'SKU',
+    prop: 'sku',
+    disableCheck: true,
+    checked: true,
+    minWidth: 100,
+    isFixed: 'left'
+  },
+  {
+    label: '销量趋势(点击看明细)',
+    prop: 'trend',
+    checked: true,
+    minWidth: 120,
+  },
+  {
+    label: '今销#',
+    prop: 'todaySell',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '今单#',
+    prop: 'todayOrder',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '今销$',
+    prop: 'todaySellD',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '今广%',
+    prop: 'todayAd',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '广告',
+    prop: 'ad',
+    checked: true,
+    minWidth: 80,
+  },
+  {
+    label: '饼图',
+    prop: 'pieChart',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '季节系数',
+    prop: 'seasonalCoefficient',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '运营分类',
+    prop: 'classify',
+    checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '小类排名',
+    prop: 'sRank',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '大类排名',
+    prop: 'bRank',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '头部产品#',
+    prop: 'topProduct',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '运营备注',
+    prop: 'remark',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月仓储费',
+    prop: 'monthlyStorageFee',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '当前售价',
+    prop: 'currentPrice',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '试算毛利',
+    prop: 'trialGrossProfit',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: 'FBA',
+    prop: 'fba',
+    checked: true,
+    minWidth: 80,
+  },
+  {
+    label: '2周广告转化',
+    prop: 'conversion',
+    checked: true,
+    minWidth: 120,
+  },
+  {
+    label: '2周广告点击',
+    prop: 'click',
+    checked: true,
+    minWidth: 120,
+  },
+  {
+    label: '2周总转化',
+    prop: 'totalConvert',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '月销量',
+    prop: 'monthlySell',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '月净利润',
+    prop: 'monthlyNetProfit',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月销售额',
+    prop: 'monthlySales',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月净利率',
+    prop: 'monthlyNetInterestRate',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月广告销售',
+    prop: 'monthlyAdSales',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '月广告支出',
+    prop: 'monthlyAdSpend',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '月广告%',
+    prop: 'monthlyAd',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月ACOS',
+    prop: 'monthlyACOS',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月TACOS',
+    prop: 'monthlyTACOS',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '1年ACOS',
+    prop: 'yearACOS',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '1年TACOS',
+    prop: 'yearTACOS',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '移除货值',
+    prop: 'removeValue',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '移除%',
+    prop: 'remove',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '替换货值',
+    prop: 'replaceValue',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '替换%',
+    prop: 'replace',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '月退货%',
+    prop: 'monthlyReturns',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '月退款%',
+    prop: 'monthlyRefund',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: 'VOC满意度',
+    prop: 'VOCSatisfaction',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: 'VOC缺陷%',
+    prop: 'VOCDefectP',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: 'VOC缺陷#',
+    prop: 'VOCDefect',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: 'VOC总订单',
+    prop: 'VOCOrder',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '上新',
+    prop: 'newReleases',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '库龄',
+    prop: 'storageAge',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '剩余库存',
+    prop: 'remainingStock',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '接收中',
+    prop: 'receiving',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '最近入库',
+    prop: 'recentlyStorage',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '总入库',
+    prop: 'totalStorage',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '库存可售',
+    prop: 'stockSale',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '可售含在途',
+    prop: 'saleTransit',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '断货',
+    prop: 'outOfStock',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '订货#',
+    prop: 'order',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '签收',
+    prop: 'sign',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '月有货率',
+    prop: 'monthlyAvailabilityRate',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '低量仓储费天数',
+    prop: 'lowFeeDays',
+    checked: true,
+    minWidth: 140,
+  },
+  {
+    label: '预估下月仓储费',
+    prop: 'estimatedFees',
+    checked: true,
+    minWidth: 140,
+  },
+  {
+    label: '盈亏售价',
+    prop: 'profitLossPrice',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '30毛利售价',
+    prop: 'profitPrice',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '操作建议',
+    prop: 'suggestions',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '状态',
+    prop: 'status',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '产品描述',
+    prop: 'productDes',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '产品经理',
+    prop: 'person',
+    checked: true,
+    minWidth: 100,
+  },
+])
 const operationsOption = [
   {
     label: '全部',
@@ -907,14 +1786,32 @@ const queryKeyWordTrend = () => {
 }
 // 处理自适应宽度
 const handleWidth = (item: any) => {
-  if (item.label === 'SKU') {
-    return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-SK', 'sku')
-  } else if (item.label === 'ASIN') {
-    return flexColumnWidth(fakeData.value, 'ASIN', 'asin')
-  } else if (item.label === '父体ASIN') {
-    return flexColumnWidth(fakeData.value, '父体ASIN', 'pAsin')
-  } else {
-    return item.minWidth
+  if (level.value === 0) {
+    if (item.label === 'SKU') {
+      return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-SK', 'sku')
+    } else if (item.label === 'ASIN') {
+      return flexColumnWidth(fakeData.value, 'ASIN', 'asin')
+    } else if (item.label === '父体ASIN') {
+      return flexColumnWidth(fakeData.value, '父体ASIN', 'pAsin')
+    } else {
+      return item.minWidth
+    }
+  } else if (level.value === 1) {
+    if (item.label === 'SKU') {
+      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
+    } else if (item.label === 'ASIN') {
+      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASIN-', 'asin')
+    } else {
+      return item.minWidth
+    }
+  } else if (level.value === 2) {
+    if (item.label === 'SKU') {
+      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
+    } else if (item.label === '父体ASIN') {
+      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASIN-', 'asin')
+    } else {
+      return item.minWidth
+    }
   }
 }
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
@@ -948,10 +1845,11 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
+const level = ref<number>(0)
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -969,7 +1867,7 @@ const handleSizeChange = (value: number) => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === 'SKU') {
+  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN') {
     return {
       textAlign: 'left'
     }

@@ -3,8 +3,8 @@
     <vab-query-form>
       <vab-query-form-left-panel :span="4">
         <el-date-picker 
+          v-model="queryForm.dateRange"
           type="daterange"
-          v-model="queryForm.date"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         >
@@ -80,11 +80,13 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
+import { getDefaultStringTime } from '/@/utils/dateUtils'
+
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  date: ''
+  dateRange: getDefaultStringTime()
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)

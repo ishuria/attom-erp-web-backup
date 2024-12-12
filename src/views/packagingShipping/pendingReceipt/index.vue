@@ -419,12 +419,28 @@
         <el-button type="primary" @click="confirmSign">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 批量签收 -->
+    <vab-dialog
+      title="批量签收"
+      width="20%"
+      v-model="signBatchVisible"
+    >
+      <el-form ref="signBatchFormRef" :model="signBatchForm" :rules="signBatchFormRules" label-position="top">
+        <el-form-item label="签收物流单号" prop="signOrder">
+          <el-input clearable v-model="signBatchForm.signOrder" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCancelSignBatch">取消</el-button>
+        <el-button type="primary" @click="handleConfirmSignBatch">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
   
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
+import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import { siteMap, siteValue } from '../constantOption'
 import {
@@ -469,6 +485,19 @@ const list = ref<IGetSignList[]>([])
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
+// 批量签收可见
+const signBatchVisible = ref<boolean>(false)
+const signBatchForm = reactive<{ signOrder: string }>({
+  signOrder: ''
+})
+const signBatchFormRef = ref<FormInstance>()
+const signBatchFormRules = reactive<FormRules<{ signOrder: string }>>({
+  signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }]
+})
+const handleCancelSignBatch = () => {
+  signBatchFormRef.value?.resetFields()
+  signBatchVisible.value = false
+}
 // 签收可见
 const signVisible = ref<boolean>(false)
 // 签收form
@@ -544,12 +573,18 @@ const closeReceiptExport = () => {
 const handleAllSigned = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning')
+    return
   }
+  signBatchVisible.value = true
+}
+const handleConfirmSignBatch = async () => {
   const signIds = selectRows.value.map((item: any) => item.signId).join(',')
   const { data } = await signBatch({
-    signIds: signIds
+    signIds: signIds,
+    signOrder: signBatchForm.signOrder
   })
   if (data) {
+    handleCancelSignBatch()
     $baseMessage('批量签收成功', 'success')
     fetchData()
   }

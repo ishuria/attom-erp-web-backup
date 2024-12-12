@@ -73,3 +73,29 @@ export const dateOption = [
     value: -1
   }
 ]
+
+export const adOption = [
+  {
+    label: '所有广告组之和',
+    value: 0
+  }
+]
+
+export const dayOption = [
+  {
+    label: '7天',
+    value: 0
+  },
+  {
+    label: '15天',
+    value: 1
+  },
+  {
+    label: '30天',
+    value: 2
+  },
+  {
+    label: '60天',
+    value: 3
+  },
+]

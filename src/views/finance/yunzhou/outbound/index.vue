@@ -1,15 +1,13 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-top-panel >
+      <vab-query-form-left-panel :span="10">
         <el-button type="primary">导出</el-button>
         <el-button type="primary" @click="showWhVerify">入库核对</el-button>
         <el-button type="primary" @click="showSummary">未匹配发票汇总</el-button>
-      </vab-query-form-top-panel>
-      <vab-query-form-left-panel :span="6">
-        <el-date-picker type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" ></el-date-picker>
+        <el-date-picker style="margin: 0 10px calc(var(--el-margin) / 2) 0; width: 20em;" v-model="queryForm.dateRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" ></el-date-picker>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="18">
+      <vab-query-form-right-panel :span="14">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
@@ -218,11 +216,13 @@
 import { Search } from '@element-plus/icons-vue'
 import { FormInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
+import { getDefaultStringTime } from '/@/utils/dateUtils'
 
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  dateRange: getDefaultStringTime()
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)

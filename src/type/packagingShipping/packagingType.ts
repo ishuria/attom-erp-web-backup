@@ -794,3 +794,8 @@ export interface IUpdatePackageTaskSite {
   taskId: number
   site: number
 }
+
+export interface ISignBatch {
+  signIds: string
+  signOrder: string
+}

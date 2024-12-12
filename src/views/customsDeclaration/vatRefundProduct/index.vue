@@ -262,6 +262,7 @@ import { CSSProperties } from 'vue'
 import VabPdf from '/@/plugins/VabPdf'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { FormInstance } from 'element-plus'
+import { getDefaultStringTime } from '/@/utils/dateUtils'
 
 const dialogWidth = ref<number>(0)
 // 当 PDF 加载完成时获取宽度
@@ -283,17 +284,7 @@ const queryForm = reactive<any>({
   pageSize: 20,
   date: getDefaultStringTime()
 })
-// 日期初始化
-function getDefaultStringTime(): [string, string] {
-  const today = new Date();
-  const lastMonthDate = new Date(today.getFullYear(), today.getMonth(), 2);
-  // 今天的日期
-  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-  // 格式化为字符串形式
-  const formattedLastMonthDate = lastMonthDate.toISOString().split('T')[0];
-  const formattedTodayDate = todayDate.toISOString().split('T')[0];
-  return [formattedLastMonthDate, formattedTodayDate];
-}
+
 let copyRow: any
 
 const handleClick = () => {

@@ -48,6 +48,9 @@
             <span>{{ row.bankAccountNumber }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="汇率" align="center">
+
+        </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="160">
           <template #default="{ row }">
             <el-button text type="danger" :underline="false" @click="handleDelete(row)">删除</el-button>

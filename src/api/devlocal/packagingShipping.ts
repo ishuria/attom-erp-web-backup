@@ -29,6 +29,7 @@ import {
   IId,
   IIds,
   IPoId,
+  ISignBatch,
   ISignComponent,
   ISignId,
   ISignIds,
@@ -86,7 +87,7 @@ export function updateSignLog(params: IUpdateSignLog): Promise<IBooleanResp> {
   })
 }
 // 批量签收
-export function signBatch(params: ISignIds): Promise<IBooleanResp> {
+export function signBatch(params: ISignBatch): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/sign/batch`,
     method: 'post',

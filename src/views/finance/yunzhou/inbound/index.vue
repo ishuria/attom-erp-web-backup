@@ -7,6 +7,7 @@
       <vab-query-form-left-panel>
         <span style="margin: 0 10px calc(var(--el-margin) / 2) 0;">
           <el-date-picker
+            v-model="queryForm.dateRange"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -33,7 +34,7 @@
       :cell-style="cellStyle"
       :data="fakeData"
     >
-      <el-table-column label="到货日期" prop="" min-width="120"></el-table-column>
+      <el-table-column label="签收日期" prop="" min-width="120"></el-table-column>
       <el-table-column label="供应商名称" prop="" min-width="130"></el-table-column>
       <el-table-column label="PO" prop="po" min-width="90"></el-table-column>
       <el-table-column label="产品名称/型号" prop="" min-width="130"></el-table-column>
@@ -119,6 +120,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
+import { getDefaultStringTime } from '/@/utils/dateUtils'
 
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -126,7 +128,8 @@ const list = ref<any>([])
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  dateRange: getDefaultStringTime()
 })
 const fakeData = [
   {

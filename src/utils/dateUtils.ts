@@ -76,3 +76,18 @@ export function daysBetween(date1: Date, date2: Date): number {
   const diffInTime = date2.getTime() - date1.getTime()
   return Math.round(diffInTime / oneDay)
 }
+
+/**
+ * @description 获取当月日期范围
+ */
+// 日期初始化
+export function getDefaultStringTime(): [string, string] {
+  const today = new Date();
+  const lastMonthDate = new Date(today.getFullYear(), today.getMonth(), 2);
+  // 今天的日期
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  // 格式化为字符串形式
+  const formattedLastMonthDate = lastMonthDate.toISOString().split('T')[0];
+  const formattedTodayDate = todayDate.toISOString().split('T')[0];
+  return [formattedLastMonthDate, formattedTodayDate];
+}

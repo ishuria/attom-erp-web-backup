@@ -5,12 +5,12 @@
       <el-col :span="18">
         <div>
           <div style="position: relative;">
-            <el-tabs v-model="activeName" type="card" @tab-click="">
+            <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
               <el-tab-pane label="趋势总览" :name="0">
                 <el-row :gutter="20">
                   <el-col :span="4">
-                    <vab-card class="top-card" shadow="always" >
-                      <div class="parting-line parting-line-primary" ></div>
+                    <vab-card class="top-card" shadow="always" @click="handleCard1Click">
+                      <div class="parting-line" :class="{ 'parting-line-primary': card1Active }" ></div>
                       <el-dropdown>
                         <span>
                           总销售额
@@ -42,8 +42,8 @@
                     </vab-card>
                   </el-col>
                   <el-col :span="4">
-                    <vab-card class="top-card" shadow="always" >
-                      <div class="parting-line parting-line-orange" ></div>
+                    <vab-card class="top-card" shadow="always" @click="handleCard2Click">
+                      <div class="parting-line" :class="{ 'parting-line-orange': card2Active }" ></div>
                       <el-dropdown>
                         <span>
                           广告销售额
@@ -75,8 +75,8 @@
                     </vab-card>
                   </el-col>
                   <el-col :span="4">
-                    <vab-card class="top-card" shadow="always" >
-                      <div class="parting-line parting-line-orange" ></div>
+                    <vab-card class="top-card" shadow="always" @click="handleCard3Click">
+                      <div class="parting-line" :class="{ 'parting-line-green': card3Active }" ></div>
                       <el-dropdown>
                         <span>
                           花费
@@ -108,8 +108,8 @@
                     </vab-card>
                   </el-col>
                   <el-col :span="4">
-                    <vab-card class="top-card" shadow="always" >
-                      <div class="parting-line parting-line-orange" ></div>
+                    <vab-card class="top-card" shadow="always" @click="handleCard4Click">
+                      <div class="parting-line" :class="{ 'parting-line-red': card4Active }" ></div>
                       <el-dropdown>
                         <span>
                           ACOS
@@ -141,8 +141,8 @@
                     </vab-card>
                   </el-col>
                   <el-col :span="4">
-                    <vab-card class="top-card" shadow="always" >
-                      <div class="parting-line parting-line-orange" ></div>
+                    <vab-card class="top-card" shadow="always" @click="handleCard5Click">
+                      <div class="parting-line" :class="{ 'parting-line-purple': card5Active }" ></div>
                       <el-dropdown>
                         <span>
                           点击成本
@@ -174,8 +174,8 @@
                     </vab-card>
                   </el-col>
                   <el-col :span="4">
-                    <vab-card class="top-card" shadow="always" >
-                      <div class="parting-line parting-line-orange" ></div>
+                    <vab-card class="top-card" shadow="always" @click="handleCard6Click">
+                      <div class="parting-line" :class="{ 'parting-line-yellow': card6Active }" ></div>
                       <el-dropdown>
                         <span>
                           TACOS
@@ -207,7 +207,7 @@
                     </vab-card>
                   </el-col>
                 </el-row>
-                <vab-card style="height: 280px;">
+                <vab-card style="height: 480px;">
                   <vab-query-form>
                     <vab-query-form-right-panel :span="24">
                       <el-radio-group v-model="radio" >
@@ -215,37 +215,52 @@
                         <el-radio-button label="周" value="weak" />
                         <el-radio-button label="月" value="month" />
                       </el-radio-group>
-
                     </vab-query-form-right-panel>
                   </vab-query-form>
+                  <!-- <div ref="chartContainer" style="width: 100%; height: 400px;">
+                        
+                  </div> -->
                 </vab-card>
                 <el-table
                   border 
                   :header-cell-style="{ textAlign: 'center' }"
                 >
-                  <el-table-column label="日期"></el-table-column>
-                  <el-table-column label="售价"></el-table-column>
-                  <el-table-column label="销售额"></el-table-column>
-                  <el-table-column label="销量"></el-table-column>
-                  <el-table-column label="自然单"></el-table-column>
-                  <el-table-column label="广告单"></el-table-column>
-                  <el-table-column label="广告占比"></el-table-column>
-                  <el-table-column label="CPA"></el-table-column>
-                  <el-table-column label="总访客"></el-table-column>
-                  <el-table-column label="PC访客"></el-table-column>
-                  <el-table-column label="广告访客"></el-table-column>
-                  <el-table-column label="自然访客"></el-table-column>
-                  <el-table-column label="广告转化率"></el-table-column>
-                  <el-table-column label="自然转化率"></el-table-column>
-                  <el-table-column label="综合转化率"></el-table-column>
-                  <el-table-column label="广告预算"></el-table-column>
-                  <el-table-column label="实际花费"></el-table-column>
-                  <el-table-column label="ACOS"></el-table-column>
-                  <el-table-column label="CPC"></el-table-column>
+                  <el-table-column label="日期" prop="" min-width="115"></el-table-column>
+                  <el-table-column label="售价" prop="" min-width="90"></el-table-column>
+                  <el-table-column label="销售额" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="销量" prop="" min-width="90"></el-table-column>
+                  <el-table-column label="自然单" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="广告单" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="广告占比" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="CPA" prop="" min-width="80"></el-table-column>
+                  <el-table-column label="总访客" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="PC访客" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="广告访客" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="自然访客" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="广告转化率" prop="" min-width="110"></el-table-column>
+                  <el-table-column label="自然转化率" prop="" min-width="110"></el-table-column>
+                  <el-table-column label="综合转化率" prop="" min-width="110"></el-table-column>
+                  <el-table-column label="广告预算" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="实际花费" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="ACOS" prop="" min-width="80"></el-table-column>
+                  <el-table-column label="CPC" prop="" min-width="80"></el-table-column>
+                  <el-table-column label="VOC缺陷率" prop="" min-width="110"></el-table-column>
+                  <el-table-column label="小类排名" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="大类排名" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="退款率" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="退货率" prop="" min-width="100"></el-table-column>
+                  <el-table-column label="FBA配送费" prop="" min-width="110"></el-table-column>
                   <!-- <template #empty>
                     <el-empty class="vab-data-empty"></el-empty>
                   </template> -->
                 </el-table>
+                <vab-pagination 
+                  :current-page="queryForm.pageNo"
+                  :page-size="queryForm.pageSize"
+                  :total="total"
+                  @current-change="handleCurrentChange"
+                  @size-change="handleSizeChange"
+                />
               </el-tab-pane>
               <el-tab-pane label="SP广告饼图" :name="1">
 
@@ -264,8 +279,9 @@
               </el-tab-pane>
             </el-tabs>
           
-            <div style="position: absolute; top: 0px; right: 0px;">
-              <el-form inline>
+            <!-- tab右边的选项 -->
+            <div style="position: absolute; top: 0px; right: -10px;">
+              <el-form v-if="activeName === 0" inline>
                 <el-form-item label="展示">
                   <el-select>
                     <el-option 
@@ -302,6 +318,109 @@
                   </el-date-picker>
                 </el-form-item>
               </el-form>
+              <el-form v-if="activeName === 1" inline>
+                <el-form-item>
+                  <el-select>
+                    <el-option 
+                      v-for="item in adOption"
+                      :label="item.label"
+                      :value="item.value"
+                      :key="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-checkbox>过滤无数据</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                  <el-select>
+                    <el-option 
+                      v-for="item in dayOption"
+                      :label="item.label"
+                      :value="item.value"
+                      :key="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-date-picker
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    range-separator="至"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+              </el-form>
+              <el-form v-if="activeName === 2" inline>
+                <el-form-item>
+                  <el-select>
+                    <el-option 
+                      v-for="item in dateOption"
+                      :label="item.label"
+                      :value="item.value"
+                      :key="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-date-picker
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    range-separator="至"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+              </el-form>
+              <el-form v-if="activeName === 3" inline>
+                <el-form-item>
+                  <el-select>
+                    <el-option 
+                      v-for="item in dateOption"
+                      :label="item.label"
+                      :value="item.value"
+                      :key="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-date-picker
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    range-separator="至"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+              </el-form>
+              <el-form v-if="activeName === 4" inline>
+                <el-form-item>
+                  <el-radio-group>
+                    <el-radio-button label="退货时间" value="time1" />
+                    <el-radio-button label="下单时间" value="time2" />
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item>
+                  <el-select>
+                    <el-option 
+                      v-for="item in dayOption"
+                      :label="item.label"
+                      :value="item.value"
+                      :key="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-date-picker
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    range-separator="至"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+              </el-form>
             </div>
           </div>
         </div>
@@ -309,33 +428,43 @@
       <el-col :span="6">
         <div>
           <vab-card>
-            <el-row :gutter="20">
-              <el-col :span="9">
-                <el-image src="https://picsum.photos/200/200" style="height: 100%;">
-                  <template #error>
-                    <el-icon></el-icon>
-                  </template>
+            <el-container style="display: flex; gap: 10px; align-items: flex-start;">
+              <!-- 左侧图片 -->
+              <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
+                <el-image src="https://picsum.photos/200/200" style="border-radius: 10px; display: block;">
+                  <template #error><el-icon></el-icon></template>
                 </el-image>
-              </el-col>
-              <el-col :span="15" style="line-height: 1.3em;">
-                <div style="margin-bottom: 10px;">
-                  <el-link type="primary">{{ 'B08N5M7S6K' }}</el-link>
-                  <div>NiHome-0451-MshRmLightSmallBRN</div>
-                  <div>蘑菇小夜灯-小号棕色底座款</div>
-                  <div>
-                    <span>4.7</span>
-                    <span><el-rate disabled /> </span>
-                    <span>484</span>
+              </el-aside>
+              <!-- 右侧内容 -->
+              <el-main style="flex: 1; padding: 0; font-weight: 600;">
+                <!-- 标题和描述 -->
+                <div style="margin-bottom: 15px;">
+                  <el-link data-label="asin" class="custom-link" type="primary" style="font-weight: 600;">
+                    {{ 'B08N5M7S6K' }}
+                  </el-link>
+                  <div style="margin-top: 6px;">NiHome-0451-MshRmLightSmallBRN</div>
+                  <div style="margin-top: 6px;">蘑菇小夜灯-小号棕色底座款</div>
+                  <!-- 评分部分 -->
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span >4.7</span>
+                    <el-rate v-model="rate" disabled style="font-size: var(--el-font-size-base);"></el-rate>
+                    <span style="color: #3c7687;">484</span>
                   </div>
                 </div>
-                <div>
-                  <el-link type="primary" style="margin-right: 10px;">买家之最</el-link>
-                  <el-tag style="background-color: #bad411; color: #fff; width: 7em; height: 1.5em; border-radius: 17px;">Good</el-tag>
-                  <div>缺陷率：<span style="color: #bad411;">4.09%</span> | 缺陷订单：<span style="color: #bad411">40</span>/1201</div>
+                <!-- 买家之声和缺陷率 -->
+                <div style="font-weight: 600;">
+                  <el-link type="primary" class="custom-link" style="margin-right: 10px; font-weight: 600;">买家之声</el-link>
+                  <el-tag style="background-color: #bad411; color: #fff; border-radius: 17px; padding: 0 30px;">
+                    Good
+                  </el-tag>
+                  <div data-label="缺陷率" style="margin-top: 6px;">
+                    缺陷率：<span style="color: #bad411;">4.09%</span> | 缺陷订单：<span style="color: #bad411;">40</span>/1201
+                  </div>
                 </div>
-              </el-col>
-            </el-row>
+              </el-main>
+            </el-container>
           </vab-card>
+          <!-- 运营备注 -->
           <div style="margin-bottom: 20px;">
             <div style="margin-bottom: 10px;">
               运营备注 
@@ -348,8 +477,9 @@
                 />
               </el-select>
             </div>
-            <el-input type="textarea" resize="none" :rows="9" />
+            <el-input type="textarea" resize="none" :rows="6" placeholder="请输入运营备注" style="width: 100%;" />
           </div>
+          <!-- 操作日志/事件清单 -->
           <div>
             <vab-query-form>
               <vab-query-form-left-panel >
@@ -390,11 +520,13 @@
 </template>
 
 <script lang="ts" setup>
-import { dateOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
+import { ArrowDown } from '@element-plus/icons-vue'
+import { TabsPaneContext } from 'element-plus'
+import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { ArrowDown } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 
 defineOptions({
   name: 'ProductAnalysis',
@@ -408,12 +540,270 @@ const { changeActiveMenu } = routesStore
 
 const activeName = ref<number>(0)
 const radio = ref<string>('day')
+const rate = ref<number>(4.7)
 const amount = 42442.71
 const formattedAmount = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+const chartContainer = ref(null)
+let chartInstance: any = null
+const imageHeight = ref<number>(0)
+
+// 六个卡片是否选择状态
+const card1Active = ref<boolean>(false)
+const card2Active = ref<boolean>(false)
+const card3Active = ref<boolean>(false)
+const card4Active = ref<boolean>(false)
+const card5Active = ref<boolean>(false)
+const card6Active = ref<boolean>(false)
+
+const queryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 20
+})
+const total = ref<number>(0)
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  // fetchData()
+}
+const handleSizeChange = (value: number) => {
+  queryForm.pageSize = value
+  queryForm.pageNo = 1
+  // fetchData()
+}
+function drawChart() {
+  // 模拟数据
+  const dates = [
+    '2023-10-14', '2023-10-15', '2023-10-16', '2023-10-17', '2023-10-18', 
+    '2023-10-19', '2023-10-20', '2023-10-21', '2023-10-22', '2023-10-23',
+    '2023-10-24', '2023-10-25', '2023-10-26', '2023-10-27', '2023-10-28', 
+    '2023-10-29', '2023-10-30', '2023-11-01', '2023-11-03', '2023-11-05',
+    '2023-11-07', '2023-11-09', '2023-11-11', '2023-11-13'
+  ]
+
+  // 销量
+  const salesVolumeData = [
+    10, 20, 30, 40, 5,
+    10, 20, 30, 40, 5,
+    10, 20, 30, 5, 40,
+    10, 20, 30, 5, 40,
+    10, 20, 30, 40
+  ]
+  // ACOS数据（%）
+  const acosData = [
+    10, 20, 30, 40, 5,
+    10, 20, 30, 40, 5,
+    10, 20, 30, 5, 40,
+    10, 20, 30, 5, 40,
+    10, 20, 30, 40
+  ]
+
+  // 广告销售额数据（美元）
+  const salesData = dates.map(() => Math.round(Math.random() * 1000))
+
+  // 广告花费数据（美元）
+  const costData = dates.map(() => Math.round(Math.random() * 50))
+
+  // 配置项
+  const option = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['ACOS', '广告销售额', '花费'],
+      left: 'center',
+    },
+    grid: {
+ 
+    
+      bottom: '10%',
+    },
+    xAxis: {
+      type: 'category',
+      data: dates,
+      axisTick: {
+        alignWithLabel: true
+      },
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: 'ACOS',
+        position: 'left',
+        nameTextStyle: {
+          color: '#7ca8bf',
+          align: 'right',
+        },
+        axisLabel: {
+          formatter: '{value}%',
+          fontWeight: 'bold'
+        },
+        min: 0,
+        max: 50,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#7ca8bf',
+          }
+        }
+      },
+      {
+        type: 'value',
+        name: '小类排名',
+        position: 'left',
+        offset: 50,
+        nameTextStyle: {
+          fontWeight: 'bold',
+          align: 'right',
+        },
+        axisLabel: {
+          fontWeight: 'bold'
+        },
+        min: 0,
+        max: 1,
+        axisLine: {
+          show: true,
+        },
+        minInterval: 1,
+        inverse: true,
+        nameLocation: 'start'
+      },
+      {
+        type: 'value',
+        name: '广告销售额',
+        position: 'right',
+        axisLabel: {
+          formatter: '${value}'
+        },
+        min: 0,
+        max: 1800,
+        nameTextStyle: {
+          color: '#f7ab1b',
+          align: 'left',
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#f7ab1b',
+          }
+        }
+      },
+      {
+        type: 'value',
+        name: '花费',
+        offset: 70,
+        position: 'right',
+        axisLabel: {
+          formatter: '${value}'
+        },
+        min: 0,
+        max: 500,
+        nameTextStyle: {
+          color: '#40c9c6',
+          align: 'left',
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#40c9c6',
+          }
+        }
+      }
+    ],
+    series: [
+      {
+        name: 'ACOS',
+        type: 'bar',
+        yAxisIndex: 0,
+        data: acosData,
+        barWidth: 20,
+        itemStyle: {
+          color: '#409EFF'
+        },
+        opacity: 0.9
+      },
+      {
+        name: '广告销售额',
+        type: 'line',
+        yAxisIndex: 2,
+        data: salesData,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#f7ab1b'
+        },
+        itemStyle: {
+          color: '#f7ab1b'
+        }
+      },
+      {
+        name: '花费',
+        type: 'line',
+        yAxisIndex: 3,
+        data: costData,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#40c9c6'
+        },
+        itemStyle: {
+          color: '#40c9c6'
+        },
+        areaStyle: {
+          color: 'rgba(64, 201, 198, 0.2)'
+        }
+      }
+    ]
+  }
+
+  chartInstance.setOption(option)
+}
+const handleCard1Click = () => {
+  card1Active.value = !card1Active.value
+}
+const handleCard2Click = () => {
+  card2Active.value = !card2Active.value
+}
+const handleCard3Click = () => {
+  card3Active.value = !card3Active.value
+}
+const handleCard4Click = () => {
+  card4Active.value = !card4Active.value
+}
+const handleCard5Click = () => {
+  card5Active.value = !card5Active.value
+}
+const handleCard6Click = () => {
+  card6Active.value = !card6Active.value
+}
+
+const handleTabClick = (tab: TabsPaneContext) => {
+  if (tab.props.name != undefined) {
+    activeName.value = Number(tab.props.name)
+  }
+}
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
+// 动态设置图片列高度
+const setImageHeight = () => {
+  const dom1 = document.querySelector('.el-link[data-label="asin"]');
+  const dom2 = document.querySelector('div[data-label="缺陷率"]');
+
+  if (dom1 && dom2) {
+    const height1 = dom1.getBoundingClientRect();
+    const height2 = dom2.getBoundingClientRect();
+    imageHeight.value = height2.bottom - height1.top;
+  }
+}
+onMounted(() => {
+  setImageHeight()
+  if (chartContainer.value) {
+    chartInstance = echarts.init(chartContainer.value)
+    drawChart()
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -437,7 +827,7 @@ const goBack = async () => {
       margin-bottom: 0;
     }
     // .el-tabs {
-    //   border-left: 1px solid black;
+    //   border-left: 1px solid var(--el-border-color-light);
     // }
   }
 
@@ -451,14 +841,7 @@ const goBack = async () => {
   border-radius: 7%;
 
   &:hover {
-    .parting-line {
-      &-primary {
-        background: var(--el-color-primary);
-      }
-      &-orange {
-        background: var(--el-color-warning);
-      }
-    }
+    cursor: pointer;
   }
   :deep() {
     .el-card__body {
@@ -482,11 +865,24 @@ const goBack = async () => {
       - 右上角 (100%, 0)
       - 右下角 (95%, 100%)
       - 左下角 (5%, 100%) */
-    &-danger {
-      background: var(--el-color-danger);
+    &-primary {
+      background: #409EFF;
     }
-
- 
+    &-orange {
+      background: #E6A23C;
+    }
+    &-green {
+      background: #34a9a9;
+    }
+    &-red {
+      background: #e36060;
+    }
+    &-purple {
+      background: #8a7ae3; // 一种柔和的紫色
+    }
+    &-yellow {
+      background: #ffd700; // 明亮的金黄色
+    }
   }
   p {
     font-size: 28px;
@@ -544,5 +940,13 @@ const goBack = async () => {
 
   
 }
-
+.custom-link.is-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  bottom: 0;
+  border-bottom: 1px solid var(--el-color-primary);
+}
 </style>
