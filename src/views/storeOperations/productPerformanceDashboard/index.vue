@@ -166,6 +166,9 @@
               />
             </el-select>
           </span>
+          <span v-if="item.label === '停产'">
+            <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+          </span>
         </template>
       </el-table-column>
       <template #empty>
@@ -613,6 +616,12 @@ const columns = ref<any>([
     minWidth: 130,
   },
   {
+    label: '停产',
+    prop: 'ting',
+    checked: true,
+    minWidth: 60,
+  },
+  {
     label: '小类排名',
     prop: 'sRank',
     checked: true,
@@ -1005,6 +1014,12 @@ const columnsAsin = ref<any>([
     minWidth: 130,
   },
   {
+    label: '停产',
+    prop: 'ting',
+    checked: true,
+    minWidth: 60,
+  },
+  {
     label: '小类排名',
     prop: 'sRank',
     checked: true,
@@ -1395,6 +1410,12 @@ const columnsParentAsin = ref<any>([
     prop: 'classify',
     checked: true,
     minWidth: 130,
+  },
+  {
+    label: '停产',
+    prop: 'ting',
+    checked: true,
+    minWidth: 60,
   },
   {
     label: '小类排名',
@@ -1906,6 +1927,10 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 .noneHoverTable :deep(.reduce-padding .cell) {
   padding-right: 2px;
   padding-left: 2px;
+}
+.noneHoverTable :deep(.el-checkbox) {
+  transform: scale(1.3);
+  transform-origin: center;
 }
 .disabled-handle {
   cursor: not-allowed;

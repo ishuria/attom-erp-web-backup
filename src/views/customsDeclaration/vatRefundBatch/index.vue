@@ -1,37 +1,53 @@
 <template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待退税" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
             <el-button type="primary">出口发票生成（云舟）</el-button>
-            <el-button type="primary">出口发票生成（埃托姆）</el-button>
+            <el-button type="primary" @click="handleExportAiTuoMu">出口发票生成（埃托姆）</el-button>
           </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline @submit.prevent :model="queryForm">
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData"></el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border
+          border stripe
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="cellStyle"
-          :data="fakeData"
+          :data="list"
           class="noneHoveTable"
           @cell-click="cellClick"
+          @selection-change="setSelectRows"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="发货日期" prop="" min-width="115"></el-table-column>
-          <el-table-column label="报关单出口日期" prop="" min-width="120">
+          <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : ''  }}
+            </template>
+          </el-table-column>
+          <el-table-column label="报关单出口日期" prop="exportDate" min-width="120">
             <template #default="{ row }">
               <el-date-picker
                 type="date"
                 style="width: 100%;"
-                v-model="row.date"
+                v-model="row.exportDate"
                 value-format="YYYY-MM-DD"
+                @change="handleUpdateDate(row)"
               >
               </el-date-picker>
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" prop="" min-width="200"></el-table-column>
-          <el-table-column label="未到发票" prop="" min-width="100"></el-table-column>
-          <el-table-column label="发票总数" prop="" min-width="100"></el-table-column>
+          <el-table-column label="合同编号" prop="contractNumber" min-width="200"></el-table-column>
+          <el-table-column label="未到发票" prop="notYetCount" min-width="100"></el-table-column>
+          <el-table-column label="发票总数" prop="totalCount" min-width="100"></el-table-column>
           <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
           <el-table-column label="备注" prop="remark" min-width="300">
             <template #default="{ row }">
@@ -48,34 +64,50 @@
               <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
               <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
               <el-link type="primary" :underline="false" @click="showInvoiceCollection(row)">发票归集</el-link>
-              <el-link type="success" :underline="false">退税完成</el-link>
+              <el-link type="success" :underline="false" @click="handleUpdateStatus(row)">退税完成</el-link>
             </template>
           </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty"></el-empty>
           </template>
         </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
       </el-tab-pane>
       <el-tab-pane label="已退税" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel >
             <el-button type="primary">出口发票生成（云舟）</el-button>
-            <el-button type="primary">出口发票生成（埃托姆）</el-button>
+            <el-button type="primary" @click="handleExportAiTuoMu">出口发票生成（埃托姆）</el-button>
           </vab-query-form-left-panel>
         </vab-query-form>
         <el-table
           border
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="cellStyle"
-          :data="fakeData"
+          :data="list"
           class="noneHoveTable"
+          @selection-change="setSelectRows"
         >
           <el-table-column type="selection"></el-table-column>
-          <el-table-column label="发货日期" prop="" min-width="115"></el-table-column>
-          <el-table-column label="报关单出口日期" prop="" min-width="120"></el-table-column>
-          <el-table-column label="合同编号" prop="" min-width="200"></el-table-column>
-          <el-table-column label="未到发票" prop="" min-width="100"></el-table-column>
-          <el-table-column label="发票总数" prop="" min-width="100"></el-table-column>
+          <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
+            <template #default="{ row }">
+              {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : ''  }}
+            </template>
+          </el-table-column>
+          <el-table-column label="报关单出口日期" prop="exportDate" min-width="120">
+            <template #default="{ row }">
+              {{ row.exportDate ? formatDate(new Date(row.exportDate)) : ''  }}
+            </template>
+          </el-table-column>
+          <el-table-column label="合同编号" prop="contractNumber" min-width="200"></el-table-column>
+          <el-table-column label="未到发票" prop="notYetCount" min-width="100"></el-table-column>
+          <el-table-column label="发票总数" prop="totalCount" min-width="100"></el-table-column>
           <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
           <el-table-column label="备注" prop="remark" min-width="300">
             <template #default="{ row }">
@@ -103,6 +135,7 @@
     <!-- 明细 -->
     <VabDetailDialog
       :detail-visible="detailVisible"
+      :id="id"
       @update-detail-visible="closeDetail"
     />
     <!-- 发票归集 -->
@@ -158,69 +191,30 @@
 defineOptions({
   name: 'TaxRefundBatch'
 })
-import { FormInstance } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
+import { FormInstance, TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { updateShipmentFreightFee } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { downloadFileP } from '~/src/api/devlocal/download'
+import { getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import { formatDate } from '/@/utils/dateUtils'
 
-const activeName = ref<number>(0)
-const handleClick = () => {
-
-}
-
-// 退税运费修改可见
-const freightFeeVisible = ref<boolean>(false)
-const freightFeeForm = reactive<any>({})
-const freightFeeFormRef = ref<FormInstance>()
-const freightFeeFormRules = reactive<any>({
-  freightFee: [{ required: true, message: '请输入退税运费', trigger: 'blur' }]
+const queryForm = reactive<IGetTaxRefundBatchListQuery>({
+  keyWord: '',
+  status: 0,
+  pageNo: 1,
+  pageSize: 20
 })
-let copyRow: any
-const showFreightFee = (row: any) => {
-  freightFeeVisible.value = true
-  copyRow = row
-  freightFeeForm.freightFee = row.freightFee
-}
-const closeFreightFee = () => {
-  freightFeeVisible.value = false
-}
-const confirmFreightFee = async () => {
-  const { data } = await updateShipmentFreightFee({
-    id: copyRow.id,
-    freightFee: freightFeeForm.freightFee
-  })
-  if (data) {
-    $baseMessage('更新退税运费成功!', 'success')
-    closeFreightFee()
-    copyRow.freightFee = freightFeeForm.freightFee
-  }
-}
+const total = ref<number>(0)
+const listLoading = ref<boolean>(false)
+const list = ref<IGetTaxRefundBatchList[]>([])
+const activeName = ref<number>(0)
+let _row: IGetTaxRefundBatchList = {}
+const selectRows = ref<IGetTaxRefundBatchList[]>([])
 // 修改备注可见
 const updateRemarkVisible = ref<boolean>(false)
 // 备注
 const remark = ref<string>('')
-// 展示备注
-const showUpdateRemark = () => {
-  updateRemarkVisible.value = true
-}
-// 确认修改备注
-const confirmUpdateRemark = () => {
-  updateRemarkVisible.value = false
-}
-// 点击备注单元格
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  if (column.property === 'remark') {
-    showUpdateRemark()
-  }
-}
-// 明细显示
-const detailVisible = ref<boolean>(false)
-const showDetail = (row: any) => {
-  detailVisible.value = true
-}
-const closeDetail = (value: boolean) => {
-  detailVisible.value = value
-}
-// 发票归集显示
 const invoiceCollectionVisible = ref<boolean>(false)
 const invoiceCollectionForm = reactive<any>({
   path: ''
@@ -229,6 +223,113 @@ const invoiceCollectionFormRef = ref<FormInstance>()
 const invoiceCollectionFormRules = reactive<any>({
   path: [{ required: 'true', message: '请输入归档路径', trigger: 'blur' }]
 })
+const detailVisible = ref<boolean>(false)
+// 传递给明细的id
+const id = ref<number>()
+
+const setSelectRows = (value: IGetTaxRefundBatchList[]) => {
+  selectRows.value = value
+}
+const handleTabClick = (pane: TabsPaneContext, ev: Event) => {
+  if (pane.props.name != undefined) {
+    queryForm.status = Number(pane.props.name)
+    activeName.value = Number(pane.props.name)
+    queryData()
+    selectRows.value = []
+  }
+}
+const handleExportAiTuoMu = async () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行！', 'error')
+    return
+  }
+  const ids = selectRows.value.map((item: IGetTaxRefundBatchList) => item.id).join(',')
+  
+  await downloadFileP('/taxRefund/batch/aiTuoMuExport', {
+    ids
+  }).then((res) => {
+    console.log(res)
+  }).catch((error) => {
+    $baseMessage(error, 'error')
+  })
+}
+// 更新报关单出口日期
+const handleUpdateDate = async (row: IGetTaxRefundBatchList) => {
+  await updateTaxRefundBatchDate({
+    id: row.id!,
+    date: row.exportDate!
+  })
+}
+// 退税运费修改可见
+const freightFeeVisible = ref<boolean>(false)
+const freightFeeForm = reactive<any>({})
+const freightFeeFormRef = ref<FormInstance>()
+const freightFeeFormRules = reactive<any>({
+  freightFee: [{ required: true, message: '请输入退税运费', trigger: 'blur' }]
+})
+
+const showFreightFee = (row: IGetTaxRefundBatchList) => {
+  freightFeeVisible.value = true
+  _row = row
+  freightFeeForm.freightFee = row.freightFee
+}
+const closeFreightFee = () => {
+  freightFeeVisible.value = false
+}
+const confirmFreightFee = async () => {
+  const { data } = await updateTaxRefundBatchFreightFee({
+    id: _row.id!,
+    freightFee: freightFeeForm.freightFee
+  })
+  if (data) {
+    $baseMessage('更新退税运费成功!', 'success')
+    closeFreightFee()
+    _row.freightFee = freightFeeForm.freightFee
+  }
+}
+
+
+// 确认修改备注
+const confirmUpdateRemark = async () => {
+  updateRemarkVisible.value = false
+  const { data } = await updateTaxRefundBatchRemark({
+    id: _row.id!,
+    remark: remark.value
+  })
+  if (data) {
+    _row.remark = remark.value
+  }
+}
+// 点击备注单元格
+const cellClick = (row: IGetTaxRefundBatchList, column: any, cell: HTMLTableCellElement, event: Event) => {
+  if (column.property === 'remark') {
+    updateRemarkVisible.value = true
+    remark.value = row.remark!
+    _row = row
+  }
+}
+// 退税完成
+const handleUpdateStatus = async (row: IGetTaxRefundBatchList) => {
+  $baseConfirm('确定要完成退税吗？', null, async () => {
+    const { data } = await updateTaxRefundBatchStatus({
+      id: row.id!
+    })
+    if (data) {
+      $baseMessage('退税完成成功！', 'success')
+      fetchData()
+    }
+  })
+}
+// 明细显示
+const showDetail = (row: IGetTaxRefundBatchList) => {
+  detailVisible.value = true
+  id.value = row.id
+}
+const closeDetail = (value: boolean) => {
+  detailVisible.value = value
+}
+
+// 发票归集显示
 const showInvoiceCollection = (row: any) => {
   invoiceCollectionVisible.value = true
 }
@@ -243,13 +344,9 @@ const confirmInvoiceCollection = () => {
     }
   })
 }
-const fakeData = [
-  {
-    remark: '修改备注'
-  }
-]
+
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 3) {
+  if (data.columnIndex === 3 || data.columnIndex === 7) {
     return {
       textAlign: 'left'
     }
@@ -258,6 +355,29 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'center'
   }
 }
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchData()
+}
+const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = value
+  fetchData()
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getTaxRefundBatchList(queryForm)
+  total.value = data.total
+  list.value = data.list
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>

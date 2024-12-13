@@ -4,7 +4,7 @@
       <vab-query-form-left-panel :span="10">
         <el-button type="primary">导出</el-button>
         <el-button type="primary" @click="showWhVerify">入库核对</el-button>
-        <el-button type="primary" @click="showSummary">未匹配发票汇总</el-button>
+        <el-button type="primary" @click="showSummary">导出未匹配发票汇总信息</el-button>
         <el-date-picker style="margin: 0 10px calc(var(--el-margin) / 2) 0; width: 20em;" v-model="queryForm.dateRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" ></el-date-picker>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="14">
@@ -140,35 +140,7 @@
         <el-button type="primary">确认</el-button>
       </template>
     </vab-dialog>
-    <!-- 未匹配发票汇总 -->
-    <vab-dialog
-      title="出库单数据汇总"
-      v-model="summaryVisible"
-      width="40%"
-    >
-      <el-table border stripe :header-cell-style="{ textAlign: 'center' }" :data="fakeData" >
-        <el-table-column label="供应商" prop="" min-width="200"></el-table-column>
-        <el-table-column label="总未税价" prop="preTaxPrice" align="center" min-width="100"></el-table-column>
-        <el-table-column label="总CIF$" prop="" align="center" min-width="100"></el-table-column>
-        <el-table-column label="操作" align="center" width="80">
-          <template #default="{ row }">
-            <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-    </vab-dialog>
-    <vab-dialog
-      title="明细"
-      v-model="detailVisible"
-      width="30%"
-    >
-      <el-table border stripe :header-cell-style="{ textAlign: 'center' }" :data="fakeData">
-        <el-table-column label="出货日期" min-width="120" align="center"></el-table-column>
-        <el-table-column label="PO" prop="po" min-width="100" align="center"></el-table-column>
-        <el-table-column label="未税价" min-width="100" align="center"></el-table-column>
-        <el-table-column label="CIF$" min-width="100" align="center"></el-table-column>
-      </el-table>
-    </vab-dialog>
+   
     <!-- 入库核对 -->
     <vab-dialog
       title="入库核对"
@@ -251,21 +223,15 @@ const handleWhSizeChange = (value: number) => {
 const showWhVerify = () => {
   whVerifyVisible.value = true
 }
-// 未匹配发票汇总
-const summaryVisible = ref<boolean>(false)
+
 const showSummary = () => {
-  summaryVisible.value = true
+  
 }
-// 明细可见
-const detailVisible = ref<boolean>(false)
-const showDetail = (row: any) => {
-  detailVisible.value = true
-}
+
+
 // 调增调减展示
 const inOrDeVisible = ref<boolean>(false)
-const showInOrDe = (row: any) => {
-  inOrDeVisible.value = true
-}
+
 // 修改false
 const modifyVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({

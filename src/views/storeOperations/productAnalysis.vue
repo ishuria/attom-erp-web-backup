@@ -217,9 +217,9 @@
                       </el-radio-group>
                     </vab-query-form-right-panel>
                   </vab-query-form>
-                  <!-- <div ref="chartContainer" style="width: 100%; height: 400px;">
+                  <div ref="chartContainer" style="width: 100%; height: 400px;">
                         
-                  </div> -->
+                  </div>
                 </vab-card>
                 <el-table
                   border 
@@ -527,6 +527,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import * as echarts from 'echarts'
+import dayjs from 'dayjs'
 
 defineOptions({
   name: 'ProductAnalysis',
@@ -569,23 +570,54 @@ const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   // fetchData()
 }
-function drawChart() {
-  // 模拟数据
+
+// 计算该日期是当年的第几周
+function getWeekOfYear(date: Date | string | number): number {
+  // 确保 date 参数可以被解析为有效的日期对象
+  const currentDate = new Date(date)
+  if (isNaN(currentDate.getTime())) {
+    throw new Error("Invalid date provided")
+  }
+
+  // 设置该日期为当年的第一天
+  const startDate = new Date(currentDate.getFullYear(), 0, 1)
+
+  // 计算该日期与第一天的差值，单位是天
+  const daysDiff = Math.floor((currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
+
+  // 计算该日期属于哪一周
+  const weekNumber = Math.ceil((daysDiff + 1) / 7)
+
+  return weekNumber
+}
+
+const drawChart = () => {
+  // 初始化日期数据
   const dates = [
-    '2023-10-14', '2023-10-15', '2023-10-16', '2023-10-17', '2023-10-18', 
+    '2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05',
+    '2023-01-06', '2023-01-07', '2023-01-08', '2023-01-09', '2023-01-10',
+    '2023-10-14', '2023-10-15', '2023-10-16', '2023-10-17', '2023-10-18',
     '2023-10-19', '2023-10-20', '2023-10-21', '2023-10-22', '2023-10-23',
-    '2023-10-24', '2023-10-25', '2023-10-26', '2023-10-27', '2023-10-28', 
+    '2023-10-24', '2023-10-25', '2023-10-26', '2023-10-27', '2023-10-28',
     '2023-10-29', '2023-10-30', '2023-11-01', '2023-11-03', '2023-11-05',
     '2023-11-07', '2023-11-09', '2023-11-11', '2023-11-13'
   ]
 
   // 销量
+  // const salesVolumeData = [
+  //   10, 20, 30, 40, 5,
+  //   10, 20, 30, 40, 5,
+  //   10, 20, 30, 40, 5,
+  //   10, 20, 30, 40, 5,
+  //   10, 20, 30, 5, 40,
+  //   10, 20, 30, 5, 40,
+  //   10, 20, 30, 40
+  // ]
   const salesVolumeData = [
-    10, 20, 30, 40, 5,
-    10, 20, 30, 40, 5,
-    10, 20, 30, 5, 40,
-    10, 20, 30, 5, 40,
-    10, 20, 30, 40
+    { date: "2024-12-01", value: 10 },
+    { date: "2024-12-02", value: 15 },
+    { date: "2024-12-08", value: 20 },
+    { date: "2024-12-09", value: 25 }
   ]
   // ACOS数据（%）
   const acosData = [
@@ -595,168 +627,267 @@ function drawChart() {
     10, 20, 30, 5, 40,
     10, 20, 30, 40
   ]
-
   // 广告销售额数据（美元）
   const salesData = dates.map(() => Math.round(Math.random() * 1000))
-
   // 广告花费数据（美元）
   const costData = dates.map(() => Math.round(Math.random() * 50))
 
-  // 配置项
-  const option = {
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      data: ['ACOS', '广告销售额', '花费'],
-      left: 'center',
-    },
-    grid: {
- 
-    
-      bottom: '10%',
-    },
-    xAxis: {
-      type: 'category',
-      data: dates,
-      axisTick: {
-        alignWithLabel: true
-      },
-    },
-    yAxis: [
-      {
-        type: 'value',
-        name: 'ACOS',
-        position: 'left',
-        nameTextStyle: {
-          color: '#7ca8bf',
-          align: 'right',
-        },
-        axisLabel: {
-          formatter: '{value}%',
-          fontWeight: 'bold'
-        },
-        min: 0,
-        max: 50,
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#7ca8bf',
-          }
-        }
-      },
-      {
-        type: 'value',
-        name: '小类排名',
-        position: 'left',
-        offset: 50,
-        nameTextStyle: {
-          fontWeight: 'bold',
-          align: 'right',
-        },
-        axisLabel: {
-          fontWeight: 'bold'
-        },
-        min: 0,
-        max: 1,
-        axisLine: {
-          show: true,
-        },
-        minInterval: 1,
-        inverse: true,
-        nameLocation: 'start'
-      },
-      {
-        type: 'value',
-        name: '广告销售额',
-        position: 'right',
-        axisLabel: {
-          formatter: '${value}'
-        },
-        min: 0,
-        max: 1800,
-        nameTextStyle: {
-          color: '#f7ab1b',
-          align: 'left',
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#f7ab1b',
-          }
-        }
-      },
-      {
-        type: 'value',
-        name: '花费',
-        offset: 70,
-        position: 'right',
-        axisLabel: {
-          formatter: '${value}'
-        },
-        min: 0,
-        max: 500,
-        nameTextStyle: {
-          color: '#40c9c6',
-          align: 'left',
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#40c9c6',
-          }
-        }
+  // 格式化日期为周数组
+  const getWeeklyData = (dates: string[]): string[] => {
+    const weeks: string[] = []
+    let currentWeek = ""
+
+    // 确保日期数组按时间排序
+    dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+
+    dates.forEach(date => {
+      const parsedDate = new Date(date)
+      if (isNaN(parsedDate.getTime())) {
+        console.warn(`Invalid date: ${date}`)
+        return;
       }
-    ],
-    series: [
-      {
-        name: 'ACOS',
-        type: 'bar',
-        yAxisIndex: 0,
-        data: acosData,
-        barWidth: 20,
-        itemStyle: {
-          color: '#409EFF'
-        },
-        opacity: 0.9
-      },
-      {
-        name: '广告销售额',
-        type: 'line',
-        yAxisIndex: 2,
-        data: salesData,
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        lineStyle: {
-          color: '#f7ab1b'
-        },
-        itemStyle: {
-          color: '#f7ab1b'
-        }
-      },
-      {
-        name: '花费',
-        type: 'line',
-        yAxisIndex: 3,
-        data: costData,
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        lineStyle: {
-          color: '#40c9c6'
-        },
-        itemStyle: {
-          color: '#40c9c6'
-        },
-        areaStyle: {
-          color: 'rgba(64, 201, 198, 0.2)'
-        }
+
+      const week = getWeekOfYear(parsedDate) // 获取日期的周数
+      
+      const year = parsedDate.getFullYear()
+      const weekIdentifier = `${year}W${week}`
+
+      if (currentWeek !== weekIdentifier) {
+        weeks.push(weekIdentifier)
+        currentWeek = weekIdentifier
       }
-    ]
+    })
+
+    return weeks
   }
 
-  chartInstance.setOption(option)
+  // 格式化日期为月数组
+  const getMonthlyData = (dates: string[]): string[] => {
+    let months: string[] = []
+    let currentMonth = ""
+    dates.forEach(date => {
+      const month = date.slice(0, 7) // 取到 'YYYY-MM'
+      if (currentMonth !== month) {
+        months.push(date.slice(0, 7)) // 按月份的第一天显示
+        currentMonth = month
+      }
+    })
+    return months
+  }
+ 
+
+  // function groupByWeek(data: {date: string, value: number}[]) {
+  //   const weeklyData: any = {};
+
+  //   data.forEach(({ date, value }) => {
+  //     const week = `${dayjs(date).year()}-W${getWeeklyData(date)}`;
+  //     if (!weeklyData[week]) weeklyData[week] = 0;
+  //     weeklyData[week] += value;
+  //   });
+
+  //   return Object.entries(weeklyData).map(([week, total]) => ({
+  //     week,
+  //     total
+  //   }));
+  // }
+
+  // const groupedData = groupByWeek(salesVolumeData)
+
+  // 按需切换数据
+  let currentView = 'week'  // 默认视图是日视图
+
+  const updateChart = (viewType: string) => {
+    let xAxisData: string[] = []
+
+    if (viewType === 'day') {
+      xAxisData = dates
+    } else if (viewType === 'week') {
+      xAxisData = getWeeklyData(dates)
+    } else if (viewType === 'month') {
+      xAxisData = getMonthlyData(dates)
+    }
+
+    const option = {
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['销量', 'ACOS', '广告销售额', '花费'],
+        left: 'center',
+      },
+      grid: {
+        left: '7%',
+        bottom: '7%',
+      },
+      xAxis: {
+        type: 'category',
+        data: xAxisData,
+        axisTick: {
+          alignWithLabel: true
+        },
+      },
+      yAxis: [
+        {
+          type: 'value',
+          name: '销量',
+          position: 'left',
+          nameTextStyle: {
+            color: '#409EFF',
+            align: 'right',
+          },
+          axisLabel: {
+            formatter: '{value}%',
+            fontWeight: 'bold'
+          },
+          min: 0,
+          max: 50,
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#409EFF',
+            }
+          }
+        },
+        {
+          type: 'value',
+          name: 'ACOS',
+          position: 'left',
+          offset: 50,
+          nameTextStyle: {
+            fontWeight: 'bold',
+            align: 'right',
+            color: '#8a7ae3'
+          },
+          axisLabel: {
+            fontWeight: 'bold'
+          },
+          min: 0,
+          max: 1800,
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#8a7ae3'
+            }
+          },
+          splitLine: {
+            show: false
+          }
+        },
+        {
+          type: 'value',
+          name: '广告销售额',
+          position: 'right',
+          axisLabel: {
+            formatter: '${value}'
+          },
+          min: 0,
+          max: 1800,
+          nameTextStyle: {
+            color: '#f7ab1b',
+            align: 'left',
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#f7ab1b',
+            }
+          },
+          splitLine: {
+            show: false
+          }
+        },
+        {
+          type: 'value',
+          name: '花费',
+          offset: 70,
+          position: 'right',
+          axisLabel: {
+            formatter: '${value}'
+          },
+          min: 0,
+          max: 500,
+          nameTextStyle: {
+            color: '#40c9c6',
+            align: 'left',
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#40c9c6',
+            }
+          },
+          splitLine: {
+            show: false
+          }
+        }
+      ],
+      series: [
+        {
+          name: '销量',
+          type: 'bar',
+          yAxisIndex: 0,
+          data: acosData,
+          barWidth: 20,
+          itemStyle: {
+            color: '#409EFF'
+          },
+          opacity: 0.9
+        },
+        {
+          name: 'ACOS',
+          type: 'line',
+          yAxisIndex: 1,
+          data: salesVolumeData,
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 6,
+          lineStyle: {
+            color: '#8a7ae3'
+          },
+          itemStyle: {
+            color: '#8a7ae3'
+          }
+        },
+        {
+          name: '广告销售额',
+          type: 'line',
+          yAxisIndex: 2,
+          data: salesData,
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 6,
+          lineStyle: {
+            color: '#f7ab1b'
+          },
+          itemStyle: {
+            color: '#f7ab1b'
+          }
+        },
+        {
+          name: '花费',
+          type: 'line',
+          yAxisIndex: 3,
+          data: costData,
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 6,
+          lineStyle: {
+            color: '#40c9c6'
+          },
+          itemStyle: {
+            color: '#40c9c6'
+          },
+          areaStyle: {
+            color: 'rgba(64, 201, 198, 0.2)'
+          }
+        }
+      ]
+    }
+
+    chartInstance.setOption(option)
+  }
+
+  updateChart(currentView)
 }
 const handleCard1Click = () => {
   card1Active.value = !card1Active.value

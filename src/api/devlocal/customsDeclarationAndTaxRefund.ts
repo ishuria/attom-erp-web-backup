@@ -29,6 +29,27 @@ import {
   IUpdateShipmentLegPay,
   IUpdateShipmentPay
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import {
+  ICleanTaxRefundInvoice,
+  IFinishTaxRefundInvoiceRes,
+  IGetTaxRefundBatchDetailQuery,
+  IGetTaxRefundBatchDetailRes,
+  IGetTaxRefundBatchListQuery,
+  IGetTaxRefundBatchListRes,
+  IGetTaxRefundInvoiceListQuery,
+  IGetTaxRefundInvoiceListRes,
+  IGetTaxRefundInvoiceMatchQuery,
+  IGetTaxRefundInvoiceMatchRes,
+  IGetTaxRefundListQuery,
+  IGetTaxRefundProfitMarginQuery,
+  IGetTaxRefundProfitMarginRes,
+  ISubmitTaxRefundInvoiceMatch,
+  IUpdateTaxRefundBatchDate,
+  IUpdateTaxRefundBatchFreightFee,
+  IUpdateTaxRefundBatchRemark,
+  IUpdateTaxRefundInvoice,
+  IUpdateTaxRefundInvoiceDetail
+} from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 
 /**
  * @description 匹配PO、报关资料列表获取
@@ -431,5 +452,196 @@ export const cancelArchiveOutbound = (params: IId): Promise<IBooleanRes> => {
     url: `${BASE_API}/outbound/cancel`,
     method: 'post',
     params
+  })
+}
+
+/**
+ * @description 退税批次-查询
+ */
+export const getTaxRefundBatchList = (params: IGetTaxRefundBatchListQuery): Promise<IGetTaxRefundBatchListRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 退税批次-更新报关单出库日期
+ */
+export const updateTaxRefundBatchDate = (params: IUpdateTaxRefundBatchDate): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/update/date`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 退税批次-更新退税批次备注
+ */
+export const updateTaxRefundBatchRemark = (params: IUpdateTaxRefundBatchRemark): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/remark`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 退税批次-退税完成
+ */
+export const updateTaxRefundBatchStatus = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/status`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 退税批次-退税运费
+ */
+export const updateTaxRefundBatchFreightFee = (params: IUpdateTaxRefundBatchFreightFee): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/freightFee`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 退税批次-明细
+ */
+export const getTaxRefundBatchDetail = (params: IGetTaxRefundBatchDetailQuery): Promise<IGetTaxRefundBatchDetailRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/detail`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 退税管理 - 查询列表
+ */
+export const getTaxRefundList = (data: IGetTaxRefundListQuery): Promise<IGetTaxRefundBatchDetailRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/list`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 退税管理-发票文件上传
+ */
+export const uploadTaxRefund = (data: FormData) => {
+  return request({
+    url: `${BASE_API}/taxRefund/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data
+  })
+}
+/**
+ * @description 退税管理-发票导入完成
+ */
+export const finishTaxRefundInvoice = (data: string[]): Promise<IFinishTaxRefundInvoiceRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/finish`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 退税管理 - 发票列表查询
+ */
+export const getTaxRefundInvoiceList = (params: IGetTaxRefundInvoiceListQuery): Promise<IGetTaxRefundInvoiceListRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 退税管理 - 发票匹配列表清空
+ */
+export const cleanTaxRefundInvoice = (params: ICleanTaxRefundInvoice): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/clean`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 退税管理-删除发票
+ */
+export const deleteTaxRefundInvoice = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/delete`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 退税管理-匹配
+ */
+export const getTaxRefundInvoiceMatch = (params: IGetTaxRefundInvoiceMatchQuery): Promise<IGetTaxRefundInvoiceMatchRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/match`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 退税管理-发票修改
+ */
+export const updateTaxRefundInvoice = (data: IUpdateTaxRefundInvoice): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 退税管理-发票明细修改
+ */
+export const updateTaxRefundInvoiceDetail = (data: IUpdateTaxRefundInvoiceDetail): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/detail/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 退税管理-发票匹配第一次提交
+ */
+export const submitTaxRefundInvoiceMatch = (data: ISubmitTaxRefundInvoiceMatch): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/match/submit`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 退税管理-发票匹配第二次提交
+ */
+export const submitConfirmTaxRefundInvoiceMatch = (): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/match/submitConfirm`,
+    method: 'post',
+  })
+}
+/**
+ * @description 退税管理-删除匹配
+ */
+export const deleteTaxRefundMatch = (data: ISubmitTaxRefundInvoiceMatch): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/delete/match`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 退税管理-查询批次利润率
+ */
+export const getTaxRefundProfitMargin = (data: IGetTaxRefundProfitMarginQuery): Promise<IGetTaxRefundProfitMarginRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/profit/margin`,
+    method: 'post',
+    data
   })
 }
