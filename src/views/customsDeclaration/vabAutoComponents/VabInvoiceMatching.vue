@@ -72,7 +72,7 @@
       <el-table-column label="开票品名" prop="invoiceName" min-width="100">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceName" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.invoiceName" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceName }}</span>
         </template>
@@ -80,7 +80,7 @@
       <el-table-column label="规格型号" prop="specificationModel" min-width="100">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.specificationModel" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.specificationModel" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.specificationModel }}</span>
         </template>
@@ -88,7 +88,7 @@
       <el-table-column label="发票数量" prop="invoiceCount" min-width="100">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceCount" type="number" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.invoiceCount" type="number" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceCount }}</span>
         </template>
@@ -96,7 +96,7 @@
       <el-table-column label="发票单位" prop="invoiceUnit" min-width="100">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceUnit" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.invoiceUnit" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceUnit }}</span>
         </template>
@@ -104,7 +104,7 @@
       <el-table-column label="发票含税金额" prop="includingTaxPrice" min-width="110">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.includingTaxPrice" type="number" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.includingTaxPrice" type="number" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.includingTaxPrice }}</span>
         </template>
@@ -112,11 +112,12 @@
       <el-table-column label="发票未税金额" prop="preTaxPrice" min-width="110">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.preTaxPrice" type="number" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.preTaxPrice" type="number" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.preTaxPrice }}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="发票图片" prop="invoicePath" width="75">
         <template #header>
           发票<br />图片
@@ -171,7 +172,7 @@
     <template #footer>
       <div style="text-align: center;">
         <el-button @click="closeInvoiceMatching">取消</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="handleSubmitConfirm">确认</el-button>
       </div>
     </template>
     <vab-pagination 
@@ -285,7 +286,7 @@ import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { UploadFile, UploadFiles, UploadRequestOptions } from 'element-plus'
 import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
-import { cleanTaxRefundInvoice, deleteTaxRefundInvoice, finishTaxRefundInvoice, getTaxRefundInvoiceList, getTaxRefundInvoiceMatch, uploadTaxRefund } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { cleanTaxRefundInvoice, deleteTaxRefundInvoice, finishTaxRefundInvoice, getTaxRefundInvoiceList, getTaxRefundInvoiceMatch, submitConfirmTaxRefundInvoiceMatch, submitTaxRefundInvoiceMatch, updateTaxRefundInvoice, updateTaxRefundInvoiceDetail, uploadTaxRefund } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetTaxRefundInvoiceList, IGetTaxRefundInvoiceListQuery, IGetTaxRefundInvoiceMatchList, IGetTaxRefundInvoiceMatchQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -389,38 +390,6 @@ const matchVisible = ref<boolean>(false)
 const matchStatus = ref<number>(0)
 const total = ref<number>(0)
 const list = ref<IGetTaxRefundInvoiceList[]>([])
-const fakeData = [
-  {
-    po: 'PO1234',
-    status: 1,
-    id: 1
-  },
-  {
-    po: 'PO1234',
-    status: 0,
-    id: 2
-  },
-  {
-    po: 'PO1234',
-    status: 1,
-    id: 3
-  },
-  {
-    po: 'PO1234',
-    status: 0,
-    id: 4
-  },
-  {
-    po: 'PO1234',
-    status: 1,
-    id: 5
-  },
-  {
-    po: 'PO1234',
-    status: 0,
-    id: 6
-  },
-]
 
 // const invoiceList = ref<UploadUserFile[]>([])
 const queryForm = reactive<IGetTaxRefundInvoiceListQuery>({
@@ -452,14 +421,36 @@ const handleMatchSizeChange = (value: number) => {
   fetchMatchData()
 }
 
-const handleConfirm = () => {
-  console.log(matchStatus.value)
+const handleConfirm = async () => {
+  const { data } = await submitTaxRefundInvoiceMatch({
+    id: matchStatus.value,
+    detailId: matchQueryForm.detailId
+  })
+  if (data) {
+    $baseMessage('提交成功！', 'success')
+    matchVisible.value = false
+  }
+}
+const handleSubmitConfirm = async () => {
+  const { data } = await submitConfirmTaxRefundInvoiceMatch()
+  if (data) {
+    $baseMessage('确认成功！', 'success')
+    closeInvoiceMatching()
+  }
 }
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
-  matchVisible.value = true
   matchQueryForm.detailId = row.detailId!
-  fetchMatchData()
+  matchListLoading.value = true
+  const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
+  if (data) {
+    matchTotal.value = data?.total!
+    matchList.value = data?.list!
+    matchVisible.value = true
+    matchListLoading.value = false
+  } else {
+    matchVisible.value = false
+  }
 }
 
 // 清空全部PO
@@ -493,7 +484,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
     focusAndSelectInput(cell);
   }
 }
-const clickCancel = (event: Event, value: any) => {
+const clickCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
   const rootElement = getRootElement(event.target, ".cell");
 
   if (rootElement) {
@@ -505,6 +496,40 @@ const clickCancel = (event: Event, value: any) => {
   }
   if (isEqual(copyRow, value)) {
     return
+  }
+  if (event.type === 'blur') {
+    await updateTaxRefundInvoice({
+      id: value.id!,
+      purchaseName: value.purchaseName,
+      invoiceCode: value.invoiceCode,
+      invoiceNumber: value.invoiceNumber,
+      suppliser: value.suppliser
+    })
+  }
+}
+const clickDetailCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
+  const rootElement = getRootElement(event.target, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    await updateTaxRefundInvoiceDetail({
+      id: value.detailId!,
+      invoiceName: value.invoiceName!,
+      specificationModel: value.specificationModel!,
+      invoiceCount: value.invoiceCount!,
+      invoiceUnit: value.invoiceUnit!,
+      preTaxPrice: value.preTaxPrice!,
+      includingTaxPrice: value.includingTaxPrice!
+    })
   }
 }
 const queryData = () => {
@@ -555,7 +580,7 @@ const objectSpanMethod = ({
     columnIndex,
 }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 9 && columnIndex !== 10 && columnIndex !== 16) {
+  if (columnIndex !== 5 && columnIndex !== 6 && columnIndex !== 7 && columnIndex !== 8 && columnIndex !== 9 && columnIndex !== 10 && columnIndex !== 16) {
     // 获取当前row的零件id
     const id = row.id;
     // 默认不跨行

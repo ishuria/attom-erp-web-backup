@@ -123,10 +123,10 @@
           <!-- SKU 展示-->
           <span v-if="item.label === 'SKU' && level === 0">
             {{ row.sku }}
-            <div style="display: flex; align-items: center; gap: 4px;">
-              <span >{{ row.rate }}</span>
-              <span><el-rate v-model="row.rate" disabled /></span>
-              <span style="color: #36788C">{{ 484 }}</span>
+            <div class="rate-wrapper">
+              <span class="rate-value">{{ row.rate }}</span>
+              <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate" /></span>
+              <span class="rate-count">{{ 484 }}</span>
             </div>
           </span>
           <span v-if="item.label === 'ASIN' && level === 0">
@@ -138,19 +138,19 @@
           <!-- ASIN 展示 -->
           <span v-if="item.label === 'ASIN' && level === 1">
             <el-link type="primary">{{ row.asin }}</el-link>
-            <div style="display: flex; align-items: center; gap: 4px;">
-              <span >{{ row.rate }}</span>
-              <span><el-rate v-model="row.rate" disabled /></span>
-              <span style="color: #36788C">{{ 484 }}</span>
+            <div class="rate-wrapper">
+              <span class="rate-value">{{ row.rate }}</span>
+              <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
+              <span class="rate-count">{{ 484 }}</span>
             </div>
           </span>
           <!-- 父体ASIN 展示 -->
           <span v-if="item.label === '父体ASIN' && level === 2">
             <el-link type="primary">{{ row.pAsin }}</el-link>
-            <div style="display: flex; align-items: center; gap: 4px;">
-              <span >{{ row.rate }}</span>
-              <span><el-rate v-model="row.rate" disabled /></span>
-              <span style="color: #36788C">{{ 484 }}</span>
+            <div class="rate-wrapper">
+              <span class="rate-value">{{ row.rate }}</span>
+              <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
+              <span class="rate-count">{{ 484 }}</span>
             </div>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -302,7 +302,7 @@
 defineOptions({
   name: 'productPerformance',
 })
-import { Hide, Search, View } from '@element-plus/icons-vue'
+import { Hide, Search, Star, View } from '@element-plus/icons-vue'
 import { FormInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
@@ -383,7 +383,7 @@ const fakeData = ref<any>([
   {
     componentImage: 'https://picsum.photos/200/200',
     sku: 'SKU67890',
-    rate: 4.9,
+    rate: 4.0,
     asin: 'B08XYZ1234',
     pAsin: 'B08XYZ1234',
     trend: '点击看明细',
@@ -452,7 +452,7 @@ const fakeData = ref<any>([
   {
     componentImage: 'https://picsum.photos/200/200',
     sku: 'SKU12345',
-    rate: 4.7,
+    rate: 4.3,
     asin: 'B08N5M7S6K',
     pAsin: 'B08N5M7S6K',
     trend: '点击看明细',
@@ -519,6 +519,7 @@ const fakeData = ref<any>([
     id: 3
   },
 ])
+const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
 const checkList = computed(() => {
   if (level.value === 0) {
     return columns.value.filter((_: any) => _.checked)
@@ -1809,7 +1810,7 @@ const queryKeyWordTrend = () => {
 const handleWidth = (item: any) => {
   if (level.value === 0) {
     if (item.label === 'SKU') {
-      return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-SK', 'sku')
+      return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-', 'sku')
     } else if (item.label === 'ASIN') {
       return flexColumnWidth(fakeData.value, 'ASIN', 'asin')
     } else if (item.label === '父体ASIN') {
@@ -1821,7 +1822,7 @@ const handleWidth = (item: any) => {
     if (item.label === 'SKU') {
       return flexColumnWidth(fakeData.value, 'SKU', 'sku')
     } else if (item.label === 'ASIN') {
-      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASIN-', 'asin')
+      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
     } else {
       return item.minWidth
     }
@@ -1829,7 +1830,7 @@ const handleWidth = (item: any) => {
     if (item.label === 'SKU') {
       return flexColumnWidth(fakeData.value, 'SKU', 'sku')
     } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASIN-', 'asin')
+      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
     } else {
       return item.minWidth
     }
@@ -1941,4 +1942,39 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   gap: 20px;
   width: 100%;
 }
+.rate-wrapper {
+  display: flex; 
+  align-items: center; 
+  gap: 8px;
+
+  .rate-value {
+    width: 22px; /* 固定宽度，保证分数区域宽度一致 */
+    text-align: left; /* 文本右对齐 */
+  }
+  .custom-rate {
+    --el-rate-icon-size: 20px; /* 调整星星的大小 */
+    --el-rate-fill-color: #f09000; /* 填充星星的颜色 */
+    --el-rate-text-color: #f09000; /* 文本颜色一致 */
+    --el-rate-disabled-void-color: #fff; /* 未填充星星的颜色 */
+    --el-rate-void-color: #fff; /* 空星颜色 */
+
+    :deep() {
+      .el-rate__item {
+        margin-top: -2px;
+        margin-right: 0;
+        margin-left: -9px;
+        .el-icon {
+          stroke: #f09000; /* 星星边框颜色 */
+          stroke-width: 60px; /* 星星边框的粗细 */
+        }
+      }
+    }
+
+  }
+  .rate-count {
+    color: #36788C;
+    margin-left: -11px;
+  }
+}
+
 </style>

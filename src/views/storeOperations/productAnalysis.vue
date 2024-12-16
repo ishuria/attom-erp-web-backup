@@ -8,26 +8,48 @@
             <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
               <el-tab-pane label="趋势总览" :name="0">
                 <el-row :gutter="20">
+                  <!-- 总销售额 -->
                   <el-col :span="4">
                     <vab-card class="top-card" shadow="always" @click="handleCard1Click">
                       <div class="parting-line" :class="{ 'parting-line-primary': card1Active }" ></div>
-                      <el-dropdown>
+                      <el-dropdown >
                         <span>
-                          总销售额
+                          {{ card1Text }}
                           <el-icon class="el-icon--right">
                             <arrow-down />
                           </el-icon>
                         </span>
                         <template #dropdown>
-                          <el-dropdown-menu>
-                            <el-dropdown-item>Rating</el-dropdown-item>
-                            <el-dropdown-item>自然销量</el-dropdown-item>
+                          <el-dropdown-menu >
+                            <el-dropdown-item @click="handleSwitchItem('总销售额')">总销售额</el-dropdown-item>
+                            <el-dropdown-item>广告销售额</el-dropdown-item>
+                            <el-dropdown-item>广告花费</el-dropdown-item>
                             <el-dropdown-item>净利润</el-dropdown-item>
-                            <el-dropdown-item>总转化率</el-dropdown-item>
-                            <el-dropdown-item>访客数</el-dropdown-item>
-                            <el-dropdown-item>点击率</el-dropdown-item>
-                            <el-dropdown-item>库存</el-dropdown-item>
+                            <el-dropdown-item>预计下月仓储费</el-dropdown-item>
+                            <el-dropdown-item>点击成本</el-dropdown-item>
                             <el-dropdown-item>售价</el-dropdown-item>
+                            <el-dropdown-item>CPA</el-dropdown-item>
+                            <el-dropdown-item>广告转化率</el-dropdown-item>
+                            <el-dropdown-item>自然转化率</el-dropdown-item>
+                            <el-dropdown-item>综合转化率</el-dropdown-item>
+                            <el-dropdown-item>退货率</el-dropdown-item>
+                            <el-dropdown-item>退款率</el-dropdown-item>
+                            <el-dropdown-item>净利润率</el-dropdown-item>
+                            <el-dropdown-item>毛利润率</el-dropdown-item>
+                            <el-dropdown-item>TACOS</el-dropdown-item>
+                            <el-dropdown-item>ACOS</el-dropdown-item>
+                            <el-dropdown-item>广告点击率</el-dropdown-item>
+                            <el-dropdown-item>总访客</el-dropdown-item>
+                            <el-dropdown-item>PC端访客</el-dropdown-item>
+                            <el-dropdown-item>移动端访客</el-dropdown-item>
+                            <el-dropdown-item>自然访客</el-dropdown-item>
+                            <el-dropdown-item>广告访客</el-dropdown-item>
+                            <el-dropdown-item>Rating</el-dropdown-item>
+                            <el-dropdown-item>库存</el-dropdown-item>
+                            <el-dropdown-item>小类排名</el-dropdown-item>
+                            <el-dropdown-item>大类排名</el-dropdown-item>
+                            <el-dropdown-item @click="handleSwitchItem('广告销量')">广告销量</el-dropdown-item>
+                            <el-dropdown-item @click="handleSwitchItem('自然销量')">自然销量</el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
@@ -210,9 +232,9 @@
                 <vab-card style="height: 480px;">
                   <vab-query-form>
                     <vab-query-form-right-panel :span="24">
-                      <el-radio-group v-model="radio" >
+                      <el-radio-group v-model="radio" size="small" @change="handleSwitchTime">
                         <el-radio-button label="日" value="day" />
-                        <el-radio-button label="周" value="weak" />
+                        <el-radio-button label="周" value="week" />
                         <el-radio-button label="月" value="month" />
                       </el-radio-group>
                     </vab-query-form-right-panel>
@@ -293,10 +315,10 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-checkbox>同比</el-checkbox>
-                </el-form-item>
-                <el-form-item>
-                  <el-checkbox>环比</el-checkbox>
+                  <el-radio-group>
+                    <el-radio value="0" style="margin-right: 10px;">同比</el-radio>
+                    <el-radio value="1">环比</el-radio>
+                  </el-radio-group>
                 </el-form-item>
                 <el-form-item>
                   <el-select>
@@ -521,13 +543,12 @@
 
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 import { TabsPaneContext } from 'element-plus'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import * as echarts from 'echarts'
-import dayjs from 'dayjs'
 
 defineOptions({
   name: 'ProductAnalysis',
@@ -540,14 +561,22 @@ const routesStore = useRoutesStore()
 const { changeActiveMenu } = routesStore
 
 const activeName = ref<number>(0)
+// 切换日，周，月
 const radio = ref<string>('day')
+// 评分
 const rate = ref<number>(4.7)
 const amount = 42442.71
+// 控制数字显示为美元形式
 const formattedAmount = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
 const chartContainer = ref(null)
 let chartInstance: any = null
+// 初始化图片高度
 const imageHeight = ref<number>(0)
-
+const queryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 20
+})
+const total = ref<number>(0)
 // 六个卡片是否选择状态
 const card1Active = ref<boolean>(false)
 const card2Active = ref<boolean>(false)
@@ -555,342 +584,356 @@ const card3Active = ref<boolean>(false)
 const card4Active = ref<boolean>(false)
 const card5Active = ref<boolean>(false)
 const card6Active = ref<boolean>(false)
+const card1Text = ref<string>('总销售额')
+const card2Text = ref<string>('广告销售额')
+const card3Text = ref<string>('花费')
+const card4Text = ref<string>('ACOS')
+const card5Text = ref<string>('点击成本')
+const card6Text = ref<string>('TACOS')
 
-const queryForm = reactive<any>({
-  pageNo: 1,
-  pageSize: 20
-})
-const total = ref<number>(0)
-const handleCurrentChange = (value: number) => {
-  queryForm.pageNo = value
-  // fetchData()
+type IData = {
+  date: string
+  adSales: number
+  organicSales: number
 }
-const handleSizeChange = (value: number) => {
-  queryForm.pageSize = value
-  queryForm.pageNo = 1
-  // fetchData()
-}
+const data: IData[] = [
+  { date: "2023-10-14", adSales: 10, organicSales: 5 },
+  { date: "2024-10-19", adSales: 20, organicSales: 15 },
+  { date: "2024-11-01", adSales: 20, organicSales: 10 },
+  { date: "2024-11-02", adSales: 10, organicSales: 8 },
+  { date: "2024-12-01", adSales: 10, organicSales: 7 },
+  { date: "2024-12-02", adSales: 15, organicSales: 12 },
+  { date: "2024-12-08", adSales: 20, organicSales: 18 },
+  { date: "2024-12-09", adSales: 25, organicSales: 20 }
+]
 
-// 计算该日期是当年的第几周
-function getWeekOfYear(date: Date | string | number): number {
-  // 确保 date 参数可以被解析为有效的日期对象
+const dates = [
+  '2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05',
+  '2023-01-06', '2023-01-07', '2023-01-08', '2023-01-09', '2023-01-10',
+  '2023-10-14', '2023-10-15', '2023-10-16', '2023-10-17', '2023-10-18',
+  '2023-10-19', '2023-10-20', '2023-10-21', '2023-10-22', '2023-10-23',
+  '2023-10-24', '2023-10-25', '2023-10-26', '2023-10-27', '2023-10-28',
+  '2023-10-29', '2023-10-30', '2023-11-01', '2023-11-03', '2023-11-05',
+  '2023-11-07', '2023-11-09', '2023-11-11', '2023-11-13'
+]
+// 广告销售额数据（美元）
+const salesData = dates.map(() => Math.round(Math.random() * 1000))
+// 广告花费数据（美元）
+const costData = dates.map(() => Math.round(Math.random() * 50))
+const data3 = dates.map(() => Math.round(Math.random() * 50))
+const data4 = dates.map(() => Math.round(Math.random() * 50))
+const currentView = ref<string>('day')
+let xAxisData = ref<any>([])
+// 按周分组并累加
+const getWeeklyData = (data: IData[], type: 'adSales' | 'organicSales'): any[] => {
+  const weeklyData: Record<string, number> = {}
+
+  // 遍历数据，按周累加
+  data.forEach((item) => {
+    const week = getWeekOfYear(item.date) // 获取 "YYYY-Wxx"
+    if (!weeklyData[week]) {
+      weeklyData[week] = 0 // 初始化累加器
+    }
+    weeklyData[week] += item[type] // 累加指定类型数据
+  })
+
+  // 转换结果为数组格式
+  return Object.keys(weeklyData).map((week) => ({
+    date: week,
+    [type]: weeklyData[week],
+  }))
+}
+// 按月分组并累加
+const getMonthlyData = (data: IData[], type: 'adSales' | 'organicSales'): any[] => {
+  const monthlyData: any = {}
+  data.forEach((item) => {
+    const month = item.date.slice(0, 7) // 提取 "YYYY-MM"
+    if (!monthlyData[month]) {
+      monthlyData[month] = 0 // 初始化
+    }
+    monthlyData[month] += item[type] // 累加值
+  })
+
+  // 转换为数组格式
+  return Object.keys(monthlyData).map((month) => ({
+    date: month,
+    [type]: monthlyData[month],
+  }))
+}
+const handleSwitchItem = (item: string) => {
+  card1Active.value = false
+  card1Text.value = item
+}
+/**
+ * @description 计算当前日期是该年的第几周,生成字符串
+ * @param date 
+ */
+function getWeekOfYear(date: Date | string | number): string {
+  // 确保当前日期 date 参数可以被解析为有效的日期对象
   const currentDate = new Date(date)
   if (isNaN(currentDate.getTime())) {
-    throw new Error("Invalid date provided")
+    throw new Error("提供的日期无效")
   }
 
-  // 设置该日期为当年的第一天
-  const startDate = new Date(currentDate.getFullYear(), 0, 1)
+  const year = currentDate.getFullYear()
+  // startDate为当年的第一天
+  const startDate = new Date(year, 0, 1)
 
-  // 计算该日期与第一天的差值，单位是天
+  // 计算当前日期与第一天的差值，单位是天
   const daysDiff = Math.floor((currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
 
-  // 计算该日期属于哪一周
+  // 计算当前日期属于哪一周
   const weekNumber = Math.ceil((daysDiff + 1) / 7)
 
-  return weekNumber
+  return `${year}-W${weekNumber}`
+}
+// 图标数组
+const legendData = ['广告销量', 'ACOS', '广告销售额', '花费']
+// 金额1
+const price1Data = ['总销售额', '广告销售额', '广告花费', '净利润', '预计下月仓储费']
+// y轴配置的第一个：广告销量/自然销量
+const yAxis1 =  {
+  type: 'value',
+  name: '广告销量',
+  position: 'left',
+  nameTextStyle: {
+    color: '#409EFF',
+    align: 'center',
+  },
+  axisLabel: {
+    fontWeight: 'bold'
+  },
+  min: 0,
+  axisLine: {
+    show: true,
+    lineStyle: {
+      color: '#409EFF',
+    }
+  }
+}
+const type = ref<"adSales" | "organicSales">('adSales')
+
+const updateChart = () => {
+  if (currentView.value === 'day') {
+    xAxisData.value = data
+  } else if (currentView.value === 'week') {
+    xAxisData.value = getWeeklyData(data, type.value)
+  } else if (currentView.value === 'month') {
+    xAxisData.value = getMonthlyData(data, type.value)
+  }
+  
+  let option = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: legendData,
+      left: 'center',
+    },
+    grid: {
+      left: '7%',
+      bottom: '7%',
+    },
+    xAxis: {
+      type: 'category',
+      data: xAxisData.value.map((item: any) => item.date),
+      axisTick: {
+        alignWithLabel: true
+      },
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: type.value === 'adSales' ? '广告销量' : '自然销量',
+        position: 'left',
+        nameTextStyle: {
+          color: type.value === 'adSales' ? '#409EFF' : '#67C23A',
+          align: 'center',
+        },
+        axisLabel: {
+          fontWeight: 'bold'
+        },
+        min: 0,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: type.value === 'adSales' ? '#409EFF' : '#67C23A',
+          }
+        }
+      },
+      {
+        type: 'value',
+        name: 'ACOS',
+        position: 'left',
+        offset: 50,
+        nameTextStyle: {
+          fontWeight: 'bold',
+          align: 'right',
+          color: '#8a7ae3'
+        },
+        axisLabel: {
+          fontWeight: 'bold'
+        },
+        min: 0,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#8a7ae3'
+          }
+        },
+        splitLine: {
+          show: false
+        }
+      },
+      {
+        type: 'value',
+        name: '广告销售额',
+        position: 'right',
+        axisLabel: {
+          formatter: '${value}',
+          fontWeight: 'bold'
+        },
+        min: 0,
+        nameTextStyle: {
+          color: '#f7ab1b',
+          align: 'left',
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#f7ab1b',
+          }
+        },
+        splitLine: {
+          show: false
+        }
+      },
+      {
+        type: 'value',
+        name: '花费',
+        offset: 70,
+        position: 'right',
+        axisLabel: {
+          formatter: '${value}',
+          fontWeight: 'bold'
+        },
+        min: 0,
+        nameTextStyle: {
+          color: '#40c9c6',
+          align: 'left',
+        },
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#40c9c6',
+          }
+        },
+        splitLine: {
+          show: false
+        }
+      }
+    ],
+    series: [
+      {
+        name: type.value === 'adSales' ? '广告销量' : '自然销量',
+        type: 'bar',
+        data: xAxisData.value.map((item: any) => item[type.value]),
+        barWidth: 20,
+        itemStyle: {
+          color: type.value === 'adSales' ? '#409EFF' : '#67C23A'
+        },
+        opacity: 0.9
+      },
+      {
+        name: 'ACOS',
+        type: 'line',
+        yAxisIndex: 1,
+        data: salesData,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#8a7ae3'
+        },
+        itemStyle: {
+          color: '#8a7ae3'
+        }
+      },
+      {
+        name: '广告销售额',
+        type: 'line',
+        yAxisIndex: 2,
+        data: data3,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#f7ab1b'
+        },
+        itemStyle: {
+          color: '#f7ab1b'
+        }
+      },
+      {
+        name: '花费',
+        type: 'line',
+        yAxisIndex: 3,
+        data: costData,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#40c9c6'
+        },
+        itemStyle: {
+          color: '#40c9c6'
+        },
+        areaStyle: {
+          color: 'rgba(64, 201, 198, 0.2)'
+        }
+      },
+      {
+        name: '总销售额',
+        type: 'line',
+        yAxisIndex: 2,
+        data: data4,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        lineStyle: {
+          color: '#f7ab1b'
+        },
+        itemStyle: {
+          color: '#f7ab1b'
+        }
+      }
+    ]
+  }
+  chartInstance.setOption(option)
 }
 
-const drawChart = () => {
-  // 初始化日期数据
-  const dates = [
-    '2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05',
-    '2023-01-06', '2023-01-07', '2023-01-08', '2023-01-09', '2023-01-10',
-    '2023-10-14', '2023-10-15', '2023-10-16', '2023-10-17', '2023-10-18',
-    '2023-10-19', '2023-10-20', '2023-10-21', '2023-10-22', '2023-10-23',
-    '2023-10-24', '2023-10-25', '2023-10-26', '2023-10-27', '2023-10-28',
-    '2023-10-29', '2023-10-30', '2023-11-01', '2023-11-03', '2023-11-05',
-    '2023-11-07', '2023-11-09', '2023-11-11', '2023-11-13'
-  ]
 
-  // 销量
-  // const salesVolumeData = [
-  //   10, 20, 30, 40, 5,
-  //   10, 20, 30, 40, 5,
-  //   10, 20, 30, 40, 5,
-  //   10, 20, 30, 40, 5,
-  //   10, 20, 30, 5, 40,
-  //   10, 20, 30, 5, 40,
-  //   10, 20, 30, 40
-  // ]
-  const salesVolumeData = [
-    { date: "2024-12-01", value: 10 },
-    { date: "2024-12-02", value: 15 },
-    { date: "2024-12-08", value: 20 },
-    { date: "2024-12-09", value: 25 }
-  ]
-  // ACOS数据（%）
-  const acosData = [
-    10, 20, 30, 40, 5,
-    10, 20, 30, 40, 5,
-    10, 20, 30, 5, 40,
-    10, 20, 30, 5, 40,
-    10, 20, 30, 40
-  ]
-  // 广告销售额数据（美元）
-  const salesData = dates.map(() => Math.round(Math.random() * 1000))
-  // 广告花费数据（美元）
-  const costData = dates.map(() => Math.round(Math.random() * 50))
 
-  // 格式化日期为周数组
-  const getWeeklyData = (dates: string[]): string[] => {
-    const weeks: string[] = []
-    let currentWeek = ""
 
-    // 确保日期数组按时间排序
-    dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-
-    dates.forEach(date => {
-      const parsedDate = new Date(date)
-      if (isNaN(parsedDate.getTime())) {
-        console.warn(`Invalid date: ${date}`)
-        return;
-      }
-
-      const week = getWeekOfYear(parsedDate) // 获取日期的周数
-      
-      const year = parsedDate.getFullYear()
-      const weekIdentifier = `${year}W${week}`
-
-      if (currentWeek !== weekIdentifier) {
-        weeks.push(weekIdentifier)
-        currentWeek = weekIdentifier
-      }
-    })
-
-    return weeks
-  }
-
-  // 格式化日期为月数组
-  const getMonthlyData = (dates: string[]): string[] => {
-    let months: string[] = []
-    let currentMonth = ""
-    dates.forEach(date => {
-      const month = date.slice(0, 7) // 取到 'YYYY-MM'
-      if (currentMonth !== month) {
-        months.push(date.slice(0, 7)) // 按月份的第一天显示
-        currentMonth = month
-      }
-    })
-    return months
-  }
- 
-
-  // function groupByWeek(data: {date: string, value: number}[]) {
-  //   const weeklyData: any = {};
-
-  //   data.forEach(({ date, value }) => {
-  //     const week = `${dayjs(date).year()}-W${getWeeklyData(date)}`;
-  //     if (!weeklyData[week]) weeklyData[week] = 0;
-  //     weeklyData[week] += value;
-  //   });
-
-  //   return Object.entries(weeklyData).map(([week, total]) => ({
-  //     week,
-  //     total
-  //   }));
-  // }
-
-  // const groupedData = groupByWeek(salesVolumeData)
-
-  // 按需切换数据
-  let currentView = 'week'  // 默认视图是日视图
-
-  const updateChart = (viewType: string) => {
-    let xAxisData: string[] = []
-
-    if (viewType === 'day') {
-      xAxisData = dates
-    } else if (viewType === 'week') {
-      xAxisData = getWeeklyData(dates)
-    } else if (viewType === 'month') {
-      xAxisData = getMonthlyData(dates)
-    }
-
-    const option = {
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: ['销量', 'ACOS', '广告销售额', '花费'],
-        left: 'center',
-      },
-      grid: {
-        left: '7%',
-        bottom: '7%',
-      },
-      xAxis: {
-        type: 'category',
-        data: xAxisData,
-        axisTick: {
-          alignWithLabel: true
-        },
-      },
-      yAxis: [
-        {
-          type: 'value',
-          name: '销量',
-          position: 'left',
-          nameTextStyle: {
-            color: '#409EFF',
-            align: 'right',
-          },
-          axisLabel: {
-            formatter: '{value}%',
-            fontWeight: 'bold'
-          },
-          min: 0,
-          max: 50,
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#409EFF',
-            }
-          }
-        },
-        {
-          type: 'value',
-          name: 'ACOS',
-          position: 'left',
-          offset: 50,
-          nameTextStyle: {
-            fontWeight: 'bold',
-            align: 'right',
-            color: '#8a7ae3'
-          },
-          axisLabel: {
-            fontWeight: 'bold'
-          },
-          min: 0,
-          max: 1800,
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#8a7ae3'
-            }
-          },
-          splitLine: {
-            show: false
-          }
-        },
-        {
-          type: 'value',
-          name: '广告销售额',
-          position: 'right',
-          axisLabel: {
-            formatter: '${value}'
-          },
-          min: 0,
-          max: 1800,
-          nameTextStyle: {
-            color: '#f7ab1b',
-            align: 'left',
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#f7ab1b',
-            }
-          },
-          splitLine: {
-            show: false
-          }
-        },
-        {
-          type: 'value',
-          name: '花费',
-          offset: 70,
-          position: 'right',
-          axisLabel: {
-            formatter: '${value}'
-          },
-          min: 0,
-          max: 500,
-          nameTextStyle: {
-            color: '#40c9c6',
-            align: 'left',
-          },
-          axisLine: {
-            show: true,
-            lineStyle: {
-              color: '#40c9c6',
-            }
-          },
-          splitLine: {
-            show: false
-          }
-        }
-      ],
-      series: [
-        {
-          name: '销量',
-          type: 'bar',
-          yAxisIndex: 0,
-          data: acosData,
-          barWidth: 20,
-          itemStyle: {
-            color: '#409EFF'
-          },
-          opacity: 0.9
-        },
-        {
-          name: 'ACOS',
-          type: 'line',
-          yAxisIndex: 1,
-          data: salesVolumeData,
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 6,
-          lineStyle: {
-            color: '#8a7ae3'
-          },
-          itemStyle: {
-            color: '#8a7ae3'
-          }
-        },
-        {
-          name: '广告销售额',
-          type: 'line',
-          yAxisIndex: 2,
-          data: salesData,
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 6,
-          lineStyle: {
-            color: '#f7ab1b'
-          },
-          itemStyle: {
-            color: '#f7ab1b'
-          }
-        },
-        {
-          name: '花费',
-          type: 'line',
-          yAxisIndex: 3,
-          data: costData,
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 6,
-          lineStyle: {
-            color: '#40c9c6'
-          },
-          itemStyle: {
-            color: '#40c9c6'
-          },
-          areaStyle: {
-            color: 'rgba(64, 201, 198, 0.2)'
-          }
-        }
-      ]
-    }
-
-    chartInstance.setOption(option)
-  }
-
-  updateChart(currentView)
+// 切换 日，周，月
+const handleSwitchTime = () => {
+  currentView.value = radio.value
+  updateChart()
 }
 const handleCard1Click = () => {
   card1Active.value = !card1Active.value
+  if (card1Active.value) {
+    if (card1Text.value === '自然销量') {
+      legendData[0] = '自然销量'
+      type.value = 'organicSales'
+    } else if (card1Text.value === '广告销量') {
+      legendData[0] = '广告销量'
+      type.value = 'adSales'
+    } else if (price1Data.includes(card1Text.value)) {
+      legendData[2] = card1Text.value
+    }
+    updateChart()
+  }
 }
 const handleCard2Click = () => {
   card2Active.value = !card2Active.value
@@ -928,11 +971,21 @@ const setImageHeight = () => {
     imageHeight.value = height2.bottom - height1.top;
   }
 }
+
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  // fetchData()
+}
+const handleSizeChange = (value: number) => {
+  queryForm.pageSize = value
+  queryForm.pageNo = 1
+  // fetchData()
+}
 onMounted(() => {
   setImageHeight()
   if (chartContainer.value) {
     chartInstance = echarts.init(chartContainer.value)
-    drawChart()
+    updateChart()
   }
 })
 </script>

@@ -9,7 +9,8 @@
             <el-button type="primary" @click="ticketReminderVisible = true">云舟催票文件</el-button>
             <el-button type="primary">云舟开票导出</el-button>
             <el-button type="primary">埃托姆开票导出</el-button>
-            <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0;">
+            <el-button type="primary" @click="invoiceMatchExportVisible = true">发票匹配导出</el-button>
+            <span style="width: 22em; margin: 0 50px calc(var(--el-margin) / 2) 0;">
               <el-date-picker 
                 v-model="date"
                 type="daterange"
@@ -23,7 +24,7 @@
               >
               </el-date-picker>
             </span>
-            <span style="margin: 0 10px calc(var(--el-margin) / 2) 0;">
+            <span style="margin: 0 0 calc(var(--el-margin) / 2) 0;">
               <el-text >该区间剩余可退税金额：<span style="color: rgb(83, 186, 177); font-weight: 600;">23234.56元</span></el-text>
             </span>
           </vab-query-form-left-panel>
@@ -118,7 +119,7 @@
           </el-table-column>
           <el-table-column label="操作" width="100" fixed="right">
             <template #default="{ row }">
-              <el-link :underline="false" type="danger">删除匹配</el-link>
+              <el-link :underline="false" type="danger" @click="handleDeleteMatch(row)">删除匹配</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -252,17 +253,21 @@
       width="25%"
       @close="closeTicketReminder"
     >
-      <el-form ref="ticketReminderFormRef" :model="ticketReminderForm" label-position="top">
+      <el-form ref="ticketReminderFormRef" :model="ticketReminderForm" :rules="ticketReminderFormRules" label-position="top">
         <el-form-item label="付款日期" prop="">
           <el-date-picker 
+            v-model="ticketReminderForm.dateRange"
             type="daterange"
             start-placeholder="最早付款日期"
             end-placeholder="最晚付款日期"
             range-separator="至"
+            :editable="false"
+            :clearable="false"
+            value-format="YYYY-MM-DD"
           />
         </el-form-item>
         <el-form-item label="供应商" prop="">
-          <el-input />
+          <el-input v-model="ticketReminderForm.suppliser" clearable />
         </el-form-item>
         <!-- <el-form-item label="仅已报关" prop="">
           <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
@@ -275,8 +280,33 @@
         </vab-alert>
       </el-form>
       <template #footer>
-        <el-button >取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button @click="closeTicketReminder">取消</el-button>
+        <el-button type="primary" @click="handleConfirmTicketReminder">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 发票匹配导出 -->
+    <vab-dialog
+      title="发票匹配导出"
+      v-model="invoiceMatchExportVisible"
+      @close="closeInvoiceMatchExport"
+      width="20%"
+    >
+      <el-form ref="invoiceMatchExportFormRef" :model="invoiceMatchExportForm" label-position="top">
+        <el-form-item>
+          <el-date-picker
+            v-model="invoiceMatchExportForm.time"
+            type="daterange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            range-separator="至"
+            :editable="false"
+            :clearable="false"
+            value-format="YYYY-MM-DD"
+          ></el-date-picker>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary">导出</el-button>
       </template>
     </vab-dialog>
     <!-- 预览pdf -->
@@ -303,11 +333,13 @@ import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
 import VabPdf from '/@/plugins/VabPdf'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { FormInstance, TabsPaneContext } from 'element-plus'
+import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
-import { getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import { flexColumnWidth } from '/@/utils/tableColum'
+import { downloadFileP, downloadFilePD } from '/@/api/devlocal/download'
+import { AxiosResponse } from 'axios'
 
 const dialogWidth = ref<number>(0)
 const source = ref<string>('')
@@ -323,7 +355,20 @@ const onPdfLoaded = (pdf: any) => {
 const onPageLoaded = (page: any) => {
   const viewport = page.getViewport({ scale: 1 }); // 获取页面的视口信息
   dialogWidth.value = viewport.width; // 设置弹窗宽度为 PDF 页面宽度
-};
+}
+// 发票匹配导出
+const invoiceMatchExportVisible = ref<boolean>(false)
+const invoiceMatchExportForm = reactive<any>({
+  time: ''
+})
+const invoiceMatchExportFormRef = ref<FormInstance>()
+const invoiceMatchExportFormRules = reactive<any>({
+  time: [{ required: true, message: '请选择发票匹配日期', trigger: 'change' }]
+})
+const closeInvoiceMatchExport = () => {
+  invoiceMatchExportFormRef.value?.resetFields()
+  invoiceMatchExportVisible.value = false
+}
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -357,15 +402,53 @@ const closeInvoiceMatching = (value: boolean) => {
 const closeBatchProfitMargin = (value: boolean) => {
   batchProfitMarginVisible.value = value
 }
+// 删除匹配
+const handleDeleteMatch = async (row: IGetTaxRefundBatchDetailList) => {
+  $baseConfirm('确定要删除匹配吗？', null, async () => {
+    const { data } = await deleteTaxRefundMatch({
+      id: row.id!,
+      detailId: row.invoiceDetailId!
+    })
+    if (data) {
+      $baseMessage('删除匹配成功！', 'success')
+    }
+  })
+}
 // 云舟催票文件
 const ticketReminderVisible = ref<boolean>(false)
-const ticketReminderForm = reactive<any>({
-
+type ITicketReminderForm = {
+  dateRange: [string, string]
+  suppliser: string
+}
+const ticketReminderForm = reactive<ITicketReminderForm>({
+  dateRange: ['',''],
+  suppliser: ''
+})
+const ticketReminderFormRules = reactive<FormRules<ITicketReminderForm>>({
+  dateRange: [{ required: true, message: '请选择日期范围', trigger: 'change' }],
+  suppliser: [{ required: true, message: '请输入供应商', trigger: 'blur' }]
 })
 const ticketReminderFormRef = ref<FormInstance>()
 const closeTicketReminder = () => {
   ticketReminderFormRef.value?.resetFields()
   ticketReminderVisible.value = false
+}
+const handleConfirmTicketReminder = async () => {
+  ticketReminderFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      await downloadFilePD('/taxRefund/hasten/invoice', {
+        fromDate: ticketReminderForm.dateRange[0],
+        toDate: ticketReminderForm.dateRange[1],
+        suppliser: ticketReminderForm.suppliser
+      }).then((value: any) => {
+      
+          $baseMessage(value.msg, 'error')
+        
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+  })
 }
 // pdf 可见
 const pdfVisible = ref<boolean>(false)

@@ -366,10 +366,10 @@
         </el-form-item>
         <el-form-item>
           <el-text>
-            云舟销售单价 = PO未税单价￥ / 当前汇率 ×
+            云舟销售单价 = ( PO未税单价￥  ×
             <el-input v-model="priceCoefficientSettingForm.salesCoefficient1" style="width: 6em;" placeholder="价格系数" clearable></el-input>
             + 预估运费 ×
-            <el-input v-model="priceCoefficientSettingForm.salesCoefficient2" style="width: 6em;" placeholder="价格系数" clearable></el-input>
+            <el-input v-model="priceCoefficientSettingForm.salesCoefficient2" style="width: 6em;" placeholder="价格系数" clearable></el-input> ) / 当前汇率
           </el-text>
         </el-form-item>
         <el-form-item>

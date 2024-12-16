@@ -16,7 +16,7 @@ export function downloadFile(url:string, params:any) {
     url: `${BASE_API}${url}`,
     params: params,
     responseType: 'blob', // 确保响应类型为二进制流
-  });;
+  })
 }
 
 export function downloadFileP(url:string, params:any) {
@@ -26,5 +26,15 @@ export function downloadFileP(url:string, params:any) {
     url: `${BASE_API}${url}`,
     params: params,
     responseType: 'blob', // 确保响应类型为二进制流
-  });;
+  })
+}
+
+export function downloadFilePD(url:string, data:any) {
+
+  return request({
+    method: 'POST',
+    url: `${BASE_API}${url}`,
+    data: data,
+    responseType: 'blob', // 确保响应类型为二进制流
+  })
 }
