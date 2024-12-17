@@ -1,6 +1,6 @@
 <template>
   <vab-dialog
-    title="明细 | 合同编号"
+    :title="`明细 | ${props.contractNumber}`"
     v-model="dflag"
     width="97%"
     top="10vh"
@@ -52,13 +52,13 @@
       <el-table-column label="利润￥" prop="profit" min-width="100"></el-table-column>
       <el-table-column label="利润率" prop="profitMargin" min-width="100"></el-table-column>
       <el-table-column label="退税额￥" prop="taxRebate" min-width="100"></el-table-column>
-      <el-table-column label="供应商" prop="suppliser" min-width="100"></el-table-column>
-      <el-table-column label="供应商税号展示" prop="suppliserTaxNumber" min-width="110">
+      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')"></el-table-column>
+      <el-table-column label="供应商税号展示" prop="suppliserTaxNumber" :width="flexColumnWidth(list, '税号展示', 'suppliserTaxNumber')">
         <template #header>
           供应商<br />税号展示
         </template>
       </el-table-column>
-      <el-table-column label="PO" prop="po" min-width="90"></el-table-column>
+      <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
       <el-table-column label="发票匹配日期" prop="invoiceMatchDate" min-width="100">
         <template #header>
           发票匹<br />配日期
@@ -68,10 +68,14 @@
       <el-table-column label="发票号码" prop="invoiceNumber" min-width="100"></el-table-column>
       <el-table-column label="发票数量" prop="invoiceCount" min-width="100"></el-table-column>
       <el-table-column label="发票文件" prop="invoiceFilePath" min-width="100"></el-table-column>
-      <el-table-column label="SKU" prop="sku" min-width="90"></el-table-column>
+      <el-table-column label="SKU" prop="sku" min-width="90" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
       <el-table-column label="PO零件数" prop="componentCount" min-width="110"></el-table-column>
       <el-table-column label="shipmentID" prop="shipmentId" min-width="130"></el-table-column>
-      <el-table-column label="付款记录" prop="payRecordList" min-width="100"></el-table-column>
+      <el-table-column label="付款记录" prop="payRecordList" min-width="220">
+        <template #default="{ row }">
+          <span v-html="row.payRecordList"></span>
+        </template>
+      </el-table-column>
     </el-table>
     <vab-pagination 
       :current-page="queryForm.pageNo"
@@ -89,16 +93,19 @@
 import { Search } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
 import { getTaxRefundBatchDetail } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { IGetTaxRefundBatchDetailList, IGetTaxRefundBatchDetailQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import { IGetTaxRefundBatchDetailList, IGetTaxRefundBatchDetailQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const props = defineProps<{
   detailVisible: boolean
   id: number | undefined
+  contractNumber: string | undefined
 }>()
 const dflag = ref<boolean>(false)
 watchEffect(() => {
   dflag.value = props.detailVisible
-  if (dflag.value) {
+  if (dflag.value) {    
+    queryForm.id = props.id!
     fetchData()
   }
 })
@@ -128,7 +135,8 @@ const headerCellStyle = (data: { row: any, column: any, rowIndex: number, column
   }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0 || data.columnIndex === 13) {
+  if (data.columnIndex === 0 || data.columnIndex === 13 || data.columnIndex === 14 || data.columnIndex === 15
+    || data.columnIndex === 21 || data.columnIndex === 23 || data.columnIndex === 24) {
     return {
       textAlign: 'left'
     }
@@ -156,6 +164,45 @@ const fetchData = async () => {
   const { data } = await getTaxRefundBatchDetail(queryForm)
   total.value = data?.total!
   list.value = data?.list!
+  list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
+    if (item.payRecordList instanceof Array) {
+      item.payRecordList = item.payRecordList.map((record: PayRecordList) => {
+        const percentage = parseInt(record.percentage!.replace('%', '')) // 去掉%并转换为整数
+        const createTime = record.createTime!.split(' ')[0]
+        if (percentage < 0) {
+          return `
+            <span class="create-time">${createTime}</span>: 
+            <span class="percentage-red">${percentage}%</span>
+            <span class="pay-price">(${record.payPrice})</span>`
+        } else {
+          return `
+            <span class="create-time">${createTime}</span>: 
+            <span class="percentage">${percentage}%</span>
+            <span class="pay-price">(${record.payPrice})</span>`
+        }
+      })
+      .join('<br>')
+    }
+   
+  })
   listLoading.value = false
 }
 </script>
+
+<style lang="scss" scoped>
+:deep() {
+  .create-time {
+    color: #4E88F3;
+  }
+  .percentage {
+    color: #24ADA1;
+  }
+  .pay-price {
+    color: #8D5FCC;
+  }
+  .percentage-red {
+    color: var(--el-color-danger);
+  }
+}
+
+</style>

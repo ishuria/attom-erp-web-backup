@@ -8,7 +8,7 @@
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
             <el-button type="primary" @click="ticketReminderVisible = true">云舟催票文件</el-button>
             <el-button type="primary">云舟开票导出</el-button>
-            <el-button type="primary">埃托姆开票导出</el-button>
+            <el-button type="primary" :loading="exportLoading" @click="handleExportATM">埃托姆开票导出</el-button>
             <el-button type="primary" @click="invoiceMatchExportVisible = true">发票匹配导出</el-button>
             <span style="width: 22em; margin: 0 50px calc(var(--el-margin) / 2) 0;">
               <el-date-picker 
@@ -306,7 +306,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary">导出</el-button>
+        <el-button type="primary" @click="handleExportInvoiceMatch">导出</el-button>
       </template>
     </vab-dialog>
     <!-- 预览pdf -->
@@ -338,8 +338,7 @@ import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { downloadFileP, downloadFilePD } from '/@/api/devlocal/download'
-import { AxiosResponse } from 'axios'
+import { downloadFilePD } from '/@/api/devlocal/download'
 
 const dialogWidth = ref<number>(0)
 const source = ref<string>('')
@@ -358,11 +357,11 @@ const onPageLoaded = (page: any) => {
 }
 // 发票匹配导出
 const invoiceMatchExportVisible = ref<boolean>(false)
-const invoiceMatchExportForm = reactive<any>({
-  time: ''
+const invoiceMatchExportForm = reactive<{time: [string, string]}>({
+  time: ['','']
 })
 const invoiceMatchExportFormRef = ref<FormInstance>()
-const invoiceMatchExportFormRules = reactive<any>({
+const invoiceMatchExportFormRules = reactive<FormRules<{time: [string, string]}>>({
   time: [{ required: true, message: '请选择发票匹配日期', trigger: 'change' }]
 })
 const closeInvoiceMatchExport = () => {
@@ -371,6 +370,7 @@ const closeInvoiceMatchExport = () => {
 }
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
+const exportLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const list = ref<IGetTaxRefundBatchDetailList[]>([])
 const date = ref<[string, string]>(getDefaultStringTime())
@@ -401,6 +401,34 @@ const closeInvoiceMatching = (value: boolean) => {
 }
 const closeBatchProfitMargin = (value: boolean) => {
   batchProfitMarginVisible.value = value
+}
+// 埃托姆发票导出
+const handleExportATM = async () => {
+  exportLoading.value = true
+  await downloadFilePD('/taxRefund/invoice/export', {
+    fromDate: date.value[0],
+    toDate: date.value[1]
+  }).then((res) => {
+    exportLoading.value = false
+  })
+}
+// 发票匹配导出
+const handleExportInvoiceMatch = async () => {
+  invoiceMatchExportFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await downloadFilePD('/taxRefund/match/invoice/export', {
+        fromDate: invoiceMatchExportForm.time[0],
+        toDate: invoiceMatchExportForm.time[1]
+      })
+      console.log(data)
+      
+      // if (data.code === 5001) {
+      //   $baseMessage(data.msg, 'error')
+      // } else {
+      //   invoiceMatchExportVisible.value = false
+      // }
+    }
+  })
 }
 // 删除匹配
 const handleDeleteMatch = async (row: IGetTaxRefundBatchDetailList) => {

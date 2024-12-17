@@ -136,6 +136,7 @@
     <VabDetailDialog
       :detail-visible="detailVisible"
       :id="id"
+      :contractNumber="contractNumber"
       @update-detail-visible="closeDetail"
     />
     <!-- 发票归集 -->
@@ -226,7 +227,7 @@ const invoiceCollectionFormRules = reactive<any>({
 const detailVisible = ref<boolean>(false)
 // 传递给明细的id
 const id = ref<number>()
-
+const contractNumber = ref<string>()
 const setSelectRows = (value: IGetTaxRefundBatchList[]) => {
   selectRows.value = value
 }
@@ -324,6 +325,7 @@ const handleUpdateStatus = async (row: IGetTaxRefundBatchList) => {
 const showDetail = (row: IGetTaxRefundBatchList) => {
   detailVisible.value = true
   id.value = row.id
+  contractNumber.value = row.contractNumber
 }
 const closeDetail = (value: boolean) => {
   detailVisible.value = value

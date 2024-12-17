@@ -45,6 +45,18 @@
           <span>{{ row.purchaseName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="发票图片" prop="invoicePath" width="75">
+        <template #header>
+          发票<br />图片
+        </template>
+        <template #default="{ row }">
+          <el-image :src="row.invoicePath" style="width: 75px; height: 75px; display: block" @click="showImagePreview(row.url)">
+            <template #error>
+              <el-icon></el-icon>
+            </template>
+          </el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" min-width="120">
         <template #default="{ row }">
           <div class="none">
@@ -117,19 +129,6 @@
           <span>{{ row.preTaxPrice }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="发票图片" prop="invoicePath" width="75">
-        <template #header>
-          发票<br />图片
-        </template>
-        <template #default="{ row }">
-          <el-image :src="row.invoicePath" style="width: 75px; height: 75px; display: block" @click="showImagePreview(row.url)">
-            <template #error>
-              <el-icon></el-icon>
-            </template>
-          </el-image>
-        </template>
-      </el-table-column>
       <el-table-column label="匹配合同号" prop="matchContractNumber" min-width="110">
         <template #default="{ row }">
           <div class="none">
@@ -190,11 +189,10 @@
     v-model="uploadInvoiceVisible"
   >
     <el-upload 
-      :http-request="handleUpload" 
       drag multiple 
       :show-file-list="true" 
-      :auto-upload="true"
-      :before-remove="handleBeforeRemove"
+      :auto-upload="false"
+      v-model:file-list="fileList"
     >
         <el-icon class="el-icon--upload">
           <upload-filled />
@@ -219,7 +217,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;">
-          供应商：，开票品名：，单位：，数量：，发票含税金额
+          供应商：{{ _row.suppliser}}，开票品名：{{ _row.invoiceName }}，单位：{{ _row.invoiceUnit }}，数量：{{ _row.invoiceCount }}，发票含税金额: {{ _row.includingTaxPrice }}
         </el-text>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -252,7 +250,7 @@
       <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100"></el-table-column>
       <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
       <el-table-column label="含税成本价￥" prop="taxInclusiveCost" min-width="130"></el-table-column>
-      <el-table-column label="SKU" prop="sku" min-width="100"></el-table-column>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')"></el-table-column>
       <el-table-column label="零件名" prop="" min-width="100"></el-table-column>
       <el-table-column label="shipment ID" prop="shipmentId" min-width="120"></el-table-column>
       <el-table-column label="匹配" prop="status" min-width="80">
@@ -263,7 +261,7 @@
     </el-table>
     <vab-pagination 
       :current-page="matchQueryForm.pageNo"
-      :page-size="matchQueryForm.pageNo"
+      :page-size="matchQueryForm.pageSize"
       :total="matchTotal"
       @current-change="handleMatchCurrentChange"
       @size-change="handleMatchSizeChange"
@@ -283,7 +281,6 @@ defineOptions({
   name: 'VabInvoiceMatching'
 })
 import { Search, UploadFilled } from '@element-plus/icons-vue'
-import { UploadFile, UploadFiles, UploadRequestOptions } from 'element-plus'
 import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
 import { cleanTaxRefundInvoice, deleteTaxRefundInvoice, finishTaxRefundInvoice, getTaxRefundInvoiceList, getTaxRefundInvoiceMatch, submitConfirmTaxRefundInvoiceMatch, submitTaxRefundInvoiceMatch, updateTaxRefundInvoice, updateTaxRefundInvoiceDetail, uploadTaxRefund } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
@@ -320,48 +317,34 @@ const showImagePreview = (url: string) => {
 }
 // 上传发票可见
 const uploadInvoiceVisible = ref<boolean>(false)
-let uploadData: { name: string, uid: number }[] = []
-// 上传发票
-const handleUpload = async (options: UploadRequestOptions) => {
 
-  const { file, onSuccess, onError } = options;
-  const formData = new FormData();
-  formData.append("files", file);
+const fileList = ref<any[]>([])
 
+// 展示上传发票
+const showUploadInvoice = () => {
+  uploadInvoiceVisible.value = true
+}
+// 完成发票导入
+const handleFinishUpload = async () => {
+  const formData = new FormData()
+  fileList.value.forEach((item: any) => {
+    formData.append("files", item.raw)
+  })
   try {
     const { data } = await uploadTaxRefund(formData)
 
     if (data) {
-      uploadData.push({
-        name: data[0],
-        uid: file.uid
-      })
       $baseMessage('上传成功', 'success')
+      const { data: resData, msg } = await finishTaxRefundInvoice(data)
+      if (msg) {
+        $baseMessage(resData, 'error')
+        uploadInvoiceVisible.value = false
+      }
     }
   } catch (err) {
     $baseMessage('上传失败', 'error')
   }
-}
-const handleBeforeRemove = async (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
-  const index = uploadData.findIndex((_: { name: string, uid: number }) => _.uid === uploadFile.uid)
-  if (index !== -1) {
-    uploadData.splice(index, 1)
-  }
-  return true
-}
-// 展示上传发票
-const showUploadInvoice = () => {
-  uploadInvoiceVisible.value = true
-  uploadData = []
-}
-// 完成发票导入
-const handleFinishUpload = async () => {
-  const nameData = uploadData.map((item: { name: string, uid: number }) => item.name)
-  const { data, msg } = await finishTaxRefundInvoice(nameData)
-  if (msg) {
-    $baseMessage(data, 'error')
-    uploadInvoiceVisible.value = false
-  }
+  
 }
 // 发票匹配清空
 const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
@@ -438,12 +421,15 @@ const handleSubmitConfirm = async () => {
     closeInvoiceMatching()
   }
 }
+let _row: IGetTaxRefundInvoiceList = {}
+
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   matchQueryForm.detailId = row.detailId!
   matchListLoading.value = true
   const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
   if (data) {
+    _row = row
     matchTotal.value = data?.total!
     matchList.value = data?.list!
     matchVisible.value = true
@@ -580,7 +566,7 @@ const objectSpanMethod = ({
     columnIndex,
 }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 5 && columnIndex !== 6 && columnIndex !== 7 && columnIndex !== 8 && columnIndex !== 9 && columnIndex !== 10 && columnIndex !== 16) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
     // 获取当前row的零件id
     const id = row.id;
     // 默认不跨行
