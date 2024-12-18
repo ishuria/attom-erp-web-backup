@@ -99,3 +99,14 @@ export const dayOption = [
     value: 3
   },
 ]
+
+export const adStatusOption = [
+  {
+    label: '开',
+    value: 0
+  },
+  {
+    label: '关',
+    value: 1
+  }
+]

@@ -544,7 +544,7 @@
         :model="filterForm"
         style="width: 100%; margin-right: 10px"
       >
-        <el-form-item label="广告点击次数">
+        <el-form-item label="上新天数">
           <div class="flex">
             <el-input-number
               v-model="filterForm.number1"
@@ -561,7 +561,7 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="上新天数">
+        <el-form-item label="ES总新">
           <div class="flex">
             <el-input-number
               v-model="filterForm.number3"
@@ -578,7 +578,7 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="图片数量筛选">
+        <el-form-item label="上海签收">
           <div class="flex">
             <el-input-number
               v-model="filterForm.number5"
@@ -594,6 +594,140 @@
               style="flex: 1"
             />
           </div>
+        </el-form-item>
+        <el-form-item label="推荐#">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number7"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number8"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="最晚补货">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number9"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number10"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="30天净利润">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number11"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number12"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="30天净利率%">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number13"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number14"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="月销售额">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number15"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number16"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="30天有货销售额">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number17"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number18"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="FBA差异">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number19"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <!-- <el-input type="number" placeholder="最小值" /> -->
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number20"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+            <!-- <el-input type="number" v-model="filterForm.number6" placeholder="最大值" /> -->
+          </div>
+        </el-form-item>
+        <el-form-item label="运营筛选">
+          <el-select></el-select>
+        </el-form-item>
+        <el-form-item label="广告">
+          <el-select>
+            <el-option 
+              v-for="item in adStatusOption"
+              :label="item.label"
+              :value="item.value"
+              :key="item.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -649,7 +783,7 @@ import { Hide, Search, Star, View } from '@element-plus/icons-vue'
 import { FormInstance, TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { levelOption, opeClassOption } from '../constantOption'
+import { adStatusOption, levelOption, opeClassOption } from '../constantOption'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const activeName = ref<number>(0)

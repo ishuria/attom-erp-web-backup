@@ -2,6 +2,7 @@
   <div class="default-table-detail-container">
     <el-page-header :content="'商品分析和操作日志'" @back="goBack" ></el-page-header>
     <el-row :gutter="20">
+      <!-- 左侧 -->
       <el-col :span="18">
         <div style="position: relative;">
           <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
@@ -21,35 +22,13 @@
                         </span>
                         <template #dropdown>
                           <el-dropdown-menu >
-                            <el-dropdown-item @click="handleSwitchItem('总销售额')">总销售额</el-dropdown-item>
-                            <el-dropdown-item @click="handleSwitchItem('广告销售额')">广告销售额</el-dropdown-item>
-                            <el-dropdown-item>广告花费</el-dropdown-item>
-                            <el-dropdown-item>净利润</el-dropdown-item>
-                            <el-dropdown-item>预计下月仓储费</el-dropdown-item>
-                            <el-dropdown-item>点击成本</el-dropdown-item>
-                            <el-dropdown-item>售价</el-dropdown-item>
-                            <el-dropdown-item>CPA</el-dropdown-item>
-                            <el-dropdown-item>广告转化率</el-dropdown-item>
-                            <el-dropdown-item>自然转化率</el-dropdown-item>
-                            <el-dropdown-item>综合转化率</el-dropdown-item>
-                            <el-dropdown-item>退货率</el-dropdown-item>
-                            <el-dropdown-item>退款率</el-dropdown-item>
-                            <el-dropdown-item>净利润率</el-dropdown-item>
-                            <el-dropdown-item>毛利润率</el-dropdown-item>
-                            <el-dropdown-item>TACOS</el-dropdown-item>
-                            <el-dropdown-item>ACOS</el-dropdown-item>
-                            <el-dropdown-item>广告点击率</el-dropdown-item>
-                            <el-dropdown-item>总访客</el-dropdown-item>
-                            <el-dropdown-item>PC端访客</el-dropdown-item>
-                            <el-dropdown-item>移动端访客</el-dropdown-item>
-                            <el-dropdown-item>自然访客</el-dropdown-item>
-                            <el-dropdown-item>广告访客</el-dropdown-item>
-                            <el-dropdown-item>Rating</el-dropdown-item>
-                            <el-dropdown-item>库存</el-dropdown-item>
-                            <el-dropdown-item>小类排名</el-dropdown-item>
-                            <el-dropdown-item>大类排名</el-dropdown-item>
-                            <el-dropdown-item @click="handleSwitchItem('广告销量')">广告销量</el-dropdown-item>
-                            <el-dropdown-item @click="handleSwitchItem('自然销量')">自然销量</el-dropdown-item>
+                            <el-dropdown-item
+                              v-for="(item, index) in dropdownItems"
+                              :key="index"
+                              @click="handleSwitchItem(item.label)"
+                            >
+                              {{ item.label }}
+                            </el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
@@ -68,21 +47,19 @@
                       <div class="parting-line" :class="{ 'parting-line-orange': card2Active }" ></div>
                       <el-dropdown>
                         <span>
-                          广告销售额
+                          {{ card2Text }}
                           <el-icon class="el-icon--right">
                             <arrow-down />
                           </el-icon>
                         </span>
                         <template #dropdown>
                           <el-dropdown-menu>
-                            <el-dropdown-item>Rating</el-dropdown-item>
-                            <el-dropdown-item>自然销量</el-dropdown-item>
-                            <el-dropdown-item>净利润</el-dropdown-item>
-                            <el-dropdown-item>总转化率</el-dropdown-item>
-                            <el-dropdown-item>访客数</el-dropdown-item>
-                            <el-dropdown-item>点击率</el-dropdown-item>
-                            <el-dropdown-item>库存</el-dropdown-item>
-                            <el-dropdown-item>售价</el-dropdown-item>
+                            <el-dropdown-item
+                              v-for="(item, index) in dropdownItems"
+                              :key="index"
+                            >
+                              {{ item.label }}
+                            </el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
@@ -101,21 +78,19 @@
                       <div class="parting-line" :class="{ 'parting-line-green': card3Active }" ></div>
                       <el-dropdown>
                         <span>
-                          花费
+                          {{ card3Text }}
                           <el-icon class="el-icon--right">
                             <arrow-down />
                           </el-icon>
                         </span>
                         <template #dropdown>
                           <el-dropdown-menu>
-                            <el-dropdown-item>Rating</el-dropdown-item>
-                            <el-dropdown-item>自然销量</el-dropdown-item>
-                            <el-dropdown-item>净利润</el-dropdown-item>
-                            <el-dropdown-item>总转化率</el-dropdown-item>
-                            <el-dropdown-item>访客数</el-dropdown-item>
-                            <el-dropdown-item>点击率</el-dropdown-item>
-                            <el-dropdown-item>库存</el-dropdown-item>
-                            <el-dropdown-item>售价</el-dropdown-item>
+                            <el-dropdown-item
+                              v-for="(item, index) in dropdownItems"
+                              :key="index"
+                            >
+                              {{ item.label }}
+                            </el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
@@ -134,21 +109,19 @@
                       <div class="parting-line" :class="{ 'parting-line-red': card4Active }" ></div>
                       <el-dropdown>
                         <span>
-                          ACOS
+                          {{ card4Text }}
                           <el-icon class="el-icon--right">
                             <arrow-down />
                           </el-icon>
                         </span>
                         <template #dropdown>
                           <el-dropdown-menu>
-                            <el-dropdown-item>Rating</el-dropdown-item>
-                            <el-dropdown-item>自然销量</el-dropdown-item>
-                            <el-dropdown-item>净利润</el-dropdown-item>
-                            <el-dropdown-item>总转化率</el-dropdown-item>
-                            <el-dropdown-item>访客数</el-dropdown-item>
-                            <el-dropdown-item>点击率</el-dropdown-item>
-                            <el-dropdown-item>库存</el-dropdown-item>
-                            <el-dropdown-item>售价</el-dropdown-item>
+                            <el-dropdown-item
+                              v-for="(item, index) in dropdownItems"
+                              :key="index"
+                            >
+                              {{ item.label }}
+                            </el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
@@ -167,21 +140,19 @@
                       <div class="parting-line" :class="{ 'parting-line-purple': card5Active }" ></div>
                       <el-dropdown>
                         <span>
-                          点击成本
+                          {{ card5Text }}
                           <el-icon class="el-icon--right">
                             <arrow-down />
                           </el-icon>
                         </span>
                         <template #dropdown>
                           <el-dropdown-menu>
-                            <el-dropdown-item>Rating</el-dropdown-item>
-                            <el-dropdown-item>自然销量</el-dropdown-item>
-                            <el-dropdown-item>净利润</el-dropdown-item>
-                            <el-dropdown-item>总转化率</el-dropdown-item>
-                            <el-dropdown-item>访客数</el-dropdown-item>
-                            <el-dropdown-item>点击率</el-dropdown-item>
-                            <el-dropdown-item>库存</el-dropdown-item>
-                            <el-dropdown-item>售价</el-dropdown-item>
+                            <el-dropdown-item
+                              v-for="(item, index) in dropdownItems"
+                              :key="index"
+                            >
+                              {{ item.label }}
+                            </el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
@@ -200,21 +171,19 @@
                       <div class="parting-line" :class="{ 'parting-line-yellow': card6Active }" ></div>
                       <el-dropdown>
                         <span>
-                          TACOS
+                          {{ card6Text }}
                           <el-icon class="el-icon--right">
                             <arrow-down />
                           </el-icon>
                         </span>
                         <template #dropdown>
                           <el-dropdown-menu>
-                            <el-dropdown-item>Rating</el-dropdown-item>
-                            <el-dropdown-item>自然销量</el-dropdown-item>
-                            <el-dropdown-item>净利润</el-dropdown-item>
-                            <el-dropdown-item>总转化率</el-dropdown-item>
-                            <el-dropdown-item>访客数</el-dropdown-item>
-                            <el-dropdown-item>点击率</el-dropdown-item>
-                            <el-dropdown-item>库存</el-dropdown-item>
-                            <el-dropdown-item>售价</el-dropdown-item>
+                            <el-dropdown-item
+                              v-for="(item, index) in dropdownItems"
+                              :key="index"
+                            >
+                              {{ item.label }}
+                            </el-dropdown-item>
                           </el-dropdown-menu>
                         </template>
                       </el-dropdown>
@@ -309,20 +278,18 @@
               />
             </el-tab-pane>
             <el-tab-pane label="SP广告饼图" :name="1">
-
+              <vab-ad-pie-tab />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
-
+              <vab-cost-analysis />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
-
+              <vab-comment-reviews />
             </el-tab-pane>
             <el-tab-pane label="退货分析" :name="4">
-
+              <vab-return-analysis />
             </el-tab-pane>
-            <el-tab-pane label="竞品" :name="5">
-
-            </el-tab-pane>
+            <el-tab-pane label="竞品" :name="5"></el-tab-pane>
           </el-tabs>
         
           <!-- tab右边的选项 -->
@@ -470,6 +437,7 @@
           </div>
         </div>
       </el-col>
+      <!-- 右侧 -->
       <el-col :span="6">
         <div>
           <vab-card>
@@ -614,6 +582,38 @@ const card4Text = ref<string>('ACOS')
 const card5Text = ref<string>('点击成本')
 const card6Text = ref<string>('TACOS')
 
+const dropdownItems = ref([
+  { label: '总销售额' },
+  { label: '广告销售额' },
+  { label: '广告花费' },
+  { label: '净利润' },
+  { label: '预计下月仓储费' },
+  { label: '点击成本' },
+  { label: '售价' },
+  { label: 'CPA' },
+  { label: '广告转化率' },
+  { label: '自然转化率', },
+  { label: '综合转化率', },
+  { label: '退货率', },
+  { label: '退款率', },
+  { label: '净利润率', },
+  { label: '毛利润率', },
+  { label: 'TACOS', },
+  { label: 'ACOS', },
+  { label: '广告点击率', },
+  { label: '总访客', },
+  { label: 'PC端访客', },
+  { label: '移动端访客', },
+  { label: '自然访客', },
+  { label: '广告访客', },
+  { label: 'Rating', },
+  { label: '库存', },
+  { label: '小类排名', },
+  { label: '大类排名', },
+  { label: '广告销量' },
+  { label: '自然销量' }
+])
+
 type IData = {
   date: string
   adSales: number
@@ -623,18 +623,30 @@ type IData = {
   adCostData: number
   netProfitData: number
   expectedStorageCostData: number
+  clickCost: number
+  priceData: number
+  cpa: number
+  adConversionRate: number
 }
-type IDataProp = 'adSales' | 'organicSales' | 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData'
+type IDataProp = 'adSales' | 'organicSales' | 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData' | 'clickCost' | 'priceData' | 'cpa'
+// name到prop的映射
+type INameProp = 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData'
+  | 'clickCost' | 'priceData' | 'cpa'
+  | 'adConversionRate' | 'naturalConversionRate' | 'overallConversionRate'
+  | 'returnRate' | 'refundRate' | 'netProfitMargin' | 'grossProfitMargin' | 'tacos' | 'acos'
+
 type IPrice1Prop = 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData'
+type IPrice2Prop = 'clickCost' | 'priceData' | 'cpa'
+
 const data: IData[] = [
-  { date: "2023-10-14", adSales: 10, organicSales: 5, totalSales: 5, adSalesData: 15 , adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 },
-  { date: "2024-10-19", adSales: 20, organicSales: 15, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 },
-  { date: "2024-11-01", adSales: 20, organicSales: 10, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 },
-  { date: "2024-11-02", adSales: 10, organicSales: 8, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 },
-  { date: "2024-12-01", adSales: 10, organicSales: 7, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 },
-  { date: "2024-12-02", adSales: 15, organicSales: 12, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 },
-  { date: "2024-12-08", adSales: 20, organicSales: 18, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 },
-  { date: "2024-12-09", adSales: 25, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25 }
+  { date: "2023-10-14", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15 , adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
+  { date: "2024-10-19", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
+  { date: "2024-11-01", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
+  { date: "2024-11-02", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
+  { date: "2024-12-01", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
+  { date: "2024-12-02", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
+  { date: "2024-12-08", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
+  { date: "2024-12-09", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 }
 ]
 
 const dates = [
@@ -652,8 +664,8 @@ const salesData = dates.map(() => Math.round(Math.random() * 1000))
 const costData = dates.map(() => Math.round(Math.random() * 50))
 const data3 = dates.map(() => Math.round(Math.random() * 50))
 const data4 = dates.map(() => Math.round(Math.random() * 50))
-const currentView = ref<string>('day')
-let xAxisData = ref<any>([])
+
+
 
 let totalSalesData: any = []
 let adSalesData :any = []
@@ -665,12 +677,11 @@ const getWeeklyData = (data: IData[], type: IDataProp): any[] => {
   data.forEach((item) => {
     const week = getWeekOfYear(item.date) // 获取 "YYYY-Wxx"
     if (!weeklyData[week]) {
-      weeklyData[week] = 0 // 初始化累加器
+      weeklyData[week] = 0 
     }
-    weeklyData[week] += item[type] // 累加指定类型数据
+    weeklyData[week] += item[type] 
   })
 
-  // 转换结果为数组格式
   return Object.keys(weeklyData).map((week) => ({
     date: week,
     [type]: weeklyData[week],
@@ -687,7 +698,6 @@ const getMonthlyData = (data: IData[], type: IDataProp): any[] => {
     monthlyData[month] += item[type] // 累加值
   })
 
-  // 转换为数组格式
   return Object.keys(monthlyData).map((month) => ({
     date: month,
     [type]: monthlyData[month],
@@ -696,6 +706,7 @@ const getMonthlyData = (data: IData[], type: IDataProp): any[] => {
 const handleSwitchItem = (item: string) => {
   card1Active.value = false
   card1Text.value = item
+
 }
 /**
  * @description 计算当前日期是该年的第几周,生成字符串
@@ -724,48 +735,101 @@ function getWeekOfYear(date: Date | string | number): string {
 // 金额1
 const price1Data = ['总销售额', '广告销售额', '广告花费', '净利润', '预计下月仓储费']
 const price1Type = ref<IPrice1Prop>('totalSales')
-const price1TypeMap: Record<string, IPrice1Prop> = {
+
+const groups = {
+  price1: ['总销售额', '广告销售额', '广告花费', '净利润', '预计下月仓储费'],
+  price2: ['点击成本', '售价', 'CPA'],
+  percent1: ['广告转化率', '自然转化率', '综合转化率'],
+  percent2: ['退货率', '退款率', '净利润率', '毛利润率', 'TACOS', 'ACOS'],
+  percent3: ['广告点击率'],
+  int1: ['总访客', 'PC端访客', '移动端访客', '自然访客', '广告访客'],
+  int2: ['Rating'],
+  int3: ['库存'],
+  int4: ['小类排名'],
+  int5: ['大类排名']
+}
+/**
+ * @description 获取字段所属组
+ * @param item 所有可以选择的字段
+ */
+function getGroup(item: string): string | null {
+  for (const [group, fields] of Object.entries(groups)) {
+    if (fields.includes(item)) {
+      return group
+    }
+  }
+  return null
+}
+
+
+// name -> prop
+const nameMapProp: Record<string, INameProp> = {
   '总销售额': 'totalSales',
   '广告销售额': 'adSalesData',
   '广告花费': 'adCostData',
   '净利润': 'netProfitData',
-  '预计下月仓储费': 'expectedStorageCostData'
+  '预计下月仓储费': 'expectedStorageCostData',
+  '点击成本': 'clickCost',
+  '售价': 'priceData',
+  'CPA': 'cpa',
+  '广告转化率': 'adConversionRate',
+  '自然转化率': 'naturalConversionRate',
+  '综合转化率': 'overallConversionRate',
+  '退货率': 'returnRate',
+  '退款率': 'refundRate',
+  '净利润率': 'netProfitMargin',
+  '毛利润率': 'grossProfitMargin',
+  'TACOS': 'tacos',
+  'ACOS': 'acos',
 }
 
-// 用户选择的项
-let selectedItems = ['总销售额']
+// 初始化选中状态
+let selectedItems: string[] = ['总销售额']
 
-const type = ref<"adSales" | "organicSales">('adSales')
 const option = ref<any>({})
+// 柱状数据是否显示，初始是显示的
+const barVisible = ref<boolean>(true)
+// 生成type类型的柱状数据
+const type = ref<"adSales" | "organicSales">('adSales')
+const xAxisData = ref<any>([]) // 原数据经过日，周，月处理过的柱状数据
+// 金额1的显示
+const price1Visible = ref<boolean>(true)
+const yAxisPrice1Data = ref<any>([])
 // 切换 日，周，月
 const handleSwitchTime = () => {
-  // 根据 radio 的值切换视图
-  currentView.value = radio.value;
-
-  // 根据选中的时间范围（日、周、月）设置 xAxisData 和 yAxisPriceData
-  if (currentView.value === 'day') {
+  // 需要处理的y轴数据
+  if (radio.value === 'day') {
     xAxisData.value = data
-    
     totalSalesData = data
     adSalesData = data
-  } else if (currentView.value === 'week') {
-    xAxisData.value = getWeeklyData(data, type.value);
+    yAxisPrice1Data.value = data
+  } else if (radio.value === 'week') {
+    xAxisData.value = getWeeklyData(data, type.value)
     totalSalesData = getWeeklyData(data, 'totalSales')
     adSalesData = getWeeklyData(data, 'adSalesData')
-  } else if (currentView.value === 'month') {
-    xAxisData.value = getMonthlyData(data, type.value);
- 
+    yAxisPrice1Data.value = getWeeklyData(data, price1Type.value)
+  } else if (radio.value === 'month') {
+    xAxisData.value = getMonthlyData(data, type.value)
     totalSalesData = getMonthlyData(data, 'totalSales')
     adSalesData = getMonthlyData(data, 'adSalesData')
+    yAxisPrice1Data.value = getMonthlyData(data, price1Type.value)
   }
-
-  // 更新x轴数据和y轴第一个数据
+ 
+  // 切换的时候x轴数据是必须要变的
   option.value.xAxis.data = xAxisData.value.map((item: any) => item.date)
-  option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
-  option.value.series[2].data = totalSalesData.map((item: any) => item.totalSales);
-  option.value.series[4].data = adSalesData.map((item: any) => item.adSalesData);
-  // 调用 updateChart 来更新图表
-  updateChart();
+  // 如果柱状图显示的话，证明有数据，数据需要处理
+  if (barVisible.value) {
+    option.value.series[0].data = xAxisData.value.map((d: any) => d[type.value])
+  }
+  // if (price1Visible.value) {
+
+  //   option.value.series[2].data = yAxisPrice1Data.value.map((d: any) => d[price1Type.value])
+  // }
+  // option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
+  // option.value.series[2].data = totalSalesData.map((item: any) => item.totalSales);
+  // option.value.series[4].data = adSalesData.map((item: any) => item.adSalesData);
+
+  updateChart()
   
 }
 
@@ -808,82 +872,83 @@ const initChart = () => {
           },
         },
       },
-      {
-        type: 'value',
-        name: 'ACOS',
-        position: 'left',
-        offset: 50,
-        nameTextStyle: {
-          fontWeight: 'bold',
-          align: 'right',
-          color: '#8a7ae3',
-        },
-        axisLabel: {
-          fontWeight: 'bold',
-        },
-        min: 0,
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#8a7ae3',
-          },
-        },
-        splitLine: {
-          show: false,
-        },
-      },
-      {
-        type: 'value',
-        name: '总销售额',
-        position: 'right',
-        axisLabel: {
-          formatter: '${value}',
-          fontWeight: 'bold',
-        },
-        min: 0,
-        nameTextStyle: {
-          color: '#f7ab1b',
-          align: 'left',
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#f7ab1b',
-          },
-        },
-        splitLine: {
-          show: false,
-        },
-      },
-      {
-        type: 'value',
-        name: '花费',
-        offset: 70,
-        position: 'right',
-        axisLabel: {
-          formatter: '${value}',
-          fontWeight: 'bold',
-        },
-        min: 0,
-        nameTextStyle: {
-          color: '#40c9c6',
-          align: 'left',
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#40c9c6',
-          },
-        },
-        splitLine: {
-          show: false,
-        },
-      },
+      // {
+      //   type: 'value',
+      //   name: 'ACOS',
+      //   position: 'left',
+      //   offset: 50,
+      //   nameTextStyle: {
+      //     fontWeight: 'bold',
+      //     align: 'right',
+      //     color: '#8a7ae3',
+      //   },
+      //   axisLabel: {
+      //     fontWeight: 'bold',
+      //   },
+      //   min: 0,
+      //   axisLine: {
+      //     show: true,
+      //     lineStyle: {
+      //       color: '#8a7ae3',
+      //     },
+      //   },
+      //   splitLine: {
+      //     show: false,
+      //   },
+      // },
+      // {
+      //   type: 'value',
+      //   name: '总销售额',
+      //   position: 'right',
+      //   axisLabel: {
+      //     formatter: '${value}',
+      //     fontWeight: 'bold',
+      //   },
+      //   min: 0,
+      //   nameTextStyle: {
+      //     color: '#f7ab1b',
+      //     align: 'left',
+      //   },
+      //   axisLine: {
+      //     show: true,
+      //     lineStyle: {
+      //       color: '#f7ab1b',
+      //     },
+      //   },
+      //   splitLine: {
+      //     show: false,
+      //   },
+      // },
+      // {
+      //   type: 'value',
+      //   name: '花费',
+      //   offset: 70,
+      //   position: 'right',
+      //   axisLabel: {
+      //     formatter: '${value}',
+      //     fontWeight: 'bold',
+      //   },
+      //   min: 0,
+      //   nameTextStyle: {
+      //     color: '#40c9c6',
+      //     align: 'left',
+      //   },
+      //   axisLine: {
+      //     show: true,
+      //     lineStyle: {
+      //       color: '#40c9c6',
+      //     },
+      //   },
+      //   splitLine: {
+      //     show: false,
+      //   },
+      // },
     ],
     series: [
       {
         name: '广告销量',
         type: 'bar',
+        yAxisIndex: 0,
         data: data.map((item: any) => item[type.value]),
         barWidth: 20,
         itemStyle: {
@@ -891,123 +956,300 @@ const initChart = () => {
         },
         opacity: 0.9,
       },
-      {
-        name: 'ACOS',
-        type: 'line',
-        yAxisIndex: 1,
-        data: salesData,
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        lineStyle: {
-          color: '#8a7ae3',
-        },
-        itemStyle: {
-          color: '#8a7ae3',
-        },
-      },
-      {
-        name: '总销售额',
-        type: 'line',
-        yAxisIndex: 2,
-        data: data.map((item: any) => item[price1Type.value]),
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        lineStyle: {
-          color: '#f7ab1b',
-        },
-        itemStyle: {
-          color: '#f7ab1b',
-        },
-      },
-      {
-        name: '花费',
-        type: 'line',
-        yAxisIndex: 3,
-        data: costData,
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 6,
-        lineStyle: {
-          color: '#40c9c6',
-        },
-        itemStyle: {
-          color: '#40c9c6',
-        },
-        areaStyle: {
-          color: 'rgba(64, 201, 198, 0.2)',
-        },
-      },
+      // {
+      //   name: 'ACOS',
+      //   type: 'line',
+      //   yAxisIndex: 1,
+      //   data: salesData,
+      //   smooth: true,
+      //   symbol: 'circle',
+      //   symbolSize: 6,
+      //   lineStyle: {
+      //     color: '#8a7ae3',
+      //   },
+      //   itemStyle: {
+      //     color: '#8a7ae3',
+      //   },
+      // },
+      // {
+      //   name: '总销售额',
+      //   type: 'line',
+      //   yAxisIndex: 2,
+      //   data: data.map((item: any) => item[price1Type.value]),
+      //   smooth: true,
+      //   symbol: 'circle',
+      //   symbolSize: 6,
+      //   lineStyle: {
+      //     color: '#f7ab1b',
+      //   },
+      //   itemStyle: {
+      //     color: '#f7ab1b',
+      //   },
+      // },
+      // {
+      //   name: '花费',
+      //   type: 'line',
+      //   yAxisIndex: 3,
+      //   data: costData,
+      //   smooth: true,
+      //   symbol: 'circle',
+      //   symbolSize: 6,
+      //   lineStyle: {
+      //     color: '#40c9c6',
+      //   },
+      //   itemStyle: {
+      //     color: '#40c9c6',
+      //   },
+      //   areaStyle: {
+      //     color: 'rgba(64, 201, 198, 0.2)',
+      //   },
+      // },
     ],
   };
 
   // 设置图表实例的配置项
   chartInstance.setOption(option.value);
-};
+}
 
 // 更新图表
 const updateChart = () => {
   chartInstance.setOption(option.value, true) // 第二个参数 `true` 表示合并旧的配置
 }
 
-const handleCard1Click = () => {
-  card1Active.value = !card1Active.value
-  if (card1Active.value) {
-    if (card1Text.value === '自然销量') {
-      type.value = 'organicSales'
-      option.value.yAxis[0].name = '自然销量'
-      option.value.yAxis[0].nameTextStyle.color = '#67C23A'
-      option.value.yAxis[0].axisLine.lineStyle.color = '#67C23A'
-      option.value.series[0].name = '自然销量'
-      option.value.series[0].itemStyle.color = '#67C23A'
-    } else if (card1Text.value === '广告销量') {
-      type.value = 'adSales'
-      option.value.yAxis[0].name = '广告销量'
-      option.value.yAxis[0].nameTextStyle.color = '#409EFF'
-      option.value.yAxis[0].axisLine.lineStyle.color = '#409EFF'
-      option.value.series[0].name = '广告销量'
-      option.value.series[0].itemStyle.color = '#409EFF'
-    } else if (price1Data.includes(card1Text.value)) {
-      
-      if (!selectedItems.includes(card1Text.value)) {
-        selectedItems.push(card1Text.value)
+const yAxisMapping = new Map(); // 数据组到 yAxisIndex 的映射
+let currentYAxisCount = 1; // 当前已有的 Y 轴数量（柱状图默认占用 yAxis[0]）
 
-        // if (selectedItems.length === 1) {
-        //   option.value.yAxis[2].name = selectedItems[0]
-        // } else if (selectedItems.length > 1) {
-        //   // 设置 yAxis name 为带有换行的文本
-        //   option.value.yAxis[2].name = selectedItems.join('/\n')
-        // }
+function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataName: string) {
+  if (selected) {
+    let yAxisIndex: number
 
-        
-        price1Type.value = price1TypeMap[card1Text.value]
-
-        // 动态生成 series 配置
-        const newSeries = {
-          name: card1Text.value,
-          type: 'line',
-          yAxisIndex: 2,
-          data: adSalesData.map((item: any) => item[price1Type.value]),
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 6,
-          lineStyle: {
-            color: '#f7ab1b'
-          },
-          itemStyle: {
-            color: '#f7ab1b'
-          }
-        }
-        
-        // 将新的 series 添加到 option
-        option.value.series.push(newSeries)
-
+    // 1. 处理是否共用y轴还是添加新的y轴
+    if (!yAxisMapping.has(dataGroup)) {
+      // 如果该数据组没有对应的 Y 轴，动态添加
+      if (currentYAxisCount >= 4) {
+        $baseMessage('最多只能支持三个额外的 Y 轴', 'error')
+        return;
       }
+      yAxisIndex = currentYAxisCount;
+      yAxisMapping.set(dataGroup, yAxisIndex);
+      console.log(yAxisMapping);
+
+      // 新增 Y 轴配置
+      option.value.yAxis.push({
+        type: 'value',
+        name: dataName,
+        position: currentYAxisCount % 2 === 0 ? 'left' : 'right',
+        offset: (Math.floor(currentYAxisCount / 2)) * 60,
+        nameTextStyle: {
+          fontWeight: 'bold',
+          color: getYAxisColor(currentYAxisCount),
+        },
+        axisLabel: {
+          fontWeight: 'bold',
+        },
+        min: 0,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: getYAxisColor(currentYAxisCount),
+          },
+        },
+        splitLine: {
+          show: false,
+        },
+      })
+      console.log(option.value.yAxis);
+      
+      currentYAxisCount++;
+    } else {
+      // 如果该数据组已有 Y 轴，复用它
+      yAxisIndex = yAxisMapping.get(dataGroup)
     }
-    updateChart()
+
+    // 添加新 series
+    option.value.series.push({
+      name: dataName, // 每条数据独立的名字
+      type: 'line', // 都是折线图
+      yAxisIndex, // 指向组内共用的 Y 轴
+      data: getDataForName(dataGroup, dataName),
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 6,
+      lineStyle: {
+        color: getYAxisColor(currentYAxisCount - 1),
+      },
+      itemStyle: {
+        color: getYAxisColor(currentYAxisCount - 1),
+      },
+    })
+    console.log(option.value.series);
+  } else {
+    // 取消选中时，移除对应的 series
+    const seriesIndex = option.value.series.findIndex((s: any) => s.name === dataName)
+    if (seriesIndex !== -1) {
+      option.value.series.splice(seriesIndex, 1) // 移除对应的 series
+    }
+
+    // 如果该组的所有 series 都被移除，移除对应的 Y 轴
+    const isGroupEmpty = option.value.series.every(
+      (s: any) => s.yAxisIndex !== yAxisMapping.get(dataGroup)
+    )
+    if (isGroupEmpty) {
+      const yAxisIndex = yAxisMapping.get(dataGroup)
+      option.value.yAxis.splice(yAxisIndex, 1) // 移除对应的 Y 轴
+      yAxisMapping.delete(dataGroup)
+      currentYAxisCount--
+      updateYAxisIndex()
+    }
+  }
+  updateChart()
+}
+
+// 更新剩余的 Y 轴和系列的索引
+function updateYAxisIndex() {
+  Array.from(yAxisMapping.keys()).forEach((group, index) => {
+    yAxisMapping.set(group, index + 1) // 保留 0 为柱状图
+    option.value.series.forEach((s: any) => {
+      if (s.yAxisIndex === index + 1) {
+        s.yAxisIndex = index + 1
+      }
+    })
+  })
+}
+type IDataGroup =  'price1' | 'price2' | 'percent1'| 'percent2'
+//| 'percent3'| 'int1'| 'int2'| 'int3'| 'int4'| 'int5'
+/**
+ *  percent3: '广告点击率',
+    int1: '总访客',
+    int2: 'Rating',
+    int3: '库存',
+    int4: '小类排名',
+    int5: '大类排名',
+ * 
+ */
+
+// 获取数据组对应的颜色
+function getYAxisColor(currentYAxisCount: number) {
+  if (currentYAxisCount === 1) {
+    return '#f7ab1b'
+  } else if (currentYAxisCount === 2) {
+    return '#8a7ae3'
+  } else if (currentYAxisCount === 3) {
+    return '#40c9c6'
   }
 }
+
+// 获取数据组中某条数据的颜色
+// function getLineColor(dataName) {
+//   const nameColors = {
+//     总销售额: '#f7ab1b',
+//     ACOS: '#8a7ae3',
+//     转化率: '#40c9c6',
+//     // 添加更多颜色
+//   };
+//   return nameColors[dataName] || '#999999';
+// }
+
+// 根据数据组和数据名称获取数据
+function getDataForName(dataGroup: IDataGroup, dataName: string) {
+  const prop = nameMapProp[dataName]
+  return data.map((item: any) => item[prop]) || [];
+}
+
+
+const handleCard1Click = () => {
+  card1Active.value = !card1Active.value
+  // 如果是柱状单独处理
+  if (card1Text.value === '自然销量' || card1Text.value === '广告销量') {
+    if (card1Active.value) {
+      if (card1Text.value === '自然销量') {
+        barVisible.value = true
+        type.value = 'organicSales'
+        option.value.yAxis[0].name = '自然销量'
+        option.value.yAxis[0].nameTextStyle.color = '#67C23A'
+        option.value.yAxis[0].axisLine.lineStyle.color = '#67C23A'
+        option.value.series[0].name = '自然销量'
+        option.value.series[0].itemStyle.color = '#67C23A'
+        // 需要加，因为没切换的时候，不会执行切换函数，只是更新
+        option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
+      } else if (card1Text.value === '广告销量') {
+        barVisible.value = true
+        type.value = 'adSales'
+        option.value.yAxis[0].name = '广告销量'
+        option.value.yAxis[0].nameTextStyle.color = '#409EFF'
+        option.value.yAxis[0].axisLine.lineStyle.color = '#409EFF'
+        option.value.series[0].name = '广告销量'
+        option.value.series[0].itemStyle.color = '#409EFF'
+        option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
+      }
+      // else if (price1Data.includes(card1Text.value)) {
+      
+      //   // if (!selectedItems.includes(card1Text.value)) {
+      //   //   price1Visible.value = true
+      //   //   selectedItems.push(card1Text.value)
+
+      //   //   // if (selectedItems.length === 1) {
+      //   //   //   option.value.yAxis[2].name = selectedItems[0]
+      //   //   // } else if (selectedItems.length > 1) {
+      //   //   //   // 设置 yAxis name 为带有换行的文本
+      //   //   //   option.value.yAxis[2].name = selectedItems.join('/\n')
+      //   //   // }
+
+      //   //   price1Type.value = price1TypeMap[card1Text.value]
+      //   //   option.value.yAxis[2].name = card1Text.value
+      //   //   option.value.series[2].name = card1Text.value
+      //   //   option.value.series[2].data = yAxisPrice1Data.value.map((item: any) => item[price1Type.value])
+      //   //   // const newSeries = {
+      //   //   //   name: card1Text.value,
+      //   //   //   type: 'line',
+      //   //   //   yAxisIndex: 2,
+      //   //   //   data: adSalesData.map((item: any) => item[price1Type.value]),
+      //   //   //   smooth: true,
+      //   //   //   symbol: 'circle',
+      //   //   //   symbolSize: 6,
+      //   //   //   lineStyle: {
+      //   //   //     color: '#f7ab1b'
+      //   //   //   },
+      //   //   //   itemStyle: {
+      //   //   //     color: '#f7ab1b'
+      //   //   //   }
+      //   //   // }
+      //   //   // option.value.series.push(newSeries)
+
+      //   // }
+      // }
+      updateChart()
+    } else {
+      // 如果取消勾选
+      if (card1Text.value === '广告销量') {
+        barVisible.value = false
+        option.value.yAxis[0].name = ''
+        option.value.series[0].data = []
+        selectedItems = selectedItems.filter((item) => item !== '广告销量')
+      } else if (card1Text.value === '自然销量') {
+        barVisible.value = false
+        option.value.yAxis[0].name = ''
+        option.value.series[0].data = []
+        selectedItems = selectedItems.filter((item) => item !== '自然销量')
+      }
+      // else if (price1Data.includes(card1Text.value)) {
+      //   // 去掉总销售额这条折线
+      //   price1Visible.value = false
+      //   option.value.series[2].data = []
+      //   option.value.yAxis[2].name = ''
+      //   selectedItems = selectedItems.filter((item) => item !== card1Text.value)
+      // } 
+      
+      updateChart()
+    }
+  } else {
+    console.log(card1Text.value);
+    const dataGroup = getGroup(card1Text.value) as IDataGroup
+    console.log(dataGroup);
+    handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
+  }
+}
+
 const handleCard2Click = () => {
   card2Active.value = !card2Active.value
 }
