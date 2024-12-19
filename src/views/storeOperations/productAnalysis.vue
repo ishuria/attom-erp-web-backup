@@ -25,7 +25,7 @@
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
-                              @click="handleSwitchItem(item.label)"
+                              @click="handleSwitchItem1(item.label)"
                             >
                               {{ item.label }}
                             </el-dropdown-item>
@@ -57,6 +57,7 @@
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
+                              @click="handleSwitchItem2(item.label)"
                             >
                               {{ item.label }}
                             </el-dropdown-item>
@@ -88,6 +89,7 @@
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
+                              @click="handleSwitchItem3(item.label)"
                             >
                               {{ item.label }}
                             </el-dropdown-item>
@@ -119,6 +121,7 @@
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
+                              @click="handleSwitchItem4(item.label)"
                             >
                               {{ item.label }}
                             </el-dropdown-item>
@@ -150,6 +153,7 @@
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
+                              @click="handleSwitchItem5(item.label)"
                             >
                               {{ item.label }}
                             </el-dropdown-item>
@@ -181,6 +185,7 @@
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
+                              @click="handleSwitchItem6(item.label)"
                             >
                               {{ item.label }}
                             </el-dropdown-item>
@@ -577,7 +582,7 @@ const card5Active = ref<boolean>(false)
 const card6Active = ref<boolean>(false)
 const card1Text = ref<string>('总销售额')
 const card2Text = ref<string>('广告销售额')
-const card3Text = ref<string>('花费')
+const card3Text = ref<string>('广告花费')
 const card4Text = ref<string>('ACOS')
 const card5Text = ref<string>('点击成本')
 const card6Text = ref<string>('TACOS')
@@ -610,8 +615,6 @@ const dropdownItems = ref([
   { label: '库存', },
   { label: '小类排名', },
   { label: '大类排名', },
-  { label: '广告销量' },
-  { label: '自然销量' }
 ])
 
 type IData = {
@@ -627,48 +630,48 @@ type IData = {
   priceData: number
   cpa: number
   adConversionRate: number
+  naturalConversionRate: number
+  overallConversionRate: number
+  returnRate: number
+  refundRate: number
+  netProfitMargin: number
+  grossProfitMargin: number
+  tacos: number
+  acos: number
 }
-type IDataProp = 'adSales' | 'organicSales' | 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData' | 'clickCost' | 'priceData' | 'cpa'
-// name到prop的映射
-type INameProp = 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData'
+type IDataProp = 'adSales' | 'organicSales'
+  | 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData'
   | 'clickCost' | 'priceData' | 'cpa'
   | 'adConversionRate' | 'naturalConversionRate' | 'overallConversionRate'
   | 'returnRate' | 'refundRate' | 'netProfitMargin' | 'grossProfitMargin' | 'tacos' | 'acos'
 
-type IPrice1Prop = 'totalSales' | 'adSalesData' | 'adCostData' | 'netProfitData' | 'expectedStorageCostData'
-type IPrice2Prop = 'clickCost' | 'priceData' | 'cpa'
-
 const data: IData[] = [
-  { date: "2023-10-14", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15 , adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
-  { date: "2024-10-19", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
-  { date: "2024-11-01", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
-  { date: "2024-11-02", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
-  { date: "2024-12-01", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
-  { date: "2024-12-02", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
-  { date: "2024-12-08", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 },
-  { date: "2024-12-09", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66 }
+  { date: "2023-10-14", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15 , adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   },
+  { date: "2024-10-19", adSales: 5, organicSales: 10, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   },
+  { date: "2024-11-01", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   },
+  { date: "2024-11-02", adSales: 5, organicSales: 10, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   },
+  { date: "2024-12-01", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   },
+  { date: "2024-12-02", adSales: 5, organicSales: 10, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   },
+  { date: "2024-12-08", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   },
+  { date: "2024-12-09", adSales: 10, organicSales: 20, totalSales: 5, adSalesData: 15, adCostData: 20, netProfitData: 33, expectedStorageCostData: 25, clickCost: 12, priceData: 60, cpa: 90, adConversionRate: 66, 
+    naturalConversionRate: 100, overallConversionRate: 90, returnRate: 80, refundRate: 70, netProfitMargin: 110, grossProfitMargin: 120, tacos: 105, acos: 115
+   }
 ]
 
-const dates = [
-  '2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05',
-  '2023-01-06', '2023-01-07', '2023-01-08', '2023-01-09', '2023-01-10',
-  '2023-10-14', '2023-10-15', '2023-10-16', '2023-10-17', '2023-10-18',
-  '2023-10-19', '2023-10-20', '2023-10-21', '2023-10-22', '2023-10-23',
-  '2023-10-24', '2023-10-25', '2023-10-26', '2023-10-27', '2023-10-28',
-  '2023-10-29', '2023-10-30', '2023-11-01', '2023-11-03', '2023-11-05',
-  '2023-11-07', '2023-11-09', '2023-11-11', '2023-11-13'
-]
-// 广告销售额数据（美元）
-const salesData = dates.map(() => Math.round(Math.random() * 1000))
-// 广告花费数据（美元）
-const costData = dates.map(() => Math.round(Math.random() * 50))
-const data3 = dates.map(() => Math.round(Math.random() * 50))
-const data4 = dates.map(() => Math.round(Math.random() * 50))
-
-
-
-let totalSalesData: any = []
-let adSalesData :any = []
 // 按周分组并累加
 const getWeeklyData = (data: IData[], type: IDataProp): any[] => {
   const weeklyData: Record<string, number> = {}
@@ -703,10 +706,55 @@ const getMonthlyData = (data: IData[], type: IDataProp): any[] => {
     [type]: monthlyData[month],
   }))
 }
-const handleSwitchItem = (item: string) => {
-  card1Active.value = false
-  card1Text.value = item
-
+// 判断是否可选择，已选中需要取消选中再进行选择
+const handleCanSelect = (cardActive: boolean) => {
+  if (cardActive) {
+    $baseMessage('请先取消选中，再进行选择！', 'error')
+    return false
+  }
+  return true
+}
+const handleSwitchItem1 = (dataName: string) => {
+  const can = handleCanSelect(card1Active.value)
+  if (can) {
+    card1Text.value = dataName
+    card1Active.value = false
+  }
+}
+const handleSwitchItem2 = (dataName: string) => {
+  const can = handleCanSelect(card2Active.value)
+  if (can) {
+    card2Text.value = dataName
+    card2Active.value = false
+  }
+}
+const handleSwitchItem3 = (dataName: string) => {
+  const can = handleCanSelect(card3Active.value)
+  if (can) {
+    card3Text.value = dataName
+    card3Active.value = false
+  }
+}
+const handleSwitchItem4 = (dataName: string) => {
+  const can = handleCanSelect(card4Active.value)
+  if (can) {
+    card4Text.value = dataName
+    card4Active.value = false
+  }
+}
+const handleSwitchItem5 = (dataName: string) => {
+  const can = handleCanSelect(card5Active.value)
+  if (can) {
+    card5Text.value = dataName
+    card5Active.value = false
+  }
+}
+const handleSwitchItem6 = (dataName: string) => {
+  const can = handleCanSelect(card6Active.value)
+  if (can) {
+    card6Text.value = dataName
+    card6Active.value = false
+  }
 }
 /**
  * @description 计算当前日期是该年的第几周,生成字符串
@@ -731,10 +779,6 @@ function getWeekOfYear(date: Date | string | number): string {
 
   return `${year}-W${weekNumber}`
 }
-
-// 金额1
-const price1Data = ['总销售额', '广告销售额', '广告花费', '净利润', '预计下月仓储费']
-const price1Type = ref<IPrice1Prop>('totalSales')
 
 const groups = {
   price1: ['总销售额', '广告销售额', '广告花费', '净利润', '预计下月仓储费'],
@@ -761,9 +805,10 @@ function getGroup(item: string): string | null {
   return null
 }
 
-
 // name -> prop
-const nameMapProp: Record<string, INameProp> = {
+const nameMapProp: Record<string, IDataProp> = {
+  '广告销量': 'adSales',
+  '自然销量': 'organicSales',
   '总销售额': 'totalSales',
   '广告销售额': 'adSalesData',
   '广告花费': 'adCostData',
@@ -784,55 +829,51 @@ const nameMapProp: Record<string, INameProp> = {
 }
 
 // 初始化选中状态
-let selectedItems: string[] = ['总销售额']
-
+let selectedItems: string[] = []
 const option = ref<any>({})
 // 柱状数据是否显示，初始是显示的
 const barVisible = ref<boolean>(true)
 // 生成type类型的柱状数据
 const type = ref<"adSales" | "organicSales">('adSales')
 const xAxisData = ref<any>([]) // 原数据经过日，周，月处理过的柱状数据
-// 金额1的显示
-const price1Visible = ref<boolean>(true)
-const yAxisPrice1Data = ref<any>([])
 // 切换 日，周，月
 const handleSwitchTime = () => {
-  // 需要处理的y轴数据
-  if (radio.value === 'day') {
-    xAxisData.value = data
-    totalSalesData = data
-    adSalesData = data
-    yAxisPrice1Data.value = data
-  } else if (radio.value === 'week') {
-    xAxisData.value = getWeeklyData(data, type.value)
-    totalSalesData = getWeeklyData(data, 'totalSales')
-    adSalesData = getWeeklyData(data, 'adSalesData')
-    yAxisPrice1Data.value = getWeeklyData(data, price1Type.value)
-  } else if (radio.value === 'month') {
-    xAxisData.value = getMonthlyData(data, type.value)
-    totalSalesData = getMonthlyData(data, 'totalSales')
-    adSalesData = getMonthlyData(data, 'adSalesData')
-    yAxisPrice1Data.value = getMonthlyData(data, price1Type.value)
-  }
  
+  let processedData: any[] = []
+  if (radio.value === 'day') {
+    processedData = data
+  } else if (radio.value === 'week') {
+    processedData = getWeeklyData(data, type.value)
+  } else if (radio.value === 'month') {
+    processedData = getMonthlyData(data, type.value)
+  }
+  xAxisData.value = processedData
   // 切换的时候x轴数据是必须要变的
   option.value.xAxis.data = xAxisData.value.map((item: any) => item.date)
   // 如果柱状图显示的话，证明有数据，数据需要处理
   if (barVisible.value) {
     option.value.series[0].data = xAxisData.value.map((d: any) => d[type.value])
   }
-  // if (price1Visible.value) {
-
-  //   option.value.series[2].data = yAxisPrice1Data.value.map((d: any) => d[price1Type.value])
-  // }
-  // option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
-  // option.value.series[2].data = totalSalesData.map((item: any) => item.totalSales);
-  // option.value.series[4].data = adSalesData.map((item: any) => item.adSalesData);
-
+  updateYAxisData(data)
   updateChart()
-  
 }
-
+// 更新 Y 轴数据随时间切换的函数
+const updateYAxisData = (data: any[]) => {
+  option.value.series.forEach((s: any, index: number) => {
+    if (index !== 0) {
+      const prop = nameMapProp[s.name]
+      let processedData: any[] = []
+      if (radio.value === 'day') {
+        processedData = data
+      } else if (radio.value === 'week') {
+        processedData = getWeeklyData(data, prop)
+      } else if (radio.value === 'month') {
+        processedData = getMonthlyData(data, prop)
+      }
+      s.data = processedData.map((d: any) => d[prop]) 
+    }
+  })
+}
 // 初始化图表
 const initChart = () => {
   // 初始化图表的配置项
@@ -855,7 +896,7 @@ const initChart = () => {
     yAxis: [
       {
         type: 'value',
-        name: '广告销量',
+        name: '广告/自然销量',
         position: 'left',
         nameTextStyle: {
           color: '#409EFF',
@@ -872,30 +913,6 @@ const initChart = () => {
           },
         },
       },
-      // {
-      //   type: 'value',
-      //   name: 'ACOS',
-      //   position: 'left',
-      //   offset: 50,
-      //   nameTextStyle: {
-      //     fontWeight: 'bold',
-      //     align: 'right',
-      //     color: '#8a7ae3',
-      //   },
-      //   axisLabel: {
-      //     fontWeight: 'bold',
-      //   },
-      //   min: 0,
-      //   axisLine: {
-      //     show: true,
-      //     lineStyle: {
-      //       color: '#8a7ae3',
-      //     },
-      //   },
-      //   splitLine: {
-      //     show: false,
-      //   },
-      // },
       // {
       //   type: 'value',
       //   name: '总销售额',
@@ -949,61 +966,26 @@ const initChart = () => {
         name: '广告销量',
         type: 'bar',
         yAxisIndex: 0,
-        data: data.map((item: any) => item[type.value]),
+        data: data.map((item: any) => item.adSales),
         barWidth: 20,
         itemStyle: {
           color: '#409EFF',
         },
         opacity: 0.9,
+        stack: 'sales'
       },
-      // {
-      //   name: 'ACOS',
-      //   type: 'line',
-      //   yAxisIndex: 1,
-      //   data: salesData,
-      //   smooth: true,
-      //   symbol: 'circle',
-      //   symbolSize: 6,
-      //   lineStyle: {
-      //     color: '#8a7ae3',
-      //   },
-      //   itemStyle: {
-      //     color: '#8a7ae3',
-      //   },
-      // },
-      // {
-      //   name: '总销售额',
-      //   type: 'line',
-      //   yAxisIndex: 2,
-      //   data: data.map((item: any) => item[price1Type.value]),
-      //   smooth: true,
-      //   symbol: 'circle',
-      //   symbolSize: 6,
-      //   lineStyle: {
-      //     color: '#f7ab1b',
-      //   },
-      //   itemStyle: {
-      //     color: '#f7ab1b',
-      //   },
-      // },
-      // {
-      //   name: '花费',
-      //   type: 'line',
-      //   yAxisIndex: 3,
-      //   data: costData,
-      //   smooth: true,
-      //   symbol: 'circle',
-      //   symbolSize: 6,
-      //   lineStyle: {
-      //     color: '#40c9c6',
-      //   },
-      //   itemStyle: {
-      //     color: '#40c9c6',
-      //   },
-      //   areaStyle: {
-      //     color: 'rgba(64, 201, 198, 0.2)',
-      //   },
-      // },
+      {
+        name: '自然销量',
+        type: 'bar',
+        yAxisIndex: 0,
+        data: data.map((item: any) => item.organicSales),
+        barWidth: 20,
+        itemStyle: {
+          color: '#67C23A',
+        },
+        opacity: 0.9,
+        stack: 'sales'
+      },
     ],
   };
 
@@ -1016,9 +998,17 @@ const updateChart = () => {
   chartInstance.setOption(option.value, true) // 第二个参数 `true` 表示合并旧的配置
 }
 
-const yAxisMapping = new Map(); // 数据组到 yAxisIndex 的映射
-let currentYAxisCount = 1; // 当前已有的 Y 轴数量（柱状图默认占用 yAxis[0]）
+const yAxisMapping = new Map() // 字段所属的组 -> yAxisIndex
+let currentYAxisCount = 1 // 当前已有的 Y 轴数量（柱状图默认占用 yAxis[0]）
 
+function updateYAxisOffsets() {
+  // 重设每个 Y 轴的 offset，确保不重叠
+  option.value.yAxis.forEach((yAxis: any, index: number) => {
+    yAxis.offset = Math.floor(index / 2) * 60; // 每两个 Y 轴之间间隔 60px
+    // 保证 Y 轴位置不重叠
+    yAxis.position = index % 2 === 0 ? 'left' : 'right'
+  })
+}
 function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataName: string) {
   if (selected) {
     let yAxisIndex: number
@@ -1027,13 +1017,12 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     if (!yAxisMapping.has(dataGroup)) {
       // 如果该数据组没有对应的 Y 轴，动态添加
       if (currentYAxisCount >= 4) {
-        $baseMessage('最多只能支持三个额外的 Y 轴', 'error')
-        return;
+        $baseMessage('最多只能支持三个额外的 Y 轴，请重新选择', 'error')
+        return true
       }
-      yAxisIndex = currentYAxisCount;
-      yAxisMapping.set(dataGroup, yAxisIndex);
-      console.log(yAxisMapping);
-
+      yAxisIndex = currentYAxisCount
+      yAxisMapping.set(dataGroup, yAxisIndex)
+ 
       // 新增 Y 轴配置
       option.value.yAxis.push({
         type: 'value',
@@ -1042,7 +1031,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         offset: (Math.floor(currentYAxisCount / 2)) * 60,
         nameTextStyle: {
           fontWeight: 'bold',
-          color: getYAxisColor(currentYAxisCount),
+          color: getYAxisColor(dataGroup),
         },
         axisLabel: {
           fontWeight: 'bold',
@@ -1051,16 +1040,16 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         axisLine: {
           show: true,
           lineStyle: {
-            color: getYAxisColor(currentYAxisCount),
+            color: getYAxisColor(dataGroup),
           },
         },
         splitLine: {
           show: false,
         },
       })
-      console.log(option.value.yAxis);
-      
-      currentYAxisCount++;
+
+      currentYAxisCount++
+      updateYAxisOffsets()
     } else {
       // 如果该数据组已有 Y 轴，复用它
       yAxisIndex = yAxisMapping.get(dataGroup)
@@ -1068,41 +1057,59 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 
     // 添加新 series
     option.value.series.push({
-      name: dataName, // 每条数据独立的名字
-      type: 'line', // 都是折线图
-      yAxisIndex, // 指向组内共用的 Y 轴
+      name: dataName, 
+      type: 'line', 
+      yAxisIndex, 
       data: getDataForName(dataGroup, dataName),
       smooth: true,
       symbol: 'circle',
       symbolSize: 6,
       lineStyle: {
-        color: getYAxisColor(currentYAxisCount - 1),
+        color: getYAxisColor(dataGroup),
       },
       itemStyle: {
-        color: getYAxisColor(currentYAxisCount - 1),
+        color: getYAxisColor(dataGroup),
       },
     })
-    console.log(option.value.series);
   } else {
+    // 取消选中时，移除选中的字段
+    const index = selectedItems.findIndex((item: string) => item === dataName)
+    if (index !== -1) {
+      selectedItems.splice(index, 1)
+    }
     // 取消选中时，移除对应的 series
     const seriesIndex = option.value.series.findIndex((s: any) => s.name === dataName)
     if (seriesIndex !== -1) {
       option.value.series.splice(seriesIndex, 1) // 移除对应的 series
     }
-
-    // 如果该组的所有 series 都被移除，移除对应的 Y 轴
+  
+    // 如果当前字段所属的组的所有 series 都被移除，移除对应的 Y 轴
     const isGroupEmpty = option.value.series.every(
       (s: any) => s.yAxisIndex !== yAxisMapping.get(dataGroup)
     )
+    
     if (isGroupEmpty) {
       const yAxisIndex = yAxisMapping.get(dataGroup)
-      option.value.yAxis.splice(yAxisIndex, 1) // 移除对应的 Y 轴
+
       yAxisMapping.delete(dataGroup)
       currentYAxisCount--
-      updateYAxisIndex()
+
+      // 更新所有 series 的 yAxisIndex
+      option.value.series.forEach((s: any) => {
+        if (s.yAxisIndex > yAxisIndex) {
+          s.yAxisIndex--  // 大于已删除的 Y 轴的index，都减一
+        }
+      })
+
+      // 移除 Y 轴配置
+      option.value.yAxis = option.value.yAxis.filter((yAxis: any, index: number) => index !== yAxisIndex)
+
+      updateYAxisIndex()  // 更新 yAxisMapping 和 series 的对应索引
+      updateYAxisOffsets()
     }
   }
   updateChart()
+  return false
 }
 
 // 更新剩余的 Y 轴和系列的索引
@@ -1129,26 +1136,23 @@ type IDataGroup =  'price1' | 'price2' | 'percent1'| 'percent2'
  */
 
 // 获取数据组对应的颜色
-function getYAxisColor(currentYAxisCount: number) {
-  if (currentYAxisCount === 1) {
-    return '#f7ab1b'
-  } else if (currentYAxisCount === 2) {
-    return '#8a7ae3'
-  } else if (currentYAxisCount === 3) {
-    return '#40c9c6'
+function getYAxisColor(groupName: IDataGroup) {
+  const colorMap = {
+    'price1': '#f7ab1b',  // 总销售额, 广告销售额等（黄色）
+    'price2': '#40c9c6',  // 点击成本, 售价等（青色）
+    'percent1': '#8a7ae3',  // 广告转化率, 自然转化率等（紫色）
+    'percent2': '#f26d00',  // 退货率, 净利润率等（橙色）
+    'percent3': '#ff99cc',  // 广告点击率（粉色）
+    'int1': '#66ccff',  // 总访客, PC端访客等（蓝色）
+    'int2': '#ff66ff',  // Rating 等（紫红色）
+    'int3': '#4c9900',  // 库存等（绿色）
+    'int4': '#ff6666',  // 小类排名等（红色）
+    'int5': '#33cc33',  // 大类排名等（绿色）
   }
-}
 
-// 获取数据组中某条数据的颜色
-// function getLineColor(dataName) {
-//   const nameColors = {
-//     总销售额: '#f7ab1b',
-//     ACOS: '#8a7ae3',
-//     转化率: '#40c9c6',
-//     // 添加更多颜色
-//   };
-//   return nameColors[dataName] || '#999999';
-// }
+  // 默认颜色为灰色
+  return colorMap[groupName] || '#999999';
+}
 
 // 根据数据组和数据名称获取数据
 function getDataForName(dataGroup: IDataGroup, dataName: string) {
@@ -1156,114 +1160,185 @@ function getDataForName(dataGroup: IDataGroup, dataName: string) {
   return data.map((item: any) => item[prop]) || [];
 }
 
-
+const handleBarUpdate = (card1Active: boolean, card1Text: string) => {
+  if (card1Active) {
+    if (card1Text === '自然销量') {
+      barVisible.value = true
+      type.value = 'organicSales'
+      option.value.yAxis[0].name = '自然销量'
+      option.value.yAxis[0].nameTextStyle.color = '#67C23A'
+      option.value.yAxis[0].axisLine.lineStyle.color = '#67C23A'
+      option.value.series[0].name = '自然销量'
+      option.value.series[0].itemStyle.color = '#67C23A'
+      // 需要加，因为没切换的时候，不会执行切换函数，只是更新
+      option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
+    } else if (card1Text === '广告销量') {
+      barVisible.value = true
+      type.value = 'adSales'
+      option.value.yAxis[0].name = '广告销量'
+      option.value.yAxis[0].nameTextStyle.color = '#409EFF'
+      option.value.yAxis[0].axisLine.lineStyle.color = '#409EFF'
+      option.value.series[0].name = '广告销量'
+      option.value.series[0].itemStyle.color = '#409EFF'
+      option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
+    }
+    updateChart()
+  } else {
+    // 如果取消勾选
+    if (card1Text === '广告销量') {
+      barVisible.value = false
+      option.value.yAxis[0].name = ''
+      option.value.series[0].data = []
+    } else if (card1Text === '自然销量') {
+      barVisible.value = false
+      option.value.yAxis[0].name = ''
+      option.value.series[0].data = []
+    }
+    updateChart()
+  }
+}
+// 处理选中的值重复问题
+const handleUnique = (cardText: string) => {
+  const index = selectedItems.findIndex((item: string) => item === cardText)
+  if (index !== -1) {
+    $baseMessage('选中的值不能重复, 请重新选择', 'error')
+    return false
+  } else {
+    selectedItems.push(cardText)
+    return true
+  }
+}
 const handleCard1Click = () => {
   card1Active.value = !card1Active.value
+  
   // 如果是柱状单独处理
   if (card1Text.value === '自然销量' || card1Text.value === '广告销量') {
-    if (card1Active.value) {
-      if (card1Text.value === '自然销量') {
-        barVisible.value = true
-        type.value = 'organicSales'
-        option.value.yAxis[0].name = '自然销量'
-        option.value.yAxis[0].nameTextStyle.color = '#67C23A'
-        option.value.yAxis[0].axisLine.lineStyle.color = '#67C23A'
-        option.value.series[0].name = '自然销量'
-        option.value.series[0].itemStyle.color = '#67C23A'
-        // 需要加，因为没切换的时候，不会执行切换函数，只是更新
-        option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
-      } else if (card1Text.value === '广告销量') {
-        barVisible.value = true
-        type.value = 'adSales'
-        option.value.yAxis[0].name = '广告销量'
-        option.value.yAxis[0].nameTextStyle.color = '#409EFF'
-        option.value.yAxis[0].axisLine.lineStyle.color = '#409EFF'
-        option.value.series[0].name = '广告销量'
-        option.value.series[0].itemStyle.color = '#409EFF'
-        option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
-      }
-      // else if (price1Data.includes(card1Text.value)) {
-      
-      //   // if (!selectedItems.includes(card1Text.value)) {
-      //   //   price1Visible.value = true
-      //   //   selectedItems.push(card1Text.value)
-
-      //   //   // if (selectedItems.length === 1) {
-      //   //   //   option.value.yAxis[2].name = selectedItems[0]
-      //   //   // } else if (selectedItems.length > 1) {
-      //   //   //   // 设置 yAxis name 为带有换行的文本
-      //   //   //   option.value.yAxis[2].name = selectedItems.join('/\n')
-      //   //   // }
-
-      //   //   price1Type.value = price1TypeMap[card1Text.value]
-      //   //   option.value.yAxis[2].name = card1Text.value
-      //   //   option.value.series[2].name = card1Text.value
-      //   //   option.value.series[2].data = yAxisPrice1Data.value.map((item: any) => item[price1Type.value])
-      //   //   // const newSeries = {
-      //   //   //   name: card1Text.value,
-      //   //   //   type: 'line',
-      //   //   //   yAxisIndex: 2,
-      //   //   //   data: adSalesData.map((item: any) => item[price1Type.value]),
-      //   //   //   smooth: true,
-      //   //   //   symbol: 'circle',
-      //   //   //   symbolSize: 6,
-      //   //   //   lineStyle: {
-      //   //   //     color: '#f7ab1b'
-      //   //   //   },
-      //   //   //   itemStyle: {
-      //   //   //     color: '#f7ab1b'
-      //   //   //   }
-      //   //   // }
-      //   //   // option.value.series.push(newSeries)
-
-      //   // }
-      // }
-      updateChart()
-    } else {
-      // 如果取消勾选
-      if (card1Text.value === '广告销量') {
-        barVisible.value = false
-        option.value.yAxis[0].name = ''
-        option.value.series[0].data = []
-        selectedItems = selectedItems.filter((item) => item !== '广告销量')
-      } else if (card1Text.value === '自然销量') {
-        barVisible.value = false
-        option.value.yAxis[0].name = ''
-        option.value.series[0].data = []
-        selectedItems = selectedItems.filter((item) => item !== '自然销量')
-      }
-      // else if (price1Data.includes(card1Text.value)) {
-      //   // 去掉总销售额这条折线
-      //   price1Visible.value = false
-      //   option.value.series[2].data = []
-      //   option.value.yAxis[2].name = ''
-      //   selectedItems = selectedItems.filter((item) => item !== card1Text.value)
-      // } 
-      
-      updateChart()
-    }
+    handleBarUpdate(card1Active.value, card1Text.value)
+    return
   } else {
+    // 处理card选择字段重复，如果重复，选中为false
+    if (card1Active.value) {
+      const unique = handleUnique(card1Text.value)
+      if (!unique) {
+        card1Active.value = false
+        return
+      }
+    }
     console.log(card1Text.value);
     const dataGroup = getGroup(card1Text.value) as IDataGroup
     console.log(dataGroup);
-    handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
+    const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
+    if (moreThan3) {
+      card1Active.value = false
+    }
   }
 }
 
 const handleCard2Click = () => {
   card2Active.value = !card2Active.value
+  
+  if (card2Text.value === '自然销量' || card2Text.value === '广告销量') {
+    handleBarUpdate(card2Active.value, card2Text.value)
+    return
+  } else {
+    if (card2Active.value) {
+      const unique = handleUnique(card2Text.value)
+      if (!unique) {
+        card2Active.value = false
+        return
+      }
+    }
+    const dataGroup = getGroup(card2Text.value) as IDataGroup
+    console.log(dataGroup);
+    const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value) 
+    if (moreThan3) {
+      card2Active.value = false
+    }
+  }
 }
 const handleCard3Click = () => {
   card3Active.value = !card3Active.value
+  if (card3Text.value === '自然销量' || card3Text.value === '广告销量') {
+    handleBarUpdate(card3Active.value, card3Text.value)
+    return
+  } else {
+    if (card3Active.value) {
+      const unique = handleUnique(card3Text.value)
+      if (!unique) {
+        card3Active.value = false
+        return
+      }
+    }
+    const dataGroup = getGroup(card3Text.value) as IDataGroup
+    console.log(dataGroup);
+    const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value) 
+    if (moreThan3) {
+      card3Active.value = false
+    }
+  }
 }
 const handleCard4Click = () => {
   card4Active.value = !card4Active.value
+  if (card4Text.value === '自然销量' || card4Text.value === '广告销量') {
+    handleBarUpdate(card4Active.value, card4Text.value)
+    return
+  } else {
+    if (card4Active.value) {
+      const unique = handleUnique(card4Text.value)
+      if (!unique) {
+        card4Active.value = false
+        return
+      }
+    }
+    const dataGroup = getGroup(card4Text.value) as IDataGroup
+    console.log(dataGroup);
+    const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value) 
+    if (moreThan3) {
+      card4Active.value = false
+    }
+  }
 }
 const handleCard5Click = () => {
   card5Active.value = !card5Active.value
+  if (card5Text.value === '自然销量' || card5Text.value === '广告销量') {
+    handleBarUpdate(card5Active.value, card5Text.value)
+    return
+  } else {
+    if (card5Active.value) {
+      const unique = handleUnique(card5Text.value)
+      if (!unique) {
+        card5Active.value = false
+        return
+      }
+    }
+    const dataGroup = getGroup(card5Text.value) as IDataGroup
+    console.log(dataGroup);
+    const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value) 
+    if (moreThan3) {
+      card5Active.value = false
+    }
+  }
 }
 const handleCard6Click = () => {
   card6Active.value = !card6Active.value
+  if (card6Text.value === '自然销量' || card6Text.value === '广告销量') {
+    handleBarUpdate(card6Active.value, card6Text.value)
+    return
+  } else {
+    if (card6Active.value) {
+      const unique = handleUnique(card6Text.value)
+      if (!unique) {
+        card6Active.value = false
+        return
+      }
+    }
+    const dataGroup = getGroup(card6Text.value) as IDataGroup
+    console.log(dataGroup);
+    const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value) 
+    if (moreThan3) {
+      card6Active.value = false
+    }
+  }
 }
 
 const handleTabClick = (tab: TabsPaneContext) => {
@@ -1502,5 +1577,4 @@ onMounted(() => {
     }
   }
 }
-
 </style>
