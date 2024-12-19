@@ -21,11 +21,12 @@
                           </el-icon>
                         </span>
                         <template #dropdown>
-                          <el-dropdown-menu >
+                          <el-dropdown-menu style="max-height: 450px; overflow: auto;">
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
                               @click="handleSwitchItem1(item.label)"
+                              
                             >
                               {{ item.label }}
                             </el-dropdown-item>
@@ -53,7 +54,7 @@
                           </el-icon>
                         </span>
                         <template #dropdown>
-                          <el-dropdown-menu>
+                          <el-dropdown-menu style="max-height: 450px; overflow: auto;">
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
@@ -85,7 +86,7 @@
                           </el-icon>
                         </span>
                         <template #dropdown>
-                          <el-dropdown-menu>
+                          <el-dropdown-menu style="max-height: 450px; overflow: auto;">
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
@@ -117,7 +118,7 @@
                           </el-icon>
                         </span>
                         <template #dropdown>
-                          <el-dropdown-menu>
+                          <el-dropdown-menu style="max-height: 450px; overflow: auto;">
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
@@ -149,7 +150,7 @@
                           </el-icon>
                         </span>
                         <template #dropdown>
-                          <el-dropdown-menu>
+                          <el-dropdown-menu style="max-height: 450px; overflow: auto;">
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
@@ -181,7 +182,7 @@
                           </el-icon>
                         </span>
                         <template #dropdown>
-                          <el-dropdown-menu>
+                          <el-dropdown-menu style="max-height: 450px; overflow: auto;">
                             <el-dropdown-item
                               v-for="(item, index) in dropdownItems"
                               :key="index"
@@ -609,12 +610,16 @@ const dropdownItems = ref([
   { label: '总访客', },
   { label: 'PC端访客', },
   { label: '移动端访客', },
-  { label: '自然访客', },
-  { label: '广告访客', },
+  { label: '自然点击/访客', },
+  { label: '广告点击/访客', },
   { label: 'Rating', },
   { label: '库存', },
   { label: '小类排名', },
   { label: '大类排名', },
+  { label: '广告展现量', },
+  { label: '退货量', },
+  { label: '退货金额', },
+  { label: '毛利润', },
 ])
 
 type IData = {
@@ -831,36 +836,33 @@ const nameMapProp: Record<string, IDataProp> = {
 // 初始化选中状态
 let selectedItems: string[] = []
 const option = ref<any>({})
-// 柱状数据是否显示，初始是显示的
-const barVisible = ref<boolean>(true)
-// 生成type类型的柱状数据
-const type = ref<"adSales" | "organicSales">('adSales')
-const xAxisData = ref<any>([]) // 原数据经过日，周，月处理过的柱状数据
+
 // 切换 日，周，月
 const handleSwitchTime = () => {
  
-  let processedData: any[] = []
+  let adSalesData: any[] = []
+  let organicSalesData: any[] = []
   if (radio.value === 'day') {
-    processedData = data
+    adSalesData = data
+    organicSalesData = data
   } else if (radio.value === 'week') {
-    processedData = getWeeklyData(data, type.value)
+    adSalesData = getWeeklyData(data, 'adSales')
+    organicSalesData = getWeeklyData(data, 'organicSales')
   } else if (radio.value === 'month') {
-    processedData = getMonthlyData(data, type.value)
+    adSalesData = getMonthlyData(data, 'adSales')
+    organicSalesData = getMonthlyData(data, 'organicSales')
   }
-  xAxisData.value = processedData
-  // 切换的时候x轴数据是必须要变的
-  option.value.xAxis.data = xAxisData.value.map((item: any) => item.date)
-  // 如果柱状图显示的话，证明有数据，数据需要处理
-  if (barVisible.value) {
-    option.value.series[0].data = xAxisData.value.map((d: any) => d[type.value])
-  }
+  option.value.xAxis.data = adSalesData.map((item: any) => item.date)
+  option.value.series[0].data = adSalesData.map((d: any) => d.adSales)
+  option.value.series[1].data = organicSalesData.map((d: any) => d.organicSales)
+
   updateYAxisData(data)
   updateChart()
 }
 // 更新 Y 轴数据随时间切换的函数
 const updateYAxisData = (data: any[]) => {
   option.value.series.forEach((s: any, index: number) => {
-    if (index !== 0) {
+    if (index !== 0 && index !== 1) {
       const prop = nameMapProp[s.name]
       let processedData: any[] = []
       if (radio.value === 'day') {
@@ -1160,43 +1162,6 @@ function getDataForName(dataGroup: IDataGroup, dataName: string) {
   return data.map((item: any) => item[prop]) || [];
 }
 
-const handleBarUpdate = (card1Active: boolean, card1Text: string) => {
-  if (card1Active) {
-    if (card1Text === '自然销量') {
-      barVisible.value = true
-      type.value = 'organicSales'
-      option.value.yAxis[0].name = '自然销量'
-      option.value.yAxis[0].nameTextStyle.color = '#67C23A'
-      option.value.yAxis[0].axisLine.lineStyle.color = '#67C23A'
-      option.value.series[0].name = '自然销量'
-      option.value.series[0].itemStyle.color = '#67C23A'
-      // 需要加，因为没切换的时候，不会执行切换函数，只是更新
-      option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
-    } else if (card1Text === '广告销量') {
-      barVisible.value = true
-      type.value = 'adSales'
-      option.value.yAxis[0].name = '广告销量'
-      option.value.yAxis[0].nameTextStyle.color = '#409EFF'
-      option.value.yAxis[0].axisLine.lineStyle.color = '#409EFF'
-      option.value.series[0].name = '广告销量'
-      option.value.series[0].itemStyle.color = '#409EFF'
-      option.value.series[0].data = xAxisData.value.map((item: any) => item[type.value])
-    }
-    updateChart()
-  } else {
-    // 如果取消勾选
-    if (card1Text === '广告销量') {
-      barVisible.value = false
-      option.value.yAxis[0].name = ''
-      option.value.series[0].data = []
-    } else if (card1Text === '自然销量') {
-      barVisible.value = false
-      option.value.yAxis[0].name = ''
-      option.value.series[0].data = []
-    }
-    updateChart()
-  }
-}
 // 处理选中的值重复问题
 const handleUnique = (cardText: string) => {
   const index = selectedItems.findIndex((item: string) => item === cardText)
@@ -1212,133 +1177,114 @@ const handleCard1Click = () => {
   card1Active.value = !card1Active.value
   
   // 如果是柱状单独处理
-  if (card1Text.value === '自然销量' || card1Text.value === '广告销量') {
-    handleBarUpdate(card1Active.value, card1Text.value)
-    return
-  } else {
-    // 处理card选择字段重复，如果重复，选中为false
-    if (card1Active.value) {
-      const unique = handleUnique(card1Text.value)
-      if (!unique) {
-        card1Active.value = false
-        return
-      }
-    }
-    console.log(card1Text.value);
-    const dataGroup = getGroup(card1Text.value) as IDataGroup
-    console.log(dataGroup);
-    const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
-    if (moreThan3) {
+  // if (card1Text.value === '自然销量' || card1Text.value === '广告销量') {
+  //   handleBarUpdate(card1Active.value, card1Text.value)
+  //   return
+  // } else {
+  // 处理card选择字段重复，如果重复，选中为false
+  if (card1Active.value) {
+    const unique = handleUnique(card1Text.value)
+    if (!unique) {
       card1Active.value = false
+      return
     }
   }
+  console.log(card1Text.value);
+  const dataGroup = getGroup(card1Text.value) as IDataGroup
+  console.log(dataGroup);
+  const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
+  if (moreThan3) {
+    card1Active.value = false
+  }
+  
 }
 
 const handleCard2Click = () => {
   card2Active.value = !card2Active.value
   
-  if (card2Text.value === '自然销量' || card2Text.value === '广告销量') {
-    handleBarUpdate(card2Active.value, card2Text.value)
-    return
-  } else {
-    if (card2Active.value) {
-      const unique = handleUnique(card2Text.value)
-      if (!unique) {
-        card2Active.value = false
-        return
-      }
-    }
-    const dataGroup = getGroup(card2Text.value) as IDataGroup
-    console.log(dataGroup);
-    const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value) 
-    if (moreThan3) {
+  if (card2Active.value) {
+    const unique = handleUnique(card2Text.value)
+    if (!unique) {
       card2Active.value = false
+      return
     }
   }
+  const dataGroup = getGroup(card2Text.value) as IDataGroup
+  console.log(dataGroup);
+  const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value) 
+  if (moreThan3) {
+    card2Active.value = false
+  }
+  
 }
 const handleCard3Click = () => {
   card3Active.value = !card3Active.value
-  if (card3Text.value === '自然销量' || card3Text.value === '广告销量') {
-    handleBarUpdate(card3Active.value, card3Text.value)
-    return
-  } else {
-    if (card3Active.value) {
-      const unique = handleUnique(card3Text.value)
-      if (!unique) {
-        card3Active.value = false
-        return
-      }
-    }
-    const dataGroup = getGroup(card3Text.value) as IDataGroup
-    console.log(dataGroup);
-    const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value) 
-    if (moreThan3) {
+
+  if (card3Active.value) {
+    const unique = handleUnique(card3Text.value)
+    if (!unique) {
       card3Active.value = false
+      return
     }
+  }
+  const dataGroup = getGroup(card3Text.value) as IDataGroup
+  console.log(dataGroup);
+  const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value) 
+  if (moreThan3) {
+    card3Active.value = false
   }
 }
 const handleCard4Click = () => {
   card4Active.value = !card4Active.value
-  if (card4Text.value === '自然销量' || card4Text.value === '广告销量') {
-    handleBarUpdate(card4Active.value, card4Text.value)
-    return
-  } else {
-    if (card4Active.value) {
-      const unique = handleUnique(card4Text.value)
-      if (!unique) {
-        card4Active.value = false
-        return
-      }
-    }
-    const dataGroup = getGroup(card4Text.value) as IDataGroup
-    console.log(dataGroup);
-    const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value) 
-    if (moreThan3) {
+  
+  if (card4Active.value) {
+    const unique = handleUnique(card4Text.value)
+    if (!unique) {
       card4Active.value = false
+      return
     }
+  }
+  const dataGroup = getGroup(card4Text.value) as IDataGroup
+  console.log(dataGroup);
+  const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value) 
+  if (moreThan3) {
+    card4Active.value = false
   }
 }
 const handleCard5Click = () => {
   card5Active.value = !card5Active.value
-  if (card5Text.value === '自然销量' || card5Text.value === '广告销量') {
-    handleBarUpdate(card5Active.value, card5Text.value)
-    return
-  } else {
-    if (card5Active.value) {
-      const unique = handleUnique(card5Text.value)
-      if (!unique) {
-        card5Active.value = false
-        return
-      }
-    }
-    const dataGroup = getGroup(card5Text.value) as IDataGroup
-    console.log(dataGroup);
-    const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value) 
-    if (moreThan3) {
+  
+  if (card5Active.value) {
+    const unique = handleUnique(card5Text.value)
+    if (!unique) {
       card5Active.value = false
+      return
     }
+  }
+  const dataGroup = getGroup(card5Text.value) as IDataGroup
+  console.log(dataGroup);
+  const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value) 
+  if (moreThan3) {
+    card5Active.value = false
   }
 }
 const handleCard6Click = () => {
   card6Active.value = !card6Active.value
-  if (card6Text.value === '自然销量' || card6Text.value === '广告销量') {
-    handleBarUpdate(card6Active.value, card6Text.value)
-    return
-  } else {
-    if (card6Active.value) {
-      const unique = handleUnique(card6Text.value)
-      if (!unique) {
-        card6Active.value = false
-        return
-      }
-    }
-    const dataGroup = getGroup(card6Text.value) as IDataGroup
-    console.log(dataGroup);
-    const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value) 
-    if (moreThan3) {
+ 
+  if (card6Active.value) {
+    const unique = handleUnique(card6Text.value)
+    if (!unique) {
       card6Active.value = false
+      return
     }
   }
+  const dataGroup = getGroup(card6Text.value) as IDataGroup
+  console.log(dataGroup);
+  const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value) 
+  if (moreThan3) {
+    card6Active.value = false
+  }
+  
 }
 
 const handleTabClick = (tab: TabsPaneContext) => {

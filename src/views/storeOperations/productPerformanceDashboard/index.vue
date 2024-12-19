@@ -52,7 +52,7 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove">
+              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove1">
                 <div
                   v-for="item in columns"
                   :key="item.label"
@@ -91,7 +91,7 @@
           @cell-click="cellClick"
         >
           <el-table-column
-            v-for="(item, index) in checkList"
+            v-for="(item, index) in checkList1"
             :key="index"
             :label="item.label"
             :prop="item.prop"
@@ -113,7 +113,7 @@
                 </el-image>
               </span>
               <!-- SKU 展示-->
-              <span v-if="item.label === 'SKU' && level === 0">
+              <span v-if="item.label === 'SKU'">
                 {{ row.sku }}
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rate }}</span>
@@ -121,29 +121,11 @@
                   <span class="rate-count">{{ 484 }}</span>
                 </div>
               </span>
-              <span v-if="item.label === 'ASIN' && level === 0">
+              <span v-if="item.label === 'ASIN'">
                 <el-link type="primary">{{ row.asin }}</el-link>
               </span>
-              <span v-if="item.label === '父体ASIN'&& level === 0">
+              <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.pAsin }}</el-link>
-              </span>
-              <!-- ASIN 展示 -->
-              <span v-if="item.label === 'ASIN' && level === 1">
-                <el-link type="primary">{{ row.asin }}</el-link>
-                <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
-                  <span class="rate-count">{{ 484 }}</span>
-                </div>
-              </span>
-              <!-- 父体ASIN 展示 -->
-              <span v-if="item.label === '父体ASIN' && level === 2">
-                <el-link type="primary">{{ row.pAsin }}</el-link>
-                <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
-                  <span class="rate-count">{{ 484 }}</span>
-                </div>
               </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <span>点击</span>
@@ -226,9 +208,9 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove">
+              <vab-draggable v-model="columnsAsin" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove2">
                 <div
-                  v-for="item in columns"
+                  v-for="item in columnsAsin"
                   :key="item.label"
                   style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
                   :class="{'non-draggable': item.disableCheck}" 
@@ -265,7 +247,7 @@
           @cell-click="cellClick"
         >
           <el-table-column
-            v-for="(item, index) in checkList"
+            v-for="(item, index) in checkList2"
             :key="index"
             :label="item.label"
             :prop="item.prop"
@@ -287,7 +269,7 @@
                 </el-image>
               </span>
               <!-- SKU 展示-->
-              <span v-if="item.label === 'SKU' && level === 0">
+              <span v-if="item.label === 'SKU'">
                 {{ row.sku }}
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rate }}</span>
@@ -295,30 +277,13 @@
                   <span class="rate-count">{{ 484 }}</span>
                 </div>
               </span>
-              <span v-if="item.label === 'ASIN' && level === 0">
+              <span v-if="item.label === 'ASIN'">
                 <el-link type="primary">{{ row.asin }}</el-link>
               </span>
-              <span v-if="item.label === '父体ASIN'&& level === 0">
+              <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.pAsin }}</el-link>
               </span>
-              <!-- ASIN 展示 -->
-              <span v-if="item.label === 'ASIN' && level === 1">
-                <el-link type="primary">{{ row.asin }}</el-link>
-                <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
-                  <span class="rate-count">{{ 484 }}</span>
-                </div>
-              </span>
-              <!-- 父体ASIN 展示 -->
-              <span v-if="item.label === '父体ASIN' && level === 2">
-                <el-link type="primary">{{ row.pAsin }}</el-link>
-                <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
-                  <span class="rate-count">{{ 484 }}</span>
-                </div>
-              </span>
+             
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <span>点击</span>
               </span>
@@ -400,9 +365,9 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove">
+              <vab-draggable v-model="columnsParentAsin" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove3">
                 <div
-                  v-for="item in columns"
+                  v-for="item in columnsParentAsin"
                   :key="item.label"
                   style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
                   :class="{'non-draggable': item.disableCheck}" 
@@ -439,7 +404,7 @@
           @cell-click="cellClick"
         >
           <el-table-column
-            v-for="(item, index) in checkList"
+            v-for="(item, index) in checkList3"
             :key="index"
             :label="item.label"
             :prop="item.prop"
@@ -460,32 +425,9 @@
                   </template>
                 </el-image>
               </span>
-              <!-- SKU 展示-->
-              <span v-if="item.label === 'SKU' && level === 0">
-                {{ row.sku }}
-                <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate" /></span>
-                  <span class="rate-count">{{ 484 }}</span>
-                </div>
-              </span>
-              <span v-if="item.label === 'ASIN' && level === 0">
-                <el-link type="primary">{{ row.asin }}</el-link>
-              </span>
-              <span v-if="item.label === '父体ASIN'&& level === 0">
-                <el-link type="primary">{{ row.pAsin }}</el-link>
-              </span>
-              <!-- ASIN 展示 -->
-              <span v-if="item.label === 'ASIN' && level === 1">
-                <el-link type="primary">{{ row.asin }}</el-link>
-                <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
-                  <span class="rate-count">{{ 484 }}</span>
-                </div>
-              </span>
+        
               <!-- 父体ASIN 展示 -->
-              <span v-if="item.label === '父体ASIN' && level === 2">
+              <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.pAsin }}</el-link>
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rate }}</span>
@@ -532,246 +474,15 @@
       @updateVisible="closeOpeClassify"
     />
     <!-- 筛选 -->
-    <vab-dialog
-      title="筛选"
-      v-model="filterVisible"
-      width="27%"
-    >
-      <el-form
-        ref="filterFormRef"
-        label-position="right"
-        label-width="auto"
-        :model="filterForm"
-        style="width: 100%; margin-right: 10px"
-      >
-        <el-form-item label="上新天数">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number1"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number2"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="ES总新">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number3"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number4"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="上海签收">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number5"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number6"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="推荐#">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number7"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number8"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="最晚补货">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number9"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number10"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="30天净利润">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number11"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number12"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="30天净利率%">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number13"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number14"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="月销售额">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number15"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number16"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="30天有货销售额">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number17"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number18"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="FBA差异">
-          <div class="flex">
-            <el-input-number
-              v-model="filterForm.number19"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <!-- <el-input type="number" placeholder="最小值" /> -->
-            <span style="white-space: nowrap; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number20"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
-            <!-- <el-input type="number" v-model="filterForm.number6" placeholder="最大值" /> -->
-          </div>
-        </el-form-item>
-        <el-form-item label="运营筛选">
-          <el-select></el-select>
-        </el-form-item>
-        <el-form-item label="广告">
-          <el-select>
-            <el-option 
-              v-for="item in adStatusOption"
-              :label="item.label"
-              :value="item.value"
-              :key="item.value"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div style="text-align: center">
-          <el-button type="danger" @click="clearFilterForm">清空</el-button>
-          <el-button type="primary">确认</el-button>
-          <el-button>取消</el-button>
-        </div>
-      </template>
-    </vab-dialog>
-    <!-- 关键词 -->
-    <vab-dialog
-      title="关键词排名趋势"
-      width="20%"
-      v-model="keyWordTrendVisible"
-    >
-      <el-form label-position="top" >
-        <el-form-item label="关键词">
-          <el-input clearable />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button type="primary" @click="queryKeyWordTrend">查询</el-button>
-      </template>
-    </vab-dialog>
-    <!-- 关键词趋势图表 -->
-    <vab-dialog
-      title="关键词排名趋势图"
-      v-model="keywordTrendChartVisible"
-    >
-      <vab-query-form>
-        <vab-query-form-left-panel :span="6" >
-          <el-select>
-            <el-option 
-              v-for="item in keyWordTrendOption"
-              :label="item.label"
-              :key="item.value"
-              :value="item.value"
-            />
-          </el-select>
-        </vab-query-form-left-panel>
-      </vab-query-form>
-      <vab-chart />    
-    </vab-dialog>
+    <VabFilterDialog 
+      :filter-visible="filterVisible"
+      @update-visible="handleCloseFilterDialog"
+    />
+    <!-- 关键词排名趋势 -->
+    <VabKeyWordRankTrend 
+      :key-word-trend-visible="keyWordTrendVisible"
+      @update-visible="handleCloseKeyWordTrend"
+    />
   </div>
 </template>
 
@@ -997,15 +708,15 @@ const fakeData = ref<any>([
     id: 3
   },
 ])
-const colors = ref(['#99A9BF', '#F7BA2A', '#FF9900'])
-const checkList = computed(() => {
-  if (level.value === 0) {
-    return columns.value.filter((_: any) => _.checked)
-  } else if (level.value === 1) {
-    return columnsAsin.value.filter((_: any) => _.checked)
-  } else if (level.value === 2) {
-    return columnsParentAsin.value.filter((_: any) => _.checked)
-  }
+
+const checkList1 = computed(() => {
+  return columns.value.filter((_: any) => _.checked)
+})
+const checkList2 = computed(() => {
+  return columnsAsin.value.filter((_: any) => _.checked)
+})
+const checkList3 = computed(() => {
+  return columnsParentAsin.value.filter((_: any) => _.checked)
 })
 const columns = ref<any>([
   {
@@ -1041,6 +752,12 @@ const columns = ref<any>([
     isFixed: 'left'
   },
   {
+    label: '站点',
+    prop: 'site',
+    checked: true,
+    minWidth: 100,
+  },
+  {
     label: '销量趋势(点击看明细)',
     prop: 'trend',
     checked: true,
@@ -1059,7 +776,7 @@ const columns = ref<any>([
     minWidth: 90,
   },
   {
-    label: '今销$',
+    label: '今销',
     prop: 'todaySellD',
     checked: true,
     minWidth: 90,
@@ -1125,10 +842,10 @@ const columns = ref<any>([
     minWidth: 100,
   },
   {
-    label: '月仓储费',
+    label: 'FBA仓储费',
     prop: 'monthlyStorageFee',
     checked: true,
-    minWidth: 100,
+    minWidth: 120,
   },
   {
     label: '当前售价',
@@ -1143,10 +860,22 @@ const columns = ref<any>([
     minWidth: 100,
   },
   {
-    label: 'FBA',
+    label: '自量FBA',
     prop: 'fba',
     checked: true,
-    minWidth: 80,
+    minWidth: 100,
+  },
+  {
+    label: '亚马逊FBA',
+    prop: 'fba',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: 'FBA差异',
+    prop: 'fba',
+    checked: true,
+    minWidth: 100,
   },
   {
     label: '2周广告转化',
@@ -1233,25 +962,13 @@ const columns = ref<any>([
     minWidth: 110,
   },
   {
-    label: '移除货值',
-    prop: 'removeValue',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '移除%',
+    label: '移除量',
     prop: 'remove',
     checked: true,
     minWidth: 90,
   },
   {
-    label: '替换货值',
-    prop: 'replaceValue',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '替换%',
+    label: '替换量',
     prop: 'replace',
     checked: true,
     minWidth: 90,
@@ -1353,16 +1070,22 @@ const columns = ref<any>([
     minWidth: 90,
   },
   {
+    label: '计划#',
+    prop: 'order',
+    checked: true,
+    minWidth: 90,
+  },
+  {
     label: '签收',
     prop: 'sign',
     checked: true,
     minWidth: 90,
   },
   {
-    label: '月有货率',
+    label: '半年有货率',
     prop: 'monthlyAvailabilityRate',
     checked: true,
-    minWidth: 100,
+    minWidth: 110,
   },
   {
     label: '低量仓储费天数',
@@ -1423,20 +1146,34 @@ const columnsAsin = ref<any>([
     isFixed: 'left'
   },
   {
-    label: 'ASIN',
-    prop: 'asin',
-    disableCheck: true,
-    checked: true,
-    minWidth: 80,
-    isFixed: 'left'
-  },
-  {
     label: 'SKU',
     prop: 'sku',
     disableCheck: true,
     checked: true,
     minWidth: 100,
     isFixed: 'left'
+  },
+  {
+    label: 'ASIN',
+    prop: 'asin',
+    disableCheck: true,
+    checked: true,
+    minWidth: 100,
+    isFixed: 'left'
+  },
+  {
+    label: '父体ASIN',
+    prop: 'pAsin',
+    disableCheck: true,
+    checked: true,
+    minWidth: 110,
+    isFixed: 'left'
+  },
+  {
+    label: '站点',
+    prop: 'site',
+    checked: true,
+    minWidth: 100,
   },
   {
     label: '销量趋势(点击看明细)',
@@ -1457,7 +1194,7 @@ const columnsAsin = ref<any>([
     minWidth: 90,
   },
   {
-    label: '今销$',
+    label: '今销',
     prop: 'todaySellD',
     checked: true,
     minWidth: 90,
@@ -1493,12 +1230,6 @@ const columnsAsin = ref<any>([
     minWidth: 130,
   },
   {
-    label: '停产',
-    prop: 'ting',
-    checked: true,
-    minWidth: 60,
-  },
-  {
     label: '小类排名',
     prop: 'sRank',
     checked: true,
@@ -1523,28 +1254,10 @@ const columnsAsin = ref<any>([
     minWidth: 100,
   },
   {
-    label: '月仓储费',
+    label: 'FBA仓储费',
     prop: 'monthlyStorageFee',
     checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '当前售价',
-    prop: 'currentPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '试算毛利',
-    prop: 'trialGrossProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: 'FBA',
-    prop: 'fba',
-    checked: true,
-    minWidth: 80,
+    minWidth: 120,
   },
   {
     label: '2周广告转化',
@@ -1631,25 +1344,13 @@ const columnsAsin = ref<any>([
     minWidth: 110,
   },
   {
-    label: '移除货值',
-    prop: 'removeValue',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '移除%',
+    label: '移除量',
     prop: 'remove',
     checked: true,
     minWidth: 90,
   },
   {
-    label: '替换货值',
-    prop: 'replaceValue',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '替换%',
+    label: '替换量',
     prop: 'replace',
     checked: true,
     minWidth: 90,
@@ -1665,30 +1366,6 @@ const columnsAsin = ref<any>([
     prop: 'monthlyRefund',
     checked: true,
     minWidth: 100,
-  },
-  {
-    label: 'VOC满意度',
-    prop: 'VOCSatisfaction',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC缺陷%',
-    prop: 'VOCDefectP',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC缺陷#',
-    prop: 'VOCDefect',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC总订单',
-    prop: 'VOCOrder',
-    checked: true,
-    minWidth: 110,
   },
   {
     label: '上新',
@@ -1751,40 +1428,28 @@ const columnsAsin = ref<any>([
     minWidth: 90,
   },
   {
+    label: '计划#',
+    prop: 'order',
+    checked: true,
+    minWidth: 90,
+  },
+  {
     label: '签收',
     prop: 'sign',
     checked: true,
     minWidth: 90,
   },
   {
-    label: '月有货率',
+    label: '半年有货率',
     prop: 'monthlyAvailabilityRate',
     checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '低量仓储费天数',
-    prop: 'lowFeeDays',
-    checked: true,
-    minWidth: 140,
+    minWidth: 110,
   },
   {
     label: '预估下月仓储费',
     prop: 'estimatedFees',
     checked: true,
     minWidth: 140,
-  },
-  {
-    label: '盈亏售价',
-    prop: 'profitLossPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '30毛利售价',
-    prop: 'profitPrice',
-    checked: true,
-    minWidth: 110,
   },
   {
     label: '操作建议',
@@ -1821,6 +1486,14 @@ const columnsParentAsin = ref<any>([
     isFixed: 'left'
   },
   {
+    label: 'SKU',
+    prop: 'sku',
+    disableCheck: true,
+    checked: true,
+    minWidth: 100,
+    isFixed: 'left'
+  },
+  {
     label: '父体ASIN',
     prop: 'pAsin',
     disableCheck: true,
@@ -1829,12 +1502,10 @@ const columnsParentAsin = ref<any>([
     isFixed: 'left'
   },
   {
-    label: 'SKU',
-    prop: 'sku',
-    disableCheck: true,
+    label: '站点',
+    prop: 'site',
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
   },
   {
     label: '销量趋势(点击看明细)',
@@ -1855,7 +1526,7 @@ const columnsParentAsin = ref<any>([
     minWidth: 90,
   },
   {
-    label: '今销$',
+    label: '今销',
     prop: 'todaySellD',
     checked: true,
     minWidth: 90,
@@ -1879,24 +1550,6 @@ const columnsParentAsin = ref<any>([
     minWidth: 100,
   },
   {
-    label: '季节系数',
-    prop: 'seasonalCoefficient',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营分类',
-    prop: 'classify',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '停产',
-    prop: 'ting',
-    checked: true,
-    minWidth: 60,
-  },
-  {
     label: '小类排名',
     prop: 'sRank',
     checked: true,
@@ -1909,40 +1562,10 @@ const columnsParentAsin = ref<any>([
     minWidth: 100,
   },
   {
-    label: '头部产品#',
-    prop: 'topProduct',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营备注',
-    prop: 'remark',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月仓储费',
+    label: 'FBA仓储费',
     prop: 'monthlyStorageFee',
     checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '当前售价',
-    prop: 'currentPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '试算毛利',
-    prop: 'trialGrossProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: 'FBA',
-    prop: 'fba',
-    checked: true,
-    minWidth: 80,
+    minWidth: 120,
   },
   {
     label: '2周广告转化',
@@ -2029,25 +1652,13 @@ const columnsParentAsin = ref<any>([
     minWidth: 110,
   },
   {
-    label: '移除货值',
-    prop: 'removeValue',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '移除%',
+    label: '移除量',
     prop: 'remove',
     checked: true,
     minWidth: 90,
   },
   {
-    label: '替换货值',
-    prop: 'replaceValue',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '替换%',
+    label: '替换量',
     prop: 'replace',
     checked: true,
     minWidth: 90,
@@ -2065,130 +1676,10 @@ const columnsParentAsin = ref<any>([
     minWidth: 100,
   },
   {
-    label: 'VOC满意度',
-    prop: 'VOCSatisfaction',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC缺陷%',
-    prop: 'VOCDefectP',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC缺陷#',
-    prop: 'VOCDefect',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC总订单',
-    prop: 'VOCOrder',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '上新',
-    prop: 'newReleases',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '库龄',
-    prop: 'storageAge',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '剩余库存',
-    prop: 'remainingStock',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '接收中',
-    prop: 'receiving',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '最近入库',
-    prop: 'recentlyStorage',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '总入库',
-    prop: 'totalStorage',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '库存可售',
-    prop: 'stockSale',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '可售含在途',
-    prop: 'saleTransit',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '断货',
-    prop: 'outOfStock',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '订货#',
-    prop: 'order',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '签收',
-    prop: 'sign',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '月有货率',
-    prop: 'monthlyAvailabilityRate',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '低量仓储费天数',
-    prop: 'lowFeeDays',
-    checked: true,
-    minWidth: 140,
-  },
-  {
     label: '预估下月仓储费',
     prop: 'estimatedFees',
     checked: true,
     minWidth: 140,
-  },
-  {
-    label: '盈亏售价',
-    prop: 'profitLossPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '30毛利售价',
-    prop: 'profitPrice',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '操作建议',
-    prop: 'suggestions',
-    checked: true,
-    minWidth: 100,
   },
   {
     label: '状态',
@@ -2242,24 +1733,6 @@ const developerOption = [
   },
 ]
 
-const keyWordTrendOption = [
-  {
-    label: '全部',
-    value: -1
-  },
-  {
-    label: '近半年',
-    value: 0
-  },
-  {
-    label: '近一年',
-    value: 1
-  },
-  {
-    label: '近两年',
-    value: 2
-  }
-]
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
     console.log(tab.props.name);
@@ -2278,23 +1751,19 @@ const closeOpeClassify = (value: boolean) => {
 }
 // 筛选可见
 const filterVisible = ref<boolean>(false)
-const filterFormRef = ref<FormInstance>()
-const filterForm = reactive<any>({
-
-})
-const clearFilterForm = () => {
-  // 每个都置空
+const handleCloseFilterDialog = (value: boolean) => {
+  filterVisible.value = value
 }
 // 关键词趋势
 const keyWordTrendVisible = ref<boolean>(false)
-// 关键词趋势图表
-const keywordTrendChartVisible = ref<boolean>(false)
-const queryKeyWordTrend = () => {
-  keywordTrendChartVisible.value = true
+const handleCloseKeyWordTrend = (value: boolean) => {
+  keyWordTrendVisible.value = value
 }
+
+
 // 处理自适应宽度
 const handleWidth = (item: any) => {
-  if (level.value === 0) {
+  
     if (item.label === 'SKU') {
       return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-', 'sku')
     } else if (item.label === 'ASIN') {
@@ -2304,23 +1773,7 @@ const handleWidth = (item: any) => {
     } else {
       return item.minWidth
     }
-  } else if (level.value === 1) {
-    if (item.label === 'SKU') {
-      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
-    } else if (item.label === 'ASIN') {
-      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
-    } else {
-      return item.minWidth
-    }
-  } else if (level.value === 2) {
-    if (item.label === 'SKU') {
-      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
-    } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
-    } else {
-      return item.minWidth
-    }
-  }
+ 
 }
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
   if (column.label === '销量趋势(点击看明细)') {
@@ -2332,7 +1785,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
 const handleChecked = (item: any) => {
   item.checked = !item.checked
 }
-const handleMove = (event: any) => {
+const handleMove1 = (event: any) => {
   const { related  } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
@@ -2342,7 +1795,26 @@ const handleMove = (event: any) => {
 
   return true; // 允许其他操作
 }
+const handleMove2 = (event: any) => {
+  const { related  } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
+  if (columnsAsin.value[targetIndex]?.disableCheck) {
+    return false; // 禁止移动到目标
+  }
+
+  return true; // 允许其他操作
+}
+const handleMove3 = (event: any) => {
+  const { related  } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columnsParentAsin.value[targetIndex]?.disableCheck) {
+    return false; // 禁止移动到目标
+  }
+
+  return true; // 允许其他操作
+}
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () => {
@@ -2353,7 +1825,7 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-const level = ref<number>(0)
+
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
