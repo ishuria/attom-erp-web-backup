@@ -103,6 +103,18 @@
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 销量趋势<br />(点击看明细)
               </span>
+              <span v-if="item.label === '2周广告转化'">
+                2周广告<br />转化
+              </span>
+              <span v-if="item.label === '2周广告点击'">
+                2周广告<br />点击
+              </span>
+              <span v-if="item.label === '库存可售'">
+                库存<br />可售
+              </span>
+              <span v-if="item.label === '可售含在途'">
+                可售<br />含在途
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -128,7 +140,9 @@
                 <el-link type="primary">{{ row.pAsin }}</el-link>
               </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                <span>点击</span>
+                <div class="custom-bar">
+                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                </div>
               </span>
               <span v-if="item.label === '运营分类'">
                 <el-select style="min-width: 100%;">
@@ -142,6 +156,49 @@
               </span>
               <span v-if="item.label === '停产'">
                 <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+              </span>
+              <span v-if="label1.includes(item.label)">
+                {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+              </span>
+              <span v-if="label2.includes(item.label)">
+                {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+              </span>
+              <span v-if="label3.includes(item.label)">
+                {{ row[label3Map.get(item.label)!] }}天
+              </span>
+              <span v-if="item.label === 'VOC满意度'">
+                <el-tag v-if="row.VOCSatisfaction === 0" class="customTag customTag-veryPoor">
+                  Very poor
+                </el-tag>
+                <el-tag v-if="row.VOCSatisfaction === 1" class="customTag customTag-fair">
+                  Fair
+                </el-tag>
+                <el-tag v-if="row.VOCSatisfaction === 2" class="customTag customTag-poor">
+                  Poor
+                </el-tag>
+                <el-tag v-if="row.VOCSatisfaction === 3" class="customTag customTag-good">
+                  Good
+                </el-tag>
+                <el-tag v-if="row.VOCSatisfaction === 4" class="customTag customTag-excellent">
+                  Excellent
+                </el-tag>
+              </span>
+              <span v-if="item.label === '半年有货率'">
+                {{ Math.floor(Number(row.monthlyAvailabilityRate)) }}%
+              </span>
+              <span v-if="item.label === '今广%'">
+                {{ Math.floor(Number(row.todayAd)) }}%
+              </span>
+              <span v-if="item.label === '广告'">
+                {{ row.ad === 0 ? '关' : '开' }}
+              </span>
+              <span v-if="item.label === '运营备注'">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                  </template>
+                  <span>{{ removeHtmlTags(row.remark) }}</span>
+                </el-tooltip>
               </span>
             </template>
           </el-table-column>
@@ -259,6 +316,18 @@
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 销量趋势<br />(点击看明细)
               </span>
+              <span v-if="item.label === '2周广告转化'">
+                2周广告<br />转化
+              </span>
+              <span v-if="item.label === '2周广告点击'">
+                2周广告<br />点击
+              </span>
+              <span v-if="item.label === '库存可售'">
+                库存<br />可售
+              </span>
+              <span v-if="item.label === '可售含在途'">
+                可售<br />含在途
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -268,24 +337,30 @@
                   </template>
                 </el-image>
               </span>
-              <!-- SKU 展示-->
-              <span v-if="item.label === 'SKU'">
-                {{ row.sku }}
+              <span v-if="item.label === 'ASIN'">
+                <el-link type="primary">{{ row.asin }}</el-link>
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rate }}</span>
                   <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate" /></span>
                   <span class="rate-count">{{ 484 }}</span>
                 </div>
               </span>
-              <span v-if="item.label === 'ASIN'">
-                <el-link type="primary">{{ row.asin }}</el-link>
+              <span v-if="item.label === 'SKU'">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.sku) }}</div>
+                  </template>
+                  <span>{{ removeHtmlTags(row.sku) }}</span>
+                </el-tooltip>
               </span>
               <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.pAsin }}</el-link>
               </span>
              
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                <span>点击</span>
+                <div class="custom-bar">
+                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                </div>
               </span>
               <span v-if="item.label === '运营分类'">
                 <el-select style="min-width: 100%;">
@@ -299,6 +374,32 @@
               </span>
               <span v-if="item.label === '停产'">
                 <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+              </span>
+              <span v-if="label1.includes(item.label)">
+                {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+              </span>
+              <span v-if="label2.includes(item.label)">
+                {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+              </span>
+              <span v-if="label3.includes(item.label)">
+                {{ row[label3Map.get(item.label)!] }}天
+              </span>
+              <span v-if="item.label === '半年有货率'">
+                {{ Math.floor(Number(row.monthlyAvailabilityRate)) }}%
+              </span>
+              <span v-if="item.label === '今广%'">
+                {{ Math.floor(Number(row.todayAd)) }}%
+              </span>
+              <span v-if="item.label === '广告'">
+                {{ row.ad === 0 ? '关' : '开' }}
+              </span>
+              <span v-if="item.label === '运营备注'">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                  </template>
+                  <span>{{ removeHtmlTags(row.remark) }}</span>
+                </el-tooltip>
               </span>
             </template>
           </el-table-column>
@@ -416,6 +517,18 @@
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 销量趋势<br />(点击看明细)
               </span>
+              <span v-if="item.label === '2周广告转化'">
+                2周广告<br />转化
+              </span>
+              <span v-if="item.label === '2周广告点击'">
+                2周广告<br />点击
+              </span>
+              <span v-if="item.label === '库存可售'">
+                库存<br />可售
+              </span>
+              <span v-if="item.label === '可售含在途'">
+                可售<br />含在途
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -435,8 +548,18 @@
                   <span class="rate-count">{{ 484 }}</span>
                 </div>
               </span>
+              <span v-if="item.label === 'SKU'">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.sku) }}</div>
+                  </template>
+                  <span>{{ removeHtmlTags(row.sku) }}</span>
+                </el-tooltip>
+              </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                <span>点击</span>
+                <div class="custom-bar">
+                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                </div>
               </span>
               <span v-if="item.label === '运营分类'">
                 <el-select style="min-width: 100%;">
@@ -450,6 +573,18 @@
               </span>
               <span v-if="item.label === '停产'">
                 <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+              </span>
+              <span v-if="label1.includes(item.label)">
+                {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+              </span>
+              <span v-if="label2.includes(item.label)">
+                {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+              </span>
+              <span v-if="item.label === '今广%'">
+                {{ Math.floor(Number(row.todayAd)) }}%
+              </span>
+              <span v-if="item.label === '广告'">
+                {{ row.ad === 0 ? '关' : '开' }}
               </span>
             </template>
           </el-table-column>
@@ -483,6 +618,18 @@
       :key-word-trend-visible="keyWordTrendVisible"
       @update-visible="handleCloseKeyWordTrend"
     />
+    <!-- 运营备注 -->
+    <vab-dialog
+      title="运营备注"
+      v-model="remarkVisible"
+      width="20%"
+    >
+      <el-input type="textarea" :rows="15" placeholder="请输入运营备注" />
+      <template #footer>
+        <el-button @click="remarkVisible = false">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -491,27 +638,132 @@ defineOptions({
   name: 'productPerformance',
 })
 import { Hide, Search, Star, View } from '@element-plus/icons-vue'
-import { FormInstance, TabsPaneContext } from 'element-plus'
+import { TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { adStatusOption, levelOption, opeClassOption } from '../constantOption'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { currencySymbols, opeClassOption } from '../constantOption'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const activeName = ref<number>(0)
 const router = useRouter()
-const fakeData = ref<any>([
+// 运营备注
+const remarkVisible = ref<boolean>(false)
+const showRemark = () => {
+  remarkVisible.value = true
+}
+interface IData {
+  componentImage: string;
+  sku: string;
+  rate: number;
+  asin: string;
+  pAsin: string;
+  saleTrendList: {};
+  todaySell: number;
+  todayOrder: number;
+  todaySellD: number;
+  todayAd: number;
+  ad: number;
+  pieChart: string;
+  seasonalCoefficient: number;
+  classify: string;
+  sRank: number;
+  bRank: number;
+  topProduct: number;
+  remark: string;
+  monthlyStorageFee: number;
+  currentPrice: number;
+  trialGrossProfit: number;
+  fba: number;
+  fbaA: number;
+  fbaD: number;
+  conversion: number;
+  click: number;
+  totalConvert: number;
+  monthlySell: number;
+  monthlyNetProfit: number;
+  monthlySales: number;
+  monthlyNetInterestRate: number;
+  monthlyAdSales: number;
+  monthlyAdSpend: number;
+  monthlyAd: number;
+  monthlyACOS: number;
+  monthlyTACOS: number;
+  yearACOS: number;
+  yearTACOS: number;
+  removeValue: number;
+  remove: number;
+  replaceValue: number;
+  replace: number;
+  monthlyReturns: number;
+  monthlyRefund: number;
+  VOCSatisfaction: number;
+  VOCDefectP: number;
+  VOCDefect: number;
+  VOCOrder: number;
+  newReleases: number;
+  storageAge: string;
+  remainingStock: string;
+  receiving: number;
+  recentlyStorage: string;
+  totalStorage: number;
+  stockSale: number;
+  saleTransit: number;
+  outOfStock: number;
+  order: number;
+  sign: string;
+  monthlyAvailabilityRate: number;
+  lowFeeDays: number;
+  estimatedFees: number;
+  profitLossPrice: number;
+  profitPrice: number;
+  suggestions: string;
+  status: string;
+  productDes: string;
+  person: string;
+  id: number;
+}
+const fakeData = ref<IData[]>([
   {
     componentImage: 'https://picsum.photos/200/200',
     sku: 'SKU12345',
     rate: 4.7,
     asin: 'B08N5M7S6K',
     pAsin: 'B08N5M7S6K',
-    trend: '点击看明细',
+    saleTrendList: {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    },
     todaySell: 100,
     todayOrder: 50,
     todaySellD: 1500,
     todayAd: 10,
-    ad: 500,
+    ad: 1,
     pieChart: '',
     seasonalCoefficient: 1.5,
     classify: '电子产品',
@@ -521,8 +773,10 @@ const fakeData = ref<any>([
     remark: '备注信息1',
     monthlyStorageFee: 100,
     currentPrice: 29.99,
-    trialGrossProfit: 10.5,
-    fba: '是',
+    trialGrossProfit: 0.5,
+    fba: 3.99,
+    fbaA: 2.99,
+    fbaD: 5.66,
     conversion: 12,
     click: 300,
     totalConvert: 25,
@@ -543,15 +797,15 @@ const fakeData = ref<any>([
     replace: 10,
     monthlyReturns: 3,
     monthlyRefund: 2,
-    VOCSatisfaction: 90,
+    VOCSatisfaction: 1,
     VOCDefectP: 1,
     VOCDefect: 10,
     VOCOrder: 200,
     newReleases: 20,
-    storageAge: 30,
-    remainingStock: 100,
+    storageAge: '81-270 0\n71-360 0',
+    remainingStock: '100/831',
     receiving: 50,
-    recentlyStorage: 200,
+    recentlyStorage: '6天/1400\n12天/200',
     totalStorage: 500,
     stockSale: 300,
     saleTransit: 100,
@@ -575,12 +829,41 @@ const fakeData = ref<any>([
     rate: 4.0,
     asin: 'B08XYZ1234',
     pAsin: 'B08XYZ1234',
-    trend: '点击看明细',
+    saleTrendList: {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    },
     todaySell: 200,
     todayOrder: 100,
     todaySellD: 2500,
     todayAd: 15,
-    ad: 800,
+    ad: 0,
     pieChart: '',
     seasonalCoefficient: 1.8,
     classify: '家居用品',
@@ -591,7 +874,9 @@ const fakeData = ref<any>([
     monthlyStorageFee: 150,
     currentPrice: 45.99,
     trialGrossProfit: 15.5,
-    fba: '否',
+    fba: 3,
+    fbaA: 4,
+    fbaD: 5,
     conversion: 10,
     click: 500,
     totalConvert: 20,
@@ -612,15 +897,15 @@ const fakeData = ref<any>([
     replace: 12,
     monthlyReturns: 2,
     monthlyRefund: 1,
-    VOCSatisfaction: 85,
+    VOCSatisfaction: 2,
     VOCDefectP: 2,
     VOCDefect: 5,
     VOCOrder: 300,
     newReleases: 15,
-    storageAge: 25,
-    remainingStock: 200,
+    storageAge: '81-270 0\n71-360 0',
+    remainingStock: '100/831',
     receiving: 70,
-    recentlyStorage: 150,
+    recentlyStorage: '6天/1400\n12天/200',
     totalStorage: 600,
     stockSale: 350,
     saleTransit: 120,
@@ -644,12 +929,41 @@ const fakeData = ref<any>([
     rate: 4.3,
     asin: 'B08N5M7S6K',
     pAsin: 'B08N5M7S6K',
-    trend: '点击看明细',
+    saleTrendList: {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    },
     todaySell: 100,
     todayOrder: 50,
     todaySellD: 1500,
     todayAd: 10,
-    ad: 500,
+    ad: 0,
     pieChart: '',
     seasonalCoefficient: 1.5,
     classify: '电子产品',
@@ -660,7 +974,9 @@ const fakeData = ref<any>([
     monthlyStorageFee: 100,
     currentPrice: 29.99,
     trialGrossProfit: 10.5,
-    fba: '是',
+    fba: 3,
+    fbaA: 4,
+    fbaD: 5,
     conversion: 12,
     click: 300,
     totalConvert: 25,
@@ -681,15 +997,15 @@ const fakeData = ref<any>([
     replace: 10,
     monthlyReturns: 3,
     monthlyRefund: 2,
-    VOCSatisfaction: 90,
+    VOCSatisfaction: 3,
     VOCDefectP: 1,
     VOCDefect: 10,
     VOCOrder: 200,
     newReleases: 20,
-    storageAge: 30,
-    remainingStock: 100,
+    storageAge: '81-270 0\n71-360 0',
+    remainingStock: '100/831',
     receiving: 50,
-    recentlyStorage: 200,
+    recentlyStorage: '6天/1400\n12天/200',
     totalStorage: 500,
     stockSale: 300,
     saleTransit: 100,
@@ -707,6 +1023,55 @@ const fakeData = ref<any>([
     person: '张三',
     id: 3
   },
+])
+
+function getRowValue(row: any, label: string, labelMap: any): number {
+  const key = labelMap.get(label)
+  // 如果找不到 key，返回 0；如果 key 存在，但 row[key] 不是数字，也返回 0
+  return typeof key !== 'undefined' && typeof row[key] === 'number' ? row[key] : 0
+}
+function formatPercentage(value: number): string {
+  const percentage = (value * 100).toFixed(2)  // 将小数转换为百分比，并保留两位小数
+  return `${percentage}%`
+}
+
+const label1 = ['今销', 'FBA仓储费', '当前售价', '亚马逊FBA', 'FBA差异', '月净利润', '月销售额', '月广告销售', '月广告支出', '预计下月仓储费', '盈亏售价', '30毛利售价']
+const label2 = ['试算毛利', '2周广告转化', '2周广告点击', '2周总转化', '月净利率', '月广告%', '月ACOS', '月TACOS', '1年ACOS', '1年TACOS', '月退货%', '月退款%', 'VOC缺陷%']
+const label3 = ['上新', '库存可售', '可售含在途', '断货']
+const label1Map = new Map([
+  ['今销', 'totalSellD'],
+  ['FBA仓储费', 'monthlyStorageFee'],
+  ['当前售价', 'currentPrice'],
+  ['亚马逊FBA', 'fbaA'],
+  ['FBA差异', 'fbaD'],
+  ['月净利润', 'monthlyNetProfit'],
+  ['月销售额', 'monthlySales'],
+  ['月广告销售', 'monthlyAdSales'],
+  ['月广告支出', 'monthlyAdSpend'],
+  ['预计下月仓储费', 'estimatedFees'],
+  ['盈亏售价', 'profitLossPrice'],
+  ['30毛利售价', 'profitPrice'],
+])
+const label2Map = new Map([
+  ['试算毛利', 'trialGrossProfit'],
+  ['2周广告转化', 'conversion'],
+  ['2周广告点击', 'click'],
+  ['2周总转化', 'totalConvert'],
+  ['月净利率', 'monthlyNetInterestRate'],
+  ['月广告%', 'monthlyAd'],
+  ['月ACOS', 'monthlyACOS'],
+  ['月TACOS', 'monthlyTACOS'],
+  ['1年ACOS', 'yearACOS'],
+  ['1年TACOS', 'yearTACOS'],
+  ['月退货%', 'monthlyReturns'],
+  ['月退款%', 'monthlyRefund'],
+  ['VOC缺陷%', 'VOCDefectP'],
+])
+const label3Map = new Map([
+  ['上新', 'newReleases'],
+  ['库存可售', 'stockSale'],
+  ['可售含在途', 'saleTransit'],
+  ['断货', 'outOfStock'],
 ])
 
 const checkList1 = computed(() => {
@@ -761,7 +1126,7 @@ const columns = ref<any>([
     label: '销量趋势(点击看明细)',
     prop: 'trend',
     checked: true,
-    minWidth: 120,
+    minWidth: 180,
   },
   {
     label: '今销#',
@@ -777,7 +1142,7 @@ const columns = ref<any>([
   },
   {
     label: '今销',
-    prop: 'todaySellD',
+    prop: 'totalSellD',
     checked: true,
     minWidth: 90,
   },
@@ -839,13 +1204,13 @@ const columns = ref<any>([
     label: '运营备注',
     prop: 'remark',
     checked: true,
-    minWidth: 100,
+    minWidth: 150,
   },
   {
     label: 'FBA仓储费',
     prop: 'monthlyStorageFee',
     checked: true,
-    minWidth: 120,
+    minWidth: 150,
   },
   {
     label: '当前售价',
@@ -867,13 +1232,13 @@ const columns = ref<any>([
   },
   {
     label: '亚马逊FBA',
-    prop: 'fba',
+    prop: 'fbaA',
     checked: true,
     minWidth: 110,
   },
   {
     label: 'FBA差异',
-    prop: 'fba',
+    prop: 'fbaD',
     checked: true,
     minWidth: 100,
   },
@@ -989,7 +1354,7 @@ const columns = ref<any>([
     label: 'VOC满意度',
     prop: 'VOCSatisfaction',
     checked: true,
-    minWidth: 110,
+    minWidth: 130,
   },
   {
     label: 'VOC缺陷%',
@@ -1146,16 +1511,16 @@ const columnsAsin = ref<any>([
     isFixed: 'left'
   },
   {
-    label: 'SKU',
-    prop: 'sku',
+    label: 'ASIN',
+    prop: 'asin',
     disableCheck: true,
     checked: true,
     minWidth: 100,
     isFixed: 'left'
   },
   {
-    label: 'ASIN',
-    prop: 'asin',
+    label: 'SKU',
+    prop: 'sku',
     disableCheck: true,
     checked: true,
     minWidth: 100,
@@ -1251,7 +1616,7 @@ const columnsAsin = ref<any>([
     label: '运营备注',
     prop: 'remark',
     checked: true,
-    minWidth: 100,
+    minWidth: 150,
   },
   {
     label: 'FBA仓储费',
@@ -1486,19 +1851,19 @@ const columnsParentAsin = ref<any>([
     isFixed: 'left'
   },
   {
-    label: 'SKU',
-    prop: 'sku',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left'
-  },
-  {
     label: '父体ASIN',
     prop: 'pAsin',
     disableCheck: true,
     checked: true,
     minWidth: 110,
+    isFixed: 'left'
+  },
+  {
+    label: 'SKU',
+    prop: 'sku',
+    disableCheck: true,
+    checked: true,
+    minWidth: 100,
     isFixed: 'left'
   },
   {
@@ -1763,7 +2128,7 @@ const handleCloseKeyWordTrend = (value: boolean) => {
 
 // 处理自适应宽度
 const handleWidth = (item: any) => {
-  
+  if (activeName.value === 0) {
     if (item.label === 'SKU') {
       return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-', 'sku')
     } else if (item.label === 'ASIN') {
@@ -1773,13 +2138,33 @@ const handleWidth = (item: any) => {
     } else {
       return item.minWidth
     }
- 
+  } else if (activeName.value === 1) {
+    if (item.label === 'SKU') {
+      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
+    } else if (item.label === 'ASIN') {
+      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
+    } else if (item.label === '父体ASIN') {
+      return flexColumnWidth(fakeData.value, '父体ASIN', 'pAsin')
+    } else {
+      return item.minWidth
+    }
+  } else {
+    if (item.label === 'SKU') {
+      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
+    } else if (item.label === '父体ASIN') {
+      return flexColumnWidth(fakeData.value, '父体ASIN-ASIN-ASIN', 'pAsin')
+    } else {
+      return item.minWidth
+    }
+  }
 }
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
   if (column.label === '销量趋势(点击看明细)') {
     router.push({
       path: '/storeOperations/productAnalysis',
     })
+  } else if (column.label === '运营备注') {
+    showRemark()
   }
 }
 const handleChecked = (item: any) => {
@@ -1847,7 +2232,7 @@ const handleSizeChange = (value: number) => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN') {
+  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '运营备注') {
     return {
       textAlign: 'left'
     }
@@ -1863,6 +2248,7 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -1976,5 +2362,36 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
     margin-left: -11px;
   }
 }
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
+}
+.customTag {
+  color: #fff; 
+  border-radius: 17px; 
+  padding: 0 30px;
+  border: 0;
+  width: 7em;
 
+  &-veryPoor {
+    background-color: #e32e00; 
+  }
+  &-good {
+    background-color: #bad411; 
+  }
+  &-fair {
+    background-color: #ffc400;
+  }
+  &-poor {
+    background-color: #ff9900;
+  }
+  &-excellent {
+    background-color: #49850f;
+  }
+}
+.custom-bar {
+  width: 100%;
+  height: 50px;
+}
 </style>

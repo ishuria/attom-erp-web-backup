@@ -2,10 +2,19 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="10">
-        <el-button type="primary">导出</el-button>
+        <el-button type="primary" @click="handleExport">导出</el-button>
         <el-button type="primary" @click="showWhVerify">入库核对</el-button>
         <el-button type="primary" @click="showSummary">导出未匹配发票汇总信息</el-button>
-        <el-date-picker style="margin: 0 10px calc(var(--el-margin) / 2) 0; width: 20em;" v-model="queryForm.dateRange" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期" ></el-date-picker>
+        <el-date-picker 
+          style="margin: 0 10px calc(var(--el-margin) / 2) 0; max-width: 20em;" 
+          v-model="date" 
+          type="daterange" 
+          start-placeholder="开始日期" 
+          end-placeholder="结束日期" 
+          :editable="false"
+          :clearable="false"
+          @change="queryDateData"
+        ></el-date-picker>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="14">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -19,24 +28,28 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
-      border
+      border stripe
       :header-cell-style="{ textAlign: 'center' }"
       :cell-style="cellStyle"
-      :data="fakeData"
+      :data="list"
     >
-      <el-table-column label="报关单出库日期" prop="" min-width="115"></el-table-column>
-      <el-table-column label="供应商名称" prop="" min-width="150"></el-table-column>
+      <el-table-column label="报关单出库日期" prop="outboundDate" min-width="130">
+        <template #default="{ row }">
+          {{ formatDate(new Date(row.outboundDate)) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="供应商名称" prop="suppliser" :width="flexColumnWidth(list, '供应商名称', 'suppliser')"></el-table-column>
       <el-table-column label="PO" prop="po" min-width="90"></el-table-column>
-      <el-table-column label="产品名称/型号" prop="" min-width="170"></el-table-column>
-      <el-table-column label="报关品名" prop="" min-width="200"></el-table-column>
-      <el-table-column label="零件名" prop="" min-width="200"></el-table-column>
-      <el-table-column label="零件数量" prop="" min-width="80"></el-table-column>
-      <el-table-column label="未税总价￥" prop="" min-width="110"></el-table-column>
-      <el-table-column label="含税总价￥" prop="" min-width="110"></el-table-column>
-      <el-table-column label="销售价格$" prop="" min-width="110"></el-table-column>
-      <el-table-column label="Shipment ID" prop="" min-width="130"></el-table-column>
-      <el-table-column label="合同编号" prop="" min-width="150"></el-table-column>
-      <el-table-column label="备注" prop="" min-width="150"></el-table-column>
+      <el-table-column label="产品名称/型号" prop="sku" :width="flexColumnWidth(list, '产品名称/型号', 'sku')"></el-table-column>
+      <el-table-column label="报关品名" prop="customDeclarationName" min-width="200"></el-table-column>
+      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"></el-table-column>
+      <el-table-column label="零件数量" prop="quantity" min-width="100"></el-table-column>
+      <el-table-column label="未税总价￥" prop="preTaxPrice" min-width="110"></el-table-column>
+      <el-table-column label="含税总价￥" prop="taxInclusivePrice" min-width="110"></el-table-column>
+      <el-table-column label="销售价格$" prop="salePrice" min-width="110"></el-table-column>
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')"></el-table-column>
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')"></el-table-column>
+      <el-table-column label="备注" prop="remark" min-width="150"></el-table-column>
       <!-- <el-table-column label="操作" prop="" width="140">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
@@ -49,13 +62,13 @@
     </el-table>
     <vab-pagination 
       :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
     <!-- 修改 -->
-    <vab-dialog
+    <!-- <vab-dialog
       title="修改"
       v-model="modifyVisible"
       width="20%"
@@ -72,9 +85,9 @@
         <el-button @click="modifyVisible = false">取消</el-button>
         <el-button type="primary" @click="confirmModify">确认</el-button>
       </template>
-    </vab-dialog>
+    </vab-dialog> -->
     <!-- 调增调减 -->
-    <vab-dialog
+    <!-- <vab-dialog
       title="调增调减"
       v-model="inOrDeVisible"
       width="25%"
@@ -139,7 +152,7 @@
         <el-button>取消</el-button>
         <el-button type="primary">确认</el-button>
       </template>
-    </vab-dialog>
+    </vab-dialog> -->
    
     <!-- 入库核对 -->
     <vab-dialog
@@ -161,21 +174,25 @@
       <el-table
         border
         :header-cell-style="{ textAlign: 'center' }"
-        :data="fakeData"
+        :data="paginatedList"
       >
-        <el-table-column label="出库日期" prop="" min-width="" align="center"></el-table-column>
-        <el-table-column label="供应商名称" prop="" min-width=""></el-table-column>
-        <el-table-column label="PO" prop="po" min-width=""></el-table-column>
-        <el-table-column label="SKU" prop="" min-width=""></el-table-column>
-        <el-table-column label="品名" prop="" min-width=""></el-table-column>
-        <el-table-column label="数量" prop="" min-width="" align="center"></el-table-column>
-        <el-table-column label="Shipment ID" prop="" min-width=""></el-table-column>
-        <el-table-column label="合同编号" prop="" min-width=""></el-table-column>
-        <el-table-column label="错误类型" prop="" min-width=""></el-table-column>
+        <el-table-column label="出库日期" prop="outboundDate" min-width="110" align="center">
+          <template #default="{ row }">
+            {{ formatDate(new Date(row.outboundDate)) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="供应商名称" prop="suppliser" :width="flexColumnWidth(checkList, '供应商名称', 'suppliser')"></el-table-column>
+        <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(checkList, 'SKU', 'sku')"></el-table-column>
+        <el-table-column label="品名" prop="customDeclarationName" min-width="100"></el-table-column>
+        <el-table-column label="数量" prop="quantity" min-width="90" align="center"></el-table-column>
+        <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(checkList, 'Shipment ID', 'shipmentId')"></el-table-column>
+        <el-table-column label="合同编号" prop="contractNumber" min-width="140"></el-table-column>
+        <el-table-column label="错误类型" prop="remark" min-width="130"></el-table-column>
       </el-table>
       <vab-pagination 
         :current-page="whVerifyForm.pageNo"
-        :page-size="whVerifyForm.pageNo"
+        :page-size="whVerifyForm.pageSize"
         :total="whTotal"
         @current-change="handleWhCurrentChange"
         @size-change="handleWhSizeChange"
@@ -186,95 +203,140 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { getDefaultStringTime } from '/@/utils/dateUtils'
+import { downloadFilePD } from '/@/api/devlocal/download'
+import { checkOutboundNotMatchInvoiceExport, getOutboundInventoryCheck, getOutBoundList } from '/@/api/devlocal/finance'
+import { IGetOutboundInventoryCheckList, IGetOutBoundList, IGetOutBoundListReq } from '/@/type/finance/financeType'
+import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
-const queryForm = reactive<any>({
+const date = ref<[string, string]>(getDefaultStringTime())
+const queryForm = reactive<IGetOutBoundListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  dateRange: getDefaultStringTime()
+  fromDate: date.value[0],
+  toDate: date.value[1]
 })
+const list = ref<IGetOutBoundList[]>([])
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 // 入库核对
+const checkList = ref<IGetOutboundInventoryCheckList[]>([])
 const whVerifyVisible = ref<boolean>(false)
 const whVerifyForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20
 })
+const filteredList = computed(() => {
+  // 如果有关键词则过滤数据
+  if (whVerifyForm.keyWord) {
+    return checkList.value.filter(item => 
+      item.suppliser.toLowerCase().includes(whVerifyForm.keyWord.toLowerCase())
+    )
+  }
+  return checkList.value
+})
+
+// 计算分页后的数据
+const paginatedList = computed(() => {
+  const start = (whVerifyForm.pageNo - 1) * whVerifyForm.pageSize
+  const end = start + whVerifyForm.pageSize
+  return filteredList.value.slice(start, end)
+})
+
 const whVerifyListLoading = ref<boolean>(false)
 const whQueryData = () => {
   whVerifyForm.pageNo = 1
-  // fetchWhData()
 }
 const whTotal = ref<number>(0)
 const handleWhCurrentChange = (value: number) => {
   whVerifyForm.pageNo = value
-  // fetchWhData()
 }
 const handleWhSizeChange = (value: number) => {
   whVerifyForm.pageNo = 1
   whVerifyForm.pageSize = value
-  // fetchWhData()
 }
-const showWhVerify = () => {
+const showWhVerify = async () => {
   whVerifyVisible.value = true
+  const { data } = await getOutboundInventoryCheck()
+  if (data) {
+    checkList.value = data
+    whTotal.value = data.length
+  }
 }
 
-const showSummary = () => {
-  
+const showSummary = async () => {
+  const { data } = await checkOutboundNotMatchInvoiceExport({
+    fromDate: date.value[0],
+    toDate: date.value[1]
+  })
+  if (data) {
+    await downloadFilePD('/outbound/notMatch/invoiceExport', {
+      fromDate: date.value[0],
+      toDate: date.value[1]
+    })
+  } 
 }
 
 
 // 调增调减展示
-const inOrDeVisible = ref<boolean>(false)
+// const inOrDeVisible = ref<boolean>(false)
 
 // 修改false
-const modifyVisible = ref<boolean>(false)
-const modifyForm = reactive<any>({
+// const modifyVisible = ref<boolean>(false)
+// const modifyForm = reactive<any>({
 
-})
-const modifyFormRef = ref<FormInstance>()
-const modifyRules = reactive<any>({
-  price1: [{ required: 'true', message: '请输入未税总价', trigger: 'blur' }],
-  price2: [{ required: 'true', message: '请输入含税总价', trigger: 'blur' }]
-})
-const confirmModify = () => {
-  modifyFormRef.value?.validate((isValid: boolean) => {
-    if (isValid) {
+// })
+// const modifyFormRef = ref<FormInstance>()
+// const modifyRules = reactive<any>({
+//   price1: [{ required: 'true', message: '请输入未税总价', trigger: 'blur' }],
+//   price2: [{ required: 'true', message: '请输入含税总价', trigger: 'blur' }]
+// })
+// const confirmModify = () => {
+//   modifyFormRef.value?.validate((isValid: boolean) => {
+//     if (isValid) {
       
-    }
+//     }
+//   })
+// }
+
+// 导出
+const handleExport = async () => {
+  await downloadFilePD('/outbound/export', {
+    fromDate: date.value[0],
+    toDate: date.value[1]
+  }).then((res) => {
+    
+  }).catch((err) => {
+    $baseMessage(err, 'error')
   })
 }
-const fakeData = [
-  {
-    po: 'PO123456',
-    preTaxPrice: '333'
-  }
-]
-
 // 展示修改
-const showModify = (row: any) => {
-  modifyVisible.value = true
-}
+// const showModify = (row: any) => {
+//   modifyVisible.value = true
+// }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
+}
+const queryDateData = () => {
+  queryForm.fromDate = date.value[0]
+  queryForm.toDate = date.value[1]
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 10 || data.columnIndex === 11) {
+  if (data.columnIndex === 1 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 5 || data.columnIndex === 10 || data.columnIndex === 11) {
     return {
       textAlign: 'left'
     }
@@ -283,6 +345,16 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'center'
   }
 }
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getOutBoundList(queryForm)
+  total.value = data?.total!
+  list.value = data?.list!
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>

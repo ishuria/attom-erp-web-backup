@@ -129,3 +129,27 @@ export const keyWordTrendOption = [
     value: 2
   }
 ]
+
+export const currencySymbols = new Map([
+  ['USD', '$'],  // United States Dollar
+  ['CNY', '¥'],  // Chinese Yuan
+  ['CAD', 'C$'], // Canadian Dollar
+  ['EUR', '€'],  // Euro
+  ['GBP', '£'],  // British Pound
+  ['JPY', '¥'],  // Japanese Yen
+  ['AUD', '$'],  // Australian Dollar
+  ['CHF', 'Fr'], // Swiss Franc
+  ['INR', '₹'],  // Indian Rupee
+  ['MXN', '$'],  // Mexican Peso
+  ['SGD', '$'],  // Singapore Dollar
+  ['HKD', '$'],  // Hong Kong Dollar
+  ['KRW', '₩'],  // South Korean Won
+  ['BRL', 'R$'], // Brazilian Real
+  ['SEK', 'kr'], // Swedish Krona
+  ['NOK', 'kr'], // Norwegian Krone
+  ['DKK', 'kr'], // Danish Krone
+  ['ZAR', 'R'],  // South African Rand
+  ['THB', '฿'],  // Thai Baht
+  ['MYR', 'RM'], // Malaysian Ringgit
+  ['RUB', '₽'],  // Russian Ruble
+])

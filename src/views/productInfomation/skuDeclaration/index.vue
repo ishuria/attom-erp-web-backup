@@ -63,22 +63,8 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HTS美国" :width="flexColumnWidth(list, 'HTS美国', 'htsUs')" prop="htsUs" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input v-model="row.htsUs" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.htsUs }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="HTS欧洲" :width="flexColumnWidth(list, 'HTS欧洲', 'htsEurope')" prop="htsEurope" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input v-model="row.htsEurope" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.htsEurope }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="HTS美国" :width="flexColumnWidth(list, 'HTS美国', 'htsUs')" prop="htsUs" ></el-table-column>
+      <el-table-column label="HTS欧洲" :width="flexColumnWidth(list, 'HTS欧洲', 'htsEurope')" prop="htsEurope" ></el-table-column>
       <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
         <template #default="{ row }">
           <div class="none">
@@ -306,7 +292,7 @@ const handleStatus1Change = async () => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4) {
+  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 6 || data.columnIndex === 7) {
     return {
       color: '#bbb',
       cursor: 'not-allowed',
@@ -366,8 +352,6 @@ const clickCancel = async (event: any, value: any) => {
     await updateCustomsClearanceSku({
       id: value.id,
       brank: value.brank,
-      htsUs: value.htsUs,
-      htsEurope: value.htsEurope,
       manufacturerEn: value.manufacturerEn,
       manufacturerAddressEn: value.manufacturerAddressEn,
       clearanceNameEn: value.clearanceNameEn,

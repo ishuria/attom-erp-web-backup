@@ -195,7 +195,7 @@ defineOptions({
 import { Search } from '@element-plus/icons-vue'
 import { FormInstance, TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { downloadFileP } from '~/src/api/devlocal/download'
+import { downloadFileP } from '/@/api/devlocal/download'
 import { getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate } from '/@/utils/dateUtils'

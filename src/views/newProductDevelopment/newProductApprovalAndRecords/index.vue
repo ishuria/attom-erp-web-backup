@@ -168,12 +168,12 @@
     </el-dialog>
         <!-- 关键词趋势图表 -->
         <vab-trend 
-          :trendEchatsVisible="keyWordTrendEchatsVisible"
+          :trendEchartsVisible="keyWordTrendEchatsVisible"
           :keyWord = "inputKeyWord"
-          :trnedData = "trendEcahts"
+          :trendData = "trendEcahts"
           @update:visibleValue = "updateTrendVisibleValue"
-          @update:clearnInputKeyWord = "cleanKeyWordTrendData"
-          @update:trendEchatsList  = "updateTrendEchatsData"
+          @update:clearInputKeyWord = "cleanKeyWordTrendData"
+          @update:trendEchartsList  = "updateTrendEchatsData"
     />
     <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>

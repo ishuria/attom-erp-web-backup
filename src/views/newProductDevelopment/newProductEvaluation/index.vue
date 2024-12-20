@@ -103,12 +103,12 @@
 
     <!-- 关键词趋势图表 -->
      <vab-trend 
-      :trendEchatsVisible="keyWordTrendEchatsVisible"
+      :trendEchartsVisible="keyWordTrendEchatsVisible"
       :keyWord = "inputKeyWord"
-      :trnedData = "trendEcahts"
+      :trendData = "trendEcahts"
       @update:visibleValue = "updateTrendVisibleValue"
-      @update:clearnInputKeyWord = "cleanKeyWordTrendData"
-      @update:trendEchatsList  = "updateTrendEchatsData"
+      @update:clearInputKeyWord = "cleanKeyWordTrendData"
+      @update:trendEchartsList  = "updateTrendEchatsData"
      />
 
     <el-dialog v-model="scoreParametersVisible" :close-on-click-modal="false" title="评分参数" width="500"
@@ -174,34 +174,35 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, ArrowDown } from '@element-plus/icons-vue'
+import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { type TableInstance } from 'element-plus'
-import { setLocalStorage } from '/@/utils/localStorage'
-import {
-  getList,
-  getEvaluationTrendList,
-  getEvaluationScoreParameter,
-  updateEvaluationScoreParams,
-  getEvaluationScoreDetail,
-  getEvaluationShareInfo,
-  getEstimatedCostAccountingList,
-  getEvaluationCostParameter,
-  updateSharePerson,
-} from '/@/api/devlocal/evaluation'
-import { getUserInfo } from '/@/api/devlocal/userLogin'
 import {
   indexColumns,
   scoreDetialColumns,
 } from './indexColumns'
+import {
+  getEstimatedCostAccountingList,
+  getEvaluationCostParameter,
+  getEvaluationScoreDetail,
+  getEvaluationScoreParameter,
+  getEvaluationShareInfo,
+  getEvaluationTrendList,
+  getList,
+  updateEvaluationScoreParams,
+  updateSharePerson,
+} from '/@/api/devlocal/evaluation'
+import { getUserInfo } from '/@/api/devlocal/userLogin'
+import { setLocalStorage } from '/@/utils/localStorage'
 
-import {IEstimatedCostAccounting,
-  IEvaluation,
-  IShared,
-  IEvaluationScore,
+import {
   IBenchmarkScore,
-  IEvaluationQueryReq,
   ICostAccounting,
-  IKeyWordTrend
+  IEstimatedCostAccounting,
+  IEvaluation,
+  IEvaluationQueryReq,
+  IEvaluationScore,
+  IKeyWordTrend,
+  IShared
 } from '/@/type/evaluation/evaluationType'
 
 import { convertString } from '/@/utils/stringUtils'

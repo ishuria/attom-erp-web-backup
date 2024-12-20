@@ -577,12 +577,12 @@ handleSubmit<template>
     </el-dialog>
     <!-- 关键词趋势图表 -->
         <vab-trend 
-          :trendEchatsVisible="keyWordTrendEchatsVisible"
+          :trendEchartsVisible="keyWordTrendEchatsVisible"
           :keyWord = "inputKeyWord"
-          :trnedData = "trendEcahts"
+          :trendData = "trendEcahts"
           @update:visibleValue = "updateTrendVisibleValue"
-          @update:clearnInputKeyWord = "cleanKeyWordTrendData"
-          @update:trendEchatsList  = "updateTrendEchatsData"
+          @update:clearInputKeyWord = "cleanKeyWordTrendData"
+          @update:trendEchartsList  = "updateTrendEchatsData"
     />
   </div>
 </template>

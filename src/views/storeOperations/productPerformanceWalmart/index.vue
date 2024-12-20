@@ -86,7 +86,7 @@
       :cell-style="cellStyle"
       :cell-class-name="clearPadding"
       :data="fakeData"
-      @cell-click=""
+      @cell-click="handleCellClick"
     >
       <el-table-column
         v-for="(item, index) in checkList"
@@ -101,6 +101,12 @@
           <span v-if="item.label === '销量趋势(点击看明细)'">
             销量趋势<br />(点击看明细)
           </span>
+          <span v-if="item.label === '库存可售'">
+            库存<br />可售
+          </span>
+          <span v-if="item.label === '可售含在途'">
+            可售<br />含在途
+          </span>
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
@@ -110,7 +116,6 @@
               </template>
             </el-image>
           </span>
-          <!-- SKU 展示-->
           <span v-if="item.label === 'SKU'">
             {{ row.sku }}
             <div class="rate-wrapper">
@@ -120,7 +125,7 @@
             </div>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
-            <span>点击</span>
+            
           </span>
           <span v-if="item.label === '运营分类'">
             <el-select style="min-width: 100%;">
@@ -134,6 +139,25 @@
           </span>
           <span v-if="item.label === '停产'">
             <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+          </span>
+         
+          <span v-if="item.label === '运营备注'">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+              </template>
+              <span>{{ removeHtmlTags(row.remark) }}</span>
+            </el-tooltip>
+          </span>
+         
+          <span v-if="label1.includes(item.label)">
+            {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+          </span>
+          <span v-if="label2.includes(item.label)">
+            {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+          </span>
+          <span v-if="label3.includes(item.label)">
+            {{ row[label3Map.get(item.label)!] }}天
           </span>
         </template>
       </el-table-column>
@@ -164,14 +188,26 @@
       :key-word-trend-visible="keyWordTrendVisible"
       @update-visible="handleCloseKeyWordTrend"
     />
+    <!-- 运营备注 -->
+    <vab-dialog
+      title="运营备注"
+      v-model="remarkVisible"
+      width="20%"
+    >
+      <el-input type="textarea" :rows="15" placeholder="请输入运营备注" />
+      <template #footer>
+        <el-button @click="remarkVisible = false">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Hide, Search, Star, View } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
-import { flexColumnWidth } from '/@/utils/tableColum'
-import { opeClassOption } from '../constantOption'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { currencySymbols, opeClassOption } from '../constantOption'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 
 const listLoading = ref<boolean>(false)
@@ -184,6 +220,27 @@ const queryForm = reactive<any>({
 const filterVisible = ref<boolean>(false)
 const keyWordTrendVisible = ref<boolean>(false)
 const opeClassifyVisible = ref<boolean>(false)
+const label1 = ['今销', '当前售价', '月销售额', '盈亏售价', '30毛利售价']
+const label2 = ['试算毛利', '月退货%', '月退款%']
+const label3 = ['上新', '库存可售', '可售含在途', '断货']
+const label1Map = new Map([
+  ['今销', 'totalSellD'],
+  ['当前售价', 'currentPrice'],
+  ['月销售额', 'monthlySales'],
+  ['盈亏售价', 'profitLossPrice'],
+  ['30毛利售价', 'profitPrice'],
+])
+const label2Map = new Map([
+  ['试算毛利', 'trialGrossProfit'],
+  ['月退货%', 'monthlyReturns'],
+  ['月退款%', 'monthlyRefund'],
+])
+const label3Map = new Map([
+  ['上新', 'newReleases'],
+  ['库存可售', 'stockSale'],
+  ['可售含在途', 'saleTransit'],
+  ['断货', 'outOfStock'],
+])
 const columns = ref<any>([
   {
     label: '图片',
@@ -609,9 +666,28 @@ const fakeData = ref<any>([
     id: 3
   },
 ])
+// 运营备注
+const remarkVisible = ref<boolean>(false)
+const showRemark = () => {
+  remarkVisible.value = true
+}
+const handleCellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  if (column.label === '运营备注') {
+    showRemark()
+  }
+}
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 
+function getRowValue(row: any, label: string, labelMap: any): number {
+  const key = labelMap.get(label)
+  // 如果找不到 key，返回 0；如果 key 存在，但 row[key] 不是数字，也返回 0
+  return typeof key !== 'undefined' && typeof row[key] === 'number' ? row[key] : 0
+}
+function formatPercentage(value: number): string {
+  const percentage = (value * 100).toFixed(2)  // 将小数转换为百分比，并保留两位小数
+  return `${percentage}%`
+}
 const handleCloseKeyWordTrend = (value: boolean) => {
   keyWordTrendVisible.value = value
 }
@@ -754,5 +830,10 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 }
 .disabled-handle {
   cursor: not-allowed;
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>

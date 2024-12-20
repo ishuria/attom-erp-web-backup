@@ -2,18 +2,20 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-top-panel>
-        <el-button type="primary">导出</el-button>
+        <el-button type="primary" @click="handleExport">导出</el-button>
       </vab-query-form-top-panel>
       <vab-query-form-left-panel>
         <span style="margin: 0 10px calc(var(--el-margin) / 2) 0;">
           <el-date-picker
-            v-model="queryForm.dateRange"
+            v-model="date"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            :clearable="false"
+            :editable="false"
+            @change="queryDateData"
           >
-
           </el-date-picker>
         </span>
       </vab-query-form-left-panel>
@@ -32,16 +34,20 @@
       border
       :header-cell-style="{ textAlign: 'center' }"
       :cell-style="cellStyle"
-      :data="fakeData"
+      :data="list"
     >
-      <el-table-column label="签收日期" prop="" min-width="120"></el-table-column>
-      <el-table-column label="供应商名称" prop="" min-width="130"></el-table-column>
+      <el-table-column label="签收日期" prop="signDate" min-width="120">
+        <template #default="{ row }">
+          {{ formatDate(new Date(row.signDate)) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="供应商名称" prop="suppliser" min-width="130"></el-table-column>
       <el-table-column label="PO" prop="po" min-width="90"></el-table-column>
-      <el-table-column label="产品名称/型号" prop="" min-width="130"></el-table-column>
-      <el-table-column label="品名" prop="" min-width="90"></el-table-column>
-      <el-table-column label="数量" prop="" min-width="90"></el-table-column>
-      <el-table-column label="价格" prop="" min-width="90"></el-table-column>
-      <el-table-column label="备注" prop="" min-width="90"></el-table-column>
+      <el-table-column label="产品名称/型号" prop="sku" min-width="130"></el-table-column>
+      <el-table-column label="品名" prop="componentName" min-width="90"></el-table-column>
+      <el-table-column label="数量" prop="purchaseCount" min-width="90"></el-table-column>
+      <el-table-column label="价格" prop="preTaxPrice" min-width="90"></el-table-column>
+      <el-table-column label="备注" prop="remark" min-width="90"></el-table-column>
       <!-- <el-table-column label="操作" fixed="right" width="100">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showInOrDe">调增调减</el-link>
@@ -59,7 +65,7 @@
       @size-change="handleSizeChange"
     />
     <!-- 调增调减 -->
-    <vab-dialog
+    <!-- <vab-dialog
       title="调增调减"
       v-model="inOrDeVisible"
       width="25%"
@@ -113,50 +119,61 @@
         <el-button>取消</el-button>
         <el-button type="primary">确认</el-button>
       </template>
-    </vab-dialog>
+    </vab-dialog> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
-import { getDefaultStringTime } from '/@/utils/dateUtils'
+import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
+import { IGetInBoundList, IGetOutBoundListReq } from '/@/type/finance/financeType'
+import { getInboundList } from '/@/api/devlocal/finance'
+import { downloadFilePD } from '~/src/api/devlocal/download'
 
+const date = ref<[string, string]>(getDefaultStringTime())
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-const list = ref<any>([])
-const queryForm = reactive<any>({
+const list = ref<IGetInBoundList[]>([])
+const queryForm = reactive<IGetOutBoundListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  dateRange: getDefaultStringTime()
+  fromDate: date.value[0],
+  toDate: date.value[1]
 })
-const fakeData = [
-  {
-    po: '123456'
-  }
-]
 // 调增调减可见
-const inOrDeVisible = ref<boolean>(false)
-const inOrDeForm = reactive<any>({
+// const inOrDeVisible = ref<boolean>(false)
+// const inOrDeForm = reactive<any>({
 
-})
+// })
 // 展示调增调减
-const showInOrDe = () => {
-  inOrDeVisible.value = true
+// const showInOrDe = () => {
+//   inOrDeVisible.value = true
+// }
+const handleExport = async () => {
+  await downloadFilePD('/inbound/export', {
+    fromDate: date.value[0],
+    toDate: date.value[1]
+  })
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
+}
+const queryDateData = () => {
+  queryForm.fromDate = date.value[0]
+  queryForm.toDate = date.value[1]
+  queryData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
   if (data.columnIndex === 1 || data.columnIndex === 3 || data.columnIndex === 4) {
@@ -168,6 +185,16 @@ const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: 
     textAlign: 'center'
   }
 }
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getInboundList(queryForm)
+  total.value = data?.total!
+  list.value = data?.list!
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>

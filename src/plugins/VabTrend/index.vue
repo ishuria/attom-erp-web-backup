@@ -1,6 +1,6 @@
 <template>
   <vab-dialog
-    :model-value="props.trendEchatsVisible"
+    :model-value="props.trendEchartsVisible"
     :before-close="handlerClose"
     width="75%"
     title="关键词趋势"
@@ -9,7 +9,7 @@
     <el-select v-model="idxKeyWordValue" :reserve-keyword="false" @change="idxUpdateKeyWordTrend" style="width: 200px">
       <el-option v-for="item in idxKeyWordOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <vab-echarts-chart-line class="chart-line" :x-axis-data="trnedData.xAxis" :y-axis-data="trnedData.yAxis" />
+    <vab-echarts-chart-line class="chart-line" :x-axis-data="trendData.xAxis" :y-axis-data="trendData.yAxis" />
     <template #footer></template>
   </vab-dialog>
 </template>
@@ -27,15 +27,15 @@ defineOptions({
 })
 
 const emit = defineEmits<{ 
-    (e: 'update:visibleValue', value: boolean): void
-    (e: 'update:clearnInputKeyWord', value: string): void
-    (e: 'update:trendEchatsList', value: IKeyWordTrend): void
+  (e: 'update:visibleValue', value: boolean): void
+  (e: 'update:clearInputKeyWord', value: string): void
+  (e: 'update:trendEchartsList', value: IKeyWordTrend): void
 }>()
 
 let props = withDefaults(defineProps<{
-    trendEchatsVisible: boolean
-    keyWord:string
-    trnedData:IKeyWordTrend
+    trendEchartsVisible: boolean
+    keyWord: string
+    trendData: IKeyWordTrend
 }>(),{
 
 });
@@ -48,9 +48,9 @@ const idxKeyWordValue = ref<string>('0')
 const handlerClose = () => {
     setTimeout(() => {
       idxKeyWordValue.value = "0"
-      emit('update:clearnInputKeyWord', "")
+      emit('update:clearInputKeyWord', "")
       emit('update:visibleValue', false)
-      emit('update:trendEchatsList',{xAxis:[],yAxis:[]})
+      emit('update:trendEchartsList',{xAxis:[],yAxis:[]})
     }, 800);
 }
 
@@ -58,9 +58,9 @@ const handlerClose = () => {
  * 关键词下拉change
  */
  const idxUpdateKeyWordTrend = async (val: any) => {
-  emit('update:trendEchatsList',{xAxis:[],yAxis:[]})  
+  emit('update:trendEchartsList',{xAxis:[],yAxis:[]})  
   const { data } = await getEvaluationTrendList({ keyWord: props.keyWord, type: val })
-  emit('update:trendEchatsList',{xAxis:data.xAxis,yAxis:data.y})
+  emit('update:trendEchartsList',{xAxis:data.xAxis,yAxis:data.y})
 }
 
 

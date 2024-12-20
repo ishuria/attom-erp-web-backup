@@ -31,7 +31,8 @@
         </el-select>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <vab-chart />    
+    <vab-echarts-chart-line  class="chart-line"  :x-axis-data="trendData.xAxis" :y-axis-data="trendData.yAxis" />
+    <template #footer></template>  
   </vab-dialog>
 </template>
 
@@ -50,6 +51,10 @@ watchEffect(() => {
 })
 const emit = defineEmits(['updateVisible'])
 const keywordTrendChartVisible = ref<boolean>(false)
+const trendData = {
+  xAxis: ['2024-12-20', '2024-12-20'],
+  yAxis: [30, 50]
+}
 const queryKeyWordTrend = () => {
   keywordTrendChartVisible.value = true
 }

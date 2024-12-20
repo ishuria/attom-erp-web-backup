@@ -1179,14 +1179,14 @@ export interface IUpdateCustomsClearanceSku {
    * HS
    */
   hs?: string
-  /**
-   * HTS欧洲
-   */
-  htsEurope?: string
-  /**
-   * HTS美国
-   */
-  htsUs?: string
+  // /**
+  //  * HTS欧洲
+  //  */
+  // htsEurope?: string
+  // /**
+  //  * HTS美国
+  //  */
+  // htsUs?: string
   /**
    * sku报关id
    */
