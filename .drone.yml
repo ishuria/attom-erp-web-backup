@@ -3,20 +3,10 @@ kind: pipeline
 type: docker
 name: web
 
-# 声明宿主机 映射到 drone执行器的数据卷
-volumes:
-  - name: node_modules # 数据卷名称
-    host:
-      # 宿主机的绝对路径
-      path: /home/attom-12/app/erp/web/node_modules
-
 steps:
   # npm 构建
   - name: npm-build
     image: node:20.15.1
-    volumes: #
-      - name: node_modules # 数据卷名称
-        path: /drone/src/node_modules # 容器内的绝对路径
     commands:
       - pwd
       - ls -alt
