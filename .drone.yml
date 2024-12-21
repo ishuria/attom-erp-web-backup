@@ -7,6 +7,8 @@ steps:
   # npm 构建
   - name: npm-build
     image: node:20.15.1
+    environment:
+      SHARP_DIST_BASE_URL: https://npmmirror.com/mirrors/sharp-libvips/
     commands:
       - pwd
       - ls -alt
