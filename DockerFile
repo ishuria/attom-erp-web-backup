@@ -1,3 +1,5 @@
+FROM node:20.15.1:alpine
+
 # 设置工作目录
 WORKDIR /app
 
