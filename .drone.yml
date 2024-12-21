@@ -5,16 +5,16 @@ name: web
 
 steps:
   # npm 构建
-  - name: npm-build
-    image: node:20.15.1
-    environment:
-      SHARP_DIST_BASE_URL: https://npmmirror.com/mirrors/sharp-libvips/
-    commands:
-      - pwd
-      - ls -alt
-      - npm config set registry https://registry.npmmirror.com
-      - npm install --verbose
-      - npm run build
+  # - name: npm-build
+  #   image: node:20.15.1
+  #   environment:
+  #     SHARP_DIST_BASE_URL: https://npmmirror.com/mirrors/sharp-libvips/
+  #   commands:
+  #     - pwd
+  #     - ls -alt
+  #     - npm config set registry https://registry.npmmirror.com
+  #     - npm install --verbose
+  #     - npm run build
 
   # 打包构建镜像
   - name: build-docker-image
