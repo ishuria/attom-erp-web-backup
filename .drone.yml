@@ -1,0 +1,39 @@
+# 项目的.drone.yml 文件
+kind: pipeline
+type: docker
+name: attom-erp-web
+
+# 声明宿主机 映射到 drone执行器的数据卷
+volumes:
+  - name: node_modules # 数据卷名称
+    host:
+      # 宿主机的绝对路径
+      path: /home/attom-12/app/erp/web/node_modules
+
+steps:
+  - name: build-attom-web-project # 步骤名称
+    image: node:20.15.1 # 使用镜像和版本
+    # volumes: # 当前步骤使用(挂载)的卷轴
+    #   - name: node_modules # 数据卷名称
+    #     path: /drone/src/node_modules # 容器内的绝对路径
+    # 执行的命令
+    commands:
+      - pwd # 查看当前目录 `/drone/src`
+      # - ls -alt
+      # - npm config set registry https://registry.npm.taobao.org # 切换淘宝镜像
+      # - npm install # 安装依赖
+      # - npm run build # 执行构建指令
+    # when:
+    #   event: tag
+
+  # - name: deploy-project
+  #   image: appleboy/drone-scp
+  #   settings:
+  #     host: 39.97.176.14
+  #     username: root #阿里云服务器用户名
+  #     password: xxx #阿里云服务器密码
+  #     port: 22
+  #     target: /home/ #宿主机绝对路径
+  #     source: ./dist/*
+  #   when:
+  #     event: tag
