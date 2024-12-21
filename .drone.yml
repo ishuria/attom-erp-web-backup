@@ -16,7 +16,7 @@ steps:
     # volumes: # 当前步骤使用(挂载)的卷轴
     #   - name: node_modules # 数据卷名称
     #     path: /drone/src/node_modules # 容器内的绝对路径
-    # 执行的命令
+    # 执行的命令1
     commands:
       - pwd # 查看当前目录 `/drone/src`
       # - ls -alt
