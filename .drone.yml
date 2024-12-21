@@ -22,7 +22,7 @@ steps:
     settings:
       username: xiangkai.luo
       password: Lxk11824.
-      repo: 192.168.6.12:3002/attom-erp-web
+      repo: 192.168.6.12:3002/attom-erp-web/web
       registry: 192.168.6.12:3002
       tags:
         - v1.0
