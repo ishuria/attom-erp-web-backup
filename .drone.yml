@@ -27,7 +27,7 @@ steps:
       tags:
         - v1.0
       context: .
-      dockerfile: DockerFile
+      dockerfile: ./DockerFile
 
   # 拉取harbor镜像并运行
   - name: pull-image-and-run
