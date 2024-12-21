@@ -20,7 +20,6 @@ steps:
   - name: build-docker-image
     image: plugins/docker
     settings:
-      context: .
       dockerfile: ./DockerFile
       username: xiangkai.luo
       password: Lxk11824.
