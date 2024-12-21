@@ -3,13 +3,6 @@ kind: pipeline
 type: docker
 name: attom-erp-web
 
-# 声明宿主机 映射到 drone执行器的数据卷
-volumes:
-  - name: node_modules # 数据卷名称
-    host:
-      # 宿主机的绝对路径
-      path: /home/attom-12/app/erp/web/node_modules
-
 steps:
   - name: build-attom-web-project # 步骤名称
     image: node:20.15.1 # 使用镜像和版本
