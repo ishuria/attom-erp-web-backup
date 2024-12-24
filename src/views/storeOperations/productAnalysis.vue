@@ -74,7 +74,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-checkbox>过滤无数据</el-checkbox>
+                <el-checkbox>跳过无数据</el-checkbox>
               </el-form-item>
               <el-form-item>
                 <el-select>
@@ -419,7 +419,7 @@ onMounted(() => {
           - 右下角 (95%, 100%)
           - 左下角 (5%, 100%) */
         &-primary {
-          background: #409EFF;
+          background: #ff99cc;
         }
         &-orange {
           background: #E6A23C;

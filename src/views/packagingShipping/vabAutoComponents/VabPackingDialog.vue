@@ -139,7 +139,7 @@ watchEffect(() => {
     barcodeDisabled.value = false
   }
 })
-const emit = defineEmits(['update:packingVisible'])
+const emit = defineEmits(['update:packingVisible', 'update:finish'])
 const handleCloseDialog = () => {
   dflag.value = false
   emit('update:packingVisible', dflag.value);
@@ -249,6 +249,7 @@ const saveAndPrint = async () => {
       $baseMessage('保存并打印条形码成功', 'success')
       goBack()
       handleCloseDialog()
+      emit('update:finish')
     }
   } else {
     $baseMessage('请先输入箱数', 'error')

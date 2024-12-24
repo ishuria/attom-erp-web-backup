@@ -153,3 +153,42 @@ export const currencySymbols = new Map([
   ['MYR', 'RM'], // Malaysian Ringgit
   ['RUB', '₽'],  // Russian Ruble
 ])
+
+export const pieSelectOption = [
+  {
+    label: '花费',
+    value: 0
+  },
+  {
+    label: '展示量',
+    value: 1
+  },
+  {
+    label: '点击量',
+    value: 2
+  },
+  {
+    label: '订单数',
+    value: 3
+  },
+]
+
+export const highLowMap: Record<number, string> = {
+  0: '低点击不出单',
+  1: '高点击不出单',
+  2: '低ACOS',
+  3: '高ACOS'
+}
+
+export const pieSelectMap: Record<number, string> = {
+  0: 'spend',
+  1: 'impressions',
+  2: 'clicks',
+  3: 'orders'
+}
+export const pieSelectLabelMap: Record<number, string> = {
+  0: '花费',
+  1: '展示量',
+  2: '点击量',
+  3: '订单数'
+}

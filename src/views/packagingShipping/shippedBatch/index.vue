@@ -85,11 +85,10 @@
           <el-checkbox v-model="row.lostGoodsStatus" :true-value="1" :false-value="0" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width="370">
+      <el-table-column label="操作" fixed="right" width="260">
         <template #default="{ row }">
-          <el-space>
+          <el-space :size="20">
             <el-link type="primary" :underline="false" @click="showDetails(row)">明细</el-link>
-            <el-link type="primary" :underline="false" >SKU运费均摊明细</el-link>
             <el-link type="primary" :underline="false" @click="showUpdateStorageTime(row)">修改最新预计入库时间</el-link>
           </el-space>
         </template>

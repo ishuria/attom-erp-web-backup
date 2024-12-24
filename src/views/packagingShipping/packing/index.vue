@@ -149,6 +149,7 @@
       :site="passSite"
       :encasement-no="encasementNo"
       @update:packing-visible="handlePackingClose"
+      @update:finish="handleFinish"
     />
     <!-- 发货（沃尔玛）-->
     <vab-dialog
@@ -806,6 +807,9 @@ const showPacking = () => {
 // 装箱的关闭
 const handlePackingClose = (value: boolean) => {
   packingVisible.value = value
+}
+const handleFinish = () => {
+  queryData()
 }
 const setSelectRows = (value: IEncasementList[]) => {
   // 使用 Map 来去重，因为 Map 会根据键值唯一性自动去重

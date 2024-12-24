@@ -1881,6 +1881,7 @@ const confirmQualityCheck = async () => {
   if (data) {
     $baseMessage('添加质检信息成功', 'success')
     packingCountVisible.value = false
+    fetchData()
   }
 }
 // 缺的数量
