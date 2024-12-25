@@ -82,6 +82,10 @@ import * as echarts from 'echarts'
 import { CSSProperties } from 'vue'
 import { highLowMap, pieSelectLabelMap, pieSelectMap, pieSelectOption } from '../constantOption'
 
+defineOptions({
+  name: 'VabAdPieTab'
+})
+
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyWord: ''
@@ -435,8 +439,8 @@ const initChart1 = () => {
           lineStyle: {
             width: 2
           },
-          length: 30, // 连接线长度
-          length2: 40, // 连接线的第二段长度
+          length: 20, // 连接线长度
+          length2: 30, // 连接线的第二段长度
         },
         label: {
           alignTo: 'labelLine',

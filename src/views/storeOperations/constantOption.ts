@@ -192,3 +192,54 @@ export const pieSelectLabelMap: Record<number, string> = {
   2: '点击量',
   3: '订单数'
 }
+
+export const colorList = [
+  '#52bfff',
+  '#ff8fa5',
+  '#99db70',
+  '#ce82fa',
+  '#ffdd36',
+  '#ffac78',
+  '#60e6e6',
+  '#55b339',
+  '#d6c9ff',
+  '#bdff52',
+  '#a187ff',
+  '#f799f4',
+  '#a8e1ff',
+  '#ffdab8',
+  '#80ceff',
+  '#52ffcb',
+  '#52bfff',
+]
+
+export const storageAgeColorList = [
+  '#52bfff',
+  '#ff8fa5',
+  '#99db70',
+  '#ce82fa',
+  '#ffdd36'
+]
+
+export const card4Option = [
+  {
+    label: '前7天',
+    value: 0
+  },
+  {
+    label: '前30天',
+    value: 1
+  },
+  {
+    label: '本月',
+    value: 2
+  },
+  {
+    label: '上月',
+    value: 3
+  },
+  {
+    label: '自定义',
+    value: 4
+  },
+]

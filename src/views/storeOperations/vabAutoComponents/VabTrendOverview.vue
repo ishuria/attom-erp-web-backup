@@ -1219,6 +1219,9 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
       itemStyle: {
         color: getYAxisColor(),
       },
+      emphasis: {
+        focus: 'series'
+      },
     })
   } else {
     // 取消选中时，移除选中的字段
