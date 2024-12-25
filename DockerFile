@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # 阶段 2: 运行阶段
-FROM nginx:alpine
+FROM nginx:latest
 
 # 删除默认的 Nginx 静态文件
 RUN rm -rf /usr/share/nginx/html/*
