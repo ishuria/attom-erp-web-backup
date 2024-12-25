@@ -40,4 +40,4 @@ steps:
 # matster分支触发构建
 trigger:
   branch:
-    - master
+    - local-dev
