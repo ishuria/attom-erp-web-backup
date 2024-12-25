@@ -680,10 +680,6 @@ export interface IgetProductReplenList {
       * 产品分类1
       */
      type1?: string;
-     /**
-      * 产品分类2
-      */
-     type2?: string;
 }
 export interface IgetProductReplenListResp {
     code: number

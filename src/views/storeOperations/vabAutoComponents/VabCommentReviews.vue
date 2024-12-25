@@ -119,6 +119,17 @@ const activeName = ref<number>(0)
 
 <style lang="scss" scoped>
 .comment-container {
+ 
+  .el-tab-pane {
+    display: flex;
+    flex-direction: column;
+    height: calc(var(--el-container-height) - var(--el-padding) - 52px - 70px - 214px) !important;
+
+    .el-table {
+      flex: 1;
+    }
+  }
+
   .comment-card {
     height: 150px; 
     position: relative;
@@ -237,15 +248,7 @@ const activeName = ref<number>(0)
       .el-tabs__item.is-active {
         background-color: rgb(78, 136, 243, 0.1);
       }
-      // .el-tab-pane {
-      //   display: flex;
-      //   flex-direction: column;
-      //   height: calc(var(--el-container-height) - var(--el-padding) - 52px - 70px) !important;
-
-      //   .el-table {
-      //     flex: 1;
-      //   }
-      // }
+      
     }
   }
   

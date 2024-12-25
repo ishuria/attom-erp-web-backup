@@ -269,6 +269,7 @@ declare module 'vue' {
     VabThemeDrawer: typeof import('./../../components/VabTheme/components/VabThemeDrawer.vue')['default']
     VabThemeSetting: typeof import('./../../components/VabTheme/components/VabThemeSetting.vue')['default']
     VabTrend: typeof import('./../../../src/plugins/VabTrend/index.vue')['default']
+    VabTrendOverview: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabTrendOverview.vue')['default']
     VabTrialCalculation: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabTrialCalculation.vue')['default']
     VabUpdate: typeof import('./../../../src/plugins/VabUpdate/index.vue')['default']
     VabUpload: typeof import('./../../../src/plugins/VabUpload/index.vue')['default']

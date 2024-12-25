@@ -26,7 +26,6 @@
         </el-table-column>
         <el-table-column align="center" label="SKU" min-width="200" prop="sku" />
         <el-table-column align="center" label="产品分类1" min-width="200" prop="type1" />
-        <el-table-column align="center" label="产品分类2" prop="type2" min-width="140"></el-table-column>
         <el-table-column align="center" label="维持库存天数" min-width="230" prop="stockPileNumberDays" />
         <el-table-column align="center" label="最小维持库存数量" min-width="160" prop="minStockPilNumber" />
         <el-table-column align="center" label="交期安全天数" min-width="160" prop="safetyLeadTime" />
@@ -74,13 +73,8 @@
   
 <script lang="ts" setup>
 import type { FormInstance, TableInstance } from 'element-plus'
-import { doDelete } from '/@/api/table'
 import { useRoutesStore } from '/@/store/modules/routes'
-import { useSettingsStore } from '/@/store/modules/settings'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { handleMatched, handleTabs } from '/@/utils/routes'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
-import { estimatedCostAccountingSiteColumns } from '../../newProductDevelopment/indexCommon'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 
 defineOptions({
