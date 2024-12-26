@@ -91,3 +91,27 @@ export function getDefaultStringTime(): [string, string] {
   const formattedTodayDate = todayDate.toISOString().split('T')[0];
   return [formattedLastMonthDate, formattedTodayDate];
 }
+
+/**
+ * @description 计算当前日期是该年的第几周,生成字符串
+ * @param date 
+ */
+export function getWeekOfYear(date: Date | string | number): string {
+  // 确保当前日期 date 参数可以被解析为有效的日期对象
+  const currentDate = new Date(date)
+  if (isNaN(currentDate.getTime())) {
+    throw new Error("提供的日期无效")
+  }
+
+  const year = currentDate.getFullYear()
+  // startDate为当年的第一天
+  const startDate = new Date(year, 0, 1)
+
+  // 计算当前日期与第一天的差值，单位是天
+  const daysDiff = Math.floor((currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
+
+  // 计算当前日期属于哪一周
+  const weekNumber = Math.ceil((daysDiff + 1) / 7)
+
+  return `${year}-W${weekNumber}`
+}

@@ -273,6 +273,7 @@ defineOptions({
 import { ArrowDown, Hide, View } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getWeekOfYear } from '/@/utils/dateUtils'
 
 // 切换日，周，月
 const radio = ref<string>('day')
@@ -903,29 +904,7 @@ const handleSwitchItem6 = (dataName: string) => {
     card6Active.value = false
   }
 }
-/**
- * @description 计算当前日期是该年的第几周,生成字符串
- * @param date 
- */
-function getWeekOfYear(date: Date | string | number): string {
-  // 确保当前日期 date 参数可以被解析为有效的日期对象
-  const currentDate = new Date(date)
-  if (isNaN(currentDate.getTime())) {
-    throw new Error("提供的日期无效")
-  }
 
-  const year = currentDate.getFullYear()
-  // startDate为当年的第一天
-  const startDate = new Date(year, 0, 1)
-
-  // 计算当前日期与第一天的差值，单位是天
-  const daysDiff = Math.floor((currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
-
-  // 计算当前日期属于哪一周
-  const weekNumber = Math.ceil((daysDiff + 1) / 7)
-
-  return `${year}-W${weekNumber}`
-}
 /**
  * @description 获取字段所属组
  * @param item 所有可以选择的字段
@@ -1056,6 +1035,7 @@ const initChart = () => {
             color: '#409EFF',
           },
         },
+        boundaryGap: [0, 0.1]  // 为顶部留出空间
       },
       // {
       //   type: 'value',
@@ -1195,6 +1175,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         splitLine: {
           show: false,
         },
+        boundaryGap: [0, 0.1]  // 为顶部留出空间
       })
 
       currentYAxisCount++

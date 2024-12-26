@@ -243,3 +243,14 @@ export const card4Option = [
     value: 4
   },
 ]
+
+export const sizeSourceOption = [
+  {
+    label: '自量',
+    value: 0
+  },
+  {
+    label: '亚马逊',
+    value: 1
+  },
+]

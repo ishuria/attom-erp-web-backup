@@ -326,7 +326,7 @@ handleSubmit<template>
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.progressLog) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.progressLog) }}</span>
               </el-tooltip>
@@ -346,7 +346,7 @@ handleSubmit<template>
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;">{{ removeHtmlTags(row.remark) }}</div>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
                 <span>{{ removeHtmlTags(row.remark) }}</span>
               </el-tooltip>

@@ -142,34 +142,170 @@
         </el-form>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-table border>
-      <el-table-column label="日期"></el-table-column>
-      <el-table-column label="站点"></el-table-column>
-      <el-table-column label="外汇币种"></el-table-column>
-      <el-table-column label="汇率"></el-table-column>
-      <el-table-column label="图片"></el-table-column>
-      <el-table-column label="产品描述"></el-table-column>
-      <el-table-column label="价格信息"></el-table-column>
-      <el-table-column label="1688链接"></el-table-column>
-      <el-table-column label="产品价格¥"></el-table-column>
-      <el-table-column label="长"></el-table-column>
-      <el-table-column label="宽"></el-table-column>
-      <el-table-column label="高"></el-table-column>
-      <el-table-column label="重量"></el-table-column>
-      <el-table-column label="下一档位"></el-table-column>
-      <el-table-column label="尺寸来源"></el-table-column>
-      <el-table-column label="尾程"></el-table-column>
-      <el-table-column label="打包¥"></el-table-column>
-      <el-table-column label="头程¥"></el-table-column>
-      <el-table-column label="头程渠道"></el-table-column>
-      <el-table-column label="售价"></el-table-column>
-      <el-table-column label="毛利率"></el-table-column>
-      <el-table-column label="ROI"></el-table-column>
-      <el-table-column label="重量系数"></el-table-column>
-      <el-table-column label="体积系数"></el-table-column>
-      <el-table-column label="关税%"></el-table-column>
-      <el-table-column label="平台佣金"></el-table-column>
-      <el-table-column label="仓储费2个月"></el-table-column>
+    <el-table :data="fakeData" @cell-click="cellClick" border :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle">
+      <el-table-column label="日期" prop="createTime" min-width="115"></el-table-column>
+      <el-table-column label="站点" prop="" min-width="135">
+        <template #default="{ row }">
+            <el-select v-model="row.site" placeholder="请选择站点" @change="" style="min-width: 100%;">
+             
+            </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="外汇币种" prop="" min-width="100"></el-table-column>
+      <el-table-column label="汇率" prop="foreignExchange" min-width="70"></el-table-column>
+      <el-table-column label="产品价格¥" prop="price" min-width="110">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.price }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="长" prop="length" min-width="70">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.length }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="宽" prop="width" min-width="70">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.width }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="高" prop="height" min-width="70">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.height }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="重量" prop="weight" min-width="80">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.weight }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="下一档位" prop="" min-width="100"></el-table-column>
+      <el-table-column label="尺寸来源" prop="" min-width="120">
+        <template #default="{ row }">
+          <el-select style="min-width: 100%;">
+            <el-option 
+              v-for="item in sizeSourceOption"
+              :label="item.label"
+              :value="item.value"
+              :key="item.value"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="尾程" prop="lastMile" min-width="80">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.lastMile }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="打包¥" prop="packaging" min-width="100">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.packaging }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="头程¥" prop="firstMile" min-width="100"></el-table-column>
+      <el-table-column label="头程渠道" prop="firstMileChannel" min-width="100">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.firstMileChannel" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.firstMileChannel }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="售价" prop="sellingPrice" min-width="100">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.sellingPrice }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="毛利率" prop="" min-width="100"></el-table-column>
+      <el-table-column label="ROI" prop="roi" min-width="90"></el-table-column>
+      <el-table-column label="重量系数" prop="weightCoefficient" min-width="100">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.weightCoefficient }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="体积系数" prop="volumeCoefficient" min-width="100">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.volumeCoefficient }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="关税%" prop="tariff" min-width="100">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.tariff }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="平台佣金" prop="platformCommission" min-width="100">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.platformCommission" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.platformCommission }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="仓储费2个月" prop="storageFee" min-width="140">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.storageFee" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.storageFee }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" width="120">
+        <template #default="{ row }">
+          <el-dropdown>
+            <el-button text type="primary">
+              逆算
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false">逆算</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item @click="">
+                  <el-link type="primary" :underline="false" >复制</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item @click="">
+                  <el-link type="primary" :underline="false" >删除</el-link>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -178,8 +314,10 @@
 <script lang="ts" setup>
 import * as echarts from 'echarts'
 import { CSSProperties } from 'vue'
-import { card4Option, colorList, storageAgeColorList } from '../constantOption'
-import { CircleClose } from '@element-plus/icons-vue'
+import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
+import { CircleClose, ArrowDown } from '@element-plus/icons-vue'
+import { isEqual } from 'lodash'
+import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 
 defineOptions({
   name: 'VabCostAnalysis'
@@ -231,7 +369,9 @@ const data3 = ref<any[]>([
   { date: '2024-12-24', sku: 105, fba: 87, cost: 79, freight: 68 },
   { date: '2024-12-25', sku: 115, fba: 93, cost: 83, freight: 73 },
 ])
-
+const fakeData = [
+  { price: 20, createTime: '2024-12-26', roi: 0 }
+]
 const ageRadio = ref<number>(0)
 const imageHeight = ref<number>(0)
 const card4Select = ref<number>(0)
@@ -249,6 +389,7 @@ const percentageData = data1.value.map(item => ({
   percentage: ((item.value / totalValue) * 100).toFixed(2) + '%'
 }))
 let percentageAgeData: any[]
+let copyRow: any
 
 const handleCard4Select = () => {
   if (card4Select.value === 4) {
@@ -542,6 +683,9 @@ const initChart3 = () => {
         itemStyle: {
           color: storageAgeColorList[4]
         },
+        smooth: true,
+        // symbol: 'circle',
+        // symbolSize: 6,
       },
       {
         name: 'FBA配送费',
@@ -550,6 +694,7 @@ const initChart3 = () => {
         itemStyle: {
           color: storageAgeColorList[3]
         },
+        smooth: true,
       },
       {
         name: '打包成本',
@@ -558,6 +703,7 @@ const initChart3 = () => {
         itemStyle: {
           color: storageAgeColorList[2]
         },
+        smooth: true,
       },
       {
         name: '头程运费',
@@ -566,6 +712,7 @@ const initChart3 = () => {
         itemStyle: {
           color: storageAgeColorList[1]
         },
+        smooth: true,
       },
     ]
   }
@@ -576,6 +723,41 @@ const updateChart2 = () => {
 }
 const updateChart3 = () => {
   chartInstance3?.setOption(option3.value, true)
+}
+
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
+  }
+}
+const clickCancel = async (event: Event, value: any) => {
+  const rootElement = getRootElement(event.target, ".cell")
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add("none")
+    if (t2) t2.classList.remove("none")
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    
+  }
 }
 const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   return {
@@ -592,6 +774,20 @@ const setImageHeight = () => {
     const height1 = dom1.getBoundingClientRect();
     const height2 = dom2.getBoundingClientRect();
     imageHeight.value = height2.bottom - height1.top;
+  }
+}
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const columnIndex = data.columnIndex
+  if (columnIndex === 0 || columnIndex === 2 || columnIndex === 3 || columnIndex === 9 || columnIndex === 13
+    || columnIndex === 16 || columnIndex === 17
+  ) {
+    return {
+      fontWeight: 600,
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'center'
   }
 }
 onBeforeMount(() => {
@@ -641,6 +837,9 @@ onMounted(() => {
   flex-direction: column;
   height: calc(var(--el-container-height) - var(--el-padding) - 52px - 70px) !important;
 
+  .none {
+    display: none;
+  }
   .el-table {
     flex: 1;
   }
