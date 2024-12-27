@@ -190,7 +190,8 @@
                 {{ Math.floor(Number(row.todayAd)) }}%
               </span>
               <span v-if="item.label === '广告'">
-                {{ row.ad === 0 ? '关' : '开' }}
+                <el-tag v-if="row.ad === 0" type="danger">关</el-tag>
+                <el-tag v-if="row.ad === 1" type="success">开</el-tag>
               </span>
               <span v-if="item.label === '运营备注'">
                 <el-tooltip content=" " effect="dark" placement="top">
@@ -199,6 +200,14 @@
                   </template>
                   <span>{{ removeHtmlTags(row.remark) }}</span>
                 </el-tooltip>
+              </span>
+              <span v-if="item.label === '饼图'">
+                <div style="width: 100%; height: 60px">
+                  <VabEchartsChartPie :data="data1" />
+                </div>
+              </span>
+              <span v-if="item.label === '当前售价'">
+                <el-link type="primary" @click="handleRouterPush">${{ row.currentPrice }}</el-link>
               </span>
             </template>
           </el-table-column>
@@ -391,7 +400,8 @@
                 {{ Math.floor(Number(row.todayAd)) }}%
               </span>
               <span v-if="item.label === '广告'">
-                {{ row.ad === 0 ? '关' : '开' }}
+                <el-tag v-if="row.ad === 0" type="danger">关</el-tag>
+                <el-tag v-if="row.ad === 1" type="success">开</el-tag>
               </span>
               <span v-if="item.label === '运营备注'">
                 <el-tooltip content=" " effect="dark" placement="top">
@@ -400,6 +410,11 @@
                   </template>
                   <span>{{ removeHtmlTags(row.remark) }}</span>
                 </el-tooltip>
+              </span>
+              <span v-if="item.label === '饼图'">
+                <div style="width: 100%; height: 60px">
+                  <VabEchartsChartPie :data="data1" />
+                </div>
               </span>
             </template>
           </el-table-column>
@@ -584,7 +599,13 @@
                 {{ Math.floor(Number(row.todayAd)) }}%
               </span>
               <span v-if="item.label === '广告'">
-                {{ row.ad === 0 ? '关' : '开' }}
+                <el-tag v-if="row.ad === 0" type="danger">关</el-tag>
+                <el-tag v-if="row.ad === 1" type="success">开</el-tag>
+              </span>
+              <span v-if="item.label === '饼图'">
+                <div style="width: 100%; height: 60px">
+                  <VabEchartsChartPie :data="data1" />
+                </div>
               </span>
             </template>
           </el-table-column>
@@ -644,6 +665,13 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { currencySymbols, opeClassOption } from '../constantOption'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+
+const data1 = ref<any[]>([
+  { value: 211.02, name: '高ACOS' },
+  { value: 453.57, name: '低ACOS' },
+  { value: 21.5, name: '高点击不出单' },
+  { value: 83.31, name: '低点击不出单' },
+])
 const activeName = ref<number>(0)
 const router = useRouter()
 // 运营备注
@@ -1035,13 +1063,12 @@ function formatPercentage(value: number): string {
   return `${percentage}%`
 }
 
-const label1 = ['今销', 'FBA仓储费', '当前售价', '亚马逊FBA', 'FBA差异', '月净利润', '月销售额', '月广告销售', '月广告支出', '预计下月仓储费', '盈亏售价', '30毛利售价']
+const label1 = ['今销', 'FBA仓储费', '亚马逊FBA', 'FBA差异', '月净利润', '月销售额', '月广告销售', '月广告支出', '预计下月仓储费', '盈亏售价', '30毛利售价']
 const label2 = ['试算毛利', '2周广告转化', '2周广告点击', '2周总转化', '月净利率', '月广告%', '月ACOS', '月TACOS', '1年ACOS', '1年TACOS', '月退货%', '月退款%', 'VOC缺陷%']
 const label3 = ['上新', '库存可售', '可售含在途', '断货']
 const label1Map = new Map([
   ['今销', 'totalSellD'],
   ['FBA仓储费', 'monthlyStorageFee'],
-  ['当前售价', 'currentPrice'],
   ['亚马逊FBA', 'fbaA'],
   ['FBA差异', 'fbaD'],
   ['月净利润', 'monthlyNetProfit'],
@@ -1544,7 +1571,7 @@ const columnsAsin = ref<any>([
     label: '销量趋势(点击看明细)',
     prop: 'trend',
     checked: true,
-    minWidth: 120,
+    minWidth: 180,
   },
   {
     label: '今销#',
@@ -1876,7 +1903,7 @@ const columnsParentAsin = ref<any>([
     label: '销量趋势(点击看明细)',
     prop: 'trend',
     checked: true,
-    minWidth: 120,
+    minWidth: 180,
   },
   {
     label: '今销#',
@@ -2159,13 +2186,32 @@ const handleWidth = (item: any) => {
   }
 }
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  if (column.label === '销量趋势(点击看明细)') {
+  const label = column.label
+  if (label === '销量趋势(点击看明细)') {
     router.push({
       path: '/storeOperations/productAnalysis',
+      query: {
+        activeName: 0
+      }
+    })
+  } else if (label === '饼图') {
+    router.push({
+      path: '/storeOperations/productAnalysis',
+      query: {
+        activeName: 1
+      }
     })
   } else if (column.label === '运营备注') {
     showRemark()
   }
+}
+const handleRouterPush = () => {
+  router.push({
+    path: '/storeOperations/productAnalysis',
+    query: {
+      activeName: 2
+    }
+  })
 }
 const handleChecked = (item: any) => {
   item.checked = !item.checked
@@ -2243,7 +2289,8 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   }
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
-  if (data.column.label === '图片') {
+  const label = data.column.label
+  if (label === '图片' || label === '饼图') {
     return 'clear-padding'
   }
   return ''

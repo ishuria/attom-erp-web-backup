@@ -2,7 +2,259 @@
   <div class="comprehensive-table-container auto-height-container">
     <el-row :gutter="10">
       <el-col :span="12">
-        <vab-card style="height: 400px;"></vab-card>
+        <vab-card class="card5" style="height: 500px;">
+          <vab-query-form>
+            <vab-query-form-left-panel :span="12">
+              <el-form inline>
+                <el-form-item label="运营">
+                  <el-select style="max-width: 2em"></el-select>
+                </el-form-item>
+                <el-form-item label="开发人">
+                  <el-select style="max-width: 2em"></el-select>
+                </el-form-item>
+                <el-form-item label="站点">
+                  <el-select style="max-width: 3em"></el-select>
+                </el-form-item>
+              </el-form>
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel :span="12">
+              <el-form inline>
+                <el-form-item>
+                  <el-radio-group>
+                    <el-radio value="0" style="margin-right: 10px;">同比</el-radio>
+                    <el-radio value="1" style="margin-right: 10px;">环比</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item >
+                  <el-select style="max-width: 3em; margin-right: 10px;">
+                    <el-option 
+                      v-for="item in dateOption"
+                      :label="item.label"
+                      :value="item.value"
+                      :key="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-date-picker
+                    type="daterange"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    range-separator="至"
+                    style="max-width: 18em;"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+              </el-form>
+            </vab-query-form-right-panel>
+          </vab-query-form>
+          <el-row :gutter="10">
+            <!-- 总销售额 -->
+            <el-col :span="4">
+              <vab-card class="top-card" shadow="always" @click="handleCard1Click">
+                <div class="parting-line" :class="{ 'parting-line-primary': card1Active }" ></div>
+                <el-dropdown >
+                  <span>
+                    {{ card1Text }}
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                      <el-dropdown-item
+                        v-for="(item, index) in dropdownItems"
+                        :key="index"
+                        @click="handleSwitchItem1(item.label)"
+                        
+                      >
+                        {{ item.label }}
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <p>
+                  {{ formattedAmount }}
+                </p>
+                <div class="bottom bottom-down">
+                  $47.026.96
+                  <vab-icon icon="arrow-down-line" />
+                  <span>{{ '-9.75%' }}</span>
+                </div>
+              </vab-card>
+            </el-col>
+            <el-col :span="4">
+              <vab-card class="top-card" shadow="always" @click="handleCard2Click">
+                <div class="parting-line" :class="{ 'parting-line-orange': card2Active }" ></div>
+                <el-dropdown>
+                  <span>
+                    {{ card2Text }}
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                      <el-dropdown-item
+                        v-for="(item, index) in dropdownItems"
+                        :key="index"
+                        @click="handleSwitchItem2(item.label)"
+                      >
+                        {{ item.label }}
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <p>
+                  {{ formattedAmount }}
+                </p>
+                <div class="bottom bottom-down">
+                  $47.026.96
+                  <vab-icon icon="arrow-down-line" />
+                  <span>{{ '-9.75%' }}</span>
+                </div>
+              </vab-card>
+            </el-col>
+            <el-col :span="4">
+              <vab-card class="top-card" shadow="always" @click="handleCard3Click">
+                <div class="parting-line" :class="{ 'parting-line-green': card3Active }" ></div>
+                <el-dropdown>
+                  <span>
+                    {{ card3Text }}
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                      <el-dropdown-item
+                        v-for="(item, index) in dropdownItems"
+                        :key="index"
+                        @click="handleSwitchItem3(item.label)"
+                      >
+                        {{ item.label }}
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <p>
+                  {{ formattedAmount }}
+                </p>
+                <div class="bottom bottom-down">
+                  $47.026.96
+                  <vab-icon icon="arrow-down-line" />
+                  <span>{{ '-9.75%' }}</span>
+                </div>
+              </vab-card>
+            </el-col>
+            <el-col :span="4">
+              <vab-card class="top-card" shadow="always" @click="handleCard4Click">
+                <div class="parting-line" :class="{ 'parting-line-red': card4Active }" ></div>
+                <el-dropdown>
+                  <span>
+                    {{ card4Text }}
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                      <el-dropdown-item
+                        v-for="(item, index) in dropdownItems"
+                        :key="index"
+                        @click="handleSwitchItem4(item.label)"
+                      >
+                        {{ item.label }}
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <p>
+                  {{ '26.58%' }}
+                </p>
+                <div class="bottom bottom-down">
+                  $47.026.96
+                  <vab-icon icon="arrow-down-line" />
+                  <span>{{ '-9.75%' }}</span>
+                </div>
+              </vab-card>
+            </el-col>
+            <el-col :span="4">
+              <vab-card class="top-card" shadow="always" @click="handleCard5Click">
+                <div class="parting-line" :class="{ 'parting-line-purple': card5Active }" ></div>
+                <el-dropdown>
+                  <span>
+                    {{ card5Text }}
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                      <el-dropdown-item
+                        v-for="(item, index) in dropdownItems"
+                        :key="index"
+                        @click="handleSwitchItem5(item.label)"
+                      >
+                        {{ item.label }}
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <p>
+                  {{ formattedAmount }}
+                </p>
+                <div class="bottom bottom-down">
+                  $47.026.96
+                  <vab-icon icon="arrow-down-line" />
+                  <span>{{ '-9.75%' }}</span>
+                </div>
+              </vab-card>
+            </el-col>
+            <el-col :span="4">
+              <vab-card class="top-card" shadow="always" @click="handleCard6Click">
+                <div class="parting-line" :class="{ 'parting-line-yellow': card6Active }" ></div>
+                <el-dropdown>
+                  <span>
+                    {{ card6Text }}
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </span>
+                  <template #dropdown>
+                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                      <el-dropdown-item
+                        v-for="(item, index) in dropdownItems"
+                        :key="index"
+                        @click="handleSwitchItem6(item.label)"
+                      >
+                        {{ item.label }}
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+                <p>
+                  {{ '15.24%' }}
+                </p>
+                <div class="bottom bottom-down">
+                  $47.026.96
+                  <vab-icon icon="arrow-down-line" />
+                  <span>{{ '-9.75%' }}</span>
+                </div>
+              </vab-card>
+            </el-col>
+          </el-row>
+          <vab-query-form>
+            <vab-query-form-right-panel :span="24">
+              <el-radio-group v-model="timeRadio" size="small" @change="handleSwitchTime">
+                <el-radio-button label="日" value="day" />
+                <el-radio-button label="周" value="week" />
+                <el-radio-button label="月" value="month" />
+              </el-radio-group>
+            </vab-query-form-right-panel>
+          </vab-query-form>
+          <div ref="chartContainer1" style="width: 100%; height: 250px"></div>
+        </vab-card>
       </el-col>
       <el-col :span="12">
         <el-row :gutter="10">
@@ -53,17 +305,24 @@
           <el-col :span="14">
             <div style="display: flex; flex-direction: column; height: calc(var(--el-container-height) - 20px)">
               <vab-card class="card2-title" style="height: 370px; margin-bottom: 10px;" title="产品成本波动监控">
-                <el-table>
+                <el-table :data="fakeTableData3" max-height="330px">
                   <el-table-column label="日期"></el-table-column>
-                  <el-table-column label="SKU"></el-table-column>
+                  <el-table-column label="SKU" prop="sku" min-width="120">
+                    <template #default="{ row }">
+                      <span v-html="row.sku"></span>
+                    </template>
+                  </el-table-column>
                   <el-table-column label="价格变动"></el-table-column>
                   <el-table-column label="毛利率变动"></el-table-column>
                   <el-table-column label="类型"></el-table-column>
                   <el-table-column label="站点"></el-table-column>
                 </el-table>
               </vab-card>
-              <vab-card class="card3-title" style="flex: 1; height: 100%; display: flex; flex-direction: column;" title="即将断货产品预警">
-                <el-table :data="fakeTableData3" style="flex: 1;">
+              <vab-card class="card3-title" style="flex: 1; display: flex; flex-direction: column;" title="即将断货产品预警">
+                <!-- <template #header>
+                  <vab-icon icon="error-warning-fill" color="#ff8c69" /><span>即将断货产品预警</span>
+                </template> -->
+                <el-table :data="fakeTableData3" border style="flex: 1;">
                   <el-table-column label="SKU" prop="sku" min-width="150">
                     <template #default="{ row }">
                       <span v-html="row.sku"></span>
@@ -100,23 +359,114 @@
 </template>
 
 <script lang="ts" setup>
+import { ArrowDown } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { CSSProperties } from 'vue'
-import { storageAgeColorList } from '../constantOption'
+import { getWeekOfYear } from '~/src/utils/dateUtils'
+import { dateOption, storageAgeColorList } from '../constantOption'
 
 defineOptions({
   name: 'operationsDashboard'
 })
-
+const amount = 42442.71
+// 控制数字显示为美元形式
+const formattedAmount = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+// 六个卡片是否选择状态
+const card1Active = ref<boolean>(false)
+const card2Active = ref<boolean>(false)
+const card3Active = ref<boolean>(false)
+const card4Active = ref<boolean>(false)
+const card5Active = ref<boolean>(false)
+const card6Active = ref<boolean>(false)
+const card1Text = ref<string>('总销售额')
+const card2Text = ref<string>('净利润')
+const card3Text = ref<string>('净利润率')
+const card4Text = ref<string>('广告销售额')
+const card5Text = ref<string>('广告销售占比')
+const card6Text = ref<string>('ACOS')
+const dropdownItems = ref([
+  { label: '总销售额' },
+  { label: '净利润' },
+  { label: '净利润率', },
+  { label: '广告销售额', },
+  { label: '广告销售占比', },
+  { label: 'ACOS', },
+  { label: 'TACOS', },
+  { label: '退款率', },
+  { label: '预计下月仓储费', },
+])
+const chartContainer1 = ref<HTMLElement | null>(null)
 const chartContainer2 = ref<HTMLElement | null>(null)
-
 let chartInstance1: echarts.ECharts | null = null
 let chartInstance2: echarts.ECharts | null = null
-
 let chartObserver1: ResizeObserver
 let chartObserver2: ResizeObserver
+let selectedItems: string[] = []
+const clickCard = ref<string>('')
+const yAxisMapping = new Map() // 字段所属的组 -> yAxisIndex
+let currentYAxisCount = 1 // 当前已有的 Y 轴数量（柱状图默认占用 yAxis[0]）
 const ageRadio = ref<number>(0)
+const timeRadio = ref<string>('day')
+const option1 = ref<any>({})
 const option2 = ref<any>({})
+type IData = {
+  date: string
+  sales: number
+  totalSales: number
+  adSalesData: number
+  netProfitData: number
+  expectedStorageCostData: number
+  refundRate: number
+  netProfitMargin: number
+  tacos: number
+  acos: number
+  adSalesRatio: number
+  refundPrice: number
+  adCostData: number
+}
+type IYProp = 'sales' | 'totalSales'|'adSalesData'|'netProfitData'|'expectedStorageCostData'|
+  'refundRate' | 'netProfitMargin' | 'tacos' | 'acos' | 'adSalesRatio' | 'refundPrice' | 'adCostData'
+// name -> prop
+const nameMapProp: Record<string, IYProp> = {
+  '销量': 'sales',
+  '总销售额': 'totalSales',
+  '广告销售额': 'adSalesData',
+  '广告花费': 'adCostData',
+  '净利润': 'netProfitData',
+  '预计下月仓储费': 'expectedStorageCostData',
+  '退款金额': 'refundPrice',
+  '退款率': 'refundRate',
+  '净利润率': 'netProfitMargin',
+  'TACOS': 'tacos',
+  'ACOS': 'acos',
+  '广告销售占比': 'adSalesRatio'
+}
+const data1 = ref<IData[]>([
+  { date: "2023-10-14", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   },
+  { date: "2024-10-19", sales: 50, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   },
+  { date: "2024-11-01", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   },
+  { date: "2024-11-02", sales: 50, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   },
+  { date: "2024-12-01", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   },
+  { date: "2024-12-02", sales: 50, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   },
+  { date: "2024-12-08", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   },
+  { date: "2024-12-09", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
+    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
+   }
+])
 const data2 = ref<any[]>([
   { name: '0-90', value: 11800 },
   { name: '91-180', value: 2644 },
@@ -208,7 +558,583 @@ const queryForm = reactive<any>({
   pageSize: 20
 })
 const total = ref<number>(0)
-  const initChart2 = () => {
+const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'): any[] => {
+  const groupedData: Record<string, number> = {}
+  const adCostData: Record<string, number> = {} // ∑广告花费
+  const totalSales: Record<string, number> = {} // ∑总销售额
+  const netProfitData: Record<string, number> = {} // ∑净利润
+  const refundPrice: Record<string, number> = {} // ∑退款金额
+  const adSalesData: Record<string, number > = { } // ∑广告销售额
+  
+  // 根据时间粒度选择分组方式
+  const getTimeKey = (date: string): string => {
+    if (groupBy === 'week') {
+      return getWeekOfYear(date) // 获取 "YYYY-Wxx"
+    }
+    return date.slice(0, 7) // 提取 "YYYY-MM" 
+  }
+
+  data.forEach((item) => {
+    const timeKey = getTimeKey(item.date) // 获取分组键（周或月）
+
+    if (type === 'tacos') {
+      // 处理TACOS类型，计算 ∑广告花费 / ∑总销售额
+      if (!groupedData[timeKey]) {
+        adCostData[timeKey] = 0
+        totalSales[timeKey] = 0
+      }
+      adCostData[timeKey] += item.adCostData
+      totalSales[timeKey] += item.totalSales
+      groupedData[timeKey] = formatNumber(adCostData[timeKey] / totalSales[timeKey] * 100) 
+    } else if (type === 'netProfitMargin') {
+      // 处理净利润率类型，计算 ∑净利润 / ∑总销售额
+      if (!groupedData[timeKey]) {
+        netProfitData[timeKey] = 0
+        totalSales[timeKey] = 0
+      }
+      netProfitData[timeKey] += item.netProfitData
+      totalSales[timeKey] += item.totalSales
+      groupedData[timeKey] = formatNumber(netProfitData[timeKey] / totalSales[timeKey] * 100) 
+    } else if (type === 'refundRate') {
+      // 处理退款率类型，计算 ∑退款金额 / ∑总销售额
+      if (!groupedData[timeKey]) {
+        refundPrice[timeKey] = 0
+        totalSales[timeKey] = 0
+      }
+      refundPrice[timeKey] += item.refundPrice
+      totalSales[timeKey] += item.totalSales
+      groupedData[timeKey] = formatNumber(refundPrice[timeKey] / totalSales[timeKey] * 100)
+    } else if (type === 'acos') {
+      // ∑广告花费 / ∑总广告销售额
+      if (!groupedData[timeKey]) {
+        adCostData[timeKey] = 0
+        adSalesData[timeKey] = 0
+      }
+      adCostData[timeKey] += item.adCostData
+      adSalesData[timeKey] += item.adSalesData
+      groupedData[timeKey] = formatNumber(adCostData[timeKey] / adSalesData[timeKey]  * 100)
+    } else if (type === 'adSalesRatio') {
+      // 总广告销售额 / ∑总销售额
+      if (!groupedData[timeKey]) {
+        totalSales[timeKey] = 0
+        adSalesData[timeKey] = 0
+      }
+      totalSales[timeKey] += item.totalSales
+      adSalesData[timeKey] += item.adSalesData
+      groupedData[timeKey] = formatNumber(totalSales[timeKey] / adSalesData[timeKey]  * 100)
+    } else {
+      // 其他类型，累加值
+      if (!groupedData[timeKey]) {
+        groupedData[timeKey] = 0
+      }
+      groupedData[timeKey] += item[type]
+    }
+  })
+
+  return Object.keys(groupedData).map((timeKey) => ({
+    date: timeKey,
+    [type]: groupedData[timeKey],
+  }))
+}
+// 金额保留两位小数
+const formatNumber = (value: number): number => {
+  return Number(value.toFixed(2))
+}
+
+// 按周分组并累加
+const getWeeklyData = (data: IData[], type: IYProp): any[] => {
+  return getGroupedData(data, type, 'week')
+}
+
+// 按月分组并累加
+const getMonthlyData = (data: IData[], type: IYProp): any[] => {
+  return getGroupedData(data, type, 'month')
+}
+
+// 切换 日，周，月
+const handleSwitchTime = () => {
+ 
+  let salesData: any[] = []
+  if (timeRadio.value === 'day') {
+    salesData = data1.value
+  } else if (timeRadio.value === 'week') {
+    salesData = getWeeklyData(data1.value, 'sales')
+  } else if (timeRadio.value === 'month') {
+    salesData = getMonthlyData(data1.value, 'sales')
+  }
+  option1.value.xAxis.data = salesData.map((item: any) => item.date)
+  option1.value.series[0].data = salesData.map((d: any) => d.sales)
+
+  updateYAxisData(data1.value)
+  updateChart1()
+}
+// 更新 Y 轴数据随时间切换的函数
+const updateYAxisData = (data: any[]) => {
+  option1.value.series.forEach((s: any, index: number) => {
+    if (index !== 0) {
+      const prop = nameMapProp[s.name]
+      let processedData: any[] = []
+      if (timeRadio.value === 'day') {
+        processedData = data
+      } else if (timeRadio.value === 'week') {
+        processedData = getWeeklyData(data, prop)
+      } else if (timeRadio.value === 'month') {
+        processedData = getMonthlyData(data, prop)
+      }
+      s.data = processedData.map((d: any) => d[prop]) 
+    }
+  })
+}
+const handleCanSelect = (cardActive: boolean) => {
+  if (cardActive) {
+    $baseMessage('请先取消选中，再进行选择！', 'error')
+    return false
+  }
+  return true
+}
+const handleSwitchItem1 = (dataName: string) => {
+  const can = handleCanSelect(card1Active.value)
+  if (can) {
+    card1Text.value = dataName
+    card1Active.value = false
+  }
+}
+const handleSwitchItem2 = (dataName: string) => {
+  const can = handleCanSelect(card2Active.value)
+  if (can) {
+    card2Text.value = dataName
+    card2Active.value = false
+  }
+}
+const handleSwitchItem3 = (dataName: string) => {
+  const can = handleCanSelect(card3Active.value)
+  if (can) {
+    card3Text.value = dataName
+    card3Active.value = false
+  }
+}
+const handleSwitchItem4 = (dataName: string) => {
+  const can = handleCanSelect(card4Active.value)
+  if (can) {
+    card4Text.value = dataName
+    card4Active.value = false
+  }
+}
+const handleSwitchItem5 = (dataName: string) => {
+  const can = handleCanSelect(card5Active.value)
+  if (can) {
+    card5Text.value = dataName
+    card5Active.value = false
+  }
+}
+const handleSwitchItem6 = (dataName: string) => {
+  const can = handleCanSelect(card6Active.value)
+  if (can) {
+    card6Text.value = dataName
+    card6Active.value = false
+  }
+}
+// 更新剩余的 Y 轴和系列的索引
+function updateYAxisIndex() {
+  Array.from(yAxisMapping.keys()).forEach((group, index) => {
+    yAxisMapping.set(group, index + 1) // 保留 0 为柱状图
+    option1.value.series.forEach((s: any) => {
+      if (s.yAxisIndex === index + 1) {
+        s.yAxisIndex = index + 1
+      }
+    })
+  })
+}
+type IDataGroup =  'price1' | 'percent1'| 'percent2'
+
+const getYAxisFormat = (groupName: string) => {
+  if (groupName === 'price1') {
+    return '${value}'
+  } else if (groupName === 'percent1' || groupName === 'percent2') {
+    return '{value}%'
+  } else {
+    return '{value}'
+  }
+}
+// 获取对应的颜色
+function getYAxisColor() {
+  if (clickCard.value === 'card1') {
+    return '#ff99cc'
+  } else if (clickCard.value === 'card2') {
+    return '#E6A23C'
+  } else if (clickCard.value === 'card3') {
+    return '#34a9a9'
+  } else if (clickCard.value === 'card4') {
+    return '#e36060'
+  } else if (clickCard.value === 'card5') {
+    return '#8a7ae3'
+  } else if (clickCard.value === 'card6') {
+    return '#ffd700'
+  } else {
+    return '#999'
+  }
+}
+
+// 根据数据组和数据名称获取数据
+function getDataForName(dataName: string) {
+  const prop = nameMapProp[dataName]
+  return data1.value.map((item: any) => item[prop]) || []
+}
+function updateYAxisOffsets() {
+  // 重设每个 Y 轴的 offset，确保不重叠
+  option1.value.yAxis.forEach((yAxis: any, index: number) => {
+    yAxis.offset = Math.floor(index / 2) * 60; // 每两个 Y 轴之间间隔 60px
+    // 保证 Y 轴位置不重叠
+    yAxis.position = index % 2 === 0 ? 'left' : 'right'
+  })
+}
+function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataName: string) {
+  if (selected) {
+    let yAxisIndex: number
+
+    // 1. 处理是否共用y轴还是添加新的y轴
+    if (!yAxisMapping.has(dataGroup)) {
+      // 如果该数据组没有对应的 Y 轴，动态添加
+      if (currentYAxisCount >= 4) {
+        $baseMessage('最多只能支持三个额外的 Y 轴，请重新选择', 'error')
+        return true
+      }
+      yAxisIndex = currentYAxisCount
+      yAxisMapping.set(dataGroup, yAxisIndex)
+ 
+      // 新增 Y 轴配置
+      option1.value.yAxis.push({
+        type: 'value',
+        name: dataName,
+        position: currentYAxisCount % 2 === 0 ? 'left' : 'right',
+        offset: (Math.floor(currentYAxisCount / 2)) * 50,
+        nameTextStyle: {
+          // fontWeight: 'bold',
+          color: getYAxisColor(),
+          // fontSize: '14px',
+          align: 'center',
+        },
+        axisLabel: {
+          // fontWeight: 'bold',
+          formatter: getYAxisFormat(dataGroup),
+          // fontSize: '14px'
+        },
+        min: 0,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: getYAxisColor(),
+          },
+        },
+        splitLine: {
+          show: false,
+        },
+        boundaryGap: [0, 0.1]  // 为顶部留出空间
+      })
+
+      currentYAxisCount++
+      updateYAxisOffsets()
+    } else {
+      // 如果该数据组已有 Y 轴，复用它
+      yAxisIndex = yAxisMapping.get(dataGroup)
+    }
+
+    // 添加新 series
+    option1.value.series.push({
+      name: dataName, 
+      type: 'line', 
+      yAxisIndex, 
+      data: getDataForName(dataName),
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 6,
+      lineStyle: {
+        color: getYAxisColor(),
+      },
+      itemStyle: {
+        color: getYAxisColor(),
+      },
+      emphasis: {
+        focus: 'series'
+      },
+    })
+  } else {
+    // 取消选中时，移除选中的字段
+    const index = selectedItems.findIndex((item: string) => item === dataName)
+    if (index !== -1) {
+      selectedItems.splice(index, 1)
+    }
+    // 取消选中时，移除对应的 series
+    const seriesIndex = option1.value.series.findIndex((s: any) => s.name === dataName)
+    if (seriesIndex !== -1) {
+      option1.value.series.splice(seriesIndex, 1) // 移除对应的 series
+    }
+  
+    // 如果当前字段所属的组的所有 series 都被移除，移除对应的 Y 轴
+    const isGroupEmpty = option1.value.series.every(
+      (s: any) => s.yAxisIndex !== yAxisMapping.get(dataGroup)
+    )
+    
+    if (isGroupEmpty) {
+      const yAxisIndex = yAxisMapping.get(dataGroup)
+
+      yAxisMapping.delete(dataGroup)
+      currentYAxisCount--
+
+      // 更新所有 series 的 yAxisIndex
+      option1.value.series.forEach((s: any) => {
+        if (s.yAxisIndex > yAxisIndex) {
+          s.yAxisIndex--  // 大于已删除的 Y 轴的index，都减一
+        }
+      })
+
+      // 移除 Y 轴配置
+      option1.value.yAxis = option1.value.yAxis.filter((yAxis: any, index: number) => index !== yAxisIndex)
+
+      updateYAxisIndex()  // 更新 yAxisMapping 和 series 的对应索引
+      updateYAxisOffsets()
+    }
+  }
+  updateYAxisData(data1.value)
+  updateChart1()
+  return false
+}
+// 处理选中的值重复问题
+const handleUnique = (cardText: string) => {
+  const index = selectedItems.findIndex((item: string) => item === cardText)
+  if (index !== -1) {
+    $baseMessage('选中的值不能重复, 请重新选择', 'error')
+    return false
+  } else {
+    selectedItems.push(cardText)
+    return true
+  }
+}
+const handleCard1Click = () => {
+  card1Active.value = !card1Active.value
+  
+  if (card1Active.value) {
+    const unique = handleUnique(card1Text.value)
+    if (!unique) {
+      card1Active.value = false
+      return
+    }
+    clickCard.value = 'card1'
+  }
+  const dataGroup = getGroup(card1Text.value) as IDataGroup
+  const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
+  if (moreThan3) {
+    card1Active.value = false
+    selectedItems.pop()
+  }
+  
+}
+
+const handleCard2Click = () => {
+  card2Active.value = !card2Active.value
+  
+  if (card2Active.value) {
+    const unique = handleUnique(card2Text.value)
+    if (!unique) {
+      card2Active.value = false
+      return
+    }
+    clickCard.value = 'card2'
+  }
+  const dataGroup = getGroup(card2Text.value) as IDataGroup
+  const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value) 
+  if (moreThan3) {
+    card2Active.value = false
+    selectedItems.pop()
+  }
+  
+}
+const handleCard3Click = () => {
+  card3Active.value = !card3Active.value
+
+  if (card3Active.value) {
+    const unique = handleUnique(card3Text.value)
+    if (!unique) {
+      card3Active.value = false
+      return
+    }
+    clickCard.value = 'card3'
+  }
+  const dataGroup = getGroup(card3Text.value) as IDataGroup
+  const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value) 
+  if (moreThan3) {
+    card3Active.value = false
+    selectedItems.pop()
+  }
+}
+const handleCard4Click = () => {
+  card4Active.value = !card4Active.value
+  
+  if (card4Active.value) {
+    const unique = handleUnique(card4Text.value)
+    if (!unique) {
+      card4Active.value = false
+      return
+    }
+    clickCard.value = 'card4'
+  }
+  const dataGroup = getGroup(card4Text.value) as IDataGroup
+  const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value) 
+  if (moreThan3) {
+    card4Active.value = false
+    selectedItems.pop()
+  }
+}
+const handleCard5Click = () => {
+  card5Active.value = !card5Active.value
+  
+  if (card5Active.value) {
+    const unique = handleUnique(card5Text.value)
+    if (!unique) {
+      card5Active.value = false
+      return
+    }
+    clickCard.value = 'card5'
+  }
+  const dataGroup = getGroup(card5Text.value) as IDataGroup
+  const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value) 
+  if (moreThan3) {
+    card5Active.value = false
+    selectedItems.pop()
+  }
+}
+const handleCard6Click = () => {
+  card6Active.value = !card6Active.value
+ 
+  if (card6Active.value) {
+    const unique = handleUnique(card6Text.value)
+    if (!unique) {
+      card6Active.value = false
+      return
+    }
+    clickCard.value = 'card6'
+  }
+  const dataGroup = getGroup(card6Text.value) as IDataGroup
+  const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value) 
+  if (moreThan3) {
+    card6Active.value = false
+    selectedItems.pop()
+  }
+  
+}
+const groups = {
+  price1: ['总销售额', '广告销售额', '净利润', '预计下月仓储费'],
+  percent1: ['退款率', '净利润率', 'TACOS', 'ACOS'],
+  percent2: ['广告销售占比'],
+}
+/**
+ * @description 获取字段所属组
+ * @param item 所有可以选择的字段
+ */
+ function getGroup(item: string): string | null {
+  for (const [group, fields] of Object.entries(groups)) {
+    if (fields.includes(item)) {
+      return group
+    }
+  }
+  return null
+}
+const initChart1 = () => {
+  // 初始化图表的配置项
+  option1.value = {
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params: any[]) => {
+        // tooltip标题
+        let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">${params[0].name}</div>`
+
+        // tooltip详情内容
+        const itemHtmlStrArr = params.map((item) => {
+          const groupName = getGroup(item.seriesName)
+          let value = item.value
+          if (groupName === 'price1') {
+            value = `$${value}`
+          } else if (groupName === 'percent1' || groupName === 'percent2') {
+            value = `${value}%`
+          } else {
+            value = value
+          }
+          return `<div style="display: flex;align-items:center;">
+            ${item.marker}
+            <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">${item.seriesName}</div>
+            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${value}</span>
+          </div>`
+        })
+        const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
+          ${itemHtmlStrArr.join('')}
+        </div>`
+        // 最终html字符串
+        const resHtmlStr = titleHtmlStr + contentHtmlStr
+        return resHtmlStr
+      }
+    },
+    grid: {
+      left: '50',
+      bottom: '6%',
+      right: '60',
+      top: '13%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: data1.value.map((item: any) => item.date),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      // axisLabel: {
+      //   // fontWeight: 'bold',
+      //   fontSize: '14px'
+      // },
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: '销量',
+        position: 'left',
+        nameTextStyle: {
+          color: '#409EFF',
+          align: 'center',
+          // fontSize: '14px'
+        },
+        // axisLabel: {
+        //   // fontWeight: 'bold',
+        //   fontSize: '14px'
+        // },
+        min: 0,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#409EFF',
+          },
+        },
+        boundaryGap: [0, 0.1]  // 为顶部留出空间
+      },
+    ],
+    series: [
+      {
+        name: '销量',
+        type: 'bar',
+        yAxisIndex: 0,
+        data: data1.value.map((item: any) => item.sales),
+        barWidth: 20,
+        itemStyle: {
+          color: '#409EFF',
+        },
+        opacity: 0.9,
+        stack: 'sales'
+      },
+    ],
+  };
+
+  // 设置图表实例的配置项
+  chartInstance1?.setOption(option1.value);
+}
+const initChart2 = () => {
   option2.value = {
     tooltip: {
       trigger: 'item',
@@ -324,8 +1250,11 @@ const total = ref<number>(0)
   }
   chartInstance2?.setOption(option2.value)
 }
+const updateChart1 = () => {
+  chartInstance1?.setOption(option1.value, true)
+}
 const updateChart2 = () => {
-  chartInstance2?.setOption(option2.value)
+  chartInstance2?.setOption(option2.value, true)
 }
 // 切换是百分比还是数量
 const handleSwitchBar = () => {
@@ -381,16 +1310,16 @@ onBeforeMount(() => {
   }))
 })
 onMounted(() => {
-  // if (chartContainer1.value) {
-  //   chartInstance1 = echarts.init(chartContainer1.value)
-  //   chartObserver1 = new ResizeObserver(() => {
-  //     if (chartInstance1) {
-  //       chartInstance1.resize()
-  //     }
-  //   })
-  //   chartObserver1.observe(chartContainer1.value)
-  //   initChart1()
-  // }
+  if (chartContainer1.value) {
+    chartInstance1 = echarts.init(chartContainer1.value)
+    chartObserver1 = new ResizeObserver(() => {
+      if (chartInstance1) {
+        chartInstance1.resize()
+      }
+    })
+    chartObserver1.observe(chartContainer1.value)
+    initChart1()
+  }
   if (chartContainer2.value) {
     chartInstance2 = echarts.init(chartContainer2.value)
     chartObserver2 = new ResizeObserver(() => {
@@ -446,9 +1375,9 @@ onMounted(() => {
       color: #ff8c69;  
     }
 
-    .el-card__body {
-      padding: 0;
-    }
+    // .el-card__body {
+    //   padding: 0;
+    // }
   }
 }
 .card4 {
@@ -463,5 +1392,120 @@ onMounted(() => {
     }
   }
 }
+.card5 {
+  :deep() {
+    .el-card__body {
+      padding-right: 10px;
+      padding-left: 10px;
+    }
+  }
+}
+.top-card {
+  position: relative;
+  height: 120px !important;
+  border-radius: 7%;
 
+  &:hover {
+    cursor: pointer;
+  }
+  :deep() {
+    .el-card__body {
+      padding-top: 0;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+    }
+  }
+      
+  .el-tag {
+    float: right;
+  }
+
+  .parting-line {
+    float: top;
+    width: 100%;
+    height: 6px;
+    margin-bottom: 10px;
+    background: #e9f5fe;
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+    /* 梯形形状：
+      - 左上角 (0, 0)
+      - 右上角 (100%, 0)
+      - 右下角 (95%, 100%)
+      - 左下角 (5%, 100%) */
+    &-primary {
+      background: #ff99cc;
+    }
+    &-orange {
+      background: #E6A23C;
+    }
+    &-green {
+      background: #34a9a9;
+    }
+    &-red {
+      background: #e36060;
+    }
+    &-purple {
+      background: #8a7ae3; // 一种柔和的紫色
+    }
+    &-yellow {
+      background: #ffd700; // 明亮的金黄色
+    }
+  }
+  p {
+    margin-top: 13px;
+    margin-bottom: 13px;
+    font-size: 24px;
+    font-weight: 550;
+  }
+
+  .right-icon {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    color: var(--el-color-primary);
+    text-align: center;
+    background: var(--el-color-primary-light-9);
+    border-radius: 50%;
+    transform: translateY(-50%);
+
+    i {
+      font-size: 35px;
+    }
+  }
+
+  .bottom {
+    &-up {
+      .ri-arrow-up-line {
+        width: 18px;
+        height: 18px;
+        margin: 0 3px 0 2px;
+        color: var(--el-color-success);
+        background: var(--el-color-success-light);
+        border-radius: 50%;
+      }
+
+      span {
+        color: var(--el-color-success);
+      }
+    }
+    &-down {
+      .ri-arrow-down-line {
+        width: 18px;
+        height: 18px;
+        margin: 0 3px 0 2px;
+        color: var(--el-color-warning);
+        background: var(--el-color-warning-light);
+        border-radius: 50%;
+      }
+
+      span {
+        color: var(--el-color-warning);
+      }
+    }
+  }
+}
 </style>

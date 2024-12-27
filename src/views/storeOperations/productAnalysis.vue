@@ -13,7 +13,7 @@
               <vab-ad-pie-tab />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis />
+              <vab-cost-analysis v-if="activeName === 2" />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
               <vab-comment-reviews />
@@ -140,9 +140,9 @@
             </el-form>
             <el-form v-if="activeName === 4" inline>
               <el-form-item>
-                <el-radio-group>
-                  <el-radio-button label="退货时间" value="time1" />
-                  <el-radio-button label="下单时间" value="time2" />
+                <el-radio-group v-model="returnRadio">
+                  <el-radio-button label="退货时间" :value="0" />
+                  <el-radio-button label="下单时间" :value="1" />
                 </el-radio-group>
               </el-form-item>
               <el-form-item>
@@ -276,6 +276,7 @@ defineOptions({
 })
 
 const route: any = useRoute()
+const router: any = useRouter()
 const tabsStore = useTabsStore()
 const { changeTabsMeta, delVisitedRoute } = tabsStore
 const routesStore = useRoutesStore()
@@ -285,7 +286,7 @@ const activeName = ref<number>(0)
 
 // 评分
 const rate = ref<number>(4.7)
-
+const returnRadio = ref<number>(0)
 
 // 初始化图片高度
 const imageHeight = ref<number>(0)
@@ -294,7 +295,9 @@ const imageHeight = ref<number>(0)
 
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
-  history.back()
+  router.push({
+    path: '/storeOperations/productPerformanceDashboard',
+  })
 }
 // 动态设置图片列高度
 const setImageHeight = () => {
@@ -315,10 +318,11 @@ const handleTabClick = (tab: TabsPaneContext) => {
     // })
   }
 }
+
 onMounted(() => {
   setImageHeight()
+  activeName.value = Number(route.query.activeName);  
 })
-
 </script>
 
 <style lang="scss" scoped>

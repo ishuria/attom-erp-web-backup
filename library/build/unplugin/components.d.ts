@@ -215,6 +215,7 @@ declare module 'vue' {
     VabDot: typeof import('./../../components/VabDot/index.vue')['default']
     VabEchartsChartBar: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEchartsChartBar.vue')['default']
     VabEchartsChartLine: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEchartsChartLine.vue')['default']
+    VabEchartsChartPie: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabEchartsChartPie.vue')['default']
     VabErrorLog: typeof import('./../../components/VabErrorLog/index.vue')['default']
     VabErrorLogContent: typeof import('./../../components/VabErrorLog/components/VabErrorLogContent.vue')['default']
     VabEstimatedCostAccounting: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEstimatedCostAccounting.vue')['default']

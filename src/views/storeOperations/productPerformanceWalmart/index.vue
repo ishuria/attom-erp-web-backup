@@ -125,7 +125,9 @@
             </div>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
-            
+            <div style="width: 100%; height: 50px">
+              <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+            </div>
           </span>
           <span v-if="item.label === '运营分类'">
             <el-select style="min-width: 100%;">
@@ -268,7 +270,7 @@ const columns = ref<any>([
     label: '销量趋势(点击看明细)',
     prop: 'trend',
     checked: true,
-    minWidth: 120,
+    minWidth: 180,
   },
   {
     label: '今销#',
@@ -464,7 +466,36 @@ const fakeData = ref<any>([
     rate: 4.7,
     asin: 'B08N5M7S6K',
     pAsin: 'B08N5M7S6K',
-    trend: '点击看明细',
+    saleTrendList: {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    },
     todaySell: 100,
     todayOrder: 50,
     todaySellD: 1500,
@@ -533,7 +564,36 @@ const fakeData = ref<any>([
     rate: 4.0,
     asin: 'B08XYZ1234',
     pAsin: 'B08XYZ1234',
-    trend: '点击看明细',
+    saleTrendList: {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    },
     todaySell: 200,
     todayOrder: 100,
     todaySellD: 2500,
@@ -602,7 +662,36 @@ const fakeData = ref<any>([
     rate: 4.3,
     asin: 'B08N5M7S6K',
     pAsin: 'B08N5M7S6K',
-    trend: '点击看明细',
+    saleTrendList: {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    },
     todaySell: 100,
     todayOrder: 50,
     todaySellD: 1500,

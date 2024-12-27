@@ -102,7 +102,7 @@ import {reviewProductList,updateStepNoQuantity,releasePo} from '/@/api/devlocal/
 import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
     name: 'OrderReviewStep4',

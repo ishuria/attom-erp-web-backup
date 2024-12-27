@@ -63,48 +63,44 @@
         </vab-card>
       </el-col>
       <el-col :span="8">
-        <vab-card class="card3" style="height: 190px;">
-          <el-container style="display: flex; gap: 10px; align-items: flex-start;">
-              <!-- 左侧图片 -->
-              <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
+        <vab-card class="card3" style="height: 150px;">
+          <el-container style="display: flex; gap: 10px;">
+              <el-aside style="width: 4em">
+                <el-text>包装信息</el-text>
+              </el-aside>
+              <!-- 内容 -->
+              <el-main style="flex: 1; padding: 0;">
+                <div class="grid-container" >
+                  <div class="grid-item">
+                    <el-text truncated class="grid-title">亚马逊产品包装尺寸</el-text>
+                    <div class="grid-value">20×10×2.0 cm</div>
+                  </div>
+                  <div class="grid-item" data-label="amazon">
+                    <el-text truncated class="grid-title">自量产品包装尺寸</el-text>
+                    <div class="grid-value">20×10×1.0 cm</div>
+                  </div>
+                  <div class="grid-item">
+                    <el-text truncated class="grid-title">重量 (自量/亚马逊)</el-text>
+                    <div class="grid-value">200g / 300g</div>
+                  </div>
+                  <div class="grid-item" data-label="fba">
+                    <el-text truncated class="grid-title">FBA (自量/亚马逊)</el-text>
+                    <div ><span class="grid-value grid-value-green">$5.4</span> / <span class="grid-value">$4.9</span></div>
+                  </div>
+                </div>
+              </el-main>
+               <!-- 右侧图片 -->
+               <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
                 <el-image src="https://picsum.photos/200/200" style="border-radius: 10px; display: block;">
                   <template #error><el-icon></el-icon></template>
                 </el-image>
               </el-aside>
-              <!-- 右侧内容 -->
-              <el-main style="flex: 1; padding: 0;">
-                <!-- 标题和描述 -->
-                <div style="margin-bottom: 6px;">
-                  <el-text data-label="amazon" type="primary" style="font-weight: 600;">
-                    亚马逊产品包装尺寸
-                  </el-text>
-                  <div >20×10×2.0cm</div>  
-                </div>
-                <div style="margin-bottom: 6px;">
-                  <el-text type="primary" style="font-weight: 600;">
-                    自量产品包装尺寸
-                  </el-text>
-                  <div >20×10×1.0cm</div>  
-                </div>
-                <div style="margin-bottom: 6px;">
-                  <el-text type="primary" style="font-weight: 600;">
-                    重量 (自量/亚马逊)
-                  </el-text>
-                  <div >200g / 300g</div>  
-                </div>
-                <div>
-                  <el-text type="primary" style="font-weight: 600;">
-                    FBA (自量/亚马逊)
-                  </el-text>
-                  <div data-label="fba">$5.4 / $4.9</div>  
-                </div>
-              </el-main>
             </el-container>
         </vab-card>
-        <vab-card class="card4" style="height: 200px; position: relative;">
-          <div ref="chartContainer3" style="width: 100%; height: 200px;"></div>
+        <vab-card class="card4" style="height: 240px; position: relative;">
+          <div ref="chartContainer3" style="width: 100%; height: 240px;"></div>
           <div v-if="!dateRangeSelectVisible" style="position: absolute; top: 5px; right: 5px">
-            <el-select v-model="card4Select" @change="handleCard4Select" placeholder="请选择日期" style="max-width: 5em;" size="small">
+            <el-select v-model="card4Select" @change="handleCard4Select" placeholder="请选择日期" style="max-width: 5em;" size="default">
               <el-option 
                 v-for="item in card4Option"
                 :label="item.label"
@@ -121,7 +117,7 @@
               :clearable="false"
               value-format="YYYY-MM-DD"
               @change="handleCard4DateSelect"
-              size="small"
+              size="default"
               style="max-width: 13em;"
             ></el-date-picker>
             <el-icon class="custom-cancel" @click="handleClickCancel" color="#999"><CircleClose /></el-icon>
@@ -639,7 +635,7 @@ const initChart3 = () => {
       left: 0,
       top: 5,
       textStyle: {
-        fontSize: 12 
+        fontSize: 14 
       },
       itemWidth: 8,
       itemHeight: 8,
@@ -651,7 +647,7 @@ const initChart3 = () => {
       confine: true
     },
     grid: {
-      top: 40,
+      top: 50,
       bottom: 5,
       left: 5,
       right: 5,
@@ -767,14 +763,16 @@ const headerCellStyle = (data: { row: any, column: any, rowIndex: number, column
 }
 // 动态设置图片列高度
 const setImageHeight = () => {
-  const dom1 = document.querySelector('.el-text[data-label="amazon"]');
-  const dom2 = document.querySelector('div[data-label="fba"]');
+  const dom1 = document.querySelector('div[data-label="amazon"]')
+  const dom2 = document.querySelector('div[data-label="fba"]')
 
   if (dom1 && dom2) {
     const height1 = dom1.getBoundingClientRect();
     const height2 = dom2.getBoundingClientRect();
     imageHeight.value = height2.bottom - height1.top;
   }
+  console.log('imageHeight', imageHeight.value);
+  
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const columnIndex = data.columnIndex
@@ -796,7 +794,7 @@ onBeforeMount(() => {
     percentage: ((item.value / totalAgeValue) * 100).toFixed(2)
   }))
 })
-onMounted(() => {
+onMounted(() => {  
   setImageHeight()
   if (chartContainer1.value) {
     chartInstance1 = echarts.init(chartContainer1.value)
@@ -907,6 +905,43 @@ onMounted(() => {
       cursor: pointer;
     }
   }
+  .grid-container {
+    display: flex;
+    flex-wrap: wrap; /* 换行 */
+    justify-content: flex-end;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 两列 */
+    grid-template-rows: repeat(2, 1fr); /* 两行 */
+    gap: 10px; /* 单元格间隙 */
+
+    .grid-item {
+      background-color: #f2f5fa;
+      border: 0;
+      border-radius: 5px;
+      padding: 10px 5px 5px 10px;
+      text-align: left;
+
+      flex-basis: 48%; /* 每个项占据父容器的 48% 宽度，留出间隙 */
+
+      .grid-title {
+        margin-bottom: 3px;
+      }
+      .grid-value {
+        color: #4e88f3;
+        font-size: 18px;
+        font-weight: 550;
+
+        &-green {
+          color: #24ada1;
+        }
+        &-red {
+          color: #d14d4d;
+        }
+      }
+    }
+  }
+
+  
 }
 
 </style>
