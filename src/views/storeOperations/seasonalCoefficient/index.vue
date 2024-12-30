@@ -59,27 +59,13 @@ defineOptions({
   name: 'seasonalCoefficient'
 })
 import * as echarts from 'echarts'
+import { months } from '../constantOption'
 
 const viewVisible = ref<boolean>(false)
 const chartContainer = ref<HTMLElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
 let chartObserver: ResizeObserver
 const option = ref<any>({})
-
-const months = [
-  { label: '1月', prop: 'Jan' },
-  { label: '2月', prop: 'Feb' },
-  { label: '3月', prop: 'Mar' },
-  { label: '4月', prop: 'Apr' },
-  { label: '5月', prop: 'May' },
-  { label: '6月', prop: 'Jun' },
-  { label: '7月', prop: 'Jul' },
-  { label: '8月', prop: 'Aug' },
-  { label: '9月', prop: 'Sep' },
-  { label: '10月', prop: 'Oct' },
-  { label: '11月', prop: 'Nov' },
-  { label: '12月', prop: 'Dec' },
-];
 
 const fakeData = ref<any[]>([
   {
@@ -129,18 +115,10 @@ const fakeData = ref<any[]>([
   },
 ])
 // 提取所有 value1 和 value2 的数组
-const value1Array: string[] = []
-const value2Array: string[] = []
+let value1Array: string[] = []
+let value2Array: string[] = []
 
-// 遍历 fakeData
-fakeData.value.forEach((row) => {
-  Object.keys(row).forEach((key) => {
-    if (key !== 'category') { // 跳过 category 字段
-      value1Array.push(row[key].value1);
-      value2Array.push(row[key].value2);
-    }
-  });
-});
+
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (data.columnIndex !== 0 && data.columnIndex !== 13) {
     return 'clear-padding'
@@ -167,7 +145,7 @@ const viewChart = () => {
 const initChart = () => {
   option.value = {
     legend: {
-      left: '39%',
+      left: '40%',
       top: 0,
     },
     tooltip: {
@@ -176,9 +154,9 @@ const initChart = () => {
     },
     grid: {
       top: 50,
-      bottom: 0,
-      left: 5,
-      right: 5,
+      bottom: 30,
+      left: 50,
+      right: 50,
       containLabel: true
     },
     xAxis: {
@@ -226,8 +204,27 @@ const initChart = () => {
       },
     ]
   }
+  console.log(value1Array);
+  
   chartInstance?.setOption(option.value)
 }
+onBeforeMount(() => {
+  value1Array = []
+  value2Array = []
+  
+  // 遍历 fakeData
+  fakeData.value.forEach((row, index) => {
+    if (index === 0) {
+      Object.keys(row).forEach((key) => {
+        if (key !== 'category') { // 跳过 category 字段
+          value1Array.push(row[key].value1)
+          value2Array.push(row[key].value2)
+        }
+      })
+    }
+    
+  })
+})
 onMounted(() => {
   // if (chartContainer.value) {
   //   chartInstance = echarts.init(chartContainer.value)

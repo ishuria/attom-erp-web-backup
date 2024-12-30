@@ -6,7 +6,7 @@
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({
-    name: 'VabEchaartsChartBar',
+    name: 'VabEchartsChartLine',
 })
 
 let props = defineProps({

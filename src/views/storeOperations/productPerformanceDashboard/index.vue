@@ -206,8 +206,23 @@
                   <VabEchartsChartPie :data="data1" />
                 </div>
               </span>
+              <span v-if="item.label === '季节系数'">
+                <div style="width: 100%; height: 50px">
+                  <VabTableChartLine :xAxisData="seasonalXData" :yAxisData="seasonalYData" />
+                </div>
+              </span>
               <span v-if="item.label === '当前售价'">
                 <el-link type="primary" @click="handleRouterPush">${{ row.currentPrice }}</el-link>
+              </span>
+              <span v-if="item.label === '小类排名'">
+                {{ 836 }}
+                <vab-icon icon="arrow-up-fill" class="arrow-up" />
+                <span style="color: #999">{{ 91 }}</span>
+              </span>
+              <span v-if="item.label === '大类排名'">
+                {{ 836 }}
+                <vab-icon icon="arrow-down-fill" class="arrow-down" />
+                <span style="color: #999">{{ 91 }}</span>
               </span>
             </template>
           </el-table-column>
@@ -416,6 +431,21 @@
                   <VabEchartsChartPie :data="data1" />
                 </div>
               </span>
+              <span v-if="item.label === '季节系数'">
+                <div style="width: 100%; height: 50px">
+                  <VabTableChartLine :xAxisData="seasonalXData" :yAxisData="seasonalYData" />
+                </div>
+              </span>
+              <span v-if="item.label === '小类排名'">
+                {{ 836 }}
+                <vab-icon icon="arrow-up-fill" class="arrow-up" />
+                <span style="color: #999">{{ 91 }}</span>
+              </span>
+              <span v-if="item.label === '大类排名'">
+                {{ 836 }}
+                <vab-icon icon="arrow-down-fill" class="arrow-down" />
+                <span style="color: #999">{{ 91 }}</span>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -607,6 +637,16 @@
                   <VabEchartsChartPie :data="data1" />
                 </div>
               </span>
+              <span v-if="item.label === '小类排名'">
+                {{ 836 }}
+                <vab-icon icon="arrow-up-fill" class="arrow-up" />
+                <span style="color: #999">{{ 91 }}</span>
+              </span>
+              <span v-if="item.label === '大类排名'">
+                {{ 836 }}
+                <vab-icon icon="arrow-down-fill" class="arrow-down" />
+                <span style="color: #999">{{ 91 }}</span>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -651,6 +691,36 @@
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 季节系数 -->
+    <vab-dialog
+      title="季节系数"
+      v-model="seasonalVisible"
+      @open="handleSeasonalOpened"
+      width="40%"
+    >
+      <div ref="chartContainer1" style="width: 100%; height: 400px;"></div>
+      <template #footer></template>
+    </vab-dialog>
+    <!-- 小类排名 -->
+    <vab-dialog
+      title="小类排名"
+      v-model="sRankVisible"
+      width="40%"
+      @open="handleSRankOpened"
+    >
+      <div ref="chartContainer2" style="width: 100%; height: 400px;"></div>
+      <template #footer></template>
+    </vab-dialog>
+    <!-- 大类排名 -->
+    <vab-dialog
+      title="大类排名"
+      v-model="bRankVisible"
+      width="40%"
+      @open="handleBRankOpened"
+    >
+      <div ref="chartContainer3" style="width: 100%; height: 400px;"></div>
+      <template #footer></template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -659,13 +729,30 @@ defineOptions({
   name: 'productPerformance',
 })
 import { Hide, Search, Star, View } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 import { TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { currencySymbols, opeClassOption } from '../constantOption'
+import { currencySymbols, months, opeClassOption } from '../constantOption'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
-
+const seasonalVisible = ref<boolean>(false)
+const sRankVisible = ref<boolean>(false)
+const bRankVisible = ref<boolean>(false)
+const chartContainer1 = ref<HTMLElement | null>(null)
+const chartContainer2 = ref<HTMLElement | null>(null)
+const chartContainer3 = ref<HTMLElement | null>(null)
+let chartInstance1: echarts.ECharts | null = null
+let chartInstance2: echarts.ECharts | null = null
+let chartInstance3: echarts.ECharts | null = null
+let chartObserver1: ResizeObserver
+let chartObserver2: ResizeObserver
+let chartObserver3: ResizeObserver
+const option1 = ref<any>({})
+const option2 = ref<any>({})
+const option3 = ref<any>({})
+const seasonalXData = months.map((item) => item.label)
+const seasonalYData = [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3]
 const data1 = ref<any[]>([
   { value: 211.02, name: '高ACOS' },
   { value: 453.57, name: '低ACOS' },
@@ -2124,7 +2211,217 @@ const developerOption = [
     value: 3
   },
 ]
-
+const initChart1 = () => {
+  option1.value = {
+    legend: {
+      left: '40%',
+      top: 0,
+    },
+    tooltip: {
+      trigger: 'axis',
+      confine: true
+    },
+    grid: {
+      top: 50,
+      bottom: 30,
+      left: 50,
+      right: 50,
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: months.map((item) => item.label),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+    },
+    yAxis: {
+      name: '系数',
+      type: 'value',
+      min: 'dataMin', // 自动以数据中的最小值为起点
+      boundaryGap: [0, 0.1],
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#999'
+        }
+      }
+    },
+    series: [
+      {
+        name: '实际值',
+        type: 'line',
+        data: [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3],
+        itemStyle: {
+          color: '#52bfff'
+        },
+        smooth: true,
+      },
+      {
+        name: '参考值',
+        type: 'line',
+        data: [1.21, 1.38, 1.38, 1.38, 1.2, 1.38, 1.2, 1.2, 1.2, 1.38, 1.38, 1.38],
+        itemStyle: {
+          color: '#ff8fa5'
+        },
+        smooth: true,
+      },
+    ]
+  }
+  
+  chartInstance1?.setOption(option1.value)
+}
+const initChart2 = () => {
+  option2.value = {
+    tooltip: {
+      trigger: 'axis',
+      confine: true
+    },
+    grid: {
+      top: 50,
+      bottom: 30,
+      left: 50,
+      right: 50,
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: months.map((item) => item.label),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+    },
+    yAxis: {
+      name: '小类排名',
+      type: 'value',
+      min: 'dataMin', // 自动以数据中的最小值为起点
+      boundaryGap: [0, 0.1],
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#999'
+        }
+      }
+    },
+    series: [
+      {
+        name: '小类排名',
+        type: 'line',
+        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        itemStyle: {
+          color: '#52bfff'
+        },
+        smooth: true,
+      },
+    ]
+  }
+  
+  chartInstance2?.setOption(option2.value)
+}
+const initChart3 = () => {
+  option3.value = {
+    tooltip: {
+      trigger: 'axis',
+      confine: true
+    },
+    grid: {
+      top: 50,
+      bottom: 30,
+      left: 50,
+      right: 50,
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: months.map((item) => item.label),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+    },
+    yAxis: {
+      name: '大类排名',
+      type: 'value',
+      min: 'dataMin', // 自动以数据中的最小值为起点
+      boundaryGap: [0, 0.1],
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#999'
+        }
+      }
+    },
+    series: [
+      {
+        name: '大类排名',
+        type: 'line',
+        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        itemStyle: {
+          color: '#52bfff'
+        },
+        smooth: true,
+      },
+    ]
+  }
+  
+  chartInstance3?.setOption(option3.value)
+}
+const handleSeasonalOpened = () => {
+  nextTick(() => {
+    if (chartContainer1.value) {
+      chartInstance1 = echarts.init(chartContainer1.value)
+      chartObserver1 = new ResizeObserver(() => {
+        if (chartInstance1) {
+          chartInstance1.resize()
+        }
+      })
+      chartObserver1.observe(chartContainer1.value)
+      initChart1()
+    }
+  })
+}
+const handleSRankOpened = () => {
+  nextTick(() => {
+    if (chartContainer2.value) {
+      chartInstance2 = echarts.init(chartContainer2.value)
+      chartObserver2 = new ResizeObserver(() => {
+        if (chartInstance2) {
+          chartInstance2.resize()
+        }
+      })
+      chartObserver2.observe(chartContainer2.value)
+      initChart2()
+    }
+  })
+}
+const handleBRankOpened = () => {
+  nextTick(() => {
+    if (chartContainer3.value) {
+      chartInstance3 = echarts.init(chartContainer3.value)
+      chartObserver3 = new ResizeObserver(() => {
+        if (chartInstance3) {
+          chartInstance3.resize()
+        }
+      })
+      chartObserver3.observe(chartContainer3.value)
+      initChart3()
+    }
+  })
+}
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
     console.log(tab.props.name);
@@ -2201,8 +2498,14 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
         activeName: 1
       }
     })
-  } else if (column.label === '运营备注') {
+  } else if (label === '运营备注') {
     showRemark()
+  } else if (label === '季节系数') {
+    seasonalVisible.value = true
+  } else if (label === '小类排名') {
+    sRankVisible.value = true
+  } else if (label === '大类排名') {
+    bRankVisible.value = true
   }
 }
 const handleRouterPush = () => {
@@ -2440,5 +2743,17 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 .custom-bar {
   width: 100%;
   height: 50px;
+}
+.arrow-up {
+  color: #ff3f48; 
+  font-weight: 600;
+  transform: scale(0.9, 1.4);  
+  margin-left: 3px;
+}
+.arrow-down {
+  color: #67C23A;
+  font-weight: 600;
+  transform: scale(0.9, 1.4);  
+  margin-left: 3px;
 }
 </style>

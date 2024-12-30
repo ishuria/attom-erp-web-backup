@@ -170,7 +170,7 @@
       </el-col>
       <!-- 右侧 -->
       <el-col :span="6">
-        <div>
+        <div style="display: flex; flex-direction: column; height: 100%">
           <vab-card>
             <el-container style="display: flex; gap: 10px; align-items: flex-start;">
               <!-- 左侧图片 -->
@@ -224,7 +224,7 @@
             <el-input type="textarea" resize="none" :rows="6" placeholder="请输入运营备注" style="width: 100%;" />
           </div>
           <!-- 操作日志/事件清单 -->
-          <div>
+          <div style="display: flex; flex-direction: column; flex: 1; height: 100%">
             <vab-query-form>
               <vab-query-form-left-panel >
                 <el-form inline>
@@ -251,7 +251,7 @@
                 </el-form>
               </vab-query-form-right-panel>
             </vab-query-form>
-            <el-table border stripe :header-cell-style="{ textAlign: 'center' }">
+            <el-table border style="flex: 1;" stripe :header-cell-style="{ textAlign: 'center' }">
               <el-table-column label="日期"></el-table-column>
               <el-table-column label="类型"></el-table-column>
               <el-table-column label="内容"></el-table-column>

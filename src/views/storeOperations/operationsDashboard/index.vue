@@ -292,12 +292,16 @@
                   </el-col>
                 </el-row>
               </vab-card>
-              <vab-card class="card1-title" style="flex: 1;" title="断货后即将上架产品">
-                <el-table>
-                  <el-table-column label="SKU"></el-table-column>
-                  <el-table-column label="断货前月销量"></el-table-column>
-                  <el-table-column label="最近入库"></el-table-column>
-                  <el-table-column label="站点"></el-table-column>
+              <vab-card class="card1-title" style="flex: 1; display: flex; flex-direction: column;" title="断货后即将上架产品">
+                <el-table border :data="fakeData1" style="flex: 1" size="small">
+                  <el-table-column label="SKU" prop="sku" min-width="170"></el-table-column>
+                  <el-table-column label="断货前月销量" prop="sales" min-width="130"></el-table-column>
+                  <el-table-column label="最近入库" prop="recently" min-width="100">
+                    <template #default="{ row }">
+                      <span :class="{ 'green': row.recently === '已入库' }">{{ row.recently }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
                 </el-table>
               </vab-card>
             </div>
@@ -305,24 +309,29 @@
           <el-col :span="14">
             <div style="display: flex; flex-direction: column; height: calc(var(--el-container-height) - 20px)">
               <vab-card class="card2-title" style="height: 370px; margin-bottom: 10px;" title="产品成本波动监控">
-                <el-table :data="fakeTableData3" max-height="330px">
-                  <el-table-column label="日期"></el-table-column>
-                  <el-table-column label="SKU" prop="sku" min-width="120">
+                <el-table border :data="fakeTableData3" max-height="230px" size="small">
+                  <el-table-column label="日期" prop="date" min-width="115"></el-table-column>
+                  <el-table-column label="SKU" prop="sku" min-width="160">
                     <template #default="{ row }">
                       <span v-html="row.sku"></span>
                     </template>
                   </el-table-column>
-                  <el-table-column label="价格变动"></el-table-column>
-                  <el-table-column label="毛利率变动"></el-table-column>
-                  <el-table-column label="类型"></el-table-column>
-                  <el-table-column label="站点"></el-table-column>
+                  <el-table-column label="价格变动" prop="price" min-width="110"></el-table-column>
+                  <el-table-column label="毛利率变动" prop="profit" min-width="110"></el-table-column>
+                  <el-table-column label="类型" prop="type" min-width="125"></el-table-column>
+                  <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
                 </el-table>
+                <vab-pagination 
+                  :current-page="queryForm2.pageNo"
+                  :page-size="queryForm2.pageSize"
+                  :total="total2"
+                  @current-change="handleCurrentChange2"
+                  @size-change="handleSizeChange2"
+  
+                />
               </vab-card>
               <vab-card class="card3-title" style="flex: 1; display: flex; flex-direction: column;" title="即将断货产品预警">
-                <!-- <template #header>
-                  <vab-icon icon="error-warning-fill" color="#ff8c69" /><span>即将断货产品预警</span>
-                </template> -->
-                <el-table :data="fakeTableData3" border style="flex: 1;">
+                <el-table :data="fakeTableData3" border style="flex: 1;" size="small">
                   <el-table-column label="SKU" prop="sku" min-width="150">
                     <template #default="{ row }">
                       <span v-html="row.sku"></span>
@@ -338,16 +347,19 @@
                       <el-tag v-if="row.advertisement === '关'" type="success">{{ row.advertisement }}</el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column label="当前毛利" prop="currentProfit" min-width="100" align="center"></el-table-column>
+                  <el-table-column label="当前毛利" prop="currentProfit" min-width="100" align="center">
+                    <template #default="{ row }">
+                      <span :class="{'green': row.currentProfit >= 25, 'red': row.currentProfit < 25}">{{ row.currentProfit }}%</span>
+                    </template>
+                  </el-table-column>
                   <el-table-column label="站点" prop="site" min-width="110" align="center"></el-table-column>
                 </el-table>
                 <vab-pagination 
-                  :current-page="queryForm.pageNo"
-                  :page-size="queryForm.pageSize"
-                  :total="total"
-                  @current-change="handleCurrentChange"
-                  @size-change="handleSizeChange"
-                  
+                  :current-page="queryForm1.pageNo"
+                  :page-size="queryForm1.pageSize"
+                  :total="total1"
+                  @current-change="handleCurrentChange1"
+                  @size-change="handleSizeChange1"
                 />
               </vab-card>
             </div>
@@ -362,12 +374,13 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { CSSProperties } from 'vue'
-import { getWeekOfYear } from '~/src/utils/dateUtils'
 import { dateOption, storageAgeColorList } from '../constantOption'
+import { getWeekOfYear } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'operationsDashboard'
 })
+
 const amount = 42442.71
 // 控制数字显示为美元形式
 const formattedAmount = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
@@ -477,7 +490,20 @@ const data2 = ref<any[]>([
 // 计算库龄总和
 const totalAgeValue = data2.value.reduce((sum, item) => sum + item.value, 0)
 let percentageAgeData: any[]
-
+const fakeData1 = [
+  {
+    sku: 'HOME-0020-WHT\n碗架-木把手白色',
+    sales: 500,
+    recently: '11天/389',
+    site: '美国亚马逊'
+  },
+  {
+    sku: 'HOME-0020-WHT\n碗架-木把手白色',
+    sales: 200,
+    recently: '已入库',
+    site: '美国亚马逊'
+  },
+]
 const fakeTableData3 = [
   {
     sku: 'SKU123456<br />碗架-木把手白色',
@@ -486,8 +512,12 @@ const fakeTableData3 = [
     monthlySales: 500,
     remainingStock: 200,
     advertisement: '开',
-    currentProfit: '15%',
+    currentProfit: 20,
     site: '美国亚马逊',
+    date: '2024-12-30',
+    type: 'SKU实际价格',
+    price: '20->25',
+    profit: '30%->25%'
   },
   {
     sku: 'SKU123456<br />奶酪板-磁吸拼接',
@@ -496,8 +526,12 @@ const fakeTableData3 = [
     monthlySales: 500,
     remainingStock: 200,
     advertisement: '关',
-    currentProfit: '15%',
+    currentProfit: 25,
     site: '美国亚马逊',
+    date: '2024-12-30',
+    type: 'FBA配送费',
+    price: '30->28',
+    profit: '28%->30%'
   },
   {
     sku: 'SKU123456<br />碗架-木把手白色',
@@ -506,8 +540,12 @@ const fakeTableData3 = [
     monthlySales: 500,
     remainingStock: 200,
     advertisement: '开',
-    currentProfit: '15%',
+    currentProfit: 30,
     site: '美国亚马逊',
+    date: '2024-12-30',
+    type: '打包成本',
+    price: '20->25',
+    profit: '30%->25%'
   },
   {
     sku: 'SKU123456<br />奶酪板-磁吸拼接',
@@ -516,8 +554,12 @@ const fakeTableData3 = [
     monthlySales: 500,
     remainingStock: 200,
     advertisement: '关',
-    currentProfit: '15%',
+    currentProfit: 20,
     site: '美国亚马逊',
+    date: '2024-12-30',
+    type: '头程运费',
+    price: '20->25',
+    profit: '30%->25%'
   },
   {
     sku: 'SKU123456<br />碗架-木把手白色',
@@ -526,8 +568,9 @@ const fakeTableData3 = [
     monthlySales: 500,
     remainingStock: 200,
     advertisement: '开',
-    currentProfit: '15%',
+    currentProfit: 20,
     site: '美国亚马逊',
+    date: '2024-12-30',
   },
   {
     sku: 'SKU123456<br />奶酪板-磁吸拼接',
@@ -536,8 +579,9 @@ const fakeTableData3 = [
     monthlySales: 500,
     remainingStock: 200,
     advertisement: '关',
-    currentProfit: '15%',
+    currentProfit: 20,
     site: '美国亚马逊',
+    date: '2024-12-30',
   },
   {
     sku: 'SKU123456<br />奶酪板-磁吸拼接',
@@ -546,18 +590,22 @@ const fakeTableData3 = [
     monthlySales: 500,
     remainingStock: 200,
     advertisement: '关',
-    currentProfit: '15%',
+    currentProfit: 20,
     site: '美国亚马逊',
+    date: '2024-12-30',
   },
-
-
 ]
 
-const queryForm = reactive<any>({
+const queryForm1 = reactive<any>({
   pageNo: 1,
   pageSize: 20
 })
-const total = ref<number>(0)
+const total1 = ref<number>(0)
+const queryForm2 = reactive<any>({
+  pageNo: 1,
+  pageSize: 20
+})
+const total2 = ref<number>(0)
 const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'): any[] => {
   const groupedData: Record<string, number> = {}
   const adCostData: Record<string, number> = {} // ∑广告花费
@@ -1288,13 +1336,22 @@ const handleSwitchBar = () => {
   }
   updateChart2()
 }
-const handleCurrentChange = (value: number) => {
-  queryForm.pageNo = value
+const handleCurrentChange1 = (value: number) => {
+  queryForm1.pageNo = value
   // fetchData()
 }
-const handleSizeChange = (value: number) => {
-  queryForm.pageNo = 1
-  queryForm.pageSize = value
+const handleSizeChange1 = (value: number) => {
+  queryForm1.pageNo = 1
+  queryForm1.pageSize = value
+  // fetchData()
+}
+const handleCurrentChange2 = (value: number) => {
+  queryForm2.pageNo = value
+  // fetchData()
+}
+const handleSizeChange2 = (value: number) => {
+  queryForm2.pageNo = 1
+  queryForm2.pageSize = value
   // fetchData()
 }
 const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
@@ -1345,9 +1402,17 @@ onMounted(() => {
       color: #6aa74d; 
     }
     .el-card__body {
-      padding: 0;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
     }
   }
+}
+.green {
+  color: #67C23A; 
+}
+.red {
+  color: #F56C6C;
 }
 .card2-title {
   :deep() {
@@ -1359,9 +1424,9 @@ onMounted(() => {
       background-color: rgba(115, 153, 192, 0.2);  
       color: #4f6d7a;  
     }
-    .el-card__body {
-      padding: 0;
-    }
+    // .el-card__body {
+    //   padding: 0;
+    // }
   }
 }
 .card3-title {
@@ -1375,9 +1440,11 @@ onMounted(() => {
       color: #ff8c69;  
     }
 
-    // .el-card__body {
-    //   padding: 0;
-    // }
+    .el-card__body {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1; /* 确保表格占满剩余空间 */
+    }
   }
 }
 .card4 {

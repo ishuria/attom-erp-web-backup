@@ -161,6 +161,11 @@
           <span v-if="label3.includes(item.label)">
             {{ row[label3Map.get(item.label)!] }}天
           </span>
+          <span v-if="item.label === '季节系数'">
+            <div style="width: 100%; height: 50px">
+              <VabTableChartLine :xAxisData="seasonalXData" :yAxisData="seasonalYData" />
+            </div>
+          </span>
         </template>
       </el-table-column>
       <template #empty>
@@ -202,16 +207,36 @@
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
+     <!-- 季节系数 -->
+     <vab-dialog
+      title="季节系数"
+      v-model="seasonalVisible"
+      @open="handleSeasonalOpened"
+      width="40%"
+    >
+      <div ref="chartContainer1" style="width: 100%; height: 400px;"></div>
+      <template #footer></template>
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Hide, Search, Star, View } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 import { CSSProperties } from 'vue'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { currencySymbols, opeClassOption } from '../constantOption'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { currencySymbols, months, opeClassOption } from '../constantOption'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+const seasonalVisible = ref<boolean>(false)
+const chartContainer1 = ref<HTMLElement | null>(null)
+let chartInstance1: echarts.ECharts | null = null
+let chartObserver1: ResizeObserver
+
+const option1 = ref<any>({})
+
+const seasonalXData = months.map((item) => item.label)
+const seasonalYData = [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3]
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const queryForm = reactive<any>({
@@ -760,9 +785,91 @@ const remarkVisible = ref<boolean>(false)
 const showRemark = () => {
   remarkVisible.value = true
 }
+const initChart1 = () => {
+  option1.value = {
+    legend: {
+      left: '40%',
+      top: 0,
+    },
+    tooltip: {
+      trigger: 'axis',
+      confine: true
+    },
+    grid: {
+      top: 50,
+      bottom: 30,
+      left: 50,
+      right: 50,
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: months.map((item) => item.label),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999'
+        }
+      },
+    },
+    yAxis: {
+      name: '系数',
+      type: 'value',
+      min: 'dataMin', // 自动以数据中的最小值为起点
+      boundaryGap: [0, 0.1],
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#999'
+        }
+      }
+    },
+    series: [
+      {
+        name: '实际值',
+        type: 'line',
+        data: [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3],
+        itemStyle: {
+          color: '#52bfff'
+        },
+        smooth: true,
+      },
+      {
+        name: '参考值',
+        type: 'line',
+        data: [1.21, 1.38, 1.38, 1.38, 1.2, 1.38, 1.2, 1.2, 1.2, 1.38, 1.38, 1.38],
+        itemStyle: {
+          color: '#ff8fa5'
+        },
+        smooth: true,
+      },
+    ]
+  }
+  
+  chartInstance1?.setOption(option1.value)
+}
+const handleSeasonalOpened = () => {
+  nextTick(() => {
+    if (chartContainer1.value) {
+      chartInstance1 = echarts.init(chartContainer1.value)
+      chartObserver1 = new ResizeObserver(() => {
+        if (chartInstance1) {
+          chartInstance1.resize()
+        }
+      })
+      chartObserver1.observe(chartContainer1.value)
+      initChart1()
+    }
+  })
+}
 const handleCellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  if (column.label === '运营备注') {
+  const label = column.label
+  if (label === '运营备注') {
     showRemark()
+  } else if (label === '季节系数') {
+    seasonalVisible.value = true
   }
 }
 const imagePreviewVisible = ref<boolean>(false)

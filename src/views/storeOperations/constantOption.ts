@@ -254,3 +254,18 @@ export const sizeSourceOption = [
     value: 1
   },
 ]
+
+export const months = [
+  { label: '1月', prop: 'Jan' },
+  { label: '2月', prop: 'Feb' },
+  { label: '3月', prop: 'Mar' },
+  { label: '4月', prop: 'Apr' },
+  { label: '5月', prop: 'May' },
+  { label: '6月', prop: 'Jun' },
+  { label: '7月', prop: 'Jul' },
+  { label: '8月', prop: 'Aug' },
+  { label: '9月', prop: 'Sep' },
+  { label: '10月', prop: 'Oct' },
+  { label: '11月', prop: 'Nov' },
+  { label: '12月', prop: 'Dec' },
+]
