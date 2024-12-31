@@ -65,8 +65,8 @@
       <el-col :span="8">
         <vab-card class="card3" style="height: 150px;">
           <el-container style="display: flex; gap: 10px; align-items: center;">
-            <el-aside style="width: 4em">
-              <el-text>包装信息</el-text>
+            <el-aside style="width: 2.5em">
+              <el-text style="writing-mode: vertical-lr; letter-spacing: 0.3em;">包装信息</el-text>
             </el-aside>
             <!-- 内容 -->
             <el-main style="flex: 1; padding: 0;">

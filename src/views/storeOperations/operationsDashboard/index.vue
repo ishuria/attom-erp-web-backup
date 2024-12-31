@@ -376,11 +376,21 @@ import * as echarts from 'echarts'
 import { CSSProperties } from 'vue'
 import { dateOption, storageAgeColorList } from '../constantOption'
 import { getWeekOfYear } from '/@/utils/dateUtils'
+import { VueDraggable } from 'vue-draggable-plus'
 
 defineOptions({
   name: 'operationsDashboard'
 })
 
+const leftCards = [
+  { id: 1, title: "库龄", class: "card4" },
+  { id: 2, title: "断货后即将上架产品", class: "card1-title" }
+]
+
+const rightCards = [
+  { id: 3, title: "产品成本波动监控", class: "card2-title" },
+  { id: 4, title: "即将断货产品预警", class: "card3-title" }
+]
 const amount = 42442.71
 // 控制数字显示为美元形式
 const formattedAmount = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
@@ -1413,6 +1423,22 @@ onMounted(() => {
 }
 .red {
   color: #F56C6C;
+}
+.table-item {
+  position: relative;
+  padding-left: 13px; 
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 16px;
+    background-color: var(--dot-color, gray); /* 默认颜色 */
+  }
 }
 .card2-title {
   :deep() {

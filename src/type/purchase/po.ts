@@ -394,7 +394,7 @@ export interface IGetPoList {
 
   componentName?: string
 
-  createTime?: string
+  releaseDate?: string
 
   currency?: number
 

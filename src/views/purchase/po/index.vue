@@ -58,9 +58,9 @@
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="发布日期" prop="createTime" min-width="115">
+          <el-table-column label="发布日期" prop="releaseDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
@@ -181,9 +181,9 @@
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="发布日期" prop="createTime" min-width="115">
+          <el-table-column label="发布日期" prop="releaseDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
@@ -304,9 +304,9 @@
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="发布日期" prop="createTime" min-width="115">
+          <el-table-column label="发布日期" prop="releaseDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
@@ -427,9 +427,9 @@
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="发布日期" prop="createTime" min-width="115">
+          <el-table-column label="发布日期" prop="releaseDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
@@ -541,9 +541,9 @@
               <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="发布日期" prop="createTime" min-width="115">
+          <el-table-column label="发布日期" prop="releaseDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>
@@ -644,9 +644,9 @@
               <el-link type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="发布日期" prop="createTime" min-width="115">
+          <el-table-column label="发布日期" prop="releaseDate" min-width="115">
             <template #default="{ row }">
-              {{ row.createTime.split(' ')[0] }}
+              {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName"></el-table-column>

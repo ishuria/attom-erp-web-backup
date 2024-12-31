@@ -251,15 +251,26 @@
                 </el-form>
               </vab-query-form-right-panel>
             </vab-query-form>
-            <el-table border style="flex: 1;" stripe :header-cell-style="{ textAlign: 'center' }">
-              <el-table-column label="日期"></el-table-column>
-              <el-table-column label="类型"></el-table-column>
-              <el-table-column label="内容"></el-table-column>
+            <el-table :data="fakeData" border style="flex: 1;" stripe :header-cell-style="{ textAlign: 'center' }">
+              <el-table-column label="日期" prop="date" min-width="115" align="center"></el-table-column>
+              <el-table-column label="类型" prop="type" min-width="130"></el-table-column>
+              <el-table-column label="内容" prop="content" min-width="170">
+                <template #default="{ row }">
+                  <el-link type="primary">{{ row.content }}</el-link>
+                </template>
+              </el-table-column>
             </el-table>
           </div>
         </div>
       </el-col>
     </el-row>
+    <vab-dialog
+      title="变化详情"
+    >
+      <el-table>
+        
+      </el-table>
+    </vab-dialog>
   </div>
 </template>
 
@@ -291,7 +302,13 @@ const returnRadio = ref<number>(0)
 // 初始化图片高度
 const imageHeight = ref<number>(0)
 
-
+const fakeData = [
+  {
+    date: '2024-12-31',
+    type: '系统抓取',
+    content: '标题修改'
+  }
+]
 
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))

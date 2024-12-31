@@ -16,7 +16,7 @@
             <el-button type="primary">平滑指数设定</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">筛选</el-button>
+            <el-button type="primary" @click="filterVisible = true">筛选</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary">春节备货</el-button>
@@ -34,7 +34,12 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table :data="fakeData" border class="noneHoverTable" :header-cell-style="{ textAlign: 'center' }" :cell-class-name="clearPadding">
+    <el-table 
+      :data="fakeData" 
+      border 
+      class="noneHoverTable" 
+      :header-cell-style="{ textAlign: 'center' }" :cell-class-name="clearPadding" :cell-style="cellStyle"
+    >
       <el-table-column
         v-for="item in columns"
         :label="item.label"
@@ -75,6 +80,15 @@
               <span>{{ removeHtmlTags(row.sku) }}</span>
             </el-tooltip>
           </span>
+          <span v-if="item.label === '销量趋势'">
+            <div style="width: 100%; height: 59px">
+              <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+            </div>
+          </span>
+          <span v-if="item.label === '广告'">
+            <el-tag v-if="row.ad === 0" type="danger">关</el-tag>
+            <el-tag v-if="row.ad === 1" type="success">开</el-tag>
+          </span>
         </template>
       </el-table-column>
       <template #empty>
@@ -89,13 +103,124 @@
       @size-change="handleSizeChange"
     />
     <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <!-- 筛选 -->
+    <vab-dialog
+      title="筛选"
+      width="20%"
+      v-model="filterVisible"
+    >
+      <el-form
+        ref="filterFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="filterForm"
+        style="width: 100%; margin-right: 10px"
+      >
+        <el-form-item label="交期">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number1"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number2"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="上新天数">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number3"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number4"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="ES总新">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number5"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number6"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="上海签售">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number7"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number8"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+        <el-form-item label="最晚补货">
+          <div class="flex">
+            <el-input-number
+              v-model="filterForm.number9"
+              :min="0"
+              placeholder="最小值"
+              style="flex: 1"
+            />
+            <span style="white-space: nowrap; color: #303133">至</span>
+            <el-input-number
+              v-model="filterForm.number10"
+              :min="0"
+              placeholder="最大值"
+              style="flex: 1"
+            />
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button>取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Search, Star } from '@element-plus/icons-vue'
 import { removeHtmlTags } from '/@/utils/tableColum'
+import { FormInstance } from 'element-plus'
+import { CSSProperties } from 'vue'
 
+const filterVisible = ref<boolean>(false)
+const filterForm = reactive<any>({
+
+})
+const filterFormRef = ref<FormInstance>()
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () => {
@@ -111,7 +236,38 @@ const fakeData = [
     componentImage: 'https://picsum.photos/200/200',
     sku: 'SKU12345',
     asin: 'ASIN12345',
-    rate: 3.5
+    rate: 3.5,
+    ad: 0,
+    saleTrendList: {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    },
   }
 ]
 const columns = ref<any>([
@@ -161,7 +317,7 @@ const columns = ref<any>([
   {
     label: '广告',
     prop: 'remark',
-    minWidth: 150,
+    minWidth: 90,
   },
   {
     label: '运营',
@@ -321,6 +477,16 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (data.columnIndex === 8) {
+    return {
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'left'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -370,5 +536,11 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 .noneHoverTable :deep(.clear-padding .cell) {
   padding-right: 0px;
   padding-left: 0px;
+}
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
 }
 </style>

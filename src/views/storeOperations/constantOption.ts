@@ -214,11 +214,11 @@ export const colorList = [
 ]
 
 export const storageAgeColorList = [
-  '#52bfff',
-  '#ff8fa5',
   '#99db70',
+  '#52bfff',
   '#ce82fa',
-  '#ffdd36'
+  '#ffdd36',
+  '#ff8fa5',
 ]
 
 export const card4Option = [

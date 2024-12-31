@@ -1249,3 +1249,4 @@ export interface IUpdateProductCustomsClearanceStatus {
   id: number
   status: number
 }
+

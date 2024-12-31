@@ -2,6 +2,19 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 import {
+  IGetMerchandiseChannelDetail,
+  IGetMerchandiseDetail,
+  IGetMerchandiseListReq,
+  IGetMerchandiseListRes,
+  IGetMerchandiseTypeListRes,
+  IGetSkuShippingChannelListRes,
+  IId,
+  ITypeId,
+  IUpdateBatchSkuShippingChannelMerchandise,
+  IUpdateMerchandiseReq,
+  IUpdateSkuShippingChannelMerchandise
+} from '/@/type/productInformation/channelType'
+import {
   IaddConsumablesOtherSku,
   IaddProductComponentOtherSku,
   IaddProductQualityInspection,
@@ -47,12 +60,12 @@ import {
   IupdateProductComponentName,
   IupdateProductComponentSuppliser,
   IupdateProductCustoms,
+  IUpdateProductCustomsClearanceStatus,
   IupdateProductReplenParams,
   IupdateProductSku,
   IupdateProductSkuRemark,
   IupdateProductStatus,
-  IupdateProductSupplier,
-  IUpdateProductCustomsClearanceStatus
+  IupdateProductSupplier
 } from '/@/type/productInformation/skuInformationType'
 
 // SKU信息 - 获取查询列表
@@ -610,6 +623,105 @@ export function updateCustomsClearanceRatio(data: IUpdateCustomsClearanceRatioRe
 export function updateProductCustomsClearanceStatus(params: IUpdateProductCustomsClearanceStatus): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/product/customs/clearance/status/update`,
+    method: 'post',
+    params
+  })
+}
+
+/**
+ * @description 获取货物渠道列表
+ */
+export function getMerchandiseList(params: IGetMerchandiseListReq): Promise<IGetMerchandiseListRes> {
+  return request({
+    url: `${BASE_API}/merchandise/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 获取sku发货渠道设定列表
+ */
+export function getSkuShippingChannelList(params: IGetMerchandiseListReq): Promise<IGetSkuShippingChannelListRes> {
+  return request({
+    url: `${BASE_API}/sku/shipping/channel/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 获取货物类别下拉列表
+ */
+export function getMerchandiseTypeList(): Promise<IGetMerchandiseTypeListRes> {
+  return request({
+    url: `${BASE_API}/merchandise/type/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 获取所有货代名称列表
+ */
+export function getFreightForwarderQuery(): Promise<IGetMerchandiseTypeListRes> {
+  return request({
+    url: `${BASE_API}/freightForwarder/query`,
+    method: 'get',
+  })
+}
+/**
+ * @description 获取货物渠道详情
+ */
+export function getMerchandiseDetail(params: IId): Promise<IGetMerchandiseDetail> {
+  return request({
+    url: `${BASE_API}/merchandise/detail`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 修改货物类别提交
+ */
+export function updateMerchandise(data: IUpdateMerchandiseReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/merchandise/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 添加货物类别提交
+ */
+export function addMerchandise(data: IUpdateMerchandiseReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/merchandise/add`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 获取货物类别对应的各站点渠道
+ */
+export function getMerchandiseChannelDetail(params: ITypeId): Promise<IGetMerchandiseChannelDetail> {
+  return request({
+    url: `${BASE_API}/merchandise/channel/detail`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 修改Sku的货物类别
+ */
+export function updateSkuShippingChannelMerchandise(params: IUpdateSkuShippingChannelMerchandise): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sku/shipping/channel/merchandise/update`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 批量修改Sku的货物类别
+ */
+export function updateBatchSkuShippingChannelMerchandise(params: IUpdateBatchSkuShippingChannelMerchandise): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sku/shipping/channel/merchandise/update/batch`,
     method: 'post',
     params
   })
