@@ -10,7 +10,6 @@ steps:
     commands:
       - pwd
       - ls -alt
-      - npm config set registry https://registry.npmmirror.com
       - npm install --verbose
       - npm run build
 
