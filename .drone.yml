@@ -11,7 +11,8 @@ steps:
       - pwd
       - ls -alt
       - npm config set registry https://registry.npmmirror.com
-      - npm install --verbose
+      - npm i -g pnpm
+      - pnpm install --verbose
       - npm run build:fast
 
   # 打包构建镜像并推送到镜像仓库
