@@ -5,24 +5,21 @@ name: web
 
 steps:
   # npm 构建
-  # - name: npm-build
-  #   image: node:20.15.1
-  #   environment:
-  #     SHARP_DIST_BASE_URL: https://npmmirror.com/mirrors/sharp-libvips/
-  #   commands:
-  #     - pwd
-  #     - ls -alt
-  #     - npm config set registry https://registry.npmmirror.com
-  #     - npm install --verbose
-  #     - npm run build
+  - name: npm-build
+    image: 192.168.6.12:3002/library/node:20.15.1
+    commands:
+      - pwd
+      - ls -alt
+      - npm config set registry https://registry.npmmirror.com
+      - npm install --verbose
+      - npm run build
 
-  # 打包构建镜像
+  # 打包构建镜像并推送到镜像仓库
   - name: build-docker-image
     image: plugins/docker
     settings:
-      dockerfile: ./DockerFile
       username: xiangkai.luo
-      password: Lxk11824.
+      password: harbor_password
       debug: true
       insecure: true
       registry: 192.168.6.12:3002
@@ -30,12 +27,19 @@ steps:
       tags:
         - v1.0
 
-  # 拉取harbor镜像并运行
-  - name: pull-image-and-run
-    image: 192.168.6.12:3002/attom-erp-web/web:v1.0
-    commands:
-      - echo "Starting container from Harbor image..."
-      - docker run -d -p 80:80 192.168.6.12:3002/attom-erp-web/web:v1.0
+  # 远程到主机并运行
+  - name: deploy-run
+    image: appleboy/drone-ssh
+    pull: true
+    settings:
+      host: 192.168.6.12
+      port: 22
+      username: attom-12
+      password:
+        from_secret: ssh_password
+      # 使用docker compose拉去对应的镜像，并运行
+      script:
+        - cd ~/app/project_install && docker compose pull && docker compose up -d
 
 # matster分支触发构建
 trigger:
