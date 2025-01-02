@@ -198,7 +198,7 @@
                 <!-- 买家之声和缺陷率 -->
                 <div style="font-weight: 600;">
                   <el-link type="primary" class="custom-link" style="margin-right: 10px; font-weight: 600;">买家之声</el-link>
-                  <el-tag style="background-color: #bad411; color: #fff; border-radius: 17px; padding: 0 30px;">
+                  <el-tag class="customTag customTag-good" >
                     Good
                   </el-tag>
                   <div data-label="缺陷率" style="margin-top: 6px;">
@@ -256,7 +256,7 @@
               <el-table-column label="类型" prop="type" min-width="130"></el-table-column>
               <el-table-column label="内容" prop="content" min-width="170">
                 <template #default="{ row }">
-                  <el-link type="primary">{{ row.content }}</el-link>
+                  <el-link type="primary" @click="handleShowChange(row)">{{ row.content }}</el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -265,10 +265,45 @@
       </el-col>
     </el-row>
     <vab-dialog
-      title="变化详情"
+      title="标题变化详情"
+      v-model="titleChangeVisible"
     >
-      <el-table>
-        
+      <el-table :data="fakeChangeData" border>
+        <el-table-column label="变化类型">
+          <template #default="{ row }">
+            {{ '标题' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="变化前"></el-table-column>
+        <el-table-column label="变化后"></el-table-column>
+      </el-table>
+    </vab-dialog>
+    <vab-dialog
+      title="描述变化详情"
+      v-model="descChangeVisible"
+    >
+      <el-table :data="fakeChangeData" border>
+        <el-table-column label="变化类型">
+          <template #default="{ row }">
+            {{ '描述' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="变化前"></el-table-column>
+        <el-table-column label="变化后"></el-table-column>
+      </el-table>
+    </vab-dialog>
+    <vab-dialog
+      title="图片变化详情"
+      v-model="imgChangeVisible"
+    >
+      <el-table :data="fakeChangeData" border>
+        <el-table-column label="变化类型">
+          <template #default="{ row }">
+            {{ '图片' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="变化前"></el-table-column>
+        <el-table-column label="变化后"></el-table-column>
       </el-table>
     </vab-dialog>
   </div>
@@ -294,7 +329,9 @@ const routesStore = useRoutesStore()
 const { changeActiveMenu } = routesStore
 
 const activeName = ref<number>(0)
-
+const titleChangeVisible = ref<boolean>(false)
+const descChangeVisible = ref<boolean>(false)
+const imgChangeVisible = ref<boolean>(false)
 // 评分
 const rate = ref<number>(4.7)
 const returnRadio = ref<number>(0)
@@ -307,9 +344,32 @@ const fakeData = [
     date: '2024-12-31',
     type: '系统抓取',
     content: '标题修改'
+  },
+  {
+    date: '2024-12-31',
+    type: '系统抓取',
+    content: '描述修改'
+  },
+  {
+    date: '2024-12-31',
+    type: '系统抓取',
+    content: '图片修改'
+  },
+]
+const fakeChangeData = [
+  {
+
   }
 ]
-
+const handleShowChange = (row: any) => {
+  if (row.content === '标题修改') {
+    titleChangeVisible.value = true
+  } else if (row.content === '描述修改') {
+    descChangeVisible.value = true
+  } else if (row.content === '图片修改') {
+    imgChangeVisible.value = true
+  }
+}
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   router.push({
@@ -355,11 +415,30 @@ onMounted(() => {
       min-width: 80px !important;
       text-align: right;
     }
-    // .aside-container {
-    //   display: flex;
-    //   flex-direction: column;
-    //   height: calc(var(--el-container-height) - var(--el-padding) - 52px - 70px) !important;
-    // }
+    
+    .customTag {
+      color: #fff; 
+      border-radius: 17px; 
+      padding: 0 30px;
+      border: 0;
+      width: 7em;
+
+      &-veryPoor {
+        background-color: #e32e00; 
+      }
+      &-good {
+        background-color: #bad411; 
+      }
+      &-fair {
+        background-color: #ffc400;
+      }
+      &-poor {
+        background-color: #ff9900;
+      }
+      &-excellent {
+        background-color: #49850f;
+      }
+    }
     .vab-query-form {
       .left-panel {
         margin-bottom: 0;

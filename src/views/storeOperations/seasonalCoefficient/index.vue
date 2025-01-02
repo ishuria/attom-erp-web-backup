@@ -14,7 +14,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">新增</el-button>
+            <el-button type="primary" @click="handleAdd">新增</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary">参考值计算</el-button>
@@ -22,62 +22,151 @@
         </el-form>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-table class="noneHoverTable" :data="list"  border stripe :header-cell-style="{ textAlign: 'center' }" :cellStyle="cellStyle" >
+    <el-table 
+      :data="list"  
+      class="noneHoverTable" 
+      border stripe :header-cell-style="{ textAlign: 'center' }" :cellStyle="cellStyle" 
+      @cell-click="changeInput"
+    >
       <el-table-column label="品名" >
         <el-table-column label="品名" prop="kindName" min-width="120"></el-table-column>
       </el-table-column>
       <el-table-column label="1月">
-        <el-table-column label="实际值" prop="janActual"></el-table-column>
+        <el-table-column label="实际值" prop="janActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.janActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.janActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="janReference"></el-table-column>
       </el-table-column>
       <el-table-column label="2月">
-        <el-table-column label="实际值" prop="febActual"></el-table-column>
+        <el-table-column label="实际值" prop="febActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.febActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.febActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="febReference"></el-table-column>
       </el-table-column>
       <el-table-column label="3月">
-        <el-table-column label="实际值" prop="marActual"></el-table-column>
+        <el-table-column label="实际值" prop="marActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.marActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.marActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="marReference"></el-table-column>
       </el-table-column>
       <el-table-column label="4月">
-        <el-table-column label="实际值" prop="aprActual"></el-table-column>
+        <el-table-column label="实际值" prop="aprActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.aprActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.aprActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="aprReference"></el-table-column>
       </el-table-column>
       <el-table-column label="5月">
-        <el-table-column label="实际值" prop="mayActual"></el-table-column>
+        <el-table-column label="实际值" prop="mayActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.mayActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.mayActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="mayReference"></el-table-column>
       </el-table-column>
       <el-table-column label="6月">
-        <el-table-column label="实际值" prop="junActual"></el-table-column>
+        <el-table-column label="实际值" prop="junActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.junActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.junActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="junReference"></el-table-column>
       </el-table-column>
       <el-table-column label="7月">
-        <el-table-column label="实际值" prop="julActual"></el-table-column>
+        <el-table-column label="实际值" prop="julActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.julActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.julActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="julReference"></el-table-column>
       </el-table-column>
       <el-table-column label="8月">
-        <el-table-column label="实际值" prop="augActual"></el-table-column>
+        <el-table-column label="实际值" prop="augActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.augActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.augActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="augReference"></el-table-column>
       </el-table-column>
       <el-table-column label="9月">
-        <el-table-column label="实际值" prop="sepActual"></el-table-column>
+        <el-table-column label="实际值" prop="sepActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.sepActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.sepActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="sepReference"></el-table-column>
       </el-table-column>
       <el-table-column label="10月">
-        <el-table-column label="实际值" prop="octActual"></el-table-column>
+        <el-table-column label="实际值" prop="octActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.octActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.octActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="octReference"></el-table-column>
       </el-table-column>
       <el-table-column label="11月">
-        <el-table-column label="实际值" prop="novActual"></el-table-column>
+        <el-table-column label="实际值" prop="novActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.novActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.novActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="novReference"></el-table-column>
       </el-table-column>
       <el-table-column label="12月">
-        <el-table-column label="实际值" prop="decActual"></el-table-column>
+        <el-table-column label="实际值" prop="decActual">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.decActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.decActual }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="参考值" prop="decReference"></el-table-column>
       </el-table-column>
       <el-table-column label="操作" width="120">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="viewChart(row)">查看</el-link>
-          <el-link type="danger" :underline="false">删除</el-link>
+          <el-link type="danger" :underline="false" @click="handleDel(row)">删除</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -100,6 +189,59 @@
       <div ref="chartContainer" style="width: 100%; height: 400px;"></div>
       <template #footer></template>
     </vab-dialog>
+    <!-- 添加季节系数 -->
+    <vab-dialog
+      title="新增季节系数"
+      v-model="addVisible"
+      width="20%"
+      @close="handleCloseAdd"
+    >
+      <el-form ref="formRef" :rules="formRules" :model="form" label-position="right" label-width="auto" style="margin: 0 10px">
+        <el-form-item label="品名" prop="kindName">
+          <el-input v-model="form.kindName" clearable />
+        </el-form-item>
+        <el-form-item label="1月实际系数" prop="janActual">
+          <el-input type="number" v-model="form.janActual" />
+        </el-form-item>
+        <el-form-item label="2月实际系数" prop="febActual">
+          <el-input type="number" v-model="form.febActual" />
+        </el-form-item>
+        <el-form-item label="3月实际系数" prop="marActual">
+          <el-input type="number" v-model="form.marActual" />
+        </el-form-item>
+        <el-form-item label="4月实际系数" prop="aprActual">
+          <el-input type="number" v-model="form.aprActual" />
+        </el-form-item>
+        <el-form-item label="5月实际系数" prop="mayActual">
+          <el-input type="number" v-model="form.mayActual" />
+        </el-form-item>
+        <el-form-item label="6月实际系数" prop="junActual">
+          <el-input type="number" v-model="form.junActual" />
+        </el-form-item>
+        <el-form-item label="7月实际系数" prop="julActual">
+          <el-input type="number" v-model="form.julActual" />
+        </el-form-item>
+        <el-form-item label="8月实际系数" prop="augActual">
+          <el-input type="number" v-model="form.augActual" />
+        </el-form-item>
+        <el-form-item label="9月实际系数" prop="sepActual">
+          <el-input type="number" v-model="form.sepActual" />
+        </el-form-item>
+        <el-form-item label="10月实际系数" prop="octActual">
+          <el-input type="number" v-model="form.octActual" />
+        </el-form-item>
+        <el-form-item label="11月实际系数" prop="novActual">
+          <el-input type="number" v-model="form.novActual" />
+        </el-form-item>
+        <el-form-item label="12月实际系数" prop="decActual">
+          <el-input type="number" v-model="form.decActual" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseAdd">取消</el-button>
+        <el-button type="primary" @click="handleConfirmAdd">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -108,10 +250,13 @@ defineOptions({
   name: 'seasonalCoefficient'
 })
 import * as echarts from 'echarts'
+import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
 import { months } from '../constantOption'
-import { getSeasonalCoefficientList, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { addSeasonalCoefficient, delSeasonalCoefficient, getSeasonalCoefficientList, getSeasonalCoefficientSiteList, updateSeasonalCoefficient } from '/@/api/devlocal/seasonalCoefficient'
 import { IGetSeasonalCoefficientList, IGetSeasonalCoefficientListReq, ISiteList } from '/@/type/storeOperation/seasonalCoefficientType'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { FormInstance, FormRules } from 'element-plus'
 
 const total = ref<number>(0)
 const queryForm = reactive<IGetSeasonalCoefficientListReq>({
@@ -126,58 +271,51 @@ let chartObserver: ResizeObserver
 const option = ref<any>({})
 const siteList = ref<ISiteList[]>([])
 const list = ref<IGetSeasonalCoefficientList[]>([])
-const fakeData = ref<any[]>([
-  {
-    category: 'Category1',
-    Jan: { value1: '1.12', value2: '1.38' },
-    Feb: { value1: '1.15', value2: '1.40' },
-    Mar: { value1: '1.20', value2: '1.33' },
-    Apr: { value1: '1.20', value2: '1.33' },
-    May: { value1: '1.20', value2: '1.33' },
-    Jun: { value1: '1.20', value2: '1.33' },
-    Jul: { value1: '1.20', value2: '1.33' },
-    Aug: { value1: '1.20', value2: '1.33' },
-    Sep: { value1: '1.20', value2: '1.33' },
-    Oct: { value1: '1.20', value2: '1.33' },
-    Nov: { value1: '1.20', value2: '1.33' },
-    Dec: { value1: '1.20', value2: '1.33' },
-  },
-  {
-    category: 'Category2',
-    Jan: { value1: '1.12', value2: '1.38' },
-    Feb: { value1: '1.15', value2: '1.40' },
-    Mar: { value1: '1.20', value2: '1.33' },
-    Apr: { value1: '1.20', value2: '1.33' },
-    May: { value1: '1.20', value2: '1.33' },
-    Jun: { value1: '1.20', value2: '1.33' },
-    Jul: { value1: '1.20', value2: '1.33' },
-    Aug: { value1: '1.20', value2: '1.33' },
-    Sep: { value1: '1.20', value2: '1.33' },
-    Oct: { value1: '1.20', value2: '1.33' },
-    Nov: { value1: '1.20', value2: '1.33' },
-    Dec: { value1: '1.20', value2: '1.33' },
-  },
-  {
-    category: 'Category3',
-    Jan: { value1: '1.12', value2: '1.38' },
-    Feb: { value1: '1.15', value2: '1.40' },
-    Mar: { value1: '1.20', value2: '1.33' },
-    Apr: { value1: '1.20', value2: '1.33' },
-    May: { value1: '1.20', value2: '1.33' },
-    Jun: { value1: '1.20', value2: '1.33' },
-    Jul: { value1: '1.20', value2: '1.33' },
-    Aug: { value1: '1.20', value2: '1.33' },
-    Sep: { value1: '1.20', value2: '1.33' },
-    Oct: { value1: '1.20', value2: '1.33' },
-    Nov: { value1: '1.20', value2: '1.33' },
-    Dec: { value1: '1.20', value2: '1.33' },
-  },
-])
-// 提取所有 value1 和 value2 的数组
-let value1Array: string[] = []
-let value2Array: string[] = []
+let copyRow: any
 let actualData: (number | undefined)[] = []
 let referenceData: (number | undefined)[] = []
+const addVisible = ref<boolean>(false)
+const form = reactive<any>({
+
+})
+const formRef = ref<FormInstance>()
+const formRules = reactive<FormRules>({
+  kindName: [{ required: true, message: '请输入品类名称', trigger: 'blur' }],
+  janActual: [{ required: true, message: '请输入1月实际系数', trigger: 'blur' }],
+  febActual: [{ required: true, message: '请输入2月实际系数', trigger: 'blur' }],
+  marActual: [{ required: true, message: '请输入3月实际系数', trigger: 'blur' }],
+  aprActual: [{ required: true, message: '请输入4月实际系数', trigger: 'blur' }],
+  mayActual: [{ required: true, message: '请输入5月实际系数', trigger: 'blur' }],
+  junActual: [{ required: true, message: '请输入6月实际系数', trigger: 'blur' }],
+  julActual: [{ required: true, message: '请输入7月实际系数', trigger: 'blur' }],
+  augActual: [{ required: true, message: '请输入8月实际系数', trigger: 'blur' }],
+  sepActual: [{ required: true, message: '请输入9月实际系数', trigger: 'blur' }],
+  octActual: [{ required: true, message: '请输入10月实际系数', trigger: 'blur' }],
+  novActual: [{ required: true, message: '请输入11月实际系数', trigger: 'blur' }],
+  decActual: [{ required: true, message: '请输入12月实际系数', trigger: 'blur' }],
+})
+const handleConfirmAdd = async () => {
+  formRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await addSeasonalCoefficient({
+        site: queryForm.siteId,
+        ...form
+      })
+      if (data) {
+        $baseMessage('新增季节系数成功！', 'success')
+        handleCloseAdd()
+        fetchData()
+      }
+    }
+  })
+}
+const handleCloseAdd = () => {
+  formRef.value?.resetFields()
+  addVisible.value = false
+}
+const handleAdd = () => {
+  addVisible.value = true
+}
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
@@ -202,9 +340,9 @@ const handleDialogOpened = () => {
       })
       chartObserver.observe(chartContainer.value)
       initChart()
-      option.value.series[0].data = actualData
-  option.value.series[1].data = referenceData
-  updateChart()
+      // option.value.series[0].data = actualData
+      // option.value.series[1].data = referenceData
+      // updateChart()
     }
   })
 }
@@ -262,7 +400,7 @@ const initChart = () => {
       {
         name: '实际值',
         type: 'line',
-        data: value1Array,
+        data: actualData,
         itemStyle: {
           color: '#52bfff'
         },
@@ -271,7 +409,7 @@ const initChart = () => {
       {
         name: '参考值',
         type: 'line',
-        data: value2Array,
+        data: referenceData,
         itemStyle: {
           color: '#ff8fa5'
         },
@@ -279,10 +417,60 @@ const initChart = () => {
       },
     ]
   }
-  // console.log(value1Array);
   
   chartInstance?.setOption(option.value)
 }
+const handleDel = async (row: IGetSeasonalCoefficientList) => {
+  $baseConfirm('确定要删除季节系数吗？', null, async () => {
+    const { data } = await delSeasonalCoefficient({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('删除季节系数成功！', 'success')
+      fetchData()
+    }
+  })
+}
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
+  }
+
+}
+
+// table blur事件
+const clickCancel = async (event:any, value:any) => {
+  const rootElement = getRootElement(event.srcElement, ".cell")
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add("none")
+    if (t2) t2.classList.remove("none")
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑
+    await updateSeasonalCoefficient(value)
+  }
+}
+
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const index = data.columnIndex
   if (index === 0) {
@@ -310,34 +498,8 @@ const fetchData = async () => {
 onBeforeMount(() => {
   fetchSiteList()
   fetchData()
-  value1Array = []
-  value2Array = []
-  
-  // 遍历 fakeData
-  fakeData.value.forEach((row, index) => {
-    if (index === 0) {
-      Object.keys(row).forEach((key) => {
-        if (key !== 'category') { // 跳过 category 字段
-          value1Array.push(row[key].value1)
-          value2Array.push(row[key].value2)
-        }
-      })
-    }
-    
-  })
 })
-onMounted(() => {
-  // if (chartContainer.value) {
-  //   chartInstance = echarts.init(chartContainer.value)
-  //   // chartObserver = new ResizeObserver(() => {
-  //   //   if (chartInstance) {
-  //   //     chartInstance.resize()
-  //   //   }
-  //   // })
-  //   // chartObserver.observe(chartContainer.value)
-  //   initChart()
-  // }
-})
+
 </script>
 
 <style lang="scss" scoped>
@@ -364,13 +526,17 @@ onMounted(() => {
 
 .noneHoverTable {
   :deep() {
-    // .el-table__body .cell {
-    //   max-height: 40px;
-    // }
+    .el-table__body .cell {
+      min-height: 32px;
+      line-height: 32px;
+    }
     /* 隐藏第二行表头 */
     .el-table__header-wrapper .el-table__header tr:nth-child(2) {
       display: none;
     }
   }
+}
+.none {
+  display: none;
 }
 </style>

@@ -10,16 +10,16 @@
             <el-select></el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">发货数检查</el-button>
+            <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">平滑指数设定</el-button>
+            <el-button type="primary" @click="smoothSettingVisible = true">平滑指数设定</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="filterVisible = true">筛选</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">春节备货</el-button>
+            <el-button type="primary" @click="stockUpVisible = true">春节备货</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -207,6 +207,65 @@
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 平滑指数设定 -->
+    <vab-dialog
+      title="平滑指数设定"
+      v-model="smoothSettingVisible"
+      width="20%"
+    >
+      <el-form label-position="top">
+        <el-form-item label="平滑指数">
+          <el-input type="number" />
+        </el-form-item>
+        <el-form-item label="新款平滑指数设定">
+          <el-input type="number" />
+        </el-form-item>
+        <el-form-item label="上新天数设定">
+          <el-input type="number" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="smoothSettingVisible = false">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 发货数检查 -->
+    <vab-dialog
+      title="发货数检查"
+      v-model="quantityCheckVisible"
+    >
+      <el-table class="noneHoverTable" :data="fakeCheckData" border stripe :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">\
+        <el-table-column type="selection"></el-table-column>
+        <el-table-column label="发货计划" prop="date"></el-table-column>
+        <el-table-column label="产品数量" prop=""></el-table-column>
+        <el-table-column label="重量" prop=""></el-table-column>
+        <el-table-column label="体积" prop=""></el-table-column>
+        <el-table-column label="箱数" prop=""></el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button @click="quantityCheckVisible = false">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 春节备货 -->
+    <vab-dialog
+      title="春节备货"
+      v-model="stockUpVisible"
+      width="20%"
+    >
+      <el-form class="noneHoverTable" style="margin: auto 0">
+        <el-form-item label="春节备货">
+          <el-checkbox ></el-checkbox>
+        </el-form-item>
+        <el-form-item label="节后开工日期" label-position="top">
+          <el-date-picker v-model="stockUpForm.date" type="date" value-format="YYYY-MM-DD"></el-date-picker>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="stockUpVisible = false">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -216,6 +275,12 @@ import { removeHtmlTags } from '/@/utils/tableColum'
 import { FormInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
 
+const smoothSettingVisible = ref<boolean>(false)
+const quantityCheckVisible = ref<boolean>(false)
+const stockUpVisible = ref<boolean>(false)
+const stockUpForm = reactive<any>({
+
+})
 const filterVisible = ref<boolean>(false)
 const filterForm = reactive<any>({
 
@@ -223,6 +288,9 @@ const filterForm = reactive<any>({
 const filterFormRef = ref<FormInstance>()
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
+const showQuantityCheck = () => {
+  quantityCheckVisible.value = true
+}
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
 }
@@ -231,6 +299,11 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
+const fakeCheckData = [
+  {
+    date: '2025-01-02'
+  }
+]
 const fakeData = [
   {
     componentImage: 'https://picsum.photos/200/200',
@@ -536,6 +609,10 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 .noneHoverTable :deep(.clear-padding .cell) {
   padding-right: 0px;
   padding-left: 0px;
+}
+.noneHoverTable :deep(.el-checkbox) {
+  transform: scale(1.2);
+  transform-origin: center;
 }
 .flex {
   display: flex;

@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import {IUserQueryReq,IUserDeleteReq,IUserAddOrUpateReq, IEditParams, IAddParams} from '/@/type/user/userType'
+import { IAddParams, IEditParams, IGetAllNameReq, IUserDeleteReq, IUserQueryReq } from '/@/type/user/userType'
 
 export function getList(params?: IUserQueryReq) {
   return request({
@@ -54,3 +54,13 @@ export function getCompany() {
   })
 }
 
+/**
+ * @description 获取所有公司所有人名
+ */
+export function getAllName(params: IGetAllNameReq) {
+  return request({
+    url: `${BASE_API}/user/getAllName`,
+    method: 'get',
+    params
+  })
+}

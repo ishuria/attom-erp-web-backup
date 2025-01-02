@@ -1,42 +1,41 @@
 <template>
-    <div class="comprehensive-table-container auto-height-container">
-      <vab-query-form>
-        <vab-query-form-left-panel :span="24">
-            <el-space>
-                <span>站点</span>
-                <el-select v-model="site" placeholder="请选择站点" @change="handleChangeSite">
-                    <el-option v-for="dict in replenishmentSiteColumns" :key="dict.value"
-                        :value="dict.value" :label="dict.label"></el-option>
-                </el-select>
-                <el-button type="primary" @click="handleUpdate">批量修改</el-button>
-            </el-space>
-        </vab-query-form-left-panel>
-      </vab-query-form>
-  
-      <el-table ref="tableRef" border stripe :data="list" @cell-click="tableInputChange" @selection-change="setSelectRows" v-loading="listLoading" class="noneHoveTable">
-        <el-table-column type="selection" width="38" fixed/>
-        <el-table-column align="center" label="图片" width="100" prop="skuUrl" >
-            <template #default="{ row }">
-                <el-image style="width: 75px; height: 75px" :src="row.skuUrl" fit="fill" data-img="img" >
-                  <template #error>
-                    <el-icon></el-icon>
-                  </template>
-                </el-image>
+  <div class="comprehensive-table-container auto-height-container">
+    <vab-query-form>
+      <vab-query-form-left-panel :span="24">
+        <el-space>
+          <span>站点</span>
+          <el-select v-model="site" placeholder="请选择站点" @change="handleChangeSite">
+            <el-option v-for="item in siteList" :key="item.id" :value="item.id" :label="item.label"></el-option>
+          </el-select>
+          <el-button type="primary" @click="handleUpdate">批量修改</el-button>
+        </el-space>
+      </vab-query-form-left-panel>
+    </vab-query-form>
+
+    <el-table ref="tableRef" border stripe :data="list" @cell-click="tableInputChange" @selection-change="setSelectRows" v-loading="listLoading" class="noneHoveTable">
+      <el-table-column type="selection" width="38" fixed/>
+      <el-table-column align="center" label="图片" width="100" prop="skuUrl" >
+        <template #default="{ row }">
+          <el-image style="width: 75px; height: 75px" :src="row.skuUrl" fit="fill" data-img="img" >
+            <template #error>
+              <el-icon></el-icon>
             </template>
-        </el-table-column>
-        <el-table-column align="center" label="SKU" min-width="200" prop="sku" />
-        <el-table-column align="center" label="产品分类1" min-width="200" prop="type1" />
-        <el-table-column align="center" label="维持库存天数" min-width="230" prop="stockPileNumberDays" />
-        <el-table-column align="center" label="最小维持库存数量" min-width="160" prop="minStockPilNumber" />
-        <el-table-column align="center" label="交期安全天数" min-width="160" prop="safetyLeadTime" />
-        <el-table-column align="center" label="平均交期(近10次)" min-width="160" prop="avgLead" />
-        <el-table-column align="center" label="交期平均波动" min-width="160" prop="avgLeadFluctuation" />
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+          </el-image>
         </template>
-      </el-table>
+      </el-table-column>
+      <el-table-column align="center" label="SKU" min-width="200" prop="sku" />
+      <el-table-column align="center" label="产品分类" min-width="200" prop="type1" />
+      <el-table-column align="center" label="维持库存天数" min-width="230" prop="stockPileNumberDays" />
+      <el-table-column align="center" label="最小维持库存数量" min-width="160" prop="minStockPilNumber" />
+      <el-table-column align="center" label="交期安全天数" min-width="160" prop="safetyLeadTime" />
+      <el-table-column align="center" label="平均交期(近10次)" min-width="160" prop="avgLead" />
+      <el-table-column align="center" label="交期平均波动" min-width="160" prop="avgLeadFluctuation" />
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
     <!-- 批量修改 -->
-    <el-dialog 
+    <vab-dialog 
       v-model="updateVisible" 
       :close-on-click-modal="false" 
       title="批量修改" 
@@ -45,67 +44,46 @@
       :before-close="handlerCloseDialog"
     >
       <el-divider style="margin-top: 0;"/>
-      <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;">
-        <el-form-item label="产品分类1" prop="type1">
-          <el-input v-model="form.type1" clearable />
-        </el-form-item>
-        <el-form-item label="产品分类2" prop="type2">
-          <el-input v-model="form.type2" clearable  />
+      <el-form ref="formRef" :rules="formRules" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;">
+        <el-form-item label="产品分类" prop="kindId">
+          <el-select v-model="form.kindId" placeholder="请选择产品类别">
+            <el-option 
+              v-for="item in merchandiseTypeList"
+              :label="item.label"
+              :value="item.id"
+              :key="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="维持库存天数" prop="stockPileNumberDays">
-          <el-input v-model="form.stockPileNumberDays" clearable />
+          <el-input v-model.number="form.stockPileNumberDays" clearable />
         </el-form-item>
         <el-form-item label="最小维持库存数量" prop="minStockPilNumber">
-          <el-input v-model="form.minStockPilNumber" clearable />
+          <el-input v-model.number="form.minStockPilNumber" clearable />
         </el-form-item>
       </el-form>
       <template #footer>
-        <span>
-          <el-button @click="updateVisible = false">退出</el-button>
-          <el-button type="primary" @click="handleSubmit">完成</el-button>
-        </span>
+        <el-button @click="updateVisible = false">退出</el-button>
+        <el-button type="primary" @click="handleSubmit">完成</el-button>
       </template>
-    </el-dialog>
-      <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
-      <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
-    </div>
+    </vab-dialog>
+    <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
+    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+  </div>
 </template>
   
 <script lang="ts" setup>
-import type { FormInstance, TableInstance } from 'element-plus'
+import { FormRules, type FormInstance, type TableInstance } from 'element-plus'
+import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
-import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 
 defineOptions({
     name: 'replenishmentSetting',
 })
-const replenishmentSiteColumns = [
-  {
-    value: 0,
-    label: '亚马逊US',
-  },
-  {
-    value: 1,
-    label: '亚马逊DE',
-  },
-  {
-    value: 2,
-    label: '亚马逊UK',
-  },
-  {
-    value: 3,
-    label: '亚马逊CA',
-  },
-  {
-    value: 4,
-    label: '亚马逊MX',
-  },
-  {
-    value: 5,
-    label: '沃尔玛US',
-  },
-]
+
+const siteList = ref<{id: number, label: string}[]>([])
 const queryForm = reactive<any>({
   keyWord: '',
   site: 0,
@@ -132,12 +110,16 @@ const imagePreviewClose = () =>{
 }
 const formRef = ref<FormInstance>()
 // 批量修改数据表单
-let form = reactive<any>({
+const form = reactive<any>({
   ids: '',
-  type1: '',
-  type2: '',
+  kindId: null,
   stockPileNumberDays: null,
   minStockPilNumber: null,
+})
+const formRules = reactive<FormRules>({
+  kindId: [{ required: true, message: '请选择产品类别', trigger: 'change' }],
+  stockPileNumberDays: [{ required: true, message: '请填写维持库存天数', trigger: 'blur' }],
+  minStockPilNumber: [{ required: true, message: '请填写最小维持库存数量', trigger: 'blur' }],
 })
 const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
@@ -146,10 +128,13 @@ const setSelectRows = (value: string) => {
 const handlerCloseDialog = () => {
   updateVisible.value = false
 }
-const handleUpdate = () => {
+const merchandiseTypeList = ref<{id: number, label: string}[]>([])
+const handleUpdate = async () => {
   if(selectRows.value.length !== 0) {
     updateVisible.value = true
     formRef.value?.resetFields()
+    const { data } = await getSeasonalCoefficientSite({ site: site.value })
+    merchandiseTypeList.value = data
   } else {
     $baseMessage('您未选中任何行', 'warning', 'hey')
   }
@@ -157,47 +142,56 @@ const handleUpdate = () => {
 }
 const ids = ref<any>([]) // 产品补货计ids使用
 const handleSubmit = async () => {
-  updateVisible.value = false
-  selectRows.value.forEach((item: any) => {
-    ids.value.push(item.id)
+  formRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      selectRows.value.forEach((item: any) => {
+        ids.value.push(item.id)
+      })
+      form.ids = `${ids.value}`
+      const { data } = await updateProductReplenParams({
+        ...form
+      })
+      if (data) {
+        updateVisible.value = false
+        fetchData()
+        $baseMessage('批量修改成功', 'success', 'hey')
+      }
+    }
   })
-  form.ids = `${ids.value}`
-  const { data } = await updateProductReplenParams({
-    ...form
-  })
-  if(data === true) {
-    fetchData()
-    $baseMessage('批量修改成功', 'success', 'hey')
-  }
+  
 }
 // table单击修改
 const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-        imagePreviewVisible.value = true
-        imagePreviewList.value = []
-        imagePreviewList.value.push(el.src)
-    }
+  // 处理图片放大预览
+  let el = getSpecificChildren(cell, "img")[0];
+  if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
+    imagePreviewVisible.value = true
+    imagePreviewList.value = []
+    imagePreviewList.value.push(el.src)
+  }
 }
 const handleChangeSite = (value: any) => {
   queryForm.site = value
   fetchData()
 }
 const fetchData = async () => {
-    listLoading.value = true
-    const { data } = await getProductReplenList(queryForm)
-    list.value = data.list
-    total.value = data.total
-    listLoading.value = false
+  listLoading.value = true
+  const { data } = await getProductReplenList(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
 }
-
+const fetchSiteList = async () => {
+  const { data } = await getSeasonalCoefficientSiteList()
+  siteList.value = data
+}
 onActivated(() => {
-    tableRef.value?.doLayout()
+  tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {
-    fetchData()
+  fetchSiteList()
+  fetchData()
 })
 </script>
   

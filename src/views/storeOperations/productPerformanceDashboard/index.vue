@@ -2291,7 +2291,7 @@ const initChart2 = () => {
     },
     xAxis: {
       type: 'category',
-      data: months.map((item) => item.label),
+      data: ['2024-12-26', '2024-12-27', '2024-12-28', '2024-12-29', '2024-12-30', '2024-12-31', '2025-01-01', '2025-01-02'],
       axisTick: {
         alignWithLabel: true,
       },
@@ -2317,7 +2317,7 @@ const initChart2 = () => {
       {
         name: '小类排名',
         type: 'line',
-        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        data: [0, 1, 2, 3, 4, 5, 6, 7],
         itemStyle: {
           color: '#52bfff'
         },
@@ -2343,7 +2343,7 @@ const initChart3 = () => {
     },
     xAxis: {
       type: 'category',
-      data: months.map((item) => item.label),
+      data: ['2024-12-26', '2024-12-27', '2024-12-28', '2024-12-29', '2024-12-30', '2024-12-31', '2025-01-01', '2025-01-02'],
       axisTick: {
         alignWithLabel: true,
       },
@@ -2369,7 +2369,7 @@ const initChart3 = () => {
       {
         name: '大类排名',
         type: 'line',
-        data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        data: [0, 1, 2, 3, 4, 5, 6, 7],
         itemStyle: {
           color: '#52bfff'
         },

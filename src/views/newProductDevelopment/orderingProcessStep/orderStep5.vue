@@ -1,202 +1,201 @@
 <template>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-     
-        <el-table 
-            ref="tableRef"
-            :data="exchangeList" 
-            border stripe
-            :header-cell-style="{ 'text-align': 'center' }"
-            @cell-click="changeInput"
-            style="width: auto; table-layout: fixed;"
+  <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <el-table 
+        ref="tableRef"
+        :data="exchangeList" 
+        border stripe
+        :header-cell-style="{ 'text-align': 'center' }"
+        @cell-click="changeInput"
+        style="width: auto; table-layout: fixed;"
+    >
+        <!-- 第一列固定标签列 -->
+        <el-table-column 
+            :prop="'column0'" 
+            :label="labelMap['column0']" 
+            fixed 
+            align="right"
+            width="240"
         >
-            <!-- 第一列固定标签列 -->
-            <el-table-column 
-                :prop="'column0'" 
-                :label="labelMap['column0']" 
-                fixed 
-                align="right"
-                width="240"
-            >
-                <template #default="{ row }">
-                    <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
+            <template #default="{ row }">
+                <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
+            </template>
+        </el-table-column>
+        <el-table-column label="变体值相同" align="center" width="110">
+            <template #default="{row, $index}">
+                <template v-if="row['column0'] !== 'productImgUrl'">
+                    <el-checkbox v-model="row.variantsSame" class="custom-checkbox" @change="handleVariantsSame(row, $index)">
+                    </el-checkbox>
                 </template>
-            </el-table-column>
-            <el-table-column label="变体值相同" align="center" width="110">
-                <template #default="{row, $index}">
-                    <template v-if="row['column0'] !== 'productImgUrl'">
-                        <el-checkbox v-model="row.variantsSame" class="custom-checkbox" @change="handleVariantsSame(row, $index)">
-                        </el-checkbox>
-                    </template>
-                </template>
-            </el-table-column>
-            <!-- 动态列 -->
-            <el-table-column 
-                v-for="(prop, index) in columnsChange" 
-                :prop="prop" 
-                :label="prop" 
-                :key="index"
-                align="center"
-                min-width="260"
-                
-            >
-                <template #default = "{row, $index}">
-                    <template v-if="row['column0'] === 'productImgUrl'">
-                      <el-upload 
-                            list-type="picture-card" 
-                            :file-list="row[prop].imgUrl" 
-                            :class="{ hide: row[prop].hide }"
-                            :http-request="(file) => uploadImage(file, row, prop)"
+            </template>
+        </el-table-column>
+        <!-- 动态列 -->
+        <el-table-column 
+            v-for="(prop, index) in columnsChange" 
+            :prop="prop" 
+            :label="prop" 
+            :key="index"
+            align="center"
+            min-width="260"
+            
+        >
+            <template #default = "{row, $index}">
+                <template v-if="row['column0'] === 'productImgUrl'">
+                  <el-upload 
+                        list-type="picture-card" 
+                        :file-list="row[prop].imgUrl" 
+                        :class="{ hide: row[prop].hide }"
+                        :http-request="(file) => uploadImage(file, row, prop)"
+                    >
+                        <div 
+                            style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
+                            @click="handleIconClick(prop)"
                         >
-                            <div 
-                                style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
-                                @click="handleIconClick(prop)"
-                            >
-                                <el-icon ><Plus /></el-icon>
-                            </div>
-                            <template #file="{ file }">
-                                <div>
-                                    <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                                    <span class="el-upload-list__item-actions">
-                                        <span
-                                            class="el-upload-list__item-preview"
-                                            @click="handlePictureCardPreview(file)"
-                                        >
-                                            <el-icon><zoom-in /></el-icon>
-                                        </span>
-                                        <span
-                                            class="el-upload-list__item-delete"
-                                            @click="handleRemove(file, prop)"
-                                        >
-                                            <el-icon><Delete /></el-icon>
-                                        </span>
+                            <el-icon ><Plus /></el-icon>
+                        </div>
+                        <template #file="{ file }">
+                            <div>
+                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                                <span class="el-upload-list__item-actions">
+                                    <span
+                                        class="el-upload-list__item-preview"
+                                        @click="handlePictureCardPreview(file)"
+                                    >
+                                        <el-icon><zoom-in /></el-icon>
                                     </span>
-                                </div>
-                            </template>
-                        </el-upload>
+                                    <span
+                                        class="el-upload-list__item-delete"
+                                        @click="handleRemove(file, prop)"
+                                    >
+                                        <el-icon><Delete /></el-icon>
+                                    </span>
+                                </span>
+                            </div>
+                        </template>
+                    </el-upload>
 
-                      </template>
-                    <template v-if="row['column0'] === 'productLength'">
-                        <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span>
-                    </template>
-                    <template v-if="row['column0'] === 'productWidth'">
-                        <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span>
-                    </template>
-                    <template v-if="row['column0'] === 'productHeight'">
-                        <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span>
-                    </template>
-                    <template v-if="row['column0'] === 'material'">
-                        <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span>
-                    </template>
-                    <template v-if="row['column0'] === 'battery'">
-                        <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span> 
-                    </template>
-                    <template v-if="row['column0'] === 'benchmarkAsin'">
-                        <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span> 
-                    </template>
-                    <template v-if="row['column0'] === 'patent'">
-                        <div class="none">
-                            <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                        </div>
-                        <span>{{ row[prop] }}</span> 
-                    </template>
-                    <template v-if="row['column0'] === 'productManager'">
-                        <!-- <div class="none">
-                            <el-input type="text" v-model="row[prop]" filterable @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
-                          </div>
-                        <span>{{ row[prop] }}</span>  -->
-                        <el-select
-                          v-model="row[prop]"
-                          filterable
-                          remote
-                          default-first-option
-                          placeholder="点击输入和搜索"
-                          :remote-method="remotePeopleMethod"
-                          :loading="peopleLoading"
-                          @change="handleSampleRetentionStatus(row, prop)"
-                          clearable
-                          class="center-input"
-                        >
-                            <el-option
-                                v-for="item in peopleOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            />
-                        </el-select>
-                    </template>
-                    <template v-if="row['column0'] === 'productDesign'">
-                        <el-select
-                          v-model="row[prop]"
-                          filterable
-                          remote
-                          default-first-option
-                          placeholder="点击输入和搜索"
-                          :remote-method="remotePeopleMethod"
-                          :loading="peopleLoading"
-                          @change="handleSampleRetentionStatus(row, prop)"
-                          clearable
-                          class="center-input"
-                        >
-                            <el-option
-                                v-for="item in peopleOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            />
-                        </el-select>
-                    </template>
-                    <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                        
-                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)" class="center-select">
-                          <el-option 
-                            v-for="item in photoSampleOptions"
+                  </template>
+                <template v-if="row['column0'] === 'productLength'">
+                    <div class="none">
+                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                    </div>
+                    <span>{{ row[prop] }}</span>
+                </template>
+                <template v-if="row['column0'] === 'productWidth'">
+                    <div class="none">
+                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                    </div>
+                    <span>{{ row[prop] }}</span>
+                </template>
+                <template v-if="row['column0'] === 'productHeight'">
+                    <div class="none">
+                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                    </div>
+                    <span>{{ row[prop] }}</span>
+                </template>
+                <template v-if="row['column0'] === 'material'">
+                    <div class="none">
+                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                    </div>
+                    <span>{{ row[prop] }}</span>
+                </template>
+                <template v-if="row['column0'] === 'battery'">
+                    <div class="none">
+                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                    </div>
+                    <span>{{ row[prop] }}</span> 
+                </template>
+                <template v-if="row['column0'] === 'benchmarkAsin'">
+                    <div class="none">
+                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                    </div>
+                    <span>{{ row[prop] }}</span> 
+                </template>
+                <template v-if="row['column0'] === 'patent'">
+                    <div class="none">
+                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                    </div>
+                    <span>{{ row[prop] }}</span> 
+                </template>
+                <template v-if="row['column0'] === 'productManager'">
+                    <!-- <div class="none">
+                        <el-input type="text" v-model="row[prop]" filterable @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                      </div>
+                    <span>{{ row[prop] }}</span>  -->
+                    <el-select
+                      v-model="row[prop]"
+                      filterable
+                      remote
+                      default-first-option
+                      placeholder="点击输入和搜索"
+                      :remote-method="remotePeopleMethod"
+                      :loading="peopleLoading"
+                      @change="handleSampleRetentionStatus(row, prop)"
+                      clearable
+                      class="center-input"
+                    >
+                        <el-option
+                            v-for="item in peopleOptions"
+                            :key="item.value"
                             :label="item.label"
                             :value="item.value"
+                        />
+                    </el-select>
+                </template>
+                <template v-if="row['column0'] === 'productDesign'">
+                    <el-select
+                      v-model="row[prop]"
+                      filterable
+                      remote
+                      default-first-option
+                      placeholder="点击输入和搜索"
+                      :remote-method="remotePeopleMethod"
+                      :loading="peopleLoading"
+                      @change="handleSampleRetentionStatus(row, prop)"
+                      clearable
+                      class="center-input"
+                    >
+                        <el-option
+                            v-for="item in peopleOptions"
                             :key="item.value"
-                          >
-                          </el-option>
-                        </el-select>
-                       
-                    </template>
-                    <template v-if="row['column0'] === 'packingGroup'">
-                        <el-checkbox v-model="row[prop]" :true-value="1" :false-value="0" class="custom-checkbox" @change="handlePackingUpdate(row, prop)"></el-checkbox>
-                    </template>
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                    </el-select>
+                </template>
+                <template v-if="row['column0'] === 'sampleRetentionStatus'">
                     
-                    <template v-if="row['column0'] === 'operate'">
-                        <el-link type="primary" :underline="false" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
-                    </template>
+                      <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)" class="center-select">
+                      <el-option 
+                        v-for="item in photoSampleOptions"
+                        :label="item.label"
+                        :value="item.value"
+                        :key="item.value"
+                      >
+                      </el-option>
+                    </el-select>
+                    
+                </template>
+                <template v-if="row['column0'] === 'packingGroup'">
+                    <el-checkbox v-model="row[prop]" :true-value="1" :false-value="0" class="custom-checkbox" @change="handlePackingUpdate(row, prop)"></el-checkbox>
                 </template>
                 
-            </el-table-column>
-            <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+                <template v-if="row['column0'] === 'operate'">
+                    <el-link type="primary" :underline="false" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
+                </template>
             </template>
-        </el-table>
-     
-        <div class="pay-button-group">
-            <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
-        </div>
+            
+        </el-table-column>
+        <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+        </template>
+    </el-table>
+    
+    <div class="pay-button-group">
+      <el-button @click="handleGoback">上一步</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
     </div>
+  </div>
 </template>
   
 <script lang="ts" setup>
@@ -205,12 +204,13 @@ defineOptions({
 })
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, UploadFile } from 'element-plus'
-import { getProductAllName } from '~/src/api/devlocal/productInformation'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
-import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
-import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import { handleActivePath } from '~/src/utils/routes'
+import { getAllName } from '/@/api/devlocal/user'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { handleActivePath } from '/@/utils/routes'
+
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
@@ -221,9 +221,9 @@ const props = defineProps<{ step1Data: number }>()
 //     formData: Object
 // })
 const emit = defineEmits<{ 
-    (e: 'change-step', value: number): void
-    (e: 'update:imagePreviewVisibale', value: boolean): void
-    (e: 'update:priviewListValue', value: string): void
+  (e: 'change-step', value: number): void
+  (e: 'update:imagePreviewVisibale', value: boolean): void
+  (e: 'update:priviewListValue', value: string): void
  }>()
 // 查询下拉变体列表
 const variantsSelectList = ref<IGetSelectVariantsList[]>([])
@@ -233,12 +233,12 @@ const peopleOptions = ref<any[]>([]) //搜索选项
 const peopleList = ref<any[]>([]) //搜索列表
 const remotePeopleMethod = async (query: string) => {
   if (query) {
-    const { data } = await getProductAllName({
+    const { data } = await getAllName({
         name: query
     })
 
     peopleList.value = data.map((item: any) => {
-        return { value: `${item}`, label: `${item}` }
+        return { value: item.userId, label: item.userName }
     })
     peopleLoading.value = true
     setTimeout(() => {
@@ -254,31 +254,29 @@ const remotePeopleMethod = async (query: string) => {
 const handleInsertSku = async (row: any, prop: string) => {
   // console.log(row);
   // console.log(prop);
- try {
+  try {
   const { data, code } = await reviewInsertSkuInfo({ sku: exchangeList.value[13][prop] })
-   if (data) {
-    exchangeList.value[1][prop] = data.productLength
-    exchangeList.value[2][prop] = data.productWidth
-    exchangeList.value[3][prop] = data.productHeight
-    exchangeList.value[4][prop] = data.material
-    exchangeList.value[5][prop] = data.battery
-    exchangeList.value[6][prop] = data.benchmarkAsin
-    await reviewStepNo5SkuInfoPerfect({
-      productLength: exchangeList.value[1][prop],
-      productWidth: exchangeList.value[2][prop],
-      productHeight: exchangeList.value[3][prop],
-      material: exchangeList.value[4][prop],
-      battery: exchangeList.value[5][prop],
-      benchmarkAsin: exchangeList.value[6][prop],
-      orderEntryId: exchangeList.value[15][prop],
-    })
-    $baseMessage('导入该SKU数据成功', 'success', 'hey')
+    if (data) {
+      exchangeList.value[1][prop] = data.productLength
+      exchangeList.value[2][prop] = data.productWidth
+      exchangeList.value[3][prop] = data.productHeight
+      exchangeList.value[4][prop] = data.material
+      exchangeList.value[5][prop] = data.battery
+      exchangeList.value[6][prop] = data.benchmarkAsin
+      await reviewStepNo5SkuInfoPerfect({
+        productLength: exchangeList.value[1][prop],
+        productWidth: exchangeList.value[2][prop],
+        productHeight: exchangeList.value[3][prop],
+        material: exchangeList.value[4][prop],
+        battery: exchangeList.value[5][prop],
+        benchmarkAsin: exchangeList.value[6][prop],
+        orderEntryId: exchangeList.value[15][prop],
+      })
+      $baseMessage('导入该SKU数据成功', 'success', 'hey')
+    }
+  } catch (error) {
+    console.error(error)
   }
-    
- } catch (error) {
-  console.error(error)
- }
-  
 }
 
 const tableRef = ref<TableInstance>()
@@ -333,19 +331,18 @@ async function uploadImage(params: any, row: any, _prop: any) {
  * 图片删除功能
  */
  const handleRemove = async (file: UploadFile, prop: any) => {
-    try {
-        $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-            const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[15][prop]})
-            if (data === true) {
-                $baseMessage("此产品图片信息删除成功!", "success", "hey");
-                exchangeList.value[0][prop].imgUrl = [] 
-                exchangeList.value[0][prop].hide = false
-            }
-        })
-        
-    } catch (error) {
-        console.error(error)
-    }
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+      const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[15][prop]})
+      if (data === true) {
+        $baseMessage("此产品图片信息删除成功!", "success", "hey");
+        exchangeList.value[0][prop].imgUrl = [] 
+        exchangeList.value[0][prop].hide = false
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 const labelMap: Record<string, string> = {
@@ -415,8 +412,8 @@ const handleVariantsSame = (row: any, index: number) => { //变体值相同的�
                 battery: exchangeList.value[5][key],
                 benchmarkAsin: exchangeList.value[6][key],
                 patent: exchangeList.value[7][key],
-                productManager: exchangeList.value[8][key],
-                productDesign: exchangeList.value[9][key],
+                productManagerId: exchangeList.value[8][key],
+                productDesignId: exchangeList.value[9][key],
                 sampleRetentionStatus: exchangeList.value[10][key],
                 checkStatus: exchangeList.value[11][key],
                 orderEntryId: exchangeList.value[15][key],
@@ -470,8 +467,8 @@ const handleInputChange = async (row: any, prop: string) => {
               battery: exchangeList.value[5][key],
               benchmarkAsin: exchangeList.value[6][key],
               patent: exchangeList.value[7][key],
-              productManager: exchangeList.value[8][key],
-              productDesign: exchangeList.value[9][key],
+              productManagerId: exchangeList.value[8][key],
+              productDesignId: exchangeList.value[9][key],
               sampleRetentionStatus: exchangeList.value[10][key],
               checkStatus: exchangeList.value[11][key],
               orderEntryId: exchangeList.value[15][key],
@@ -513,8 +510,8 @@ const clickCancle = async (event: any, prop: any) =>{
           battery: exchangeList.value[5][prop],
           benchmarkAsin: exchangeList.value[6][prop],
           patent: exchangeList.value[7][prop],
-          productManager: exchangeList.value[8][prop],
-          productDesign: exchangeList.value[9][prop],
+          productManagerId: exchangeList.value[8][prop],
+          productDesignId: exchangeList.value[9][prop],
           sampleRetentionStatus: exchangeList.value[10][prop],
           checkStatus: exchangeList.value[11][prop],
           orderEntryId: exchangeList.value[15][prop],
@@ -539,26 +536,25 @@ const handlePackingUpdate = async (row: any, prop: any) => {
           }
           update()
         }
-      });
+      })
     }
 
   }else {
     await reviewStepNo5SkuInfoPerfect({
-              productLength: exchangeList.value[1][prop],
-              productWidth: exchangeList.value[2][prop],
-              productHeight: exchangeList.value[3][prop],
-              material: exchangeList.value[4][prop],
-              battery: exchangeList.value[5][prop],
-              benchmarkAsin: exchangeList.value[6][prop],
-              patent: exchangeList.value[7][prop],
-              productManager: exchangeList.value[8][prop],
-              productDesign: exchangeList.value[9][prop],
-              sampleRetentionStatus: exchangeList.value[10][prop],
-              checkStatus: exchangeList.value[11][prop],
-              orderEntryId: exchangeList.value[15][prop],
-            })
+      productLength: exchangeList.value[1][prop],
+      productWidth: exchangeList.value[2][prop],
+      productHeight: exchangeList.value[3][prop],
+      material: exchangeList.value[4][prop],
+      battery: exchangeList.value[5][prop],
+      benchmarkAsin: exchangeList.value[6][prop],
+      patent: exchangeList.value[7][prop],
+      productManagerId: exchangeList.value[8][prop],
+      productDesignId: exchangeList.value[9][prop],
+      sampleRetentionStatus: exchangeList.value[10][prop],
+      checkStatus: exchangeList.value[11][prop],
+      orderEntryId: exchangeList.value[15][prop],
+    })
   }
-  
 }
 // 修改拍照留样情况
 const handleSampleRetentionStatus = async (row: any, prop: any) => {
@@ -579,8 +575,8 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
               battery: exchangeList.value[5][key],
               benchmarkAsin: exchangeList.value[6][key],
               patent: exchangeList.value[7][key],
-              productManager: exchangeList.value[8][key],
-              productDesign: exchangeList.value[9][key],
+              productManagerId: exchangeList.value[8][key],
+              productDesignId: exchangeList.value[9][key],
               sampleRetentionStatus: exchangeList.value[10][key],
               checkStatus: exchangeList.value[11][key],
               orderEntryId: exchangeList.value[15][key],
@@ -588,23 +584,23 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
           }
           update()
         } 
-      });
+      })
     }
   } else {
     await reviewStepNo5SkuInfoPerfect({
-              productLength: exchangeList.value[1][prop],
-              productWidth: exchangeList.value[2][prop],
-              productHeight: exchangeList.value[3][prop],
-              material: exchangeList.value[4][prop],
-              battery: exchangeList.value[5][prop],
-              benchmarkAsin: exchangeList.value[6][prop],
-              patent: exchangeList.value[7][prop],
-              productManager: exchangeList.value[8][prop],
-              productDesign: exchangeList.value[9][prop],
-              sampleRetentionStatus: exchangeList.value[10][prop],
-              checkStatus: exchangeList.value[11][prop],
-              orderEntryId: exchangeList.value[15][prop],
-            })
+      productLength: exchangeList.value[1][prop],
+      productWidth: exchangeList.value[2][prop],
+      productHeight: exchangeList.value[3][prop],
+      material: exchangeList.value[4][prop],
+      battery: exchangeList.value[5][prop],
+      benchmarkAsin: exchangeList.value[6][prop],
+      patent: exchangeList.value[7][prop],
+      productManagerId: exchangeList.value[8][prop],
+      productDesignId: exchangeList.value[9][prop],
+      sampleRetentionStatus: exchangeList.value[10][prop],
+      checkStatus: exchangeList.value[11][prop],
+      orderEntryId: exchangeList.value[15][prop],
+    })
   }
 }
 // 当点击保存的时候

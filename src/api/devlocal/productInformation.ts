@@ -463,11 +463,11 @@ export function uploadProductSupplierSpecialFile(data: FormData) {
  * 产品补货计算参数 - 批量修改
  */
 export function updateProductReplenParams(data: IupdateProductReplenParams) {
-    return request({
-      url: `${BASE_API}/product/update/replenParams`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/replenParams`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * 零件报关信息 - 修改零件报关信息

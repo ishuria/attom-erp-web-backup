@@ -1,82 +1,77 @@
 <template>
-    <div>
-        <el-space direction="vertical" style="width: 100%;">
-            <el-form 
-                ref="formRef" 
-                label-position="right" 
-                label-width="170px" 
-                :model="form" 
-                @submit.prevent
-                :rules="rules"
-                style="display: flex; flex-direction: column; justify-content: center; align-items: center;"
-            >
-    
-              <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
-              
-                  <el-input v-model="form.variantSku" clearable @blur="handleVariantSkuMap"/>
-             
-              </el-form-item>
-     
-              <el-form-item label="产品主品名" prop="productName">
-            
-                  <el-input v-model="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
-            
-              </el-form-item>
-              <el-form-item label="产品短描述" prop="productDesc">
-                  <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
-              </el-form-item>
-           
-             
-              <div class="list-container auto-height-container">
-                <el-scrollbar>
-                  <el-form-item prop="variantList" class="variant-list-error" :error="variantListError">
-                      <ul class="vab-auto-box">
-                          <!-- list第一行 新增变体 -->
-                          <li class="list-item"> 
-                              <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular);">
-                                  <div class="list-item-meta-content" style="text-align: center">
-                                      <el-space>
-                                          <span style="width: 240px;">{{ "变体名" }}</span>
-                                      </el-space>
-                                  </div>
-                                  <div class="list-item-meta-content" style="text-align: center">
-                                      <el-space>
-                                          <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
-                                      </el-space>
-                                  </div>
-                                  <div class="list-item-meta-content">
-                                      <el-button type="primary" @click="handleAddVariants">新增变体</el-button>
-                                  </div>
-                              </div>
-                          </li>
-                          <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
-                              <div class="list-item-meta">
-                                  <div class="list-item-meta-content">
-                                    <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" />
-                                  </div>
-                                  <div class="list-item-meta-content">
-                                    <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px"/>
-                                  </div>
-                                  <div class="list-item-meta-content">
-                                    <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
-                                  </div>
-                              </div>
-                          </li>
-                      </ul>
-                  </el-form-item>
-                </el-scrollbar>
-              </div>
-             
-            </el-form>
-          <div style="color: var(--el-color-primary)">注：产品最终名称系统自动合成=产品主品名+产品规格描述+变体名（若有）</div>
-        </el-space>
-        <div class="pay-button-group">
-            <el-button @click="handleGoback">退出</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSubmit">保存</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSubmitAndContinue">保存并继续</el-button>
+  <div>
+    <el-space direction="vertical" style="width: 100%;">
+      <el-form 
+        ref="formRef" 
+        label-position="right" 
+        label-width="170px" 
+        :model="form" 
+        @submit.prevent
+        :rules="rules"
+        style="display: flex; flex-direction: column; justify-content: center; align-items: center;"
+      >
+
+        <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
+          <el-input v-model="form.variantSku" clearable @blur="handleVariantSkuMap"/>
+        </el-form-item>
+
+        <el-form-item label="产品主品名" prop="productName">
+          <el-input v-model="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
+        </el-form-item>
+        <el-form-item label="产品短描述" prop="productDesc">
+            <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
+        </el-form-item>
+      
+        <div class="list-container auto-height-container">
+          <el-scrollbar>
+            <el-form-item prop="variantList" class="variant-list-error" :error="variantListError">
+              <ul class="vab-auto-box">
+                <!-- list第一行 新增变体 -->
+                <li class="list-item"> 
+                  <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular);">
+                    <div class="list-item-meta-content" style="text-align: center">
+                      <el-space>
+                        <span style="width: 240px;">{{ "变体名" }}</span>
+                      </el-space>
+                    </div>
+                    <div class="list-item-meta-content" style="text-align: center">
+                      <el-space>
+                        <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
+                      </el-space>
+                    </div>
+                    <div class="list-item-meta-content">
+                      <el-button type="primary" @click="handleAddVariants">新增变体</el-button>
+                    </div>
+                  </div>
+                </li>
+                <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
+                  <div class="list-item-meta">
+                    <div class="list-item-meta-content">
+                      <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" />
+                    </div>
+                    <div class="list-item-meta-content">
+                      <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px"/>
+                    </div>
+                    <div class="list-item-meta-content">
+                      <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </el-form-item>
+          </el-scrollbar>
         </div>
+        
+      </el-form>
+      <div style="color: var(--el-color-primary)">注：产品最终名称系统自动合成=产品主品名+产品规格描述+变体名（若有）</div>
+    </el-space>
+    <div class="pay-button-group">
+      <el-button @click="handleGoback">退出</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSubmit">保存</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSubmitAndContinue">保存并继续</el-button>
     </div>
-  </template>
+  </div>
+</template>
   
 <script lang="ts" setup>
 defineOptions({

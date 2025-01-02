@@ -51,7 +51,7 @@
           </el-table-column>
           <el-table-column label="最新预计到货" prop="latestArrivalDate" min-width="115">
             <template #default="{ row }">
-              {{ formatDate(new Date(row.latestArrivalDate)) }}
+              {{ row.latestArrivalDate ? formatDate(new Date(row.latestArrivalDate)) : '' }}
             </template>
           </el-table-column>
           <el-table-column label="延误" prop="delayDays" min-width="80"></el-table-column>

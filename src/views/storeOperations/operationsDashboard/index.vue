@@ -1,370 +1,371 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
-    <el-row :gutter="10">
-      <el-col :span="12">
-        <vab-card class="card5" style="height: 500px;">
-          <vab-query-form>
-            <vab-query-form-left-panel :span="12">
-              <el-form inline>
-                <el-form-item label="运营">
-                  <el-select style="max-width: 2em"></el-select>
-                </el-form-item>
-                <el-form-item label="开发人">
-                  <el-select style="max-width: 2em"></el-select>
-                </el-form-item>
-                <el-form-item label="站点">
-                  <el-select style="max-width: 3em"></el-select>
-                </el-form-item>
-              </el-form>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel :span="12">
-              <el-form inline>
-                <el-form-item>
-                  <el-radio-group>
-                    <el-radio value="0" style="margin-right: 10px;">同比</el-radio>
-                    <el-radio value="1" style="margin-right: 10px;">环比</el-radio>
+    <el-row :gutter="10" style="height: 100%">
+      <el-col :span="18" style="height: 100%">
+        <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
+          <div style="height: 500px; margin-bottom: 10px;">
+            <vab-card class="card5" style="height: 100%">
+              <vab-query-form>
+                <vab-query-form-left-panel :span="12">
+                  <el-form inline>
+                    <el-form-item label="运营">
+                      <el-select style="max-width: 2em"></el-select>
+                    </el-form-item>
+                    <el-form-item label="开发人">
+                      <el-select style="max-width: 2em"></el-select>
+                    </el-form-item>
+                    <el-form-item label="站点">
+                      <el-select style="max-width: 3em"></el-select>
+                    </el-form-item>
+                  </el-form>
+                </vab-query-form-left-panel>
+                <vab-query-form-right-panel :span="12">
+                  <el-form inline>
+                    <el-form-item>
+                      <el-radio-group>
+                        <el-radio value="0" style="margin-right: 10px;">同比</el-radio>
+                        <el-radio value="1" style="margin-right: 10px;">环比</el-radio>
+                      </el-radio-group>
+                    </el-form-item>
+                    <el-form-item >
+                      <el-select style="max-width: 3em; margin-right: 10px;">
+                        <el-option 
+                          v-for="item in dateOption"
+                          :label="item.label"
+                          :value="item.value"
+                          :key="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-date-picker
+                        type="daterange"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        range-separator="至"
+                        style="max-width: 18em;"
+                      >
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-form>
+                </vab-query-form-right-panel>
+              </vab-query-form>
+              <el-row :gutter="20">
+                <!-- 总销售额 -->
+                <el-col :span="4">
+                  <vab-card class="top-card" shadow="always" @click="handleCard1Click">
+                    <div class="parting-line" :class="{ 'parting-line-primary': card1Active }" ></div>
+                    <el-dropdown >
+                      <span>
+                        {{ card1Text }}
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </span>
+                      <template #dropdown>
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                          <el-dropdown-item
+                            v-for="(item, index) in dropdownItems"
+                            :key="index"
+                            @click="handleSwitchItem1(item.label)"
+                            
+                          >
+                            {{ item.label }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <p>
+                      {{ formattedAmount }}
+                    </p>
+                    <div class="bottom bottom-down">
+                      $47.026.96
+                      <vab-icon icon="arrow-down-line" />
+                      <span>{{ '-9.75%' }}</span>
+                    </div>
+                  </vab-card>
+                </el-col>
+                <el-col :span="4">
+                  <vab-card class="top-card" shadow="always" @click="handleCard2Click">
+                    <div class="parting-line" :class="{ 'parting-line-orange': card2Active }" ></div>
+                    <el-dropdown>
+                      <span>
+                        {{ card2Text }}
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </span>
+                      <template #dropdown>
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                          <el-dropdown-item
+                            v-for="(item, index) in dropdownItems"
+                            :key="index"
+                            @click="handleSwitchItem2(item.label)"
+                          >
+                            {{ item.label }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <p>
+                      {{ formattedAmount }}
+                    </p>
+                    <div class="bottom bottom-down">
+                      $47.026.96
+                      <vab-icon icon="arrow-down-line" />
+                      <span>{{ '-9.75%' }}</span>
+                    </div>
+                  </vab-card>
+                </el-col>
+                <el-col :span="4">
+                  <vab-card class="top-card" shadow="always" @click="handleCard3Click">
+                    <div class="parting-line" :class="{ 'parting-line-green': card3Active }" ></div>
+                    <el-dropdown>
+                      <span>
+                        {{ card3Text }}
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </span>
+                      <template #dropdown>
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                          <el-dropdown-item
+                            v-for="(item, index) in dropdownItems"
+                            :key="index"
+                            @click="handleSwitchItem3(item.label)"
+                          >
+                            {{ item.label }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <p>
+                      {{ formattedAmount }}
+                    </p>
+                    <div class="bottom bottom-down">
+                      $47.026.96
+                      <vab-icon icon="arrow-down-line" />
+                      <span>{{ '-9.75%' }}</span>
+                    </div>
+                  </vab-card>
+                </el-col>
+                <el-col :span="4">
+                  <vab-card class="top-card" shadow="always" @click="handleCard4Click">
+                    <div class="parting-line" :class="{ 'parting-line-red': card4Active }" ></div>
+                    <el-dropdown>
+                      <span>
+                        {{ card4Text }}
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </span>
+                      <template #dropdown>
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                          <el-dropdown-item
+                            v-for="(item, index) in dropdownItems"
+                            :key="index"
+                            @click="handleSwitchItem4(item.label)"
+                          >
+                            {{ item.label }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <p>
+                      {{ '26.58%' }}
+                    </p>
+                    <div class="bottom bottom-down">
+                      $47.026.96
+                      <vab-icon icon="arrow-down-line" />
+                      <span>{{ '-9.75%' }}</span>
+                    </div>
+                  </vab-card>
+                </el-col>
+                <el-col :span="4">
+                  <vab-card class="top-card" shadow="always" @click="handleCard5Click">
+                    <div class="parting-line" :class="{ 'parting-line-purple': card5Active }" ></div>
+                    <el-dropdown>
+                      <span>
+                        {{ card5Text }}
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </span>
+                      <template #dropdown>
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                          <el-dropdown-item
+                            v-for="(item, index) in dropdownItems"
+                            :key="index"
+                            @click="handleSwitchItem5(item.label)"
+                          >
+                            {{ item.label }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <p>
+                      {{ formattedAmount }}
+                    </p>
+                    <div class="bottom bottom-down">
+                      $47.026.96
+                      <vab-icon icon="arrow-down-line" />
+                      <span>{{ '-9.75%' }}</span>
+                    </div>
+                  </vab-card>
+                </el-col>
+                <el-col :span="4">
+                  <vab-card class="top-card" shadow="always" @click="handleCard6Click">
+                    <div class="parting-line" :class="{ 'parting-line-yellow': card6Active }" ></div>
+                    <el-dropdown>
+                      <span>
+                        {{ card6Text }}
+                        <el-icon class="el-icon--right">
+                          <arrow-down />
+                        </el-icon>
+                      </span>
+                      <template #dropdown>
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                          <el-dropdown-item
+                            v-for="(item, index) in dropdownItems"
+                            :key="index"
+                            @click="handleSwitchItem6(item.label)"
+                          >
+                            {{ item.label }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <p>
+                      {{ '15.24%' }}
+                    </p>
+                    <div class="bottom bottom-down">
+                      $47.026.96
+                      <vab-icon icon="arrow-down-line" />
+                      <span>{{ '-9.75%' }}</span>
+                    </div>
+                  </vab-card>
+                </el-col>
+              </el-row>
+              <vab-query-form>
+                <vab-query-form-right-panel :span="24">
+                  <el-radio-group v-model="timeRadio" size="small" @change="handleSwitchTime">
+                    <el-radio-button label="日" value="day" />
+                    <el-radio-button label="周" value="week" />
+                    <el-radio-button label="月" value="month" />
                   </el-radio-group>
-                </el-form-item>
-                <el-form-item >
-                  <el-select style="max-width: 3em; margin-right: 10px;">
-                    <el-option 
-                      v-for="item in dateOption"
-                      :label="item.label"
-                      :value="item.value"
-                      :key="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item>
-                  <el-date-picker
-                    type="daterange"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
-                    range-separator="至"
-                    style="max-width: 18em;"
-                  >
-                  </el-date-picker>
-                </el-form-item>
-              </el-form>
-            </vab-query-form-right-panel>
-          </vab-query-form>
-          <el-row :gutter="10">
-            <!-- 总销售额 -->
-            <el-col :span="4">
-              <vab-card class="top-card" shadow="always" @click="handleCard1Click">
-                <div class="parting-line" :class="{ 'parting-line-primary': card1Active }" ></div>
-                <el-dropdown >
-                  <span>
-                    {{ card1Text }}
-                    <el-icon class="el-icon--right">
-                      <arrow-down />
-                    </el-icon>
-                  </span>
-                  <template #dropdown>
-                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
-                      <el-dropdown-item
-                        v-for="(item, index) in dropdownItems"
-                        :key="index"
-                        @click="handleSwitchItem1(item.label)"
-                        
-                      >
-                        {{ item.label }}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
+                </vab-query-form-right-panel>
+              </vab-query-form>
+              <div ref="chartContainer1" style="width: 100%; height: 250px;"></div>
+            </vab-card>
+          </div>
+          <div style="flex: 1; display: flex; gap: 10px;">
+            <vab-card class="card2-title" title="产品成本波动监控" style="flex: 1; margin-bottom: 0; display: flex; flex-direction: column;">
+              <el-table border :data="fakeTableData3" style="flex: 1" size="small">
+                <el-table-column label="日期" prop="date" min-width="115"></el-table-column>
+                <el-table-column label="SKU" prop="sku" min-width="160">
+                  <template #default="{ row }">
+                    <span v-html="row.sku"></span>
                   </template>
-                </el-dropdown>
-                <p>
-                  {{ formattedAmount }}
-                </p>
-                <div class="bottom bottom-down">
-                  $47.026.96
-                  <vab-icon icon="arrow-down-line" />
-                  <span>{{ '-9.75%' }}</span>
-                </div>
-              </vab-card>
-            </el-col>
-            <el-col :span="4">
-              <vab-card class="top-card" shadow="always" @click="handleCard2Click">
-                <div class="parting-line" :class="{ 'parting-line-orange': card2Active }" ></div>
-                <el-dropdown>
-                  <span>
-                    {{ card2Text }}
-                    <el-icon class="el-icon--right">
-                      <arrow-down />
-                    </el-icon>
-                  </span>
-                  <template #dropdown>
-                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
-                      <el-dropdown-item
-                        v-for="(item, index) in dropdownItems"
-                        :key="index"
-                        @click="handleSwitchItem2(item.label)"
-                      >
-                        {{ item.label }}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
+                </el-table-column>
+                <el-table-column label="价格变动" prop="price" min-width="110"></el-table-column>
+                <el-table-column label="毛利率变动" prop="profit" min-width="110"></el-table-column>
+                <el-table-column label="类型" prop="type" min-width="125"></el-table-column>
+                <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
+              </el-table>
+              <vab-pagination 
+                :current-page="queryForm2.pageNo"
+                :page-size="queryForm2.pageSize"
+                :total="total2"
+                @current-change="handleCurrentChange2"
+                @size-change="handleSizeChange2"
+
+              />
+            </vab-card>
+            <vab-card class="card3-title" style="flex: 1; margin-bottom: 0; display: flex; flex-direction: column;" title="即将断货产品预警">
+              <el-table :data="fakeTableData3" border style="flex: 1" size="small">
+                <el-table-column label="SKU" prop="sku" min-width="150">
+                  <template #default="{ row }">
+                    <span v-html="row.sku"></span>
                   </template>
-                </el-dropdown>
-                <p>
-                  {{ formattedAmount }}
-                </p>
-                <div class="bottom bottom-down">
-                  $47.026.96
-                  <vab-icon icon="arrow-down-line" />
-                  <span>{{ '-9.75%' }}</span>
-                </div>
-              </vab-card>
-            </el-col>
-            <el-col :span="4">
-              <vab-card class="top-card" shadow="always" @click="handleCard3Click">
-                <div class="parting-line" :class="{ 'parting-line-green': card3Active }" ></div>
-                <el-dropdown>
-                  <span>
-                    {{ card3Text }}
-                    <el-icon class="el-icon--right">
-                      <arrow-down />
-                    </el-icon>
-                  </span>
-                  <template #dropdown>
-                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
-                      <el-dropdown-item
-                        v-for="(item, index) in dropdownItems"
-                        :key="index"
-                        @click="handleSwitchItem3(item.label)"
-                      >
-                        {{ item.label }}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
+                </el-table-column>
+                <el-table-column label="可售天数" prop="availableDays" min-width="100" align="center"></el-table-column>
+                <el-table-column label="预计断货" prop="expectedOutOfStock" min-width="100" align="center"></el-table-column>
+                <el-table-column label="月销量" prop="monthlySales" min-width="90" align="center"></el-table-column>
+                <el-table-column label="剩余库存" prop="remainingStock" min-width="100" align="center"></el-table-column>
+                <el-table-column label="广告" prop="advertisement" min-width="70" align="center">
+                  <template #default="{ row }">
+                    <el-tag v-if="row.advertisement === '开'" type="danger">{{ row.advertisement }}</el-tag>
+                    <el-tag v-if="row.advertisement === '关'" type="success">{{ row.advertisement }}</el-tag>
                   </template>
-                </el-dropdown>
-                <p>
-                  {{ formattedAmount }}
-                </p>
-                <div class="bottom bottom-down">
-                  $47.026.96
-                  <vab-icon icon="arrow-down-line" />
-                  <span>{{ '-9.75%' }}</span>
-                </div>
-              </vab-card>
-            </el-col>
-            <el-col :span="4">
-              <vab-card class="top-card" shadow="always" @click="handleCard4Click">
-                <div class="parting-line" :class="{ 'parting-line-red': card4Active }" ></div>
-                <el-dropdown>
-                  <span>
-                    {{ card4Text }}
-                    <el-icon class="el-icon--right">
-                      <arrow-down />
-                    </el-icon>
-                  </span>
-                  <template #dropdown>
-                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
-                      <el-dropdown-item
-                        v-for="(item, index) in dropdownItems"
-                        :key="index"
-                        @click="handleSwitchItem4(item.label)"
-                      >
-                        {{ item.label }}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
+                </el-table-column>
+                <el-table-column label="当前毛利" prop="currentProfit" min-width="100" align="center">
+                  <template #default="{ row }">
+                    <span :class="{'green': row.currentProfit >= 25, 'red': row.currentProfit < 25}">{{ row.currentProfit }}%</span>
                   </template>
-                </el-dropdown>
-                <p>
-                  {{ '26.58%' }}
-                </p>
-                <div class="bottom bottom-down">
-                  $47.026.96
-                  <vab-icon icon="arrow-down-line" />
-                  <span>{{ '-9.75%' }}</span>
-                </div>
-              </vab-card>
-            </el-col>
-            <el-col :span="4">
-              <vab-card class="top-card" shadow="always" @click="handleCard5Click">
-                <div class="parting-line" :class="{ 'parting-line-purple': card5Active }" ></div>
-                <el-dropdown>
-                  <span>
-                    {{ card5Text }}
-                    <el-icon class="el-icon--right">
-                      <arrow-down />
-                    </el-icon>
-                  </span>
-                  <template #dropdown>
-                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
-                      <el-dropdown-item
-                        v-for="(item, index) in dropdownItems"
-                        :key="index"
-                        @click="handleSwitchItem5(item.label)"
-                      >
-                        {{ item.label }}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
-                <p>
-                  {{ formattedAmount }}
-                </p>
-                <div class="bottom bottom-down">
-                  $47.026.96
-                  <vab-icon icon="arrow-down-line" />
-                  <span>{{ '-9.75%' }}</span>
-                </div>
-              </vab-card>
-            </el-col>
-            <el-col :span="4">
-              <vab-card class="top-card" shadow="always" @click="handleCard6Click">
-                <div class="parting-line" :class="{ 'parting-line-yellow': card6Active }" ></div>
-                <el-dropdown>
-                  <span>
-                    {{ card6Text }}
-                    <el-icon class="el-icon--right">
-                      <arrow-down />
-                    </el-icon>
-                  </span>
-                  <template #dropdown>
-                    <el-dropdown-menu style="max-height: 450px; overflow: auto;">
-                      <el-dropdown-item
-                        v-for="(item, index) in dropdownItems"
-                        :key="index"
-                        @click="handleSwitchItem6(item.label)"
-                      >
-                        {{ item.label }}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </template>
-                </el-dropdown>
-                <p>
-                  {{ '15.24%' }}
-                </p>
-                <div class="bottom bottom-down">
-                  $47.026.96
-                  <vab-icon icon="arrow-down-line" />
-                  <span>{{ '-9.75%' }}</span>
-                </div>
-              </vab-card>
-            </el-col>
-          </el-row>
-          <vab-query-form>
-            <vab-query-form-right-panel :span="24">
-              <el-radio-group v-model="timeRadio" size="small" @change="handleSwitchTime">
-                <el-radio-button label="日" value="day" />
-                <el-radio-button label="周" value="week" />
-                <el-radio-button label="月" value="month" />
-              </el-radio-group>
-            </vab-query-form-right-panel>
-          </vab-query-form>
-          <div ref="chartContainer1" style="width: 100%; height: 250px"></div>
-        </vab-card>
+                </el-table-column>
+                <el-table-column label="站点" prop="site" min-width="110" align="center"></el-table-column>
+              </el-table>
+              <vab-pagination 
+                :current-page="queryForm1.pageNo"
+                :page-size="queryForm1.pageSize"
+                :total="total1"
+                @current-change="handleCurrentChange1"
+                @size-change="handleSizeChange1"
+              />
+            </vab-card>
+          </div>
+        </div>
       </el-col>
-      <el-col :span="12">
-        <el-row :gutter="10">
-          <el-col :span="10">
-            <div style="display: flex; flex-direction: column; height: calc(var(--el-container-height) - 20px)">
-              <vab-card class="card4" title="库龄" style="height: 370px; margin-bottom: 10px;">
-                <div style="text-align: right; margin-bottom: 15px;">
-                  <el-radio-group v-model="ageRadio" size="small" @change="handleSwitchBar">
-                    <el-radio-button label="数量" :value="0" />
-                    <el-radio-button label="占比" :value="1" />
-                  </el-radio-group>
-                </div>
-                <el-row>
-                  <el-col :span="9">
-                    <div ref="chartContainer2" style="width: 100%; height: 272px"></div>
-                  </el-col>
-                  <el-col :span="15">
-                  
-                    <el-table :data="percentageAgeData" max-height="285" :header-cell-style="headerCellStyle" show-summary>
-                      <el-table-column label="项目" prop="name" min-width="110">
-                        <template #default="{ row, $index }">
-                          <span class="table-item" :style="{ '--dot-color': storageAgeColorList[$index] }">
-                            {{ row.name }}
-                          </span>
-                        </template>
-                      </el-table-column>
-                      <el-table-column v-if="ageRadio === 0" label="FBA仓" prop="value" min-width="90" align="right"></el-table-column>
-                      <el-table-column v-if="ageRadio === 1" label="FBA仓" prop="percentage" min-width="90" align="right">
-                        <template #default="{ row }">
-                          {{ row.percentage }}%
-                        </template>
-                      </el-table-column>
-                      <el-table-column label="预估下月费用" min-width="120"></el-table-column>
-                    </el-table>
-                  </el-col>
-                </el-row>
-              </vab-card>
-              <vab-card class="card1-title" style="flex: 1; display: flex; flex-direction: column;" title="断货后即将上架产品">
-                <el-table border :data="fakeData1" style="flex: 1" size="small">
-                  <el-table-column label="SKU" prop="sku" min-width="170"></el-table-column>
-                  <el-table-column label="断货前月销量" prop="sales" min-width="130"></el-table-column>
-                  <el-table-column label="最近入库" prop="recently" min-width="100">
-                    <template #default="{ row }">
-                      <span :class="{ 'green': row.recently === '已入库' }">{{ row.recently }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
-                </el-table>
-              </vab-card>
-            </div>
-          </el-col>
-          <el-col :span="14">
-            <div style="display: flex; flex-direction: column; height: calc(var(--el-container-height) - 20px)">
-              <vab-card class="card2-title" style="height: 370px; margin-bottom: 10px;" title="产品成本波动监控">
-                <el-table border :data="fakeTableData3" max-height="230px" size="small">
-                  <el-table-column label="日期" prop="date" min-width="115"></el-table-column>
-                  <el-table-column label="SKU" prop="sku" min-width="160">
-                    <template #default="{ row }">
-                      <span v-html="row.sku"></span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="价格变动" prop="price" min-width="110"></el-table-column>
-                  <el-table-column label="毛利率变动" prop="profit" min-width="110"></el-table-column>
-                  <el-table-column label="类型" prop="type" min-width="125"></el-table-column>
-                  <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
-                </el-table>
-                <vab-pagination 
-                  :current-page="queryForm2.pageNo"
-                  :page-size="queryForm2.pageSize"
-                  :total="total2"
-                  @current-change="handleCurrentChange2"
-                  @size-change="handleSizeChange2"
-  
-                />
-              </vab-card>
-              <vab-card class="card3-title" style="flex: 1; display: flex; flex-direction: column;" title="即将断货产品预警">
-                <el-table :data="fakeTableData3" border style="flex: 1;" size="small">
-                  <el-table-column label="SKU" prop="sku" min-width="150">
-                    <template #default="{ row }">
-                      <span v-html="row.sku"></span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="可售天数" prop="availableDays" min-width="100" align="center"></el-table-column>
-                  <el-table-column label="预计断货" prop="expectedOutOfStock" min-width="100" align="center"></el-table-column>
-                  <el-table-column label="月销量" prop="monthlySales" min-width="90" align="center"></el-table-column>
-                  <el-table-column label="剩余库存" prop="remainingStock" min-width="100" align="center"></el-table-column>
-                  <el-table-column label="广告" prop="advertisement" min-width="70" align="center">
-                    <template #default="{ row }">
-                      <el-tag v-if="row.advertisement === '开'" type="danger">{{ row.advertisement }}</el-tag>
-                      <el-tag v-if="row.advertisement === '关'" type="success">{{ row.advertisement }}</el-tag>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="当前毛利" prop="currentProfit" min-width="100" align="center">
-                    <template #default="{ row }">
-                      <span :class="{'green': row.currentProfit >= 25, 'red': row.currentProfit < 25}">{{ row.currentProfit }}%</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="站点" prop="site" min-width="110" align="center"></el-table-column>
-                </el-table>
-                <vab-pagination 
-                  :current-page="queryForm1.pageNo"
-                  :page-size="queryForm1.pageSize"
-                  :total="total1"
-                  @current-change="handleCurrentChange1"
-                  @size-change="handleSizeChange1"
-                />
-              </vab-card>
-            </div>
-          </el-col>
-        </el-row>
+      <el-col :span="6" style="height: 100%">
+        <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
+          <div style="height: 500px; margin-bottom: 10px;">
+            <vab-card class="card4" title="库龄" style="height: 100%;">
+              <div style="text-align: right; margin-top: 25px;">
+                <el-radio-group v-model="ageRadio" @change="handleSwitchBar">
+                  <el-radio-button label="数量" :value="0" />
+                  <el-radio-button label="占比" :value="1" />
+                </el-radio-group>
+              </div>
+              <el-row>
+                <el-col :span="9">
+                  <div ref="chartContainer2" style="width: 100%; height: 300px; margin-top: 30px"></div>
+                </el-col>
+                <el-col :span="15">
+                  <el-table :data="percentageAgeData" style="margin-top: 30px" max-height="280" :header-cell-style="headerCellStyle" show-summary>
+                    <el-table-column label="项目" prop="name" min-width="110">
+                      <template #default="{ row, $index }">
+                        <span class="table-item" :style="{ '--dot-color': storageAgeColorList[$index] }">
+                          {{ row.name }}
+                        </span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column v-if="ageRadio === 0" label="FBA仓" prop="value" min-width="90" align="right"></el-table-column>
+                    <el-table-column v-if="ageRadio === 1" label="FBA仓" prop="percentage" min-width="90" align="right">
+                      <template #default="{ row }">
+                        {{ row.percentage }}%
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="预估下月费用" min-width="120"></el-table-column>
+                  </el-table>
+                </el-col>
+              </el-row>
+            </vab-card>
+          </div>
+          <div style="flex: 1;">
+            <vab-card class="card1-title" style="height: 100%; display: flex; flex-direction: column;" title="断货后即将上架产品">
+              <el-table border :data="fakeData1" style="flex: 1" size="small">
+                <el-table-column label="SKU" prop="sku" min-width="170"></el-table-column>
+                <el-table-column label="断货前月销量" prop="sales" min-width="130"></el-table-column>
+                <el-table-column label="最近入库" prop="recently" min-width="100">
+                  <template #default="{ row }">
+                    <span :class="{ 'green': row.recently === '已入库' }">{{ row.recently }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
+              </el-table>
+            </vab-card>
+          </div>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -1450,9 +1451,11 @@ onMounted(() => {
       background-color: rgba(115, 153, 192, 0.2);  
       color: #4f6d7a;  
     }
-    // .el-card__body {
-    //   padding: 0;
-    // }
+    .el-card__body {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1; /* 确保表格占满剩余空间 */
+    }
   }
 }
 .card3-title {
@@ -1488,8 +1491,7 @@ onMounted(() => {
 .card5 {
   :deep() {
     .el-card__body {
-      padding-right: 10px;
-      padding-left: 10px;
+      padding-bottom: 0;
     }
   }
 }
@@ -1571,6 +1573,7 @@ onMounted(() => {
   }
 
   .bottom {
+    white-space: nowrap;
     &-up {
       .ri-arrow-up-line {
         width: 18px;

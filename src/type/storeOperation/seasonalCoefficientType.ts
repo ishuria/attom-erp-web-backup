@@ -120,3 +120,28 @@ export interface ISiteList {
   id: number
   label: string
 }
+export interface IBooleanResp {
+  data: boolean
+}
+export interface IId {
+  id: number
+}
+export interface ISite {
+  site: number
+}
+export interface IAddSeasonalCoefficientReq {
+  site: number
+  kindName: string
+  aprActual: number
+  augActual: number
+  decActual: number
+  febActual: number
+  janActual: number
+  julActual: number
+  junActual: number
+  marActual: number
+  mayActual: number
+  novActual: number
+  octActual: number
+  sepActual: number
+}

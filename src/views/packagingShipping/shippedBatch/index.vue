@@ -38,12 +38,12 @@
       </el-table-column>
       <el-table-column label="最新预计入库" prop="latestArrivalDate" min-width="130">
         <template #default="{ row }">
-          {{ formatDate(new Date(row.latestArrivalDate)) }}
+          {{ row.latestArrivalDate ? formatDate(new Date(row.latestArrivalDate)): '' }}
         </template>
       </el-table-column>
       <el-table-column label="上架日期" prop="actualArrivalDate" min-width="115">
         <template #default="{ row }">
-          {{ formatDate(new Date(row.actualArrivalDate)) }}
+          {{ row.actualArrivalDate ? formatDate(new Date(row.actualArrivalDate)) : '' }}
         </template>
       </el-table-column>
       <el-table-column label="实际时效" prop="actualTimeliness" min-width="100"></el-table-column>

@@ -691,26 +691,13 @@ export interface IgetProductReplenListResp {
 }
 // 产品补货计算参数 - 批量修改
 export interface IupdateProductReplenParams {
-    /**
-     * 产品补货计ids使用,分割
-     */
-    ids?: string;
-    /**
-     * 最小维持库存数量
-     */
-    minStockPilNumber?: number;
-    /**
-     * 维持库存天数
-     */
-    stockPileNumberDays?: number;
-    /**
-     * 产品分类1
-     */
-    type1?: string;
-    /**
-     * 产品分类2
-     */
-    type2?: string;
+  // 产品补货计ids使用,分割
+  ids?: string
+  // 最小维持库存数量
+  minStockPilNumber?: number
+  // 维持库存天数
+  stockPileNumberDays?: number
+  kindId?: number
 }
 // 零件报关信息 - 获取零件报关信息列表
 export interface IgetProductCustomsListQuery {

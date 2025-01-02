@@ -86,3 +86,7 @@ export interface IAddParams {
     nextYearAnnualLeave: number | null
     affiliatedBranchCompanyId: string | null
 }
+
+export interface IGetAllNameReq {
+  name: string
+}

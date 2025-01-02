@@ -2,8 +2,12 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 import {
+  IAddSeasonalCoefficientReq,
+  IBooleanResp,
   IGetSeasonalCoefficientListReq,
   IGetSeasonalCoefficientListRes,
+  IId,
+  ISite,
   ISiteList
 } from '/@/type/storeOperation/seasonalCoefficientType'
 
@@ -24,5 +28,45 @@ export function getSeasonalCoefficientSiteList(): Promise<{data: ISiteList[]}> {
   return request({
     url: `${BASE_API}/seasonal/coefficient/site/list`,
     method: 'get',
+  })
+}
+/**
+ * @description 修改季节系数
+ */
+export function updateSeasonalCoefficient(data: IGetSeasonalCoefficientListReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/seasonal/coefficient/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 删除季节系数
+ */
+export function delSeasonalCoefficient(params: IId): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/seasonal/coefficient/del`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 获取季节系数的品类列表
+ */
+export function getSeasonalCoefficientSite(params: ISite): Promise<{data: ISiteList[]}> {
+  return request({
+    url: `${BASE_API}/seasonal/coefficient/site`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 添加季节系数
+ */
+export function addSeasonalCoefficient(data: IAddSeasonalCoefficientReq): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/seasonal/coefficient/add`,
+    method: 'post',
+    data
   })
 }

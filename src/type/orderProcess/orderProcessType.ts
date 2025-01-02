@@ -531,7 +531,7 @@ export interface IreviewStepNo5SkuInfoPerfect {
     /**
      * 产品设计
      */
-    productDesign?: string;
+    productDesignId?: number
     /**
      * 产品高
      */
@@ -543,7 +543,7 @@ export interface IreviewStepNo5SkuInfoPerfect {
     /**
      * 产品经理
      */
-    productManager?: string;
+    productManagerId?: number
     /**
      * 产品宽
      */
