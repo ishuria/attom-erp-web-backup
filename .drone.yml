@@ -1,7 +1,7 @@
 # 项目的.drone.yml 文件
 kind: pipeline
 type: docker
-name: web
+name: erp-web
 
 steps:
   # npm 构建
