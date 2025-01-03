@@ -28,8 +28,6 @@ steps:
       insecure: true
       tags:
         - v1.0
-      build_args:
-        - --no-cache
 
   # 远程到主机并运行
   - name: deploy-run
