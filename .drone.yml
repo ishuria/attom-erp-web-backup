@@ -12,7 +12,7 @@ steps:
       - ls -alt
       - npm config set registry https://registry.npmmirror.com
       - npm i -g pnpm
-      - npm install --registry=https://registry.npm.taobao.org --verbose
+      - pnpm install --verbose
       - npm run build:fast
 
   # 打包构建镜像并推送到镜像仓库
