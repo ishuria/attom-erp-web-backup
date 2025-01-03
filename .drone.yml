@@ -10,8 +10,7 @@ steps:
     commands:
       - pwd
       - ls -alt
-      - npm config set registry https://registry.npmmirror.com
-      - npm install --verbose
+      - npm install --verbose --registry=https://registry.npmmirror.com
       - npm run build:fast
 
   # 打包构建镜像并推送到镜像仓库
