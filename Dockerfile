@@ -1,4 +1,4 @@
-FROM 192.168.12.6:3002/library/nginx:alpine
+FROM 192.168.6.12:3002/library/nginx:alpine
 
 # 删除默认的 Nginx 静态文件
 RUN rm -rf /usr/share/nginx/html/*
