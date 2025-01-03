@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
         <template #default="{ row }">
-          <span v-html="row.sku"></span>
+          <span>{{ row.sku }}</span><br /><span>{{ row.productDesc }}</span>
         </template>
       </el-table-column>
       <el-table-column label="重量" prop="weight" min-width="90" align="center"></el-table-column>

@@ -52,7 +52,7 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove1">
+              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove1" :onEnd="handleEnd1">
                 <div
                   v-for="item in columns"
                   :key="item.label"
@@ -732,7 +732,7 @@ import { Hide, Search, Star, View } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { DraggableEvent, VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { currencySymbols, months, opeClassOption } from '../constantOption'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
@@ -2520,6 +2520,8 @@ const handleChecked = (item: any) => {
   item.checked = !item.checked
 }
 const handleMove1 = (event: any) => {
+  console.log(event);
+  
   const { related  } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
@@ -2528,6 +2530,10 @@ const handleMove1 = (event: any) => {
   }
 
   return true; // 允许其他操作
+}
+const handleEnd1 = (event: any) => {
+  // console.log(event);
+  
 }
 const handleMove2 = (event: any) => {
   const { related  } = event
