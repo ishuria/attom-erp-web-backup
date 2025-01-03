@@ -15,7 +15,7 @@ steps:
       - pnpm install --verbose
       - npm run build:fast
 
-  # 打包构建镜像并推送到镜像仓库
+  # 构建镜像并推送到镜像仓库
   - name: build-docker-image
     image: plugins/docker
     settings:
@@ -29,7 +29,7 @@ steps:
       tags:
         - v1.0
 
-  # 远程到主机并运行
+  # 远程到主机并运行docker compose
   - name: deploy-run
     image: appleboy/drone-ssh
     pull: true
