@@ -11,9 +11,8 @@ steps:
       - pwd
       - ls -alt
       - npm config set registry https://registry.npmmirror.com
-      - npm i -g pnpm
-      - pnpm install --verbose
-      - pnpm run build:fast
+      - npm install --verbose
+      - npm run build:fast
 
   # 打包构建镜像并推送到镜像仓库
   - name: build-docker-image
