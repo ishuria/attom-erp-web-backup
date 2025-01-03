@@ -10,8 +10,7 @@ steps:
     commands:
       - pwd
       - ls -alt
-      - npm config set registry https://registry.npmmirror.com
-      - npm i -g pnpm
+      - npm install pnpm -g --registry=//registry.npmmirror.com
       - pnpm install --verbose
       - npm run build:fast
 
