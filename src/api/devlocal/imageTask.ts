@@ -1,14 +1,21 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
+
 import {
   IAddArtDesignTaskReq,
   IArtDesignTaskMargin,
   IClaimArtDesignTaskReq,
+  IConfirmOtherSkuArtDesignSellingPointRes,
   IGetArtDesignTaskListReq,
   IGetArtDesignTaskListRes,
   IGetArtDesignTaskMarginRes,
   IGetArtDesignTaskStatisticsRes,
+  IGetCopywritingRes,
+  IGetSellingPoint,
+  IGetSellingPointRes,
+  ISaveArtDesignCopywritingReq,
+  ISaveBatchSellingPointReq,
   IUpdateArtDesignTaskDistributeReq
 } from '/@/type/listingTask/imageTaskType'
 
@@ -130,6 +137,85 @@ export function getArtDesignTaskUserList() {
 export function updateArtDesignTaskDistribute(data: IUpdateArtDesignTaskDistributeReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/artdesign/task/distribution/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 美工任务-查看卖点
+ */
+export function getArtDesignSellingPoint(params: { sku: string }): Promise<IGetSellingPointRes> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/query`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 美工任务-卖点保存
+ */
+export function saveArtDesignSellingPoint(data: IGetSellingPoint): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/save`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 美工任务-卖点下拉列表
+ */
+export function getArtDesignSellingPointDropdownList(): Promise<{ data: { id: number, label: string }[]}> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/dropdown/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 美工任务-从其他SKU导入确认
+ */
+export function confirmOtherSkuArtDesignSellingPoint(params: { sku: string }): Promise<IConfirmOtherSkuArtDesignSellingPointRes> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/other/sku`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 美工任务-查看文案
+ */
+export function getArtDesignCopywriting(params: { sku: string }): Promise<IGetCopywritingRes> {
+  return request({
+    url: `${BASE_API}/artdesign/copywriting/query`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 美工任务-文案保存
+ */
+export function saveArtDesignCopywriting(data: ISaveArtDesignCopywritingReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/copywriting/save`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 美工任务-卖点批量查看
+ */
+export function getBatchArtDesignSellingPoint(params: { skus: string }): Promise<IGetSellingPointRes> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/batch/query`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 美工任务-卖点批量填写保存
+ */
+export function saveBatchArtDesignSellingPoint(data: ISaveBatchSellingPointReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/batch`,
     method: 'post',
     data
   })

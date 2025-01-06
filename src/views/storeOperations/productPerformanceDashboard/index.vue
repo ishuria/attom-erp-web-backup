@@ -491,9 +491,6 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="filterVisible = true">筛选</el-button>
-              </el-form-item>
-              <el-form-item>
                 <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
               </el-form-item>
               <el-form-item >

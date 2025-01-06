@@ -77,10 +77,7 @@ export interface IGetArtDesignTaskList {
    * 任务类型
    */
   taskType?: string
-  _sites: string
-  overflow: boolean
-  _productManager: string
-  overflow2: boolean
+  [property: string]: any
 }
 export interface IAddArtDesignTaskReq {
   sku: string
@@ -139,4 +136,236 @@ export interface IUpdateArtDesignTaskDistributeReq {
    * 视频人多个用,分割
    */
   videoPerson?: string
+}
+export interface IGetSellingPointRes {
+  data: IGetSellingPoint
+}
+
+export interface IGetSellingPoint {
+  /**
+   * 品牌词
+   */
+  brand?: string
+  /**
+   * 竞品ASIN
+   */
+  competitiveAsin?: string
+  /**
+   * 竞品差异化
+   */
+  competitiveProductDifferences?: string
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 链接关键词
+   */
+  linkKeywords?: string
+  /**
+   * 材质
+   */
+  material?: string
+  /**
+   * 注意事项
+   */
+  precautions?: string
+  /**
+   * 产品差异程度 0非常大 1大 2中 3小 4无差异化
+   */
+  productDifferences?: number
+  /**
+   * 同赛道ASIN
+   */
+  sameTrackAsin?: string
+  /**
+   * 功能卖点
+   */
+  sellingPointContent?: string
+  /**
+   * 概括
+   */
+  summary?: string
+  /**
+   * 目标客群
+   */
+  targetAudience?: string
+  /**
+   * 产品使用场景
+   */
+  usageScenario?: string
+}
+export interface IConfirmOtherSkuArtDesignSellingPointRes {
+  data: IConfirmOtherSkuArtDesignSellingPoint
+}
+
+export interface IConfirmOtherSkuArtDesignSellingPoint {
+  /**
+   * 品牌词
+   */
+  brand?: string
+  /**
+   * 竞品ASIN
+   */
+  competitiveAsin?: string
+  /**
+   * 竞品差异化
+   */
+  competitiveProductDifferences?: string
+  /**
+   * 链接关键词
+   */
+  linkKeywords?: string
+  /**
+   * 材质
+   */
+  material?: string
+  /**
+   * 注意事项
+   */
+  precautions?: string
+  /**
+   * 产品差异程度 0非常大 1大 2中 3小 4无差异化
+   */
+  productDifferences?: number
+  /**
+   * 同赛道ASIN
+   */
+  sameTrackAsin?: string
+  /**
+   * 功能卖点
+   */
+  sellingPointContent?: string
+  /**
+   * 概括
+   */
+  summary?: string
+  /**
+   * 目标客群
+   */
+  targetAudience?: string
+  /**
+   * 产品使用场景
+   */
+  usageScenario?: string
+}
+export interface IGetCopywritingRes {
+  data: IGetCopywriting
+}
+
+export interface IGetCopywriting {
+  /**
+   * 品牌词
+   */
+  brand?: string
+  /**
+   * 竞品ASIN
+   */
+  competitiveAsin?: string
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 链接关键词
+   */
+  linkKeywords?: string
+  /**
+   * 链接关键词译文
+   */
+  linkKeywordsTs?: string
+  /**
+   * 材质
+   */
+  material?: string
+  /**
+   * 同赛道ASIN
+   */
+  sameTrackAsin?: string
+  /**
+   * 功能卖点
+   */
+  sellingPointContent?: string
+  /**
+   * 功能卖点译文
+   */
+  sellingPointContentTs?: string
+  /**
+   * 目标客群
+   */
+  targetAudience?: string
+  /**
+   * 标题1
+   */
+  title1?: string
+  /**
+   * 标题2
+   */
+  title2?: string
+  /**
+   * 产品使用场景
+   */
+  usageScenario?: string
+}
+export interface ISaveArtDesignCopywritingReq {
+  artDesignTaskId?: number
+  id?: number
+  title1: string
+  title2: string
+  linkKeywordsTs: string
+  sellingPointContentTs: string
+}
+export interface ISaveBatchSellingPointReq {
+  /**
+   * 品牌词
+   */
+  brand?: string
+  /**
+   * 竞品ASIN
+   */
+  competitiveAsin?: string
+  /**
+   * 竞品差异化
+   */
+  competitiveProductDifferences?: string
+  /**
+   * 勾选的多条美工记录的id，多个,分割
+   */
+  ids?: string
+  /**
+   * 链接关键词
+   */
+  linkKeywords?: string
+  /**
+   * 材质
+   */
+  material?: string
+  /**
+   * 注意事项
+   */
+  precautions?: string
+  /**
+   * 产品差异程度 0非常大 1大 2中 3小 4无差异化
+   */
+  productDifferences?: number
+  /**
+   * 同赛道ASIN
+   */
+  sameTrackAsin?: string
+  /**
+   * 功能卖点
+   */
+  sellingPointContent?: string
+  /**
+   * 概括
+   */
+  summary?: string
+  /**
+   * 目标客群
+   */
+  targetAudience?: string
+  /**
+   * 产品使用场景
+   */
+  usageScenario?: string
 }

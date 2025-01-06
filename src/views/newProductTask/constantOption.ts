@@ -14,3 +14,7 @@ export const designTypeOption = [
   { label: '说明书', value: 3 },
   { label: '建模渲染', value: 4 },
 ]
+
+export const summaryOption = [
+  { label: '和老系统一致', value: 0 }
+]

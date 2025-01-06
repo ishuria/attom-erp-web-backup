@@ -7,7 +7,7 @@
             <el-button type="primary" @click="showPostTask">发布任务</el-button>
             <el-button type="primary" @click="showMarginSetting">余量设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
-            <el-button type="primary">卖点填写(批量)</el-button>
+            <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
             <!-- <el-button type="primary" @click="showAssignTask">任务分配修改</el-button> -->
           </vab-query-form-left-panel>
@@ -45,9 +45,9 @@
           </el-table-column>
           <el-table-column label="站点" prop="sites" min-width="150">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow" content=" " effect="dark" placement="top">
+              <el-tooltip :disabled="!row.overflow_sites" content=" " effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.sites) }}</div>
+                  <div class="custom-tooltip" >{{ row._sitesFull }}</div>
                 </template>
                 <span v-html="row._sites"></span>
               </el-tooltip>
@@ -73,23 +73,68 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" prop="basePicture" min-width="100"></el-table-column>
-          <el-table-column label="建模/渲染" prop="modeling" min-width="105"></el-table-column>
-          <el-table-column label="A+" prop="aAdd" min-width="90"></el-table-column>
-          <el-table-column label="视频" prop="video" min-width="90"></el-table-column>
-          <el-table-column label="说明书/包装" prop="instructionManual" min-width="115"></el-table-column>
-          <el-table-column label="发布人" prop="publisherPersonName" min-width="90"></el-table-column>
+          <el-table-column label="基础图片" prop="basePicture" min-width="100">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_basePicture" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
+                </template>
+                <span v-html="row._basePicture"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="建模/渲染" prop="modeling" min-width="105">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_modeling" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._modelingFull }}</div>
+                </template>
+                <span v-html="row._modeling"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="A+" prop="aAdd" min-width="90">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_aAdd" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._aAddFull }}</div>
+                </template>
+                <span v-html="row._aAdd"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="视频" prop="video" min-width="90">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_video" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._videoFull }}</div>
+                </template>
+                <span v-html="row._video"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="说明书/包装" prop="instructionManual" min-width="115">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_instructionManual" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
+                </template>
+                <span v-html="row._instructionManual"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="发布人" prop="publisherPersonName" min-width="160"></el-table-column>
           <el-table-column label="产品经理" prop="productManager" min-width="100">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow2" content=" " effect="dark" placement="top">
+              <el-tooltip :disabled="!row.overflow_productManager" content=" " effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.productManager) }}</div>
+                  <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
                 </template>
                 <span v-html="row._productManager"></span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品设计" prop="productDesign" min-width="100"></el-table-column>
+          <el-table-column label="产品设计" prop="productDesign" min-width="160"></el-table-column>
           <el-table-column label="运营" prop="operation" min-width="90"></el-table-column>
           <el-table-column label="陈峥校对" prop="proofreadingStatus" min-width="100">
             <template #default="{ row }">
@@ -101,7 +146,7 @@
           <el-table-column label="操作" width="110" fixed="right">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary">
+                <el-button text type="primary" @click="handleShowSellingPoint(row)">
                   卖点
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -109,10 +154,10 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="handleShowSellingPoint(row)">
                       <el-link type="primary" :underline="false">卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="handleShowCopywriting(row)">
                       <el-link type="primary" :underline="false">文案</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleLongTerm(row)">
@@ -147,7 +192,7 @@
             <el-button type="primary" @click="showPostTask">发布任务</el-button>
             <el-button type="primary" @click="showMarginSetting">余量设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
-            <el-button type="primary">卖点填写(批量)</el-button>
+            <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
             <el-button type="primary" @click="showAssignTask">任务分配修改</el-button>
           </vab-query-form-left-panel>
@@ -185,9 +230,9 @@
           </el-table-column>
           <el-table-column label="站点" prop="sites" min-width="150">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow" content=" " effect="dark" placement="top">
+              <el-tooltip :disabled="!row.overflow_sites" content=" " effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.sites) }}</div>
+                  <div class="custom-tooltip" >{{ row._sitesFull }}</div>
                 </template>
                 <span v-html="row._sites"></span>
               </el-tooltip>
@@ -213,23 +258,68 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" prop="basePicture" min-width="100"></el-table-column>
-          <el-table-column label="建模/渲染" prop="modeling" min-width="105"></el-table-column>
-          <el-table-column label="A+" prop="aAdd" min-width="90"></el-table-column>
-          <el-table-column label="视频" prop="video" min-width="90"></el-table-column>
-          <el-table-column label="说明书/包装" prop="instructionManual" min-width="115"></el-table-column>
-          <el-table-column label="发布人" prop="publisherPersonName" min-width="90"></el-table-column>
+          <el-table-column label="基础图片" prop="basePicture" min-width="100">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_basePicture" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
+                </template>
+                <span v-html="row._basePicture"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="建模/渲染" prop="modeling" min-width="105">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_modeling" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._modelingFull }}</div>
+                </template>
+                <span v-html="row._modeling"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="A+" prop="aAdd" min-width="90">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_aAdd" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._aAddFull }}</div>
+                </template>
+                <span v-html="row._aAdd"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="视频" prop="video" min-width="90">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_video" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._videoFull }}</div>
+                </template>
+                <span v-html="row._video"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="说明书/包装" prop="instructionManual" min-width="115">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_instructionManual" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
+                </template>
+                <span v-html="row._instructionManual"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="发布人" prop="publisherPersonName" min-width="160"></el-table-column>
           <el-table-column label="产品经理" prop="productManager" min-width="100">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow2" content=" " effect="dark" placement="top">
+              <el-tooltip :disabled="!row.overflow_productManager" content=" " effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.productManager) }}</div>
+                  <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
                 </template>
                 <span v-html="row._productManager"></span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品设计" prop="productDesign" min-width="100"></el-table-column>
+          <el-table-column label="产品设计" prop="productDesign" min-width="160"></el-table-column>
           <el-table-column label="运营" prop="operation" min-width="90"></el-table-column>
           <el-table-column label="陈峥校对" prop="proofreadingStatus" min-width="100">
             <template #default="{ row }">
@@ -241,7 +331,7 @@
           <el-table-column label="操作" width="110" fixed="right">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary">
+                <el-button text type="primary" @click="handleShowSellingPoint(row)">
                   卖点
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -249,10 +339,10 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="handleShowSellingPoint(row)">
                       <el-link type="primary" :underline="false">卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="handleShowCopywriting(row)">
                       <el-link type="primary" :underline="false">文案</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleLongTerm(row)">
@@ -305,9 +395,9 @@
           </el-table-column>
           <el-table-column label="站点" prop="sites" min-width="150">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow" content=" " effect="dark" placement="top">
+              <el-tooltip :disabled="!row.overflow_sites" content=" " effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.sites) }}</div>
+                  <div class="custom-tooltip" >{{ row._sitesFull }}</div>
                 </template>
                 <span v-html="row._sites"></span>
               </el-tooltip>
@@ -333,23 +423,68 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" prop="basePicture" min-width="100"></el-table-column>
-          <el-table-column label="建模/渲染" prop="modeling" min-width="105"></el-table-column>
-          <el-table-column label="A+" prop="aAdd" min-width="90"></el-table-column>
-          <el-table-column label="视频" prop="video" min-width="90"></el-table-column>
-          <el-table-column label="说明书/包装" prop="instructionManual" min-width="115"></el-table-column>
-          <el-table-column label="发布人" prop="publisherPersonName" min-width="90"></el-table-column>
-          <el-table-column label="产品经理" prop="productManager" min-width="100">
+          <el-table-column label="基础图片" prop="basePicture" min-width="160">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow2" content=" " effect="dark" placement="top">
+              <el-tooltip :disabled="!row.overflow_basePicture" content=" " effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.productManager) }}</div>
+                  <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
+                </template>
+                <span v-html="row._basePicture"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="建模/渲染" prop="modeling" min-width="160">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_modeling" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._modelingFull }}</div>
+                </template>
+                <span v-html="row._modeling"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="A+" prop="aAdd" min-width="160">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_aAdd" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._aAddFull }}</div>
+                </template>
+                <span v-html="row._aAdd"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="视频" prop="video" min-width="160">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_video" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._videoFull }}</div>
+                </template>
+                <span v-html="row._video"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="说明书/包装" prop="instructionManual" min-width="160">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_instructionManual" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
+                </template>
+                <span v-html="row._instructionManual"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="发布人" prop="publisherPersonName" min-width="90"></el-table-column>
+          <el-table-column label="产品经理" prop="productManager" min-width="160">
+            <template #default="{ row }">
+              <el-tooltip :disabled="!row.overflow_productManager" content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
                 </template>
                 <span v-html="row._productManager"></span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品设计" prop="productDesign" min-width="100"></el-table-column>
+          <el-table-column label="产品设计" prop="productDesign" min-width="160"></el-table-column>
           <el-table-column label="运营" prop="operation" min-width="90"></el-table-column>
           <el-table-column label="陈峥校对" prop="proofreadingStatus" min-width="100">
             <template #default="{ row }">
@@ -361,7 +496,7 @@
           <el-table-column label="操作" width="110" fixed="right">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary">
+                <el-button text type="primary" @click="handleShowSellingPoint(row)">
                   卖点
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -369,10 +504,10 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="handleShowSellingPoint(row)">
                       <el-link type="primary" :underline="false">卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item>
+                    <el-dropdown-item @click="handleShowCopywriting(row)">
                       <el-link type="primary" :underline="false">文案</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleLongTerm(row)">
@@ -550,8 +685,11 @@
     <vab-dialog
       title="任务量统计"
       v-model="taskStatisticsVisible"
+      width="60%"
+      @open="handleStatisticsOpened"
     >
-
+      <div ref="chartContainer1" style="width: 100%; height: 300px"></div>
+      <div style="width: 100%; height: 300px"></div>
     </vab-dialog>
     <!-- 备注 -->
     <vab-dialog
@@ -579,11 +717,21 @@ import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoeffici
 import { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import * as echarts from 'echarts'
 
 defineOptions({
   name: 'ImageTask'
 })
 
+const chartContainer1 = ref<HTMLElement | null>(null)
+const chartContainer2 = ref<HTMLElement | null>(null)
+let chartInstance1: echarts.ECharts | null = null
+let chartInstance2: echarts.ECharts | null = null
+let chartObserver1: ResizeObserver
+let chartObserver2: ResizeObserver
+const option1 = ref<any>({})
+const option2 = ref<any>({})
+const router = useRouter()
 const remark = ref<string>('')
 const remarkVisible = ref<boolean>(false)
 const taskStatisticsVisible = ref<boolean>(false)
@@ -610,6 +758,21 @@ const missionClaimForm = reactive<{ type: number }>({
 const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<{ value: string, label: string }[]>([]) //搜索选项
 const skuList = ref<{ value: string, label: string }[]>([]) //搜索列表
+const showBatchSellingPoint = () => {
+  if (selectedRows.value.length === 0) {
+    $baseMessage('您未选择任何行！', 'warning')
+    return
+  }
+  const skus = selectedRows.value.map((item) => item.sku).join(',')
+  const ids = selectedRows.value.map((item) => item.id).join(',')
+  router.push({
+    path: '/newProductTask/sellingPoint',
+    query: {
+      sku: skus,
+      id: ids
+    },
+  })
+}
 const remoteSKUMethod = async (query: string) => {
   if (query) {
     const { data } = await getPoSkuList({ sku: query })
@@ -664,6 +827,101 @@ const listLoading = ref<boolean>(false)
 const siteList = ref<{ id: number, label: string }[]>([])
 const userList = ref<{ id: number, label: string }[]>([])
 const _id = ref<number>(0)
+const finishDate = ['']
+const taskCount: number[] = []
+const avgTaskCountDate = ['本周', '下一周', '下二周', '下三周', '下四周', '下五周']
+const handleStatisticsOpened = () => {
+  nextTick(() => {
+    if (chartContainer1.value) {
+      chartInstance1 = echarts.init(chartContainer1.value)
+      chartObserver1 = new ResizeObserver(() => {
+        if (chartInstance1) {
+          chartInstance1.resize()
+        }
+      })
+      chartObserver1.observe(chartContainer1.value)
+      initChart1()
+    }
+  })
+}
+const initChart1 = () => {
+  option1.value = {
+    // legend: {
+    //   icon: 'circle',
+    //   left: 0,
+    //   top: 5,
+    //   // textStyle: {
+    //   //   fontSize: parseInt(fontSizeBase) - 1
+    //   // },
+    //   itemWidth: 10,
+    //   itemHeight: 10,
+    //   itemGap: 5,
+    //   data: ['任务数']
+    // },
+    tooltip: {
+      trigger: 'axis',
+      confine: true
+    },
+    grid: {
+      top: 50,
+      bottom: 5,
+      left: 10,
+      right: 10,
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: finishDate,
+      axisTick: {
+        alignWithLabel: true,
+      },
+      // axisLabel: {
+      //   fontSize: parseInt(fontSizeBase) - 1
+      // }
+    },
+    yAxis: {
+      type: 'value',
+      min: 'dataMin', // 自动以数据中的最小值为起点
+      boundaryGap: [0, 0.1],
+      // axisLabel: {
+      //   fontSize: parseInt(fontSizeBase) - 1
+      // }
+    },
+    series: [
+      {
+        name: '任务数',
+        type: 'line',
+        data: taskCount,
+        // itemStyle: {
+        //   color: storageAgeColorList[4]
+        // },
+        smooth: true,
+        symbol: 'none',
+        // symbolSize: 6,
+      },
+    ]
+  }
+  chartInstance1?.setOption(option1.value)
+}
+
+const handleShowSellingPoint = (row: IGetArtDesignTaskList) => {
+  router.push({
+    path: '/newProductTask/sellingPoint',
+    query: {
+      sku: row.sku,
+      id: row.id
+    },
+  })
+}
+const handleShowCopywriting = (row: IGetArtDesignTaskList) => {
+  router.push({
+    path: '/newProductTask/copywriting',
+    query: {
+      sku: row.sku,
+      id: row.id
+    },
+  })
+}
 const handleConfirmAssignTask = async () => {
   const ids = selectedRows.value.map((item) => item.id).join(',')
   const { data } = await updateArtDesignTaskDistribute({
@@ -724,7 +982,8 @@ const handleFinish = async (row: IGetArtDesignTaskList) => {
   })
 }
 const showTaskStatistics = async () => {
-  const { data } = await getArtDesignTaskStatistics()
+  taskStatisticsVisible.value = true
+  // const { data } = await getArtDesignTaskStatistics()
   
 }
 const handleConfirmMarginSetting = async () => {
@@ -812,7 +1071,7 @@ const imagePreviewShow = (url: string) => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const index = data.columnIndex
-  if (index === 2 || index === 3 || index === 4 || index === 18) {
+  if (index === 2 || index === 3 || index === 4 || index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 18) {
     return {
       textAlign: 'left'
     }
@@ -840,32 +1099,33 @@ const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   fetchData()
 }
+// 处理","号分隔的人员换行以及tooltip展示
+function processField(item: any, fieldName: string, max: number) {
+  const fieldArray = item[fieldName]?.split(',')
+  if (fieldArray && fieldArray.length > max) {
+    item[`_${fieldName}`] = [fieldArray[0], fieldArray[1]].join('<br />') // 显示在表格上的处理过的
+    item[`_${fieldName}`] += '...'
+    item[`overflow_${fieldName}`] = true // 判断tooltip是否显示
+    item[`_${fieldName}Full`] = fieldArray.join('\n')  // tooltip显示全部内容
+  } else {
+    item[`overflow_${fieldName}`] = false
+    item[`_${fieldName}`] = fieldArray?.join('<br />')!
+    item[`_${fieldName}Full`] = item[`_${fieldName}`]  
+  }
+}
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getArtDesignTaskList(queryForm)
   total.value = data.total
   list.value = data.list
   list.value.forEach((item) => {
-    const sitesArray = item.sites?.split(',')
-    if (sitesArray && sitesArray.length > 3) {
-      item._sites = [sitesArray[0], sitesArray[1]].join('<br />')
-      item._sites += '...'
-      item.overflow = true
-    } else {
-      item.overflow = false
-      item._sites = sitesArray?.join('<br />')!
-    }
-    item.sites = sitesArray?.join('<br />')
-    const managerArray = item.productManager?.split(',')
-    if (managerArray && managerArray.length > 3) {
-      item._productManager = [managerArray[0], managerArray[1]].join('<br />')
-      item._productManager += '...'
-      item.overflow2 = true
-    } else {
-      item.overflow2 = false
-      item._productManager = managerArray?.join('<br />')!
-    }
-    item.productManager = managerArray?.join('<br />')
+    processField(item, 'sites', 3)
+    processField(item, 'productManager', 3)
+    processField(item, 'basePicture', 2)
+    processField(item, 'modeling', 2)
+    processField(item, 'aAdd', 2)
+    processField(item, 'video', 2)
+    processField(item, 'instructionManual', 2)
   })
   listLoading.value = false
 }
@@ -918,9 +1178,9 @@ onBeforeMount(() => {
                 border-radius: 99px;
               }
             }
-            // .el-form-item:last-child { //自加
-            //   margin: 0 !important;
-            // }
+            .el-form-item:last-child { //自加
+              margin: 0 !important;
+            }
           }
         }
 

@@ -63,40 +63,8 @@
           />
         </div>
       </el-form-item>
-      <el-form-item label="推荐#">
-        <div class="flex">
-          <el-input-number
-            v-model="filterForm.number7"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style="white-space: nowrap; color: #303133">至</span>
-          <el-input-number
-            v-model="filterForm.number8"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
-        </div>
-      </el-form-item>
-      <el-form-item label="最晚补货">
-        <div class="flex">
-          <el-input-number
-            v-model="filterForm.number9"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style="white-space: nowrap; color: #303133">至</span>
-          <el-input-number
-            v-model="filterForm.number10"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
-        </div>
-      </el-form-item>
+    
+      
       <el-form-item label="30天净利润">
         <div class="flex">
           <el-input-number
@@ -148,23 +116,7 @@
           />
         </div>
       </el-form-item>
-      <el-form-item label="30天有货销售额">
-        <div class="flex">
-          <el-input-number
-            v-model="filterForm.number17"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style="white-space: nowrap; color: #303133">至</span>
-          <el-input-number
-            v-model="filterForm.number18"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
-        </div>
-      </el-form-item>
+    
       <el-form-item label="FBA差异">
         <div class="flex">
           <el-input-number
@@ -184,7 +136,7 @@
           <!-- <el-input type="number" v-model="filterForm.number6" placeholder="最大值" /> -->
         </div>
       </el-form-item>
-      <el-form-item label="运营筛选">
+      <el-form-item label="运营分类筛选">
         <el-select></el-select>
       </el-form-item>
       <el-form-item label="广告">
