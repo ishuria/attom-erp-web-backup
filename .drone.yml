@@ -41,7 +41,7 @@ steps:
         from_secret: ssh_password
       # 使用docker compose拉去对应的镜像，并运行
       script:
-        - cd ~/app/project_install && docker compose pull && docker compose up -d
+        - cd ~/app/erp/web && docker compose pull && docker compose up -d
 
 # matster分支触发构建
 trigger:
