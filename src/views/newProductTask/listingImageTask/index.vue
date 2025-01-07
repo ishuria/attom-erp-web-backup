@@ -688,8 +688,9 @@
       width="60%"
       @open="handleStatisticsOpened"
     >
-      <div ref="chartContainer1" style="width: 100%; height: 300px"></div>
-      <div style="width: 100%; height: 300px"></div>
+      <div ref="chartContainer1" style="width: 100%; height: 300px; margin-bottom: 20px;"></div>
+      <div ref="chartContainer2" style="width: 100%; height: 300px; margin-bottom: 20px;"></div>
+      <template #footer></template>
     </vab-dialog>
     <!-- 备注 -->
     <vab-dialog
@@ -708,16 +709,17 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
-import { addArtDesignTask, claimArtDesignTask, delArtDesignTask, finishArtDesignTask, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskStatistics, getArtDesignTaskUserList, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
+import { addArtDesignTask, claimArtDesignTask, delArtDesignTask, finishArtDesignTask, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import * as echarts from 'echarts'
+import { flexColumnWidth } from '/@/utils/tableColum'
+import { fontSize } from '~/src/config'
 
 defineOptions({
   name: 'ImageTask'
@@ -768,8 +770,8 @@ const showBatchSellingPoint = () => {
   router.push({
     path: '/newProductTask/sellingPoint',
     query: {
-      sku: skus,
-      id: ids
+      skus: skus,
+      ids: ids
     },
   })
 }
@@ -842,22 +844,24 @@ const handleStatisticsOpened = () => {
       chartObserver1.observe(chartContainer1.value)
       initChart1()
     }
+    if (chartContainer2.value) {
+      chartInstance2 = echarts.init(chartContainer2.value)
+      chartObserver2 = new ResizeObserver(() => {
+        if (chartInstance2) {
+          chartInstance2.resize()
+        }
+      })
+      chartObserver2.observe(chartContainer2.value)
+      initChart2()
+    }
   })
 }
 const initChart1 = () => {
   option1.value = {
-    // legend: {
-    //   icon: 'circle',
-    //   left: 0,
-    //   top: 5,
-    //   // textStyle: {
-    //   //   fontSize: parseInt(fontSizeBase) - 1
-    //   // },
-    //   itemWidth: 10,
-    //   itemHeight: 10,
-    //   itemGap: 5,
-    //   data: ['任务数']
-    // },
+    title: {
+      text: '任务总数',
+      left: 'center'
+    },
     tooltip: {
       trigger: 'axis',
       confine: true
@@ -865,45 +869,95 @@ const initChart1 = () => {
     grid: {
       top: 50,
       bottom: 5,
-      left: 10,
-      right: 10,
+      left: 60,
+      right: 60,
       containLabel: true
     },
     xAxis: {
       type: 'category',
-      data: finishDate,
+      data: ['2024-10-21', '2024-11-15', '2024-12-01', '2024-12-12'],
       axisTick: {
         alignWithLabel: true,
       },
-      // axisLabel: {
-      //   fontSize: parseInt(fontSizeBase) - 1
-      // }
+      axisLabel: {
+        fontSize: 14
+      },
     },
     yAxis: {
       type: 'value',
-      min: 'dataMin', // 自动以数据中的最小值为起点
       boundaryGap: [0, 0.1],
-      // axisLabel: {
-      //   fontSize: parseInt(fontSizeBase) - 1
-      // }
+      axisLabel: {
+        fontSize: 14
+      },
+      name: '任务个数'
     },
     series: [
       {
-        name: '任务数',
+        name: '任务个数',
         type: 'line',
-        data: taskCount,
-        // itemStyle: {
-        //   color: storageAgeColorList[4]
-        // },
+        data: [1, 1, 3, 3],
+        itemStyle: {
+          color: '#ff8fa5'
+        },
         smooth: true,
-        symbol: 'none',
-        // symbolSize: 6,
+        symbol: 'circle',
+        symbolSize: 6,
       },
     ]
   }
   chartInstance1?.setOption(option1.value)
 }
-
+const initChart2 = () => {
+  option2.value = {
+    title: {
+      text: '人均任务数',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'axis',
+      confine: true
+    },
+    grid: {
+      top: 50,
+      bottom: 5,
+      left: 60,
+      right: 60,
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ['本周', '下一周', '下二周', '下三周', '下四周', '下五周'],
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLabel: {
+        fontSize: 14
+      },
+    },
+    yAxis: {
+      type: 'value',
+      boundaryGap: [0, 0.1],
+      axisLabel: {
+        fontSize: 14
+      },
+      name: '人均周任务个数'
+    },
+    series: [
+      {
+        name: '人均周任务个数',
+        type: 'line',
+        data: [2.5, 1.5, 1, 0, 0, 0],
+        itemStyle: {
+          color: '#52bfff'
+        },
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+      },
+    ]
+  }
+  chartInstance2?.setOption(option2.value)
+}
 const handleShowSellingPoint = (row: IGetArtDesignTaskList) => {
   router.push({
     path: '/newProductTask/sellingPoint',

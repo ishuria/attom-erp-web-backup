@@ -29,7 +29,7 @@
       @cell-click="changeInput"
     >
       <el-table-column label="品名" >
-        <el-table-column label="品名" prop="kindName" min-width="120"></el-table-column>
+        <el-table-column label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')"></el-table-column>
       </el-table-column>
       <el-table-column label="1月">
         <el-table-column label="实际值" prop="janActual">
@@ -197,7 +197,7 @@
       @close="handleCloseAdd"
     >
       <el-form ref="formRef" :rules="formRules" :model="form" label-position="right" label-width="auto" style="margin: 0 10px">
-        <el-form-item label="品名" prop="kindName">
+        <el-form-item label="品名" prop="kindName" >
           <el-input v-model="form.kindName" clearable />
         </el-form-item>
         <el-form-item label="1月实际系数" prop="janActual">
@@ -257,6 +257,7 @@ import { addSeasonalCoefficient, delSeasonalCoefficient, getSeasonalCoefficientL
 import { IGetSeasonalCoefficientList, IGetSeasonalCoefficientListReq, ISiteList } from '/@/type/storeOperation/seasonalCoefficientType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { FormInstance, FormRules } from 'element-plus'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const total = ref<number>(0)
 const queryForm = reactive<IGetSeasonalCoefficientListReq>({

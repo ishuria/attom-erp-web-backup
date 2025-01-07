@@ -16,5 +16,5 @@ export const designTypeOption = [
 ]
 
 export const summaryOption = [
-  { label: '和老系统一致', value: 0 }
+  { label: '同质化产品，采购成本低，可试错', value: 0 }
 ]

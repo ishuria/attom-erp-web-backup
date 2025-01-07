@@ -15,7 +15,7 @@ interface FormType {
 export const login = async (data: any) => {
   if (loginRSA) data = { ...data, password: await encryptedData(data) }
   return request({
-    url: '/login',
+    url: `${BASE_API}/login`,
     method: 'post',
     data,
   })
