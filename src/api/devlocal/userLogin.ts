@@ -30,7 +30,7 @@ export const getUserInfo = () => {
 
 export const logout = () => {
   return request({
-    url: '/logout',
+    url: `${BASE_API}/logout`,
     method: 'get',
   })
 }
