@@ -40,9 +40,12 @@ export const setupPermissions = (router: Router) => {
         } else next()
       } else {
         try {
-          if (loginInterception) await getUserInfo()
           // config/setting.config.js loginInterception为false(关闭登录拦截时)时，创建虚拟角色
-          else await setVirtualRoles()
+          if (loginInterception) {
+            await getUserInfo()
+          } else {
+            await setVirtualRoles()
+          }
           // 根据路由模式获取路由并根据权限过滤
           await setRoutes(authentication)
           next({ ...to, replace: true })

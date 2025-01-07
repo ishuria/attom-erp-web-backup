@@ -155,7 +155,7 @@ const changeCode = () => {
 }
 
 onBeforeMount(() => {
-  form.username = 'xiangkai.luo@163.com'
+  form.username = '1835857596@qq.com'
   form.password = ''
   // 为了演示效果，会在官网演示页自动登录到首页，正式开发可删除
   if (location.hostname.includes('vuejs-core')) {
