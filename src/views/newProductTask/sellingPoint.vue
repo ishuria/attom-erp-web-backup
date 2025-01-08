@@ -18,9 +18,9 @@
                   <el-option v-for="item in differencesOption" :label="item.label" :value="item.id" :key="item.id" />
                 </el-select>
               </el-form-item>
-              <el-form-item label="选品理由一句话概括">
+              <el-form-item label="选品理由一句话概括" prop="summary">
                 <el-select v-model="form.summary" @change="setLocalStorageData">
-                  <el-option v-for="item in summaryOption" :label="item.label" :value="item.value" :key="item.value" />
+                  <el-option v-for="item in reasonsOption" :label="item.label" :value="item.id" :key="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="与竞品相比差异化的地方" prop="competitiveProductDifferences">
@@ -116,10 +116,9 @@
 </template>
 
 <script lang="ts" setup>
-import { confirmOtherSkuArtDesignSellingPoint, getArtDesignSellingPoint, getArtDesignSellingPointDropdownList, getBatchArtDesignSellingPoint, saveArtDesignSellingPoint, saveBatchArtDesignSellingPoint } from '/@/api/devlocal/imageTask'
+import { confirmOtherSkuArtDesignSellingPoint, getArtDesignSelectionReasons, getArtDesignSellingPoint, getArtDesignSellingPointDropdownList, getBatchArtDesignSellingPoint, saveArtDesignSellingPoint, saveBatchArtDesignSellingPoint } from '/@/api/devlocal/imageTask'
 
 import { FormInstance, FormRules } from 'element-plus'
-import { summaryOption } from './constantOption'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetSellingPoint } from '/@/type/listingTask/imageTaskType'
@@ -138,8 +137,10 @@ const selectedSKUForm = reactive<{ sku: string }>({
   sku: ''
 })
 const differencesOption = ref<{ id: number, label: string }[]>([])
+const reasonsOption = ref<{ id: number, label: string }[]>([])
 const form = reactive<IGetSellingPoint>({
   productDifferences: 0,
+  summary: 0,
   competitiveProductDifferences: '',
   targetAudience: '',
   usageScenario: '',
@@ -151,9 +152,7 @@ const form = reactive<IGetSellingPoint>({
   precautions: '',
   sellingPointContent: ''
 })
-const form2 = reactive<any>({
-  sellingPointContent: ''
-})
+
 const formRules1 = reactive<FormRules>({
   productDifferences: [{ required: true, message: '请选择产品差异化程度', trigger: 'change' }],
   summary: [{ required: true, message: '请选择选品理由一句话概括', trigger: 'change' }],
@@ -170,6 +169,7 @@ const formRef1 = ref<FormInstance>()
 const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<{ value: string, label: string }[]>([]) //搜索选项
 const skuList = ref<{ value: string, label: string }[]>([]) //搜索列表
+const _id = ref<number>(0)
 const handleConfirmSelectedSKU = async () => {
   const { data } = await confirmOtherSkuArtDesignSellingPoint({
     sku: selectedSKUForm.sku
@@ -177,6 +177,8 @@ const handleConfirmSelectedSKU = async () => {
   if (data) {
     $baseMessage('导入成功！', 'success')
     Object.assign(form, data)
+    form.id = _id.value
+    
     setLocalStorageData()
     selectSKUVisible.value = false
   }
@@ -189,9 +191,11 @@ const handleConfirmSave = async () => {
   formRef1.value?.validate(async (isValid) => {
     if (isValid) {
       if (route.query.sku) {
+        const { summary, ...filteredForm } = form
         const { data } = await saveArtDesignSellingPoint({
-          ...form,
-          id: Number(route.query.id)
+          ...filteredForm,
+          artDesignTaskId: Number(route.query.id),
+          summaryId: form.summary
         })
         if (data) {
           $baseMessage('保存成功！', 'success')
@@ -199,9 +203,11 @@ const handleConfirmSave = async () => {
           goBack()
         }
       } else {
+        const { summary, ...filteredForm } = form
         const { data } = await saveBatchArtDesignSellingPoint({
-          ...form,
-          ids: route.query.ids
+          ...filteredForm,
+          ids: route.query.ids,
+          summaryId: form.summary
         })
         if (data) {
           $baseMessage('保存成功！', 'success')
@@ -245,6 +251,10 @@ const fetchDifferencesOption = async () => {
   const { data } = await getArtDesignSellingPointDropdownList()
   differencesOption.value = data
 }
+const fetchReasonsOption = async () => {
+  const { data } = await getArtDesignSelectionReasons()
+  reasonsOption.value = data
+}
 const setLocalStorageData = () => {
   const rawForm = toRaw(form)  // 获取非响应式的原始数据
   const jsonString = JSON.stringify(rawForm)  // 现在可以进行字符串化了
@@ -252,6 +262,7 @@ const setLocalStorageData = () => {
 }
 onBeforeMount(async () => {
   fetchDifferencesOption()
+  fetchReasonsOption()
   const querySku = route.query.sku
   if (querySku) {
     // 有缓存 读缓存, 每个sku的卖点和文案是不一样的，
@@ -264,6 +275,7 @@ onBeforeMount(async () => {
       const { data } = await getArtDesignSellingPoint({
         sku: sku.value
       })
+      _id.value = data.id!
       Object.assign(form, data)
       // 获取到的数据存储到localStorage
       setLocalStorageData()

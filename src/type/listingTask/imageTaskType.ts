@@ -185,7 +185,7 @@ export interface IGetSellingPoint {
   /**
    * 概括
    */
-  summary?: string
+  summary?: number
   /**
    * 目标客群
    */
@@ -194,6 +194,8 @@ export interface IGetSellingPoint {
    * 产品使用场景
    */
   usageScenario?: string
+  summaryId?: number
+  artDesignTaskId?: number
 }
 export interface IConfirmOtherSkuArtDesignSellingPointRes {
   data: IConfirmOtherSkuArtDesignSellingPoint
@@ -359,7 +361,7 @@ export interface ISaveBatchSellingPointReq {
   /**
    * 概括
    */
-  summary?: string
+  summaryId?: number
   /**
    * 目标客群
    */
@@ -368,4 +370,9 @@ export interface ISaveBatchSellingPointReq {
    * 产品使用场景
    */
   usageScenario?: string
+}
+
+export interface IGetArtDesignSelectionReasonsList {
+  id: number
+  reason: string
 }

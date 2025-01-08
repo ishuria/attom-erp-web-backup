@@ -15,6 +15,3 @@ export const designTypeOption = [
   { label: '建模渲染', value: 4 },
 ]
 
-export const summaryOption = [
-  { label: '同质化产品，采购成本低，可试错', value: 0 }
-]

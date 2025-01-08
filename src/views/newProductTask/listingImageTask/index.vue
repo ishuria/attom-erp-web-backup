@@ -6,6 +6,7 @@
           <vab-query-form-left-panel>
             <el-button type="primary" @click="showPostTask">发布任务</el-button>
             <el-button type="primary" @click="showMarginSetting">余量设定</el-button>
+            <el-button type="primary" @click="showReasons">选品理由设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
             <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
@@ -191,6 +192,7 @@
           <vab-query-form-left-panel>
             <el-button type="primary" @click="showPostTask">发布任务</el-button>
             <el-button type="primary" @click="showMarginSetting">余量设定</el-button>
+            <el-button type="primary" @click="showReasons">选品理由设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
             <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
@@ -704,6 +706,44 @@
         <el-button type="primary" @click="handleUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 选品理由设定 -->
+    <vab-dialog
+      title="选品理由设定"
+      width="20%"
+      v-model="reasonsVisible"
+    >
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="addReasonVisible = true">新增</el-button>
+        </vab-query-form-left-panel>
+      </vab-query-form>
+      <el-table border stripe :data="reasonsList">
+        <el-table-column label="选品理由" prop="reason"></el-table-column>
+        <el-table-column label="操作" width="80" align="center">
+          <template #default="{ row, $index }">
+            <el-link type="danger" :underline="false" @click="handleDelReason(row, $index)">删除</el-link>
+          </template>
+        </el-table-column>
+      </el-table>
+      <template #footer></template>
+    </vab-dialog>
+    <!-- 新增选品理由 -->
+    <vab-dialog
+      title="新增选品理由"
+      v-model="addReasonVisible"
+      @close="closeAddReason"
+      width="20%"
+    >
+      <el-form ref="addFormRef" :rules="addFormRules" :model="addReasonForm" style="margin: 0;">
+        <el-form-item label="选品理由" prop="reason">
+          <el-input v-model="addReasonForm.reason" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="closeAddReason">取消</el-button>
+        <el-button type="primary" @click="confirmAddReason">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -713,13 +753,12 @@ import * as echarts from 'echarts'
 import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
-import { addArtDesignTask, claimArtDesignTask, delArtDesignTask, finishArtDesignTask, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
+import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
+import { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { fontSize } from '~/src/config'
 
 defineOptions({
   name: 'ImageTask'
@@ -738,9 +777,7 @@ const remark = ref<string>('')
 const remarkVisible = ref<boolean>(false)
 const taskStatisticsVisible = ref<boolean>(false)
 const marginSettingVisible = ref<boolean>(false)
-const marginSettingForm = reactive<any>({
-
-})
+const marginSettingForm = reactive<any>({})
 const marginSettingFormRef = ref<FormInstance>()
 const marginSettingFormRules = reactive<FormRules<IArtDesignTaskMargin>>({
   dayMargin: [{ required: true, message: '请输入天数余量', trigger: 'blur' }],
@@ -756,10 +793,56 @@ const missionClaimVisible = ref<boolean>(false)
 const missionClaimForm = reactive<{ type: number }>({
   type: 0
 })
-
 const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<{ value: string, label: string }[]>([]) //搜索选项
 const skuList = ref<{ value: string, label: string }[]>([]) //搜索列表
+const reasonsVisible = ref<boolean>(false)
+const reasonsList = ref<IGetArtDesignSelectionReasonsList[]>([])
+const addReasonVisible = ref<boolean>(false)
+const addReasonForm = reactive<{ reason: string }>({
+  reason: ''
+})
+const addFormRef = ref<FormInstance>()
+const addFormRules = reactive<FormRules<{ reason: string }>>({
+  reason: [{ required: true, message: '请输入选品理由', trigger: 'blur' }]
+})
+const closeAddReason = () => {
+  addFormRef.value?.resetFields()
+  addReasonVisible.value = false
+}
+const confirmAddReason = async () => {
+  addFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await addArtDesignSelectionReasons({
+        reason: addReasonForm.reason
+      })
+      if (data) {
+        $baseMessage('新增选品理由成功！', 'success')
+        closeAddReason()
+        fetchReasonsData()
+      }
+    }
+  })
+}
+const handleDelReason = async (row: IGetArtDesignSelectionReasonsList, index: number) => {
+  $baseConfirm('确定要删除选品理由吗？', null, async () => {
+    const { data } = await delArtDesignSelectionReasons({
+      id: row.id
+    })
+    if (data) {
+      $baseMessage('删除成功！', 'success')
+      reasonsList.value.splice(index, 1)
+    }
+  })
+}
+const fetchReasonsData = async () => {
+  const { data } = await getArtDesignSelectionReasonsList()
+  reasonsList.value = data
+}
+const showReasons = async () => {
+  fetchReasonsData()
+  reasonsVisible.value = true
+}
 const showBatchSellingPoint = () => {
   if (selectedRows.value.length === 0) {
     $baseMessage('您未选择任何行！', 'warning')

@@ -7,6 +7,7 @@ import {
   IArtDesignTaskMargin,
   IClaimArtDesignTaskReq,
   IConfirmOtherSkuArtDesignSellingPointRes,
+  IGetArtDesignSelectionReasonsList,
   IGetArtDesignTaskListReq,
   IGetArtDesignTaskListRes,
   IGetArtDesignTaskMarginRes,
@@ -216,6 +217,44 @@ export function getBatchArtDesignSellingPoint(params: { skus: string }): Promise
 export function saveBatchArtDesignSellingPoint(data: ISaveBatchSellingPointReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/artdesign/sell/point/batch`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 美工任务-选品理由下拉列表
+ */
+export function getArtDesignSelectionReasons(): Promise<{ data: { id: number, label: string}[] }> {
+  return request({
+    url: `${BASE_API}/artdesign/selection/reasons`,
+    method: 'get',
+  })
+}
+/**
+ * @description 美工任务-选品理由设定列表
+ */
+export function getArtDesignSelectionReasonsList(): Promise<{ data: IGetArtDesignSelectionReasonsList[] }> {
+  return request({
+    url: `${BASE_API}/artdesign/selection/reasons/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 美工任务-删除选品理由
+ */
+export function delArtDesignSelectionReasons(data: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/selection/reasons/delete`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 美工任务-添加选品理由
+ */
+export function addArtDesignSelectionReasons(data: { reason: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/selection/reasons/add`,
     method: 'post',
     data
   })
