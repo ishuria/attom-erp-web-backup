@@ -1371,7 +1371,7 @@
       @update:tableValue="handleSubmitConsumable"
     />
     <!-- 采购方更新 -->
-    <el-dialog
+    <vab-dialog
       title="采购方更新"
       v-model="updatePurchaserVisible"
       width="15%"
@@ -1379,7 +1379,7 @@
       :before-close="handleCloseUpdatePurchaserDialog"
     >
       <el-divider class="divider-margin"></el-divider>
-      <div style=" margin-right: 20px;margin-left: 20px;">
+      <div style="margin: 0">
         <el-checkbox
           v-model="purchaser0"
           label="更新SKU库"
@@ -1397,7 +1397,7 @@
           <el-button type="primary" @click="handleConfirmUpdatePurchaser">确认</el-button>
         </span>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 添加 SKU -->
     <vab-dialog
       title="添加SKU"

@@ -263,9 +263,8 @@
       :classify="classify"
     >
     </wangEditor>
-    <el-dialog 
+    <vab-dialog 
       v-model="consumableVisible" 
-      :close-on-click-modal="false" 
       title="耗材种类" 
       width="33%"
       class="moldDialog"
@@ -300,11 +299,10 @@
         </el-table>
       </div>
       <template #footer></template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 创建耗材 -->
-    <el-dialog 
+    <vab-dialog 
       v-model="addConsumableVisible" 
-      :close-on-click-modal="false" 
       title="创建耗材" 
       width="570"
       class="moldDialog"
@@ -387,11 +385,10 @@
           <el-button type="primary" @click="handleSubmit">确认</el-button>
         </span>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 添加到其它SKU -->
-    <el-dialog 
+    <vab-dialog 
       v-model="addOtherSkuVisible" 
-      :close-on-click-modal="false" 
       title="零件复制到其他SKU" 
       width="800"
       class="moldDialog"
@@ -412,7 +409,7 @@
           <el-button type="primary" @click="handleSubmitOtherSku">确认</el-button>
         </span>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
 </template>

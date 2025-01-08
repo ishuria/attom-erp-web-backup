@@ -3,9 +3,9 @@
     :title="props.title"
     v-model="dflag"
     width="60%"
-    :close-on-click-modal="false"
     :before-close = "handlerCloseDialog"
     class="wangEditorDialog"
+    
   >
     <div class="wang-editor-container" >
       <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" :defaultConfig="toolbarConfig"/>

@@ -1,9 +1,9 @@
 
 <template>
-    <el-dialog v-model="zflag" 
-        :close-on-click-modal="false" 
-        title="成本核算默认参数" width="500"
-        :before-close = "handlerCloseDialog"
+    <vab-dialog 
+      v-model="zflag" 
+      title="成本核算默认参数" width="500"
+      :before-close = "handlerCloseDialog"
     >
       <el-form label-position="top" label-width="auto" style="max-width: 600px">
         <div class="cost-accountinge-param">
@@ -82,7 +82,7 @@
           </el-button>
         </div>
       </template>
-    </el-dialog>
+    </vab-dialog>
 </template>
 
 <script lang="ts" setup>

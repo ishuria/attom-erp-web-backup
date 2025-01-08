@@ -98,9 +98,8 @@
       </el-table>
       <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
       <!-- 收货仓库 -->
-      <el-dialog 
+      <vab-dialog 
         v-model="repositoryAddVisible" 
-        :close-on-click-modal="false" 
         title="收货仓库" 
         width="600"
         class="moldDialog"
@@ -140,7 +139,7 @@
             <el-button type="primary" @click="handleSubmit">确认</el-button>
           </span>
         </template>
-      </el-dialog>
+      </vab-dialog>
     </div>
   </template>
   

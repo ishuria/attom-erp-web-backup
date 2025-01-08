@@ -204,13 +204,12 @@
       </template>
     </el-table>
     <!-- 创建零件 -->
-    <el-dialog 
-        v-model="addSupplierVisible" 
-        :close-on-click-modal="false" 
-        title="新增供应商" 
-        width="450"
-        class="moldDialog"
-        :before-close="handlerCloseDialog"
+    <vab-dialog 
+      v-model="addSupplierVisible" 
+      title="新增供应商" 
+      width="450"
+      class="moldDialog"
+      :before-close="handlerCloseDialog"
     >
         <el-divider style="margin-top: 0;"/>
         <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;" :rules="rules" >
@@ -257,7 +256,7 @@
                 <el-button type="primary" @click="handleSubmit">确认</el-button>
             </span>
         </template>
-    </el-dialog>
+    </vab-dialog>
     <wangEditor
       :title="wangEditorTitle"
       :wangEditorVisible="wangEditorAttentionVisible"

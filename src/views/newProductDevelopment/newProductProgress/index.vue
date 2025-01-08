@@ -363,7 +363,7 @@ handleSubmit<template>
             </template>
           </el-table-column>
 
-          <el-table-column align="center" :fixed="fixed" label="操作" min-width="180px">
+          <el-table-column align="center" :fixed="fixed" label="操作" min-width="100px">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleCopyAchivedProgress(row)">
                 复制
@@ -414,9 +414,8 @@ handleSubmit<template>
     />
     
     <!-- 开模申请 -->
-    <el-dialog 
+    <vab-dialog 
       v-model="moldVisible" 
-      :close-on-click-modal="false" 
       title="开模申请" 
       width="500"
       class="moldDialog"
@@ -471,7 +470,7 @@ handleSubmit<template>
           <el-button type="primary" @click="handleSubmit">提交</el-button>
         </span>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 样品进度 -->
     <sampleProgress 
       :sampleProgressVisible="sampleProgressDialog"
@@ -484,97 +483,86 @@ handleSubmit<template>
       @update:moldProgressVisible="moldProgressDialog = $event"
     />
     <!-- 新款评估 -->
-    <el-dialog 
-        v-model="newEvaluationVisible" 
-        :close-on-click-modal="false" 
-        title="新款评估" 
-        width="90%"
-        style="height: 40vh; margin: 30vh auto 30vh;"
-        class="moldDialog"
-        :before-close="handlerEvaluationCloseDialog"
-        @opened="onDialogOpened"
+    <vab-dialog 
+      v-model="newEvaluationVisible" 
+      title="新款评估" 
+      width="90%"
+      class="moldDialog"
+      :before-close="handlerEvaluationCloseDialog"
+      @opened="onDialogOpened"
     >
       <el-divider style="margin-top: 0; margin-bottom: 20px"/>
-        <div id="table-height-container">
-            <el-table 
-                ref="evaluationTableRef" 
-                v-loading="listLoading" 
-                border stripe 
-                :data="newEvaluationData" 
-                :header-cell-style="{ 'text-align': 'center' }"
-                @cell-click="keyWordTrendCellClick"
-            >
-              <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-                  :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
-                  <template #default="{ row }">
-                      <div  v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
-                        <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
-                      </div>
-                  </template>
-              </el-table-column>
-            </el-table>
-        </div>
-    </el-dialog>
+      <div id="table-height-container">
+        <el-table 
+          ref="evaluationTableRef" 
+          v-loading="listLoading" 
+          border stripe 
+          :data="newEvaluationData" 
+          :header-cell-style="{ 'text-align': 'center' }"
+          @cell-click="keyWordTrendCellClick"
+        >
+          <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+              :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+            <template #default="{ row }">
+              <div  v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
+                <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <template #footer></template>
+    </vab-dialog>
     <!-- 参与人员筛选 -->
-    <el-dialog 
+    <vab-dialog 
       v-model="shareSelectVisible" 
-      :close-on-click-modal="false" 
       title="参与人员筛选" 
       width="480"
-      class="moldDialog shareSelectDialog"
       :before-close="handleShareSelectClose"
     >
-      <el-divider style="margin-top: 0;"/>
-      <el-space>
-        <span>参与人员列表</span>
-        <el-select 
-          v-model="shareSelect" 
-          multiple 
-          placeholder="请选择参与人员"  
-          collapse-tags
-          collapse-tags-tooltip
-          style="width: 250px;"
-          clearable
-        >
-          <el-option v-for="item in optionShare" :key="item.userID" :label="item.userName" :value="item.userID" />
-        </el-select>
-      </el-space>
+      <el-form style="margin: 0">
+        <el-form-item label="参与人员列表">
+          <el-select 
+            v-model="shareSelect" 
+            multiple 
+            placeholder="请选择参与人员"  
+            collapse-tags
+            collapse-tags-tooltip
+            clearable
+          >
+            <el-option v-for="item in optionShare" :key="item.userID" :label="item.userName" :value="item.userID" />
+          </el-select>
+        </el-form-item>
+      </el-form>
       <template #footer>
-        <span>
-          <el-button type="primary" @click="handleShareSelectConfirm">筛选</el-button>
-        </span>
+        <el-button type="primary" @click="handleShareSelectConfirm">筛选</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 参与人员筛选 -->
-    <el-dialog 
+    <vab-dialog 
       v-model="shareArchivedSelectVisible" 
-      :close-on-click-modal="false" 
       title="参与人员筛选" 
       width="480"
-      class="moldDialog shareSelectDialog"
       :before-close="handleArchivedShareSelectClose"
     >
-      <el-divider style="margin-top: 0;"/>
-      <el-space>
-        <span>参与人员列表</span>
-        <el-select 
-          v-model="shareArchivedSelect" 
-          multiple 
-          placeholder="请选择参与人员"  
-          collapse-tags
-          collapse-tags-tooltip
-          style="width: 250px;"
-          clearable
-        >
-          <el-option v-for="item in optionArchivedShare" :key="item.userID" :label="item.userName" :value="item.userID" />
-        </el-select>
-      </el-space>
+      <el-form style="margin: 0">
+        <el-form-item label="参与人员列表">
+          <el-select 
+            v-model="shareArchivedSelect" 
+            multiple 
+            placeholder="请选择参与人员"  
+            collapse-tags
+            collapse-tags-tooltip
+            clearable
+          >
+            <el-option v-for="item in optionArchivedShare" :key="item.userID" :label="item.userName" :value="item.userID" />
+          </el-select>
+        </el-form-item>
+      </el-form>
       <template #footer>
-        <span>
-          <el-button type="primary" @click="handleArchivedShareSelectConfirm">筛选</el-button>
-        </span>
+        <el-button type="primary" @click="handleArchivedShareSelectConfirm">筛选</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 关键词趋势图表 -->
         <vab-trend 
           :trendEchartsVisible="keyWordTrendEchatsVisible"

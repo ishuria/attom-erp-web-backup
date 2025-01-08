@@ -1,6 +1,6 @@
 <template>
-  <el-dialog v-model="dflag" 
-    :close-on-click-modal="false" 
+  <vab-dialog 
+    v-model="dflag" 
     title="共享" 
     width="650"
     :before-close = "handlerCloseDialog"
@@ -23,7 +23,7 @@
     <template #footer>
       <div class="dialog-footer"></div>
     </template>
-  </el-dialog>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>

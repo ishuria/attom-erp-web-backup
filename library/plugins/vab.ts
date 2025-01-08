@@ -2,7 +2,6 @@ import { ElLoading, ElMessage, ElMessageBox, ElNotification } from 'element-plus
 import { head, toArray } from 'lodash-es'
 import mitt from 'mitt'
 import type { App, VNode } from 'vue'
-import { markRaw } from 'vue'
 import { loadingText, messageDuration } from '/@/config'
 
 export let gp: Record<string, any>
@@ -130,7 +129,8 @@ export default {
       ElMessageBox.confirm(content, title || '温馨提示', {
         confirmButtonText,
         cancelButtonText,
-        closeOnClickModal: false,
+        closeOnClickModal: true,
+        closeOnPressEscape: true,
         draggable: true,
         type: 'warning',
         lockScroll: false,
@@ -140,7 +140,8 @@ export default {
             callback1()
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          // console.log('关闭原因:', error)
           if (callback2) {
             callback2()
           }

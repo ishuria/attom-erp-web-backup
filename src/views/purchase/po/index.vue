@@ -718,9 +718,8 @@
     </el-tabs>
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
     <!-- 付款记录表 -->
-    <el-dialog 
+    <vab-dialog 
       v-model="paymentHistoryVisible" 
-      :close-on-click-modal="false" 
       title="付款记录" 
       width="50%"
       class="moldDialog"
@@ -774,11 +773,10 @@
         </el-table>
       </div>
       <template #footer></template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 分批付款 -->
-    <el-dialog
+    <vab-dialog
       v-model="installmentVisible"
-      :close-on-click-modal="false" 
       title="分批付款" 
       width="20%"
       class="moldDialog"
@@ -797,11 +795,10 @@
         <el-button @click="handleCloseInstallmentDialog">关闭</el-button>
         <el-button type="primary" @click="handleConfirmInstallment">确认</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 退款 -->
-    <el-dialog
+    <vab-dialog
       v-model="refundVisible"
-      :close-on-click-modal="false" 
       title="退款" 
       width="20%"
       class="moldDialog"
@@ -850,11 +847,10 @@
         <el-button @click="handleCloseRefundDialog">关闭</el-button>
         <el-button type="primary" @click="handleConfirmRefund">确认</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 总价分摊 -->
-    <el-dialog
+    <vab-dialog
       v-model="totalPriceSharingVisible"
-      :close-on-click-modal="false" 
       title="总价分摊" 
       width="20%"
       class="moldDialog"
@@ -873,11 +869,10 @@
         <el-button @click="handleCloseTotalPriceSharingDialog">关闭</el-button>
         <el-button type="primary" @click="handleConfirmTotalPriceSharing">确认</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 聚合合同 -->
-    <el-dialog
+    <vab-dialog
       v-model="mergeContractVisible"
-      :close-on-click-modal="false" 
       title="聚合合同-请上传需要聚合的合同" 
       width="35%"
       class="moldDialog"
@@ -902,11 +897,10 @@
         <el-button @click="handleCloseMergeContractDialog">关闭</el-button>
         <el-button type="primary" @click="handleConfirmMergeContract">确认</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 生成汇款模板 -->
-    <el-dialog
+    <vab-dialog
       v-model="generateMoneyTransferVisible"
-      :close-on-click-modal="false" 
       title="生成汇款模板" 
       width="30%"
       class="moldDialog"
@@ -932,7 +926,7 @@
         <el-button @click="handleCloseGenerateMoneyTransferDialog">关闭</el-button>
         <el-button type="primary" @click="handleConfirmGenerateMoneyTransfer">确认</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 自动签收设定 -->
     <vab-automatic-signature
       :automaticSignatureVisible="automaticSignatureVisible"

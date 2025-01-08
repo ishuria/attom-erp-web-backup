@@ -66,9 +66,8 @@
     />
 
     <!-- 添加到其它SKU -->
-    <el-dialog 
+    <vab-dialog 
       v-model="addOtherSkuVisible" 
-      :close-on-click-modal="false" 
       title="零件复制到其他SKU" 
       width="800"
       class="moldDialog"
@@ -89,7 +88,7 @@
           <el-button type="primary" @click="handleSubmitOtherSku">确认</el-button>
         </span>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
   </div>
 </template>

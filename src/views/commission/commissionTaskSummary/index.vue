@@ -37,25 +37,44 @@
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
           <el-table-column label="状态" prop="status" min-width="100">
             <template #default="{ row }">
-              <el-tag type="danger" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '未上架'" type="info" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '已结束'" type="danger" >{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="任务ID" prop="taskId" min-width="100"></el-table-column>
           <el-table-column label="站点" prop="siteName" min-width="120"></el-table-column>
           <el-table-column label="提成模式" prop="mold" min-width="100"></el-table-column>
           <el-table-column label="设计任务" prop="designTask" min-width="110"></el-table-column>
-          <el-table-column label="提前完成天数" prop="advanceDays" min-width="120"></el-table-column>
+          <el-table-column label="提前完成天数" prop="advanceDays" min-width="120">
+            <template #default="{ row }">
+              <el-text v-if="row.advanceDays >= 0" type="success">{{ row.advanceDays }}</el-text>
+              <el-text v-if="row.advanceDays < 0" type="danger">{{ row.advanceDays }}</el-text>
+            </template>
+          </el-table-column>
           <el-table-column label="要求完成日期" prop="dueDate" min-width="120">
             <template #default="{ row }">
               {{ row.dueDate ? formatDate(new Date(row.dueDate)) : '' }}
             </template>
           </el-table-column>
           <el-table-column label="提成天数" prop="commissionDay" min-width="100"></el-table-column>
-          <el-table-column label="合作提成比例" prop="cooperationProportion" min-width="120"></el-table-column>
-          <el-table-column label="单人提成比例" prop="singleProportion" min-width="120"></el-table-column>
+          <el-table-column label="合作提成比例" prop="cooperationProportion" min-width="120">
+            <template #default="{ row }">
+              {{ row.cooperationProportion ? (row.cooperationProportion * 100).toFixed(2) + '%' : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="单人提成比例" prop="singleProportion" min-width="120">
+            <template #default="{ row }">
+              {{ row.singleProportion ? (row.singleProportion * 100).toFixed(2) + '%' : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="合作权重" prop="cooperationWeight" min-width="100"></el-table-column>
           <el-table-column label="合作加成" prop="cooperationBonus" min-width="100"></el-table-column>
-          <el-table-column label="最低要求转化率" prop="lowRate" min-width="130"></el-table-column>
+          <el-table-column label="最低要求转化率" prop="lowRate" min-width="130">
+            <template #default="{ row }">
+              {{ row.lowRate ? (row.lowRate * 100).toFixed(2) + '%' : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="150" fixed="right">
             <template #default="{ row }">
               <el-link type="primary" :underline="false" >修改</el-link>

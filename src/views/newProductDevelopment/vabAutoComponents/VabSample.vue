@@ -1,83 +1,75 @@
 <template>
 
-    <el-dialog
-        title="拿样"
-        v-model="sampleVisible"
-        width="25%"
-        :before-close="childCloseDialog"
+  <vab-dialog
+    title="拿样"
+    v-model="sampleVisible"
+    width="25%"
+    :before-close="childCloseDialog"
+  >
+
+    <el-form 
+      ref="sampleFormRef"
+      :model="sampleForm" 
+      :rules="rules"
+      label-width="auto" 
+      style="max-width: 600px"
     >
-
-        <el-form 
-            ref="sampleFormRef"
-            :model="sampleForm" 
-            :rules="rules"
-            label-width="auto" 
-            style="max-width: 600px"
-            
+      <el-form-item label="零件名" prop="componentInfo">
+        <el-select 
+          v-model="sampleForm.componentInfo!" 
+          value-key="id"
+          placeholder="请选择拿样零件或输入拿样零件"
+          filterable
+          clearable
+          allow-create
+          :reserve-keyword = "false"
+          @change="componentSelectChange"
         >
-            <el-form-item label="零件名" prop="componentInfo">
-                <el-select 
-                    v-model="sampleForm.componentInfo!" 
-                    value-key="id"
-                    placeholder="请选择拿样零件或输入拿样零件"
-                    filterable
-                    clearable
-                    allow-create
-                    :reserve-keyword = "false"
-                    @change="componentSelectChange"
-                    
-                >
-                    <el-option v-for="val,idx in componentList" :label="val.label!" :value="val" :key="val.id!"/>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="供应商" prop="suppliserInfo">
-                
-                <el-select 
-                    v-model="sampleForm.suppliserInfo!" 
-                    value-key="id"
-                    placeholder="请选择供应商或输入供应商"
-                    filterable
-                    clearable
-                    allow-create
-                    :reserve-keyword = "false"
-                    :disabled="suppliserFlag"
-                >
-                    <el-option v-for="val,idx in supplisertList" :label="val.label!" :value="val" :key="val.id!"/>
-                </el-select>
+          <el-option v-for="val,idx in componentList" :label="val.label!" :value="val" :key="val.id!"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="供应商" prop="suppliserInfo">
+        <el-select 
+          v-model="sampleForm.suppliserInfo!" 
+          value-key="id"
+          placeholder="请选择供应商或输入供应商"
+          filterable
+          clearable
+          allow-create
+          :reserve-keyword = "false"
+          :disabled="suppliserFlag"
+        >
+          <el-option v-for="val,idx in supplisertList" :label="val.label!" :value="val" :key="val.id!"/>
+        </el-select>
+      </el-form-item>
 
-            </el-form-item>
+      <el-form-item label="1688单号" prop="orderNo1688">
+        <el-input type="input" v-model="sampleForm.orderNo1688" />
+      </el-form-item>
 
-            <el-form-item label="1688单号" prop="orderNo1688">
-                <el-input type="input" v-model="sampleForm.orderNo1688" />
-            </el-form-item>
+      <el-form-item label="物流单号" prop="logisticsNo">
+        <el-input type="input" v-model="sampleForm.logisticsNo" />
+      </el-form-item>
 
-            <el-form-item label="物流单号" prop="logisticsNo">
-                <el-input type="input" v-model="sampleForm.logisticsNo" />
-            </el-form-item>
+      <el-form-item label="拿样金额" prop="price">
+        <el-input type="input" v-model="sampleForm.price" />
+      </el-form-item>
 
-            <el-form-item label="拿样金额" prop="price">
-                <el-input type="input" v-model="sampleForm.price" />
-            </el-form-item>
+      <el-form-item label="下大货可退拿样金额" prop="bulkGoodsReturnable">
+        <el-input type="input" v-model="sampleForm.bulkGoodsReturnable" />
+      </el-form-item>
 
-            <el-form-item label="下大货可退拿样金额" prop="bulkGoodsReturnable">
-                <el-input type="input" v-model="sampleForm.bulkGoodsReturnable" />
-            </el-form-item>
+      <el-form-item label="备注" prop="remark">
+        <el-input type="textarea" v-model="sampleForm.remark" />
+      </el-form-item>
+    </el-form>
 
-            <el-form-item label="备注" prop="remark">
-                <el-input type="textarea" v-model="sampleForm.remark" />
-            </el-form-item>
+    <template #footer>
+      <el-button @click="childCloseDialog">取消</el-button>
+      <el-button type="primary" @click="submitForm(sampleFormRef)">确认</el-button>
+    </template>
+  </vab-dialog>
 
-        </el-form>
-
-        <template #footer>
-            <span>
-                <el-button @click="childCloseDialog">取消</el-button>
-                <el-button type="primary" @click="submitForm(sampleFormRef)">确认</el-button>
-            </span>
-        </template>
-    </el-dialog>
-    
-    
 </template>
 
 <script lang="ts" setup>

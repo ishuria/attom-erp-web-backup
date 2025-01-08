@@ -1,7 +1,6 @@
 <template>
-    <el-dialog 
+    <vab-dialog 
         v-model="dflag" 
-        :close-on-click-modal="false" 
         title="打包注意事项" 
         width="70%"
         class="moldDialog"
@@ -72,7 +71,7 @@
                 @size-change="handleSizeChange"
             /> -->
         </div>
-    </el-dialog>
+    </vab-dialog>
 </template>
 
 <script lang="ts" setup>

@@ -109,33 +109,30 @@
               </template>
             </el-table>
           </div>
-          <el-dialog 
+          <vab-dialog 
             v-model="checkPersonListVisible" 
-            :close-on-click-modal="false" 
             title="审批人选择" 
             width="480"
-            class="moldDialog shareSelectDialog"
+       
             :before-close="handleCheckPersonClose"
           >
-            <el-space>
-              <span>审批人员列表</span>
-              <el-select 
-                v-model="reviewPersonId" 
-                placeholder="请选择审批人员"  
-                collapse-tags
-                collapse-tags-tooltip
-                style="width: 250px;"
-                clearable
-              >
-                <el-option v-for="item in personList" :key="item.userId" :label="item.userName" :value="item.userId" />
-              </el-select>
-            </el-space>
+            <el-form style="margin: 0">
+              <el-form-item label="审批人员列表">
+                <el-select 
+                  v-model="reviewPersonId" 
+                  placeholder="请选择审批人员"  
+                  collapse-tags
+                  collapse-tags-tooltip
+                  clearable
+                >
+                  <el-option v-for="item in personList" :key="item.userId" :label="item.userName" :value="item.userId" />
+                </el-select>
+              </el-form-item>
+            </el-form>
             <template #footer>
-              <span>
-                <el-button type="primary" @click="handlePersonSelectConfirm">提交</el-button>
-              </span>
+              <el-button type="primary" @click="handlePersonSelectConfirm">提交</el-button>
             </template>
-          </el-dialog>
+          </vab-dialog>
         <div class="pay-button-group">
             <el-button @click="handleGoback">上一步</el-button>
             <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>

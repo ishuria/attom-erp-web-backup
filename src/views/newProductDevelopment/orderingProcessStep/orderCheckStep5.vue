@@ -1,147 +1,120 @@
 <template>
   <div>
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <el-table 
-                ref="tableRef" 
-                stripe border 
-                :data="exchangeList" 
-                :header-cell-style="{ 'text-align': 'right' }"
-                :show-header="false"
-                @cell-click="tableInputChange"
-                class="table1"
-                style="width: auto; table-layout: fixed;"
-            >
-                <!-- 第一列固定标签列 -->
-                <el-table-column 
-                    :prop="'column0'" 
-                    :label="labelMap['column0']" 
-                    fixed
-                    align="right"
-                    width="260"
-                >
-                    <template #default="{ row }">
-                        <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
-                    </template>
-                </el-table-column>
-                <el-table-column 
-                    v-for="(prop, i) in columnsChange" 
-                    :prop="prop" 
-                    :label="prop" 
-                    :key="i" 
-                    align="center" 
-                    min-width="240"
-                >
-                    <template #default = {row}>
-                        
-                        <template v-if="row['column0'] === 'variantImg'">
-                            <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
-                        </template>
-                        <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
-                            <el-option 
-                              v-for="item in photoSampleOptions"
-                              :label="item.label"
-                              :value="item.value"
-                              :key="item.value"
-                            >
-                            </el-option>
-                          </el-select>
-                        </template>
-                        <template v-if="row['column0'] === 'packagingSize'">
-                            {{ row[prop] }} cm
-                        </template>
-                        <template v-if="row['column0'] === 'productSize'">
-                            {{ row[prop] }} inch
-                        </template>
-                        <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'packagingSize'&& row['column0'] !== 'productSize'">
-                          {{ row[prop] }}
-                        </template>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-                </template>
-            </el-table>
-        </div>
+      <el-table 
+          ref="tableRef" 
+          stripe border 
+          :data="exchangeList" 
+          :header-cell-style="{ 'text-align': 'right' }"
+          :show-header="false"
+          @cell-click="tableInputChange"
+          class="table1"
+          style="width: auto; table-layout: fixed;"
+      >
+          <!-- 第一列固定标签列 -->
+          <el-table-column 
+              :prop="'column0'" 
+              :label="labelMap['column0']" 
+              fixed
+              align="right"
+              width="260"
+          >
+              <template #default="{ row }">
+                  <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
+              </template>
+          </el-table-column>
+          <el-table-column 
+              v-for="(prop, i) in columnsChange" 
+              :prop="prop" 
+              :label="prop" 
+              :key="i" 
+              align="center" 
+              min-width="240"
+          >
+              <template #default = {row}>
+                  
+                  <template v-if="row['column0'] === 'variantImg'">
+                      <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
+                  </template>
+                  <template v-if="row['column0'] === 'sampleRetentionStatus'">
+                    <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
+                      <el-option 
+                        v-for="item in photoSampleOptions"
+                        :label="item.label"
+                        :value="item.value"
+                        :key="item.value"
+                      >
+                      </el-option>
+                    </el-select>
+                  </template>
+                  <template v-if="row['column0'] === 'packagingSize'">
+                      {{ row[prop] }} cm
+                  </template>
+                  <template v-if="row['column0'] === 'productSize'">
+                      {{ row[prop] }} inch
+                  </template>
+                  <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'packagingSize'&& row['column0'] !== 'productSize'">
+                    {{ row[prop] }}
+                  </template>
+              </template>
+          </el-table-column>
+          <template #empty>
+              <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+          </template>
+      </el-table>
+    </div>
 
       
-          <div>
-            <el-table 
-              stripe border 
-              :data="moldCheckList" 
-              :header-cell-style="{ 'text-align': 'center' }"
-              style="margin-top: 25px;"
-              height="100"
-              :cell-style="{ 'text-align': 'center' }"
-            >
-              <el-table-column label="提交日期" min-width="100" prop="createTime">
-                  <template #default="{ row }">
-                    <span>{{ row.createTime.split(' ')[0] }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="零件名" min-width="200" prop="component">
-              </el-table-column>
-              <el-table-column label="供应商" min-width="127" prop="suppliser">
-        
-              </el-table-column>
-              <el-table-column label="状态" min-width="127" align="center" prop="status">
-                <template #default="{ row }">
-                    <span :class="generateStatus(row.status).color">
-                        {{ generateStatus(row.status).text }}
-                    </span>
-                </template>
-              </el-table-column>
-              <el-table-column label="开票类型" min-width="127" align="center" prop="invoiceType">
-                <template #default="{ row }">
-                  {{ generateInvoiceType(row.invoiceType) }}
-                </template>
-              </el-table-column>
-              <el-table-column label="付款金额" min-width="127" align="center" prop="payPrice">
-        
-              </el-table-column>
-              <el-table-column label="开模处理方式" min-width="127" align="center" prop="dealMethod">
-                <template #default="{ row }">
-                  {{ generateDealMethod(row.dealMethod) }}
-                </template>
-              </el-table-column>
-              <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-              </template>
-            </el-table>
-          </div>
-          <!-- <el-dialog 
-            v-model="checkPersonListVisible" 
-            :close-on-click-modal="false" 
-            title="审批人选择" 
-            width="480"
-            class="moldDialog shareSelectDialog"
-            :before-close="handleCheckPersonClose"
-          >
-            <el-space>
-              <span>审批人员列表</span>
-              <el-select 
-                v-model="reviewPersonId" 
-                placeholder="请选择审批人员"  
-                collapse-tags
-                collapse-tags-tooltip
-                style="width: 250px;"
-                clearable
-                disabled
-              >
-                <el-option v-for="item in personList" :key="item.userId" :label="item.userName" :value="item.userId" />
-              </el-select>
-            </el-space>
-            <template #footer>
-              <span>
-                <el-button type="primary" @click="handlePersonSelectConfirm">提交</el-button>
-              </span>
+    <div>
+      <el-table 
+        stripe border 
+        :data="moldCheckList" 
+        :header-cell-style="{ 'text-align': 'center' }"
+        style="margin-top: 25px;"
+        height="100"
+        :cell-style="{ 'text-align': 'center' }"
+      >
+        <el-table-column label="提交日期" min-width="100" prop="createTime">
+            <template #default="{ row }">
+              <span>{{ row.createTime.split(' ')[0] }}</span>
             </template>
-          </el-dialog> -->
-        <div class="pay-button-group">
-            <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSave">完成</el-button>
-            <!-- <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button> -->
-        </div>
+        </el-table-column>
+        <el-table-column label="零件名" min-width="200" prop="component">
+        </el-table-column>
+        <el-table-column label="供应商" min-width="127" prop="suppliser">
+  
+        </el-table-column>
+        <el-table-column label="状态" min-width="127" align="center" prop="status">
+          <template #default="{ row }">
+              <span :class="generateStatus(row.status).color">
+                  {{ generateStatus(row.status).text }}
+              </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="开票类型" min-width="127" align="center" prop="invoiceType">
+          <template #default="{ row }">
+            {{ generateInvoiceType(row.invoiceType) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="付款金额" min-width="127" align="center" prop="payPrice">
+  
+        </el-table-column>
+        <el-table-column label="开模处理方式" min-width="127" align="center" prop="dealMethod">
+          <template #default="{ row }">
+            {{ generateDealMethod(row.dealMethod) }}
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+        </template>
+      </el-table>
+    </div>
+       
+    <div class="pay-button-group">
+      <el-button @click="handleGoback">上一步</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSave">完成</el-button>
+        <!-- <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button> -->
+    </div>
   </div>
 </template>
   

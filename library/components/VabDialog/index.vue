@@ -79,11 +79,11 @@ const props = defineProps({
   },
   closeOnClickModal: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   closeOnPressEscape: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   theme: {
     type: String,

@@ -1,161 +1,152 @@
 <template>
-   
-    <el-dialog 
-        v-model="dflag" 
-        :close-on-click-modal="false" 
-        title="样品进度" 
-        width="70%"
-        class="moldDialog"
-        :before-close="handlerCloseDialog"
-    >
-        <el-divider style="margin-top: 0; margin-bottom: 20px"/>
-        <div id="table-height-container">
-            <vab-query-form>
-                <vab-query-form-right-panel :span="24">
-                    <el-form inline :model="queryForm" @submit.prevent>
-                        <el-form-item>
-                            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                                @click="queryData"></el-button>
-                        </el-form-item>
-                    </el-form>
-                </vab-query-form-right-panel>
-            </vab-query-form>
-
-            <el-table 
-                ref="tableRef" 
-                v-loading="listLoading" 
-                border stripe 
-                :data="sampleList" 
-                :header-cell-style="{ 'text-align': 'center' }"
-                @cell-click="sampleTableInputChange"
-            >
-                <el-table-column align="center" label="图片" min-width="100">
-                    <template #default="{ row }">
-                        <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="产品" min-width="160" prop="productName" >
-                    <template #default="{ row }">
-                        <span v-html="formattedProgressLog(row.productName)"></span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="零件名"  min-width="160" prop="componentName" >
-                    <template #default="{ row }">
-                        {{ row.componentName  }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="下单日期" width="120">
-                    <template #default="{ row }">
-                        {{ row.createTime.split(' ')[0] }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="签收日期" min-width="100">
-                    <template #default="{ row }">
-                        {{ row.receiptDate ? row.receiptDate.split(' ')[0] : '' }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="物流追踪" min-width="100"/>
-                <el-table-column align="center" label="供应商">
-                    <template #default="{ row }">
-                        {{ row.supplier }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="1688订单号" min-width="160">
-                    <template #default="{ row }">
-                        {{ row.orderNo1688 }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="物流单号（非1688订单）" min-width="200" >
-                    <template #default="{ row }">
-                        {{ row.logisticsNo }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="金额￥" min-width="100" >
-                    <template #default="{ row }">
-                        {{ row.price }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="大货可退￥" min-width="100" >
-                    <template #default="{ row }">
-                        {{ row.bulkGoodsReturnable }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="备注" min-width="130" prop="remark">
-                </el-table-column>
-                <el-table-column align="center" fixed="right" label="操作" width="160">
-                    <template #default="{ row }">
-                        <el-dropdown >
-                            <el-button text type="primary" @click="handleSampleReceipt(row)">
-                            手动签收
-                            <el-icon class="el-icon--right">
-                                <arrow-down />
-                            </el-icon>
-                            </el-button>
-                            <template #dropdown>
-                                <el-dropdown-menu >
-                                    <el-dropdown-item @click="handleSampleReceipt(row)">
-                                        <el-link type="primary" :underline="false" >手动签收</el-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click="orderNo1688Update(row)">
-                                        <el-link type="primary" :underline="false">1688订单号修改</el-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click="logisticsNoUpdate(row)">
-                                        <el-link type="primary" :underline="false" >物流订单修改</el-link>
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </template>
-                        </el-dropdown>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" />
-                </template>
-            </el-table>
-  
-            <vab-pagination
-                :current-page="queryForm.pageNo"
-                :page-size="queryForm.pageSize"
-                :total="total"
-                @current-change="handleCurrentChange"
-                @size-change="handleSizeChange"
-            />
-        </div>
-    </el-dialog>
-
-    <el-dialog 
-        :model-value="orderVisible"
-        width="400"
-        :title="dialogFlag === true ?'物流单号修改':'1688订单号修改'"
-        :close-on-click-modal="false"
-        :before-close="orderDialogClose"
-    >
-        <el-form 
-            ref="formRef"
-            :model="orderForm"
-            label-width="auto" 
-            style="max-width: 400px"
-        >
-            <el-form-item label="1688订单号" prop="orderNo1688" v-if="!dialogFlag">
-                <el-input v-model="orderForm.orderNo"/>
+  <vab-dialog 
+    v-model="dflag" 
+    title="样品进度" 
+    width="70%"
+    class="moldDialog"
+    :before-close="handlerCloseDialog"
+  >
+    <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+    <div id="table-height-container">
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
             </el-form-item>
-
-            
-            <el-form-item label="物流单号" prop="logisticsNo" v-if="dialogFlag">
-                <el-input v-model="orderForm.logisticsNo"/>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
             </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
 
-        </el-form>
-
-        <template #footer>
-            <span>
-                <el-button @click="orderDialogClose">取消</el-button>
-                <el-button type="primary" @click="submitForm(formRef)">确认</el-button>
-            </span>
+      <el-table 
+        ref="tableRef" 
+        v-loading="listLoading" 
+        border stripe 
+        :data="sampleList" 
+        :header-cell-style="{ 'text-align': 'center' }"
+        @cell-click="sampleTableInputChange"
+      >
+        <el-table-column align="center" label="图片" min-width="100">
+            <template #default="{ row }">
+                <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
+            </template>
+        </el-table-column>
+        <el-table-column label="产品" min-width="160" prop="productName" >
+            <template #default="{ row }">
+                <span v-html="formattedProgressLog(row.productName)"></span>
+            </template>
+        </el-table-column>
+        <el-table-column label="零件名"  min-width="160" prop="componentName" >
+            <template #default="{ row }">
+                {{ row.componentName  }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="下单日期" width="120">
+            <template #default="{ row }">
+                {{ row.createTime.split(' ')[0] }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="签收日期" min-width="100">
+            <template #default="{ row }">
+                {{ row.receiptDate ? row.receiptDate.split(' ')[0] : '' }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="物流追踪" min-width="100"/>
+        <el-table-column align="center" label="供应商">
+            <template #default="{ row }">
+                {{ row.supplier }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="1688订单号" min-width="160">
+            <template #default="{ row }">
+                {{ row.orderNo1688 }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="物流单号（非1688订单）" min-width="200" >
+            <template #default="{ row }">
+                {{ row.logisticsNo }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="金额￥" min-width="100" >
+            <template #default="{ row }">
+                {{ row.price }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="大货可退￥" min-width="100" >
+            <template #default="{ row }">
+                {{ row.bulkGoodsReturnable }}
+            </template>
+        </el-table-column>
+        <el-table-column align="center" label="备注" min-width="130" prop="remark">
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="160">
+            <template #default="{ row }">
+                <el-dropdown >
+                    <el-button text type="primary" @click="handleSampleReceipt(row)">
+                    手动签收
+                    <el-icon class="el-icon--right">
+                        <arrow-down />
+                    </el-icon>
+                    </el-button>
+                    <template #dropdown>
+                        <el-dropdown-menu >
+                            <el-dropdown-item @click="handleSampleReceipt(row)">
+                                <el-link type="primary" :underline="false" >手动签收</el-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item @click="orderNo1688Update(row)">
+                                <el-link type="primary" :underline="false">1688订单号修改</el-link>
+                            </el-dropdown-item>
+                            <el-dropdown-item @click="logisticsNoUpdate(row)">
+                                <el-link type="primary" :underline="false" >物流订单修改</el-link>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </template>
+        </el-table-column>
+        <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
-    </el-dialog>
+      </el-table>
+
+      <vab-pagination
+        :current-page="queryForm.pageNo"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+    </div>
+  </vab-dialog>
+
+  <vab-dialog 
+    :model-value="orderVisible"
+    width="400"
+    :title="dialogFlag === true ?'物流单号修改':'1688订单号修改'"
+    :before-close="orderDialogClose"
+  >
+    <el-form 
+      ref="formRef"
+      :model="orderForm"
+      label-width="auto" 
+      style="margin: 0"
+    >
+      <el-form-item label="1688订单号" prop="orderNo1688" v-if="!dialogFlag">
+        <el-input v-model="orderForm.orderNo"/>
+      </el-form-item>
+      <el-form-item label="物流单号" prop="logisticsNo" v-if="dialogFlag">
+        <el-input v-model="orderForm.logisticsNo"/>
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <el-button @click="orderDialogClose">取消</el-button>
+      <el-button type="primary" @click="submitForm(formRef)">确认</el-button>
+    </template>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>

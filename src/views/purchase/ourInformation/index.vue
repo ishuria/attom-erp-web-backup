@@ -62,9 +62,8 @@
       </el-table>
       <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
       <!-- 我司信息 -->
-      <el-dialog 
+      <vab-dialog 
         v-model="companyAddVisible" 
-        :close-on-click-modal="false" 
         title="我司信息" 
         width="600"
         class="moldDialog"
@@ -96,7 +95,7 @@
             <el-button type="primary" @click="handleSubmit">确认</el-button>
           </span>
         </template>
-      </el-dialog>
+      </vab-dialog>
     </div>
 </template>
   

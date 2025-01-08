@@ -1,7 +1,6 @@
 <template>
-  <el-dialog 
+  <vab-dialog 
     v-model="dflag" 
-    :close-on-click-modal="false" 
     title="自动签收设定" 
     width="30%"
     class="moldDialog"
@@ -54,13 +53,13 @@
         @size-change="handleSizeChange"
       />
     </div>
-    <el-dialog
+    <vab-dialog
       v-model="addSignatureSettingsVisible"
       width="20%"
       title="新增零件"
       :before-close="closeAddDialog"
     >
-      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules">
+      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" style="margin: 0">
         <el-form-item label="零件名" prop="componentName">
           <el-select
             v-model="addForm.componentName"
@@ -83,9 +82,9 @@
       <template #footer>
         <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
       </template>
-    </el-dialog>
+    </vab-dialog>
     <template #footer></template>
-  </el-dialog>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>

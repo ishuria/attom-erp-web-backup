@@ -136,44 +136,43 @@
     <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />
     <!-- 新款评估 -->
-    <el-dialog 
+    <vab-dialog 
       v-model="newScoreVisible" 
-      :close-on-click-modal="false" 
       title="分数明细" 
       width="90%"
-      style="height: 40vh; margin: 30vh auto 30vh;"
       class="moldDialog"
       :before-close="handlerScoreCloseDialog"
-  >
-    <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+    >
+      <el-divider style="margin-top: 0; margin-bottom: 20px"/>
       <div id="table-height-container">
-          <el-table 
-              ref="evaluationTableRef" 
-              v-loading="listLoading" 
-              border stripe 
-              :data="newEvaluationData" 
-              :header-cell-style="{ 'text-align': 'center' }"
-              @cell-click="keyWordTrendCellClick"
-          >
-            <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-                :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
-                <template #default="{ row }">
-                    <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
-                      <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
-                    </div>
-                </template>
-            </el-table-column>
-          </el-table>
+        <el-table 
+          ref="evaluationTableRef" 
+          v-loading="listLoading" 
+          border stripe 
+          :data="newEvaluationData" 
+          :header-cell-style="{ 'text-align': 'center' }"
+          @cell-click="keyWordTrendCellClick"
+        >
+          <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+            :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+            <template #default="{ row }">
+              <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
+                <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-    </el-dialog>
-        <!-- 关键词趋势图表 -->
-        <vab-trend 
-          :trendEchartsVisible="keyWordTrendEchatsVisible"
-          :keyWord = "inputKeyWord"
-          :trendData = "trendEcahts"
-          @update:visibleValue = "updateTrendVisibleValue"
-          @update:clearInputKeyWord = "cleanKeyWordTrendData"
-          @update:trendEchartsList  = "updateTrendEchatsData"
+      <template #footer></template>
+    </vab-dialog>
+    <!-- 关键词趋势图表 -->
+    <vab-trend 
+      :trendEchartsVisible="keyWordTrendEchatsVisible"
+      :keyWord = "inputKeyWord"
+      :trendData = "trendEcahts"
+      @update:visibleValue = "updateTrendVisibleValue"
+      @update:clearInputKeyWord = "cleanKeyWordTrendData"
+      @update:trendEchartsList  = "updateTrendEchatsData"
     />
     <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>

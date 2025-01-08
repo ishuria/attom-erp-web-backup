@@ -54,7 +54,7 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <vab-dialog
+    <!-- <vab-dialog
       title="修改"
       v-model="modifyVisible"
       width="20%"
@@ -74,7 +74,7 @@
         <el-button>取消</el-button>
         <el-button type="primary">确认</el-button>
       </template>
-    </vab-dialog>
+    </vab-dialog> -->
   </div>
 </template>
 

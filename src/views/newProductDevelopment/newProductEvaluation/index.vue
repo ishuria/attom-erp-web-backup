@@ -110,9 +110,9 @@
       @update:clearInputKeyWord = "cleanKeyWordTrendData"
       @update:trendEchartsList  = "updateTrendEchatsData"
      />
-
-    <el-dialog v-model="scoreParametersVisible" :close-on-click-modal="false" title="评分参数" width="500"
-      style="height: 800px;">
+    
+    <!-- 评分参数 -->
+    <vab-dialog v-model="scoreParametersVisible" title="评分参数" width="500">
       <el-table height="700px" :data="scoreParametersList" :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ 'text-align': 'center' }">
         <el-table-column property="key" label="名称" />
@@ -124,26 +124,16 @@
           </template>
         </el-table-column>
       </el-table>
-
-      <template #footer>
-        <div class="dialog-footer">
-
-        </div>
-      </template>
-    </el-dialog>
-
-    <el-dialog v-model="benchmarkScoreVisible" :close-on-click-modal="false" title="跑分明细" width="750">
-      <el-table :data="benchmarkScoreList" :cell-style="{ textAlign: 'center' }"
-        :header-cell-style="{ 'text-align': 'center' }">
-        <el-table-column v-for="(item, index) in scoreDetialColumns" :key="index" :label="item.label"
-          :prop="item.prop" />
+      <template #footer></template>
+    </vab-dialog>
+    <!-- 跑分明细 -->
+    <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="750">
+      <el-table :data="benchmarkScoreList" :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }">
+        <el-table-column v-for="(item, index) in scoreDetialColumns" :key="index" :label="item.label" :prop="item.prop" />
       </el-table>
 
-      <template #footer>
-        <div class="dialog-footer">
-        </div>
-      </template>
-    </el-dialog>
+      <template #footer></template>
+    </vab-dialog>
 
     <!-- 共享 -->
     <vab-shared  

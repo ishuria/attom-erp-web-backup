@@ -476,13 +476,12 @@
     >
     </wangEditor>
     <!-- 创建零件 / 耗材 -->
-    <el-dialog 
-        v-model="addComponentVisible" 
-        :close-on-click-modal="false" 
-        title="创建零件" 
-        width="570"
-        class="moldDialog"
-        :before-close="handlerCloseDialog"
+    <vab-dialog 
+      v-model="addComponentVisible" 
+      title="创建零件" 
+      width="570"
+      class="moldDialog"
+      :before-close="handlerCloseDialog"
     >
       <template #header>
         <span style="padding-left: 20px">{{ form.type === 0 ? '创建零件' : '创建耗材' }}</span>
@@ -578,7 +577,7 @@
             <el-button type="primary" @click="handleSubmit">确认</el-button>
           </span>
         </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 打包注意事项 -->
     <VabPackingPrecautions 
         :packingPrecautionsVisible="packingPrecautionsVisible"
@@ -586,13 +585,12 @@
         @update:tableValue="handleTableDataValue"
     />
     <!-- 添加到其它SKU -->
-    <el-dialog 
-        v-model="addOtherSkuVisible" 
-        :close-on-click-modal="false" 
-        title="零件复制到其他SKU" 
-        width="800"
-        class="moldDialog"
-        :before-close="handlerOtherSkuCloseDialog"
+    <vab-dialog 
+      v-model="addOtherSkuVisible" 
+      title="零件复制到其他SKU" 
+      width="800"
+      class="moldDialog"
+      :before-close="handlerOtherSkuCloseDialog"
     >
         <el-divider style="margin-top: 0;"/>
         <div class="transfer-container">
@@ -610,18 +608,17 @@
                 <el-button type="primary" @click="handleSubmitOtherSku">确认</el-button>
             </span>
         </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 更新零件名 -->
-    <el-dialog 
-        v-model="updateComponentNameVisible" 
-        :close-on-click-modal="false" 
-        title="更新零件名" 
-        width="500"
-        class="moldDialog"
-        :before-close="handlerUpdateComponentNameDialog"
+    <vab-dialog 
+      v-model="updateComponentNameVisible" 
+      title="更新零件名" 
+      width="500"
+      class="moldDialog"
+      :before-close="handlerUpdateComponentNameDialog"
     >
         <el-divider style="margin-top: 0;"/>
-        <el-form ref="componentNameFormRef" :model="componentNameForm">
+        <el-form ref="componentNameFormRef" :model="componentNameForm" style="margin: 0">
             <el-form-item label="零件名" prop="componentName" :rules="{ required: true, message: '请输入零件名', trigger: 'blur' }">
                 <el-input v-model="componentNameForm.componentName" clearable />
             </el-form-item>
@@ -632,7 +629,7 @@
                 <el-button type="primary" @click="handleSubmitComponentName">确认</el-button>
             </span>
         </template>
-    </el-dialog>
+    </vab-dialog>
     <!-- 添加零件 -->
     <VabCreateComponent 
       :createComponentVisible="createComponentVisible"
