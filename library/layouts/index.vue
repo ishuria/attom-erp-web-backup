@@ -31,7 +31,7 @@ const { username } = storeToRefs(userStore)
 
 const settingsStore = useSettingsStore()
 const { device, collapse, theme } = storeToRefs(settingsStore)
-const { toggleDevice, foldSideBar, openSideBar, updateTheme, updateScrollTop, getScrollTop: scrollTop } = settingsStore
+const { toggleDevice, foldSideBar, openSideBar, updateTheme, updateScrollTop } = settingsStore
 const mobile = ref(false)
 let oldLayout = theme.value.layout
 const visibility = useDocumentVisibility()

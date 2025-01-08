@@ -54,12 +54,12 @@ let synth: SpeechSynthesis
 const voices = ref<SpeechSynthesisVoice[]>([])
 
 const play = () => {
-  if (speech.status.value === 'pause') window.speechSynthesis.resume()
+  if (speech.status.value === 'pause') globalThis.speechSynthesis.resume()
   else speech.speak()
 }
 
 const pause = () => {
-  window.speechSynthesis.pause()
+  globalThis.speechSynthesis.pause()
 }
 
 const stop = () => {
@@ -71,7 +71,7 @@ let timer: ReturnType<typeof setInterval>
 onMounted(() => {
   if (speech.isSupported.value) {
     timer = setTimeout(() => {
-      synth = window.speechSynthesis
+      synth = globalThis.speechSynthesis
       voices.value = synth.getVoices()
       voice.value = voices.value[0]
     }, 200)

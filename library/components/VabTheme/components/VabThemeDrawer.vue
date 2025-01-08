@@ -70,7 +70,7 @@
         <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('色弱')">
           <el-switch v-model="theme.colorWeakness" @change="handleColorWeakness" />
         </el-form-item>
-        <el-form-item :label="translate('头部固定')">
+        <el-form-item v-if="theme.layout !== 'comprehensive'" :label="translate('头部固定')">
           <el-switch v-model="theme.fixedHeader" />
         </el-form-item>
         <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('暗黑组件')">

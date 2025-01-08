@@ -46,7 +46,7 @@ let timer: ReturnType<typeof setInterval>
 onMounted(() => {
   if (speech.isSupported.value) {
     timer = setTimeout(() => {
-      synth = window.speechSynthesis
+      synth = globalThis.speechSynthesis
       voices.value = synth.getVoices()
       voice.value = voices.value[0]
     }, 200)
@@ -59,7 +59,7 @@ onBeforeUnmount(() => {
 })
 
 const handlePlay = () => {
-  if (speech.status.value === 'pause') window.speechSynthesis.resume()
+  if (speech.status.value === 'pause') globalThis.speechSynthesis.resume()
   else speech.speak()
 }
 
@@ -68,9 +68,9 @@ const handleElNotice = () => {
 }
 
 const handleSettingNotice = () => {
-  window.Notification.requestPermission().then((result: any) => {
+  globalThis.Notification.requestPermission().then((result: any) => {
     if (result === 'granted') {
-      const notification = new window.Notification('温馨提示', {
+      const notification = new globalThis.Notification('温馨提示', {
         body: text.value,
       })
       notification.addEventListener('click', () => {

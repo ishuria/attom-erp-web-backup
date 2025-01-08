@@ -65,7 +65,7 @@ export default function registerUser(lf) {
             className: 'lf-menu-delete',
             icon: true,
             callback(node) {
-              const confirm = window.confirm('您确定要删除吗？')
+              const confirm = globalThis.confirm('您确定要删除吗？')
               confirm && lf.deleteNode(node.id)
             },
           },

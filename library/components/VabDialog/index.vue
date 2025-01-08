@@ -1,18 +1,21 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    :align-center="props.lignCenter"
+    :align-center="props.alignCenter"
     :append-to="props.appendTo"
     :append-to-body="props.appendToBody"
     :before-close="props.beforeClose"
     :center="props.center"
-    :class="'vab-dialog-' + props.theme"
+    :class="{
+      ['vab-dialog-' + props.theme]: true,
+      'open-in-tab': props.openInTab,
+    }"
     :close-on-click-modal="props.closeOnClickModal"
     :close-on-press-escape="props.closeOnPressEscape"
     :destroy-on-close="props.destroyOnClose"
     :draggable="props.draggable"
     :fullscreen="isFullscreen"
-    :lock-scroll="props.ockScroll"
+    :lock-scroll="props.lockScroll"
     :modal="props.modal"
     :modal-class="props.modalClass"
     :open-delay="props.openDelay"
@@ -93,6 +96,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  openInTab: {
+    type: Boolean,
+    default: false,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -118,3 +125,13 @@ watch(
   }
 )
 </script>
+
+<style lang="scss">
+.el-overlay:has(.open-in-tab) {
+  position: absolute;
+
+  .el-overlay-dialog {
+    position: absolute;
+  }
+}
+</style>

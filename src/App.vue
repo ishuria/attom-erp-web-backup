@@ -28,8 +28,8 @@ onBeforeMount(() => {
    * @author sundan
    */
 
-  window.addEventListener('orientationchange', resizeContainer)
-  window.addEventListener('resize', resizeContainer)
+  globalThis.addEventListener('orientationchange', resizeContainer)
+  globalThis.addEventListener('resize', resizeContainer)
   resizeContainer()
 })
 

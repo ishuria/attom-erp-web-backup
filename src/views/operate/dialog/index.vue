@@ -26,6 +26,7 @@
         <el-checkbox v-model="form.center" label="开启header、footer居中" />
         <el-checkbox v-model="form.closeOnClickModal" label="开启点击遮罩关闭" />
         <el-checkbox v-model="form.closeOnPressEscape" label="开启ESC按键关闭" />
+        <el-checkbox v-model="form.openInTab" label="在内容页弹框（不影响tab页切换，不推荐）" @change="handleOpenInTab" />
       </el-form-item>
       <el-form-item class="hidden-xs-only" label="弹窗宽度（30% - 60%）">
         <el-slider v-model="form.width" :disabled="form.fullscreen" :max="60" :min="30" style="width: 345px" />
@@ -43,14 +44,16 @@
       v-model="dialogVisible"
       :align-center="form.alignCenter"
       :animated="form.animated"
-      append-to-body
+      :append-to-body="form.appendToBoy"
       :center="form.center"
       :close-on-click-modal="form.closeOnClickModal"
       :close-on-press-escape="form.closeOnPressEscape"
       :destroy-on-close="true"
       :draggable="form.draggable"
       :fullscreen="form.fullscreen"
+      :lock-scroll="form.lockScroll"
       :modal="form.modal"
+      :open-in-tab="form.openInTab"
       :show-fullscreen="form.showFullscreen"
       :theme="form.theme"
       :title="form.title"
@@ -81,7 +84,7 @@ const form = reactive<any>({
   draggable: true,
   width: 30,
   title: '温馨提示',
-  content: '昨夜西风凋碧树，独上高楼望尽天涯路',
+  content: '昨夜西风凋碧树，独上高楼，望尽天涯路',
   alignCenter: false,
   modal: true,
   fullscreen: false,
@@ -90,6 +93,9 @@ const form = reactive<any>({
   closeOnPressEscape: false,
   theme: 'default',
   top: 15,
+  appendToBoy: true,
+  openInTab: false,
+  lockScroll: true,
 })
 const dialogVisible = ref<any>(false)
 const themeList = ref<any>([
@@ -121,6 +127,12 @@ const handleReset = () => {
   form.theme = 'default'
 }
 
+const handleOpenInTab = (val: any) => {
+  form.openInTab = val
+  form.appendToBoy = !val
+  form.lockScroll = true
+}
+
 let timer: ReturnType<typeof setInterval>
 onActivated(() => {
   if (theme.value.themeName === 'technology') form.theme = 'default'
@@ -134,3 +146,4 @@ onDeactivated(() => {
   if (timer) clearTimeout(timer)
 })
 </script>
+timer

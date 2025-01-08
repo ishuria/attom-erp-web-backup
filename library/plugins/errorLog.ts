@@ -11,7 +11,7 @@ export const needErrorLog = () => {
 
 export const addErrorLog = (err: any) => {
   if (!err.isRequest) console.error('vue-shop-vite 错误拦截:', err)
-  const url = window.location.href
+  const url = globalThis.location.href
   const { addErrorLog } = useErrorLogStore(pinia)
   addErrorLog({ err, url })
 }

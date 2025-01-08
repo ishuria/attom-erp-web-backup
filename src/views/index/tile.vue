@@ -194,12 +194,14 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
   }
 
   .tile-box {
+    position: relative;
+
     @each $bp, $width in $breakpoints {
       @media (min-width: $bp) {
         width: $width;
       }
     }
-    position: relative;
+
     //  padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
     // background: var(--el-color-white);
     // border: 1px solid var(--el-border-color);

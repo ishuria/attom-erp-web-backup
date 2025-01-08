@@ -31,7 +31,7 @@ onBeforeMount(() => {
       t.src = `//www.clarity.ms/tag/${i}`
       y = l.getElementsByTagName(r)[0]
       y.parentNode.insertBefore(t, y)
-    })(window, document, 'clarity', 'script', 'j9de7dmm7n')
+    })(globalThis, document, 'clarity', 'script', 'j9de7dmm7n')
   }
 })
 </script>

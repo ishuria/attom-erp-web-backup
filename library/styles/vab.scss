@@ -883,6 +883,8 @@ html {
       position: fixed !important;
       inset: 0 !important;
       z-index: calc(var(--el-z-index) + 3) !important;
+      width: 100vw !important;
+      height: calc(var(--vh, 1vh) * 100) !important;
       padding: 0 !important;
       margin: 0 !important;
       border: 0 !important;
@@ -1067,16 +1069,18 @@ html {
     }
 
     /* 旋转动画 */
-    .rotate {
-      @keyframes rotate {
-        0% {
-          transform: rotate(0);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0);
       }
 
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .rotate {
       animation: rotate 1s linear infinite;
     }
 
