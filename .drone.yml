@@ -12,6 +12,7 @@ steps:
       - ls -alt
       - npm config set registry https://registry.npmmirror.com
       - npm i -g pnpm
+      - pnpm store prune
       - pnpm install --verbose
       - npm run build:fast
 
