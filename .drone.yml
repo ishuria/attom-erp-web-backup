@@ -75,7 +75,7 @@ steps:
 volumes:
   - name: cache
     host:
-      path: ~/app/drone-cache
+      path: /tmp/drone-cache
 
 
 # matster分支触发构建
