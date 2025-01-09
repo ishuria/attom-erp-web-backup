@@ -1,3 +1,300 @@
 <template>
-  <h1>procurementCostReduction</h1>
+  <div class="comprehensive-table-container auto-height-container">
+    <vab-query-form>
+      <vab-query-form-left-panel>
+        <el-form inline>
+          <el-form-item label="人员">
+            <el-select v-model="costQueryForm.userId" placeholder="请选择人员" @change="costQueryData">
+              <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="发放月份">
+            <el-select v-model="costQueryForm.month" placeholder="请选择发放月份" @change="costQueryData"></el-select>
+          </el-form-item>
+          <el-form-item >
+            <el-text style="margin-left: 10px;">提成总金额：</el-text> <el-text type="success">{{ amount4 }}元</el-text>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form :model="costQueryForm" inline @submit.prevent>
+          <el-form-item>
+            <el-input v-model="costQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="costQueryData" @input="costQueryData" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :loading="listLoading" :icon="Search" @click="costQueryData" ></el-button>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+    <el-table
+      border stripe
+      class="noneHoverTable"
+      :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle" :cell-class-name="clearPadding"
+      :data="costList"
+    >
+      <el-table-column label="提成结束日期" prop="endDate" min-width="120">
+        <template #default="{ row }">
+          {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="降本人员" prop="userName" :width="flexColumnWidth(costList, '人员', 'userName')"></el-table-column>
+      <el-table-column label="图片" prop="skuImageUrl" width="75">
+        <template #default="{ row }">
+          <el-image :src="row.skuImageUrl" @click="imagePreviewShow(row.skuImageUrl)" style="width: 75px; height: 75px; display: block;" >
+            <template #error><el-icon></el-icon></template>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku')">
+        <template #default="{ row }">
+          {{ row.sku }}<br />{{ row.desc }}
+        </template>
+      </el-table-column>
+      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(costList, '零件名', 'componentName')"></el-table-column>
+      <el-table-column label="零件图片" prop="componentImgUrl" width="75">
+        <template #header>
+          零件<br />图片
+        </template>
+        <template #default="{ row }">
+          <el-image :src="row.componentImgUrl" @click="imagePreviewShow(row.componentImgUrl)" style="width: 75px; height: 75px; display: block;" >
+            <template #error><el-icon></el-icon></template>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" prop="status" min-width="100">
+        <template #default="{ row }">
+          <el-tag v-if="row.status === '暂停'" type="warning" >{{ row.status }}</el-tag>
+          <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
+          <el-tag v-if="row.status === '已结束'" type="danger" >{{ row.status }}</el-tag>
+          <el-tag v-if="row.status === '待审核'" type="primary" >{{ row.status }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
+      <el-table-column label="本PO提成￥" prop="currentPoCommission" min-width="110">
+        <template #default="{ row }">
+          {{ row.currentPoCommission ? '￥' + row.currentPoCommission : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="PO日期" prop="poReleaseDate" min-width="120">
+        <template #default="{ row }">
+          {{ row.poReleaseDate ? formatDate(new Date(row.poReleaseDate)) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="零件付款日期" prop="compnentPayDate" min-width="120">
+        <template #default="{ row }">
+          {{ row.compnentPayDate ? formatDate(new Date(row.compnentPayDate)) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="PO零件单价￥" prop="poComponentUnitPrice" min-width="130">
+        <template #default="{ row }">
+          {{ row.poComponentUnitPrice ? '￥' + row.poComponentUnitPrice : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="PO零件数量" prop="poComponentCount" min-width="120"></el-table-column>
+      <el-table-column label="PO零件单位" prop="poComponentUnit" min-width="120"></el-table-column>
+      <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(costList, '供应商', 'suppliserName')"></el-table-column>
+      <el-table-column label="提成比例" prop="commissionProportion" min-width="120">
+        <template #default="{ row }">
+          {{ row.commissionProportion ? row.commissionProportion + '%' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="提成开始日期" prop="startDate" min-width="120">
+        <template #default="{ row }">
+          {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="剩余提成天数" min-width="130">
+        <template #default="{ row }">
+          {{ row.remainingDays }} / {{ row.commissionDays }}
+        </template>
+      </el-table-column>
+      <el-table-column label="优化前单价￥" prop="optimizationBefore" min-width="120">
+        <template #default="{ row }">
+          {{ row.optimizationBefore ? '￥' + row.optimizationBefore : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="优化后单价￥" prop="optimizationAfter" min-width="120">
+        <template #default="{ row }">
+          {{ row.optimizationAfter ? '￥' + row.optimizationAfter : '' }}
+        </template>
+      </el-table-column>
+        
+      <el-table-column label="操作" width="100" fixed="right">
+        <template #default="{ row }">
+          <el-link type="primary" :underline="false" @click="showPrices">历史单价</el-link>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty"></el-empty>
+      </template>
+    </el-table>
+    <vab-pagination 
+      :current-page="costQueryForm.pageNo"
+      :page-size="costQueryForm.pageSize"
+      :total="total"
+      @current-change="handleCostCurrentChange"
+      @size-change="handleCostSizeChange"
+    />
+    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <vab-dialog
+      title="历史价格和单价查看"
+      v-model="viewPricesVisible"
+    >
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form :model="priceForm" inline @submit.prevent>
+            <el-form-item>
+              <el-input v-model="priceForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="" @input="" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :loading="listLoading" :icon="Search" @click="" ></el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table border :header-cell-style="{ textAlign: 'center' }">
+        <el-table-column label="PO日期" prop="" min-width="115"></el-table-column>
+        <el-table-column label="PO" prop="" min-width="110"></el-table-column>
+        <el-table-column label="出厂单价" prop="" min-width="100"></el-table-column>
+        <el-table-column label="未税单价" prop="" min-width="100"></el-table-column>
+        <el-table-column label="含税单价" prop="" min-width="100"></el-table-column>
+        <el-table-column label="货币" prop="" min-width="100"></el-table-column>
+        <el-table-column label="供应商" prop="" min-width="200"></el-table-column>
+      </el-table>
+      <vab-pagination 
+        :current-page="priceForm.pageNo"
+        :page-size="priceForm.pageSize"
+        :total="priceTotal"
+        @current-change="handlePriceCurrentChange"
+        @size-change="handlePriceSizeChange"
+      />
+      <template #footer></template>
+    </vab-dialog>
+  </div>
 </template>
+
+<script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
+import { getReductionCostDetailList } from '/@/api/devlocal/commission'
+import { IGetReductionCostDetailList, IGetReductionCostDetailListReq } from '/@/type/commission/commissionType'
+import { flexColumnWidth } from '/@/utils/tableColum'
+import { formatDate } from '/@/utils/dateUtils'
+import { CSSProperties } from 'vue'
+import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
+
+const userList = ref<{ id: number, label: string }[]>([])
+const priceTotal = ref<number>(0)
+const viewPricesVisible = ref<boolean>(false)
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const costList = ref<IGetReductionCostDetailList[]>([])
+const amount4 = ref<number>(0)
+const listLoading = ref<boolean>(false)
+const total = ref<number>(0)
+const costQueryForm = reactive<IGetReductionCostDetailListReq>({
+  keyWord: '',
+  userId: -1,
+  month: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const priceForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
+const imagePreviewShow = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
+const handlePriceCurrentChange = (value: number) => {
+  priceForm.pageNo = value
+  // fetchPriceData()
+}
+const handlePriceSizeChange = (value: number) => {
+  priceForm.pageNo = 1
+  priceForm.pageSize = value
+  // fetchPriceData()
+}
+const priceQueryData = () => {
+  priceForm.pageNo = 1
+  // fetchPriceData()
+}
+const showPrices = () => {
+  viewPricesVisible.value = true
+}
+const handleCostCurrentChange = (value: number) => {
+  costQueryForm.pageNo = value
+  fetchCostData()
+}
+const handleCostSizeChange = (value: number) => {
+  costQueryForm.pageNo = 1
+  costQueryForm.pageSize = value
+  fetchCostData()
+}
+const costQueryData = () => {
+  costQueryForm.pageNo = 1
+  fetchCostData()
+}
+const fetchCostData = async () => {
+  listLoading.value = true
+  const { data } = await getReductionCostDetailList(costQueryForm)
+  if (data) {
+    total.value = data.total
+    costList.value = data.list
+    costList.value.forEach((item) => {
+      if (item.currentPoCommission) {
+        amount4.value += item.currentPoCommission
+      }
+      if (item.commissionProportion) {
+        item.commissionProportion = parseFloat((item.commissionProportion * 100).toFixed(2))
+      }
+    })
+  }
+  listLoading.value = false
+}
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+  const label = data.column.label
+  if (label === 'SKU') {
+    return {
+      textAlign: 'left'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
+}
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.column.label === '图片' || data.column.label === '零件图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
+const fetchUserList = async () => {
+  const { data } = await getArtDesignTaskUserList()
+  userList.value = data
+  userList.value.unshift({ id: -1, label: '全部' })
+}
+onBeforeMount(() => {
+  fetchUserList()
+  fetchCostData()
+})
+</script>
+
+<style lang="scss" scoped>
+.noneHoverTable {
+  .clear-padding {
+    padding-top: 0;
+    padding-bottom: 0;
+    :deep(.cell) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+</style>

@@ -382,6 +382,7 @@ const initChart2 = () => {
           borderColor: '#fff',
           borderWidth: 2
         },
+        startAngle: 90,
         label: {
         
           formatter: [
@@ -418,7 +419,9 @@ const initChart2 = () => {
   }
   chartInstance2?.setOption(option2.value)
 }
-
+onBeforeMount(() => {
+  data2.value.sort((a, b) => b.value - a.value)
+})
 onMounted(() => {
   if (chartContainer1.value) {
     chartInstance1 = echarts.init(chartContainer1.value)

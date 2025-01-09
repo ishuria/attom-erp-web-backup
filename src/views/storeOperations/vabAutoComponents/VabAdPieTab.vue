@@ -434,7 +434,7 @@ const initChart1 = () => {
         right: 0,
         top: 0,
         bottom: 30,
-        startAngle: 30, //起始角度
+        startAngle: 90, //起始角度
         labelLine: {
           lineStyle: {
             width: 2
@@ -540,7 +540,7 @@ const initChart2 = () => {
         right: 0,
         top: 0,
         bottom: 20,
-        clockwise: false,
+        // clockwise: false,
         startAngle: 90, //起始角度
         labelLine: {
           lineStyle: {
@@ -648,6 +648,7 @@ const handleChangeSelect = () => {
   updateChart2()
 }
 onBeforeMount(() => {
+  data1.value.sort((a, b) => b.value - a.value)
   processedData.value = data2.value.map((item) => {
     return {
       name: item.name,
@@ -658,6 +659,7 @@ onBeforeMount(() => {
     name: '其他',
     value: 100,
   })
+  processedData.value.sort((a, b) => b.value - a.value)
 })
 // 初始化图表
 onMounted(() => {

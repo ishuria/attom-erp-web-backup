@@ -37,13 +37,14 @@
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
           <el-table-column label="状态" prop="status" min-width="100">
             <template #default="{ row }">
-              <el-tag v-if="row.status === '结束'" type="danger" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '未上架'" type="info" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '已结束'" type="danger" >{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '暂停'" type="warning" >{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="任务ID" prop="taskId" min-width="100"></el-table-column>
-          <el-table-column label="站点" prop="siteName" min-width="120"></el-table-column>
+          <el-table-column label="站点" prop="siteName" min-width="130"></el-table-column>
           <el-table-column label="提成模式" prop="mold" min-width="100"></el-table-column>
           <el-table-column label="设计任务" prop="designTask" min-width="110"></el-table-column>
           <el-table-column label="提前完成天数" prop="advanceDays" min-width="120">
@@ -194,7 +195,6 @@
             <template #default="{ row }">
               <el-tag v-if="row.status === '暂停'" type="warning" >{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '已结束'" type="danger" >{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="本职角色" prop="jobRole" min-width="100"></el-table-column>

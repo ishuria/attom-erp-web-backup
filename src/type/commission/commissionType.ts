@@ -360,3 +360,384 @@ export interface IUpdateReductionCostTaskReq {
   commissionProportion: number
   commissionDays: number
 }
+export interface IGetCommissionDetailPictureListReq {
+  keyWord: string
+  site: number
+  userId: number
+  month: string
+  status: number
+  pageNo: number
+  pageSize: number
+}
+export interface IGetCommissionDetailPictureListRes {
+  data?: {
+    list: IGetCommissionDetailPictureList[]
+    total: number
+  }
+}
+
+export interface IGetCommissionDetailPictureList {
+  /**
+   * 提前完成天数
+   */
+  advanceDays?: number
+  /**
+   * 平均转化率
+   */
+  avgConversionRate?: number
+  /**
+   * 均值汇率
+   */
+  avgRate?: number
+  /**
+   * 奖金
+   */
+  bonus?: number
+  /**
+   * 提成天数
+   */
+  commissionDay?: number
+  /**
+   * 转化率加成
+   */
+  conversionRateIncrease?: number
+  /**
+   * 提成比例
+   */
+  cooperationProportion?: number
+  /**
+   * 币种符号
+   */
+  currencySymbol?: string
+  /**
+   * SKU描述
+   */
+  desc?: string
+  /**
+   * 提成结束日期
+   */
+  endDate?: string
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 要求转化率
+   */
+  lowRate?: number
+  /**
+   * 提成模式
+   */
+  mold?: string
+  /**
+   * 断货补偿天数
+   */
+  outOfStockDays?: number
+  /**
+   * 剩余天数
+   */
+  remainingDays?: number
+  /**
+   * 销售额差额$
+   */
+  salesDifference?: number
+  /**
+   * 站点名称
+   */
+  siteName?: string
+  /**
+   * sku
+   */
+  sku?: string
+  /**
+   * sku图片
+   */
+  skuImageUrl?: string
+  /**
+   * 提成开始日期
+   */
+  startDate?: string
+  /**
+   * 状态
+   */
+  status?: string
+  /**
+   * 类型
+   */
+  type?: string
+  /**
+   * 用户名
+   */
+  userName?: string
+}
+export interface IGetCommissionDetailLongListRes {
+  data?: {
+    list: IGetCommissionDetailLongList[]
+    total: number
+  }
+}
+
+export interface IGetCommissionDetailLongList {
+  /**
+   * 累积奖金
+   */
+  accumulateBonus?: number
+  /**
+   * 奖金
+   */
+  bonus?: number
+  /**
+   * 提成天数
+   */
+  commissionDay?: number
+  /**
+   * 提成比例
+   */
+  cooperationProportion?: number
+  /**
+   * 币种符号
+   */
+  currencySymbol?: string
+  /**
+   * SKU描述
+   */
+  desc?: string
+  /**
+   * 提成结束日期
+   */
+  endDate?: string
+  /**
+   * 汇率
+   */
+  exchangeRate?: number
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 剩余天数
+   */
+  remainingDays?: number
+  /**
+   * 站点名称
+   */
+  siteName?: string
+  /**
+   * sku
+   */
+  sku?: string
+  /**
+   * sku图片
+   */
+  skuImageUrl?: string
+  /**
+   * 状态
+   */
+  status?: string
+  /**
+   * 类型
+   */
+  type?: string
+  /**
+   * 用户名
+   */
+  userName?: string
+}
+export interface IGetCommissionDetailDevelopListReq {
+  keyWord: string
+  site: number
+  userId: number
+  month: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetCommissionDetailDevelopListRes {
+
+  data?: {
+    list: IGetCommissionDetailDevelopList[]
+    total: number
+  }
+}
+
+export interface IGetCommissionDetailDevelopList {
+  /**
+   * 基础比例
+   */
+  baseProportion?: number
+  /**
+   * 累计提成
+   */
+  cumulativeCommission?: number
+  /**
+   * 币种符号
+   */
+  currencySymbol?: string
+  /**
+   * 当月提成
+   */
+  currentMonthBonus?: number
+  /**
+   * 描述
+   */
+  description?: string
+  /**
+   * 汇率
+   */
+  exchangeRate?: number
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 月净利润
+   */
+  monthProfit?: number
+  /**
+   * 月净利率
+   */
+  monthProfitMargin?: number
+  /**
+   * 月销售额
+   */
+  monthSales?: number
+  /**
+   * 月销量
+   */
+  monthSalesVolume?: number
+  /**
+   * 发布日期
+   */
+  releaseDate?: string
+  /**
+   * 超额比例
+   */
+  rewardProportion?: number
+  /**
+   * 站点,参考站点表
+   */
+  siteName?: string
+  /**
+   * SKU
+   */
+  sku?: string
+  /**
+   * sku图片URL
+   */
+  skuImageUrl?: string
+  /**
+   * 状态
+   */
+  status?: string
+  /**
+   * 总提成比例
+   */
+  totalCommissionProportion?: number
+  /**
+   * 用户名
+   */
+  userName?: string;
+}
+export interface IGetReductionCostDetailListReq {
+  keyWord: string
+  userId: number
+  month: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetReductionCostDetailListRes {
+  data: {
+    list: IGetReductionCostDetailList[]
+    total: number
+  }
+}
+
+export interface IGetReductionCostDetailList {
+  /**
+   * 提成天数
+   */
+  commissionDays?: number
+  /**
+   * 提成比例
+   */
+  commissionProportion?: number
+  /**
+   * 零件付款日期
+   */
+  compnentPayDate?: string
+  /**
+   * 零件图片url
+   */
+  componentImgUrl?: string
+  /**
+   * 零件名称
+   */
+  componentName?: string
+  /**
+   * 当前po提成金额
+   */
+  currentPoCommission?: number
+  /**
+   * 提成结束日期
+   */
+  endDate?: string
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 优化后成本
+   */
+  optimizationAfter?: number
+  /**
+   * 优化前成本
+   */
+  optimizationBefore?: number
+  /**
+   * 匹配的Po
+   */
+  po?: string
+  /**
+   * po零件数量
+   */
+  poComponentCount?: number
+  /**
+   * po零件单位
+   */
+  poComponentUnit?: string
+  /**
+   * po零件单价
+   */
+  poComponentUnitPrice?: number
+  /**
+   * po发布日期
+   */
+  poReleaseDate?: string
+  /**
+   * 剩余天数
+   */
+  remainingDays?: number
+  /**
+   * SKU
+   */
+  sku?: string
+  /**
+   * SKU的图片url
+   */
+  skuImgUrl?: string
+  /**
+   * 提成开始日期
+   */
+  startDate?: string
+  /**
+   * 状态 0待审核 1进行中 2暂停 3结束 4不通过
+   */
+  status?: number
+  /**
+   * 供应商名称
+   */
+  suppliserName?: string
+  /**
+   * 用户名
+   */
+  userName?: string
+}

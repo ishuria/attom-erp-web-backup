@@ -183,13 +183,13 @@
       width="20%"
     >
       <el-form ref="formRef" :rules="formRules" :model="form" label-position="right" label-width="auto" style="margin: 0 0 20px 0;">
-        <el-form-item label="初始acos转化率" prop="acos">
+        <el-form-item label="初始目标ACOS" prop="acos">
           <el-input type="number" v-model="form.acos" />
         </el-form-item>
         <el-form-item label="转化率加成上限" prop="upperLimit">
           <el-input type="number" v-model="form.upperLimit" />
         </el-form-item>
-        <el-form-item label="最低转化率" prop="minConversionRate">
+        <el-form-item label="图片优化任务最低要求转化率" prop="minConversionRate">
           <el-input type="number" v-model="form.minConversionRate" />
         </el-form-item>
         <el-form-item label="断货补偿天数上限" prop="compensationDay">

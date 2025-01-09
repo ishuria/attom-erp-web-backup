@@ -1,3 +1,3 @@
 <template>
-  <h1>Memo</h1>
+  <h1>HTSSettings</h1>
 </template>

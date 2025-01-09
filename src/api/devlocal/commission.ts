@@ -4,6 +4,11 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import {
   IGetCommissionArtTypeListRes,
+  IGetCommissionDetailDevelopListReq,
+  IGetCommissionDetailDevelopListRes,
+  IGetCommissionDetailLongListRes,
+  IGetCommissionDetailPictureListReq,
+  IGetCommissionDetailPictureListRes,
   IGetCommissionProductTypeListRes,
   IGetCommissionSettingRes,
   IGetCommissionTaskPictureListReq,
@@ -11,6 +16,8 @@ import {
   IGetDevelopDesignTaskListRes,
   IGetLongCommissionTaskListReq,
   IGetLongCommissionTaskListRes,
+  IGetReductionCostDetailListReq,
+  IGetReductionCostDetailListRes,
   IGetReductionCostListRes,
   IUpdateCommissionArtTypeReq,
   IUpdateCommissionProductTypeReq,
@@ -268,5 +275,45 @@ export function updateReductionCostTask(data: IUpdateReductionCostTaskReq): Prom
     url: `${BASE_API}/cost/reduction/task/update`,
     method: 'post',
     data
+  })
+}
+/**
+ * @description 提成明细-美工图片任务列表查询
+ */
+export function getCommissionDetailPictureList(params: IGetCommissionDetailPictureListReq): Promise<IGetCommissionDetailPictureListRes> {
+  return request({
+    url: `${BASE_API}/commission/task/detail/picture/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 提成明细-美工长期任务列表查询
+ */
+export function getCommissionDetailLongList(params: IGetCommissionDetailPictureListReq): Promise<IGetCommissionDetailLongListRes> {
+  return request({
+    url: `${BASE_API}/long/commission/task/detail/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 产品开发设计提成任务明细-获取列表
+ */
+export function getCommissionDetailDevelopList(params: IGetCommissionDetailDevelopListReq): Promise<IGetCommissionDetailDevelopListRes> {
+  return request({
+    url: `${BASE_API}/develop/design/task/detail/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 采购降本提成任务明细-列表获取
+ */
+export function getReductionCostDetailList(params: IGetReductionCostDetailListReq): Promise<IGetReductionCostDetailListRes> {
+  return request({
+    url: `${BASE_API}/cost/reduction/detail/list`,
+    method: 'get',
+    params
   })
 }
