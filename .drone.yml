@@ -4,8 +4,21 @@ type: docker
 name: erp-web
 
 steps:
+  # 构建缓存
+  - name: loading cache # 加载缓存
+    pull: if-not-exists # 如果镜像不存在则拉取,免去每次都要重新下载
+    image: drillster/drone-volume-cache
+    volumes:
+    - name: cache
+      path: /cache
+    settings:
+      restore: true
+      mount:
+      - ./node_modules
+
   # npm 构建
   - name: npm-build
+    pull: if-not-exists
     image: 192.168.6.12:3002/library/node:20.15.1
     commands:
       - pwd
@@ -18,6 +31,7 @@ steps:
 
   # 构建镜像并推送到镜像仓库
   - name: build-docker-image
+    pull: if-not-exists
     image: plugins/docker
     settings:
       username: admin
@@ -32,6 +46,7 @@ steps:
 
   # 远程到主机并运行docker compose
   - name: deploy-run
+    pull: if-not-exists
     image: appleboy/drone-ssh
     pull: true
     settings:
@@ -43,6 +58,25 @@ steps:
       # 使用docker compose拉去对应的镜像，并运行
       script:
         - cd ~/app/erp/web && docker compose pull && docker compose up -d
+
+  # 构建缓存
+  - name: rebuild-cache
+    pull: if-not-exists
+    image: drillster/drone-volume-cache
+    volumes:
+      - name: cache
+        path: /cache
+    settings:
+      rebuild: true
+      mount:
+        - ./node_modules
+
+# 挂载卷
+volumes:
+- name: cache
+  host:
+    path: ~/app/drone-cache
+    
 
 # matster分支触发构建
 trigger:
