@@ -73,10 +73,10 @@ steps:
 
 # 挂载卷
 volumes:
-- name: cache
-  host:
-    path: ~/app/drone-cache
-    
+  - name: cache
+    host:
+      path: ~/app/drone-cache
+
 
 # matster分支触发构建
 trigger:
