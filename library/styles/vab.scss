@@ -28,6 +28,9 @@
 }
 
 html {
+  text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+
   body {
     position: relative;
     box-sizing: border-box;
@@ -137,7 +140,7 @@ html {
 
     * {
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
       outline: none !important;
       -webkit-tap-highlight-color: transparent;
       -webkit-font-smoothing: antialiased;
