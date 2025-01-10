@@ -2,6 +2,16 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 import {
+  IAddHSListReq,
+  IAddHTSListReq,
+  IGetHSListReq,
+  IGetHSListRes,
+  IGetHTSListReq,
+  IGetHTSListRes,
+  IUpdateHSListReq,
+  IUpdateHTSListReq
+} from '/@/type/customsDeclarationAndTaxRefund/hsHts'
+import {
   IBooleanRes,
   IClearAllMatchComponent,
   IClearMatchComponent,
@@ -641,6 +651,88 @@ export const deleteTaxRefundMatch = (data: ISubmitTaxRefundInvoiceMatch): Promis
 export const getTaxRefundProfitMargin = (data: IGetTaxRefundProfitMarginQuery): Promise<IGetTaxRefundProfitMarginRes> => {
   return request({
     url: `${BASE_API}/taxRefund/profit/margin`,
+    method: 'post',
+    data
+  })
+}
+
+
+/**
+ * @description Hs列表
+ */
+export const getHSList = (params: IGetHSListReq): Promise<IGetHSListRes> => {
+  return request({
+    url: `${BASE_API}/hs/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 修改Hs
+ */
+export const updateHSList = (data: IUpdateHSListReq): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/hs/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 删除Hs
+ */
+export const delHSList = (params: { id: number }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/hs/del`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 添加Hs
+ */
+export const addHSList = (data: IAddHSListReq): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/hs/add`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description HTS列表
+ */
+export const getHTSList = (params: IGetHTSListReq): Promise<IGetHTSListRes> => {
+  return request({
+    url: `${BASE_API}/hts/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 删除hts
+ */
+export const delHTSList = (params: { id: number }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/hts/del`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * @description 添加Hs
+ */
+export const addHTSList = (data: IAddHTSListReq): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/hts/add`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 修改HTS
+ */
+export const updateHTSList = (data: IUpdateHTSListReq): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/hts/update`,
     method: 'post',
     data
   })

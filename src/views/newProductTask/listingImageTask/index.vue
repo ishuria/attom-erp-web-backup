@@ -67,7 +67,20 @@
             </template>
           </el-table-column>
           <el-table-column label="剩余自然日" prop="naturalDay" min-width="110"></el-table-column>
-          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160"></el-table-column>
+          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.requiredAddress" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.requiredAddress }}</div>
+                </template>
+                <el-text truncated>{{ row.requiredAddress }}</el-text>
+              </el-tooltip>
+              <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
+            </template>
+          </el-table-column>
           <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
             <template #default="{ row }">
               <vab-icon v-if="row.sellingPointStatus === 1" icon="check-fill" class="custom-check" />
@@ -751,7 +764,9 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
+import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
 import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
@@ -806,6 +821,27 @@ const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<FormRules<{ reason: string }>>({
   reason: [{ required: true, message: '请输入选品理由', trigger: 'blur' }]
 })
+let copyRow: any
+
+// table blur事件
+const clickCancel = async (event:any, value:any) => {
+  const rootElement = getRootElement(event.srcElement, ".cell")
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add("none")
+    if (t2) t2.classList.remove("none")
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑
+    
+  }
+}
 const closeAddReason = () => {
   addFormRef.value?.resetFields()
   addReasonVisible.value = false
@@ -1092,6 +1128,22 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
     _id.value = row.id
     remark.value = row.remark
     remarkVisible.value = true
+  } else if (label === '需求文件地址') {
+    const firstChild = cell?.children[0]?.children[0]
+    const secondChild = cell?.children[0]?.children[1]
+
+    if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+      return
+    }
+
+    copyRow = JSON.parse(JSON.stringify(row))
+
+    if (firstChild.classList.contains('none')) {
+      firstChild.classList.remove('none')
+      secondChild.classList.add('none')
+
+      focusAndSelectInput(cell)
+    }
   }
 }
 const handleTabClick = (tab: TabsPaneContext) => {
@@ -1349,5 +1401,8 @@ onBeforeMount(() => {
   white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+}
+.none {
+  display: none;
 }
 </style>

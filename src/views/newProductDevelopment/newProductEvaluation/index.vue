@@ -151,6 +151,8 @@
       :list="estimatedCostAccountingList"
       :evaluationId="evaluationId"
       :callParentMethod="fetchEstimatedCostAccounting"
+      :channelList="channelList"
+      :siteList="siteList"
     />
 
     <!-- 成本核算默认方式 -->
@@ -178,6 +180,7 @@ import {
   getEvaluationShareInfo,
   getEvaluationTrendList,
   getList,
+  getSalesSiteList,
   updateEvaluationScoreParams,
   updateSharePerson,
 } from '/@/api/devlocal/evaluation'
@@ -196,6 +199,7 @@ import {
 } from '/@/type/evaluation/evaluationType'
 
 import { convertString } from '/@/utils/stringUtils'
+import { getChannelList } from '~/src/api/devlocal/encasement'
 
 defineOptions({
   name: 'Evaluation',
@@ -367,13 +371,24 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-
+const channelList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number, label: string }[]>([])
+const fetchChannelData = async () => {
+  const { data } = await getChannelList()
+  channelList.value = data
+}
+const fetchSalesSiteList = async () => {
+  const { data } = await getSalesSiteList()
+  siteList.value = data
+}
 /**
  * 产品核算推进
  */
 const handleClick = async (row: any) => {
   evaluationId.value = convertString(row.idNo);
   fetchEstimatedCostAccounting(row.idNo)
+  fetchChannelData()
+  fetchSalesSiteList()
 }
 
 /**

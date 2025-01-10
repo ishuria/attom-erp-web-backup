@@ -564,13 +564,13 @@ handleSubmit<template>
       </template>
     </vab-dialog>
     <!-- 关键词趋势图表 -->
-        <vab-trend 
-          :trendEchartsVisible="keyWordTrendEchatsVisible"
-          :keyWord = "inputKeyWord"
-          :trendData = "trendEcahts"
-          @update:visibleValue = "updateTrendVisibleValue"
-          @update:clearInputKeyWord = "cleanKeyWordTrendData"
-          @update:trendEchartsList  = "updateTrendEchatsData"
+    <vab-trend 
+      :trendEchartsVisible="keyWordTrendEchatsVisible"
+      :keyWord = "inputKeyWord"
+      :trendData = "trendEcahts"
+      @update:visibleValue = "updateTrendVisibleValue"
+      @update:clearInputKeyWord = "cleanKeyWordTrendData"
+      @update:trendEchartsList  = "updateTrendEchatsData"
     />
   </div>
 </template>

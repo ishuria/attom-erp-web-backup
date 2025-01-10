@@ -3,15 +3,14 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 
-import { 
-  ICostAccounting,
-  IEvaluationScore,
-  IEvaluationQueryReq,
-  IEvaluationKeyWordTrendReq,
-  IEvaluationSharePersonReq,
-  IEstimatedCostAccountingQueryReq,
+import {
   EstimatedCostAccountingProductRelease,
-  EstimatedCostAccountingSort
+  ICostAccounting,
+  IEstimatedCostAccountingQueryReq,
+  IEvaluationKeyWordTrendReq,
+  IEvaluationQueryReq,
+  IEvaluationScore,
+  IEvaluationSharePersonReq
 } from '/@/type/evaluation/evaluationType'
 
 
@@ -142,6 +141,16 @@ export function updateEstimatedCostAccounting(data?: any) {
     data,
   })
 }
+/**
+ * @description 新款评估头程渠道更新
+ */
+export function updateEstimatedCostAccountingFirstMileChannel(data?: { id: number, channelId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/firstMileChannel/update`,
+    method: 'post',
+    data,
+  })
+}
 
 /**
  * 获取产品成本核算列表
@@ -240,5 +249,15 @@ export function addEstimatedCostAccountingProductRelease(data?: EstimatedCostAcc
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
     data,
+  })
+}
+
+/**
+ * @description 成本核算-获取所有销售站点的数据
+ */
+export function getSalesSiteList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/sales/site/list`,
+    method: 'get',
   })
 }

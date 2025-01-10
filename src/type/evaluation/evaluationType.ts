@@ -104,7 +104,7 @@ export interface IEstimatedCostAccounting{
     // 打包
     packaging:string
     // 头程渠道
-    firstMileChannel:string
+    firstMileChannel: number
     // 售价
     sellingPrice:string
     // 毛利率

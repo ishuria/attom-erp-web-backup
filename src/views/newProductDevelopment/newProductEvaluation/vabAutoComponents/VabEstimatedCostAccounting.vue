@@ -33,16 +33,13 @@
         <el-table-column prop="site" label="站点" min-width="140">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%">
-              <el-option v-for="dict in estimatedCostAccountingSiteColumns" :key="dict.value" :value="dict.value" :label="dict.label"></el-option>
+              <el-option v-for="dict in props.siteList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="外汇币种" min-width="60">
+        <el-table-column label="外汇币种" prop="currencyType" min-width="60">
           <template #header>
             外汇<br />币种
-          </template>
-          <template #default="{ row }">
-            <span>{{siteReflectCurrencyAndExchangeRate.get(row.site)}}</span>
           </template>
         </el-table-column>
         <el-table-column label="汇率" prop="foreignExchange"></el-table-column>   
@@ -63,18 +60,17 @@
               <template #content>
                 <div class="custom-tooltip">{{ row.desc }}</div>
               </template>
-              <span>{{ row.desc }}</span>
+              <el-text truncated>{{ row.desc }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
-
         <el-table-column prop="priceInfo" label="价格信息" min-width="200">
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
                 <div class="custom-tooltip">{{ row.priceInfo }}</div>
               </template>
-              <span>{{ row.priceInfo }}</span>
+              <el-text truncated>{{ row.priceInfo }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -84,7 +80,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ row.url1688 }}</div>
               </template>
-              <span>{{ row.url1688 }}</span>
+              <el-text truncated>{{ row.url1688 }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -95,24 +91,16 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.price" 
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.price }}</span>
+            <span>{{ row.price ? '￥' + row.price : '' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column prop="length" label="长">
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.length" 
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
             <span>{{ row.length }}</span>
           </template>
@@ -121,11 +109,7 @@
         <el-table-column prop="width" label="宽">
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.width" 
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
             <span>{{ row.width }}</span>
           </template>
@@ -134,11 +118,7 @@
         <el-table-column prop="height" label="高">
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.height" 
-                @blur="clickCancle($event, row)" 
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
             <span>{{ row.height }}</span>
           </template>
@@ -147,28 +127,28 @@
         <el-table-column prop="weight" label="重量">
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.weight" 
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
             <span>{{ row.weight }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="lastMile" label="尾程"></el-table-column>
-        <el-table-column prop="lastfirstMileMile" label="头程"></el-table-column>
+        <el-table-column prop="lastMile" label="尾程">
+          <template #default="{ row }">
+            {{ row.lastMile ? row.symbol + row.lastMile : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="lastfirstMileMile" label="头程￥">
+          <template #default="{ row }">
+            {{ row.lastfirstMileMile ? '￥' + row.lastfirstMileMile : '' }}
+          </template>
+        </el-table-column>
 
-        <el-table-column prop="packaging" label="打包">
+        <el-table-column prop="packaging" label="打包￥">
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.packaging" 
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.packaging }}</span>
+            <span>{{ row.packaging ? '￥' + row.packaging : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="firstMileChannel" label="头程渠道" min-width="130">
@@ -176,32 +156,29 @@
             <el-select 
               v-model="row.firstMileChannel" 
               placeholder="请选择"
-              @change="handlerEstimatendChange(row)"
+              @change="handlerEstimatedChange(row)"
               style="min-width: 100%"
             >
-              <el-option 
-                v-for="dict in firstLegChannelColumns" 
-                :key="dict.value" 
-                :value="dict.value"
-                :label="dict.label"
-              >
-              </el-option>
+              <el-option v-for="dict in props.channelList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
             </el-select>
           </template>
         </el-table-column>
         <el-table-column prop="sellingPrice" label="售价">
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.sellingPrice" 
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.sellingPrice }}</span>
+            <span>{{ row.sellingPrice ? row.symbol + row.sellingPrice : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
+        <el-table-column prop="grossMarginRate" label="毛利率">
+          <template #default="{ row }">
+            <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column prop="roi" label="ROI" min-width="60"></el-table-column>
 
         <el-table-column prop="weightCoefficient" label="重量系数" min-width="60">
@@ -210,11 +187,7 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.weightCoefficient" 
-                @blur="clickCancle($event, row)"
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
             <span>{{ row.weightCoefficient }}</span>
           </template>
@@ -226,11 +199,7 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.volumeCoefficient" 
-                @blur="clickCancle($event, row)" 
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
             <span>{{ row.volumeCoefficient }}</span>
           </template>
@@ -239,19 +208,22 @@
         <el-table-column prop="tariff" label="关税%" min-width="80">
           <template #default="{ row }">
             <div class="none">
-              <el-input 
-                v-model="row.tariff" 
-                @blur="clickCancle($event, row)" 
-                @keydown.enter="effectiveCountInputeHandle($event,row)"
-              />
+              <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.tariff ? row.tariff+'%' : '' }}</span>
+            <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="platformCommission" label="平台佣金"></el-table-column>
-        <el-table-column prop="storageFee" label="仓储费2个月$" min-width="80">
+        <el-table-column prop="platformCommission" label="平台佣金">
+          <template #default="{ row }">
+            <span>{{ row.platformCommission ? row.symbol + row.platformCommission : '' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="storageFee" label="仓储费2个月" min-width="80">
           <template #header>
-            仓储费<br />2个月$
+            仓储费<br />2个月
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.storageFee ? row.symbol + row.storageFee : '' }}</span>
           </template>
         </el-table-column>
 
@@ -346,6 +318,7 @@ import {
   deleteEstimatedCostAccounting,
   getExchangeRate,
   updateEstimatedCostAccounting,
+  updateEstimatedCostAccountingFirstMileChannel,
   updateEstimatedCostAccountingSort
 } from '/@/api/devlocal/evaluation'
 import { formatDate } from '/@/utils/dateUtils'
@@ -356,9 +329,7 @@ import {
 } from 'vue-draggable-plus'
 
 import {
-  estimatedCostAccountingSiteColumns,
-  firstLegChannelColumns,
-  siteReflectCurrencyAndExchangeRate,
+  siteReflectCurrencyAndExchangeRate
 } from '../../indexCommon'
 
 import { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
@@ -372,14 +343,16 @@ import { convertString } from '/@/utils/stringUtils'
 
 
 defineOptions({
-    name: 'VabEstimatedCostAccounting',
+  name: 'VabEstimatedCostAccounting',
 })
 
 let props = defineProps<{
-    flag: boolean
-    evaluationId:string
-    list: IEstimatedCostAccounting[]
-    callParentMethod: (id:number) => void
+  flag: boolean
+  evaluationId:string
+  list: IEstimatedCostAccounting[]
+  channelList: { id: number, label: string }[]
+  siteList: { id: number, label: string }[]
+  callParentMethod: (id:number) => void
 }>();
 
 // 产品描述可见
@@ -399,13 +372,6 @@ watchEffect(()=>{
     dflag.value = props.flag
 })
 
-onBeforeMount(() => {
-    dList.value.forEach((item: any) => {
-        if(item.tariff) {
-            item.tariff = (item.tariff * 100).toFixed(0)
-        }
-    })
-})
 
 const emit = defineEmits<{ (e: 'update:visibleValue', value: boolean): void }>()
 // Table cell 下标
@@ -421,9 +387,9 @@ const router = useRouter()
 let {list,evaluationId} = toRefs(props)
 
 // 鼠标enter事件
-const effectiveCountInputeHandle = (event: Event,row:any) => {
-    const targetElement = event.target as HTMLInputElement
-    targetElement.blur()
+const effectiveCountInputHandle = (event: Event, row:any) => {
+  const targetElement = event.target as HTMLInputElement
+  targetElement.blur()
 }
 
 // 新增行
@@ -446,7 +412,7 @@ const handlerAddRowCost = async () => {
       height: '',
       weight: '',
       packaging: '',
-      firstMileChannel: '0',
+      firstMileChannel: 1,
       sellingPrice: '',
       weightCoefficient: '',
       volumeCoefficient: '',
@@ -519,24 +485,24 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
 
 // 产品描述的确认修改
 const confirmUpdate1Dialog = async () => {
-  await updateEstimatedCostAccounting({ ...clickRow, desc: productDescription.value, tariff: clickRow.tariff / 100 })
+  await updateEstimatedCostAccounting({ ...clickRow, desc: productDescription.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100 })
   clickRow.desc = productDescription.value
   productDescriptionVisible.value = false
 }
 // 价格信息的确认修改
 const confirmUpdate2Dialog = async () => {
-  await updateEstimatedCostAccounting({ ...clickRow, priceInfo: priceInformation.value, tariff: clickRow.tariff / 100 })
+  await updateEstimatedCostAccounting({ ...clickRow, priceInfo: priceInformation.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100 })
   clickRow.priceInfo = priceInformation.value
   priceInformationVisible.value = false
 }
 // 1688链接的确认修改
 const confirmUpdate3Dialog = async () => {
-  await updateEstimatedCostAccounting({ ...clickRow, url1688: link1688.value, tariff: clickRow.tariff / 100 })
+  await updateEstimatedCostAccounting({ ...clickRow, url1688: link1688.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100 })
   clickRow.url1688 = link1688.value
   link1688Visible.value = false
 }
 // 相当于输入input blur事件
-const clickCancle = async (event:any,value:any) =>{
+const clickCancel = async (event:any, value:any) =>{
 
   const rootElement = getRootElement(event.srcElement, ".cell");
 
@@ -551,7 +517,14 @@ const clickCancle = async (event:any,value:any) =>{
   if (isEqual(_row, value)) {
     return
   }
-  await updateEstimatedCostAccounting({...value, tariff: value.tariff / 100})
+  if (value.tariff < 0) {
+    $baseMessage('关税不能为复数！', 'error')
+    value.tariff = 0
+    return
+  }
+  const { firstMileChannel, ...filterValue } = value
+  await updateEstimatedCostAccounting({ ...filterValue, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100 })
+  props.callParentMethod(parseInt(evaluationId.value))
 }
 
 const getCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
@@ -599,17 +572,21 @@ const handlerDelete = async (row:any)=>{
 }
 
 // 头程渠道修改
-const handlerEstimatendChange = async (row:IEstimatedCostAccounting) =>{
-  await updateEstimatedCostAccounting({...row})
+const handlerEstimatedChange = async (row: IEstimatedCostAccounting) =>{
+  await updateEstimatedCostAccountingFirstMileChannel({
+    id: Number(row.id),
+    channelId: row.firstMileChannel
+  })
 }
 
 // 修改站点
-const handlerSiteChange = async (row:IEstimatedCostAccounting) =>{
-    row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
-    const {data} = await getExchangeRate({currency:row.currencyType})
-    row.foreignExchange = data
-    row.site = row.site  
-    await updateEstimatedCostAccounting({...row})
+const handlerSiteChange = async (row: IEstimatedCostAccounting) =>{
+  // row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
+  // const {data} = await getExchangeRate({currency:row.currencyType})
+  // row.foreignExchange = data
+  // row.site = row.site  
+  await updateEstimatedCostAccounting({ ...row })
+  props.callParentMethod(parseInt(evaluationId.value))
 }
 
 // 上传图片
