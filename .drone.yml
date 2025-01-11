@@ -71,6 +71,38 @@ steps:
       mount:
         - ./node_modules
 
+    # webhook通知
+  - name: feishu-notify
+    pull: if-not-exists
+    image: plugins/webhook
+    settings:
+      urls: 'https://open.feishu.cn/open-apis/bot/v2/hook/0855b6bf-0a5c-4a97-8b83-5efd8e84d09d'
+      method: 'POST'
+      content_type: application/json
+      skip_verify: true
+      debug: true
+      template: |
+        {
+          "msg_type": "interactive",
+          "card": {
+            "elements": [
+              {
+                "tag": "div",
+                "text": {
+                  "content": "**构建的项目名称：{{DRONE_REPO}}**，分支：{{build.branch}},构建编号：{{build.number}}，{{DRONE_COMMIT_AUTHOR}}提交的代码内容为：{{DRONE_COMMIT_MESSAGE}}",
+                  "tag": "lark_md"
+                }
+              }
+            ],
+            "header": {
+              "title": {
+                "content": "CI/CD项目部署通知",
+                "tag": "plain_text"
+              }
+            }
+          }
+        }
+
 # 挂载卷
 volumes:
   - name: cache
