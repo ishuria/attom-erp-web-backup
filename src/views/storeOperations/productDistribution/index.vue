@@ -9,35 +9,23 @@
               multiple
               clearable
               collapse-tags
+              collapse-tags-tooltip
               placeholder="请选择站点"
               :max-collapse-tags="1"
               style="width: 220px"
+              @change="queryData"
             >
               <template #header>
-                <el-checkbox
-                  v-model="checkAll"
-                  :indeterminate="indeterminate"
-                  @change="handleCheckAll"
-                >
+                <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
                   所有
                 </el-checkbox>
               </template>
-              <el-option
-                v-for="item in siteOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="状态">
-            <el-select v-model="queryForm.status">
-              <el-option 
-                v-for="item in statusOption"
-                :label="item.label"
-                :value="item.value"
-                :key="item.value"
-              />
+            <el-select v-model="queryForm.status" @change="queryData">
+              <el-option v-for="item in statusOption" :label="item.label" :value="item.value" :key="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -56,37 +44,45 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table 
-      border
-      :header-cell-style="{ textAlign: 'center' }"
-      :cell-style="cellStyle"
+    <el-table
+      class="noneHoverTable" 
+      border stripe
+      :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle" :cell-class-name="clearPadding"
+      :data="list"
     >
-      <el-table-column label="预计上架日期" prop="" min-width="115"></el-table-column>
-      <el-table-column label="图片" prop="" width="80">
+      <el-table-column label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
-          <el-image :src="row.url" @click="imagePreviewShow(row.url)">
-            <template #error>
-              <el-icon></el-icon>
-            </template>
+          <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
+            <template #error><el-icon></el-icon></template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="" min-width="200"></el-table-column>
-      <el-table-column label="ASIN" prop="" min-width="130"></el-table-column>
-      <el-table-column label="站点" prop="" min-width="140"></el-table-column>
-      <el-table-column label="最近入库" prop="" min-width="110"></el-table-column>
-      <el-table-column label="入库总数" prop="" min-width="100"></el-table-column>
-      <el-table-column label="同赛道ASIN" prop="" min-width="200"></el-table-column>
-      <el-table-column label="产品经理" prop="" min-width="100"></el-table-column>
-      <el-table-column label="运营" prop="" min-width="100">
+      <el-table-column label="SKU" min-width="200">
         <template #default="{ row }">
-          <el-select></el-select>
+          {{ row.sku }}<br />{{ row.description }}
         </template>
       </el-table-column>
-      <el-table-column label="运营分类" prop="" min-width="150">
-        <el-select>
-
-        </el-select>
+      <el-table-column label="ASIN" prop="asin" min-width="130"></el-table-column>
+      <el-table-column label="站点" prop="siteName" min-width="130"></el-table-column>
+      <el-table-column label="预计上架日期" prop="estimateInboundDate" min-width="115"></el-table-column>
+      <el-table-column label="最近入库" prop="recentlyInboundStorage" min-width="110"></el-table-column>
+      <el-table-column label="入库总数" prop="inboundStorageTotal" min-width="100"></el-table-column>
+      <el-table-column label="头部产品#" prop="headerCount" min-width="100"></el-table-column>
+      <el-table-column label="同赛道ASIN" prop="benchmarkAsin" min-width="200"></el-table-column>
+      <el-table-column label="产品经理" prop="productManagerName" min-width="130"></el-table-column>
+      <el-table-column label="运营" prop="userId" min-width="100">
+        <template #default="{ row }">
+          <el-select v-model="row.userId" @change="handleChangeUser(row)" placeholder="请选择运营人员">
+            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="运营分类" prop="typeId" min-width="150">
+        <template #default="{ row }">
+          <el-select v-model="row.typeId" @change="handleChangeType(row)" placeholder="请选择运营分类">
+            <el-option v-for="item in row.userTypeList" :label="item.label" :value="item.id" :key="item.id" />
+          </el-select>
+        </template>
       </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty"></el-empty>
@@ -107,31 +103,53 @@
       width="30%"
     >
       <vab-query-form>
-        <vab-query-form-right-panel :span="24">
-          <el-button type="primary">新增</el-button>
-        </vab-query-form-right-panel>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="showAdd">新增</el-button>
+        </vab-query-form-left-panel>
       </vab-query-form>
-      <el-table border stripe :header-cell-style="{ textAlign: 'center' }" >
-        <el-table-column label="姓名" prop="" min-width="100" align="center"></el-table-column>
-        <el-table-column label="自动认领站点" prop="" min-width="200" align="center">
-          <template #default="{ row }">
-            <el-select />
-          </template>
-        </el-table-column>
+      <el-table :data="distributionList" border stripe :header-cell-style="{ textAlign: 'center' }" >
+        <el-table-column label="姓名" prop="userName" min-width="100" align="center"></el-table-column>
+        <el-table-column label="自动认领站点" prop="siteName" min-width="200" align="center"></el-table-column>
         <el-table-column label="操作" min-width="80" align="center">
-          <template #default="{ row }">
-            <el-link :underline="false" type="danger">删除</el-link>
+          <template #default="{ row, $index }">
+            <el-link :underline="false" type="danger" @click="handleDelDistributionList(row, $index)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
+    </vab-dialog>
+    <!-- 新增 -->
+    <vab-dialog
+      title="新增"
+      v-model="addVisible"
+      width="20%"
+      @close="handleCloseAdd"
+    >
+      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-position="right" label-width="auto" style="margin: 0;">
+        <el-form-item label="姓名" prop="userId">
+          <el-select v-model="addForm.userId" placeholder="请选择姓名">
+            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="自动认领站点" prop="site">
+          <el-select v-model="addForm.site" placeholder="请选择自动认领站点">
+            <el-option v-for="item in siteList" :label="item.label" :key="item.id" :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseAdd">取消</el-button>
+        <el-button type="primary" @click="handleConfirmAdd">确定</el-button>
+      </template>
     </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { CheckboxValueType } from 'element-plus'
+import { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
 import { CSSProperties } from 'vue'
+import { addDistributionList, delDistributionList, getDistributionList, getDistributionOptionUserList, getDistributionProductList, getDistributionSiteList, getDistributionUserTypeList, updateDistributionAsinUser, updateDistributionUserType } from '/@/api/devlocal/productDistribution'
+import { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 
 defineOptions({
   name: 'ProductDistribution'
@@ -147,15 +165,84 @@ const queryForm = reactive<IQueryForm>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  site: [],
-  status: 0
+  site: [0],
+  status: -1
 })
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
+const list = ref<IGetDistributionProductList[]>([])
+const distributionList = ref<IGetDistributionList[]>([])
+const siteList = ref<{ id: number, label: string }[]>([])
+const userList = ref<{ id: number, label: string }[]>([])
+// 新增
+const addVisible = ref<boolean>(false)
 // 自动认领设定
 const autoClaimSettingsVisible = ref<boolean>(false)
-const showAutoClaimSettings = () => {
+const addForm = reactive<any>({})
+const addFormRef = ref<FormInstance>()
+const addFormRules = reactive<FormRules>({
+  userId: [{ required: true, message: '请选择姓名', trigger: 'change' }],
+  site: [{ required: true, message: '请选择自动认领站点', trigger: 'change' }]
+})
+const handleChangeUser = async (row: IGetDistributionProductList) => {
+  try {
+    const { data } = await updateDistributionAsinUser({
+      id: row.id,
+      userId: row.userId!
+    })
+    if (data) {
+      const { data: typeList } = await getDistributionUserTypeList({ userId: row.userId! })
+      row.userTypeList = typeList
+    }
+  } catch (error) {
+    
+  }
+}
+const handleChangeType = async (row: IGetDistributionProductList) => {
+  try {
+    await updateDistributionUserType({
+      id: row.id,
+      typeId: row.typeId!
+    })
+  } catch (error) {
+    
+  }
+}
+const handleConfirmAdd = async () => {
+  addFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await addDistributionList(addForm)
+      if (data) {
+        $baseMessage('新增自动认领设定成功！', 'success')
+        fetchDistributionList()
+        handleCloseAdd()
+      }
+    }
+  })
+}
+const handleCloseAdd = () => {
+  addFormRef.value?.resetFields()
+  addVisible.value = false
+}
+const showAdd = () => {
+  addVisible.value = true
+}
+const handleDelDistributionList = async (row: IGetDistributionList, index: number) => {
+  $baseConfirm('确定要删除自动认领设定吗？', null, async () => {
+    const { data } = await delDistributionList({ id: row.id })
+    if (data) {
+      $baseMessage('删除成功！', 'success')
+      distributionList.value.splice(index, 1)
+    }
+  })
+}
+const showAutoClaimSettings = async () => {
   autoClaimSettingsVisible.value = true
+  fetchDistributionList()
+}
+const fetchDistributionList = async () => {
+  const { data } = await getDistributionList()
+  distributionList.value = data
 }
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<any>([])
@@ -181,16 +268,7 @@ const statusOption = [
     value: 1
   },
 ]
-const siteOption = ref<any>([
-  {
-    label: '亚马逊美国US',
-    value: 0
-  },
-  {
-    label: '亚马逊德国DE',
-    value: 1
-  },
-])
+
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const { site } = toRefs(queryForm)
@@ -198,7 +276,7 @@ watch(site, (val) => {
   if (val.length === 0) {
     checkAll.value = false
     indeterminate.value = false
-  } else if (val.length === siteOption.value.length) {
+  } else if (val.length === siteList.value.length) {
     checkAll.value = true
     indeterminate.value = false
   } else {
@@ -208,27 +286,31 @@ watch(site, (val) => {
 const handleCheckAll = (val: CheckboxValueType) => {
   indeterminate.value = false
   if (val) {
-    queryForm.site = siteOption.value.map((_: any) => _.value)
+    queryForm.site = siteList.value.map((_) => _.id)
+    // 全选的时候获取数据
+    queryData()
   } else {
     queryForm.site = []
+    // 取消全选获取数据
+    queryData()
   }
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const label = data.column.label
-  if (label === '预计上架日期' || label === '图片' || label === '入库总数' || label === '产品经理' || label === '运营' || label === '运营分类') {
+  const index = data.columnIndex
+  if (index !== 1 && index !== 2 && index !== 8) {
     return {
       textAlign: 'center'
     }
@@ -238,8 +320,55 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     }
   }
 }
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
+const fetchSiteList = async () => {
+  const { data } = await getDistributionSiteList()
+  siteList.value = data
+}
+const fetchUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  userList.value = data
+}
+const fetchData = async () => {
+  listLoading.value = true
+  const { site, ...filterQueryForm } = queryForm
+  const { data } = await getDistributionProductList({
+    ...filterQueryForm,
+    siteCodes: site.join(',')
+  })
+  total.value = data.total
+  list.value = data.list
+  list.value.forEach(async (item) => {
+    if (item.userId != null && item.userId != undefined) {
+      const { data } = await getDistributionUserTypeList({ userId: item.userId })
+      item.userTypeList = data
+    }
+  })
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchSiteList()
+  fetchUserList()
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-
+.noneHoverTable {
+  :deep() {
+    .clear-padding {
+      padding-top: 0;
+      padding-bottom: 0;
+      .cell {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+}
 </style>

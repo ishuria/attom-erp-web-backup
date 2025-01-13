@@ -137,9 +137,9 @@
             {{ row.lastMile ? row.symbol + row.lastMile : '' }}
           </template>
         </el-table-column>
-        <el-table-column prop="lastfirstMileMile" label="头程￥">
+        <el-table-column prop="firstMile" label="头程￥">
           <template #default="{ row }">
-            {{ row.lastfirstMileMile ? '￥' + row.lastfirstMileMile : '' }}
+            {{ row.firstMile ? '￥' + row.firstMile : '' }}
           </template>
         </el-table-column>
 

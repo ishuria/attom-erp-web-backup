@@ -3,12 +3,13 @@
     v-model="dflag"
     title="运营分类"
     width="25%"
+    @open="fetchData"
     @close="closeDialog"
     top="10vh"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary">新增</el-button>
+        <el-button type="primary" @click="addVisible = true">新增</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" >
@@ -24,10 +25,9 @@
     <el-table
       border 
       :header-cell-style="{ textAlign: 'center' }"
+      :data="list"
     >
-      <el-table-column label="分类" prop="">
-
-      </el-table-column>
+      <el-table-column label="分类" prop="typeName"></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
           <el-button type="primary" @click="modifyVisible = true">修改</el-button>
@@ -58,6 +58,24 @@
       <el-button type="primary">确认</el-button>
     </template>
   </vab-dialog>
+  <!-- 新增 -->
+  <vab-dialog
+    title="新增"
+    width="20%"
+    v-model="addVisible"
+    @close="closeAdd"
+  >
+    <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" style="margin: 0">
+      <el-form-item label="运营分类类型" prop="typeName">
+        <el-input v-model="addForm.typeName" clearable />
+      </el-form-item>
+    </el-form>
+    
+    <template #footer>
+      <el-button @click="closeAdd">取消</el-button>
+      <el-button type="primary">确定</el-button>
+    </template>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -66,7 +84,9 @@ defineOptions({
   name: 'OperationalClassify',
 })
 import { Search } from '@element-plus/icons-vue'
-import { FormRules } from 'element-plus'
+import { FormInstance, FormRules } from 'element-plus'
+import { getOperationTypeList } from '/@/api/devlocal/productPerformance'
+import { IGetOperationTypeListReq } from '/@/type/storeOperation/productPerformanceType'
 
 const dflag = ref < boolean > (false)
 const props = defineProps<{
@@ -83,15 +103,18 @@ watchEffect(() => {
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-type IQueryForm = {
-  keyWord: string
-  pageNo: number
-  pageSize: number
-}
-const queryForm = reactive<IQueryForm>({
+const queryForm = reactive<IGetOperationTypeListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20
+})
+const addVisible = ref<boolean>(false)
+const addForm = reactive<{ typeName: string }>({
+  typeName: ''
+})
+const addFormRef = ref<FormInstance>()
+const addFormRules = reactive<FormRules>({
+  typeName: [{ required: true, message: '请输入运营分类类型', trigger: 'blur' }]
 })
 // 修改
 const modifyVisible = ref<boolean>(false)
@@ -101,17 +124,27 @@ const modifyForm = reactive<{ classify: string }>({
 const modifyFormRules = reactive<FormRules<{ classify: string }>>({
   classify: [{ required: true, message: '请填写分类', trigger: 'blur' }]
 })
+const list = ref<{ id: number, typeName: string }[]>([])
+
+const closeAdd = () => {
+  addFormRef.value?.resetFields()
+  addVisible.value = false
+}
+const fetchData = async () => {
+  const { data } = await getOperationTypeList(queryForm)
+  list.value = data
+}
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 </script>
