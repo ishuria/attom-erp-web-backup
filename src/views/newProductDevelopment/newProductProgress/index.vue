@@ -163,7 +163,7 @@ handleSubmit<template>
           <el-table-column align="center" :fixed="fixed" label="操作" min-width="180px">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" @click="handleSampleCostting(row)">
+                <el-button text type="primary" @click="handleSampleCosting(row)">
                   拿样与核算
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -171,7 +171,7 @@ handleSubmit<template>
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handleSampleCostting(row)">
+                    <el-dropdown-item @click="handleSampleCosting(row)">
                       <el-link type="primary" :underline="false" >拿样与核算</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="addProgressMold(row.progressId)">
@@ -1041,15 +1041,13 @@ const handleCurrentChange = (value: number) => {
 
 
 // 拿样与核算
-const handleSampleCostting = (row:IProgress) =>{
-  
+const handleSampleCosting = (row: IProgress) =>{
   router.push({
     path: '/newProductDevelopment/productProgressComponent',
     query: {
       title: "零件清单",
       progressId: row.progressId,
       product: row.product,
-      timestamp: Date.now(),
     },
   })
 }

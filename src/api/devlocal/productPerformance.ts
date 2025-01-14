@@ -3,9 +3,11 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import {
+  IFilterAmazonSKUListReq,
   IGetOperationAmazonSKUListReq,
   IGetOperationAmazonSKUListRes,
-  IGetOperationTypeListReq
+  IGetOperationTypeListReq,
+  IGetOperationTypeListRes
 } from '/@/type/storeOperation/productPerformanceType'
 
 
@@ -40,7 +42,7 @@ export function getDevelopUserList(): Promise<{ data: { id: number, label: strin
 /**
  * @description 产品表现-运营分类列表
  */
-export function getOperationTypeList(params: IGetOperationTypeListReq): Promise<{ data: { id: number, typeName: string }[] }> {
+export function getOperationTypeList(params: IGetOperationTypeListReq): Promise<IGetOperationTypeListRes> {
   return request({
     url: `${BASE_API}/operation/type/list`,
     method: 'get',
@@ -50,9 +52,69 @@ export function getOperationTypeList(params: IGetOperationTypeListReq): Promise<
 /**
  * @description 产品表现-运营分类新增
  */
-export function addOperationTypeList(params: { typeName: string }): Promise<{ data: boolean }> {
+export function addOperationTypeList(data: { typeName: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/type/add`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-运营分类删除
+ */
+export function delOperationTypeList(data: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/type/delete`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-运营分类修改
+ */
+export function updateOperationTypeList(data: { id: number, typeName: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/type/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-SKU运营分类修改
+ */
+export function updateOperationSKUOperateTypeList(data: { id: number, typeId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/sku/operateType/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-SKU停产状态修改
+ */
+export function updateOperationSKUDisContinuedStatus(data: { id: number, status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/sku/discontinuedStatus/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-SKU运营筛选
+ */
+export function filterAmazonSKUList(data: IFilterAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/screening/list`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品看板表现-asin列表
+ */
+export function getOperationAsinList(params: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
+  return request({
+    url: `${BASE_API}/operation/asin/list`,
     method: 'get',
     params
   })

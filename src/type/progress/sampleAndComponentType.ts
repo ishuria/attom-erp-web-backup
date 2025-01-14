@@ -112,7 +112,7 @@ export interface IProgressEstimatedCostAccounting {
   // 日期
   createTime?: string
   // 站点
-  site?: string
+  site?: number
   // 外币币种
   currencyType?: string
   // 汇率

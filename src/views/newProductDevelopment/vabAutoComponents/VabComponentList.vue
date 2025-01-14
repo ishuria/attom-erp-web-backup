@@ -427,8 +427,8 @@ watchEffect(() => {
 })
 
 const emit = defineEmits<{
-    (e: 'update:imagePreviewVisibale', value: boolean): void
-    (e: 'update:priviewListValue', value: string): void
+    (e: 'update:imagePreviewVisible', value: boolean): void
+    (e: 'update:previewListValue', value: string): void
 }>()
 
 interface SpanMethodProps {
@@ -783,8 +783,8 @@ const componentTableInputChange = async (row: any, column: any, cell: HTMLTableC
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-      emit("update:priviewListValue", row.componentImg)
-      emit("update:imagePreviewVisibale", true)
+      emit("update:previewListValue", row.componentImg)
+      emit("update:imagePreviewVisible", true)
   }
 
   const firstChild = cell?.children[0]?.children[0];
@@ -855,8 +855,8 @@ const addSampleHandler = async () => {
 
 // 样品table
 const settingPriviewList = (imageUr: string) => {
-    emit("update:priviewListValue", imageUr)
-    emit("update:imagePreviewVisibale", true)
+  emit("update:previewListValue", imageUr)
+  emit("update:imagePreviewVisible", true)
 }
 
 

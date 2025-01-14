@@ -19,58 +19,53 @@
         <el-table-column align="center" label="属于变体" min-width="140">
           <template #default="{ row }">
             <el-select v-model="row.orderEntryId" placeholder="请选择变体" @change="handleVariantChange(row)" style="min-width: 100%;">
-              <el-option
-                v-for="item in variantsSelectList"
-                :label="item.label"
-                :key="item.id"
-                :value="item.id"
-              ></el-option>
+              <el-option v-for="item in variantsSelectList" :label="item.label" :key="item.id" :value="item.id"></el-option>
             </el-select>
           </template>
         </el-table-column>
         
         <el-table-column align="center" label="零件图片" class="image-wall" min-width="100">
-            <template #default="{ row, $index }">
-                <el-upload 
-                    list-type="picture-card" 
-                    :file-list="row.componentImgUrl" 
-                    :class="{ hide: row.hide }"
-                    :http-request="(File) => uploadImage(File, row)"
-                >
-                    <el-icon ><Plus /></el-icon>
-                    <template #file="{ file }">
-                        <div>
-                            <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                            <span class="el-upload-list__item-actions">
-                                <span
-                                    class="el-upload-list__item-preview"
-                                    @click="handlePictureCardPreview(file, row)"
-                                >
-                                    <el-icon><zoom-in /></el-icon>
-                                </span>
-                                <span
-                                    class="el-upload-list__item-delete"
-                                    @click="handleRemove(file, row)"
-                                >
-                                    <el-icon><Delete /></el-icon>
-                                </span>
-                            </span>
-                        </div>
-                    </template>
-                </el-upload>
-            </template>
+          <template #default="{ row, $index }">
+            <el-upload 
+              list-type="picture-card" 
+              :file-list="row.componentImgUrl" 
+              :class="{ hide: row.hide }"
+              :http-request="(File) => uploadImage(File, row)"
+            >
+              <el-icon ><Plus /></el-icon>
+              <template #file="{ file }">
+                <div>
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file, row)"
+                    >
+                      <el-icon><zoom-in /></el-icon>
+                    </span>
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file, row)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </span>
+                  </span>
+                </div>
+              </template>
+            </el-upload>
+          </template>
         </el-table-column>
         <el-table-column label="零件ID" align="center" min-width="70"  width="100">
         </el-table-column>   
           
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="textarea" autofocus v-model="row.componentName" :autosize="{ minRows: 2, maxRows: 7 }"
-                    @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-                </div>
-                <span>{{ row.componentName }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+                <el-input type="textarea" autofocus v-model="row.componentName" :autosize="{ minRows: 2, maxRows: 7 }"
+                @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.componentName }}</span>
+          </template>
         </el-table-column>
         <el-table-column label="每个SKU需要数量"  width="100" prop="quantity" align="center">
             <template #header>
@@ -78,7 +73,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.quantity }}</span>
             </template>
@@ -86,7 +81,7 @@
         <el-table-column label="单位"  min-width="70" prop="componentUnit" align="center">
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.componentUnit" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.componentUnit" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.componentUnit }}</span>
             </template>
@@ -97,7 +92,7 @@
           </template>
           <template #default="{ row, $index }">
             <div class="none">
-              <el-input v-model="row.unitPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+              <el-input v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
             </div>
             <span>{{ row.unitPrice }}</span>
           </template>
@@ -108,7 +103,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.totalPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row,)" />
+                    <el-input type="text" v-model="row.totalPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.totalPrice }}</span>
             </template>
@@ -119,7 +114,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.freight" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.freight" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.freight }}</span>
             </template>
@@ -138,7 +133,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.taxIncludedPrice }}</span>
             </template>
@@ -154,7 +149,7 @@
         <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="80">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                     </div>
                 <span>{{ row.minimumOrderQuantity }}</span>
             </template>
@@ -162,7 +157,7 @@
         <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="80">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                        <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                     </div>
                 <span>{{ row.numberFullCartons }}</span>
             </template>
@@ -171,7 +166,7 @@
             <template #default="{row}">
                 <div class="none">
                     <el-input type="text" autofocus v-model="row.supplier" 
-                    @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>
                     <el-text truncated>
@@ -194,7 +189,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.actualTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.actualTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.actualTaxRate }}</span>
             </template>
@@ -206,7 +201,7 @@
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.invoicingTaxRate" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.invoicingTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.invoicingTaxRate }}</span>
             </template>
@@ -216,7 +211,7 @@
         <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
                 </div>
                 <span>
                     <el-text truncated>
@@ -257,13 +252,13 @@
               </el-tooltip>
             </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="150">
-            <template #default="{ row }">
-                <el-space>
-                    <el-link type="primary" :underline="false" @click="handleComponentCopy(row)">复制</el-link>
-                    <el-link type="danger" :underline="false" @click="handleComponentDel(row)">删除</el-link>
-                </el-space>
-            </template>
+        <el-table-column align="center" fixed="right" label="操作" width="130">
+          <template #default="{ row }">
+            <el-space :size="20">
+              <el-link type="primary" :underline="false" @click="handleComponentCopy(row)">复制</el-link>
+              <el-link type="danger" :underline="false" @click="handleComponentDel(row)">删除</el-link>
+            </el-space>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -311,128 +306,145 @@
         ref="tableRef" 
         stripe border 
         :data="variantsList" 
-        :header-cell-style="{ 'text-align': 'center' }"
+        :header-cell-style="{ 'text-align': 'center' }" :cell-style="{ 'text-align': 'center' }"
         @cell-click="changeInput"
-        :cell-style="{ 'text-align': 'center' }"
       >
         <el-table-column label="变体" min-width="100" prop="variant" align="center"></el-table-column>
         <el-table-column prop="site" label="站点" min-width="135">
-            <template #default="{ row }">
-                <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
-                    <el-option v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
-                            :value="dict.value" :label="dict.label"></el-option>
-                </el-select>
-            </template>
+          <template #default="{ row }">
+            <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
+              <el-option v-for="dict in siteList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
+            </el-select>
+          </template>
         </el-table-column>
-        <el-table-column label="外汇币种" min-width="100" prop="currencyType">
+        <el-table-column label="外汇币种" min-width="100" prop="currencyType"></el-table-column>
+        <el-table-column label="汇率" min-width="100" prop="foreignExchange"></el-table-column>
+        <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="125">
+          <template #default="{ row }">
+            {{ row.actualTotalCost!= null ? '￥' + row.actualTotalCost : '' }}
+          </template>
         </el-table-column>
-        <el-table-column label="汇率" min-width="100" prop="foreignExchange">
-        </el-table-column>
-        <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="125"></el-table-column>
         <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.packagingLength" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.packagingLength }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.packagingLength" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.packagingLength != null ? row.packagingLength + 'cm' : '' }}</span>
+          </template>
         </el-table-column>
 
         <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.packagingWidth" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.packagingWidth }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.packagingWidth" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.packagingWidth != null ? row.packagingWidth + 'cm' : '' }}</span>
+          </template>
         </el-table-column>
 
         <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.packagingHeight" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.packagingHeight }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.packagingHeight" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.packagingHeight != null ? row.packagingHeight + 'cm' : '' }}</span>
+          </template>
         </el-table-column>
 
         <el-table-column prop="weight" label="重量(g)">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.weight" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.weight }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.weight" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
+          </template>
         </el-table-column>
-        <el-table-column label="尾程$"  min-width="70" prop="lastMile" ></el-table-column>
-        <el-table-column label="头程￥"  width="90" prop="firstMile" ></el-table-column>    
-        <el-table-column label="打包￥"  width="90" prop="packagingPrice" >
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.packagingPrice" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.packagingPrice }}</span>
-            </template>
+        <el-table-column label="尾程" min-width="70" prop="lastMile" >
+          <template #default="{ row }">
+            {{ row.lastMile != null ? row.symbol + row.lastMile : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="头程￥" width="90" prop="firstMile" >
+          <template #default="{ row }">
+            {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
+          </template>
+        </el-table-column>    
+        <el-table-column label="打包￥" width="90" prop="packagingPrice" >
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.packagingPrice" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.packagingPrice != null ? '￥' + row.packagingPrice : '' }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
-            <template #default="{ row }">
-                <el-select 
-                    v-model="row.firstMileChannel" 
-                    placeholder="请选择头程渠道"
-                    style="min-width: 100%"
-                    @change="handlerEstimatendChange(row)"
-                >
-                    <el-option 
-                        v-for="dict in firstLegChannelColumnsNum" 
-                        :key="dict.value" 
-                        :value="dict.value"
-                        :label="dict.label"
-                    >
-                    </el-option>
-                </el-select>
-            </template>
+          <template #default="{ row }">
+            <el-select 
+              v-model="row.firstMileChannel" 
+              placeholder="请选择头程渠道"
+              style="min-width: 100%"
+              @change="handlerEstimatendChange(row)"
+            >
+              <el-option v-for="dict in channelList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
+            </el-select>
+          </template>
         </el-table-column>
-        <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.finalSellingPrice" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.finalSellingPrice }}</span>
-            </template>
+        <el-table-column label="最终售价" min-width="100" prop="finalSellingPrice">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.finalSellingPrice" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.finalSellingPrice != null ? row.symbol + row.finalSellingPrice : '' }}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
+        <el-table-column prop="grossMarginRate" label="毛利率">
+          <template #default="{ row }">
+            <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
+          </template>
+        </el-table-column>
         <el-table-column prop="roi" label="ROI"></el-table-column>
         <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.weightCoefficient" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.weightCoefficient }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.weightCoefficient" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.weightCoefficient }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.volumeCoefficient" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.volumeCoefficient }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.volumeCoefficient" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.volumeCoefficient }}</span>
+          </template>
         </el-table-column>
         <el-table-column prop="tariff" label="关税%">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input type="text" v-model="row.tariff" @keyup.enter="clickVariantsCancle($event, row)" @blur="clickVariantsCancle($event, row)" />
-                </div>
-                <span>{{ row.tariff ? row.tariff+'%' : '' }}</span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.tariff" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+            </div>
+            <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
-        <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140"></el-table-column>
+        <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
+          <template #default="{ row }">
+            {{ row.platformCommission != null ? row.symbol + row.platformCommission : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="storageFee" label="仓储费2个月" min-width="140">
+          <template #default="{ row }">
+            {{ row.storageFee != null ? row.symbol + row.storageFee : '' }}
+          </template>
+        </el-table-column>
     
-        <el-table-column align="center" fixed="right" label="操作" width="120">
-            <template #default="{ row }">
-                <el-link type="primary" :underline="false">逆算</el-link>
-            </template>
+        <el-table-column align="center" fixed="right" label="操作" width="100">
+          <template #default="{ row }">
+            <el-link type="primary" :underline="false">逆算</el-link>
+          </template>
         </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -453,14 +465,14 @@
   
 <script lang="ts" setup>
 defineOptions({
-    name: 'OrderStep3',
+  name: 'OrderStep3',
 })
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList, siteReflectCurrencyAndExchangeRate } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { getExchangeRate } from '/@/api/devlocal/evaluation'
+import { getExchangeRate, getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
   reviewStepNo3ComponentAdd,
   reviewStepNo3ComponentCopy,
@@ -488,6 +500,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { getChannelList } from '/@/api/devlocal/encasement'
 
 const route: any = useRoute()
 const router = useRouter()
@@ -496,9 +509,9 @@ const { delVisitedRoute } = tabsStore
 const props = defineProps<{ step1Data: number }>()
 
 const emit = defineEmits<{ 
-    (e: 'change-step', value: number): void
-    (e: 'update:imagePreviewVisibale', value: boolean): void
-    (e: 'update:priviewListValue', value: string): void
+  (e: 'change-step', value: number): void
+  (e: 'update:imagePreviewVisibale', value: boolean): void
+  (e: 'update:priviewListValue', value: string): void
  }>()
 
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
@@ -596,18 +609,18 @@ const contractCopy = ref<string>('')
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickAttentionConfirm = async (val: any) => {
-    const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
-    if (data === true) {
-        attentionCopy.value = val
-        clickRow.value.purchaseMatters = val
-    }
+  const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
+  if (data === true) {
+    attentionCopy.value = val
+    clickRow.value.purchaseMatters = val
+  }
 }
 const clickContractConfirm = async (val: any) => {
-    const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
-    if (data === true) {
-        contractCopy.value = val
-        clickRow.value.contractTerms = val
-    }
+  const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
+  if (data === true) {
+    contractCopy.value = val
+    clickRow.value.contractTerms = val
+  }
 }
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
@@ -621,27 +634,28 @@ const clickContractCancel = (val: any) => {
 
 // 零件信息完善与售价核对修改站点
 const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
-    // 外币币种
-    row.currencyType = siteReflectCurrencyAndExchangeRate.get(convertString(row.site))!
-    const {data} = await getExchangeRate({currency:row.currencyType})
-    row.foreignExchange = data
-    row.site = row.site
-    await reviewStepNo3VariantUpdate({
-        currencyType: row.currencyType,
-        finalSellingPrice: row.finalSellingPrice!,
-        firstMileChannel: row.firstMileChannel,
-        foreignExchange: row.foreignExchange,
-        orderEntryId: row.orderEntryId,
-        packagingHeight: row.packagingHeight!,
-        packagingLength: row.packagingLength!,
-        packagingPrice: row.packagingPrice!,     
-        packagingWidth: row.packagingWidth!,     
-        site: row.site,
-        tariff: row.tariff!,
-        volumeCoefficient: row.volumeCoefficient!,
-        weight: row.weight!,
-        weightCoefficient: row.weightCoefficient!,
-    })
+  // 外币币种
+  // row.currencyType = siteReflectCurrencyAndExchangeRate.get(convertString(row.site))!
+  // const {data} = await getExchangeRate({currency:row.currencyType})
+  // row.foreignExchange = data
+  // row.site = row.site
+  await reviewStepNo3VariantUpdate({
+    currencyType: row.currencyType,
+    finalSellingPrice: row.finalSellingPrice!,
+    firstMileChannel: row.firstMileChannel,
+    foreignExchange: row.foreignExchange,
+    orderEntryId: row.orderEntryId,
+    packagingHeight: row.packagingHeight!,
+    packagingLength: row.packagingLength!,
+    packagingPrice: row.packagingPrice!,     
+    packagingWidth: row.packagingWidth!,     
+    site: row.site,
+    tariff: row.tariff! / 100,
+    volumeCoefficient: row.volumeCoefficient!,
+    weight: row.weight!,
+    weightCoefficient: row.weightCoefficient!,
+  })
+  fetchVariantsData()
 }
 const handleVariantChange = async (row: any) => {
     let _variant: any = {}
@@ -677,23 +691,24 @@ const handleInvoicingChange = async (row: any) => {
     fetchVariantsData()
 }
 // 头程渠道修改
-const handlerEstimatendChange = async (row:IreviewStepNo3VariantList) =>{
-    await reviewStepNo3VariantUpdate({
-        currencyType: row.currencyType,
-        finalSellingPrice: row.finalSellingPrice!,
-        firstMileChannel: row.firstMileChannel,
-        foreignExchange: row.foreignExchange,
-        orderEntryId: row.orderEntryId,
-        packagingHeight: row.packagingHeight!,
-        packagingLength: row.packagingLength!,
-        packagingPrice: row.packagingPrice!,     
-        packagingWidth: row.packagingWidth!,     
-        site: row.site,
-        tariff: row.tariff!,
-        volumeCoefficient: row.volumeCoefficient!,
-        weight: row.weight!,
-        weightCoefficient: row.weightCoefficient!,
-    })
+const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
+  await reviewStepNo3VariantUpdate({
+    currencyType: row.currencyType,
+    finalSellingPrice: row.finalSellingPrice!,
+    firstMileChannel: row.firstMileChannel,
+    foreignExchange: row.foreignExchange,
+    orderEntryId: row.orderEntryId,
+    packagingHeight: row.packagingHeight!,
+    packagingLength: row.packagingLength!,
+    packagingPrice: row.packagingPrice!,     
+    packagingWidth: row.packagingWidth!,     
+    site: row.site,
+    tariff: row.tariff! / 100,
+    volumeCoefficient: row.volumeCoefficient!,
+    weight: row.weight!,
+    weightCoefficient: row.weightCoefficient!,
+  })
+  fetchVariantsData()
 }
 
 /**
@@ -871,7 +886,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   }
 }
 // 零件table blur事件
-const clickCancle = async (event:any,value:any) =>{
+const clickCancel = async (event:any,value:any) =>{
     
   // 获取根元素，避免重复调用 getRootElement
   const rootElement = getRootElement(event.srcElement, ".cell");
@@ -894,7 +909,7 @@ const clickCancle = async (event:any,value:any) =>{
   }
 }
 // 变体table blur事件
-const clickVariantsCancle = async (event:any, value:any) => {
+const clickVariantsCancel = async (event:any, value:any) => {
   const rootElement = getRootElement(event.srcElement, ".cell");
 
   if (rootElement) {
@@ -910,7 +925,7 @@ const clickVariantsCancle = async (event:any, value:any) => {
   
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await reviewStepNo3VariantUpdate({...value, tariff: value.tariff / 100})
+    await reviewStepNo3VariantUpdate({ ...value, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100 })
     fetchVariantsData()
   }
 }
@@ -1109,23 +1124,30 @@ const fetchDataComponent = async () =>{
 const fetchVariantsData = async () => {
   let classReviewId: number | undefined
   if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
+    classReviewId = props.step1Data
   } else {
-      classReviewId = route.query.reviewId
+    classReviewId = route.query.reviewId
   }
   try {
-      if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
-          const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
-          variantsList.value = data
-          variantsList.value.forEach((item: any) => {
-              item.tariff = (item.tariff * 100).toFixed(0)
-          })
-      }
+    if (route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
+      const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
+      variantsList.value = data
+    }
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
 }
 const repositoryOption = ref<any>()
+const channelList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number, label: string }[]>([])
+const fetchChannelData = async () => {
+  const { data } = await getChannelList()
+  channelList.value = data
+}
+const fetchSalesSiteList = async () => {
+  const { data } = await getSalesSiteList()
+  siteList.value = data
+}
 const fetchRepository = async () => { //获取收货仓库
     const { data: repository } = await getProductComponentStore()
     repositoryOption.value = repository
@@ -1135,6 +1157,8 @@ onMounted(()=>{
   fetchDataComponent()
   fetchVariantsData()
   fetchRepository()
+  fetchChannelData()
+  fetchSalesSiteList()
 })
 </script>
   

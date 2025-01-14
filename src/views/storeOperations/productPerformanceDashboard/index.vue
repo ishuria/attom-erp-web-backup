@@ -31,12 +31,12 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="queryForm.operationUserId" style="width: 5em;" placeholder="请选择运营人员">
+                <el-select v-model="queryForm.operationUserId" @change="queryData" style="width: 5em;" placeholder="请选择运营人员">
                   <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="开发人">
-                <el-select v-model="queryForm.developUserId" style="width: 5em;" placeholder="请选择开发人">
+                <el-select v-model="queryForm.developUserId" @change="queryData" style="width: 5em;" placeholder="请选择开发人">
                   <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -91,7 +91,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border
+          border stripe
           class="noneHoverTable"
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="cellStyle"
@@ -152,12 +152,12 @@
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
-                <el-select style="min-width: 100%;" v-model="row.operationTypeId">
+                <el-select style="min-width: 100%;" v-model="row.operationTypeId" @change="handleUpdateOpeType(row)">
                   <el-option v-for="item in row.operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox v-model="row.stopProductStatus" :true-value="1" :false-value="0" ></el-checkbox>
+                <el-checkbox v-model="row.stopProductStatus" :true-value="1" :false-value="0" @change="handleUpdateSKUStopStatus(row)"></el-checkbox>
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
@@ -231,6 +231,9 @@
               <span v-if="item.label === '剩余库存'">
                 {{ row.availableInventory }}/{{ row.fbaCount }}
               </span>
+              <span v-if="item.label === '库龄'">
+                <span v-html="row.storageAge"></span>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -250,29 +253,38 @@
           <vab-query-form-left-panel :span="20">
             <el-form inline :model="queryForm">
               <el-form-item label="站点">
-                <el-select />
+                <el-select
+                  v-model="asinQueryForm.site"
+                  multiple
+                  clearable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  placeholder="请选择站点"
+                  :max-collapse-tags="1"
+                  style="width: 220px"
+                  @change="queryData"
+                >
+                  <template #header>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
+                      所有
+                    </el-checkbox>
+                  </template>
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select />
+                <el-select placeholder="请选择币种">
+                  <el-option v-for="item in currencyList" :label="item.label" :value="item.id" :key="item.id" />
+                </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="queryForm.operations" style="width: 5em;" >
-                  <el-option 
-                    v-for="item in operationsOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select v-model="asinQueryForm.operationUserId" @change="queryData" style="width: 5em;" placeholder="请选择运营人员">
+                  <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="开发人">
-                <el-select v-model="queryForm.developer" style="width: 5em;" >
-                  <el-option 
-                    v-for="item in developerOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select v-model="asinQueryForm.developUserId" @change="queryData" style="width: 5em;" placeholder="请选择开发人">
+                  <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -385,7 +397,7 @@
                 </el-tooltip>
               </span>
               <span v-if="item.label === '父体ASIN'">
-                <el-link type="primary">{{ row.pAsin }}</el-link>
+                <el-link type="primary">{{ row.parentAsin }}</el-link>
               </span>
              
               <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -394,17 +406,12 @@
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
-                <el-select style="min-width: 100%;">
-                  <el-option 
-                    v-for="item in opeClassOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select style="min-width: 100%;" v-model="row.operationTypeId" @change="handleUpdateOpeType(row)">
+                  <el-option v-for="item in row.operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+                <el-checkbox v-model="row.stopProductStatus" :true-value="1" :false-value="0" ></el-checkbox>
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
@@ -416,21 +423,21 @@
                 {{ row[label3Map.get(item.label)!] }}天
               </span>
               <span v-if="item.label === '半年有货率'">
-                {{ Math.floor(Number(row.monthlyAvailabilityRate)) }}%
+                {{ Math.floor(Number(row.availableRate)) }}%
               </span>
               <span v-if="item.label === '今广%'">
                 {{ Math.floor(Number(row.currentAdvertisement)) }}%
               </span>
               <span v-if="item.label === '广告'">
-                <el-tag v-if="row.ad === 0" type="danger">关</el-tag>
-                <el-tag v-if="row.ad === 1" type="success">开</el-tag>
+                <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
+                <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
               </span>
               <span v-if="item.label === '运营备注'">
                 <el-tooltip content=" " effect="dark" placement="top">
                   <template #content>
-                    <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
                   </template>
-                  <span>{{ removeHtmlTags(row.remark) }}</span>
+                  <span>{{ removeHtmlTags(row.operationRemark) }}</span>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '饼图'">
@@ -444,14 +451,19 @@
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
-                {{ 836 }}
-                <vab-icon icon="arrow-up-fill" class="arrow-up" />
-                <span style="color: #999">{{ 91 }}</span>
+                {{ row.nowSubcategoryRanking }}
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+                <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
-                {{ 836 }}
-                <vab-icon icon="arrow-down-fill" class="arrow-down" />
-                <span style="color: #999">{{ 91 }}</span>
+                {{ row.nowMajorCategoryRanking }}
+                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+                <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+              </span>
+              <span v-if="item.label === '剩余库存'">
+                {{ row.availableInventory }}/{{ row.fbaCount }}
               </span>
             </template>
           </el-table-column>
@@ -677,6 +689,7 @@
     <VabFilterDialog 
       :filter-visible="filterVisible"
       @update-visible="handleCloseFilterDialog"
+      @update-filter="handleConfirmFilter"
     />
     <!-- 关键词排名趋势 -->
     <VabKeyWordRankTrend 
@@ -739,7 +752,7 @@ import { CSSProperties } from 'vue'
 import { DraggableEvent, VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { currencySymbols, months, opeClassOption } from '../constantOption'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { getCurrencyList, getDevelopUserList, getOperationAmazonSKUList, getOperationTypeList } from '/@/api/devlocal/productPerformance'
+import { filterAmazonSKUList, getCurrencyList, getDevelopUserList, getOperationAmazonSKUList, getOperationTypeList, updateOperationSKUDisContinuedStatus, updateOperationSKUOperateTypeList } from '/@/api/devlocal/productPerformance'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { IGetOperationAmazonSKUList, IGetOperationTypeListReq } from '/@/type/storeOperation/productPerformanceType'
 
@@ -788,10 +801,45 @@ const queryForm = reactive<any>({
   operationUserId: 1,
   developUserId: 1
 })
+const asinQueryForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  site: [0, 1],
+  operationUserId: 1,
+  developUserId: 1
+})
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const list = ref<IGetOperationAmazonSKUList[]>([])
 const { site } = toRefs(queryForm)
+const handleConfirmFilter = async (filterForm: any) => {
+  const { site, ...filterQueryForm } = queryForm
+  const siteIds = site.join(',')
+  const { data } = await filterAmazonSKUList({
+    ...filterQueryForm,
+    ...filterForm,
+    siteIds
+  })
+  if (data) {
+    $baseConfirm('SKU运营筛选成功！', 'success')
+    filterVisible.value = false
+    total.value = data.total
+    list.value = data.list
+  }
+}
+const handleUpdateOpeType = async (row: IGetOperationAmazonSKUList) => {
+  const { data } = await updateOperationSKUOperateTypeList({
+    id: row.id!,
+    typeId: row.operationTypeId!
+  })
+}
+const handleUpdateSKUStopStatus = async (row: IGetOperationAmazonSKUList) => {
+  const { data } = await updateOperationSKUDisContinuedStatus({
+    id: row.id!,
+    status: row.stopProductStatus!
+  })
+}
 watch(site, (val) => {
   if (val.length === 0) {
     checkAll.value = false
@@ -808,11 +856,11 @@ const handleCheckAll = (val: CheckboxValueType) => {
   if (val) {
     queryForm.site = siteList.value.map((_) => _.id)
     // 全选的时候获取数据
-    // queryData()
+    queryData()
   } else {
     queryForm.site = []
     // 取消全选获取数据
-    // queryData()
+    queryData()
   }
 }
 const showRemark = () => {
@@ -1550,7 +1598,7 @@ const columns = ref<any>([
     label: '库龄',
     prop: 'inventoryAge',
     checked: true,
-    minWidth: 90,
+    minWidth: 180,
   },
   {
     label: '剩余库存',
@@ -1694,7 +1742,7 @@ const columnsAsin = ref<any>([
   },
   {
     label: '父体ASIN',
-    prop: 'pAsin',
+    prop: 'parentAsin',
     disableCheck: true,
     checked: true,
     minWidth: 110,
@@ -1702,7 +1750,7 @@ const columnsAsin = ref<any>([
   },
   {
     label: '站点',
-    prop: 'site',
+    prop: 'siteName',
     checked: true,
     minWidth: 100,
   },
@@ -1714,31 +1762,31 @@ const columnsAsin = ref<any>([
   },
   {
     label: '今销#',
-    prop: 'todaySell',
+    prop: 'currentSalesNumber',
     checked: true,
     minWidth: 90,
   },
   {
     label: '今单#',
-    prop: 'todayOrder',
+    prop: 'currentSalesOrder',
     checked: true,
     minWidth: 90,
   },
   {
     label: '今销',
-    prop: 'todaySellD',
+    prop: 'currentSalesPrice',
     checked: true,
     minWidth: 90,
   },
   {
     label: '今广%',
-    prop: 'todayAd',
+    prop: 'currentAdvertisement',
     checked: true,
     minWidth: 90,
   },
   {
     label: '广告',
-    prop: 'ad',
+    prop: 'advertisementStatus',
     checked: true,
     minWidth: 80,
   },
@@ -1756,31 +1804,31 @@ const columnsAsin = ref<any>([
   },
   {
     label: '运营分类',
-    prop: 'classify',
+    prop: 'operationTypeId',
     checked: true,
     minWidth: 130,
   },
   {
     label: '小类排名',
-    prop: 'sRank',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
   {
     label: '大类排名',
-    prop: 'bRank',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
   {
     label: '头部产品#',
-    prop: 'topProduct',
+    prop: 'headerCount',
     checked: true,
     minWidth: 100,
   },
   {
     label: '运营备注',
-    prop: 'remark',
+    prop: 'operationRemark',
     checked: true,
     minWidth: 150,
   },
@@ -1792,157 +1840,157 @@ const columnsAsin = ref<any>([
   },
   {
     label: '2周广告转化',
-    prop: 'conversion',
+    prop: 'tWksAdvRate',
     checked: true,
     minWidth: 120,
   },
   {
     label: '2周广告点击',
-    prop: 'click',
+    prop: 'tWksClickRate',
     checked: true,
     minWidth: 120,
   },
   {
     label: '2周总转化',
-    prop: 'totalConvert',
+    prop: 'tWksTotalConv',
     checked: true,
     minWidth: 110,
   },
   {
     label: '月销量',
-    prop: 'monthlySell',
+    prop: 'monthSalesVolume',
     checked: true,
     minWidth: 90,
   },
   {
     label: '月净利润',
-    prop: 'monthlyNetProfit',
+    prop: 'monthNetProfit',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月销售额',
-    prop: 'monthlySales',
+    prop: 'monthSalesPrice',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月净利率',
-    prop: 'monthlyNetInterestRate',
+    prop: 'monthNetProfitMargin',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月广告销售',
-    prop: 'monthlyAdSales',
+    prop: 'monthAdvSales',
     checked: true,
     minWidth: 110,
   },
   {
     label: '月广告支出',
-    prop: 'monthlyAdSpend',
+    prop: 'monthAdvExpenditure',
     checked: true,
     minWidth: 110,
   },
   {
     label: '月广告%',
-    prop: 'monthlyAd',
+    prop: 'monthAdv',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月ACOS',
-    prop: 'monthlyACOS',
+    prop: 'monthAcos',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月TACOS',
-    prop: 'monthlyTACOS',
+    prop: 'monthTacos',
     checked: true,
     minWidth: 100,
   },
   {
     label: '1年ACOS',
-    prop: 'yearACOS',
+    prop: 'yearAcos',
     checked: true,
     minWidth: 100,
   },
   {
     label: '1年TACOS',
-    prop: 'yearTACOS',
+    prop: 'yearTacos',
     checked: true,
     minWidth: 110,
   },
   {
     label: '移除量',
-    prop: 'remove',
+    prop: 'removalAmount',
     checked: true,
     minWidth: 90,
   },
   {
     label: '替换量',
-    prop: 'replace',
+    prop: 'replacementAmount',
     checked: true,
     minWidth: 90,
   },
   {
     label: '月退货%',
-    prop: 'monthlyReturns',
+    prop: 'monthReturnGoods',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月退款%',
-    prop: 'monthlyRefund',
+    prop: 'monthRefund',
     checked: true,
     minWidth: 100,
   },
   {
     label: '上新',
-    prop: 'newReleases',
+    prop: 'newArrivalDay',
     checked: true,
     minWidth: 90,
   },
   {
     label: '库龄',
-    prop: 'storageAge',
+    prop: 'inventoryAge',
     checked: true,
     minWidth: 90,
   },
   {
     label: '剩余库存',
-    prop: 'remainingStock',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
   {
     label: '接收中',
-    prop: 'receiving',
+    prop: 'acceptingCount',
     checked: true,
     minWidth: 90,
   },
   {
     label: '最近入库',
-    prop: 'recentlyStorage',
+    prop: 'recentlyInboundStorage',
     checked: true,
     minWidth: 100,
   },
   {
     label: '总入库',
-    prop: 'totalStorage',
+    prop: 'inboundStorageTotal',
     checked: true,
     minWidth: 90,
   },
   {
     label: '库存可售',
-    prop: 'stockSale',
+    prop: 'esAvailableSaleDay',
     checked: true,
     minWidth: 100,
   },
   {
     label: '可售含在途',
-    prop: 'saleTransit',
+    prop: 'esAvailableSaleDayTotal',
     checked: true,
     minWidth: 110,
   },
@@ -1954,37 +2002,37 @@ const columnsAsin = ref<any>([
   },
   {
     label: '订货#',
-    prop: 'order',
+    prop: 'orderSkuNumber',
     checked: true,
     minWidth: 90,
   },
   {
     label: '计划#',
-    prop: 'order',
+    prop: 'planPoPurchaseSkuNumber',
     checked: true,
     minWidth: 90,
   },
   {
     label: '签收',
-    prop: 'sign',
+    prop: 'quantityReceived',
     checked: true,
     minWidth: 90,
   },
   {
     label: '半年有货率',
-    prop: 'monthlyAvailabilityRate',
+    prop: 'availableRate',
     checked: true,
     minWidth: 110,
   },
   {
     label: '预估下月仓储费',
-    prop: 'estimatedFees',
+    prop: 'estimateNextMonthStorageFee',
     checked: true,
     minWidth: 140,
   },
   {
     label: '操作建议',
-    prop: 'suggestions',
+    prop: 'operateSuggestion',
     checked: true,
     minWidth: 100,
   },
@@ -1996,13 +2044,13 @@ const columnsAsin = ref<any>([
   },
   {
     label: '产品描述',
-    prop: 'productDes',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
   {
     label: '产品经理',
-    prop: 'person',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
@@ -2529,7 +2577,7 @@ const handleWidth = (item: any) => {
     if (item.label === 'SKU') {
       return flexColumnWidth(fakeData.value, 'SKU', 'sku')
     } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(fakeData.value, '父体ASIN-ASIN-ASIN', 'pAsin')
+      return flexColumnWidth(fakeData.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
     } else {
       return item.minWidth
     }
@@ -2622,19 +2670,19 @@ const imagePreviewShow = (url: string) => {
 
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '运营备注') {
+  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '运营备注' || label === '库龄') {
     return {
       textAlign: 'left'
     }
@@ -2734,9 +2782,26 @@ const fetchData = async () => {
 				4500
       ]
     }
+    item.storageAge = `
+      <div class="storage-list">
+        ${storageList.map((item) => `
+          <div class="storage-item">
+            <span class="value1">${item.name}</span>
+            <span class="value2">${item.fba}</span>
+            <span class="value3">${item.fba ? `($${item.price})` : ''}</span>
+          </div>
+        `).join('')}
+      </div>
+    `
+
   })
   listLoading.value = false
 }
+const storageList = [
+  { name: '181-270', fba: 10, price: 2.34 },
+  { name: '271-360', fba: 216, price: 35.33 },
+  { name: '361+', fba: 0 },
+]
 onBeforeMount(() => {
   fetchSiteList()
   fetchCurrencyList()
@@ -2786,6 +2851,25 @@ onBeforeMount(() => {
           flex: 1;
         }
       }
+    }
+
+    .storage-list {
+      display: grid;
+    }
+
+    .storage-item {
+      display: grid;
+      grid-template-columns: 65px 35px 60px; /* 设定固定列宽 */
+      text-align: left;
+    }
+ 
+    .value2 {
+      color: #000;
+      font-weight: 550;
+    }
+    .value3 {
+      color: var(--el-color-danger);
+      font-weight: 550;
     }
   }
 }
@@ -2901,4 +2985,5 @@ onBeforeMount(() => {
   transform: scale(0.9, 1.4);  
   margin-left: 3px;
 }
+
 </style>

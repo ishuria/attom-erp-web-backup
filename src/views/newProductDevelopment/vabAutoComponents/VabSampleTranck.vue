@@ -120,7 +120,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    (e: 'update:priviewListValue', value: string): void
+    (e: 'update:previewListValue', value: string): void
  }>()
 
  // 订单号
@@ -145,7 +145,7 @@ watchEffect(()=>{
 // 拿样table单击事件
 const sampleTableInputChage = (row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
     if (getSpecificChildren(cell, "img")[0]){
-        emit("update:priviewListValue",row.componentImg)
+        emit("update:previewListValue",row.componentImg)
     }
 }
 

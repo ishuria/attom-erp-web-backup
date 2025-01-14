@@ -158,9 +158,9 @@
       <el-table-column label="日期" prop="createTime" min-width="115"></el-table-column>
       <el-table-column label="站点" prop="" min-width="135">
         <template #default="{ row }">
-            <el-select v-model="row.site" placeholder="请选择站点" @change="" style="min-width: 100%;">
-             
-            </el-select>
+          <el-select v-model="row.site" placeholder="请选择站点" @change="" style="min-width: 100%;">
+            <el-option v-for="item in siteList" :label="item.label" :value="item.id" :key="item.id" />
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="外汇币种" prop="" min-width="100"></el-table-column>
@@ -170,39 +170,39 @@
           <div class="none">
             <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.price }}</span>
+          <span>{{ row.price != null ? '￥' + row.price : ''}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="长" prop="length" min-width="70">
+      <el-table-column label="长(cm)" prop="length" min-width="80">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.length }}</span>
+          <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="宽" prop="width" min-width="70">
+      <el-table-column label="宽(cm)" prop="width" min-width="80">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.width }}</span>
+          <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="高" prop="height" min-width="70">
+      <el-table-column label="高(cm)" prop="height" min-width="80">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.height }}</span>
+          <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="重量" prop="weight" min-width="80">
+      <el-table-column label="重量(g)" prop="weight" min-width="80">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.weight }}</span>
+          <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="下一档位" prop="" min-width="100"></el-table-column>
@@ -223,7 +223,7 @@
           <div class="none">
             <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.lastMile }}</span>
+          <span>{{ row.lastMile != null ? row.symbol + row.lastMile : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="打包¥" prop="packaging" min-width="100">
@@ -231,16 +231,19 @@
           <div class="none">
             <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.packaging }}</span>
+          <span>{{ row.packaging != null ? '￥' + row.packaging : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头程¥" prop="firstMile" min-width="100"></el-table-column>
-      <el-table-column label="头程渠道" prop="firstMileChannel" min-width="100">
+      <el-table-column label="头程¥" prop="firstMile" min-width="100">
         <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.firstMileChannel" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.firstMileChannel }}</span>
+          {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="头程渠道" prop="firstMileChannel" min-width="150">
+        <template #default="{ row }">
+          <el-select v-model="row.firstMileChannel" style="min-width: 100%;">
+            <el-option v-for="item in channelList" :label="item.label" :value="item.id" :key="item.id" />
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="售价" prop="sellingPrice" min-width="100">
@@ -248,10 +251,17 @@
           <div class="none">
             <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.sellingPrice }}</span>
+          <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="毛利率" prop="" min-width="100"></el-table-column>
+      <el-table-column label="毛利率" prop="grossMarginRate" min-width="100">
+        <template #default="{ row }">
+          <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
+          <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
+          <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
+          <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
+        </template>
+      </el-table-column>
       <el-table-column label="ROI" prop="roi" min-width="90"></el-table-column>
       <el-table-column label="重量系数" prop="weightCoefficient" min-width="100">
         <template #default="{ row }">
@@ -274,7 +284,7 @@
           <div class="none">
             <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.tariff }}</span>
+          <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="平台佣金" prop="platformCommission" min-width="100">
@@ -282,7 +292,7 @@
           <div class="none">
             <el-input v-model="row.platformCommission" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.platformCommission }}</span>
+          <span>{{ row.platformCommission != null ? row.symbol + row.platformCommission : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="仓储费2个月" prop="storageFee" min-width="140">
@@ -290,7 +300,7 @@
           <div class="none">
             <el-input v-model="row.storageFee" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.storageFee }}</span>
+          <span>{{ row.storageFee != null ? row.symbol + row.storageFee : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
@@ -311,7 +321,7 @@
                   <el-link type="primary" :underline="false" >复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="">
-                  <el-link type="primary" :underline="false" >删除</el-link>
+                  <el-link type="danger" :underline="false" >删除</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -330,6 +340,8 @@ import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '.
 import { CircleClose, ArrowDown } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { getChannelList } from '~/src/api/devlocal/encasement'
+import { getSalesSiteList } from '~/src/api/devlocal/evaluation'
 
 defineOptions({
   name: 'VabCostAnalysis'
@@ -819,8 +831,19 @@ const tooltipIsDisHandler = (event: any) => {
     isOverflow.value = true
   }
 }
-
+const channelList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number, label: string }[]>([])
+const fetchChannelData = async () => {
+  const { data } = await getChannelList()
+  channelList.value = data
+}
+const fetchSalesSiteList = async () => {
+  const { data } = await getSalesSiteList()
+  siteList.value = data
+}
 onBeforeMount(() => {
+  fetchChannelData()
+  fetchSalesSiteList()
   percentageAgeData = data2.value.map(item => ({
     ...item,
     percentage: ((item.value / totalAgeValue) * 100).toFixed(2)

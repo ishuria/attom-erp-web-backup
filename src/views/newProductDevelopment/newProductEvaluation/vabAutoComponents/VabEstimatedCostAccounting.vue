@@ -23,7 +23,7 @@
         :data="dList" 
         border stripe 
         @cell-click="changeInput"
-        :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }"
+        :cell-style="cellStyle" :header-cell-style="{ 'text-align': 'center' }"
         :cell-class-name="getCellStyle"
         @selection-change="handleSelectionChange"
         max-height="65vh"
@@ -97,39 +97,39 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="length" label="长">
+        <el-table-column prop="length" label="长(cm)">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.length }}</span>
+            <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="width" label="宽">
+        <el-table-column prop="width" label="宽(cm)">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.width }}</span>
+            <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="height" label="高">
+        <el-table-column prop="height" label="高(cm)">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.height }}</span>
+            <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="weight" label="重量">
+        <el-table-column prop="weight" label="重量(g)">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
             </div>
-            <span>{{ row.weight }}</span>
+            <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="lastMile" label="尾程">
@@ -340,6 +340,7 @@ import debounce from 'lodash/debounce'
 import { uploadFileBoBakend } from '/@/api/devlocal/evaluation'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
+import { CSSProperties } from 'vue'
 
 
 defineOptions({
@@ -585,7 +586,7 @@ const handlerSiteChange = async (row: IEstimatedCostAccounting) =>{
   // const {data} = await getExchangeRate({currency:row.currencyType})
   // row.foreignExchange = data
   // row.site = row.site  
-  await updateEstimatedCostAccounting({ ...row })
+  await updateEstimatedCostAccounting({ ...row, tariff: Number(row.tariff) / 100, grossMarginRate: Number(row.grossMarginRate) / 100 })
   props.callParentMethod(parseInt(evaluationId.value))
 }
 
@@ -681,7 +682,17 @@ const updateUploadPicVisible = (newV:boolean) =>{
     uploadPicVisible.value = newV
 }
 
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const index = data.columnIndex
+  if (index === 6 || index === 7 || index === 8) {
+    return {
+      textAlign: 'left'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
