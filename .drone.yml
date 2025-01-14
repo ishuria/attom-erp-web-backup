@@ -89,7 +89,7 @@ steps:
               {
                 "tag": "div",
                 "text": {
-                  "content": "**构建的项目名称：{{repo.name}}**，分支：{{build.branch}},构建编号：{{build.number}}，{{build.author}}提交的代码内容为：{{build.message}}，<br/>项目构建状态为：{{build.status}}",
+                  "content": "**构建的项目名称：{{repo.name}}**，分支：{{build.branch}},构建编号：{{build.number}},{{build.author}}提交的代码内容为：{{build.message}},项目构建状态为：{{build.status}}。",
                   "tag": "lark_md"
                 }
               }
