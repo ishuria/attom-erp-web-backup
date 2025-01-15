@@ -241,7 +241,7 @@
       </el-table-column>
       <el-table-column label="头程渠道" prop="firstMileChannel" min-width="150">
         <template #default="{ row }">
-          <el-select v-model="row.firstMileChannel" style="min-width: 100%;">
+          <el-select v-model="row.firstMileChannel" style="min-width: 100%;" placeholder="请选择头程渠道">
             <el-option v-for="item in channelList" :label="item.label" :value="item.id" :key="item.id" />
           </el-select>
         </template>
@@ -292,7 +292,7 @@
           <div class="none">
             <el-input v-model="row.platformCommission" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.platformCommission != null ? row.symbol + row.platformCommission : '' }}</span>
+          <span>{{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="仓储费2个月" prop="storageFee" min-width="140">
@@ -300,7 +300,7 @@
           <div class="none">
             <el-input v-model="row.storageFee" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.storageFee != null ? row.symbol + row.storageFee : '' }}</span>
+          <span>{{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">

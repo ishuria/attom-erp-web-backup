@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
-      <el-tab-pane label="已分配" :name="0">
+      <el-tab-pane label="未分配" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="showPostTask">发布任务</el-button>
@@ -10,7 +10,7 @@
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
             <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
-            <!-- <el-button type="primary" @click="showAssignTask">任务分配修改</el-button> -->
+            <el-button type="primary" @click="showAssignTask">任务分配修改</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -67,20 +67,7 @@
             </template>
           </el-table-column>
           <el-table-column label="剩余自然日" prop="naturalDay" min-width="110"></el-table-column>
-          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.requiredAddress" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
-              </div>
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.requiredAddress }}</div>
-                </template>
-                <el-text truncated>{{ row.requiredAddress }}</el-text>
-              </el-tooltip>
-              <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
-            </template>
-          </el-table-column>
+          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160"></el-table-column>
           <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
             <template #default="{ row }">
               <vab-icon v-if="row.sellingPointStatus === 1" icon="check-fill" class="custom-check" />
@@ -200,7 +187,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="未分配" :name="1">
+      <el-tab-pane label="已分配" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="showPostTask">发布任务</el-button>
@@ -209,7 +196,7 @@
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
             <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
-            <el-button type="primary" @click="showAssignTask">任务分配修改</el-button>
+            <!-- <el-button type="primary" @click="showAssignTask">任务分配修改</el-button> -->
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -266,7 +253,20 @@
             </template>
           </el-table-column>
           <el-table-column label="剩余自然日" prop="naturalDay" min-width="110"></el-table-column>
-          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160"></el-table-column>
+          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.requiredAddress" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.requiredAddress }}</div>
+                </template>
+                <el-text truncated>{{ row.requiredAddress }}</el-text>
+              </el-tooltip>
+              <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
+            </template>
+          </el-table-column>
           <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
             <template #default="{ row }">
               <vab-icon v-if="row.sellingPointStatus === 1" icon="check-fill" class="custom-check" />

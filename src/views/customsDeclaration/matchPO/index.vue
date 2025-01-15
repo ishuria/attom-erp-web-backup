@@ -352,6 +352,10 @@ const setSelectRows = (value: any) => {
 }
 // 退税归档
 const handleArchiveTaxRefund = (row: any) => {
+  if (row.taxRefundStatus === 1) {
+    $baseMessage('此记录已退税归档，请勿重复退税归档！', 'error')
+    return
+  }
   $baseConfirm('确定要退税归档吗？', null, async () => {
     const { data } = await archiveTaxRefund({
       id: row.id
@@ -363,6 +367,10 @@ const handleArchiveTaxRefund = (row: any) => {
   })
 }
 const handleCancelArchiveTaxRefund = (row: any) => {
+  if (row.taxRefundStatus === 0) {
+    $baseMessage('此批次的状态不是已归档到税管理，不能进行撤销退税归档操作！', 'error')
+    return
+  }
   $baseConfirm('确定要撤销退税归档吗？', null, async () => {
     const { data } = await cancelArchiveTaxRefund({
       id: row.id
@@ -508,6 +516,10 @@ const handleUpdateFreightForwardingNumber = async (row: any) => {
 }
 // 打包归档
 const handleArchivePackage = async (row: any) => {
+  if (row.packArchiveStatus === 1) {
+    $baseMessage('此记录已打包归档，请勿重复打包归档！', 'error')
+    return
+  }
   $baseConfirm('确定要打包归档吗？', null, async () => {
     const { data } = await archivePackageShipment({
       id: row.id
@@ -520,6 +532,10 @@ const handleArchivePackage = async (row: any) => {
 }
 // 撤销打包归档
 const handleCancelArchivePackage = async (row: any) => {
+  if (row.packArchiveStatus === 0) {
+    $baseMessage('此匹配数据状态不是已打包归档，不能进行撤销归档操作！', 'error')
+    return
+  }
   $baseConfirm('确定要撤销打包归档吗?', null, async () => {
     const { data } = await cancelArchivePackageShipment({
       id: row.id
@@ -532,6 +548,10 @@ const handleCancelArchivePackage = async (row: any) => {
 }
 // 出库归档
 const handleArchiveOutbound = async (row: any) => {
+  if (row.outboundStatus === 1) {
+    $baseMessage('此记录已出库归档，请勿重复出库归档！', 'error')
+    return
+  }
   $baseConfirm('确定要出库归档吗？', null, async () => {
     const { data } = await archiveOutbound({
       id: row.id
@@ -544,6 +564,10 @@ const handleArchiveOutbound = async (row: any) => {
 }
 // 撤销出库归档
 const handleCancelArchiveOutbound = async (row: any) => {
+  if (row.outboundStatus === 0) {
+    $baseMessage('该批次的出库状态不是已出库，不能进行撤销出库操作！', 'error')
+    return
+  }
   $baseConfirm('确定要撤销出库归档吗?', null, async () => {
     const { data } = await cancelArchiveOutbound({
       id: row.id

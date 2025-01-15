@@ -261,3 +261,14 @@ export function getSalesSiteList(): Promise<{ data: { id: number, label: string 
     method: 'get',
   })
 }
+
+/**
+ * @description 新品评估成本核算-逆算
+ */
+export function reverseCalculateEstimatedCostAccounting(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/estimatedCostAccounting/reverse/calculation`,
+    method: 'post',
+    params
+  })
+}

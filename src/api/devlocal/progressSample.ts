@@ -476,3 +476,19 @@ export function submitProgressConsumable(data?: ISubmitProgressConsumableQuery):
     data,
   })
 }
+// 新品进度成本核算-逆算
+export function reverseCalculateProgress(params?: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/progress/reverse/calculation`,
+    method: 'post',
+    params,
+  })
+}
+// 新品进度拿样清单成本试算-逆算
+export function reverseCalculateProgressSample(params?: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/progress/sample/reverse/calculation`,
+    method: 'post',
+    params,
+  })
+}

@@ -6,6 +6,8 @@ import {
   IFilterAmazonSKUListReq,
   IGetOperationAmazonSKUListReq,
   IGetOperationAmazonSKUListRes,
+  IGetOperationAsinListRes,
+  IGetOperationParentAsinRes,
   IGetOperationTypeListReq,
   IGetOperationTypeListRes
 } from '/@/type/storeOperation/productPerformanceType'
@@ -112,9 +114,29 @@ export function filterAmazonSKUList(data: IFilterAmazonSKUListReq): Promise<IGet
 /**
  * @description 产品看板表现-asin列表
  */
-export function getOperationAsinList(params: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
+export function getOperationAsinList(params: IGetOperationAmazonSKUListReq): Promise<IGetOperationAsinListRes> {
   return request({
     url: `${BASE_API}/operation/asin/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 产品表现-ASIN运营筛选
+ */
+export function filterOperationAmazonAsinList(data: IFilterAmazonSKUListReq): Promise<IGetOperationAsinListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/asin/screening/list`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品看板表现-parentAsin列表
+ */
+export function getOperationParentAsinList(params: IGetOperationAmazonSKUListReq): Promise<IGetOperationParentAsinRes> {
+  return request({
+    url: `${BASE_API}/operation/parent/asin/list`,
     method: 'get',
     params
   })

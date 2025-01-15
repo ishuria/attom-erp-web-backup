@@ -159,20 +159,20 @@
 
       <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
         <template #default="{ row }">
-          {{ row.platformCommission != null ? row.symbol + row.platformCommission : '' }}
+          {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
         </template>
       </el-table-column>
 
       <el-table-column prop="storageFee" label="仓储费2个月" min-width="140">
         <template #default="{ row }">
-          {{ row.storageFee != null ? row.symbol + row.storageFee : '' }}
+          {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
         </template>
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" min-width="130">
         <template #default="{ row }">
           <el-space :size="20">
-            <el-link type="primary" :underline="false" >逆算</el-link>
+            <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
             <el-link type="success" :underline="false"  @click="saveTrialCalculationHandler(row)">保存</el-link>
           </el-space>
         </template>
@@ -195,7 +195,7 @@
 import { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { addTrialCalculation, getTrialCalculation, getTrialCalculationProductDesc, saveTrialCalculation, updateTrialCalculation, updateTrialcalculationProductdesc } from '/@/api/devlocal/progressSample'
+import { addTrialCalculation, getTrialCalculation, getTrialCalculationProductDesc, reverseCalculateProgressSample, saveTrialCalculation, updateTrialCalculation, updateTrialcalculationProductdesc } from '/@/api/devlocal/progressSample'
 import { IProgressEstimatedCostAccounting, IProgressSample } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -223,6 +223,57 @@ const progressLogCopy = ref<string | undefined>('')
 
 const classify = ref<string>('')
 const _index = ref<number>(0)
+
+const isValueAllInput = (row: IProgressSample) => {
+  if (row.site == null) { 
+    $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (!row.desc?.trim()) { 
+    $baseMessage('产品描述不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.length == null) {
+    $baseMessage('产品的长度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.width == null) {
+    $baseMessage('产品的宽度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.height == null) {
+    $baseMessage('产品的高度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weight == null) {
+    $baseMessage('产品的重量(g)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.packaging == null) {
+    $baseMessage('产品的打包价格不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.firstMileChannel == null) {
+    $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (row.sellingPrice == null) {
+    $baseMessage('产品的售价不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weightCoefficient == null) {
+    $baseMessage('产品的重量系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.volumeCoefficient == null) {
+    $baseMessage('产品的体积系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.tariff == null) {
+    $baseMessage('产品的关税不能为空，请填写后再进行逆算', 'warning')
+    return false
+  }
+  return true
+}
+const handleCalculate = async (row: IProgressSample) => {
+  const isInputAll = isValueAllInput(row)
+  if (isInputAll) {
+    const { data } = await reverseCalculateProgressSample({ id: Number(row.id) })
+    if (data) {
+      $baseMessage('逆算成功!', 'success')
+      fetchData()
+    }
+  }
+}
 const handleDescClick = (index: number) => {
   _index.value = index
 }

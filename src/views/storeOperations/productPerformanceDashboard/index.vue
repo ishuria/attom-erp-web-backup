@@ -262,7 +262,7 @@
                   placeholder="请选择站点"
                   :max-collapse-tags="1"
                   style="width: 220px"
-                  @change="queryData"
+                  @change="queryAsinData"
                 >
                   <template #header>
                     <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
@@ -278,12 +278,12 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="asinQueryForm.operationUserId" @change="queryData" style="width: 5em;" placeholder="请选择运营人员">
+                <el-select v-model="asinQueryForm.operationUserId" @change="queryAsinData" style="width: 5em;" placeholder="请选择运营人员">
                   <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="开发人">
-                <el-select v-model="asinQueryForm.developUserId" @change="queryData" style="width: 5em;" placeholder="请选择开发人">
+                <el-select v-model="asinQueryForm.developUserId" @change="queryAsinData" style="width: 5em;" placeholder="请选择开发人">
                   <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -343,7 +343,7 @@
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="cellStyle"
           :cell-class-name="clearPadding" 
-          :data="fakeData"
+          :data="asinList"
           @cell-click="cellClick"
         >
           <el-table-column
@@ -374,7 +374,7 @@
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
-                <el-image :src="row.componentImage" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.componentImage)" >
+                <el-image :src="row.asinImgUrl" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.asinImgUrl)" >
                   <template #error>
                     <el-icon></el-icon>
                   </template>
@@ -383,9 +383,9 @@
               <span v-if="item.label === 'ASIN'">
                 <el-link type="primary">{{ row.asin }}</el-link>
                 <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate" /></span>
-                  <span class="rate-count">{{ 484 }}</span>
+                  <span class="rate-value">{{ row.rating }}</span>
+                  <span><el-rate v-model="row.displayRating" :void-icon="Star" disabled class="custom-rate" /></span>
+                  <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
@@ -419,8 +419,8 @@
               <span v-if="label2.includes(item.label)">
                 {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
               </span>
-              <span v-if="label3.includes(item.label)">
-                {{ row[label3Map.get(item.label)!] }}天
+              <span v-if="label3.includes(item.label)"> <!-- 处理 天 -->
+                {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
               </span>
               <span v-if="item.label === '半年有货率'">
                 {{ Math.floor(Number(row.availableRate)) }}%
@@ -465,6 +465,9 @@
               <span v-if="item.label === '剩余库存'">
                 {{ row.availableInventory }}/{{ row.fbaCount }}
               </span>
+              <span v-if="item.label === '库龄'">
+                <span v-html="row.storageAge"></span>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -472,41 +475,50 @@
           </template>
         </el-table>
         <vab-pagination 
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
+          :current-page="asinQueryForm.pageNo"
+          :page-size="asinQueryForm.pageSize"
           :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
+          @current-change="handleAsinCurrentChange"
+          @size-change="handleAsinSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="父体ASIN" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel :span="20">
-            <el-form inline :model="queryForm">
+            <el-form inline :model="pAsinQueryForm">
               <el-form-item label="站点">
-                <el-select />
+                <el-select
+                  v-model="pAsinQueryForm.site"
+                  multiple
+                  clearable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  placeholder="请选择站点"
+                  :max-collapse-tags="1"
+                  style="width: 220px"
+                  @change="queryPAsinData"
+                >
+                  <template #header>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
+                      所有
+                    </el-checkbox>
+                  </template>
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select />
+                <el-select placeholder="请选择币种">
+                  <el-option v-for="item in currencyList" :label="item.label" :value="item.id" :key="item.id" />
+                </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="queryForm.operations" style="width: 5em;" >
-                  <el-option 
-                    v-for="item in operationsOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select v-model="pAsinQueryForm.operationUserId" @change="queryPAsinData" style="width: 5em;" placeholder="请选择运营人员">
+                  <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="开发人">
-                <el-select v-model="queryForm.developer" style="width: 5em;" >
-                  <el-option 
-                    v-for="item in developerOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select v-model="pAsinQueryForm.developUserId" @change="queryPAsinData" style="width: 5em;" placeholder="请选择开发人">
+                  <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -562,7 +574,7 @@
           :header-cell-style="{ textAlign: 'center' }"
           :cell-style="cellStyle"
           :cell-class-name="clearPadding" 
-          :data="fakeData"
+          :data="pAsinList"
           @cell-click="cellClick"
         >
           <el-table-column
@@ -593,7 +605,7 @@
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
-                <el-image :src="row.componentImage" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.componentImage)" >
+                <el-image :src="row.asinImgUrl" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.asinImgUrl)" >
                   <template #error>
                     <el-icon></el-icon>
                   </template>
@@ -602,19 +614,19 @@
         
               <!-- 父体ASIN 展示 -->
               <span v-if="item.label === '父体ASIN'">
-                <el-link type="primary">{{ row.pAsin }}</el-link>
+                <el-link type="primary">{{ row.parentAsin }}</el-link>
                 <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rate }}</span>
-                  <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate"  /></span>
-                  <span class="rate-count">{{ 484 }}</span>
+                  <span class="rate-value">{{ row.rating }}</span>
+                  <span><el-rate v-model="row.displayRating" :void-icon="Star" disabled class="custom-rate" /></span>
+                  <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
-                <el-tooltip content=" " effect="dark" placement="top">
+                <el-tooltip :disabled="!row.overflow_sku" content=" " effect="dark" placement="top">
                   <template #content>
-                    <div class="custom-tooltip">{{ removeHtmlTags(row.sku) }}</div>
+                    <div class="custom-tooltip" >{{ row._skuFull }}</div>
                   </template>
-                  <span>{{ removeHtmlTags(row.sku) }}</span>
+                  <span v-html="row._sku"></span>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -645,8 +657,8 @@
                 {{ Math.floor(Number(row.currentAdvertisement)) }}%
               </span>
               <span v-if="item.label === '广告'">
-                <el-tag v-if="row.ad === 0" type="danger">关</el-tag>
-                <el-tag v-if="row.ad === 1" type="success">开</el-tag>
+                <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
+                <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
@@ -654,14 +666,16 @@
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
-                {{ 836 }}
-                <vab-icon icon="arrow-up-fill" class="arrow-up" />
-                <span style="color: #999">{{ 91 }}</span>
+                {{ row.nowSubcategoryRanking }}
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+                <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
-                {{ 836 }}
-                <vab-icon icon="arrow-down-fill" class="arrow-down" />
-                <span style="color: #999">{{ 91 }}</span>
+                {{ row.nowMajorCategoryRanking }}
+                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+                <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
             </template>
           </el-table-column>
@@ -670,11 +684,11 @@
           </template>
         </el-table>
         <vab-pagination 
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
+          :current-page="pAsinQueryForm.pageNo"
+          :page-size="pAsinQueryForm.pageSize"
           :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
+          @current-change="handlePAsinCurrentChange"
+          @size-change="handlePAsinSizeChange"
         />
       </el-tab-pane>
     </el-tabs>
@@ -751,10 +765,10 @@ import { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { DraggableEvent, VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { currencySymbols, months, opeClassOption } from '../constantOption'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { filterAmazonSKUList, getCurrencyList, getDevelopUserList, getOperationAmazonSKUList, getOperationTypeList, updateOperationSKUDisContinuedStatus, updateOperationSKUOperateTypeList } from '/@/api/devlocal/productPerformance'
+import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { filterAmazonSKUList, filterOperationAmazonAsinList, getCurrencyList, getDevelopUserList, getOperationAmazonSKUList, getOperationAsinList, getOperationParentAsinList, getOperationTypeList, updateOperationSKUDisContinuedStatus, updateOperationSKUOperateTypeList } from '/@/api/devlocal/productPerformance'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { IGetOperationAmazonSKUList, IGetOperationTypeListReq } from '/@/type/storeOperation/productPerformanceType'
+import { IGetOperationAmazonSKUList, IGetOperationAsinList, IGetOperationParentAsinList, IGetOperationTypeListReq } from '/@/type/storeOperation/productPerformanceType'
 
 const seasonalVisible = ref<boolean>(false)
 const sRankVisible = ref<boolean>(false)
@@ -805,28 +819,55 @@ const asinQueryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  site: [0, 1],
+  site: [0],
+  operationUserId: 1,
+  developUserId: 1
+})
+const pAsinQueryForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  site: [0],
   operationUserId: 1,
   developUserId: 1
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const list = ref<IGetOperationAmazonSKUList[]>([])
+const asinList = ref<IGetOperationAsinList[]>([])
+const pAsinList = ref<IGetOperationParentAsinList[]>([])
 const { site } = toRefs(queryForm)
 const handleConfirmFilter = async (filterForm: any) => {
-  const { site, ...filterQueryForm } = queryForm
-  const siteIds = site.join(',')
-  const { data } = await filterAmazonSKUList({
-    ...filterQueryForm,
-    ...filterForm,
-    siteIds
-  })
-  if (data) {
-    $baseConfirm('SKU运营筛选成功！', 'success')
-    filterVisible.value = false
-    total.value = data.total
-    list.value = data.list
+  if (activeName.value === 0) {
+    const { site, ...filterQueryForm } = queryForm
+    const siteIds = site.join(',')
+    const { data } = await filterAmazonSKUList({
+      ...filterQueryForm,
+      ...filterForm,
+      siteIds
+    })
+    if (data) {
+      $baseConfirm('SKU运营筛选成功！', 'success')
+      filterVisible.value = false
+      total.value = data.total
+      list.value = data.list
+    }
+  } else if (activeName.value === 1) {
+    const { site, ...filterQueryForm } = asinQueryForm
+    const siteIds = site.join(',')
+    const { data } = await filterOperationAmazonAsinList({
+      ...filterQueryForm,
+      ...filterForm,
+      siteIds
+    })
+    if (data) {
+      $baseConfirm('ASIN运营筛选成功！', 'success')
+      filterVisible.value = false
+      total.value = data.total
+      asinList.value = data.list
+    }
   }
+  
 }
 const handleUpdateOpeType = async (row: IGetOperationAmazonSKUList) => {
   const { data } = await updateOperationSKUOperateTypeList({
@@ -856,389 +897,402 @@ const handleCheckAll = (val: CheckboxValueType) => {
   if (val) {
     queryForm.site = siteList.value.map((_) => _.id)
     // 全选的时候获取数据
-    queryData()
+    if (activeName.value === 0) {
+      queryData()
+    } else if (activeName.value === 1) {
+      queryAsinData()
+    } else {
+      queryPAsinData()
+    }
+    
   } else {
     queryForm.site = []
     // 取消全选获取数据
-    queryData()
+    if (activeName.value === 0) {
+      queryData()
+    } else if (activeName.value === 1) {
+      queryAsinData()
+    } else {
+      queryPAsinData()
+    }
   }
 }
 const showRemark = () => {
   remarkVisible.value = true
 }
-interface IData {
-  componentImage: string;
-  sku: string;
-  rate: number;
-  asin: string;
-  pAsin: string;
-  saleTrendList: {};
-  todaySell: number;
-  todayOrder: number;
-  todaySellD: number;
-  todayAd: number;
-  ad: number;
-  pieChart: string;
-  seasonalCoefficient: number;
-  classify: string;
-  sRank: number;
-  bRank: number;
-  topProduct: number;
-  remark: string;
-  fbaStorageFee: number;
-  currentPrice: number;
-  trialGrossProfit: number;
-  fba: number;
-  fbaA: number;
-  fbaD: number;
-  conversion: number;
-  click: number;
-  totalConvert: number;
-  monthlySell: number;
-  monthlyNetProfit: number;
-  monthlySales: number;
-  monthlyNetInterestRate: number;
-  monthlyAdSales: number;
-  monthlyAdSpend: number;
-  monthlyAd: number;
-  monthlyACOS: number;
-  monthlyTACOS: number;
-  yearACOS: number;
-  yearTACOS: number;
-  removeValue: number;
-  remove: number;
-  replaceValue: number;
-  replace: number;
-  monthlyReturns: number;
-  monthlyRefund: number;
-  VOCSatisfaction: number;
-  VOCDefectP: number;
-  VOCDefect: number;
-  VOCOrder: number;
-  newReleases: number;
-  storageAge: string;
-  remainingStock: string;
-  receiving: number;
-  recentlyStorage: string;
-  totalStorage: number;
-  stockSale: number;
-  saleTransit: number;
-  outOfStock: number;
-  order: number;
-  sign: string;
-  monthlyAvailabilityRate: number;
-  lowFeeDays: number;
-  estimatedFees: number;
-  profitLossPrice: number;
-  profitPrice: number;
-  suggestions: string;
-  status: string;
-  productDes: string;
-  person: string;
-  id: number;
-}
-const fakeData = ref<IData[]>([
-  {
-    componentImage: 'https://picsum.photos/200/200',
-    sku: 'SKU12345',
-    rate: 4.7,
-    asin: 'B08N5M7S6K',
-    pAsin: 'B08N5M7S6K',
-    saleTrendList: {
-      xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
-      ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
-    },
-    todaySell: 100,
-    todayOrder: 50,
-    todaySellD: 1500,
-    todayAd: 10,
-    ad: 1,
-    pieChart: '',
-    seasonalCoefficient: 1.5,
-    classify: '电子产品',
-    sRank: 5,
-    bRank: 2,
-    topProduct: 200,
-    remark: '备注信息1',
-    fbaStorageFee: 100,
-    currentPrice: 29.99,
-    trialGrossProfit: 0.5,
-    fba: 3.99,
-    fbaA: 2.99,
-    fbaD: 5.66,
-    conversion: 12,
-    click: 300,
-    totalConvert: 25,
-    monthlySell: 1500,
-    monthlyNetProfit: 5000,
-    monthlySales: 45000,
-    monthlyNetInterestRate: 11.1,
-    monthlyAdSales: 1500,
-    monthlyAdSpend: 800,
-    monthlyAd: 30,
-    monthlyACOS: 15,
-    monthlyTACOS: 10,
-    yearACOS: 12,
-    yearTACOS: 8,
-    removeValue: 100,
-    remove: 5,
-    replaceValue: 200,
-    replace: 10,
-    monthlyReturns: 3,
-    monthlyRefund: 2,
-    VOCSatisfaction: 1,
-    VOCDefectP: 1,
-    VOCDefect: 10,
-    VOCOrder: 200,
-    newReleases: 20,
-    storageAge: '81-270 0\n71-360 0',
-    remainingStock: '100/831',
-    receiving: 50,
-    recentlyStorage: '6天/1400\n12天/200',
-    totalStorage: 500,
-    stockSale: 300,
-    saleTransit: 100,
-    outOfStock: 0,
-    order: 150,
-    sign: '已签收',
-    monthlyAvailabilityRate: 95,
-    lowFeeDays: 5,
-    estimatedFees: 2000,
-    profitLossPrice: 18,
-    profitPrice: 22,
-    suggestions: '增加广告投放',
-    status: '正常',
-    productDes: '这是一款电子产品',
-    person: '张三',
-    id: 1
-  },
-  {
-    componentImage: 'https://picsum.photos/200/200',
-    sku: 'SKU67890',
-    rate: 4.0,
-    asin: 'B08XYZ1234',
-    pAsin: 'B08XYZ1234',
-    saleTrendList: {
-      xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
-      ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
-    },
-    todaySell: 200,
-    todayOrder: 100,
-    todaySellD: 2500,
-    todayAd: 15,
-    ad: 0,
-    pieChart: '',
-    seasonalCoefficient: 1.8,
-    classify: '家居用品',
-    sRank: 3,
-    bRank: 1,
-    topProduct: 400,
-    remark: '备注信息2',
-    fbaStorageFee: 150,
-    currentPrice: 45.99,
-    trialGrossProfit: 15.5,
-    fba: 3,
-    fbaA: 4,
-    fbaD: 5,
-    conversion: 10,
-    click: 500,
-    totalConvert: 20,
-    monthlySell: 2000,
-    monthlyNetProfit: 7000,
-    monthlySales: 80000,
-    monthlyNetInterestRate: 8.75,
-    monthlyAdSales: 2500,
-    monthlyAdSpend: 1200,
-    monthlyAd: 24,
-    monthlyACOS: 14,
-    monthlyTACOS: 9,
-    yearACOS: 13,
-    yearTACOS: 7,
-    removeValue: 200,
-    remove: 3,
-    replaceValue: 400,
-    replace: 12,
-    monthlyReturns: 2,
-    monthlyRefund: 1,
-    VOCSatisfaction: 2,
-    VOCDefectP: 2,
-    VOCDefect: 5,
-    VOCOrder: 300,
-    newReleases: 15,
-    storageAge: '81-270 0\n71-360 0',
-    remainingStock: '100/831',
-    receiving: 70,
-    recentlyStorage: '6天/1400\n12天/200',
-    totalStorage: 600,
-    stockSale: 350,
-    saleTransit: 120,
-    outOfStock: 0,
-    order: 180,
-    sign: '未签收',
-    monthlyAvailabilityRate: 98,
-    lowFeeDays: 4,
-    estimatedFees: 2500,
-    profitLossPrice: 22,
-    profitPrice: 26,
-    suggestions: '增加促销活动',
-    status: '待处理',
-    productDes: '这是一款家居用品',
-    person: '李四',
-    id: 2
-  },
-  {
-    componentImage: 'https://picsum.photos/200/200',
-    sku: 'SKU12345',
-    rate: 4.3,
-    asin: 'B08N5M7S6K',
-    pAsin: 'B08N5M7S6K',
-    saleTrendList: {
-      xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
-      ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
-    },
-    todaySell: 100,
-    todayOrder: 50,
-    todaySellD: 1500,
-    todayAd: 10,
-    ad: 0,
-    pieChart: '',
-    seasonalCoefficient: 1.5,
-    classify: '电子产品',
-    sRank: 5,
-    bRank: 2,
-    topProduct: 200,
-    remark: '备注信息1',
-    fbaStorageFee: 100,
-    currentPrice: 29.99,
-    trialGrossProfit: 10.5,
-    fba: 3,
-    fbaA: 4,
-    fbaD: 5,
-    conversion: 12,
-    click: 300,
-    totalConvert: 25,
-    monthlySell: 1500,
-    monthlyNetProfit: 5000,
-    monthlySales: 45000,
-    monthlyNetInterestRate: 11.1,
-    monthlyAdSales: 1500,
-    monthlyAdSpend: 800,
-    monthlyAd: 30,
-    monthlyACOS: 15,
-    monthlyTACOS: 10,
-    yearACOS: 12,
-    yearTACOS: 8,
-    removeValue: 100,
-    remove: 5,
-    replaceValue: 200,
-    replace: 10,
-    monthlyReturns: 3,
-    monthlyRefund: 2,
-    VOCSatisfaction: 3,
-    VOCDefectP: 1,
-    VOCDefect: 10,
-    VOCOrder: 200,
-    newReleases: 20,
-    storageAge: '81-270 0\n71-360 0',
-    remainingStock: '100/831',
-    receiving: 50,
-    recentlyStorage: '6天/1400\n12天/200',
-    totalStorage: 500,
-    stockSale: 300,
-    saleTransit: 100,
-    outOfStock: 0,
-    order: 150,
-    sign: '已签收',
-    monthlyAvailabilityRate: 95,
-    lowFeeDays: 5,
-    estimatedFees: 2000,
-    profitLossPrice: 18,
-    profitPrice: 22,
-    suggestions: '增加广告投放',
-    status: '正常',
-    productDes: '这是一款电子产品',
-    person: '张三',
-    id: 3
-  },
-])
+// interface IData {
+//   componentImage: string;
+//   sku: string;
+//   rate: number;
+//   asin: string;
+//   pAsin: string;
+//   saleTrendList: {};
+//   todaySell: number;
+//   todayOrder: number;
+//   todaySellD: number;
+//   todayAd: number;
+//   ad: number;
+//   pieChart: string;
+//   seasonalCoefficient: number;
+//   classify: string;
+//   sRank: number;
+//   bRank: number;
+//   topProduct: number;
+//   remark: string;
+//   fbaStorageFee: number;
+//   currentPrice: number;
+//   trialGrossProfit: number;
+//   fba: number;
+//   fbaA: number;
+//   fbaD: number;
+//   conversion: number;
+//   click: number;
+//   totalConvert: number;
+//   monthlySell: number;
+//   monthlyNetProfit: number;
+//   monthlySales: number;
+//   monthlyNetInterestRate: number;
+//   monthlyAdSales: number;
+//   monthlyAdSpend: number;
+//   monthlyAd: number;
+//   monthlyACOS: number;
+//   monthlyTACOS: number;
+//   yearACOS: number;
+//   yearTACOS: number;
+//   removeValue: number;
+//   remove: number;
+//   replaceValue: number;
+//   replace: number;
+//   monthlyReturns: number;
+//   monthlyRefund: number;
+//   VOCSatisfaction: number;
+//   VOCDefectP: number;
+//   VOCDefect: number;
+//   VOCOrder: number;
+//   newReleases: number;
+//   storageAge: string;
+//   remainingStock: string;
+//   receiving: number;
+//   recentlyStorage: string;
+//   totalStorage: number;
+//   stockSale: number;
+//   saleTransit: number;
+//   outOfStock: number;
+//   order: number;
+//   sign: string;
+//   monthlyAvailabilityRate: number;
+//   lowFeeDays: number;
+//   estimatedFees: number;
+//   profitLossPrice: number;
+//   profitPrice: number;
+//   suggestions: string;
+//   status: string;
+//   productDes: string;
+//   person: string;
+//   id: number;
+// }
+// const fakeData = ref<IData[]>([
+//   {
+//     componentImage: 'https://picsum.photos/200/200',
+//     sku: 'SKU12345',
+//     rate: 4.7,
+//     asin: 'B08N5M7S6K',
+//     pAsin: 'B08N5M7S6K',
+//     saleTrendList: {
+//       xAxis: [
+//         "21-04-1",
+// 				"21-08-1",
+// 				"22-05-1",
+// 				"22-06-1",
+// 				"22-07-1",
+// 				"22-09-1",
+// 				"22-10-1",
+// 				"23-01-1",
+// 				"23-05-1",
+// 				"23-07-1",
+// 				"23-10-1",
+// 				"23-11-1"
+//       ],
+//       yAxis: [
+//         6611,
+// 				53824,
+// 				18712,
+// 				18991,
+// 				21611,
+// 				10277,
+// 				15420,
+// 				9159,
+// 				4192,
+// 				3064,
+// 				5619,
+// 				4500
+//       ]
+//     },
+//     todaySell: 100,
+//     todayOrder: 50,
+//     todaySellD: 1500,
+//     todayAd: 10,
+//     ad: 1,
+//     pieChart: '',
+//     seasonalCoefficient: 1.5,
+//     classify: '电子产品',
+//     sRank: 5,
+//     bRank: 2,
+//     topProduct: 200,
+//     remark: '备注信息1',
+//     fbaStorageFee: 100,
+//     currentPrice: 29.99,
+//     trialGrossProfit: 0.5,
+//     fba: 3.99,
+//     fbaA: 2.99,
+//     fbaD: 5.66,
+//     conversion: 12,
+//     click: 300,
+//     totalConvert: 25,
+//     monthlySell: 1500,
+//     monthlyNetProfit: 5000,
+//     monthlySales: 45000,
+//     monthlyNetInterestRate: 11.1,
+//     monthlyAdSales: 1500,
+//     monthlyAdSpend: 800,
+//     monthlyAd: 30,
+//     monthlyACOS: 15,
+//     monthlyTACOS: 10,
+//     yearACOS: 12,
+//     yearTACOS: 8,
+//     removeValue: 100,
+//     remove: 5,
+//     replaceValue: 200,
+//     replace: 10,
+//     monthlyReturns: 3,
+//     monthlyRefund: 2,
+//     VOCSatisfaction: 1,
+//     VOCDefectP: 1,
+//     VOCDefect: 10,
+//     VOCOrder: 200,
+//     newReleases: 20,
+//     storageAge: '81-270 0\n71-360 0',
+//     remainingStock: '100/831',
+//     receiving: 50,
+//     recentlyStorage: '6天/1400\n12天/200',
+//     totalStorage: 500,
+//     stockSale: 300,
+//     saleTransit: 100,
+//     outOfStock: 0,
+//     order: 150,
+//     sign: '已签收',
+//     monthlyAvailabilityRate: 95,
+//     lowFeeDays: 5,
+//     estimatedFees: 2000,
+//     profitLossPrice: 18,
+//     profitPrice: 22,
+//     suggestions: '增加广告投放',
+//     status: '正常',
+//     productDes: '这是一款电子产品',
+//     person: '张三',
+//     id: 1
+//   },
+//   {
+//     componentImage: 'https://picsum.photos/200/200',
+//     sku: 'SKU67890',
+//     rate: 4.0,
+//     asin: 'B08XYZ1234',
+//     pAsin: 'B08XYZ1234',
+//     saleTrendList: {
+//       xAxis: [
+//         "21-04-1",
+// 				"21-08-1",
+// 				"22-05-1",
+// 				"22-06-1",
+// 				"22-07-1",
+// 				"22-09-1",
+// 				"22-10-1",
+// 				"23-01-1",
+// 				"23-05-1",
+// 				"23-07-1",
+// 				"23-10-1",
+// 				"23-11-1"
+//       ],
+//       yAxis: [
+//         6611,
+// 				53824,
+// 				18712,
+// 				18991,
+// 				21611,
+// 				10277,
+// 				15420,
+// 				9159,
+// 				4192,
+// 				3064,
+// 				5619,
+// 				4500
+//       ]
+//     },
+//     todaySell: 200,
+//     todayOrder: 100,
+//     todaySellD: 2500,
+//     todayAd: 15,
+//     ad: 0,
+//     pieChart: '',
+//     seasonalCoefficient: 1.8,
+//     classify: '家居用品',
+//     sRank: 3,
+//     bRank: 1,
+//     topProduct: 400,
+//     remark: '备注信息2',
+//     fbaStorageFee: 150,
+//     currentPrice: 45.99,
+//     trialGrossProfit: 15.5,
+//     fba: 3,
+//     fbaA: 4,
+//     fbaD: 5,
+//     conversion: 10,
+//     click: 500,
+//     totalConvert: 20,
+//     monthlySell: 2000,
+//     monthlyNetProfit: 7000,
+//     monthlySales: 80000,
+//     monthlyNetInterestRate: 8.75,
+//     monthlyAdSales: 2500,
+//     monthlyAdSpend: 1200,
+//     monthlyAd: 24,
+//     monthlyACOS: 14,
+//     monthlyTACOS: 9,
+//     yearACOS: 13,
+//     yearTACOS: 7,
+//     removeValue: 200,
+//     remove: 3,
+//     replaceValue: 400,
+//     replace: 12,
+//     monthlyReturns: 2,
+//     monthlyRefund: 1,
+//     VOCSatisfaction: 2,
+//     VOCDefectP: 2,
+//     VOCDefect: 5,
+//     VOCOrder: 300,
+//     newReleases: 15,
+//     storageAge: '81-270 0\n71-360 0',
+//     remainingStock: '100/831',
+//     receiving: 70,
+//     recentlyStorage: '6天/1400\n12天/200',
+//     totalStorage: 600,
+//     stockSale: 350,
+//     saleTransit: 120,
+//     outOfStock: 0,
+//     order: 180,
+//     sign: '未签收',
+//     monthlyAvailabilityRate: 98,
+//     lowFeeDays: 4,
+//     estimatedFees: 2500,
+//     profitLossPrice: 22,
+//     profitPrice: 26,
+//     suggestions: '增加促销活动',
+//     status: '待处理',
+//     productDes: '这是一款家居用品',
+//     person: '李四',
+//     id: 2
+//   },
+//   {
+//     componentImage: 'https://picsum.photos/200/200',
+//     sku: 'SKU12345',
+//     rate: 4.3,
+//     asin: 'B08N5M7S6K',
+//     pAsin: 'B08N5M7S6K',
+//     saleTrendList: {
+//       xAxis: [
+//         "21-04-1",
+// 				"21-08-1",
+// 				"22-05-1",
+// 				"22-06-1",
+// 				"22-07-1",
+// 				"22-09-1",
+// 				"22-10-1",
+// 				"23-01-1",
+// 				"23-05-1",
+// 				"23-07-1",
+// 				"23-10-1",
+// 				"23-11-1"
+//       ],
+//       yAxis: [
+//         6611,
+// 				53824,
+// 				18712,
+// 				18991,
+// 				21611,
+// 				10277,
+// 				15420,
+// 				9159,
+// 				4192,
+// 				3064,
+// 				5619,
+// 				4500
+//       ]
+//     },
+//     todaySell: 100,
+//     todayOrder: 50,
+//     todaySellD: 1500,
+//     todayAd: 10,
+//     ad: 0,
+//     pieChart: '',
+//     seasonalCoefficient: 1.5,
+//     classify: '电子产品',
+//     sRank: 5,
+//     bRank: 2,
+//     topProduct: 200,
+//     remark: '备注信息1',
+//     fbaStorageFee: 100,
+//     currentPrice: 29.99,
+//     trialGrossProfit: 10.5,
+//     fba: 3,
+//     fbaA: 4,
+//     fbaD: 5,
+//     conversion: 12,
+//     click: 300,
+//     totalConvert: 25,
+//     monthlySell: 1500,
+//     monthlyNetProfit: 5000,
+//     monthlySales: 45000,
+//     monthlyNetInterestRate: 11.1,
+//     monthlyAdSales: 1500,
+//     monthlyAdSpend: 800,
+//     monthlyAd: 30,
+//     monthlyACOS: 15,
+//     monthlyTACOS: 10,
+//     yearACOS: 12,
+//     yearTACOS: 8,
+//     removeValue: 100,
+//     remove: 5,
+//     replaceValue: 200,
+//     replace: 10,
+//     monthlyReturns: 3,
+//     monthlyRefund: 2,
+//     VOCSatisfaction: 3,
+//     VOCDefectP: 1,
+//     VOCDefect: 10,
+//     VOCOrder: 200,
+//     newReleases: 20,
+//     storageAge: '81-270 0\n71-360 0',
+//     remainingStock: '100/831',
+//     receiving: 50,
+//     recentlyStorage: '6天/1400\n12天/200',
+//     totalStorage: 500,
+//     stockSale: 300,
+//     saleTransit: 100,
+//     outOfStock: 0,
+//     order: 150,
+//     sign: '已签收',
+//     monthlyAvailabilityRate: 95,
+//     lowFeeDays: 5,
+//     estimatedFees: 2000,
+//     profitLossPrice: 18,
+//     profitPrice: 22,
+//     suggestions: '增加广告投放',
+//     status: '正常',
+//     productDes: '这是一款电子产品',
+//     person: '张三',
+//     id: 3
+//   },
+// ])
 
 function getRowValue(row: any, label: string, labelMap: any): number {
   const key = labelMap.get(label)
@@ -1650,7 +1704,7 @@ const columns = ref<any>([
   },
   {
     label: '计划#',
-    prop: '',
+    prop: 'planPoPurchaseSkuNumber',
     checked: true,
     minWidth: 90,
   },
@@ -1718,7 +1772,7 @@ const columns = ref<any>([
 const columnsAsin = ref<any>([
   {
     label: '图片',
-    prop: 'componentImage',
+    prop: 'asinImgUrl',
     disableCheck: true,
     checked: true,
     width: 75,
@@ -1752,7 +1806,7 @@ const columnsAsin = ref<any>([
     label: '站点',
     prop: 'siteName',
     checked: true,
-    minWidth: 100,
+    minWidth: 130,
   },
   {
     label: '销量趋势(点击看明细)',
@@ -2058,7 +2112,7 @@ const columnsAsin = ref<any>([
 const columnsParentAsin = ref<any>([
   {
     label: '图片',
-    prop: 'componentImage',
+    prop: 'asinImgUrl',
     disableCheck: true,
     checked: true,
     width: 75,
@@ -2066,7 +2120,7 @@ const columnsParentAsin = ref<any>([
   },
   {
     label: '父体ASIN',
-    prop: 'pAsin',
+    prop: 'parentAsin',
     disableCheck: true,
     checked: true,
     minWidth: 110,
@@ -2082,9 +2136,9 @@ const columnsParentAsin = ref<any>([
   },
   {
     label: '站点',
-    prop: 'site',
+    prop: 'siteName',
     checked: true,
-    minWidth: 100,
+    minWidth: 130,
   },
   {
     label: '销量趋势(点击看明细)',
@@ -2094,31 +2148,31 @@ const columnsParentAsin = ref<any>([
   },
   {
     label: '今销#',
-    prop: 'todaySell',
+    prop: 'currentSalesNumber',
     checked: true,
     minWidth: 90,
   },
   {
     label: '今单#',
-    prop: 'todayOrder',
+    prop: 'currentSalesOrder',
     checked: true,
     minWidth: 90,
   },
   {
     label: '今销',
-    prop: 'todaySellD',
+    prop: 'currentSalesPrice',
     checked: true,
     minWidth: 90,
   },
   {
     label: '今广%',
-    prop: 'todayAd',
+    prop: 'currentAdvertisement',
     checked: true,
     minWidth: 90,
   },
   {
     label: '广告',
-    prop: 'ad',
+    prop: 'advertisementStatus',
     checked: true,
     minWidth: 80,
   },
@@ -2130,13 +2184,13 @@ const columnsParentAsin = ref<any>([
   },
   {
     label: '小类排名',
-    prop: 'sRank',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
   {
     label: '大类排名',
-    prop: 'bRank',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
@@ -2148,115 +2202,115 @@ const columnsParentAsin = ref<any>([
   },
   {
     label: '2周广告转化',
-    prop: 'conversion',
+    prop: 'tWksAdvRate',
     checked: true,
     minWidth: 120,
   },
   {
     label: '2周广告点击',
-    prop: 'click',
+    prop: 'tWksClickRate',
     checked: true,
     minWidth: 120,
   },
   {
     label: '2周总转化',
-    prop: 'totalConvert',
+    prop: 'tWksTotalConv',
     checked: true,
     minWidth: 110,
   },
   {
     label: '月销量',
-    prop: 'monthlySell',
+    prop: 'monthSalesVolume',
     checked: true,
     minWidth: 90,
   },
   {
     label: '月净利润',
-    prop: 'monthlyNetProfit',
+    prop: 'monthNetProfit',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月销售额',
-    prop: 'monthlySales',
+    prop: 'monthSalesPrice',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月净利率',
-    prop: 'monthlyNetInterestRate',
+    prop: 'monthNetProfitMargin',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月广告销售',
-    prop: 'monthlyAdSales',
+    prop: 'monthAdvSales',
     checked: true,
     minWidth: 110,
   },
   {
     label: '月广告支出',
-    prop: 'monthlyAdSpend',
+    prop: 'monthAdvExpenditure',
     checked: true,
     minWidth: 110,
   },
   {
     label: '月广告%',
-    prop: 'monthlyAd',
+    prop: 'monthAdv',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月ACOS',
-    prop: 'monthlyACOS',
+    prop: 'monthAcos',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月TACOS',
-    prop: 'monthlyTACOS',
+    prop: 'monthTacos',
     checked: true,
     minWidth: 100,
   },
   {
     label: '1年ACOS',
-    prop: 'yearACOS',
+    prop: 'yearAcos',
     checked: true,
     minWidth: 100,
   },
   {
     label: '1年TACOS',
-    prop: 'yearTACOS',
+    prop: 'yearTacos',
     checked: true,
     minWidth: 110,
   },
   {
     label: '移除量',
-    prop: 'remove',
+    prop: 'removalAmount',
     checked: true,
     minWidth: 90,
   },
   {
     label: '替换量',
-    prop: 'replace',
+    prop: 'replacementAmount',
     checked: true,
     minWidth: 90,
   },
   {
     label: '月退货%',
-    prop: 'monthlyReturns',
+    prop: 'monthReturnGoods',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月退款%',
-    prop: 'monthlyRefund',
+    prop: 'monthRefund',
     checked: true,
     minWidth: 100,
   },
   {
     label: '预估下月仓储费',
-    prop: 'estimatedFees',
+    prop: 'estimateNextMonthStorageFee',
     checked: true,
     minWidth: 140,
   },
@@ -2268,49 +2322,18 @@ const columnsParentAsin = ref<any>([
   },
   {
     label: '产品描述',
-    prop: 'productDes',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
   {
     label: '产品经理',
-    prop: 'person',
+    prop: '',
     checked: true,
     minWidth: 100,
   },
 ])
-const operationsOption = [
-  {
-    label: '全部',
-    value: 0
-  },
-  {
-    label: '王鑫',
-    value: 1
-  },
-  {
-    label: '赵前程',
-    value: 2
-  },
-]
-const developerOption = [
-  {
-    label: '全部',
-    value: 0
-  },
-  {
-    label: '王宏',
-    value: 1
-  },
-  {
-    label: '王文育',
-    value: 2
-  },
-  {
-    label: '任佳茗',
-    value: 3
-  },
-]
+
 const initChart1 = () => {
   option1.value = {
     legend: {
@@ -2523,11 +2546,15 @@ const handleBRankOpened = () => {
   })
 }
 const handleTabClick = (tab: TabsPaneContext) => {
-  if (tab.props.name != undefined) {
-    console.log(tab.props.name);
-    // if (Number(tab.props.name) === 0) {
-      
-    // }
+  if (tab.props.name === 0) {
+    queryData()
+    activeName.value = 0
+  } else if (tab.props.name === 1) {
+    queryAsinData()
+    activeName.value = 1
+  } else {
+    queryPAsinData()
+    activeName.value = 2
   }
 }
 // 运营分类设定可见
@@ -2565,19 +2592,19 @@ const handleWidth = (item: any) => {
     }
   } else if (activeName.value === 1) {
     if (item.label === 'SKU') {
-      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
+      return flexColumnWidth(asinList.value, 'SKU', 'sku')
     } else if (item.label === 'ASIN') {
-      return flexColumnWidth(fakeData.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
+      return flexColumnWidth(asinList.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
     } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(fakeData.value, '父体ASIN', 'parentAsin')
+      return flexColumnWidth(asinList.value, '父体ASIN', 'parentAsin')
     } else {
       return item.minWidth
     }
   } else {
     if (item.label === 'SKU') {
-      return flexColumnWidth(fakeData.value, 'SKU', 'sku')
+      return calculateBrColumnWidth(pAsinList.value, (row: any) => (row._sku), 100)
     } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(fakeData.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
+      return flexColumnWidth(pAsinList.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
     } else {
       return item.minWidth
     }
@@ -2680,6 +2707,30 @@ const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   fetchData()
 }
+const queryAsinData = () => {
+  asinQueryForm.pageNo = 1
+  fetchAsinData()
+}
+const handleAsinCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchAsinData()
+}
+const handleAsinSizeChange = (value: number) => {
+  queryForm.pageSize = value
+  fetchAsinData()
+}
+const queryPAsinData = () => {
+  pAsinQueryForm.pageNo = 1
+  fetchPAsinData()
+}
+const handlePAsinCurrentChange = (value: number) => {
+  pAsinQueryForm.pageNo = value
+  fetchPAsinData()
+}
+const handlePAsinSizeChange = (value: number) => {
+  pAsinQueryForm.pageSize = value
+  fetchPAsinData()
+}
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '运营备注' || label === '库龄') {
@@ -2741,6 +2792,20 @@ function getAmazonStars(score: number) {
   if (score >= 1.3) return 1.5;
   return 1;
 }
+// 处理","号分隔的SKU换行以及tooltip展示
+function processField(item: any, fieldName: string, max: number) {
+  const fieldArray = item[fieldName]?.split(',')
+  if (fieldArray && fieldArray.length > max) {
+    item[`_${fieldName}`] = [fieldArray[0], fieldArray[1]].join('<br />') // 显示在表格上的处理过的
+    item[`_${fieldName}`] += '...'
+    item[`overflow_${fieldName}`] = true // 判断tooltip是否显示
+    item[`_${fieldName}Full`] = fieldArray.join('\n')  // tooltip显示全部内容
+  } else {
+    item[`overflow_${fieldName}`] = false
+    item[`_${fieldName}`] = fieldArray?.join('<br />')!
+    item[`_${fieldName}Full`] = item[`_${fieldName}`]  
+  }
+}
 const fetchData = async () => {
   listLoading.value = true
   const { site, ...filterQueryForm } = queryForm
@@ -2794,6 +2859,107 @@ const fetchData = async () => {
       </div>
     `
 
+  })
+  listLoading.value = false
+}
+const fetchAsinData = async () => {
+  listLoading.value = true
+  const { site, ...filterQueryForm } = asinQueryForm
+  const { data } = await getOperationAsinList({
+    ...filterQueryForm,
+    siteIds: site.join(',')
+  })
+  total.value = data.total
+  asinList.value = data.list
+  asinList.value.forEach((item) => {
+    item.displayRating = computed(() => getAmazonStars(item.rating!));
+    item.saleTrendList = {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    }
+    item.storageAge = `
+      <div class="storage-list">
+        ${storageList.map((item) => `
+          <div class="storage-item">
+            <span class="value1">${item.name}</span>
+            <span class="value2">${item.fba}</span>
+            <span class="value3">${item.fba ? `($${item.price})` : ''}</span>
+          </div>
+        `).join('')}
+      </div>
+    `
+
+  })
+  listLoading.value = false
+}
+const fetchPAsinData = async () => {
+  listLoading.value = true
+  const { site, ...filterQueryForm } = pAsinQueryForm
+  const { data } = await getOperationParentAsinList({
+    ...filterQueryForm,
+    siteIds: site.join(',')
+  })
+  total.value = data.total
+  pAsinList.value = data.list
+  pAsinList.value.forEach((item) => {
+    processField(item, 'sku', 2)
+    item.displayRating = computed(() => getAmazonStars(item.rating!));
+    item.saleTrendList = {
+      xAxis: [
+        "21-04-1",
+				"21-08-1",
+				"22-05-1",
+				"22-06-1",
+				"22-07-1",
+				"22-09-1",
+				"22-10-1",
+				"23-01-1",
+				"23-05-1",
+				"23-07-1",
+				"23-10-1",
+				"23-11-1"
+      ],
+      yAxis: [
+        6611,
+				53824,
+				18712,
+				18991,
+				21611,
+				10277,
+				15420,
+				9159,
+				4192,
+				3064,
+				5619,
+				4500
+      ]
+    }
   })
   listLoading.value = false
 }

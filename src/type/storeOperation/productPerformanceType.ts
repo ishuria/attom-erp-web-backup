@@ -658,3 +658,179 @@ export interface IGetOperationAsinList {
   [property: string]: any
 }
 
+export interface IGetOperationParentAsinRes {
+
+  data: {
+    list: IGetOperationParentAsinList[]
+    total: number
+  }
+}
+
+
+export interface IGetOperationParentAsinList {
+  /**
+   * 广告状态 0关闭 1开
+   */
+  advertisementStatus?: number
+  /**
+   * 图片地址
+   */
+  asinImgUrl?: string
+  /**
+   * 上一次大类排名
+   */
+  beforeMajorCategoryRanking?: number
+  /**
+   * 上次小类排名
+   */
+  beforeSubcategoryRanking?: number
+  /**
+   * 评论数
+   */
+  commentsNumbers?: number
+  /**
+   * 今日广告
+   */
+  currentAdvertisement?: number
+  /**
+   * 今销数量
+   */
+  currentSalesNumber?: number
+  /**
+   * 今销订单数量
+   */
+  currentSalesOrder?: number
+  /**
+   * 今销金额
+   */
+  currentSalesPrice?: number
+  /**
+   * 开发人员
+   */
+  developName?: string
+  /**
+   * 预估入库日期
+   */
+  estimateInboundDate?: string
+  /**
+   * 预估下月仓储费
+   */
+  estimateNextMonthStorageFee?: number
+  /**
+   * fab仓储费
+   */
+  fbaStorageFee?: number
+  /**
+   * 主键id
+   */
+  id?: number
+  /**
+   * 月ACOS
+   */
+  monthAcos?: number
+  /**
+   * 月广告百分比
+   */
+  monthAdv?: number
+  /**
+   * 月广告支出
+   */
+  monthAdvExpenditure?: number
+  /**
+   * 月广告销售
+   */
+  monthAdvSales?: number
+  /**
+   * 月净利润
+   */
+  monthNetProfit?: number
+  /**
+   * 月净利润率
+   */
+  monthNetProfitMargin?: number
+  /**
+   * 月退款百分比
+   */
+  monthRefund?: number
+  /**
+   * 月退货百分比
+   */
+  monthReturnGoods?: number
+  /**
+   * 月销售额
+   */
+  monthSalesPrice?: number
+  /**
+   * 月销量
+   */
+  monthSalesVolume?: number
+  /**
+   * 月TACOS
+   */
+  monthTacos?: number
+  /**
+   * 当前大类排名
+   */
+  nowMajorCategoryRanking?: number
+  /**
+   * 当前小类排名
+   */
+  nowSubcategoryRanking?: number
+  /**
+   * 操作建议
+   */
+  operateSuggestion?: string
+  /**
+   * 运营人id
+   */
+  operationUserId?: number
+  /**
+   * 父体ASIN
+   */
+  parentAsin?: string
+  /**
+   * 评分
+   */
+  rating?: number
+  /**
+   * 移除量
+   */
+  removalAmount?: number
+  /**
+   * 替换量
+   */
+  replacementAmount?: number
+  /**
+   * 站点名
+   */
+  siteName?: string
+  /**
+   * sku信息
+   */
+  sku?: string
+  /**
+   * 状态
+   */
+  status?: number
+  /**
+   * 两周广告转化率
+   */
+  tWksAdvRate?: number
+  /**
+   * 两周广告点击率
+   */
+  tWksClickRate?: number
+  /**
+   * 两周总转化率
+   */
+  tWksTotalConv?: number
+  /**
+   * 1年ACOS
+   */
+  yearAcos?: number
+  /**
+   * 1年TACOS
+   */
+  yearTacos?: number
+  [property: string]: any
+}

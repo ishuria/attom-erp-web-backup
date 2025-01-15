@@ -611,6 +611,7 @@ const handleSave = async () => {
   } else {
       classReviewId = route.query.reviewId
   }
+  
   try {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
@@ -632,6 +633,21 @@ const handleSaveAndContinue = async () => {
   } else {
       classReviewId = route.query.reviewId
   }
+  // 校验是否为空
+  for (const item of exchangeList.value) {
+    const column0 = item.column0
+    if (['productLength', 'productWidth', 'productHeight', 'material', 'battery', 'benchmarkAsin', 'productManager', 'productDesign'].includes(column0)) {
+      for (const key of Object.keys(item)) {
+        if (key !== 'column0' && key !== 'variantsSame') {
+          if (!item[key]) {
+            $baseMessage(`${key}变体的${labelMap[column0]}不能为空!`, 'warning')
+            return
+          }
+        }
+      }
+    }
+  }
+  
   try {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {

@@ -30,7 +30,7 @@
       >
         <el-table-column type="selection" width="38" />
         <el-table-column prop="createTime" label="日期" min-width="110" />
-        <el-table-column prop="site" label="站点" min-width="140">
+        <el-table-column prop="site" label="站点" min-width="160">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%">
               <el-option v-for="dict in props.siteList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
@@ -213,24 +213,24 @@
             <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="platformCommission" label="平台佣金">
+        <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
           <template #default="{ row }">
-            <span>{{ row.platformCommission ? row.symbol + row.platformCommission : '' }}</span>
+            <span>{{ row.platformCommission ? row.symbol + row.platformCommission.toFixed(2) : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="storageFee" label="仓储费2个月" min-width="80">
+        <el-table-column prop="storageFee" label="仓储费2个月" min-width="90">
           <template #header>
             仓储费<br />2个月
           </template>
           <template #default="{ row }">
-            <span>{{ row.storageFee ? row.symbol + row.storageFee : '' }}</span>
+            <span>{{ row.storageFee ? row.symbol + row.storageFee.toFixed(2) : '' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="center" :fixed="fixed" label="操作" width="120px">
-          <template v-slot="scope">
+          <template #default="{ row, $index }">
             <el-dropdown>
-              <el-button text type="primary">
+              <el-button text type="primary" @click="handleCalculate(row)">
                 逆算
                 <el-icon class="el-icon--right">
                   <arrow-down />
@@ -238,17 +238,17 @@
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>
+                  <el-dropdown-item @click="handleCalculate(row)">
                     <el-link type="primary" :underline="false">逆算</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item @click="handlerPicUpload(scope.row,scope.$index)">
+                  <el-dropdown-item @click="handlerPicUpload(row, $index)">
                     <el-link type="primary" :underline="false" >上传图片</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item @click="handlerCopyData(scope.row)">
+                  <el-dropdown-item @click="handlerCopyData(row)">
                     <el-link type="primary" :underline="false" >复制</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item @click="handlerDelete(scope.row)">
-                    <el-link type="primary" :underline="false" >删除</el-link>
+                  <el-dropdown-item @click="handlerDelete(row)">
+                    <el-link type="danger" :underline="false" >删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -317,6 +317,7 @@ import {
   copyEstimatedCostAccounting,
   deleteEstimatedCostAccounting,
   getExchangeRate,
+  reverseCalculateEstimatedCostAccounting,
   updateEstimatedCostAccounting,
   updateEstimatedCostAccountingFirstMileChannel,
   updateEstimatedCostAccountingSort
@@ -373,7 +374,6 @@ watchEffect(()=>{
     dflag.value = props.flag
 })
 
-
 const emit = defineEmits<{ (e: 'update:visibleValue', value: boolean): void }>()
 // Table cell 下标
 let imageUploadCellIdx = 0
@@ -385,8 +385,70 @@ const estimatedCostAccountingList = ref<IEstimatedCostAccounting[]>([])
 const imagePreviewList = ref<string[]>([])
 const selectRows = ref<IEstimatedCostAccounting[]>([])
 const router = useRouter()
-let {list,evaluationId} = toRefs(props)
+let { list, evaluationId } = toRefs(props)
 
+const isValueAllInput = (row: IEstimatedCostAccounting) => {
+  if (row.site == null) { 
+    $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (!row.desc?.trim()) { 
+    $baseMessage('产品描述不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (!row.priceInfo.trim()) {
+    $baseMessage('价格信息不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (!row.url1688.trim()) {
+    $baseMessage('1688链接不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.price == null) {
+    $baseMessage('产品价格不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.length == null) {
+    $baseMessage('产品的长度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.width == null) {
+    $baseMessage('产品的宽度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.height == null) {
+    $baseMessage('产品的高度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weight == null) {
+    $baseMessage('产品的重量(g)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.packaging == null) {
+    $baseMessage('产品的打包价格不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.firstMileChannel == null) {
+    $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (row.sellingPrice == null) {
+    $baseMessage('产品的售价不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weightCoefficient == null) {
+    $baseMessage('产品的重量系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.volumeCoefficient == null) {
+    $baseMessage('产品的体积系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.tariff == null) {
+    $baseMessage('产品的关税不能为空，请填写后再进行逆算', 'warning')
+    return false
+  }
+  return true
+}
+
+// 逆算
+const handleCalculate = async (row: IEstimatedCostAccounting) => {
+  // 判断可以编辑的值是否都已填
+  const isInputAll = isValueAllInput(row)
+  if (isInputAll) {
+    const { data } = await reverseCalculateEstimatedCostAccounting({ id: Number(row.id) })
+    if (data) {
+      $baseMessage('逆算成功！', 'success')
+      props.callParentMethod(parseInt(evaluationId.value))
+    }
+  }
+}
 // 鼠标enter事件
 const effectiveCountInputHandle = (event: Event, row:any) => {
   const targetElement = event.target as HTMLInputElement

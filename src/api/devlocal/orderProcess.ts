@@ -437,3 +437,11 @@ export function submitReviewConsumable(data?: ISubmitReviewConsumableQuery): Pro
     data,
   })
 }
+// 新品订货流程-逆算
+export function reverseCalculateReview(params?: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/reverse/calculation`,
+    method: 'post',
+    params,
+  })
+}

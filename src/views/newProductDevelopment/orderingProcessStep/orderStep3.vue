@@ -432,18 +432,18 @@
         </el-table-column>
         <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
           <template #default="{ row }">
-            {{ row.platformCommission != null ? row.symbol + row.platformCommission : '' }}
+            {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
           </template>
         </el-table-column>
         <el-table-column prop="storageFee" label="仓储费2个月" min-width="140">
           <template #default="{ row }">
-            {{ row.storageFee != null ? row.symbol + row.storageFee : '' }}
+            {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
           </template>
         </el-table-column>
     
         <el-table-column align="center" fixed="right" label="操作" width="100">
           <template #default="{ row }">
-            <el-link type="primary" :underline="false">逆算</el-link>
+            <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
           </template>
         </el-table-column>
         <template #empty>
@@ -474,6 +474,7 @@ import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelCol
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getExchangeRate, getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
+  reverseCalculateReview,
   reviewStepNo3ComponentAdd,
   reviewStepNo3ComponentCopy,
   reviewStepNo3ComponentDel,
@@ -516,6 +517,54 @@ const emit = defineEmits<{
 
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
+
+const isValueAllInput = (row: IreviewStepNo3VariantList) => {
+  if (row.site == null) { 
+    $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (row.packagingLength == null) {
+    $baseMessage('产品的长度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.packagingWidth== null) {
+    $baseMessage('产品的宽度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.packagingHeight == null) {
+    $baseMessage('产品的高度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weight == null) {
+    $baseMessage('产品的重量(g)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.packagingPrice == null) {
+    $baseMessage('产品的打包价格不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.firstMileChannel == null) {
+    $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (row.finalSellingPrice == null) {
+    $baseMessage('产品的最终售价不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weightCoefficient == null) {
+    $baseMessage('产品的重量系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.volumeCoefficient == null) {
+    $baseMessage('产品的体积系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.tariff == null) {
+    $baseMessage('产品的关税不能为空，请填写后再进行逆算', 'warning')
+    return false
+  }
+  return true
+}
+const handleCalculate = async (row: IreviewStepNo3VariantList) => {
+  const isInputAll = isValueAllInput(row)
+  if (isInputAll) {
+    const { data } = await reverseCalculateReview({ id: row.orderEntryId })
+    if (data) {
+      $baseMessage('逆算成功!', 'success')
+      fetchVariantsData()
+    }
+  }
+}
 // 关闭添加零件对话框
 const handleCloseCreateComponent = (value: boolean) => {
   createComponentVisible.value = value

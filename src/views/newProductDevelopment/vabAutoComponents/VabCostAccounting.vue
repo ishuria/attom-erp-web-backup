@@ -197,20 +197,20 @@
 
         <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
           <template #default="{ row }">
-            {{ row.platformCommission != null ? row.symbol + row.platformCommission : '' }}
+            {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
           </template>
         </el-table-column>
 
         <el-table-column prop="storageFee" label="仓储费2个月" min-width="140">
           <template #default="{ row }">
-            {{ row.storageFee != null ? row.symbol + row.storageFee : '' }}
+            {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
           </template>
         </el-table-column>
 
         <el-table-column align="center" fixed="right" label="操作" width="120px">
           <template #default="{ row, $index }">
             <el-dropdown>
-              <el-button text type="primary">
+              <el-button text type="primary" @click="handleReverseCalculate(row)">
                 逆算
                 <el-icon class="el-icon--right">
                   <arrow-down />
@@ -218,7 +218,7 @@
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>
+                  <el-dropdown-item @click="handleReverseCalculate(row)"> 
                     <el-link type="primary" :underline="false">逆算</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="costAccountImageUpload(row, $index)">
@@ -274,13 +274,9 @@ import { TableRefs, UploadRequestOptions } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
-import {
-  estimatedCostAccountingSiteColumns,
-  firstLegChannelColumns,
-  siteReflectCurrencyAndExchangeRate,
-} from '../indexCommon'
+
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { getExchangeRate } from '/@/api/devlocal/evaluation'
+
 import {
   addCostAccounting,
   costAccountingCopy,
@@ -291,6 +287,7 @@ import {
   getCostAccountingList,
   getProgressPriceInfo,
   getProgressProductDesc,
+  reverseCalculateProgress,
   updateProgressPriceInfo,
   updateProgressProductdesc
 } from '/@/api/devlocal/progressSample'
@@ -369,8 +366,64 @@ const _site = ref<number>(0)
 const handleFocus = (row: any) => {
   _site.value = row.site
 }
+const isValueAllInput = (row: IProgressEstimatedCostAccounting) => {
+  if (row.site == null) { 
+    $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (!row.desc?.trim()) { 
+    $baseMessage('产品描述不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (!row.priceInfo?.trim()) {
+    $baseMessage('价格信息不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.price == null) {
+    $baseMessage('产品价格不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.length == null) {
+    $baseMessage('产品的长度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.width == null) {
+    $baseMessage('产品的宽度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.height == null) {
+    $baseMessage('产品的高度(cm)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weight == null) {
+    $baseMessage('产品的重量(g)不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.packaging == null) {
+    $baseMessage('产品的打包价格不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.firstMileChannel == null) {
+    $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算', 'warning')
+    return false
+  } else if (row.sellingPrice == null) {
+    $baseMessage('产品的售价不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.weightCoefficient == null) {
+    $baseMessage('产品的重量系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.volumeCoefficient == null) {
+    $baseMessage('产品的体积系数不能为空，请填写后再进行逆算', 'warning')
+    return false
+  } else if (row.tariff == null) {
+    $baseMessage('产品的关税不能为空，请填写后再进行逆算', 'warning')
+    return false
+  }
+  return true
+}
+const handleReverseCalculate = async (row: IProgressEstimatedCostAccounting) => {
+  const isInputAll = isValueAllInput(row)
+  if (isInputAll) {
+    const { data } = await reverseCalculateProgress({ id: Number(row.id) })
+    if (data) {
+      $baseMessage('逆算成功!', 'success')
+      fetchDataCostAccounting()
+    }
+  }
+}
 // 输入input blur事件
-const clickCancel = async (event:any, value:IProgressEstimatedCostAccounting) => {
+const clickCancel = async (event:any, value: IProgressEstimatedCostAccounting) => {
 
   const rootElement = getRootElement(event.srcElement, ".cell");
 
