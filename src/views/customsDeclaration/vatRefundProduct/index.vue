@@ -10,7 +10,7 @@
             <el-button type="primary">云舟开票导出</el-button>
             <el-button type="primary" :loading="exportLoading" @click="handleExportATM">埃托姆开票导出</el-button>
             <el-button type="primary" @click="invoiceMatchExportVisible = true">发票匹配导出</el-button>
-            <span style="width: 22em; margin: 0 50px calc(var(--el-margin) / 2) 0;">
+            <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0;">
               <el-date-picker 
                 v-model="date"
                 type="daterange"
@@ -104,9 +104,9 @@
           <el-table-column label="发票代码" prop="invoiceCode" min-width="100"></el-table-column>
           <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')"></el-table-column>
           <el-table-column label="发票数量" prop="invoiceCount" min-width="100"></el-table-column>
-          <el-table-column label="发票文件" prop="invoiceFilePath" min-width="160">
+          <el-table-column label="发票文件" prop="invoiceFilePath" min-width="100">
             <template #default="{ row }">
-              <el-button style="min-width: 100%;" @click="showPdf(row)">预览发票文件</el-button>
+              <el-button style="min-width: 100%;" @click="showPdf(row)">预览</el-button>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
@@ -210,9 +210,9 @@
           <el-table-column label="发票代码" prop="invoiceCode" min-width="100"></el-table-column>
           <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')"></el-table-column>
           <el-table-column label="发票数量" prop="invoiceCount" min-width="100"></el-table-column>
-          <el-table-column label="发票文件" prop="invoiceFilePath" min-width="160">
+          <el-table-column label="发票文件" prop="invoiceFilePath" min-width="100">
             <template #default="{ row }">
-              <el-button style="min-width: 100%;" @click="showPdf(row)">预览发票文件</el-button>
+              <el-button style="min-width: 100%;" @click="showPdf(row)">预览</el-button>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
@@ -558,18 +558,25 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
       textAlign: 'left'
     }
   }
+  if (data.columnIndex === 17) {
+    return {
+      cursor: 'not-allowed',
+      textAlign: 'left'
+    }
+  }
   if (data.columnIndex !== 4 && data.columnIndex !== 5 && data.columnIndex !== 6) {
     return {
       cursor: 'not-allowed',
       textAlign: 'center'
     }
   }
+  
   return {
     textAlign: 'center'
   }
 }
 const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 3 || data.columnIndex === 25 || data.columnIndex === 27 || data.columnIndex === 28) {
+  if (data.columnIndex === 3 || data.columnIndex === 17 || data.columnIndex === 25 || data.columnIndex === 27 || data.columnIndex === 28) {
     return {
       textAlign: 'left'
     }

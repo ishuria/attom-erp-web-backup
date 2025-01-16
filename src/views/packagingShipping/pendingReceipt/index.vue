@@ -34,7 +34,7 @@
               <el-space>
                 <el-link type="primary" :underline="false" @click="showSignDialog(row)">签收</el-link>
                 <el-link type="primary" :underline="false" @click="handleGetSignRecord(row)">修改</el-link>
-                <el-link type="primary" :underline="false" >打印</el-link>
+                <el-link type="primary" :underline="false" @click="showPrint(row)">打印</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -57,7 +57,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" min-width="250"></el-table-column>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"></el-table-column>
           <el-table-column label="签收数量" min-width="100" prop="signCount" ></el-table-column>
           <el-table-column label="零件数量" min-width="100" prop="purchaseCount" ></el-table-column>
           <el-table-column label="单位" min-width="60" prop="unit" ></el-table-column>
@@ -435,6 +435,23 @@
         <el-button type="primary" @click="handleConfirmSignBatch">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 打印 -->
+    <vab-dialog
+      v-model="printCountVisible"
+      title="打印数量"
+      width="20%"
+    >
+      <el-form ref="printFormRef" :model="printForm" :rules="printFormRules" style="margin: 0;" >
+        <el-form-item label="数量" prop="count">
+          <el-input v-model="printForm.count" type="number" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="text-align: center;">
+          <el-button type="primary" @click="handleConfirmPrint">打印</el-button>
+        </div>
+      </template>
+    </vab-dialog>
   </div>
 </template>
   
@@ -449,6 +466,8 @@ import {
   getSignList,
   getSignLog,
   getSignRecord,
+  printSign,
+  printSignSuccess,
   signBatch,
   signComponent,
   signMoreRecord,
@@ -464,12 +483,21 @@ import { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { isEqual } from 'lodash'
-import { removeHtmlTags } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'pendingReceiptTable',
 })
 
+const printCountVisible = ref<boolean>(false)
+const printForm = reactive<{ count: number | undefined }>({
+  count: undefined 
+})
+const printFormRef = ref<FormInstance>()
+const printFormRules = reactive<FormRules>({
+  count: [{ required: true, message: '请输入打印数量', trigger: 'blur' }]
+})
+const _id = ref<number>(0)
 const router = useRouter()
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
@@ -494,6 +522,33 @@ const signBatchFormRef = ref<FormInstance>()
 const signBatchFormRules = reactive<FormRules<{ signOrder: string }>>({
   signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }]
 })
+const handleConfirmPrint = async () => {
+  printFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await printSign({
+        signId: _id.value,
+        quantity: printForm.count!
+      })
+      if (data) {
+
+        const { data: res } = await printSignSuccess(
+          JSON.stringify(data)
+        )
+        if (res.errorId === "0") {
+          $baseMessage('打印成功!', 'success')
+          printCountVisible.value = false
+        } else {
+          $baseMessage('打印失败!', 'error')
+        }
+      }
+    }
+  })
+}
+const showPrint = (row: any) => {
+  _id.value = row.signId
+  printFormRef.value?.resetFields()
+  printCountVisible.value = true
+}
 const handleCancelSignBatch = () => {
   signBatchFormRef.value?.resetFields()
   signBatchVisible.value = false

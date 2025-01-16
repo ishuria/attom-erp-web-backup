@@ -23,8 +23,8 @@
           :data="list"
           @cell-click="changeInput"
         >
-          <el-table-column label="HTS" prop="hts" min-width="" align="center"></el-table-column>
-          <el-table-column label="关税率" prop="tariffRate" min-width="" align="center">
+          <el-table-column label="HTS" prop="hts" min-width="110" align="center"></el-table-column>
+          <el-table-column label="关税率" prop="tariffRate" min-width="90" align="center">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.tariffRate" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -32,7 +32,7 @@
               <span>{{ row.tariffRate ? row.tariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="301税率" prop="threeZeroOne" min-width="" align="center">
+          <el-table-column label="301税率" prop="threeZeroOne" min-width="100" align="center">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.threeZeroOne" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -40,7 +40,7 @@
               <span>{{ row.threeZeroOne ? row.threeZeroOne + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="杂费" prop="extras" min-width="" align="center">
+          <el-table-column label="杂费" prop="extras" min-width="90" align="center">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.extras" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -48,7 +48,7 @@
               <span>{{ row.extras }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="产品大类" prop="productCategory" min-width="">
+          <el-table-column label="产品大类" prop="productCategory" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -58,7 +58,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="1级大类" prop="categoryOne" min-width="">
+          <el-table-column label="1级大类" prop="categoryOne" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -68,7 +68,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="2级大类" prop="categoryTwo" min-width="">
+          <el-table-column label="2级大类" prop="categoryTwo" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -78,7 +78,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="3级大类" prop="categoryThree" min-width="">
+          <el-table-column label="3级大类" prop="categoryThree" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -88,7 +88,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="操作" min-width="" align="center">
+          <el-table-column label="操作" width="100" align="center">
             <template #default="{ row, $index }">
               <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
             </template>
@@ -127,8 +127,8 @@
           :data="list"
           @cell-click="changeInput"
         >
-          <el-table-column label="HTS" prop="hts" min-width="" align="center"></el-table-column>
-          <el-table-column label="德国关税率" prop="deTariffRate" min-width="" align="center">
+          <el-table-column label="HTS" prop="hts" min-width="110" align="center"></el-table-column>
+          <el-table-column label="德国关税率" prop="deTariffRate" min-width="110" align="center">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.deTariffRate" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -136,7 +136,7 @@
               <span>{{ row.deTariffRate ? row.deTariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="英国关税率" prop="ukTariffRate" min-width="" align="center">
+          <el-table-column label="英国关税率" prop="ukTariffRate" min-width="110" align="center">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.ukTariffRate" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -144,7 +144,7 @@
               <span>{{ row.ukTariffRate ? row.ukTariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="杂费" prop="extras" min-width="" align="center">
+          <el-table-column label="杂费" prop="extras" min-width="90" align="center">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.extras" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
@@ -152,7 +152,7 @@
               <span>{{ row.extras }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="产品大类" prop="productCategory" min-width="">
+          <el-table-column label="产品大类" prop="productCategory" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -162,7 +162,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="1级大类" prop="categoryOne" min-width="">
+          <el-table-column label="1级大类" prop="categoryOne" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -172,7 +172,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="2级大类" prop="categoryTwo" min-width="">
+          <el-table-column label="2级大类" prop="categoryTwo" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -182,7 +182,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="3级大类" prop="categoryThree" min-width="">
+          <el-table-column label="3级大类" prop="categoryThree" min-width="250">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>

@@ -42,6 +42,14 @@
         :prop="item.prop" 
         :min-width="item.minWidth || 100" width="auto"
       >
+        <template #header>
+          <span v-if="item.label === '30毛利盈亏自然单占比'">
+            30毛利盈亏<br />自然单占比
+          </span>
+          <span v-if="item.label === '关键词首页评分'">
+            关键词<br />首页评分
+          </span>
+        </template>
         <template #default="{ row }">
           <div v-if="item.label === '关键词趋势'">
             <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />

@@ -36,11 +36,12 @@ export const indexColumns = [
   },
   {
     label: '关键词趋势',
+    minWidth: 110,
   },
   {
     label: '头部个数',
     prop: 'productsCount',
-    minWidth: 80,
+    minWidth: 100,
   },
   {
     label: 'CPC$',
@@ -50,33 +51,37 @@ export const indexColumns = [
   {
     label: '30毛利盈亏自然单占比',
     prop: 'grossProfitAndLoss',
+    minWidth: 150,
   },
   {
     label: '平均转化',
     prop: 'avgConversionRate',
-    minWidth: 80,
+    minWidth: 100,
   },
   {
     label: '平均售价',
     prop: 'averageSellingPrice',
-    minWidth: 80,
+    minWidth: 100,
   },
   {
     label: '供求评分',
     prop: 'supplyScore',
+    minWidth: 100
   },
   {
     label: '关键词首页评分',
     prop: 'keyWordScore',
-    minWidth: 120
+    minWidth: 130
   },
   {
     label: '总分',
     prop: 'finalScore',
+    minWidth: 100
   },
   {
     label: '来源',
     prop: 'productSource',
+    minWidth: 130
   },
 ]
 

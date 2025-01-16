@@ -67,7 +67,20 @@
             </template>
           </el-table-column>
           <el-table-column label="剩余自然日" prop="naturalDay" min-width="110"></el-table-column>
-          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160"></el-table-column>
+          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.requiredAddress" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.requiredAddress }}</div>
+                </template>
+                <el-text truncated>{{ row.requiredAddress }}</el-text>
+              </el-tooltip>
+              <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
+            </template>
+          </el-table-column>
           <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
             <template #default="{ row }">
               <vab-icon v-if="row.sellingPointStatus === 1" icon="check-fill" class="custom-check" />
@@ -768,7 +781,7 @@ import { isEqual } from 'lodash'
 import { CSSProperties } from 'vue'
 import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
-import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
+import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
@@ -839,7 +852,10 @@ const clickCancel = async (event:any, value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    
+    await updateArtDesignDemandAddress({
+      id: value.id,
+      demandAddress: value.requiredAddress
+    })
   }
 }
 const closeAddReason = () => {
@@ -1259,8 +1275,8 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value.push(url)
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 2 || index === 3 || index === 4 || index === 12 || index === 13 || index === 14 || index === 15 || index === 16 || index === 18) {
+  const label = data.column.label
+  if (['SKU', 'ASIN', '站点', '需求文件地址', '基础图片', '建模/渲染', 'A+', '视频', '说明书/包装', '产品经理', '产品设计', '备注'].includes(label)) {
     return {
       textAlign: 'left'
     }

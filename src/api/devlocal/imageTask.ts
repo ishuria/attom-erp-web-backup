@@ -17,6 +17,7 @@ import {
   IGetSellingPointRes,
   ISaveArtDesignCopywritingReq,
   ISaveBatchSellingPointReq,
+  IUpdateArtDesignDemandAddressReq,
   IUpdateArtDesignTaskDistributeReq
 } from '/@/type/listingTask/imageTaskType'
 
@@ -255,6 +256,16 @@ export function delArtDesignSelectionReasons(data: { id: number }): Promise<{ da
 export function addArtDesignSelectionReasons(data: { reason: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/artdesign/selection/reasons/add`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 美工任务-需求文件地址修改
+ */
+export function updateArtDesignDemandAddress(data: IUpdateArtDesignDemandAddressReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/demand/address/update`,
     method: 'post',
     data
   })

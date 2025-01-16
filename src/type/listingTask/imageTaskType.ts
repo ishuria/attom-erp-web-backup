@@ -376,3 +376,10 @@ export interface IGetArtDesignSelectionReasonsList {
   id: number
   reason: string
 }
+/**
+ * 需求文件地址修改参数
+ */
+export interface IUpdateArtDesignDemandAddressReq {
+  id: number
+  demandAddress: string
+}

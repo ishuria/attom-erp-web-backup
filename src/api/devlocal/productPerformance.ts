@@ -6,6 +6,8 @@ import {
   IFilterAmazonSKUListReq,
   IGetOperationAmazonSKUListReq,
   IGetOperationAmazonSKUListRes,
+  IGetOperationArtListReq,
+  IGetOperationArtListRes,
   IGetOperationAsinListRes,
   IGetOperationParentAsinRes,
   IGetOperationTypeListReq,
@@ -16,11 +18,11 @@ import {
 /**
  * @description 产品表现-亚马逊看板SKU列表
  */
-export function getOperationAmazonSKUList(params: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
+export function getOperationAmazonSKUList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/sku/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -114,11 +116,11 @@ export function filterAmazonSKUList(data: IFilterAmazonSKUListReq): Promise<IGet
 /**
  * @description 产品看板表现-asin列表
  */
-export function getOperationAsinList(params: IGetOperationAmazonSKUListReq): Promise<IGetOperationAsinListRes> {
+export function getOperationAsinList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationAsinListRes> {
   return request({
     url: `${BASE_API}/operation/asin/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -134,10 +136,21 @@ export function filterOperationAmazonAsinList(data: IFilterAmazonSKUListReq): Pr
 /**
  * @description 产品看板表现-parentAsin列表
  */
-export function getOperationParentAsinList(params: IGetOperationAmazonSKUListReq): Promise<IGetOperationParentAsinRes> {
+export function getOperationParentAsinList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationParentAsinRes> {
   return request({
     url: `${BASE_API}/operation/parent/asin/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * @description 产品表现-亚马逊看板SKU列表(美工)
+ */
+export function getOperationAmazonArtDesignList(data: IGetOperationArtListReq): Promise<IGetOperationArtListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/art/design/sku/list`,
+    method: 'post',
+    data
   })
 }

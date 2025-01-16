@@ -1040,3 +1040,17 @@ export interface IFilterShipmentFbaList {
    */
   shipmentDateStart?: string;
 }
+
+/**
+ * 装箱打印请求参数
+ */
+export interface IPrintEncasementReq {
+  encasementId: number
+  quantity: number
+}
+export interface IPrintEncasementRes {
+  data: {
+    code: string
+    printerName: string
+  }
+}

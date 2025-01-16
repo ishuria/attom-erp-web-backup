@@ -365,23 +365,7 @@
         </div>
       </template>
     </vab-dialog>
-    <!-- 打印 -->
-    <vab-dialog
-      title="打印"
-      width="20%"
-      v-model="printVisible"
-    >
-      <el-form style=" margin-right: 10px;margin-left: 10px;">
-        <el-form-item label="打印数量">
-          <el-input v-model="printCount" clearable />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div style="text-align: center;">
-          <el-button type="primary">打印</el-button>
-        </div>
-      </template>
-    </vab-dialog>
+
     <!-- 拆分 -->
     <vab-dialog
       title="拆分"
@@ -399,6 +383,23 @@
         </div>
       </template>
     </vab-dialog>
+    <!-- 打印 -->
+    <vab-dialog
+      title="打印数量"
+      v-model="printCountVisible"
+      width="20%"
+    >
+      <el-form ref="printFormRef" :model="printForm" :rules="printFormRules" style="margin: 0;" >
+        <el-form-item label="数量" prop="count" >
+          <el-input v-model="printForm.count" type="number" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="text-align: center;">
+          <el-button type="primary" @click="handleConfirmPrint">打印</el-button>
+        </div>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -408,7 +409,7 @@ import { FormInstance, FormRules } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
-import { confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
+import { confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, printEncasementSuccess, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -420,6 +421,14 @@ const queryForm = reactive<IGetEncasementListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20
+})
+const printCountVisible = ref<boolean>(false)
+const printForm = reactive<{ count: number | undefined }>({
+  count: undefined
+})
+const printFormRef = ref<FormInstance>()
+const printFormRules = reactive<FormRules>({
+  count: [{ required: true, message: '请输入打印数量', trigger: 'blur' }]
 })
 // 修改可见
 const modifyVisible = ref<boolean>(false)
@@ -518,6 +527,26 @@ const uploadSplitFormRef = ref<FormInstance>()
 const file2Disabled = ref<boolean>(true)
 // 禁止下载装箱文件和装箱表格
 const file3Disabled = ref<boolean>(true)
+// 确认打印
+const handleConfirmPrint = async () => {
+  printFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await printEncasement({
+        encasementId: _id.value,
+        quantity: printForm.count!
+      })
+      if (data) {
+        const { data: res } = await printEncasementSuccess(JSON.stringify(data))
+        if (res) {
+          $baseMessage('打印成功!', 'success')
+          printCountVisible.value = false
+        } else {
+          $baseMessage('打印失败!', 'error')
+        }
+      }
+    }
+  })
+}
 // 修改箱数
 const handleBoxNumberChange = async (currentValue: number | undefined, oldValue: number | undefined, row: IEncasementList) => {
   if (currentValue! > oldValue!) {
@@ -856,10 +885,12 @@ const showModifyShippingPlan = () => {
   }
   modifyPlanVisible.value = true
 }
+const _id = ref<number>(0)
 // 展示打印
 const showPrint = (row: any) => {
-  printCount.value = undefined
-  printVisible.value = true
+  printForm.count = row.numberOfBoxes
+  _id.value = row.id
+  printCountVisible.value = true
 }
 const copyRow = ref<any>()
 // 展示拆分

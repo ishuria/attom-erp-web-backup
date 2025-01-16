@@ -64,3 +64,9 @@ export const unitOption = [
     value: 2
   },
 ]
+
+export const sizeOption = [
+  { label: '50×30mm', value: 1 },
+  { label: '80×50mm', value: 2 },
+  { label: '80×100mm', value: 3 }
+]

@@ -29,6 +29,8 @@ import {
   IId,
   IIds,
   IPoId,
+  IPrintSignReq,
+  IPrintSignRes,
   ISignBatch,
   ISignComponent,
   ISignId,
@@ -483,6 +485,27 @@ export function getPackageTaskSplitList(params: ITaskId): Promise<IGetPackageTas
 export function updatePackageTaskSite(data: IUpdatePackageTaskSite): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/package/task/site/update`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * @description 零件签收打印
+ */
+export function printSign(data: IPrintSignReq): Promise<IPrintSignRes> {
+  return request({
+    url: `${BASE_API}/sign/print`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 打印
+ */
+export function printSignSuccess(data: any) {
+  return request({
+    url: "https://192.168.6.19:6789/api/v2/printWriting",
     method: 'post',
     data
   })

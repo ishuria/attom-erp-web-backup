@@ -799,3 +799,21 @@ export interface ISignBatch {
   signIds: string
   signOrder: string
 }
+/**
+ * 零件签收打印请求参数
+ */
+export interface IPrintSignReq {
+  signId: number
+  quantity: number
+}
+/**
+ * 零件签收打印响应数据
+ */
+export interface IPrintSignRes {
+  data: {
+    code: string
+    printerName: string
+    sku: string
+    componentName: string
+  }
+}

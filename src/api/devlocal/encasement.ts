@@ -33,6 +33,8 @@ import {
   IGetShipmentFbaListRes,
   IGetShippedEncasementListRes,
   IId,
+  IPrintEncasementReq,
+  IPrintEncasementRes,
   ISplitEncasementCsv,
   ISplitEncasementReq,
   IStringRes,
@@ -526,5 +528,22 @@ export const filterShipmentFbaList = (params: IFilterShipmentFbaList): Promise<I
     url: `${BASE_API}/shipment/fba/filter/list`,
     method: 'post',
     params
+  })
+}
+/**
+ * @description 装箱-打印
+ */
+export const printEncasement = (data: IPrintEncasementReq): Promise<IPrintEncasementRes> => {
+  return request({
+    url: `${BASE_API}/encasement/print`,
+    method: 'post',
+    data
+  })
+}
+export const printEncasementSuccess = (data: any) => {
+  return request({
+    url: "https://192.168.6.19:6789/api/v2/print",
+    method: 'post',
+    data
   })
 }

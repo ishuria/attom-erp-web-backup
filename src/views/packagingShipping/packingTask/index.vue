@@ -102,7 +102,7 @@
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
@@ -222,7 +222,7 @@
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
@@ -342,7 +342,7 @@
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
@@ -462,7 +462,7 @@
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
@@ -582,7 +582,7 @@
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
@@ -701,7 +701,7 @@
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false">生成条形码</el-link>
+                <el-link type="primary" :underline="false" @click="showBarcode(row)" >生成条形码</el-link>
                 <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
@@ -1212,6 +1212,37 @@
         <el-button type="primary" @click="confirmSplitTask">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 生成条形码 -->
+    <vab-dialog
+      title="生成条形码"
+      width="20%"
+      v-model="generateBarcodeVisible"
+    >
+      <el-form class="barcodeForm" :model="barcodeForm" label-position="top" style="margin: 0;">
+        <el-form-item label="尺寸">
+          <el-select placeholder="请选择尺寸">
+            <el-option v-for="item in sizeOption" :label="item.label" :value="item.value" :key="item.value" />
+          </el-select>
+        </el-form-item>
+        <!-- <el-form-item label="窒息警告" label-position="left">
+          <el-checkbox></el-checkbox>
+        </el-form-item>
+        <el-form-item label="奶嘴夹警告" label-position="left">
+          <el-checkbox></el-checkbox>
+        </el-form-item> -->
+        <el-form-item style="margin-left: 2px">
+          <el-checkbox>窒息警告</el-checkbox>
+          <el-checkbox>奶嘴夹警告</el-checkbox>
+        </el-form-item>
+        <el-form-item label="品牌">
+          <el-input clearable style="min-width: 100%;" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button>取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
     <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal />
   </div>
 </template>
@@ -1221,7 +1252,7 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
-import { siteMap, siteValue } from '../constantOption'
+import { siteMap, siteValue, sizeOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
   addQualityCheck,
@@ -1269,6 +1300,13 @@ const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
 
+const generateBarcodeVisible = ref<boolean>(false)
+const barcodeForm = reactive<any>({
+
+})
+const showBarcode = (row: any) => {
+  generateBarcodeVisible.value = true
+}
 // 任务书修改form
 const modifyTaskForm = reactive<any>({})
 const modifyTaskFormRef = ref<FormInstance>()
@@ -2294,5 +2332,12 @@ onBeforeMount(() => {
   max-height: 60px;
   display: block;
   overflow-y: auto;
+}
+.barcodeForm {
+  .el-checkbox {
+    :deep(.el-checkbox__input) {
+      transform: scale(1.1);
+    }
+  }
 }
 </style>
