@@ -3,14 +3,14 @@ import { loginRSA } from '/@/config'
 import { encryptedData } from '/@/utils/encrypt'
 import request from '/@/utils/request'
 
-interface FormType {
-  password: string
-  password2?: string
-  phone: string
-  phoneCode: string
-  username: string
-  verificationCode: string
-}
+// interface FormType {
+//   password: string
+//   password2?: string
+//   phone: string
+//   phoneCode: string
+//   username: string
+//   verificationCode: string
+// }
 
 export const login = async (data: any) => {
   if (loginRSA) data = { ...data, password: await encryptedData(data) }

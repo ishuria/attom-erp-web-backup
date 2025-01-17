@@ -2,24 +2,28 @@
   <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="startEvalution"
-          v-permissions="{ permission: ['newProduct:evaluation:add'] }">开始评估</el-button>
-        <el-button type="primary" @click="keyWordTrendVisible = true"
-          v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-button>
-        <el-button type="primary" @click="getScoreParams"
-          v-permissions="{ permission: ['newProduct:evaluation:default:params'] }">评分参数</el-button>
-        <el-button class="hidden-xs-only" type="primary"
-          v-permissions="{ permission: ['newProduct:evaluation:score:params'] }"
+        <el-button
+v-permissions="{ permission: ['newProduct:evaluation:add'] }" type="primary"
+          @click="startEvalution">开始评估</el-button>
+        <el-button
+v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary"
+          @click="keyWordTrendVisible = true">关键词趋势</el-button>
+        <el-button
+v-permissions="{ permission: ['newProduct:evaluation:default:params'] }" type="primary"
+          @click="getScoreParams">评分参数</el-button>
+        <el-button
+v-permissions="{ permission: ['newProduct:evaluation:score:params'] }" class="hidden-xs-only"
+          type="primary"
           @click="costAccountingeParam">成本核算默认参数</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="custom-table-right-tools">
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
             </el-form-item>
           </el-form>
         </div>
@@ -39,8 +43,8 @@
         :key="index" 
         align="center" 
         :label="item.label"
-        :prop="item.prop" 
-        :min-width="item.minWidth || 100" width="auto"
+        :min-width="handleWidth(item)" 
+        :prop="item.prop" width="auto"
       >
         <template #header>
           <span v-if="item.label === '30毛利盈亏自然单占比'">
@@ -75,13 +79,13 @@
                   <el-link type="primary" :underline="false" >查看和修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="cliekFontSearchKeyWord(row)">
-                  <el-link type="primary" :underline="false" v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }">关键词趋势</el-link>
+                  <el-link v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary" :underline="false">关键词趋势</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="row.userId === currentLoginUserId" @click="sharedEvaluation(row)">
                   <el-link type="primary" :underline="false" >共享</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="getBenchmarkScoreDetail(row.idNo)">
-                  <el-link type="primary" :underline="false" v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }">分数明细</el-link>
+                  <el-link v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }" type="primary" :underline="false">分数明细</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -93,13 +97,14 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
+    <vab-pagination
+:current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />
 
     <vab-dialog v-model="keyWordTrendVisible" title="关键词趋势" width="500">
       <el-form style="margin-left: 3px; margin-right: 3px;">
         <el-form-item label="关键词">
-          <el-input autocomplete="off" v-model="inputKeyWord" />
+          <el-input v-model="inputKeyWord" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -111,23 +116,24 @@
 
     <!-- 关键词趋势图表 -->
      <vab-trend 
-      :trendEchartsVisible="keyWordTrendEchatsVisible"
-      :keyWord = "inputKeyWord"
-      :trendData = "trendEcahts"
-      @update:visibleValue = "updateTrendVisibleValue"
-      @update:clearInputKeyWord = "cleanKeyWordTrendData"
-      @update:trendEchartsList  = "updateTrendEchatsData"
+      :key-word = "inputKeyWord"
+      :trend-data = "trendEcahts"
+      :trend-echarts-visible="keyWordTrendEchatsVisible"
+      @update:clear-input-key-word = "cleanKeyWordTrendData"
+      @update:trend-echarts-list  = "updateTrendEchatsData"
+      @update:visible-value = "updateTrendVisibleValue"
      />
     
     <!-- 评分参数 -->
     <vab-dialog v-model="scoreParametersVisible" title="评分参数" width="500">
-      <el-table height="700px" :data="scoreParametersList" :cell-style="{ textAlign: 'center' }"
-        :header-cell-style="{ 'text-align': 'center' }">
-        <el-table-column property="key" label="名称" />
+      <el-table
+:cell-style="{ textAlign: 'center' }" :data="scoreParametersList" :header-cell-style="{ 'text-align': 'center' }"
+        height="700px">
+        <el-table-column label="名称" property="key" />
         <el-table-column label="值">
           <template #default="scope">
             <div>
-              <el-input @blur="updateScoreParam(scope.row)" autocomplete="off" v-model="scope.row.value" />
+              <el-input v-model="scope.row.value" autocomplete="off" @blur="updateScoreParam(scope.row)" />
             </div>
           </template>
         </el-table-column>
@@ -136,7 +142,7 @@
     </vab-dialog>
     <!-- 跑分明细 -->
     <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="750">
-      <el-table :data="benchmarkScoreList" :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }">
+      <el-table :cell-style="{ textAlign: 'center' }" :data="benchmarkScoreList" :header-cell-style="{ 'text-align': 'center' }">
         <el-table-column v-for="(item, index) in scoreDetialColumns" :key="index" :label="item.label" :prop="item.prop" />
       </el-table>
 
@@ -145,29 +151,29 @@
 
     <!-- 共享 -->
     <vab-shared  
-      :visible="sharedVisible"
       :id = "shareId"
+      :fetch-data="fetchData"
+      :handler-switch-change="handlerSwitchChange"
       :list="shareUserList"
-      @update:sharedVisible = "updateSharedVisibleValue"
-      :handlerSwitchChange="handlerSwitchChange"
-      :fetchData="fetchData"
+      :visible="sharedVisible"
+      @update:shared-visible = "updateSharedVisibleValue"
     />
 
     <!-- 产品成本核算与推进子组件 -->
     <vab-estimated-cost-accounting 
-      :flag="estimatedCostAccountingVisible" 
+      :call-parent-method="fetchEstimatedCostAccounting" 
+      :channel-list="channelList"
+      :evaluation-id="evaluationId"
+      :flag="estimatedCostAccountingVisible"
       :list="estimatedCostAccountingList"
-      :evaluationId="evaluationId"
-      :callParentMethod="fetchEstimatedCostAccounting"
-      :channelList="channelList"
-      :siteList="siteList"
+      :site-list="siteList"
     />
 
     <!-- 成本核算默认方式 -->
       <vab-cost-accounting-param 
-      :flag="costAccountingeParamVisible"
-      @update:visibleValue = "updatecostAccountingeParamVisible"
       :data = "costAccountingFrom"
+      :flag="costAccountingeParamVisible"
+      @update:visible-value = "updatecostAccountingeParamVisible"
     />
 
   </div>
@@ -195,7 +201,7 @@ import {
 import { getUserInfo } from '/@/api/devlocal/userLogin'
 import { setLocalStorage } from '/@/utils/localStorage'
 
-import {
+import type {
   IBenchmarkScore,
   ICostAccounting,
   IEstimatedCostAccounting,
@@ -206,8 +212,9 @@ import {
   IShared
 } from '/@/type/evaluation/evaluationType'
 
-import { convertString } from '/@/utils/stringUtils'
 import { getChannelList } from '~/src/api/devlocal/encasement'
+import { flexColumnWidth } from '~/src/utils/tableColum'
+import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
   name: 'Evaluation',
@@ -288,6 +295,16 @@ const queryForm = reactive<IEvaluationQueryReq>({
 
 const fixed = ref<string>('right')
 
+const handleWidth = (item: any) => {
+  if (item.label === '来源') {
+    return flexColumnWidth(evaluationList.value, '来源', 'productSource')
+  } else if (item.label === '亚马逊前台关键词') {
+    return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords')
+  } else if (item.label === '亚马逊后台关键词') {
+    return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords')
+  }
+  return item.minWIdth || 100
+}
 /**
  * 获取初始新款评估数据
  */

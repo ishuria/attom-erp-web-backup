@@ -1,7 +1,7 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import {
+import type {
   IAddHSListReq,
   IAddHTSListReq,
   IGetHSListReq,
@@ -11,7 +11,7 @@ import {
   IUpdateHSListReq,
   IUpdateHTSListReq
 } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
-import {
+import type {
   IBooleanRes,
   IClearAllMatchComponent,
   IClearMatchComponent,
@@ -39,7 +39,7 @@ import {
   IUpdateShipmentLegPay,
   IUpdateShipmentPay
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
-import {
+import type {
   ICleanTaxRefundInvoice,
   IFinishTaxRefundInvoiceRes,
   IGetTaxRefundBatchDetailQuery,

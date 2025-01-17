@@ -1,12 +1,12 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import {
+import type {
+  IPurchaserId,
+  IRepositoryId,
   IaddPurchaseCompany,
   IaddPurchaseRepository,
   IgetPurchaseRepositoryResp,
-  IPurchaserId,
-  IRepositoryId,
   IupdatePurchaseCompany,
   IupdatePurchaseRepository
 } from '/@/type/purchase/ourInformationType'

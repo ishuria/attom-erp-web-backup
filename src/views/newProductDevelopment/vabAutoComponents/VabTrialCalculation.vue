@@ -128,7 +128,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="roi" label="ROI"></el-table-column>
+      <el-table-column prop="roi" label="ROI">
+        <template #default="{ row }">
+          {{ row.roi != null ? row.roi + '%' : '' }}
+        </template>
+      </el-table-column>
 
       <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
         <template #default="{ row }">
@@ -328,7 +332,7 @@ const handlerSiteChange = async (row:IProgressEstimatedCostAccounting) =>{
     // 调用修改接口
 }
 const handleUpdateChannel = async (row: any) => {
-  await updateTrialCalculation({ ...row, tariff: "" + parseInt(row.tariff!) / 100, grossMarginRate: "" + parseInt(row.grossMarginRate) / 100 })
+  await updateTrialCalculation({ ...row, tariff: `${parseInt(row.tariff!) / 100}`, grossMarginRate: `${parseInt(row.grossMarginRate) / 100}`, roi: `${Number(row.roi) / 100}` })
   fetchData()
 }
 // 鼠标enter事件
@@ -459,7 +463,7 @@ const clickCancel = async (event:any,value:IProgressSample) =>{
     return
   }
     
-  await updateTrialCalculation({ ...value, tariff: "" + parseInt(value.tariff!) / 100, grossMarginRate: "" + parseInt(value.grossMarginRate!) / 100 })
+  await updateTrialCalculation({ ...value, tariff: `${parseInt(value.tariff!) / 100}`, grossMarginRate: `${parseInt(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
 }
 
 const fetchData = async () => {

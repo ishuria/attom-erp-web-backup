@@ -1,7 +1,7 @@
 import { BASE_API } from '/@/api/devlocal/api'
 import request from '/@/utils/request'
 
-import {IMenuDeleteReq,IMenuAddOrUpdteReq} from '/@/type/menu/menuType'
+import type {IMenuAddOrUpdteReq,IMenuDeleteReq} from '/@/type/menu/menuType'
 
 export const getList = (params?: any) => {
   return request({

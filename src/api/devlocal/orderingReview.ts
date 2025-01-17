@@ -2,19 +2,19 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import {
-  IReviewQueryReq,
-  IReviewQueryResp,
+import type {
   IReviewCommonReq,
   IReviewCommonResp,
   IReviewMoldResp,
-  IVariantInfoResp,
+  IReviewQueryReq,
+  IReviewQueryResp,
+  IReviewStep2Req,
   IReviewStepNo1Req,
   IReviewStepResp,
-  IReviewStep2Req,
   IReviewStepUpdateReq,
+  IVariantInfoResp,
 } from '/@/type/review/review'
-import { IreviewId } from '/@/type/orderProcess/orderProcessType'
+import type { IreviewId } from '/@/type/orderProcess/orderProcessType'
 
 // 新品审核与记录-获取新品审核列表
 export function getReviewList(params?: IReviewQueryReq): Promise<IReviewQueryResp> {

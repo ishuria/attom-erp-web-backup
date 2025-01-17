@@ -66,7 +66,13 @@
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" prop="naturalDay" min-width="110"></el-table-column>
+          <el-table-column label="剩余自然日" min-width="110" prop="naturalDay" >
+            <template #default="{ row }">
+              <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
+              <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
+              <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
+            </template>
+          </el-table-column>
           <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
             <template #default="{ row }">
               <div class="none">
@@ -265,7 +271,13 @@
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" prop="naturalDay" min-width="110"></el-table-column>
+          <el-table-column label="剩余自然日" prop="naturalDay" min-width="110">
+            <template #default="{ row }">
+              <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
+              <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
+              <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
+            </template>
+          </el-table-column>
           <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
             <template #default="{ row }">
               <div class="none">
@@ -443,7 +455,13 @@
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" prop="naturalDay" min-width="110"></el-table-column>
+          <el-table-column label="剩余自然日" prop="naturalDay" min-width="110">
+            <template #default="{ row }">
+              <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
+              <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
+              <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
+            </template>
+          </el-table-column>
           <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160"></el-table-column>
           <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
             <template #default="{ row }">

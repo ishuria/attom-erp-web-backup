@@ -2,7 +2,9 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import {
+import type {
+  ISubmitReviewComponentQuery,
+  ISubmitReviewConsumableQuery,
   IqualityInspectionId,
   IreviewComponentId,
   IreviewId,
@@ -24,11 +26,9 @@ import {
   IreviewStepNo4UpdateQualityInspection,
   IreviewStepNo4UpdateSupplier,
   IreviewStepNo5SkuInfoPerfect,
-  IreviewStepNo6SaveSix,
-  ISubmitReviewComponentQuery,
-  ISubmitReviewConsumableQuery
+  IreviewStepNo6SaveSix
 } from '/@/type/orderProcess/orderProcessType'
-import { IBooleanResp } from '/@/type/purchase/po'
+import type { IBooleanResp } from '/@/type/purchase/po'
 
 /**
  * 新品进度-开模进度列表

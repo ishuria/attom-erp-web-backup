@@ -1,22 +1,23 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import {
+import type {
   IAddQualityCheckReq,
   IBooleanResp,
   IConfirmEndTask,
   IConfirmStartMoreTask,
   IConfirmStartTask,
+  IGeneratePackageBarcodeReq,
   IGetAfterSalesListReq,
   IGetAfterSalesListResp,
   IGetAfterSalesLogResp,
   IGetEndTaskListResp,
   IGetPackageComponentListResp,
   IGetPackageInspectionResp,
-  IGetPackageTaskingList,
   IGetPackageTaskListQuery,
   IGetPackageTaskListResp,
   IGetPackageTaskSplitList,
+  IGetPackageTaskingList,
   IGetPackageTimeDayRequest,
   IGetPackageTimeDayResp,
   IGetPackageTimeListReq,
@@ -34,7 +35,6 @@ import {
   ISignBatch,
   ISignComponent,
   ISignId,
-  ISignIds,
   ISignRecordId,
   ISplitPackageTask,
   IStringResp,
@@ -506,6 +506,16 @@ export function printSign(data: IPrintSignReq): Promise<IPrintSignRes> {
 export function printSignSuccess(data: any) {
   return request({
     url: "https://192.168.6.19:6789/api/v2/printWriting",
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 打包-条形码生成
+ */
+export function generatePackageBarcode(data: IGeneratePackageBarcodeReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/generate/barcode`,
     method: 'post',
     data
   })

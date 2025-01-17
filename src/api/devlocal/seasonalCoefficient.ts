@@ -1,7 +1,7 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import {
+import type {
   IAddSeasonalCoefficientReq,
   IBooleanResp,
   IGetSeasonalCoefficientListReq,

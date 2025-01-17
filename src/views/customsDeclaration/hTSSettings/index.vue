@@ -12,7 +12,7 @@
                 <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData" ></el-button>
+                <el-button :loading="listLoading" type="primary" :icon="Search"  @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -45,7 +45,7 @@
               <div class="none">
                 <el-input v-model="row.extras" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
-              <span>{{ row.extras }}</span>
+              <span>{{ row.extras ? row.extras + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="产品大类" prop="productCategory" min-width="250">
@@ -149,7 +149,7 @@
               <div class="none">
                 <el-input v-model="row.extras" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
               </div>
-              <span>{{ row.extras }}</span>
+              <span>{{ row.extras ? row.extras + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="产品大类" prop="productCategory" min-width="250">
@@ -329,7 +329,8 @@ const handleConfirmAdd = async () => {
         tariffRate: addForm.tariffRate / 100,
         threeZeroOne: addForm.threeZeroOne / 100,
         deTariffRate: addForm.deTariffRate / 100,
-        ukTariffRate: addForm.ukTariffRate / 100
+        ukTariffRate: addForm.ukTariffRate / 100,
+        extras: addForm.extras / 100
       })
       if (data) {
         $baseMessage('新增成功！', 'success')
@@ -404,7 +405,7 @@ const clickCancel = async (event: any, value: IGetHTSList) => {
         id: value.id,
         tariffRate: value.tariffRate! / 100,
         threeZeroOne: value.threeZeroOne! / 100,
-        extras: value.extras,
+        extras: value.extras! / 100,
         type: 0
       })
     } else if (activeName.value === 1) {
@@ -412,7 +413,7 @@ const clickCancel = async (event: any, value: IGetHTSList) => {
         id: value.id,
         deTariffRate: value.deTariffRate! / 100,
         ukTariffRate: value.ukTariffRate! / 100,
-        extras: value.extras,
+        extras: value.extras! / 100,
         type: 1
       })
     }
@@ -476,6 +477,9 @@ const fetchData = async () => {
     }
     if (item.ukTariffRate) {
       item.ukTariffRate = parseFloat((item.ukTariffRate * 100).toFixed(2))
+    }
+    if (item.extras) {
+      item.extras = parseFloat((item.extras * 100).toFixed(2))
     }
   })
   listLoading.value = false

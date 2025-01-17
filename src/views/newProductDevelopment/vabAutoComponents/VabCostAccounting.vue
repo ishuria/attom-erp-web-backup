@@ -166,7 +166,11 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="roi" label="ROI" />
+        <el-table-column label="ROI" prop="roi" min-width="90">
+          <template #default="{ row }">
+            {{ row.roi != null ? row.roi + '%' : '' }}
+          </template>
+        </el-table-column>
 
         <el-table-column label="重量系数" min-width="100">
           <template #default="{ row }">
@@ -438,7 +442,7 @@ const clickCancel = async (event:any, value: IProgressEstimatedCostAccounting) =
     return
   }
   isDraggingDisabled.value = false
-  await costAccountingUpdate({ ...value, tariff: "" + parseFloat(value.tariff!) / 100, grossMarginRate: "" + parseFloat(value.grossMarginRate!) / 100 })
+  await costAccountingUpdate({ ...value, tariff: `${parseFloat(value.tariff!) / 100}`, grossMarginRate: `${parseFloat(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
   fetchDataCostAccounting()
 }
 
@@ -518,7 +522,7 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
 // 进度成本核算修改站点
 const handlerSiteChange = async (row: IProgressEstimatedCostAccounting) => {
   try {
-    const { data } = await costAccountingUpdate({ ...row, tariff: "" + parseFloat(row.tariff!) / 100, grossMarginRate: "" + parseFloat(row.grossMarginRate!) / 100 })
+    const { data } = await costAccountingUpdate({ ...row, tariff: `${parseFloat(row.tariff!) / 100}`, grossMarginRate: `${parseFloat(row.grossMarginRate!) / 100}`, roi: `${parseFloat(row.roi!) / 100}` })
     fetchDataCostAccounting()
   } catch (error) {
     row.site = _site.value
@@ -545,8 +549,8 @@ const fetchDataCostAccounting = async ()=>{
     // 成本核算列表
     const {data} = await getCostAccountingList({ progressId: props.progressId })
     estimatedCostList.value = data
-  } catch(e){
-    console.error(e as Error)
+  } catch(error) {
+    console.error(error)
   }
 }
 
@@ -579,7 +583,7 @@ const costAccountingUploadImageFile = async (options: UploadRequestOptions) => {
 
 // 头程渠道修改
 const handlerEstimatendChange = async (row: IProgressEstimatedCostAccounting) =>{
-  await costAccountingUpdate({ ...row, tariff: "" + parseFloat(row.tariff!) / 100, grossMarginRate: "" + parseFloat(row.grossMarginRate!) / 100 })
+  await costAccountingUpdate({ ...row, tariff: `${parseFloat(row.tariff!) / 100}`, grossMarginRate: `${parseFloat(row.grossMarginRate!) / 100}`, roi: `${parseFloat(row.roi!)/ 100}` })
   fetchDataCostAccounting()
 }
 

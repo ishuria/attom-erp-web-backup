@@ -2,10 +2,10 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import {IRoleDeleteReq,
-  IRoleQuery,
-  IRoleAddOrUpdateReq,
-  IRoleMenuReq
+import type {IRoleAddOrUpdateReq,
+  IRoleDeleteReq,
+  IRoleMenuReq,
+  IRoleQuery
 } from '/@/type/role/roleType'
 
 /**

@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IAddParams, IEditParams, IGetAllNameReq, IUserDeleteReq, IUserQueryReq } from '/@/type/user/userType'
+import type { IAddParams, IEditParams, IGetAllNameReq, IUserDeleteReq, IUserQueryReq } from '/@/type/user/userType'
 
 export function getList(params?: IUserQueryReq) {
   return request({

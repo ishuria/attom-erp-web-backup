@@ -1,13 +1,13 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import {
+import type {
   IBooleanRes,
   ICheckOutboundNotMatchInvoiceExport,
   IGetInBoundListRes,
-  IGetOutboundInventoryCheckRes,
   IGetOutBoundListReq,
-  IGetOutBoundListRes
+  IGetOutBoundListRes,
+  IGetOutboundInventoryCheckRes
 } from '/@/type/finance/financeType'
 
 export function getOutBoundList(params: IGetOutBoundListReq): Promise<IGetOutBoundListRes> {

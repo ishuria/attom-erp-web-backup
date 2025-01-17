@@ -405,7 +405,11 @@
             <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column prop="roi" label="ROI"></el-table-column>
+        <el-table-column prop="roi" label="ROI">
+          <template #default="{ row }">
+            {{ row.roi != null ? row.roi + '%' : '' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
           <template #default="{ row }">
             <div class="none">
@@ -974,7 +978,7 @@ const clickVariantsCancel = async (event:any, value:any) => {
   
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await reviewStepNo3VariantUpdate({ ...value, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100 })
+    await reviewStepNo3VariantUpdate({ ...value, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100, roi: value.roi / 100 })
     fetchVariantsData()
   }
 }

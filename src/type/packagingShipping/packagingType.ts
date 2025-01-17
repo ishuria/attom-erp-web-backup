@@ -817,3 +817,13 @@ export interface IPrintSignRes {
     componentName: string
   }
 }
+/**
+ * 生成条形码
+ */
+export interface IGeneratePackageBarcodeReq {
+  packageId: number
+  sizeIdx: number
+  chokingWarning: number
+  nippleClampWarning: number
+  brand: string
+}

@@ -1389,7 +1389,7 @@ const columns = ref<any>([
     label: '站点',
     prop: 'siteName',
     checked: true,
-    minWidth: 130,
+    minWidth: 150,
   },
   {
     label: '销量趋势(点击看明细)',
@@ -1807,7 +1807,7 @@ const columnsAsin = ref<any>([
     label: '站点',
     prop: 'siteName',
     checked: true,
-    minWidth: 130,
+    minWidth: 150,
   },
   {
     label: '销量趋势(点击看明细)',
@@ -2139,7 +2139,7 @@ const columnsParentAsin = ref<any>([
     label: '站点',
     prop: 'siteName',
     checked: true,
-    minWidth: 130,
+    minWidth: 150,
   },
   {
     label: '销量趋势(点击看明细)',

@@ -2,27 +2,27 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { 
-  IProgressQueryReq, 
-  IProgressImgSort, 
-  IProgress, 
-  ISharelistQueryReq, 
-  ISampleListQueryReq, 
-  IProgressMoldAddQueryReq, 
-  IProgressMoldUpdateQueryReq, 
-  IProgressSampleUpdate, 
-  IProgressId, 
-  ISampleId, 
-  IIdNo, 
+import type { 
+  IComponentId, 
   IGetByIdQueryEvaluationResp, 
-  ISampleListResp, 
+  IIdNo, 
+  IProgress, 
+  IProgressFilterResp, 
+  IProgressId, 
+  IProgressImgSort, 
+  IProgressMoldAddQueryReq, 
   IProgressMoldListResp, 
+  IProgressMoldUpdateQueryReq, 
   IProgressMoldUpdateResp, 
+  IProgressQueryReq, 
+  IProgressSampleReceiptResp, 
+  IProgressSampleUpdate, 
+  ISampleId, 
+  ISampleListQueryReq,
+  ISampleListResp,
   IShareListResp,
-  IComponentId,
-  IProgressSampleReceiptResp,
   ISharePersonReq,
-  IProgressFilterResp} from '/@/type/progress/progressType'
+  ISharelistQueryReq} from '/@/type/progress/progressType'
 
 /**
  * 新品进度-获取新品进度管理列表

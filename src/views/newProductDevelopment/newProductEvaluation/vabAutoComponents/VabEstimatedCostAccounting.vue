@@ -3,8 +3,8 @@
     v-model="dflag" 
     :before-close = "handlerCloseDialog"
     title="产品成本核算与推进" 
-    width="100%"
     top="10vh"
+    width="100%"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
@@ -171,7 +171,7 @@
             <span>{{ row.sellingPrice ? row.symbol + row.sellingPrice : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="grossMarginRate" label="毛利率">
+        <el-table-column label="毛利率" prop="grossMarginRate">
           <template #default="{ row }">
             <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
@@ -179,7 +179,11 @@
             <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column prop="roi" label="ROI" min-width="60"></el-table-column>
+        <el-table-column prop="roi" label="ROI" min-width="90">
+          <template #default="{ row }">
+            {{ row.roi != null ? row.roi + '%' : '' }}
+          </template>
+        </el-table-column>
 
         <el-table-column prop="weightCoefficient" label="重量系数" min-width="60">
           <template #header>
@@ -548,19 +552,19 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: E
 
 // 产品描述的确认修改
 const confirmUpdate1Dialog = async () => {
-  await updateEstimatedCostAccounting({ ...clickRow, desc: productDescription.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100 })
+  await updateEstimatedCostAccounting({ ...clickRow, desc: productDescription.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100, roi: clickRow.roi / 100 })
   clickRow.desc = productDescription.value
   productDescriptionVisible.value = false
 }
 // 价格信息的确认修改
 const confirmUpdate2Dialog = async () => {
-  await updateEstimatedCostAccounting({ ...clickRow, priceInfo: priceInformation.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100 })
+  await updateEstimatedCostAccounting({ ...clickRow, priceInfo: priceInformation.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100, roi: clickRow.roi / 100 })
   clickRow.priceInfo = priceInformation.value
   priceInformationVisible.value = false
 }
 // 1688链接的确认修改
 const confirmUpdate3Dialog = async () => {
-  await updateEstimatedCostAccounting({ ...clickRow, url1688: link1688.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100 })
+  await updateEstimatedCostAccounting({ ...clickRow, url1688: link1688.value, tariff: clickRow.tariff / 100, grossMarginRate: clickRow.grossMarginRate / 100, roi: clickRow.roi / 100 })
   clickRow.url1688 = link1688.value
   link1688Visible.value = false
 }
@@ -586,7 +590,7 @@ const clickCancel = async (event:any, value:any) =>{
     return
   }
   const { firstMileChannel, ...filterValue } = value
-  await updateEstimatedCostAccounting({ ...filterValue, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100 })
+  await updateEstimatedCostAccounting({ ...filterValue, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100, roi: clickRow.roi / 100 })
   props.callParentMethod(parseInt(evaluationId.value))
 }
 
@@ -648,7 +652,7 @@ const handlerSiteChange = async (row: IEstimatedCostAccounting) =>{
   // const {data} = await getExchangeRate({currency:row.currencyType})
   // row.foreignExchange = data
   // row.site = row.site  
-  await updateEstimatedCostAccounting({ ...row, tariff: Number(row.tariff) / 100, grossMarginRate: Number(row.grossMarginRate) / 100 })
+  await updateEstimatedCostAccounting({ ...row, tariff: Number(row.tariff) / 100, grossMarginRate: Number(row.grossMarginRate) / 100, roi: Number(row.roi) / 100 })
   props.callParentMethod(parseInt(evaluationId.value))
 }
 

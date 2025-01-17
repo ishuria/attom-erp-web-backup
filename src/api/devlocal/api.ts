@@ -1,1 +1,1 @@
-export const BASE_API: string = '/api/v1'
+export const BASE_API = '/api/v1'

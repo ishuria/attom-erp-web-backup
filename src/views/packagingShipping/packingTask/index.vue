@@ -1,23 +1,23 @@
 <template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
+    <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待打包" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>    
-                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
-                <el-button type="primary" class="button-margin">工作量预估</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -26,35 +26,35 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          v-loading="listLoading"
-          :data="list"
-          class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
-          :cell-style="cellStyle"
+          v-loading="listLoading" border 
           :cell-class-name="cellClassName"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
+          :data="list"
+          :header-cell-style="headerCellStyle"
+          stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="发货日期" prop="sendDate" min-width="115">
+          <el-table-column fixed="left" type="selection"/>
+          <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="145">
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity"/>
+          <el-table-column label="站点" min-width="145" prop="sendSite">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -64,38 +64,38 @@
               产品<br>图片
             </template>
             <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" style="display: block; width: 100%; height: 100%" fit="contain">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="200">
+          <el-table-column label="SKU" min-width="200" prop="sku">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
           </el-table-column>   
-          <el-table-column prop="priorityPackaging" label="优先打包" min-width="100">
+          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :true-value="1" :false-value="0" @change="handleUpdatePriority(row)"></el-checkbox>
+              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="任务数" width="100" prop="packageTaskCount" ></el-table-column>
-          <el-table-column label="推荐数量" width="100" prop="recommendCount" ></el-table-column>
-          <el-table-column label="已装箱数" width="100" prop="" ></el-table-column>
-          <el-table-column label="清点质检" prop="qualityCheckStatus" min-width="100"> 
+          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
+          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus"> 
             <template #default="{ row }">
-              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" @change="handleShowPackingCount(row)" style="--el-switch-on-color: #13ce66;"></el-switch>
+              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleShowPackingCount(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
+          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
+          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>    
-          <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
+          <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
@@ -126,18 +126,18 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button type="primary" class="button-margin" @click="handleShowCurrentTask">当前任务加人</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
-                <el-button type="primary" class="button-margin">工作量预估</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowCurrentTask">当前任务加人</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="taskingForm.site" placeholder="全部" clearable class="button-margin" @change="queryTaskingData">
+                <el-select v-model="taskingForm.site" class="button-margin" clearable placeholder="全部" @change="queryTaskingData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -146,35 +146,35 @@
           <vab-query-form-right-panel>
             <el-form inline :model="taskingForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="taskingForm.keyWord" @input="queryTaskingData" @keyup.enter.native="queryTaskingData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="taskingForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryTaskingData" @keyup.enter.native="queryTaskingData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryTaskingData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryTaskingData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          v-loading="listLoading"
-          :data="taskingList"
-          class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
-          :cell-style="cellStyle"
+          v-loading="listLoading" border 
           :cell-class-name="cellClassName"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
+          :data="taskingList"
+          :header-cell-style="headerCellStyle"
+          stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="发货日期" prop="sendDate" min-width="115">
+          <el-table-column fixed="left" type="selection"/>
+          <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="145">
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity"/>
+          <el-table-column label="站点" min-width="145" prop="sendSite">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -184,38 +184,38 @@
               产品<br>图片
             </template>
             <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" style="display: block; width: 100%; height: 100%" fit="contain">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="200">
+          <el-table-column label="SKU" min-width="200" prop="sku">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
           </el-table-column>   
-          <el-table-column prop="priorityPackaging" label="优先打包" min-width="100">
+          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :true-value="1" :false-value="0" @change="handleUpdatePriority(row)"></el-checkbox>
+              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="任务数" width="100" prop="packageTaskCount" ></el-table-column>
-          <el-table-column label="推荐数量" width="100" prop="recommendCount" ></el-table-column>
-          <el-table-column label="已装箱数" width="100" prop="" ></el-table-column>
-          <el-table-column label="清点质检" prop="qualityCheckStatus" min-width="100"> 
+          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
+          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus"> 
             <template #default="{ row }">
-              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" @change="handleShowPackingCount(row)" style="--el-switch-on-color: #13ce66;"></el-switch>
+              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleShowPackingCount(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
+          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
+          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>    
-          <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
+          <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
@@ -246,18 +246,18 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
-                <el-button type="primary" class="button-margin">工作量预估</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -266,35 +266,35 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          v-loading="listLoading"
-          :data="list"
-          class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
-          :cell-style="cellStyle"
+          v-loading="listLoading" border 
           :cell-class-name="cellClassName"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
+          :data="list"
+          :header-cell-style="headerCellStyle"
+          stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="发货日期" prop="sendDate" min-width="115">
+          <el-table-column fixed="left" type="selection"/>
+          <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="145">
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity"/>
+          <el-table-column label="站点" min-width="145" prop="sendSite">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -304,38 +304,38 @@
               产品<br>图片
             </template>
             <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" style="display: block; width: 100%; height: 100%" fit="contain">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="200">
+          <el-table-column label="SKU" min-width="200" prop="sku">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
           </el-table-column>   
-          <el-table-column prop="priorityPackaging" label="优先打包" min-width="100">
+          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :true-value="1" :false-value="0" @change="handleUpdatePriority(row)"></el-checkbox>
+              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="任务数" width="100" prop="packageTaskCount" ></el-table-column>
-          <el-table-column label="推荐数量" width="100" prop="recommendCount" ></el-table-column>
-          <el-table-column label="已装箱数" width="100" prop="" ></el-table-column>
-          <el-table-column label="清点质检" prop="qualityCheckStatus" min-width="100"> 
+          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
+          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus"> 
             <template #default="{ row }">
-              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" @change="handleShowPackingCount(row)" style="--el-switch-on-color: #13ce66;"></el-switch>
+              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleShowPackingCount(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
+          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
+          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>     
-          <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
+          <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
@@ -366,18 +366,18 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
-                <el-button type="primary" class="button-margin">工作量预估</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -386,35 +386,35 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          :data="list"
-          v-loading="listLoading"
-          class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
-          :cell-style="cellStyle"
+          v-loading="listLoading" border 
           :cell-class-name="cellClassName"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
+          :data="list"
+          :header-cell-style="headerCellStyle"
+          stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="发货日期" prop="sendDate" min-width="115">
+          <el-table-column fixed="left" type="selection"/>
+          <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="145">
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity"/>
+          <el-table-column label="站点" min-width="145" prop="sendSite">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -424,38 +424,38 @@
               产品<br>图片
             </template>
             <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" style="display: block; width: 100%; height: 100%" fit="contain">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="200">
+          <el-table-column label="SKU" min-width="200" prop="sku">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
           </el-table-column>   
-          <el-table-column prop="priorityPackaging" label="优先打包" min-width="100">
+          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :true-value="1" :false-value="0" @change="handleUpdatePriority(row)"></el-checkbox>
+              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="任务数" width="100" prop="packageTaskCount" ></el-table-column>
-          <el-table-column label="推荐数量" width="100" prop="recommendCount" ></el-table-column>
-          <el-table-column label="已装箱数" width="100" prop="" ></el-table-column>
-          <el-table-column label="清点质检" prop="qualityCheckStatus" min-width="100"> 
+          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
+          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus"> 
             <template #default="{ row }">
-              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" @change="handleShowPackingCount(row)" style="--el-switch-on-color: #13ce66;"></el-switch>
+              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleShowPackingCount(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
+          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
+          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>      
-          <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
+          <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
@@ -486,18 +486,18 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button type="primary" class="button-margin" @click="handleShowStartTask">开始任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
-                <el-button type="primary" class="button-margin">工作量预估</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -506,35 +506,35 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          :data="list"
-          v-loading="listLoading"
-          class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
-          :cell-style="cellStyle"
+          v-loading="listLoading" border 
           :cell-class-name="cellClassName"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
+          :data="list"
+          :header-cell-style="headerCellStyle"
+          stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="发货日期" prop="sendDate" min-width="115">
+          <el-table-column fixed="left" type="selection"/>
+          <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="145">
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity"/>
+          <el-table-column label="站点" min-width="145" prop="sendSite">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -544,38 +544,38 @@
               产品<br>图片
             </template>
             <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" style="display: block; width: 100%; height: 100%" fit="contain">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="200">
+          <el-table-column label="SKU" min-width="200" prop="sku">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
           </el-table-column>   
-          <el-table-column prop="priorityPackaging" label="优先打包" min-width="100">
+          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :true-value="1" :false-value="0" @change="handleUpdatePriority(row)"></el-checkbox>
+              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="任务数" width="100" prop="packageTaskCount" ></el-table-column>
-          <el-table-column label="推荐数量" width="100" prop="recommendCount" ></el-table-column>
-          <el-table-column label="已装箱数" width="100" prop="" ></el-table-column>
-          <el-table-column label="清点质检" prop="qualityCheckStatus" min-width="100"> 
+          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
+          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus"> 
             <template #default="{ row }">
-              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" @change="handleShowPackingCount(row)" style="--el-switch-on-color: #13ce66;"></el-switch>
+              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleShowPackingCount(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
+          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
+          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>     
-          <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
+          <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
@@ -606,17 +606,17 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button type="primary" class="button-margin" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button type="primary" class="button-margin" @click="handleShowGetOffWork">下班人员</el-button>
-                <el-button type="primary" class="button-margin">工作量预估</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" placeholder="全部" clearable class="button-margin" @change="queryData">
+                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -625,35 +625,35 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          :data="list"
-          v-loading="listLoading"
-          class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
-          :cell-style="cellStyle"
+          v-loading="listLoading" border 
           :cell-class-name="cellClassName"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
+          :data="list"
+          :header-cell-style="headerCellStyle"
+          stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="发货日期" prop="sendDate" min-width="115">
+          <el-table-column fixed="left" type="selection"/>
+          <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="订单总数" prop="totalOrderQuantity" min-width="115"></el-table-column>
-          <el-table-column label="站点" prop="sendSite" min-width="145">
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity"/>
+          <el-table-column label="站点" min-width="145" prop="sendSite">
             <template #default="{ row }">
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
@@ -663,38 +663,38 @@
               产品<br>图片
             </template>
             <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" style="display: block; width: 100%; height: 100%" fit="contain">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="200">
+          <el-table-column label="SKU" min-width="200" prop="sku">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
           </el-table-column>   
-          <el-table-column prop="priorityPackaging" label="优先打包" min-width="100">
+          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :true-value="1" :false-value="0" @change="handleUpdatePriority(row)"></el-checkbox>
+              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="任务数" width="100" prop="packageTaskCount" ></el-table-column>
-          <el-table-column label="推荐数量" width="100" prop="recommendCount" ></el-table-column>
-          <el-table-column label="已装箱数" width="100" prop="" ></el-table-column>
-          <el-table-column label="清点质检" prop="qualityCheckStatus" min-width="100"> 
+          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
+          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus"> 
             <template #default="{ row }">
-              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" @change="handleShowPackingCount(row)" style="--el-switch-on-color: #13ce66;"></el-switch>
+              <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleShowPackingCount(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="实际完成数量" width="130" prop="actualCompletionCount" ></el-table-column>
-          <el-table-column label="打包注意事项" prop="packageRemarkList" min-width="250">
+          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
+          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>   
-          <el-table-column  label="产品经理" min-width="100" prop="productManager"></el-table-column>
+          <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row, $index }">
               <el-space>
@@ -724,72 +724,72 @@
 
     <!-- 零件清单 -->
     <vab-dialog
-      title="零配件清单"
       v-model="dialogPartsListTableVisible"
+      title="零配件清单"
       width="45%"
     >
       <el-table
-        border stripe
+        border :cell-class-name="partsListCellClassName"
+        :cell-style="partsListCellStyle"
         :data="partsList"
         :header-cell-style="{ textAlign: 'center' }"
-        :cell-style="partsListCellStyle"
-        :cell-class-name="partsListCellClassName"
         max-height="500px"
+        stripe
         @cell-click="changePartsListInput"
       >
-        <el-table-column label="零件ID" prop="existingPartsListId"></el-table-column>
+        <el-table-column label="零件ID" prop="existingPartsListId"/>
         <el-table-column label="图片" prop="componentUrl" width="60">
           <template #default="{ row }">
-            <el-image :src="row.componentUrl" data-img="img" fit="contain" style="display: block; width: 100%; height: 100%">
+            <el-image data-img="img" fit="contain" :src="row.componentUrl" style="display: block; width: 100%; height: 100%">
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="零件名" prop="componentName" min-width="200"></el-table-column>
-        <el-table-column label="总数" prop="totalCount"></el-table-column>
-        <el-table-column label="每套SKU数量" prop="count" min-width="130"></el-table-column>
-        <el-table-column label="单位" prop="componentUnit"></el-table-column>
-        <el-table-column label="收货仓库" prop="repositoryName" min-width="130"></el-table-column>
-        <el-table-column label="签收日期" prop="signDate" min-width="120"></el-table-column>
+        <el-table-column label="零件名" min-width="200" prop="componentName"/>
+        <el-table-column label="总数" prop="totalCount"/>
+        <el-table-column label="每套SKU数量" min-width="130" prop="count"/>
+        <el-table-column label="单位" prop="componentUnit"/>
+        <el-table-column label="收货仓库" min-width="130" prop="repositoryName"/>
+        <el-table-column label="签收日期" min-width="120" prop="signDate"/>
       </el-table>
     </vab-dialog>
     <!-- 质检报告 -->
     <vab-dialog
-      title="质检报告"
       v-model="qualityInspectionReportVisible"
+      title="质检报告"
+      top="10vh"
       width="40%"
       @close="closeQualityInspection"
-      top="10vh"
     >
-      <el-form ref="qualityInspectionFormRef" :model="qualityInspectionForm" label-position="left" label-width="auto" style="margin-right: 30px; margin-left: 30px;">
+      <el-form ref="qualityInspectionFormRef" label-position="left" label-width="auto" :model="qualityInspectionForm" style="margin-right: 30px; margin-left: 30px;">
         <el-form-item label="SKU" prop="sku" >
           <el-input v-model="qualityInspectionForm.sku" disabled style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="产品名称" prop="productName" >
           <el-input v-model="qualityInspectionForm.productName" disabled style="margin-right: 0" />
         </el-form-item>
-        <el-form-item label="包装尺寸(cm)" prop="packingSize" inline>
+        <el-form-item inline label="包装尺寸(cm)" prop="packingSize">
           <el-row style="display: flex; gap: 1%; align-items: center; width: 100%;">
             <el-input
               v-model.trim="qualityInspectionForm.packageLength"
-              placeholder="长"
               clearable
+              placeholder="长"
               style="flex: 1; margin-right: 0"
             />
             <span style="display: inline-block; text-align: center; font-size: 1.5em;">×</span>
             <el-input
               v-model.trim="qualityInspectionForm.packageWidth"
-              placeholder="宽"
               clearable
+              placeholder="宽"
               style="flex: 1; margin-right: 0"
             />
             <span style="display: inline-block; text-align: center; font-size: 1.5em;">×</span>
             <el-input
               v-model.trim="qualityInspectionForm.packageHeight"
-              placeholder="高"
               clearable
+              placeholder="高"
               style="flex: 1; margin-right: 0"
             />
           </el-row>
@@ -799,21 +799,21 @@
         </el-form-item>
 
         <el-table
-          border stripe
-          :data="qualityInspectionForm.inspectionList"
-          :cell-style="qualityInspectionCellStyle"
-          :header-cell-style="{ textAlign: 'center' }"
-          @cell-click="changeQualityInspectionInput"
+          border :cell-style="qualityInspectionCellStyle"
           class="quality-inspection"
+          :data="qualityInspectionForm.inspectionList"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+          @cell-click="changeQualityInspectionInput"
         >
-          <el-table-column label="质检项目" prop="qualityInspection" min-width="330"></el-table-column>
-          <el-table-column label="检查类型" prop="type" min-width="100"></el-table-column>
-          <el-table-column label="通过" prop="pass" min-width="50" >
+          <el-table-column label="质检项目" min-width="330" prop="qualityInspection"/>
+          <el-table-column label="检查类型" min-width="100" prop="type"/>
+          <el-table-column label="通过" min-width="50" prop="pass" >
             <template #default="{ row }">
-              <el-checkbox v-model="row.pass" :true-value="1" :false-value="0" @change="handleUpdatePackageInspectionDetail(row)"></el-checkbox>
+              <el-checkbox v-model="row.pass" :false-value="0" :true-value="1" @change="handleUpdatePackageInspectionDetail(row)"/>
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="remark" min-width="150">
+          <el-table-column label="备注" min-width="150" prop="remark">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.remark" @blur="clickQualityInspectionCancel($event, row)" @keyup.enter="clickQualityInspectionCancel($event, row)"/>
@@ -826,7 +826,7 @@
           <el-input v-model.trim="qualityInspectionForm.packageCount" clearable style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="其他反馈" prop="remark">
-          <el-input type="textarea" placeholder="请输入其他反馈" v-model="qualityInspectionForm.remark" :rows="2" resize="none" />
+          <el-input v-model="qualityInspectionForm.remark" placeholder="请输入其他反馈" resize="none" :rows="2" type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -844,32 +844,32 @@
     </vab-dialog>
     <!-- 当前任务加人 - 人员选择 -->
     <vab-dialog
+      v-model="currentTaskVisible"
       title="人员选择"
       width="20%"
-      v-model="currentTaskVisible"
       @close="handleCloseCurrentTask"
     >
       <el-table 
         ref="currentTaskTableRef"
-        border stripe
+        border :cell-class-name="personSelectCellClassName"
+        class="person-select"
         :data="currentTaskList"
         :header-cell-style="{ textAlign: 'center' }"
-        :cell-class-name="personSelectCellClassName"
-        class="person-select"
+        stripe
         @cell-click="changePartsListInput"
         @selection-change="setSelectTaskAddRows"
       >
-        <el-table-column label="姓名" prop="userName" align="center" min-width="100"></el-table-column>
-        <el-table-column label="头像" prop="headerImage" align="center" width="65">
+        <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
+        <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image :src="row.headerImage" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column type="selection" align="center" width="80"></el-table-column>
+        <el-table-column align="center" type="selection" width="80"/>
       </el-table>
       <template #footer>
         <el-button type="danger" @click="handleCloseCurrentTask">取消</el-button>
@@ -878,32 +878,32 @@
     </vab-dialog>
     <!-- 下班人员 - 人员选择 -->
     <vab-dialog
+      v-model="getOffWorkVisible"
       title="人员选择"
       width="20%"
-      v-model="getOffWorkVisible"
       @close="handleCloseGetOffWork"
     >
       <el-table 
       ref="getOffWorkTableRef"
-        border stripe
+        border :cell-class-name="personSelectCellClassName"
+        class="person-select"
         :data="goOffWorkList"
         :header-cell-style="{ textAlign: 'center' }"
-        :cell-class-name="personSelectCellClassName"
-        class="person-select"
+        stripe
         @cell-click="changePartsListInput"
         @selection-change="setSelectGetOffRows"
       >
-        <el-table-column label="姓名" prop="userName" align="center" min-width="100"></el-table-column>
-        <el-table-column label="头像" prop="headerImage" align="center" width="65">
+        <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
+        <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image :src="row.headerImage" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column type="selection" align="center" width="80"></el-table-column>
+        <el-table-column align="center" type="selection" width="80"/>
       </el-table>
       <template #footer>
         <el-button type="danger" @click="handleCloseGetOffWork">取消</el-button>
@@ -912,32 +912,32 @@
     </vab-dialog>
     <!-- 开始任务 - 人员选择 -->
     <vab-dialog
+      v-model="personSelectVisible"
       title="人员选择"
       width="20%"
-      v-model="personSelectVisible"
       @close="handleCloseStartTask"
     >
       <el-table 
         ref="startTaskTableRef"
-        border stripe
+        border :cell-class-name="personSelectCellClassName"
+        class="person-select"
         :data="startTaskList"
         :header-cell-style="{ textAlign: 'center' }"
-        :cell-class-name="personSelectCellClassName"
-        class="person-select"
+        stripe
         @cell-click="changePartsListInput"
         @selection-change="setSelectPersonRows"
       >
-        <el-table-column label="姓名" prop="userName" align="center" min-width="100"></el-table-column>
-        <el-table-column label="头像" prop="headerImage" align="center" width="65">
+        <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
+        <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image :src="row.headerImage" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column type="selection" align="center" width="80"></el-table-column>
+        <el-table-column align="center" type="selection" width="80"/>
       </el-table>
       <template #footer>
         <el-button type="danger" @click="handleCloseStartTask">取消</el-button>
@@ -946,32 +946,32 @@
     </vab-dialog>
      <!-- 结束任务 - 人员选择 -->
      <vab-dialog
+      v-model="finishTaskVisible"
       title="人员选择"
       width="20%"
-      v-model="finishTaskVisible"
       @close="handleCloseFinishTask"
     >
       <el-table 
         ref="finishTaskTableRef"
-        border stripe
+        border :cell-class-name="personSelectCellClassName"
+        class="person-select"
         :data="endTaskList"
         :header-cell-style="{ textAlign: 'center' }"
-        :cell-class-name="personSelectCellClassName"
-        class="person-select"
+        stripe
         @cell-click="changePartsListInput"
         @selection-change="setSelectFinishTaskRows"
       >
-        <el-table-column label="姓名" prop="userName" align="center" min-width="100"></el-table-column>
-        <el-table-column label="头像" prop="headerImage" align="center" width="65">
+        <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
+        <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image :src="row.headerImage" fit="contain" data-img="img" style="display: block; width: 100%; height: 100%">
+            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column type="selection" align="center" width="80"></el-table-column>
+        <el-table-column align="center" type="selection" width="80"/>
       </el-table>
       <template #footer>
         <el-button type="danger" @click="handleCloseFinishTask">取消</el-button>
@@ -980,37 +980,37 @@
     </vab-dialog>
     <!-- 开始任务 - 质检项目 -->
     <vab-dialog
+      v-model="qualityProjectVisible"
       title="质检项目"
       width="40%"
-      v-model="qualityProjectVisible"
     >
       <el-table
-        border stripe
-        :header-cell-style="{ textAlign: 'center' }"
-        :data="skuQualityList"
+        border :cell-class-name="projectCellClassName"
         class="qualityProject"
-        :cell-class-name="projectCellClassName"
-        @cell-click="changeProjectInput"
+        :data="skuQualityList"
+        :header-cell-style="{ textAlign: 'center' }"
         :span-method="objectSpanMethod"
+        stripe
+        @cell-click="changeProjectInput"
       >
-        <el-table-column label="SKU" prop="sku" min-width="100"></el-table-column>
+        <el-table-column label="SKU" min-width="100" prop="sku"/>
         <el-table-column label="图片" width="82">
           <template #default="{ row }">
-            <el-image :src="row.skuImageUrl" fit="contain" style="width: 100%; height: 100%; display: block" data-img="img">
+            <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="width: 100%; height: 100%; display: block">
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column label="检查类型" prop="type" min-width="100" align="center"></el-table-column>
-        <el-table-column label="打包注意事项" prop="packagePrecautions" min-width="300"></el-table-column>
-        <el-table-column label="需质检" prop="status" min-width="80" align="center">
+        <el-table-column align="center" label="检查类型" min-width="100" prop="type"/>
+        <el-table-column label="打包注意事项" min-width="300" prop="packagePrecautions"/>
+        <el-table-column align="center" label="需质检" min-width="80" prop="status">
           <template #default="{ row }">
-            <el-checkbox v-model="row.status" :true-value="1" :false-value="0" />
+            <el-checkbox v-model="row.status" :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="修改日期" prop="updateTime" min-width="110" align="center">
+        <el-table-column align="center" label="修改日期" min-width="110" prop="updateTime">
           <template #default="{ row }">
             {{ row.updateTime ? row.updateTime.split(' ')[0] : '' }}
           </template>
@@ -1019,19 +1019,19 @@
     </vab-dialog>
     <!-- 站点修改 -->
     <vab-dialog
+      v-model="modifyVisible"
       title="站点修改"
       width="20%"
-      v-model="modifyVisible"
       @close="closeModifyDialog"
     >
-      <el-form ref="modifyFormRef" :model="modifyForm" :rules="modifyRules" label-position="right" label-width="auto" style="margin-left: 20px; margin-right: 20px;">
+      <el-form ref="modifyFormRef" label-position="right" label-width="auto" :model="modifyForm" :rules="modifyRules" style="margin-left: 20px; margin-right: 20px;">
         <el-form-item label="站点" prop="site" style="width: 97%">
-          <el-select v-model="modifyForm.site" placeholder="请选择站点" clearable>
+          <el-select v-model="modifyForm.site" clearable placeholder="请选择站点">
             <el-option 
               v-for="item in siteList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -1045,33 +1045,33 @@
       </template>
     </vab-dialog>
     <!-- 任务数修改 -->
-      <vab-dialog
+    <vab-dialog
+      v-model="modifyTaskVisible"
       title="任务数修改"
       width="23%"
-      v-model="modifyTaskVisible"
       @close="closeModifyTask"
     >
-      <el-form ref="modifyTaskFormRef" :model="modifyTaskForm" :rules="modifyTaskRules" label-position="right" label-width="auto" style="margin-left: 20px; margin-right: 20px;">
+      <el-form ref="modifyTaskFormRef" label-position="right" label-width="auto" :model="modifyTaskForm" :rules="modifyTaskRules" style="margin-left: 20px; margin-right: 20px;">
         <el-form-item label="数量减少的任务" prop="reduceTaskId" style="width: 97.5%">
-          <el-select v-model="modifyTaskForm.reduceTaskId" placeholder="请选择数量减少的任务" clearable @change="reduceTaskChange">
+          <el-select v-model="modifyTaskForm.reduceTaskId" clearable placeholder="请选择数量减少的任务" @change="reduceTaskChange">
             <el-option 
               v-for="item in taskSplitOption"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
         <el-form-item label="转移数量" prop="transferPackageTaskCount">
-          <el-input-number v-model="modifyTaskForm.transferPackageTaskCount" placeholder="请输入" clearable :max="maxCount" />
+          <el-input-number v-model="modifyTaskForm.transferPackageTaskCount" clearable :max="maxCount" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="数量增加的任务" prop="increaseTaskId" style="width: 97.5%">
-          <el-select v-model="modifyTaskForm.increaseTaskId" placeholder="" clearable :disabled="addTaskDisabled" >
+          <el-select v-model="modifyTaskForm.increaseTaskId" clearable :disabled="addTaskDisabled" placeholder="" >
             <el-option 
               v-for="item in addTaskOption"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -1083,16 +1083,16 @@
     </vab-dialog>
     <!-- 点击清点质检 - 打包总数 -->
     <vab-dialog
+      v-model="packingCountVisible"
+      :before-close="closePackingCount"
+      class="packingTotal"
       title="打包总数"
       width="22%"
-      v-model="packingCountVisible"
-      class="packingTotal"
-      :before-close="closePackingCount"
     >
-      <el-form ref="packingCountFormRef" :model="packingCountForm" label-position="left" label-width="auto" style="margin-left: 20px; margin-right: 0px">
+      <el-form ref="packingCountFormRef" label-position="left" label-width="auto" :model="packingCountForm" style="margin-left: 20px; margin-right: 0px">
         <el-form-item label="任务数量" prop="packageTaskCount">
           <div style="width: 85%;">
-            <el-input v-model="packingCountForm.packageTaskCount" disabled  ></el-input>
+            <el-input v-model="packingCountForm.packageTaskCount" disabled  />
           </div>
         </el-form-item>
         <el-form-item label="好" prop="goodCount">
@@ -1100,7 +1100,7 @@
             <el-input v-model.trim="packingCountForm.goodCount" clearable/>
           </div>
           <div style="width: 10%; display: flex; align-items: center">
-            <el-icon :size="23" class="add-icon" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><CirclePlus /></el-icon>
+            <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><circle-plus /></el-icon>
           </div>
         </el-form-item>
         <el-form-item label="留样" prop="keepSampleCount">
@@ -1131,7 +1131,7 @@
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <div style="width: 85%;">
-            <el-input type="textarea" v-model="packingCountForm.remark" :rows="2" style="margin-bottom: 18px" resize="none"/>
+            <el-input v-model="packingCountForm.remark" resize="none" :rows="2" style="margin-bottom: 18px" type="textarea"/>
           </div>
         </el-form-item>
       </el-form>
@@ -1144,12 +1144,12 @@
     </vab-dialog>
     <!-- 增加 -->
     <vab-dialog
-      title="增加"
       v-model="addVisible"
-      @close="handleCloseAdd"
+      title="增加"
       width="17%"
+      @close="handleCloseAdd"
     >
-      <el-form ref="addFormRef" :model="addForm" label-width="auto" label-position="left" style="margin-left: 20px; margin-right: 20px">
+      <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-left: 20px; margin-right: 20px">
         <el-form-item label="好" prop="good">
           <el-input v-model.trim="addForm.good" clearable />
         </el-form-item>
@@ -1167,42 +1167,42 @@
     </vab-dialog>
     <!-- 明细 -->
     <vab-dialog
+      v-model="detailsVisible"
       title="明细"
       width="40%"
-      v-model="detailsVisible"
     >
       <el-table
-        stripe border
-        :header-cell-style="{ textAlign: 'center' }"
+        border :cell-style="detailsCellStyle"
         :data="fakeDetails"
-        :cell-style="detailsCellStyle"
+        :header-cell-style="{ textAlign: 'center' }"
+        stripe
       >
-        <el-table-column label="零件ID" min-width="100" prop="id"></el-table-column>
-        <el-table-column label="零件名" min-width="200" prop="componentName"></el-table-column>
-        <el-table-column label="订货总数" min-width="100" prop="total"></el-table-column>
-        <el-table-column label="单位" min-width="70" prop="unit"></el-table-column>
-        <el-table-column label="缺" min-width="100" prop="lack"></el-table-column>
-        <el-table-column label="坏" min-width="100" prop="bad"></el-table-column>
+        <el-table-column label="零件ID" min-width="100" prop="id"/>
+        <el-table-column label="零件名" min-width="200" prop="componentName"/>
+        <el-table-column label="订货总数" min-width="100" prop="total"/>
+        <el-table-column label="单位" min-width="70" prop="unit"/>
+        <el-table-column label="缺" min-width="100" prop="lack"/>
+        <el-table-column label="坏" min-width="100" prop="bad"/>
       </el-table>
     </vab-dialog>
     <!-- 打包任务的拆分 -->
     <vab-dialog
-      title="拆分"
       v-model="splitTaskVisible"
+      title="拆分"
       width="20%"
       @close="closeSplitTask"
     >
-      <el-form ref="splitTaskFormRef" :model="splitTaskForm" style="margin-left: 20px; margin-right: 20px" :rules="splitRules" label-position="right" label-width="auto">
+      <el-form ref="splitTaskFormRef" label-position="right" label-width="auto" :model="splitTaskForm" :rules="splitRules" style="margin-left: 20px; margin-right: 20px">
         <el-form-item label="拆分的数量" prop="splitCount">
-          <el-input v-model="splitTaskForm.splitCount" clearable></el-input>
+          <el-input v-model="splitTaskForm.splitCount" clearable/>
         </el-form-item>
         <el-form-item label="站点" prop="site" style="width: 97.5%">
           <el-select v-model="splitTaskForm.site" clearable placeholder="请选择站点">
             <el-option 
               v-for="item in siteList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -1214,45 +1214,41 @@
     </vab-dialog>
     <!-- 生成条形码 -->
     <vab-dialog
+      v-model="generateBarcodeVisible"
       title="生成条形码"
       width="20%"
-      v-model="generateBarcodeVisible"
+      @close="closeBarcode"
     >
-      <el-form class="barcodeForm" :model="barcodeForm" label-position="top" style="margin: 0;">
-        <el-form-item label="尺寸">
-          <el-select placeholder="请选择尺寸">
-            <el-option v-for="item in sizeOption" :label="item.label" :value="item.value" :key="item.value" />
+      <el-form ref="barcodeFormRef" class="barcodeForm" label-position="top" :model="barcodeForm" :rules="barcodeFormRules" style="margin: 0;">
+        <el-form-item label="尺寸" prop="sizeIdx">
+          <el-select v-model="barcodeForm.sizeIdx" placeholder="请选择尺寸">
+            <el-option v-for="item in sizeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="窒息警告" label-position="left">
-          <el-checkbox></el-checkbox>
-        </el-form-item>
-        <el-form-item label="奶嘴夹警告" label-position="left">
-          <el-checkbox></el-checkbox>
-        </el-form-item> -->
         <el-form-item style="margin-left: 2px">
-          <el-checkbox>窒息警告</el-checkbox>
-          <el-checkbox>奶嘴夹警告</el-checkbox>
+          <el-checkbox v-model="barcodeForm.chokingWarning" :false-value="0" :true-value="1">窒息警告</el-checkbox>
+          <el-checkbox v-model="barcodeForm.nippleClampWarning" :false-value="0" :true-value="1">奶嘴夹警告</el-checkbox>
         </el-form-item>
-        <el-form-item label="品牌">
-          <el-input clearable style="min-width: 100%;" />
+        <el-form-item label="品牌" prop="brand">
+          <el-input v-model="barcodeForm.brand" clearable style="min-width: 100%;" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button>取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button @click="closeBarcode">取消</el-button>
+        <el-button type="primary" @click="confirmGenerateBarcode">确定</el-button>
       </template>
     </vab-dialog>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal />
+    <el-image-viewer v-if ="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
   
 <script lang="ts" setup>
 import { CirclePlus, Search } from '@element-plus/icons-vue'
-import { type FormInstance, type TableInstance, type TabsPaneContext } from 'element-plus'
+import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
-import { siteMap, siteValue, sizeOption } from '../constantOption'
+import type { siteValue } from '../constantOption'
+import { siteMap, sizeOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
   addQualityCheck,
@@ -1262,6 +1258,7 @@ import {
   confirmGoOffWork,
   confirmStartMoreTask,
   confirmStartTask,
+  generatePackageBarcode,
   getBarCodePath,
   getEndTaskList,
   getFreeList,
@@ -1269,10 +1266,10 @@ import {
   getPackageComponentList,
   getPackageInspection,
   getPackageSiteList,
-  getPackageTaskingList,
   getPackageTaskIsSplit,
   getPackageTaskList,
   getPackageTaskSplitList,
+  getPackageTaskingList,
   getQualityCheck,
   getSkuQualityList,
   getStartTaskList,
@@ -1286,11 +1283,11 @@ import {
 } from '/@/api/devlocal/packagingShipping'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
+import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: 'packingTaskTable',
+  name: 'PackingTaskTable',
 })
 
 const router = useRouter()
@@ -1300,12 +1297,39 @@ const tabsStore = useTabsStore()
 const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
 
+const _id = ref<number>(0)
 const generateBarcodeVisible = ref<boolean>(false)
 const barcodeForm = reactive<any>({
-
+  sizeIdx: 1,
+  chokingWarning: 0,
+  nippleClampWarning: 0
+})
+const barcodeFormRef = ref<FormInstance>()
+const barcodeFormRules = reactive<FormRules>({
+  sizeIdx: [{ required: true, message: '请选择尺寸', trigger: 'change' }],
+  brand: [{ required: true, message: '请填写品牌', trigger: 'blur' }]
 })
 const showBarcode = (row: any) => {
+  _id.value = row.id
   generateBarcodeVisible.value = true
+}
+const closeBarcode = () => {
+  barcodeFormRef.value?.resetFields()
+  generateBarcodeVisible.value = false
+}
+const confirmGenerateBarcode = async () => {
+  barcodeFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await generatePackageBarcode({
+        packageId: _id.value,
+        ...barcodeForm
+      })
+      if (data) {
+        $baseMessage('生成条形码成功!', 'success')
+        closeBarcode()
+      }
+    }
+  })
 }
 // 任务书修改form
 const modifyTaskForm = reactive<any>({})
@@ -1533,7 +1557,7 @@ const handleUpdatePackageInspectionDetail = async (row: any) => {
 const qualityInspectionCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}) => {
   if (data.columnIndex === 2) {
     return {
-      textAlign: 'center' as 'center'
+      textAlign: 'center' as const
     }
   }
 }
@@ -1566,11 +1590,9 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
     const t1 = rootElement.children[0];
     const t2 = rootElement.children[1];
 
-    if (t1) {
-      if (t1.classList[0] !== 'el-select') {
+    if (t1 && t1.classList[0] !== 'el-select') {
         t1.classList.add("none");
       }
-    }
     if (t2) t2.classList.remove("none");
   }
   if (isEqual(_row, value)) {
@@ -1678,7 +1700,7 @@ const handleConfirmCurrentTask = async () => {
   }
   const userIds = selectTaskAddRows.value.map((item: any) => item.userId).join(',')
   const { data } = await confirmCurrentTaskAddPerson({
-    userIds: userIds
+    userIds
   })
   if (data) {
     $baseMessage('当前任务加人成功', 'success')
@@ -1699,12 +1721,12 @@ const handleConfirmGetOffWork = async () => {
   }
   const userIds = selectGetOffRows.value.map((item: any) => item.userId).join(',')
   const { data } = await checkGoOffWork({
-    userIds: userIds
+    userIds
   })
   if (data) {
     $baseConfirm('下班人员列表中，存在有未结束任务的人。确定是否要下班并结束任务?', '系统提示', async () => {
       const { data: goOff } = await confirmGoOffWork({
-        userIds: userIds
+        userIds
       })
       if (goOff === true) {
         $baseMessage('下班人员确定成功', 'success')
@@ -1712,7 +1734,7 @@ const handleConfirmGetOffWork = async () => {
     })
   } else {
     const { data: goOff } = await confirmGoOffWork({
-      userIds: userIds
+      userIds
     })
     if (goOff === true) {
       $baseMessage('下班人员确定成功', 'success')
@@ -1734,7 +1756,7 @@ const handleConfirmFinishTask = async () => {
   }
   const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
   const { data } = await confirmEndTask({
-    userIds: userIds
+    userIds
   })
   if (data) {
     $baseMessage('结束任务成功', 'success')
@@ -1760,14 +1782,14 @@ const handleShowQualityProject = async () => {
   const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
   if (selectRows.value.length > 1) {
     const { data } = await confirmStartMoreTask({
-      taskIds: taskIds,
-      startTaskUserIds: startTaskUserIds
+      taskIds,
+      startTaskUserIds
     })
     personSelectVisible.value = false
   } else {
     const { data } = await confirmStartTask({
       taskId: Number(taskIds),
-      startTaskUserIds: startTaskUserIds
+      startTaskUserIds
     })
     personSelectVisible.value = false
   }
@@ -1930,9 +1952,7 @@ const lackCount = computed<number>({
     let taskCount = Number(packingCountForm.packageTaskCount);
     return taskCount - good - bad;
   },
-  set(value) {
-
-  }
+  set(value) {}
 });
 // 多的数量
 const manyCount = computed({
@@ -1943,9 +1963,7 @@ const manyCount = computed({
       return good - taskCount
     }
   },
-  set(value) {
-
-  }
+  set(value) {}
 })
 // 打包总数数量
 const packingTotal = computed({  
@@ -1954,9 +1972,7 @@ const packingTotal = computed({
     let bad = Number(packingCountForm.badCount)
     return good + bad
   },
-  set(value) {
-
-  }
+  set(value) {}
 })
 // 拆分可见
 const splitTaskVisible = ref<boolean>(false)
@@ -2073,12 +2089,12 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
 // 表头样式
 const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 8) {
-    return { color: '#4E88F3', textAlign: 'center' as 'center' };
+    return { color: '#4E88F3', textAlign: 'center' as const };
   }
   if (data.columnIndex === 9) {
-    return { color: '#13CE66', textAlign: 'center' as 'center' };
+    return { color: '#13CE66', textAlign: 'center' as const };
   }
-  return { textAlign: 'center' as 'center' };
+  return { textAlign: 'center' as const };
 };
 // 打包表格样式 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
@@ -2104,7 +2120,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 const detailsCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex !== 1) {
     return {
-      textAlign: 'center' as 'center'
+      textAlign: 'center' as const
     }
   }
 }
@@ -2138,6 +2154,9 @@ const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
 let _row: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
 
+  if (column.label === '打包注意事项') {
+    handleShowQualityInspectionReport(row)
+  }
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
