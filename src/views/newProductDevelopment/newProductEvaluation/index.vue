@@ -2,56 +2,73 @@
   <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-left-panel>
+        <el-button v-permissions="{ permission: ['newProduct:evaluation:add'] }" type="primary" @click="startEvalution">开始评估</el-button>
         <el-button
-v-permissions="{ permission: ['newProduct:evaluation:add'] }" type="primary"
-          @click="startEvalution">开始评估</el-button>
-        <el-button
-v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary"
-          @click="keyWordTrendVisible = true">关键词趋势</el-button>
-        <el-button
-v-permissions="{ permission: ['newProduct:evaluation:default:params'] }" type="primary"
-          @click="getScoreParams">评分参数</el-button>
-        <el-button
-v-permissions="{ permission: ['newProduct:evaluation:score:params'] }" class="hidden-xs-only"
+          v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }"
           type="primary"
-          @click="costAccountingeParam">成本核算默认参数</el-button>
+          @click="keyWordTrendVisible = true"
+        >
+          关键词趋势
+        </el-button>
+        <el-button v-permissions="{ permission: ['newProduct:evaluation:default:params'] }" type="primary" @click="getScoreParams">
+          评分参数
+        </el-button>
+        <el-button
+          v-permissions="{ permission: ['newProduct:evaluation:score:params'] }"
+          class="hidden-xs-only"
+          type="primary"
+          @click="costAccountingeParam"
+        >
+          成本核算默认参数
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="custom-table-right-tools">
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+              <el-input
+                v-model.trim="queryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="queryData"
+                @keyup.enter="queryData"
+              />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
             </el-form-item>
           </el-form>
         </div>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table 
-      ref="tableRef" 
-      v-loading="listLoading" 
-      :border="true" 
-      :data="evaluationList" 
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      :border="true"
+      :data="evaluationList"
       :stripe="true"
       @cell-click="keyWordTrendCellClick"
     >
-      <el-table-column 
-        v-for="(item, index) in indexColumns" 
-        :key="index" 
-        align="center" 
+      <el-table-column
+        v-for="(item, index) in indexColumns"
+        :key="index"
+        align="center"
         :label="item.label"
-        :min-width="handleWidth(item)" 
-        :prop="item.prop" width="auto"
+        :min-width="handleWidth(item)"
+        :prop="item.prop"
+        width="auto"
       >
         <template #header>
           <span v-if="item.label === '30毛利盈亏自然单占比'">
-            30毛利盈亏<br />自然单占比
+            30毛利盈亏
+            <br />
+            自然单占比
           </span>
           <span v-if="item.label === '关键词首页评分'">
-            关键词<br />首页评分
+            关键词
+            <br />
+            首页评分
           </span>
         </template>
         <template #default="{ row }">
@@ -64,7 +81,7 @@ v-permissions="{ permission: ['newProduct:evaluation:score:params'] }" class="hi
       <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button text type="primary"  @click="handleClick(row)">
+            <el-button text type="primary" @click="handleClick(row)">
               产品核算推进
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -73,19 +90,23 @@ v-permissions="{ permission: ['newProduct:evaluation:score:params'] }" class="hi
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleClick(row)">
-                  <el-link type="primary" :underline="false" >产品核算推进</el-link>
+                  <el-link type="primary" :underline="false">产品核算推进</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="toUpdateEvaluation(row)">
-                  <el-link type="primary" :underline="false" >查看和修改</el-link>
+                  <el-link type="primary" :underline="false">查看和修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="cliekFontSearchKeyWord(row)">
-                  <el-link v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary" :underline="false">关键词趋势</el-link>
+                  <el-link v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary" :underline="false">
+                    关键词趋势
+                  </el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="row.userId === currentLoginUserId" @click="sharedEvaluation(row)">
-                  <el-link type="primary" :underline="false" >共享</el-link>
+                  <el-link type="primary" :underline="false">共享</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="getBenchmarkScoreDetail(row.idNo)">
-                  <el-link v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }" type="primary" :underline="false">分数明细</el-link>
+                  <el-link v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }" type="primary" :underline="false">
+                    分数明细
+                  </el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -98,37 +119,42 @@ v-permissions="{ permission: ['newProduct:evaluation:score:params'] }" class="hi
       </template>
     </el-table>
     <vab-pagination
-:current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
-      @current-change="handleCurrentChange" @size-change="handleSizeChange" />
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
 
     <vab-dialog v-model="keyWordTrendVisible" title="关键词趋势" width="500">
-      <el-form style="margin-left: 3px; margin-right: 3px;">
+      <el-form style="margin-right: 3px; margin-left: 3px">
         <el-form-item label="关键词">
           <el-input v-model="inputKeyWord" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="searchKeyWordTrend">
-          查询
-        </el-button>
+        <el-button type="primary" @click="searchKeyWordTrend">查询</el-button>
       </template>
     </vab-dialog>
 
     <!-- 关键词趋势图表 -->
-     <vab-trend 
-      :key-word = "inputKeyWord"
-      :trend-data = "trendEcahts"
+    <vab-trend
+      :key-word="inputKeyWord"
+      :trend-data="trendEcahts"
       :trend-echarts-visible="keyWordTrendEchatsVisible"
-      @update:clear-input-key-word = "cleanKeyWordTrendData"
-      @update:trend-echarts-list  = "updateTrendEchatsData"
-      @update:visible-value = "updateTrendVisibleValue"
-     />
-    
+      @update:clear-input-key-word="cleanKeyWordTrendData"
+      @update:trend-echarts-list="updateTrendEchatsData"
+      @update:visible-value="updateTrendVisibleValue"
+    />
+
     <!-- 评分参数 -->
     <vab-dialog v-model="scoreParametersVisible" title="评分参数" width="500">
       <el-table
-:cell-style="{ textAlign: 'center' }" :data="scoreParametersList" :header-cell-style="{ 'text-align': 'center' }"
-        height="700px">
+        :cell-style="{ textAlign: 'center' }"
+        :data="scoreParametersList"
+        :header-cell-style="{ 'text-align': 'center' }"
+        height="700px"
+      >
         <el-table-column label="名称" property="key" />
         <el-table-column label="值">
           <template #default="scope">
@@ -150,18 +176,18 @@ v-permissions="{ permission: ['newProduct:evaluation:score:params'] }" class="hi
     </vab-dialog>
 
     <!-- 共享 -->
-    <vab-shared  
-      :id = "shareId"
+    <vab-shared
+      :id="shareId"
       :fetch-data="fetchData"
       :handler-switch-change="handlerSwitchChange"
       :list="shareUserList"
       :visible="sharedVisible"
-      @update:shared-visible = "updateSharedVisibleValue"
+      @update:shared-visible="updateSharedVisibleValue"
     />
 
     <!-- 产品成本核算与推进子组件 -->
-    <vab-estimated-cost-accounting 
-      :call-parent-method="fetchEstimatedCostAccounting" 
+    <vab-estimated-cost-accounting
+      :call-parent-method="fetchEstimatedCostAccounting"
       :channel-list="channelList"
       :evaluation-id="evaluationId"
       :flag="estimatedCostAccountingVisible"
@@ -170,22 +196,18 @@ v-permissions="{ permission: ['newProduct:evaluation:score:params'] }" class="hi
     />
 
     <!-- 成本核算默认方式 -->
-      <vab-cost-accounting-param 
-      :data = "costAccountingFrom"
+    <vab-cost-accounting-param
+      :data="costAccountingFrom"
       :flag="costAccountingeParamVisible"
-      @update:visible-value = "updatecostAccountingeParamVisible"
+      @update:visible-value="updatecostAccountingeParamVisible"
     />
-
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { type TableInstance } from 'element-plus'
-import {
-  indexColumns,
-  scoreDetialColumns,
-} from './indexColumns'
+import { indexColumns, scoreDetialColumns } from './indexColumns'
 import {
   getEstimatedCostAccountingList,
   getEvaluationCostParameter,
@@ -209,7 +231,7 @@ import type {
   IEvaluationQueryReq,
   IEvaluationScore,
   IKeyWordTrend,
-  IShared
+  IShared,
 } from '/@/type/evaluation/evaluationType'
 
 import { getChannelList } from '~/src/api/devlocal/encasement'
@@ -219,7 +241,6 @@ import { convertString } from '/@/utils/stringUtils'
 defineOptions({
   name: 'Evaluation',
 })
-
 
 const router = useRouter()
 const tableRef = ref<TableInstance>()
@@ -257,15 +278,15 @@ const evaluationList = ref<IEvaluation[]>([])
 // 共享人列表
 const shareUserList = ref<IShared[]>([])
 // 共享人id
-const shareId = ref<string>("")
+const shareId = ref<string>('')
 // 当前登入者id
-const currentLoginUserId = ref<string>("")
+const currentLoginUserId = ref<string>('')
 // 评估id
 const evaluationId = ref<string>('')
 // 图表
 const trendEcahts = ref<IKeyWordTrend>({
-  xAxis:[],
-  yAxis:[]
+  xAxis: [],
+  yAxis: [],
 })
 
 // 默认成本核算参数
@@ -284,7 +305,7 @@ const costAccountingFrom = reactive<ICostAccounting>({
   airTransport: '',
   volumeRate: '',
   weightRate: '',
-  fuelCost: ''
+  fuelCost: '',
 })
 
 const queryForm = reactive<IEvaluationQueryReq>({
@@ -296,12 +317,17 @@ const queryForm = reactive<IEvaluationQueryReq>({
 const fixed = ref<string>('right')
 
 const handleWidth = (item: any) => {
-  if (item.label === '来源') {
-    return flexColumnWidth(evaluationList.value, '来源', 'productSource')
-  } else if (item.label === '亚马逊前台关键词') {
-    return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords')
-  } else if (item.label === '亚马逊后台关键词') {
-    return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords')
+  switch (item.label) {
+    case '来源': {
+      return flexColumnWidth(evaluationList.value, '来源', 'productSource')
+    }
+    case '亚马逊前台关键词': {
+      return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords')
+    }
+    case '亚马逊后台关键词': {
+      return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords')
+    }
+    // No default
   }
   return item.minWIdth || 100
 }
@@ -337,11 +363,10 @@ const handleCurrentChange = (value: number) => {
  * 开始新款评估
  */
 const startEvalution = (row: any) => {
-
   router.push({
     path: '/newProductDevelopment/addOrUpdateEvalution',
     query: {
-      title: "评估",
+      title: '评估',
       timestamp: Date.now(),
     },
   })
@@ -351,13 +376,13 @@ const startEvalution = (row: any) => {
  * 修改新款评估
  */
 const toUpdateEvaluation = (row: any) => {
-  row.avgConversionRate = row.avgConversionRate.split("%")[0]
-  setLocalStorage("evlautionRouteParams", { ...row })
+  row.avgConversionRate = row.avgConversionRate.split('%')[0]
+  setLocalStorage('evlautionRouteParams', { ...row })
   router.push({
     path: '/newProductDevelopment/addOrUpdateEvalution',
     query: {
       idNo: row.idNo,
-      title: "评估修改",
+      title: '评估修改',
       timestamp: Date.now(),
     },
   })
@@ -365,23 +390,22 @@ const toUpdateEvaluation = (row: any) => {
 
 // 关键词趋势检索
 const searchKeyWordTrend = async () => {
-   keyWordTrend(inputKeyWord.value)
+  keyWordTrend(inputKeyWord.value)
 }
 
-const cliekFontSearchKeyWord = async(row:any)=>{
+const cliekFontSearchKeyWord = async (row: any) => {
   inputKeyWord.value = row.amazonFrontendKeywords
   keyWordTrend(row.amazonFrontendKeywords)
 }
 
-
-const keyWordTrendCellClick = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
-  if (column.label === "关键词趋势") {
+const keyWordTrendCellClick = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+  if (column.label === '关键词趋势') {
     inputKeyWord.value = row.amazonFrontendKeywords
     keyWordTrend(row.amazonFrontendKeywords)
   }
 }
 
-const keyWordTrend  = async (str:string) =>{
+const keyWordTrend = async (str: string) => {
   const { data } = await getEvaluationTrendList({ keyWord: str, type: 0 })
   trendEcahts.value.xAxis = data.xAxis
   trendEcahts.value.yAxis = data.yAxis
@@ -396,8 +420,8 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const channelList = ref<{ id: number, label: string }[]>([])
-const siteList = ref<{ id: number, label: string }[]>([])
+const channelList = ref<{ id: number; label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const fetchChannelData = async () => {
   const { data } = await getChannelList()
   channelList.value = data
@@ -410,7 +434,7 @@ const fetchSalesSiteList = async () => {
  * 产品核算推进
  */
 const handleClick = async (row: any) => {
-  evaluationId.value = convertString(row.idNo);
+  evaluationId.value = convertString(row.idNo)
   fetchEstimatedCostAccounting(row.idNo)
   fetchChannelData()
   fetchSalesSiteList()
@@ -419,20 +443,19 @@ const handleClick = async (row: any) => {
 /**
  * 获取产品成本核算
  */
-const fetchEstimatedCostAccounting =  async (id:number)=>{
+const fetchEstimatedCostAccounting = async (id: number) => {
   const { data } = await getEstimatedCostAccountingList({ evaluationId: convertString(id) })
   estimatedCostAccountingList.value = data
   estimatedCostAccountingVisible.value = true
 }
 
- // 清除关键词趋势相关数据
-const cleanKeyWordTrendData = (newValue:string) => {
+// 清除关键词趋势相关数据
+const cleanKeyWordTrendData = (newValue: string) => {
   inputKeyWord.value = newValue
   trendEcahts.value.xAxis = []
   trendEcahts.value.yAxis = []
   keyWordTrendEchatsVisible.value = false
   keyWordTrendVisible.value = false
-
 }
 
 // 获取评分参数列表
@@ -444,7 +467,6 @@ const getScoreParams = async () => {
 
 // 获取成本核算默认参数
 const costAccountingeParam = async () => {
-
   const { data } = await getEvaluationCostParameter()
   costAccountingFrom.rateMargin = data.rateMargin
   costAccountingFrom.rateRoi = data.rateRoi
@@ -470,7 +492,7 @@ const updateScoreParam = (row: any) => {
   $baseConfirm(`您确定要修改评分参数${row.key}的值吗`, null, async () => {
     const { data } = await updateEvaluationScoreParams({ ...row })
     if (data == true) {
-      $baseMessage("评分参数修改成功!", "success", "hey")
+      $baseMessage('评分参数修改成功!', 'success', 'hey')
     }
   })
 }
@@ -481,13 +503,12 @@ const sharedEvaluation = async (row: any) => {
   const { data } = await getEvaluationShareInfo({ evaluationId: row.idNo })
   shareId.value = row.idNo
   shareUserList.value = data
-
 }
 /**
  * 共享操作
  */
- const handlerSwitchChange = async (row: any) => {
-  let type = 1;
+const handlerSwitchChange = async (row: any) => {
+  let type = 1
 
   if (row.share === true) {
     type = 0
@@ -495,20 +516,20 @@ const sharedEvaluation = async (row: any) => {
   const { data } = await updateSharePerson({
     evaluationId: shareId.value,
     userId: row.userID,
-    type
+    type,
   })
 
   if (data === true && type === 0) {
-    $baseMessage(`已共享给${row.userName}成功！`, "success", "hey")
+    $baseMessage(`已共享给${row.userName}成功！`, 'success', 'hey')
   }
 
   if (data === true && type === 1) {
-    $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
+    $baseMessage(`取消共享给${row.userName}成功！`, 'success', 'hey')
   }
 }
 // 获取跑分明细
 const getBenchmarkScoreDetail = async (id: any) => {
-  const { data } = await getEvaluationScoreDetail({ evaluationId:id })
+  const { data } = await getEvaluationScoreDetail({ evaluationId: id })
   benchmarkScoreList.value = data
   benchmarkScoreVisible.value = true
 }
@@ -517,17 +538,15 @@ const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
   trendEcahts.value = newValue
 }
 
-
-const updateTrendVisibleValue = (newValue:boolean) =>{
+const updateTrendVisibleValue = (newValue: boolean) => {
   keyWordTrendEchatsVisible.value = newValue
 }
 
-const updateSharedVisibleValue = (newValue:boolean) =>{
+const updateSharedVisibleValue = (newValue: boolean) => {
   sharedVisible.value = newValue
 }
 
-
-const updatecostAccountingeParamVisible = (newValue:boolean) =>{
+const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
 
@@ -543,7 +562,6 @@ onMounted(async () => {
 onBeforeMount(() => {
   fetchData()
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -554,15 +572,15 @@ onBeforeMount(() => {
   }
 }
 
-.example-showcase .el-dropdown+.el-dropdown {
+.example-showcase .el-dropdown + .el-dropdown {
   margin-left: 15px;
 }
 
 .example-showcase .el-dropdown-link {
-  cursor: pointer;
-  color: var(--el-color-primary);
   display: flex;
   align-items: center;
+  color: var(--el-color-primary);
+  cursor: pointer;
 }
 
 .vab-chart {
@@ -571,7 +589,7 @@ onBeforeMount(() => {
   min-height: 40px;
 }
 .ghost {
-  opacity: 0.5;
   background: #c8ebfb;
+  opacity: 0.5;
 }
 </style>
