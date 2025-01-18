@@ -8,35 +8,33 @@
               <el-form-item label="站点">
                 <el-select
                   v-model="queryForm.site"
-                  multiple
                   clearable
                   collapse-tags
                   collapse-tags-tooltip
-                  placeholder="请选择站点"
                   :max-collapse-tags="1"
+                  multiple
+                  placeholder="请选择站点"
                   style="width: 220px"
                   @change="queryData"
                 >
                   <template #header>
-                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
-                      所有
-                    </el-checkbox>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
                   </template>
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
                 <el-select placeholder="请选择币种">
-                  <el-option v-for="item in currencyList" :label="item.label" :value="item.id" :key="item.id" />
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="queryForm.operationUserId" @change="queryData" style="width: 5em;" placeholder="请选择运营人员">
+                <el-select v-model="queryForm.operationUserId" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
                   <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="开发人">
-                <el-select v-model="queryForm.developUserId" @change="queryData" style="width: 5em;" placeholder="请选择开发人">
+                <el-select v-model="queryForm.developUserId" placeholder="请选择开发人" style="width: 5em" @change="queryData">
                   <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -46,89 +44,118 @@
               <el-form-item>
                 <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
               </el-form-item>
-              <el-form-item >
+              <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
-              <el-form-item >
-                <el-text style="margin-left: 10px; font-weight: 600;">数据更新时间：2024年12月22日14:02</el-text>
+              <el-form-item>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="4">
-            <el-popover :width="240" popper-style="max-height: 550px; overflow: auto;">
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove1" :onEnd="handleEnd1">
+              <vab-draggable
+                v-model="columns"
+                :animation="600"
+                filter=".non-draggable"
+                handle=".handle"
+                :on-end="handleEnd1"
+                :on-move="handleMove1"
+              >
                 <div
                   v-for="item in columns"
                   :key="item.label"
-                  style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
-                  :class="{'non-draggable': item.disableCheck}" 
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
                 >
-                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                   <span style="flex: 1">{{ item.label }}</span>
-                  <span v-if="item.disableCheck" style="display: flex; align-items: center;" class="icon-hover">
-                    <el-icon><View /></el-icon>
+                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
+                    <vab-icon icon="eye-line" />
                   </span>
-                  <span v-else @click="handleChecked(item)" class="icon-hover" style="cursor: pointer; display: flex; align-items: center;">
-                    <el-icon v-show="!item.checked"><Hide /></el-icon>
-                    <el-icon v-show="item.checked"><View /></el-icon>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
                   </span>
                 </div>
               </vab-draggable>
             </el-popover>
             <el-form inline :model="queryForm">
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border stripe
-          class="noneHoverTable"
-          :header-cell-style="{ textAlign: 'center' }"
+          border
+          :cell-class-name="clearPadding"
           :cell-style="cellStyle"
-          :cell-class-name="clearPadding" 
+          class="noneHoverTable"
           :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
           @cell-click="cellClick"
         >
           <el-table-column
             v-for="(item, index) in checkList1"
             :key="index"
+            :fixed="item.isFixed"
             :label="item.label"
+            :min-width="handleWidth(item)"
             :prop="item.prop"
             :width="item.width"
-            :minWidth="handleWidth(item)"
-            :fixed="item.isFixed"
           >
             <template #header>
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                销量趋势<br />(点击看明细)
+                销量趋势
+                <br />
+                (点击看明细)
               </span>
               <span v-if="item.label === '2周广告转化'">
-                2周广告<br />转化
+                2周广告
+                <br />
+                转化
               </span>
               <span v-if="item.label === '2周广告点击'">
-                2周广告<br />点击
+                2周广告
+                <br />
+                点击
               </span>
               <span v-if="item.label === '库存可售'">
-                库存<br />可售
+                库存
+                <br />
+                可售
               </span>
               <span v-if="item.label === '可售含在途'">
-                可售<br />含在途
+                可售
+                <br />
+                含在途
               </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
-                <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.skuImgUrl)" >
-                  <template #error><el-icon></el-icon></template>
+                <el-image
+                  fit="fill"
+                  :src="row.skuImgUrl"
+                  style="display: block; width: 75px; height: 75px"
+                  @click="imagePreviewShow(row.skuImgUrl)"
+                >
+                  <template #error><el-icon /></template>
                 </el-image>
               </span>
               <!-- SKU 展示-->
@@ -136,7 +163,7 @@
                 {{ row.sku }}
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rating }}</span>
-                  <span><el-rate v-model="row.displayRating" :void-icon="Star" disabled class="custom-rate" /></span>
+                  <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>
               </span>
@@ -152,45 +179,33 @@
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
-                <el-select style="min-width: 100%;" v-model="row.operationTypeId" @change="handleUpdateOpeType(row)">
+                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateOpeType(row)">
                   <el-option v-for="item in row.operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox v-model="row.stopProductStatus" :true-value="1" :false-value="0" @change="handleUpdateSKUStopStatus(row)"></el-checkbox>
+                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateSKUStopStatus(row)" />
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
               </span>
-              <span v-if="label2.includes(item.label)"> <!-- 处理 百分比（小数点后两位）-->
+              <span v-if="label2.includes(item.label)">
+                <!-- 处理 百分比（小数点后两位）-->
                 {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
               </span>
-              <span v-if="label3.includes(item.label)"> <!-- 处理 天 -->
+              <span v-if="label3.includes(item.label)">
+                <!-- 处理 天 -->
                 {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
               </span>
               <span v-if="item.label === 'VOC满意度'">
-                <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">
-                  Very poor
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 1" class="customTag customTag-fair">
-                  Fair
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 2" class="customTag customTag-poor">
-                  Poor
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">
-                  Good
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">
-                  Excellent
-                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">Very poor</el-tag>
+                <el-tag v-if="row.vocSatisfaction === 1" class="customTag customTag-fair">Fair</el-tag>
+                <el-tag v-if="row.vocSatisfaction === 2" class="customTag customTag-poor">Poor</el-tag>
+                <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">Good</el-tag>
+                <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">Excellent</el-tag>
               </span>
-              <span v-if="item.label === '半年有货率'">
-                {{ Math.floor(Number(row.availableRate)) }}%
-              </span>
-              <span v-if="item.label === '今广%'">
-                {{ Math.floor(Number(row.currentAdvertisement)) }}%
-              </span>
+              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate)) }}%</span>
+              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement)) }}%</span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
@@ -205,12 +220,12 @@
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
-                  <VabEchartsChartPie :data="data1" />
+                  <vab-echarts-chart-pie :data="data1" />
                 </div>
               </span>
               <span v-if="item.label === '季节系数'">
                 <div style="width: 100%; height: 50px">
-                  <VabTableChartLine :xAxisData="seasonalXData" :yAxisData="seasonalYData" />
+                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="seasonalYData" />
                 </div>
               </span>
               <span v-if="item.label === '当前售价'">
@@ -218,29 +233,31 @@
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
                 <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
                 {{ row.nowMajorCategoryRanking }}
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+                <vab-icon
+                  v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0"
+                  class="arrow-down"
+                  icon="arrow-down-fill"
+                />
+                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
                 <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
-              <span v-if="item.label === '剩余库存'">
-                {{ row.availableInventory }}/{{ row.fbaCount }}
-              </span>
+              <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
                 <span v-html="row.storageAge"></span>
               </span>
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -255,35 +272,33 @@
               <el-form-item label="站点">
                 <el-select
                   v-model="asinQueryForm.site"
-                  multiple
                   clearable
                   collapse-tags
                   collapse-tags-tooltip
-                  placeholder="请选择站点"
                   :max-collapse-tags="1"
+                  multiple
+                  placeholder="请选择站点"
                   style="width: 220px"
                   @change="queryAsinData"
                 >
                   <template #header>
-                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
-                      所有
-                    </el-checkbox>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
                   </template>
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
                 <el-select placeholder="请选择币种">
-                  <el-option v-for="item in currencyList" :label="item.label" :value="item.id" :key="item.id" />
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="asinQueryForm.operationUserId" @change="queryAsinData" style="width: 5em;" placeholder="请选择运营人员">
+                <el-select v-model="asinQueryForm.operationUserId" placeholder="请选择运营人员" style="width: 5em" @change="queryAsinData">
                   <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="开发人">
-                <el-select v-model="asinQueryForm.developUserId" @change="queryAsinData" style="width: 5em;" placeholder="请选择开发人">
+                <el-select v-model="asinQueryForm.developUserId" placeholder="请选择开发人" style="width: 5em" @change="queryAsinData">
                   <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -293,90 +308,111 @@
               <el-form-item>
                 <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
               </el-form-item>
-              <el-form-item >
+              <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
-              <el-form-item >
-                <el-text style="margin-left: 10px; font-weight: 600;">数据更新时间：2024年12月22日14:02</el-text>
+              <el-form-item>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="4">
-            <el-popover :width="240" popper-style="max-height: 550px; overflow: auto;">
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columnsAsin" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove2">
+              <vab-draggable v-model="columnsAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove2">
                 <div
                   v-for="item in columnsAsin"
                   :key="item.label"
-                  style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
-                  :class="{'non-draggable': item.disableCheck}" 
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
                 >
-                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                   <span style="flex: 1">{{ item.label }}</span>
-                  <span v-if="item.disableCheck" style="display: flex; align-items: center;" class="icon-hover">
-                    <el-icon><View /></el-icon>
+                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
+                    <el-icon><view /></el-icon>
                   </span>
-                  <span v-else @click="handleChecked(item)" class="icon-hover" style="cursor: pointer; display: flex; align-items: center;">
-                    <el-icon v-show="!item.checked"><Hide /></el-icon>
-                    <el-icon v-show="item.checked"><View /></el-icon>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <el-icon v-show="!item.checked"><hide /></el-icon>
+                    <el-icon v-show="item.checked"><view /></el-icon>
                   </span>
                 </div>
               </vab-draggable>
             </el-popover>
             <el-form inline :model="queryForm">
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
           border
-          class="noneHoverTable"
-          :header-cell-style="{ textAlign: 'center' }"
+          :cell-class-name="clearPadding"
           :cell-style="cellStyle"
-          :cell-class-name="clearPadding" 
+          class="noneHoverTable"
           :data="asinList"
+          :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
         >
           <el-table-column
             v-for="(item, index) in checkList2"
             :key="index"
+            :fixed="item.isFixed"
             :label="item.label"
+            :min-width="handleWidth(item)"
             :prop="item.prop"
             :width="item.width"
-            :minWidth="handleWidth(item)"
-            :fixed="item.isFixed"
           >
             <template #header>
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                销量趋势<br />(点击看明细)
+                销量趋势
+                <br />
+                (点击看明细)
               </span>
               <span v-if="item.label === '2周广告转化'">
-                2周广告<br />转化
+                2周广告
+                <br />
+                转化
               </span>
               <span v-if="item.label === '2周广告点击'">
-                2周广告<br />点击
+                2周广告
+                <br />
+                点击
               </span>
               <span v-if="item.label === '库存可售'">
-                库存<br />可售
+                库存
+                <br />
+                可售
               </span>
               <span v-if="item.label === '可售含在途'">
-                可售<br />含在途
+                可售
+                <br />
+                含在途
               </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
-                <el-image :src="row.asinImgUrl" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.asinImgUrl)" >
+                <el-image
+                  fit="fill"
+                  :src="row.asinImgUrl"
+                  style="display: block; width: 75px; height: 75px"
+                  @click="imagePreviewShow(row.asinImgUrl)"
+                >
                   <template #error>
-                    <el-icon></el-icon>
+                    <el-icon />
                   </template>
                 </el-image>
               </span>
@@ -384,7 +420,7 @@
                 <el-link type="primary">{{ row.asin }}</el-link>
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rating }}</span>
-                  <span><el-rate v-model="row.displayRating" :void-icon="Star" disabled class="custom-rate" /></span>
+                  <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>
               </span>
@@ -399,19 +435,19 @@
               <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.parentAsin }}</el-link>
               </span>
-             
+
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div class="custom-bar">
                   <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
-                <el-select style="min-width: 100%;" v-model="row.operationTypeId" @change="handleUpdateOpeType(row)">
+                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateOpeType(row)">
                   <el-option v-for="item in row.operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox v-model="row.stopProductStatus" :true-value="1" :false-value="0" ></el-checkbox>
+                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
@@ -419,15 +455,12 @@
               <span v-if="label2.includes(item.label)">
                 {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
               </span>
-              <span v-if="label3.includes(item.label)"> <!-- 处理 天 -->
+              <span v-if="label3.includes(item.label)">
+                <!-- 处理 天 -->
                 {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
               </span>
-              <span v-if="item.label === '半年有货率'">
-                {{ Math.floor(Number(row.availableRate)) }}%
-              </span>
-              <span v-if="item.label === '今广%'">
-                {{ Math.floor(Number(row.currentAdvertisement)) }}%
-              </span>
+              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate)) }}%</span>
+              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement)) }}%</span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
@@ -442,39 +475,41 @@
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
-                  <VabEchartsChartPie :data="data1" />
+                  <vab-echarts-chart-pie :data="data1" />
                 </div>
               </span>
               <span v-if="item.label === '季节系数'">
                 <div style="width: 100%; height: 50px">
-                  <VabTableChartLine :xAxisData="seasonalXData" :yAxisData="seasonalYData" />
+                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="seasonalYData" />
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
                 <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
                 {{ row.nowMajorCategoryRanking }}
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+                <vab-icon
+                  v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0"
+                  class="arrow-down"
+                  icon="arrow-down-fill"
+                />
+                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
                 <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
-              <span v-if="item.label === '剩余库存'">
-                {{ row.availableInventory }}/{{ row.fbaCount }}
-              </span>
+              <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
                 <span v-html="row.storageAge"></span>
               </span>
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="asinQueryForm.pageNo"
           :page-size="asinQueryForm.pageSize"
           :total="total"
@@ -489,142 +524,166 @@
               <el-form-item label="站点">
                 <el-select
                   v-model="pAsinQueryForm.site"
-                  multiple
                   clearable
                   collapse-tags
                   collapse-tags-tooltip
-                  placeholder="请选择站点"
                   :max-collapse-tags="1"
+                  multiple
+                  placeholder="请选择站点"
                   style="width: 220px"
                   @change="queryPAsinData"
                 >
                   <template #header>
-                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
-                      所有
-                    </el-checkbox>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
                   </template>
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
                 <el-select placeholder="请选择币种">
-                  <el-option v-for="item in currencyList" :label="item.label" :value="item.id" :key="item.id" />
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="pAsinQueryForm.operationUserId" @change="queryPAsinData" style="width: 5em;" placeholder="请选择运营人员">
+                <el-select
+                  v-model="pAsinQueryForm.operationUserId"
+                  placeholder="请选择运营人员"
+                  style="width: 5em"
+                  @change="queryPAsinData"
+                >
                   <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="开发人">
-                <el-select v-model="pAsinQueryForm.developUserId" @change="queryPAsinData" style="width: 5em;" placeholder="请选择开发人">
+                <el-select v-model="pAsinQueryForm.developUserId" placeholder="请选择开发人" style="width: 5em" @change="queryPAsinData">
                   <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
               </el-form-item>
-              <el-form-item >
+              <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
-              <el-form-item >
-                <el-text style="margin-left: 10px; font-weight: 600;">数据更新时间：2024年12月22日14:02</el-text>
+              <el-form-item>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="4">
-            <el-popover :width="240" popper-style="max-height: 550px; overflow: auto;">
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columnsParentAsin" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove3">
+              <vab-draggable v-model="columnsParentAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove3">
                 <div
                   v-for="item in columnsParentAsin"
                   :key="item.label"
-                  style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
-                  :class="{'non-draggable': item.disableCheck}" 
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
                 >
-                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                   <span style="flex: 1">{{ item.label }}</span>
-                  <span v-if="item.disableCheck" style="display: flex; align-items: center;" class="icon-hover">
-                    <el-icon><View /></el-icon>
+                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
+                    <el-icon><view /></el-icon>
                   </span>
-                  <span v-else @click="handleChecked(item)" class="icon-hover" style="cursor: pointer; display: flex; align-items: center;">
-                    <el-icon v-show="!item.checked"><Hide /></el-icon>
-                    <el-icon v-show="item.checked"><View /></el-icon>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <el-icon v-show="!item.checked"><hide /></el-icon>
+                    <el-icon v-show="item.checked"><view /></el-icon>
                   </span>
                 </div>
               </vab-draggable>
             </el-popover>
             <el-form inline :model="queryForm">
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
           border
-          class="noneHoverTable"
-          :header-cell-style="{ textAlign: 'center' }"
+          :cell-class-name="clearPadding"
           :cell-style="cellStyle"
-          :cell-class-name="clearPadding" 
+          class="noneHoverTable"
           :data="pAsinList"
+          :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
         >
           <el-table-column
             v-for="(item, index) in checkList3"
             :key="index"
+            :fixed="item.isFixed"
             :label="item.label"
+            :min-width="handleWidth(item)"
             :prop="item.prop"
             :width="item.width"
-            :minWidth="handleWidth(item)"
-            :fixed="item.isFixed"
           >
             <template #header>
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                销量趋势<br />(点击看明细)
+                销量趋势
+                <br />
+                (点击看明细)
               </span>
               <span v-if="item.label === '2周广告转化'">
-                2周广告<br />转化
+                2周广告
+                <br />
+                转化
               </span>
               <span v-if="item.label === '2周广告点击'">
-                2周广告<br />点击
+                2周广告
+                <br />
+                点击
               </span>
               <span v-if="item.label === '库存可售'">
-                库存<br />可售
+                库存
+                <br />
+                可售
               </span>
               <span v-if="item.label === '可售含在途'">
-                可售<br />含在途
+                可售
+                <br />
+                含在途
               </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
-                <el-image :src="row.asinImgUrl" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.asinImgUrl)" >
+                <el-image
+                  fit="fill"
+                  :src="row.asinImgUrl"
+                  style="display: block; width: 75px; height: 75px"
+                  @click="imagePreviewShow(row.asinImgUrl)"
+                >
                   <template #error>
-                    <el-icon></el-icon>
+                    <el-icon />
                   </template>
                 </el-image>
               </span>
-        
+
               <!-- 父体ASIN 展示 -->
               <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.parentAsin }}</el-link>
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rating }}</span>
-                  <span><el-rate v-model="row.displayRating" :void-icon="Star" disabled class="custom-rate" /></span>
+                  <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
-                <el-tooltip :disabled="!row.overflow_sku" content=" " effect="dark" placement="top">
+                <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
                   <template #content>
-                    <div class="custom-tooltip" >{{ row._skuFull }}</div>
+                    <div class="custom-tooltip">{{ row._skuFull }}</div>
                   </template>
                   <span v-html="row._sku"></span>
                 </el-tooltip>
@@ -635,17 +694,12 @@
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
-                <el-select style="min-width: 100%;">
-                  <el-option 
-                    v-for="item in opeClassOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select style="min-width: 100%">
+                  <el-option v-for="item in opeClassOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+                <el-checkbox :false-value="0" :true-value="1" />
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
@@ -653,37 +707,39 @@
               <span v-if="label2.includes(item.label)">
                 {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
               </span>
-              <span v-if="item.label === '今广%'">
-                {{ Math.floor(Number(row.currentAdvertisement)) }}%
-              </span>
+              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement)) }}%</span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
-                  <VabEchartsChartPie :data="data1" />
+                  <vab-echarts-chart-pie :data="data1" />
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
                 <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
                 {{ row.nowMajorCategoryRanking }}
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+                <vab-icon
+                  v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0"
+                  class="arrow-down"
+                  icon="arrow-down-fill"
+                />
+                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
                 <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="pAsinQueryForm.pageNo"
           :page-size="pAsinQueryForm.pageSize"
           :total="total"
@@ -692,84 +748,69 @@
         />
       </el-tab-pane>
     </el-tabs>
-    
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hideOnClickModal/>
+
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 运营分类 -->
-    <VabOperationalClassify 
-      :opeClassifyVisible="opeClassifyVisible"
-      @updateVisible="closeOpeClassify"
-    />
+    <vab-operational-classify :ope-classify-visible="opeClassifyVisible" @update-visible="closeOpeClassify" />
     <!-- 筛选 -->
-    <VabFilterDialog 
-      :filter-visible="filterVisible"
-      @update-visible="handleCloseFilterDialog"
-      @update-filter="handleConfirmFilter"
-    />
+    <vab-filter-dialog :filter-visible="filterVisible" @update-filter="handleConfirmFilter" @update-visible="handleCloseFilterDialog" />
     <!-- 关键词排名趋势 -->
-    <VabKeyWordRankTrend 
-      :key-word-trend-visible="keyWordTrendVisible"
-      @update-visible="handleCloseKeyWordTrend"
-    />
+    <vab-key-word-rank-trend :key-word-trend-visible="keyWordTrendVisible" @update-visible="handleCloseKeyWordTrend" />
     <!-- 运营备注 -->
-    <vab-dialog
-      title="运营备注"
-      v-model="remarkVisible"
-      width="20%"
-    >
-      <el-input type="textarea" :rows="15" placeholder="请输入运营备注" />
+    <vab-dialog v-model="remarkVisible" title="运营备注" width="20%">
+      <el-input placeholder="请输入运营备注" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="remarkVisible = false">取消</el-button>
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 季节系数 -->
-    <vab-dialog
-      title="季节系数"
-      v-model="seasonalVisible"
-      @open="handleSeasonalOpened"
-      width="40%"
-    >
-      <div ref="chartContainer1" style="width: 100%; height: 400px;"></div>
+    <vab-dialog v-model="seasonalVisible" title="季节系数" width="40%" @open="handleSeasonalOpened">
+      <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 小类排名 -->
-    <vab-dialog
-      title="小类排名"
-      v-model="sRankVisible"
-      width="40%"
-      @open="handleSRankOpened"
-    >
-      <div ref="chartContainer2" style="width: 100%; height: 400px;"></div>
+    <vab-dialog v-model="sRankVisible" title="小类排名" width="40%" @open="handleSRankOpened">
+      <div ref="chartContainer2" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 大类排名 -->
-    <vab-dialog
-      title="大类排名"
-      v-model="bRankVisible"
-      width="40%"
-      @open="handleBRankOpened"
-    >
-      <div ref="chartContainer3" style="width: 100%; height: 400px;"></div>
+    <vab-dialog v-model="bRankVisible" title="大类排名" width="40%" @open="handleBRankOpened">
+      <div ref="chartContainer3" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'productPerformance',
-})
-import { Hide, Search, Star, View } from '@element-plus/icons-vue'
+import { Hide, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { CheckboxValueType, TabsPaneContext } from 'element-plus'
-import { CSSProperties } from 'vue'
-import { DraggableEvent, VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
+import type { CSSProperties } from 'vue'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { currencySymbols, months, opeClassOption } from '../constantOption'
-import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { filterAmazonSKUList, filterOperationAmazonAsinList, getCurrencyList, getDevelopUserList, getOperationAmazonSKUList, getOperationAsinList, getOperationParentAsinList, getOperationTypeList, updateOperationSKUDisContinuedStatus, updateOperationSKUOperateTypeList } from '/@/api/devlocal/productPerformance'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { IGetOperationAmazonSKUList, IGetOperationAsinList, IGetOperationParentAsinList, IGetOperationTypeListReq } from '/@/type/storeOperation/productPerformanceType'
+import {
+  filterAmazonSKUList,
+  filterOperationAmazonAsinList,
+  getCurrencyList,
+  getDevelopUserList,
+  getOperationAmazonSKUList,
+  getOperationAsinList,
+  getOperationParentAsinList,
+  updateOperationSKUDisContinuedStatus,
+  updateOperationSKUOperateTypeList,
+} from '/@/api/devlocal/productPerformance'
+import type {
+  IGetOperationAmazonSKUList,
+  IGetOperationAsinList,
+  IGetOperationParentAsinList,
+} from '/@/type/storeOperation/productPerformanceType'
 import { getAmazonStars } from '/@/utils/rate'
+import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+defineOptions({
+  name: 'ProductPerformance',
+})
 
 const seasonalVisible = ref<boolean>(false)
 const sRankVisible = ref<boolean>(false)
@@ -814,7 +855,7 @@ const queryForm = reactive<any>({
   pageSize: 20,
   site: [0, 1],
   operationUserId: 1,
-  developUserId: 1
+  developUserId: 1,
 })
 const asinQueryForm = reactive<any>({
   keyWord: '',
@@ -822,7 +863,7 @@ const asinQueryForm = reactive<any>({
   pageSize: 20,
   site: [0],
   operationUserId: 1,
-  developUserId: 1
+  developUserId: 1,
 })
 const pAsinQueryForm = reactive<any>({
   keyWord: '',
@@ -830,7 +871,7 @@ const pAsinQueryForm = reactive<any>({
   pageSize: 20,
   site: [0],
   operationUserId: 1,
-  developUserId: 1
+  developUserId: 1,
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -845,7 +886,7 @@ const handleConfirmFilter = async (filterForm: any) => {
     const { data } = await filterAmazonSKUList({
       ...filterQueryForm,
       ...filterForm,
-      siteIds
+      siteIds,
     })
     if (data) {
       $baseConfirm('SKU运营筛选成功！', 'success')
@@ -859,7 +900,7 @@ const handleConfirmFilter = async (filterForm: any) => {
     const { data } = await filterOperationAmazonAsinList({
       ...filterQueryForm,
       ...filterForm,
-      siteIds
+      siteIds,
     })
     if (data) {
       $baseConfirm('ASIN运营筛选成功！', 'success')
@@ -868,18 +909,17 @@ const handleConfirmFilter = async (filterForm: any) => {
       asinList.value = data.list
     }
   }
-  
 }
 const handleUpdateOpeType = async (row: IGetOperationAmazonSKUList) => {
   const { data } = await updateOperationSKUOperateTypeList({
     id: row.id!,
-    typeId: row.operationTypeId!
+    typeId: row.operationTypeId!,
   })
 }
 const handleUpdateSKUStopStatus = async (row: IGetOperationAmazonSKUList) => {
   const { data } = await updateOperationSKUDisContinuedStatus({
     id: row.id!,
-    status: row.stopProductStatus!
+    status: row.stopProductStatus!,
   })
 }
 watch(site, (val) => {
@@ -905,7 +945,6 @@ const handleCheckAll = (val: CheckboxValueType) => {
     } else {
       queryPAsinData()
     }
-    
   } else {
     queryForm.site = []
     // 取消全选获取数据
@@ -1298,15 +1337,41 @@ const showRemark = () => {
 function getRowValue(row: any, label: string, labelMap: any): number {
   const key = labelMap.get(label)
   // 如果找不到 key，返回 0；如果 key 存在，但 row[key] 不是数字，也返回 0
-  return typeof key !== 'undefined' && typeof row[key] === 'number' ? row[key] : 0
+  return key !== undefined && typeof row[key] === 'number' ? row[key] : 0
 }
 function formatPercentage(value: number): string {
-  const percentage = (value * 100).toFixed(2)  // 将小数转换为百分比，并保留两位小数
+  const percentage = (value * 100).toFixed(2) // 将小数转换为百分比，并保留两位小数
   return `${percentage}%`
 }
 
-const label1 = ['今销', 'FBA仓储费', '亚马逊FBA', 'FBA差异', '月净利润', '月销售额', '月广告销售', '月广告支出', '预计下月仓储费', '盈亏售价', '30毛利售价']
-const label2 = ['试算毛利', '2周广告转化', '2周广告点击', '2周总转化', '月净利率', '月广告%', '月ACOS', '月TACOS', '1年ACOS', '1年TACOS', '月退货%', '月退款%', 'VOC缺陷%']
+const label1 = [
+  '今销',
+  'FBA仓储费',
+  '亚马逊FBA',
+  'FBA差异',
+  '月净利润',
+  '月销售额',
+  '月广告销售',
+  '月广告支出',
+  '预计下月仓储费',
+  '盈亏售价',
+  '30毛利售价',
+]
+const label2 = [
+  '试算毛利',
+  '2周广告转化',
+  '2周广告点击',
+  '2周总转化',
+  '月净利率',
+  '月广告%',
+  '月ACOS',
+  '月TACOS',
+  '1年ACOS',
+  '1年TACOS',
+  '月退货%',
+  '月退款%',
+  'VOC缺陷%',
+]
 const label3 = ['上新', '库存可售', '可售含在途', '断货']
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
@@ -1359,7 +1424,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     width: 75,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'SKU',
@@ -1367,7 +1432,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'ASIN',
@@ -1375,7 +1440,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '父体ASIN',
@@ -1383,7 +1448,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 110,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '站点',
@@ -1777,7 +1842,7 @@ const columnsAsin = ref<any>([
     disableCheck: true,
     checked: true,
     width: 75,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'ASIN',
@@ -1785,7 +1850,7 @@ const columnsAsin = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'SKU',
@@ -1793,7 +1858,7 @@ const columnsAsin = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '父体ASIN',
@@ -1801,7 +1866,7 @@ const columnsAsin = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 110,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '站点',
@@ -2117,7 +2182,7 @@ const columnsParentAsin = ref<any>([
     disableCheck: true,
     checked: true,
     width: 75,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '父体ASIN',
@@ -2125,7 +2190,7 @@ const columnsParentAsin = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 110,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'SKU',
@@ -2133,7 +2198,7 @@ const columnsParentAsin = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '站点',
@@ -2343,14 +2408,14 @@ const initChart1 = () => {
     },
     tooltip: {
       trigger: 'axis',
-      confine: true
+      confine: true,
     },
     grid: {
       top: 50,
       bottom: 30,
       left: 50,
       right: 50,
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -2360,8 +2425,8 @@ const initChart1 = () => {
       },
       axisLine: {
         lineStyle: {
-          color: '#999'
-        }
+          color: '#999',
+        },
       },
     },
     yAxis: {
@@ -2372,9 +2437,9 @@ const initChart1 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#999'
-        }
-      }
+          color: '#999',
+        },
+      },
     },
     series: [
       {
@@ -2382,7 +2447,7 @@ const initChart1 = () => {
         type: 'line',
         data: [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3],
         itemStyle: {
-          color: '#52bfff'
+          color: '#52bfff',
         },
         smooth: true,
       },
@@ -2391,27 +2456,27 @@ const initChart1 = () => {
         type: 'line',
         data: [1.21, 1.38, 1.38, 1.38, 1.2, 1.38, 1.2, 1.2, 1.2, 1.38, 1.38, 1.38],
         itemStyle: {
-          color: '#ff8fa5'
+          color: '#ff8fa5',
         },
         smooth: true,
       },
-    ]
+    ],
   }
-  
+
   chartInstance1?.setOption(option1.value)
 }
 const initChart2 = () => {
   option2.value = {
     tooltip: {
       trigger: 'axis',
-      confine: true
+      confine: true,
     },
     grid: {
       top: 50,
       bottom: 30,
       left: 50,
       right: 50,
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -2421,8 +2486,8 @@ const initChart2 = () => {
       },
       axisLine: {
         lineStyle: {
-          color: '#999'
-        }
+          color: '#999',
+        },
       },
     },
     yAxis: {
@@ -2433,9 +2498,9 @@ const initChart2 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#999'
-        }
-      }
+          color: '#999',
+        },
+      },
     },
     series: [
       {
@@ -2443,27 +2508,27 @@ const initChart2 = () => {
         type: 'line',
         data: [0, 1, 2, 3, 4, 5, 6, 7],
         itemStyle: {
-          color: '#52bfff'
+          color: '#52bfff',
         },
         smooth: true,
       },
-    ]
+    ],
   }
-  
+
   chartInstance2?.setOption(option2.value)
 }
 const initChart3 = () => {
   option3.value = {
     tooltip: {
       trigger: 'axis',
-      confine: true
+      confine: true,
     },
     grid: {
       top: 50,
       bottom: 30,
       left: 50,
       right: 50,
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -2473,8 +2538,8 @@ const initChart3 = () => {
       },
       axisLine: {
         lineStyle: {
-          color: '#999'
-        }
+          color: '#999',
+        },
       },
     },
     yAxis: {
@@ -2485,9 +2550,9 @@ const initChart3 = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#999'
-        }
-      }
+          color: '#999',
+        },
+      },
     },
     series: [
       {
@@ -2495,13 +2560,13 @@ const initChart3 = () => {
         type: 'line',
         data: [0, 1, 2, 3, 4, 5, 6, 7],
         itemStyle: {
-          color: '#52bfff'
+          color: '#52bfff',
         },
         smooth: true,
       },
-    ]
+    ],
   }
-  
+
   chartInstance3?.setOption(option3.value)
 }
 const handleSeasonalOpened = () => {
@@ -2578,32 +2643,41 @@ const handleCloseKeyWordTrend = (value: boolean) => {
   keyWordTrendVisible.value = value
 }
 
-
 // 处理自适应宽度
 const handleWidth = (item: any) => {
   if (activeName.value === 0) {
-    if (item.label === 'SKU') {
-      return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku')
-    } else if (item.label === 'ASIN') {
-      return flexColumnWidth(list.value, 'ASIN', 'asin')
-    } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
-    } else {
-      return item.minWidth
+    switch (item.label) {
+      case 'SKU': {
+        return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku')
+      }
+      case 'ASIN': {
+        return flexColumnWidth(list.value, 'ASIN', 'asin')
+      }
+      case '父体ASIN': {
+        return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
+      }
+      default: {
+        return item.minWidth
+      }
     }
   } else if (activeName.value === 1) {
-    if (item.label === 'SKU') {
-      return flexColumnWidth(asinList.value, 'SKU', 'sku')
-    } else if (item.label === 'ASIN') {
-      return flexColumnWidth(asinList.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
-    } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(asinList.value, '父体ASIN', 'parentAsin')
-    } else {
-      return item.minWidth
+    switch (item.label) {
+      case 'SKU': {
+        return flexColumnWidth(asinList.value, 'SKU', 'sku')
+      }
+      case 'ASIN': {
+        return flexColumnWidth(asinList.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
+      }
+      case '父体ASIN': {
+        return flexColumnWidth(asinList.value, '父体ASIN', 'parentAsin')
+      }
+      default: {
+        return item.minWidth
+      }
     }
   } else {
     if (item.label === 'SKU') {
-      return calculateBrColumnWidth(pAsinList.value, (row: any) => (row._sku), 100)
+      return calculateBrColumnWidth(pAsinList.value, (row: any) => row._sku, 100)
     } else if (item.label === '父体ASIN') {
       return flexColumnWidth(pAsinList.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
     } else {
@@ -2613,76 +2687,95 @@ const handleWidth = (item: any) => {
 }
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
   const label = column.label
-  if (label === '销量趋势(点击看明细)') {
-    router.push({
-      path: '/storeOperations/productAnalysis',
-      query: {
-        activeName: 0
-      }
-    })
-  } else if (label === '饼图') {
-    router.push({
-      path: '/storeOperations/productAnalysis',
-      query: {
-        activeName: 1
-      }
-    })
-  } else if (label === '运营备注') {
-    showRemark()
-  } else if (label === '季节系数') {
-    seasonalVisible.value = true
-  } else if (label === '小类排名') {
-    sRankVisible.value = true
-  } else if (label === '大类排名') {
-    bRankVisible.value = true
+  switch (label) {
+    case '销量趋势(点击看明细)': {
+      router.push({
+        path: '/storeOperations/productAnalysis',
+        query: {
+          activeName: 0,
+        },
+      })
+
+      break
+    }
+    case '饼图': {
+      router.push({
+        path: '/storeOperations/productAnalysis',
+        query: {
+          activeName: 1,
+        },
+      })
+
+      break
+    }
+    case '运营备注': {
+      showRemark()
+
+      break
+    }
+    case '季节系数': {
+      seasonalVisible.value = true
+
+      break
+    }
+    case '小类排名': {
+      sRankVisible.value = true
+
+      break
+    }
+    case '大类排名': {
+      bRankVisible.value = true
+
+      break
+    }
+    // No default
   }
 }
 const handleRouterPush = () => {
   router.push({
     path: '/storeOperations/productAnalysis',
     query: {
-      activeName: 2
-    }
+      activeName: 2,
+    },
   })
 }
 const handleChecked = (item: any) => {
   item.checked = !item.checked
 }
 const handleMove1 = (event: any) => {
-  console.log(event);
-  
-  const { related  } = event
+  console.log(event)
+
+  const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
   if (columns.value[targetIndex]?.disableCheck) {
-    return false; // 禁止移动到目标
+    return false // 禁止移动到目标
   }
 
-  return true; // 允许其他操作
+  return true // 允许其他操作
 }
 const handleEnd1 = (event: any) => {
   // console.log(event);
-  
 }
 const handleMove2 = (event: any) => {
-  const { related  } = event
+  const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
   if (columnsAsin.value[targetIndex]?.disableCheck) {
-    return false; // 禁止移动到目标
+    return false // 禁止移动到目标
   }
 
-  return true; // 允许其他操作
+  return true // 允许其他操作
 }
 const handleMove3 = (event: any) => {
-  const { related  } = event
+  const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
   if (columnsParentAsin.value[targetIndex]?.disableCheck) {
-    return false; // 禁止移动到目标
+    return false // 禁止移动到目标
   }
 
-  return true; // 允许其他操作
+  return true // 允许其他操作
 }
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
@@ -2694,7 +2787,6 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-
 
 const queryData = () => {
   queryForm.pageNo = 1
@@ -2732,19 +2824,19 @@ const handlePAsinSizeChange = (value: number) => {
   pAsinQueryForm.pageSize = value
   fetchPAsinData()
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '运营备注' || label === '库龄') {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   } else {
     return {
-      textAlign: 'center'
+      textAlign: 'center',
     }
   }
 }
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   const label = data.column.label
   if (label === '图片' || label === '饼图') {
     return 'clear-padding'
@@ -2776,11 +2868,11 @@ function processField(item: any, fieldName: string, max: number) {
     item[`_${fieldName}`] = [fieldArray[0], fieldArray[1]].join('<br />') // 显示在表格上的处理过的
     item[`_${fieldName}`] += '...'
     item[`overflow_${fieldName}`] = true // 判断tooltip是否显示
-    item[`_${fieldName}Full`] = fieldArray.join('\n')  // tooltip显示全部内容
+    item[`_${fieldName}Full`] = fieldArray.join('\n') // tooltip显示全部内容
   } else {
     item[`overflow_${fieldName}`] = false
     item[`_${fieldName}`] = fieldArray?.join('<br />')!
-    item[`_${fieldName}Full`] = item[`_${fieldName}`]  
+    item[`_${fieldName}Full`] = item[`_${fieldName}`]
   }
 }
 const fetchData = async () => {
@@ -2788,54 +2880,44 @@ const fetchData = async () => {
   const { site, ...filterQueryForm } = queryForm
   const { data } = await getOperationAmazonSKUList({
     ...filterQueryForm,
-    siteIds: site.join(',')
+    siteIds: site.join(','),
   })
   total.value = data.total
   list.value = data.list
   list.value.forEach((item) => {
-    item.displayRating = computed(() => getAmazonStars(item.rating!));
+    item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.saleTrendList = {
       xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
+        '21-04-1',
+        '21-08-1',
+        '22-05-1',
+        '22-06-1',
+        '22-07-1',
+        '22-09-1',
+        '22-10-1',
+        '23-01-1',
+        '23-05-1',
+        '23-07-1',
+        '23-10-1',
+        '23-11-1',
       ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
+      yAxis: [6611, 53824, 18712, 18991, 21611, 10277, 15420, 9159, 4192, 3064, 5619, 4500],
     }
     item.storageAge = `
       <div class="storage-list">
-        ${storageList.map((item) => `
+        ${storageList
+          .map(
+            (item) => `
           <div class="storage-item">
             <span class="value1">${item.name}</span>
             <span class="value2">${item.fba}</span>
             <span class="value3">${item.fba ? `($${item.price})` : ''}</span>
           </div>
-        `).join('')}
+        `
+          )
+          .join('')}
       </div>
     `
-
   })
   listLoading.value = false
 }
@@ -2844,54 +2926,44 @@ const fetchAsinData = async () => {
   const { site, ...filterQueryForm } = asinQueryForm
   const { data } = await getOperationAsinList({
     ...filterQueryForm,
-    siteIds: site.join(',')
+    siteIds: site.join(','),
   })
   total.value = data.total
   asinList.value = data.list
   asinList.value.forEach((item) => {
-    item.displayRating = computed(() => getAmazonStars(item.rating!));
+    item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.saleTrendList = {
       xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
+        '21-04-1',
+        '21-08-1',
+        '22-05-1',
+        '22-06-1',
+        '22-07-1',
+        '22-09-1',
+        '22-10-1',
+        '23-01-1',
+        '23-05-1',
+        '23-07-1',
+        '23-10-1',
+        '23-11-1',
       ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
+      yAxis: [6611, 53824, 18712, 18991, 21611, 10277, 15420, 9159, 4192, 3064, 5619, 4500],
     }
     item.storageAge = `
       <div class="storage-list">
-        ${storageList.map((item) => `
+        ${storageList
+          .map(
+            (item) => `
           <div class="storage-item">
             <span class="value1">${item.name}</span>
             <span class="value2">${item.fba}</span>
             <span class="value3">${item.fba ? `($${item.price})` : ''}</span>
           </div>
-        `).join('')}
+        `
+          )
+          .join('')}
       </div>
     `
-
   })
   listLoading.value = false
 }
@@ -2900,42 +2972,29 @@ const fetchPAsinData = async () => {
   const { site, ...filterQueryForm } = pAsinQueryForm
   const { data } = await getOperationParentAsinList({
     ...filterQueryForm,
-    siteIds: site.join(',')
+    siteIds: site.join(','),
   })
   total.value = data.total
   pAsinList.value = data.list
   pAsinList.value.forEach((item) => {
     processField(item, 'sku', 2)
-    item.displayRating = computed(() => getAmazonStars(item.rating!));
+    item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.saleTrendList = {
       xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
+        '21-04-1',
+        '21-08-1',
+        '22-05-1',
+        '22-06-1',
+        '22-07-1',
+        '22-09-1',
+        '22-10-1',
+        '23-01-1',
+        '23-05-1',
+        '23-07-1',
+        '23-10-1',
+        '23-11-1',
       ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
+      yAxis: [6611, 53824, 18712, 18991, 21611, 10277, 15420, 9159, 4192, 3064, 5619, 4500],
     }
   })
   listLoading.value = false
@@ -2975,7 +3034,7 @@ onBeforeMount(() => {
         height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
 
         .vab-query-form {
-          .left-panel { 
+          .left-panel {
             margin-bottom: 0;
           }
           .el-form {
@@ -2987,7 +3046,6 @@ onBeforeMount(() => {
               }
             }
           }
-
         }
 
         .el-table {
@@ -3005,14 +3063,14 @@ onBeforeMount(() => {
       grid-template-columns: 65px 35px 60px; /* 设定固定列宽 */
       text-align: left;
     }
- 
+
     .value2 {
-      color: #000;
       font-weight: 550;
+      color: #000;
     }
     .value3 {
-      color: var(--el-color-danger);
       font-weight: 550;
+      color: var(--el-color-danger);
     }
   }
 }
@@ -3022,8 +3080,8 @@ onBeforeMount(() => {
   transition: background-color 0.3s; /* 动画过渡效果 */
 }
 .icon-hover:hover {
-  background-color: #f2f2f2; /* 浅灰色背景 */
   color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 .noneHoverTable :deep(.clear-padding) {
   padding-top: 0px;
@@ -3046,14 +3104,14 @@ onBeforeMount(() => {
 }
 .flex {
   display: flex;
-  align-items: center;
   gap: 20px;
+  align-items: center;
   width: 100%;
 }
 .rate-wrapper {
-  display: flex; 
-  align-items: center; 
+  display: flex;
   gap: 8px;
+  align-items: center;
 
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
@@ -3077,30 +3135,29 @@ onBeforeMount(() => {
         }
       }
     }
-
   }
   .rate-count {
-    color: #36788C;
     margin-left: -11px;
+    color: #36788c;
   }
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 .customTag {
-  color: #fff; 
-  border-radius: 17px; 
-  padding: 0 30px;
-  border: 0;
   width: 7em;
+  padding: 0 30px;
+  color: #fff;
+  border: 0;
+  border-radius: 17px;
 
   &-veryPoor {
-    background-color: #e32e00; 
+    background-color: #e32e00;
   }
   &-good {
-    background-color: #bad411; 
+    background-color: #bad411;
   }
   &-fair {
     background-color: #ffc400;
@@ -3117,16 +3174,15 @@ onBeforeMount(() => {
   height: 50px;
 }
 .arrow-up {
-  color: #ff3f48; 
-  font-weight: 600;
-  transform: scale(0.9, 1.4);  
   margin-left: 3px;
+  font-weight: 600;
+  color: #ff3f48;
+  transform: scale(0.9, 1.4);
 }
 .arrow-down {
-  color: #67C23A;
-  font-weight: 600;
-  transform: scale(0.9, 1.4);  
   margin-left: 3px;
+  font-weight: 600;
+  color: #67c23a;
+  transform: scale(0.9, 1.4);
 }
-
 </style>
