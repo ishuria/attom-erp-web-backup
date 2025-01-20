@@ -8,6 +8,7 @@
               <el-form-item label="站点">
                 <el-select
                   v-model="queryForm.site"
+                  class="multiple-select"
                   clearable
                   collapse-tags
                   collapse-tags-tooltip
@@ -180,7 +181,7 @@
               </span>
               <span v-if="item.label === '运营分类'">
                 <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateOpeType(row)">
-                  <el-option v-for="item in row.operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="a in row.operationTypeList" :key="a.id" :label="a.label" :value="a.id" />
                 </el-select>
               </span>
               <span v-if="item.label === '停产'">
@@ -443,11 +444,8 @@
               </span>
               <span v-if="item.label === '运营分类'">
                 <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateOpeType(row)">
-                  <el-option v-for="item in row.operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="select in row.operationTypeList" :key="select.id" :label="select.label" :value="select.id" />
                 </el-select>
-              </span>
-              <span v-if="item.label === '停产'">
-                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
@@ -693,14 +691,6 @@
                   <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
                 </div>
               </span>
-              <span v-if="item.label === '运营分类'">
-                <el-select style="min-width: 100%">
-                  <el-option v-for="item in opeClassOption" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-              </span>
-              <span v-if="item.label === '停产'">
-                <el-checkbox :false-value="0" :true-value="1" />
-              </span>
               <span v-if="label1.includes(item.label)">
                 {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
               </span>
@@ -788,7 +778,7 @@ import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { currencySymbols, months, opeClassOption } from '../constantOption'
+import { currencySymbols, months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
   filterAmazonSKUList,
@@ -911,13 +901,13 @@ const handleConfirmFilter = async (filterForm: any) => {
   }
 }
 const handleUpdateOpeType = async (row: IGetOperationAmazonSKUList) => {
-  const { data } = await updateOperationSKUOperateTypeList({
+  await updateOperationSKUOperateTypeList({
     id: row.id!,
     typeId: row.operationTypeId!,
   })
 }
 const handleUpdateSKUStopStatus = async (row: IGetOperationAmazonSKUList) => {
-  const { data } = await updateOperationSKUDisContinuedStatus({
+  await updateOperationSKUDisContinuedStatus({
     id: row.id!,
     status: row.stopProductStatus!,
   })
@@ -1508,7 +1498,7 @@ const columns = ref<any>([
     label: '运营分类',
     prop: 'operationTypeId',
     checked: true,
-    minWidth: 130,
+    minWidth: 150,
   },
   {
     label: '停产',
@@ -2629,7 +2619,7 @@ const opeClassifyVisible = ref<boolean>(false)
 const showOpeClassify = () => {
   opeClassifyVisible.value = true
 }
-const closeOpeClassify = (value: boolean) => {
+const closeOpeClassify = () => {
   opeClassifyVisible.value = false
 }
 // 筛选可见
@@ -2656,6 +2646,9 @@ const handleWidth = (item: any) => {
       case '父体ASIN': {
         return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
       }
+      case '运营分类': {
+        return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
+      }
       default: {
         return item.minWidth
       }
@@ -2671,6 +2664,9 @@ const handleWidth = (item: any) => {
       case '父体ASIN': {
         return flexColumnWidth(asinList.value, '父体ASIN', 'parentAsin')
       }
+      case '运营分类': {
+        return flexColumnWidth(asinList.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
+      }
       default: {
         return item.minWidth
       }
@@ -2685,7 +2681,7 @@ const handleWidth = (item: any) => {
     }
   }
 }
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const cellClick = (row: any, column: any) => {
   const label = column.label
   switch (label) {
     case '销量趋势(点击看明细)': {
@@ -2754,7 +2750,7 @@ const handleMove1 = (event: any) => {
 
   return true // 允许其他操作
 }
-const handleEnd1 = (event: any) => {
+const handleEnd1 = () => {
   // console.log(event);
 }
 const handleMove2 = (event: any) => {

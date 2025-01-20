@@ -5,6 +5,7 @@
     @close="closeInvoiceMatching"
     width="90%"
     top="10vh"
+    :draggable="false"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
@@ -238,14 +239,14 @@
       :data="matchList"
       class="noneHoveTable"
     >
-      <el-table-column label="合同编号" prop="contractNumber" min-width="100"></el-table-column>
-      <el-table-column label="未匹配发票数" prop="" min-width="120"></el-table-column>
-      <el-table-column label="CIF售价" prop="cifPrice" min-width="100"></el-table-column>
-      <el-table-column label="运费" prop="freightFee" min-width="90"></el-table-column>
-      <el-table-column label="FOB售价" prop="fobPrice" min-width="100"></el-table-column>
-      <el-table-column label="利润率" prop="profitMargin" min-width="100"></el-table-column>
-      <el-table-column label="汇率" prop="" min-width="90"></el-table-column>
-      <el-table-column label="人民币售价" prop="salePrice" min-width="110"></el-table-column>
+      <el-table-column label="合同编号" prop="contractNumber" min-width="100"/>
+      <el-table-column label="未匹配发票数" prop="" min-width="120"/>
+      <el-table-column label="CIF售价" prop="cifPrice" min-width="100"/>
+      <el-table-column label="运费" prop="freightFee" min-width="90"/>
+      <el-table-column label="FOB售价" prop="fobPrice" min-width="100"/>
+      <el-table-column label="利润率" prop="profitMargin" min-width="100"/>
+      <el-table-column label="汇率" prop="" min-width="90"/>
+      <el-table-column label="人民币售价" prop="salePrice" min-width="110"/>
       <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100"></el-table-column>
       <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100"></el-table-column>
       <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
@@ -268,7 +269,7 @@
     />
     <template #footer>
       <div style="text-align: center;">
-        <el-button>取消</el-button>
+        <el-button @click="matchVisible = false">取消</el-button>
         <el-button type="primary" @click="handleConfirm">确定</el-button>
       </div>
     </template>

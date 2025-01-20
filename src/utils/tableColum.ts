@@ -101,43 +101,68 @@ export const getMaxLength  = (arr: string[])  => {
   }, 0)
 }
 /**
- * 使用span标签包裹内容，然后计算span的宽度 width： px
- * @param valArr
+ * 计算文本宽度，包括选项的宽度
+ * @param str 文本内容
  */
 export const getTextWidth = (str: string) => {
-  // console.log(str);
   let width = 0;
   const html = document.createElement('span');
-  html.innerText = str;
+  html.textContent = str;
   html.className = 'getTextWidth';
-  html.style.fontSize = 'var(--el-font-size-base)'; // 设置与表格一致的字体样式
-  html.style.fontFamily = 'Arial, sans-serif'
-  html.style.lineHeight = '23px'
+  html.style.fontSize = 'var(--el-font-size-base)';
+  html.style.fontFamily = 'Arial, sans-serif';
+  html.style.lineHeight = '23px';
   document.body.appendChild(html);
+
   const element = document.querySelector('.getTextWidth') as HTMLElement;
   if (element) {
-    width = element.offsetWidth + 2;
+    width = element.offsetWidth + 2; // 加上2px的间距
   }
 
   document.body.removeChild(html); // 清理 DOM
   return width;
-}
+};
+
 /**
- * el-table-column 自适应列宽
- * @param prop_label: 表名
- * @param table_data: 表格数据
+ * 获取 `el-select` 中所有选项的最大宽度
+ * @param options 选项列表
  */
-export const flexColumnWidth =  (list: any, label: string, prop: string, padding = 25) => {
-  // console.log('label', label)
-  // console.log('prop', prop)
-  // 1.获取该列的所有数据
-  const arr = list.map((x: any) => x[prop])
-  arr.push(label) // 把每列的表头也加进去算
-  // console.log(arr)
-  // 2.计算每列内容最大的宽度 + 表格的内间距（依据实际情况而定）
-  const maxLength = getMaxLength(arr)
-  return (maxLength + padding) + 'px'
-}
+export const getSelectMaxWidth = (options: any[]) => {
+  let maxWidth = 0;
+  options.forEach(option => {
+    const optionWidth = getTextWidth(option.label);
+    if (optionWidth > maxWidth) {
+      maxWidth = optionWidth;
+    }
+  });
+  return maxWidth;
+};
+
+/**
+ * el-table-column 自适应列宽，支持下拉框选项的宽度
+ * @param list 表格数据
+ * @param label 表头
+ * @param prop 列的属性名
+ * @param padding 内边距
+ */
+export const flexColumnWidth = (list: any, label: string, prop: string, padding = 25) => {
+  let maxLength = 0;
+
+  // 处理普通文本列
+  if (prop === 'operationTypeList') {
+    // 处理下拉框列 (operationTypeList)
+    // 获取每一行的 operationTypeList 并计算出每个选项的最大宽度
+    const maxSelectWidth = Math.max(...list.map((x: any) => getSelectMaxWidth(x.operationTypeList)));
+    maxLength = maxSelectWidth;
+  } else {
+    const arr = list.map((x: any) => x[prop]);
+    arr.push(label); // 加入表头
+    maxLength = getMaxLength(arr);
+  }
+
+  return `${maxLength + padding}px`;
+};
+
 
 const decodeHtmlEntities = (html: string): string => {
   const textarea = document.createElement('textarea');
@@ -159,14 +184,14 @@ export const removeHtmlTags = (html: string): string => {
 
   // 替换换行相关标签为换行符
   textWithBreaks = textWithBreaks
-    .replace(/<br\s*\/?>/gi, '\n') // 替换 <br> 标签为换行符
-    .replace(/<\/(p|div|h[1-6]|li)>/gi, '\n') // 替换块级标签结束为换行符
-    .replace(/<ul>|<ol>/gi, '\n') // 替换列表开始为换行符
-    .replace(/<\/?[^>]+(>|$)/g, ''); // 去除其他 HTML 标签
+    .replaceAll(/<br\s*\/?>/gi, '\n') // 替换 <br> 标签为换行符
+    .replaceAll(/<\/(p|div|h[1-6]|li)>/gi, '\n') // 替换块级标签结束为换行符
+    .replaceAll(/<ul>|<ol>/gi, '\n') // 替换列表开始为换行符
+    .replaceAll(/<\/?[^>]+(>|$)/g, ''); // 去除其他 HTML 标签
 
   // 替换多余的换行符
   textWithBreaks = textWithBreaks
-    .replace(/\n\s*\n/g, '\n') // 去除多余的连续换行符
+    .replaceAll(/\n\s*\n/g, '\n') // 去除多余的连续换行符
     .trim(); // 去掉首尾多余换行符
 
   return textWithBreaks;
