@@ -6,12 +6,12 @@
           <el-form-item label="站点">
             <el-select
               v-model="queryForm.site"
-              multiple
               clearable
               collapse-tags
               collapse-tags-tooltip
-              placeholder="请选择站点"
               :max-collapse-tags="1"
+              multiple
+              placeholder="请选择站点"
               style="width: 220px"
               @change="queryData"
             >
@@ -25,7 +25,7 @@
           </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="queryForm.status" @change="queryData">
-              <el-option v-for="item in statusOption" :label="item.label" :value="item.value" :key="item.value" />
+              <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -36,24 +36,24 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter.native="queryData" @input="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" :loading="listLoading" native-type="submit" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
-      class="noneHoverTable" 
-      border stripe
-      :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle" :cell-class-name="clearPadding"
-      :data="list"
+      border 
+      :cell-class-name="clearPadding" :cell-style="cellStyle"
+      class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
+      stripe
     >
       <el-table-column label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
           <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
-            <template #error><el-icon></el-icon></template>
+            <template #error><el-icon/></template>
           </el-image>
         </template>
       </el-table-column>
@@ -62,30 +62,30 @@
           {{ row.sku }}<br />{{ row.description }}
         </template>
       </el-table-column>
-      <el-table-column label="ASIN" prop="asin" min-width="130"></el-table-column>
-      <el-table-column label="站点" prop="siteName" min-width="130"></el-table-column>
-      <el-table-column label="预计上架日期" prop="estimateInboundDate" min-width="115"></el-table-column>
-      <el-table-column label="最近入库" prop="recentlyInboundStorage" min-width="110"></el-table-column>
-      <el-table-column label="入库总数" prop="inboundStorageTotal" min-width="100"></el-table-column>
-      <el-table-column label="头部产品#" prop="headerCount" min-width="100"></el-table-column>
-      <el-table-column label="同赛道ASIN" prop="benchmarkAsin" min-width="200"></el-table-column>
-      <el-table-column label="产品经理" prop="productManagerName" min-width="130"></el-table-column>
-      <el-table-column label="运营" prop="userId" min-width="100">
+      <el-table-column label="ASIN" min-width="130" prop="asin"/>
+      <el-table-column label="站点" min-width="130" prop="siteName"/>
+      <el-table-column label="预计上架日期" min-width="115" prop="estimateInboundDate"/>
+      <el-table-column label="最近入库" min-width="110" prop="recentlyInboundStorage"/>
+      <el-table-column label="入库总数" min-width="100" prop="inboundStorageTotal"/>
+      <el-table-column label="头部产品#" min-width="100" prop="headerCount"/>
+      <el-table-column label="同赛道ASIN" min-width="200" prop="benchmarkAsin"/>
+      <el-table-column label="产品经理" min-width="130" prop="productManagerName"/>
+      <el-table-column label="运营" min-width="100" prop="userId">
         <template #default="{ row }">
-          <el-select v-model="row.userId" @change="handleChangeUser(row)" placeholder="请选择运营人员">
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="row.userId" placeholder="请选择运营人员" @change="handleChangeUser(row)">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="运营分类" prop="typeId" min-width="150">
+      <el-table-column label="运营分类" min-width="150" prop="typeId">
         <template #default="{ row }">
-          <el-select v-model="row.typeId" @change="handleChangeType(row)" placeholder="请选择运营分类">
-            <el-option v-for="item in row.userTypeList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="row.typeId" placeholder="请选择运营分类" @change="handleChangeType(row)">
+            <el-option v-for="item in row.userTypeList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -95,11 +95,11 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 自动认领设定 -->
     <vab-dialog
-      title="自动认领设定"
       v-model="autoClaimSettingsVisible"
+      title="自动认领设定"
       width="30%"
     >
       <vab-query-form>
@@ -107,32 +107,32 @@
           <el-button type="primary" @click="showAdd">新增</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-      <el-table :data="distributionList" border stripe :header-cell-style="{ textAlign: 'center' }" >
-        <el-table-column label="姓名" prop="userName" min-width="100" align="center"></el-table-column>
-        <el-table-column label="自动认领站点" prop="siteName" min-width="200" align="center"></el-table-column>
-        <el-table-column label="操作" min-width="80" align="center">
+      <el-table border :data="distributionList" :header-cell-style="{ textAlign: 'center' }" stripe >
+        <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
+        <el-table-column align="center" label="自动认领站点" min-width="200" prop="siteName"/>
+        <el-table-column align="center" label="操作" min-width="80">
           <template #default="{ row, $index }">
-            <el-link :underline="false" type="danger" @click="handleDelDistributionList(row, $index)">删除</el-link>
+            <el-link type="danger" :underline="false" @click="handleDelDistributionList(row, $index)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
     </vab-dialog>
     <!-- 新增 -->
     <vab-dialog
-      title="新增"
       v-model="addVisible"
+      title="新增"
       width="20%"
       @close="handleCloseAdd"
     >
-      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-position="right" label-width="auto" style="margin: 0;">
+      <el-form ref="addFormRef" label-position="right" label-width="auto" :model="addForm" :rules="addFormRules" style="margin: 0;">
         <el-form-item label="姓名" prop="userId">
           <el-select v-model="addForm.userId" placeholder="请选择姓名">
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="自动认领站点" prop="site">
           <el-select v-model="addForm.site" placeholder="请选择自动认领站点">
-            <el-option v-for="item in siteList" :label="item.label" :key="item.id" :value="item.id" />
+            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -146,10 +146,10 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
-import { CSSProperties } from 'vue'
+import type { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
+import type { CSSProperties } from 'vue'
 import { addDistributionList, delDistributionList, getDistributionList, getDistributionOptionUserList, getDistributionProductList, getDistributionSiteList, getDistributionUserTypeList, updateDistributionAsinUser, updateDistributionUserType } from '/@/api/devlocal/productDistribution'
-import { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
+import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 
 defineOptions({
   name: 'ProductDistribution'
@@ -194,9 +194,7 @@ const handleChangeUser = async (row: IGetDistributionProductList) => {
       const { data: typeList } = await getDistributionUserTypeList({ userId: row.userId! })
       row.userTypeList = typeList
     }
-  } catch (error) {
-    
-  }
+  } catch {}
 }
 const handleChangeType = async (row: IGetDistributionProductList) => {
   try {
@@ -204,9 +202,7 @@ const handleChangeType = async (row: IGetDistributionProductList) => {
       id: row.id,
       typeId: row.typeId!
     })
-  } catch (error) {
-    
-  }
+  } catch {}
 }
 const handleConfirmAdd = async () => {
   addFormRef.value?.validate(async (isValid: boolean) => {

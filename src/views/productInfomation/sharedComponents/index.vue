@@ -4,43 +4,43 @@
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
       ref="tableRef" 
-      stripe border 
+      border class="noneHoveTable" 
       :data="list" 
       :header-cell-style="{ 'text-align': 'center' }"
-      class="noneHoveTable"
+      stripe
       @cell-click="cellClick"
     >
       <el-table-column label="图片" width="94">
-        <template #default="{ row, $index }">
-          <el-image :src="row.imageUrl" fit="fill" style="width: 100%; height: 100%" @click="handleImagePreview(row.imageUrl)" >
+        <template #default="{ row }">
+          <el-image fit="fill" :src="row.imageUrl" style="width: 100%; height: 100%" @click="handleImagePreview(row.imageUrl)" >
             <template #error>
-              <el-icon></el-icon>
+              <el-icon/>
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="零件ID" class="component-center" min-width="70" prop="id" width="100"></el-table-column>   
-      <el-table-column label="零件名" prop="componentName" min-width="200"></el-table-column>
-      <el-table-column label="使用的SKU" prop="sku" min-width="200">
+      <el-table-column class="component-center" label="零件ID" min-width="70" prop="id" width="100"/>   
+      <el-table-column label="零件名" min-width="200" prop="componentName"/>
+      <el-table-column label="使用的SKU" min-width="200" prop="sku">
         <template #default="{ row }">
           <span v-html="row.sku"></span>
         </template>
       </el-table-column>
-      <el-table-column label="默认供应商" min-width="200" prop="suppliser"></el-table-column>
-      <el-table-column label="云舟采购价格系数" prop="ratio" min-width="80">
+      <el-table-column label="默认供应商" min-width="200" prop="suppliser"/>
+      <el-table-column label="云舟采购价格系数" min-width="80" prop="ratio">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.ratio" clearable @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.ratio" clearable @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.ratio }}</span>
         </template>
@@ -48,8 +48,8 @@
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <el-space>
-            <el-link :underline="false" type="primary" @click="handleSupplier(row)">供应商</el-link>
-            <el-link :underline="false" type="primary" @click="handleAddOtherSku(row)">添加到SKU</el-link>
+            <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
+            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row)">添加到SKU</el-link>
           </el-space>
         </template>
       </el-table-column>
@@ -68,10 +68,10 @@
     <!-- 添加到其它SKU -->
     <vab-dialog 
       v-model="addOtherSkuVisible" 
-      title="零件复制到其他SKU" 
-      width="800"
+      :before-close="handlerOtherSkuCloseDialog" 
       class="moldDialog"
-      :before-close="handlerOtherSkuCloseDialog"
+      title="零件复制到其他SKU"
+      width="800"
     >
       <el-divider style="margin-top: 0;"/>
       <div class="transfer-container">
@@ -89,37 +89,26 @@
         </span>
       </template>
     </vab-dialog>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'consumable',
-})
 import { Search } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import { addConsumablesOtherSku, getProductAllReadyCOmponentList, getProductSkuList, updateProductAlreadyComponent } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+defineOptions({
+  name: 'Consumable',
+})
 
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
     addOtherSkuVisible.value = false
 }
-const consumableTypeForm = reactive({
-    consumableType: ''
-})
-
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 5){        
-    return {    
-      textAlign: 'center',
-    } 
-  }
-}
 
 let copyRow: any
-const cellClick = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const cellClick = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -275,7 +264,7 @@ const fetchData = async () => {
   list.value = data.list
   total.value = data.total
   list.value.forEach((item: any) => {
-    item.sku = item.sku.replace(/,/g, '<br>');
+    item.sku = item.sku.replaceAll(',', '<br>');
   })
 }
 

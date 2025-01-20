@@ -9,9 +9,9 @@
                 <el-select v-model="queryForm.site" placeholder="请选择站点" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -20,10 +20,10 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -32,38 +32,38 @@
         <el-table 
           ref="tableRef" 
           border 
-          :data="list" 
-          :header-cell-style="{ textAlign: 'center' }"
-          :cell-class-name="cellClassName"
+          :cell-class-name="cellClassName" 
           class="noneHoveTable"
-          :span-method="objectSpanMethod"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
           :row-class-name="stripedRowClass"
+          :span-method="objectSpanMethod"
         >
-          <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
+          <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
             <template #default="{ row }">
               {{ formatDate(new Date(row.shipmentDate)) }}
             </template>
           </el-table-column>
-          <el-table-column label="初始预计到货" prop="initialArrivalDate" min-width="115">
+          <el-table-column label="初始预计到货" min-width="115" prop="initialArrivalDate">
             <template #default="{ row }">
               {{ formatDate(new Date(row.initialArrivalDate)) }}
             </template>
           </el-table-column>
-          <el-table-column label="最新预计到货" prop="latestArrivalDate" min-width="115">
+          <el-table-column label="最新预计到货" min-width="115" prop="latestArrivalDate">
             <template #default="{ row }">
               {{ row.latestArrivalDate ? formatDate(new Date(row.latestArrivalDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="延误" prop="delayDays" min-width="80"></el-table-column>
+          <el-table-column label="延误" min-width="80" prop="delayDays"/>
           
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" fit="contain" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row)">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
@@ -73,18 +73,18 @@
               {{ row.sku }}<br />{{ row.description }}
             </template>
           </el-table-column>
-          <el-table-column label="发货总数" prop="shipmentTotalCount" min-width="100"></el-table-column>
-          <el-table-column label="丢货" prop="lostGoodsStatus" min-width="60">
+          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount"/>
+          <el-table-column label="丢货" min-width="60" prop="lostGoodsStatus">
             <template #default="{ row }">
-              <el-checkbox v-model="row.lostGoodsStatus" :true-value="1" :false-value="0" @change="handleUpdateLostGoodsStatus(row)" />
+              <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" @change="handleUpdateLostGoodsStatus(row)" />
             </template>
           </el-table-column>
-          <el-table-column label="站点" prop="site" min-width="120"></el-table-column>
-          <el-table-column label="Shipment ID" prop="shipmentId" min-width="120"></el-table-column>
-          <el-table-column label="货代单号" prop="freightForwardingNumber" min-width="100"></el-table-column>
-          <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
-          <el-table-column label="发货数" prop="actualCount" min-width="100"></el-table-column>
-          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName')"></el-table-column>
+          <el-table-column label="站点" min-width="120" prop="site"/>
+          <el-table-column label="Shipment ID" min-width="120" prop="shipmentId"/>
+          <el-table-column label="货代单号" min-width="100" prop="freightForwardingNumber"/>
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="发货数" min-width="100" prop="actualCount"/>
+          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName')"/>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -105,9 +105,9 @@
                 <el-select v-model="queryForm.site" clearable placeholder="请选择站点" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
+                    :key="item.id"
                     :label="item.label"
                     :value="item.id"
-                    :key="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -116,10 +116,10 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -127,10 +127,10 @@
         <el-table 
           ref="tableRef" 
           border 
-          :data="list" 
-          :header-cell-style="{ textAlign: 'center' }"
-          :cell-class-name="cellClassName2"
+          :cell-class-name="cellClassName2" 
           class="noneHoveTable"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
           :span-method="objectSpanMethod2"
         >
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
@@ -138,24 +138,24 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" fit="contain" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row)">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="170">
+          <el-table-column label="SKU" min-width="170" prop="sku">
             <template #default="{ row }">
               {{ row.sku }}<br />{{ row.description }}
             </template>
           </el-table-column>
-          <el-table-column label="发货总数" prop="shipmentTotalCount" min-width="100"></el-table-column>
-          <el-table-column label="已接收数" prop="receiptsCount" min-width="110"></el-table-column>
-          <el-table-column label="缺数" prop="lackCount" min-width="80"></el-table-column>
-          <el-table-column label="已接收" prop="acceptDays" min-width="90"></el-table-column>
-          <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
-          <el-table-column label="发货数" prop="actualCount" min-width="100"></el-table-column>
+          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount"/>
+          <el-table-column label="已接收数" min-width="110" prop="receiptsCount"/>
+          <el-table-column label="缺数" min-width="80" prop="lackCount"/>
+          <el-table-column label="已接收" min-width="90" prop="acceptDays"/>
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="发货数" min-width="100" prop="actualCount"/>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -172,7 +172,7 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
@@ -181,9 +181,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { getShipmentArrivedList, updateLostGoodsStatus } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetShipmentArrivedList, IGetShipmentArrivedListReq } from '/@/type/packagingShipping/shippedType'
+import type { IGetShipmentArrivedList, IGetShipmentArrivedListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -191,20 +189,12 @@ defineOptions({
   name: 'ShippedProductTable',
 })
 
-const activeName = ref<number>(0)
-const router = useRouter()
-
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const tabsStore = useTabsStore()
-const { changeTabsMeta, addVisitedRoute } = tabsStore
-const editRef = ref<any>(null)
 const tableRef = ref<TableInstance>()
 const list = ref<IGetShipmentArrivedList[]>([])
 const listLoading = ref<boolean>(true)
 
 const total = ref<number>(0)
-const selectRows = ref<any>([])
+
 const queryForm = reactive<IGetShipmentArrivedListReq>({
   pageNo: 1,
   pageSize: 20,
@@ -231,11 +221,11 @@ const handleClick = (tab: TabsPaneContext) => {
 // 修改丢货状态
 const handleUpdateLostGoodsStatus = async (row: IGetShipmentArrivedList) => {
   try {
-    const { data } = await updateLostGoodsStatus({
+    await updateLostGoodsStatus({
       id: row.id!,
       status: row.lostGoodsStatus!
     })
-  } catch (error) {
+  } catch {
     row.lostGoodsStatus = row.lostGoodsStatus === 1 ? 0 : 1
   }
 }
@@ -299,7 +289,6 @@ const cellClassName2 = (data: {row: any, column: any, rowIndex: number, columnIn
 // 已发货（未到货）col合并方法
 const objectSpanMethod = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: any) => {
@@ -328,7 +317,6 @@ const objectSpanMethod = ({
 // 已发货（接收中）col合并方法
 const objectSpanMethod2 = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: any) => {

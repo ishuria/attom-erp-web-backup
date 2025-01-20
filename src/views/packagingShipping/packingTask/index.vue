@@ -26,7 +26,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -63,7 +63,7 @@
             <template #header>
               产品<br>图片
             </template>
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon/>
@@ -97,7 +97,7 @@
           </el-table-column>    
           <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
@@ -146,7 +146,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="taskingForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="taskingForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryTaskingData" @keyup.enter.native="queryTaskingData" />
+                <el-input v-model.trim="taskingForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryTaskingData" @keyup.enter="queryTaskingData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryTaskingData"/>
@@ -183,7 +183,7 @@
             <template #header>
               产品<br>图片
             </template>
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon/>
@@ -217,7 +217,7 @@
           </el-table-column>    
           <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
@@ -266,7 +266,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -303,7 +303,7 @@
             <template #header>
               产品<br>图片
             </template>
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon/>
@@ -337,7 +337,7 @@
           </el-table-column>     
           <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
@@ -386,7 +386,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -423,7 +423,7 @@
             <template #header>
               产品<br>图片
             </template>
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon/>
@@ -457,7 +457,7 @@
           </el-table-column>      
           <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
@@ -506,7 +506,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -543,7 +543,7 @@
             <template #header>
               产品<br>图片
             </template>
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon/>
@@ -577,7 +577,7 @@
           </el-table-column>     
           <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
@@ -625,7 +625,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -662,7 +662,7 @@
             <template #header>
               产品<br>图片
             </template>
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
                 <template #error>
                   <el-icon/>
@@ -696,7 +696,7 @@
           </el-table-column>   
           <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
                 <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
@@ -1281,22 +1281,12 @@ import {
   updatePackageTaskSite,
   updatePriorityPackaging
 } from '/@/api/devlocal/packagingShipping'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'PackingTaskTable',
 })
-
-const router = useRouter()
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const tabsStore = useTabsStore()
-const { changeTabsMeta, addVisitedRoute } = tabsStore
-const editRef = ref<any>(null)
-
 const _id = ref<number>(0)
 const generateBarcodeVisible = ref<boolean>(false)
 const barcodeForm = reactive<any>({
@@ -1450,7 +1440,7 @@ const dialogPartsListTableVisible = ref<boolean>(false)
 const partsList = ref<any>([])
 // 打包条形码文件夹
 const getPackageCodePath = async (row: any) => {
-  const { data } = await getBarCodePath({
+  await getBarCodePath({
     taskId: row.id
   })
 }
@@ -1478,7 +1468,7 @@ const partsListCellClassName = (data: { row: any, column: any, rowIndex: number,
   return ''
 }
 // 零件清单放大预览
-const changePartsListInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const changePartsListInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0]
   if (getDataAttribute(el, 'img') && el) {
@@ -1562,7 +1552,7 @@ const qualityInspectionCellStyle = (data: { row: any, column: any, rowIndex: num
   }
 }
 // 质检报告修改
-const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
 
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -1671,15 +1661,7 @@ const handleShowFinishTask = async () => {
 }
 // 质检项目展示与否
 const qualityProjectVisible = ref<boolean>(false)
-// 质检项目数据
-const fakeQualityProject = [
-  {
-    type: '全检',
-    matters: '检查产品配件是否齐全，外观是否有破损和划痕。',
-    remind: 1,
-    date: '2024-10-22'
-  }
-]
+
 // 人员选择的padding
 const personSelectCellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 1) {
@@ -1781,13 +1763,13 @@ const handleShowQualityProject = async () => {
   const taskIds = selectRows.value.map((item: any) => item.id).join(',')
   const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
   if (selectRows.value.length > 1) {
-    const { data } = await confirmStartMoreTask({
+    await confirmStartMoreTask({
       taskIds,
       startTaskUserIds
     })
     personSelectVisible.value = false
   } else {
-    const { data } = await confirmStartTask({
+    await confirmStartTask({
       taskId: Number(taskIds),
       startTaskUserIds
     })
@@ -1805,7 +1787,7 @@ const handleShowQualityProject = async () => {
 }
 // 修改优先打包
 const handleUpdatePriority = async (row: any) => {
-  const { data } = await updatePriorityPackaging({
+  await updatePriorityPackaging({
     id: row.id,
     priorityPackaging: row.priorityPackaging
   })
@@ -1867,10 +1849,7 @@ const detailsVisible = ref<boolean>(false)
 const handleShowAdd = () => {
   addVisible.value = true
 }
-// 点击明细
-const handleShowDetails = () => {
-  detailsVisible.value = true
-}
+
 // 关闭增加
 const handleCloseAdd = () => {
   addFormRef.value?.resetFields()
@@ -1952,7 +1931,7 @@ const lackCount = computed<number>({
     let taskCount = Number(packingCountForm.packageTaskCount);
     return taskCount - good - bad;
   },
-  set(value) {}
+  set() {}
 });
 // 多的数量
 const manyCount = computed({
@@ -1963,7 +1942,7 @@ const manyCount = computed({
       return good - taskCount
     }
   },
-  set(value) {}
+  set() {}
 })
 // 打包总数数量
 const packingTotal = computed({  
@@ -1972,7 +1951,7 @@ const packingTotal = computed({
     let bad = Number(packingCountForm.badCount)
     return good + bad
   },
-  set(value) {}
+  set() {}
 })
 // 拆分可见
 const splitTaskVisible = ref<boolean>(false)
@@ -2073,7 +2052,7 @@ const fetchTaskingData = async () => {
     listLoading.value = false
   }
 }  
-const handleTabClick = (tab: TabsPaneContext, event: Event) => {
+const handleTabClick = (tab: TabsPaneContext) => {
   list.value = []
   selectRows.value = []
   if (tab.props.name !== undefined) {
@@ -2139,7 +2118,7 @@ const projectCellClassName = (data: { row: any, column: any, rowIndex: number, c
   return ''
 }
 // 质检项目的图片预览
-const changeProjectInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const changeProjectInput = (row: any, column: any, cell: HTMLTableCellElement) => {
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el, 'img') && el) {
     imagePreviewVisible.value = true
@@ -2150,9 +2129,9 @@ const changeProjectInput = (row: any, column: any, cell: HTMLTableCellElement, e
 /**
  * 当点击时切换输入框，修改输入
  */
-const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
+
 let _row: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
 
   if (column.label === '打包注意事项') {
     handleShowQualityInspectionReport(row)
@@ -2168,7 +2147,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
 // 开始确定选择后的的质检列表col合并方法
 const objectSpanMethod = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: any) => {

@@ -14,7 +14,6 @@ defineOptions({
 const props = defineProps({
   data: {
     type: Array,
-    default: [],
   },
 })
   
@@ -54,13 +53,6 @@ const option = reactive<any>({
       ],
     },
   ],
-})
-
-onMounted(() => {
-  
-})
-
-onBeforeUnmount(() => {
 })
 
 </script>

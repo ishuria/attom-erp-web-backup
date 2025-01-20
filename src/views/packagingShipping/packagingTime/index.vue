@@ -9,28 +9,26 @@
           <vab-query-form-right-panel >
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item >
-                <el-select placeholder="选择人员" style="margin-right: 10px; width: 30px">
-
-                </el-select>
+                <el-select placeholder="选择人员" style="margin-right: 10px; width: 30px"/>
               </el-form-item>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <div class="flex-container">
           <el-table
-            border stripe
-            :header-cell-style="{ textAlign: 'center' }"
-            :cell-style="cellStyle"
-            :data="leftList"
+            border :cell-style="cellStyle"
             class="leftTable"
+            :data="leftList"
+            :header-cell-style="{ textAlign: 'center' }"
+            stripe
           >
-            <el-table-column label="姓名" prop="name" min-width="90"></el-table-column>
+            <el-table-column label="姓名" min-width="90" prop="name"/>
             <el-table-column label="开始时间" min-width="76" prop="startTime">
               <template #default="{ row }">
                 {{ formatTime(row.startTime) }}
@@ -41,13 +39,13 @@
                 {{ formatTime(row.endTime) }}
               </template>
             </el-table-column>
-            <el-table-column label="工作时长(分钟)" prop="workerHouse" min-width="70"></el-table-column>
-            <el-table-column label="PO" prop="po" min-width="50">
+            <el-table-column label="工作时长(分钟)" min-width="70" prop="workerHouse"/>
+            <el-table-column label="PO" min-width="50" prop="po">
               <template #default="{ row }">
                 <span v-html="row.po"></span>
               </template>
             </el-table-column>
-            <el-table-column label="SKU" prop="sku" min-width="80">
+            <el-table-column label="SKU" min-width="80" prop="sku">
               <template #default="{ row }">
                 <span v-html="row.sku"></span>
               </template>
@@ -64,12 +62,12 @@
             </el-table-column>
           </el-table>
           <vab-pagination 
+            class="pagination" 
             :current-page="queryForm.pageNo" 
-            :page-size="queryForm.pageSize" 
-            :total="total"
-            @current-change="handleCurrentChange" 
+            :page-size="queryForm.pageSize"
+            :total="total" 
+            @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
-            class="pagination"
           />
         </div>
       </el-col>
@@ -78,71 +76,69 @@
           <vab-query-form-left-panel :span="20" style="margin-bottom: 10px;">
             <el-date-picker
               v-model="date"
-              type="daterange"
-              start-placeholder="开始日期"
-              range-separator="至" 
               end-placeholder="结束日期"
-              value-format="YYYY-MM-DD"
-              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期" 
               style="width: 100px"
+              type="daterange"
+              unlink-panels
+              value-format="YYYY-MM-DD"
               @change="queryRightData"
             />
-            <el-select placeholder="选择人员" style="margin-left: 10px; width: 30px">
-
-            </el-select>
+            <el-select placeholder="选择人员" style="margin-left: 10px; width: 30px"/>
           </vab-query-form-left-panel>
         </vab-query-form>
         <div class="flex-container">
           <el-table
-            border stripe
-            :header-cell-style="{ textAlign: 'center' }"
-            :cell-style="cellStyle"
-            :data="rightList"
-            show-summary
+            border :cell-style="cellStyle"
             class="center-table"
+            :data="rightList"
+            :header-cell-style="{ textAlign: 'center' }"
+            show-summary
+            stripe
           >
-            <el-table-column label="姓名" prop="name" min-width="100"></el-table-column>
+            <el-table-column label="姓名" min-width="100" prop="name"/>
             <el-table-column label="日期" min-width="80" prop="time">
               <template #default="{ row }">
                 {{ row.time ? row.time.split(' ')[0] : '' }}
               </template>
             </el-table-column>
-            <el-table-column label="工时(分钟)" prop="workerHouse" min-width="70"></el-table-column>
-            <el-table-column label="餐补次数" min-width="60" prop=""></el-table-column>
+            <el-table-column label="工时(分钟)" min-width="70" prop="workerHouse"/>
+            <el-table-column label="餐补次数" min-width="60" prop=""/>
           </el-table>
           <vab-pagination 
+            class="pagination" 
             :current-page="queryRightForm.pageNo" 
-            :page-size="queryRightForm.pageSize" 
-            :total="rightTotal"
-            @current-change="handleRightCurrentChange" 
+            :page-size="queryRightForm.pageSize"
+            :total="rightTotal" 
+            @current-change="handleRightCurrentChange"
             @size-change="handleRightSizeChange"
-            class="pagination"
           />
         </div>
       </el-col>
     </el-row>
     <vab-dialog
+      v-model="modifyVisible"
       title="修改"
       width="20%"
-      v-model="modifyVisible"
       @close="closeModify"
     >
       <el-form  ref="modifyFormRef" :model="modifyForm" style="margin-left: 20px; margin-right: 20px">
         <el-form-item label="开始时间" prop="startTime">
           <el-date-picker
             v-model="modifyForm.startTime"
-            type="datetime"
-            placeholder="选择开始时间"
             format="YYYY-MM-DD HH:mm"
+            placeholder="选择开始时间"
+            type="datetime"
             value-format="YYYY-MM-DD HH:mm"
           />
         </el-form-item>
         <el-form-item label="结束时间" prop="endTime">
           <el-date-picker
             v-model="modifyForm.endTime"
-            type="datetime"
-            placeholder="选择结束时间"
             format="YYYY-MM-DD HH:mm"
+            placeholder="选择结束时间"
+            type="datetime"
             value-format="YYYY-MM-DD HH:mm"
           />
         </el-form-item>
@@ -157,7 +153,7 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import { getPackageTimeDay, getPackageTimeList, updatePackageTime } from '/@/api/devlocal/packagingShipping'
 
 // 日期初始化
@@ -192,10 +188,10 @@ const closeModify = () => {
   modifyFormRef.value?.resetFields()
   modifyVisible.value = false
 }
-const modifyRules = reactive<any>({
-  startTime: [{ required: true, message: '请选择开始时间', trigger: 'blur' }],
-  endTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }]
-})
+// const modifyRules = reactive<any>({
+//   startTime: [{ required: true, message: '请选择开始时间', trigger: 'blur' }],
+//   endTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }]
+// })
 const confirmModify = async () => {
   modifyFormRef.value?.validate(async (valid: any) => {
     if (valid) {
@@ -252,9 +248,9 @@ const fetchData = async () => {
   leftList.value = data?.list
   total.value = data?.total!
   leftList.value.forEach((item: any) => {
-    item.po = item.po.replace(/,/g, '<br>');
-    item.sku = item.sku.replace(/,/g, '<br>');
-    item.productName = item.productName.replace(/,/g, '<br>');
+    item.po = item.po.replaceAll(',', '<br>');
+    item.sku = item.sku.replaceAll(',', '<br>');
+    item.productName = item.productName.replaceAll(',', '<br>');
   })
   listLoading.value = false
 }
@@ -299,9 +295,9 @@ const queryRightData = () => {
   queryRightForm.endTime = date.value[1]
   fetchRightData()
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const cellStyle = () => {
   return {
-    textAlign: 'center' as 'center'
+    textAlign: 'center' as const
   }
 }
 onBeforeMount(() => {

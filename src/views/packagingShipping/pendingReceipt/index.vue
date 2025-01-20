@@ -1,6 +1,6 @@
 <template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
+    <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待签收" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
@@ -9,28 +9,28 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          v-loading="listLoading"
+          v-loading="listLoading" border 
+          :cell-class-name="getCellClass"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
           :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
-          class="noneHoveTable"
-          :cell-style="cellStyle"
+          stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
-          :cell-class-name="getCellClass"
         >
           <el-table-column fixed="left" label="仓库操作" width="150" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="showSignDialog(row)">签收</el-link>
                 <el-link type="primary" :underline="false" @click="handleGetSignRecord(row)">修改</el-link>
@@ -38,74 +38,74 @@
               </el-space>
             </template>
           </el-table-column>
-          <el-table-column type="selection" fixed="left"></el-table-column>
-          <el-table-column label="外发" prop="outsourced" min-width="60">
+          <el-table-column fixed="left" type="selection"/>
+          <el-table-column label="外发" min-width="60" prop="outsourced">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.outsourced" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
+                  <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
               </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
-          <el-table-column label="零件图片" class="image-wall" width="82">
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column class="image-wall" label="零件图片" width="82">
             <template #header>
               零件<br>图片
             </template>
-            <template #default="{ row, $index }">
-              <el-image :src="row.componentUrl" data-img="img" fit="contain" style="width: 100%; height: 100%">
+            <template #default="{ row }">
+              <el-image data-img="img" fit="contain" :src="row.componentUrl" style="width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"></el-table-column>
-          <el-table-column label="签收数量" min-width="100" prop="signCount" ></el-table-column>
-          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" min-width="60" prop="unit" ></el-table-column>
-          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" ></el-table-column>
-          <el-table-column label="PO日期" prop="poDate" min-width="115">
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
+          <el-table-column label="签收数量" min-width="100" prop="signCount" />
+          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
+          <el-table-column label="单位" min-width="60" prop="unit" />
+          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" />
+          <el-table-column label="PO日期" min-width="115" prop="poDate">
             <template #default="{ row }">
               {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="付款日期" prop="payDate" min-width="115">
+          <el-table-column label="付款日期" min-width="115" prop="payDate">
             <template #default="{ row }">
               {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="82">
+          <el-table-column class="image-wall" label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
-            <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" data-img="img" fit="contain" style="width: 100%; height: 100%">
+            <template #default="{ row }">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="160"></el-table-column>    
-          <el-table-column label="剩余可售" prop="sellableDay" min-width="100"></el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliserName"></el-table-column>
-          <el-table-column label="站点" prop="site" min-width="130">
+          <el-table-column label="SKU" min-width="160" prop="sku"/>    
+          <el-table-column label="剩余可售" min-width="100" prop="sellableDay"/>
+          <el-table-column  label="供应商" min-width="250" prop="suppliserName"/>
+          <el-table-column label="站点" min-width="130" prop="site">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
             </template>
           </el-table-column>
-          <el-table-column label="生产完成日期" prop="produceCompletionDate" min-width="170">
+          <el-table-column label="生产完成日期" min-width="170" prop="produceCompletionDate">
             <template #default="{ row }">
               <el-date-picker
                 v-model="row.produceCompletionDate"
-                type="date"
                 placeholder="请选择日期"
                 size="large"
                 style="width: 100%"
+                type="date"
                 value-format="YYYY-MM-DD"
                 @change="changeProductDate(row)"
               />
             </template>
           </el-table-column>
-          <el-table-column label="跟单日志" prop="log" min-width="250">
+          <el-table-column label="跟单日志" min-width="250" prop="log">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -136,27 +136,27 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
           ref="tableRef" 
-          stripe border 
-          v-loading="listLoading"
+          v-loading="listLoading" border 
+          :cell-class-name="getCellClass2"
+          :cell-style="cellStyle2"
+          class="noneHoveTable"
           :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
-          class="noneHoveTable"
-          :cell-style="cellStyle2"
+          stripe
           @cell-click="changeInput"
-          :cell-class-name="getCellClass2"
         >
           <el-table-column fixed="left" label="操作" width="150" >
-            <template #default="{ row, $index }">
+            <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" >
                   打印面单
@@ -180,81 +180,81 @@
               </el-dropdown>
             </template>
           </el-table-column>
-          <el-table-column label="签收日期" prop="signDate" min-width="115">
+          <el-table-column label="签收日期" min-width="115" prop="signDate">
             <template #default="{ row }">
               {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="外发" prop="outsourced" min-width="60">
+          <el-table-column label="外发" min-width="60" prop="outsourced">
               <template #default = "{ row }">
-                  <el-checkbox v-model="row.outsourced" :true-value="1" :false-value="0" class="custom-checkbox" disabled />
+                  <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
               </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"></el-table-column>
+          <el-table-column label="PO" min-width="100" prop="po"/>
           <el-table-column label="零件图片" min-width="82">
             <template #header>
               零件<br>图片
             </template>
-            <template #default="{ row, $index }">
-                <el-image :src="row.componentUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
+            <template #default="{ row }">
+                <el-image data-img="img" fit="contain" :src="row.componentUrl" style="width: 100%; height: 100%">
                   <template #error>
-                    <el-icon></el-icon>
+                    <el-icon/>
                   </template>
                 </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" min-width="250"></el-table-column>
-          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" ></el-table-column>
-          <el-table-column label="单位" min-width="60" prop="unit" ></el-table-column>
-          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" ></el-table-column>
-          <el-table-column label="签收物流单号" width="130" prop="signOrder" >
+          <el-table-column label="零件名" min-width="250" prop="componentName"/>
+          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
+          <el-table-column label="单位" min-width="60" prop="unit" />
+          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" />
+          <el-table-column label="签收物流单号" prop="signOrder" width="130" >
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.signOrder"></span>
             </template>
           </el-table-column>
-          <el-table-column label="PO日期" prop="poDate" min-width="115">
+          <el-table-column label="PO日期" min-width="115" prop="poDate">
             <template #default="{ row }">
               {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="付款日期" prop="payDate" min-width="115">
+          <el-table-column label="付款日期" min-width="115" prop="payDate">
             <template #default="{ row }">
               {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="SKU图片" class="image-wall" width="82">
+          <el-table-column class="image-wall" label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
             </template>
-            <template #default="{ row, $index }">
-              <el-image :src="row.skuImageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%">
+            <template #default="{ row }">
+              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="width: 100%; height: 100%">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="160"></el-table-column>
-          <el-table-column  label="供应商" min-width="250" prop="suppliserName"></el-table-column>
-          <el-table-column label="站点" prop="site" min-width="100">
+          <el-table-column label="SKU" min-width="160" prop="sku"/>
+          <el-table-column  label="供应商" min-width="250" prop="suppliserName"/>
+          <el-table-column label="站点" min-width="100" prop="site">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
             </template>
           </el-table-column>  
-          <el-table-column label="生产完成日期" prop="produceCompletionDate" min-width="170">
+          <el-table-column label="生产完成日期" min-width="170" prop="produceCompletionDate">
             <template #default="{ row }">
               <el-date-picker
                 v-model="row.produceCompletionDate"
-                type="date"
                 placeholder="请选择日期"
                 size="large"
                 style="width: 100%"
+                type="date"
                 value-format="YYYY-MM-DD"
                 @change="changeProductDate(row)"
               />
             </template>
           </el-table-column>
-          <el-table-column label="跟单日志" prop="log" min-width="250">
+          <el-table-column label="跟单日志" min-width="250" prop="log">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -279,28 +279,27 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal />
-    <wangEditor
-      :title="wangEditorTitle"
-      :wangEditorVisible="wangEditorLogVisible"
-      :content="progressLogCopy"
-      @clickChild="clickLog"
-      @clickBoolean="clickLogBool"
+    <el-image-viewer v-if ="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <wang-editor
       :classify="classify"
-    >
-    </wangEditor>
+      :content="progressLogCopy"
+      :title="wangEditorTitle"
+      :wang-editor-visible="wangEditorLogVisible"
+      @click-boolean="clickLogBool"
+      @click-child="clickLog"
+    />
     <!-- 待签收修改 -->
     <vab-dialog
+      v-model="modifyPendingVisible"
       title="修改"
       width="40%"
-      v-model="modifyPendingVisible"
       @close="closeModifyPendingDialog"
     >
       <el-table
         border
+        :cell-style="cellStyle3"
         :data="pendingSignRecord"
         :header-cell-style="{ textAlign: 'center' }"
-        :cell-style="cellStyle3"
         @cell-click="changeModifyInput"
       >
         <el-table-column label="签收日期" prop="createTime">
@@ -311,7 +310,7 @@
         <el-table-column label="签收数量" prop="signCount">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.signCount" clearable @keyup.enter="clickModifyCountCancel($event, row)" @blur="clickModifyCountCancel($event, row)" />
+              <el-input v-model="row.signCount" clearable @blur="clickModifyCountCancel($event, row)" @keyup.enter="clickModifyCountCancel($event, row)" />
             </div>
             <span>{{ row.signCount }}</span>
           </template>
@@ -319,7 +318,7 @@
         <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.signOrder" clearable @keyup.enter="clickModifyOrderCancel($event, row)" @blur="clickModifyOrderCancel($event, row)" />
+              <el-input v-model="row.signOrder" clearable @blur="clickModifyOrderCancel($event, row)" @keyup.enter="clickModifyOrderCancel($event, row)" />
             </div>
             <span>{{ row.signOrder }}</span>
           </template>
@@ -337,16 +336,16 @@
     </vab-dialog>
     <!-- 已签收修改 -->
     <vab-dialog
+      v-model="modifyVisible"
       title="修改"
       width="40%"
-      v-model="modifyVisible"
       @close="closeModifyDialog"
     >
       <el-table
         border
+        :cell-style="cellStyle4"
         :data="signedRecord"
         :header-cell-style="{ textAlign: 'center' }"
-        :cell-style="cellStyle4"
         @cell-click="changeModifyInput"
       >
         <el-table-column label="签收日期" prop="createTime">
@@ -354,11 +353,11 @@
             {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="签收数量" prop="signCount"></el-table-column>
+        <el-table-column label="签收数量" prop="signCount"/>
         <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.signOrder" clearable @keyup.enter="clickModifyOrderCancel($event, row)"  @blur="clickModifyOrderCancel($event, row)" />
+              <el-input v-model="row.signOrder" clearable @blur="clickModifyOrderCancel($event, row)"  @keyup.enter="clickModifyOrderCancel($event, row)" />
             </div>
             <span>{{ row.signOrder }}</span>
           </template>
@@ -376,21 +375,21 @@
     </vab-dialog>
     <!-- 入库单导出 -->
     <vab-dialog
+      v-model="receiptExportVisible"
       title="入库单导出"
       width="25%"
-      v-model="receiptExportVisible"
       @close="closeReceiptExport"
     >
       <el-form ref="receiptExportFormRef" :model="receiptExportForm">
         <el-form-item label="日期" label-width="70px" prop="date">
           <el-date-picker 
             v-model="receiptExportForm.date" 
+            :editable="false" 
             end-placeholder="结束日期" 
+            format="YYYY-MM-DD" 
             range-separator="至" 
             start-placeholder="开始日期" 
-            type="daterange" 
-            format="YYYY-MM-DD" 
-            :editable="false"	
+            type="daterange"	
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
@@ -402,12 +401,12 @@
     </vab-dialog>
     <!-- 签收 -->
     <vab-dialog
-      title="签收"
       v-model="signVisible"
-      @close="closeSignDialog"
+      title="签收"
       width="20%"
+      @close="closeSignDialog"
     >
-      <el-form ref="signFormRef" :model="signForm" label-position="right" label-width="auto" :rules="signRules">
+      <el-form ref="signFormRef" label-position="right" label-width="auto" :model="signForm" :rules="signRules">
         <el-form-item label="签收数量" prop="signCount">
           <el-input v-model="signForm.signCount" clearable />
         </el-form-item>
@@ -421,13 +420,13 @@
     </vab-dialog>
     <!-- 批量签收 -->
     <vab-dialog
+      v-model="signBatchVisible"
       title="批量签收"
       width="20%"
-      v-model="signBatchVisible"
     >
-      <el-form ref="signBatchFormRef" :model="signBatchForm" :rules="signBatchFormRules" label-position="top">
+      <el-form ref="signBatchFormRef" label-position="top" :model="signBatchForm" :rules="signBatchFormRules">
         <el-form-item label="签收物流单号" prop="signOrder">
-          <el-input clearable v-model="signBatchForm.signOrder" />
+          <el-input v-model="signBatchForm.signOrder" clearable />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -459,7 +458,8 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { siteMap, siteValue } from '../constantOption'
+import type { siteValue } from '../constantOption';
+import { siteMap } from '../constantOption'
 import {
   deleteSign,
   deleteSignRecord,
@@ -476,17 +476,16 @@ import {
   updateRecordOrder,
   updateSignLog
 } from '/@/api/devlocal/packagingShipping'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSignList } from '/@/type/packagingShipping/packagingType'
-import { IGetPlanPoListQuery } from '/@/type/purchase/po'
+
+import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
+import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { isEqual } from 'lodash'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'pendingReceiptTable',
+  name: 'PendingReceiptTable',
 })
 
 const printCountVisible = ref<boolean>(false)
@@ -498,12 +497,6 @@ const printFormRules = reactive<FormRules>({
   count: [{ required: true, message: '请输入打印数量', trigger: 'blur' }]
 })
 const _id = ref<number>(0)
-const router = useRouter()
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const tabsStore = useTabsStore()
-const { changeTabsMeta, addVisitedRoute } = tabsStore
-const editRef = ref<any>(null)
 
 const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
@@ -635,7 +628,7 @@ const handleAllSigned = async () => {
 const handleConfirmSignBatch = async () => {
   const signIds = selectRows.value.map((item: any) => item.signId).join(',')
   const { data } = await signBatch({
-    signIds: signIds,
+    signIds,
     signOrder: signBatchForm.signOrder
   })
   if (data) {
@@ -753,7 +746,7 @@ const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
   
-const handleTabClick = (tab: TabsPaneContext, event: Event) => {
+const handleTabClick = (tab: TabsPaneContext) => {
   Object.assign(list.value, [])
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
@@ -804,7 +797,7 @@ const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   // console.log(column);
   if (column.property === 'log') {
     clickRow.value = row
@@ -828,7 +821,7 @@ let _row: any
 /**
  * 当点击修改时切换输入框，修改输入
  */
-const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -912,7 +905,7 @@ const fetchData = async () => {
     total.value = data.total!
     list.value.forEach((item: any) => {
       if (item.signOrder) {
-        item.signOrder = item.signOrder.replace(/,/g, '<br>');
+        item.signOrder = item.signOrder.replaceAll(',', '<br>');
       }
     })
   }

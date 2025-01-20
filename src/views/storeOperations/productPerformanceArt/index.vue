@@ -6,12 +6,12 @@
           <el-form-item label="站点">
             <el-select
               v-model="queryForm.site"
-              multiple
               clearable
               collapse-tags
               collapse-tags-tooltip
-              placeholder="请选择站点"
               :max-collapse-tags="1"
+              multiple
+              placeholder="请选择站点"
               style="width: 220px"
               @change="queryData"
             >
@@ -25,7 +25,7 @@
           </el-form-item>
           <el-form-item label="币种">
             <el-select placeholder="请选择币种">
-              <el-option v-for="item in currencyList" :label="item.label" :value="item.id" :key="item.id" />
+              <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -34,55 +34,55 @@
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
-        <el-popover :width="240" popper-style="max-height: 550px; overflow: auto;">
+        <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
           <template #reference>
             <el-button>
               <vab-icon icon="settings-line" />
             </el-button>
           </template>
-          <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove">
+          <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
             <div
               v-for="item in columns"
               :key="item.label"
-              style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
-              :class="{'non-draggable': item.disableCheck}" 
+              :class="{'non-draggable': item.disableCheck}"
+              style="font-size: var(--el-font-size-base); display: flex; align-items: center;" 
             >
               <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
               <span style="flex: 1">{{ item.label }}</span>
-              <span v-if="item.disableCheck" style="display: flex; align-items: center;" class="icon-hover">
-                <el-icon><View /></el-icon>
+              <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
+                <el-icon><view /></el-icon>
               </span>
-              <span v-else @click="handleChecked(item)" class="icon-hover" style="cursor: pointer; display: flex; align-items: center;">
-                <el-icon v-show="!item.checked"><Hide /></el-icon>
-                <el-icon v-show="item.checked"><View /></el-icon>
+              <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+                <el-icon v-show="!item.checked"><hide /></el-icon>
+                <el-icon v-show="item.checked"><view /></el-icon>
               </span>
             </div>
           </vab-draggable>
         </el-popover>
         <el-form inline :model="queryForm" @submit.prevent >
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @click="queryData" />
+            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @click="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
       border
-      class="noneHoverTable"
-      :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle" :cell-class-name="clearPadding"
-      :data="list"
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle" class="noneHoverTable" :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
     >
       <el-table-column
         v-for="(item, index) in checkList"
         :key="index"
+        :fixed="item.isFixed"
         :label="item.label"
+        :min-width="handleWidth(item)"
         :prop="item.prop"
         :width="item.width"
-        :min-width="handleWidth(item)"
-        :fixed="item.isFixed"
       >
         <template #header>
           <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -92,14 +92,14 @@
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
             <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)" >
-              <template #error><el-icon></el-icon></template>
+              <template #error><el-icon/></template>
             </el-image>
           </span>
           <span v-if="item.label === 'SKU'">
             {{ row.sku }}
             <div class="rate-wrapper">
               <span class="rate-value">{{ row.rating }}</span>
-              <span><el-rate v-model="row.displayRating" :void-icon="Star" disabled class="custom-rate" /></span>
+              <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
               <span class="rate-count">{{ row.commentsNumbers }}</span>
             </div>
           </span>
@@ -118,7 +118,7 @@
             {{ row.newArrivalDay != null ? row.newArrivalDay + '天' : '' }}
           </span>
           <span v-if="item.label === '停产'">
-            <el-checkbox v-model="row.stopProductStatus" :true-value="1" :false-value="0" ></el-checkbox>
+            <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
           </span>
           <span v-if="item.label === 'VOC满意度'">
             <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">
@@ -139,14 +139,14 @@
           </span>
           <span v-if="item.label === '小类排名'">
             {{ row.nowSubcategoryRanking }}
-            <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
-            <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
+            <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+            <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
             <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
           </span>
           <span v-if="item.label === '大类排名'">
             {{ row.nowMajorCategoryRanking }}
-            <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" icon="arrow-down-fill" class="arrow-down" />
-            <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" icon="arrow-up-fill" class="arrow-up" />
+            <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
+            <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
             <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
           </span>
           <span v-if="['月退货%', '月退款%', 'VOC缺陷%'].includes(item.label)" >
@@ -155,7 +155,7 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -165,16 +165,16 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Search, View, Hide, Star } from '@element-plus/icons-vue'
+import { Hide, Search, Star } from '@element-plus/icons-vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { CSSProperties } from 'vue'
-import { CheckboxValueType } from 'element-plus'
+import type { CSSProperties } from 'vue'
+import type { CheckboxValueType } from 'element-plus'
 import { getCurrencyList, getOperationAmazonArtDesignList } from '/@/api/devlocal/productPerformance'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getAmazonStars } from '/@/utils/rate'
@@ -396,14 +396,19 @@ const imagePreviewShow = (url: string) => {
 // 处理自适应宽度
 const handleWidth = (item: any) => {
   
-  if (item.label === 'SKU') {
+  switch (item.label) {
+  case 'SKU': {
     return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku')
-  } else if (item.label === 'ASIN') {
+  }
+  case 'ASIN': {
     return flexColumnWidth(list.value, 'ASIN', 'asin')
-  } else if (item.label === '父体ASIN') {
+  }
+  case '父体ASIN': {
     return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
-  } else {
+  }
+  default: {
     return item.minWidth
+  }
   }
   
 }

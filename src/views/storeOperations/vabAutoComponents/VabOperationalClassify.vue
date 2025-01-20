@@ -2,10 +2,10 @@
   <vab-dialog
     v-model="dflag"
     title="运营分类"
-    width="25%"
-    @open="fetchData"
-    @close="closeDialog"
     top="10vh"
+    width="25%"
+    @close="closeDialog"
+    @open="fetchData"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
@@ -14,22 +14,22 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" >
           <el-form-item>
-            <el-input placeholder="请输入搜索关键词" v-model.trim="queryForm.keyWord" clearable @keyup.enter="queryData" @input="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border 
-      :header-cell-style="{ textAlign: 'center' }"
       :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
     >
-      <el-table-column label="分类" prop="typeName"></el-table-column>
-      <el-table-column label="操作" align="center" width="170">
-        <template #default="{ row, $index }">
+      <el-table-column label="分类" prop="typeName"/>
+      <el-table-column align="center" label="操作" width="170">
+        <template #default="{ row }">
           <el-button text type="primary" @click="showModify(row)">修改</el-button>
           <el-button text type="danger" @click="handleDel(row)">删除</el-button>
         </template>
@@ -44,8 +44,8 @@
     />
   </vab-dialog>
   <vab-dialog
-    title="修改"
     v-model="modifyVisible"
+    title="修改"
     width="20%"
   >
     <el-form ref="modifyFormRef" :model="modifyForm" :rules="modifyFormRules" style="margin: 0;">
@@ -60,9 +60,9 @@
   </vab-dialog>
   <!-- 新增 -->
   <vab-dialog
+    v-model="addVisible"
     title="新增"
     width="20%"
-    v-model="addVisible"
     @close="closeAdd"
   >
     <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" style="margin: 0">
@@ -80,13 +80,13 @@
 
 <script lang="ts" setup>
 
+import { Search } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import { addOperationTypeList, delOperationTypeList, getOperationTypeList, updateOperationTypeList } from '/@/api/devlocal/productPerformance'
+import type { IGetOperationTypeListReq } from '/@/type/storeOperation/productPerformanceType'
 defineOptions({
   name: 'OperationalClassify',
 })
-import { Search } from '@element-plus/icons-vue'
-import { FormInstance, FormRules } from 'element-plus'
-import { addOperationTypeList, delOperationTypeList, getOperationTypeList, updateOperationTypeList } from '/@/api/devlocal/productPerformance'
-import { IGetOperationTypeListReq } from '/@/type/storeOperation/productPerformanceType'
 
 const dflag = ref < boolean > (false)
 const props = defineProps<{

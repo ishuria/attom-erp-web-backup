@@ -5,11 +5,11 @@
         <vab-card style="height: 350px; position: relative;">
           <div ref="chartContainer1" style="width: 100%; height: 350px"></div>
           <div style="position: absolute; top: 5px; right: 10px;">
-            <el-select placeholder="退货原因"style="max-width: 5em; margin-right: 10px; margin-top: 8px" size="small"></el-select>
-            <el-radio-group v-model="radio" @change="handleSwitchTime" size="small">
-              <el-radio-button label="日" value="day"></el-radio-button>
-              <el-radio-button label="周" value="week"></el-radio-button>
-              <el-radio-button label="月" value="month"></el-radio-button>
+            <el-select placeholder="退货原因" size="small" style="max-width: 5em; margin-right: 10px; margin-top: 8px"/>
+            <el-radio-group v-model="radio" size="small" @change="handleSwitchTime">
+              <el-radio-button label="日" value="day"/>
+              <el-radio-button label="周" value="week"/>
+              <el-radio-button label="月" value="month"/>
             </el-radio-group>
           </div>
         </vab-card>
@@ -26,17 +26,17 @@
         <span style="line-height: normal; font-size: 18px;">退货订单反馈</span>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
-        <el-select style="max-width: 6em; " placeholder="退货原因"></el-select>
+        <el-select placeholder="退货原因" style="max-width: 6em; "/>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table border stripe :data="mockData" :header-cell-style="{ textAlign: 'center' }">
-      <el-table-column label="订单号" prop="orderNumber" min-width="">
+    <el-table border :data="mockData" :header-cell-style="{ textAlign: 'center' }" stripe>
+      <el-table-column label="订单号" min-width="" prop="orderNumber">
         <template #default="{ row }">
           <el-link type="primary">{{ row.orderNumber }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="退货原因" prop="returnReason" min-width=""></el-table-column>
-      <el-table-column label="买家备注" prop="buyerRemarks" min-width="">
+      <el-table-column label="退货原因" min-width="" prop="returnReason"/>
+      <el-table-column label="买家备注" min-width="" prop="buyerRemarks">
         <template #default="{ row }">
           <el-tooltip content=" " effect="dark" placement="top">
             <template #content>
@@ -46,10 +46,10 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="买家之声反馈" prop="feedback" min-width=""></el-table-column>
-      <el-table-column label="退货时间" prop="returnTime" sortable min-width=""></el-table-column>
-      <el-table-column label="订购时间" prop="orderTime" sortable min-width=""></el-table-column>
-      <el-table-column label="订单标签" prop="orderTags" min-width=""></el-table-column>
+      <el-table-column label="买家之声反馈" min-width="" prop="feedback"/>
+      <el-table-column label="退货时间" min-width="" prop="returnTime" sortable/>
+      <el-table-column label="订购时间" min-width="" prop="orderTime" sortable/>
+      <el-table-column label="订单标签" min-width="" prop="orderTags"/>
     </el-table>
     <vab-pagination 
       :current-page="queryForm.pageNo"
@@ -77,9 +77,7 @@ let chartInstance2: echarts.ECharts | null = null
 let chartObserver1: ResizeObserver
 let chartObserver2: ResizeObserver
 const option1 = ref<any>({})
-const option2 = ref<any>({
-
-})
+const option2 = ref<any>({})
 const mockData = [
   {
     orderNumber: "ORD123456",
@@ -145,10 +143,7 @@ const data1 = ref<IData[]>([
   { date: '2024-11-25', returnQuantity: 1, returnMargin: 40 },
   { date: '2024-11-26', returnQuantity: 0, returnMargin: 0 },
 ])
-const nameMapProp: Record<string, string> = {
-  '退货数': 'returnQuantity',
-  '退货率': 'returnMargin',
-}
+
 const data2 = ref<any[]>([
   { value: 1, name: '没有原因' },
   { value: 1, name: '不兼容' },
@@ -288,15 +283,26 @@ const handleSwitchTime = () => {
 
   let returnQuantity: any[] = []
   let returnMargin: any[] = []
-  if (radio.value === 'day') {
+  switch (radio.value) {
+  case 'day': {
   returnQuantity = data1.value
   returnMargin = data1.value
-  } else if (radio.value === 'week') {
+  
+  break;
+  }
+  case 'week': {
   returnQuantity = getWeeklyData(data1.value, 'returnQuantity')
   returnMargin = getWeeklyData(data1.value, 'returnMargin')
-  } else if (radio.value === 'month') {
+  
+  break;
+  }
+  case 'month': {
   returnQuantity = getMonthlyData(data1.value, 'returnQuantity')
   returnMargin = getMonthlyData(data1.value, 'returnMargin')
+  
+  break;
+  }
+  // No default
   }
   option1.value.xAxis.data = returnQuantity.map((item: any) => item.date)
   option1.value.series[0].data = returnQuantity.map((d: any) => d.returnQuantity)

@@ -53,7 +53,7 @@
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱日期" prop="createTime" min-width="115">
+      <el-table-column label="装箱日期" min-width="115" prop="createTime">
         <template #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
@@ -62,26 +62,26 @@
       <el-table-column label="长(cm)" min-width="90" prop="length"/>
       <el-table-column label="宽(cm)" min-width="90" prop="width"/>
       <el-table-column label="高(cm)" min-width="90" prop="height"/>
-      <el-table-column label="总重量(kg)" prop="totalWeight" min-width="110"></el-table-column>
-      <el-table-column label="总体积(m3)" prop="totalVolume" min-width="110"></el-table-column>
-      <el-table-column label="箱规号" prop="encasementNo" min-width="110"></el-table-column>
-      <el-table-column label="站点" prop="site" min-width="100"></el-table-column>
-      <el-table-column label="SKU" prop="sku" min-width="300" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
+      <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight"/>
+      <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume"/>
+      <el-table-column label="箱规号" min-width="110" prop="encasementNo"/>
+      <el-table-column label="站点" min-width="100" prop="site"/>
+      <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
-      <el-table-column label="箱数" prop="numberOfBoxes" min-width="150">
+      <el-table-column label="箱数" min-width="150" prop="numberOfBoxes">
         <template #default="{ row }">
           <el-input-number 
             v-model="row.numberOfBoxes" 
-            @change="(newValue, oldValue) => handleBoxNumberChange(newValue, oldValue, row)" 
             style="width: 100%;" 
+            @change="(newValue, oldValue) => handleBoxNumberChange(newValue, oldValue, row)" 
             @keydown.prevent="handleKeyDown" 
         />
         </template>
       </el-table-column>
-      <el-table-column label="数量" prop="number" min-width="90"></el-table-column>
-      <el-table-column label="产品总数" prop="productTotalNumber" min-width="100"></el-table-column>
-      <el-table-column label="备注" prop="remarks" min-width="100"></el-table-column>
-      <el-table-column label="操作" fixed="right" width="200">
+      <el-table-column label="数量" min-width="90" prop="number"/>
+      <el-table-column label="产品总数" min-width="100" prop="productTotalNumber"/>
+      <el-table-column label="备注" min-width="100" prop="remarks"/>
+      <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row, $index }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
           <el-link type="primary" :underline="false" @click="showSplit(row)">拆分</el-link>
@@ -101,22 +101,22 @@
       @size-change="handleSizeChange"
     />
     <!-- 修改 -->
-    <VabModifyDialog 
-      :modify-visible="modifyVisible"
-      :encasementId="encasementId"
+    <vab-modify-dialog 
       :_siteList="siteList"
+      :encasement-id="encasementId"
+      :modify-visible="modifyVisible"
       @update:modify-visible="closeModify"
     />
 
     <!-- 箱号 -->
     <vab-dialog
-      title="箱号"
-      :width="dialogWidth"
       v-model="boxNumberVisible"
       class="dialog"
+      title="箱号"
+      :width="dialogWidth"
       @close="closeBoxNumber"
     >
-      <el-form ref="boxNumberFormRef" :model="boxNumberForm" :rules="boxNumberFormRules" label-position="right" label-width="auto" style=" margin-right: 10px;margin-left: 10px">
+      <el-form ref="boxNumberFormRef" label-position="right" label-width="auto" :model="boxNumberForm" :rules="boxNumberFormRules" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="箱号" prop="boxNumber">
           <el-input v-model="boxNumberForm.boxNumber" disabled />
         </el-form-item>
@@ -124,9 +124,9 @@
           <el-select v-model="boxNumberForm.site" placeholder="请选择站点" >
             <el-option 
               v-for="item in siteList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -144,36 +144,36 @@
       </template>
     </vab-dialog>
     <!-- 装箱 -->
-    <VabPackingDialog 
+    <vab-packing-dialog 
+      :encasement-no="encasementNo"
       :packing-visible="packingVisible"
       :site="passSite"
-      :encasement-no="encasementNo"
-      @update:packing-visible="handlePackingClose"
       @update:finish="handleFinish"
+      @update:packing-visible="handlePackingClose"
     />
     <!-- 发货（沃尔玛）-->
     <vab-dialog
-      title="发货（沃尔玛）"
-      width="20%"
       v-model="shippingWalmartVisible"
       class="dialog"
+      title="发货（沃尔玛）"
+      width="20%"
     >
       <el-text >
         {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
       </el-text>
       <br />
-      <el-button type="primary" style="margin-top: 20px" @click="handleEncasementWalmart">生成模板文件</el-button>
+      <el-button style="margin-top: 20px" type="primary" @click="handleEncasementWalmart">生成模板文件</el-button>
     </vab-dialog>
     <!-- 发货（亚马逊）-->
     <vab-dialog
-      title="发货（亚马逊）"
-      width="25%"
       v-model="shippingAmazonVisible"
       class="dialog"
+      title="发货（亚马逊）"
       top="6vh"
+      width="25%"
       @close="closeShipmentAmazon"
     >
-      <el-form ref="shipmentAmazonFormRef" :model="shipmentAmazonForm" label-position="top">
+      <el-form ref="shipmentAmazonFormRef" label-position="top" :model="shipmentAmazonForm">
         <el-form-item style="margin-bottom: 10px">
           <el-text>
             {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
@@ -183,9 +183,9 @@
           <el-select v-model="shipmentAmazonForm.type" >
             <el-option 
               v-for="item in unitOption"
+              :key="item.value"
               :label="item.label"
               :value="item.value"
-              :key="item.value"
             />
           </el-select>
         </el-form-item>
@@ -197,14 +197,14 @@
         </el-form-item>
      
         <el-upload
+          v-model:file-list="fileList"
+          action="#"
+          :auto-upload="true"
           class="upload-demo"
           drag
-          action="#"
-          multiple
+          :http-request="UploadRequestHandler" 
+          multiple :show-file-list="true"
           width="100%"
-          v-model:file-list="fileList" 
-          :show-file-list="true" :auto-upload="true"
-          :http-request="UploadRequestHandler"
         >
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
@@ -229,9 +229,9 @@
           <el-select v-model="shipmentAmazonForm.site" placeholder="请选择站点" >
             <el-option 
               v-for="item in siteList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -239,9 +239,9 @@
           <el-select v-model="shipmentAmazonForm.channel" clearable placeholder="请选择货代渠道">
             <el-option 
               v-for="item in channelList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -254,22 +254,21 @@
     </vab-dialog>
     <!-- 发货规划 -->
     <vab-dialog
-      title="发货规划"
       v-model="shippingPlanningVisible"
+      title="发货规划"
       width="20%"
       @close="closeShippingPlanning"
     >
-      <el-form ref="shippingPlanningFormRef" :model="shippingPlanningForm" style=" margin-right: 10px;margin-left: 10px" class="noneHoveTable">
+      <el-form ref="shippingPlanningFormRef" class="noneHoveTable" :model="shippingPlanningForm" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="发货计划" prop="date">
-          <el-date-picker  type="date" placeholder="选择发货计划日期" clearable>
-          </el-date-picker>
+          <el-date-picker  clearable placeholder="选择发货计划日期" type="date"/>
           
         </el-form-item>
         <el-form-item label="货代渠道">
           <el-input  clearable />
         </el-form-item>
         <el-form-item label="应急补货">
-          <el-checkbox></el-checkbox>
+          <el-checkbox/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -279,21 +278,20 @@
     </vab-dialog>
     <!-- 修改发货计划 -->
     <vab-dialog
-      title="修改发货计划"
       v-model="modifyPlanVisible"
+      title="修改发货计划"
       width="20%"
       @close="closeShippingPlan"
     >
       <el-form ref="shippingPlanFormRef" :model="shippingPlanForm" :rules="shippingPlanFormRules" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="发货计划" prop="date">
           <el-date-picker 
-            type="date" 
-            placeholder="请选择日期" 
-            v-model="shippingPlanForm.date"
+            v-model="shippingPlanForm.date" 
+            clearable 
+            placeholder="请选择日期"
+            type="date"
             value-format="YYYY-MM-DD"
-            clearable
-          >
-          </el-date-picker>
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -303,28 +301,28 @@
     </vab-dialog>
     <!-- 上传拆分 -->
     <vab-dialog
-      title="上传拆分"
-      width="25%"
       v-model="uploadSplitVisible"
+      title="上传拆分"
       top="10vh"
+      width="25%"
       @close="closeUploadSplit"
     >
-      <el-form ref="uploadSplitFormRef" :model="uploadSplitForm" label-position="top" style=" margin-right: 10px;margin-left: 10px">
+      <el-form ref="uploadSplitFormRef" label-position="top" :model="uploadSplitForm" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="日期" prop="date">
-          <el-date-picker v-model="uploadSplitForm.date" type="date" value-format="YYYY-MM-DD" clearable style="width: 100%" />
+          <el-date-picker v-model="uploadSplitForm.date" clearable style="width: 100%" type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
         <el-form-item label="拆分备注" prop="remarks">
-          <el-input v-model="uploadSplitForm.remarks" type="textarea" :rows="2" resize="none" />
+          <el-input v-model="uploadSplitForm.remarks" resize="none" :rows="2" type="textarea" />
         </el-form-item>
         <el-upload
+          v-model:file-list="splitFileList"
+          action="#"
+          :auto-upload="true"
           class="upload-demo"
           drag
-          action="#"
-          multiple
+          :http-request="uploadSplitFile" 
+          multiple :show-file-list="true"
           width="100%"
-          v-model:file-list="splitFileList" 
-          :show-file-list="true" :auto-upload="true"
-          :http-request="uploadSplitFile"
         >
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
@@ -340,19 +338,19 @@
     </vab-dialog>
     <!-- 上传 pdf 插页 -->
     <vab-dialog
+      v-model="uploadPdfVisible"
       title="上传pdf插页"
       width="25%"
-      v-model="uploadPdfVisible"
     >
       <el-upload
+        v-model:file-list="pdfFileList"
+        action="#"
+        :auto-upload="true"
         class="upload-demo"
         drag
-        action="#"
-        multiple
+        :http-request="uploadPdf" 
+        multiple :show-file-list="true"
         width="100%"
-        v-model:file-list="pdfFileList" 
-        :show-file-list="true" :auto-upload="true"
-        :http-request="uploadPdf"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">
@@ -368,9 +366,9 @@
 
     <!-- 拆分 -->
     <vab-dialog
+      v-model="splitVisible"
       title="拆分"
       width="20%"
-      v-model="splitVisible"
     >
       <el-form ref="splitFormRef" :model="splitForm" :rules="splitFormRules" style=" margin-right: 10px;margin-left: 10px;">
         <el-form-item label="拆分数量" prop="splitCount">
@@ -385,8 +383,8 @@
     </vab-dialog>
     <!-- 打印 -->
     <vab-dialog
-      title="打印数量"
       v-model="printCountVisible"
+      title="打印数量"
       width="20%"
     >
       <el-form ref="printFormRef" :model="printForm" :rules="printFormRules" style="margin: 0;" >
@@ -405,13 +403,13 @@
 
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
-import { FormInstance, FormRules } from 'element-plus'
-import { CSSProperties } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
 import { confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, printEncasementSuccess, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
-import { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
+import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const listLoading = ref<boolean>(false)
@@ -444,9 +442,7 @@ const packingVisible = ref<boolean>(false)
 const uploadSplitVisible = ref<boolean>(false)
 // 上传pdf可见
 const uploadPdfVisible = ref<boolean>(false)
-// 打印可见
-const printVisible = ref<boolean>(false)
-const printCount = ref<number | undefined>(undefined)
+
 // 拆分可见
 const splitVisible = ref<boolean>(false)
 const splitForm = reactive<{ splitCount: number | undefined }>({
@@ -469,8 +465,7 @@ const boxNumberFormRules = reactive<FormRules<IBoxNumberForm>>({
 
 // 站点列表
 const siteList = ref<ISiteOption[]>([])
-// 传递给装箱的判断是UPC还是FNSKU
-const upcOrFnSku = ref<string>('FNSKU')
+
 // 多选的行
 const selectRows = ref<any>([])
 // 总箱数
@@ -517,9 +512,6 @@ const shippingPlanningVisible = ref<boolean>(false)
 // 发货规划表单
 const shippingPlanningForm = reactive<any>({})
 const shippingPlanningFormRef = ref<FormInstance>()
-const shippingPlanningFormRules = reactive<any>({
-
-})
 // 上传拆分表单
 const uploadSplitForm = reactive<any>({})
 const uploadSplitFormRef = ref<FormInstance>()
@@ -557,7 +549,7 @@ const handleBoxNumberChange = async (currentValue: number | undefined, oldValue:
       if (data) {
         fetchData()
       }
-    } catch (error) {
+    } catch {
       // 还原回原来的值
       row.numberOfBoxes = oldValue
     }
@@ -569,13 +561,13 @@ const handleBoxNumberChange = async (currentValue: number | undefined, oldValue:
       if (data) {
         fetchData()
       }
-    } catch (error) {
+    } catch {
       row.numberOfBoxes = oldValue
     }
   }
 }
 // 不许编辑箱数
-const handleKeyDown = () => { }
+const handleKeyDown = () => {}
 // 解锁
 const handleUnlockEncasement = async () => {
   const { data } = await unlockEncasement()
@@ -589,7 +581,7 @@ const fileName = ref<string>('')
 const handleGenerateFile1 = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   const { data } = await generateTemplateFile1({
-    encasementIds: encasementIds,
+    encasementIds,
     type: shipmentAmazonForm.type
   })
   fileName.value = data
@@ -609,7 +601,7 @@ const handleDownloadFile = async () => {
 const handleEncasementWalmart = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   const { data } = await generateWalmartShipment({
-    encasementIds: encasementIds
+    encasementIds
   })
   await downloadFile('/encasement/download', {
     fileName: data
@@ -674,7 +666,7 @@ const fileName3 = ref<string>('')
 const handleGenerateFile3 = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   const { data } = await generateTemplateFile3({
-    encasementIds: encasementIds
+    encasementIds
   })
   fileName3.value = data
   await downloadFile('/encasement/download', {
@@ -695,11 +687,11 @@ const submitShipmentAmazon = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   // 发货亚马逊前置上锁请求
   const { data } = await doLockEncasement({
-    encasementIds: encasementIds
+    encasementIds
   })
   if (data) {
     const { data: res } = await confirmEncasementShipments({
-      encasementIds: encasementIds,
+      encasementIds,
       type: shipmentAmazonForm.type,
       templateFile1Name: fileName.value,
       templateFile2Name: fileName2.value,
@@ -766,7 +758,7 @@ const closeShippingPlan = () => {
 const confirmShippingPlan = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   const { data } = await updateEncasementShipmentDate({
-    encasementIds: encasementIds,
+    encasementIds,
     shipmentPlanDate: shippingPlanForm.date
   })
   if (data) {
@@ -950,7 +942,6 @@ const stripedRowClass = (_row: any) => {
 // 装箱合并方法
 const objectSpanMethod = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: any) => {

@@ -4,51 +4,51 @@
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :loading="listLoading" :icon="Search" type="primary" native-type="submit" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
-      border stripe
+      border :cell-style="cellStyle"
       class="noneHoveTable"
-      :header-cell-style="{ textAlign: 'center' }"
-      :cell-style="cellStyle"
       :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
       @selection-change="setSelectRows"
     >
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column label="发货计划" prop="shipmentPlanDate" min-width="120">
+      <el-table-column type="selection"/>
+      <el-table-column label="发货计划" min-width="120" prop="shipmentPlanDate">
         <template #default="{ row }">
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱日期" prop="createTime" min-width="115">
+      <el-table-column label="装箱日期" min-width="115" prop="createTime">
         <template #default="{ row }">
           {{ formatDate(new Date(row.createTime)) }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱人员" prop="encasementUser" :width="flexColumnWidth(list, '装箱人员', 'encasementUser')"></el-table-column>
-      <el-table-column label="箱数" prop="numberOfBoxes" min-width="90"></el-table-column>
-      <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')"></el-table-column>
-      <el-table-column label="毛重(kg)" prop="grossWeight" min-width="100"></el-table-column>
-      <el-table-column label="长(cm)" prop="length" min-width="90"></el-table-column>
-      <el-table-column label="宽(cm)" prop="width" min-width="90"></el-table-column>
-      <el-table-column label="高(cm)" prop="height" min-width="90"></el-table-column>
-      <el-table-column label="总重量(kg)" prop="totalWeight" min-width="110"></el-table-column>
-      <el-table-column label="总体积(m3)" prop="totalVolume" min-width="110"></el-table-column>
-      <el-table-column label="箱规号" prop="encasementNo" min-width="110"></el-table-column>
-      <el-table-column label="站点" prop="planSiteName" min-width="130"></el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
-      <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"></el-table-column>
-      <el-table-column label="数量" prop="number" min-width="90"></el-table-column>
-      <el-table-column label="产品总数" prop="productTotalNumber" min-width="100"></el-table-column>
-      <el-table-column label="备注" prop="remarks" min-width="100" >
+      <el-table-column label="装箱人员" prop="encasementUser" :width="flexColumnWidth(list, '装箱人员', 'encasementUser')"/>
+      <el-table-column label="箱数" min-width="90" prop="numberOfBoxes"/>
+      <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')"/>
+      <el-table-column label="毛重(kg)" min-width="100" prop="grossWeight"/>
+      <el-table-column label="长(cm)" min-width="90" prop="length"/>
+      <el-table-column label="宽(cm)" min-width="90" prop="width"/>
+      <el-table-column label="高(cm)" min-width="90" prop="height"/>
+      <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight"/>
+      <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume"/>
+      <el-table-column label="箱规号" min-width="110" prop="encasementNo"/>
+      <el-table-column label="站点" min-width="130" prop="planSiteName"/>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+      <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
+      <el-table-column label="数量" min-width="90" prop="number"/>
+      <el-table-column label="产品总数" min-width="100" prop="productTotalNumber"/>
+      <el-table-column label="备注" min-width="100" prop="remarks" >
         <template #default="{ row }">
-          <el-tooltip effect="dark" content="" placement="top">
+          <el-tooltip content="" effect="dark" placement="top">
             <template #content>
               <div class="custom-tooltip" >{{ row.remarks }}</div>
             </template>
@@ -56,10 +56,10 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width="180">
+      <el-table-column fixed="right" label="操作" width="180">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button text type="primary" @click="">
+            <el-button text type="primary">
               下载模板文件
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -97,14 +97,13 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, ArrowDown } from '@element-plus/icons-vue'
-import { CSSProperties } from 'vue'
-import { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
+import { ArrowDown, Search } from '@element-plus/icons-vue'
+import type { CSSProperties } from 'vue'
+import type { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
 import { getShippedEncasementList } from '/@/api/devlocal/encasement'
-import { downloadFile, downloadFileP } from '/@/api/devlocal/download'
+import { downloadFileP } from '/@/api/devlocal/download'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { split } from 'lodash'
 
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({

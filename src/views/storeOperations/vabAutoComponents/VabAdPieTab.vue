@@ -15,16 +15,16 @@
           </div>
           <div ref="chartContainer1" style="width: 100%; height: 350px;"></div>
         </div>
-        <el-divider direction="vertical" style="height: 360px"></el-divider>
+        <el-divider direction="vertical" style="height: 360px"/>
         <div style="flex: 1">
           <el-row >
             <el-col :span="4">
-              <el-select v-model="pieSelect" @change="handleChangeSelect" style="max-width: 5em; margin-left: 10px;">
+              <el-select v-model="pieSelect" style="max-width: 5em; margin-left: 10px;" @change="handleChangeSelect">
                 <el-option 
                   v-for="item in pieSelectOption"
+                  :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                  :key="item.value"
                 />
               </el-select>
             </el-col>
@@ -41,33 +41,33 @@
           <el-checkbox>精准搜索</el-checkbox>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" />
+          <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData"></el-button>
+          <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
         </el-form-item>
       </el-form>
     </div>
-    <el-table border stripe :header-cell-style="{textAlign: 'center'}" :data="data2" :cell-style="cellStyle">
-      <el-table-column label="客户搜索词" prop="name" min-width="120" fixed="left">
+    <el-table border :cell-style="cellStyle" :data="data2" :header-cell-style="{textAlign: 'center'}" stripe>
+      <el-table-column fixed="left" label="客户搜索词" min-width="120" prop="name">
         <template #default="{ row }">
           <el-link type="primary">{{ row.name }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="展示量" prop="impressions" min-width="90"></el-table-column>
-      <el-table-column label="点击量" prop="clicks" min-width="90"></el-table-column>
-      <el-table-column label="点击率(我们/大盘)" prop="clickThroughRate" min-width="170"></el-table-column>
-      <el-table-column label="转化率(我们/大盘)" prop="conversionRate" min-width="170"></el-table-column>
-      <el-table-column label="花费" prop="spend" min-width="80"></el-table-column>
-      <el-table-column label="订单数" prop="orders" min-width="90"></el-table-column>
-      <el-table-column label="ACOS" prop="acos" min-width="90"></el-table-column>
-      <el-table-column label="CPC" prop="cpc" min-width="80"></el-table-column>
-      <el-table-column label="建议竞价" prop="suggestedBid" min-width="100"></el-table-column>
-      <el-table-column label="广告日总展示" prop="dailyImpressions" min-width="130"></el-table-column>
-      <el-table-column label="估算广告日总点击" prop="estimatedDailyClicks" min-width="170"></el-table-column>
-      <el-table-column label="曝光量排名" prop="impressionRank" min-width="120"></el-table-column>
-      <el-table-column label="品牌占有率" prop="brandShare" min-width="120"></el-table-column>
-      <el-table-column label="分类" prop="category" min-width="130" fixed="right">
+      <el-table-column label="展示量" min-width="90" prop="impressions"/>
+      <el-table-column label="点击量" min-width="90" prop="clicks"/>
+      <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate"/>
+      <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate"/>
+      <el-table-column label="花费" min-width="80" prop="spend"/>
+      <el-table-column label="订单数" min-width="90" prop="orders"/>
+      <el-table-column label="ACOS" min-width="90" prop="acos"/>
+      <el-table-column label="CPC" min-width="80" prop="cpc"/>
+      <el-table-column label="建议竞价" min-width="100" prop="suggestedBid"/>
+      <el-table-column label="广告日总展示" min-width="130" prop="dailyImpressions"/>
+      <el-table-column label="估算广告日总点击" min-width="170" prop="estimatedDailyClicks"/>
+      <el-table-column label="曝光量排名" min-width="120" prop="impressionRank"/>
+      <el-table-column label="品牌占有率" min-width="120" prop="brandShare"/>
+      <el-table-column fixed="right" label="分类" min-width="130" prop="category">
         <template #default="{ row }">
           <span :style="{ color: `${getCategoryColor(row.category)}` }">{{ highLowMap[row.category] }}</span>
         </template>
@@ -79,7 +79,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { highLowMap, pieSelectLabelMap, pieSelectMap, pieSelectOption } from '../constantOption'
 
 defineOptions({
@@ -171,7 +171,7 @@ const data2 = ref<any[]>([
     "orders": 25,
     "acos": "28%",
     "cpc": 2.7,
-    "suggestedBid": 3.0,
+    "suggestedBid": 3,
     "dailyImpressions": 18000,
     "estimatedDailyClicks": 820,
     "impressionRank": 4,
@@ -224,7 +224,7 @@ const data2 = ref<any[]>([
     "spend": 998.45,
     "orders": 40,
     "acos": "25%",
-    "cpc": 3.0,
+    "cpc": 3,
     "suggestedBid": 3.3,
     "dailyImpressions": 29000,
     "estimatedDailyClicks": 1200,
@@ -333,7 +333,7 @@ const data2 = ref<any[]>([
     "orders": 31,
     "acos": "27%",
     "cpc": 2.6,
-    "suggestedBid": 3.0,
+    "suggestedBid": 3,
     "dailyImpressions": 23000,
     "estimatedDailyClicks": 940,
     "impressionRank": 13,
@@ -368,7 +368,7 @@ const data2 = ref<any[]>([
     "spend": 965.78,
     "orders": 38,
     "acos": "26%",
-    "cpc": 3.0,
+    "cpc": 3,
     "suggestedBid": 3.5,
     "dailyImpressions": 31000,
     "estimatedDailyClicks": 1150,
@@ -396,7 +396,7 @@ const initChart1 = () => {
         let itemHtmlStrArr = ''
         if (params.data.sales > 0) {
           // 计算销售额的百分比
-          const salesPercent = ((params.data.sales / totalSales) * 100).toFixed(2) + '%'
+          const salesPercent = `${((params.data.sales / totalSales) * 100).toFixed(2)  }%`
           
           itemHtmlStrArr =  `<div style="display: flex;align-items:center;">
             ${params.marker}
@@ -450,7 +450,7 @@ const initChart1 = () => {
             // 计算销售额的百分比
             const salesPercent =
               totalSales > 0 && data.sales > 0
-                ? ((data.sales / totalSales) * 100).toFixed(2) + '%'
+                ? `${((data.sales / totalSales) * 100).toFixed(2)  }%`
                 : ''
 
             // 销售额信息
@@ -459,7 +459,7 @@ const initChart1 = () => {
                 ? `{b|销售额：}{x|€${data.sales} | ${salesPercent}}`
                 : ''
 
-            return `{a|${data.name}}\n{b|花费：}{x|€${data.value} | ${percent}% }\n` + salesInfo
+            return `{a|${data.name}}\n{b|花费：}{x|€${data.value} | ${percent}% }\n${  salesInfo}`
           },
 
           rich: {
@@ -627,9 +627,9 @@ const initChart2 = () => {
   chartInstance2?.setOption(option2.value)
 }
 // 更新图表
-const updateChart1 = () => {
-  chartInstance1?.setOption(option1.value, true) 
-}
+// const updateChart1 = () => {
+//   chartInstance1?.setOption(option1.value, true) 
+// }
 const updateChart2 = () => {
   chartInstance2?.setOption(option2.value, true) 
 }
@@ -697,14 +697,19 @@ onBeforeUnmount(() => {
   }
 })
 const getCategoryColor = (value: any) => {
-  if (value === 0) {
+  switch (value) {
+  case 0: {
     return '#00aeef'
-  } else if (value === 1) {
+  }
+  case 1: {
     return '#e65a56'
-  } else if (value === 2) {
+  }
+  case 2: {
     return '#62d9ad'
-  } else {
+  }
+  default: {
     return '#ffdc4c'
+  }
   }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {

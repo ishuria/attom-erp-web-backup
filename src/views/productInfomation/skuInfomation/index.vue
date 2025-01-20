@@ -7,30 +7,30 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData"></el-button>
+            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
       ref="tableRef" 
-      stripe border 
-      :data="list" 
-      :header-cell-style="{ 'text-align': 'center' }"
-      :cell-style="cellStyle"
-      @cell-click="changeInput"
-      v-loading="listLoading"
+      v-loading="listLoading" border 
+      :cell-style="cellStyle" 
       class="noneHoveTable"
+      :data="list"
+      :header-cell-style="{ 'text-align': 'center' }"
+      stripe
+      @cell-click="changeInput"
     >
-      <el-table-column label="图片" class="image-wall" min-width="100">
+      <el-table-column class="image-wall" label="图片" min-width="100">
         <template #default="{ row }">
-            <el-image style="width: 75px; height: 75px" v-if="row.skuImgUrl":src="row.skuImgUrl" fit="fill" data-img="img" />
+            <el-image v-if="row.skuImgUrl" data-img="img" fit="fill" :src="row.skuImgUrl" style="width: 75px; height: 75px" />
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :min-width="tableColumnWidth">
+      <el-table-column label="SKU" :min-width="tableColumnWidth" prop="sku">
         <template #default="{ row }">
           <span v-html="row.sku" ></span>
         </template>
@@ -43,63 +43,65 @@
           <span v-html="row.fnSkuUpc"></span>
         </template>
       </el-table-column>
-      <el-table-column label="产品经理" prop="productManager" min-width="90"></el-table-column>
+      <el-table-column label="产品经理" min-width="90" prop="productManager"/>
       <el-table-column label="停产" prop="productionHaltStatus">
         <template #default="{ row }">
-          <el-switch v-model="row.productionHaltStatus" @change="handleUpdateStatus(row)" :active-value="1"
-          :inactive-value="0" style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66"/>
+          <el-switch
+v-model="row.productionHaltStatus" :active-value="1" :inactive-value="0"
+          style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="优先打包" prop="priorityPacking" min-width="90">
+      <el-table-column label="优先打包" min-width="90" prop="priorityPacking">
         <template #default="{ row }">
-          <el-switch v-model="row.priorityPacking" @change="handleUpdateStatus(row)" :active-value="1"
-          :inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
+          <el-switch
+v-model="row.priorityPacking" :active-value="1" :inactive-value="0"
+          style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="打包拍照" prop="packagePhotograph" min-width="90">
+      <el-table-column label="打包拍照" min-width="90" prop="packagePhotograph">
         <template #default="{ row }">
-          <el-switch v-model="row.packagePhotograph" @change="handleUpdateStatus(row)" :active-value="1"
-          :inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
+          <el-switch
+v-model="row.packagePhotograph" :active-value="1" :inactive-value="0"
+          style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="总实际成本" prop="procurementCost" min-width="80" >
+      <el-table-column label="总实际成本" min-width="80" prop="procurementCost" >
           <template #header>
               总实际<br>成本
           </template>
       </el-table-column>
-      <el-table-column label="" prop="dilapidationCost" min-width="100" >
+      <el-table-column label="" min-width="100" prop="dilapidationCost" >
           <template #header>
               损耗成本<br>(近10次)
           </template>
       </el-table-column>
-      <el-table-column label="" prop="packingCost" min-width="100" >
+      <el-table-column label="" min-width="100" prop="packingCost" >
           <template #header>
               打包成本<br>(近10次)
           </template>
       </el-table-column>
-      <el-table-column label="" prop="freightFeeCost" min-width="100" >
+      <el-table-column label="" min-width="100" prop="freightFeeCost" >
           <template #header>
               运费<br>(近10次)
           </template>
       </el-table-column>
-      <el-table-column label="货币" width="110px" prop="currency">
-      </el-table-column>
-      <el-table-column label="" prop="avgTime" min-width="100" >
+      <el-table-column label="货币" prop="currency" width="110px"/>
+      <el-table-column label="" min-width="100" prop="avgTime" >
           <template #header>
             平均交期<br>(近10次)
           </template>
       </el-table-column>
-      <el-table-column label="" prop="avgFluctuation" min-width="100" >
+      <el-table-column label="" min-width="100" prop="avgFluctuation" >
           <template #header>
             交期平均<br>波动
           </template>
       </el-table-column>
-      <el-table-column prop="length" label="长(cm)" min-width="90"></el-table-column>
-      <el-table-column prop="width" label="宽(cm)" min-width="90"></el-table-column>
-      <el-table-column prop="height" label="高(cm)" min-width="90"></el-table-column>
-      <el-table-column prop="weight" label="重量(g)"></el-table-column>
-      <el-table-column prop="weightCoefficient" label="重量系数" min-width="100"></el-table-column>
-      <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100"></el-table-column>
+      <el-table-column label="长(cm)" min-width="90" prop="length"/>
+      <el-table-column label="宽(cm)" min-width="90" prop="width"/>
+      <el-table-column label="高(cm)" min-width="90" prop="height"/>
+      <el-table-column label="重量(g)" prop="weight"/>
+      <el-table-column label="重量系数" min-width="100" prop="weightCoefficient"/>
+      <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient"/>
       <el-table-column fixed="right" label="操作" width="150">
           <template #default="{ row }">
             <el-dropdown>
@@ -132,7 +134,7 @@
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
       </template>
     </el-table>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
     <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
@@ -144,40 +146,39 @@
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'consumable',
-})
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IgetProductList } from '/@/type/productInformation/skuInformationType'
+import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { calculateBrColumnWidth } from '/@/utils/tableColum'
+defineOptions({
+  name: 'Consumable',
+})
 
 
 const listLoading = ref<boolean>(true)
 // 零件列表
 const list = ref<any>([])
-const route: any = useRoute()
 const router = useRouter()
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
-const { changeTabsMeta, addVisitedRoute } = tabsStore
+const { changeTabsMeta } = tabsStore
 const handleSkuDetail = async (row: any) => {
   const query = { title: `${row.sku.split('<br/>')[0]}`, skuId: row.skuId }
   const matched = handleMatched(allRoutes.value, '/productInfomation/skuDetailView')
   const tab = handleTabs({
     ...matched.at(-1),
-    query: query
+    query
   })
   if (tab) {
     await router.push({
       path: '/productInfomation/skuDetailView',
-      query: query
+      query
     })
     await changeTabsMeta({
       title: 'SKU详情',
@@ -252,7 +253,7 @@ const imagePreviewClose = () =>{
 /**
 * 当点击时切换输入框，修改输入
 */
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && el){
     imagePreviewVisible.value = true
@@ -279,7 +280,7 @@ const fetchData = async () =>{
   list.value = data.list
   total.value = data.total
   list.value.forEach((item: any) => {
-    item.fnSkuUpc = item.fnSkuUpc.replace(/,/g, '<br>')
+    item.fnSkuUpc = item.fnSkuUpc.replaceAll(',', '<br>')
   })
   listLoading.value = false
   // calculateColumnWidth()

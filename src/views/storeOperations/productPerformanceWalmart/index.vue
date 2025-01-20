@@ -44,58 +44,58 @@
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="4">
-        <el-popover :width="240" popper-style="max-height: 560px; overflow: auto;">
+        <el-popover popper-style="max-height: 560px; overflow: auto;" :width="240">
           <template #reference>
             <el-button>
               <vab-icon icon="settings-line" />
             </el-button>
           </template>
-          <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove">
+          <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
             <div
               v-for="item in columns"
               :key="item.label"
-              style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
-              :class="{'non-draggable': item.disableCheck}" 
+              :class="{'non-draggable': item.disableCheck}"
+              style="font-size: var(--el-font-size-base); display: flex; align-items: center;" 
             >
               <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
               <span style="flex: 1">{{ item.label }}</span>
-              <span v-if="item.disableCheck" style="display: flex; align-items: center;" class="icon-hover">
-                <el-icon><View /></el-icon>
+              <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
+                <el-icon><view /></el-icon>
               </span>
-              <span v-else @click="handleChecked(item)" class="icon-hover" style="cursor: pointer; display: flex; align-items: center;">
-                <el-icon v-show="!item.checked"><Hide /></el-icon>
-                <el-icon v-show="item.checked"><View /></el-icon>
+              <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+                <el-icon v-show="!item.checked"><hide /></el-icon>
+                <el-icon v-show="item.checked"><view /></el-icon>
               </span>
             </div>
           </vab-draggable>
         </el-popover>
         <el-form inline :model="queryForm">
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border
-      class="noneHoverTable"
-      :header-cell-style="{ textAlign: 'center' }"
-      :cell-style="cellStyle"
       :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      class="noneHoverTable"
       :data="fakeData"
+      :header-cell-style="{ textAlign: 'center' }"
       @cell-click="handleCellClick"
     >
       <el-table-column
         v-for="(item, index) in checkList"
         :key="index"
+        :fixed="item.isFixed"
         :label="item.label"
+        :min-width="handleWidth(item)"
         :prop="item.prop"
         :width="item.width"
-        :minWidth="handleWidth(item)"
-        :fixed="item.isFixed"
       >
         <template #header>
           <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -110,9 +110,9 @@
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
-            <el-image :src="row.componentImage" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.componentImage)" >
+            <el-image fit="fill" :src="row.componentImage" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.componentImage)" >
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </span>
@@ -120,7 +120,7 @@
             {{ row.sku }}
             <div class="rate-wrapper">
               <span class="rate-value">{{ row.rate }}</span>
-              <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate" /></span>
+              <span><el-rate v-model="row.rate" class="custom-rate" disabled :void-icon="Star" /></span>
               <span class="rate-count">{{ 484 }}</span>
             </div>
           </span>
@@ -132,15 +132,15 @@
           <span v-if="item.label === '运营分类'">
             <el-select style="min-width: 100%;">
               <el-option 
-                v-for="item in opeClassOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                v-for="o in opeClassOption"
+                :key="o.value"
+                :label="o.label"
+                :value="o.value"
               />
             </el-select>
           </span>
           <span v-if="item.label === '停产'">
-            <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
+            <el-checkbox :false-value="0" :true-value="1" />
           </span>
          
           <span v-if="item.label === '运营备注'">
@@ -163,13 +163,13 @@
           </span>
           <span v-if="item.label === '季节系数'">
             <div style="width: 100%; height: 50px">
-              <VabTableChartLine :xAxisData="seasonalXData" :yAxisData="seasonalYData" />
+              <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="seasonalYData" />
             </div>
           </span>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -179,29 +179,29 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 筛选 -->
-    <VabFilterDialog 
+    <vab-filter-dialog 
       :filter-visible="filterVisible"
       @update-visible="handleCloseFilterDialog"
     />
     <!-- 运营分类 -->
-    <VabOperationalClassify 
-      :opeClassifyVisible="opeClassifyVisible"
-      @updateVisible="closeOpeClassify"
+    <vab-operational-classify 
+      :ope-classify-visible="opeClassifyVisible"
+      @update-visible="closeOpeClassify"
     />
      <!-- 关键词排名趋势 -->
-     <VabKeyWordRankTrend 
+     <vab-key-word-rank-trend 
       :key-word-trend-visible="keyWordTrendVisible"
       @update-visible="handleCloseKeyWordTrend"
     />
     <!-- 运营备注 -->
     <vab-dialog
-      title="运营备注"
       v-model="remarkVisible"
+      title="运营备注"
       width="20%"
     >
-      <el-input type="textarea" :rows="15" placeholder="请输入运营备注" />
+      <el-input placeholder="请输入运营备注" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="remarkVisible = false">取消</el-button>
         <el-button type="primary">确定</el-button>
@@ -209,10 +209,10 @@
     </vab-dialog>
      <!-- 季节系数 -->
      <vab-dialog
-      title="季节系数"
       v-model="seasonalVisible"
-      @open="handleSeasonalOpened"
+      title="季节系数"
       width="40%"
+      @open="handleSeasonalOpened"
     >
       <div ref="chartContainer1" style="width: 100%; height: 400px;"></div>
       <template #footer></template>
@@ -221,9 +221,9 @@
 </template>
 
 <script lang="ts" setup>
-import { Hide, Search, Star, View } from '@element-plus/icons-vue'
+import { Hide, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { currencySymbols, months, opeClassOption } from '../constantOption'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -586,7 +586,7 @@ const fakeData = ref<any>([
   {
     componentImage: 'https://picsum.photos/200/200',
     sku: 'SKU67890',
-    rate: 4.0,
+    rate: 4,
     asin: 'B08XYZ1234',
     pAsin: 'B08XYZ1234',
     saleTrendList: {
@@ -864,7 +864,7 @@ const handleSeasonalOpened = () => {
     }
   })
 }
-const handleCellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const handleCellClick = (row: any, column: any) => {
   const label = column.label
   if (label === '运营备注') {
     showRemark()
@@ -878,7 +878,7 @@ const imagePreviewList = ref<string[]>([])
 function getRowValue(row: any, label: string, labelMap: any): number {
   const key = labelMap.get(label)
   // 如果找不到 key，返回 0；如果 key 存在，但 row[key] 不是数字，也返回 0
-  return typeof key !== 'undefined' && typeof row[key] === 'number' ? row[key] : 0
+  return key !== undefined && typeof row[key] === 'number' ? row[key] : 0
 }
 function formatPercentage(value: number): string {
   const percentage = (value * 100).toFixed(2)  // 将小数转换为百分比，并保留两位小数
@@ -916,7 +916,7 @@ const handleSizeChange = (value: number) => {
 const showOpeClassify = () => {
   opeClassifyVisible.value = true
 }
-const closeOpeClassify = (value: boolean) => {
+const closeOpeClassify = () => {
   opeClassifyVisible.value = false
 }
 const handleChecked = (item: any) => {

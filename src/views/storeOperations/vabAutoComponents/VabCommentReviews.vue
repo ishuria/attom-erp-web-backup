@@ -5,7 +5,7 @@
         <vab-card class="comment-card comment-card-green" shadow="always">
           <div class="parting-line parting-line-green" ></div>
           <div class="comment-title">
-            <vab-icon icon="emotion-happy-line" class="title-icon title-icon-green" />
+            <vab-icon class="title-icon title-icon-green" icon="emotion-happy-line" />
             <span class="title-text title-text-green">好评</span>
             <span class="title-sub">（4-5星）</span>
           </div>
@@ -25,7 +25,7 @@
         <vab-card class="comment-card comment-card-orange" shadow="always">
           <div class="parting-line parting-line-orange" ></div>
           <div class="comment-title">
-            <vab-icon icon="emotion-normal-line" class="title-icon title-icon-orange" />
+            <vab-icon class="title-icon title-icon-orange" icon="emotion-normal-line" />
             <span class="title-text title-text-orange">中评</span>
             <span class="title-sub">（3星）</span>
           </div>
@@ -45,7 +45,7 @@
         <vab-card class="comment-card comment-card-red" shadow="always">
           <div class="parting-line parting-line-red" ></div>
           <div class="comment-title">
-            <vab-icon icon="emotion-unhappy-line" class="title-icon title-icon-red" />
+            <vab-icon class="title-icon title-icon-red" icon="emotion-unhappy-line" />
             <span class="title-text title-text-red">差评</span>
             <span class="title-sub">（1-2星）</span>
           </div>
@@ -66,32 +66,32 @@
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="4-5星" :name="0">
           <el-table border>
-            <el-table-column label="图片"></el-table-column>
-            <el-table-column label="ASIN"></el-table-column>
-            <el-table-column label="评级"></el-table-column>
-            <el-table-column label="点赞数"></el-table-column>
-            <el-table-column label="Review ID"></el-table-column>
-            <el-table-column label="评价内容"></el-table-column>
-            <el-table-column label="买家信息"></el-table-column>
-            <el-table-column label="国家"></el-table-column>
-            <el-table-column label="店铺"></el-table-column>
-            <el-table-column label="评价时间"></el-table-column>
-            <el-table-column label="更新时间"></el-table-column>
+            <el-table-column label="图片"/>
+            <el-table-column label="ASIN"/>
+            <el-table-column label="评级"/>
+            <el-table-column label="点赞数"/>
+            <el-table-column label="Review ID"/>
+            <el-table-column label="评价内容"/>
+            <el-table-column label="买家信息"/>
+            <el-table-column label="国家"/>
+            <el-table-column label="店铺"/>
+            <el-table-column label="评价时间"/>
+            <el-table-column label="更新时间"/>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="1-3星" :name="1">
           <el-table border>
-            <el-table-column label="图片"></el-table-column>
-            <el-table-column label="ASIN"></el-table-column>
-            <el-table-column label="评级"></el-table-column>
-            <el-table-column label="点赞数"></el-table-column>
-            <el-table-column label="Review ID"></el-table-column>
-            <el-table-column label="评价内容"></el-table-column>
-            <el-table-column label="买家信息"></el-table-column>
-            <el-table-column label="国家"></el-table-column>
-            <el-table-column label="店铺"></el-table-column>
-            <el-table-column label="评价时间"></el-table-column>
-            <el-table-column label="更新时间"></el-table-column>
+            <el-table-column label="图片"/>
+            <el-table-column label="ASIN"/>
+            <el-table-column label="评级"/>
+            <el-table-column label="点赞数"/>
+            <el-table-column label="Review ID"/>
+            <el-table-column label="评价内容"/>
+            <el-table-column label="买家信息"/>
+            <el-table-column label="国家"/>
+            <el-table-column label="店铺"/>
+            <el-table-column label="评价时间"/>
+            <el-table-column label="更新时间"/>
           </el-table>
         </el-tab-pane>
       </el-tabs>
@@ -102,7 +102,7 @@
             <el-input placeholder="请输入搜索关键词" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search"></el-button>
+            <el-button :icon="Search" type="primary"/>
           </el-form-item>
         </el-form>
       </div>

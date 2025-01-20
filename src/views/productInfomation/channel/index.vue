@@ -8,26 +8,26 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" />
+            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData"></el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
-      :data="list" 
-      class="noneHoverTable" 
-      border stripe 
-      :header-cell-style="{ textAlign: 'center' }" :cell-class-name="clearPadding"
+      border 
+      :cell-class-name="clearPadding" 
+      class="noneHoverTable" :data="list" 
+      :header-cell-style="{ textAlign: 'center' }" stripe
       @selection-change="setSelectedRows"
     >
-      <el-table-column type="selection" width="50" fixed="left" align="center"></el-table-column>
-      <el-table-column label="图片" prop="" width="75" fixed="left">
+      <el-table-column align="center" fixed="left" type="selection" width="50"/>
+      <el-table-column fixed="left" label="图片" prop="" width="75">
         <template #default="{ row }">
           <el-image :src="row.skuImgUrl" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
-            <template #error><el-icon></el-icon></template>
+            <template #error><el-icon/></template>
           </el-image>
         </template>
       </el-table-column>
@@ -36,21 +36,21 @@
           <span>{{ row.sku }}</span><br /><span>{{ row.productDesc }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="重量" prop="weight" min-width="90" align="center"></el-table-column>
-      <el-table-column label="货物类别" prop="merchandiseName" :width="flexColumnWidth(list, '货物类别', 'merchandiseName')"></el-table-column>
-      <el-table-column label="亚马逊美国" prop="amazonUsChannelName" :width="flexColumnWidth(list, '亚马逊美国', 'amazonUsChannelName')"></el-table-column>
-      <el-table-column label="亚马逊加拿大" prop="amazonCaChannelName" :width="flexColumnWidth(list, '亚马逊加拿大', 'amazonCaChannelName')"></el-table-column>
-      <el-table-column label="亚马逊德国" prop="amazonDeChannelName" :width="flexColumnWidth(list, '亚马逊德国', 'amazonDeChannelName')"></el-table-column>
-      <el-table-column label="亚马逊英国" prop="amazonUkChannelName" :width="flexColumnWidth(list, '亚马逊英国', 'amazonUkChannelName')"></el-table-column>
-      <el-table-column label="亚马逊日本" prop="amazonJapanChannelName" :width="flexColumnWidth(list, '亚马逊日本', 'amazonJapanChannelName')"></el-table-column>
-      <el-table-column label="沃尔玛美国" prop="walmartUsChannelName" :width="flexColumnWidth(list, '沃尔玛美国', 'walmartUsChannelName')"></el-table-column>
-      <el-table-column label="操作" width="90" fixed="right" align="center">
+      <el-table-column align="center" label="重量" min-width="90" prop="weight"/>
+      <el-table-column label="货物类别" prop="merchandiseName" :width="flexColumnWidth(list, '货物类别', 'merchandiseName')"/>
+      <el-table-column label="亚马逊美国" prop="amazonUsChannelName" :width="flexColumnWidth(list, '亚马逊美国', 'amazonUsChannelName')"/>
+      <el-table-column label="亚马逊加拿大" prop="amazonCaChannelName" :width="flexColumnWidth(list, '亚马逊加拿大', 'amazonCaChannelName')"/>
+      <el-table-column label="亚马逊德国" prop="amazonDeChannelName" :width="flexColumnWidth(list, '亚马逊德国', 'amazonDeChannelName')"/>
+      <el-table-column label="亚马逊英国" prop="amazonUkChannelName" :width="flexColumnWidth(list, '亚马逊英国', 'amazonUkChannelName')"/>
+      <el-table-column label="亚马逊日本" prop="amazonJapanChannelName" :width="flexColumnWidth(list, '亚马逊日本', 'amazonJapanChannelName')"/>
+      <el-table-column label="沃尔玛美国" prop="walmartUsChannelName" :width="flexColumnWidth(list, '沃尔玛美国', 'walmartUsChannelName')"/>
+      <el-table-column align="center" fixed="right" label="操作" width="90">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="handleModify(row)">修改</el-link>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -60,21 +60,21 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 修改 -->
     <vab-dialog
-      title="修改运输渠道"
       v-model="modifyVisible"
+      title="修改运输渠道"
       width="20%"
     >
-      <el-form ref="modifyFormRef" :model="modifyForm" label-position="top">
+      <el-form ref="modifyFormRef" label-position="top" :model="modifyForm">
         <el-form-item label="货物" prop="typeId">
           <el-select v-model="modifyForm.typeId" placeholder="请选择货物名" @change="handleGetChannel">
             <el-option 
               v-for="item in merchandiseTypeList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -104,8 +104,8 @@
     </vab-dialog>
     <!-- 货物类别 -->
     <vab-dialog
-      title="货物类别设定"
       v-model="categorySetUpVisible"
+      title="货物类别设定"
       width="60%"
     >
       <vab-query-form>
@@ -115,23 +115,23 @@
         <vab-query-form-right-panel>
           <el-form inline :model="setUpQueryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model="setUpQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="setUpQueryData" @input="setUpQueryData" />
+              <el-input v-model="setUpQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="setUpQueryData" @keyup.enter="setUpQueryData" />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :icon="Search" :loading="setUpListLoading" @click="setUpQueryData"></el-button>
+              <el-button :icon="Search" :loading="setUpListLoading" type="primary" @click="setUpQueryData"/>
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table :data="setUpList" border stripe>
-        <el-table-column label="货物" prop="merchandiseName" min-width=""></el-table-column>
-        <el-table-column label="亚马逊美国" prop="amazonUsChannelName" min-width=""></el-table-column>
-        <el-table-column label="亚马逊加拿大" prop="amazonCaChannelName" min-width=""></el-table-column>
-        <el-table-column label="亚马逊德国" prop="amazonDeChannelName" min-width=""></el-table-column>
-        <el-table-column label="亚马逊英国" prop="amazonUkChannelName" min-width=""></el-table-column>
-        <el-table-column label="亚马逊日本" prop="amazonJapanChannelName" min-width=""></el-table-column>
-        <el-table-column label="沃尔玛美国" prop="walmartUsChannelName" min-width=""></el-table-column>
-        <el-table-column label="操作" align="center" width="80">
+      <el-table border :data="setUpList" stripe>
+        <el-table-column label="货物" min-width="" prop="merchandiseName"/>
+        <el-table-column label="亚马逊美国" min-width="" prop="amazonUsChannelName"/>
+        <el-table-column label="亚马逊加拿大" min-width="" prop="amazonCaChannelName"/>
+        <el-table-column label="亚马逊德国" min-width="" prop="amazonDeChannelName"/>
+        <el-table-column label="亚马逊英国" min-width="" prop="amazonUkChannelName"/>
+        <el-table-column label="亚马逊日本" min-width="" prop="amazonJapanChannelName"/>
+        <el-table-column label="沃尔玛美国" min-width="" prop="walmartUsChannelName"/>
+        <el-table-column align="center" label="操作" width="80">
           <template #default="{ row }">
             <el-link type="primary" :underline="false" @click="handleModifySetUp(row)">修改</el-link>
           </template>
@@ -148,43 +148,43 @@
     </vab-dialog>
     <!-- 新增 -->
     <vab-dialog
+      v-model="addVisible"
       title="新增货物"
       width="20%"
-      v-model="addVisible"
       @close="closeAddDialog"
     >
-      <el-form ref="addFormRef" :rules="addFormRules" :model="addForm" label-position="top">
+      <el-form ref="addFormRef" label-position="top" :model="addForm" :rules="addFormRules">
         <el-form-item label="货物名" prop="merchandiseName">
           <el-input v-model="addForm.merchandiseName" />
         </el-form-item>
         <el-form-item label="亚马逊美国" prop="amazonUsChannelId">
           <el-select v-model="addForm.amazonUsChannelId" filterable placeholder="请选择亚马逊美国渠道">
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊加拿大" prop="amazonCaChannelId" >
           <el-select v-model="addForm.amazonCaChannelId" filterable placeholder="请选择亚马逊加拿大渠道">
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊德国" prop="amazonDeChannelId" >
           <el-select v-model="addForm.amazonDeChannelId" filterable placeholder="请选择亚马逊德国渠道">
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊英国" prop="amazonUkChannelId" >
           <el-select v-model="addForm.amazonUkChannelId" filterable placeholder="请选择亚马逊英国渠道">
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊日本" prop="amazonJapanChannelId" >
           <el-select v-model="addForm.amazonJapanChannelId" filterable placeholder="请选择亚马逊日本渠道">
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="沃尔玛美国" prop="walmartUsChannelId" >
           <el-select v-model="addForm.walmartUsChannelId" filterable placeholder="请选择沃尔玛美国渠道">
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -195,39 +195,39 @@
     </vab-dialog>
     <!-- 货物类别设定里的修改 -->
     <vab-dialog
+      v-model="setUpModifyVisible"
       title="修改货物类别"
       width="20%"
-      v-model="setUpModifyVisible"
     >
-      <el-form :model="setUpModifyForm" label-position="top">
+      <el-form label-position="top" :model="setUpModifyForm">
         <el-form-item label="亚马逊美国">
           <el-select v-model="setUpModifyForm.amazonUsChannelId" filterable>
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊加拿大">
           <el-select v-model="setUpModifyForm.amazonCaChannelId" filterable>
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊德国">
           <el-select v-model="setUpModifyForm.amazonDeChannelId" filterable>
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊英国">
           <el-select v-model="setUpModifyForm.amazonUkChannelId" filterable>
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="亚马逊日本">
           <el-select v-model="setUpModifyForm.amazonJapanChannelId" filterable>
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="沃尔玛美国">
           <el-select v-model="setUpModifyForm.walmartUsChannelId" filterable>
-            <el-option v-for="item in freightForwarderList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in freightForwarderList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -241,9 +241,9 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import { addMerchandise, getFreightForwarderQuery, getMerchandiseChannelDetail, getMerchandiseDetail, getMerchandiseList, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
-import { IGetMerchandiseList, IGetMerchandiseListReq, IGetMerchandiseTypeList, IGetSkuShippingChannelList } from '/@/type/productInformation/channelType'
+import type { IGetMerchandiseList, IGetMerchandiseListReq, IGetMerchandiseTypeList, IGetSkuShippingChannelList } from '/@/type/productInformation/channelType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -269,16 +269,10 @@ const setUpQueryForm = reactive<IGetMerchandiseListReq>({
 })
 // 判断是批量修改还是单个修改
 const isBatch = ref<boolean>(false)
-const modifyForm = reactive<any>({
-
-})
+const modifyForm = reactive<any>({})
 const modifyFormRef = ref<FormInstance>()
-const setUpModifyForm = reactive<any>({
-
-})
-const addForm = reactive<any>({
-
-})
+const setUpModifyForm = reactive<any>({})
+const addForm = reactive<any>({})
 const addFormRules = reactive<any>({
   merchandiseName: [{ required: true, message: '请输入货物类别名', trigger: 'blur' }],
   amazonUsChannelId: [{ required: true, message: '请选择亚马逊美国渠道', trigger: 'change' }],
@@ -302,13 +296,10 @@ const _id = ref<number>(0)
 
 const handleConfirmModify = async () => {
   if (isBatch.value) {
-    if (!modifyForm.typeId) {
-      $baseMessage('请先选择货物名', 'error')
-      return
-    } else {
+    if (modifyForm.typeId) {
       const ids = selectedRows.value.map((item) => item.id).join(',')
       const { data } = await updateBatchSkuShippingChannelMerchandise({
-        ids: ids,
+        ids,
         merchandiseId: modifyForm.typeId
       })
       if (data) {
@@ -316,6 +307,9 @@ const handleConfirmModify = async () => {
         modifyVisible.value = false
         fetchData()
       }
+    } else {
+      $baseMessage('请先选择货物名', 'error')
+      return
     }
   } else {
     const { data } = await updateSkuShippingChannelMerchandise({

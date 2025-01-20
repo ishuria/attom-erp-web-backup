@@ -1,8 +1,8 @@
 <template>
   <vab-dialog
+    v-model="dflag"
     title="关键词排名趋势"
     width="20%"
-    v-model="dflag"
     @close="handleClose"
   >
     <el-form label-position="top" >
@@ -16,16 +16,16 @@
   </vab-dialog>
   <!-- 关键词趋势图表 -->
   <vab-dialog
-    title="关键词排名趋势图"
     v-model="keywordTrendChartVisible"
+    title="关键词排名趋势图"
   >
     <vab-query-form>
       <vab-query-form-left-panel :span="6" >
         <el-select>
           <el-option 
             v-for="item in keyWordTrendOption"
-            :label="item.label"
             :key="item.value"
+            :label="item.label"
             :value="item.value"
           />
         </el-select>

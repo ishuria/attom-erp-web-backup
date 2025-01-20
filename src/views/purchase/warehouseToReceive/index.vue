@@ -6,8 +6,8 @@
         </vab-query-form-left-panel>
       </vab-query-form>
   
-      <el-table ref="tableRef" border stripe :data="list" @cell-click="changeInput" v-loading="listLoading" :cell-style="cellStyle">
-        <el-table-column align="center" label="仓库ID" width="80" prop="id" >
+      <el-table ref="tableRef" v-loading="listLoading" border :cell-style="cellStyle" :data="list" stripe @cell-click="changeInput">
+        <el-table-column align="center" label="仓库ID" prop="id" width="80" >
             <template #default="{ row }">
                 <span style="color: rgb(192, 192, 192)">{{ row.id }}</span>
             </template>
@@ -15,7 +15,7 @@
         <el-table-column align="center" label="仓库名称" min-width="200" prop="name" >
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.name" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input v-model="row.name" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.name }}</span>
             </template>
@@ -23,14 +23,14 @@
         <el-table-column align="center" label="仓库性质" prop="characteristic" width="120">
             <template #default="{ row }">
                 <el-select v-model="row.characteristic" style="min-width: 100%;" @change="handleCharacteristicChange(row)">
-                    <el-option v-for="item in warehouseOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <el-option v-for="item in warehouseOption" :key="item.value" :label="item.label" :value="item.value"/>
                 </el-select>
             </template>
         </el-table-column>
         <el-table-column align="center" label="仓库状态" min-width="100" prop="status">
           <template #default="{ row }">
             <div class="none">
-                <el-input type="text" v-model="row.status" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input v-model="row.status" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
             </div>
             <span>
               <el-tag :type="row.status === '正常' ? 'success' : 'danger'">
@@ -42,7 +42,7 @@
         <el-table-column align="center" label="仓库地址" min-width="230" prop="address" >
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.address" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input v-model="row.address" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.address }}</span>
             </template>
@@ -50,7 +50,7 @@
         <el-table-column align="center" label="联系人" min-width="100" prop="associates" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.associates" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input v-model="row.associates" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.associates }}</span>
             </template>
@@ -58,7 +58,7 @@
         <el-table-column align="center" label="电话" min-width="150" prop="phone" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.phone" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input v-model="row.phone" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.phone }}</span>
             </template>
@@ -66,7 +66,7 @@
         <el-table-column align="center" label="添加人员" min-width="120" prop="createUserName" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.createUserName" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input v-model="row.createUserName" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.createUserName }}</span>
             </template>
@@ -74,7 +74,7 @@
         <el-table-column align="center" label="添加日期" min-width="130" prop="createTime" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.createTime" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input v-model="row.createTime" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.createTime }}</span>
             </template>
@@ -82,7 +82,7 @@
         <el-table-column align="center" label="备注" min-width="160" prop="remarks" >
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.remarks" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                    <el-input v-model="row.remarks" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
                 </div>
                 <span>{{ row.remarks }}</span>
             </template>
@@ -100,24 +100,24 @@
       <!-- 收货仓库 -->
       <vab-dialog 
         v-model="repositoryAddVisible" 
-        title="收货仓库" 
-        width="600"
+        :before-close="handlerCloseDialog" 
         class="moldDialog"
-        :before-close="handlerCloseDialog"
+        title="收货仓库"
+        width="600"
       >
         <el-divider style="margin-top: 0;"/>
-        <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="margin: 0 auto; width: 70%;" :rules="rules">
+        <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" :rules="rules" style="margin: 0 auto; width: 70%;">
           <el-form-item label="仓库名称" prop="name">
             <el-input v-model="form.name" clearable />
           </el-form-item>
           <el-form-item label="仓库性质" prop="characteristic">
-            <el-select v-model="form.characteristic" style="min-width: 100%;" placeholder="请选择仓库性质" >
-                <el-option v-for="item in warehouseOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select v-model="form.characteristic" placeholder="请选择仓库性质" style="min-width: 100%;" >
+                <el-option v-for="item in warehouseOption" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
           <el-form-item label="仓库状态" prop="status">
-          <el-select v-model="form.status" style="min-width: 100%;" placeholder="请选择仓库状态">
-              <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select v-model="form.status" placeholder="请选择仓库状态" style="min-width: 100%;">
+              <el-option v-for="item in statusOption" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
           </el-form-item>
           <el-form-item label="仓库地址" prop="address">
@@ -130,7 +130,7 @@
             <el-input v-model="form.phone" clearable />
           </el-form-item>
           <el-form-item label="备注" prop="remarks">
-            <el-input type="textarea" v-model="form.remarks" clearable />
+            <el-input v-model="form.remarks" clearable type="textarea" />
           </el-form-item>
         </el-form>
         <template #footer>
@@ -145,22 +145,15 @@
   
 <script lang="ts" setup>
 import type { FormInstance, TableInstance } from 'element-plus'
-
-import { useRoutesStore } from '/@/store/modules/routes'
-
-import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { addPurchaseRepository, delPurchaseRepository, getPurchaseRepository, updatePurchaseRepository } from '/@/api/devlocal/purchase';
-import { IgetPurchaseRepository } from '/@/type/purchase/ourInformationType';
+import type { IgetPurchaseRepository } from '/@/type/purchase/ourInformationType';
 import { isEqual } from 'lodash'
   
 defineOptions({
     name: 'WarehouseToReceive',
 })
   
-const router = useRouter()
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const editRef = ref<any>(null)
 const tableRef = ref<TableInstance>()
 const list = ref<IgetPurchaseRepository[]>([])
 const listLoading = ref<boolean>(true)
@@ -233,7 +226,7 @@ const handleSubmit = async () => {
   })
 }
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
     
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];

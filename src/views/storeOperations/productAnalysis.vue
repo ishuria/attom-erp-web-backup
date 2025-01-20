@@ -1,6 +1,6 @@
 <template>
   <div class="default-table-detail-container">
-    <el-page-header :content="'商品分析和操作日志'" @back="goBack" ></el-page-header>
+    <el-page-header :content="'商品分析和操作日志'" @back="goBack" />
     <el-row :gutter="20">
       <!-- 左侧 -->
       <el-col :span="18">
@@ -21,7 +21,7 @@
             <el-tab-pane label="退货分析" :name="4">
               <vab-return-analysis />
             </el-tab-pane>
-            <el-tab-pane label="竞品" :name="5"></el-tab-pane>
+            <el-tab-pane label="竞品" :name="5"/>
           </el-tabs>
           <!-- tab右边的选项 -->
           <div style="position: absolute; top: 0px; right: -9px;">
@@ -30,15 +30,15 @@
                 <el-select>
                   <el-option 
                     v-for="item in levelOption"
+                    :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                    :key="item.value"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-radio-group>
-                  <el-radio value="0" style="margin-right: 10px;">同比</el-radio>
+                  <el-radio style="margin-right: 10px;" value="0">同比</el-radio>
                   <el-radio value="1">环比</el-radio>
                 </el-radio-group>
               </el-form-item>
@@ -46,20 +46,19 @@
                 <el-select>
                   <el-option 
                     v-for="item in dateOption"
+                    :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                    :key="item.value"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-date-picker
-                  type="daterange"
-                  start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   range-separator="至"
-                >
-                </el-date-picker>
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 1" inline>
@@ -67,9 +66,9 @@
                 <el-select>
                   <el-option 
                     v-for="item in adOption"
+                    :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                    :key="item.value"
                   />
                 </el-select>
               </el-form-item>
@@ -80,20 +79,19 @@
                 <el-select>
                   <el-option 
                     v-for="item in dayOption"
+                    :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                    :key="item.value"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-date-picker
-                  type="daterange"
-                  start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   range-separator="至"
-                >
-                </el-date-picker>
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 2" inline>
@@ -101,20 +99,19 @@
                 <el-select>
                   <el-option 
                     v-for="item in dateOption"
+                    :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                    :key="item.value"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-date-picker
-                  type="daterange"
-                  start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   range-separator="至"
-                >
-                </el-date-picker>
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 3" inline>
@@ -122,20 +119,19 @@
                 <el-select>
                   <el-option 
                     v-for="item in dateOption"
+                    :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                    :key="item.value"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-date-picker
-                  type="daterange"
-                  start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   range-separator="至"
-                >
-                </el-date-picker>
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 4" inline>
@@ -149,20 +145,19 @@
                 <el-select>
                   <el-option 
                     v-for="item in dayOption"
+                    :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                    :key="item.value"
                   />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-date-picker
-                  type="daterange"
-                  start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   range-separator="至"
-                >
-                </el-date-picker>
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
           </div>
@@ -176,14 +171,14 @@
               <!-- 左侧图片 -->
               <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
                 <el-image src="https://picsum.photos/200/200" style="border-radius: 10px; display: block;">
-                  <template #error><el-icon></el-icon></template>
+                  <template #error><el-icon/></template>
                 </el-image>
               </el-aside>
               <!-- 右侧内容 -->
               <el-main style="flex: 1; padding: 0; font-weight: 600;">
                 <!-- 标题和描述 -->
                 <div style="margin-bottom: 15px;">
-                  <el-link data-label="asin" class="custom-link" type="primary" style="font-weight: 600;">
+                  <el-link class="custom-link" data-label="asin" style="font-weight: 600;" type="primary">
                     {{ 'B08N5M7S6K' }}
                   </el-link>
                   <div style="margin-top: 6px;">NiHome-0451-MshRmLightSmallBRN</div>
@@ -191,13 +186,13 @@
                   <!-- 评分部分 -->
                   <div class="rate-wrapper">
                     <span class="rate-value">{{ 4.6 }}</span>
-                    <span><el-rate v-model="rate" :void-icon="Star" disabled class="custom-rate"  /></span>
+                    <span><el-rate v-model="rate" class="custom-rate" disabled :void-icon="Star"  /></span>
                     <span class="rate-count">{{ 484 }}</span>
                   </div>
                 </div>
                 <!-- 买家之声和缺陷率 -->
                 <div style="font-weight: 600;">
-                  <el-link type="primary" class="custom-link" style="margin-right: 10px; font-weight: 600;">买家之声</el-link>
+                  <el-link class="custom-link" style="margin-right: 10px; font-weight: 600;" type="primary">买家之声</el-link>
                   <el-tag class="customTag customTag-good" >
                     Good
                   </el-tag>
@@ -215,13 +210,13 @@
               <el-select style="width: 30%; margin-left: 10px;">
                 <el-option 
                   v-for="item in opeClassOption"
+                  :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                  :key="item.value"
                 />
               </el-select>
             </div>
-            <el-input type="textarea" resize="none" :rows="6" placeholder="请输入运营备注" style="width: 100%;" />
+            <el-input placeholder="请输入运营备注" resize="none" :rows="6" style="width: 100%;" type="textarea" />
           </div>
           <!-- 操作日志/事件清单 -->
           <div style="display: flex; flex-direction: column; flex: 1; height: 100%">
@@ -242,19 +237,19 @@
                     <el-select>
                       <el-option 
                         v-for="item in filterShowOption"
+                        :key="item.value"
                         :label="item.label"
                         :value="item.value"
-                        :key="item.value"
                       />
                     </el-select>
                   </el-form-item>
                 </el-form>
               </vab-query-form-right-panel>
             </vab-query-form>
-            <el-table :data="fakeData" border style="flex: 1;" stripe :header-cell-style="{ textAlign: 'center' }">
-              <el-table-column label="日期" prop="date" min-width="115" align="center"></el-table-column>
-              <el-table-column label="类型" prop="type" min-width="130"></el-table-column>
-              <el-table-column label="内容" prop="content" min-width="170">
+            <el-table border :data="fakeData" :header-cell-style="{ textAlign: 'center' }" stripe style="flex: 1;">
+              <el-table-column align="center" label="日期" min-width="115" prop="date"/>
+              <el-table-column label="类型" min-width="130" prop="type"/>
+              <el-table-column label="内容" min-width="170" prop="content">
                 <template #default="{ row }">
                   <el-link type="primary" @click="handleShowChange(row)">{{ row.content }}</el-link>
                 </template>
@@ -265,45 +260,45 @@
       </el-col>
     </el-row>
     <vab-dialog
-      title="标题变化详情"
       v-model="titleChangeVisible"
+      title="标题变化详情"
     >
-      <el-table :data="fakeChangeData" border>
+      <el-table border :data="fakeChangeData">
         <el-table-column label="变化类型">
           <template #default="{ row }">
             {{ '标题' }}
           </template>
         </el-table-column>
-        <el-table-column label="变化前"></el-table-column>
-        <el-table-column label="变化后"></el-table-column>
+        <el-table-column label="变化前"/>
+        <el-table-column label="变化后"/>
       </el-table>
     </vab-dialog>
     <vab-dialog
-      title="描述变化详情"
       v-model="descChangeVisible"
+      title="描述变化详情"
     >
-      <el-table :data="fakeChangeData" border>
+      <el-table border :data="fakeChangeData">
         <el-table-column label="变化类型">
           <template #default="{ row }">
             {{ '描述' }}
           </template>
         </el-table-column>
-        <el-table-column label="变化前"></el-table-column>
-        <el-table-column label="变化后"></el-table-column>
+        <el-table-column label="变化前"/>
+        <el-table-column label="变化后"/>
       </el-table>
     </vab-dialog>
     <vab-dialog
-      title="图片变化详情"
       v-model="imgChangeVisible"
+      title="图片变化详情"
     >
-      <el-table :data="fakeChangeData" border>
+      <el-table border :data="fakeChangeData">
         <el-table-column label="变化类型">
           <template #default="{ row }">
             {{ '图片' }}
           </template>
         </el-table-column>
-        <el-table-column label="变化前"></el-table-column>
-        <el-table-column label="变化后"></el-table-column>
+        <el-table-column label="变化前"/>
+        <el-table-column label="变化后"/>
       </el-table>
     </vab-dialog>
   </div>
@@ -311,9 +306,8 @@
 
 <script lang="ts" setup>
 import { Star } from '@element-plus/icons-vue'
-import { TabsPaneContext } from 'element-plus'
+import type { TabsPaneContext } from 'element-plus'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
-import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 
@@ -324,9 +318,7 @@ defineOptions({
 const route: any = useRoute()
 const router: any = useRouter()
 const tabsStore = useTabsStore()
-const { changeTabsMeta, delVisitedRoute } = tabsStore
-const routesStore = useRoutesStore()
-const { changeActiveMenu } = routesStore
+const { delVisitedRoute } = tabsStore
 
 const activeName = ref<number>(0)
 const titleChangeVisible = ref<boolean>(false)
@@ -357,17 +349,26 @@ const fakeData = [
   },
 ]
 const fakeChangeData = [
-  {
-
-  }
+  {}
 ]
 const handleShowChange = (row: any) => {
-  if (row.content === '标题修改') {
+  switch (row.content) {
+  case '标题修改': {
     titleChangeVisible.value = true
-  } else if (row.content === '描述修改') {
+  
+  break;
+  }
+  case '描述修改': {
     descChangeVisible.value = true
-  } else if (row.content === '图片修改') {
+  
+  break;
+  }
+  case '图片修改': {
     imgChangeVisible.value = true
+  
+  break;
+  }
+  // No default
   }
 }
 const goBack = async () => {

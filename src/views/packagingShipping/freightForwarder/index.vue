@@ -10,31 +10,31 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" :loading="listLoading" native-type="submit" @click="queryData"></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
-      border stripe
-      :header-cell-style="{ textAlign: 'center' }"
+      border class="noneHoveTable"
       :data="list"
-      class="noneHoveTable"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
     >
-      <el-table-column label="渠道全名" prop="channelName" align="left"></el-table-column>
-      <el-table-column label="当前价格" prop="price" align="center"></el-table-column>
-      <el-table-column label="近10次时效" prop="tenCountTime" align="center"></el-table-column>
-      <el-table-column label="名义时效" prop="nominalLimitation" align="center"></el-table-column>
-      <el-table-column label="累计发货次数" prop="cumulativeCount" align="center"></el-table-column>
-      <el-table-column label="安全天数" prop="safeDays" align="center">
+      <el-table-column align="left" label="渠道全名" prop="channelName"/>
+      <el-table-column align="center" label="当前价格" prop="price"/>
+      <el-table-column align="center" label="近10次时效" prop="tenCountTime"/>
+      <el-table-column align="center" label="名义时效" prop="nominalLimitation"/>
+      <el-table-column align="center" label="累计发货次数" prop="cumulativeCount"/>
+      <el-table-column align="center" label="安全天数" prop="safeDays">
         <template #default="{ row }">
           <el-input v-model="row.safeDays" class="input-center" @change="modifySafeDays(row)" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="360" fixed="right" align="center">
+      <el-table-column align="center" fixed="right" label="操作" width="360">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
           <el-link type="primary" :underline="false" @click="showCopy(row)">复制</el-link>
@@ -56,11 +56,11 @@
     />
     <!-- 货代费用名设定 -->
     <vab-dialog
-      title="货代费用名设定"
       v-model="feeNameSettingVisible"
-      width="40%"
-      top="3%"
       class="dialog"
+      title="货代费用名设定"
+      top="3%"
+      width="40%"
     >
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -68,9 +68,9 @@
           <el-select v-model="selectId" @change="fetchFeeNameSetting">
             <el-option 
               v-for="item in selectList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </vab-query-form-left-panel>
@@ -79,52 +79,52 @@
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table
-        border stripe
-        :header-cell-style="{ textAlign: 'center' }"
-        :data="feeNameSettingData"
+        border :cell-style="feeNameSettingCellStyle"
         class="feeNameSettingTable"
-        :cell-style="feeNameSettingCellStyle"
-        @cell-click="changeInputFeeSetting"
-         style="max-height: 70vh; overflow: auto;"
+        :data="feeNameSettingData"
+        :header-cell-style="{ textAlign: 'center' }"
+        stripe
+        style="max-height: 70vh; overflow: auto;"
+         @cell-click="changeInputFeeSetting"
       >
-        <el-table-column label="我们的费用名" prop="costName" min-width="180">
+        <el-table-column label="我们的费用名" min-width="180" prop="costName">
           <template #default="{ row }">
             <div v-if="row.status === 1" class="none">
-              <el-input v-model="row.costName" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)"/>
+              <el-input v-model="row.costName" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)"/>
             </div>
             <span>{{ row.costName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="货代账单费用名" prop="billCostName" min-width="180">
+        <el-table-column label="货代账单费用名" min-width="180" prop="billCostName">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.billCostName" @keypress.enter="clickCancel($event, row)" @blur="clickCancel($event, row)"/>
+              <el-input v-model="row.billCostName" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)"/>
             </div>
             <span>{{ row.billCostName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="合并报关后可合并" prop="bgStatus" min-width="100">
+        <el-table-column label="合并报关后可合并" min-width="100" prop="bgStatus">
           <template #header>
             合并报关<br>后可合并
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.bgStatus" :true-value="1" :false-value="0" @change="modifyFeeNameSetting(row)" />
+            <el-checkbox v-model="row.bgStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)" />
           </template>
         </el-table-column>
-        <el-table-column label="合并清关后可合并" prop="qgStatus" min-width="100">
+        <el-table-column label="合并清关后可合并" min-width="100" prop="qgStatus">
           <template #header>
             合并清关<br>后可合并
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.qgStatus" :true-value="1" :false-value="0" @change="modifyFeeNameSetting(row)"/>
+            <el-checkbox v-model="row.qgStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)"/>
           </template>
         </el-table-column>
-        <el-table-column label="运费核对默认展示" prop="costShowStatus" min-width="100">
+        <el-table-column label="运费核对默认展示" min-width="100" prop="costShowStatus">
           <template #header>
             运费核对<br>默认展示
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.costShowStatus" :true-value="1" :false-value="0" @change="modifyFeeNameSetting(row)"/>
+            <el-checkbox v-model="row.costShowStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)"/>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="80">
@@ -137,24 +137,24 @@
     </vab-dialog>
     <!-- 新增货代 -->
     <vab-dialog
+      v-model="addForwarderVisible"
       title="新增货代"
       width="20%"
-      v-model="addForwarderVisible"
       @close="closeAddForwarder"
     >
       <el-form 
         ref="addForwarderFormRef" 
-        :model="addForwarderForm" 
-        :rules="addForwarderRule"
-        label-width="auto" 
         label-position="right" 
+        label-width="auto"
+        :model="addForwarderForm" 
+        :rules="addForwarderRule" 
         style="margin-left: 20px; margin-right: 20px;"
       >
         <el-form-item label="货代公司全名" prop="fullName">
-          <el-input v-model="addForwarderForm.fullName" clearable></el-input>
+          <el-input v-model="addForwarderForm.fullName" clearable/>
         </el-form-item>
         <el-form-item label="货代简称" prop="abbreviation">
-          <el-input v-model="addForwarderForm.abbreviation" clearable></el-input>
+          <el-input v-model="addForwarderForm.abbreviation" clearable/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -164,16 +164,16 @@
     </vab-dialog>
     <!-- 货代清单 -->
     <vab-dialog
-      title="货代清单"
-      width="30%"
       v-model="forwarderListVisible"
       class="listTable"
+      title="货代清单"
+      width="30%"
     >
-      <el-table border stripe :header-cell-style="{ textAlign: 'center' }" @cell-click="changeInputForwarderList" :data="forwarderList" >
+      <el-table border :data="forwarderList" :header-cell-style="{ textAlign: 'center' }" stripe @cell-click="changeInputForwarderList" >
         <el-table-column label="货代公司全名" prop="fullName">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.fullName" @keypress.enter="clickCancelForwarderList($event, row)" @blur="clickCancelForwarderList($event, row)"/>
+              <el-input v-model="row.fullName" @blur="clickCancelForwarderList($event, row)" @keypress.enter="clickCancelForwarderList($event, row)"/>
             </div>
             <span>{{ row.fullName }}</span>
           </template>
@@ -181,7 +181,7 @@
         <el-table-column label="货代简称" prop="abbreviation">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.abbreviation" @keypress.enter="clickCancelForwarderList($event, row)" @blur="clickCancelForwarderList($event, row)"/>
+              <el-input v-model="row.abbreviation" @blur="clickCancelForwarderList($event, row)" @keypress.enter="clickCancelForwarderList($event, row)"/>
             </div>
             <span>{{ row.abbreviation }}</span>
           </template>
@@ -190,23 +190,23 @@
     </vab-dialog>
     <!-- 新增渠道 -->
     <vab-dialog
-      title="新增渠道"
-      width="38%"
       v-model="addNewChannelVisible"
-      top="5%"
       class="dialog"
+      title="新增渠道"
+      top="5%"
+      width="38%"
       @close="closeAddNewChannel"
     >
       <div style="max-height: 60vh; overflow: auto;">
-        <el-form ref="addNewChannelFormRef" :model="addNewChannelForm" label-width="auto" label-position="right" style="margin-left: 10px; margin-right: 10px;">
+        <el-form ref="addNewChannelFormRef" label-position="right" label-width="auto" :model="addNewChannelForm" style="margin-left: 10px; margin-right: 10px;">
           <el-form-item label="渠道名">
             <div style="display: flex; gap: 1%; align-items: center;">
               <el-select v-model="addNewChannelForm.freightForwarderId" placeholder="货代简称" style="flex: 1">
                 <el-option 
                   v-for="item in selectList"
+                  :key="item.id"
                   :label="item.label"
                   :value="item.id"
-                  :key="item.id"
                 />
               </el-select>
               <span>-</span>
@@ -299,9 +299,9 @@
             <el-select v-model="addNewChannelForm.includeTariffs">
               <el-option 
                 v-for="item in includeTariffOption"
+                :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                :key="item.value"
               />
             </el-select>
           </el-form-item>
@@ -314,22 +314,22 @@
     </vab-dialog>
     <!-- 修改or复制 -->
     <vab-dialog
-      :title="modifyOrCopy === 'modify' ? '修改' : '复制'"
-      width="38%"
       v-model="modifyOrCopyVisible"
-      top="5%"
       class="addNewChannel"
+      :title="modifyOrCopy === 'modify' ? '修改' : '复制'"
+      top="5%"
+      width="38%"
     >
       <div style="max-height: 60vh; overflow: auto;">
-        <el-form :model="updateForm" label-width="auto" label-position="right" style="margin-left: 10px; margin-right: 10px;">
+        <el-form label-position="right" label-width="auto" :model="updateForm" style="margin-left: 10px; margin-right: 10px;">
           <el-form-item label="渠道名">
             <div style="display: flex; gap: 1%; align-items: center;">
               <el-select v-model="updateForm.freightForwarderId" placeholder="货代简称" style="flex: 1">
                 <el-option 
                   v-for="item in selectList"
+                  :key="item.id"
                   :label="item.label"
                   :value="item.id"
-                  :key="item.id"
                 />
               </el-select>
               <span>-</span>
@@ -401,13 +401,13 @@
             <el-input v-model="updateForm.customsClearanceFee" clearable />
           </el-form-item>
           <!-- 新加货币选项 -->
-          <el-form-item label="货币" prop="customsClearanceCurrency" v-if="modifyOrCopy === 'modify'"> 
+          <el-form-item v-if="modifyOrCopy === 'modify'" label="货币" prop="customsClearanceCurrency"> 
             <el-select v-model="updateForm.customsClearanceCurrency" placeholder="请选择货币" >
               <el-option 
                 v-for="item in currencyNumList"
+                :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                :key="item.value"
               />
             </el-select>
           </el-form-item>
@@ -433,9 +433,9 @@
             <el-select v-model="updateForm.includeTariffs">
               <el-option 
                 v-for="item in includeTariffOption"
+                :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                :key="item.value"
               />
             </el-select>
           </el-form-item>
@@ -451,11 +451,11 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance, FormRules } from 'element-plus'
-import { CSSProperties } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import type { CSSProperties } from 'vue'
 import { includeTariffOption } from '../../packagingShipping/constantOption'
 import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
-import { IAddForwarder, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
+import type { IAddForwarder, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 const currencyNumList = [
@@ -603,7 +603,7 @@ const confirmAddNewChannel = async () => {
 // 获取修改的列表
 const fetchUpdateList = async (id: number) => {
   const { data } = await getUpdateForwarderList({
-    id: id
+    id
   })
   Object.assign(updateForm, data)
 }
@@ -681,7 +681,7 @@ let copyRow: any
 /**
  * @description 货代费用名设定表格的点击编辑
  */
-const changeInputFeeSetting = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInputFeeSetting = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -740,7 +740,7 @@ const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
 /**
  * @description 货代清单表格的点击编辑
  */
-const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {

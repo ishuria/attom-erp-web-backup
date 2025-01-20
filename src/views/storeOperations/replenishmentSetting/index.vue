@@ -5,20 +5,20 @@
         <el-space>
           <span>站点</span>
           <el-select v-model="site" placeholder="请选择站点" @change="handleChangeSite">
-            <el-option v-for="item in siteList" :key="item.id" :value="item.id" :label="item.label"></el-option>
+            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id"/>
           </el-select>
           <el-button type="primary" @click="handleUpdate">批量修改</el-button>
         </el-space>
       </vab-query-form-left-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" border stripe :data="list" @cell-click="tableInputChange" @selection-change="setSelectRows" v-loading="listLoading" class="noneHoveTable">
-      <el-table-column type="selection" width="38" fixed/>
-      <el-table-column align="center" label="图片" width="100" prop="skuUrl" >
+    <el-table ref="tableRef" v-loading="listLoading" border class="noneHoveTable" :data="list" stripe @cell-click="tableInputChange" @selection-change="setSelectRows">
+      <el-table-column fixed type="selection" width="38"/>
+      <el-table-column align="center" label="图片" prop="skuUrl" width="100" >
         <template #default="{ row }">
-          <el-image style="width: 75px; height: 75px" :src="row.skuUrl" fit="fill" data-img="img" >
+          <el-image data-img="img" fit="fill" :src="row.skuUrl" style="width: 75px; height: 75px" >
             <template #error>
-              <el-icon></el-icon>
+              <el-icon/>
             </template>
           </el-image>
         </template>
@@ -37,21 +37,21 @@
     <!-- 批量修改 -->
     <vab-dialog 
       v-model="updateVisible" 
-      :close-on-click-modal="false" 
-      title="批量修改" 
+      :before-close="handlerCloseDialog" 
+      class="moldDialog" 
+      :close-on-click-modal="false"
+      title="批量修改"
       width="500"
-      class="moldDialog"
-      :before-close="handlerCloseDialog"
     >
       <el-divider style="margin-top: 0;"/>
-      <el-form ref="formRef" :rules="formRules" class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;">
+      <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" :rules="formRules" style="max-width: 340px; margin: 0 auto;">
         <el-form-item label="产品分类" prop="kindId">
           <el-select v-model="form.kindId" placeholder="请选择产品类别">
             <el-option 
               v-for="item in merchandiseTypeList"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </el-form-item>
@@ -68,19 +68,19 @@
       </template>
     </vab-dialog>
     <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
 </template>
   
 <script lang="ts" setup>
-import { FormRules, type FormInstance, type TableInstance } from 'element-plus'
+import type { FormInstance, FormRules, TableInstance } from 'element-plus';
+
 import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
-import { useRoutesStore } from '/@/store/modules/routes'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
-    name: 'replenishmentSetting',
+    name: 'ReplenishmentSetting',
 })
 
 const siteList = ref<{id: number, label: string}[]>([])
@@ -90,10 +90,7 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
 })
-const router = useRouter()
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const editRef = ref<any>(null)
+
 const tableRef = ref<TableInstance>()
 const site = ref<number>(0)
 const list = ref<any>([])
@@ -130,7 +127,7 @@ const handlerCloseDialog = () => {
 }
 const merchandiseTypeList = ref<{id: number, label: string}[]>([])
 const handleUpdate = async () => {
-  if(selectRows.value.length !== 0) {
+  if(selectRows.value.length > 0) {
     updateVisible.value = true
     formRef.value?.resetFields()
     const { data } = await getSeasonalCoefficientSite({ site: site.value })
@@ -161,7 +158,7 @@ const handleSubmit = async () => {
   
 }
 // table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){

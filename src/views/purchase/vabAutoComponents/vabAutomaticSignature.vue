@@ -1,10 +1,10 @@
 <template>
   <vab-dialog 
     v-model="dflag" 
-    title="自动签收设定" 
-    width="30%"
+    :before-close="handlerCloseDialog" 
     class="moldDialog"
-    :before-close="handlerCloseDialog"
+    title="自动签收设定"
+    width="30%"
   >
     <el-divider style="margin-top: 0; margin-bottom: 20px"/>
     <div id="table-height-container">
@@ -15,11 +15,12 @@
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                @click="queryData"></el-button>
+              <el-button
+:icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"/>
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
@@ -27,14 +28,14 @@
 
       <el-table 
         ref="tableRef" 
-        stripe border 
+        border :cell-style="cellStyle" 
         :data="list"
         :header-cell-style="{ 'text-align': 'center' }"
+        stripe
         @cell-click="changeInput"
-        :cell-style="cellStyle"
       >
-        <el-table-column label="零件ID" min-width="100" prop="existingPartsId"></el-table-column>
-        <el-table-column label="零件" min-width="350" prop="componentName"></el-table-column>
+        <el-table-column label="零件ID" min-width="100" prop="existingPartsId"/>
+        <el-table-column label="零件" min-width="350" prop="componentName"/>
         <el-table-column label="操作" min-width="100">
           <template #default="{ row, $index }">
             <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
@@ -55,20 +56,20 @@
     </div>
     <vab-dialog
       v-model="addSignatureSettingsVisible"
-      width="20%"
-      title="新增零件"
       :before-close="closeAddDialog"
+      title="新增零件"
+      width="20%"
     >
       <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" style="margin: 0">
         <el-form-item label="零件名" prop="componentName">
           <el-select
             v-model="addForm.componentName"
-            filterable
-            remote
             default-first-option
-            placeholder="点击输入和搜索"
-            :remote-method="remotePeopleMethod"
+            filterable
             :loading="skuLoading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remotePeopleMethod"
           >
             <el-option
               v-for="item in skuOptions"
@@ -89,12 +90,11 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance, type TableInstance } from 'element-plus'
-import { delProductQualityInspection } from '/@/api/devlocal/productInformation'
+import type { FormInstance, TableInstance } from 'element-plus';
 import { addSignatureSettings, delSignatureSettings, getSearchComponent, getSignatureSettingList } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
-  name: 'vabAutomaticSignature'
+  name: 'VabAutomaticSignature'
 })
 let props = defineProps<{
   automaticSignatureVisible: boolean
@@ -169,7 +169,6 @@ const addFormRules = reactive<any>({
 })
 const tableRef = ref<TableInstance>()
 
-const route: any = useRoute()
 const emit = defineEmits(['update:automaticSignatureVisible', 'update:tableValue'])
 
 const handlerCloseDialog = () => {
@@ -211,39 +210,11 @@ const handleDel = async (row: any, index: number) => {
     console.error(error)
   }
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+const cellStyle = ():any => {
   return { 'text-align': 'center'}
 }
 
-
-
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-
-}
-
-// 删除
-const handleDelQualityInspection = async (row: any, index: number) => {
-  try {
-      $baseConfirm('确定要删除本条信息吗? ', "系统提示", async () => {
-          try {
-              const { data } = await delProductQualityInspection({ id: row.id! })
-              if (data) {
-                  list.value.splice(index, 1);
-                  // fetchData()
-                  $baseMessage("删除成功！","success","hey")
-              } else {
-                  $baseMessage("删除失败，请重试。", "error", "hey");
-              }
-          } catch (delError) {
-              console.error(delError);
-              $baseMessage("删除操作失败，请重试。", "error", "hey");
-          }
-      });
-  } catch(e){
-      console.log(e as Error)
- }
-}
-
+const changeInput = async () => {}
 
 /**
 * 获取自动签收设定数据

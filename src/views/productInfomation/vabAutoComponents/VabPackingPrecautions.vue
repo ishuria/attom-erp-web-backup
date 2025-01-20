@@ -1,10 +1,10 @@
 <template>
     <vab-dialog 
         v-model="dflag" 
-        title="打包注意事项" 
-        width="70%"
+        :before-close="handlerCloseDialog" 
         class="moldDialog"
-        :before-close="handlerCloseDialog"
+        title="打包注意事项"
+        width="70%"
     >
         <el-divider style="margin-top: 0; margin-bottom: 20px"/>
         <div id="table-height-container">
@@ -16,39 +16,39 @@
 
         <el-table 
             ref="tableRef" 
-            stripe border 
+            v-loading="listLoading" border 
+            :cell-style="cellStyle"
             :data="list"
             :header-cell-style="{ 'text-align': 'center' }"
+            stripe
             @cell-click="changeInput"
-            v-loading="listLoading"
-            :cell-style="cellStyle"
         >
-            <el-table-column label="修改日期" width="140" prop="createTime" align="center">
+            <el-table-column align="center" label="修改日期" prop="createTime" width="140">
                 <template #default="{ row }">
                     <span>{{ row.createTime.split(' ')[0] }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="需质检" width="90" prop="status" align="center">
+            <el-table-column align="center" label="需质检" prop="status" width="90">
                 <template #default="{ row }">
-                    <el-checkbox v-model="row.status" :true-value="1" :false-value="0" class="custom-checkbox" @change="handleStatusChange(row)"></el-checkbox>
+                    <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
                 </template>
             </el-table-column>
-            <el-table-column label="检查类型" min-width="40" align="center">
+            <el-table-column align="center" label="检查类型" min-width="40">
                 <template #default="{ row }">
                         <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
                             <el-option
                                 v-for="item in checkTypeList"
+                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                :key="item.value"
-                            ></el-option>
+                            />
                         </el-select>
                 </template>
             </el-table-column>
             <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.packagePrecautions" @keyup.enter="clickQualityInspectionCancle($event, row)" @blur="clickQualityInspectionCancle($event, row)" />
+                        <el-input v-model="row.packagePrecautions" type="text" @blur="clickQualityInspectionCancle($event, row)" @keyup.enter="clickQualityInspectionCancle($event, row)" />
                     </div>
                     <span>{{ row.packagePrecautions }}</span>
                 </template>
@@ -76,12 +76,12 @@
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
-import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils';
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils';
 import { checkTypeList } from '../../newProductDevelopment/indexCommon'
 import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation';
 import { isEqual } from 'lodash'
 defineOptions({
-    name: 'vabPackingPrecautions'
+    name: 'VabPackingPrecautions'
 })
 let props = defineProps<{
     packingPrecautionsVisible: boolean
@@ -149,7 +149,7 @@ const handleAdd = async () => {
     }
 }
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
     
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -207,8 +207,8 @@ const handleDelQualityInspection = async (row: any, index: number) => {
                 $baseMessage("删除操作失败，请重试。", "error", "hey");
             }
         });
-    } catch(e){
-        console.log(e as Error)
+    } catch(error){
+        console.log(error as Error)
    }
 }
 

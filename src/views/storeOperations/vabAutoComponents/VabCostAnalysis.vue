@@ -2,27 +2,27 @@
   <div class="cost-container">
     <el-row :gutter="10">
       <el-col :span="8">
-        <vab-card title="支出构成" class="card1" style="height: 400px;">
+        <vab-card class="card1" style="height: 400px;" title="支出构成">
           <el-row>
             <el-col :span="9">
               <!-- <span style="font-weight: 600;">支出构成</span> -->
               <div ref="chartContainer1" style="width: 100%; height: 345px"></div>
             </el-col>
             <el-col :span="15">
-              <el-table :data="percentageData" max-height="325" :header-cell-style="headerCellStyle">
-                <el-table-column label="项目" prop="name" fixed="left" min-width="170">
+              <el-table :data="percentageData" :header-cell-style="headerCellStyle" max-height="325">
+                <el-table-column fixed="left" label="项目" min-width="170" prop="name">
                   <template #default="{ row, $index }">
                     <span class="table-item" :style="{ '--dot-color': colorList[$index] }">
                       {{ row.name }}
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column label="金额" prop="value" min-width="60">
+                <el-table-column label="金额" min-width="60" prop="value">
                   <template #default="{ row }">
                     ${{ row.value }}
                   </template>
                 </el-table-column>
-                <el-table-column label="占比" prop="percentage" min-width="90" align="right"></el-table-column>
+                <el-table-column align="right" label="占比" min-width="90" prop="percentage"/>
               </el-table>
             </el-col>
           </el-row>
@@ -42,21 +42,21 @@
             </el-col>
             <el-col :span="15">
              
-              <el-table :data="percentageAgeData" max-height="325" :header-cell-style="headerCellStyle" show-summary>
-                <el-table-column label="项目" prop="name" min-width="110">
+              <el-table :data="percentageAgeData" :header-cell-style="headerCellStyle" max-height="325" show-summary>
+                <el-table-column label="项目" min-width="110" prop="name">
                   <template #default="{ row, $index }">
                     <span class="table-item" :style="{ '--dot-color': storageAgeColorList[$index] }">
                       {{ row.name }}
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column v-if="ageRadio === 0" label="FBA仓" prop="value" min-width="90" align="right"></el-table-column>
-                <el-table-column v-if="ageRadio === 1" label="FBA仓" prop="percentage" min-width="90" align="right">
+                <el-table-column v-if="ageRadio === 0" align="right" label="FBA仓" min-width="90" prop="value"/>
+                <el-table-column v-if="ageRadio === 1" align="right" label="FBA仓" min-width="90" prop="percentage">
                   <template #default="{ row }">
                     {{ row.percentage }}%
                   </template>
                 </el-table-column>
-                <el-table-column label="预估下月费用" min-width="120"></el-table-column>
+                <el-table-column label="预估下月费用" min-width="120"/>
               </el-table>
             </el-col>
           </el-row>
@@ -72,35 +72,35 @@
             <el-main style="flex: 1; padding: 0;">
               <div class="grid-container" >
                 <div class="grid-item">
-                  <el-tooltip :disabled="isOverflow" content="亚马逊产品包装尺寸" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-title">亚马逊产品包装尺寸</div>
+                  <el-tooltip content="亚马逊产品包装尺寸" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">亚马逊产品包装尺寸</div>
                   </el-tooltip>
-                  <el-tooltip :disabled="isOverflow" content="20×10×2.0 cm" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-value">20×10×2.0 cm</div>
+                  <el-tooltip content="20×10×2.0 cm" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">20×10×2.0 cm</div>
                   </el-tooltip>
                 </div>
                 <div class="grid-item" data-label="amazon">
-                  <el-tooltip :disabled="isOverflow" content="自量产品包装尺寸" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-title">自量产品包装尺寸</div>
+                  <el-tooltip content="自量产品包装尺寸" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">自量产品包装尺寸</div>
                   </el-tooltip>
-                  <el-tooltip :disabled="isOverflow" content="20×10×1.0 cm" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-value">20×10×1.0 cm</div>
+                  <el-tooltip content="20×10×1.0 cm" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">20×10×1.0 cm</div>
                   </el-tooltip>
                 </div>
                 <div class="grid-item">
-                  <el-tooltip :disabled="isOverflow" content="重量 (自量/亚马逊)" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-title">重量 (自量/亚马逊)</div>
+                  <el-tooltip content="重量 (自量/亚马逊)" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">重量 (自量/亚马逊)</div>
                   </el-tooltip>
-                  <el-tooltip :disabled="isOverflow" content="200g / 300g" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-value">200g / 300g</div>
+                  <el-tooltip content="200g / 300g" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">200g / 300g</div>
                   </el-tooltip>
                 </div>
                 <div class="grid-item" data-label="fba">
-                  <el-tooltip :disabled="isOverflow" content="FBA (自量/亚马逊)" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-title">FBA (自量/亚马逊)</div>
+                  <el-tooltip content="FBA (自量/亚马逊)" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">FBA (自量/亚马逊)</div>
                   </el-tooltip>
-                  <el-tooltip :disabled="isOverflow" content="$5.4 / $4.9" placement="top" effect="dark" popper-style="font-size: var(--el-font-size-base)">
-                    <div @mouseenter="tooltipIsDisHandler($event)" class="grid-value"><span class="grid-value-green">$5.4</span> / <span>$4.9</span></div>
+                  <el-tooltip content="$5.4 / $4.9" :disabled="isOverflow" effect="dark" placement="top" popper-style="font-size: var(--el-font-size-base)">
+                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)"><span class="grid-value-green">$5.4</span> / <span>$4.9</span></div>
                   </el-tooltip>
                 </div>
               </div>
@@ -108,7 +108,7 @@
             <!-- 右侧图片 -->
             <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
               <el-image src="https://picsum.photos/200/200" style="border-radius: 10px; display: block;">
-                <template #error><el-icon></el-icon></template>
+                <template #error><el-icon/></template>
               </el-image>
             </el-aside>
           </el-container>
@@ -116,27 +116,27 @@
         <vab-card class="card4" style="height: 240px; position: relative;">
           <div ref="chartContainer3" style="width: 100%; height: 240px;"></div>
           <div v-if="!dateRangeSelectVisible" style="position: absolute; top: 5px; right: 5px">
-            <el-select v-model="card4Select" @change="handleCard4Select" placeholder="请选择日期" style="max-width: 5em;" size="default">
+            <el-select v-model="card4Select" placeholder="请选择日期" size="default" style="max-width: 5em;" @change="handleCard4Select">
               <el-option 
                 v-for="item in card4Option"
+                :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                :key="item.value"
               />
             </el-select>
           </div>
           <div v-if="dateRangeSelectVisible" style="position: absolute; top: 5px; right: 5px; display: flex; align-items: center;">
             <el-date-picker
               v-model="card4DateRange"
-              type="daterange"
-              :editable="false"
               :clearable="false"
-              value-format="YYYY-MM-DD"
-              @change="handleCard4DateSelect"
+              :editable="false"
               size="default"
               style="max-width: 13em;"
-            ></el-date-picker>
-            <el-icon class="custom-cancel" @click="handleClickCancel" color="#999"><CircleClose /></el-icon>
+              type="daterange"
+              value-format="YYYY-MM-DD"
+              @change="handleCard4DateSelect"
+            />
+            <el-icon class="custom-cancel" color="#999" @click="handleClickCancel"><circle-close /></el-icon>
           </div>
         </vab-card>
         
@@ -154,18 +154,18 @@
         </el-form>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-table :data="fakeData" @cell-click="cellClick" border :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle">
-      <el-table-column label="日期" prop="createTime" min-width="115"></el-table-column>
-      <el-table-column label="站点" prop="" min-width="135">
+    <el-table border :cell-style="cellStyle" :data="fakeData" :header-cell-style="{ textAlign: 'center' }" @cell-click="cellClick">
+      <el-table-column label="日期" min-width="115" prop="createTime"/>
+      <el-table-column label="站点" min-width="135" prop="">
         <template #default="{ row }">
-          <el-select v-model="row.site" placeholder="请选择站点" @change="" style="min-width: 100%;">
-            <el-option v-for="item in siteList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;">
+            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="外汇币种" prop="" min-width="100"></el-table-column>
-      <el-table-column label="汇率" prop="foreignExchange" min-width="70"></el-table-column>
-      <el-table-column label="产品价格¥" prop="price" min-width="110">
+      <el-table-column label="外汇币种" min-width="100" prop=""/>
+      <el-table-column label="汇率" min-width="70" prop="foreignExchange"/>
+      <el-table-column label="产品价格¥" min-width="110" prop="price">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -173,7 +173,7 @@
           <span>{{ row.price != null ? '￥' + row.price : ''}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="长(cm)" prop="length" min-width="80">
+      <el-table-column label="长(cm)" min-width="80" prop="length">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -181,7 +181,7 @@
           <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="宽(cm)" prop="width" min-width="80">
+      <el-table-column label="宽(cm)" min-width="80" prop="width">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -189,7 +189,7 @@
           <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="高(cm)" prop="height" min-width="80">
+      <el-table-column label="高(cm)" min-width="80" prop="height">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -197,7 +197,7 @@
           <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="重量(g)" prop="weight" min-width="80">
+      <el-table-column label="重量(g)" min-width="80" prop="weight">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -205,20 +205,20 @@
           <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下一档位" prop="" min-width="100"></el-table-column>
-      <el-table-column label="尺寸来源" prop="" min-width="120">
-        <template #default="{ row }">
+      <el-table-column label="下一档位" min-width="100" prop=""/>
+      <el-table-column label="尺寸来源" min-width="120" prop="">
+        <template #default="">
           <el-select style="min-width: 100%;">
             <el-option 
               v-for="item in sizeSourceOption"
+              :key="item.value"
               :label="item.label"
               :value="item.value"
-              :key="item.value"
             />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="尾程" prop="lastMile" min-width="80">
+      <el-table-column label="尾程" min-width="80" prop="lastMile">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -226,7 +226,7 @@
           <span>{{ row.lastMile != null ? row.symbol + row.lastMile : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="打包¥" prop="packaging" min-width="100">
+      <el-table-column label="打包¥" min-width="100" prop="packaging">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -234,19 +234,19 @@
           <span>{{ row.packaging != null ? '￥' + row.packaging : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头程¥" prop="firstMile" min-width="100">
+      <el-table-column label="头程¥" min-width="100" prop="firstMile">
         <template #default="{ row }">
           {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="头程渠道" prop="firstMileChannel" min-width="150">
+      <el-table-column label="头程渠道" min-width="150" prop="firstMileChannel">
         <template #default="{ row }">
-          <el-select v-model="row.firstMileChannel" style="min-width: 100%;" placeholder="请选择头程渠道">
-            <el-option v-for="item in channelList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="row.firstMileChannel" placeholder="请选择头程渠道" style="min-width: 100%;">
+            <el-option v-for="item in channelList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="售价" prop="sellingPrice" min-width="100">
+      <el-table-column label="售价" min-width="100" prop="sellingPrice">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -254,7 +254,7 @@
           <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="毛利率" prop="grossMarginRate" min-width="100">
+      <el-table-column label="毛利率" min-width="100" prop="grossMarginRate">
         <template #default="{ row }">
           <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
           <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
@@ -262,8 +262,8 @@
           <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
         </template>
       </el-table-column>
-      <el-table-column label="ROI" prop="roi" min-width="90"></el-table-column>
-      <el-table-column label="重量系数" prop="weightCoefficient" min-width="100">
+      <el-table-column label="ROI" min-width="90" prop="roi"/>
+      <el-table-column label="重量系数" min-width="100" prop="weightCoefficient">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -271,7 +271,7 @@
           <span>{{ row.weightCoefficient }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="体积系数" prop="volumeCoefficient" min-width="100">
+      <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -279,7 +279,7 @@
           <span>{{ row.volumeCoefficient }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="关税%" prop="tariff" min-width="100">
+      <el-table-column label="关税%" min-width="100" prop="tariff">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -287,7 +287,7 @@
           <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="平台佣金" prop="platformCommission" min-width="100">
+      <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.platformCommission" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -295,7 +295,7 @@
           <span>{{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="仓储费2个月" prop="storageFee" min-width="140">
+      <el-table-column label="仓储费2个月" min-width="140" prop="storageFee">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.storageFee" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -304,7 +304,7 @@
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
-        <template #default="{ row }">
+        <template #default="">
           <el-dropdown>
             <el-button text type="primary">
               逆算
@@ -317,10 +317,10 @@
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false">逆算</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="">
+                <el-dropdown-item >
                   <el-link type="primary" :underline="false" >复制</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="">
+                <el-dropdown-item>
                   <el-link type="danger" :underline="false" >删除</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -335,9 +335,9 @@
 
 <script lang="ts" setup>
 import * as echarts from 'echarts'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
-import { CircleClose, ArrowDown } from '@element-plus/icons-vue'
+import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { getChannelList } from '~/src/api/devlocal/encasement'
@@ -412,7 +412,7 @@ const formattedTotalValue = totalValue.toLocaleString('en-US', { style: 'currenc
 // 计算占比
 const percentageData = data1.value.map(item => ({
   ...item,
-  percentage: ((item.value / totalValue) * 100).toFixed(2) + '%'
+  percentage: `${((item.value / totalValue) * 100).toFixed(2)  }%`
 }))
 let percentageAgeData: any[]
 let copyRow: any
@@ -425,9 +425,7 @@ const handleCard4Select = () => {
     updateChart3()
   }
 }
-const handleCard4DateSelect = () => {
-  
-}
+const handleCard4DateSelect = () => {}
 const handleClickCancel = () => {
   card4Select.value = 0
   dateRangeSelectVisible.value = false
@@ -757,7 +755,7 @@ const updateChart3 = () => {
   chartInstance3?.setOption(option3.value, true)
 }
 
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -787,11 +785,9 @@ const clickCancel = async (event: Event, value: any) => {
   if (isEqual(copyRow, value)) {
     return
   }
-  if (event.type === 'blur') {
-    
-  }
+  if (event.type === 'blur') { /* empty */ }
 }
-const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const headerCellStyle = (): CSSProperties => {
   return {
     backgroundColor: '#f2f5fa',
     textAlign: 'center'

@@ -9,13 +9,13 @@
                 <vab-query-form-left-panel :span="12">
                   <el-form inline>
                     <el-form-item label="运营">
-                      <el-select style="max-width: 2em"></el-select>
+                      <el-select style="max-width: 2em"/>
                     </el-form-item>
                     <el-form-item label="开发人">
-                      <el-select style="max-width: 2em"></el-select>
+                      <el-select style="max-width: 2em"/>
                     </el-form-item>
                     <el-form-item label="站点">
-                      <el-select style="max-width: 3em"></el-select>
+                      <el-select style="max-width: 3em"/>
                     </el-form-item>
                   </el-form>
                 </vab-query-form-left-panel>
@@ -23,29 +23,28 @@
                   <el-form inline>
                     <el-form-item>
                       <el-radio-group>
-                        <el-radio value="0" style="margin-right: 10px;">同比</el-radio>
-                        <el-radio value="1" style="margin-right: 10px;">环比</el-radio>
+                        <el-radio style="margin-right: 10px;" value="0">同比</el-radio>
+                        <el-radio style="margin-right: 10px;" value="1">环比</el-radio>
                       </el-radio-group>
                     </el-form-item>
                     <el-form-item >
                       <el-select style="max-width: 3em; margin-right: 10px;">
                         <el-option 
                           v-for="item in dateOption"
+                          :key="item.value"
                           :label="item.label"
                           :value="item.value"
-                          :key="item.value"
                         />
                       </el-select>
                     </el-form-item>
                     <el-form-item>
                       <el-date-picker
-                        type="daterange"
-                        start-placeholder="开始日期"
                         end-placeholder="结束日期"
                         range-separator="至"
+                        start-placeholder="开始日期"
                         style="max-width: 18em;"
-                      >
-                      </el-date-picker>
+                        type="daterange"
+                      />
                     </el-form-item>
                   </el-form>
                 </vab-query-form-right-panel>
@@ -259,18 +258,18 @@
             </vab-card>
           </div>
           <div style="flex: 1; display: flex; gap: 10px;">
-            <vab-card class="card2-title" title="产品成本波动监控" style="flex: 1; margin-bottom: 0; display: flex; flex-direction: column;">
-              <el-table border :data="fakeTableData3" style="flex: 1" size="small">
-                <el-table-column label="日期" prop="date" min-width="115"></el-table-column>
-                <el-table-column label="SKU" prop="sku" min-width="160">
+            <vab-card class="card2-title" style="flex: 1; margin-bottom: 0; display: flex; flex-direction: column;" title="产品成本波动监控">
+              <el-table border :data="fakeTableData3" size="small" style="flex: 1">
+                <el-table-column label="日期" min-width="115" prop="date"/>
+                <el-table-column label="SKU" min-width="160" prop="sku">
                   <template #default="{ row }">
                     <span v-html="row.sku"></span>
                   </template>
                 </el-table-column>
-                <el-table-column label="价格变动" prop="price" min-width="110"></el-table-column>
-                <el-table-column label="毛利率变动" prop="profit" min-width="110"></el-table-column>
-                <el-table-column label="类型" prop="type" min-width="125"></el-table-column>
-                <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
+                <el-table-column label="价格变动" min-width="110" prop="price"/>
+                <el-table-column label="毛利率变动" min-width="110" prop="profit"/>
+                <el-table-column label="类型" min-width="125" prop="type"/>
+                <el-table label="站点" min-width="110" prop="site"/>
               </el-table>
               <vab-pagination 
                 :current-page="queryForm2.pageNo"
@@ -282,28 +281,28 @@
               />
             </vab-card>
             <vab-card class="card3-title" style="flex: 1; margin-bottom: 0; display: flex; flex-direction: column;" title="即将断货产品预警">
-              <el-table :data="fakeTableData3" border style="flex: 1" size="small">
-                <el-table-column label="SKU" prop="sku" min-width="150">
+              <el-table border :data="fakeTableData3" size="small" style="flex: 1">
+                <el-table-column label="SKU" min-width="150" prop="sku">
                   <template #default="{ row }">
                     <span v-html="row.sku"></span>
                   </template>
                 </el-table-column>
-                <el-table-column label="可售天数" prop="availableDays" min-width="100" align="center"></el-table-column>
-                <el-table-column label="预计断货" prop="expectedOutOfStock" min-width="100" align="center"></el-table-column>
-                <el-table-column label="月销量" prop="monthlySales" min-width="90" align="center"></el-table-column>
-                <el-table-column label="剩余库存" prop="remainingStock" min-width="100" align="center"></el-table-column>
-                <el-table-column label="广告" prop="advertisement" min-width="70" align="center">
+                <el-table-column align="center" label="可售天数" min-width="100" prop="availableDays"/>
+                <el-table-column align="center" label="预计断货" min-width="100" prop="expectedOutOfStock"/>
+                <el-table-column align="center" label="月销量" min-width="90" prop="monthlySales"/>
+                <el-table-column align="center" label="剩余库存" min-width="100" prop="remainingStock"/>
+                <el-table-column align="center" label="广告" min-width="70" prop="advertisement">
                   <template #default="{ row }">
                     <el-tag v-if="row.advertisement === '开'" type="danger">{{ row.advertisement }}</el-tag>
                     <el-tag v-if="row.advertisement === '关'" type="success">{{ row.advertisement }}</el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column label="当前毛利" prop="currentProfit" min-width="100" align="center">
+                <el-table-column align="center" label="当前毛利" min-width="100" prop="currentProfit">
                   <template #default="{ row }">
                     <span :class="{'green': row.currentProfit >= 25, 'red': row.currentProfit < 25}">{{ row.currentProfit }}%</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="站点" prop="site" min-width="110" align="center"></el-table-column>
+                <el-table-column align="center" label="站点" min-width="110" prop="site"/>
               </el-table>
               <vab-pagination 
                 :current-page="queryForm1.pageNo"
@@ -319,7 +318,7 @@
       <el-col :span="6" style="height: 100%">
         <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
           <div style="height: 500px; margin-bottom: 10px;">
-            <vab-card class="card4" title="库龄" style="height: 100%;">
+            <vab-card class="card4" style="height: 100%;" title="库龄">
               <div style="text-align: right; margin-top: 25px;">
                 <el-radio-group v-model="ageRadio" @change="handleSwitchBar">
                   <el-radio-button label="数量" :value="0" />
@@ -331,21 +330,21 @@
                   <div ref="chartContainer2" style="width: 100%; height: 300px; margin-top: 30px"></div>
                 </el-col>
                 <el-col :span="15">
-                  <el-table :data="percentageAgeData" style="margin-top: 30px" max-height="280" :header-cell-style="headerCellStyle" show-summary>
-                    <el-table-column label="项目" prop="name" min-width="110">
+                  <el-table :data="percentageAgeData" :header-cell-style="headerCellStyle" max-height="280" show-summary style="margin-top: 30px">
+                    <el-table-column label="项目" min-width="110" prop="name">
                       <template #default="{ row, $index }">
                         <span class="table-item" :style="{ '--dot-color': storageAgeColorList[$index] }">
                           {{ row.name }}
                         </span>
                       </template>
                     </el-table-column>
-                    <el-table-column v-if="ageRadio === 0" label="FBA仓" prop="value" min-width="90" align="right"></el-table-column>
-                    <el-table-column v-if="ageRadio === 1" label="FBA仓" prop="percentage" min-width="90" align="right">
+                    <el-table-column v-if="ageRadio === 0" align="right" label="FBA仓" min-width="90" prop="value"/>
+                    <el-table-column v-if="ageRadio === 1" align="right" label="FBA仓" min-width="90" prop="percentage">
                       <template #default="{ row }">
                         {{ row.percentage }}%
                       </template>
                     </el-table-column>
-                    <el-table-column label="预估下月费用" min-width="120"></el-table-column>
+                    <el-table-column label="预估下月费用" min-width="120"/>
                   </el-table>
                 </el-col>
               </el-row>
@@ -353,15 +352,15 @@
           </div>
           <div style="flex: 1;">
             <vab-card class="card1-title" style="height: 100%; display: flex; flex-direction: column;" title="断货后即将上架产品">
-              <el-table border :data="fakeData1" style="flex: 1" size="small">
-                <el-table-column label="SKU" prop="sku" min-width="170"></el-table-column>
-                <el-table-column label="断货前月销量" prop="sales" min-width="130"></el-table-column>
-                <el-table-column label="最近入库" prop="recently" min-width="100">
+              <el-table border :data="fakeData1" size="small" style="flex: 1">
+                <el-table-column label="SKU" min-width="170" prop="sku"/>
+                <el-table-column label="断货前月销量" min-width="130" prop="sales"/>
+                <el-table-column label="最近入库" min-width="100" prop="recently">
                   <template #default="{ row }">
                     <span :class="{ 'green': row.recently === '已入库' }">{{ row.recently }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="站点" prop="site" min-width="110"></el-table-column>
+                <el-table label="站点" min-width="110" prop="site"/>
               </el-table>
             </vab-card>
           </div>
@@ -374,24 +373,23 @@
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { dateOption, storageAgeColorList } from '../constantOption'
 import { getWeekOfYear } from '/@/utils/dateUtils'
-import { VueDraggable } from 'vue-draggable-plus'
 
 defineOptions({
-  name: 'operationsDashboard'
+  name: 'OperationsDashboard'
 })
 
-const leftCards = [
-  { id: 1, title: "库龄", class: "card4" },
-  { id: 2, title: "断货后即将上架产品", class: "card1-title" }
-]
+// const leftCards = [
+//   { id: 1, title: "库龄", class: "card4" },
+//   { id: 2, title: "断货后即将上架产品", class: "card1-title" }
+// ]
 
-const rightCards = [
-  { id: 3, title: "产品成本波动监控", class: "card2-title" },
-  { id: 4, title: "即将断货产品预警", class: "card3-title" }
-]
+// const rightCards = [
+//   { id: 3, title: "产品成本波动监控", class: "card2-title" },
+//   { id: 4, title: "即将断货产品预警", class: "card3-title" }
+// ]
 const amount = 42442.71
 // 控制数字显示为美元形式
 const formattedAmount = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
@@ -623,7 +621,7 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
   const totalSales: Record<string, number> = {} // ∑总销售额
   const netProfitData: Record<string, number> = {} // ∑净利润
   const refundPrice: Record<string, number> = {} // ∑退款金额
-  const adSalesData: Record<string, number > = { } // ∑广告销售额
+  const adSalesData: Record<string, number > = {} // ∑广告销售额
   
   // 根据时间粒度选择分组方式
   const getTimeKey = (date: string): string => {
@@ -636,7 +634,8 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
   data.forEach((item) => {
     const timeKey = getTimeKey(item.date) // 获取分组键（周或月）
 
-    if (type === 'tacos') {
+    switch (type) {
+    case 'tacos': {
       // 处理TACOS类型，计算 ∑广告花费 / ∑总销售额
       if (!groupedData[timeKey]) {
         adCostData[timeKey] = 0
@@ -645,7 +644,10 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
       adCostData[timeKey] += item.adCostData
       totalSales[timeKey] += item.totalSales
       groupedData[timeKey] = formatNumber(adCostData[timeKey] / totalSales[timeKey] * 100) 
-    } else if (type === 'netProfitMargin') {
+    
+    break;
+    }
+    case 'netProfitMargin': {
       // 处理净利润率类型，计算 ∑净利润 / ∑总销售额
       if (!groupedData[timeKey]) {
         netProfitData[timeKey] = 0
@@ -654,7 +656,10 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
       netProfitData[timeKey] += item.netProfitData
       totalSales[timeKey] += item.totalSales
       groupedData[timeKey] = formatNumber(netProfitData[timeKey] / totalSales[timeKey] * 100) 
-    } else if (type === 'refundRate') {
+    
+    break;
+    }
+    case 'refundRate': {
       // 处理退款率类型，计算 ∑退款金额 / ∑总销售额
       if (!groupedData[timeKey]) {
         refundPrice[timeKey] = 0
@@ -663,7 +668,10 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
       refundPrice[timeKey] += item.refundPrice
       totalSales[timeKey] += item.totalSales
       groupedData[timeKey] = formatNumber(refundPrice[timeKey] / totalSales[timeKey] * 100)
-    } else if (type === 'acos') {
+    
+    break;
+    }
+    case 'acos': {
       // ∑广告花费 / ∑总广告销售额
       if (!groupedData[timeKey]) {
         adCostData[timeKey] = 0
@@ -672,7 +680,10 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
       adCostData[timeKey] += item.adCostData
       adSalesData[timeKey] += item.adSalesData
       groupedData[timeKey] = formatNumber(adCostData[timeKey] / adSalesData[timeKey]  * 100)
-    } else if (type === 'adSalesRatio') {
+    
+    break;
+    }
+    case 'adSalesRatio': {
       // 总广告销售额 / ∑总销售额
       if (!groupedData[timeKey]) {
         totalSales[timeKey] = 0
@@ -681,12 +692,16 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
       totalSales[timeKey] += item.totalSales
       adSalesData[timeKey] += item.adSalesData
       groupedData[timeKey] = formatNumber(totalSales[timeKey] / adSalesData[timeKey]  * 100)
-    } else {
+    
+    break;
+    }
+    default: {
       // 其他类型，累加值
       if (!groupedData[timeKey]) {
         groupedData[timeKey] = 0
       }
       groupedData[timeKey] += item[type]
+    }
     }
   })
 
@@ -714,12 +729,23 @@ const getMonthlyData = (data: IData[], type: IYProp): any[] => {
 const handleSwitchTime = () => {
  
   let salesData: any[] = []
-  if (timeRadio.value === 'day') {
+  switch (timeRadio.value) {
+  case 'day': {
     salesData = data1.value
-  } else if (timeRadio.value === 'week') {
+  
+  break;
+  }
+  case 'week': {
     salesData = getWeeklyData(data1.value, 'sales')
-  } else if (timeRadio.value === 'month') {
+  
+  break;
+  }
+  case 'month': {
     salesData = getMonthlyData(data1.value, 'sales')
+  
+  break;
+  }
+  // No default
   }
   option1.value.xAxis.data = salesData.map((item: any) => item.date)
   option1.value.series[0].data = salesData.map((d: any) => d.sales)
@@ -733,12 +759,23 @@ const updateYAxisData = (data: any[]) => {
     if (index !== 0) {
       const prop = nameMapProp[s.name]
       let processedData: any[] = []
-      if (timeRadio.value === 'day') {
+      switch (timeRadio.value) {
+      case 'day': {
         processedData = data
-      } else if (timeRadio.value === 'week') {
+      
+      break;
+      }
+      case 'week': {
         processedData = getWeeklyData(data, prop)
-      } else if (timeRadio.value === 'month') {
+      
+      break;
+      }
+      case 'month': {
         processedData = getMonthlyData(data, prop)
+      
+      break;
+      }
+      // No default
       }
       s.data = processedData.map((d: any) => d[prop]) 
     }
@@ -817,20 +854,28 @@ const getYAxisFormat = (groupName: string) => {
 }
 // 获取对应的颜色
 function getYAxisColor() {
-  if (clickCard.value === 'card1') {
+  switch (clickCard.value) {
+  case 'card1': {
     return '#ff99cc'
-  } else if (clickCard.value === 'card2') {
+  }
+  case 'card2': {
     return '#E6A23C'
-  } else if (clickCard.value === 'card3') {
+  }
+  case 'card3': {
     return '#34a9a9'
-  } else if (clickCard.value === 'card4') {
+  }
+  case 'card4': {
     return '#e36060'
-  } else if (clickCard.value === 'card5') {
+  }
+  case 'card5': {
     return '#8a7ae3'
-  } else if (clickCard.value === 'card6') {
+  }
+  case 'card6': {
     return '#ffd700'
-  } else {
+  }
+  default: {
     return '#999'
+  }
   }
 }
 
@@ -852,7 +897,10 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     let yAxisIndex: number
 
     // 1. 处理是否共用y轴还是添加新的y轴
-    if (!yAxisMapping.has(dataGroup)) {
+    if (yAxisMapping.has(dataGroup)) {
+      // 如果该数据组已有 Y 轴，复用它
+      yAxisIndex = yAxisMapping.get(dataGroup)
+    } else {
       // 如果该数据组没有对应的 Y 轴，动态添加
       if (currentYAxisCount >= 4) {
         $baseMessage('最多只能支持三个额外的 Y 轴，请重新选择', 'error')
@@ -893,9 +941,6 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 
       currentYAxisCount++
       updateYAxisOffsets()
-    } else {
-      // 如果该数据组已有 Y 轴，复用它
-      yAxisIndex = yAxisMapping.get(dataGroup)
     }
 
     // 添加新 series
@@ -919,7 +964,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     })
   } else {
     // 取消选中时，移除选中的字段
-    const index = selectedItems.findIndex((item: string) => item === dataName)
+    const index = selectedItems.indexOf(dataName)
     if (index !== -1) {
       selectedItems.splice(index, 1)
     }
@@ -960,13 +1005,13 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 }
 // 处理选中的值重复问题
 const handleUnique = (cardText: string) => {
-  const index = selectedItems.findIndex((item: string) => item === cardText)
-  if (index !== -1) {
-    $baseMessage('选中的值不能重复, 请重新选择', 'error')
-    return false
-  } else {
+  const index = selectedItems.indexOf(cardText)
+  if (index === -1) {
     selectedItems.push(cardText)
     return true
+  } else {
+    $baseMessage('选中的值不能重复, 请重新选择', 'error')
+    return false
   }
 }
 const handleCard1Click = () => {
@@ -1115,8 +1160,6 @@ const initChart1 = () => {
             value = `$${value}`
           } else if (groupName === 'percent1' || groupName === 'percent2') {
             value = `${value}%`
-          } else {
-            value = value
           }
           return `<div style="display: flex;align-items:center;">
             ${item.marker}
@@ -1365,7 +1408,7 @@ const handleSizeChange2 = (value: number) => {
   queryForm2.pageSize = value
   // fetchData()
 }
-const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const headerCellStyle = (): CSSProperties => {
   return {
     backgroundColor: '#f2f5fa',
     textAlign: 'center'

@@ -13,7 +13,7 @@
         <el-row :gutter="50" style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
           <!-- 左侧表单 -->
           <el-col :span="12" style="display: flex; justify-content: flex-end;">
-            <el-form class="custom-form" :model="form" label-position="right" label-width="10.5em" style="width: 80%; padding-right: 50px">
+            <el-form class="custom-form" label-position="right" label-width="10.5em" :model="form" style="width: 80%; padding-right: 50px">
               <el-form-item label="目标客群" prop="targetAudience">
                 <el-input v-model="form.targetAudience" disabled />
               </el-form-item>
@@ -36,25 +36,25 @@
                 <el-input v-model="form.brand" disabled />
               </el-form-item>
               <el-form-item label="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;功能/卖点/5点(重要性从高到低排列)" prop="sellingPointContent">
-                <el-input type="textarea" v-model="form.sellingPointContent" :rows="15" resize="none" disabled />
+                <el-input v-model="form.sellingPointContent" disabled resize="none" :rows="15" type="textarea" />
               </el-form-item>
             </el-form>
           </el-col>
 
           <!-- 右侧表单 -->
           <el-col :span="12" style="padding-right: 250px; display: flex; flex-direction: column; justify-content: flex-start; margin-top: 25px;">
-            <el-form ref="formRef" :model="form" :rules="formRules" class="custom-form" label-position="right" label-width="10.5em" style="width: 100%; height: 100%;">
+            <el-form ref="formRef" class="custom-form" label-position="right" label-width="10.5em" :model="form" :rules="formRules" style="width: 100%; height: 100%;">
               <el-form-item label="标题1" prop="title1">
-                <el-input type="textarea" v-model="form.title1" :rows="4" resize="none" @change="setLocalStorageData" />
+                <el-input v-model="form.title1" resize="none" :rows="4" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="标题2" prop="title2">
-                <el-input type="textarea" v-model="form.title2" :rows="4" resize="none" @change="setLocalStorageData" />
+                <el-input v-model="form.title2" resize="none" :rows="4" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="链接关键词(译文)" prop="linkKeywordsTs">
-                <el-input type="textarea" v-model="form.linkKeywordsTs" :rows="4" resize="none" @change="setLocalStorageData" />
+                <el-input v-model="form.linkKeywordsTs" resize="none" :rows="4" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="功能/卖点/5点(译文)" prop="sellingPointContentTs">
-                <el-input type="textarea" v-model="form.sellingPointContentTs" :rows="15"  style="flex-grow: 1;" resize="none" @change="setLocalStorageData" />
+                <el-input v-model="form.sellingPointContentTs" resize="none" :rows="15"  style="flex-grow: 1;" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
             </el-form>
             <!-- 确定和取消按钮 -->
@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts" setup>
-import { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { getArtDesignCopywriting, saveArtDesignCopywriting } from '/@/api/devlocal/imageTask'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
@@ -88,10 +88,8 @@ const sku = ref<string>('')
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
-const { delVisitedRoute, changeTabsMeta } = tabsStore
-const form = reactive<any>({
-
-})
+const { delVisitedRoute } = tabsStore
+const form = reactive<any>({})
 const formRules = reactive<FormRules>({
   title1: [{ required: true, message: '请填写标题1', trigger: 'blur' }],
   title2: [{ required: true, message: '请填写标题2', trigger: 'blur' }],

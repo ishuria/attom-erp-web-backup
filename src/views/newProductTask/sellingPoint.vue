@@ -12,15 +12,15 @@
         <el-row :gutter="30" style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
           <!-- 左侧表单 -->
           <el-col :span="10" style="display: flex; flex-direction: column;">
-            <el-form ref="formRef1" class="custom-form" :rules="formRules1" :model="form" label-position="right" label-width="15em" style="width: 100%; padding-right: 80px">
+            <el-form ref="formRef1" class="custom-form" label-position="right" label-width="15em" :model="form" :rules="formRules1" style="width: 100%; padding-right: 80px">
               <el-form-item label="产品差异化程度" prop="productDifferences">
                 <el-select v-model="form.productDifferences" @change="setLocalStorageData">
-                  <el-option v-for="item in differencesOption" :label="item.label" :value="item.id" :key="item.id" />
+                  <el-option v-for="item in differencesOption" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="选品理由一句话概括" prop="summary">
                 <el-select v-model="form.summary" @change="setLocalStorageData">
-                  <el-option v-for="item in reasonsOption" :label="item.label" :value="item.id" :key="item.id" />
+                  <el-option v-for="item in reasonsOption" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="与竞品相比差异化的地方" prop="competitiveProductDifferences">
@@ -36,19 +36,19 @@
                 <el-input v-model="form.material" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="本产品知名品牌" prop="brand">
-                <el-input placeholder="链接文案需要规避的品牌词" v-model="form.brand" clearable @change="setLocalStorageData" />
+                <el-input v-model="form.brand" clearable placeholder="链接文案需要规避的品牌词" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="竞品ASIN" prop="competitiveAsin">
                 <el-input v-model="form.competitiveAsin" clearable @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="同赛道ASIN" prop="sameTrackAsin">
-                <el-input v-model="form.sameTrackAsin" placeholder="提供至少2个产品价格定位和类型与我们一致的ASIN：上线时间长卖得好的成熟ASIN，以及新品卖得好的" clearable @change="setLocalStorageData" />
+                <el-input v-model="form.sameTrackAsin" clearable placeholder="提供至少2个产品价格定位和类型与我们一致的ASIN：上线时间长卖得好的成熟ASIN，以及新品卖得好的" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="链接关键词" prop="linkKeywords">
                 <el-input v-model="form.linkKeywords" clearable @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="图片配色，风格和道具选用要求拍摄注意事项" prop="precautions">
-                <el-input v-model="form.precautions" type="textarea" :rows="8" resize="none" @change="setLocalStorageData" />
+                <el-input v-model="form.precautions" resize="none" :rows="8" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
             </el-form>
           </el-col>
@@ -57,14 +57,14 @@
           <el-col :span="10" style="padding: 45px; display: flex; justify-content: flex-start;"> 
             <el-form :model="form" style="width: 100%" >
               <el-form-item 
+                label="功能/卖点/5点&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;(重要性从高到低排列)"
+                label-width="11.5em" 
+                prop="sellingPointContent" 
                 :rules="[
                   { required: true, message: '请输入功能/卖点/5点(重要性从高到低排列)', trigger: 'blur' }
                 ]"
-                label-width="11.5em" 
-                label="功能/卖点/5点&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;(重要性从高到低排列)" 
-                prop="sellingPointContent"
               >
-                <el-input v-model="form.sellingPointContent" type="textarea" :rows="32"  style="flex-grow: 1;" resize="none" @change="setLocalStorageData" />
+                <el-input v-model="form.sellingPointContent" resize="none" :rows="32"  style="flex-grow: 1;" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
             </el-form>
           
@@ -80,21 +80,21 @@
       </div>
     </div>
     <vab-dialog
+      v-model="selectSKUVisible"
       title="从其他SKU导入"
       width="20%"
-      v-model="selectSKUVisible"
       @close="closeSelectedSKU"
     >
       <el-form style="margin: 0 10px;">
         <el-form-item label="SKU" >
           <el-select
             v-model="selectedSKUForm.sku"
-            filterable
-            remote
             default-first-option
-            placeholder="点击输入和搜索"
-            :remote-method="remoteSKUMethod"
+            filterable
             :loading="skuLoading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remoteSKUMethod"
           >
             <el-option
               v-for="item in skuOptions"
@@ -118,10 +118,10 @@
 <script lang="ts" setup>
 import { confirmOtherSkuArtDesignSellingPoint, getArtDesignSelectionReasons, getArtDesignSellingPoint, getArtDesignSellingPointDropdownList, getBatchArtDesignSellingPoint, saveArtDesignSellingPoint, saveBatchArtDesignSellingPoint } from '/@/api/devlocal/imageTask'
 
-import { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSellingPoint } from '/@/type/listingTask/imageTaskType'
+import type { IGetSellingPoint } from '/@/type/listingTask/imageTaskType'
 import { handleActivePath } from '/@/utils/routes'
 
 defineOptions({
@@ -131,7 +131,7 @@ const sku = ref<string>('')
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
-const { delVisitedRoute, changeTabsMeta } = tabsStore
+const { delVisitedRoute } = tabsStore
 const selectSKUVisible = ref<boolean>(false)
 const selectedSKUForm = reactive<{ sku: string }>({
   sku: ''
@@ -191,6 +191,7 @@ const handleConfirmSave = async () => {
   formRef1.value?.validate(async (isValid) => {
     if (isValid) {
       if (route.query.sku) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { summary, ...filteredForm } = form
         const { data } = await saveArtDesignSellingPoint({
           ...filteredForm,
@@ -203,6 +204,7 @@ const handleConfirmSave = async () => {
           goBack()
         }
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { summary, ...filteredForm } = form
         const { data } = await saveBatchArtDesignSellingPoint({
           ...filteredForm,

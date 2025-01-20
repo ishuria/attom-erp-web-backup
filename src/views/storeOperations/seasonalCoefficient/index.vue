@@ -7,9 +7,9 @@
             <el-select v-model="queryForm.siteId" placeholder="请选择站点" @change="handleChangeSite">
               <el-option 
                 v-for="item in siteList"
+                :key="item.id"
                 :label="item.label"
                 :value="item.id"
-                :key="item.id"
               />
             </el-select>
           </el-form-item>
@@ -23,145 +23,145 @@
       </vab-query-form-left-panel>
     </vab-query-form>
     <el-table 
-      :data="list"  
-      class="noneHoverTable" 
-      border stripe :header-cell-style="{ textAlign: 'center' }" :cellStyle="cellStyle" 
+      border  
+      :cell-style="cellStyle" 
+      class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe 
       @cell-click="changeInput"
     >
       <el-table-column label="品名" >
-        <el-table-column label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')"></el-table-column>
+        <el-table-column label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')"/>
       </el-table-column>
       <el-table-column label="1月">
         <el-table-column label="实际值" prop="janActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.janActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.janActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.janActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="janReference"></el-table-column>
+        <el-table-column label="参考值" prop="janReference"/>
       </el-table-column>
       <el-table-column label="2月">
         <el-table-column label="实际值" prop="febActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.febActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.febActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.febActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="febReference"></el-table-column>
+        <el-table-column label="参考值" prop="febReference"/>
       </el-table-column>
       <el-table-column label="3月">
         <el-table-column label="实际值" prop="marActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.marActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.marActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.marActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="marReference"></el-table-column>
+        <el-table-column label="参考值" prop="marReference"/>
       </el-table-column>
       <el-table-column label="4月">
         <el-table-column label="实际值" prop="aprActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.aprActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.aprActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.aprActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="aprReference"></el-table-column>
+        <el-table-column label="参考值" prop="aprReference"/>
       </el-table-column>
       <el-table-column label="5月">
         <el-table-column label="实际值" prop="mayActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.mayActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.mayActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.mayActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="mayReference"></el-table-column>
+        <el-table-column label="参考值" prop="mayReference"/>
       </el-table-column>
       <el-table-column label="6月">
         <el-table-column label="实际值" prop="junActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.junActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.junActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.junActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="junReference"></el-table-column>
+        <el-table-column label="参考值" prop="junReference"/>
       </el-table-column>
       <el-table-column label="7月">
         <el-table-column label="实际值" prop="julActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.julActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.julActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.julActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="julReference"></el-table-column>
+        <el-table-column label="参考值" prop="julReference"/>
       </el-table-column>
       <el-table-column label="8月">
         <el-table-column label="实际值" prop="augActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.augActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.augActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.augActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="augReference"></el-table-column>
+        <el-table-column label="参考值" prop="augReference"/>
       </el-table-column>
       <el-table-column label="9月">
         <el-table-column label="实际值" prop="sepActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.sepActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.sepActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.sepActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="sepReference"></el-table-column>
+        <el-table-column label="参考值" prop="sepReference"/>
       </el-table-column>
       <el-table-column label="10月">
         <el-table-column label="实际值" prop="octActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.octActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.octActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.octActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="octReference"></el-table-column>
+        <el-table-column label="参考值" prop="octReference"/>
       </el-table-column>
       <el-table-column label="11月">
         <el-table-column label="实际值" prop="novActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.novActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.novActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.novActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="novReference"></el-table-column>
+        <el-table-column label="参考值" prop="novReference"/>
       </el-table-column>
       <el-table-column label="12月">
         <el-table-column label="实际值" prop="decActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.decActual" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.decActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.decActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="decReference"></el-table-column>
+        <el-table-column label="参考值" prop="decReference"/>
       </el-table-column>
       <el-table-column label="操作" width="120">
         <template #default="{ row }">
@@ -170,7 +170,7 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -181,60 +181,60 @@
       @size-change="handleSizeChange"
     />
     <vab-dialog
-      title="查看"
       v-model="viewVisible"
-      @open="handleDialogOpened"
+      title="查看"
       width="40%"
+      @open="handleDialogOpened"
     >
       <div ref="chartContainer" style="width: 100%; height: 400px;"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 添加季节系数 -->
     <vab-dialog
-      title="新增季节系数"
       v-model="addVisible"
+      title="新增季节系数"
       width="20%"
       @close="handleCloseAdd"
     >
-      <el-form ref="formRef" :rules="formRules" :model="form" label-position="right" label-width="auto" style="margin: 0 10px">
+      <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="formRules" style="margin: 0 10px">
         <el-form-item label="品名" prop="kindName" >
           <el-input v-model="form.kindName" clearable />
         </el-form-item>
         <el-form-item label="1月实际系数" prop="janActual">
-          <el-input type="number" v-model="form.janActual" />
+          <el-input v-model="form.janActual" type="number" />
         </el-form-item>
         <el-form-item label="2月实际系数" prop="febActual">
-          <el-input type="number" v-model="form.febActual" />
+          <el-input v-model="form.febActual" type="number" />
         </el-form-item>
         <el-form-item label="3月实际系数" prop="marActual">
-          <el-input type="number" v-model="form.marActual" />
+          <el-input v-model="form.marActual" type="number" />
         </el-form-item>
         <el-form-item label="4月实际系数" prop="aprActual">
-          <el-input type="number" v-model="form.aprActual" />
+          <el-input v-model="form.aprActual" type="number" />
         </el-form-item>
         <el-form-item label="5月实际系数" prop="mayActual">
-          <el-input type="number" v-model="form.mayActual" />
+          <el-input v-model="form.mayActual" type="number" />
         </el-form-item>
         <el-form-item label="6月实际系数" prop="junActual">
-          <el-input type="number" v-model="form.junActual" />
+          <el-input v-model="form.junActual" type="number" />
         </el-form-item>
         <el-form-item label="7月实际系数" prop="julActual">
-          <el-input type="number" v-model="form.julActual" />
+          <el-input v-model="form.julActual" type="number" />
         </el-form-item>
         <el-form-item label="8月实际系数" prop="augActual">
-          <el-input type="number" v-model="form.augActual" />
+          <el-input v-model="form.augActual" type="number" />
         </el-form-item>
         <el-form-item label="9月实际系数" prop="sepActual">
-          <el-input type="number" v-model="form.sepActual" />
+          <el-input v-model="form.sepActual" type="number" />
         </el-form-item>
         <el-form-item label="10月实际系数" prop="octActual">
-          <el-input type="number" v-model="form.octActual" />
+          <el-input v-model="form.octActual" type="number" />
         </el-form-item>
         <el-form-item label="11月实际系数" prop="novActual">
-          <el-input type="number" v-model="form.novActual" />
+          <el-input v-model="form.novActual" type="number" />
         </el-form-item>
         <el-form-item label="12月实际系数" prop="decActual">
-          <el-input type="number" v-model="form.decActual" />
+          <el-input v-model="form.decActual" type="number" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -246,18 +246,18 @@
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'seasonalCoefficient'
-})
 import * as echarts from 'echarts'
 import { isEqual } from 'lodash'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { months } from '../constantOption'
 import { addSeasonalCoefficient, delSeasonalCoefficient, getSeasonalCoefficientList, getSeasonalCoefficientSiteList, updateSeasonalCoefficient } from '/@/api/devlocal/seasonalCoefficient'
-import { IGetSeasonalCoefficientList, IGetSeasonalCoefficientListReq, ISiteList } from '/@/type/storeOperation/seasonalCoefficientType'
+import type { IGetSeasonalCoefficientList, IGetSeasonalCoefficientListReq, ISiteList } from '/@/type/storeOperation/seasonalCoefficientType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { flexColumnWidth } from '/@/utils/tableColum'
+defineOptions({
+  name: 'SeasonalCoefficient'
+})
 
 const total = ref<number>(0)
 const queryForm = reactive<IGetSeasonalCoefficientListReq>({
@@ -276,9 +276,7 @@ let copyRow: any
 let actualData: (number | undefined)[] = []
 let referenceData: (number | undefined)[] = []
 const addVisible = ref<boolean>(false)
-const form = reactive<any>({
-
-})
+const form = reactive<any>({})
 const formRef = ref<FormInstance>()
 const formRules = reactive<FormRules>({
   kindName: [{ required: true, message: '请输入品类名称', trigger: 'blur' }],
@@ -353,9 +351,9 @@ const viewChart = (row: IGetSeasonalCoefficientList) => {
   referenceData = [row.janReference, row.febReference, row.marReference, row.aprReference, row.mayReference, row.junReference, row.julReference, row.augReference, row.sepReference, row.octReference, row.novReference, row.decReference]
   
 }
-const updateChart = () => {
-  chartInstance?.setOption(option.value, true)
-}
+// const updateChart = () => {
+//   chartInstance?.setOption(option.value, true)
+// }
 const initChart = () => {
   option.value = {
     legend: {
@@ -432,7 +430,7 @@ const handleDel = async (row: IGetSeasonalCoefficientList) => {
     }
   })
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
 
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]

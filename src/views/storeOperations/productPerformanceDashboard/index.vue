@@ -3071,6 +3071,11 @@ onBeforeMount(() => {
     }
   }
 }
+
+
+:deep(.el-popper) {
+  max-width: 100px;
+}
 .icon-hover {
   padding: 6px;
   border-radius: 4px; /* 圆角 */

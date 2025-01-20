@@ -6,13 +6,12 @@
         </vab-query-form-left-panel>
       </vab-query-form>
   
-      <el-table ref="tableRef" border stripe :data="list" @cell-click="changeInput" v-loading="listLoading" :cell-style="cellStyle">
-        <el-table-column align="center" label="采购方ID" width="100" prop="purchaserId" >
-        </el-table-column>
+      <el-table ref="tableRef" v-loading="listLoading" border :cell-style="cellStyle" :data="list" stripe @cell-click="changeInput">
+        <el-table-column align="center" label="采购方ID" prop="purchaserId" width="100" />
         <el-table-column align="center" label="公司简称" min-width="200" prop="companyAbbreviation" >
           <template #default="{ row }">
             <div class="none">
-                <el-input type="text" v-model="row.companyAbbreviation" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input v-model="row.companyAbbreviation" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
             </div>
             <span>{{ row.companyAbbreviation }}</span>
           </template>
@@ -20,7 +19,7 @@
         <el-table-column align="center" label="采购方全名" min-width="200" prop="purchaserFullName" >
           <template #default="{ row }">
             <div class="none">
-                <el-input type="text" v-model="row.purchaserFullName" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input v-model="row.purchaserFullName" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
             </div>
             <span>{{ row.purchaserFullName }}</span>
           </template>
@@ -28,14 +27,14 @@
         <el-table-column align="center" label="报关模式" prop="customsDeclarationMode" width="180">
             <template #default="{ row }">
                 <el-select v-model="row.customsDeclarationMode" style="min-width: 100%;" @change="handleModeChange(row)">
-                    <el-option v-for="item in customsModeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <el-option v-for="item in customsModeOption" :key="item.value" :label="item.label" :value="item.value"/>
                 </el-select>
             </template>
         </el-table-column>
         <el-table-column align="center" label="开户行" min-width="230" prop="accountOpeningBank" >
           <template #default="{ row }">
             <div class="none">
-                <el-input type="text" v-model="row.accountOpeningBank" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input v-model="row.accountOpeningBank" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
             </div>
             <span>{{ row.accountOpeningBank }}</span>
           </template>
@@ -43,14 +42,12 @@
         <el-table-column align="center" label="银行账号" min-width="160" prop="bankAccountNumber" >
           <template #default="{ row }">
             <div class="none">
-                <el-input type="text" v-model="row.bankAccountNumber" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
+                <el-input v-model="row.bankAccountNumber" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
             </div>
             <span>{{ row.bankAccountNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="汇率" align="center">
-
-        </el-table-column>
+        <el-table-column align="center" label="汇率"/>
         <el-table-column align="center" fixed="right" label="操作" width="160">
           <template #default="{ row }">
             <el-button text type="danger" :underline="false" @click="handleDelete(row)">删除</el-button>
@@ -64,13 +61,13 @@
       <!-- 我司信息 -->
       <vab-dialog 
         v-model="companyAddVisible" 
-        title="我司信息" 
-        width="600"
+        :before-close="handlerCloseDialog" 
         class="moldDialog"
-        :before-close="handlerCloseDialog"
+        title="我司信息"
+        width="600"
       >
         <el-divider style="margin-top: 0;"/>
-        <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="margin: 0 auto; width: 70%;" :rules="rules">
+        <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" :rules="rules" style="margin: 0 auto; width: 70%;">
           <el-form-item label="公司简称" prop="companyAbbreviation">
             <el-input v-model="form.companyAbbreviation" clearable />
           </el-form-item>
@@ -78,8 +75,8 @@
             <el-input v-model="form.purchaserFullName" clearable />
           </el-form-item>
           <el-form-item label="报关模式" prop="customsDeclarationMode">
-            <el-select v-model="form.customsDeclarationMode" style="min-width: 100%;" placeholder="请选择报关模式" >
-              <el-option v-for="item in customsModeOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-select v-model="form.customsDeclarationMode" placeholder="请选择报关模式" style="min-width: 100%;" >
+              <el-option v-for="item in customsModeOption" :key="item.value" :label="item.label" :value="item.value"/>
             </el-select>
           </el-form-item>
           <el-form-item label="开户行" prop="accountOpeningBank">
@@ -101,19 +98,14 @@
   
 <script lang="ts" setup>
 import type { FormInstance, TableInstance } from 'element-plus'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { addPurchaseCompany, delPurchaseCompany, getPurchaseCompanyList, updatePurchaseCompany } from '/@/api/devlocal/purchase';
 import { isEqual } from 'lodash'
   
 defineOptions({
-    name: 'ourInformation',
+    name: 'OurInformation',
 })
   
-const router = useRouter()
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const editRef = ref<any>(null)
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -136,7 +128,7 @@ const formRef = ref<FormInstance>()
      }
   }
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
     
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];

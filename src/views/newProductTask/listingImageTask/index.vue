@@ -15,38 +15,38 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData"/>
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"/>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border :header-cell-style="{ textAlign: 'center' }"
-          :cell-class-name="clearPadding" :cell-style="cellStyle"
-          :data="list"
-          @selection-change="setSelectedRows"
+          border :cell-class-name="clearPadding"
+          :cell-style="cellStyle" :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
+          @selection-change="setSelectedRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
+          <el-table-column fixed="left" type="selection"/>
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
               <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
-                <template #error><el-icon></el-icon></template>
+                <template #error><el-icon/></template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
-          <el-table-column label="ASIN" prop="" min-width="160">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column label="ASIN" min-width="160" prop="">
             <template #default="{ row }">
-              <el-link type="primary"></el-link>
+              <el-link type="primary">{{ row.asin }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="站点" prop="sites" min-width="150">
+          <el-table-column label="站点" min-width="150" prop="sites">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_sites" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_sites" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._sitesFull }}</div>
                 </template>
@@ -54,14 +54,14 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="任务类型" prop="taskType" min-width="100"></el-table-column>
-          <el-table-column label="产品定位" prop="positioning" min-width="100"></el-table-column>
-          <el-table-column label="要求完成日期" prop="finishDate" min-width="125">
+          <el-table-column label="任务类型" min-width="100" prop="taskType"/>
+          <el-table-column label="产品定位" min-width="100" prop="positioning"/>
+          <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
               {{ row.finishDate ? formatDate(new Date(row.finishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="实际完成日期" prop="actualFinishDate" min-width="125">
+          <el-table-column label="实际完成日期" min-width="125" prop="actualFinishDate">
             <template #default="{ row }">
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
@@ -73,10 +73,10 @@
               <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
             </template>
           </el-table-column>
-          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
+          <el-table-column label="需求文件地址" min-width="160" prop="requiredAddress">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.requiredAddress" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.requiredAddress" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -87,15 +87,15 @@
               <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
             </template>
           </el-table-column>
-          <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
+          <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.sellingPointStatus === 1" icon="check-fill" class="custom-check" />
+              <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" prop="basePicture" min-width="100">
+          <el-table-column label="基础图片" min-width="100" prop="basePicture">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_basePicture" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_basePicture" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
                 </template>
@@ -103,9 +103,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="建模/渲染" prop="modeling" min-width="105">
+          <el-table-column label="建模/渲染" min-width="105" prop="modeling">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_modeling" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_modeling" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._modelingFull }}</div>
                 </template>
@@ -113,9 +113,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="A+" prop="aAdd" min-width="90">
+          <el-table-column label="A+" min-width="90" prop="aAdd">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_aAdd" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_aAdd" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._aAddFull }}</div>
                 </template>
@@ -123,9 +123,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="视频" prop="video" min-width="90">
+          <el-table-column label="视频" min-width="90" prop="video">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_video" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_video" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._videoFull }}</div>
                 </template>
@@ -133,9 +133,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="说明书/包装" prop="instructionManual" min-width="115">
+          <el-table-column label="说明书/包装" min-width="115" prop="instructionManual">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_instructionManual" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_instructionManual" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
                 </template>
@@ -143,10 +143,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="发布人" prop="publisherPersonName" min-width="160"></el-table-column>
-          <el-table-column label="产品经理" prop="productManager" min-width="100">
+          <el-table-column label="发布人" min-width="160" prop="publisherPersonName"/>
+          <el-table-column label="产品经理" min-width="100" prop="productManager">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_productManager" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_productManager" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
                 </template>
@@ -154,16 +154,16 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品设计" prop="productDesign" min-width="160"></el-table-column>
-          <el-table-column label="运营" prop="operation" min-width="90"></el-table-column>
-          <el-table-column label="陈峥校对" prop="proofreadingStatus" min-width="100">
+          <el-table-column label="产品设计" min-width="160" prop="productDesign"/>
+          <el-table-column label="运营" min-width="90" prop="operation"/>
+          <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.proofreadingStatus === 1" icon="check-fill" class="custom-check" />
+              <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="remark" min-width="130"></el-table-column>
-          <el-table-column label="操作" width="110" fixed="right">
+          <el-table-column label="备注" min-width="130" prop="remark"/>
+          <el-table-column fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="handleShowSellingPoint(row)">
@@ -195,7 +195,7 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
         <vab-pagination 
@@ -220,38 +220,38 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData"/>
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"/>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border :header-cell-style="{ textAlign: 'center' }"
-          :cell-class-name="clearPadding" :cell-style="cellStyle"
-          :data="list"
-          @selection-change="setSelectedRows"
+          border :cell-class-name="clearPadding"
+          :cell-style="cellStyle" :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
+          @selection-change="setSelectedRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
+          <el-table-column fixed="left" type="selection"/>
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
               <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
-                <template #error><el-icon></el-icon></template>
+                <template #error><el-icon/></template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
-          <el-table-column label="ASIN" prop="" min-width="160">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column label="ASIN" min-width="160" prop="">
             <template #default="{ row }">
-              <el-link type="primary"></el-link>
+              <el-link  type="primary">{{ row.asin }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="站点" prop="sites" min-width="150">
+          <el-table-column label="站点" min-width="150" prop="sites">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_sites" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_sites" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._sitesFull }}</div>
                 </template>
@@ -259,29 +259,29 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="任务类型" prop="taskType" min-width="100"></el-table-column>
-          <el-table-column label="产品定位" prop="positioning" min-width="100"></el-table-column>
-          <el-table-column label="要求完成日期" prop="finishDate" min-width="125">
+          <el-table-column label="任务类型" min-width="100" prop="taskType"/>
+          <el-table-column label="产品定位" min-width="100" prop="positioning"/>
+          <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
               {{ row.finishDate ? formatDate(new Date(row.finishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="实际完成日期" prop="actualFinishDate" min-width="125">
+          <el-table-column label="实际完成日期" min-width="125" prop="actualFinishDate">
             <template #default="{ row }">
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" prop="naturalDay" min-width="110">
+          <el-table-column label="剩余自然日" min-width="110" prop="naturalDay">
             <template #default="{ row }">
               <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
               <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
               <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
             </template>
           </el-table-column>
-          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160">
+          <el-table-column label="需求文件地址" min-width="160" prop="requiredAddress">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.requiredAddress" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.requiredAddress" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -292,15 +292,15 @@
               <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
             </template>
           </el-table-column>
-          <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
+          <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.sellingPointStatus === 1" icon="check-fill" class="custom-check" />
+              <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" prop="basePicture" min-width="100">
+          <el-table-column label="基础图片" min-width="100" prop="basePicture">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_basePicture" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_basePicture" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
                 </template>
@@ -308,9 +308,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="建模/渲染" prop="modeling" min-width="105">
+          <el-table-column label="建模/渲染" min-width="105" prop="modeling">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_modeling" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_modeling" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._modelingFull }}</div>
                 </template>
@@ -318,9 +318,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="A+" prop="aAdd" min-width="90">
+          <el-table-column label="A+" min-width="90" prop="aAdd">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_aAdd" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_aAdd" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._aAddFull }}</div>
                 </template>
@@ -328,9 +328,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="视频" prop="video" min-width="90">
+          <el-table-column label="视频" min-width="90" prop="video">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_video" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_video" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._videoFull }}</div>
                 </template>
@@ -338,9 +338,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="说明书/包装" prop="instructionManual" min-width="115">
+          <el-table-column label="说明书/包装" min-width="115" prop="instructionManual">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_instructionManual" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_instructionManual" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
                 </template>
@@ -348,10 +348,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="发布人" prop="publisherPersonName" min-width="160"></el-table-column>
-          <el-table-column label="产品经理" prop="productManager" min-width="100">
+          <el-table-column label="发布人" min-width="160" prop="publisherPersonName"/>
+          <el-table-column label="产品经理" min-width="100" prop="productManager">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_productManager" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_productManager" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
                 </template>
@@ -359,16 +359,16 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品设计" prop="productDesign" min-width="160"></el-table-column>
-          <el-table-column label="运营" prop="operation" min-width="90"></el-table-column>
-          <el-table-column label="陈峥校对" prop="proofreadingStatus" min-width="100">
+          <el-table-column label="产品设计" min-width="160" prop="productDesign"/>
+          <el-table-column label="运营" min-width="90" prop="operation"/>
+          <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.proofreadingStatus === 1" icon="check-fill" class="custom-check" />
+              <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="remark" min-width="130"></el-table-column>
-          <el-table-column label="操作" width="110" fixed="right">
+          <el-table-column label="备注" min-width="130" prop="remark"/>
+          <el-table-column fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="handleShowSellingPoint(row)">
@@ -400,7 +400,7 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
         <vab-pagination 
@@ -413,29 +413,29 @@
       </el-tab-pane>
       <el-tab-pane label="已完成" :name="2">
         <el-table
-          border :header-cell-style="{ textAlign: 'center' }"
-          :cell-class-name="clearPadding" :cell-style="cellStyle"
-          :data="list"
-          @selection-change="setSelectedRows"
+          border :cell-class-name="clearPadding"
+          :cell-style="cellStyle" :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
+          @selection-change="setSelectedRows"
         >
-          <el-table-column type="selection" fixed="left"></el-table-column>
+          <el-table-column fixed="left" type="selection"/>
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
               <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
-                <template #error><el-icon></el-icon></template>
+                <template #error><el-icon/></template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
-          <el-table-column label="ASIN" prop="" min-width="160">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column label="ASIN" min-width="160" prop="">
             <template #default="{ row }">
-              <el-link type="primary"></el-link>
+              <el-link type="primary">{{ row.asin }}</el-link>
             </template>
           </el-table-column>
-          <el-table-column label="站点" prop="sites" min-width="150">
+          <el-table-column label="站点" min-width="150" prop="sites">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_sites" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_sites" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._sitesFull }}</div>
                 </template>
@@ -443,35 +443,35 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="任务类型" prop="taskType" min-width="100"></el-table-column>
-          <el-table-column label="产品定位" prop="positioning" min-width="100"></el-table-column>
-          <el-table-column label="要求完成日期" prop="finishDate" min-width="125">
+          <el-table-column label="任务类型" min-width="100" prop="taskType"/>
+          <el-table-column label="产品定位" min-width="100" prop="positioning"/>
+          <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
               {{ row.finishDate ? formatDate(new Date(row.finishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="实际完成日期" prop="actualFinishDate" min-width="125">
+          <el-table-column label="实际完成日期" min-width="125" prop="actualFinishDate">
             <template #default="{ row }">
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" prop="naturalDay" min-width="110">
+          <el-table-column label="剩余自然日" min-width="110" prop="naturalDay">
             <template #default="{ row }">
               <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
               <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
               <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
             </template>
           </el-table-column>
-          <el-table-column label="需求文件地址" prop="requiredAddress" min-width="160"></el-table-column>
-          <el-table-column label="卖点完成" prop="sellingPointStatus" min-width="100">
+          <el-table-column label="需求文件地址" min-width="160" prop="requiredAddress"/>
+          <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.sellingPointStatus === 1" icon="check-fill" class="custom-check" />
+              <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" prop="basePicture" min-width="160">
+          <el-table-column label="基础图片" min-width="160" prop="basePicture">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_basePicture" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_basePicture" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
                 </template>
@@ -479,9 +479,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="建模/渲染" prop="modeling" min-width="160">
+          <el-table-column label="建模/渲染" min-width="160" prop="modeling">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_modeling" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_modeling" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._modelingFull }}</div>
                 </template>
@@ -489,9 +489,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="A+" prop="aAdd" min-width="160">
+          <el-table-column label="A+" min-width="160" prop="aAdd">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_aAdd" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_aAdd" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._aAddFull }}</div>
                 </template>
@@ -499,9 +499,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="视频" prop="video" min-width="160">
+          <el-table-column label="视频" min-width="160" prop="video">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_video" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_video" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._videoFull }}</div>
                 </template>
@@ -509,9 +509,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="说明书/包装" prop="instructionManual" min-width="160">
+          <el-table-column label="说明书/包装" min-width="160" prop="instructionManual">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_instructionManual" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_instructionManual" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
                 </template>
@@ -519,10 +519,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="发布人" prop="publisherPersonName" min-width="90"></el-table-column>
-          <el-table-column label="产品经理" prop="productManager" min-width="160">
+          <el-table-column label="发布人" min-width="90" prop="publisherPersonName"/>
+          <el-table-column label="产品经理" min-width="160" prop="productManager">
             <template #default="{ row }">
-              <el-tooltip :disabled="!row.overflow_productManager" content=" " effect="dark" placement="top">
+              <el-tooltip content=" " :disabled="!row.overflow_productManager" effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
                 </template>
@@ -530,16 +530,16 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品设计" prop="productDesign" min-width="160"></el-table-column>
-          <el-table-column label="运营" prop="operation" min-width="90"></el-table-column>
-          <el-table-column label="陈峥校对" prop="proofreadingStatus" min-width="100">
+          <el-table-column label="产品设计" min-width="160" prop="productDesign"/>
+          <el-table-column label="运营" min-width="90" prop="operation"/>
+          <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.proofreadingStatus === 1" icon="check-fill" class="custom-check" />
+              <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="remark" min-width="130"></el-table-column>
-          <el-table-column label="操作" width="110" fixed="right">
+          <el-table-column label="备注" min-width="130" prop="remark"/>
+          <el-table-column fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="handleShowSellingPoint(row)">
@@ -565,7 +565,7 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
         <vab-pagination 
@@ -577,24 +577,24 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 发布任务 -->
     <vab-dialog
-      title="发布任务"
       v-model="postTaskVisible"
+      title="发布任务"
       width="25%"
       @close="handleClosePostTask"
     >
-      <el-form ref="postTaskFormRef" :model="postTaskForm" :rules="postTaskRules" label-position="right" label-width="auto" style="margin: 0 60px">
+      <el-form ref="postTaskFormRef" label-position="right" label-width="auto" :model="postTaskForm" :rules="postTaskRules" style="margin: 0 60px">
         <el-form-item label="sku" prop="sku">
           <el-select
             v-model="postTaskForm.sku"
-            filterable
-            remote
             default-first-option
-            placeholder="点击输入和搜索"
-            :remote-method="remoteSKUMethod"
+            filterable
             :loading="skuLoading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remoteSKUMethod"
           >
             <el-option
               v-for="item in skuOptions"
@@ -606,34 +606,34 @@
         </el-form-item>
         <el-form-item label="任务类型" prop="taskType">
           <el-select v-model="postTaskForm.taskType" placeholder="请选择任务类型">
-            <el-option v-for="item in taskTypeOption" :label="item.label" :value="item.value" :key="item.value" />
+            <el-option v-for="item in taskTypeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="站点" prop="sites">
-          <el-select v-model="postTaskForm.sites" placeholder="请选择站点" multiple collapse-tags collapse-tags-tooltip>
-            <el-option v-for="item in siteList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="postTaskForm.sites" collapse-tags collapse-tags-tooltip multiple placeholder="请选择站点">
+            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="产品分类" prop="position">
           <el-select v-model="postTaskForm.position" placeholder="请选择产品分类">
-            <el-option v-for="item in productClassificationOption" :label="item.label" :value="item.value" :key="item.value" />
+            <el-option v-for="item in productClassificationOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="要求完成日期" prop="finishDate">
-          <el-date-picker v-model="postTaskForm.finishDate" type="date"  value-format="YYYY-MM-DD"></el-date-picker>
+          <el-date-picker v-model="postTaskForm.finishDate" type="date"  value-format="YYYY-MM-DD"/>
         </el-form-item>
         <el-form-item label="设计类型" prop="artDesignType">
           <el-select v-model="postTaskForm.artDesignType" placeholder="请选择设计类型">
-            <el-option v-for="item in designTypeOption" :label="item.label" :value="item.value" :key="item.value" />
+            <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="美工" prop="artDesign">
-          <el-select v-model="postTaskForm.artDesign" placeholder="请选择人员" multiple collapse-tags collapse-tags-tooltip>
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="postTaskForm.artDesign" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="要求" prop="remark">
-          <el-input v-model="postTaskForm.remark" type="textarea" :rows="3" resize="none" />
+          <el-input v-model="postTaskForm.remark" resize="none" :rows="3" type="textarea" />
         </el-form-item>
         <el-form-item label="需求文件共享文档地址" prop="linkAddress">
           <el-input v-model="postTaskForm.linkAddress" clearable />
@@ -648,14 +648,14 @@
     </vab-dialog>
     <!-- 任务认领 -->
     <vab-dialog
-      title="任务认领"
       v-model="missionClaimVisible"
+      title="任务认领"
       width="20%"
     >
       <el-form :model="missionClaimForm" style="margin: 0 10px;">
         <el-form-item label="设计类型" prop="type">
           <el-select v-model="missionClaimForm.type" placeholder="请选择设计类型">
-            <el-option v-for="item in designTypeOption" :label="item.label" :value="item.value" :key="item.value" />
+            <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -668,34 +668,34 @@
     </vab-dialog>
     <!-- 任务分配 -->
     <vab-dialog
-      title="任务分配"
       v-model="assignTaskVisible"
+      title="任务分配"
       width="20%"
     >
-      <el-form :model="assignTaskForm" label-position="right" label-width="auto" style="margin: 0 10px">
+      <el-form label-position="right" label-width="auto" :model="assignTaskForm" style="margin: 0 10px">
         <el-form-item label="基础图片">
-          <el-select v-model="assignTaskForm.baseImageUrlPerson" placeholder="请选择人员" multiple collapse-tags collapse-tags-tooltip>
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="assignTaskForm.baseImageUrlPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="建模渲染">
-          <el-select v-model="assignTaskForm.moldingPerson" placeholder="请选择人员" multiple collapse-tags collapse-tags-tooltip>
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="assignTaskForm.moldingPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="A+">
-          <el-select v-model="assignTaskForm.aPlus" placeholder="请选择人员" multiple collapse-tags collapse-tags-tooltip>
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="assignTaskForm.aPlus" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="视频">
-          <el-select v-model="assignTaskForm.videoPerson" placeholder="请选择人员" multiple collapse-tags collapse-tags-tooltip>
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="assignTaskForm.videoPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="说明书">
-          <el-select v-model="assignTaskForm.instructionPerson" placeholder="请选择人员" multiple collapse-tags collapse-tags-tooltip>
-            <el-option v-for="item in userList" :label="item.label" :value="item.id" :key="item.id" />
+          <el-select v-model="assignTaskForm.instructionPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -708,8 +708,8 @@
     </vab-dialog>
     <!-- 余量设定 -->
     <vab-dialog
-      title="余量设定"
       v-model="marginSettingVisible"
+      title="余量设定"
       width="20%"
     >
       <el-form ref="marginSettingFormRef" :model="marginSettingForm" :rules="marginSettingFormRules" style="margin: 0 10px">
@@ -729,8 +729,8 @@
     </vab-dialog>
     <!-- 任务量统计 -->
     <vab-dialog
-      title="任务量统计"
       v-model="taskStatisticsVisible"
+      title="任务量统计"
       width="60%"
       @open="handleStatisticsOpened"
     >
@@ -740,11 +740,11 @@
     </vab-dialog>
     <!-- 备注 -->
     <vab-dialog
-      title="备注"
       v-model="remarkVisible"
+      title="备注"
       width="20%"
     >
-      <el-input v-model="remark" type="textarea" :rows="15" placeholder="请输入备注" />
+      <el-input v-model="remark" placeholder="请输入备注" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="remarkVisible = false">取消</el-button>
         <el-button type="primary" @click="handleUpdateRemark">确定</el-button>
@@ -752,18 +752,18 @@
     </vab-dialog>
     <!-- 选品理由设定 -->
     <vab-dialog
+      v-model="reasonsVisible"
       title="选品理由设定"
       width="20%"
-      v-model="reasonsVisible"
     >
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="addReasonVisible = true">新增</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-      <el-table border stripe :data="reasonsList">
-        <el-table-column label="选品理由" prop="reason"></el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+      <el-table border :data="reasonsList" stripe>
+        <el-table-column label="选品理由" prop="reason"/>
+        <el-table-column align="center" label="操作" width="80">
           <template #default="{ row, $index }">
             <el-link type="danger" :underline="false" @click="handleDelReason(row, $index)">删除</el-link>
           </template>
@@ -773,12 +773,12 @@
     </vab-dialog>
     <!-- 新增选品理由 -->
     <vab-dialog
-      title="新增选品理由"
       v-model="addReasonVisible"
-      @close="closeAddReason"
+      title="新增选品理由"
       width="20%"
+      @close="closeAddReason"
     >
-      <el-form ref="addFormRef" :rules="addFormRules" :model="addReasonForm" style="margin: 0;">
+      <el-form ref="addFormRef" :model="addReasonForm" :rules="addFormRules" style="margin: 0;">
         <el-form-item label="选品理由" prop="reason">
           <el-input v-model="addReasonForm.reason" clearable />
         </el-form-item>
@@ -794,15 +794,15 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
 import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
+import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -923,8 +923,8 @@ const showBatchSellingPoint = () => {
   router.push({
     path: '/newProductTask/sellingPoint',
     query: {
-      skus: skus,
-      ids: ids
+      skus,
+      ids
     },
   })
 }
@@ -982,9 +982,9 @@ const listLoading = ref<boolean>(false)
 const siteList = ref<{ id: number, label: string }[]>([])
 const userList = ref<{ id: number, label: string }[]>([])
 const _id = ref<number>(0)
-const finishDate = ['']
-const taskCount: number[] = []
-const avgTaskCountDate = ['本周', '下一周', '下二周', '下三周', '下四周', '下五周']
+// const finishDate = ['']
+// const taskCount: number[] = []
+// const avgTaskCountDate = ['本周', '下一周', '下二周', '下三周', '下四周', '下五周']
 const handleStatisticsOpened = () => {
   nextTick(() => {
     if (chartContainer1.value) {
@@ -1156,7 +1156,7 @@ const handleUpdateRemark = async () => {
     fetchData()
   }
 }
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const label = column.label
   if (label === '备注') {
     _id.value = row.id

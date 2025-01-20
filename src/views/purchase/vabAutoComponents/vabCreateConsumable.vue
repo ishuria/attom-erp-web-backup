@@ -2,8 +2,8 @@
   <vab-dialog 
     v-model="dflag" 
     title="添加耗材" 
-    width="55%"
     top="5%"
+    width="55%"
     @close="handlerCloseDialog"
   >
  
@@ -11,11 +11,12 @@
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                @click="queryData"></el-button>
+              <el-button
+:icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                @click="queryData"/>
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
@@ -23,28 +24,28 @@
 
       <el-table 
         ref="tableRef" 
-        stripe border 
+        border :cell-class-name="getCellStyle" 
+        :cell-style="cellStyle"
         :data="list"
         :header-cell-style="{ 'text-align': 'center' }"
-        @cell-click="changeInput"
-        :cell-style="cellStyle"
-        :cell-class-name="getCellStyle"
         max-height="550px"
+        stripe
+        @cell-click="changeInput"
       >
-        <el-table-column  label="图片" class="image-wall" width="82">
-          <template #default="{ row, $index }">
-            <el-image :src="row.imageUrl" fit="contain" data-img="img" style="width: 100%; height: 100%"/>
+        <el-table-column  class="image-wall" label="图片" width="82">
+          <template #default="{ row }">
+            <el-image data-img="img" fit="contain" :src="row.imageUrl" style="width: 100%; height: 100%"/>
           </template>
         </el-table-column>
-        <el-table-column label="零件ID" width="100" prop="id"></el-table-column>
-        <el-table-column label="供应商" min-width="200" prop="suppliser"></el-table-column>
-        <el-table-column label="耗材名" min-width="200" prop="componentName"></el-table-column>
+        <el-table-column label="零件ID" prop="id" width="100"/>
+        <el-table-column label="供应商" min-width="200" prop="suppliser"/>
+        <el-table-column label="耗材名" min-width="200" prop="componentName"/>
         <el-table-column label="添加数量" min-width="100" prop="count">
             <template #default="{ row }">
                 <el-input v-model="row.count" clearable />
             </template>
         </el-table-column>
-        <el-table-column label="单位" min-width="70" prop="unit"></el-table-column>
+        <el-table-column label="单位" min-width="70" prop="unit"/>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
@@ -63,7 +64,7 @@
       <el-button type="primary" @click="handleConfirm">确认</el-button>
     </template>
   </vab-dialog>
-  <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
 </template>
 
 <script lang="ts" setup>
@@ -73,7 +74,7 @@ import { getAddConsumableList } from '~/src/api/devlocal/purchasePo'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: 'vabCreateConsumable'
+  name: 'VabCreateConsumable'
 })
 let props = defineProps<{
   createConsumableVisible: boolean

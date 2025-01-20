@@ -4,10 +4,10 @@
       <vab-query-form-left-panel>
         <el-form inline>
           <el-form-item label="站点">
-            <el-select></el-select>
+            <el-select/>
           </el-form-item>
           <el-form-item label="运营">
-            <el-select></el-select>
+            <el-select/>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
@@ -24,29 +24,30 @@
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
-        <el-form :model="queryForm" inline @submit.prevent>
+        <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" /> 
+            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" /> 
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData"></el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
-      :data="fakeData" 
       border 
-      class="noneHoverTable" 
-      :header-cell-style="{ textAlign: 'center' }" :cell-class-name="clearPadding" :cell-style="cellStyle"
+      :cell-class-name="clearPadding" 
+      :cell-style="cellStyle" 
+      class="noneHoverTable" :data="fakeData" :header-cell-style="{ textAlign: 'center' }"
     >
       <el-table-column
-        v-for="item in columns"
+        v-for="(item, index) in columns"
+        :key="index"
+        :fixed="item.isFixed"
         :label="item.label"
+        :min-width="item.minWidth"
         :prop="item.prop"
         :width="item.width"
-        :min-width="item.minWidth"
-        :fixed="item.isFixed"
       >
         <template #header>
           <span v-if="item.label==='库存可售'">
@@ -58,9 +59,9 @@
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
-            <el-image :src="row.componentImage" style="width: 75px; height: 75px; display: block;" fit="fill" @click="imagePreviewShow(row.componentImage)" >
+            <el-image fit="fill" :src="row.componentImage" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.componentImage)" >
               <template #error>
-                <el-icon></el-icon>
+                <el-icon/>
               </template>
             </el-image>
           </span>
@@ -68,7 +69,7 @@
             <el-link type="primary">{{ row.asin }}</el-link>
             <div class="rate-wrapper">
               <span class="rate-value">{{ row.rate }}</span>
-              <span><el-rate v-model="row.rate" :void-icon="Star" disabled class="custom-rate" /></span>
+              <span><el-rate v-model="row.rate" class="custom-rate" disabled :void-icon="Star" /></span>
               <span class="rate-count">{{ 484 }}</span>
             </div>
           </span>
@@ -92,7 +93,7 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -102,12 +103,12 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 筛选 -->
     <vab-dialog
+      v-model="filterVisible"
       title="筛选"
       width="20%"
-      v-model="filterVisible"
     >
       <el-form
         ref="filterFormRef"
@@ -209,8 +210,8 @@
     </vab-dialog>
     <!-- 平滑指数设定 -->
     <vab-dialog
-      title="平滑指数设定"
       v-model="smoothSettingVisible"
+      title="平滑指数设定"
       width="20%"
     >
       <el-form label-position="top">
@@ -231,16 +232,16 @@
     </vab-dialog>
     <!-- 发货数检查 -->
     <vab-dialog
-      title="发货数检查"
       v-model="quantityCheckVisible"
+      title="发货数检查"
     >
-      <el-table class="noneHoverTable" :data="fakeCheckData" border stripe :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">\
-        <el-table-column type="selection"></el-table-column>
-        <el-table-column label="发货计划" prop="date"></el-table-column>
-        <el-table-column label="产品数量" prop=""></el-table-column>
-        <el-table-column label="重量" prop=""></el-table-column>
-        <el-table-column label="体积" prop=""></el-table-column>
-        <el-table-column label="箱数" prop=""></el-table-column>
+      <el-table border :cell-style="{ textAlign: 'center' }" class="noneHoverTable" :data="fakeCheckData" :header-cell-style="{ textAlign: 'center' }" stripe>\
+        <el-table-column type="selection"/>
+        <el-table-column label="发货计划" prop="date"/>
+        <el-table-column label="产品数量" prop=""/>
+        <el-table-column label="重量" prop=""/>
+        <el-table-column label="体积" prop=""/>
+        <el-table-column label="箱数" prop=""/>
       </el-table>
       <template #footer>
         <el-button @click="quantityCheckVisible = false">取消</el-button>
@@ -249,16 +250,16 @@
     </vab-dialog>
     <!-- 春节备货 -->
     <vab-dialog
-      title="春节备货"
       v-model="stockUpVisible"
+      title="春节备货"
       width="20%"
     >
       <el-form class="noneHoverTable" style="margin: auto 0">
         <el-form-item label="春节备货">
-          <el-checkbox ></el-checkbox>
+          <el-checkbox />
         </el-form-item>
         <el-form-item label="节后开工日期" label-position="top">
-          <el-date-picker v-model="stockUpForm.date" type="date" value-format="YYYY-MM-DD"></el-date-picker>
+          <el-date-picker v-model="stockUpForm.date" type="date" value-format="YYYY-MM-DD"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -272,19 +273,15 @@
 <script setup lang="ts">
 import { Search, Star } from '@element-plus/icons-vue'
 import { removeHtmlTags } from '/@/utils/tableColum'
-import { FormInstance } from 'element-plus'
-import { CSSProperties } from 'vue'
+import type { FormInstance } from 'element-plus'
+import type { CSSProperties } from 'vue'
 
 const smoothSettingVisible = ref<boolean>(false)
 const quantityCheckVisible = ref<boolean>(false)
 const stockUpVisible = ref<boolean>(false)
-const stockUpForm = reactive<any>({
-
-})
+const stockUpForm = reactive<any>({})
 const filterVisible = ref<boolean>(false)
-const filterForm = reactive<any>({
-
-})
+const filterForm = reactive<any>({})
 const filterFormRef = ref<FormInstance>()
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])

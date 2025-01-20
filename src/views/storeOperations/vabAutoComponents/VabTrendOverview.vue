@@ -1,6 +1,6 @@
 <template>
   <div class="overview-container">
-    <vab-card style="height: 550px; margin-bottom: 10px; display: flex; flex-direction: column;" data-label="card">
+    <vab-card data-label="card" style="height: 550px; margin-bottom: 10px; display: flex; flex-direction: column;">
       <el-row :gutter="20">
         <!-- 总销售额 -->
         <el-col :span="4">
@@ -209,27 +209,27 @@
       <div ref="chartContainer" style="width: 100%; height: 350px"></div>
     </vab-card>
     <div style="text-align: right; margin-bottom: 10px;">
-      <el-popover :width="240" popper-style="max-height: 550px; overflow: auto;">
+      <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
         <template #reference>
           <el-button>
             <vab-icon icon="settings-line" />
           </el-button>
         </template>
-        <vab-draggable v-model="columns" :animation="600" handle=".handle" filter=".non-draggable" :onMove="handleMove">
+        <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
           <div
             v-for="item in columns"
             :key="item.label"
-            style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
-            :class="{'non-draggable': item.disableCheck}" 
+            :class="{'non-draggable': item.disableCheck}"
+            style="font-size: var(--el-font-size-base); display: flex; align-items: center;" 
           >
             <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
             <span style="flex: 1">{{ item.label }}</span>
-            <span v-if="item.disableCheck" style="display: flex; align-items: center;" class="icon-hover">
-              <el-icon><View /></el-icon>
+            <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
+              <el-icon><view /></el-icon>
             </span>
-            <span v-else @click="handleChecked(item)" class="icon-hover" style="cursor: pointer; display: flex; align-items: center;">
-              <el-icon v-show="!item.checked"><Hide /></el-icon>
-              <el-icon v-show="item.checked"><View /></el-icon>
+            <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+              <el-icon v-show="!item.checked"><hide /></el-icon>
+              <el-icon v-show="item.checked"><view /></el-icon>
             </span>
           </div>
         </vab-draggable>
@@ -237,20 +237,19 @@
     </div>
     <el-table
       border 
-      :header-cell-style="{ textAlign: 'center' }"
-      :data="data"
       :cell-style="{ textAlign: 'center' }"
+      :data="data"
+      :header-cell-style="{ textAlign: 'center' }"
     >
       <el-table-column
         v-for="(item, index) in checkList1"
         :key="index"
+        :fixed="item.isFixed"
         :label="item.label"
+        :min-width="item.minWidth"
         :prop="item.prop"
         :width="item.width"
-        :minWidth="item.minWidth"
-        :fixed="item.isFixed"
-      >
-      </el-table-column>
+      />
       <!-- <template #empty>
         <el-empty class="vab-data-empty"></el-empty>
       </template> -->
@@ -266,14 +265,14 @@
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'VabTrendOverview'
-})
-
-import { ArrowDown, Hide, View } from '@element-plus/icons-vue'
+import { ArrowDown, Hide } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getWeekOfYear } from '/@/utils/dateUtils'
+
+defineOptions({
+  name: 'VabTrendOverview'
+})
 
 // 切换日，周，月
 const radio = ref<string>('day')
@@ -695,7 +694,7 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
   const totalVisitors: Record<string, number> = {} // ∑总访客
   const adVisitors: Record<string, number> = {} // ∑广告点击量
   const adSales: Record<string, number> = {} // ∑广告销量
-  const adSalesData: Record<string, number > = { } // ∑广告销售额
+  const adSalesData: Record<string, number > = {} // ∑广告销售额
   const adImpressions: Record<string, number> = {} // ∑广告展现量
   
   // 根据时间粒度选择分组方式
@@ -709,7 +708,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
   data.forEach((item) => {
     const timeKey = getTimeKey(item.date) // 获取分组键（周或月）
 
-    if (type === 'subcategoryRanking' || type === 'categoryRanking' || type === 'rating') {
+    switch (type) {
+    case 'subcategoryRanking': 
+    case 'categoryRanking': 
+    case 'rating': {
       // 取最小值
       if (!groupedData[timeKey]) {
         groupedData[timeKey] = Infinity
@@ -717,7 +719,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       if (item[type] < groupedData[timeKey]) {
         groupedData[timeKey] = item[type]
       }
-    } else if (type === 'tacos') {
+    
+    break;
+    }
+    case 'tacos': {
       // 处理TACOS类型，计算 ∑广告花费 / ∑总销售额
       if (!groupedData[timeKey]) {
         adCostData[timeKey] = 0
@@ -726,7 +731,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       adCostData[timeKey] += item.adCostData
       totalSales[timeKey] += item.totalSales
       groupedData[timeKey] = formatNumber(adCostData[timeKey] / totalSales[timeKey] * 100) 
-    } else if (type === 'grossProfitMargin') {
+    
+    break;
+    }
+    case 'grossProfitMargin': {
       // 处理毛利润率类型，计算 ∑毛利润 / ∑总销售额
       if (!groupedData[timeKey]) {
         grossProfit[timeKey] = 0
@@ -735,7 +743,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       grossProfit[timeKey] += item.grossProfit
       totalSales[timeKey] += item.totalSales
       groupedData[timeKey] = formatNumber(grossProfit[timeKey] / totalSales[timeKey] * 100) 
-    } else if (type === 'netProfitMargin') {
+    
+    break;
+    }
+    case 'netProfitMargin': {
       // 处理净利润率类型，计算 ∑净利润 / ∑总销售额
       if (!groupedData[timeKey]) {
         netProfitData[timeKey] = 0
@@ -744,7 +755,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       netProfitData[timeKey] += item.netProfitData
       totalSales[timeKey] += item.totalSales
       groupedData[timeKey] = formatNumber(netProfitData[timeKey] / totalSales[timeKey] * 100) 
-    } else if (type === 'refundRate') {
+    
+    break;
+    }
+    case 'refundRate': {
       // 处理退款率类型，计算 ∑退款金额 / ∑总销售额
       if (!groupedData[timeKey]) {
         refundPrice[timeKey] = 0
@@ -753,7 +767,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       refundPrice[timeKey] += item.refundPrice
       totalSales[timeKey] += item.totalSales
       groupedData[timeKey] = formatNumber(refundPrice[timeKey] / totalSales[timeKey] * 100)
-    } else if (type === 'returnRate') {
+    
+    break;
+    }
+    case 'returnRate': {
       // 处理退货率类型，计算 ∑退货量 / ∑总销量
       if (!groupedData[timeKey]) {
         returnQuantity[timeKey] = 0
@@ -762,7 +779,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       returnQuantity[timeKey] += item.returnQuantity
       totalBarSales[timeKey] += item.adSales + item.organicSales
       groupedData[timeKey] = formatNumber(returnQuantity[timeKey] / totalBarSales[timeKey] * 100)
-    } else if (type === 'overallConversionRate') {
+    
+    break;
+    }
+    case 'overallConversionRate': {
       // 处理综合转化率类型，计算 ∑总销量 / ∑总访客
       if (!groupedData[timeKey]) {
         totalVisitors[timeKey] = 0
@@ -771,7 +791,11 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       totalVisitors[timeKey] += item.totalVisitors
       totalBarSales[timeKey] += item.adSales + item.organicSales
       groupedData[timeKey] = formatNumber(totalBarSales[timeKey] / totalVisitors[timeKey] * 100)
-    } else if (type === 'naturalConversionRate'|| type === 'adConversionRate') {
+    
+    break;
+    }
+    case 'naturalConversionRate': 
+    case 'adConversionRate': {
       // 处理自然转化率/广告转化率类型，计算 ∑广告销量 / ∑广告点击量
       if (!groupedData[timeKey]) {
         adSales[timeKey] = 0
@@ -780,7 +804,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       adSales[timeKey] += item.adSales
       adVisitors[timeKey] += item.adVisitors
       groupedData[timeKey] = formatNumber(adSales[timeKey] / adVisitors[timeKey] * 100)
-    } else if (type === 'cpa') {
+    
+    break;
+    }
+    case 'cpa': {
       // 处理CPA, ∑广告花费 / ∑总销量
       if (!groupedData[timeKey]) {
         adCostData[timeKey] = 0
@@ -789,7 +816,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       adCostData[timeKey] += item.adCostData
       totalBarSales[timeKey] += item.adSales + item.organicSales
       groupedData[timeKey] = formatNumber(adCostData[timeKey] / totalBarSales[timeKey])
-    } else if (type === 'priceData') {
+    
+    break;
+    }
+    case 'priceData': {
       // 售价, ∑总销售额/ ∑总销量
       if (!groupedData[timeKey]) {
         totalSales[timeKey] = 0
@@ -798,7 +828,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       totalSales[timeKey] += item.totalSales
       totalBarSales[timeKey] += item.adSales + item.organicSales
       groupedData[timeKey] = formatNumber(totalSales[timeKey] / totalBarSales[timeKey])
-    } else if (type === 'clickCost') {
+    
+    break;
+    }
+    case 'clickCost': {
       // 点击成本, ∑广告花费/ ∑广告点击量
       if (!groupedData[timeKey]) {
         adCostData[timeKey] = 0
@@ -807,7 +840,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       adCostData[timeKey] += item.adCostData
       adVisitors[timeKey] += item.adVisitors
       groupedData[timeKey] = formatNumber(adCostData[timeKey] / adVisitors[timeKey])
-    } else if (type === 'acos') {
+    
+    break;
+    }
+    case 'acos': {
       // ∑广告花费 / ∑总广告销售额
       if (!groupedData[timeKey]) {
         adCostData[timeKey] = 0
@@ -816,7 +852,10 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       adCostData[timeKey] += item.adCostData
       adSalesData[timeKey] += item.adSalesData
       groupedData[timeKey] = formatNumber(adCostData[timeKey] / adSalesData[timeKey]  * 100)
-    } else if (type === 'adClickRate') {
+    
+    break;
+    }
+    case 'adClickRate': {
       // ∑广告点击量 / ∑广告展现量
       if (!groupedData[timeKey]) {
         adVisitors[timeKey] = 0
@@ -825,12 +864,16 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       adVisitors[timeKey] += item.adVisitors
       adImpressions[timeKey] += item.adImpressions
       groupedData[timeKey] = formatNumber(adVisitors[timeKey] / adImpressions[timeKey]  * 100)
-    } else {
+    
+    break;
+    }
+    default: {
       // 其他类型，累加值
       if (!groupedData[timeKey]) {
         groupedData[timeKey] = 0
       }
       groupedData[timeKey] += item[type]
+    }
     }
   })
 
@@ -927,15 +970,26 @@ const handleSwitchTime = () => {
  
   let adSalesData: any[] = []
   let organicSalesData: any[] = []
-  if (radio.value === 'day') {
+  switch (radio.value) {
+  case 'day': {
     adSalesData = data
     organicSalesData = data
-  } else if (radio.value === 'week') {
+  
+  break;
+  }
+  case 'week': {
     adSalesData = getWeeklyData(data, 'adSales')
     organicSalesData = getWeeklyData(data, 'organicSales')
-  } else if (radio.value === 'month') {
+  
+  break;
+  }
+  case 'month': {
     adSalesData = getMonthlyData(data, 'adSales')
     organicSalesData = getMonthlyData(data, 'organicSales')
+  
+  break;
+  }
+  // No default
   }
   option.value.xAxis.data = adSalesData.map((item: any) => item.date)
   option.value.series[0].data = adSalesData.map((d: any) => d.adSales)
@@ -950,12 +1004,23 @@ const updateYAxisData = (data: any[]) => {
     if (index !== 0 && index !== 1) {
       const prop = nameMapProp[s.name]
       let processedData: any[] = []
-      if (radio.value === 'day') {
+      switch (radio.value) {
+      case 'day': {
         processedData = data
-      } else if (radio.value === 'week') {
+      
+      break;
+      }
+      case 'week': {
         processedData = getWeeklyData(data, prop)
-      } else if (radio.value === 'month') {
+      
+      break;
+      }
+      case 'month': {
         processedData = getMonthlyData(data, prop)
+      
+      break;
+      }
+      // No default
       }
       s.data = processedData.map((d: any) => d[prop]) 
     }
@@ -979,8 +1044,6 @@ const initChart = () => {
             value = `$${value}`
           } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
             value = `${value}%`
-          } else {
-            value = value
           }
           return `<div style="display: flex;align-items:center;">
             ${item.marker}
@@ -1139,7 +1202,10 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     let yAxisIndex: number
 
     // 1. 处理是否共用y轴还是添加新的y轴
-    if (!yAxisMapping.has(dataGroup)) {
+    if (yAxisMapping.has(dataGroup)) {
+      // 如果该数据组已有 Y 轴，复用它
+      yAxisIndex = yAxisMapping.get(dataGroup)
+    } else {
       // 如果该数据组没有对应的 Y 轴，动态添加
       if (currentYAxisCount >= 4) {
         $baseMessage('最多只能支持三个额外的 Y 轴，请重新选择', 'error')
@@ -1180,9 +1246,6 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 
       currentYAxisCount++
       updateYAxisOffsets()
-    } else {
-      // 如果该数据组已有 Y 轴，复用它
-      yAxisIndex = yAxisMapping.get(dataGroup)
     }
 
     // 添加新 series
@@ -1206,7 +1269,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     })
   } else {
     // 取消选中时，移除选中的字段
-    const index = selectedItems.findIndex((item: string) => item === dataName)
+    const index = selectedItems.indexOf(dataName)
     if (index !== -1) {
       selectedItems.splice(index, 1)
     }
@@ -1270,20 +1333,28 @@ const getYAxisFormat = (groupName: string) => {
 }
 // 获取对应的颜色
 function getYAxisColor() {
-  if (clickCard.value === 'card1') {
+  switch (clickCard.value) {
+  case 'card1': {
     return '#ff99cc'
-  } else if (clickCard.value === 'card2') {
+  }
+  case 'card2': {
     return '#E6A23C'
-  } else if (clickCard.value === 'card3') {
+  }
+  case 'card3': {
     return '#34a9a9'
-  } else if (clickCard.value === 'card4') {
+  }
+  case 'card4': {
     return '#e36060'
-  } else if (clickCard.value === 'card5') {
+  }
+  case 'card5': {
     return '#8a7ae3'
-  } else if (clickCard.value === 'card6') {
+  }
+  case 'card6': {
     return '#ffd700'
-  } else {
+  }
+  default: {
     return '#999'
+  }
   }
 }
 
@@ -1295,13 +1366,13 @@ function getDataForName(dataName: string) {
 
 // 处理选中的值重复问题
 const handleUnique = (cardText: string) => {
-  const index = selectedItems.findIndex((item: string) => item === cardText)
-  if (index !== -1) {
-    $baseMessage('选中的值不能重复, 请重新选择', 'error')
-    return false
-  } else {
+  const index = selectedItems.indexOf(cardText)
+  if (index === -1) {
     selectedItems.push(cardText)
     return true
+  } else {
+    $baseMessage('选中的值不能重复, 请重新选择', 'error')
+    return false
   }
 }
 const handleCard1Click = () => {
