@@ -931,3 +931,11 @@ export interface IDelPayRecord {
   id: number
   poId: number
 }
+/**
+ * 采购订单-降本提成申请
+ */
+export interface IApplyPurchaseReductionCostReq {
+  poComponentId: number
+  beforePrice: number
+  afterPrice: number
+}

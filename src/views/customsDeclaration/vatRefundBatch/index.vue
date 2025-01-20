@@ -13,7 +13,7 @@
                 <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData"></el-button>
+                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -27,7 +27,7 @@
           @cell-click="cellClick"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column type="selection"/>
           <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : ''  }}
@@ -41,14 +41,13 @@
                 v-model="row.exportDate"
                 value-format="YYYY-MM-DD"
                 @change="handleUpdateDate(row)"
-              >
-              </el-date-picker>
+              />
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" prop="contractNumber" min-width="200"></el-table-column>
-          <el-table-column label="未到发票" prop="notYetCount" min-width="100"></el-table-column>
-          <el-table-column label="发票总数" prop="totalCount" min-width="100"></el-table-column>
-          <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
+          <el-table-column label="合同编号" prop="contractNumber" min-width="200"/>
+          <el-table-column label="未到发票" prop="notYetCount" min-width="100"/>
+          <el-table-column label="发票总数" prop="totalCount" min-width="100"/>
+          <el-table-column label="退税运费" prop="totalFreightFee" min-width="100"/>
           <el-table-column label="备注" prop="remark" min-width="300">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
@@ -68,7 +67,7 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
         <vab-pagination
@@ -88,13 +87,13 @@
         </vab-query-form>
         <el-table
           border
-          :header-cell-style="{ textAlign: 'center' }"
           :cell-style="cellStyle"
-          :data="list"
           class="noneHoveTable"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
           @selection-change="setSelectRows"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column type="selection"/>
           <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : ''  }}
@@ -105,10 +104,10 @@
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : ''  }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" prop="contractNumber" min-width="200"></el-table-column>
-          <el-table-column label="未到发票" prop="notYetCount" min-width="100"></el-table-column>
-          <el-table-column label="发票总数" prop="totalCount" min-width="100"></el-table-column>
-          <el-table-column label="退税运费" prop="freightFee" min-width="100"></el-table-column>
+          <el-table-column label="合同编号" prop="contractNumber" min-width="200"/>
+          <el-table-column label="未到发票" prop="notYetCount" min-width="100"/>
+          <el-table-column label="发票总数" prop="totalCount" min-width="100"/>
+          <el-table-column label="退税运费" prop="totalFreightFee" min-width="100"/>
           <el-table-column label="备注" prop="remark" min-width="300">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
@@ -126,14 +125,14 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
       </el-tab-pane>
     </el-tabs>
    
     <!-- 明细 -->
-    <VabDetailDialog
+    <vab-detail-dialog
       :detail-visible="detailVisible"
       :id="id"
       :contractNumber="contractNumber"
@@ -272,7 +271,7 @@ const freightFeeFormRules = reactive<any>({
 const showFreightFee = (row: IGetTaxRefundBatchList) => {
   freightFeeVisible.value = true
   _row = row
-  freightFeeForm.freightFee = row.freightFee
+  freightFeeForm.freightFee = row.totalFreightFee
 }
 const closeFreightFee = () => {
   freightFeeVisible.value = false
@@ -285,7 +284,7 @@ const confirmFreightFee = async () => {
   if (data) {
     $baseMessage('更新退税运费成功!', 'success')
     closeFreightFee()
-    _row.freightFee = freightFeeForm.freightFee
+    _row.totalFreightFee = freightFeeForm.freightFee
   }
 }
 

@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   IAddPoSKUQuery,
+  IApplyPurchaseReductionCostReq,
   IBooleanResp,
   IComponentName,
   ICreatePlanPoResp,
@@ -527,5 +528,17 @@ export function planPorMoq(params?: IId) {
     url: `${BASE_API}/purchase/planPo/r/moq`,
     method: 'post',
     params,
+  })
+}
+/**
+ * @description 采购订单-降本提成申请
+ * @param params 
+ * @returns 
+ */
+export function applyPurchaseReductionCost(data?: IApplyPurchaseReductionCostReq): Promise<{data: boolean}> {
+  return request({
+    url: `${BASE_API}/purchase/cost/reduction/apply`,
+    method: 'post',
+    data,
   })
 }

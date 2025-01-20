@@ -27,7 +27,7 @@ export interface IGetTaxRefundBatchList {
   taxRefundStatus?: number
   // 发票总数
   totalCount?: number
-  freightFee?: number
+  totalFreightFee?: number
 }
 
 export interface IUpdateTaxRefundBatchDate {
