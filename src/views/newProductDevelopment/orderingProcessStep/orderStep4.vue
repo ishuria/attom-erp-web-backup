@@ -3,13 +3,13 @@
         <h2 style="text-align: center;">新供应商信息完善</h2>
         <el-table 
             ref="tableRef" 
-            stripe border 
+            border :cell-style="cellStyle" 
             :data="list" 
             :header-cell-style="{ 'text-align': 'center' }"
-            :cell-style="cellStyle"
+            stripe
             @cell-click="changeInput"
         >
-            <el-table-column label="供应商全名" align="center" min-width="120" prop="suppliser" ></el-table-column>   
+            <el-table-column align="center" label="供应商全名" min-width="120" prop="suppliser" />   
             <el-table-column label="税号" min-width="120" prop="taxNumber" >
                  <template #default="{ row }">
                     <div class="none">
@@ -50,7 +50,7 @@
                     <span>{{ row.accountNumber }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="联行号" prop="bankRoutingNumber" align="center" min-width="100">
+            <el-table-column align="center" label="联行号" min-width="100" prop="bankRoutingNumber">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input v-model="row.bankRoutingNumber" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
@@ -58,7 +58,7 @@
                     <span>{{ row.bankRoutingNumber }}</span>
                 </template>
             </el-table-column>    
-            <el-table-column label="联系人" prop="contactPerson" align="center" min-width="100">
+            <el-table-column align="center" label="联系人" min-width="100" prop="contactPerson">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input v-model="row.contactPerson" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
@@ -66,7 +66,7 @@
                     <span>{{ row.contactPerson }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="联系人电话" prop="contactNumber" min-width="100">
+            <el-table-column label="联系人电话" min-width="100" prop="contactNumber">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input v-model="row.contactNumber" @blur="supplierClickCancle($event, row)" @keydown.enter="supplierClickCancle($event,row)" />
@@ -91,39 +91,39 @@
       <el-table 
             ref="tableRef" 
 
-            stripe border 
-            :data="qualityInspectionList" 
-            :header-cell-style="{ 'text-align': 'center' }"
+            border :data="qualityInspectionList" 
+            :header-cell-style="{ 'text-align': 'center' }" 
+            stripe
             @cell-click="changeInput"
         >
-            <el-table-column label="变体" width="140" prop="variant" align="center">
-                <template #default="{ row, $index }">
-                    <el-select v-model="row.variant" placeholder="请选择变体" @change="handleVariantUpdate(row)" style="min-width: 100%;">
+            <el-table-column align="center" label="变体" prop="variant" width="140">
+                <template #default="{ row }">
+                    <el-select v-model="row.variant" placeholder="请选择变体" style="min-width: 100%;" @change="handleVariantUpdate(row)">
                         <el-option
                             v-for="item in variantsSelectStringList"
-                            :label="item.label"
                             :key="item.value"
+                            :label="item.label"
                             :value="item.value"
-                        ></el-option>
+                        />
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="检查类型" min-width="30" align="center">
-                <template #default="{ row, $index }">
+            <el-table-column align="center" label="检查类型" min-width="30">
+                <template #default="{ row }">
                         <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckTypeUpdate(row)">
                             <el-option
                                 v-for="item in checkTypeList"
+                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                :key="item.value"
-                            ></el-option>
+                            />
                         </el-select>
                 </template>
             </el-table-column>
             <el-table-column label="打包注意事项" min-width="200" prop="packingPrecautions">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="text" v-model="row.packingPrecautions" @keyup.enter="clickQualityInspectionCancle($event, row)" @blur="clickQualityInspectionCancle($event, row)" />
+                        <el-input v-model="row.packingPrecautions" type="text" @blur="clickQualityInspectionCancle($event, row)" @keyup.enter="clickQualityInspectionCancle($event, row)" />
                     </div>
                     <span>{{ row.packingPrecautions }}</span>
                 </template>
@@ -159,8 +159,8 @@ import {
   reviewStepNo4UpdateSupplier
 } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
-import { focusAndSelectInput, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import type { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 
@@ -228,7 +228,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
  * 当点击时切换输入框，修改输入
  */
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
     
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -314,7 +314,7 @@ const handleDelQualityInspection = async (row: IreviewStepNo4ListQualityInspecti
             try {
                 $baseConfirm('确定要删除本条质检信息吗', "系统提示", async () => {
                     try {
-                        const {data, msg} = await reviewStepNo4DelQualityInspection({ qualityInspectionId: row.qualityInspectionId! })
+                        const {msg} = await reviewStepNo4DelQualityInspection({ qualityInspectionId: row.qualityInspectionId! })
                     if (msg === "调用成功！") {
                         const index = qualityInspectionList.value.findIndex((item: IreviewStepNo4ListQualityInspection) => item.qualityInspectionId === row.qualityInspectionId);
                         if (index !== -1) {
@@ -340,8 +340,8 @@ const handleDelQualityInspection = async (row: IreviewStepNo4ListQualityInspecti
             }
             $baseMessage("质检信息删除成功！","success","hey")
         }
-    } catch(e){
-        console.log(e as Error)
+    } catch(error){
+        console.log(error as Error)
    }
 }
 

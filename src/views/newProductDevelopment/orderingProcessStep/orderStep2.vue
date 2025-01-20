@@ -3,21 +3,20 @@
         <h2 style="text-align: center;">请选择需要添加到采购单里的零件</h2>
         <el-table 
             ref="tableRef" 
+            border
+            :cell-style="{ textAlign: 'center'}" :data="progressProductList"
+            :header-cell-style="{'text-align': 'center'}" 
+            stripe
             style="width: 80%"
-            border stripe
-            :data="progressProductList" 
-            :header-cell-style="{'text-align': 'center'}"
             @cell-click="tableInputChange"
-            :cell-style="{ textAlign: 'center'}"
             @selection-change="setSelectRows"
         >
             <el-table-column label="图片" min-width="90" prop="componentImg">
                 <template #default="{ row }">
-                    <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" data-img="img" />
+                    <el-image data-img="img" fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" />
                 </template>
             </el-table-column>
-            <el-table-column label="已有零件ID" width="120">
-            </el-table-column>   
+            <el-table-column label="已有零件ID" width="120"/>   
             <el-table-column label="零件名"  min-width="160" prop="componentName" >
                 <template #default="{ row }">
                     {{ row.componentName  }}
@@ -49,24 +48,20 @@
                     {{ row.totalPrice  }}
                 </template>
             </el-table-column>
-            <el-table-column label="运费(含税)" prop="freight" width="100">
-            </el-table-column>    
-            <el-table-column label="总未税价" prop="preTaxPrice" width="100">
-            </el-table-column>
-            <el-table-column label="总含税价"  min-width="100" prop="taxIncludedPrice" >
-            </el-table-column>    
+            <el-table-column label="运费(含税)" prop="freight" width="100"/>    
+            <el-table-column label="总未税价" prop="preTaxPrice" width="100"/>
+            <el-table-column label="总含税价"  min-width="100" prop="taxIncludedPrice" />    
             <el-table-column label="货币" prop="currency" width="110px">
                 <template #default = "{ row }">
-                    <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" disabled>
-                        <el-option v-for="dict in currencyList" :key="dict.value"
-                            :value="dict.value" :label="dict.label"></el-option>
+                    <el-select v-model="row.currency" disabled placeholder="请选择货币" style="min-width: 100%;">
+                        <el-option
+v-for="dict in currencyList" :key="dict.value"
+                            :label="dict.label" :value="dict.value"/>
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="供应商" min-width="140" prop="supplier">
-            </el-table-column>
-            <el-table-column type="selection" width="100" fixed="right" class="custom-checkbox">
-            </el-table-column>
+            <el-table-column label="供应商" min-width="140" prop="supplier"/>
+            <el-table-column class="custom-checkbox" fixed="right" type="selection" width="100"/>
             <template #empty>
                 <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
             </template>
@@ -84,7 +79,7 @@ import { currencyList } from '../indexCommon'
 import { reviewProgressId, reviewStepNo2Savetw } from '/@/api/devlocal/orderProcess'
 import { getComponentList } from '/@/api/devlocal/progressSample'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IComponentAdd } from '/@/type/orderProcess/orderProcessType'
+import type { IComponentAdd } from '/@/type/orderProcess/orderProcessType'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 
@@ -105,14 +100,13 @@ const emit = defineEmits<{
     (e: 'update:priviewListValue', value: string): void
  }>()
 
-const listLoading = ref<boolean>(true)
 const selectRows = ref<any>([])
 const suppliserIds = ref<number[]>([])
 // 拿样零件添加列表
 const progressProductList = ref<IComponentAdd[]>([])
 
 // table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
@@ -137,7 +131,7 @@ const fetchDataComponent = async () =>{
             progressProductList.value = data
         } else { //如果是编辑进去的
             const { data: progressId} = await reviewProgressId({ reviewId: route.query.reviewId })
-            const {data} = await getComponentList({progressId: progressId })
+            const {data} = await getComponentList({progressId })
             progressProductList.value = data
         }
             progressProductList.value.forEach((item: any) => {
@@ -153,8 +147,8 @@ const fetchDataComponent = async () =>{
             progressProductList.value.sort((a:IComponentAdd,b:IComponentAdd) => a.componentId! - b.componentId!)
             
         
-    }catch(e){
-        console.error(e as Error)
+    }catch(error){
+        console.error(error as Error)
     }
 }
 onMounted(async ()=>{
@@ -171,7 +165,7 @@ const handleContinue = async () => {
     suppliserIds.value.push(item.supplierId)
   })
 
-  const id = suppliserIds.value + ""
+  const id = `${suppliserIds.value  }`
   let classReviewId: number | undefined
   try {
     if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId

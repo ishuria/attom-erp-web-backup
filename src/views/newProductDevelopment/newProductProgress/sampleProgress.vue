@@ -1,10 +1,10 @@
 <template>
   <vab-dialog 
     v-model="dflag" 
-    title="样品进度" 
-    width="70%"
+    :before-close="handlerCloseDialog" 
     class="moldDialog"
-    :before-close="handlerCloseDialog"
+    title="样品进度"
+    width="70%"
   >
     <el-divider style="margin-top: 0; margin-bottom: 20px"/>
     <div id="table-height-container">
@@ -12,10 +12,10 @@
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
@@ -24,14 +24,14 @@
       <el-table 
         ref="tableRef" 
         v-loading="listLoading" 
-        border stripe 
-        :data="sampleList" 
-        :header-cell-style="{ 'text-align': 'center' }"
+        border :data="sampleList" 
+        :header-cell-style="{ 'text-align': 'center' }" 
+        stripe
         @cell-click="sampleTableInputChange"
       >
         <el-table-column align="center" label="图片" min-width="100">
             <template #default="{ row }">
-                <el-image style="width: 75px; height: 75px" :src="row.componentImg" fit="fill" />
+                <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" />
             </template>
         </el-table-column>
         <el-table-column label="产品" min-width="160" prop="productName" >
@@ -80,8 +80,7 @@
                 {{ row.bulkGoodsReturnable }}
             </template>
         </el-table-column>
-        <el-table-column align="center" label="备注" min-width="130" prop="remark">
-        </el-table-column>
+        <el-table-column align="center" label="备注" min-width="130" prop="remark"/>
         <el-table-column align="center" fixed="right" label="操作" width="160">
             <template #default="{ row }">
                 <el-dropdown >
@@ -123,42 +122,42 @@
   </vab-dialog>
 
   <vab-dialog 
-    :model-value="orderVisible"
-    width="400"
-    :title="dialogFlag === true ?'物流单号修改':'1688订单号修改'"
     :before-close="orderDialogClose"
+    :model-value="orderVisible"
+    :title="dialogFlag === true ?'物流单号修改':'1688订单号修改'"
+    width="400"
   >
     <el-form 
       ref="formRef"
-      :model="orderForm"
-      label-width="auto" 
+      label-width="auto"
+      :model="orderForm" 
       style="margin: 0"
     >
-      <el-form-item label="1688订单号" prop="orderNo1688" v-if="!dialogFlag">
+      <el-form-item v-if="!dialogFlag" label="1688订单号" prop="orderNo1688">
         <el-input v-model="orderForm.orderNo"/>
       </el-form-item>
-      <el-form-item label="物流单号" prop="logisticsNo" v-if="dialogFlag">
+      <el-form-item v-if="dialogFlag" label="物流单号" prop="logisticsNo">
         <el-input v-model="orderForm.logisticsNo"/>
       </el-form-item>
     </el-form>
 
     <template #footer>
       <el-button @click="orderDialogClose">取消</el-button>
-      <el-button type="primary" @click="submitForm(formRef)">确认</el-button>
+      <el-button type="primary" @click="submitForm">确认</el-button>
     </template>
   </vab-dialog>
 </template>
 
 <script lang="ts" setup>
-import { getProgressSampleList, ProgressSampleReceipt, ProgressSampleUpdate } from '~/src/api/devlocal/progress';
-import { IProgressSampleUpdate, ISampleList } from '~/src/type/progress/progressType';
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import type { TableInstance, FormInstance } from 'element-plus'
-import { convertString } from '~/src/utils/stringUtils';
-import { getSpecificChildren } from '~/src/utils/nodeUtils';
+import { ArrowDown, Search } from '@element-plus/icons-vue'
+import type { FormInstance, TableInstance } from 'element-plus'
+import { ProgressSampleReceipt, ProgressSampleUpdate, getProgressSampleList } from '/@/api/devlocal/progress'
+import type { IProgressSampleUpdate, ISampleList } from '/@/type/progress/progressType'
+import { getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
-    name: 'sampleProgressTable'
+    name: 'SampleProgressTable'
 })
 let props = defineProps<{
     sampleProgressVisible: boolean
@@ -200,8 +199,8 @@ const handlerCloseDialog = () => {
 }
 const formattedProgressLog = (str: string) => {
   return str
-    .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
-    .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
+    .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
+    .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
 const orderDialogClose = () =>{
     orderVisible.value = false
@@ -225,7 +224,7 @@ const handleSampleReceipt = async (row: any) => {
 
 
 // 拿样table单击事件
-const sampleTableInputChange = (row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const sampleTableInputChange = (row: any, column: any, cell: HTMLTableCellElement) =>{
     if (getSpecificChildren(cell, ".el-image")[0]){
         emit("update:priviewListValue", row.componentImg)
     }
@@ -247,7 +246,7 @@ const logisticsNoUpdate = (row: any) =>{
 }
 
 // 修改提交
-const submitForm = async (formEl: FormInstance | undefined) => {
+const submitForm = async () => {
   let orderParam: IProgressSampleUpdate = {
     sampleId: parseInt(orderForm.sampleId)
   }

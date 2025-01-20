@@ -1,6 +1,6 @@
 <template>
     <div class="step-form-container">
-        <el-page-header  @back="goBack" style="margin-bottom: 0px;">
+        <el-page-header  style="margin-bottom: 0px;" @back="goBack">
           <template #title >
             退出
           </template>
@@ -24,36 +24,36 @@
           <order-step1 
             v-if="active === 0" 
             @change-step="handleSetStep" 
-            @sendDataToStep2="setStep2Data"
+            @send-data-to-step2="setStep2Data"
           />
           <order-step2 
             v-if="active === 1"
-            @change-step="handleSetStep" 
-            @update:imagePreviewVisibale="updateUploadPriviewVisible"
-            @update:priviewListValue="setPreviewList"
-            :step1Data="step2ReceivedData"
+            :step1-data="step2ReceivedData" 
+            @change-step="handleSetStep"
+            @update:image-preview-visibale="updateUploadPriviewVisible"
+            @update:priview-list-value="setPreviewList"
           />
           <order-step3 
             v-if="active === 2" 
-            @change-step="handleSetStep" 
-            @update:imagePreviewVisibale="updateUploadPriviewVisible"
-            @update:priviewListValue="setPreviewList"
-            :step1Data="step2ReceivedData"
+            :step1-data="step2ReceivedData" 
+            @change-step="handleSetStep"
+            @update:image-preview-visibale="updateUploadPriviewVisible"
+            @update:priview-list-value="setPreviewList"
           />
-          <order-step4 v-if="active === 3" @change-step="handleSetStep" :step1Data="step2ReceivedData" />
+          <order-step4 v-if="active === 3" :step1-data="step2ReceivedData" @change-step="handleSetStep" />
           <order-step5 
             v-if="active === 4" 
-            @change-step="handleSetStep" 
-            :step1Data="step2ReceivedData"
-            @update:imagePreviewVisibale="updateUploadPriviewVisible"
-            @update:priviewListValue="setPreviewList"
+            :step1-data="step2ReceivedData" 
+            @change-step="handleSetStep"
+            @update:image-preview-visibale="updateUploadPriviewVisible"
+            @update:priview-list-value="setPreviewList"
           />
           <order-step6 
             v-if="active === 5" 
-            @change-step="handleSetStep"             
-            @update:imagePreviewVisibale="updateUploadPriviewVisible"
-            @update:priviewListValue="setPreviewList"
-            :step1Data="step2ReceivedData"
+            :step1-data="step2ReceivedData"             
+            @change-step="handleSetStep"
+            @update:image-preview-visibale="updateUploadPriviewVisible"
+            @update:priview-list-value="setPreviewList"
           />
         </div>
         <div :class="{ 'none2': isNone2 }">
@@ -64,23 +64,23 @@
             <el-step title="完善SKU信息" />
             <el-step title="检查并提交" />
           </el-steps>
-          <order-check-step1 v-if="activeCheck === 0" @changeCheck-step="handleCheckSetStep" />
-          <order-check-step2 v-if="activeCheck === 1" @changeCheck-step="handleCheckSetStep" @update:imagePreviewVisibale="updateUploadPriviewVisible"
-          @update:priviewListValue="setPreviewList"/>
-          <order-check-step3 v-if="activeCheck === 2" @changeCheck-step="handleCheckSetStep" />
-          <order-check-step4 v-if="activeCheck === 3" @changeCheck-step="handleCheckSetStep" @update:imagePreviewVisibale="updateUploadPriviewVisible"
-          @update:priviewListValue="setPreviewList"/>
-          <order-check-step5 v-if="activeCheck === 4" @changeCheck-step="handleCheckSetStep" @update:imagePreviewVisibale="updateUploadPriviewVisible"
-          @update:priviewListValue="setPreviewList"/>
+          <order-check-step1 v-if="activeCheck === 0" @change-check-step="handleCheckSetStep" />
+          <order-check-step2
+v-if="activeCheck === 1" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
+          @update:priview-list-value="setPreviewList"/>
+          <order-check-step3 v-if="activeCheck === 2" @change-check-step="handleCheckSetStep" />
+          <order-check-step4
+v-if="activeCheck === 3" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
+          @update:priview-list-value="setPreviewList"/>
+          <order-check-step5
+v-if="activeCheck === 4" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
+          @update:priview-list-value="setPreviewList"/>
         </div>
-        <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+        <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
     </div>
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'OrderingProcess',
-})
 import { ref } from 'vue'
 import orderCheckStep1 from './orderingProcessStep/orderCheckStep1.vue'
 import orderCheckStep2 from './orderingProcessStep/orderCheckStep2.vue'
@@ -95,6 +95,9 @@ import orderStep5 from './orderingProcessStep/orderStep5.vue'
 import orderStep6 from './orderingProcessStep/orderStep6.vue'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+defineOptions({
+  name: 'OrderingProcess',
+})
 
 // route
 const route: any = useRoute()
@@ -154,15 +157,15 @@ onMounted(() => {
     isNone1.value = true;
   }
   
-  if (!route.query.stepNo) { //订大货进去的
-    active.value = 0
-  
-  } else {
+  if (route.query.stepNo) {
     active.value = parseInt(route.query.stepNo) //编辑进去的
     activeCheck.value = parseInt(route.query.stepNo) //查看进去的
     if (parseInt(route.query.stepNo) === 5) { //查看
       activeCheck.value = 0
     }
+  } else { //订大货进去的
+    active.value = 0
+  
   }
 });
 

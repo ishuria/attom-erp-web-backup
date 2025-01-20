@@ -14,11 +14,9 @@ defineOptions({
 const props = defineProps({
   xAxisData: {
     type: Array,
-    default: [],
   },
   yAxisData: {
     type: Array,
-    default: [],
   },
 })
   
@@ -69,13 +67,5 @@ watch(
   },
   { immediate: true }
 )
-
-onMounted(() => {
-  
-})
-
-onBeforeUnmount(() => {
-})
-
 </script>
 

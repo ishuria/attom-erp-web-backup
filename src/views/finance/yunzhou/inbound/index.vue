@@ -8,53 +8,52 @@
         <span style="margin: 0 10px calc(var(--el-margin) / 2) 0;">
           <el-date-picker
             v-model="date"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
             :clearable="false"
             :editable="false"
+            end-placeholder="结束日期"
+            range-separator="至"
+            start-placeholder="开始日期"
+            type="daterange"
             @change="queryDateData"
-          >
-          </el-date-picker>
+          />
         </span>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter.native="queryData" @input="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" :loading="listLoading" native-type="submit" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border
-      :header-cell-style="{ textAlign: 'center' }"
       :cell-style="cellStyle"
       :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
     >
-      <el-table-column label="签收日期" prop="signDate" min-width="120">
+      <el-table-column label="签收日期" min-width="120" prop="signDate">
         <template #default="{ row }">
           {{ formatDate(new Date(row.signDate)) }}
         </template>
       </el-table-column>
-      <el-table-column label="供应商名称" prop="suppliser" min-width="130"></el-table-column>
-      <el-table-column label="PO" prop="po" min-width="90"></el-table-column>
-      <el-table-column label="产品名称/型号" prop="sku" min-width="130"></el-table-column>
-      <el-table-column label="品名" prop="componentName" min-width="90"></el-table-column>
-      <el-table-column label="数量" prop="purchaseCount" min-width="90"></el-table-column>
-      <el-table-column label="价格" prop="preTaxPrice" min-width="90"></el-table-column>
-      <el-table-column label="备注" prop="remark" min-width="90"></el-table-column>
+      <el-table-column label="供应商名称" min-width="130" prop="suppliser"/>
+      <el-table-column label="PO" min-width="90" prop="po"/>
+      <el-table-column label="产品名称/型号" min-width="130" prop="sku"/>
+      <el-table-column label="品名" min-width="90" prop="componentName"/>
+      <el-table-column label="数量" min-width="90" prop="purchaseCount"/>
+      <el-table-column label="价格" min-width="90" prop="preTaxPrice"/>
+      <el-table-column label="备注" min-width="90" prop="remark"/>
       <!-- <el-table-column label="操作" fixed="right" width="100">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showInOrDe">调增调减</el-link>
         </template>
       </el-table-column> -->
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -125,11 +124,11 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { CSSProperties } from 'vue'
-import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
-import { IGetInBoundList, IGetOutBoundListReq } from '/@/type/finance/financeType'
-import { getInboundList } from '/@/api/devlocal/finance'
+import type { CSSProperties } from 'vue'
 import { downloadFilePD } from '~/src/api/devlocal/download'
+import { getInboundList } from '/@/api/devlocal/finance'
+import type { IGetInBoundList, IGetOutBoundListReq } from '/@/type/finance/financeType'
+import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 
 const date = ref<[string, string]>(getDefaultStringTime())
 const total = ref<number>(0)

@@ -4,86 +4,89 @@
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-              @click="queryData"></el-button>
+            <el-button
+:icon="Search" :loading="listLoading" native-type="submit" type="primary"
+              @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" :header-cell-style="{ 'text-align': 'center' }" border :data="dataList" 
-      @cell-click="reviewTableInputChange" :span-method="objectSpanMethod" :row-class-name="stripedRowClass" class="noneHoveTable">
-      <el-table-column label="提交日期" prop="createTime" align="center" width="110">
+    <el-table
+ref="tableRef" border class="noneHoveTable" :data="dataList" 
+      :header-cell-style="{ 'text-align': 'center' }" :row-class-name="stripedRowClass" :span-method="objectSpanMethod" @cell-click="reviewTableInputChange">
+      <el-table-column align="center" label="提交日期" prop="createTime" width="110">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.createTime)) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="SKU图片" width="100">
         <template #default="{ row }">
-          <el-image v-if="row.skuImage" style="width: 75px; height: 75px" :src="row.skuImage" fit="fill" />
+          <el-image v-if="row.skuImage" fit="fill" :src="row.skuImage" style="width: 75px; height: 75px" />
         </template>
       </el-table-column>
-      <el-table-column label="SKU" width="300" prop="sku">
+      <el-table-column label="SKU" prop="sku" width="300">
         <template #default="{ row }">
           {{ formattedProgressLog(row.sku) }}
         </template>
       </el-table-column>
-      <el-table-column label="产品" width="200" prop="productName">
+      <el-table-column label="产品" prop="productName" width="200">
         <template #default="{ row }">
           {{ formattedProgressLog(row.productName) }}
         </template>
       </el-table-column>
-      <el-table-column label="首单PO" min-width="90" prop="po" align="center">
+      <el-table-column align="center" label="首单PO" min-width="90" prop="po">
         <template #default="{ row }">
           {{ row.po }}
         </template>
       </el-table-column>
-      <el-table-column label="首单实际成本" width="130" prop="firstRealCost" align="center">
+      <el-table-column align="center" label="首单实际成本" prop="firstRealCost" width="130">
         <template #default="{ row }">
           {{ row.firstRealCost }}
         </template>
       </el-table-column>
-      <el-table-column label="审批成本" min-width="100" prop="totalCost" align="center">
+      <el-table-column align="center" label="审批成本" min-width="100" prop="totalCost">
         <template #default="{ row }">
           {{ row.totalCost }}
         </template>
       </el-table-column>
-      <el-table-column label="相差" min-width="70" prop="difference" align="center">
+      <el-table-column align="center" label="相差" min-width="70" prop="difference">
         <template #default="{ row }">
           {{ row.difference }}
         </template>
       </el-table-column>
-      <el-table-column label="有效计数" prop="effectiveCount" align="center" width="70"/>
-      <el-table-column label="OEM" prop="oem" align="center" width="70">
+      <el-table-column align="center" label="有效计数" prop="effectiveCount" width="70"/>
+      <el-table-column align="center" label="OEM" prop="oem" width="70">
         <template #default="{ row }">
-          <el-checkbox :disabled="true" v-model="row.oem" :true-value="1" :false-value="0" size="large"
-            class="custom-checkbox" />
+          <el-checkbox
+v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large"
+            :true-value="1" />
         </template>
       </el-table-column>
-      <el-table-column label="产品经理" align="center" min-width="100" prop="productManager">
+      <el-table-column align="center" label="产品经理" min-width="100" prop="productManager">
         <template #default="{ row }">
           <div v-html="row.productManager"></div>
         </template>
       </el-table-column>
-      <el-table-column label="产品设计" align="center" min-width="100" prop="productDesign">
+      <el-table-column align="center" label="产品设计" min-width="100" prop="productDesign">
         <template #default="{ row }">
           {{ row.productDesign }}
         </template>
       </el-table-column>
-      <el-table-column label="立项日期" prop="projectInitiationDate" align="center" width="110">
+      <el-table-column align="center" label="立项日期" prop="projectInitiationDate" width="110">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审批日期" prop="reviewDate" align="center" width="110">
+      <el-table-column align="center" label="审批日期" prop="reviewDate" width="110">
         <template #default="{ row }">
           <span> {{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : "" }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="耗时" min-width="100" prop="timeConsuming" align="center">
+      <el-table-column align="center" label="耗时" min-width="100" prop="timeConsuming">
         <template #default="{ row }">
           {{ row.timeConsuming }}
         </template>
@@ -95,7 +98,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="审批人" align="center" min-width="100" prop="reviewPersonName">
+      <el-table-column align="center" label="审批人" min-width="100" prop="reviewPersonName">
         <template #default="{ row }">
           {{ row.reviewPersonName }}
         </template>
@@ -133,28 +136,30 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <vab-pagination :current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
+    <vab-pagination
+:current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />
     <!-- 新款评估 -->
     <vab-dialog 
       v-model="newScoreVisible" 
-      title="分数明细" 
-      width="90%"
+      :before-close="handlerScoreCloseDialog" 
       class="moldDialog"
-      :before-close="handlerScoreCloseDialog"
+      title="分数明细"
+      width="90%"
     >
       <el-divider style="margin-top: 0; margin-bottom: 20px"/>
       <div id="table-height-container">
         <el-table 
           ref="evaluationTableRef" 
           v-loading="listLoading" 
-          border stripe 
-          :data="newEvaluationData" 
-          :header-cell-style="{ 'text-align': 'center' }"
+          border :data="newEvaluationData" 
+          :header-cell-style="{ 'text-align': 'center' }" 
+          stripe
           @cell-click="keyWordTrendCellClick"
         >
-          <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-            :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+          <el-table-column
+v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+            :min-width="item.minWidth || 100" :prop="item.prop" width="auto">
             <template #default="{ row }">
               <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
                 <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
@@ -167,28 +172,28 @@
     </vab-dialog>
     <!-- 关键词趋势图表 -->
     <vab-trend 
-      :trendEchartsVisible="keyWordTrendEchatsVisible"
-      :keyWord = "inputKeyWord"
-      :trendData = "trendEcahts"
-      @update:visibleValue = "updateTrendVisibleValue"
-      @update:clearInputKeyWord = "cleanKeyWordTrendData"
-      @update:trendEchartsList  = "updateTrendEchatsData"
+      :key-word = "inputKeyWord"
+      :trend-data = "trendEcahts"
+      :trend-echarts-visible="keyWordTrendEchatsVisible"
+      @update:clear-input-key-word = "cleanKeyWordTrendData"
+      @update:trend-echarts-list  = "updateTrendEchatsData"
+      @update:visible-value = "updateTrendVisibleValue"
     />
     <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableInstance } from 'element-plus'
-import { getByIdQueryEvaluation } from '~/src/api/devlocal/progress'
-import { IKeyWordTrend } from '~/src/type/evaluation/evaluationType'
-import { IGetByIdQueryEvaluation } from '~/src/type/progress/progressType'
-import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
+import { getByIdQueryEvaluation } from '/@/api/devlocal/progress'
+import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
+import type { IGetByIdQueryEvaluation } from '/@/type/progress/progressType'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { indexColumns } from '../newProductProgress/indexColumns'
 import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
-import { IReviewQueryItem, IReviewQueryReq } from '/@/type/review/review'
+import type { IReviewQueryItem, IReviewQueryReq } from '/@/type/review/review'
 import { formatDate } from '/@/utils/dateUtils'
 defineOptions({
   name: 'DefaultTable',
@@ -227,11 +232,11 @@ const trendEcahts = ref<IKeyWordTrend>({
 const keyWordTrendEchatsVisible = ref<boolean>(false)
 const formattedProgressLog = (str: string) => {
   return str
-    .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
-    .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
+    .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
+    .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
 // table单击修改
-const reviewTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const reviewTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement) => {
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
@@ -251,7 +256,7 @@ const handleGetScoreById = async (idNo: number) => {
 const handlerScoreCloseDialog = () => {
   newScoreVisible.value = false
 }
-const keyWordTrendCellClick = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const keyWordTrendCellClick = async(row: any, column: any) => {
   if (column.label === "关键词趋势") {
     inputKeyWord.value = row.amazonFrontendKeywords
     trendEcahts.value.xAxis = row.trendList.xAxis
@@ -276,22 +281,30 @@ const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
 // 审批状态对应的文本和颜色
 const generateStatus = (value: number) => {
   switch (value) {
-    case 0:
+    case 0: {
       return { text: "编辑中", color: "status-editing" };
-    case 1:
+    }
+    case 1: {
       return { text: "待审核", color: "status-editing" };
-    case 2:
+    }
+    case 2: {
       return { text: "主管审批未通过", color: "status-failed" };
-    case 3:
+    }
+    case 3: {
       return { text: "SKU创建", color: "status-editing" };
-    case 4:
+    }
+    case 4: {
       return { text: "运营分货", color: "status-editing" };
-    case 5:
+    }
+    case 5: {
       return { text: "待发布PO", color: "status-editing" };
-    case 6:
+    }
+    case 6: {
       return { text: "已完成", color: "status-finished" };
-    default:
+    }
+    default: {
       return { text: "未知", color: "status-editing" };
+    }
   }
 }
 
@@ -369,7 +382,6 @@ const setPreviewList = (imageUrl: string) => {
 // 列表col合并方法
 const objectSpanMethod = ({
   row,
-  column,
   rowIndex,
   columnIndex,
 }: SpanMethodProps) => {

@@ -1,11 +1,11 @@
 <template>
   <vab-dialog 
     v-model="dflag" 
-    title="开模进度" 
-    width="80%"
+    :before-close="handlerCloseDialog" 
     class="moldDialog"
     style="margin: 10vh auto; height: 80vh; display: flex; flex-direction: column;"
-    :before-close="handlerCloseDialog"
+    title="开模进度"
+    width="80%"
   >
     <el-divider style="margin-top: 0; margin-bottom: 20px"/>
     <div id="table-height-container">
@@ -13,10 +13,10 @@
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
@@ -25,9 +25,9 @@
       <el-table 
         ref="tableRef" 
         v-loading="listLoading" 
-        border stripe 
-        :data="moldList" 
-        :header-cell-style="{ 'text-align': 'center' }"
+        border :data="moldList" 
+        :header-cell-style="{ 'text-align': 'center' }" 
+        stripe
       >
         <el-table-column align="center" label="提交的信息">
           <el-table-column align="center" label="提交日期" min-width="100">
@@ -117,8 +117,8 @@
           </el-table-column>
           <el-table-column align="center" fixed="right" label="操作" width="200">
               <template #default="{ row }">
-                  <el-button text type="primary" :disabled="row.status !== 1">付款申请</el-button>
-                  <el-button text type="primary" @click="handleAudit(row)" :disabled="row.status === 1 || row.status === 2">审批</el-button>
+                  <el-button :disabled="row.status !== 1" text type="primary">付款申请</el-button>
+                  <el-button :disabled="row.status === 1 || row.status === 2" text type="primary" @click="handleAudit(row)">审批</el-button>
               </template>
           </el-table-column>
         </el-table-column>
@@ -140,20 +140,20 @@
 
   <vab-dialog
     v-model="auditVisible"
-    title="审批" 
+    class="moldDialog" 
+    title="审批"
     width="20%"
-    class="moldDialog"
   >
     <el-divider style="margin-top: 0;"/>
     <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" style="margin: 0 auto;">
       <el-form-item label="开模费处理方式" prop="dealMethod">
-        <el-select v-model="form.dealMethod" placeholder="" clearable>
-          <el-option v-for="option in dealMethodOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
+        <el-select v-model="form.dealMethod" clearable placeholder="">
+          <el-option v-for="option in dealMethodOptions" :key="option.value" :label="option.label" :value="option.value"/>
         </el-select>
       </el-form-item>
       <el-form-item label="开票类型" prop="type">
-        <el-select v-model="form.type" placeholder="" clearable>
-          <el-option v-for="option in invoiceTypeOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
+        <el-select v-model="form.type" clearable placeholder="">
+          <el-option v-for="option in invoiceTypeOptions" :key="option.value" :label="option.label" :value="option.value"/>
         </el-select>
       </el-form-item>
     </el-form>
@@ -165,13 +165,13 @@
 </template>
 
 <script lang="ts" setup>
-import { getProgressMoldList, getProgressSampleList, updateProgressMold } from '/@/api/devlocal/progress';
-import { IProgressMoldList, ISampleList, ISampleListQueryReq } from '/@/type/progress/progressType';
-import { Search, ArrowDown, Delete, Plus, ZoomIn  } from '@element-plus/icons-vue'
-import type { TableInstance, FormInstance } from 'element-plus'
+import { Search } from '@element-plus/icons-vue'
+import type { FormInstance, TableInstance } from 'element-plus'
+import { getProgressMoldList, updateProgressMold } from '/@/api/devlocal/progress'
+import type { IProgressMoldList, ISampleListQueryReq } from '/@/type/progress/progressType'
 
 defineOptions({
-    name: 'moldProgressTable'
+    name: 'MoldProgressTable'
 })
 let props = defineProps<{
     moldProgressVisible: boolean
@@ -226,37 +226,51 @@ const handlerCloseDialog = () => {
 }
 const formattedProgressLog = (str: string) => {
   return str
-    .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
-    .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
+    .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
+    .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
 const generateStatus = (value: number) => {
   switch (value) {
-    case 0:
+    case 0: {
       return { text: "审批中", color: "status-pending" };
-    case 1:
+    }
+    case 1: {
       return { text: "待提交付款申请", color: "status-in" };
-    case 2:
+    }
+    case 2: {
       return { text: "已付款", color: "status-paid" };
-    default:
+    }
+    default: {
       return { text: "未知", color: "status-pending" };
+    }
   }
 }
 const generateDealMethod = (value: number) => {
-    if (value === 0) {
+    switch (value) {
+    case 0: {
         return "不含在PO"
-    } else if (value === 1) {
+    }
+    case 1: {
         return "含在PO"
-    } else if (value === 2) {
+    }
+    case 2: {
         return "含在其他PO"
+    }
+    // No default
     }
 }
 const generateInvoiceType = (value: number) => {
-    if (value === 0) {
+    switch (value) {
+    case 0: {
         return "专票"
-    } else if (value === 1) {
+    }
+    case 1: {
         return "普票"
-    } else if (value === 2) {
+    }
+    case 2: {
         return "不开票"
+    }
+    // No default
     }
 }
 // 点击审批
@@ -274,7 +288,7 @@ const handleFailed = () => {
 // 审批通过
 const handleSuccess = async () => {
     auditVisible.value = false
-    const { data } = await updateProgressMold(form.value)
+    await updateProgressMold(form.value)
     resetForm()
     fetchData()
 }

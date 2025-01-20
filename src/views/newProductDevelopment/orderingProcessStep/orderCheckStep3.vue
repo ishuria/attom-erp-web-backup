@@ -3,28 +3,19 @@
         <h2 style="text-align: center;">新供应商信息完善</h2>
         <el-table 
             ref="tableRef" 
-            stripe border 
-            :data="list" 
-            :header-cell-style="{ 'text-align': 'center' }"
+            border :data="list" 
+            :header-cell-style="{ 'text-align': 'center' }" 
+            stripe
         >
-            <el-table-column label="供应商全名" align="center" min-width="120" prop="suppliser" >
-            </el-table-column>   
-            <el-table-column label="税号" min-width="120" prop="taxNumber" >
-            </el-table-column>  
-            <el-table-column label="地址"  min-width="160" prop="address" >
-            </el-table-column>
-            <el-table-column label="开票电话"  min-width="100" prop="telephone" >
-            </el-table-column>
-            <el-table-column label="开户银行"  min-width="120" prop="bank" >
-            </el-table-column>    
-            <el-table-column label="开户账号"  min-width="120" prop="accountNumber" >
-            </el-table-column>
-            <el-table-column label="联行号" prop="bankRoutingNumber" align="center" min-width="100">
-            </el-table-column>    
-            <el-table-column label="联系人" prop="contactPerson" align="center" min-width="100">
-            </el-table-column>
-            <el-table-column label="联系人电话" prop="contactNumber" min-width="100">
-            </el-table-column>    
+            <el-table-column align="center" label="供应商全名" min-width="120" prop="suppliser" />   
+            <el-table-column label="税号" min-width="120" prop="taxNumber" />  
+            <el-table-column label="地址"  min-width="160" prop="address" />
+            <el-table-column label="开票电话"  min-width="100" prop="telephone" />
+            <el-table-column label="开户银行"  min-width="120" prop="bank" />    
+            <el-table-column label="开户账号"  min-width="120" prop="accountNumber" />
+            <el-table-column align="center" label="联行号" min-width="100" prop="bankRoutingNumber"/>    
+            <el-table-column align="center" label="联系人" min-width="100" prop="contactPerson"/>
+            <el-table-column label="联系人电话" min-width="100" prop="contactNumber"/>    
             
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
@@ -34,32 +25,32 @@
       <el-table 
             ref="tableRef" 
 
-            stripe border 
-            :data="qualityInspectionList" 
-            :header-cell-style="{ 'text-align': 'center' }"
+            border :data="qualityInspectionList" 
+            :header-cell-style="{ 'text-align': 'center' }" 
+            stripe
             style="margin-top: 20px"
         >
-            <el-table-column label="变体" width="140" prop="variant" align="center">
-                <template #default="{ row, $index }">
-                    <el-select v-model="row.variant" placeholder="请选择变体" style="min-width: 100%;" disabled>
+            <el-table-column align="center" label="变体" prop="variant" width="140">
+                <template #default="{ row }">
+                    <el-select v-model="row.variant" disabled placeholder="请选择变体" style="min-width: 100%;">
                         <el-option
                             v-for="item in variantsSelectStringList"
-                            :label="item.label"
                             :key="item.value"
+                            :label="item.label"
                             :value="item.value"
-                        ></el-option>
+                        />
                     </el-select>
                 </template>
             </el-table-column>
-            <el-table-column label="检查类型" min-width="30" align="center">
-                <template #default="{ row, $index }">
-                        <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" disabled>
+            <el-table-column align="center" label="检查类型" min-width="30">
+                <template #default="{ row }">
+                        <el-select v-model="row.checkType" disabled placeholder="请选择检查类型" style="min-width: 100%;">
                             <el-option
                                 v-for="item in checkTypeList"
+                                :key="item.value"
                                 :label="item.label"
                                 :value="item.value"
-                                :key="item.value"
-                            ></el-option>
+                            />
                         </el-select>
                 </template>
             </el-table-column>
@@ -81,9 +72,6 @@
   </template>
   
 <script lang="ts" setup>
-defineOptions({
-    name: 'OrderCheckStep3',
-})
 import { checkTypeList } from '../indexCommon'
 import {
   reviewStepNo3GetSelectVariantList,
@@ -91,9 +79,12 @@ import {
   reviewStepNo4SupplierList,
 } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
+import type { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
+defineOptions({
+    name: 'OrderCheckStep3',
+})
 
 const route: any = useRoute()
 const router = useRouter()

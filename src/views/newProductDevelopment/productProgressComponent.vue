@@ -1,6 +1,6 @@
 <template>
   <div class="default-table-detail-container">
-    <el-page-header  @back="goBack" style="margin-bottom: 0px;">
+    <el-page-header  style="margin-bottom: 0px;" @back="goBack">
       <template #content>
         <div class="flex items-center">
           <span> <strong> {{ route.query.title }} </strong><el-divider direction="vertical"/> <strong>{{ route.query.product }}</strong></span>
@@ -11,41 +11,41 @@
     <div class="container">
       <vab-component-list 
         :progress-id="route.query.progressId"
-        @update:imagePreviewVisible="updateUploadPreviewVisible"
-        @update:previewListValue="setPreviewList"
-        :trialCalculationData="trialCalculationRef?.fetchData"
+        :trial-calculation-data="trialCalculationRef?.fetchData"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
       />
 
       <vab-trial-calculation 
-        :siteList="siteList"
-        :channelList="channelList"
-        :progress-id="route.query.progressId"
-        :costScroll="costAccountingRef?.autoScrollButtom"
-        :costAccountingData = "costAccountingRef?.estimatedCostList"
-        :costAccountingFetch = "costAccountingRef?.fetchDataCostAccounting"
         ref="trialCalculationRef"
+        :channel-list="channelList"
+        :cost-accounting-data = "costAccountingRef?.estimatedCostList"
+        :cost-accounting-fetch = "costAccountingRef?.fetchDataCostAccounting"
+        :cost-scroll="costAccountingRef?.autoScrollButtom"
+        :progress-id="route.query.progressId"
+        :site-list="siteList"
       />
 
       <vab-cost-accounting
-        :siteList="siteList"
-        :channelList="channelList"
-        :progress-id="route.query.progressId"
-        @update:imagePreviewVisible="updateUploadPreviewVisible"
-        @update:previewListValue="setPreviewList"
         ref="costAccountingRef"
+        :channel-list="channelList"
+        :progress-id="route.query.progressId"
+        :site-list="siteList"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
       />
     </div>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { handleActivePath } from '/@/utils/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
-import VabCostAccounting from './vabAutoComponents/VabCostAccounting.vue';
-import VabTrialCalculation from './vabAutoComponents/VabTrialCalculation.vue';
+import VabCostAccounting from './vabAutoComponents/VabCostAccounting.vue'
+import VabTrialCalculation from './vabAutoComponents/VabTrialCalculation.vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)

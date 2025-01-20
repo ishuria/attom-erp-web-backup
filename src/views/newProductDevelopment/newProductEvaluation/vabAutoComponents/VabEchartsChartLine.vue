@@ -12,11 +12,9 @@ defineOptions({
 let props = defineProps({
     xAxisData: {
         type: Array,
-        default: [],
     },
     yAxisData: {
         type: Array,
-        default: [],
     },
 })
 
@@ -79,7 +77,4 @@ onMounted( async () => {
     await nextTick();
 })
 
-onBeforeUnmount(() => {
-    
-})
 </script>

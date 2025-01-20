@@ -1,6 +1,6 @@
 <template>
   <div class="step-form-container">
-    <el-page-header @back="goBack" style="margin-bottom: 0px;">
+    <el-page-header style="margin-bottom: 0px;" @back="goBack">
       <template #content>
         <div class="flex items-center">
           <span> <strong> 新品订货审批 </strong></span>
@@ -16,39 +16,36 @@
     </el-steps>
     <order-review-step1 
       v-if="active === 0" 
+      :review-id="route.query.reviewId" 
+      :review-status="route.query.reviewStatus"
+      :review-step-no="route.query.reviewStepNo" 
       @change-step="handleSetStep" 
-      :reviewId="route.query.reviewId"
-      :reviewStatus="route.query.reviewStatus" 
-      :reviewStepNo="route.query.reviewStepNo" 
     />
     <order-review-step2 
       v-if="active === 1" 
+      :review-id="route.query.reviewId" 
+      :review-status="route.query.reviewStatus"
+      :review-step-no="route.query.reviewStepNo" 
       @change-step="handleSetStep" 
-      :reviewId="route.query.reviewId"
-      :reviewStatus="route.query.reviewStatus" 
-      :reviewStepNo="route.query.reviewStepNo" 
     />
     <order-review-step3 
       v-if="active === 2" 
+      :review-id="route.query.reviewId" 
+      :review-status="route.query.reviewStatus"
+      :review-step-no="route.query.reviewStepNo" 
       @change-step="handleSetStep" 
-      :reviewId="route.query.reviewId"
-      :reviewStatus="route.query.reviewStatus" 
-      :reviewStepNo="route.query.reviewStepNo" 
     />
     <order-review-step4 
       v-if="active === 3" 
+      :review-id="route.query.reviewId" 
+      :review-status="route.query.reviewStatus"
+      :review-step-no="route.query.reviewStepNo" 
       @change-step="handleSetStep" 
-      :reviewId="route.query.reviewId"
-      :reviewStatus="route.query.reviewStatus" 
-      :reviewStepNo="route.query.reviewStepNo" 
    />
   </div>
 </template>
 
 <script lang="ts" setup>
-defineOptions({
-  name: 'OrderingReview',
-})
 import { handleActivePath } from '/@/utils/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { ref } from 'vue'
@@ -56,6 +53,9 @@ import orderReviewStep1 from './orderingReviewStep/orderReviewStep1.vue'
 import orderReviewStep2 from './orderingReviewStep/orderReviewStep2.vue'
 import orderReviewStep3 from './orderingReviewStep/orderReviewStep3.vue'
 import orderReviewStep4 from './orderingReviewStep/orderReviewStep4.vue'
+defineOptions({
+  name: 'OrderingReview',
+})
 
 // route
 const route: any = useRoute()

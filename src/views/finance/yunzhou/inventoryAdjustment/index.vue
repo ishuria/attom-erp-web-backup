@@ -4,39 +4,38 @@
       <vab-query-form-left-panel :span="4">
         <el-date-picker 
           v-model="queryForm.dateRange"
-          type="daterange"
-          start-placeholder="开始日期"
           end-placeholder="结束日期"
-        >
-        </el-date-picker>
+          start-placeholder="开始日期"
+          type="daterange"
+        />
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="20">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" native-type="submit" :loading="listLoading" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border 
-      :header-cell-style="{ textAlign: 'center' }"
       :data="fakeData"
+      :header-cell-style="{ textAlign: 'center' }"
     >
-      <el-table-column label="调整日期" prop="" min-width="115" align="center"></el-table-column>
-      <el-table-column label="供应商名称" prop="" min-width="200"></el-table-column>
-      <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
-      <el-table-column label="产品名称/型号" prop="" min-width="170"></el-table-column>
-      <el-table-column label="品名" prop="" min-width="140"></el-table-column>
-      <el-table-column label="调整数量" prop="" min-width="100" align="center"></el-table-column>
-      <el-table-column label="调整未税价格" prop="" min-width="120" align="center"></el-table-column>
-      <el-table-column label="含税总价￥" prop="" min-width="110" align="center"></el-table-column>
-      <el-table-column label="Shipment ID" prop="" min-width="130"></el-table-column>
-      <el-table-column label="合同编号" prop="" min-width="150"></el-table-column>
-      <el-table-column label="备注" prop="" min-width="200"></el-table-column>
+      <el-table-column align="center" label="调整日期" min-width="115" prop=""/>
+      <el-table-column label="供应商名称" min-width="200" prop=""/>
+      <el-table-column label="PO" min-width="100" prop="po"/>
+      <el-table-column label="产品名称/型号" min-width="170" prop=""/>
+      <el-table-column label="品名" min-width="140" prop=""/>
+      <el-table-column align="center" label="调整数量" min-width="100" prop=""/>
+      <el-table-column align="center" label="调整未税价格" min-width="120" prop=""/>
+      <el-table-column align="center" label="含税总价￥" min-width="110" prop=""/>
+      <el-table-column label="Shipment ID" min-width="130" prop=""/>
+      <el-table-column label="合同编号" min-width="150" prop=""/>
+      <el-table-column label="备注" min-width="200" prop=""/>
       <!-- <el-table-column label="操作" prop="" width="160" align="center">
         <template #default="{ row }">
           <el-button type="primary" text @click="showModify(row)">修改</el-button>
@@ -44,7 +43,7 @@
         </template>
       </el-table-column> -->
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -96,10 +95,10 @@ const fakeData = [
   }
 ]
 // 修改可见
-const modifyVisible = ref<boolean>(false)
-const showModify = (row: any) => {
-  modifyVisible.value = true
-}
+// const modifyVisible = ref<boolean>(false)
+// const showModify = (row: any) => {
+//   modifyVisible.value = true
+// }
 const queryData = () => {
   queryForm.pageNo = 1
   // fetchData()

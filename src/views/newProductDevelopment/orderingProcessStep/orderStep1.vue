@@ -6,9 +6,9 @@
         label-position="right" 
         label-width="170px" 
         :model="form" 
-        @submit.prevent
         :rules="rules"
         style="display: flex; flex-direction: column; justify-content: center; align-items: center;"
+        @submit.prevent
       >
 
         <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
@@ -24,7 +24,7 @@
       
         <div class="list-container auto-height-container">
           <el-scrollbar>
-            <el-form-item prop="variantList" class="variant-list-error" :error="variantListError">
+            <el-form-item class="variant-list-error" :error="variantListError" prop="variantList">
               <ul class="vab-auto-box">
                 <!-- list第一行 新增变体 -->
                 <li class="list-item"> 
@@ -74,13 +74,13 @@
 </template>
   
 <script lang="ts" setup>
-defineOptions({
-    name: 'OrderStep1',
-})
 import type { FormInstance } from 'element-plus'
 import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+defineOptions({
+    name: 'OrderStep1',
+})
 
 const route: any = useRoute()
 const router = useRouter()
@@ -114,12 +114,12 @@ const rules = reactive<any>({
     {
       validator: (rule: any, value: any, callback: any) => {
         const hasVariant = value.some((variant: any) => variant.variantName !== '' && variant.amazonUSVariantQuantity !== undefined);
-        if (!hasVariant) {
-          variantListError.value = '至少需要填写一个变体的名称和订货数量'; // 设置错误信息
-          callback(new Error(variantListError.value));
-        } else {
+        if (hasVariant) {
           variantListError.value = ''; // 清空错误信息
           callback();
+        } else {
+          variantListError.value = '至少需要填写一个变体的名称和订货数量'; // 设置错误信息
+          callback(new Error(variantListError.value));
         }
       },
       trigger: 'blur',
@@ -185,7 +185,7 @@ const handleSubmit = () => {
           }
         } else {
           const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
-          const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
+          await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
 
             $baseMessage(
               "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
@@ -229,7 +229,7 @@ const handleSubmitAndContinue = async () => {
               }
             } else {
               const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
-              const { data } = await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
+              await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
             
             
                 $baseMessage(

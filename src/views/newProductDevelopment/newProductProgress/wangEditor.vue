@@ -1,15 +1,14 @@
 <template>
   <el-dialog
-    :title="props.title"
     v-model="dflag"
-    width="60%"
     :before-close = "handlerCloseDialog"
     class="wangEditorDialog"
-    
+    :title="props.title"
+    width="60%"
   >
     <div class="wang-editor-container" >
-      <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" :defaultConfig="toolbarConfig"/>
-      <editor v-model="html" class="wang-editor-content" :default-config="editorConfig" @on-created="handleCreated" @click="handleClick"/>
+      <toolbar :default-config="toolbarConfig" :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)"/>
+      <editor v-model="html" class="wang-editor-content" :default-config="editorConfig" @click="handleClick" @on-created="handleCreated"/>
     </div>
     <template #footer>
       <span>
@@ -22,11 +21,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { IDomEditor } from '@wangeditor/editor'
+import type { IDomEditor, IToolbarConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
 import { removeLocalStorage, setLocalStorage } from '/@/utils/localStorage'
-import { IToolbarConfig } from '@wangeditor/editor'
 
 defineOptions({
   name: 'WangEditor',

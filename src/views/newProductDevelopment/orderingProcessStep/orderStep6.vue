@@ -3,48 +3,47 @@
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table 
                 ref="tableRef" 
-                stripe border 
+                border class="table1" 
                 :data="exchangeList" 
                 :header-cell-style="{ 'text-align': 'right' }"
                 :show-header="false"
-                @cell-click="tableInputChange"
-                class="table1"
+                stripe
                 style="width: auto; table-layout: fixed;"
+                @cell-click="tableInputChange"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
-                    :prop="'column0'" 
-                    :label="labelMap['column0']" 
-                    fixed
-                    align="right"
+                    align="right" 
+                    fixed 
+                    :label="labelMap['column0']"
+                    :prop="'column0'"
                     width="260"
                 >
                     <template #default="{ row }">
-                        <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
+                        <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
                     </template>
                 </el-table-column>
                 <el-table-column 
                     v-for="(prop, i) in columnsChange" 
-                    :prop="prop" 
-                    :label="prop" 
                     :key="i" 
                     align="center" 
-                    min-width="260"
+                    :label="prop" 
+                    min-width="260" 
+                    :prop="prop"
                 >
                     <template #default = {row}>
                         
                         <template v-if="row['column0'] === 'variantImg'">
-                            <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
+                            <el-image data-img="img" fit="fill" :src="row[prop]" style="width: 75px; height: 75px" />
                         </template>
                         <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                          <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled class="center-select">
+                          <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择拍照留样情况">
                             <el-option 
                               v-for="item in photoSampleOptions"
+                              :key="item.value"
                               :label="item.label"
                               :value="item.value"
-                              :key="item.value"
-                            >
-                            </el-option>
+                            />
                           </el-select>
                         </template>
                         <template v-if="row['column0'] === 'packagingSize'">
@@ -67,39 +66,34 @@
       
           <div>
             <el-table 
-              stripe border 
+              border :cell-style="{ 'text-align': 'center' }" 
               :data="moldCheckList" 
               :header-cell-style="{ 'text-align': 'center' }"
-              style="margin-top: 25px;"
               height="100"
-              :cell-style="{ 'text-align': 'center' }"
+              stripe
+              style="margin-top: 25px;"
             >
               <el-table-column label="提交日期" min-width="100" prop="createTime">
                   <template #default="{ row }">
                     <span>{{ row.createTime.split(' ')[0] }}</span>
                   </template>
               </el-table-column>
-              <el-table-column label="零件名" min-width="200" prop="component">
-              </el-table-column>
-              <el-table-column label="供应商" min-width="127" prop="suppliser">
-        
-              </el-table-column>
-              <el-table-column label="状态" min-width="127" align="center" prop="status">
+              <el-table-column label="零件名" min-width="200" prop="component"/>
+              <el-table-column label="供应商" min-width="127" prop="suppliser"/>
+              <el-table-column align="center" label="状态" min-width="127" prop="status">
                 <template #default="{ row }">
                     <span :class="generateStatus(row.status).color">
                         {{ generateStatus(row.status).text }}
                     </span>
                 </template>
               </el-table-column>
-              <el-table-column label="开票类型" min-width="127" align="center" prop="invoiceType">
+              <el-table-column align="center" label="开票类型" min-width="127" prop="invoiceType">
                 <template #default="{ row }">
                   {{ generateInvoiceType(row.invoiceType) }}
                 </template>
               </el-table-column>
-              <el-table-column label="付款金额" min-width="127" align="center" prop="payPrice">
-        
-              </el-table-column>
-              <el-table-column label="开模处理方式" min-width="127" align="center" prop="dealMethod">
+              <el-table-column align="center" label="付款金额" min-width="127" prop="payPrice"/>
+              <el-table-column align="center" label="开模处理方式" min-width="127" prop="dealMethod">
                 <template #default="{ row }">
                   {{ generateDealMethod(row.dealMethod) }}
                 </template>
@@ -111,19 +105,19 @@
           </div>
           <vab-dialog 
             v-model="checkPersonListVisible" 
-            title="审批人选择" 
-            width="480"
+            :before-close="handleCheckPersonClose" 
+            title="审批人选择"
        
-            :before-close="handleCheckPersonClose"
+            width="480"
           >
             <el-form style="margin: 0">
               <el-form-item label="审批人员列表">
                 <el-select 
                   v-model="reviewPersonId" 
-                  placeholder="请选择审批人员"  
+                  clearable  
                   collapse-tags
                   collapse-tags-tooltip
-                  clearable
+                  placeholder="请选择审批人员"
                 >
                   <el-option v-for="item in personList" :key="item.userId" :label="item.userName" :value="item.userId" />
                 </el-select>
@@ -141,9 +135,9 @@
 </template>
   
 <script lang="ts" setup>
-import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess';
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
-import { convertString } from '/@/utils/stringUtils';
+import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
     name: 'OrderStep6',
@@ -168,7 +162,7 @@ const exchangeList = ref<any>([])
 const props = defineProps<{ step1Data: number }>()
 const route: any = useRoute()
 // table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
     // 处理图片放大预览
     let el = getSpecificChildren(cell, "img")[0];
     if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
@@ -196,32 +190,46 @@ const formattedPrice = (price: string) => {
 
 const generateStatus = (value: number) => {
   switch (value) {
-    case 0:
+    case 0: {
       return { text: "审批中", color: "status-pending" };
-    case 1:
+    }
+    case 1: {
       return { text: "待提交付款申请", color: "status-in" };
-    case 2:
+    }
+    case 2: {
       return { text: "已付款", color: "status-paid" };
-    default:
+    }
+    default: {
       return { text: "未知", color: "status-pending" };
+    }
   }
 }
 const generateInvoiceType = (value: number) => {
-    if (value === 0) {
+    switch (value) {
+    case 0: {
         return "专票"
-    } else if (value === 1) {
+    }
+    case 1: {
         return "普票"
-    } else if (value === 2) {
+    }
+    case 2: {
         return "不开票"
+    }
+    // No default
     }
 }
 const generateDealMethod = (value: number) => {
-    if (value === 0) {
+    switch (value) {
+    case 0: {
         return "不含在PO"
-    } else if (value === 1) {
+    }
+    case 1: {
         return "含在PO"
-    } else if (value === 2) {
+    }
+    case 2: {
         return "含在其他PO"
+    }
+    // No default
     }
 }
 const labelMap: Record<string, string> = {

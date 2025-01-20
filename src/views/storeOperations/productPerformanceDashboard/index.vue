@@ -15,6 +15,7 @@
                   :max-collapse-tags="1"
                   multiple
                   placeholder="请选择站点"
+                  :placement="'bottom-end'"
                   style="width: 220px"
                   @change="queryData"
                 >
@@ -879,7 +880,7 @@ const handleConfirmFilter = async (filterForm: any) => {
       siteIds,
     })
     if (data) {
-      $baseConfirm('SKU运营筛选成功！', 'success')
+      $baseMessage('SKU运营筛选成功！', 'success')
       filterVisible.value = false
       total.value = data.total
       list.value = data.list

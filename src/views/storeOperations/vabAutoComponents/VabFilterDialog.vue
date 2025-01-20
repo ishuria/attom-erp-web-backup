@@ -1,7 +1,7 @@
 <template>
   <vab-dialog
-    title="筛选"
     v-model="dflag"
+    title="筛选"
     width="27%"
     @close="handleClose"
   >
@@ -137,15 +137,15 @@
         </div>
       </el-form-item>
       <el-form-item label="运营分类筛选">
-        <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类"></el-select>
+        <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类"/>
       </el-form-item>
       <el-form-item label="广告">
         <el-select v-model="filterForm.advStatus" placeholder="请选择广告状态">
           <el-option 
             v-for="item in adStatusOption"
+            :key="item.value"
             :label="item.label"
             :value="item.value"
-            :key="item.value"
           />
         </el-select>
       </el-form-item>
@@ -162,7 +162,7 @@
 </template>
 
 <script lang="ts" setup>
-import { FormInstance } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import { adStatusOption } from '../constantOption'
 
 defineOptions({
@@ -177,29 +177,46 @@ watchEffect(() => {
 })
 const emit = defineEmits(['updateVisible', 'updateFilter'])
 const filterForm = reactive<any>({
-  newArrivalMinDay: undefined,
-  newArrivalMaxDay: undefined,
-  esTotalMin: undefined,
-  esTotalMax: undefined,
-  signCountMin: undefined,
-  signCountMax: undefined,
-  monthProfitMin: undefined,
-  monthProfitMax: undefined,
-  monthInterestRateMin: undefined,
-  monthInterestRateMax: undefined,
-  monthSalesVolumeMin: undefined,
-  monthSalesVolumeMax: undefined,
-  fbaMin: undefined,
-  fbaMax: undefined,
-  operationTypeId: undefined,
-  advStatus: undefined
+  newArrivalMinDay: null,
+  newArrivalMaxDay: null,
+  esTotalMin: null,
+  esTotalMax: null,
+  signCountMin: null,
+  signCountMax: null,
+  monthProfitMin: null,
+  monthProfitMax: null,
+  monthInterestRateMin: null,
+  monthInterestRateMax: null,
+  monthSalesVolumeMin: null,
+  monthSalesVolumeMax: null,
+  fbaMin: null,
+  fbaMax: null,
+  operationTypeId: null,
+  advStatus: null
 })
 const filterFormRef = ref<FormInstance>()
 const handleConfirmFilter = () => {
   emit('updateFilter', filterForm)
 }
 const clearFilterForm = () => {
-  Object.assign(filterForm, {})
+  Object.assign(filterForm, {
+    newArrivalMinDay: null,
+    newArrivalMaxDay: null,
+    esTotalMin: null,
+    esTotalMax: null,
+    signCountMin: null,
+    signCountMax: null,
+    monthProfitMin: null,
+    monthProfitMax: null,
+    monthInterestRateMin: null,
+    monthInterestRateMax: null,
+    monthSalesVolumeMin: null,
+    monthSalesVolumeMax: null,
+    fbaMin: null,
+    fbaMax: null,
+    operationTypeId: null,
+    advStatus: null
+  })
 }
 const handleClose = () => {
   emit('updateVisible', false)

@@ -1,6 +1,6 @@
 handleSubmit<template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
+    <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="进行中" name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
@@ -11,10 +11,10 @@ handleSubmit<template>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.productKeyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.productKeyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -23,50 +23,49 @@ handleSubmit<template>
         <el-table 
           ref="tableRef" 
           v-loading="listLoading" 
-          border stripe
-          :data="progressList" 
+          border :data="progressList"
+          :header-cell-style="{ 'text-align': 'center' }" 
+          stripe
           @cell-click="changeInput"
-          :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column label="优先级" prop="priority" align="center" min-width="75">
+          <el-table-column align="center" label="优先级" min-width="75" prop="priority">
             <template #default = "{ row }">
-              <el-select size="default" style="min-width: 100%" v-model="row.priority" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)">
+              <el-select v-model="row.priority" size="default" style="min-width: 100%" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
                   :label="item.label" 
                   :value="item.value"
-                >
-                </el-option>
+                />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="示例图片" prop="imageList" class="image-wall" min-width="450">
+          <el-table-column class="image-wall" label="示例图片" min-width="450" prop="imageList">
             <template #default = "{ row }">
-              <VueDraggable
+              <vue-draggable
                 v-model="row.imageList"
                 :animation="150"
-                ghostClass="ghost"
+                ghost-class="ghost"
                 target="ul"
                 @end="onEnd"
               >
                 <el-upload 
-                  list-type="picture-card" 
+                  :class="{ hide: row.hide }" 
                   :file-list="row.imageList" 
-                  :limit="5" 
-                  :class="{ hide: row.hide }"
-                  :http-request="uploadImage"
+                  :http-request="uploadImage" 
+                  :limit="5"
+                  list-type="picture-card"
                 >
                   <div 
                     style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
                     @click="handleIconClick(row)"
                   >
-                    <el-icon ><Plus /></el-icon>
+                    <el-icon ><plus /></el-icon>
                   </div>
 
                   <template #file="{ file }">
                     <div>
-                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
                       <span class="el-upload-list__item-actions">
                         <span
                           class="el-upload-list__item-preview"
@@ -79,44 +78,45 @@ handleSubmit<template>
                           class="el-upload-list__item-delete"
                           @click="handleRemove(file, row)"
                         >
-                          <el-icon><Delete /></el-icon>
+                          <el-icon><delete /></el-icon>
                         </span>
                       </span>
                       {{ file.name }}
                     </div>
                   </template>
                 </el-upload>
-              </VueDraggable>
+              </vue-draggable>
             </template>
           </el-table-column>
-          <el-table-column label="产品" prop="product" min-width="160">
+          <el-table-column label="产品" min-width="160" prop="product">
             <template #default = "{ row }">
               <div class="none">
-                  <el-input type="textarea" autofocus v-model="row.product" :autosize="{ minRows: 1, maxRows: 2 }" @keyup.enter="clickCancel($event, row)"
-                    @blur="clickCancel($event, row)" />
+                  <el-input
+v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)"
+                    @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" prop="oem" align="center" min-width="65">
+          <el-table-column align="center" label="OEM" min-width="65" prop="oem">
             <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox"/>
+               <el-checkbox v-model="row.oem" class="custom-checkbox" :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
             </template>
           </el-table-column>
-          <el-table-column label="立项日期" prop="createTime" align="center" width="120">
+          <el-table-column align="center" label="立项日期" prop="createTime" width="120">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" min-width="90">
+          <el-table-column align="center" label="当前阶段" min-width="90" prop="currentPhaseStatus">
             <template #default = "{ row }">
               <div class="none">
-                <el-input type="textarea" autofocus v-model="row.currentPhaseStatus" :autosize="{ minRows: 1, maxRows: 2 }" @keyup.enter="clickCancel($event, row)"  @blur="clickCancel($event, row)"/>
+                <el-input v-model="row.currentPhaseStatus" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)"  @keyup.enter="clickCancel($event, row)"/>
               </div>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
           </el-table-column>      
-          <el-table-column label="开发日志" prop="progressLog" min-width="500">
+          <el-table-column label="开发日志" min-width="500" prop="progressLog">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -126,7 +126,7 @@ handleSubmit<template>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" align="center" min-width="100">
+          <el-table-column align="center" label="参与人员" min-width="100" prop="sharerName">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -146,15 +146,15 @@ handleSubmit<template>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="90">
+          <el-table-column align="center" label="目标月销" min-width="90" prop="targetMonthlySales">
             <template #default = "{ row }">
               <div class="none">
-                  <el-input type="text" v-model="row.targetMonthlySales" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                  <el-input v-model="row.targetMonthlySales" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" align="center" width="130">
+          <el-table-column align="center" label="新款评估编号" prop="evaluationId" width="130">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
@@ -174,7 +174,7 @@ handleSubmit<template>
                     <el-dropdown-item @click="handleSampleCosting(row)">
                       <el-link type="primary" :underline="false" >拿样与核算</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="addProgressMold(row.progressId)">
+                    <el-dropdown-item @click="addProgressMold">
                       <el-link type="primary" :underline="false" >开模申请</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleOrderProcess(row)">
@@ -220,12 +220,12 @@ handleSubmit<template>
             <div class="custom-table-right-tools">
               <el-form inline :model="queryForm" @submit.prevent>
                 <el-form-item>
-                  <el-input v-model.trim="queryForm.productKeyWord" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                  <el-input v-model.trim="queryForm.productKeyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                    @click="queryData">
-                  </el-button>
+                  <el-button
+:icon="Search" :loading="listLoading" native-type="submit" type="primary"
+                    @click="queryData"/>
                 </el-form-item>
               </el-form>
             </div>
@@ -234,52 +234,51 @@ handleSubmit<template>
         <el-table 
           ref="tableRef" 
           v-loading="listLoading" 
-          border stripe
-          :data="progressList" 
+          border :data="progressList"
+          :header-cell-style="{ 'text-align': 'center' }" 
+          stripe
           @cell-click="changeInput"
-          :header-cell-style="{ 'text-align': 'center' }"
         >
-          <el-table-column label="优先级" prop="priority" align="center" min-width="75">
+          <el-table-column align="center" label="优先级" min-width="75" prop="priority">
             <template #default = "{ row }">
-              <el-select size="default" v-model="row.priority" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" disabled>
+              <el-select v-model="row.priority" disabled size="default" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
                   :label="item.label" 
                   :value="item.value"
-                >
-                </el-option>
+                />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="示例图片" prop="imageList" class="image-wall" min-width="450">
+          <el-table-column class="image-wall" label="示例图片" min-width="450" prop="imageList">
             <template #default = "{ row }">
-              <VueDraggable
+              <vue-draggable
                 v-model="row.imageList"
                 :animation="150"
-                ghostClass="ghost"
+                disabled
+                ghost-class="ghost"
                 target="ul"
                 @end="onEnd"
-                disabled
               >
                 <el-upload 
-                  list-type="picture-card" 
+                  :class="{ hide: row.hide }" 
+                  disabled 
                   :file-list="row.imageList" 
-                  :limit="5" 
-                  :class="{ hide: row.hide }"
                   :http-request="uploadImage"
-                  disabled
+                  :limit="5"
+                  list-type="picture-card"
                 >
                   <div 
                     style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
                     @click="handleIconClick(row)"
                   >
-                    <el-icon ><Plus /></el-icon>
+                    <el-icon ><plus /></el-icon>
                   </div>
 
                   <template #file="{ file }">
                     <div>
-                      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
                       <span class="el-upload-list__item-actions">
                         <span
                           class="el-upload-list__item-preview"
@@ -292,37 +291,37 @@ handleSubmit<template>
                           class="el-upload-list__item-delete"
                           @click="handleRemove(file, row)"
                         >
-                          <el-icon><Delete /></el-icon>
+                          <el-icon><delete /></el-icon>
                         </span>
                       </span>
                       {{ file.name }}
                     </div>
                   </template>
                 </el-upload>
-              </VueDraggable>
+              </vue-draggable>
             </template>
           </el-table-column>
-          <el-table-column label="产品" prop="product" min-width="160">
+          <el-table-column label="产品" min-width="160" prop="product">
             <template #default = "{ row }">
               <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" prop="oem" align="center" min-width="60">
+          <el-table-column align="center" label="OEM" min-width="60" prop="oem">
             <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" :true-value="'1'" :false-value="'0'" size="large" @change="handleCheckbox(row.oem)" class="custom-checkbox" disabled/>
+               <el-checkbox v-model="row.oem" class="custom-checkbox" disabled :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
             </template>
           </el-table-column>
-          <el-table-column label="立项日期" prop="createTime" align="center" min-width="100">
+          <el-table-column align="center" label="立项日期" min-width="100" prop="createTime">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" align="center" width="85">
+          <el-table-column align="center" label="当前阶段" prop="currentPhaseStatus" width="85">
             <template #default = "{ row }">
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="开发日志" prop="progressLog" min-width="500">
+          <el-table-column label="开发日志" min-width="500" prop="progressLog">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -332,7 +331,7 @@ handleSubmit<template>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" align="center" min-width="100">
+          <el-table-column align="center" label="参与人员" min-width="100" prop="sharerName">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -352,12 +351,12 @@ handleSubmit<template>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" align="center" min-width="85">
+          <el-table-column align="center" label="目标月销" min-width="85" prop="targetMonthlySales">
             <template #default = "{ row }">
               <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" align="center" min-width="110">
+          <el-table-column align="center" label="新款评估编号" min-width="110" prop="evaluationId">
             <template #default = "{ row }">
               <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
             </template>
@@ -384,65 +383,61 @@ handleSubmit<template>
         <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="dialogVisible" hide-on-click-modal/>
-    <wangEditor
-      :title="wangEditorTitle"
-      :wangEditorVisible="wangEditorLogVisible"
+    <el-image-viewer v-if ="dialogVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <wang-editor
+      :classify="classify"
       :content="progressLogCopy"
-      @clickChild="clickLog"
-      @clickBoolean="clickLogBool"
-      :classify="classify"
-    >
-    </wangEditor>
-    <wangEditor
       :title="wangEditorTitle"
-      :wangEditorVisible="wangEditorRemarkVisible"
-      :content="remarkCopy"
-      @clickChild="clickRemark"
-      @clickBoolean="clickRemarkBool"
+      :wang-editor-visible="wangEditorLogVisible"
+      @click-boolean="clickLogBool"
+      @click-child="clickLog"
+    />
+    <wang-editor
       :classify="classify"
-    >
-    </wangEditor>
+      :content="remarkCopy"
+      :title="wangEditorTitle"
+      :wang-editor-visible="wangEditorRemarkVisible"
+      @click-boolean="clickRemarkBool"
+      @click-child="clickRemark"
+    />
     <!-- 共享 -->
     <vab-shared  
-      :visible="sharedVisible"
       :id = "shareId"
+      :fetch-data="fetchData"
+      :handler-switch-change="handlerSwitchChange"
       :list="shareUserList"
-      @update:sharedVisible = "updateSharedVisibleValue"
-      :handlerSwitchChange="handlerSwitchChange"
-      :fetchData="fetchData"
+      :visible="sharedVisible"
+      @update:shared-visible = "updateSharedVisibleValue"
     />
     
     <!-- 开模申请 -->
     <vab-dialog 
       v-model="moldVisible" 
-      title="开模申请" 
-      width="500"
+      :before-close="handlerCloseDialog" 
       class="moldDialog"
-      :before-close="handlerCloseDialog"
+      title="开模申请"
+      width="500"
     >
       <el-divider style="margin-top: 0;"/>
       <el-form ref="formRef" class="demo-form" label-position="right" label-width="120px" :model="form" style="max-width: 340px; margin: 0 auto;">
         <el-form-item label="零件名" prop="componentName">
-          <el-select v-model="form.componentName" placeholder="" @change="handleComponentChange" clearable>
+          <el-select v-model="form.componentName" clearable placeholder="" @change="handleComponentChange">
             <el-option 
               v-for="item in componentOptions" 
               :key="item.id" 
               :label="item.label" 
               :value="item.id"
-            >
-            </el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="供应商全名" prop="supplierName">
-          <el-select v-model="form.supplierName" placeholder="" @change="handleSupplierChange" clearable :disabled="supplierDisabled">
+          <el-select v-model="form.supplierName" clearable :disabled="supplierDisabled" placeholder="" @change="handleSupplierChange">
             <el-option 
               v-for="item in supplierOptions" 
               :key="item.id" 
               :label="item.label" 
               :value="item.id"
-            >
-            </el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="模具费(不含税)" prop="excludingTax">
@@ -459,8 +454,8 @@ handleSubmit<template>
         </el-form-item>
         <el-form-item label="审核人" prop="audit">
           <!-- <el-input v-model="form.name" clearable placeholder="王豪俊" disabled/> -->
-          <el-select v-model="form.audit" placeholder="王豪俊" clearable>
-            <el-option label="王豪俊" value="王豪俊"></el-option>
+          <el-select v-model="form.audit" clearable placeholder="王豪俊">
+            <el-option label="王豪俊" value="王豪俊"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -472,23 +467,23 @@ handleSubmit<template>
       </template>
     </vab-dialog>
     <!-- 样品进度 -->
-    <sampleProgress 
-      :sampleProgressVisible="sampleProgressDialog"
-      @update:sampleProgressVisible="sampleProgressDialog = $event"
-      @update:priviewListValue="setPreviewList"
+    <sample-progress 
+      :sample-progress-visible="sampleProgressDialog"
+      @update:priview-list-value="setPreviewList"
+      @update:sample-progress-visible="sampleProgressDialog = $event"
     />
     <!-- 开模进度 -->
-    <moldProgress 
-      :moldProgressVisible="moldProgressDialog"
-      @update:moldProgressVisible="moldProgressDialog = $event"
+    <mold-progress 
+      :mold-progress-visible="moldProgressDialog"
+      @update:mold-progress-visible="moldProgressDialog = $event"
     />
     <!-- 新款评估 -->
     <vab-dialog 
       v-model="newEvaluationVisible" 
-      title="新款评估" 
-      width="90%"
+      :before-close="handlerEvaluationCloseDialog" 
       class="moldDialog"
-      :before-close="handlerEvaluationCloseDialog"
+      title="新款评估"
+      width="90%"
       @opened="onDialogOpened"
     >
       <el-divider style="margin-top: 0; margin-bottom: 20px"/>
@@ -496,13 +491,14 @@ handleSubmit<template>
         <el-table 
           ref="evaluationTableRef" 
           v-loading="listLoading" 
-          border stripe 
-          :data="newEvaluationData" 
-          :header-cell-style="{ 'text-align': 'center' }"
+          border :data="newEvaluationData" 
+          :header-cell-style="{ 'text-align': 'center' }" 
+          stripe
           @cell-click="keyWordTrendCellClick"
         >
-          <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-              :prop="item.prop" :min-width="item.minWidth || 100" width="auto">
+          <el-table-column
+v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+              :min-width="item.minWidth || 100" :prop="item.prop" width="auto">
             <template #default="{ row }">
               <div  v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
                 <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
@@ -516,19 +512,19 @@ handleSubmit<template>
     <!-- 参与人员筛选 -->
     <vab-dialog 
       v-model="shareSelectVisible" 
-      title="参与人员筛选" 
+      :before-close="handleShareSelectClose" 
+      title="参与人员筛选"
       width="480"
-      :before-close="handleShareSelectClose"
     >
       <el-form style="margin: 0">
         <el-form-item label="参与人员列表">
           <el-select 
             v-model="shareSelect" 
-            multiple 
-            placeholder="请选择参与人员"  
-            collapse-tags
+            clearable 
+            collapse-tags  
             collapse-tags-tooltip
-            clearable
+            multiple
+            placeholder="请选择参与人员"
           >
             <el-option v-for="item in optionShare" :key="item.userID" :label="item.userName" :value="item.userID" />
           </el-select>
@@ -541,19 +537,19 @@ handleSubmit<template>
     <!-- 参与人员筛选 -->
     <vab-dialog 
       v-model="shareArchivedSelectVisible" 
-      title="参与人员筛选" 
+      :before-close="handleArchivedShareSelectClose" 
+      title="参与人员筛选"
       width="480"
-      :before-close="handleArchivedShareSelectClose"
     >
       <el-form style="margin: 0">
         <el-form-item label="参与人员列表">
           <el-select 
             v-model="shareArchivedSelect" 
-            multiple 
-            placeholder="请选择参与人员"  
-            collapse-tags
+            clearable 
+            collapse-tags  
             collapse-tags-tooltip
-            clearable
+            multiple
+            placeholder="请选择参与人员"
           >
             <el-option v-for="item in optionArchivedShare" :key="item.userID" :label="item.userName" :value="item.userID" />
           </el-select>
@@ -565,12 +561,12 @@ handleSubmit<template>
     </vab-dialog>
     <!-- 关键词趋势图表 -->
     <vab-trend 
-      :trendEchartsVisible="keyWordTrendEchatsVisible"
-      :keyWord = "inputKeyWord"
-      :trendData = "trendEcahts"
-      @update:visibleValue = "updateTrendVisibleValue"
-      @update:clearInputKeyWord = "cleanKeyWordTrendData"
-      @update:trendEchartsList  = "updateTrendEchatsData"
+      :key-word = "inputKeyWord"
+      :trend-data = "trendEcahts"
+      :trend-echarts-visible="keyWordTrendEchatsVisible"
+      @update:clear-input-key-word = "cleanKeyWordTrendData"
+      @update:trend-echarts-list  = "updateTrendEchatsData"
+      @update:visible-value = "updateTrendVisibleValue"
     />
   </div>
 </template>
@@ -578,9 +574,10 @@ handleSubmit<template>
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
+import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import { ref } from 'vue'
-import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
+import { VueDraggable } from 'vue-draggable-plus'
 import { indexColumns } from './indexColumns'
 import moldProgress from './moldProgress.vue'
 import sampleProgress from './sampleProgress.vue'
@@ -603,10 +600,8 @@ import {
   updateProgressSharelist,
   uploadFile
 } from '/@/api/devlocal/progress'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
-import { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
+import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
+import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { removeHtmlTags } from '/@/utils/tableColum'
@@ -617,10 +612,6 @@ defineOptions({
 
 const router = useRouter()
 
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const tabsStore = useTabsStore()
-const { changeTabsMeta, addVisitedRoute } = tabsStore
 const editRef = ref<any>(null)
 
 const activeName = ref("0")
@@ -705,8 +696,7 @@ const supplierDisabled = ref<boolean>(true)
 const sampleProgressDialog = ref<boolean>(false)
 // 控制开模进度是否显示
 const moldProgressDialog = ref<boolean>(false)
-// 控制复制提示框是否显示
-const copyDialogVisible = ref<boolean>(false)
+
 // 控制查看新款评估是否显示
 const newEvaluationVisible = ref<boolean>(false)
 // 根据评估id找到的新款评估信息
@@ -747,7 +737,7 @@ const handleArchivedShareSelectClose = () => {
 const handlerEvaluationCloseDialog = () => {
   newEvaluationVisible.value = false
 }
-const handleTabClick = (tab: TabsPaneContext, event: Event) => {
+const handleTabClick = (tab: TabsPaneContext) => {
   progressList.value=[]
   if (tab.props.name === '0')  queryForm.status = 0
   else queryForm.status = 1
@@ -834,7 +824,7 @@ const imagePreviewClose = () =>{
  * 点击添加图标事件
  */
 const handleIconClick = (row: any) => {
-  tableClickProgressId = row.progressId
+  tableClickProgressId.value = row.progressId
   tableClickRowIndex.value = progressList.value.findIndex(item => item.progressId == row.progressId) as any
   // console.log('点击行的下标', tableClickRowIndex.value);
 }
@@ -861,7 +851,7 @@ async function uploadImage (params: any) {
     const { fileId, url } = data
     const imageListCopy = [...progressList.value[tableClickRowIndex.value].imageList!];
     imageListCopy.push({
-        url: url,
+        url,
         name: fileId,
     });
     let newArray = [...progressList.value]
@@ -877,7 +867,7 @@ async function uploadImage (params: any) {
 }
 const dlist = ref<any>([])
 // 移动之后触发修改排序接口
-const onEnd = debounce(async (e: SortableEvent ) => {
+const onEnd = debounce(async () => {
     try {
         dlist.value = progressList.value[tableClickRowIndex.value].imageList
         // console.log(dlist.value)
@@ -885,8 +875,8 @@ const onEnd = debounce(async (e: SortableEvent ) => {
             return item.name
         })
         await updateProgressImgSort(idList)
-    }catch(e){
-        console.error(e as Error)
+    }catch(error){
+        console.error(error as Error)
     }
 }, 500)
 /**
@@ -917,12 +907,11 @@ const fetchData = async () => {
     }
   })
 }
-
-let _row: any
+let _row: any = null
 /**
  * 当点击时切换输入框，修改输入
  */
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   
   // 获取行的下标
   tableClickIdx.value = progressList.value.indexOf(row)
@@ -978,7 +967,13 @@ const clickCancel = async (event: any, value: any) =>{
     if (t1) t1.classList.add("none");
     if (t2) t2.classList.remove("none");
   }
-  await updateProgressManage({...value})
+  if (isEqual(_row, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑
+    await updateProgressManage({...value})
+  }
 }
 
 /**
@@ -1019,8 +1014,8 @@ const queryData = () => {
 }
 const formattedProgressLog = (str: string) => {
   return str
-    .replace(/([\u4e00-\u9fa5]) ([a-zA-Z])/g, '$1<br>$2')
-    .replace(/([a-zA-Z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
+    .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
+    .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
 /**
  * 分页大小的改变
@@ -1071,7 +1066,7 @@ const getMoldProgress = async () => {
 }
 
 // 开模申请
-const addProgressMold = async (progressId: number) => {
+const addProgressMold = async () => {
   moldVisible.value = true
   const { data } = await getProgressComponentList({ progressId: 6 })
   componentOptions.value = data
@@ -1128,7 +1123,7 @@ const handleCopyProgress = (row: any) => {
     const { data } = await copyProgress({ progressId: row.progressId })
     if (data === true) {
       copyRow.value = JSON.parse(JSON.stringify(row))
-      const index = progressList.value.findIndex(item => item === row)
+      const index = progressList.value.indexOf(row)
       progressList.value.splice(index + 1, 0, copyRow.value)
       $baseMessage(`复制成功！`, "success", "hey")
     }
@@ -1174,7 +1169,6 @@ const handleGetShareList = async (progressId: number) => {
       $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
     }
   }
-const tabName = ref<string>('0')
 // 获取参与人员列表
 const handlePersonSelect = async () => {
   shareSelectVisible.value = true
@@ -1287,7 +1281,7 @@ const handleGetEvaluationById = async (idNo: number) => {
 const onDialogOpened = () => {
   evaluationTableRef.value?.doLayout();
 };
-const keyWordTrendCellClick = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const keyWordTrendCellClick = async(row: any, column: any) => {
   if (column.label === "关键词趋势") {
     inputKeyWord.value = row.amazonFrontendKeywords
     trendEcahts.value.xAxis = row.trendList.xAxis

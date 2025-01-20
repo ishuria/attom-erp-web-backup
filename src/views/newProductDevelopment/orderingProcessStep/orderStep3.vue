@@ -11,31 +11,31 @@
         
       <el-table 
         ref="tableRef" 
-        stripe border 
-        :data="componentList" 
-        :header-cell-style="{ 'text-align': 'center' }"
+        border :data="componentList" 
+        :header-cell-style="{ 'text-align': 'center' }" 
+        stripe
         @cell-click="changeInput"
       >
         <el-table-column align="center" label="属于变体" min-width="140">
           <template #default="{ row }">
-            <el-select v-model="row.orderEntryId" placeholder="请选择变体" @change="handleVariantChange(row)" style="min-width: 100%;">
-              <el-option v-for="item in variantsSelectList" :label="item.label" :key="item.id" :value="item.id"></el-option>
+            <el-select v-model="row.orderEntryId" placeholder="请选择变体" style="min-width: 100%;" @change="handleVariantChange(row)">
+              <el-option v-for="item in variantsSelectList" :key="item.id" :label="item.label" :value="item.id"/>
             </el-select>
           </template>
         </el-table-column>
         
-        <el-table-column align="center" label="零件图片" class="image-wall" min-width="100">
-          <template #default="{ row, $index }">
+        <el-table-column align="center" class="image-wall" label="零件图片" min-width="100">
+          <template #default="{ row }">
             <el-upload 
-              list-type="picture-card" 
+              :class="{ hide: row.hide }" 
               :file-list="row.componentImgUrl" 
-              :class="{ hide: row.hide }"
               :http-request="(File) => uploadImage(File, row)"
+              list-type="picture-card"
             >
-              <el-icon ><Plus /></el-icon>
+              <el-icon ><plus /></el-icon>
               <template #file="{ file }">
                 <div>
-                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                  <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
                   <span class="el-upload-list__item-actions">
                     <span
                       class="el-upload-list__item-preview"
@@ -47,7 +47,7 @@
                       class="el-upload-list__item-delete"
                       @click="handleRemove(file, row)"
                     >
-                      <el-icon><Delete /></el-icon>
+                      <el-icon><delete /></el-icon>
                     </span>
                   </span>
                 </div>
@@ -55,71 +55,71 @@
             </el-upload>
           </template>
         </el-table-column>
-        <el-table-column label="零件ID" align="center" min-width="70"  width="100">
-        </el-table-column>   
+        <el-table-column align="center" label="零件ID" min-width="70"  width="100"/>   
           
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
           <template #default="{ row }">
             <div class="none">
-                <el-input type="textarea" autofocus v-model="row.componentName" :autosize="{ minRows: 2, maxRows: 7 }"
-                @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input
+v-model="row.componentName" autofocus :autosize="{ minRows: 2, maxRows: 7 }" type="textarea"
+                @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.componentName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="每个SKU需要数量"  width="100" prop="quantity" align="center">
+        <el-table-column align="center"  label="每个SKU需要数量" prop="quantity" width="100">
             <template #header>
                 每个SKU<br>需要数量
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.quantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.quantity" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.quantity }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="单位"  min-width="70" prop="componentUnit" align="center">
+        <el-table-column align="center"  label="单位" min-width="70" prop="componentUnit">
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.componentUnit" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.componentUnit" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.componentUnit }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="出厂单价" prop="unitPrice" :width="flexColumnWidth(componentList, '出厂', 'unitPrice', 35)" align="center">
+        <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(componentList, '出厂', 'unitPrice', 35)">
           <template #header>
             出厂<br>单价
           </template>
-          <template #default="{ row, $index }">
+          <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.unitPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.unitPrice" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.unitPrice }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')" align="center">
+        <el-table-column align="center" label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')">
             <template #header>
                 出厂<br>总价
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.totalPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.totalPrice" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.totalPrice }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="每个SKU运费(含税)" prop="freight" align="center" min-width="100">
+        <el-table-column align="center" label="每个SKU运费(含税)" min-width="100" prop="freight">
             <template #header>
                 每个SKU<br>运费(含税)
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.freight" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.freight" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.freight }}</span>
             </template>
         </el-table-column>    
-        <el-table-column label="总未税价" prop="preTaxPrice" align="center" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
+        <el-table-column align="center" label="总未税价" prop="preTaxPrice" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
             <template #header>
                 总未<br>税价
             </template>
@@ -127,37 +127,38 @@
                 <span>{{ row.preTaxPrice }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(componentList, '总含', 'taxIncludedPrice')">
+        <el-table-column align="center" label="总含税价" prop="taxIncludedPrice" :width="flexColumnWidth(componentList, '总含', 'taxIncludedPrice')">
             <template #header>
                 总含<br>税价
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.taxIncludedPrice" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.taxIncludedPrice" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.taxIncludedPrice }}</span>
             </template>
         </el-table-column>    
-        <el-table-column label="货币" width="110px" prop="currency">
+        <el-table-column label="货币" prop="currency" width="110px">
             <template #default="{ row }">
                 <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
-                    <el-option v-for="dict in currencyList" :key="dict.value"
-                        :value="dict.value" :label="dict.label"></el-option>
+                    <el-option
+v-for="dict in currencyList" :key="dict.value"
+                        :label="dict.label" :value="dict.value"/>
                 </el-select>
             </template>
         </el-table-column>
-        <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="80">
+        <el-table-column align="center" label="起订量" min-width="80" prop="minimumOrderQuantity">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="text" v-model="row.minimumOrderQuantity" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                        <el-input v-model="row.minimumOrderQuantity" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                     </div>
                 <span>{{ row.minimumOrderQuantity }}</span>
             </template>
         </el-table-column> 
-        <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="80">
+        <el-table-column align="center" label="整箱数" min-width="80" prop="numberFullCartons">
             <template #default="{ row }">
                 <div class="none">
-                        <el-input type="text" v-model="row.numberFullCartons" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                        <el-input v-model="row.numberFullCartons" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                     </div>
                 <span>{{ row.numberFullCartons }}</span>
             </template>
@@ -165,8 +166,9 @@
         <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
             <template #default="{row}">
                 <div class="none">
-                    <el-input type="text" autofocus v-model="row.supplier" 
-                    @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input
+v-model="row.supplier" autofocus type="text" 
+                    @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>
                     <el-text truncated>
@@ -175,43 +177,44 @@
                 </span>
             </template>
         </el-table-column>
-        <el-table-column label="开票" prop="oem" align="center" width="140">
+        <el-table-column align="center" label="开票" prop="oem" width="140">
             <template #default = "{ row }">
                 <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)">
-                    <el-option v-for="dict in invoicingList" :key="dict.value"
-                        :value="dict.value" :label="dict.label"></el-option>
+                    <el-option
+v-for="dict in invoicingList" :key="dict.value"
+                        :label="dict.label" :value="dict.value"/>
                 </el-select>
             </template>
         </el-table-column>
-        <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
+        <el-table-column  align="center" label="实际税点" min-width="60" prop="actualTaxRate">
             <template #header>
                 实际<br>税点
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.actualTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.actualTaxRate" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.actualTaxRate }}</span>
             </template>
         </el-table-column>
 
-        <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
+        <el-table-column  align="center" label="开票税点" min-width="60" prop="invoicingTaxRate">
             <template #header>
                 开票<br>税点
             </template>
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.invoicingTaxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.invoicingTaxRate" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.invoicingTaxRate }}</span>
             </template>
         </el-table-column>
 
         
-        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+        <el-table-column  label="采购链接" min-width="140" prop="purchaseLink">
             <template #default="{ row }">
                 <div class="none">
-                    <el-input type="text" v-model="row.purchaseLink" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                    <el-input v-model="row.purchaseLink" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>
                     <el-text truncated>
@@ -220,19 +223,19 @@
                 </span>
             </template>
         </el-table-column>
-        <el-table-column  label="收货仓库" prop="defaultRepositoryId" min-width="140">
+        <el-table-column  label="收货仓库" min-width="140" prop="defaultRepositoryId">
             <template #default="{ row }">
-                <el-select v-model="row.defaultRepositoryId" placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" filterable @change="handleCurrencyChange(row)">
+                <el-select v-model="row.defaultRepositoryId" filterable placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" @change="handleCurrencyChange(row)">
                     <el-option 
                         v-for="item in repositoryOption"
+                        :key="item.id"
                         :label="item.label"
                         :value="item.id"
-                        :key="item.id"
                     />
                 </el-select>
             </template>
         </el-table-column>
-        <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
+        <el-table-column label="零件采购注意事项" min-width="200" prop="purchaseMatters">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -242,7 +245,7 @@
               </el-tooltip>
             </template>
         </el-table-column>
-        <el-table-column label="合同条款" prop="contractTerms" min-width="200">
+        <el-table-column label="合同条款" min-width="200" prop="contractTerms">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -270,91 +273,89 @@
           <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
           <h3>--为了精准核算利润，运费需要准确填写。</h3>
       </vab-alert>
-      <wangEditor
-          :title="wangEditorTitle"
-          :wangEditorVisible="wangEditorAttentionVisible"
+      <wang-editor
+          :classify="classify"
           :content="attentionCopy"
-          @clickChild="clickAttentionConfirm"
-          @clickBoolean="clickAttentionCancel"
-          :classify="classify"
-      >
-      </wangEditor>
-      <wangEditor
           :title="wangEditorTitle"
-          :wangEditorVisible="wangEditorContractVisible"
-          :content="contractCopy"
-          @clickChild="clickContractConfirm"
-          @clickBoolean="clickContractCancel"
+          :wang-editor-visible="wangEditorAttentionVisible"
+          @click-boolean="clickAttentionCancel"
+          @click-child="clickAttentionConfirm"
+      />
+      <wang-editor
           :classify="classify"
-      >
-      </wangEditor>
+          :content="contractCopy"
+          :title="wangEditorTitle"
+          :wang-editor-visible="wangEditorContractVisible"
+          @click-boolean="clickContractCancel"
+          @click-child="clickContractConfirm"
+      />
       <!-- 添加零件 -->
-      <VabCreateComponent 
-        :createComponentVisible="createComponentVisible"
-        @update:createComponentVisible="handleCloseCreateComponent"
-        @update:tableValue="handleSubmitComponent"
+      <vab-create-component 
+        :create-component-visible="createComponentVisible"
+        @update:create-component-visible="handleCloseCreateComponent"
+        @update:table-value="handleSubmitComponent"
       />
       <!-- 添加耗材 -->
-      <VabCreateConsumable 
-        :createConsumableVisible="createConsumableVisible"
-        @update:createConsumableVisible="handleCloseCreateConsumable"
-        @update:tableValue="handleSubmitConsumable"
+      <vab-create-consumable 
+        :create-consumable-visible="createConsumableVisible"
+        @update:create-consumable-visible="handleCloseCreateConsumable"
+        @update:table-value="handleSubmitConsumable"
       />
     </div>
     <div class="table-container">
       <el-table 
         ref="tableRef" 
-        stripe border 
+        border :cell-style="{ 'text-align': 'center' }" 
         :data="variantsList" 
-        :header-cell-style="{ 'text-align': 'center' }" :cell-style="{ 'text-align': 'center' }"
+        :header-cell-style="{ 'text-align': 'center' }" stripe
         @cell-click="changeInput"
       >
-        <el-table-column label="变体" min-width="100" prop="variant" align="center"></el-table-column>
-        <el-table-column prop="site" label="站点" min-width="135">
+        <el-table-column align="center" label="变体" min-width="100" prop="variant"/>
+        <el-table-column label="站点" min-width="135" prop="site">
           <template #default="{ row }">
-            <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
-              <el-option v-for="dict in siteList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
+            <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handlerSiteChange(row)">
+              <el-option v-for="dict in siteList" :key="dict.id" :label="dict.label" :value="dict.id"/>
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="外汇币种" min-width="100" prop="currencyType"></el-table-column>
-        <el-table-column label="汇率" min-width="100" prop="foreignExchange"></el-table-column>
-        <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="125">
+        <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
+        <el-table-column label="汇率" min-width="100" prop="foreignExchange"/>
+        <el-table-column label="实际总成本￥" min-width="125" prop="actualTotalCost">
           <template #default="{ row }">
             {{ row.actualTotalCost!= null ? '￥' + row.actualTotalCost : '' }}
           </template>
         </el-table-column>
-        <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
+        <el-table-column label="长(cm)" min-width="90" prop="packagingLength">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.packagingLength" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.packagingLength" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.packagingLength != null ? row.packagingLength + 'cm' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
+        <el-table-column label="宽(cm)" min-width="90" prop="packagingWidth">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.packagingWidth" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.packagingWidth" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.packagingWidth != null ? row.packagingWidth + 'cm' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
+        <el-table-column label="高(cm)" min-width="90" prop="packagingHeight">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.packagingHeight" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.packagingHeight" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.packagingHeight != null ? row.packagingHeight + 'cm' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="weight" label="重量(g)">
+        <el-table-column label="重量(g)" prop="weight">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.weight" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.weight" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
           </template>
@@ -364,20 +365,20 @@
             {{ row.lastMile != null ? row.symbol + row.lastMile : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="头程￥" width="90" prop="firstMile" >
+        <el-table-column label="头程￥" prop="firstMile" width="90" >
           <template #default="{ row }">
             {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
           </template>
         </el-table-column>    
-        <el-table-column label="打包￥" width="90" prop="packagingPrice" >
+        <el-table-column label="打包￥" prop="packagingPrice" width="90" >
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.packagingPrice" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.packagingPrice" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.packagingPrice != null ? '￥' + row.packagingPrice : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
+        <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel">
           <template #default="{ row }">
             <el-select 
               v-model="row.firstMileChannel" 
@@ -385,19 +386,19 @@
               style="min-width: 100%"
               @change="handlerEstimatendChange(row)"
             >
-              <el-option v-for="dict in channelList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
+              <el-option v-for="dict in channelList" :key="dict.id" :label="dict.label" :value="dict.id"/>
             </el-select>
           </template>
         </el-table-column>
         <el-table-column label="最终售价" min-width="100" prop="finalSellingPrice">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.finalSellingPrice" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.finalSellingPrice" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.finalSellingPrice != null ? row.symbol + row.finalSellingPrice : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="grossMarginRate" label="毛利率">
+        <el-table-column label="毛利率" prop="grossMarginRate">
           <template #default="{ row }">
             <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
@@ -405,41 +406,41 @@
             <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
           </template>
         </el-table-column>
-        <el-table-column prop="roi" label="ROI">
+        <el-table-column label="ROI" prop="roi">
           <template #default="{ row }">
             {{ row.roi != null ? row.roi + '%' : '' }}
           </template>
         </el-table-column>
-        <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
+        <el-table-column label="重量系数" min-width="100" prop="weightCoefficient">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.weightCoefficient" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.weightCoefficient" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.weightCoefficient }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
+        <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.volumeCoefficient" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.volumeCoefficient" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.volumeCoefficient }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="tariff" label="关税%">
+        <el-table-column label="关税%" prop="tariff">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.tariff" @keyup.enter="clickVariantsCancel($event, row)" @blur="clickVariantsCancel($event, row)" />
+              <el-input v-model="row.tariff" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
             <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
+        <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
           <template #default="{ row }">
             {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
           </template>
         </el-table-column>
-        <el-table-column prop="storageFee" label="仓储费2个月" min-width="140">
+        <el-table-column label="仓储费2个月" min-width="140" prop="storageFee">
           <template #default="{ row }">
             {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
           </template>
@@ -468,15 +469,12 @@
 </template>
   
 <script lang="ts" setup>
-defineOptions({
-  name: 'OrderStep3',
-})
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
-import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList, siteReflectCurrencyAndExchangeRate } from '../indexCommon'
+import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { getExchangeRate, getSalesSiteList } from '/@/api/devlocal/evaluation'
+import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
   reverseCalculateReview,
   reviewStepNo3ComponentAdd,
@@ -499,13 +497,16 @@ import {
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
+import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import { getChannelList } from '/@/api/devlocal/encasement'
+defineOptions({
+  name: 'OrderStep3',
+})
 
 const route: any = useRoute()
 const router = useRouter()
@@ -876,8 +877,8 @@ const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
                 }
         })
        
-    } catch(e){
-        console.log(e as Error)
+    } catch(error){
+        console.log(error as Error)
    }
 }
 // 复制逻辑
@@ -887,7 +888,7 @@ const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
         const { data } = await reviewStepNo3ComponentCopy({ reviewComponentId: row.reviewComponentId! })
         if (data === true) {
             copyRow.value = JSON.parse(JSON.stringify(row))
-            const index = componentList.value.findIndex(item => item === row)
+            const index = componentList.value.indexOf(row)
             componentList.value.splice(index + 1, 0, copyRow.value)
             $baseMessage(`复制成功！`, "success", "hey")
             fetchDataComponent()
@@ -899,9 +900,9 @@ const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
-const editingRow = ref<any>()
+
 let _row: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
 
   const { property } = column;
   if (property === 'purchaseMatters') {
@@ -1140,7 +1141,7 @@ const fetchDataComponent = async () =>{
       }
       const { data } = await reviewStepNo3ComponentList({reviewId: classReviewId!})
       componentList.value = data
-      componentList.value.forEach((item: any, index: number) => {
+      componentList.value.forEach((item: any) => {
           item.currency = convertString(item.currency)
           item.invoicing = convertString(item.invoicing)
           if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
@@ -1168,8 +1169,8 @@ const fetchDataComponent = async () =>{
       }
           return 0; // 不排序
       });
-    }catch(e){
-        console.error(e as Error)
+    }catch(error){
+        console.error(error as Error)
     }
   }
 }

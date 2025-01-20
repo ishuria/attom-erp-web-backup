@@ -10,41 +10,41 @@
       </vab-query-form-left-panel>
     </vab-query-form>
 
-    <VueDraggable
+    <vue-draggable
       v-model="estimatedCostList"
       :animation="150"
-      ghostClass="ghost"
+      :disabled="isDraggingDisabled"
+      ghost-class="ghost"
       target="tbody"
       @end="onEnd"
-      :disabled="isDraggingDisabled"
     >
       <el-table 
         ref="costAccountingTable"
+        border
+        :cell-class-name="clearPadding"
+        :cell-style="cellStyle" class="noneHoveTable"
         :data="estimatedCostList"
-        @cell-click="costAccountingChangeInput"
-        border stripe
-        class="noneHoveTable"
-        :header-cell-style="{ 'text-align': 'center' }" :cell-style="cellStyle" :cell-class-name="clearPadding"
+        :header-cell-style="{ 'text-align': 'center' }" stripe @cell-click="costAccountingChangeInput"
       >
-        <el-table-column prop="createTime" label="日期" min-width="110">
+        <el-table-column label="日期" min-width="110" prop="createTime">
           <template #default="{ row }">
             <span>{{ row.createTime ? formatDate(new Date(row.createTime)) : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="站点" min-width="165">
           <template #default="{ row }">
-            <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" @focus="handleFocus(row)" style="min-width: 100%;">
-              <el-option v-for="dict in props.siteList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
+            <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handlerSiteChange(row)" @focus="handleFocus(row)">
+              <el-option v-for="dict in props.siteList" :key="dict.id" :label="dict.label" :value="dict.id"/>
             </el-select>
           </template>
         </el-table-column>
 
-        <el-table-column label="外汇币种" prop="currencyType" min-width="100"></el-table-column>
-        <el-table-column label="汇率" prop="foreignExchange"></el-table-column>
+        <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
+        <el-table-column label="汇率" prop="foreignExchange"/>
         <el-table-column label="图片" width="60">
           <template #default="{ row }">
-            <el-image style="width: 60px; height: 60px; display: block;" :src="row.imgUrl" @click="showImagePreview(row.imgUrl)" >
-              <template #error><el-icon></el-icon></template>
+            <el-image :src="row.imgUrl" style="width: 60px; height: 60px; display: block;" @click="showImagePreview(row.imgUrl)" >
+              <template #error><el-icon/></template>
             </el-image>
           </template>
         </el-table-column>
@@ -74,7 +74,7 @@
         <el-table-column label="产品价格￥" min-width="120">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.price != null ? '￥' + row.price : '' }}</span>
           </template>
@@ -83,7 +83,7 @@
         <el-table-column label="长(cm)" min-width="80">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
           </template>
@@ -92,7 +92,7 @@
         <el-table-column  label="宽(cm)" min-width="80">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
           </template>
@@ -101,7 +101,7 @@
         <el-table-column  label="高(cm)" min-width="80">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
           </template>
@@ -110,19 +110,19 @@
         <el-table-column  label="重量(g)">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="lastMile" label="尾程" >
+        <el-table-column label="尾程" prop="lastMile" >
           <template #default="{ row }">
             {{ row.lastMile != null ? row.symbol + row.lastMile : '' }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="firstMile" label="头程￥">
+        <el-table-column label="头程￥" prop="firstMile">
           <template #default="{ row }">
             {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
           </template>
@@ -131,7 +131,7 @@
         <el-table-column label="打包￥">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.packaging != null ? '￥' + row.packaging : '' }}</span>
           </template>
@@ -141,23 +141,23 @@
             <el-select 
               v-model="row.firstMileChannel" 
               placeholder="请选择头程渠道"
-              @change="handlerEstimatendChange(row)"
               style="min-width: 100%;"
+              @change="handlerEstimatendChange(row)"
             >
-              <el-option v-for="dict in props.channelList" :key="dict.id" :value="dict.id" :label="dict.label" />
+              <el-option v-for="dict in props.channelList" :key="dict.id" :label="dict.label" :value="dict.id" />
             </el-select>
           </template>
         </el-table-column>
         <el-table-column label="售价">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="grossMarginRate" label="毛利率" >
+        <el-table-column label="毛利率" prop="grossMarginRate" >
           <template #default="{ row }">
             <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
@@ -166,7 +166,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="ROI" prop="roi" min-width="90">
+        <el-table-column label="ROI" min-width="90" prop="roi">
           <template #default="{ row }">
             {{ row.roi != null ? row.roi + '%' : '' }}
           </template>
@@ -175,7 +175,7 @@
         <el-table-column label="重量系数" min-width="100">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.weightCoefficient }}</span>
           </template>
@@ -184,7 +184,7 @@
         <el-table-column label="体积系数" min-width="100">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.volumeCoefficient }}</span>
           </template>
@@ -193,19 +193,19 @@
         <el-table-column label="关税%">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+              <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.tariff ? row.tariff + '%' : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
+        <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
           <template #default="{ row }">
             {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
           </template>
         </el-table-column>
 
-        <el-table-column prop="storageFee" label="仓储费2个月" min-width="140">
+        <el-table-column label="仓储费2个月" min-width="140" prop="storageFee">
           <template #default="{ row }">
             {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
           </template>
@@ -240,47 +240,48 @@
           </template>
         </el-table-column>
       </el-table>
-    </VueDraggable>
+    </vue-draggable>
 
     <vab-upload 
-      :upload-visible="costAccoutingVisible" 
-      title="上传图片" 
+      :data-id = "dataId" 
+      :file-list-flag = "false" 
       :is-multiple="false"
-      :fileListFlag = "false"
-      :dataId = "dataId"
-      @update:uploadVisible = "costAccountingUpdateUploadPicVisible"
+      title="上传图片"
       :upload-file="costAccountingUploadImageFile"
+      :upload-visible="costAccoutingVisible"
+      @update:upload-visible = "costAccountingUpdateUploadPicVisible"
     />
     <!-- 产品描述显示 -->
-    <wangEditor 
-      :wangEditorVisible="wangEditorLogVisible" 
-      :title="wangEditorTitle" 
-      :content="progressLogCopy"
+    <wang-editor 
       :classify='classify' 
-      @clickBoolean="clickLogBool" 
-      @clickChild="clickLog" 
+      :content="progressLogCopy" 
+      :title="wangEditorTitle"
+      :wang-editor-visible="wangEditorLogVisible" 
+      @click-boolean="clickLogBool" 
+      @click-child="clickLog" 
     />
     <!-- 价格信息显示 -->
-    <wangEditor 
-      :wangEditorVisible="wangEditorRemarkVisible" 
-      :title="wangEditorTitle" 
-      :content="remarkCopy"
+    <wang-editor 
       :classify='classify' 
-      @clickBoolean="clickRemarkBool" 
-      @clickChild="clickRemark" 
+      :content="remarkCopy" 
+      :title="wangEditorTitle"
+      :wang-editor-visible="wangEditorRemarkVisible" 
+      @click-boolean="clickRemarkBool" 
+      @click-child="clickRemark" 
     />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-import { TableRefs, UploadRequestOptions } from 'element-plus'
+import type { TableRefs, UploadRequestOptions } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
-import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
+import { VueDraggable } from 'vue-draggable-plus'
 
 import wangEditor from '../newProductProgress/wangEditor.vue'
 
+import type { CSSProperties } from 'vue'
 import {
   addCostAccounting,
   costAccountingCopy,
@@ -295,12 +296,11 @@ import {
   updateProgressPriceInfo,
   updateProgressProductdesc
 } from '/@/api/devlocal/progressSample'
-import { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComponentType'
+import type { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
-import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { removeHtmlTags } from '/@/utils/tableColum'
-import { CSSProperties } from 'vue'
 
 const isDraggingDisabled = ref<boolean>(false)
 
@@ -447,7 +447,7 @@ const clickCancel = async (event:any, value: IProgressEstimatedCostAccounting) =
 }
 
 // 鼠标enter事件
-const effectiveCountInputHandle = (event: Event,row:any) => {
+const effectiveCountInputHandle = (event: Event) => {
   const targetElement = event.target as HTMLInputElement
   targetElement.blur()
   isDraggingDisabled.value = false
@@ -483,7 +483,7 @@ const showImagePreview = (url: string) => {
 }
 let copyRow: any
 // 成本核算单击表格修改
-const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   if (column.property === 'desc') {
     const { data } = await getProgressProductDesc({ accountingId: row.id })
     progressLogCopy.value = data
@@ -522,23 +522,23 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
 // 进度成本核算修改站点
 const handlerSiteChange = async (row: IProgressEstimatedCostAccounting) => {
   try {
-    const { data } = await costAccountingUpdate({ ...row, tariff: `${parseFloat(row.tariff!) / 100}`, grossMarginRate: `${parseFloat(row.grossMarginRate!) / 100}`, roi: `${parseFloat(row.roi!) / 100}` })
+    await costAccountingUpdate({ ...row, tariff: `${parseFloat(row.tariff!) / 100}`, grossMarginRate: `${parseFloat(row.grossMarginRate!) / 100}`, roi: `${parseFloat(row.roi!) / 100}` })
     fetchDataCostAccounting()
-  } catch (error) {
+  } catch {
     row.site = _site.value
   }
 }
 
 
 // 内容拖拽排序
-const onEnd = debounce(async (e: SortableEvent ) => {
+const onEnd = debounce(async () => {
   try {
     const idList = estimatedCostList.value.map((item: IProgressEstimatedCostAccounting) => {
       return item.id
     })
     await costAccountingUpdateRowSort(idList)
-  } catch(e){
-    console.error(e as Error)
+  } catch(error){
+    console.error(error as Error)
   }
 }, 1000)
 
@@ -557,7 +557,7 @@ const fetchDataCostAccounting = async ()=>{
 // 图片上传按钮
 const costAccountImageUpload =  async (row:IProgressEstimatedCostAccounting,idx:number) =>{
   costAccoutingVisible.value = true
-  dataId.value = row.id + ""
+  dataId.value = `${row.id  }`
   imageUploadCellIdx = idx
 }
 
@@ -574,8 +574,8 @@ const costAccountingUploadImageFile = async (options: UploadRequestOptions) => {
       estimatedCostList.value[imageUploadCellIdx].imgUrl! = data
       costAccoutingVisible.value = false
     }
-  } catch(err){
-    const error = err as Error;
+  } catch(error_){
+    const error = error_ as Error;
     console.error(error)
     $baseMessage("零件图片上传失败！","error","hey")
   }
@@ -625,7 +625,7 @@ const addRowCostAccounting = async () =>{
   }
  
   const formdata = new FormData()
-  formdata.append('progressId', props.progressId+"")
+  formdata.append('progressId', `${props.progressId}`)
   formdata.append('sort', convertString(estimatedCostList.value.length + 1))
   
   // 成本核算进度id
@@ -649,7 +649,7 @@ const addRowCostAccounting = async () =>{
 
 // 复制
 const costAccountCopy = async(row:IProgressEstimatedCostAccounting) =>{
-  const {data} = await costAccountingCopy({accountingId: row.id + "", progressId: props.progressId})
+  const {data} = await costAccountingCopy({accountingId: `${row.id  }`, progressId: props.progressId})
   if (data == true){
     $baseMessage("此条产品成本核算信息复制成功!","success","hey")
     fetchDataCostAccounting()

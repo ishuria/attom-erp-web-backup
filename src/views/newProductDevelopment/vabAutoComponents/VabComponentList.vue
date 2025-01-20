@@ -12,12 +12,13 @@
             </vab-query-form-left-panel>
         </vab-query-form>
 
-        <el-table ref="progressComponentTable" :data="progressProductList" border :row-class-name="stripedRowClass"
-            @cell-click="componentTableInputChange" :span-method="objectSpanMethod" :cell-style="cellStyle"
-            :header-cell-style="{ 'text-align': 'center' }" class="noneHoveTable" >
+        <el-table
+ref="progressComponentTable" border :cell-style="cellStyle" class="noneHoveTable"
+            :data="progressProductList" :header-cell-style="{ 'text-align': 'center' }" :row-class-name="stripedRowClass"
+            :span-method="objectSpanMethod" @cell-click="componentTableInputChange" >
 
             <el-table-column align="center" fixed="left" label="零件操作" width="120px">
-                <template v-slot="scope">
+                <template #default="scope">
                     <el-dropdown>
                         <el-button text type="primary" @click="uploadProdcutProgressImage(scope.row, scope.$index)">
                             上传图片
@@ -43,31 +44,33 @@
             </el-table-column>
 
 
-            <el-table-column label="图片" prop="componentImg" min-width="80" align="center">
-                <template v-slot="scope">
+            <el-table-column align="center" label="图片" min-width="80" prop="componentImg">
+                <template #default="scope">
                     <div>
-                        <el-image v-if="scope.row.componentImg" style="width: 55px;"
-                            :src="scope.row.componentImg" fit="contain" data-img="img" />
+                        <el-image
+v-if="scope.row.componentImg" data-img="img"
+                            fit="contain" :src="scope.row.componentImg" style="width: 55px;" />
                     </div>
                 </template>
             </el-table-column>
 
-            <el-table-column label="零件名" prop="componentName" min-width="200">
+            <el-table-column label="零件名" min-width="200" prop="componentName">
                 <template #default="{ row }">
                     <div class="none">
-                        <el-input type="textarea" 
+                        <el-input
+v-model="row.componentName" 
                             autofocus
-                            v-model="row.componentName"
-                            :autosize="{ minRows: 2, maxRows: 7 }" 
+                            :autosize="{ minRows: 2, maxRows: 7 }"
+                            type="textarea" 
                             @blur="componentClickCancle($event, row)"
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.componentName }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="已有零件id" prop="existingPartId"  min-width="80">
+            <el-table-column label="已有零件id" min-width="80"  prop="existingPartId">
                 <template #header>
                     已有零<br>件id
                 </template>
@@ -76,68 +79,68 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="零件数量" prop="componentQuantity" min-width="60">
+            <el-table-column label="零件数量" min-width="60" prop="componentQuantity">
                 <template #header>
                     零件<br>数量
                 </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
-                            v-model="row.componentQuantity"
+                            v-model="row.componentQuantity" 
+                            type="text"
                             @blur="componentClickCancle($event, row)"
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.componentQuantity }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="零件单位" prop="componentUnit" min-width="60">
+            <el-table-column label="零件单位" min-width="60" prop="componentUnit">
                 <template #header>
                     零件<br>单位
                 </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
-                            v-model="row.componentUnit"
+                            v-model="row.componentUnit" 
+                            type="text"
                             @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.componentUnit }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="出厂单价" prop="unitPrice" min-width="70">
+            <el-table-column label="出厂单价" min-width="70" prop="unitPrice">
                 <template #header>
                     出厂<br>单价
                 </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
                             v-model="row.unitPrice" 
+                            type="text" 
                             @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.unitPrice }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="出厂总价" prop="totalPrice" min-width="70">
+            <el-table-column label="出厂总价" min-width="70" prop="totalPrice">
                 <template #header>
                     出厂<br>总价
                 </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
                             v-model="row.totalPrice" 
+                            type="text" 
                             @blur="componentClickCancle($event, row,)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.totalPrice }}</span>
@@ -151,17 +154,17 @@
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
                             v-model="row.freight" 
+                            type="text" 
                             @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.freight }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="总未税价" prop="preTaxPrice" min-width="70">
+            <el-table-column label="总未税价" min-width="70" prop="preTaxPrice">
                 <template #header>
                     总未<br>税价
                 </template>
@@ -170,32 +173,33 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="总含税价" prop="taxIncludedPrice" min-width="70">
+            <el-table-column label="总含税价" min-width="70" prop="taxIncludedPrice">
                 <template #header>
                     总含<br>税价
                 </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
-                            v-model="row.taxIncludedPrice"
+                            v-model="row.taxIncludedPrice" 
+                            type="text"
                             @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.taxIncludedPrice }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="货币" width="110px" prop="currency">
+            <el-table-column label="货币" prop="currency" width="110px">
                 <template #default="{ row }">
-                    <el-select v-model="row.currency" placeholder="请选择货币" @change="handlerCurrencyChange(row)"
-                        style="min-width: 100%;">
+                    <el-select
+v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;"
+                        @change="handlerCurrencyChange(row)">
                         <el-option 
                             v-for="dict in currencyList" 
                             :key="dict.value" 
-                            :value="dict.value"
-                            :label="dict.label" />
+                            :label="dict.label"
+                            :value="dict.value" />
                     </el-select>
                 </template>
             </el-table-column>
@@ -207,24 +211,24 @@
                 <template #default="{ row }">
                     <el-checkbox 
                         v-model="row.includedInCost" 
-                        :true-value="0" 
+                        class="custom-checkbox" 
                         :false-value="1" 
                         size="large"
-                        @change="includedInCostChange(row)" 
-                        class="custom-checkbox"
+                        :true-value="0" 
+                        @change="includedInCostChange(row)"
                     />
                 </template>
             </el-table-column>
 
-            <el-table-column label="供应商" prop="supplier" min-width="140">
+            <el-table-column label="供应商" min-width="140" prop="supplier">
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
+                            v-model="row.supplier" 
                             autofocus 
-                            v-model="row.supplier"
+                            type="text"
                             @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>
@@ -235,60 +239,62 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="开票" width="140" prop="invoicing">
+            <el-table-column label="开票" prop="invoicing" width="140">
                 <template #default="{ row }">
-                    <el-select v-model="row.invoicing" placeholder="请选择开票类型" @change="handlerInvoicingChange(row)"
-                        style="min-width: 100%;">
-                        <el-option v-for="dict in invoicingList" :key="dict.value" :value="dict.value"
-                            :label="dict.label"></el-option>
+                    <el-select
+v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;"
+                        @change="handlerInvoicingChange(row)">
+                        <el-option
+v-for="dict in invoicingList" :key="dict.value" :label="dict.label"
+                            :value="dict.value"/>
                     </el-select>
                 </template>
             </el-table-column>
 
-            <el-table-column label="实际税点" prop="actualTaxRate" min-width="60">
+            <el-table-column label="实际税点" min-width="60" prop="actualTaxRate">
                 <template #header>
                     实际<br>税点
                 </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
                             v-model="row.actualTaxRate" 
+                            type="text" 
                             @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.actualTaxRate }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="开票税点" prop="invoicingTaxRate" min-width="60">
+            <el-table-column label="开票税点" min-width="60" prop="invoicingTaxRate">
                 <template #header>
                     开票<br>税点
                 </template>
                 <template #default="{ row }">
                     <div class="none">
                         <el-input 
-                            type="text" 
-                            v-model="row.invoicingTaxRate"
+                            v-model="row.invoicingTaxRate" 
+                            type="text"
                             @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event,row)"
+                            @keydown.enter="effectiveCountInputeHandle($event)"
                         />
                     </div>
                     <span>{{ row.invoicingTaxRate }}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column label="采购链接" prop="purchaseLink" min-width="140">
+            <el-table-column label="采购链接" min-width="140" prop="purchaseLink">
               <template #default="{ row }">
                 <div class="none">
                   <el-input 
                     v-model="row.purchaseLink"
                     @blur="componentClickCancle($event, row)"
-                    @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    @keydown.enter="effectiveCountInputeHandle($event)"
                   />
                 </div>  
-                <el-tooltip effect="dark" content="" placement="top">
+                <el-tooltip content="" effect="dark" placement="top">
                   <template #content>
                     <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
                   </template>
@@ -303,10 +309,10 @@
                   <el-input 
                     v-model="row.remarks" 
                     @blur="componentClickCancle($event, row)"
-                    @keydown.enter="effectiveCountInputeHandle($event,row)"
+                    @keydown.enter="effectiveCountInputeHandle($event)"
                   />
                 </div>
-                <el-tooltip effect="dark" content="" placement="top">
+                <el-tooltip content="" effect="dark" placement="top">
                   <template #content>
                     <div class="custom-tooltip" >{{ row.remarks }}</div>
                   </template>
@@ -316,7 +322,7 @@
             </el-table-column>
 
             <el-table-column align="center" fixed="right" label="供应商操作" width="120px">
-                <template v-slot="scope">
+                <template #default="scope">
                     <el-button text type="primary" @click="deleteSupplserOrComponent(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
@@ -324,50 +330,50 @@
 
 
         <vab-upload 
-            :upload-visible="uploadPicVisible"
-            title="上传图片" 
+            :data-id="dataId"
+            :file-list-flag="false" 
             :is-multiple="false" 
-            :fileListFlag="false"
-            :dataId="dataId" 
-            @update:uploadVisible="updateUploadPicVisible" 
+            title="上传图片"
             :upload-file="uploadImageFile" 
+            :upload-visible="uploadPicVisible" 
+            @update:upload-visible="updateUploadPicVisible" 
         />
 
         <!-- 样品追踪dialog -->
         <vab-sample-tranck 
-            :progress-id="props.progressId" 
-            :close-dialog-handler="() => sampleVisible = false"
+            :close-dialog-handler="() => sampleVisible = false" 
+            :progress-id="props.progressId"
             :visible="sampleVisible" 
-            @update:priviewListValue="settingPriviewList" />
+            @update:priview-list-value="settingPriviewList" />
 
         <!-- 拿样 -->
         <vab-sample 
-            :progress-id="props.progressId" 
-            :close-dialog="() => sampleFormVisible = false"
-            :visible="sampleFormVisible" 
-            :refreshComponent="fetchDataComponent"
+            :close-dialog="() => sampleFormVisible = false" 
+            :progress-id="props.progressId"
+            :refresh-component="fetchDataComponent" 
+            :visible="sampleFormVisible"
         />
 
         <!-- 开发日志显示 -->
-        <wangEditor 
-            :wangEditorVisible="wangEditorVisible" 
-            :title="wangEditorTitle" 
-            :content="progressLog"
+        <wang-editor 
             :classify='classify' 
-            @clickBoolean="clickLogBool" 
-            @clickChild="clickLog" 
+            :content="progressLog" 
+            :title="wangEditorTitle"
+            :wang-editor-visible="wangEditorVisible" 
+            @click-boolean="clickLogBool" 
+            @click-child="clickLog" 
         />
         <!-- 添加零件 -->
-        <VabCreateComponent 
-          :createComponentVisible="createComponentVisible"
-          @update:createComponentVisible="handleCloseCreateComponent"
-          @update:tableValue="handleSubmitComponent"
+        <vab-create-component 
+          :create-component-visible="createComponentVisible"
+          @update:create-component-visible="handleCloseCreateComponent"
+          @update:table-value="handleSubmitComponent"
         />
         <!-- 添加耗材 -->
-        <VabCreateConsumable 
-          :createConsumableVisible="createConsumableVisible"
-          @update:createConsumableVisible="handleCloseCreateConsumable"
-          @update:tableValue="handleSubmitConsumable"
+        <vab-create-consumable 
+          :create-consumable-visible="createConsumableVisible"
+          @update:create-consumable-visible="handleCloseCreateConsumable"
+          @update:table-value="handleSubmitConsumable"
         />
     </div>
 
@@ -375,25 +381,24 @@
 
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-import { getRootElement, getSpecificChildren, getDataAttribute, focusAndSelectInput } from '/@/utils/nodeUtils'
-import { currencyList, invoicingList } from '../indexCommon'
-import { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
 import type { TableColumnCtx, TableRefs, UploadRequestOptions } from 'element-plus'
-import { convertString } from '/@/utils/stringUtils'
-import {
-    getComponentList, addComponent,
-    addSuppliers, deleteSuppliers,
-    copyComponent, componentUploadImage,
-    updateComponenet,
-    updateProgressLog,
-    getProgressCalculation,
-    submitProgressComponent,
-    submitProgressConsumable
-} from '/@/api/devlocal/progressSample'
-import { getProgressLog,  } from '/@/api/devlocal/progress'
-import wangEditor from '../newProductProgress/wangEditor.vue'
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { isEqual } from 'lodash'
+import { currencyList, invoicingList } from '../indexCommon'
+import wangEditor from '../newProductProgress/wangEditor.vue'
+import { getProgressLog, } from '/@/api/devlocal/progress'
+import {
+  addComponent, addSuppliers,
+  componentUploadImage, copyComponent,
+  deleteSuppliers, getComponentList,
+  submitProgressComponent,
+  submitProgressConsumable,
+  updateComponenet,
+  updateProgressLog
+} from '/@/api/devlocal/progressSample'
+import type { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
+import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 
 // 图片上传显示控制
@@ -401,6 +406,7 @@ const uploadPicVisible = ref<boolean>(false)
 // 图片唯一id
 const dataId = ref<string>("")
 let imageUploadCellIdx = 0
+// eslint-disable-next-line vue/no-dupe-keys
 const progressId = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 const progressLog = ref<string>('')
@@ -410,9 +416,7 @@ const route = useRoute()
 defineComponent({
     name: 'VabComponentList',
 })
-const secondColumnCellStyle = (row: any, column: any, rowIndex: number, columnIndex: number) => {
-  return { padding: '5px 5px' }; // 设置你需要的 padding
-};
+
 const props = defineProps<{
     progressId: string
     trialCalculationData: (() => Promise<void>) | undefined
@@ -633,7 +637,7 @@ const addComponentHandler = async () => {
 // 零件清单上传图片
 const uploadProdcutProgressImage = async (row: IProgressProdcutComponent, idx: number) => {
     uploadPicVisible.value = true
-    dataId.value = row.componentId + ""
+    dataId.value = `${row.componentId  }`
     imageUploadCellIdx = idx
 
 }
@@ -656,8 +660,8 @@ const uploadImageFile = async (options: UploadRequestOptions) => {
             progressProductList.value[imageUploadCellIdx].componentImg! = data
             uploadPicVisible.value = false
         }
-    } catch (err) {
-        const error = err as Error;
+    } catch (error_) {
+        const error = error_ as Error;
         console.error(error)
         $baseMessage("零件图片上传失败！", "error", "hey")
     }
@@ -749,8 +753,8 @@ const deleteSupplserOrComponent = async (row: IProgressProdcutComponent) => {
                 $baseMessage("供应商删除成功！", "success", "hey")
             }
         })
-    } catch (e) {
-        console.log(e as Error)
+    } catch (error) {
+        console.log(error as Error)
     }
 }
 
@@ -770,14 +774,14 @@ const copyComponentInfo = async (row: IProgressProdcutComponent) => {
         fetchDataComponent()
     }
 }
-let clickColumn: any
+
 let rowCopy: any
 // 零件清单table单击修改
-const componentTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const componentTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement) => {
 
   // 不能被修改cell的下标
   if (column.no === 3) return
-  clickColumn = column
+
   rowCopy = JSON.parse(JSON.stringify(row))
 
   // 处理图片放大预览
@@ -818,13 +822,6 @@ const componentClickCancle = async (event: any, value: IProgressProdcutComponent
     return
   }
 
-  const query: IProgressProdcutComponent = {
-      progressId: value.progressId,
-      supplierId: value.supplierId,
-      componentId: value.componentId,
-      [clickColumn.property]: value[clickColumn.property],
-  }
-
   await updateComponenet(value)
   fetchDataComponent()
   props.trialCalculationData?.()
@@ -838,7 +835,7 @@ const includedInCostChange = async (row: IProgressProdcutComponent) => {
 
 
 // 鼠标enter事件
-const effectiveCountInputeHandle = (event: Event,row:any) => {
+const effectiveCountInputeHandle = (event: Event) => {
     const targetElement = event.target as HTMLInputElement
     targetElement.blur()
 }
@@ -874,8 +871,8 @@ const fetchDataComponent = async () => {
         progressProductList.value.sort((a: IProgressProdcutComponent, b: IProgressProdcutComponent) => a.componentId! - b.componentId!)
         previous = null
         currentGroupIndex = 0
-    } catch (e) {
-        console.error(e as Error)
+    } catch (error) {
+        console.error(error as Error)
     }
 }
 
@@ -883,7 +880,6 @@ const fetchDataComponent = async () => {
 // 零件清单列表col合并方法
 const objectSpanMethod = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: SpanMethodProps) => {

@@ -362,7 +362,7 @@ const handleCurrentChange = (value: number) => {
 /**
  * 开始新款评估
  */
-const startEvalution = (row: any) => {
+const startEvalution = () => {
   router.push({
     path: '/newProductDevelopment/addOrUpdateEvalution',
     query: {
@@ -398,7 +398,7 @@ const cliekFontSearchKeyWord = async (row: any) => {
   keyWordTrend(row.amazonFrontendKeywords)
 }
 
-const keyWordTrendCellClick = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const keyWordTrendCellClick = async (row: any, column: any) => {
   if (column.label === '关键词趋势') {
     inputKeyWord.value = row.amazonFrontendKeywords
     keyWordTrend(row.amazonFrontendKeywords)

@@ -3,75 +3,75 @@
       <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <el-table 
                 ref="tableRef" 
-                stripe border 
-                :data="variantList" 
-                :header-cell-style="{ 'text-align': 'right' }"
+                border :data="variantList" 
+                :header-cell-style="{ 'text-align': 'right' }" 
                 height="630"
                 :show-header="false"
+                stripe
                 style="width: auto; table-layout: fixed;"
                 @cell-click="tableInputChange"
             >
                 <!-- 第一列固定标签列 -->
                 <el-table-column 
-                    :prop="'column0'" 
-                    :label="labelMap['column0']" 
-                    fixed
-                    align="right"
+                    align="right" 
+                    fixed 
+                    :label="labelMap['column0']"
+                    :prop="'column0'"
                     width="260"
                 >
                     <template #default="{ row }">
-                        <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
+                        <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
                     </template>
                 </el-table-column>
                 <el-table-column 
-                    :prop="prop" 
-                    :label="prop" 
                     v-for="(prop, i) in columns" 
                     :key="i" 
                     align="center" 
-                    min-width="240"
+                    :label="prop" 
+                    min-width="240" 
+                    :prop="prop"
                 >
-                    <template v-slot="scope">
+                    <template #default="scope">
                         <template v-if="scope.row['column0'] === 'variantImg'">
-                            <el-image style="width: 105px;height: 105px;" :src="scope.row[prop]" fit="fill" data-img="img">
+                            <el-image data-img="img" fit="fill" :src="scope.row[prop]" style="width: 105px;height: 105px;">
                               <template #error>
-                                <el-icon></el-icon>
+                                <el-icon/>
                               </template>
                             </el-image>
                         </template>
                         <template v-if="scope.row['column0'] === 'oem'">
-                            <el-checkbox v-model="scope.row[prop]" :disabled="true":true-value="1" :false-value="0" size="large" class="custom-checkbox"/>
+                            <el-checkbox v-model="scope.row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1"/>
                         </template>
                         <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
                           <el-input
                             v-model="scope.row[prop]" 
-                            @click="inputHandleMouseOver($event)"
+                            @blur="updateHnadlerNumber($event, scope)"
+                            @click="inputHandleMouseOver($event)" 
                             @keydown.enter="updateHnadlerNumber($event, scope)" 
-                            @blur="updateHnadlerNumber($event, scope)" 
                           />
                         </template>
                         <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
                           <el-input 
                             v-model="scope.row[prop]" 
+                            @blur="updateHnadlerNumber($event, scope)"
                             @click="inputHandleMouseOver($event)"
                             @keydown.enter="updateHnadlerNumber($event, scope)"
-                            @blur="updateHnadlerNumber($event, scope)"
                           />
                         </template>
                         <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
                           <el-input
                             v-model="scope.row[prop]"
+                            @blur="updateHnadlerNumber($event, scope)"
                             @click="inputHandleMouseOver($event)"
                             @keydown.enter="updateHnadlerNumber($event, scope)"
-                            @blur="updateHnadlerNumber($event, scope)"
                           />
                         </template>
                         <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
                           <el-input
                             v-model="scope.row[prop]"
+                            @blur="updateHnadlerNumber($event, scope)"
                             @click="inputHandleMouseOver($event)"
                             @keydown.enter="updateHnadlerNumber($event, scope)"
-                            @blur="updateHnadlerNumber($event, scope)"
                           />
                         </template>
                         <template 
@@ -93,13 +93,13 @@
         </div>
         
     </div>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
 </template>
   
 <script lang="ts" setup>
-import { useTableDataLineToColumn, inputHandleMouseOver } from '/@/utils/tableColum'
-import {reviewProductList,updateStepNoQuantity,releasePo} from '/@/api/devlocal/orderingReview'
-import { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
+import { inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
+import {releasePo,reviewProductList,updateStepNoQuantity} from '/@/api/devlocal/orderingReview'
+import type { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
@@ -122,7 +122,7 @@ const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
 // table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
     // 处理图片放大预览
     
     let el = getSpecificChildren(cell, "img")[0];
@@ -136,7 +136,7 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const router = useRouter()
-const emit = defineEmits(['change-step'])
+
 const variantList = ref<any[]>([])
 const labelMap: Record<string, string> = {
   column0: '',
@@ -154,7 +154,7 @@ const labelMap: Record<string, string> = {
 
 const buildParams = (idx: number): IReviewStepUpdateReq => {
   let n: any = {}
-  variantList.value.map((item, index) => {
+  variantList.value.map((item) => {
     n[item["column0"]] = item[idx]
   })
 
@@ -215,7 +215,7 @@ const fetchData = async () => {
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
     let n: IReviewCommonItem = {
-      column0: (index + 1) + "",
+      column0: `${index + 1  }`,
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
       productName: item.productName,

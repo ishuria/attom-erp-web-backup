@@ -3,18 +3,18 @@
  
       <el-table 
           ref="tableRef"
-          :data="exchangeList" 
-          border stripe
-          :header-cell-style="{ 'text-align': 'center' }"
-          @cell-click="changeInput"
+          border 
+          :data="exchangeList" :header-cell-style="{ 'text-align': 'center' }"
+          stripe
           style="width: auto; table-layout: fixed;"
+          @cell-click="changeInput"
       >
           <!-- 第一列固定标签列 -->
           <el-table-column 
-              :prop="'column0'" 
-              :label="labelMap['column0']" 
+              align="right" 
               fixed 
-              align="right"
+              :label="labelMap['column0']" 
+              :prop="'column0'"
               width="260"
           >
               <template #default="{ row }">
@@ -32,13 +32,13 @@
           <!-- 动态列 -->
           <el-table-column 
               v-for="(prop, index) in columnsChange" 
-              :prop="prop" 
-              :label="prop" 
-              :key="index"
-              align="center"
+              :key="index" 
+              align="center" 
+              :label="prop"
               min-width="240"
+              :prop="prop"
           >
-              <template #default = "{row, $index}">
+              <template #default = "{row}">
                   <template v-if="row['column0'] === 'productImgUrl'">
                       <el-image data-img="img" :src="row[prop]"/>
                     </template>
@@ -70,18 +70,17 @@
                       <span>{{ row[prop] }}</span> 
                   </template>
                   <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                      <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
+                      <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
                           <el-option 
                             v-for="item in photoSampleOptions"
+                            :key="item.value"
                             :label="item.label"
                             :value="item.value"
-                            :key="item.value"
-                          >
-                          </el-option>
+                          />
                       </el-select>
                   </template>
                   <template v-if="row['column0'] === 'packingGroup'">
-                      <el-checkbox v-model="row[prop]" :true-value="0" :false-value="1" class="custom-checkbox" disabled></el-checkbox>
+                      <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="1" :true-value="0"/>
                   </template>
               </template>
               
@@ -99,16 +98,15 @@
 </template>
 
 <script lang="ts" setup>
+import type { TableInstance } from 'element-plus'
+import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList } from '/@/api/devlocal/orderProcess'
+import { useTabsStore } from '/@/store/modules/tabs'
+import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { handleActivePath } from '/@/utils/routes'
 defineOptions({
   name: 'OrderCheckStep4',
 })
-import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
-import type { TableInstance } from 'element-plus'
-import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList } from '/@/api/devlocal/orderProcess';
-import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType';
-import { handleActivePath } from '/@/utils/routes'
-import { useTabsStore } from '/@/store/modules/tabs';
 
 const route: any = useRoute()
 const router = useRouter()
@@ -129,8 +127,6 @@ const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 
 
 const tableRef = ref<TableInstance>()
-
-const variantsSame = ref<boolean[]>([true, true, true, true, true, true, true, true, true, true, true, true, true, true,])
 const photoSampleOptions = [
     { label: '已有拍照样品,大货无需留样', value: 0 },
     { label: '大货需要留样拍照', value: 1 }
@@ -154,7 +150,7 @@ certificateUpload: '证书上传',
 skuMerge: '合并变体的SKU',
 }
 
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && el){
     emit("update:priviewListValue", el.src)
@@ -264,7 +260,7 @@ try {
           battery: item.battery,
           benchmarkAsin: item.benchmarkAsin,
           patent: item.patent,
-          productManager: productManager,
+          productManager,
           productDesign: item.productDesign,
           sampleRetentionStatus: item.sampleRetentionStatus,
           packingGroup: item.checkStatus,

@@ -3,48 +3,47 @@
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
       <el-table 
           ref="tableRef" 
-          stripe border 
+          border class="table1" 
           :data="exchangeList" 
           :header-cell-style="{ 'text-align': 'right' }"
           :show-header="false"
-          @cell-click="tableInputChange"
-          class="table1"
+          stripe
           style="width: auto; table-layout: fixed;"
+          @cell-click="tableInputChange"
       >
           <!-- 第一列固定标签列 -->
           <el-table-column 
-              :prop="'column0'" 
-              :label="labelMap['column0']" 
-              fixed
-              align="right"
+              align="right" 
+              fixed 
+              :label="labelMap['column0']"
+              :prop="'column0'"
               width="260"
           >
               <template #default="{ row }">
-                  <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
+                  <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
               </template>
           </el-table-column>
           <el-table-column 
               v-for="(prop, i) in columnsChange" 
-              :prop="prop" 
-              :label="prop" 
               :key="i" 
               align="center" 
-              min-width="240"
+              :label="prop" 
+              min-width="240" 
+              :prop="prop"
           >
               <template #default = {row}>
                   
                   <template v-if="row['column0'] === 'variantImg'">
-                      <el-image style="width: 75px; height: 75px" :src="row[prop]" fit="fill" data-img="img" />
+                      <el-image data-img="img" fit="fill" :src="row[prop]" style="width: 75px; height: 75px" />
                   </template>
                   <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                    <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" disabled>
+                    <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
                       <el-option 
                         v-for="item in photoSampleOptions"
+                        :key="item.value"
                         :label="item.label"
                         :value="item.value"
-                        :key="item.value"
-                      >
-                      </el-option>
+                      />
                     </el-select>
                   </template>
                   <template v-if="row['column0'] === 'packagingSize'">
@@ -67,39 +66,34 @@
       
     <div>
       <el-table 
-        stripe border 
+        border :cell-style="{ 'text-align': 'center' }" 
         :data="moldCheckList" 
         :header-cell-style="{ 'text-align': 'center' }"
-        style="margin-top: 25px;"
         height="100"
-        :cell-style="{ 'text-align': 'center' }"
+        stripe
+        style="margin-top: 25px;"
       >
         <el-table-column label="提交日期" min-width="100" prop="createTime">
             <template #default="{ row }">
               <span>{{ row.createTime.split(' ')[0] }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="零件名" min-width="200" prop="component">
-        </el-table-column>
-        <el-table-column label="供应商" min-width="127" prop="suppliser">
-  
-        </el-table-column>
-        <el-table-column label="状态" min-width="127" align="center" prop="status">
+        <el-table-column label="零件名" min-width="200" prop="component"/>
+        <el-table-column label="供应商" min-width="127" prop="suppliser"/>
+        <el-table-column align="center" label="状态" min-width="127" prop="status">
           <template #default="{ row }">
               <span :class="generateStatus(row.status).color">
                   {{ generateStatus(row.status).text }}
               </span>
           </template>
         </el-table-column>
-        <el-table-column label="开票类型" min-width="127" align="center" prop="invoiceType">
+        <el-table-column align="center" label="开票类型" min-width="127" prop="invoiceType">
           <template #default="{ row }">
             {{ generateInvoiceType(row.invoiceType) }}
           </template>
         </el-table-column>
-        <el-table-column label="付款金额" min-width="127" align="center" prop="payPrice">
-  
-        </el-table-column>
-        <el-table-column label="开模处理方式" min-width="127" align="center" prop="dealMethod">
+        <el-table-column align="center" label="付款金额" min-width="127" prop="payPrice"/>
+        <el-table-column align="center" label="开模处理方式" min-width="127" prop="dealMethod">
           <template #default="{ row }">
             {{ generateDealMethod(row.dealMethod) }}
           </template>
@@ -119,9 +113,9 @@
 </template>
   
 <script lang="ts" setup>
-import { reviewProductManager, reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess';
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils';
-import { convertString } from '/@/utils/stringUtils';
+import { reviewProductManager, reviewStepNo6CheckGet, reviewStepNo6CheckGetMold } from '/@/api/devlocal/orderProcess'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
     name: 'OrderCheckStep5',
@@ -133,11 +127,7 @@ const emit = defineEmits<{
     (e: 'update:priviewListValue', value: string): void
  }>()
 // const listLoading = ref<boolean>(true)
-const checkPersonListVisible = ref<boolean>(false)
-// 审批人列表
-const personList = ref<{ userId: number; userName: string}[]>([])
-// 审批人id
-const reviewPersonId = ref<string>('')
+
 const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
 const photoSampleOptions = [
@@ -145,53 +135,61 @@ const photoSampleOptions = [
     { label: '大货需要留样拍照', value: 1 }
 ];
 // table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-    emit("update:priviewListValue", " "+el.src)
+    emit("update:priviewListValue", ` ${el.src}`)
     emit("update:imagePreviewVisibale", true)
   }
 }
 
-const handleCheckPersonClose = () => {
-  checkPersonListVisible.value = false
-}
-const handlePersonSelectConfirm = () => {
-  checkPersonListVisible.value = false
-}
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
 }
 const generateStatus = (value: number) => {
   switch (value) {
-    case 0:
+    case 0: {
       return { text: "审批中", color: "status-pending" };
-    case 1:
+    }
+    case 1: {
       return { text: "待提交付款申请", color: "status-in" };
-    case 2:
+    }
+    case 2: {
       return { text: "已付款", color: "status-paid" };
-    default:
+    }
+    default: {
       return { text: "未知", color: "status-pending" };
+    }
   }
 }
 const generateInvoiceType = (value: number) => {
-    if (value === 0) {
+    switch (value) {
+    case 0: {
         return "专票"
-    } else if (value === 1) {
+    }
+    case 1: {
         return "普票"
-    } else if (value === 2) {
+    }
+    case 2: {
         return "不开票"
+    }
+    // No default
     }
 }
 const generateDealMethod = (value: number) => {
-    if (value === 0) {
+    switch (value) {
+    case 0: {
         return "不含在PO"
-    } else if (value === 1) {
+    }
+    case 1: {
         return "含在PO"
-    } else if (value === 2) {
+    }
+    case 2: {
         return "含在其他PO"
+    }
+    // No default
     }
 }
 const labelMap: Record<string, string> = {
@@ -282,18 +280,17 @@ const useTableDataLineToColumn = () => {
   }
 }
 const route: any = useRoute()
-const router = useRouter()
 // 当点击保存的时候
 const handleSave = async () => {
   $baseMessage("完成", "success", "hey")
   // router.replace({ query: { ...route.query, stepNo: 4 }});
 }
-// 当点击提交审核的时候
-const handleSaveAndContinue = async () => {
-    checkPersonListVisible.value = true
-    const { data }  = await reviewStepNo6PersonList()
-    personList.value = data
-}
+// // 当点击提交审核的时候
+// const handleSaveAndContinue = async () => {
+//     checkPersonListVisible.value = true
+//     const { data }  = await reviewStepNo6PersonList()
+//     personList.value = data
+// }
 // 当点击上一步的时候
 const handleGoback = () => {
     emit('changeCheck-step', 3)
@@ -319,7 +316,7 @@ const fetchData = async () => {
         benchmarkAsin: item.benchmarkAsin,
         patent: item.patent,
         sampleRetentionStatus: item.sampleRetentionStatus,
-        productManager: productManager,
+        productManager,
         productDesign: item.productDesign,
         certification: '',
         variantSku: item.variantSku,

@@ -1,15 +1,16 @@
 <template>
   <div>
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-      <el-table ref="tableRef" stripe border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-        height="750" :show-header="false" style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
+      <el-table
+ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }" height="750"
+        :show-header="false" stripe style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
         <!-- 第一列固定标签列 -->
-        <el-table-column :prop="'column0'" :label="labelMap['column0']" fixed align="right" width="260">
+        <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="260">
           <template #default="{ row }">
-            <strong v-html="labelMap[row['column0']]" style="color: var(--el-table-header-text-color)"></strong>
+            <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
           </template>
         </el-table-column>
-        <el-table-column :prop="prop" :label="prop" v-for="(prop, i) in columns" :key="i" align="center" min-width="240">
+        <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="{ row }">
 
             <template v-if="row['column0'] === 'sku'">
@@ -21,15 +22,15 @@
             </template>
 
             <template v-if="row['column0'] === 'variantImg'">
-              <el-image style="width: 105px;height: 105px;" :src="row[prop]" fit="fill" data-img="img">
+              <el-image data-img="img" fit="fill" :src="row[prop]" style="width: 105px;height: 105px;">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>
             </template>
 
             <template v-if="row['column0'] === 'oem'">
-              <el-checkbox v-model="row[prop]" :disabled="true":true-value="1" :false-value="0" size="large" class="custom-checkbox"/>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1"/>
             </template>
             <template v-if="row['column0'] === 'packagingSize'">
                 {{ row[prop] }} cm
@@ -52,22 +53,22 @@
 
     <div style="padding-top: 20px;">
       <el-table border :data="moldData" :header-cell-style="{ 'text-align': 'center' }" style="margin-top: 25px;">
-        <el-table-column label="提交日期" align="center">
+        <el-table-column align="center" label="提交日期">
           <template #default="{ row }">
             {{ formatDate(new Date(row.createTime)) }}
           </template>
         </el-table-column>
-        <el-table-column label="零件名" prop="component" align="center" />
-        <el-table-column label="供应商" prop="suppliser" align="center" />
-        <el-table-column label="状态" align="center">
+        <el-table-column align="center" label="零件名" prop="component" />
+        <el-table-column align="center" label="供应商" prop="suppliser" />
+        <el-table-column align="center" label="状态">
           <template #default="{ row }">
-            <el-tag type="info" v-if="row.status == 0">审批中</el-tag>
-            <el-tag type="warning" v-if="row.status == 1">待提交付款申请</el-tag>
-            <el-tag type="success" v-if="row.status == 2">已付款</el-tag>
+            <el-tag v-if="row.status == 0" type="info">审批中</el-tag>
+            <el-tag v-if="row.status == 1" type="warning">待提交付款申请</el-tag>
+            <el-tag v-if="row.status == 2" type="success">已付款</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column label="开票类型" align="center">
+        <el-table-column align="center" label="开票类型">
           <template #default="{ row }">
             <span v-if="row.invoiceType == 0">专票</span>
             <span v-if="row.invoiceType == 1">普票</span>
@@ -75,10 +76,8 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="付款金额" align="center" prop="payPrice">
-
-        </el-table-column>
-        <el-table-column label="处理方式" align="center">
+        <el-table-column align="center" label="付款金额" prop="payPrice"/>
+        <el-table-column align="center" label="处理方式">
           <template #default="{ row }">
             <span v-if="row.dealMethod == 0">不含在PO</span>
             <span v-if="row.dealMethod == 1">含在该PO</span>
@@ -92,19 +91,19 @@
     <div class="pay-button-group">
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
 
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useTableDataLineToColumn, inputHandleMouseOver, effectiveCountInputeHandle } from '/@/utils/tableColum'
-import { getSkuVariantList, getMoldInfoByReviewId, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
-import { IReviewMoldItem, IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
-import { formatDate } from '/@/utils/dateUtils'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { handleActivePath } from '/@/utils/routes'
 import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
+import { getMoldInfoByReviewId, getSkuVariantList, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
+import { useTabsStore } from '/@/store/modules/tabs'
+import type { IReviewCommonItem, IReviewMoldItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
+import { formatDate } from '/@/utils/dateUtils'
+import { handleActivePath } from '/@/utils/routes'
+import { inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
 
 const moldData = ref<IReviewMoldItem[]>()
 const variantList = ref<any[]>([])
@@ -135,7 +134,7 @@ const router = useRouter()
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-const emit = defineEmits(['change-step'])
+
 const labelMap: Record<string, string> = {
   column0: '',
   orderEntryId: '变体编号',
@@ -170,7 +169,7 @@ const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
 // table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement, event: Event) =>{
+const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
     // 处理图片放大预览
     let el = getSpecificChildren(cell, "img")[0];
     if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
@@ -184,13 +183,13 @@ const buildParams = (): IReviewStep2Req => {
   let vArr: any = []
   for (let i = 1; i < variantSize.value + 1; i++) {
     let n: any = {}
-    variantList.value.map((item, index) => {
+    variantList.value.map((item) => {
       n[item["column0"]] = item[i]
     })
     vArr.push(n)
   }
 
-  vArr.forEach((item: any, index: number) => {
+  vArr.forEach((item: any) => {
     const v: IReviewStep2Item = {
       orderEntryId: item.orderEntryId,
       sku: item.sku
@@ -237,7 +236,7 @@ const fetchData = async () => {
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
     let n: IReviewCommonItem = {
-      column0: (index + 1) + "",
+      column0: `${index + 1  }`,
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
       productName: item.productName,

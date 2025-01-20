@@ -2,59 +2,58 @@
   <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <el-table 
         ref="tableRef"
-        :data="exchangeList" 
-        border stripe
-        :header-cell-style="{ 'text-align': 'center' }"
-        @cell-click="changeInput"
+        border 
+        :data="exchangeList" :header-cell-style="{ 'text-align': 'center' }"
+        stripe
         style="width: auto; table-layout: fixed;"
+        @cell-click="changeInput"
     >
         <!-- 第一列固定标签列 -->
         <el-table-column 
-            :prop="'column0'" 
-            :label="labelMap['column0']" 
+            align="right" 
             fixed 
-            align="right"
+            :label="labelMap['column0']" 
+            :prop="'column0'"
             width="240"
         >
             <template #default="{ row }">
                 <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
             </template>
         </el-table-column>
-        <el-table-column label="变体值相同" align="center" width="110">
-            <template #default="{row, $index}">
+        <el-table-column align="center" label="变体值相同" width="110">
+            <template #default="{row}">
                 <template v-if="row['column0'] !== 'productImgUrl'">
-                    <el-checkbox v-model="row.variantsSame" class="custom-checkbox" @change="handleVariantsSame(row, $index)">
-                    </el-checkbox>
+                    <el-checkbox v-model="row.variantsSame" class="custom-checkbox" @change="handleVariantsSame(row)"/>
                 </template>
             </template>
         </el-table-column>
         <!-- 动态列 -->
         <el-table-column 
             v-for="(prop, index) in columnsChange" 
-            :prop="prop" 
-            :label="prop" 
-            :key="index"
-            align="center"
+            :key="index" 
+            align="center" 
+            :label="prop"
             min-width="260"
+            :prop="prop"
             
         >
-            <template #default = "{row, $index}">
+            <template #default = "{row}">
                 <template v-if="row['column0'] === 'productImgUrl'">
                   <el-upload 
-                        list-type="picture-card" 
+                        :class="{ hide: row[prop].hide }" 
                         :file-list="row[prop].imgUrl" 
-                        :class="{ hide: row[prop].hide }"
                         :http-request="(file) => uploadImage(file, row, prop)"
+                        list-type="picture-card"
                     >
                         <div 
                             style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
                             @click="handleIconClick(prop)"
                         >
-                            <el-icon ><Plus /></el-icon>
+                            <el-icon ><plus /></el-icon>
                         </div>
                         <template #file="{ file }">
                             <div>
-                                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
                                 <span class="el-upload-list__item-actions">
                                     <span
                                         class="el-upload-list__item-preview"
@@ -66,7 +65,7 @@
                                         class="el-upload-list__item-delete"
                                         @click="handleRemove(file, prop)"
                                     >
-                                        <el-icon><Delete /></el-icon>
+                                        <el-icon><delete /></el-icon>
                                     </span>
                                 </span>
                             </div>
@@ -76,43 +75,43 @@
                   </template>
                 <template v-if="row['column0'] === 'productLength'">
                     <div class="none">
-                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                        <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
                     </div>
                     <span>{{ row[prop] }}</span>
                 </template>
                 <template v-if="row['column0'] === 'productWidth'">
                     <div class="none">
-                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                        <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
                     </div>
                     <span>{{ row[prop] }}</span>
                 </template>
                 <template v-if="row['column0'] === 'productHeight'">
                     <div class="none">
-                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                        <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
                     </div>
                     <span>{{ row[prop] }}</span>
                 </template>
                 <template v-if="row['column0'] === 'material'">
                     <div class="none">
-                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                        <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
                     </div>
                     <span>{{ row[prop] }}</span>
                 </template>
                 <template v-if="row['column0'] === 'battery'">
                     <div class="none">
-                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                        <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
                     </div>
                     <span>{{ row[prop] }}</span> 
                 </template>
                 <template v-if="row['column0'] === 'benchmarkAsin'">
                     <div class="none">
-                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                        <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
                     </div>
                     <span>{{ row[prop] }}</span> 
                 </template>
                 <template v-if="row['column0'] === 'patent'">
                     <div class="none">
-                        <el-input type="text" v-model="row[prop]" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" @blur="clickCancle($event, prop)" />
+                        <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
                     </div>
                     <span>{{ row[prop] }}</span> 
                 </template>
@@ -123,15 +122,15 @@
                     <span>{{ row[prop] }}</span>  -->
                     <el-select
                       v-model="row[prop]"
-                      filterable
-                      remote
-                      default-first-option
-                      placeholder="点击输入和搜索"
-                      :remote-method="remotePeopleMethod"
-                      :loading="peopleLoading"
-                      @change="handleSampleRetentionStatus(row, prop)"
-                      clearable
                       class="center-input"
+                      clearable
+                      default-first-option
+                      filterable
+                      :loading="peopleLoading"
+                      placeholder="点击输入和搜索"
+                      remote
+                      :remote-method="remotePeopleMethod"
+                      @change="handleSampleRetentionStatus(row, prop)"
                     >
                         <el-option
                             v-for="item in peopleOptions"
@@ -144,15 +143,15 @@
                 <template v-if="row['column0'] === 'productDesign'">
                     <el-select
                       v-model="row[prop]"
-                      filterable
-                      remote
-                      default-first-option
-                      placeholder="点击输入和搜索"
-                      :remote-method="remotePeopleMethod"
-                      :loading="peopleLoading"
-                      @change="handleSampleRetentionStatus(row, prop)"
-                      clearable
                       class="center-input"
+                      clearable
+                      default-first-option
+                      filterable
+                      :loading="peopleLoading"
+                      placeholder="点击输入和搜索"
+                      remote
+                      :remote-method="remotePeopleMethod"
+                      @change="handleSampleRetentionStatus(row, prop)"
                     >
                         <el-option
                             v-for="item in peopleOptions"
@@ -164,19 +163,18 @@
                 </template>
                 <template v-if="row['column0'] === 'sampleRetentionStatus'">
                     
-                      <el-select v-model="row[prop]" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)" class="center-select">
+                      <el-select v-model="row[prop]" class="center-select" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
                       <el-option 
                         v-for="item in photoSampleOptions"
+                        :key="item.value"
                         :label="item.label"
                         :value="item.value"
-                        :key="item.value"
-                      >
-                      </el-option>
+                      />
                     </el-select>
                     
                 </template>
                 <template v-if="row['column0'] === 'packingGroup'">
-                    <el-checkbox v-model="row[prop]" :true-value="1" :false-value="0" class="custom-checkbox" @change="handlePackingUpdate(row, prop)"></el-checkbox>
+                    <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handlePackingUpdate(row, prop)"/>
                 </template>
                 
                 <template v-if="row['column0'] === 'operate'">
@@ -199,17 +197,17 @@
 </template>
   
 <script lang="ts" setup>
-defineOptions({
-    name: 'OrderStep5',
-})
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, UploadFile } from 'element-plus'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { getAllName } from '/@/api/devlocal/user'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
+import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
+defineOptions({
+    name: 'OrderStep5',
+})
 
 const route: any = useRoute()
 const router = useRouter()
@@ -255,7 +253,7 @@ const handleInsertSku = async (row: any, prop: string) => {
   // console.log(row);
   // console.log(prop);
   try {
-  const { data, code } = await reviewInsertSkuInfo({ sku: exchangeList.value[13][prop] })
+  const { data } = await reviewInsertSkuInfo({ sku: exchangeList.value[13][prop] })
     if (data) {
       exchangeList.value[1][prop] = data.productLength
       exchangeList.value[2][prop] = data.productWidth
@@ -363,7 +361,7 @@ const labelMap: Record<string, string> = {
   skuMerge: '合并变体的SKU',
   operate: '操作',
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
 
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -380,7 +378,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, ev
   }
 }
 // 处理变体值相同
-const handleVariantsSame = (row: any, index: number) => { //变体值相同的值改变的时候,也要检查是否更改
+const handleVariantsSame = (row: any) => { //变体值相同的值改变的时候,也要检查是否更改
   const values = Object.values(row).filter(value => value !== null && value !== undefined && value !== '' && value !== row.variantsSame && value !== row.column0);
   if (row.variantsSame) {
     // console.log(values)
@@ -492,11 +490,9 @@ const clickCancle = async (event: any, prop: any) =>{
       const t1 = rootElement.children[0];
       const t2 = rootElement.children[1];
 
-      if (t1) {
-        if (t1.classList[0] !== 'el-select') {
+      if (t1 && t1.classList[0] !== 'el-select') {
           t1.classList.add("none");
         }
-      }
       if (t2) t2.classList.remove("none");
     }
 
@@ -638,12 +634,10 @@ const handleSaveAndContinue = async () => {
     const column0 = item.column0
     if (['productLength', 'productWidth', 'productHeight', 'material', 'battery', 'benchmarkAsin', 'productManager', 'productDesign'].includes(column0)) {
       for (const key of Object.keys(item)) {
-        if (key !== 'column0' && key !== 'variantsSame') {
-          if (!item[key]) {
+        if (key !== 'column0' && key !== 'variantsSame' && !item[key]) {
             $baseMessage(`${key}变体的${labelMap[column0]}不能为空!`, 'warning')
             return
           }
-        }
       }
     }
   }
@@ -767,7 +761,7 @@ const fetchVariantList = async () => {
           battery: item.battery,
           benchmarkAsin: item.benchmarkAsin,
           patent: item.patent,
-          productManager: productManager,
+          productManager,
           productDesign: item.productDesign,
           sampleRetentionStatus: item.sampleRetentionStatus,
           packingGroup: item.checkStatus,
@@ -787,7 +781,7 @@ const fetchVariantList = async () => {
             battery: item.battery,
             benchmarkAsin: item.benchmarkAsin,
             patent: item.patent,
-            productManager: productManager,
+            productManager,
             productDesign: item.productDesign,
             sampleRetentionStatus: item.sampleRetentionStatus,
             packingGroup: item.checkStatus,

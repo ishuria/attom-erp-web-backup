@@ -3,101 +3,97 @@
     <div class="table-container">
       <el-table 
         ref="tableRef" 
-        stripe border 
-        :data="componentList" 
-        :header-cell-style="{ 'text-align': 'center' }"
+        border :data="componentList" 
+        :header-cell-style="{ 'text-align': 'center' }" 
+        stripe
         @cell-click="changeInput"
       >
         <el-table-column align="center" label="属于变体" min-width="140" prop="variant">
             <template #default="{ row }">
-                <el-select v-model="row.variant" placeholder="请选择变体"  style="min-width: 100%;" disabled>
+                <el-select v-model="row.variant" disabled  placeholder="请选择变体" style="min-width: 100%;">
                     <el-option
                         v-for="item in variantsSelectList"
-                        :label="item.label"
                         :key="item.id"
+                        :label="item.label"
                         :value="item.id"
-                    ></el-option>
+                    />
                 </el-select>
             </template>
         </el-table-column>
         <el-table-column align="center" label="零件图片" min-width="100">
-            <template #default="{ row, $index }">
-                <el-image width="75px" height="75px" :src="row.componentImgUrl" data-img="img" />
+            <template #default="{ row }">
+                <el-image data-img="img" height="75px" :src="row.componentImgUrl" width="75px" />
             </template>
         </el-table-column>
-        <el-table-column label="零件ID" align="center" min-width="70" prop="" width="100">
-        </el-table-column>   
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
-        </el-table-column>
-        <el-table-column label="每个SKU需要数量"  width="100" prop="quantity" align="center">
+        <el-table-column align="center" label="零件ID" min-width="70" prop="" width="100"/>   
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')"/>
+        <el-table-column align="center"  label="每个SKU需要数量" prop="quantity" width="100">
             <template #header>
                 每个SKU<br>需要数量
             </template>
         </el-table-column>
-        <el-table-column label="单位"  min-width="70" prop="componentUnit" align="center">
-        </el-table-column>
-        <el-table-column label="出厂单价" prop="unitPrice" align="center" :width="flexColumnWidth(componentList, '出厂', 'unitPrice')">
+        <el-table-column align="center"  label="单位" min-width="70" prop="componentUnit"/>
+        <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(componentList, '出厂', 'unitPrice')">
             <template #header>
                 出厂<br>单价
             </template>
         </el-table-column>
 
-        <el-table-column label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')" align="center">
+        <el-table-column align="center" label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')">
             <template #header>
                 出厂<br>总价
             </template>
         </el-table-column>
-        <el-table-column label="每个SKU运费(含税)" prop="freight" align="center" min-width="100">
+        <el-table-column align="center" label="每个SKU运费(含税)" min-width="100" prop="freight">
             <template #header>
                 每个SKU<br>运费(含税)
             </template>
         </el-table-column>    
-        <el-table-column label="总未税价" prop="preTaxPrice" align="center" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
+        <el-table-column align="center" label="总未税价" prop="preTaxPrice" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
             <template #header>
                 总未<br>税价
             </template>
         </el-table-column>
-        <el-table-column label="总含税价" prop="taxIncludedPrice" align="center" :width="flexColumnWidth(componentList, '总含', 'taxIncludedPrice')">
+        <el-table-column align="center" label="总含税价" prop="taxIncludedPrice" :width="flexColumnWidth(componentList, '总含', 'taxIncludedPrice')">
             <template #header>
                 总含<br>税价
             </template>
         </el-table-column>    
-        <el-table-column label="货币" width="110px" prop="currency">
+        <el-table-column label="货币" prop="currency" width="110px">
             <template #default="{ row }">
-                <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" disabled>
-                    <el-option v-for="dict in currencyList" :key="dict.value"
-                        :value="dict.value" :label="dict.label"></el-option>
+                <el-select v-model="row.currency" disabled placeholder="请选择货币" style="min-width: 100%;">
+                    <el-option
+v-for="dict in currencyList" :key="dict.value"
+                        :label="dict.label" :value="dict.value"/>
                 </el-select>
             </template>
         </el-table-column>
-        <el-table-column label="起订量" prop="minimumOrderQuantity" align="center" min-width="100">
-        </el-table-column> 
-        <el-table-column label="整箱数" prop="numberFullCartons" align="center" min-width="100">
-        </el-table-column> 
-        <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
-        </el-table-column>
-        <el-table-column label="开票" prop="oem" align="center" width="140">
+        <el-table-column align="center" label="起订量" min-width="100" prop="minimumOrderQuantity"/> 
+        <el-table-column align="center" label="整箱数" min-width="100" prop="numberFullCartons"/> 
+        <el-table-column align="center" label="供应商" min-width="140" prop="supplier"/>
+        <el-table-column align="center" label="开票" prop="oem" width="140">
             <template #default = "{ row }">
-                <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" disabled>
-                    <el-option v-for="dict in invoicingList" :key="dict.value"
-                        :value="dict.value" :label="dict.label"></el-option>
+                <el-select v-model="row.invoicing" disabled placeholder="请选择开票类型" style="min-width: 100%;">
+                    <el-option
+v-for="dict in invoicingList" :key="dict.value"
+                        :label="dict.label" :value="dict.value"/>
                 </el-select>
             </template>
         </el-table-column>
-        <el-table-column  label="实际税点" prop="actualTaxRate" min-width="60" align="center">
+        <el-table-column  align="center" label="实际税点" min-width="60" prop="actualTaxRate">
             <template #header>
                 实际<br>税点
             </template>
         </el-table-column>
 
-        <el-table-column  label="开票税点" prop="invoicingTaxRate" min-width="60" align="center">
+        <el-table-column  align="center" label="开票税点" min-width="60" prop="invoicingTaxRate">
             <template #header>
                 开票<br>税点
             </template>
         </el-table-column>
 
         
-        <el-table-column  label="采购链接" prop="purchaseLink" min-width="140">
+        <el-table-column  label="采购链接" min-width="140" prop="purchaseLink">
             <template #default="{ row }">
                 <span>
                     <el-text truncated>
@@ -106,22 +102,22 @@
                 </span>
             </template>
         </el-table-column>
-        <el-table-column  label="收货仓库" prop="remarks" min-width="100">
+        <el-table-column  label="收货仓库" min-width="100" prop="remarks">
             <el-select 
                 v-model="list.componentInfo!" 
-                value-key="id"
-                placeholder="请选择收货仓库"
-                filterable
-                clearable
                 allow-create
-                :reserve-keyword = "false"
+                clearable
                 disabled
+                filterable
+                placeholder="请选择收货仓库"
+                :reserve-keyword = "false"
                 style="min-width: 100%"
+                value-key="id"
             >
-                <el-option v-for="val,idx in list" :label="val.label!" :value="val" :key="val.id!"/>
+                <el-option v-for="val in list" :key="val.id!" :label="val.label!" :value="val"/>
             </el-select>
         </el-table-column>
-        <el-table-column label="零件采购注意事项" prop="purchaseMatters" min-width="200">
+        <el-table-column label="零件采购注意事项" min-width="200" prop="purchaseMatters">
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
@@ -131,7 +127,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="合同条款" prop="contractTerms" min-width="200">
+        <el-table-column label="合同条款" min-width="200" prop="contractTerms">
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
@@ -149,96 +145,84 @@
         <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
         <h3>--为了精准核算利润，运费需要准确填写。</h3>
       </vab-alert>
-      <wangEditor
-        :title="wangEditorTitle"
-        :wangEditorVisible="wangEditorAttentionVisible"
+      <wang-editor
+        :classify="classify"
         :content="attentionCopy"
-        @clickBoolean="clickAttentionCancel"
-        @clickChild="clickAttentionConfirm"
-        :classify="classify"
-      >
-      </wangEditor>
-      <wangEditor
         :title="wangEditorTitle"
-        :wangEditorVisible="wangEditorContractVisible"
-        :content="contractCopy"
-        @clickBoolean="clickContractCancel"
-        @clickChild="clickContractConfirm"
+        :wang-editor-visible="wangEditorAttentionVisible"
+        @click-boolean="clickAttentionCancel"
+        @click-child="clickAttentionConfirm"
+      />
+      <wang-editor
         :classify="classify"
-      >
-      </wangEditor>
+        :content="contractCopy"
+        :title="wangEditorTitle"
+        :wang-editor-visible="wangEditorContractVisible"
+        @click-boolean="clickContractCancel"
+        @click-child="clickContractConfirm"
+      />
     </div>
     <div class="table-container">
       <el-table 
           ref="tableRef" 
-          stripe border 
+          border :cell-style="{ 'text-align': 'center' }" 
           :data="variantsList" 
           :header-cell-style="{ 'text-align': 'center' }"
+          stripe
           @cell-click="changeInput"
-          :cell-style="{ 'text-align': 'center' }"
       >
-          <el-table-column label="变体" min-width="100" prop="variant" align="center"></el-table-column>
-          <el-table-column prop="site" label="站点" min-width="135">
+          <el-table-column align="center" label="变体" min-width="100" prop="variant"/>
+          <el-table-column label="站点" min-width="135" prop="site">
               <template #default="{ row }">
-                  <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" disabled>
-                      <el-option v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
-                              :value="dict.value" :label="dict.label"></el-option>
+                  <el-select v-model="row.site" disabled placeholder="请选择站点" style="min-width: 100%;">
+                      <el-option
+v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
+                              :label="dict.label" :value="dict.value"/>
                   </el-select>
               </template>
           </el-table-column>
-          <el-table-column label="外汇币种" min-width="100" prop="currencyType">
-          </el-table-column>
-          <el-table-column label="汇率" min-width="100" prop="foreignExchange">
-          </el-table-column>
-          <el-table-column prop="actualTotalCost" label="实际总成本￥" min-width="120"></el-table-column>
-          <el-table-column prop="packagingLength" label="长(cm)" min-width="90">
-          </el-table-column>
+          <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
+          <el-table-column label="汇率" min-width="100" prop="foreignExchange"/>
+          <el-table-column label="实际总成本￥" min-width="120" prop="actualTotalCost"/>
+          <el-table-column label="长(cm)" min-width="90" prop="packagingLength"/>
 
-          <el-table-column prop="packagingWidth" label="宽(cm)" min-width="90">
-          </el-table-column>
+          <el-table-column label="宽(cm)" min-width="90" prop="packagingWidth"/>
 
-          <el-table-column prop="packagingHeight" label="高(cm)" min-width="90">
-          </el-table-column>
+          <el-table-column label="高(cm)" min-width="90" prop="packagingHeight"/>
 
-          <el-table-column prop="weight" label="重量(g)">
-          </el-table-column>
-          <el-table-column label="尾程$"  min-width="70" prop="lastMile" ></el-table-column>
-          <el-table-column label="头程￥"  width="90" prop="firstMile" ></el-table-column>    
-          <el-table-column label="打包￥"  width="90" prop="packagingPrice" >
-          </el-table-column>
-          <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
+          <el-table-column label="重量(g)" prop="weight"/>
+          <el-table-column label="尾程$"  min-width="70" prop="lastMile" />
+          <el-table-column label="头程￥"  prop="firstMile" width="90" />    
+          <el-table-column label="打包￥"  prop="packagingPrice" width="90" />
+          <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel">
               <template #default="{ row }">
                   <el-select 
                       v-model="row.firstMileChannel" 
+                      disabled
                       placeholder="请选择头程渠道"
                       style="min-width: 100%"
-                      disabled
                   >
                       <el-option 
                           v-for="dict in firstLegChannelColumnsNum" 
                           :key="dict.value" 
-                          :value="dict.value"
                           :label="dict.label"
-                      >
-                      </el-option>
+                          :value="dict.value"
+                      />
                   </el-select>
               </template>
           </el-table-column>
-          <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice">
-          </el-table-column>
-          <el-table-column prop="grossMarginRate" label="毛利率"></el-table-column>
-          <el-table-column prop="roi" label="ROI"></el-table-column>
-          <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
-          </el-table-column>
-          <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
-          </el-table-column>
-          <el-table-column prop="tariff" label="关税%">
+          <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice"/>
+          <el-table-column label="毛利率" prop="grossMarginRate"/>
+          <el-table-column label="ROI" prop="roi"/>
+          <el-table-column label="重量系数" min-width="100" prop="weightCoefficient"/>
+          <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient"/>
+          <el-table-column label="关税%" prop="tariff">
               <template #default="{row}">
                   {{ row.tariff ? row.tariff+'%' : '' }}
               </template>
           </el-table-column>
-          <el-table-column prop="platformCommission" label="平台佣金" min-width="100"></el-table-column>
-          <el-table-column prop="storageFee" label="仓储费2个月$" min-width="140"></el-table-column>
+          <el-table-column label="平台佣金" min-width="100" prop="platformCommission"/>
+          <el-table-column label="仓储费2个月$" min-width="140" prop="storageFee"/>
           <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
           </template>
@@ -256,18 +240,18 @@
 </template>
   
 <script lang="ts" setup>
-defineOptions({
-    name: 'OrderCheckStep2',
-})
 import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { reviewStepNo3ComponentList, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
+import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+defineOptions({
+    name: 'OrderCheckStep2',
+})
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
@@ -300,10 +284,10 @@ const contractCopy = ref<string>('')
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
-const clickAttentionConfirm = async (val: any) => {
+const clickAttentionConfirm = async () => {
     wangEditorAttentionVisible.value = false
 }
-const clickContractConfirm = async (val: any) => {
+const clickContractConfirm = async () => {
     wangEditorContractVisible.value = false
 }
 /**
@@ -320,7 +304,7 @@ const clickContractCancel = (val: any) => {
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
 
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
@@ -366,7 +350,7 @@ const fetchDataComponent = async () =>{
         // 拿样零件添加列表
         const { data } = await reviewStepNo3ComponentList({reviewId: parseInt(route.query.reviewId)})
         componentList.value = data
-        componentList.value.forEach((item: any, index: number) => {
+        componentList.value.forEach((item: any) => {
             item.currency = convertString(item.currency)
             item.invoicing = convertString(item.invoicing)
         })
@@ -375,8 +359,8 @@ const fetchDataComponent = async () =>{
         // 获取下拉变体列表
         const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: parseInt(route.query.reviewId) })
         variantsSelectList.value = variantSelectList
-    }catch(e){
-        console.error(e as Error)
+    }catch(error){
+        console.error(error as Error)
     }
 }
 // 获取变体列表

@@ -6,28 +6,28 @@
     </el-col> -->
     <el-col :span="24">
       <el-table 
-        :data="sampleList"
-        @cell-click="sampelTrialTableInputChage"
-        border stripe
-        :cell-style="cellStyle" :header-cell-style="{ 'text-align': 'center' }"
         ref="trialTableRef"
-        :span-method="objectSpanMethod"
+        border
+        :cell-style="cellStyle" :data="sampleList"
+        :header-cell-style="{ 'text-align': 'center' }" :span-method="objectSpanMethod"
+        stripe
+        @cell-click="sampelTrialTableInputChage"
       >
-      <el-table-column prop="firstColumn" min-width="100">
+      <el-table-column min-width="100" prop="firstColumn">
         <span style="font-weight: 600; font-size: var(--el-font-size-base); color: var(--el-table-header-text-color);">拿样清单<br>成本试算</span>
       </el-table-column>
-      <el-table-column prop="site" label="站点" min-width="135">
+      <el-table-column label="站点" min-width="135" prop="site">
         <template #default="{ row }">
-          <el-select v-model="row.site" placeholder="请选择站点" @change="handlerSiteChange(row)" style="min-width: 100%;">
-            <el-option v-for="dict in props.siteList" :key="dict.id" :value="dict.id" :label="dict.label"></el-option>
+          <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handlerSiteChange(row)">
+            <el-option v-for="dict in props.siteList" :key="dict.id" :label="dict.label" :value="dict.id"/>
           </el-select>
         </template>
       </el-table-column>
 
 
-      <el-table-column label="外汇币种" prop="currencyType" min-width="100"></el-table-column>
+      <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
 
-      <el-table-column label="汇率" prop="foreignExchange"></el-table-column>
+      <el-table-column label="汇率" prop="foreignExchange"/>
 
       <el-table-column label="产品描述" min-width="200" prop="desc">
         <template #default="{ row, $index }">
@@ -41,85 +41,85 @@
       </el-table-column>
 
 
-      <el-table-column prop="length" label="长(cm)" min-width="80">
+      <el-table-column label="长(cm)" min-width="80" prop="length">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="width" label="宽(cm)" min-width="80">
+      <el-table-column label="宽(cm)" min-width="80" prop="width">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="height" label="高(cm)" min-width="80">
+      <el-table-column label="高(cm)" min-width="80" prop="height">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="price" label="实际总成本￥" min-width="130">
+      <el-table-column label="实际总成本￥" min-width="130" prop="price">
         <template #default="{ row }">
           {{ row.price != null ? '￥' + row.price : '' }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="weight" label="重量(g)">
+      <el-table-column label="重量(g)" prop="weight">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="lastMile" label="尾程">
+      <el-table-column label="尾程" prop="lastMile">
         <template #default="{ row }">
           {{ row.lastMile != null ? row.symbol + row.lastMile : '' }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="firstMile" label="头程￥">
+      <el-table-column label="头程￥" prop="firstMile">
         <template #default="{ row }">
           {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="packaging" label="打包￥">
+      <el-table-column label="打包￥" prop="packaging">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.packaging != null ? '￥' + row.packaging : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="firstMileChannel" label="头程渠道" min-width="140">
+      <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel">
         <template #default="{ row }">
-          <el-select v-model="row.firstMileChannel" @change="handleUpdateChannel(row)" placeholder="请选择头程渠道" style="min-width: 100%">
-            <el-option v-for="dict in props.channelList" :key="dict.id" :value="dict.id" :label="dict.label" />
+          <el-select v-model="row.firstMileChannel" placeholder="请选择头程渠道" style="min-width: 100%" @change="handleUpdateChannel(row)">
+            <el-option v-for="dict in props.channelList" :key="dict.id" :label="dict.label" :value="dict.id" />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="sellingPrice" label="售价">
+      <el-table-column label="售价" prop="sellingPrice">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="grossMarginRate" label="毛利率">
+      <el-table-column label="毛利率" prop="grossMarginRate">
         <template #default="{ row }">
           <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
           <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
@@ -128,46 +128,46 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="roi" label="ROI">
+      <el-table-column label="ROI" prop="roi">
         <template #default="{ row }">
           {{ row.roi != null ? row.roi + '%' : '' }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="weightCoefficient" label="重量系数" min-width="100">
+      <el-table-column label="重量系数" min-width="100" prop="weightCoefficient">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.weightCoefficient }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="volumeCoefficient" label="体积系数" min-width="100">
+      <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.volumeCoefficient }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="tariff" label="关税%">
+      <el-table-column label="关税%" prop="tariff">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event,row)" />
+            <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
           </div>
           <span>{{ row.tariff ? row.tariff + '%' : '' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column prop="platformCommission" label="平台佣金" min-width="100">
+      <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
         <template #default="{ row }">
           {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="storageFee" label="仓储费2个月" min-width="140">
+      <el-table-column label="仓储费2个月" min-width="140" prop="storageFee">
         <template #default="{ row }">
           {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
         </template>
@@ -185,27 +185,27 @@
     </el-col>
   </el-row>
   <!-- 产品描述显示 -->
-  <wangEditor 
-    :wangEditorVisible="wangEditorLogVisible" 
-    :title="wangEditorTitle" 
-    :content="progressLogCopy"
+  <wang-editor 
     :classify='classify' 
-    @clickBoolean="clickLogBool" 
-    @clickChild="clickLog" 
+    :content="progressLogCopy" 
+    :title="wangEditorTitle"
+    :wang-editor-visible="wangEditorLogVisible" 
+    @click-boolean="clickLogBool" 
+    @click-child="clickLog" 
   />
 </template>
 
 <script lang="ts" setup>
-import { TableInstance } from 'element-plus'
+import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
+import type { CSSProperties } from 'vue'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { addTrialCalculation, getTrialCalculation, getTrialCalculationProductDesc, reverseCalculateProgressSample, saveTrialCalculation, updateTrialCalculation, updateTrialcalculationProductdesc } from '/@/api/devlocal/progressSample'
-import { IProgressEstimatedCostAccounting, IProgressSample } from '/@/type/progress/sampleAndComponentType'
+import type { IProgressEstimatedCostAccounting, IProgressSample } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { removeHtmlTags } from '/@/utils/tableColum'
-import { CSSProperties } from 'vue'
 
 const trialTableRef = ref<TableInstance>()
 
@@ -306,10 +306,8 @@ defineComponent({
 
 // 列表col合并方法
 const objectSpanMethod = ({
-  row,
   column,
   rowIndex,
-  columnIndex,
 }: any) => {
   
   // 表头合并
@@ -336,7 +334,7 @@ const handleUpdateChannel = async (row: any) => {
   fetchData()
 }
 // 鼠标enter事件
-const effectiveCountInputHandle = (event: Event,row:any) => {
+const effectiveCountInputHandle = (event: Event) => {
   const targetElement = event.target as HTMLInputElement
   targetElement.blur()
 }
@@ -397,6 +395,7 @@ const saveTrialCalculationHandler = async (row:IProgressSample) => {
       newValue.price = convertString(newInfo.totalCost!)
     }
 
+    // eslint-disable-next-line vue/no-mutating-props
     props.costAccountingData?.push(newValue)
 
     // 重新加载成本核算
@@ -421,7 +420,7 @@ const getTrialCalculationHandler = async (): Promise<IProgressSample> => {
 
 let copyRow: any
 // 拿样清单成本试算修改
-const sampelTrialTableInputChage = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const sampelTrialTableInputChage = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.property === 'desc') {
     const { data } = await getTrialCalculationProductDesc({ id: row.id })
     row.desc = data
@@ -497,7 +496,10 @@ const fetchData = async () => {
     // first.foreignExchange = data
 
   const dbInfo: IProgressSample = await getTrialCalculationHandler()
-  if (!dbInfo){
+  if (dbInfo){
+    first.id = dbInfo.id!
+    sampleList.value.push(dbInfo)
+  } else{
     // 创建拿样清单成本试算
     const id = await addTrialCalculationHandler()
     // -1 代表对应的拿样清单成本试算已经存在
@@ -505,9 +507,6 @@ const fetchData = async () => {
       first.id = convertString(id)
     }
     sampleList.value.push(first)
-  } else{
-    first.id = dbInfo.id!
-    sampleList.value.push(dbInfo)
   }
 }
 defineExpose({

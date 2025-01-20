@@ -1,66 +1,66 @@
 <template>
 
   <vab-dialog
-    title="拿样"
     v-model="sampleVisible"
-    width="25%"
     :before-close="childCloseDialog"
+    title="拿样"
+    width="25%"
   >
 
     <el-form 
       ref="sampleFormRef"
-      :model="sampleForm" 
-      :rules="rules"
       label-width="auto" 
+      :model="sampleForm"
+      :rules="rules" 
       style="max-width: 600px"
     >
       <el-form-item label="零件名" prop="componentInfo">
         <el-select 
           v-model="sampleForm.componentInfo!" 
-          value-key="id"
-          placeholder="请选择拿样零件或输入拿样零件"
-          filterable
-          clearable
           allow-create
+          clearable
+          filterable
+          placeholder="请选择拿样零件或输入拿样零件"
           :reserve-keyword = "false"
+          value-key="id"
           @change="componentSelectChange"
         >
-          <el-option v-for="val,idx in componentList" :label="val.label!" :value="val" :key="val.id!"/>
+          <el-option v-for="val in componentList" :key="val.id!" :label="val.label!" :value="val"/>
         </el-select>
       </el-form-item>
       <el-form-item label="供应商" prop="suppliserInfo">
         <el-select 
           v-model="sampleForm.suppliserInfo!" 
-          value-key="id"
-          placeholder="请选择供应商或输入供应商"
-          filterable
-          clearable
           allow-create
-          :reserve-keyword = "false"
+          clearable
           :disabled="suppliserFlag"
+          filterable
+          placeholder="请选择供应商或输入供应商"
+          :reserve-keyword = "false"
+          value-key="id"
         >
-          <el-option v-for="val,idx in supplisertList" :label="val.label!" :value="val" :key="val.id!"/>
+          <el-option v-for="val in supplisertList" :key="val.id!" :label="val.label!" :value="val"/>
         </el-select>
       </el-form-item>
 
       <el-form-item label="1688单号" prop="orderNo1688">
-        <el-input type="input" v-model="sampleForm.orderNo1688" />
+        <el-input v-model="sampleForm.orderNo1688" type="input" />
       </el-form-item>
 
       <el-form-item label="物流单号" prop="logisticsNo">
-        <el-input type="input" v-model="sampleForm.logisticsNo" />
+        <el-input v-model="sampleForm.logisticsNo" type="input" />
       </el-form-item>
 
       <el-form-item label="拿样金额" prop="price">
-        <el-input type="input" v-model="sampleForm.price" />
+        <el-input v-model="sampleForm.price" type="input" />
       </el-form-item>
 
       <el-form-item label="下大货可退拿样金额" prop="bulkGoodsReturnable">
-        <el-input type="input" v-model="sampleForm.bulkGoodsReturnable" />
+        <el-input v-model="sampleForm.bulkGoodsReturnable" type="input" />
       </el-form-item>
 
       <el-form-item label="备注" prop="remark">
-        <el-input type="textarea" v-model="sampleForm.remark" />
+        <el-input v-model="sampleForm.remark" type="textarea" />
       </el-form-item>
     </el-form>
 
@@ -73,9 +73,9 @@
 </template>
 
 <script lang="ts" setup>
-import { FormInstance, FormRules } from 'element-plus';
-import {getComponentInfoList,getSuppliserInfoList,addSample} from '/@/api/devlocal/progressSample'
-import {ISampleAddReq, ISampleItem,} from '/@/type/progress/sampleAndComponentType'
+import type { FormInstance, FormRules } from 'element-plus'
+import { addSample, getComponentInfoList, getSuppliserInfoList } from '/@/api/devlocal/progressSample'
+import type { ISampleAddReq, ISampleItem, } from '/@/type/progress/sampleAndComponentType'
 
 defineComponent({
     name:"VabSample"
@@ -106,6 +106,7 @@ interface AddSampleForm {
 
 }
 const sampleVisible = ref<boolean>(false)
+// eslint-disable-next-line vue/no-dupe-keys
 const progressId = ref<string>()
 
 // 拿样form

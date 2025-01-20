@@ -5,11 +5,11 @@
       <el-col :span="12">
         <el-form
           ref="inputFormRef"
-          :model="inputForm" 
-          style="max-width: 750px"
+          label-position="right" 
           label-width="auto"
-          label-position="right"
+          :model="inputForm"
           :rules="rules"
+          style="max-width: 750px"
           @submit.prevent
          >
           <el-form-item label="产品来源"  prop="productSource">
@@ -17,9 +17,9 @@
 
             <el-select
               v-model="inputForm.productSource"
-              filterable
-              clearable
               allow-create
+              clearable
+              filterable
               :reserve-keyword = "false"
             >
               <el-option
@@ -64,17 +64,17 @@
           <el-form-item label="亚马逊首页数据上传">
             <el-upload
               ref="uploadRef"
-              class="upload-demo"
-              :limit="1"
-              action="none"
-              drag
-              style="width: 600px"
               accept=".xls, .xlsx"
-              @before-upload="uploadFileCheck"
-              :file-list="fileList"
+              action="none"
               :auto-upload="false"
-              :on-change="fileOnChange"
               :before-remove="fileBeforeRemove"
+              class="upload-demo"
+              drag
+              :file-list="fileList"
+              :limit="1"
+              :on-change="fileOnChange"
+              style="width: 600px"
+              @before-upload="uploadFileCheck"
             >
               <el-icon class="el-icon--upload"><upload-filled /></el-icon>
               <div class="el-upload__text">
@@ -89,7 +89,7 @@
           </el-form-item>
 
           <div style="display: flex;justify-content: end;">
-            <el-button type="success" @click="handlerSave" :loading="isSaveLoading">{{ saveBtnText }}</el-button>
+            <el-button :loading="isSaveLoading" type="success" @click="handlerSave">{{ saveBtnText }}</el-button>
           </div>
 
         </el-form>
@@ -97,13 +97,13 @@
 
       <el-col :span="12">
         <el-form
-          ref="outputFormRef"
-          :model="outputForm" 
-          style="max-width: 750px"
-          label-width="auto"
-          label-position="right"
-          @submit.prevent
           v-if="outPutResFlg"
+          ref="outputFormRef" 
+          label-position="right"
+          label-width="auto"
+          :model="outputForm"
+          style="max-width: 750px"
+          @submit.prevent
          >
          <el-form-item label="评估编号"  prop="productSource">
             <el-input v-model="outputForm.evaluationId" disabled style="width: 600px" />
@@ -166,9 +166,9 @@
 
           <el-form-item style="width: 850px">
             <vab-echarts-chart-line 
+              v-if="echartsFlag" 
               :x-axis-data="x" 
-              :y-axis-data="y" 
-              v-if="echartsFlag"/>
+              :y-axis-data="y"/>
           </el-form-item>
 
           <div style="display: flex;justify-content: end;">
@@ -184,19 +184,23 @@
 
 <script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { handleActivePath } from '/@/utils/routes'
-import {removeLocalStorage} from '/@/utils/localStorage'
-import type {FormInstance,
+import type {
+  FormInstance,
   UploadFile,
-  UploadFiles,UploadInstance } from 'element-plus'
-import {doAddEvaluation,
-  updateEvaluation,
+  UploadFiles, UploadInstance
+} from 'element-plus'
+import {
+  doAddEvaluation,
   getEvaluationById,
-  getEvaluationTrendList
+  getEvaluationTrendList,
+  updateEvaluation
 } from '/@/api/devlocal/evaluation'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { removeLocalStorage } from '/@/utils/localStorage'
+import { handleActivePath } from '/@/utils/routes'
 
-import {rules,
+import {
+  rules,
   selectOptions,
 } from './addOrUpdateEvalution'
 
@@ -263,7 +267,7 @@ const inputForm = reactive<any>({
 const uploadFileCheck = async (file:File) =>{
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
   const whiteList = ["xls", "xlsx"];
-  if (whiteList.indexOf(fileSuffix) === -1) {
+  if (!whiteList.includes(fileSuffix)) {
     await $baseMessage('上传文件只能是xls、xlsx格式', 'error', 'hey')
     await close()
     return false;
@@ -321,7 +325,7 @@ const handlerSave = async() =>{
       await $baseMessage("评估分析成功！", "success", "hey")
       setResponseValue(data)
       
-    } catch (e: any) {
+    } catch {
       isSaveLoading.value = false
     }
   }

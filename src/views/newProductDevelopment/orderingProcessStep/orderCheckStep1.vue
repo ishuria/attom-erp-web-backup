@@ -39,10 +39,10 @@
                         <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
                             <div class="list-item-meta">
                                 <div class="list-item-meta-content">
-                                  <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" disabled/>
+                                  <el-input v-model="item.variantName" clearable disabled placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
                                 </div>
                                 <div class="list-item-meta-content">
-                                  <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px" disabled/>
+                                  <el-input v-model="item.amazonUSVariantQuantity" clearable disabled style="width: 240px"/>
                                 </div>
                             </div>
                         </li>
@@ -59,13 +59,13 @@
   </template>
   
 <script lang="ts" setup>
+import type { FormInstance } from 'element-plus'
+import { reviewStepNo1 } from '/@/api/devlocal/orderProcess'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 defineOptions({
     name: 'OrderCheckStep1',
 })
-import { reviewStepNo1 } from '~/src/api/devlocal/orderProcess';
-import { useTabsStore } from '/@/store/modules/tabs'
-import { handleActivePath } from '/@/utils/routes'
-import type { FormInstance } from 'element-plus'
 
 const route: any = useRoute()
 const tabsStore = useTabsStore()

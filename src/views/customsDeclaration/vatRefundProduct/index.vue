@@ -13,13 +13,13 @@
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0;">
               <el-date-picker 
                 v-model="date"
+                :clearable="false"
+                :editable="false"
+                end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
                 type="daterange"
-                end-placeholder="结束日期"
-                :clearable="false"
                 value-format="YYYY-MM-DD"
-                :editable="false"
                 @change="queryDateData"
               />
             </span>
@@ -30,10 +30,10 @@
           <vab-query-form-right-panel :span="4">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" native-type="submit" :loading="listLoading" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -42,8 +42,8 @@
           border
           :cell-style="cellStyle"
           class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
           :data="list"
+          :header-cell-style="headerCellStyle"
           @cell-click="cellClick"
         >
           <el-table-column fixed="left" type="selection"/>
@@ -142,13 +142,13 @@
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0;">
               <el-date-picker 
                 v-model="date"
+                :clearable="false"
+                :editable="false"
+                end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
                 type="daterange"
-                end-placeholder="结束日期"
-                :clearable="false"
                 value-format="YYYY-MM-DD"
-                :editable="false"
                 @change="queryDateData"
               />
             </span>
@@ -156,10 +156,10 @@
           <vab-query-form-right-panel :span="4">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" native-type="submit" :loading="listLoading" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -168,8 +168,8 @@
           border
           :cell-style="cellStyle2"
           class="noneHoveTable"
-          :header-cell-style="headerCellStyle"
           :data="list"
+          :header-cell-style="headerCellStyle"
           @cell-click="cellClick"
         >
           <el-table-column fixed="left" type="selection"/>
@@ -255,12 +255,12 @@
         <el-form-item label="付款日期" prop="">
           <el-date-picker 
             v-model="ticketReminderForm.dateRange"
-            start-placeholder="最早付款日期"
-            end-placeholder="最晚付款日期"
-            type="daterange"
-            range-separator="至"
-            :editable="false"
             :clearable="false"
+            :editable="false"
+            end-placeholder="最晚付款日期"
+            range-separator="至"
+            start-placeholder="最早付款日期"
+            type="daterange"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
@@ -293,12 +293,12 @@
         <el-form-item>
           <el-date-picker
             v-model="invoiceMatchExportForm.time"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            type="daterange"
-            range-separator="至"
-            :editable="false"
             :clearable="false"
+            :editable="false"
+            end-placeholder="结束日期"
+            range-separator="至"
+            start-placeholder="开始日期"
+            type="daterange"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
@@ -314,7 +314,7 @@
       @close="pdfVisible = false"
     >
       <div class="pdf-container" >
-        <vab-pdf :source="source" @loaded="" @page-loaded="" />
+        <vab-pdf :source="source" />
       </div>
     </vab-dialog>
   </div>
@@ -323,45 +323,45 @@
 <script lang="ts" setup>
 
 import { Search } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import VabPdf from '/@/plugins/VabPdf'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
-import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
-import { flexColumnWidth } from '/@/utils/tableColum'
 import { downloadFilePD } from '/@/api/devlocal/download'
+import VabPdf from '/@/plugins/VabPdf'
+import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'TaxRefundManagement'
 })
 
-const dialogWidth = ref<number>(0)
+// const dialogWidth = ref<number>(0)
 const source = ref<string>('')
 const showPdf = (row: IGetTaxRefundBatchDetailList) => {
   source.value = row.invoiceFilePath!
   pdfVisible.value = true
 }
 // 当 PDF 加载完成时获取宽度
-const onPdfLoaded = (pdf: any) => {
-  console.log(pdf);
-}
-// 当某一页加载完成时触发
-const onPageLoaded = (page: any) => {
-  const viewport = page.getViewport({ scale: 1 }); // 获取页面的视口信息
-  dialogWidth.value = viewport.width; // 设置弹窗宽度为 PDF 页面宽度
-}
+// const onPdfLoaded = (pdf: any) => {
+//   console.log(pdf);
+// }
+// // 当某一页加载完成时触发
+// const onPageLoaded = (page: any) => {
+//   const viewport = page.getViewport({ scale: 1 }); // 获取页面的视口信息
+//   dialogWidth.value = viewport.width; // 设置弹窗宽度为 PDF 页面宽度
+// }
 // 发票匹配导出
 const invoiceMatchExportVisible = ref<boolean>(false)
 const invoiceMatchExportForm = reactive<{time: [string, string]}>({
   time: ['','']
 })
 const invoiceMatchExportFormRef = ref<FormInstance>()
-const invoiceMatchExportFormRules = reactive<FormRules<{time: [string, string]}>>({
-  time: [{ required: true, message: '请选择发票匹配日期', trigger: 'change' }]
-})
+// const invoiceMatchExportFormRules = reactive<FormRules<{time: [string, string]}>>({
+//   time: [{ required: true, message: '请选择发票匹配日期', trigger: 'change' }]
+// })
 const closeInvoiceMatchExport = () => {
   invoiceMatchExportFormRef.value?.resetFields()
   invoiceMatchExportVisible.value = false
@@ -387,7 +387,7 @@ const queryDateData = () => {
 }
 let copyRow: any
 
-const handleTabClick = (pane: TabsPaneContext, ev: Event) => {
+const handleTabClick = (pane: TabsPaneContext) => {
   if (pane.props.name != undefined) {
     queryForm.taxRefundStatus = Number(pane.props.name)
     activeName.value = Number(pane.props.name)
@@ -406,7 +406,7 @@ const handleExportATM = async () => {
   await downloadFilePD('/taxRefund/invoice/export', {
     fromDate: date.value[0],
     toDate: date.value[1]
-  }).then((res) => {
+  }).then(() => {
     exportLoading.value = false
   })
 }
@@ -490,7 +490,7 @@ const invoiceMatchingVisible = ref<boolean>(false)
 const showInvoiceMatching = () => {
   invoiceMatchingVisible.value = true
 }
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -537,7 +537,7 @@ const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   fetchData()
 }
-const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const headerCellStyle = (): CSSProperties => {
   // if (data.columnIndex !== 0 && data.columnIndex !== 1 && data.columnIndex !== 2 && data.columnIndex !== 3
   //   && data.columnIndex !== 17 && data.columnIndex !== 18 && data.columnIndex !== 19 && data.columnIndex !== 25 && data.columnIndex !== 28) {
   //   return {

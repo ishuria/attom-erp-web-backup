@@ -85,7 +85,7 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event, row)" />
+              <el-input v-model="row.price" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.price ? '￥' + row.price : '' }}</span>
           </template>
@@ -94,7 +94,7 @@
         <el-table-column label="长(cm)" prop="length">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event, row)" />
+              <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
           </template>
@@ -103,7 +103,7 @@
         <el-table-column label="宽(cm)" prop="width">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event, row)" />
+              <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
           </template>
@@ -112,7 +112,7 @@
         <el-table-column label="高(cm)" prop="height">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event, row)" />
+              <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
           </template>
@@ -121,7 +121,7 @@
         <el-table-column label="重量(g)" prop="weight">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event, row)" />
+              <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
           </template>
@@ -140,7 +140,7 @@
         <el-table-column label="打包￥" prop="packaging">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event, row)" />
+              <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.packaging ? '￥' + row.packaging : '' }}</span>
           </template>
@@ -158,7 +158,7 @@
               <el-input
                 v-model="row.sellingPrice"
                 @blur="clickCancel($event, row)"
-                @keydown.enter="effectiveCountInputHandle($event, row)"
+                @keydown.enter="effectiveCountInputHandle($event)"
               />
             </div>
             <span>{{ row.sellingPrice ? row.symbol + row.sellingPrice : '' }}</span>
@@ -191,7 +191,7 @@
               <el-input
                 v-model="row.weightCoefficient"
                 @blur="clickCancel($event, row)"
-                @keydown.enter="effectiveCountInputHandle($event, row)"
+                @keydown.enter="effectiveCountInputHandle($event)"
               />
             </div>
             <span>{{ row.weightCoefficient }}</span>
@@ -209,7 +209,7 @@
               <el-input
                 v-model="row.volumeCoefficient"
                 @blur="clickCancel($event, row)"
-                @keydown.enter="effectiveCountInputHandle($event, row)"
+                @keydown.enter="effectiveCountInputHandle($event)"
               />
             </div>
             <span>{{ row.volumeCoefficient }}</span>
@@ -219,7 +219,7 @@
         <el-table-column label="关税%" min-width="80" prop="tariff">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event, row)" />
+              <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
           </template>
@@ -326,7 +326,7 @@ import {
 } from '/@/api/devlocal/evaluation'
 import { formatDate } from '/@/utils/dateUtils'
 
-import { type SortableEvent, VueDraggable } from 'vue-draggable-plus'
+import { VueDraggable } from 'vue-draggable-plus'
 
 import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
 
@@ -370,7 +370,6 @@ watchEffect(() => {
   dflag.value = props.flag
 })
 
-const emit = defineEmits<{ (e: 'update:visibleValue', value: boolean): void }>()
 // Table cell 下标
 let imageUploadCellIdx = 0
 const imagePreviewVisible = ref<boolean>(false)
@@ -446,7 +445,7 @@ const handleCalculate = async (row: IEstimatedCostAccounting) => {
   }
 }
 // 鼠标enter事件
-const effectiveCountInputHandle = (event: Event, row: any) => {
+const effectiveCountInputHandle = (event: Event) => {
   const targetElement = event.target as HTMLInputElement
   targetElement.blur()
 }
@@ -502,7 +501,7 @@ const handlerAddRowCost = async () => {
 let _row: any
 let clickRow: any
 // 修改输入
-const changeInput = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const changeInput = (row: any, column: any, cell: HTMLTableCellElement) => {
   clickRow = row
   if (column.property === 'desc') {
     productDescription.value = row.desc
@@ -595,6 +594,7 @@ const clickCancel = async (event: any, value: any) => {
     value.tariff = 0
     return
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { firstMileChannel, ...filterValue } = value
   await updateEstimatedCostAccounting({
     ...filterValue,
@@ -712,7 +712,7 @@ const handleClick = () => {
 }
 
 // 移动之后触发修改排序接口
-const onEnd = debounce(async (e: SortableEvent) => {
+const onEnd = debounce(async () => {
   try {
     const idList = dList.value.map((item: IEstimatedCostAccounting) => {
       return item.id
