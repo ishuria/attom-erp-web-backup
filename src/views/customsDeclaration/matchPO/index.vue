@@ -8,43 +8,43 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keypress.enter.native="queryData" placeholder="请输入搜索关键词" clearable />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keypress.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData"></el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       ref="tableRef"
-      border stripe
-      :header-cell-style="{ textAlign: 'center' }"
+      border
+      :cell-class-name="getCellClass" :cell-style="CellStyle"
       class="noneHoveTable"
       :data="list"
-      :cell-style="CellStyle"
-      :cell-class-name="getCellClass"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
       @selection-change="setSelectRows"
     >
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column label="发货日期" prop="shipmentDate" min-width="115">
+      <el-table-column type="selection"/>
+      <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
         <template #default="{ row }">
           {{  row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
       <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')">
         <template #default="{ row }">
-          <el-input v-model="row.contractNumber" @change="handleUpdateContractNumber(row)" clearable />
+          <el-input v-model="row.contractNumber" clearable @change="handleUpdateContractNumber(row)" />
         </template>
       </el-table-column>
-      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')"></el-table-column>
-      <el-table-column label="Reference ID" prop="referenceId" min-width="130">
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')"/>
+      <el-table-column label="Reference ID" min-width="130" prop="referenceId">
         <template #default="{ row }">
           <el-input v-model="row.referenceId" clearable @change="handleUpdateReferenceId(row)" />
         </template>
       </el-table-column>
-      <el-table-column label="站点" prop="site" min-width="130"></el-table-column>
-      <el-table-column label="货代单号" prop="freightForwardingNumber" min-width="120">
+      <el-table-column label="站点" min-width="130" prop="site"/>
+      <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber">
         <template #default="{ row }">
           <el-input v-model="row.freightForwardingNumber" clearable @change="handleUpdateFreightForwardingNumber(row)"/>
         </template>
@@ -59,25 +59,24 @@
           <span v-html="row.mergeCustomsClearanceList"></span>
         </template>
       </el-table-column>
-      <el-table-column label="货代渠道" prop="channelId" min-width="180">
+      <el-table-column label="货代渠道" min-width="180" prop="channelId">
         <template #default="{ row }">
           <el-select v-model="row.channelId" >
             <el-option 
               v-for="item in forwarderOption"
+              :key="item.id"
               :label="item.label"
               :value="item.id"
-              :key="item.id"
             />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="产品总数" prop="totalNumber" min-width="100"></el-table-column>
-      <el-table-column label="重量" prop="weight" min-width="70"></el-table-column>
-      <el-table-column label="体积" prop="volume" min-width="70"></el-table-column>
-     
-      <el-table-column label="预估运费" prop="" min-width="100"></el-table-column>
-      <el-table-column label="实际运费" prop="" min-width="100"></el-table-column>
-      <el-table-column label="已付运费" prop="payStatus" min-width="100">
+      <el-table-column label="产品总数" min-width="100" prop="totalNumber"/>
+      <el-table-column label="重量" min-width="70" prop="weight"/>
+      <el-table-column label="体积" min-width="70" prop="volume"/>
+      <el-table-column label="预估运费" min-width="100" prop=""/>
+      <el-table-column label="实际运费" min-width="100" prop=""/>
+      <el-table-column label="已付运费" min-width="100" prop="payStatus">
         <template #default="{ row }">
           <el-checkbox 
             v-model="row.payStatus"
@@ -86,7 +85,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" min-width="160">
+      <el-table-column label="状态" min-width="160" prop="status">
         <template #default="{ row }">
           <span 
             :style="{ 
@@ -109,7 +108,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="110" fixed="right">
+      <el-table-column fixed="right" label="操作" width="110">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="showMatch(row)">
@@ -135,7 +134,7 @@
                 <el-dropdown-item @click="showFirstLegFreight(row)">
                   <el-link type="primary" :underline="false" >头程运费</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="">
+                <el-dropdown-item >
                   <el-link type="primary" :underline="false" >合同导入</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelArchivePackage(row)">
@@ -156,7 +155,7 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据"></el-empty>
+        <el-empty class="vab-data-empty" description="暂无数据"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -168,12 +167,12 @@
     />
     <!-- 头程运费 -->
     <vab-dialog
-      :title="`运费明细 | 货代单号：${_freightForwardingNumber} | 自测重量：${_weight} | 自测体积：${_volume}`"
-      width="85%"
       v-model="firstLegFreightVisible"
-      top="7vh"
       class="dialog"
       :draggable="false"
+      :title="`运费明细 | 货代单号：${_freightForwardingNumber} | 自测重量：${_weight} | 自测体积：${_volume}`"
+      top="7vh"
+      width="85%"
     >
       <vab-query-form>
         <vab-query-form-left-panel>

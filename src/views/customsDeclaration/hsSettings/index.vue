@@ -7,53 +7,53 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" />
+            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
-      border stripe 
+      border :cell-style="{ textAlign: 'center' }" 
       class="noneHoverTable"
-      :header-cell-style="{ textAlign: 'center'}" :cell-style="{ textAlign: 'center' }"
-      :data="list"
+      :data="list" :header-cell-style="{ textAlign: 'center'}"
+      stripe
       @cell-click="changeInput"
     >
-      <el-table-column label="HS" prop="hs" min-width=""></el-table-column>
-      <el-table-column label="法定第1单位" prop="statutoryUnit" min-width="">
+      <el-table-column label="HS" min-width="" prop="hs"/>
+      <el-table-column label="法定第1单位" min-width="" prop="statutoryUnit">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.statutoryUnit" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.statutoryUnit" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.statutoryUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="每零件单位有多少个法定第1单位" prop="statutoryCount" min-width="">
+      <el-table-column label="每零件单位有多少个法定第1单位" min-width="" prop="statutoryCount">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.statutoryCount" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.statutoryCount" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.statutoryCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="出口退税税率" prop="taxRate" min-width="">
+      <el-table-column label="出口退税税率" min-width="" prop="taxRate">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.taxRate" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.taxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.taxRate ? row.taxRate + '%' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" prop="" min-width="">
+      <el-table-column label="操作" min-width="" prop="">
         <template #default="{ row, $index }">
           <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
+        <el-empty class="vab-data-empty"/>
       </template>
     </el-table>
     <vab-pagination 
@@ -64,12 +64,12 @@
       @size-change="handleSizeChange"
     />
     <vab-dialog
-      title="新增"
       v-model="addVisible"
+      title="新增"
       width="25%"
       @close="handleCloseAdd"
     >
-      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" style="margin: 0;" label-position="right" label-width="auto">
+      <el-form ref="addFormRef" label-position="right" label-width="auto" :model="addForm" :rules="addFormRules" style="margin: 0;">
         <el-form-item label="HS" prop="hs">
           <el-input v-model="addForm.hs" />
         </el-form-item>
@@ -94,10 +94,10 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash'
 import { addHSList, delHSList, getHSList, updateHSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { IAddHSListReq, IGetHSList, IGetHSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
+import type { IAddHSListReq, IGetHSList, IGetHSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
@@ -140,7 +140,7 @@ const handleConfirmAdd = async () => {
     }
   })
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
 
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]

@@ -9,46 +9,46 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" />
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :loading="listLoading" type="primary" :icon="Search"  @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border stripe
+          border :data="list"
           :header-cell-style="{ textAlign: 'center' }"
-          :data="list"
+          stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="HTS" prop="hts" min-width="110" align="center"></el-table-column>
-          <el-table-column label="关税率" prop="tariffRate" min-width="90" align="center">
+          <el-table-column align="center" label="HTS" min-width="110" prop="hts" />
+          <el-table-column align="center" label="关税率" min-width="90" prop="tariffRate" >
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.tariffRate" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.tariffRate ? row.tariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="301税率" prop="threeZeroOne" min-width="100" align="center">
+          <el-table-column align="center" label="301税率" min-width="100" prop="threeZeroOne">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.threeZeroOne" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.threeZeroOne" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.threeZeroOne ? row.threeZeroOne + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="杂费" prop="extras" min-width="90" align="center">
+          <el-table-column align="center" label="杂费" min-width="90" prop="extras" >
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.extras" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.extras" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.extras ? row.extras + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="产品大类" prop="productCategory" min-width="250">
+          <el-table-column label="产品大类" min-width="250" prop="productCategory">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -58,7 +58,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="1级大类" prop="categoryOne" min-width="250">
+          <el-table-column label="1级大类" min-width="250" prop="categoryOne">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -68,7 +68,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="2级大类" prop="categoryTwo" min-width="250">
+          <el-table-column label="2级大类" min-width="250" prop="categoryTwo">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -78,7 +78,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="3级大类" prop="categoryThree" min-width="250">
+          <el-table-column label="3级大类" min-width="250" prop="categoryThree">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -88,13 +88,13 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="100" align="center">
+          <el-table-column align="center" label="操作" width="100">
             <template #default="{ row, $index }">
               <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
         <vab-pagination 
@@ -113,46 +113,46 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" />
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :icon="Search" :loading="listLoading" @click="queryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border stripe
-          :header-cell-style="{ textAlign: 'center' }"
-          :data="list"
+          border
+          :data="list" :header-cell-style="{ textAlign: 'center' }"
+          stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="HTS" prop="hts" min-width="110" align="center"></el-table-column>
-          <el-table-column label="德国关税率" prop="deTariffRate" min-width="110" align="center">
+          <el-table-column align="center" label="HTS" min-width="110" prop="hts"/>
+          <el-table-column align="center" label="德国关税率" min-width="110" prop="deTariffRate">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.deTariffRate" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.deTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.deTariffRate ? row.deTariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="英国关税率" prop="ukTariffRate" min-width="110" align="center">
+          <el-table-column align="center" label="英国关税率" min-width="110" prop="ukTariffRate">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.ukTariffRate" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.ukTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.ukTariffRate ? row.ukTariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="杂费" prop="extras" min-width="90" align="center">
+          <el-table-column align="center" label="杂费" min-width="90" prop="extras">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.extras" @keydown.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.extras" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.extras ? row.extras + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="产品大类" prop="productCategory" min-width="250">
+          <el-table-column label="产品大类" min-width="250" prop="productCategory">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -162,7 +162,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="1级大类" prop="categoryOne" min-width="250">
+          <el-table-column label="1级大类" min-width="250" prop="categoryOne">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -172,7 +172,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="2级大类" prop="categoryTwo" min-width="250">
+          <el-table-column label="2级大类" min-width="250" prop="categoryTwo">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -182,7 +182,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="3级大类" prop="categoryThree" min-width="250">
+          <el-table-column label="3级大类" min-width="250" prop="categoryThree">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -192,13 +192,13 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="操作" min-width="" align="center">
+          <el-table-column align="center" label="操作" min-width="">
             <template #default="{ row, $index }">
               <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
         <vab-pagination 
@@ -212,41 +212,41 @@
     </el-tabs>
     <!-- 新增 -->
     <vab-dialog
+      v-model="addVisible"
       title="新增"
       width="25%"
-      v-model="addVisible"
       @close="handleClose"
     >
-      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-position="right" label-width="auto" style="margin: 0;">
+      <el-form ref="addFormRef" label-position="right" label-width="auto" :model="addForm" :rules="addFormRules" style="margin: 0;">
         <el-form-item label="HTS" prop="hts">
           <el-input v-model="addForm.hts" clearable />
         </el-form-item>
         <el-form-item v-if="addForm.type === 0" label="关税率" prop="tariffRate">
-          <el-input type="number" v-model="addForm.tariffRate" />
+          <el-input v-model="addForm.tariffRate" type="number" />
         </el-form-item>
         <el-form-item v-if="addForm.type === 0" label="301关税率" prop="threeZeroOne">
-          <el-input type="number" v-model="addForm.threeZeroOne" />
+          <el-input v-model="addForm.threeZeroOne" type="number" />
         </el-form-item>
         <el-form-item v-if="addForm.type === 1" label="德国关税率" prop="deTariffRate">
-          <el-input type="number" v-model="addForm.deTariffRate" />
+          <el-input v-model="addForm.deTariffRate" type="number" />
         </el-form-item>
         <el-form-item v-if="addForm.type === 1" label="英国关税率" prop="ukTariffRate">
-          <el-input type="number" v-model="addForm.ukTariffRate" />
+          <el-input v-model="addForm.ukTariffRate" type="number" />
         </el-form-item>
         <el-form-item label="杂费" prop="extras">
-          <el-input type="number" v-model="addForm.extras" />
+          <el-input v-model="addForm.extras" type="number" />
         </el-form-item>
         <el-form-item label="产品大类" prop="productCategory">
-          <el-input type="textarea" v-model="addForm.productCategory" :rows="3" resize="none" />
+          <el-input v-model="addForm.productCategory" resize="none" :rows="3" type="textarea" />
         </el-form-item>
         <el-form-item label="1级大类" prop="categoryOne">
-          <el-input type="textarea" v-model="addForm.categoryOne" :rows="3" resize="none" />
+          <el-input v-model="addForm.categoryOne" resize="none" :rows="3" type="textarea" />
         </el-form-item>
         <el-form-item label="2级大类" prop="categoryTwo">
-          <el-input type="textarea" v-model="addForm.categoryTwo" :rows="3" resize="none" />
+          <el-input v-model="addForm.categoryTwo" resize="none" :rows="3" type="textarea" />
         </el-form-item>
         <el-form-item label="3级大类" prop="categoryThree">
-          <el-input type="textarea" v-model="addForm.categoryThree" :rows="3" resize="none" />
+          <el-input v-model="addForm.categoryThree" resize="none" :rows="3"  type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -256,11 +256,11 @@
     </vab-dialog>
     <!-- 更改产品大类、1级、2级、3级大类的弹窗 -->
     <vab-dialog
-      :title="title"
       v-model="updateVisible"
+      :title="title"
       width="25%"
     >
-      <el-input v-model="content" type="textarea" :rows="15" resize="none" />
+      <el-input v-model="content" resize="none" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="updateVisible = false">取消</el-button>
         <el-button type="primary" @click="handleConfirmUpdate">确认</el-button>
@@ -271,10 +271,10 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { addHTSList, delHTSList, getHTSList, updateHTSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { IGetHTSList, IGetHTSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
+import type { IGetHTSList, IGetHTSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
@@ -344,45 +344,58 @@ const handleClose = () => {
   addFormRef.value?.resetFields()
   addVisible.value = false
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   _id.value = row.id
-  if (column.label === '产品大类') {
-    updateVisible.value = true
-    title.value = '产品大类'
-    prop.value = 'productCategory'
-    content.value = row.productCategory
-  } else if (column.label === '1级大类') {
-    updateVisible.value = true
-    title.value = '1级大类'
-    prop.value = 'categoryOne'
-    content.value = row.categoryOne
-  } else if (column.label === '2级大类') {
-    updateVisible.value = true
-    title.value = '2级大类'
-    prop.value = 'categoryTwo'
-    content.value = row.categoryTwo
-  } else if (column.label === '3级大类') {
-    updateVisible.value = true
-    title.value = '3级大类'
-    prop.value = 'categoryThree'
-    content.value = row.categoryThree
-  } else {
-    const firstChild = cell?.children[0]?.children[0]
-    const secondChild = cell?.children[0]?.children[1]
-
-    if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-      return
+  switch (column.label) {
+    case '产品大类': {
+      updateVisible.value = true
+      title.value = '产品大类'
+      prop.value = 'productCategory'
+      content.value = row.productCategory
+    
+      break;
     }
+    case '1级大类': {
+      updateVisible.value = true
+      title.value = '1级大类'
+      prop.value = 'categoryOne'
+      content.value = row.categoryOne
+    
+      break;
+    }
+    case '2级大类': {
+      updateVisible.value = true
+      title.value = '2级大类'
+      prop.value = 'categoryTwo'
+      content.value = row.categoryTwo
+    
+      break;
+    }
+    case '3级大类': {
+      updateVisible.value = true
+      title.value = '3级大类'
+      prop.value = 'categoryThree'
+      content.value = row.categoryThree
+    
+      break;
+    }
+    default: {
+      const firstChild = cell?.children[0]?.children[0]
+      const secondChild = cell?.children[0]?.children[1]
 
-    copyRow = JSON.parse(JSON.stringify(row))
+      if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+        return
+      }
 
-    if (firstChild.classList.contains('none')) {
-      firstChild.classList.remove('none')
-      secondChild.classList.add('none')
-      focusAndSelectInput(cell)
+      copyRow = JSON.parse(JSON.stringify(row))
+
+      if (firstChild.classList.contains('none')) {
+        firstChild.classList.remove('none')
+        secondChild.classList.add('none')
+        focusAndSelectInput(cell)
+      }
     }
   }
-  
 }
 // table blur事件
 const clickCancel = async (event: any, value: IGetHTSList) => {
