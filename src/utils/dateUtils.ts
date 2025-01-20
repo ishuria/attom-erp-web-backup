@@ -4,7 +4,7 @@ export function getCurrentDate(): Date {
 }
 
 // 格式化日期为指定格式
-export function formatDate(date: Date = new Date(), format: string = 'yyyy-MM-dd'): string {
+export function formatDate(date: Date = new Date(), format = 'yyyy-MM-dd'): string {
   const map: { [key: string]: number } = {
     'M+': date.getMonth() + 1, // 月份
     'd+': date.getDate(), // 日
@@ -16,12 +16,12 @@ export function formatDate(date: Date = new Date(), format: string = 'yyyy-MM-dd
   }
 
   if (/(y+)/.test(format)) {
-    format = format.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+    format = format.replace(RegExp.$1, (`${date.getFullYear()}`).substr(4 - RegExp.$1.length))
   }
 
   for (let k in map) {
-    if (new RegExp('(' + k + ')').test(format)) {
-      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? map[k].toString() : ('00' + map[k]).substr(('' + map[k]).length))
+    if (new RegExp(`(${k})`).test(format)) {
+      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? map[k].toString() : (`00${map[k]}`).substr((`${map[k]}`).length))
     }
   }
 
@@ -100,7 +100,7 @@ export function getWeekOfYear(date: Date | string | number): string {
   // 确保当前日期 date 参数可以被解析为有效的日期对象
   const currentDate = new Date(date)
   if (isNaN(currentDate.getTime())) {
-    throw new Error("提供的日期无效")
+    throw new TypeError("提供的日期无效")
   }
 
   const year = currentDate.getFullYear()
@@ -115,3 +115,16 @@ export function getWeekOfYear(date: Date | string | number): string {
 
   return `${year}-W${weekNumber}`
 }
+
+/**
+ * @description 获取当前日期处理过的形式
+ * @returns `${year}${month}${day}`
+ */
+export const getCurrentFormatDate = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');  // 月份从0开始，所以加1
+  const day = date.getDate().toString().padStart(2, '0');  // 补充0到日期
+
+  return `${year}${month}${day}`;
+};

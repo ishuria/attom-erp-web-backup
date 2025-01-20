@@ -1,17 +1,17 @@
 <template>
   <vab-dialog
-    title="装箱"
-    width="660px"
     v-model="dflag"
     class="dialog"
+    title="装箱"
+    width="660px"
     @close="handleCloseDialog"
     @open="handlePackingOpen"
   >
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form ref="packingFormRef" :model="packingForm" :rules="packingFormRules" label-position="top">
+        <el-form ref="packingFormRef" label-position="top" :model="packingForm" :rules="packingFormRules">
           <el-form-item :label="upcOrFnSku" prop="fnSkuOrUpc">
-            <el-input ref="barcodeInput" v-model="packingForm.fnSkuOrUpc" :disabled="barcodeDisabled" @keydown.enter="handleKeyPress" clearable />
+            <el-input ref="barcodeInput" v-model="packingForm.fnSkuOrUpc" clearable :disabled="barcodeDisabled" @keydown.enter="handleKeyPress" />
           </el-form-item>
           <el-form-item label="SKU" prop="sku">
             <el-input v-model="packingForm.sku" disabled />
@@ -27,7 +27,7 @@
       <el-col :span="12">
         <el-image :src="packingForm.skuImageUrl" style="width: 300px; height: 300px; cursor: pointer; border: 2px #DCDFE6 solid; border-radius: 2%;" @click="imagePreviewShow(packingForm.skuImageUrl!)">
           <template #error>
-            <el-icon></el-icon>
+            <el-icon/>
           </template>
         </el-image>
       </el-col>
@@ -42,33 +42,33 @@
   </vab-dialog>
   <!-- 确认 -->
   <vab-dialog
-    title="确认"
-    width="660px"
     v-model="confirmVisible"
     :before-close="goBack"
+    title="确认"
+    width="660px"
   >
     <el-form :model="confirmForm" :rules="confirmFormRules" style="margin-left: 1px; margin-right: 1px">
       <el-form-item label="数量(箱)" prop="encaseCount">
-        <el-input v-model="confirmForm.encaseCount" style="width: 100%" clearable />
+        <el-input v-model="confirmForm.encaseCount" clearable style="width: 100%" />
       </el-form-item>
     </el-form>
     <vab-query-form style="margin-top: 20px">
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keydown.enter.native="queryData" placeholder="请输入搜索关键词" clearable />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" native-type="submit" @click="queryData"></el-button>
+            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table border stripe :data="list" :header-cell-style="{ textAlign: 'center' }" height="22vh" max-height="30vh">
-      <el-table-column label="SKU" prop="sku" min-width="200"></el-table-column>
-      <el-table-column :label="upcOrFnSku" prop="fnSkuOrUpc" min-width="100"></el-table-column>
-      <el-table-column label="Description" prop="productName" min-width="200"></el-table-column>
-      <el-table-column label="数量" prop="count" min-width="70" align="center"></el-table-column>
+    <el-table border :data="list" :header-cell-style="{ textAlign: 'center' }" height="22vh" max-height="30vh" stripe>
+      <el-table-column label="SKU" min-width="200" prop="sku"/>
+      <el-table-column :label="upcOrFnSku" min-width="100" prop="fnSkuOrUpc"/>
+      <el-table-column label="Description" min-width="200" prop="productName"/>
+      <el-table-column align="center" label="数量" min-width="70" prop="count"/>
     </el-table>
     <vab-pagination 
       :current-page="queryForm.pageNo"
@@ -85,15 +85,16 @@
       </div>
     </template>
   </vab-dialog>
-  <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance, FormRules } from 'element-plus'
-import { getEncasementSku, submitEncasementSku } from '/@/api/devlocal/encasement'
+import type { FormInstance, FormRules } from 'element-plus'
+import { getCurrentFormatDate } from '~/src/utils/dateUtils'
+import { getEncasementSku, printBarcodeEncasement, printBarcodeEncasementSuccess, submitEncasementSku } from '/@/api/devlocal/encasement'
 import { usePackingStore } from '/@/store/modules/packing'
-import { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
+import type { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 
 let props = defineProps<{
@@ -207,7 +208,9 @@ const fetchData = () => {
 // 展示确认
 const showConfirm = () => {
   // 先判断存入数据是否为空
-  if (packingStore.packingData.length !== 0) {
+  if (packingStore.packingData.length === 0) {
+    $baseMessage(`请先填写${upcOrFnSku.value}`, 'error')
+  } else {
     // 校验所有存储的是否是已填
     const countValid = packingStore.packingData.every((item: PackingType) => { return item.count != null && item.count !== 0; })
     if (!countValid) {
@@ -222,8 +225,6 @@ const showConfirm = () => {
     }
     confirmVisible.value = true
     fetchData()
-  } else {
-    $baseMessage(`请先填写${upcOrFnSku.value}`, 'error')
   }
 }
 // 确认的返回
@@ -247,9 +248,16 @@ const saveAndPrint = async () => {
     })
     if (data) {
       $baseMessage('保存并打印条形码成功', 'success')
-      goBack()
-      handleCloseDialog()
-      emit('update:finish')
+      const req = `${getCurrentFormatDate()}-${props.encasementNo}-${confirmForm.encaseCount}`
+      const { data, code } = await printBarcodeEncasement({ code: req })
+      if (code === 0) {
+        const { data: res } = await printBarcodeEncasementSuccess(JSON.stringify(data))
+        if (res) {
+          goBack()
+          handleCloseDialog()
+          emit('update:finish')
+        }
+      }
     }
   } else {
     $baseMessage('请先输入箱数', 'error')
@@ -264,7 +272,7 @@ const handlePackingOpen = () => {
   })
 }
 function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);

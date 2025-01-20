@@ -33,12 +33,14 @@ import type {
   IGetShipmentFbaListRes,
   IGetShippedEncasementListRes,
   IId,
+  IPrintBarcodeEncasementRes,
   IPrintEncasementReq,
   IPrintEncasementRes,
   ISplitEncasementCsv,
   ISplitEncasementReq,
   IStringRes,
   ISubmitEncasementSkuReq,
+  ISubmitSKUEncasementReq,
   ITypeId,
   IUpdateCostFreightForwarderReq,
   IUpdateEncasementReq,
@@ -541,6 +543,24 @@ export const printEncasement = (data: IPrintEncasementReq): Promise<IPrintEncase
   })
 }
 export const printEncasementSuccess = (data: any) => {
+  return request({
+    url: "https://192.168.6.19:6789/api/v2/print",
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * @description 开始装箱-保存后调用打印条形码
+ */
+export const printBarcodeEncasement = (data: { code: string }): Promise<IPrintBarcodeEncasementRes> => {
+  return request({
+    url: `${BASE_API}/encasement/print/barcode`,
+    method: 'post',
+    data
+  })
+}
+export const printBarcodeEncasementSuccess = (data: any) => {
   return request({
     url: "https://192.168.6.19:6789/api/v2/print",
     method: 'post',

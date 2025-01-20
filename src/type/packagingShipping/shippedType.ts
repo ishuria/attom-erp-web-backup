@@ -1054,3 +1054,15 @@ export interface IPrintEncasementRes {
     printerName: string
   }
 }
+
+/**
+ * 开始装箱-保存后调用打印条形码
+ */
+export interface IPrintBarcodeEncasementRes {
+  code: number
+  msg: string
+  data: {
+    code: string
+    printerName: string
+  }
+}
