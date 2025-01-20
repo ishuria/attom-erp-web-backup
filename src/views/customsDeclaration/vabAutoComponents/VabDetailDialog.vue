@@ -1,9 +1,9 @@
 <template>
   <vab-dialog
-    :title="`明细 | ${props.contractNumber}`"
     v-model="dflag"
-    width="97%"
+    :title="`明细 | ${props.contractNumber}`"
     top="10vh"
+    width="97%"
     @close="closeDetail"
   >
     <vab-query-form>
@@ -13,65 +13,65 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter.native="queryData" @input="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" type="primary" :loading="listLoading" native-type="submit" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border
-      :header-cell-style="headerCellStyle"
       :cell-style="cellStyle"
       :data="list"
+      :header-cell-style="headerCellStyle"
     >
-      <el-table-column label="报关品名" prop="customsDeclarationName" min-width="100"></el-table-column>
-      <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100"></el-table-column>
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100"></el-table-column>
-      <el-table-column label="CIF售价$" prop="cifPrice" min-width="105"></el-table-column>
-      <el-table-column label="运费$" prop="freightFee" min-width="95"></el-table-column>
-      <el-table-column label="FOB售价$" prop="fobPrice" min-width="105"></el-table-column>
-      <el-table-column label="汇率" prop="rate" min-width="90"></el-table-column>
-      <el-table-column label="人民币售价￥" prop="salePrice" min-width="130">
+      <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName"/>
+      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount"/>
+      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit"/>
+      <el-table-column label="CIF售价$" min-width="105" prop="cifPrice"/>
+      <el-table-column label="运费$" min-width="95" prop="freightFee"/>
+      <el-table-column label="FOB售价$" min-width="105" prop="fobPrice"/>
+      <el-table-column label="汇率" min-width="90" prop="rate"/>
+      <el-table-column label="人民币售价￥" min-width="130" prop="salePrice">
         <template #header>
           人民币<br />售价￥
         </template>
       </el-table-column>
-      <el-table-column label="含税成本￥" prop="taxInclusiveCost" min-width="110">
+      <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost">
         <template #header>
           含税<br />成本￥
         </template>
       </el-table-column>
-      <el-table-column label="退税后成本￥" prop="taxRefundsCost" min-width="130">
+      <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost">
         <template #header>
           退税后<br />成本￥
         </template>
       </el-table-column>
-      <el-table-column label="利润￥" prop="profit" min-width="100"></el-table-column>
-      <el-table-column label="利润率" prop="profitMargin" min-width="100"></el-table-column>
-      <el-table-column label="退税额￥" prop="taxRebate" min-width="100"></el-table-column>
-      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')"></el-table-column>
+      <el-table-column label="利润￥" min-width="100" prop="profit"/>
+      <el-table-column label="利润率" min-width="100" prop="profitMargin"/>
+      <el-table-column label="退税额￥" min-width="100" prop="taxRebate"/>
+      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')"/>
       <el-table-column label="供应商税号展示" prop="suppliserTaxNumber" :width="flexColumnWidth(list, '税号展示', 'suppliserTaxNumber')">
         <template #header>
           供应商<br />税号展示
         </template>
       </el-table-column>
-      <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
-      <el-table-column label="发票匹配日期" prop="invoiceMatchDate" min-width="100">
+      <el-table-column label="PO" min-width="100" prop="po"/>
+      <el-table-column label="发票匹配日期" min-width="100" prop="invoiceMatchDate">
         <template #header>
           发票匹<br />配日期
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" prop="invoiceCode" min-width="100"></el-table-column>
-      <el-table-column label="发票号码" prop="invoiceNumber" min-width="100"></el-table-column>
-      <el-table-column label="发票数量" prop="invoiceCount" min-width="100"></el-table-column>
-      <el-table-column label="发票文件" prop="invoiceFilePath" min-width="100"></el-table-column>
-      <el-table-column label="SKU" prop="sku" min-width="90" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
-      <el-table-column label="PO零件数" prop="componentCount" min-width="110"></el-table-column>
-      <el-table-column label="shipmentID" prop="shipmentId" min-width="130"></el-table-column>
-      <el-table-column label="付款记录" prop="payRecordList" min-width="220">
+      <el-table-column label="发票代码" min-width="100" prop="invoiceCode"/>
+      <el-table-column label="发票号码" min-width="100" prop="invoiceNumber"/>
+      <el-table-column label="发票数量" min-width="100" prop="invoiceCount"/>
+      <el-table-column label="发票文件" min-width="100" prop="invoiceFilePath"/>
+      <el-table-column label="SKU" min-width="90" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+      <el-table-column label="PO零件数" min-width="110" prop="componentCount"/>
+      <el-table-column label="shipmentID" min-width="130" prop="shipmentId"/>
+      <el-table-column label="付款记录" min-width="220" prop="payRecordList">
         <template #default="{ row }">
           <span v-html="row.payRecordList"></span>
         </template>
@@ -91,9 +91,9 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { getTaxRefundBatchDetail } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { IGetTaxRefundBatchDetailList, IGetTaxRefundBatchDetailQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import type { IGetTaxRefundBatchDetailList, IGetTaxRefundBatchDetailQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const props = defineProps<{
@@ -129,7 +129,7 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const headerCellStyle = (): CSSProperties => {
   return {
     textAlign: 'center'
   }
@@ -139,11 +139,6 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     || data.columnIndex === 21 || data.columnIndex === 23 || data.columnIndex === 24) {
     return {
       textAlign: 'left'
-    }
-  } else if (data.columnIndex === 15) {
-    return {
-      color: 'var(--el-color-danger)',
-      textAlign: 'center'
     }
   }
   return {
@@ -165,7 +160,7 @@ const fetchData = async () => {
   total.value = data?.total!
   list.value = data?.list!
   list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
-    if (item.payRecordList instanceof Array) {
+    if (Array.isArray(item.payRecordList)) {
       item.payRecordList = item.payRecordList.map((record: PayRecordList) => {
         const percentage = parseInt(record.percentage!.replace('%', '')) // 去掉%并转换为整数
         const createTime = record.createTime!.split(' ')[0]

@@ -1,63 +1,63 @@
 <template>
   <vab-dialog
-    title="匹配"
-    width="80%"
     v-model="dflag"
     class="dialog"
+    title="匹配"
     top="10vh"
+    width="80%"
     @close="handleCloseCheck"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button v-if="!disabled3" type="primary" :disabled="disabled1 || (!disabled1 && !disabled2)" @click="handleStartMatch">开始匹配</el-button>
+        <el-button v-if="!disabled3" :disabled="disabled1 || (!disabled1 && !disabled2)" type="primary" @click="handleStartMatch">开始匹配</el-button>
         <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="primary" @click="showSentButNotReported">已发未报</el-button>
         <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="primary" @click="handleClearCheckAll">清空全部</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keydown.enter.native="queryData"  placeholder="请输入搜索关键词" clearable />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词"  @input="queryData" @keydown.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" native-type="submit" :loading="listLoading" @click="queryData"></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border
-      :header-cell-style="{ textAlign: 'center' }"
-      class="noneHoveTable"
       :cell-style="match1Style"
+      class="noneHoveTable"
       :data="list"
-      :span-method="objectSpanMethod1"
+      :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="stripedRowClass"
+      :span-method="objectSpanMethod1"
     >
       <el-table-column label="SKU">
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
-        <el-table-column label="装箱总数" prop="encasementCount" min-width="100"></el-table-column>
-        <el-table-column label="站点" prop="site" min-width="130"></el-table-column>
-        <el-table-column label="匹配的PO" prop="po" min-width="110"></el-table-column>
-        <el-table-column label="SKU实际数量" prop="skuActualCount" min-width="130"></el-table-column>
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+        <el-table-column label="装箱总数" min-width="100" prop="encasementCount"/>
+        <el-table-column label="站点" min-width="130" prop="site"/>
+        <el-table-column label="匹配的PO" min-width="110" prop="po"/>
+        <el-table-column label="SKU实际数量" min-width="130" prop="skuActualCount"/>
       </el-table-column>
       <el-table-column label="零件">
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"></el-table-column>
-        <el-table-column label="实际数量" prop="actualComponentCount" min-width="100"></el-table-column>
-        <el-table-column label="退税报关数量" prop="customsDeclarationCount" min-width="130"></el-table-column>
-        <el-table-column label="PO总数" prop="purchaseCount" min-width="90"></el-table-column>
-        <el-table-column label="采购方" prop="purchase" min-width="90"></el-table-column>
-        <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="80">
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
+        <el-table-column label="实际数量" min-width="100" prop="actualComponentCount"/>
+        <el-table-column label="退税报关数量" min-width="130" prop="customsDeclarationCount"/>
+        <el-table-column label="PO总数" min-width="90" prop="purchaseCount"/>
+        <el-table-column label="采购方" min-width="90" prop="purchase"/>
+        <el-table-column label="不报关" min-width="80" prop="customsDeclarationStatus">
           <template #default="{ row }">
-            <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" disabled />
+            <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="有已发未报" prop="flag" min-width="110">
+        <el-table-column label="有已发未报" min-width="110" prop="flag">
           <template #default="{ row }">
-            <el-icon v-show="row.flag === true"><Select /></el-icon>
+            <el-icon v-show="row.flag === true"><select /></el-icon>
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="操作" width="150" fixed="right" v-if="!disabled3 && (!disabled1 && !disabled2)">
+      <el-table-column v-if="!disabled3 && (!disabled1 && !disabled2)" fixed="right" label="操作" width="150">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="handleShowMatch2(row)">匹配</el-link>
           <el-link type="danger" :underline="false" @click="handleCheckClear(row)">清空</el-link>
@@ -80,16 +80,16 @@
     </template>
   </vab-dialog>
   <vab-dialog
-    title="匹配"
-    class="dialog"
-    top="7vh"
-    width="90%"
     v-model="match2Visible"
     :before-close="handleCloseMatch2"
+    class="dialog"
+    title="匹配"
+    top="7vh"
+    width="90%"
   >
 
     <div style="margin-bottom: 15px">
-      <el-button type="primary" style="margin-right: 10px" @click="handleClearAll">清空全部</el-button>
+      <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
       <el-text style=" font-size: var(--el-font-size-base);font-weight: 600;">
         SKU：<span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>  
         品名：<span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>  
@@ -99,46 +99,46 @@
 
     <el-table
       border
-      :header-cell-style="{ textAlign: 'center' }"
-      class="noneHoveTable"
       :cell-style="match2Style"
+      class="noneHoveTable"
       :data="matchList"
+      :header-cell-style="{ textAlign: 'center' }"
       max-height="60vh"
-      :span-method="objectSpanMethod2"
       :row-class-name="stripedRowClass2"
+      :span-method="objectSpanMethod2"
     >
       <el-table-column label="SKU">
-        <el-table-column label="匹配的PO" prop="po" min-width="100"></el-table-column>
-        <el-table-column label="站点" prop="siteName" min-width="150"></el-table-column>
-        <el-table-column label="打包完成数(好)" prop="goodCount" min-width="140"></el-table-column>
-        <el-table-column label="打包任务数" prop="packageTaskCount" min-width="110"></el-table-column>
-        <el-table-column label="打包任务状态" prop="status" min-width="130"></el-table-column>
-        <el-table-column label="SKU实际数量" prop="skuActualCount" min-width="130">
+        <el-table-column label="匹配的PO" min-width="100" prop="po"/>
+        <el-table-column label="站点" min-width="150" prop="siteName"/>
+        <el-table-column label="打包完成数(好)" min-width="140" prop="goodCount"/>
+        <el-table-column label="打包任务数" min-width="110" prop="packageTaskCount"/>
+        <el-table-column label="打包任务状态" min-width="130" prop="status"/>
+        <el-table-column label="SKU实际数量" min-width="130" prop="skuActualCount">
           <template #default="{ row }">
-            <el-input type="number" @wheel.stop.prevent :min="0" :max="row.goodCount" v-model="row.skuActualCount" @focus="handleFocus(row)" @change="handleUpdateSkuCount(row)" />
+            <el-input v-model="row.skuActualCount" :max="row.goodCount" :min="0" type="number" @change="handleUpdateSkuCount(row)" @focus="handleFocus(row)" @wheel.stop.prevent />
           </template>
         </el-table-column>
       </el-table-column>
       <el-table-column label="零件">
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')"></el-table-column>
-        <el-table-column label="实际数量" prop="componentActualCount" min-width="100"></el-table-column>
-        <el-table-column label="退税报关数量" prop="customsDeclarationCount" min-width="130">
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')"/>
+        <el-table-column label="实际数量" min-width="100" prop="componentActualCount"/>
+        <el-table-column label="退税报关数量" min-width="130" prop="customsDeclarationCount">
           <template #default="{ row }">
-            <el-input v-model="row.customsDeclarationCount" :disabled="row.customsDeclarationStatus === 1" @wheel.stop.prevent :min="0" type="number" @focus="handleFocus(row)" @change="handleUpdateComponentCustomCount(row)" />
+            <el-input v-model="row.customsDeclarationCount" :disabled="row.customsDeclarationStatus === 1" :min="0" type="number" @change="handleUpdateComponentCustomCount(row)" @focus="handleFocus(row)" @wheel.stop.prevent />
           </template>
         </el-table-column>
-        <el-table-column label="剩余可报" prop="reportable" min-width="100"></el-table-column>
-        <el-table-column label="PO总数" prop="purchaseCount" min-width="90"></el-table-column>
-        <el-table-column label="采购方" prop="purchase" min-width="90"></el-table-column>
-        <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="80">
+        <el-table-column label="剩余可报" min-width="100" prop="reportable"/>
+        <el-table-column label="PO总数" min-width="90" prop="purchaseCount"/>
+        <el-table-column label="采购方" min-width="90" prop="purchase"/>
+        <el-table-column label="不报关" min-width="80" prop="customsDeclarationStatus">
           <template #default="{ row }">
-            <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" disabled />
+            <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="已发未报" prop="yfwbCount" min-width="100"></el-table-column>
-        <el-table-column label="已报未发" prop="ybwfCount" min-width="100"></el-table-column>
+        <el-table-column label="已发未报" min-width="100" prop="yfwbCount"/>
+        <el-table-column label="已报未发" min-width="100" prop="ybwfCount"/>
       </el-table-column>
-      <el-table-column label="操作" width="230" fixed="right">
+      <el-table-column fixed="right" label="操作" width="230">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="handleShowPackingCount(row)">修正质检</el-link>
           <el-link type="primary" :underline="false" @click="handleInsertAll(row)">填入全部</el-link>
@@ -161,11 +161,11 @@
   </vab-dialog>
   <!-- 已发未报 -->
   <vab-dialog
-    title="已发未报"
-    width="60%"
-    class="dialog"
     v-model="sentButNotReportedVisible"
+    class="dialog"
+    title="已发未报"
     top="10vh"
+    width="60%"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
@@ -174,30 +174,30 @@
       <vab-query-form-right-panel>
         <el-form inline :model="querySentForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="querySentForm.keyWord" @input="querySentData" @keyup.enter.native="querySentData"  placeholder="请输入搜索关键词" clearable />
+            <el-input v-model="querySentForm.keyWord" clearable placeholder="请输入搜索关键词"  @input="querySentData" @keyup.enter="querySentData" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" native-type="submit" :loading="sentListLoading" @click="querySentData"></el-button>
+            <el-button :icon="Search" :loading="sentListLoading" native-type="submit" type="primary" @click="querySentData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
-      border stripe
-      :header-cell-style="{ textAlign: 'center' }"
-      :cell-style="sentCellStyle"
+      border :cell-style="sentCellStyle"
       class="noneHoveTable"
       :data="sentList"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
       @selection-change="setSelectRows"
     >
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column label="SKU" prop="sku" min-width="200"></el-table-column>
-      <el-table-column label="描述" prop="desc" min-width="200"></el-table-column>
-      <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
-      <el-table-column label="未报已发" prop="yfwbCount" min-width="100"></el-table-column>
-      <el-table-column label="已报未发" prop="ybwfCount" min-width="100"></el-table-column>
-      <el-table-column label="采购方" prop="purchase" min-width="90"></el-table-column>
-      <el-table-column label="备注" prop="" min-width="100"></el-table-column>
+      <el-table-column type="selection"/>
+      <el-table-column label="SKU" min-width="200" prop="sku"/>
+      <el-table-column label="描述" min-width="200" prop="desc"/>
+      <el-table-column label="PO" min-width="100" prop="po"/>
+      <el-table-column label="未报已发" min-width="100" prop="yfwbCount"/>
+      <el-table-column label="已报未发" min-width="100" prop="ybwfCount"/>
+      <el-table-column label="采购方" min-width="90" prop="purchase"/>
+      <el-table-column label="备注" min-width="100" prop=""/>
     </el-table>
     <vab-pagination 
       :current-page="querySentForm.pageNo"
@@ -215,16 +215,16 @@
   </vab-dialog>
   <!-- 点击清点质检 - 打包总数 -->
   <vab-dialog
+    v-model="packingCountVisible"
+    :before-close="closePackingCount"
+    class="packingTotal"
     title="打包总数"
     width="22%"
-    v-model="packingCountVisible"
-    class="packingTotal"
-    :before-close="closePackingCount"
   >
-    <el-form ref="packingCountFormRef" :model="packingCountForm" label-position="left" label-width="auto" style=" margin-right: 0px;margin-left: 20px">
+    <el-form ref="packingCountFormRef" label-position="left" label-width="auto" :model="packingCountForm" style=" margin-right: 0px;margin-left: 20px">
       <el-form-item label="任务数量" prop="packageTaskCount">
         <div style="width: 85%;">
-          <el-input v-model="packingCountForm.packageTaskCount" disabled  ></el-input>
+          <el-input v-model="packingCountForm.packageTaskCount" disabled  />
         </div>
       </el-form-item>
       <el-form-item label="好" prop="goodCount">
@@ -232,7 +232,7 @@
           <el-input v-model.trim="packingCountForm.goodCount" clearable/>
         </div>
         <div style=" display: flex; align-items: center;width: 10%">
-          <el-icon :size="23" class="add-icon" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><CirclePlus /></el-icon>
+          <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><circle-plus /></el-icon>
         </div>
       </el-form-item>
       <el-form-item label="留样" prop="keepSampleCount">
@@ -270,12 +270,12 @@
   </vab-dialog>
   <!-- 增加 -->
   <vab-dialog
-    title="增加"
     v-model="addVisible"
-    @close="handleCloseAdd"
+    title="增加"
     width="17%"
+    @close="handleCloseAdd"
   >
-    <el-form ref="addFormRef" :model="addForm" label-width="auto" label-position="left" style=" margin-right: 20px;margin-left: 20px">
+    <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style=" margin-right: 20px;margin-left: 20px">
       <el-form-item label="好" prop="good">
         <el-input v-model.trim="addForm.good" clearable />
       </el-form-item>
@@ -294,19 +294,22 @@
 </template>
 
 <script lang="ts" setup>
-import { CirclePlus, Search, Select } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
-import { CSSProperties } from 'vue'
+import { CirclePlus, Search } from '@element-plus/icons-vue'
+import type { FormInstance } from 'element-plus'
+import type { CSSProperties } from 'vue'
 import { getQualityCheck } from '~/src/api/devlocal/packagingShipping'
-import { IGetQualityCheck } from '~/src/type/packagingShipping/packagingType'
+import type { IGetQualityCheck } from '~/src/type/packagingShipping/packagingType'
 import { flexColumnWidth } from '~/src/utils/tableColum'
 import { clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, insertAllMatchComponent, lockMatchShipment, submitMatchShipment, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { IGetCheckMatchList, IGetMatchPackageList, IGetMatchSentList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import type { IGetCheckMatchList, IGetMatchPackageList, IGetMatchSentList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 
 const dflag = ref<boolean>(false)
 const match2Visible = ref<boolean>(false)
+// eslint-disable-next-line vue/no-dupe-keys
 const disabled1 = ref<boolean>(false)
+// eslint-disable-next-line vue/no-dupe-keys
 const disabled2 = ref<boolean>(true)
+// eslint-disable-next-line vue/no-dupe-keys
 const disabled3 = ref<boolean>(false)
 let props = defineProps<{
   matchVisible: boolean
@@ -450,9 +453,7 @@ const lackCount = computed<number>({
     let taskCount = Number(packingCountForm.packageTaskCount);
     return taskCount - good - bad;
   },
-  set(value) {
-
-  }
+  set() {}
 });
 // 多的数量
 const manyCount = computed({
@@ -463,9 +464,7 @@ const manyCount = computed({
       return good - taskCount
     }
   },
-  set(value) {
-
-  }
+  set() {}
 })
 // 打包总数数量
 const packingTotal = computed({  
@@ -474,9 +473,7 @@ const packingTotal = computed({
     let bad = Number(packingCountForm.badCount)
     return good + bad
   },
-  set(value) {
-
-  }
+  set() {}
 })
 // 开始匹配
 const handleStartMatch = async () => {
@@ -516,7 +513,7 @@ const _originalCount = ref<number>(0)
 const lastSku = ref<number>(0)
 // 点击上一个
 const fetchPreviousMatchData = async () => {
-  const index = idList.value.findIndex((item: any) => item === _id.value)
+  const index = idList.value.indexOf(_id.value)
   _id.value = idList.value[index - 1]
   const item = list.value.find((item: any) => item.id === _id.value)
   _sku.value = item!.sku
@@ -541,7 +538,7 @@ const fetchPreviousMatchData = async () => {
 }
 // 点击下一个
 const fetchNextMatchData = async () => {
-  const index = idList.value.findIndex((item: any) => item === _id.value)
+  const index = idList.value.indexOf(_id.value)
   _id.value = idList.value[index + 1]
   const item = list.value.find((item: any) => item.id === _id.value)
   _sku.value = item!.sku
@@ -566,7 +563,7 @@ const fetchNextMatchData = async () => {
 }
 const handleShowPreviousOrNext = (id: number) => {
   const length = idList.value.length
-  const index = idList.value.findIndex((item: any) => item === id)
+  const index = idList.value.indexOf(id)
   lastSku.value = length - index - 1
   // 处理上一个还是下一个显示
   if (index === 0) {
@@ -639,9 +636,6 @@ const handleArchive = async () => {
   // })
 }
 // 确定已发未报
-const confirmSent = async () => {
-
-}
 const fetchSentData = async () => {
   sentListLoading.value = true
   const { data } = await getMatchSentList(querySentForm)
@@ -692,7 +686,7 @@ const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
       fetchMatchData();
       skuActualCountMap[row.mId] = Number(row.skuActualCount)
     }
-  } catch (error: any) {
+  } catch {
     // 恢复修改前的值
     if (row.mId in skuActualCountMap) {
       const previousValues = skuActualCountMap[row.mId];
@@ -720,7 +714,7 @@ const handleUpdateComponentCustomCount = async (row: IGetMatchPackageList) => {
       fetchMatchData()
       customsDeclarationCountMap[row.poComponentId] = Number(row.customsDeclarationCount)
     }
-  } catch (error) {
+  } catch {
     // 恢复修改前的值
     if (row.poComponentId in customsDeclarationCountMap) {
       const previousValues = customsDeclarationCountMap[row.poComponentId]
@@ -788,7 +782,7 @@ const handleClearCheckAll = async () => {
   $baseConfirm('确定要清空全部吗?', null, async () => {
     try {
       const { data } = await clearAllMatchShipment({
-        ids: ids,
+        ids,
       })
       if (data) {
         $baseMessage('清空全部成功', 'success')
@@ -809,7 +803,7 @@ const handleClearAll = async () => {
   $baseConfirm('确定要清空全部吗?', null, async () => {
     try {
       const { data } = await clearAllMatchComponent({
-        mIds: mIds,
+        mIds,
         id: _id.value
       })
       if (data) {
@@ -844,7 +838,7 @@ const handleUnlockAndClear = async () => {
   const ids = Array.from(setIds).join(',')
   try {
     const { data } = await clearUnlockMatchShipment({
-      ids: ids,
+      ids,
       id: props.shipId
     })
     if (data) {
@@ -899,7 +893,7 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 
-const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
+const objectSpanMethod1 = ({ row, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
  
   if (columnIndex === 0 || columnIndex === 1 || columnIndex === 12) {
@@ -945,7 +939,6 @@ const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
 //匹配2合并
 const objectSpanMethod2 = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: any) => {

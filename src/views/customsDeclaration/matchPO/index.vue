@@ -180,19 +180,19 @@
         </vab-query-form-left-panel>
       </vab-query-form>
       <el-table
-        border stripe
-        :header-cell-style="{ textAlign: 'center' }"
+        border :cell-style="firstLegFreightStyle"
         class="noneHoveTable center-table"
-        show-summary
-        :cell-style="firstLegFreightStyle"
-        @close="closeFirstLegFreight"
         :data="costList"
+        :header-cell-style="{ textAlign: 'center' }"
         max-height="70vh"
+        show-summary
+        stripe
         :summary-method="handleSummaryMethod"
         @cell-click="cellClick"
+        @close="closeFirstLegFreight"
       >
-        <el-table-column label="费用名" prop="costName" :width="flexColumnWidth(costList, '费用名', 'costName')"></el-table-column>
-        <el-table-column label="数量" prop="count" min-width="70">
+        <el-table-column label="费用名" prop="costName" :width="flexColumnWidth(costList, '费用名', 'costName')"/>
+        <el-table-column label="数量" min-width="70" prop="count">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.count"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -200,7 +200,7 @@
             <span>{{ row.count }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="单价" prop="unitPrice" min-width="70">
+        <el-table-column label="单价" min-width="70" prop="unitPrice">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.unitPrice"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -208,8 +208,8 @@
             <span>{{ row.unitPrice }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="预估总费用" prop="estimateCost" min-width="110"></el-table-column>
-        <el-table-column label="暂估汇率" prop="estimateExchangeRate" min-width="100">
+        <el-table-column label="预估总费用" min-width="110" prop="estimateCost"/>
+        <el-table-column label="暂估汇率" min-width="100" prop="estimateExchangeRate">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.estimateExchangeRate"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -217,19 +217,19 @@
             <span>{{ row.estimateExchangeRate }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="货币" prop="currency" min-width="100">
+        <el-table-column label="货币" min-width="100" prop="currency">
           <template #default="{ row }">
             <el-select v-model="row.currency" style="min-width: 100%;" @change="handleUpdateLegCurrency(row)">
               <el-option 
                 v-for="item in currencyList"
+                :key="item.id"
                 :label="item.label"
                 :value="item.id"
-                :key="item.id"
               />
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="实际总费用" prop="actualCost" min-width="110">
+        <el-table-column label="实际总费用" min-width="110" prop="actualCost">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.actualCost"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -237,7 +237,7 @@
             <span>{{ row.actualCost }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="实际汇率" prop="actualExchangeRate" min-width="100">
+        <el-table-column label="实际汇率" min-width="100" prop="actualExchangeRate">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.actualExchangeRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -245,20 +245,20 @@
             <span>{{ row.actualExchangeRate }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="差额" prop="difference" min-width="90">
+        <el-table-column label="差额" min-width="90" prop="difference">
           <template #default="{ row }">
             <span :style="{ color: row.difference >= 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="已付" prop="payStatus" min-width="90">
+        <el-table-column label="已付" min-width="90" prop="payStatus">
           <template #default="{ row }">
-            <el-checkbox v-model="row.payStatus" :true-value="1" :false-value="0" @change="handleUpdateLegPayStatus(row)" />
+            <el-checkbox v-model="row.payStatus" :false-value="0" :true-value="1" @change="handleUpdateLegPayStatus(row)" />
           </template>
         </el-table-column>
-        <el-table-column label="付款日期" prop="payDate" min-width="180"></el-table-column>
-        <el-table-column label="合并报关" prop="bgStatus" min-width="100">
+        <el-table-column label="付款日期" min-width="180" prop="payDate"/>
+        <el-table-column label="合并报关" min-width="100" prop="bgStatus">
           <template #default="{ row }">
-            <el-checkbox v-model="row.bgStatus" :true-value="1" :false-value="0" @change="handleUpdateBgStatus(row)" />
+            <el-checkbox v-model="row.bgStatus" :false-value="0" :true-value="1" @change="handleUpdateBgStatus(row)" />
           </template>
         </el-table-column>
         <el-table-column label="合并报关的货代单号" prop="mergeCustomsDeclarationList" :width="calculateBrColumnWidth(costList, (row: any) => row.mergeCustomsDeclarationList)">
@@ -269,9 +269,9 @@
             <span v-html="row.mergeCustomsDeclarationList"></span>
           </template>
         </el-table-column>
-        <el-table-column label="合并清关" prop="qgStatus" min-width="100">
+        <el-table-column label="合并清关" min-width="100" prop="qgStatus">
           <template #default="{ row }">
-            <el-checkbox v-model="row.qgStatus" :true-value="1" :false-value="0" @change="handleUpdateQgStatus(row)" />
+            <el-checkbox v-model="row.qgStatus" :false-value="0" :true-value="1" @change="handleUpdateQgStatus(row)" />
           </template>
         </el-table-column>
         <el-table-column label="合并清关的货代单号" prop="mergeCustomsClearanceList" :width="calculateBrColumnWidth(costList, (row: any) => row.mergeCustomsClearanceList)">
@@ -282,7 +282,7 @@
             <span v-html="row.mergeCustomsClearanceList"></span>
           </template>
         </el-table-column>
-        <el-table-column label="SKU运费分摊方式" prop="" min-width="100">
+        <el-table-column label="SKU运费分摊方式" min-width="100" prop="">
           <template #header>
             SKU运费<br>分摊方式
           </template>
@@ -296,22 +296,23 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 匹配 -->
-    <VabMatchDialog 
-      :matchVisible="matchVisible"
-      :status="status"
-      :shipId="shipId"
+    <vab-match-dialog 
       :disabled1="disabled1"
       :disabled2="disabled2"
       :disabled3="disabled3"
+      :match-visible="matchVisible"
+      :ship-id="shipId"
+      :status="status"
+      
       @update-match-visible="handleCloseMatch"
     />
     <!-- 修改货代渠道 -->
     <vab-dialog
+      v-model="updateForwarderChannelVisible"
       title="修改货代渠道"
       width="20%"
-      v-model="updateForwarderChannelVisible"
     >
-      <el-form ref="forwarderChannelFormRef" :model="forwarderChannelForm" :rules="forwarderChannelFormRules" label-position="top" style=" margin-right: 10px;margin-left: 10px">
+      <el-form ref="forwarderChannelFormRef" label-position="top" :model="forwarderChannelForm" :rules="forwarderChannelFormRules" style=" margin-right: 10px;margin-left: 10px">
         <el-form-item label="货代渠道" prop="forwarderChannel">
           <el-input v-model="forwarderChannelForm.forwarderChannel" clearable />
         </el-form-item>
@@ -326,15 +327,15 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import { FormInstance, TableInstance } from 'element-plus'
-import { CSSProperties } from 'vue'
-import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentFreightFee, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { getChannelList } from '/@/api/devlocal/encasement'
-import { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
-import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
+import type { CSSProperties } from 'vue'
+import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
+import { getChannelList } from '/@/api/devlocal/encasement'
+import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 const tableRef = ref<TableInstance>()
 const queryForm = reactive<any>({
@@ -415,20 +416,20 @@ const handleGenerateDeclaration = async () => {
   }
   const ids = selectRows.value.map((item: any) => item.id).join(',')
   const { data } = await generateCustomsDeclaration({
-    ids: ids
+    ids
   })
   if (data) {
     data.forEach(async (fileName: string) => {
       try {
         await downloadFileP('/shipment/download', {
-          fileName: fileName
+          fileName
         }).then((res) => {
           console.log(res);
         }).catch((error) => {
           console.error(error);
         })
         $baseMessage('生成报关资料成功！', 'success')
-      } catch (error) {
+      } catch {
         $baseMessage('生成报关资料失败！', 'error')
       }
     })
@@ -448,20 +449,20 @@ const handleGenerateClearance = async () => {
   }
   const ids = selectRows.value.map((item: any) => item.id).join(',')
   const { data } = await generateTaxRefund({
-    ids: ids
+    ids
   })
   if (data) {
     data.forEach(async (fileName: string) => {
       try {
         await downloadFileP('/shipment/download', {
-          fileName: fileName
+          fileName
         }).then((res) => {
           console.log(res);
         }).catch((error) => {
           console.error(error);
         })
         $baseMessage('生成清关资料成功！', 'success')
-      } catch (error) {
+      } catch {
         $baseMessage('生成清关资料失败！', 'error')
       }
     })
@@ -485,9 +486,7 @@ const handleUpdatePayStatus = async (row: any) => {
 
 // 修改货代渠道可见
 const updateForwarderChannelVisible = ref<boolean>(false)
-const forwarderChannelForm = reactive<any>({
-
-})
+const forwarderChannelForm = reactive<any>({})
 const forwarderChannelFormRef = ref<FormInstance>()
 const forwarderChannelFormRules = reactive<any>({
   forwarderChannel: [{ required: true, message: '请输入货代渠道', trigger: 'blur' }]
@@ -582,9 +581,9 @@ const closeForwarderChannel = () => {
   updateForwarderChannelVisible.value = false
 }
 // 展示货代渠道
-const showForwarderChannel = () => {
-  updateForwarderChannelVisible.value = true
-}
+// const showForwarderChannel = () => {
+//   updateForwarderChannelVisible.value = true
+// }
 const costList = ref<any>([])
 const _shipId = ref<number>()
 const _freightForwardingNumber = ref<string>('')
@@ -651,7 +650,7 @@ const fetchCostData = async (id: number) => {
       item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join(','.replace(',', '<br />'))
     })
     firstLegFreightVisible.value = true
-  } catch (error) {
+  } catch {
     firstLegFreightVisible.value = false
   }
 }
@@ -706,7 +705,7 @@ const handleCloseMatch = (value: boolean) => {
 }
 
 // 头程运费点击编辑
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -753,37 +752,44 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
 
   columns.forEach((column, index) => {
     // 第一列显示'合计'
-    if (index === 0) {
-      sums[index] = h('div', { style: { fontWeight: '600' } }, [
-        '总计',
-      ])
-      return
-    } else if (index === 5) {
-      sums[index] = h('div', { style: { fontWeight: '600' } }, [
-        'RMB',
-      ])
-      return
-    } else if (index === 3) {
-      const values = data.map((item) => {
-        // 计算每一行的合计值：预估总费用 * 暂估汇率
-        const estimateCost = Number(item['estimateCost'])
-        const estimateExchangeRate = Number(item['estimateExchangeRate'])
-        return estimateCost * estimateExchangeRate
-      })
+    switch (index) {
+      case 0: {
+        sums[index] = h('div', { style: { fontWeight: '600' } }, [
+          '总计',
+        ])
+        return
+      }
+      case 5: {
+        sums[index] = h('div', { style: { fontWeight: '600' } }, [
+          'RMB',
+        ])
+        return
+      }
+      case 3: {
+        const values = data.map((item) => {
+          // 计算每一行的合计值：预估总费用 * 暂估汇率
+          const estimateCost = Number(item['estimateCost'])
+          const estimateExchangeRate = Number(item['estimateExchangeRate'])
+          return estimateCost * estimateExchangeRate
+        })
 
-      // 计算所有值的合计
-      sums[index] = h('div', { style: { fontWeight: '600' } }, [
-        `${values.reduce((prev, curr) => {
-          const value = Number(curr);
-          if (!Number.isNaN(value)) {
-            return prev + curr // 累加有效的数值
-          } else {
-            return prev
-          }
-        }, 0).toFixed(2)}`,
-      ])
-    } else {
-      sums[index] = '' // 如果不是 'estimateCost' 或 'estimateExchangeRate' 列，设置为空
+        // 计算所有值的合计
+        sums[index] = h('div', { style: { fontWeight: '600' } }, [
+          `${values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (Number.isNaN(value)) {
+              return prev
+            } else {
+              return prev + curr // 累加有效的数值
+            }
+          }, 0).toFixed(2)}`,
+        ])
+      
+      break;
+      }
+      default: {
+        sums[index] = '' // 如果不是 'estimateCost' 或 'estimateExchangeRate' 列，设置为空
+      }
     }
   })
 
@@ -821,30 +827,39 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0 || data.columnIndex === 12 || data.columnIndex === 14) {
-    return {
-      textAlign: 'left',
-      cursor: 'not-allowed'
+  switch (data.columnIndex) {
+    case 0: 
+    case 12: 
+    case 14: {
+      return {
+        textAlign: 'left',
+        cursor: 'not-allowed'
+      }
     }
-  } else if (data.columnIndex === 3) {
-    return {
-      fontWeight: '600',
-      textAlign: 'center',
-      cursor: 'not-allowed'
+    case 3: {
+      return {
+        fontWeight: '600',
+        textAlign: 'center',
+        cursor: 'not-allowed'
+      }
     }
-  } else if (data.columnIndex === 8 || data.columnIndex === 10) {
-    return {
-      textAlign: 'center',
-      cursor: 'not-allowed'
+    case 8: 
+    case 10: {
+      return {
+        textAlign: 'center',
+        cursor: 'not-allowed'
+      }
     }
-  } else if (data.columnIndex === 6) {
-    return {
-      fontWeight: '600',
-      textAlign: 'center'
+    case 6: {
+      return {
+        fontWeight: '600',
+        textAlign: 'center'
+      }
     }
-  } else {
-    return {
-      textAlign: 'center'
+    default: {
+      return {
+        textAlign: 'center'
+      }
     }
   }
 }

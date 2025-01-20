@@ -1,11 +1,11 @@
 <template>
   <vab-dialog
-    title="发票匹配"
     v-model="dflag"
-    @close="closeInvoiceMatching"
-    width="90%"
-    top="10vh"
     :draggable="false"
+    title="发票匹配"
+    top="10vh"
+    width="90%"
+    @close="closeInvoiceMatching"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
@@ -14,34 +14,34 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter.native="queryData" />
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" :loading="listLoading" native-type="submit" @click="queryData" ></el-button>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border
-      :header-cell-style="{ textAlign: 'center' }"
-      :cell-style="cellStyle"
-      :data="list"
-      @cell-click="cellClick"
-      class="noneHoveTable"
       :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      class="noneHoveTable"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
       max-height="57vh"
       :span-method="objectSpanMethod"
+      @cell-click="cellClick"
     >
-      <el-table-column label="操作" fixed="left">
+      <el-table-column fixed="left" label="操作">
         <template #default="{ row }">
-          <el-link :underline="false" type="danger" @click="handleDeleteInvoice(row)">删除</el-link>
+          <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" prop="purchaseName" :width="flexColumnWidth(list, '购方名称', 'purchaseName')">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.purchaseName" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.purchaseName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.purchaseName }}</span>
         </template>
@@ -53,15 +53,15 @@
         <template #default="{ row }">
           <el-image :src="row.invoicePath" style="width: 75px; height: 75px; display: block" @click="showImagePreview(row.url)">
             <template #error>
-              <el-icon></el-icon>
+              <el-icon/>
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" prop="invoiceCode" min-width="120">
+      <el-table-column label="发票代码" min-width="120" prop="invoiceCode">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceCode" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.invoiceCode" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.invoiceCode }}</span>
         </template>
@@ -69,7 +69,7 @@
       <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceNumber" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.invoiceNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.invoiceNumber }}</span>
         </template>
@@ -77,95 +77,95 @@
       <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.suppliser" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.suppliser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="开票品名" prop="invoiceName" min-width="100">
+      <el-table-column label="开票品名" min-width="100" prop="invoiceName">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceName" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
+            <el-input v-model="row.invoiceName" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格型号" prop="specificationModel" min-width="100">
+      <el-table-column label="规格型号" min-width="100" prop="specificationModel">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.specificationModel" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
+            <el-input v-model="row.specificationModel" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.specificationModel }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票数量" prop="invoiceCount" min-width="100">
+      <el-table-column label="发票数量" min-width="100" prop="invoiceCount">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceCount" type="number" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
+            <el-input v-model="row.invoiceCount" type="number" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票单位" prop="invoiceUnit" min-width="100">
+      <el-table-column label="发票单位" min-width="100" prop="invoiceUnit">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.invoiceUnit" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
+            <el-input v-model="row.invoiceUnit" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票含税金额" prop="includingTaxPrice" min-width="110">
+      <el-table-column label="发票含税金额" min-width="110" prop="includingTaxPrice">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.includingTaxPrice" type="number" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
+            <el-input v-model="row.includingTaxPrice" type="number" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.includingTaxPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票未税金额" prop="preTaxPrice" min-width="110">
+      <el-table-column label="发票未税金额" min-width="110" prop="preTaxPrice">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.preTaxPrice" type="number" @keyup.enter="clickDetailCancel($event, row)" @blur="clickDetailCancel($event, row)" />
+            <el-input v-model="row.preTaxPrice" type="number" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.preTaxPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="匹配合同号" prop="matchContractNumber" min-width="110">
+      <el-table-column label="匹配合同号" min-width="110" prop="matchContractNumber">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.matchContractNumber" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.matchContractNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.matchContractNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="匹配PO" prop="matchPo" min-width="100">
+      <el-table-column label="匹配PO" min-width="100" prop="matchPo">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.matchPo" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.matchPo" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.matchPo }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100">
+      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.customsDeclarationCount" type="number" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.customsDeclarationCount" type="number" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.customsDeclarationCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100">
+      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.customsDeclarationUnit" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+            <el-input v-model="row.customsDeclarationUnit" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.customsDeclarationUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="130" fixed="right">
+      <el-table-column fixed="right" label="操作" width="130">
         <template #default="{ row }">
-          <el-link :underline="false" type="primary" @click="showMatch(row)">匹配</el-link>
-          <el-link :underline="false" type="primary" @click="handleCleanInvoice(row)">清空</el-link>
+          <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
+          <el-link type="primary" :underline="false" @click="handleCleanInvoice(row)">清空</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -185,15 +185,15 @@
   </vab-dialog>
   <!-- 上传发票 -->
   <vab-dialog
+    v-model="uploadInvoiceVisible"
     title="上传发票"
     width="25%"
-    v-model="uploadInvoiceVisible"
   >
     <el-upload 
-      drag multiple 
-      :show-file-list="true" 
-      :auto-upload="false"
-      v-model:file-list="fileList"
+      v-model:file-list="fileList" :auto-upload="false" 
+      drag 
+      multiple
+      :show-file-list="true"
     >
         <el-icon class="el-icon--upload">
           <upload-filled />
@@ -211,8 +211,8 @@
   </vab-dialog>
   <!-- 匹配 -->
   <vab-dialog
-    title="匹配"
     v-model="matchVisible"
+    title="匹配"
     width="80%"
   >
     <vab-query-form>
@@ -224,39 +224,39 @@
       <vab-query-form-right-panel>
         <el-form inline :model="matchQueryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="matchQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryMatchData" @keyup.enter.native="queryMatchData" />
+            <el-input v-model.trim="matchQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryMatchData" @keyup.enter="queryMatchData" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" :icon="Search" :loading="matchListLoading" native-type="submit" @click="queryMatchData" ></el-button>
+            <el-button :icon="Search" :loading="matchListLoading" native-type="submit" type="primary" @click="queryMatchData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       border
-      :header-cell-style="{ textAlign: 'center' }"
       :cell-style="matchCellStyle"
-      :data="matchList"
       class="noneHoveTable"
+      :data="matchList"
+      :header-cell-style="{ textAlign: 'center' }"
     >
-      <el-table-column label="合同编号" prop="contractNumber" min-width="100"/>
-      <el-table-column label="未匹配发票数" prop="" min-width="120"/>
-      <el-table-column label="CIF售价" prop="cifPrice" min-width="100"/>
-      <el-table-column label="运费" prop="freightFee" min-width="90"/>
-      <el-table-column label="FOB售价" prop="fobPrice" min-width="100"/>
-      <el-table-column label="利润率" prop="profitMargin" min-width="100"/>
-      <el-table-column label="汇率" prop="" min-width="90"/>
-      <el-table-column label="人民币售价" prop="salePrice" min-width="110"/>
-      <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100"></el-table-column>
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100"></el-table-column>
-      <el-table-column label="PO" prop="po" min-width="100"></el-table-column>
-      <el-table-column label="含税成本价￥" prop="taxInclusiveCost" min-width="130"></el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')"></el-table-column>
-      <el-table-column label="零件名" prop="" min-width="100"></el-table-column>
-      <el-table-column label="shipment ID" prop="shipmentId" min-width="120"></el-table-column>
-      <el-table-column label="匹配" prop="status" min-width="80">
+      <el-table-column label="合同编号" min-width="100" prop="contractNumber"/>
+      <el-table-column label="未匹配发票数" min-width="120" prop=""/>
+      <el-table-column label="CIF售价" min-width="100" prop="cifPrice"/>
+      <el-table-column label="运费" min-width="90" prop="freightFee"/>
+      <el-table-column label="FOB售价" min-width="100" prop="fobPrice"/>
+      <el-table-column label="利润率" min-width="100" prop="profitMargin"/>
+      <el-table-column label="汇率" min-width="90" prop=""/>
+      <el-table-column label="人民币售价" min-width="110" prop="salePrice"/>
+      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount"/>
+      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit"/>
+      <el-table-column label="PO" min-width="100" prop="po"/>
+      <el-table-column label="含税成本价￥" min-width="130" prop="taxInclusiveCost"/>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')"/>
+      <el-table-column label="零件名" min-width="100" prop=""/>
+      <el-table-column label="shipment ID" min-width="120" prop="shipmentId"/>
+      <el-table-column label="匹配" min-width="80" prop="status">
         <template #default="{ row }">
-          <el-radio class="custom-radio" v-model="matchStatus" :label="row.id" size="large">{{ '' }}</el-radio>
+          <el-radio v-model="matchStatus" class="custom-radio" :label="row.id" size="large">{{ '' }}</el-radio>
         </template>
       </el-table-column>
     </el-table>
@@ -274,20 +274,20 @@
       </div>
     </template>
   </vab-dialog>
-  <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="closeImagePreview" hide-on-click-modal />
+  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
 </template>
 
 <script lang="ts" setup>
+import { Search, UploadFilled } from '@element-plus/icons-vue'
+import { isEqual } from 'lodash'
+import type { CSSProperties } from 'vue'
+import { cleanTaxRefundInvoice, deleteTaxRefundInvoice, finishTaxRefundInvoice, getTaxRefundInvoiceList, getTaxRefundInvoiceMatch, submitConfirmTaxRefundInvoiceMatch, submitTaxRefundInvoiceMatch, updateTaxRefundInvoice, updateTaxRefundInvoiceDetail, uploadTaxRefund } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import type { IGetTaxRefundInvoiceList, IGetTaxRefundInvoiceListQuery, IGetTaxRefundInvoiceMatchList, IGetTaxRefundInvoiceMatchQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'VabInvoiceMatching'
 })
-import { Search, UploadFilled } from '@element-plus/icons-vue'
-import { isEqual } from 'lodash'
-import { CSSProperties } from 'vue'
-import { cleanTaxRefundInvoice, deleteTaxRefundInvoice, finishTaxRefundInvoice, getTaxRefundInvoiceList, getTaxRefundInvoiceMatch, submitConfirmTaxRefundInvoiceMatch, submitTaxRefundInvoiceMatch, updateTaxRefundInvoice, updateTaxRefundInvoiceDetail, uploadTaxRefund } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { IGetTaxRefundInvoiceList, IGetTaxRefundInvoiceListQuery, IGetTaxRefundInvoiceMatchList, IGetTaxRefundInvoiceMatchQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
 
 const dflag = ref<boolean>(false)
 const props = defineProps<{
@@ -342,7 +342,7 @@ const handleFinishUpload = async () => {
         uploadInvoiceVisible.value = false
       }
     }
-  } catch (err) {
+  } catch {
     $baseMessage('上传失败', 'error')
   }
   
@@ -440,21 +440,8 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   }
 }
 
-// 清空全部PO
-const clearAllPO = async () => {
-  $baseConfirm('确定要清空全部PO吗？', null, async () => {
-    console.log(1);
-    
-  })
-}
-const handleDelAll = async () => {
-  $baseConfirm('确定要全部删除吗？', null, async () => {
-console.log(2);
-
-  })
-}
 let copyRow: any
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -562,7 +549,6 @@ const clearPadding = (data: {row: any, column: any, rowIndex: number, columnInde
 // col合并方法
 const objectSpanMethod = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: any) => {
