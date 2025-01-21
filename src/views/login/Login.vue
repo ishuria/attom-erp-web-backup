@@ -10,6 +10,9 @@
             <template #prefix>
               <vab-icon icon="user-line" />
             </template>
+            <template #suffix>
+              @yunzhou.design
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
@@ -141,7 +144,7 @@ const handleLogin = async () => {
       if (valid)
         try {
           loading.value = true
-          await login(form).catch(() => {
+          await login({...form, username: `${form.username}@yunzhou.design`}).catch(() => {
             loading.value = false
           })
           await router.push(handleRoute())

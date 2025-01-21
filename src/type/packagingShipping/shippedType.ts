@@ -750,6 +750,7 @@ export interface IGetForwarderList {
    * 货代类型
    */
   types?: string;
+  fullName?: string
 }
 
 export interface IGetShipmentArrivedListReq {

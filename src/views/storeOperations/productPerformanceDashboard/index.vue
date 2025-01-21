@@ -153,6 +153,46 @@
                 <br />
                 Outlet Deal
               </span>
+              <span v-if="item.label === '今销'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>今销 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip">今日销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '今广%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>今广% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip">今日广告销售占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '头部产品#'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>头部产品# <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip" >大于60：头部垄断较小<br />30 - 60：头部垄断中等<br />小于30：头部垄断严重</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === 'FBA差异'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>FBA差异 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip" >=亚马逊FBA - 自量FBA</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>月广告% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip" >月广告销售占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -415,6 +455,38 @@
                 <br />
                 Outlet Deal
               </span>
+              <span v-if="item.label === '今销'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>今销 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip">今日销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '今广%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>今广% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip">今日广告销售占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '头部产品#'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>头部产品# <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip" >大于60：头部垄断较小<br />30 - 60：头部垄断中等<br />小于30：头部垄断严重</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>月广告% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip" >月广告销售占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -667,6 +739,30 @@
                 <br />
                 含在途
               </span>
+              <span v-if="item.label === '今销'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>今销 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip">今日销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '今广%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>今广% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip">今日广告销售占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <span>月广告% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <template #content>
+                    <div class="custom-tooltip" >月广告销售占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -786,7 +882,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, Star } from '@element-plus/icons-vue'
+import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
@@ -1722,6 +1818,18 @@ const fetchColumn = async () => {
     if (item.prop === 'lowVolumeDelivery') {
       item.minWidth = '130'
     }
+    if (item.prop === 'currentAdvertisement') {
+      item.minWidth = '100'
+    }
+    if (item.prop === 'headerCount') {
+      item.minWidth = '120'
+    }
+    if (item.prop === 'differenceFba') {
+      item.minWidth = '120'
+    }
+    if (item.prop === 'monthAdv') {
+      item.minWidth = '110'
+    }
     if (['skuImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
@@ -1744,6 +1852,15 @@ const fetchAsinColumn = async () => {
     if (item.prop === 'lowVolumeDelivery') {
       item.minWidth = '130'
     }
+    if (item.prop === 'currentAdvertisement') {
+      item.minWidth = '100'
+    }
+    if (item.prop === 'headerCount') {
+      item.minWidth = '120'
+    }
+    if (item.prop === 'monthAdv') {
+      item.minWidth = '110'
+    }
     if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
@@ -1759,6 +1876,12 @@ const fetchPAsinColumn = async () => {
     }
     if (item.prop === 'siteName') {
       item.minWidth = '150'
+    }
+    if (item.prop === 'currentAdvertisement') {
+      item.minWidth = '100'
+    }
+    if (item.prop === 'monthAdv') {
+      item.minWidth = '110'
     }
     if (['asinImgUrl', 'sku', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
@@ -1952,5 +2075,10 @@ onBeforeMount(() => {
   font-weight: 600;
   color: #67c23a;
   transform: scale(0.9, 1.4);
+}
+.custom-tooltip {
+  white-space: pre-wrap; 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
 }
 </style>

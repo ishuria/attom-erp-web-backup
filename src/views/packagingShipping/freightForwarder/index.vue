@@ -24,7 +24,7 @@
       :header-cell-style="{ textAlign: 'center' }"
       stripe
     >
-      <el-table-column align="left" label="渠道全名" prop="channelName"/>
+      <el-table-column align="left" label="渠道全名" prop="fullName" :width="flexColumnWidth(list, '渠道全名', 'fullName')" />
       <el-table-column align="center" label="当前价格" prop="price"/>
       <el-table-column align="center" label="近10次时效" prop="tenCountTime"/>
       <el-table-column align="center" label="名义时效" prop="nominalLimitation"/>
@@ -457,6 +457,7 @@ import { includeTariffOption } from '../../packagingShipping/constantOption'
 import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
 import type { IAddForwarder, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const currencyNumList = [
   {
@@ -596,6 +597,7 @@ const confirmAddNewChannel = async () => {
       if (data) {
         $baseMessage('新增渠道成功', 'success')
         closeAddNewChannel()
+        queryData()
       }
     }
   })
@@ -774,6 +776,7 @@ const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCe
       fullName: row.fullName,
       abbreviation: row.abbreviation
     })
+    queryData()
   }
 }
 /**
@@ -803,6 +806,9 @@ const fetchData = async () => {
   const { data } = await getForwarderList(queryForm)
   total.value = data?.total!
   list.value = data?.list!
+  list.value.forEach((item) => {
+    item.fullName = `${item.name}-${item.types}-${item.channelName}-${item.destination}`
+  })
   listLoading.value = false
 }
 onBeforeMount(() => {
