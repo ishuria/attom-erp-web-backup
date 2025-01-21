@@ -34,10 +34,10 @@ const option = reactive<any>({
       data: props.data,
       // color: ['#ffdc4c', '#62d9ad', '#e65a56', '#00aeef'],
       color: [
-        '#ffdc4c', // 金黄色
         '#62d9ad', // 青绿色
-        '#e65a56', // 珊瑚红
         '#00aeef', // 天蓝色
+        '#ffdc4c', // 金黄色
+        '#e65a56', // 珊瑚红
         '#ffa500', // 橙色
         '#20c997', // 翠绿色
         '#f94d50', // 鲜红色

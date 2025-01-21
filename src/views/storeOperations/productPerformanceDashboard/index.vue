@@ -155,7 +155,7 @@
               </span>
               <span v-if="item.label === '今销'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>今销 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">今销 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日销售额</div>
                   </template>
@@ -163,7 +163,7 @@
               </span>
               <span v-if="item.label === '今广%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>今广% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">今广% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日广告销售占比</div>
                   </template>
@@ -171,7 +171,7 @@
               </span>
               <span v-if="item.label === '头部产品#'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>头部产品# <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">头部产品# <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >大于60：头部垄断较小<br />30 - 60：头部垄断中等<br />小于30：头部垄断严重</div>
                   </template>
@@ -179,7 +179,7 @@
               </span>
               <span v-if="item.label === 'FBA差异'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>FBA差异 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">FBA差异 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >=亚马逊FBA - 自量FBA</div>
                   </template>
@@ -187,7 +187,7 @@
               </span>
               <span v-if="item.label === '月广告%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>月广告% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >月广告销售占比</div>
                   </template>
@@ -222,7 +222,7 @@
               </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div class="custom-bar">
-                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                  <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
@@ -267,12 +267,12 @@
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
-                  <vab-echarts-chart-pie :data="data1" />
+                  <vab-echarts-chart-pie :data="row.pieList" />
                 </div>
               </span>
               <span v-if="item.label === '季节系数'">
                 <div style="width: 100%; height: 50px">
-                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="seasonalYData" />
+                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row.seasonalCoefficient?.actualList || []" />
                 </div>
               </span>
               <span v-if="item.label === '当前售价'">
@@ -457,7 +457,7 @@
               </span>
               <span v-if="item.label === '今销'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>今销 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">今销 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日销售额</div>
                   </template>
@@ -465,7 +465,7 @@
               </span>
               <span v-if="item.label === '今广%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>今广% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">今广% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日广告销售占比</div>
                   </template>
@@ -473,7 +473,7 @@
               </span>
               <span v-if="item.label === '头部产品#'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>头部产品# <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">头部产品# <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >大于60：头部垄断较小<br />30 - 60：头部垄断中等<br />小于30：头部垄断严重</div>
                   </template>
@@ -481,7 +481,7 @@
               </span>
               <span v-if="item.label === '月广告%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>月广告% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >月广告销售占比</div>
                   </template>
@@ -523,7 +523,7 @@
 
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div class="custom-bar">
-                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                  <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
@@ -557,12 +557,12 @@
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
-                  <vab-echarts-chart-pie :data="data1" />
+                  <vab-echarts-chart-pie :data="row?.pieList" />
                 </div>
               </span>
               <span v-if="item.label === '季节系数'">
                 <div style="width: 100%; height: 50px">
-                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="seasonalYData" />
+                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row.seasonalCoefficient?.actualList || []" />
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
@@ -741,7 +741,7 @@
               </span>
               <span v-if="item.label === '今销'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>今销 <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">今销 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日销售额</div>
                   </template>
@@ -749,7 +749,7 @@
               </span>
               <span v-if="item.label === '今广%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>今广% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">今广% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日广告销售占比</div>
                   </template>
@@ -757,7 +757,7 @@
               </span>
               <span v-if="item.label === '月广告%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <span>月广告% <el-icon style="vertical-align: middle"><question-filled /></el-icon> </span>
+                  <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >月广告销售占比</div>
                   </template>
@@ -797,7 +797,7 @@
               </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div class="custom-bar">
-                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                  <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
                 </div>
               </span>
               <span v-if="label1.includes(item.label)">
@@ -813,7 +813,7 @@
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
-                  <vab-echarts-chart-pie :data="data1" />
+                  <vab-echarts-chart-pie :data="row.pieList || []" />
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
@@ -931,13 +931,7 @@ const option1 = ref<any>({})
 const option2 = ref<any>({})
 const option3 = ref<any>({})
 const seasonalXData = months.map((item) => item.label)
-const seasonalYData = [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3]
-const data1 = ref<any[]>([
-  { value: 211.02, name: '高ACOS' },
-  { value: 453.57, name: '低ACOS' },
-  { value: 21.5, name: '高点击不出单' },
-  { value: 83.31, name: '低点击不出单' },
-])
+const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const activeName = ref<number>(0)
 const router = useRouter()
 // 运营备注
@@ -1196,7 +1190,7 @@ const initChart1 = () => {
       {
         name: '实际值',
         type: 'line',
-        data: [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3],
+        data: _seasonalCoefficient.actualList,
         itemStyle: {
           color: '#52bfff',
         },
@@ -1205,7 +1199,7 @@ const initChart1 = () => {
       {
         name: '参考值',
         type: 'line',
-        data: [1.21, 1.38, 1.38, 1.38, 1.2, 1.38, 1.2, 1.2, 1.2, 1.38, 1.38, 1.38],
+        data: _seasonalCoefficient.referenceList,
         itemStyle: {
           color: '#ff8fa5',
         },
@@ -1445,6 +1439,10 @@ const handleWidth = (item: any) => {
     }
   }
 }
+let _seasonalCoefficient = {
+  actualList: [],
+  referenceList: []
+} 
 const cellClick = (row: any, column: any) => {
   const label = column.label
   switch (label) {
@@ -1475,7 +1473,7 @@ const cellClick = (row: any, column: any) => {
     }
     case '季节系数': {
       seasonalVisible.value = true
-
+      _seasonalCoefficient = row.seasonalCoefficient
       break
     }
     case '小类排名': {
@@ -1683,23 +1681,6 @@ const fetchData = async () => {
   list.value = data.list
   list.value.forEach((item) => {
     item.displayRating = computed(() => getAmazonStars(item.rating!))
-    item.saleTrendList = {
-      xAxis: [
-        '21-04-1',
-        '21-08-1',
-        '22-05-1',
-        '22-06-1',
-        '22-07-1',
-        '22-09-1',
-        '22-10-1',
-        '23-01-1',
-        '23-05-1',
-        '23-07-1',
-        '23-10-1',
-        '23-11-1',
-      ],
-      yAxis: [6611, 53824, 18712, 18991, 21611, 10277, 15420, 9159, 4192, 3064, 5619, 4500],
-    }
     item.storageAge = `
       <div class="storage-list">
         ${storageList
@@ -1830,6 +1811,9 @@ const fetchColumn = async () => {
     if (item.prop === 'monthAdv') {
       item.minWidth = '110'
     }
+    // if (item.prop === 'trend') {
+    //   item.minWidth = '200'
+    // }
     if (['skuImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
@@ -2080,5 +2064,14 @@ onBeforeMount(() => {
   white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
 }
 </style>

@@ -24,6 +24,15 @@ const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
   
 const option = reactive<any>({
+  tooltip: {
+    show: true,
+    confine: true,
+    formatter: '{c}',
+    textStyle: {
+      fontSize: 14, // 设置字体大小
+    },
+    padding: [0, 5], // 设置内边距，调整提示框的宽高
+  },
   grid: {
     top:1,
     left: 1,
@@ -55,7 +64,13 @@ const option = reactive<any>({
       type: 'bar',
       data: props.yAxisData,
       barGap:'10',
-      barCategoryGap:'1'
+      barCategoryGap: '1',
+      emphasis: {
+        itemStyle: {
+          color: '#4e88f3',  // 设置鼠标悬停时的颜色
+          opacity: 0.5
+        }
+      }
     }
   ]
 })
