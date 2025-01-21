@@ -523,6 +523,7 @@ const showFeeNameSetting = async () => {
   // 初始化为第一个选项的id
   selectId.value = selectList.value[0].id
   fetchFeeNameSetting()
+  fetchSelectList()
 }
 const fetchFeeNameSetting = async () => {
   const { data: res } = await getForwarderCostList({
@@ -630,6 +631,7 @@ const confirmModifyOrCopy = async () => {
     if (data) {
       $baseMessage('货代费用渠道修改成功', 'success')
       modifyOrCopyVisible.value = false
+      fetchData()
     }
   } else if (modifyOrCopy.value === 'copy') {
     // 执行复制逻辑
@@ -661,6 +663,7 @@ const calculateSafeDays = async (row: any) => {
 // 展示新增渠道
 const handleShowAddChannel = async () => {
   addNewChannelVisible.value = true
+  fetchSelectList()
 }
 const queryData = () => {
   queryForm.pageNo = 1

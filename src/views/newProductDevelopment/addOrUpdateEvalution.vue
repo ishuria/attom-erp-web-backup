@@ -59,7 +59,11 @@
             <el-input v-model="inputForm.amazonAdCpc" clearable style="width: 600px" />
           </el-form-item>
           <el-form-item label="类目平均转化率" prop="categoryAvgConversionRate">
-            <el-input v-model="inputForm.categoryAvgConversionRate" clearable style="width: 600px" />
+            <el-input v-model="inputForm.categoryAvgConversionRate" clearable style="width: 600px" >
+              <template #suffix>
+                %
+              </template>
+            </el-input>
           </el-form-item>
           <el-form-item label="亚马逊首页数据上传">
             <el-upload
@@ -300,7 +304,7 @@ const handlerSave = async() =>{
   formData.append('averageSales360Days', inputForm.averageSales360Days)
   formData.append('top80PercentClickedProductsCount', inputForm.top80PercentClickedProductsCount)
   formData.append('amazonAdCpc', inputForm.amazonAdCpc)
-  formData.append('categoryAvgConversionRate', inputForm.categoryAvgConversionRate)
+  formData.append('categoryAvgConversionRate', (Number(inputForm.categoryAvgConversionRate) / 100).toString())
   
   // formData可以添加同名数据，
   fileList.value.forEach((v:any) => {
@@ -414,7 +418,7 @@ onMounted(async () => {
     inputForm.averageSales360Days = data.averageSales360Days    
     inputForm.top80PercentClickedProductsCount = data.productsCount    
     inputForm.amazonAdCpc = data.cpc    
-    inputForm.categoryAvgConversionRate = data.avgConversionRate
+    inputForm.categoryAvgConversionRate = (data.avgConversionRate * 100).toFixed(2)
 
     outputForm.evaluationId = data.idNo
     outputForm.marketCapacity = data.marketVolume

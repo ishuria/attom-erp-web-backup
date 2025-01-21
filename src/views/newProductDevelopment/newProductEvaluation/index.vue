@@ -46,14 +46,15 @@
       ref="tableRef"
       v-loading="listLoading"
       :border="true"
+      :cell-style="cellStyle"
       :data="evaluationList"
+      :header-cell-style="{ textAlign: 'center' }"
       :stripe="true"
       @cell-click="keyWordTrendCellClick"
     >
       <el-table-column
         v-for="(item, index) in indexColumns"
         :key="index"
-        align="center"
         :label="item.label"
         :min-width="handleWidth(item)"
         :prop="item.prop"
@@ -234,9 +235,10 @@ import type {
   IShared,
 } from '/@/type/evaluation/evaluationType'
 
-import { getChannelList } from '~/src/api/devlocal/encasement'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import { getChannelList } from '/@/api/devlocal/encasement'
+import { flexColumnWidth } from '/@/utils/tableColum'
 import { convertString } from '/@/utils/stringUtils'
+import type { CSSProperties } from 'vue'
 
 defineOptions({
   name: 'Evaluation',
@@ -319,13 +321,16 @@ const fixed = ref<string>('right')
 const handleWidth = (item: any) => {
   switch (item.label) {
     case '来源': {
-      return flexColumnWidth(evaluationList.value, '来源', 'productSource')
+      return flexColumnWidth(evaluationList.value, '来源', 'productSource', 10)
     }
     case '亚马逊前台关键词': {
-      return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords')
+      return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords', 0)
     }
     case '亚马逊后台关键词': {
-      return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords')
+      return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords', 0)
+    }
+    case '年市场容量': {
+      return flexColumnWidth(evaluationList.value, '年市场容量', 'marketVolume', 10)
     }
     // No default
   }
@@ -549,7 +554,16 @@ const updateSharedVisibleValue = (newValue: boolean) => {
 const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (['亚马逊前台关键词', '亚马逊后台关键词', '年市场容量'].includes(data.column.label)) {
+    return {
+      textAlign: 'left'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
+}
 onActivated(() => {
   tableRef.value?.doLayout()
 })
