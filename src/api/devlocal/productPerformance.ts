@@ -9,9 +9,12 @@ import type {
   IGetOperationArtListReq,
   IGetOperationArtListRes,
   IGetOperationAsinListRes,
+  IGetOperationColumnListRes,
   IGetOperationParentAsinRes,
   IGetOperationTypeListReq,
-  IGetOperationTypeListRes
+  IGetOperationTypeListRes,
+  IHideOrShowOperationColumnReq,
+  IUpdateSortOperationColumnReq
 } from '/@/type/storeOperation/productPerformanceType'
 
 
@@ -150,6 +153,36 @@ export function getOperationParentAsinList(data: IGetOperationAmazonSKUListReq):
 export function getOperationAmazonArtDesignList(data: IGetOperationArtListReq): Promise<IGetOperationArtListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/art/design/sku/list`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现列名查询
+ */
+export function getOperationColumnList(params: { type: number }): Promise<IGetOperationColumnListRes> {
+  return request({
+    url: `${BASE_API}/operation/column/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description 产品看板表现列隐藏
+ */
+export function hideOrShowOperationColumn(data: IHideOrShowOperationColumnReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/column/hiddenOrShow`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现看板-列拖动
+ */
+export function updateSortOperationColumn(data: IUpdateSortOperationColumnReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/column/update/sort`,
     method: 'post',
     data
   })

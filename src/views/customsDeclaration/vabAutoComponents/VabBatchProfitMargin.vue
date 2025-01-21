@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
       <el-table-column label="合同编号" min-width="" prop="contractNumber"/>
-      <el-table-column label="Shipment ID" min-width="" prop=""/>
+      <el-table-column label="Shipment ID" min-width="" prop="shipmentId"/>
       <el-table-column label="总CIF售价$" min-width="" prop="totalCif"/>
       <el-table-column label="运费$" min-width="" prop="totalFreightFee"/>
       <el-table-column label="汇率" min-width="" prop="rate"/>

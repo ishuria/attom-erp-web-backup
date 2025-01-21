@@ -15,7 +15,6 @@
                   :max-collapse-tags="1"
                   multiple
                   placeholder="请选择站点"
-                  :placement="'bottom-end'"
                   style="width: 220px"
                   @change="queryData"
                 >
@@ -77,7 +76,7 @@
                 >
                   <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                   <span style="flex: 1">{{ item.label }}</span>
-                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center;">
                     <vab-icon icon="eye-line" />
                   </span>
                   <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
@@ -104,6 +103,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -114,8 +114,8 @@
           @cell-click="cellClick"
         >
           <el-table-column
-            v-for="(item, index) in checkList1"
-            :key="index"
+            v-for="(item) in checkList1"
+            :key="item.columnId"
             :fixed="item.isFixed"
             :label="item.label"
             :min-width="handleWidth(item)"
@@ -147,6 +147,11 @@
                 可售
                 <br />
                 含在途
+              </span>
+              <span v-if="item.prop === 'outletDeal'">
+                可报
+                <br />
+                Outlet Deal
               </span>
             </template>
             <template #default="{ row }">
@@ -325,7 +330,7 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columnsAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove2">
+              <vab-draggable v-model="columnsAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-end="handleEnd2" :on-move="handleMove2">
                 <div
                   v-for="item in columnsAsin"
                   :key="item.label"
@@ -334,12 +339,12 @@
                 >
                   <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                   <span style="flex: 1">{{ item.label }}</span>
-                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
-                    <el-icon><view /></el-icon>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon v-show="item.checked" icon="eye-line" />
                   </span>
                   <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
-                    <el-icon v-show="!item.checked"><hide /></el-icon>
-                    <el-icon v-show="item.checked"><view /></el-icon>
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
                   </span>
                 </div>
               </vab-draggable>
@@ -361,6 +366,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -370,8 +376,8 @@
           @cell-click="cellClick"
         >
           <el-table-column
-            v-for="(item, index) in checkList2"
-            :key="index"
+            v-for="(item) in checkList2"
+            :key="item.columnId"
             :fixed="item.isFixed"
             :label="item.label"
             :min-width="handleWidth(item)"
@@ -403,6 +409,11 @@
                 可售
                 <br />
                 含在途
+              </span>
+              <span v-if="item.prop === 'outletDeal'">
+                可报
+                <br />
+                Outlet Deal
               </span>
             </template>
             <template #default="{ row }">
@@ -576,7 +587,7 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columnsParentAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove3">
+              <vab-draggable v-model="columnsParentAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-end="handleEnd3" :on-move="handleMove3">
                 <div
                   v-for="item in columnsParentAsin"
                   :key="item.label"
@@ -585,12 +596,12 @@
                 >
                   <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                   <span style="flex: 1">{{ item.label }}</span>
-                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
-                    <el-icon><view /></el-icon>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon v-show="item.checked" icon="eye-line" />
                   </span>
                   <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
-                    <el-icon v-show="!item.checked"><hide /></el-icon>
-                    <el-icon v-show="item.checked"><view /></el-icon>
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
                   </span>
                 </div>
               </vab-draggable>
@@ -612,6 +623,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -621,8 +633,8 @@
           @cell-click="cellClick"
         >
           <el-table-column
-            v-for="(item, index) in checkList3"
-            :key="index"
+            v-for="(item) in checkList3"
+            :key="item.columnId"
             :fixed="item.isFixed"
             :label="item.label"
             :min-width="handleWidth(item)"
@@ -774,7 +786,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Hide, Search, Star } from '@element-plus/icons-vue'
+import { Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
@@ -788,13 +800,17 @@ import {
   getDevelopUserList,
   getOperationAmazonSKUList,
   getOperationAsinList,
+  getOperationColumnList,
   getOperationParentAsinList,
+  hideOrShowOperationColumn,
   updateOperationSKUDisContinuedStatus,
   updateOperationSKUOperateTypeList,
+  updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
+  IGetOperationColumnList,
   IGetOperationParentAsinList,
 } from '/@/type/storeOperation/productPerformanceType'
 import { getAmazonStars } from '/@/utils/rate'
@@ -838,13 +854,13 @@ const currencyList = ref<optionType[]>([])
 const developUserList = ref<optionType[]>([])
 const siteList = ref<optionType[]>([])
 const operateUserList = ref<optionType[]>([])
-const checkAll = ref<boolean>(false)
+const checkAll = ref<boolean>(true)
 const indeterminate = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  site: [0, 1],
+  site: [],
   operationUserId: 1,
   developUserId: 1,
 })
@@ -852,7 +868,7 @@ const asinQueryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  site: [0],
+  site: [],
   operationUserId: 1,
   developUserId: 1,
 })
@@ -860,7 +876,7 @@ const pAsinQueryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  site: [0],
+  site: [],
   operationUserId: 1,
   developUserId: 1,
 })
@@ -951,379 +967,6 @@ const handleCheckAll = (val: CheckboxValueType) => {
 const showRemark = () => {
   remarkVisible.value = true
 }
-// interface IData {
-//   componentImage: string;
-//   sku: string;
-//   rate: number;
-//   asin: string;
-//   pAsin: string;
-//   saleTrendList: {};
-//   todaySell: number;
-//   todayOrder: number;
-//   todaySellD: number;
-//   todayAd: number;
-//   ad: number;
-//   pieChart: string;
-//   seasonalCoefficient: number;
-//   classify: string;
-//   sRank: number;
-//   bRank: number;
-//   topProduct: number;
-//   remark: string;
-//   fbaStorageFee: number;
-//   currentPrice: number;
-//   trialGrossProfit: number;
-//   fba: number;
-//   fbaA: number;
-//   fbaD: number;
-//   conversion: number;
-//   click: number;
-//   totalConvert: number;
-//   monthlySell: number;
-//   monthlyNetProfit: number;
-//   monthlySales: number;
-//   monthlyNetInterestRate: number;
-//   monthlyAdSales: number;
-//   monthlyAdSpend: number;
-//   monthlyAd: number;
-//   monthlyACOS: number;
-//   monthlyTACOS: number;
-//   yearACOS: number;
-//   yearTACOS: number;
-//   removeValue: number;
-//   remove: number;
-//   replaceValue: number;
-//   replace: number;
-//   monthlyReturns: number;
-//   monthlyRefund: number;
-//   VOCSatisfaction: number;
-//   VOCDefectP: number;
-//   VOCDefect: number;
-//   VOCOrder: number;
-//   newReleases: number;
-//   storageAge: string;
-//   remainingStock: string;
-//   receiving: number;
-//   recentlyStorage: string;
-//   totalStorage: number;
-//   stockSale: number;
-//   saleTransit: number;
-//   outOfStock: number;
-//   order: number;
-//   sign: string;
-//   monthlyAvailabilityRate: number;
-//   lowFeeDays: number;
-//   estimatedFees: number;
-//   profitLossPrice: number;
-//   profitPrice: number;
-//   suggestions: string;
-//   status: string;
-//   productDes: string;
-//   person: string;
-//   id: number;
-// }
-// const fakeData = ref<IData[]>([
-//   {
-//     componentImage: 'https://picsum.photos/200/200',
-//     sku: 'SKU12345',
-//     rate: 4.7,
-//     asin: 'B08N5M7S6K',
-//     pAsin: 'B08N5M7S6K',
-//     saleTrendList: {
-//       xAxis: [
-//         "21-04-1",
-// 				"21-08-1",
-// 				"22-05-1",
-// 				"22-06-1",
-// 				"22-07-1",
-// 				"22-09-1",
-// 				"22-10-1",
-// 				"23-01-1",
-// 				"23-05-1",
-// 				"23-07-1",
-// 				"23-10-1",
-// 				"23-11-1"
-//       ],
-//       yAxis: [
-//         6611,
-// 				53824,
-// 				18712,
-// 				18991,
-// 				21611,
-// 				10277,
-// 				15420,
-// 				9159,
-// 				4192,
-// 				3064,
-// 				5619,
-// 				4500
-//       ]
-//     },
-//     todaySell: 100,
-//     todayOrder: 50,
-//     todaySellD: 1500,
-//     todayAd: 10,
-//     ad: 1,
-//     pieChart: '',
-//     seasonalCoefficient: 1.5,
-//     classify: '电子产品',
-//     sRank: 5,
-//     bRank: 2,
-//     topProduct: 200,
-//     remark: '备注信息1',
-//     fbaStorageFee: 100,
-//     currentPrice: 29.99,
-//     trialGrossProfit: 0.5,
-//     fba: 3.99,
-//     fbaA: 2.99,
-//     fbaD: 5.66,
-//     conversion: 12,
-//     click: 300,
-//     totalConvert: 25,
-//     monthlySell: 1500,
-//     monthlyNetProfit: 5000,
-//     monthlySales: 45000,
-//     monthlyNetInterestRate: 11.1,
-//     monthlyAdSales: 1500,
-//     monthlyAdSpend: 800,
-//     monthlyAd: 30,
-//     monthlyACOS: 15,
-//     monthlyTACOS: 10,
-//     yearACOS: 12,
-//     yearTACOS: 8,
-//     removeValue: 100,
-//     remove: 5,
-//     replaceValue: 200,
-//     replace: 10,
-//     monthlyReturns: 3,
-//     monthlyRefund: 2,
-//     VOCSatisfaction: 1,
-//     VOCDefectP: 1,
-//     VOCDefect: 10,
-//     VOCOrder: 200,
-//     newReleases: 20,
-//     storageAge: '81-270 0\n71-360 0',
-//     remainingStock: '100/831',
-//     receiving: 50,
-//     recentlyStorage: '6天/1400\n12天/200',
-//     totalStorage: 500,
-//     stockSale: 300,
-//     saleTransit: 100,
-//     outOfStock: 0,
-//     order: 150,
-//     sign: '已签收',
-//     monthlyAvailabilityRate: 95,
-//     lowFeeDays: 5,
-//     estimatedFees: 2000,
-//     profitLossPrice: 18,
-//     profitPrice: 22,
-//     suggestions: '增加广告投放',
-//     status: '正常',
-//     productDes: '这是一款电子产品',
-//     person: '张三',
-//     id: 1
-//   },
-//   {
-//     componentImage: 'https://picsum.photos/200/200',
-//     sku: 'SKU67890',
-//     rate: 4.0,
-//     asin: 'B08XYZ1234',
-//     pAsin: 'B08XYZ1234',
-//     saleTrendList: {
-//       xAxis: [
-//         "21-04-1",
-// 				"21-08-1",
-// 				"22-05-1",
-// 				"22-06-1",
-// 				"22-07-1",
-// 				"22-09-1",
-// 				"22-10-1",
-// 				"23-01-1",
-// 				"23-05-1",
-// 				"23-07-1",
-// 				"23-10-1",
-// 				"23-11-1"
-//       ],
-//       yAxis: [
-//         6611,
-// 				53824,
-// 				18712,
-// 				18991,
-// 				21611,
-// 				10277,
-// 				15420,
-// 				9159,
-// 				4192,
-// 				3064,
-// 				5619,
-// 				4500
-//       ]
-//     },
-//     todaySell: 200,
-//     todayOrder: 100,
-//     todaySellD: 2500,
-//     todayAd: 15,
-//     ad: 0,
-//     pieChart: '',
-//     seasonalCoefficient: 1.8,
-//     classify: '家居用品',
-//     sRank: 3,
-//     bRank: 1,
-//     topProduct: 400,
-//     remark: '备注信息2',
-//     fbaStorageFee: 150,
-//     currentPrice: 45.99,
-//     trialGrossProfit: 15.5,
-//     fba: 3,
-//     fbaA: 4,
-//     fbaD: 5,
-//     conversion: 10,
-//     click: 500,
-//     totalConvert: 20,
-//     monthlySell: 2000,
-//     monthlyNetProfit: 7000,
-//     monthlySales: 80000,
-//     monthlyNetInterestRate: 8.75,
-//     monthlyAdSales: 2500,
-//     monthlyAdSpend: 1200,
-//     monthlyAd: 24,
-//     monthlyACOS: 14,
-//     monthlyTACOS: 9,
-//     yearACOS: 13,
-//     yearTACOS: 7,
-//     removeValue: 200,
-//     remove: 3,
-//     replaceValue: 400,
-//     replace: 12,
-//     monthlyReturns: 2,
-//     monthlyRefund: 1,
-//     VOCSatisfaction: 2,
-//     VOCDefectP: 2,
-//     VOCDefect: 5,
-//     VOCOrder: 300,
-//     newReleases: 15,
-//     storageAge: '81-270 0\n71-360 0',
-//     remainingStock: '100/831',
-//     receiving: 70,
-//     recentlyStorage: '6天/1400\n12天/200',
-//     totalStorage: 600,
-//     stockSale: 350,
-//     saleTransit: 120,
-//     outOfStock: 0,
-//     order: 180,
-//     sign: '未签收',
-//     monthlyAvailabilityRate: 98,
-//     lowFeeDays: 4,
-//     estimatedFees: 2500,
-//     profitLossPrice: 22,
-//     profitPrice: 26,
-//     suggestions: '增加促销活动',
-//     status: '待处理',
-//     productDes: '这是一款家居用品',
-//     person: '李四',
-//     id: 2
-//   },
-//   {
-//     componentImage: 'https://picsum.photos/200/200',
-//     sku: 'SKU12345',
-//     rate: 4.3,
-//     asin: 'B08N5M7S6K',
-//     pAsin: 'B08N5M7S6K',
-//     saleTrendList: {
-//       xAxis: [
-//         "21-04-1",
-// 				"21-08-1",
-// 				"22-05-1",
-// 				"22-06-1",
-// 				"22-07-1",
-// 				"22-09-1",
-// 				"22-10-1",
-// 				"23-01-1",
-// 				"23-05-1",
-// 				"23-07-1",
-// 				"23-10-1",
-// 				"23-11-1"
-//       ],
-//       yAxis: [
-//         6611,
-// 				53824,
-// 				18712,
-// 				18991,
-// 				21611,
-// 				10277,
-// 				15420,
-// 				9159,
-// 				4192,
-// 				3064,
-// 				5619,
-// 				4500
-//       ]
-//     },
-//     todaySell: 100,
-//     todayOrder: 50,
-//     todaySellD: 1500,
-//     todayAd: 10,
-//     ad: 0,
-//     pieChart: '',
-//     seasonalCoefficient: 1.5,
-//     classify: '电子产品',
-//     sRank: 5,
-//     bRank: 2,
-//     topProduct: 200,
-//     remark: '备注信息1',
-//     fbaStorageFee: 100,
-//     currentPrice: 29.99,
-//     trialGrossProfit: 10.5,
-//     fba: 3,
-//     fbaA: 4,
-//     fbaD: 5,
-//     conversion: 12,
-//     click: 300,
-//     totalConvert: 25,
-//     monthlySell: 1500,
-//     monthlyNetProfit: 5000,
-//     monthlySales: 45000,
-//     monthlyNetInterestRate: 11.1,
-//     monthlyAdSales: 1500,
-//     monthlyAdSpend: 800,
-//     monthlyAd: 30,
-//     monthlyACOS: 15,
-//     monthlyTACOS: 10,
-//     yearACOS: 12,
-//     yearTACOS: 8,
-//     removeValue: 100,
-//     remove: 5,
-//     replaceValue: 200,
-//     replace: 10,
-//     monthlyReturns: 3,
-//     monthlyRefund: 2,
-//     VOCSatisfaction: 3,
-//     VOCDefectP: 1,
-//     VOCDefect: 10,
-//     VOCOrder: 200,
-//     newReleases: 20,
-//     storageAge: '81-270 0\n71-360 0',
-//     remainingStock: '100/831',
-//     receiving: 50,
-//     recentlyStorage: '6天/1400\n12天/200',
-//     totalStorage: 500,
-//     stockSale: 300,
-//     saleTransit: 100,
-//     outOfStock: 0,
-//     order: 150,
-//     sign: '已签收',
-//     monthlyAvailabilityRate: 95,
-//     lowFeeDays: 5,
-//     estimatedFees: 2000,
-//     profitLossPrice: 18,
-//     profitPrice: 22,
-//     suggestions: '增加广告投放',
-//     status: '正常',
-//     productDes: '这是一款电子产品',
-//     person: '张三',
-//     id: 3
-//   },
-// ])
 
 function getRowValue(row: any, label: string, labelMap: any): number {
   const key = labelMap.get(label)
@@ -1408,988 +1051,9 @@ const checkList2 = computed(() => {
 const checkList3 = computed(() => {
   return columnsParentAsin.value.filter((_: any) => _.checked)
 })
-const columns = ref<any>([
-  {
-    label: '图片',
-    prop: 'skuImgUrl',
-    disableCheck: true,
-    checked: true,
-    width: 75,
-    isFixed: 'left',
-  },
-  {
-    label: 'SKU',
-    prop: 'sku',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left',
-  },
-  {
-    label: 'ASIN',
-    prop: 'asin',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left',
-  },
-  {
-    label: '父体ASIN',
-    prop: 'parentAsin',
-    disableCheck: true,
-    checked: true,
-    minWidth: 110,
-    isFixed: 'left',
-  },
-  {
-    label: '站点',
-    prop: 'siteName',
-    checked: true,
-    minWidth: 150,
-  },
-  {
-    label: '销量趋势(点击看明细)',
-    prop: 'trend',
-    checked: true,
-    minWidth: 180,
-  },
-  {
-    label: '今销#',
-    prop: 'currentSalesNumber',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今单#',
-    prop: 'currentSalesOrder',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今销',
-    prop: 'currentSalesPrice',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今广%',
-    prop: 'currentAdvertisement',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '广告',
-    prop: 'advertisementStatus',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '饼图',
-    prop: 'pieChart',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '季节系数',
-    prop: 'seasonalCoefficient',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营分类',
-    prop: 'operationTypeId',
-    checked: true,
-    minWidth: 150,
-  },
-  {
-    label: '停产',
-    prop: 'stopProductStatus',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '小类排名',
-    prop: 'nowSubcategoryRanking',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '大类排名',
-    prop: 'nowMajorCategoryRanking',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '头部产品#',
-    prop: 'headerCount',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营备注',
-    prop: 'operationRemark',
-    checked: true,
-    minWidth: 150,
-  },
-  {
-    label: 'FBA仓储费',
-    prop: 'fbaStorageFee',
-    checked: true,
-    minWidth: 150,
-  },
-  {
-    label: '当前售价',
-    prop: 'sellingPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '试算毛利',
-    prop: 'grossProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '自量FBA',
-    prop: 'selfAssessmentFba',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '亚马逊FBA',
-    prop: 'amazonFba',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'FBA差异',
-    prop: 'differenceFba',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '2周广告转化',
-    prop: 'tWksAdvRate',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周广告点击',
-    prop: 'tWksClickRate',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周总转化',
-    prop: 'tWksTotalConv',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月销量',
-    prop: 'monthSalesVolume',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '月净利润',
-    prop: 'monthNetProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月销售额',
-    prop: 'monthSalesPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月净利率',
-    prop: 'monthNetProfitMargin',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月广告销售',
-    prop: 'monthAdvSales',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月广告支出',
-    prop: 'monthAdvExpenditure',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月广告%',
-    prop: 'monthAdv',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月ACOS',
-    prop: 'monthAcos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月TACOS',
-    prop: 'monthTacos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '1年ACOS',
-    prop: 'yearAcos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '1年TACOS',
-    prop: 'yearTacos',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '移除量',
-    prop: 'removalAmount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '替换量',
-    prop: 'replacementAmount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '月退货%',
-    prop: 'monthReturnGoods',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月退款%',
-    prop: 'monthRefund',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: 'VOC满意度',
-    prop: 'vocSatisfaction',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: 'VOC缺陷%',
-    prop: 'vocDefect',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC缺陷#',
-    prop: 'vocNcxCount',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC总订单',
-    prop: 'vocTotalOrderCount',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '上新',
-    prop: 'newArrivalDay',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '库龄',
-    prop: 'inventoryAge',
-    checked: true,
-    minWidth: 180,
-  },
-  {
-    label: '剩余库存',
-    prop: 'availableInventory',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '接收中',
-    prop: 'acceptingCount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '最近入库',
-    prop: 'recentlyInboundStorage',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '总入库',
-    prop: 'inboundStorageTotal',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '库存可售',
-    prop: 'esAvailableSaleDay',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '可售含在途',
-    prop: 'esAvailableSaleDayTotal',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '断货',
-    prop: 'outOfStock',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '订货#',
-    prop: '',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '计划#',
-    prop: 'planPoPurchaseSkuNumber',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '签收',
-    prop: '',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '半年有货率',
-    prop: 'availableRate',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '低量仓储费天数',
-    prop: 'warehousing',
-    checked: true,
-    minWidth: 140,
-  },
-  {
-    label: '预估下月仓储费',
-    prop: 'estimateNextMonthStorageFee',
-    checked: true,
-    minWidth: 140,
-  },
-  {
-    label: '盈亏售价',
-    prop: 'profitLossSellingPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '30毛利售价',
-    prop: 'grossSellingPrice',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '操作建议',
-    prop: 'operateSuggestion',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '状态',
-    prop: 'status',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '产品描述',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '产品经理',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-])
-const columnsAsin = ref<any>([
-  {
-    label: '图片',
-    prop: 'asinImgUrl',
-    disableCheck: true,
-    checked: true,
-    width: 75,
-    isFixed: 'left',
-  },
-  {
-    label: 'ASIN',
-    prop: 'asin',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left',
-  },
-  {
-    label: 'SKU',
-    prop: 'sku',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left',
-  },
-  {
-    label: '父体ASIN',
-    prop: 'parentAsin',
-    disableCheck: true,
-    checked: true,
-    minWidth: 110,
-    isFixed: 'left',
-  },
-  {
-    label: '站点',
-    prop: 'siteName',
-    checked: true,
-    minWidth: 150,
-  },
-  {
-    label: '销量趋势(点击看明细)',
-    prop: 'trend',
-    checked: true,
-    minWidth: 180,
-  },
-  {
-    label: '今销#',
-    prop: 'currentSalesNumber',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今单#',
-    prop: 'currentSalesOrder',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今销',
-    prop: 'currentSalesPrice',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今广%',
-    prop: 'currentAdvertisement',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '广告',
-    prop: 'advertisementStatus',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '饼图',
-    prop: 'pieChart',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '季节系数',
-    prop: 'seasonalCoefficient',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营分类',
-    prop: 'operationTypeId',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '小类排名',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '大类排名',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '头部产品#',
-    prop: 'headerCount',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营备注',
-    prop: 'operationRemark',
-    checked: true,
-    minWidth: 150,
-  },
-  {
-    label: 'FBA仓储费',
-    prop: 'fbaStorageFee',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周广告转化',
-    prop: 'tWksAdvRate',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周广告点击',
-    prop: 'tWksClickRate',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周总转化',
-    prop: 'tWksTotalConv',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月销量',
-    prop: 'monthSalesVolume',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '月净利润',
-    prop: 'monthNetProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月销售额',
-    prop: 'monthSalesPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月净利率',
-    prop: 'monthNetProfitMargin',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月广告销售',
-    prop: 'monthAdvSales',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月广告支出',
-    prop: 'monthAdvExpenditure',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月广告%',
-    prop: 'monthAdv',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月ACOS',
-    prop: 'monthAcos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月TACOS',
-    prop: 'monthTacos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '1年ACOS',
-    prop: 'yearAcos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '1年TACOS',
-    prop: 'yearTacos',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '移除量',
-    prop: 'removalAmount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '替换量',
-    prop: 'replacementAmount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '月退货%',
-    prop: 'monthReturnGoods',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月退款%',
-    prop: 'monthRefund',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '上新',
-    prop: 'newArrivalDay',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '库龄',
-    prop: 'inventoryAge',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '剩余库存',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '接收中',
-    prop: 'acceptingCount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '最近入库',
-    prop: 'recentlyInboundStorage',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '总入库',
-    prop: 'inboundStorageTotal',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '库存可售',
-    prop: 'esAvailableSaleDay',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '可售含在途',
-    prop: 'esAvailableSaleDayTotal',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '断货',
-    prop: 'outOfStock',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '订货#',
-    prop: 'orderSkuNumber',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '计划#',
-    prop: 'planPoPurchaseSkuNumber',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '签收',
-    prop: 'quantityReceived',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '半年有货率',
-    prop: 'availableRate',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '预估下月仓储费',
-    prop: 'estimateNextMonthStorageFee',
-    checked: true,
-    minWidth: 140,
-  },
-  {
-    label: '操作建议',
-    prop: 'operateSuggestion',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '状态',
-    prop: 'status',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '产品描述',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '产品经理',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-])
-const columnsParentAsin = ref<any>([
-  {
-    label: '图片',
-    prop: 'asinImgUrl',
-    disableCheck: true,
-    checked: true,
-    width: 75,
-    isFixed: 'left',
-  },
-  {
-    label: '父体ASIN',
-    prop: 'parentAsin',
-    disableCheck: true,
-    checked: true,
-    minWidth: 110,
-    isFixed: 'left',
-  },
-  {
-    label: 'SKU',
-    prop: 'sku',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left',
-  },
-  {
-    label: '站点',
-    prop: 'siteName',
-    checked: true,
-    minWidth: 150,
-  },
-  {
-    label: '销量趋势(点击看明细)',
-    prop: 'trend',
-    checked: true,
-    minWidth: 180,
-  },
-  {
-    label: '今销#',
-    prop: 'currentSalesNumber',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今单#',
-    prop: 'currentSalesOrder',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今销',
-    prop: 'currentSalesPrice',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '今广%',
-    prop: 'currentAdvertisement',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '广告',
-    prop: 'advertisementStatus',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '饼图',
-    prop: 'pieChart',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '小类排名',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '大类排名',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: 'FBA仓储费',
-    prop: 'fbaStorageFee',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周广告转化',
-    prop: 'tWksAdvRate',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周广告点击',
-    prop: 'tWksClickRate',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '2周总转化',
-    prop: 'tWksTotalConv',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月销量',
-    prop: 'monthSalesVolume',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '月净利润',
-    prop: 'monthNetProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月销售额',
-    prop: 'monthSalesPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月净利率',
-    prop: 'monthNetProfitMargin',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月广告销售',
-    prop: 'monthAdvSales',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月广告支出',
-    prop: 'monthAdvExpenditure',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '月广告%',
-    prop: 'monthAdv',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月ACOS',
-    prop: 'monthAcos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月TACOS',
-    prop: 'monthTacos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '1年ACOS',
-    prop: 'yearAcos',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '1年TACOS',
-    prop: 'yearTacos',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '移除量',
-    prop: 'removalAmount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '替换量',
-    prop: 'replacementAmount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '月退货%',
-    prop: 'monthReturnGoods',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月退款%',
-    prop: 'monthRefund',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '预估下月仓储费',
-    prop: 'estimateNextMonthStorageFee',
-    checked: true,
-    minWidth: 140,
-  },
-  {
-    label: '状态',
-    prop: 'status',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '产品描述',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '产品经理',
-    prop: '',
-    checked: true,
-    minWidth: 100,
-  },
-])
+const columns = ref<any>([])
+const columnsAsin = ref<any>([])
+const columnsParentAsin = ref<any>([])
 
 const initChart1 = () => {
   option1.value = {
@@ -2604,12 +1268,15 @@ const handleBRankOpened = () => {
 }
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
+    fetchColumn()
     queryData()
     activeName.value = 0
   } else if (tab.props.name === 1) {
+    fetchAsinColumn()
     queryAsinData()
     activeName.value = 1
   } else {
+    fetchPAsinColumn()
     queryPAsinData()
     activeName.value = 2
   }
@@ -2736,11 +1403,17 @@ const handleRouterPush = () => {
     },
   })
 }
-const handleChecked = (item: any) => {
+// 处理列是否隐藏
+const handleChecked = async (item: any) => {
   item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status
+  })
 }
 const handleMove1 = (event: any) => {
-  console.log(event)
 
   const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
@@ -2751,8 +1424,36 @@ const handleMove1 = (event: any) => {
 
   return true // 允许其他操作
 }
-const handleEnd1 = () => {
-  // console.log(event);
+const handleEnd1 = async () => {
+  const req = columns.value.map((item: IGetOperationColumnList, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  }) 
+  await updateSortOperationColumn(req)
+}
+const handleEnd2 = async () => {
+  const req = columnsAsin.value.map((item: IGetOperationColumnList, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+    }
+  }) 
+  await updateSortOperationColumn(req)
+}
+const handleEnd3 = async () => {
+  const req = columnsParentAsin.value.map((item: IGetOperationColumnList, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+    }
+  }) 
+  await updateSortOperationColumn(req)
 }
 const handleMove2 = (event: any) => {
   const { related } = event
@@ -2852,6 +1553,9 @@ const fetchDevelopUserList = async () => {
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
+  queryForm.site = siteList.value.map((_) => _.id)
+  asinQueryForm.site = siteList.value.map((_) => _.id)
+  pAsinQueryForm.site = siteList.value.map((_) => _.id)
 }
 const fetchOperateUserList = async () => {
   const { data } = await getDistributionOptionUserList()
@@ -3001,11 +1705,72 @@ const storageList = [
   { name: '271-360', fba: 216, price: 35.33 },
   { name: '361+', fba: 0 },
 ]
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 0 })
+  columns.value = data
+  columns.value.forEach((item: IGetOperationColumnList) => {
+    item.minWidth = item.width;
+    if (item.prop !== 'skuImgUrl') {
+      delete item.width
+    }
+    if (item.prop === 'siteName') {
+      item.minWidth = '150'
+    }
+    if (item.prop === 'outletDeal') {
+      item.minWidth = '110'
+    }
+    if (item.prop === 'lowVolumeDelivery') {
+      item.minWidth = '130'
+    }
+    if (['skuImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
+      item.isFixed = true
+    }
+  })
+}
+const fetchAsinColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 1 })
+  columnsAsin.value = data
+  columnsAsin.value.forEach((item: IGetOperationColumnList) => {
+    item.minWidth = item.width;
+    if (item.prop !== 'asinImgUrl') {
+      delete item.width
+    }
+    if (item.prop === 'siteName') {
+      item.minWidth = '150'
+    }
+    if (item.prop === 'outletDeal') {
+      item.minWidth = '110'
+    }
+    if (item.prop === 'lowVolumeDelivery') {
+      item.minWidth = '130'
+    }
+    if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
+      item.isFixed = true
+    }
+  })
+}
+const fetchPAsinColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 2 })
+  columnsParentAsin.value = data
+  columnsParentAsin.value.forEach((item: IGetOperationColumnList) => {
+    item.minWidth = item.width;
+    if (item.prop !== 'asinImgUrl') {
+      delete item.width
+    }
+    if (item.prop === 'siteName') {
+      item.minWidth = '150'
+    }
+    if (['asinImgUrl', 'sku', 'parentAsin'].includes(item.prop)) {
+      item.isFixed = true
+    }
+  })
+}
 onBeforeMount(() => {
   fetchSiteList()
   fetchCurrencyList()
   fetchOperateUserList()
   fetchDevelopUserList()
+  fetchColumn()
   fetchData()
 })
 </script>
@@ -3038,7 +1803,7 @@ onBeforeMount(() => {
             .el-form-item:first-child {
               .el-check-tag,
               .el-form-item__label {
-                margin: 0 10px 5px 0;
+                margin: 0 5px 5px 0;
                 border-radius: 99px;
               }
             }
@@ -3071,10 +1836,11 @@ onBeforeMount(() => {
     }
   }
 }
-
-
-:deep(.el-popper) {
-  max-width: 100px;
+.handle {
+  cursor: grab;
+}
+.icon-dis {
+  padding: 6px;
 }
 .icon-hover {
   padding: 6px;

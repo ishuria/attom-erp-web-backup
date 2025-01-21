@@ -1143,3 +1143,38 @@ export interface IGetOperationArtList {
   yearTacos?: number
   [property: string]: any
 }
+
+/**
+ * 产品表现列名查询
+ */
+export interface IGetOperationColumnListRes {
+  data: IGetOperationColumnList[]
+}
+export interface IGetOperationColumnList {
+  checked: boolean
+  columnId: number
+  disableCheck: boolean
+  label: string
+  position: number
+  prop: string
+  userId: number
+  width?: string
+  minWidth?: string
+  isFixed?: boolean
+}
+/**
+ * 产品看板表现列隐藏
+ */
+export interface IHideOrShowOperationColumnReq {
+  userId: number
+  columnId: number
+  status: number //0隐藏 1显示
+}
+/**
+ * 产品表现看板-列拖动
+ */
+export interface IUpdateSortOperationColumnReq {
+  userId: number
+  columnId: number
+  sort: number 
+}
