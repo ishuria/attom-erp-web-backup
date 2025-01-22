@@ -25,7 +25,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select placeholder="请选择币种">
+                <el-select v-model="currencySKU" placeholder="请选择币种" @change="changeCurrencySKU">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -301,6 +301,14 @@
               <span v-if="item.label === '订货#'">
                 {{ row.orderCount }}<br><span style="font-weight: bold;">{{ row.orderTotalNumber }}</span>
               </span>
+              <span v-if="item.label === '开发人员'">
+                <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ row._developNameFull }}</div>
+                  </template>
+                  <span v-html="row._developName"></span>
+                </el-tooltip>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -338,7 +346,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select placeholder="请选择币种">
+                <el-select v-model="currencyAsin" placeholder="请选择币种" @change="changeCurrencyASIN">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -591,6 +599,14 @@
               <span v-if="item.label === '订货#'">
                 {{ row.orderCount }}<br><span style="font-weight: bold;">{{ row.orderTotalNumber }}</span>
               </span>
+              <span v-if="item.label === '开发人员'">
+                <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ row._developNameFull }}</div>
+                  </template>
+                  <span v-html="row._developName"></span>
+                </el-tooltip>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -628,7 +644,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select placeholder="请选择币种">
+                <el-select v-model="currencyPAsin" placeholder="请选择币种" @change="changeCurrencyPASIN">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -838,6 +854,14 @@
                 <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
                 <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
+              <span v-if="item.label === '开发人员'">
+                <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ row._developNameFull }}</div>
+                  </template>
+                  <span v-html="row._developName"></span>
+                </el-tooltip>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -898,13 +922,19 @@ import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/d
 import {
   filterAmazonSKUList,
   filterOperationAmazonAsinList,
+  getCurrencyASINAmazonOperation,
   getCurrencyList,
+  getCurrencyParentASINAmazonOperation,
+  getCurrencySKUAmazonOperation,
   getDevelopUserList,
   getOperationAmazonSKUList,
   getOperationAsinList,
   getOperationColumnList,
   getOperationParentAsinList,
   hideOrShowOperationColumn,
+  updateCurrencyASINAmazonOperation,
+  updateCurrencyParentASINAmazonOperation,
+  updateCurrencySKUAmazonOperation,
   updateOperationSKUDisContinuedStatus,
   updateOperationSKUOperateTypeList,
   updateRemarkAmazonOperation,
@@ -917,7 +947,7 @@ import type {
   IGetOperationParentAsinList,
 } from '/@/type/storeOperation/productPerformanceType'
 import { getAmazonStars } from '/@/utils/rate'
-import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
 defineOptions({
   name: 'ProductPerformance',
 })
@@ -950,6 +980,9 @@ interface optionType {
   label: string
 }
 const currencyList = ref<optionType[]>([])
+const currencySKU = ref<number | undefined>(0)
+const currencyAsin = ref<number | undefined>(0)
+const currencyPAsin = ref<number | undefined>(0)
 const developUserList = ref<optionType[]>([])
 const siteList = ref<optionType[]>([])
 const operateUserList = ref<optionType[]>([])
@@ -1080,6 +1113,7 @@ function formatPercentage(value: number): string {
 const label1 = [
   '今销',
   'FBA仓储费',
+  '自量FBA',
   '亚马逊FBA',
   'FBA差异',
   '月净利润',
@@ -1109,6 +1143,7 @@ const label3 = ['上新', '库存可售', '可售含在途', '断货']
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
   ['FBA仓储费', 'fbaStorageFee'],
+  ['自量FBA', 'selfAssessmentFba'],
   ['亚马逊FBA', 'amazonFba'],
   ['FBA差异', 'differenceFba'],
   ['月净利润', 'monthNetProfit'],
@@ -1431,6 +1466,12 @@ const handleWidth = (item: any) => {
       case '运营分类': {
         return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
       }
+      case '产品描述': {
+        return flexColumnWidth(list.value, '产品描述', 'productDesc');
+      }
+      case '开发人员': {
+        return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
+      }
       default: {
         return item.minWidth
       }
@@ -1449,17 +1490,33 @@ const handleWidth = (item: any) => {
       case '运营分类': {
         return flexColumnWidth(asinList.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
       }
+      case '产品描述': {
+        return flexColumnWidth(asinList.value, '产品描述', 'productDesc');
+      }
+      case '开发人员': {
+        return calculateBrColumnWidth(asinList.value, (row: any) => row._developName, 100)
+      }
       default: {
         return item.minWidth
       }
     }
   } else {
-    if (item.label === 'SKU') {
-      return calculateBrColumnWidth(pAsinList.value, (row: any) => row._sku, 100)
-    } else if (item.label === '父体ASIN') {
-      return flexColumnWidth(pAsinList.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
-    } else {
-      return item.minWidth
+    switch (item.label) {
+      case 'SKU': {
+        return calculateBrColumnWidth(pAsinList.value, (row: any) => row._sku, 100)
+      }
+      case '父体ASIN': {
+        return flexColumnWidth(pAsinList.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
+      }
+      case '产品描述': {
+        return flexColumnWidth(pAsinList.value, '产品描述', 'productDesc');
+      }
+      case '开发人员': {
+        return calculateBrColumnWidth(pAsinList.value, (row: any) => row._developName, 100)
+      }
+      default: {
+        return item.minWidth
+      }
     }
   }
 }
@@ -1638,9 +1695,33 @@ const handlePAsinSizeChange = (value: number) => {
   pAsinQueryForm.pageSize = value
   fetchPAsinData()
 }
+const changeCurrencySKU = async () => {
+  const { data } = await updateCurrencySKUAmazonOperation({
+    currency: currencySKU.value!
+  })
+  if (data) {
+    queryData()
+  }
+}
+const changeCurrencyASIN = async () => {
+  const { data } = await updateCurrencyASINAmazonOperation({
+    currency: currencyAsin.value!
+  })
+  if (data) {
+    queryAsinData()
+  }
+}
+const changeCurrencyPASIN = async () => {
+  const { data } = await updateCurrencyParentASINAmazonOperation({
+    currency: currencyPAsin.value!
+  })
+  if (data) {
+    queryPAsinData()
+  }
+}
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '库龄') {
+  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述', '开发人员'].includes(label)) {
     return {
       textAlign: 'left',
     }
@@ -1667,6 +1748,14 @@ const fetchCurrencyList = async () => {
   const { data } = await getCurrencyList()
   currencyList.value = data
 }
+const fetchCurrency = async () => {
+  const { data: sku } = await getCurrencySKUAmazonOperation()
+  currencySKU.value = sku
+  const { data: asin } = await getCurrencyASINAmazonOperation()
+  currencyAsin.value = asin
+  const { data: pAsin } = await getCurrencyParentASINAmazonOperation()
+  currencyPAsin.value = pAsin
+}
 const fetchDevelopUserList = async () => {
   const { data } = await getDevelopUserList()
   developUserList.value = data
@@ -1684,20 +1773,7 @@ const fetchOperateUserList = async () => {
   operateUserList.value = data
   operateUserList.value.unshift({ id: -1, label: '全部' })
 }
-// 处理","号分隔的SKU换行以及tooltip展示
-function processField(item: any, fieldName: string, max: number) {
-  const fieldArray = item[fieldName]?.split(',')
-  if (fieldArray && fieldArray.length > max) {
-    item[`_${fieldName}`] = [fieldArray[0], fieldArray[1]].join('<br />') // 显示在表格上的处理过的
-    item[`_${fieldName}`] += '...'
-    item[`overflow_${fieldName}`] = true // 判断tooltip是否显示
-    item[`_${fieldName}Full`] = fieldArray.join('\n') // tooltip显示全部内容
-  } else {
-    item[`overflow_${fieldName}`] = false
-    item[`_${fieldName}`] = fieldArray?.join('<br />')!
-    item[`_${fieldName}Full`] = item[`_${fieldName}`]
-  }
-}
+
 const fetchData = async () => {
   listLoading.value = true
   const { site, ...filterQueryForm } = queryForm
@@ -1708,6 +1784,7 @@ const fetchData = async () => {
   total.value = data.total
   list.value = data.list
   list.value.forEach((item) => {
+    processField(item, 'developName', 2)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.storageAge = `
       <div class="storage-list">
@@ -1738,6 +1815,7 @@ const fetchAsinData = async () => {
   asinList.value = data.list
   asinList.value.forEach((item) => {
     processField(item, 'sku', 2)
+    processField(item, 'developName', 2)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.storageAge = `
       <div class="storage-list">
@@ -1768,6 +1846,7 @@ const fetchPAsinData = async () => {
   pAsinList.value = data.list
   pAsinList.value.forEach((item) => {
     processField(item, 'sku', 2)
+    processField(item, 'developName', 2)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
   })
   listLoading.value = false
@@ -1870,6 +1949,7 @@ const fetchPAsinColumn = async () => {
 onBeforeMount(() => {
   fetchSiteList()
   fetchCurrencyList()
+  fetchCurrency()
   fetchOperateUserList()
   fetchDevelopUserList()
   fetchColumn()

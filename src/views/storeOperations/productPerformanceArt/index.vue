@@ -24,7 +24,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="币种">
-            <el-select placeholder="请选择币种">
+            <el-select v-model="currency" placeholder="请选择币种" @change="changeCurrency">
               <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -50,11 +50,11 @@
               <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
               <span style="flex: 1">{{ item.label }}</span>
               <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
-                <el-icon><view /></el-icon>
+                <vab-icon v-show="item.checked" icon="eye-line" />
               </span>
               <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
-                <el-icon v-show="!item.checked"><hide /></el-icon>
-                <el-icon v-show="item.checked"><view /></el-icon>
+                <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                <vab-icon v-show="item.checked" icon="eye-line" />
               </span>
             </div>
           </vab-draggable>
@@ -170,18 +170,19 @@
 </template>
 
 <script lang="ts" setup>
-import { Hide, Search, Star } from '@element-plus/icons-vue'
+import { Search, Star } from '@element-plus/icons-vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import type { CSSProperties } from 'vue'
 import type { CheckboxValueType } from 'element-plus'
-import { getCurrencyList, getOperationAmazonArtDesignList } from '/@/api/devlocal/productPerformance'
+import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getAmazonStars } from '/@/utils/rate'
 
 defineOptions({
   name: 'ProductPerformanceArt'
 })
+const currency = ref<number | undefined>(0)
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const siteList = ref<{ id: number, label: string }[]>([])
@@ -259,7 +260,7 @@ const columns = ref<any>([
     minWidth: 180,
   },
   {
-    label: '今销#',
+    label: '今销量',
     prop: 'currentSalesNumber',
     checked: true,
     minWidth: 90,
@@ -385,6 +386,12 @@ const handleCheckAll = (val: CheckboxValueType) => {
     queryData()
   }
 }
+const changeCurrency = async () => {
+  const { data } = await updateCurrencySKUAmazonOperation({ currency: currency.value! })
+  if (data) {
+    queryData()
+  }
+}
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
 }
@@ -397,20 +404,19 @@ const imagePreviewShow = (url: string) => {
 const handleWidth = (item: any) => {
   
   switch (item.label) {
-  case 'SKU': {
-    return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku')
+    case 'SKU': {
+      return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku')
+    }
+    case 'ASIN': {
+      return flexColumnWidth(list.value, 'ASIN', 'asin')
+    }
+    case '父体ASIN': {
+      return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
+    }
+    default: {
+      return item.minWidth
+    }
   }
-  case 'ASIN': {
-    return flexColumnWidth(list.value, 'ASIN', 'asin')
-  }
-  case '父体ASIN': {
-    return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
-  }
-  default: {
-    return item.minWidth
-  }
-  }
-  
 }
 const handleChecked = (item: any) => {
   item.checked = !item.checked
@@ -464,6 +470,7 @@ const fetchCurrencyList = async () => {
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
+  queryForm.site = siteList.value.map((_) => _.id)
 }
 const fetchData = async () => {
   listLoading.value = true
@@ -512,8 +519,13 @@ const fetchData = async () => {
   }
   listLoading.value = false
 }
+const fetchCurrency = async () => {
+  const { data } = await getCurrencySKUAmazonOperation()
+  currency.value = data
+}
 onBeforeMount(() => {
   fetchCurrencyList()
+  fetchCurrency()
   fetchSiteList()
   fetchData()
 })

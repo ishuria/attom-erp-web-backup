@@ -231,3 +231,23 @@ export function calculateBrColumnWidth(rows: any, getContent: any, baseWidth = 9
 
   return maxWidth + padding;
 }
+
+/**
+ * @description 处理","号分隔的SKU换行以及tooltip展示
+ * @param item 表格的每行
+ * @param fieldName 字段名
+ * @param max 最多显示几行
+ */
+export function processField(item: any, fieldName: string, max: number) {
+  const fieldArray = item[fieldName]?.split(',')
+  if (fieldArray && fieldArray.length > max) {
+    item[`_${fieldName}`] = [fieldArray[0], fieldArray[1]].join('<br />') // 显示在表格上的处理过的
+    item[`_${fieldName}`] += '...'
+    item[`overflow_${fieldName}`] = true // 判断tooltip是否显示
+    item[`_${fieldName}Full`] = fieldArray.join('\n') // tooltip显示全部内容
+  } else {
+    item[`overflow_${fieldName}`] = false
+    item[`_${fieldName}`] = fieldArray?.join('<br />')!
+    item[`_${fieldName}Full`] = item[`_${fieldName}`]
+  }
+}

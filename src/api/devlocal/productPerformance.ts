@@ -198,3 +198,60 @@ export function updateRemarkAmazonOperation(data: IUpdateRemarkAmazonOperationRe
     data
   })
 }
+/**
+ * @description 产品表现-亚马逊看板SKU维度货币
+ */
+export function getCurrencySKUAmazonOperation(): Promise<{ data?: number }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/currency`,
+    method: 'get',
+  })
+}
+/**
+ * @description 产品表现-亚马逊看板Asin维度货币
+ */
+export function getCurrencyASINAmazonOperation(): Promise<{ data?: number }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/asin/currency`,
+    method: 'get',
+  })
+}
+/**
+ * @description 产品表现-亚马逊看板ParentAsin维度货币
+ */
+export function getCurrencyParentASINAmazonOperation(): Promise<{ data?: number }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/parent/asin/currency`,
+    method: 'get',
+  })
+}
+/**
+ * @description 产品表现-亚马逊看板Sku维度货币修改
+ */
+export function updateCurrencySKUAmazonOperation(data: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/currency/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-亚马逊看板Asin维度货币修改
+ */
+export function updateCurrencyASINAmazonOperation(data: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/asin/currency/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-亚马逊看板ParentAsin维度货币修改
+ */
+export function updateCurrencyParentASINAmazonOperation(data: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/parent/asin/currency/update`,
+    method: 'post',
+    data
+  })
+}

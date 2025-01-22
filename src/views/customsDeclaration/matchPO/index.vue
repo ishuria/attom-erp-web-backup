@@ -18,8 +18,9 @@
     </vab-query-form>
     <el-table
       ref="tableRef"
+      v-loading="listLoading"
       border
-      :cell-class-name="getCellClass" :cell-style="CellStyle"
+      :cell-style="CellStyle"
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
@@ -32,31 +33,29 @@
           {{  row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')">
-        <template #default="{ row }">
-          <el-input v-model="row.contractNumber" clearable @change="handleUpdateContractNumber(row)" />
-        </template>
-      </el-table-column>
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')"/>
       <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')"/>
-      <el-table-column label="Reference ID" min-width="130" prop="referenceId">
-        <template #default="{ row }">
-          <el-input v-model="row.referenceId" clearable @change="handleUpdateReferenceId(row)" />
-        </template>
-      </el-table-column>
+      <el-table-column label="Reference ID" min-width="130" prop="referenceId"/>
       <el-table-column label="站点" min-width="130" prop="site"/>
-      <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber">
+      <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber" :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber')"/>
+      <el-table-column label="合并报关" prop="mergeCustomsDeclarationList" :width="calculateBrColumnWidth(list, (row: any) => row.mergeCustomsDeclarationList, 100, 27)">
         <template #default="{ row }">
-          <el-input v-model="row.freightForwardingNumber" clearable @change="handleUpdateFreightForwardingNumber(row)"/>
+          <el-tooltip content=" " :disabled="!row.overflow_mergeCustomsDeclarationList" effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row._mergeCustomsDeclarationListFull }}</div>
+            </template>
+            <span v-html="row._mergeCustomsDeclarationList"></span>
+          </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="合并报关" prop="mergeCustomsDeclarationList" :width="calculateBrColumnWidth(list, (row: any) => row.mergeCustomsDeclarationList)">
+      <el-table-column label="合并清关" prop="mergeCustomsClearanceList" :width="calculateBrColumnWidth(list, (row: any) => row.mergeCustomsClearanceList, 100, 27)">
         <template #default="{ row }">
-          <span v-html="row.mergeCustomsDeclarationList"></span>
-        </template>
-      </el-table-column>
-      <el-table-column label="合并清关" prop="mergeCustomsClearanceList" :width="calculateBrColumnWidth(list, (row: any) => row.mergeCustomsClearanceList)">
-        <template #default="{ row }">
-          <span v-html="row.mergeCustomsClearanceList"></span>
+          <el-tooltip content=" " :disabled="!row.overflow_mergeCustomsClearanceList" effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row._mergeCustomsClearanceListFull }}</div>
+            </template>
+            <span v-html="row._mergeCustomsClearanceList"></span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="货代渠道" min-width="180" prop="channelId">
@@ -102,7 +101,7 @@
           </span><br />
           <span :style="{ color: row.taxRefundStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
             {{ row.taxRefundStatus === 0 ? '待归档到退税管理' : '已归档到退税管理' }}
-          </span>
+          </span><br />
           <span :style="{ color: row.outboundStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
             {{ row.outboundStatus === 0 ? '待出库归档' : '已出库归档' }}
           </span>
@@ -121,6 +120,9 @@
               <el-dropdown-menu>
                 <el-dropdown-item @click="showMatch(row)">
                   <el-link type="primary" :underline="false" >匹配</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item @click="showModify(row)">
+                  <el-link type="primary" :underline="false">修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchivePackage(row)">
                   <el-link type="primary" :underline="false" >打包归档</el-link>
@@ -322,6 +324,52 @@
         <el-button type="primary">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 修改 -->
+    <vab-dialog
+      v-model="modifyVisible"
+      title="修改"
+      width="20%"
+    >
+      <el-form label-position="right" label-width="auto" :model="modifyForm" style="margin: 0;">
+        <el-form-item label="合同编号" prop="contractNumber">
+          <el-input v-model="modifyForm.contractNumber" clearable />
+        </el-form-item>
+        <el-form-item label="Reference ID" prop="referenceId">
+          <el-input v-model="modifyForm.referenceId" clearable />
+        </el-form-item>
+        <el-form-item label="货代单号" prop="freightForwardingNumber">
+          <el-input v-model="modifyForm.freightForwardingNumber" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="modifyVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmModify">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 二次确认生成文件 -->
+    <vab-dialog
+      v-model="confirmTwiceVisible"
+      :title="`确定要生成${confirmTwiceTitle}资料吗？`"
+      width="20%"
+    >
+      <el-table
+        border
+        :data="confirmTwiceList"
+        :header-cell-style="{ textAlign: 'center' }"
+      >
+        <el-table-column label="货代单号" prop="freightForwardingNumber"/>
+        <el-table-column :label="`合并${confirmTwiceTitle}`" prop="mergeList">
+          <template #default="{ row }">
+            <span v-html="row.mergeList"></span>
+          </template>
+        </el-table-column>
+        
+      </el-table>
+      <template #footer>
+        <el-button @click="confirmTwiceVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleDownload">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -335,7 +383,7 @@ import { downloadFileP } from '/@/api/devlocal/download'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 const tableRef = ref<TableInstance>()
 const queryForm = reactive<any>({
@@ -347,6 +395,19 @@ const total = ref<number>(0)
 const list = ref<IGetMatchPoList[]>([])
 const listLoading = ref<boolean>(false)
 const selectRows = ref<any>([])
+const modifyVisible = ref<boolean>(false)
+const modifyForm = reactive<any>({})
+const _row = ref<any>(null)
+const confirmTwiceVisible = ref<boolean>(false)
+const confirmTwiceTitle = ref<string>('')
+const confirmTwiceList = ref<any>([])
+const showModify = (row: any) => {
+  modifyVisible.value = true
+  _row.value = row
+  modifyForm.contractNumber = row.contractNumber
+  modifyForm.referenceId = row.referenceId
+  modifyForm.freightForwardingNumber = row.freightForwardingNumber
+}
 const setSelectRows = (value: any) => {
   selectRows.value = value
 }
@@ -402,8 +463,52 @@ const handleCancelEncasement = async (row: any) => {
     }
   })
 }
-// 报关资料生成
-const handleGenerateDeclaration = async () => {
+const handleDownload = async () => {
+  if (confirmTwiceTitle.value === '报关') {
+    const ids = selectRows.value.map((item: any) => item.id).join(',')
+    const { data } = await generateCustomsDeclaration({
+      ids
+    })
+    if (data) {
+      data.forEach(async (fileName: string) => {
+        try {
+          await downloadFileP('/shipment/download', {
+            fileName
+          }).then((res) => {
+            console.log(res);
+          }).catch((error) => {
+            console.error(error);
+          })
+          $baseMessage('生成报关资料成功！', 'success')
+        } catch {
+          $baseMessage('生成报关资料失败！', 'error')
+        }
+      })
+    }
+  } else {
+    const ids = selectRows.value.map((item: any) => item.id).join(',')
+    const { data } = await generateTaxRefund({
+      ids
+    })
+    if (data) {
+      data.forEach(async (fileName: string) => {
+        try {
+          await downloadFileP('/shipment/download', {
+            fileName
+          }).then((res) => {
+            console.log(res);
+          }).catch((error) => {
+            console.error(error);
+          })
+          $baseMessage('生成清关资料成功！', 'success')
+        } catch {
+          $baseMessage('生成清关资料失败！', 'error')
+        }
+      })
+    }
+  }
+}
+const isValid = () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选择任何行！', 'error')
     return
@@ -414,59 +519,41 @@ const handleGenerateDeclaration = async () => {
     $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成报关资料！', 'error')
     return
   }
-  const ids = selectRows.value.map((item: any) => item.id).join(',')
-  const { data } = await generateCustomsDeclaration({
-    ids
-  })
-  if (data) {
-    data.forEach(async (fileName: string) => {
-      try {
-        await downloadFileP('/shipment/download', {
-          fileName
-        }).then((res) => {
-          console.log(res);
-        }).catch((error) => {
-          console.error(error);
-        })
-        $baseMessage('生成报关资料成功！', 'success')
-      } catch {
-        $baseMessage('生成报关资料失败！', 'error')
-      }
-    })
+  const valid2 = selectRows.value.every((item: any) => item.outboundStatus === 0)
+  if (!valid2) {
+    $baseMessage('选中的行状态为‘已出库归档’时，无法生成报关资料！', 'error')
+    return
   }
+  const allContractNumbers = selectRows.value.map((item: any) => item.contractNumber);
+  const hasDifferentContractNumbers = new Set(allContractNumbers).size > 1;
+
+  if (hasDifferentContractNumbers) {
+    $baseMessage('选中的行包含不同的合同号，无法生成报关资料！', 'error');
+    return;
+  }
+  confirmTwiceVisible.value = true
+}
+// 报关资料生成
+const handleGenerateDeclaration = () => {
+  confirmTwiceTitle.value = '报关'
+  isValid()
+  confirmTwiceList.value = selectRows.value
+    .filter((item: any) => item.freightForwardingNumber !== '' || item.mergeCustomsDeclarationList !== '')
+    .map((item: any) => ({
+      freightForwardingNumber: item.freightForwardingNumber,
+      mergeList: item.mergeCustomsDeclarationList
+    }));
 }
 // 清关资料生成
 const handleGenerateClearance = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选择任何行！', 'error')
-    return
-  }
-  // 判断选中的行的是否都是已归档到退税管理
-  const valid = selectRows.value.every((item: any) => item.taxRefundStatus === 1)
-  if (!valid) {
-    $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成清关资料！', 'error')
-    return
-  }
-  const ids = selectRows.value.map((item: any) => item.id).join(',')
-  const { data } = await generateTaxRefund({
-    ids
-  })
-  if (data) {
-    data.forEach(async (fileName: string) => {
-      try {
-        await downloadFileP('/shipment/download', {
-          fileName
-        }).then((res) => {
-          console.log(res);
-        }).catch((error) => {
-          console.error(error);
-        })
-        $baseMessage('生成清关资料成功！', 'success')
-      } catch {
-        $baseMessage('生成清关资料失败！', 'error')
-      }
-    })
-  }
+  confirmTwiceTitle.value = '清关'
+  isValid()
+  confirmTwiceList.value = selectRows.value
+    .filter((item: any) => item.freightForwardingNumber !== '' || item.mergeCustomsClearanceList !== '')
+    .map((item: any) => ({
+      freightForwardingNumber: item.freightForwardingNumber,
+      mergeList: item.mergeCustomsClearanceList
+    }));
 }
 let copyRow: any
 
@@ -491,27 +578,20 @@ const forwarderChannelFormRef = ref<FormInstance>()
 const forwarderChannelFormRules = reactive<any>({
   forwarderChannel: [{ required: true, message: '请输入货代渠道', trigger: 'blur' }]
 })
-// 修改合同编号
-const handleUpdateContractNumber = async (row: any) => {
-  await updateShipment({
-    id: row.id,
-    contractNumber: row.contractNumber
+const confirmModify = async () => {
+  const { data } = await updateShipment({
+    id: _row.value.id,
+    ...modifyForm
   })
+  if (data) {
+    $baseMessage('修改成功！', 'success')
+    modifyVisible.value = false
+    _row.value.contractNumber = modifyForm.contractNumber
+    _row.value.referenceId = modifyForm.referenceId
+    _row.value.freightForwardingNumber = modifyForm.freightForwardingNumber
+  }
 }
-// 修改referenceId
-const handleUpdateReferenceId = async (row: any) => {
-  await updateShipment({
-    id: row.id,
-    referenceId: row.referenceId
-  })
-}
-// 修改货代单号
-const handleUpdateFreightForwardingNumber = async (row: any) => {
-  await updateShipment({
-    id: row.id,
-    shipmentNumber: row.freightForwardingNumber
-  })
-}
+
 // 打包归档
 const handleArchivePackage = async (row: any) => {
   if (row.packArchiveStatus === 1) {
@@ -647,7 +727,7 @@ const fetchCostData = async (id: number) => {
     costList.value = data
     costList.value.forEach((item: any) => {
       item.mergeCustomsDeclarationList = item.mergeCustomsDeclarationList.join(',').replace(',', '<br />')
-      item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join(','.replace(',', '<br />'))
+      item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join(',').replace(',', '<br />')
     })
     firstLegFreightVisible.value = true
   } catch {
@@ -810,8 +890,7 @@ const handleSizeChange = (value: number) => {
 }
 
 const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-
-  if (data.columnIndex === 7 || data.columnIndex === 8 || data.columnIndex === 9 || data.columnIndex === 3 || data.columnIndex === 16) {
+  if ([2, 3, 4, 6, 7, 8, 9, 16].includes(data.columnIndex)) {
     return {
       textAlign: 'left'
     }
@@ -819,12 +898,6 @@ const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   return {
     textAlign: 'center'
   }
-}
-const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex === 2 || data.columnIndex === 4 || data.columnIndex === 6 || data.columnIndex === 9) {
-    return 'reduce-padding'
-  }
-  return ''
 }
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   switch (data.columnIndex) {
@@ -887,8 +960,10 @@ const fetchData = async () => {
       }
     )
     item.payStatus = !!item.payStatus
-    item.mergeCustomsDeclarationList = item.mergeCustomsDeclarationList.join(',').replace(',', '<br />')
-    item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join(',').replace(',', '<br />')
+    item.mergeCustomsDeclarationList = item.mergeCustomsDeclarationList.join('<br />')
+    item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join('<br />')
+    processField(item, 'mergeCustomsDeclarationList', 2)
+    processField(item, 'mergeCustomsClearanceList', 2)
   })
   listLoading.value = false
 }
@@ -914,10 +989,10 @@ onActivated(() => {
 :deep(.dialog .el-dialog__body) {
   padding-top: 5px;
 }
-.el-table :deep(.reduce-padding .cell) {
-  padding-right: 3px;
-  padding-left: 3px;
-}
+// .el-table :deep(.reduce-padding .cell) {
+//   padding-right: 3px;
+//   padding-left: 3px;
+// }
 :deep(.center-table tr:last-child td), 
 :deep(.center-table tr:last-child th) {
   text-align: center !important;
