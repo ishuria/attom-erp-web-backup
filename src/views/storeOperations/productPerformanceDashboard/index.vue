@@ -25,7 +25,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select v-model="currencySKU" placeholder="请选择币种" @change="changeCurrencySKU">
+                <el-select v-model="currencySKU" clearable placeholder="请选择币种" @change="changeCurrencySKU">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -234,15 +234,17 @@
                 <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateSKUStopStatus(row)" />
               </span>
               <span v-if="label1.includes(item.label)">
-                {{ row.currencyIcon }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+                {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
               </span>
               <span v-if="label2.includes(item.label)">
-                <!-- 处理 百分比（小数点后两位）-->
-                {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+                {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
               </span>
               <span v-if="label3.includes(item.label)">
                 <!-- 处理 天 -->
                 {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
+              </span>
+              <span v-if="label4.includes(item.label)">
+                {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
               </span>
               <span v-if="item.label === 'VOC满意度'">
                 <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">Very poor</el-tag>
@@ -251,8 +253,6 @@
                 <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">Good</el-tag>
                 <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">Excellent</el-tag>
               </span>
-              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate) * 100) }}%</span>
-              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement) * 100) }}%</span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
@@ -280,19 +280,15 @@
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-                <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
+                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
                 {{ row.nowMajorCategoryRanking }}
-                <vab-icon
-                  v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0"
-                  class="arrow-down"
-                  icon="arrow-down-fill"
-                />
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
               <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
@@ -346,7 +342,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select v-model="currencyAsin" placeholder="请选择币种" @change="changeCurrencyASIN">
+                <el-select v-model="currencyAsin" clearable placeholder="请选择币种" @change="changeCurrencyASIN">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -543,17 +539,18 @@
                 </el-select>
               </span>
               <span v-if="label1.includes(item.label)">
-                {{ row.currencyIcon }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+                {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
               </span>
               <span v-if="label2.includes(item.label)">
-                {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+                {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
               </span>
               <span v-if="label3.includes(item.label)">
                 <!-- 处理 天 -->
                 {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
               </span>
-              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate) * 100) }}%</span>
-              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement) * 100) }}%</span>
+              <span v-if="label4.includes(item.label)">
+                {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
+              </span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
@@ -578,19 +575,15 @@
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-                <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
+                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
                 {{ row.nowMajorCategoryRanking }}
-                <vab-icon
-                  v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0"
-                  class="arrow-down"
-                  icon="arrow-down-fill"
-                />
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
               <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
@@ -644,7 +637,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="币种">
-                <el-select v-model="currencyPAsin" placeholder="请选择币种" @change="changeCurrencyPASIN">
+                <el-select v-model="currencyPAsin" clearable placeholder="请选择币种" @change="changeCurrencyPASIN">
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -823,12 +816,14 @@
                 </div>
               </span>
               <span v-if="label1.includes(item.label)">
-                {{ row.currencyIcon }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+                {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
               </span>
               <span v-if="label2.includes(item.label)">
-                {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+                {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
               </span>
-              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement) * 100) }}%</span>
+              <span v-if="label4.includes(item.label)">
+                {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
+              </span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
@@ -840,19 +835,15 @@
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-                <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
+                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
               </span>
               <span v-if="item.label === '大类排名'">
                 {{ row.nowMajorCategoryRanking }}
-                <vab-icon
-                  v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0"
-                  class="arrow-down"
-                  icon="arrow-down-fill"
-                />
-                <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
               </span>
               <span v-if="item.label === '开发人员'">
                 <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
@@ -931,6 +922,7 @@ import {
   getOperationAsinList,
   getOperationColumnList,
   getOperationParentAsinList,
+  getUserAmazonOperation,
   hideOrShowOperationColumn,
   updateCurrencyASINAmazonOperation,
   updateCurrencyParentASINAmazonOperation,
@@ -993,24 +985,24 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
   site: [],
-  operationUserId: 1,
-  developUserId: 1,
+  operationUserId: '',
+  developUserId: '',
 })
 const asinQueryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
   site: [],
-  operationUserId: 1,
-  developUserId: 1,
+  operationUserId: '',
+  developUserId: '',
 })
 const pAsinQueryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
   site: [],
-  operationUserId: 1,
-  developUserId: 1,
+  operationUserId: '',
+  developUserId: '',
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -1100,13 +1092,9 @@ const showRemark = () => {
   remarkVisible.value = true
 }
 
-function getRowValue(row: any, label: string, labelMap: any): number {
-  const key = labelMap.get(label)
-  // 如果找不到 key，返回 0；如果 key 存在，但 row[key] 不是数字，也返回 0
-  return key !== undefined && typeof row[key] === 'number' ? row[key] : 0
-}
-function formatPercentage(value: number): string {
-  const percentage = (value * 100).toFixed(2) // 将小数转换为百分比，并保留两位小数
+function formatPercentage(value: number | null, num: number): string | null {
+  if (value == null) return value
+  const percentage = (value * 100).toFixed(num) // 将小数转换为百分比，并保留两位小数
   return `${percentage}%`
 }
 
@@ -1140,6 +1128,7 @@ const label2 = [
   'VOC缺陷%',
 ]
 const label3 = ['上新', '库存可售', '可售含在途', '断货']
+const label4 = ['今广%', '半年有货率']
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
   ['FBA仓储费', 'fbaStorageFee'],
@@ -1174,6 +1163,10 @@ const label3Map = new Map([
   ['库存可售', 'esAvailableSaleDay'],
   ['可售含在途', 'esAvailableSaleDayTotal'],
   ['断货', 'outOfStock'],
+])
+const label4Map = new Map([
+  ['今广%', 'currentAdvertisement'],
+  ['半年有货率', 'availableRate']
 ])
 let _seasonalCoefficient = {
   actualList: [],
@@ -1761,6 +1754,15 @@ const fetchDevelopUserList = async () => {
   developUserList.value = data
   developUserList.value.unshift({ id: -1, label: '全部' })
 }
+const fetchUser = async () => {
+  const { data } = await getUserAmazonOperation()
+  queryForm.operationUserId = data.operationUserId
+  queryForm.developUserId = data.developUserId
+  asinQueryForm.operationUserId = data.operationUserId
+  asinQueryForm.developUserId = data.developUserId
+  pAsinQueryForm.operationUserId = data.operationUserId
+  pAsinQueryForm.developUserId = data.developUserId
+}
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
@@ -1952,6 +1954,7 @@ onBeforeMount(() => {
   fetchCurrency()
   fetchOperateUserList()
   fetchDevelopUserList()
+  fetchUser()
   fetchColumn()
   fetchData()
 })

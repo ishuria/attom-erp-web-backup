@@ -24,7 +24,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="币种">
-            <el-select v-model="currency" placeholder="请选择币种" @change="changeCurrency">
+            <el-select v-model="currency" clearable placeholder="请选择币种" @change="changeCurrency">
               <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>

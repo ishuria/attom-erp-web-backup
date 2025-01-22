@@ -13,6 +13,7 @@ import type {
   IGetOperationParentAsinRes,
   IGetOperationTypeListReq,
   IGetOperationTypeListRes,
+  IGetUserAmazonOperationRes,
   IHideOrShowOperationColumnReq,
   IUpdateRemarkAmazonOperationReq,
   IUpdateSortOperationColumnReq
@@ -253,5 +254,14 @@ export function updateCurrencyParentASINAmazonOperation(data: { currency: number
     url: `${BASE_API}/operation/amazon/parent/asin/currency/update`,
     method: 'post',
     data
+  })
+}
+/**
+ * @description 产品表现-获取人员信息
+ */
+export function getUserAmazonOperation(): Promise<IGetUserAmazonOperationRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/user`,
+    method: 'get',
   })
 }

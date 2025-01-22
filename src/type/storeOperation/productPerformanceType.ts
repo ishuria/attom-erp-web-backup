@@ -1186,3 +1186,12 @@ export interface IUpdateRemarkAmazonOperationReq {
   asin?: string
   remark?: string
 }
+/**
+ * 产品表现-获取人员信息
+ */
+export interface IGetUserAmazonOperationRes {
+  data: {
+    operationUserId: number
+    developUserId: number
+  }
+}
