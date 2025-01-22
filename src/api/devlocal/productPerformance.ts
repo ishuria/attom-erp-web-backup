@@ -14,6 +14,7 @@ import type {
   IGetOperationTypeListReq,
   IGetOperationTypeListRes,
   IHideOrShowOperationColumnReq,
+  IUpdateRemarkAmazonOperationReq,
   IUpdateSortOperationColumnReq
 } from '/@/type/storeOperation/productPerformanceType'
 
@@ -183,6 +184,16 @@ export function hideOrShowOperationColumn(data: IHideOrShowOperationColumnReq): 
 export function updateSortOperationColumn(data: IUpdateSortOperationColumnReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/column/update/sort`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 产品表现-运营备注修改
+ */
+export function updateRemarkAmazonOperation(data: IUpdateRemarkAmazonOperationReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/remark/update`,
     method: 'post',
     data
   })

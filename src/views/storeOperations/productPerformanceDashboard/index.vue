@@ -234,7 +234,7 @@
                 <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateSKUStopStatus(row)" />
               </span>
               <span v-if="label1.includes(item.label)">
-                {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+                {{ row.currencyIcon }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
               </span>
               <span v-if="label2.includes(item.label)">
                 <!-- 处理 百分比（小数点后两位）-->
@@ -251,8 +251,8 @@
                 <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">Good</el-tag>
                 <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">Excellent</el-tag>
               </span>
-              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate)) }}%</span>
-              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement)) }}%</span>
+              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate) * 100) }}%</span>
+              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement) * 100) }}%</span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
@@ -262,7 +262,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
                   </template>
-                  <span>{{ removeHtmlTags(row.operationRemark) }}</span>
+                  <el-text truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '饼图'">
@@ -276,7 +276,7 @@
                 </div>
               </span>
               <span v-if="item.label === '当前售价'">
-                <el-link type="primary" @click="handleRouterPush">${{ row.sellingPrice }}</el-link>
+                <el-link type="primary" @click="handleRouterPush">{{ row.currencyIcon + row.sellingPrice }}</el-link>
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
@@ -297,6 +297,9 @@
               <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
                 <span v-html="row.storageAge"></span>
+              </span>
+              <span v-if="item.label === '订货#'">
+                {{ row.orderCount }}<br><span style="font-weight: bold;">{{ row.orderTotalNumber }}</span>
               </span>
             </template>
           </el-table-column>
@@ -510,11 +513,11 @@
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
-                <el-tooltip content=" " effect="dark" placement="top">
+                <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
                   <template #content>
-                    <div class="custom-tooltip">{{ removeHtmlTags(row.sku) }}</div>
+                    <div class="custom-tooltip">{{ row._skuFull }}</div>
                   </template>
-                  <span>{{ removeHtmlTags(row.sku) }}</span>
+                  <span v-html="row._sku"></span>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '父体ASIN'">
@@ -532,7 +535,7 @@
                 </el-select>
               </span>
               <span v-if="label1.includes(item.label)">
-                {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+                {{ row.currencyIcon }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
               </span>
               <span v-if="label2.includes(item.label)">
                 {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
@@ -541,8 +544,8 @@
                 <!-- 处理 天 -->
                 {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
               </span>
-              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate)) }}%</span>
-              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement)) }}%</span>
+              <span v-if="item.label === '半年有货率'">{{ Math.floor(Number(row.availableRate) * 100) }}%</span>
+              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement) * 100) }}%</span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
@@ -552,7 +555,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
                   </template>
-                  <span>{{ removeHtmlTags(row.operationRemark) }}</span>
+                  <el-text truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '饼图'">
@@ -584,6 +587,9 @@
               <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
                 <span v-html="row.storageAge"></span>
+              </span>
+              <span v-if="item.label === '订货#'">
+                {{ row.orderCount }}<br><span style="font-weight: bold;">{{ row.orderTotalNumber }}</span>
               </span>
             </template>
           </el-table-column>
@@ -801,19 +807,19 @@
                 </div>
               </span>
               <span v-if="label1.includes(item.label)">
-                {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+                {{ row.currencyIcon }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
               </span>
               <span v-if="label2.includes(item.label)">
                 {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
               </span>
-              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement)) }}%</span>
+              <span v-if="item.label === '今广%'">{{ Math.floor(Number(row.currentAdvertisement) * 100) }}%</span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
               </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
-                  <vab-echarts-chart-pie :data="row.pieList || []" />
+                  <vab-echarts-chart-pie :data="row?.pieList || []" />
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
@@ -857,10 +863,10 @@
     <vab-key-word-rank-trend :key-word-trend-visible="keyWordTrendVisible" @update-visible="handleCloseKeyWordTrend" />
     <!-- 运营备注 -->
     <vab-dialog v-model="remarkVisible" title="运营备注" width="20%">
-      <el-input placeholder="请输入运营备注" :rows="15" type="textarea" />
+      <el-input v-model="remark" placeholder="请输入运营备注" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="remarkVisible = false">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 季节系数 -->
@@ -887,7 +893,7 @@ import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { currencySymbols, months } from '../constantOption'
+import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
   filterAmazonSKUList,
@@ -901,6 +907,7 @@ import {
   hideOrShowOperationColumn,
   updateOperationSKUDisContinuedStatus,
   updateOperationSKUOperateTypeList,
+  updateRemarkAmazonOperation,
   updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import type {
@@ -936,6 +943,8 @@ const activeName = ref<number>(0)
 const router = useRouter()
 // 运营备注
 const remarkVisible = ref<boolean>(false)
+const remark = ref<string>('')
+const _row = ref<any>(null)
 interface optionType {
   id: number
   label: string
@@ -1131,7 +1140,22 @@ const label3Map = new Map([
   ['可售含在途', 'esAvailableSaleDayTotal'],
   ['断货', 'outOfStock'],
 ])
-
+let _seasonalCoefficient = {
+  actualList: [],
+  referenceList: []
+} 
+const confirmUpdateRemark = async () => {
+  const { data } = await updateRemarkAmazonOperation({
+    site: _row.value.site,
+    asin: _row.value.asin,
+    remark: remark.value
+  })
+  if (data) {
+    $baseMessage('运营备注修改成功！', 'success')
+    remarkVisible.value = false
+    _row.value.operationRemark = remark.value
+  }
+}
 const checkList1 = computed(() => {
   return columns.value.filter((_: any) => _.checked)
 })
@@ -1414,7 +1438,7 @@ const handleWidth = (item: any) => {
   } else if (activeName.value === 1) {
     switch (item.label) {
       case 'SKU': {
-        return flexColumnWidth(asinList.value, 'SKU', 'sku')
+        return calculateBrColumnWidth(asinList.value, (row: any) => row._sku, 100)
       }
       case 'ASIN': {
         return flexColumnWidth(asinList.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
@@ -1439,10 +1463,7 @@ const handleWidth = (item: any) => {
     }
   }
 }
-let _seasonalCoefficient = {
-  actualList: [],
-  referenceList: []
-} 
+
 const cellClick = (row: any, column: any) => {
   const label = column.label
   switch (label) {
@@ -1468,7 +1489,8 @@ const cellClick = (row: any, column: any) => {
     }
     case '运营备注': {
       showRemark()
-
+      _row.value = row
+      remark.value = row.operationRemark
       break
     }
     case '季节系数': {
@@ -1618,11 +1640,17 @@ const handlePAsinSizeChange = (value: number) => {
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '运营备注' || label === '库龄') {
+  if (label === 'SKU' || label === 'ASIN' || label === '父体ASIN' || label === '库龄') {
     return {
       textAlign: 'left',
     }
-  } else {
+  } else if (label === '运营备注') {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer'
+    }
+  }
+  else {
     return {
       textAlign: 'center',
     }
@@ -1709,24 +1737,8 @@ const fetchAsinData = async () => {
   total.value = data.total
   asinList.value = data.list
   asinList.value.forEach((item) => {
+    processField(item, 'sku', 2)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
-    item.saleTrendList = {
-      xAxis: [
-        '21-04-1',
-        '21-08-1',
-        '22-05-1',
-        '22-06-1',
-        '22-07-1',
-        '22-09-1',
-        '22-10-1',
-        '23-01-1',
-        '23-05-1',
-        '23-07-1',
-        '23-10-1',
-        '23-11-1',
-      ],
-      yAxis: [6611, 53824, 18712, 18991, 21611, 10277, 15420, 9159, 4192, 3064, 5619, 4500],
-    }
     item.storageAge = `
       <div class="storage-list">
         ${storageList
@@ -1757,23 +1769,6 @@ const fetchPAsinData = async () => {
   pAsinList.value.forEach((item) => {
     processField(item, 'sku', 2)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
-    item.saleTrendList = {
-      xAxis: [
-        '21-04-1',
-        '21-08-1',
-        '22-05-1',
-        '22-06-1',
-        '22-07-1',
-        '22-09-1',
-        '22-10-1',
-        '23-01-1',
-        '23-05-1',
-        '23-07-1',
-        '23-10-1',
-        '23-11-1',
-      ],
-      yAxis: [6611, 53824, 18712, 18991, 21611, 10277, 15420, 9159, 4192, 3064, 5619, 4500],
-    }
   })
   listLoading.value = false
 }

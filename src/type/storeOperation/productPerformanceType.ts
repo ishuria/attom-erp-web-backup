@@ -1178,3 +1178,11 @@ export interface IUpdateSortOperationColumnReq {
   columnId: number
   sort: number 
 }
+/**
+ * 产品表现-运营备注修改
+ */
+export interface IUpdateRemarkAmazonOperationReq {
+  site?: number
+  asin?: string
+  remark?: string
+}
