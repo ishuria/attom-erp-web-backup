@@ -276,7 +276,7 @@
                 </div>
               </span>
               <span v-if="item.label === '当前售价'">
-                <el-link type="primary" @click="handleRouterPush">{{ row.currencyIcon + row.sellingPrice }}</el-link>
+                <el-link type="primary" @click="handleRouterPush(row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
               </span>
               <span v-if="item.label === '小类排名'">
                 {{ row.nowSubcategoryRanking }}
@@ -908,6 +908,7 @@ import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { _addData } from '~/src/utils/skuOptions'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -1524,7 +1525,7 @@ const cellClick = (row: any, column: any) => {
           activeName: 0,
         },
       })
-
+      _addData(row) 
       break
     }
     case '饼图': {
@@ -1534,7 +1535,7 @@ const cellClick = (row: any, column: any) => {
           activeName: 1,
         },
       })
-
+      _addData(row)
       break
     }
     case '运营备注': {
@@ -1561,13 +1562,14 @@ const cellClick = (row: any, column: any) => {
     // No default
   }
 }
-const handleRouterPush = () => {
+const handleRouterPush = (row: any) => {
   router.push({
     path: '/storeOperations/productAnalysis',
     query: {
       activeName: 2,
     },
   })
+  _addData(row)
 }
 // 处理列是否隐藏
 const handleChecked = async (item: any) => {

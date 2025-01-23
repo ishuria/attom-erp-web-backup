@@ -95,6 +95,19 @@
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 2" inline>
+              <el-form-item v-if="isSingle">
+                <el-text>SKU: {{ skuOptions[0] }}</el-text>
+              </el-form-item>
+              <el-form-item v-else label="SKU">
+                <el-select v-model="queryForm3.sku" placeholder="请选择SKU">
+                  <el-option 
+                    v-for="item in skuOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-select>
                   <el-option 
@@ -310,6 +323,7 @@ import type { TabsPaneContext } from 'element-plus'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { useSkuOptionsStore } from '~/src/store/modules/skuOptions'
 
 defineOptions({
   name: 'ProductAnalysis',
@@ -319,7 +333,6 @@ const route: any = useRoute()
 const router: any = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-
 const activeName = ref<number>(0)
 const titleChangeVisible = ref<boolean>(false)
 const descChangeVisible = ref<boolean>(false)
@@ -327,10 +340,9 @@ const imgChangeVisible = ref<boolean>(false)
 // 评分
 const rate = ref<number>(4.7)
 const returnRadio = ref<number>(0)
-
 // 初始化图片高度
 const imageHeight = ref<number>(0)
-
+const queryForm3 = reactive<any>({})
 const fakeData = [
   {
     date: '2024-12-31',
@@ -396,7 +408,21 @@ const handleTabClick = (tab: TabsPaneContext) => {
     // })
   }
 }
-
+const skuOptionsStore = useSkuOptionsStore()
+const skuOptions = ref<any[]>([])
+// 判断是单个显示还是多个显示
+const isSingle = ref<boolean>(false)
+onBeforeMount(() => {
+  skuOptions.value = skuOptionsStore.data.sku.split(',')
+  // console.log('进入页面的数据：', skuOptions.value);
+  const length = skuOptions.value.length
+  if (length === 1) {
+    isSingle.value = true
+  } else if (length > 1) {
+    queryForm3.sku = skuOptions.value[0]
+    isSingle.value = false
+  }
+})
 onMounted(() => {
   setImageHeight()
   activeName.value = Number(route.query.activeName);  
