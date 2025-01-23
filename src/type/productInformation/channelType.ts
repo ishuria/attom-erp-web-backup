@@ -12,12 +12,8 @@ export interface IGetMerchandiseListRes {
 export interface IGetMerchandiseList {
   id: number
   merchandiseName: string
-  amazonUsChannelName: string
-  amazonCaChannelName: string
-  amazonDeChannelName: string
-  amazonUkChannelName: string
-  amazonJapanChannelName: string
-  walmartUsChannelName: string
+  channel: string
+  siteName: string
 }
 export interface IGetSkuShippingChannelListRes {
   data: {
@@ -64,12 +60,7 @@ export interface IGetMerchandiseDetail {
 }
 export interface IUpdateMerchandiseReq {
   id: number
-  amazonUsChannelId: number
-  amazonCaChannelId: number
-  amazonDeChannelId: number
-  amazonUkChannelId: number
-  amazonJapanChannelId: number
-  walmartUsChannelId: number
+  channelId: number
 }
 export interface ITypeId {
   typeId: number

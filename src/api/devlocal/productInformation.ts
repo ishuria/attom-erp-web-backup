@@ -689,7 +689,7 @@ export function updateMerchandise(data: IUpdateMerchandiseReq): Promise<IBoolean
 /**
  * @description 添加货物类别提交
  */
-export function addMerchandise(data: IUpdateMerchandiseReq): Promise<IBooleanResp> {
+export function addMerchandise(data: { merchandiseName: string }): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/merchandise/add`,
     method: 'post',

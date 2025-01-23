@@ -25,7 +25,8 @@
         </vab-query-form>
         <el-table
           border :cell-class-name="clearPadding"
-          :cell-style="cellStyle" :data="list"
+          :cell-style="cellStyle" class="noneHoveTable"
+          :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
           @selection-change="setSelectedRows"
@@ -230,7 +231,8 @@
         </vab-query-form>
         <el-table
           border :cell-class-name="clearPadding"
-          :cell-style="cellStyle" :data="list"
+          :cell-style="cellStyle" class="noneHoveTable"
+          :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
           @selection-change="setSelectedRows"
@@ -414,7 +416,8 @@
       <el-tab-pane label="已完成" :name="2">
         <el-table
           border :cell-class-name="clearPadding"
-          :cell-style="cellStyle" :data="list"
+          :cell-style="cellStyle" class="noneHoveTable"
+          :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
           @selection-change="setSelectedRows"
@@ -804,7 +807,8 @@ import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth, processField } from '/@/utils/tableColum'
+import { useUserStore } from '/@/store/modules/user'
 
 defineOptions({
   name: 'ImageTask'
@@ -1294,9 +1298,14 @@ const imagePreviewShow = (url: string) => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '站点', '需求文件地址', '基础图片', '建模/渲染', 'A+', '视频', '说明书/包装', '产品经理', '产品设计', '备注'].includes(label)) {
+  if (['SKU', 'ASIN', '站点', '需求文件地址', '产品经理', '备注'].includes(label)) {
     return {
       textAlign: 'left'
+    }
+  } else if (['基础图片', '建模/渲染', 'A+', '视频', '说明书/包装', '产品设计',].includes(label)) {
+    return {
+      textAlign: 'left',
+      backgroundColor: '#F0F8FF'
     }
   }
   return {
@@ -1322,20 +1331,7 @@ const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   fetchData()
 }
-// 处理","号分隔的人员换行以及tooltip展示
-function processField(item: any, fieldName: string, max: number) {
-  const fieldArray = item[fieldName]?.split(',')
-  if (fieldArray && fieldArray.length > max) {
-    item[`_${fieldName}`] = [fieldArray[0], fieldArray[1]].join('<br />') // 显示在表格上的处理过的
-    item[`_${fieldName}`] += '...'
-    item[`overflow_${fieldName}`] = true // 判断tooltip是否显示
-    item[`_${fieldName}Full`] = fieldArray.join('\n')  // tooltip显示全部内容
-  } else {
-    item[`overflow_${fieldName}`] = false
-    item[`_${fieldName}`] = fieldArray?.join('<br />')!
-    item[`_${fieldName}Full`] = item[`_${fieldName}`]  
-  }
-}
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getArtDesignTaskList(queryForm)
@@ -1360,7 +1356,10 @@ const fetchUserList = async () => {
   const { data } = await getArtDesignTaskUserList()
   userList.value = data
 }
+const useUser = useUserStore()
 onBeforeMount(() => {
+  console.log(useUser.getUsername);
+  
   fetchSiteList()
   fetchUserList()
   fetchData()
@@ -1439,4 +1438,10 @@ onBeforeMount(() => {
 .none {
   display: none;
 }
+// :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+//   background-color: #fff !important;
+// }
+// :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+//   background-color: #fafafa !important; 
+// }
 </style>

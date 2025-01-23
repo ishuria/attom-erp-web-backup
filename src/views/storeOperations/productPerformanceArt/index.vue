@@ -139,15 +139,23 @@
           </span>
           <span v-if="item.label === '小类排名'">
             {{ row.nowSubcategoryRanking }}
-            <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-            <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-            <span style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+            <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+            <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
+            <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
           </span>
           <span v-if="item.label === '大类排名'">
             {{ row.nowMajorCategoryRanking }}
-            <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-            <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-            <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+            <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
+            <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+            <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+          </span>
+          <span v-if="item.label === '开发人员'">
+            <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ row._developNameFull }}</div>
+              </template>
+              <span v-html="row._developName"></span>
+            </el-tooltip>
           </span>
           <span v-if="['月退货%', '月退款%', 'VOC缺陷%'].includes(item.label)" >
             {{ row[item.prop] != null ? row[item.prop].toFixed(2) + '%' : '' }}

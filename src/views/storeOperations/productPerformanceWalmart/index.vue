@@ -153,13 +153,14 @@
           </span>
          
           <span v-if="label1.includes(item.label)">
-            {{ currencySymbols.get('USD') }}{{ getRowValue(row, item.label, label1Map).toFixed(2) }}
+            {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
           </span>
           <span v-if="label2.includes(item.label)">
-            {{ formatPercentage(getRowValue(row, item.label, label2Map)) }}
+            {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
           </span>
           <span v-if="label3.includes(item.label)">
-            {{ row[label3Map.get(item.label)!] }}天
+            <!-- 处理 天 -->
+            {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
           </span>
           <span v-if="item.label === '季节系数'">
             <div style="width: 100%; height: 50px">
@@ -225,7 +226,7 @@ import { Hide, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { currencySymbols, months, opeClassOption } from '../constantOption'
+import { months, opeClassOption } from '../constantOption'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const seasonalVisible = ref<boolean>(false)
@@ -875,13 +876,9 @@ const handleCellClick = (row: any, column: any) => {
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 
-function getRowValue(row: any, label: string, labelMap: any): number {
-  const key = labelMap.get(label)
-  // 如果找不到 key，返回 0；如果 key 存在，但 row[key] 不是数字，也返回 0
-  return key !== undefined && typeof row[key] === 'number' ? row[key] : 0
-}
-function formatPercentage(value: number): string {
-  const percentage = (value * 100).toFixed(2)  // 将小数转换为百分比，并保留两位小数
+function formatPercentage(value: number | null, num: number): string | null {
+  if (value == null) return value
+  const percentage = (value * 100).toFixed(num) // 将小数转换为百分比，并保留两位小数
   return `${percentage}%`
 }
 const handleCloseKeyWordTrend = (value: boolean) => {
