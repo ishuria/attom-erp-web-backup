@@ -94,69 +94,29 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" min-width="100" prop="basePicture">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_basePicture" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
-                </template>
-                <span v-html="row._basePicture"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="建模/渲染" min-width="105" prop="modeling">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_modeling" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._modelingFull }}</div>
-                </template>
-                <span v-html="row._modeling"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="A+" min-width="90" prop="aAdd">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_aAdd" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._aAddFull }}</div>
-                </template>
-                <span v-html="row._aAdd"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="视频" min-width="90" prop="video">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_video" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._videoFull }}</div>
-                </template>
-                <span v-html="row._video"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="说明书/包装" min-width="115" prop="instructionManual">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_instructionManual" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
-                </template>
-                <span v-html="row._instructionManual"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="发布人" min-width="160" prop="publisherPersonName"/>
-          <el-table-column label="产品经理" min-width="100" prop="productManager">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_productManager" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
-                </template>
-                <span v-html="row._productManager"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品设计" min-width="160" prop="productDesign"/>
-          <el-table-column label="运营" min-width="90" prop="operation"/>
+          <template v-for="col in columnConfigs" :key="col.prop">
+            <el-table-column 
+              v-if="!col.isSpecial"
+              :label="col.label"
+              :prop="col.prop"
+              :width="calculateBrColumnWidth(list, (row: any) => row[col.dataKey as string], col.baseWidth, 30)"
+            >
+              <template #default="{ row }">
+                <span
+                  v-for="(username, index) in splitUsernames(row[col.prop])"
+                  :key="index"
+                  class="username-item"
+                  :class="getHighlightClass(username)"
+                >{{ username }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-else
+              :label="col.label"
+              :prop="col.prop"
+              :width="flexColumnWidth(list, '发布人', 'publisherPersonName')"
+            />
+          </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
@@ -291,7 +251,6 @@
                 </template>
                 <el-text truncated>{{ row.requiredAddress }}</el-text>
               </el-tooltip>
-              <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
             </template>
           </el-table-column>
           <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
@@ -300,69 +259,29 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" min-width="100" prop="basePicture">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_basePicture" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
-                </template>
-                <span v-html="row._basePicture"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="建模/渲染" min-width="105" prop="modeling">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_modeling" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._modelingFull }}</div>
-                </template>
-                <span v-html="row._modeling"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="A+" min-width="90" prop="aAdd">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_aAdd" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._aAddFull }}</div>
-                </template>
-                <span v-html="row._aAdd"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="视频" min-width="90" prop="video">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_video" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._videoFull }}</div>
-                </template>
-                <span v-html="row._video"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="说明书/包装" min-width="115" prop="instructionManual">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_instructionManual" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
-                </template>
-                <span v-html="row._instructionManual"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="发布人" min-width="160" prop="publisherPersonName"/>
-          <el-table-column label="产品经理" min-width="100" prop="productManager">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_productManager" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
-                </template>
-                <span v-html="row._productManager"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品设计" min-width="160" prop="productDesign"/>
-          <el-table-column label="运营" min-width="90" prop="operation"/>
+          <template v-for="col in columnConfigs" :key="col.prop">
+            <el-table-column 
+              v-if="!col.isSpecial"
+              :label="col.label"
+              :prop="col.prop"
+              :width="calculateBrColumnWidth(list, (row: any) => row[col.dataKey as string], col.baseWidth, 30)"
+            >
+              <template #default="{ row }">
+                <span
+                  v-for="(username, index) in splitUsernames(row[col.prop])"
+                  :key="index"
+                  class="username-item"
+                  :class="getHighlightClass(username)"
+                >{{ username }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-else
+              :label="col.label"
+              :prop="col.prop"
+              :width="flexColumnWidth(list, '发布人', 'publisherPersonName')"
+            />
+          </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
@@ -472,69 +391,29 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="基础图片" min-width="160" prop="basePicture">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_basePicture" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._basePictureFull }}</div>
-                </template>
-                <span v-html="row._basePicture"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="建模/渲染" min-width="160" prop="modeling">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_modeling" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._modelingFull }}</div>
-                </template>
-                <span v-html="row._modeling"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="A+" min-width="160" prop="aAdd">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_aAdd" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._aAddFull }}</div>
-                </template>
-                <span v-html="row._aAdd"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="视频" min-width="160" prop="video">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_video" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._videoFull }}</div>
-                </template>
-                <span v-html="row._video"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="说明书/包装" min-width="160" prop="instructionManual">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_instructionManual" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._instructionManualFull }}</div>
-                </template>
-                <span v-html="row._instructionManual"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="发布人" min-width="90" prop="publisherPersonName"/>
-          <el-table-column label="产品经理" min-width="160" prop="productManager">
-            <template #default="{ row }">
-              <el-tooltip content=" " :disabled="!row.overflow_productManager" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" >{{ row._productManagerFull }}</div>
-                </template>
-                <span v-html="row._productManager"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品设计" min-width="160" prop="productDesign"/>
-          <el-table-column label="运营" min-width="90" prop="operation"/>
+          <template v-for="col in columnConfigs" :key="col.prop">
+            <el-table-column 
+              v-if="!col.isSpecial"
+              :label="col.label"
+              :prop="col.prop"
+              :width="calculateBrColumnWidth(list, (row: any) => row[col.dataKey as string], col.baseWidth, 30)"
+            >
+              <template #default="{ row }">
+                <span
+                  v-for="(username, index) in splitUsernames(row[col.prop])"
+                  :key="index"
+                  class="username-item"
+                  :class="getHighlightClass(username)"
+                >{{ username }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-else
+              :label="col.label"
+              :prop="col.prop"
+              :width="flexColumnWidth(list, '发布人', 'publisherPersonName')"
+            />
+          </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
@@ -797,23 +676,45 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
 import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { useUserStore } from '/@/store/modules/user'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
-import { flexColumnWidth, processField } from '/@/utils/tableColum'
-import { useUserStore } from '/@/store/modules/user'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ImageTask'
 })
 
+interface ColumnConfig {
+  label: string
+  prop: string
+  dataKey?: string 
+  baseWidth?: number
+  isSpecial?: boolean 
+}
+const columnConfigs: ColumnConfig[] = [
+  { label: '基础图片', prop: 'basePicture', dataKey: '_basePicture', baseWidth: 100 },
+  { label: '建模/渲染', prop: 'modeling', dataKey: '_modeling', baseWidth: 110 },
+  { label: 'A+', prop: 'aAdd', dataKey: '_aAdd', baseWidth: 90 },
+  { label: '视频', prop: 'video', dataKey: '_video', baseWidth: 90 },
+  { label: '说明书/包装', prop: 'instructionManual', dataKey: '_instructionManual', baseWidth: 120 },
+  { 
+    label: '发布人', 
+    prop: 'publisherPersonName', 
+    isSpecial: true 
+  },
+  { label: '产品经理', prop: 'productManager', dataKey: '_productManager', baseWidth: 100 },
+  { label: '产品设计', prop: 'productDesign', dataKey: '_productDesign', baseWidth: 100 },
+  { label: '运营', prop: 'operation', dataKey: '_operation', baseWidth: 100 }
+]
 const chartContainer1 = ref<HTMLElement | null>(null)
 const chartContainer2 = ref<HTMLElement | null>(null)
 let chartInstance1: echarts.ECharts | null = null
@@ -857,7 +758,12 @@ const addFormRules = reactive<FormRules<{ reason: string }>>({
   reason: [{ required: true, message: '请输入选品理由', trigger: 'blur' }]
 })
 let copyRow: any
-
+const splitUsernames = (usernames: string) => {
+  return usernames.split(',').map(username => username.trim())
+}
+const getHighlightClass = (username: string) => {
+  return username === currentUser ? 'highlight' : ''
+}
 // table blur事件
 const clickCancel = async (event:any, value:any) => {
   const rootElement = getRootElement(event.srcElement, ".cell")
@@ -1305,7 +1211,6 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   } else if (['基础图片', '建模/渲染', 'A+', '视频', '说明书/包装', '产品设计',].includes(label)) {
     return {
       textAlign: 'left',
-      backgroundColor: '#F0F8FF'
     }
   }
   return {
@@ -1339,12 +1244,14 @@ const fetchData = async () => {
   list.value = data.list
   list.value.forEach((item) => {
     processField(item, 'sites', 3)
-    processField(item, 'productManager', 3)
-    processField(item, 'basePicture', 2)
-    processField(item, 'modeling', 2)
-    processField(item, 'aAdd', 2)
-    processField(item, 'video', 2)
-    processField(item, 'instructionManual', 2)
+    item._basePicture = item.basePicture?.replaceAll(',', '<br />')
+    item._productManager = item.productManager?.replaceAll(',', '<br />')
+    item._modeling = item.modeling?.replaceAll(',', '<br />')
+    item._aAdd = item.aAdd?.replaceAll(',', '<br />')
+    item._video = item.video?.replaceAll(',', '<br />')
+    item._instructionManual = item.instructionManual?.replaceAll(',', '<br />')
+    item._operation = item.operation?.replaceAll(',', '<br />')
+    item._productDesign = item.productDesign?.replaceAll(',', '<br />')
   })
   listLoading.value = false
 }
@@ -1357,9 +1264,8 @@ const fetchUserList = async () => {
   userList.value = data
 }
 const useUser = useUserStore()
-onBeforeMount(() => {
-  console.log(useUser.getUsername);
-  
+const currentUser = useUser.getUsername
+onBeforeMount(() => { 
   fetchSiteList()
   fetchUserList()
   fetchData()
@@ -1424,6 +1330,12 @@ onBeforeMount(() => {
               padding-left: 0;
               padding-right: 0;
             }
+          }
+          .highlight {
+            color: var(--el-color-primary);
+          }
+          .username-item {
+            display: block;
           }
         }
       }

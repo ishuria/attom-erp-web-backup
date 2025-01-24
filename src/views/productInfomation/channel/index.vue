@@ -65,12 +65,12 @@
     <!-- 修改 -->
     <vab-dialog
       v-model="modifyVisible"
-      title="修改货物类别"
-      width="20%"
+      :title="`${isBatch ? '批量' : ''}修改货物类别`"
+      width="25%"
     >
       <el-form ref="modifyFormRef" label-position="top" :model="modifyForm">
         <el-form-item label="类别" prop="typeId">
-          <el-select v-model="modifyForm.typeId" placeholder="请选择类别" @change="handleGetChannel">
+          <el-select v-model="modifyForm.typeId" placeholder="请选择类别">
             <el-option 
               v-for="item in merchandiseTypeList"
               :key="item.id"
@@ -79,28 +79,10 @@
             />
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="亚马逊美国" prop="amazonUsChannelName">
-          <el-input v-model="modifyForm.amazonUsChannelName" disabled />
-        </el-form-item>
-        <el-form-item label="亚马逊加拿大" prop="amazonCaChannelName">
-          <el-input v-model="modifyForm.amazonCaChannelName" disabled />
-        </el-form-item>
-        <el-form-item label="亚马逊德国" prop="amazonDeChannelName">
-          <el-input v-model="modifyForm.amazonDeChannelName" disabled />
-        </el-form-item>
-        <el-form-item label="亚马逊英国" prop="amazonUkChannelName">
-          <el-input v-model="modifyForm.amazonUkChannelName" disabled />
-        </el-form-item>
-        <el-form-item label="亚马逊日本" prop="amazonJapanChannelName">
-          <el-input v-model="modifyForm.amazonJapanChannelName" disabled />
-        </el-form-item>
-        <el-form-item label="沃尔玛美国" prop="walmartUsChannelName">
-          <el-input v-model="modifyForm.walmartUsChannelName" disabled />
-        </el-form-item> -->
       </el-form>
-      <el-table>
-        <el-table-column label="站点" />
-        <el-table-column label="渠道" />
+      <el-table border :data="modifyForm.list">
+        <el-table-column label="站点" prop="siteName" width="150" />
+        <el-table-column label="渠道" min-width="100" prop="channel" />
       </el-table>
       <template #footer>
         <el-button @click="modifyVisible = false">取消</el-button>
@@ -117,7 +99,7 @@
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="handleShowAdd">新增分类</el-button>
-          <el-button type="primary">批量修改</el-button>
+          <el-button type="primary" @click="handleModifyBatchSetUp">批量修改</el-button>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="setUpQueryForm" @submit.prevent>
@@ -130,7 +112,7 @@
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table border :data="setUpList" max-height="800" stripe>
+      <el-table border class="noneHoverTable" :data="setUpList" max-height="800" stripe @selection-change="setSelectedSetUpRows">
         <el-table-column align="center" type="selection" />
         <el-table-column label="分类" min-width="150" prop="merchandiseName"/>
         <el-table-column label="站点" min-width="130" prop="siteName"/>
@@ -170,7 +152,7 @@
     <!-- 货物类别设定里的修改 -->
     <vab-dialog
       v-model="setUpModifyVisible"
-      title="修改渠道"
+      :title="`${setUpBatch ? '批量' : ''}修改渠道`"
       width="20%"
     >
       <el-form label-position="top" :model="setUpModifyForm">
@@ -191,7 +173,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { addMerchandise, getFreightForwarderQuery, getMerchandiseChannelDetail, getMerchandiseList, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
+import { addMerchandise, getFreightForwarderQuery, getMerchandiseList, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
 import type { IGetMerchandiseList, IGetMerchandiseListReq, IGetMerchandiseTypeList, IGetSkuShippingChannelList } from '/@/type/productInformation/channelType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -202,10 +184,10 @@ const setUpModifyVisible = ref<boolean>(false)
 const addVisible = ref<boolean>(false)
 const categorySetUpVisible = ref<boolean>(false)
 const selectedRows = ref<any[]>([])
+const selectedSetUpRows = ref<any[]>([])
 const modifyVisible = ref<boolean>(false)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
-
 const queryForm = reactive<IGetMerchandiseListReq>({
   keyWord: '',
   pageNo: 1,
@@ -224,12 +206,6 @@ const setUpModifyForm = reactive<any>({})
 const addForm = reactive<any>({})
 const addFormRules = reactive<any>({
   merchandiseName: [{ required: true, message: '请输入货物类别名', trigger: 'blur' }],
-  amazonUsChannelId: [{ required: true, message: '请选择亚马逊美国渠道', trigger: 'change' }],
-  amazonCaChannelId: [{ required: true, message: '请选择亚马逊加拿大渠道', trigger: 'change' }],
-  amazonDeChannelId: [{ required: true, message: '请选择亚马逊德国渠道', trigger: 'change' }],
-  amazonUkChannelId: [{ required: true, message: '请选择亚马逊英国渠道', trigger: 'change' }],
-  amazonJapanChannelId: [{ required: true, message: '请选择亚马逊日本渠道', trigger: 'change' }],
-  walmartUsChannelId: [{ required: true, message: '请选择沃尔玛美国渠道', trigger: 'change' }],
 })
 const addFormRef = ref<FormInstance>()
 const setUpTotal = ref<number>(0)
@@ -242,7 +218,22 @@ const setUpList = ref<IGetMerchandiseList[]>([])
 // 货代名称列表
 const freightForwarderList = ref<IGetMerchandiseTypeList[]>([])
 const _id = ref<number>(0)
-// 货物类别批量修改
+const setUpBatch = ref<boolean>(false)
+const setSelectedSetUpRows = (value: any) => {
+  selectedSetUpRows.value = value
+}
+// 货物类别的批量修改
+const handleModifyBatchSetUp = async () => {
+  if (selectedSetUpRows.value.length === 0) {
+    $baseMessage('您未选中任何行!', 'warning')
+    return
+  }
+  setUpModifyVisible.value = true
+  setUpBatch.value = true
+  const { data } = await getFreightForwarderQuery()
+  freightForwarderList.value = data
+}
+// 外面的批量修改
 const handleConfirmModify = async () => {
   if (isBatch.value) {
     if (modifyForm.typeId) {
@@ -272,17 +263,7 @@ const handleConfirmModify = async () => {
     }
   }
 }
-const handleGetChannel = async () => {
-  const { data } = await getMerchandiseChannelDetail({
-    typeId: modifyForm.typeId
-  })
-  modifyForm.amazonUsChannelName = data.amazonUsChannelName
-  modifyForm.amazonCaChannelName = data.amazonCaChannelName
-  modifyForm.amazonDeChannelName = data.amazonDeChannelName
-  modifyForm.amazonUkChannelName = data.amazonUkChannelName
-  modifyForm.amazonJapanChannelName = data.amazonJapanChannelName
-  modifyForm.walmartUsChannelName = data.walmartUsChannelName
-}
+
 const handleConfirmAdd = async () => {
   addFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
@@ -302,6 +283,7 @@ const closeAddDialog = () => {
   addVisible.value = false
 }
 const handleModifySetUp = async (row: IGetMerchandiseList) => {
+  setUpBatch.value = false
   setUpModifyVisible.value = true
   _id.value = row.id
   const { data } = await getFreightForwarderQuery()
@@ -347,17 +329,12 @@ const handleModify = async (row: IGetSkuShippingChannelList) => {
   merchandiseTypeList.value = data
   _id.value = row.id
   modifyForm.typeId = row.typeId
-  modifyForm.amazonUsChannelName = row.amazonUsChannelName
-  modifyForm.amazonCaChannelName = row.amazonCaChannelName
-  modifyForm.amazonDeChannelName = row.amazonDeChannelName
-  modifyForm.amazonUkChannelName = row.amazonUkChannelName
-  modifyForm.amazonJapanChannelName = row.amazonJapanChannelName
-  modifyForm.walmartUsChannelName = row.walmartUsChannelName
+  modifyForm.list = row.siteMerchandiseList
   isBatch.value = false
 }
 const handleModifyAll = async () => {
   if (selectedRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'error')
+    $baseMessage('您未选中任何行', 'warning')
     return
   }
   modifyFormRef.value?.resetFields()
@@ -416,7 +393,6 @@ const fetchData = async () => {
       row[`${key}`] = value
     })
   })
-  // console.log(list.value);
   listLoading.value = false
 }
 const fetchSetUpData = async () => {

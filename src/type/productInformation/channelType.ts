@@ -29,12 +29,8 @@ export interface IGetSkuShippingChannelList {
   skuImgUrl: string
   weight: string
   merchandiseName: string
-  amazonUsChannelName: string
-  amazonCaChannelName: string
-  amazonDeChannelName: string
-  amazonUkChannelName: string
-  amazonJapanChannelName: string
-  walmartUsChannelName: string
+  siteMerchandiseList: { channel: string, siteName: string }[]
+  [property: string]: any
 }
 export interface IGetMerchandiseTypeListRes {
   data: IGetMerchandiseTypeList[]

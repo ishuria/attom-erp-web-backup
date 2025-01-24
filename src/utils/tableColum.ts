@@ -205,12 +205,23 @@ export const removeHtmlTags = (html: string): string => {
  * @param {number} padding - 额外添加的宽度（默认值：26）
  * @returns {number} - 计算后的列宽
  */
-export function calculateBrColumnWidth(rows: any, getContent: any, baseWidth = 90, padding = 26) {
+export function calculateBrColumnWidth(
+  rows: any, 
+  getContent: any, 
+  baseWidth = 90, 
+  padding = 26
+) {
   let maxWidth = baseWidth;
 
   rows.forEach((row: any) => {
     // 使用回调函数获取内容
     const content = getContent(row);
+
+    // 如果 content 为空，跳过该行的处理
+    if (!content) {
+      return;
+    }
+
     const paragraphs = content.split(/<br\s*\/?>/);
 
     paragraphs.forEach((paragraph: any) => {
@@ -231,6 +242,7 @@ export function calculateBrColumnWidth(rows: any, getContent: any, baseWidth = 9
 
   return maxWidth + padding;
 }
+
 
 /**
  * @description 处理","号分隔的SKU换行以及tooltip展示
