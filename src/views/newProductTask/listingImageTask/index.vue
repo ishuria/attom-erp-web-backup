@@ -34,7 +34,7 @@
           <el-table-column fixed="left" type="selection"/>
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
+              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.skuImgUrl)">
                 <template #error><el-icon/></template>
               </el-image>
             </template>
@@ -200,7 +200,7 @@
           <el-table-column fixed="left" type="selection"/>
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
+              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.skuImgUrl)">
                 <template #error><el-icon/></template>
               </el-image>
             </template>
@@ -344,7 +344,7 @@
           <el-table-column fixed="left" type="selection"/>
           <el-table-column label="图片" prop="skuImgUrl" width="75">
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
+              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.skuImgUrl)">
                 <template #error><el-icon/></template>
               </el-image>
             </template>
@@ -1316,8 +1316,8 @@ onBeforeMount(() => {
           flex: 1;
 
           .custom-check {
+            color: var(--el-color-success);
             transform: scale(1.4);
-            color: var(--el-color-success)
           }
           .el-checkbox {
             transform: scale(1.3);
@@ -1327,8 +1327,8 @@ onBeforeMount(() => {
             padding-top: 0;
             padding-bottom: 0;
             .cell {
-              padding-left: 0;
               padding-right: 0;
+              padding-left: 0;
             }
           }
           .highlight {
@@ -1343,9 +1343,9 @@ onBeforeMount(() => {
   }
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 .none {
   display: none;

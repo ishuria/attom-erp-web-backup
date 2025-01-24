@@ -26,7 +26,7 @@
       <el-table-column align="center" fixed="left" type="selection" width="50"/>
       <el-table-column fixed="left" label="图片" prop="" width="75">
         <template #default="{ row }">
-          <el-image :src="row.skuImgUrl" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row.skuImgUrl)">
+          <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.skuImgUrl)">
             <template #error><el-icon/></template>
           </el-image>
         </template>
@@ -418,8 +418,8 @@ onBeforeMount(() => {
       padding-top: 0;
       padding-bottom: 0;
       .cell {
-        padding-left: 0;
         padding-right: 0;
+        padding-left: 0;
       }
     }
   }
