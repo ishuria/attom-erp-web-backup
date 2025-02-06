@@ -7,38 +7,49 @@
             <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button
-:icon="Search" :loading="listLoading" native-type="submit" type="primary"
-              @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table
-ref="tableRef" border class="noneHoveTable" :data="dataList" 
-      :header-cell-style="{ 'text-align': 'center' }" :row-class-name="stripedRowClass" :span-method="objectSpanMethod" @cell-click="reviewTableInputChange">
-      <el-table-column align="center" label="提交日期" prop="createTime" width="110">
+    <el-table 
+      ref="tableRef" 
+      border 
+      :cell-class-name="clearPadding" 
+      class="noneHoveTable" 
+      :data="dataList" :header-cell-style="{ 'text-align': 'center' }" 
+      :row-class-name="stripedRowClass"
+      :span-method="objectSpanMethod" 
+    >
+      <el-table-column align="center" label="提交日期" min-width="115" prop="createTime">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.createTime)) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="SKU图片" width="100">
+      <el-table-column align="center" label="SKU图片" width="75">
+        <template #header>
+          SKU<br />图片
+        </template>
         <template #default="{ row }">
-          <el-image v-if="row.skuImage" fit="fill" :src="row.skuImage" style="width: 75px; height: 75px" />
+          <el-image fit="fill" :src="row.skuImage" style="display: block; width: 75px; height: 75px;" @click="setPreviewList(row.skuImage)">
+            <template #error>
+              <el-icon />
+            </template>
+          </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" width="300">
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(dataList, 'SKU', 'sku')">
         <template #default="{ row }">
           {{ formattedProgressLog(row.sku) }}
         </template>
       </el-table-column>
-      <el-table-column label="产品" prop="productName" width="200">
+      <el-table-column label="产品" prop="productName" :width="flexColumnWidth(dataList, '产品', 'productName')">
         <template #default="{ row }">
           {{ formattedProgressLog(row.productName) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="首单PO" min-width="90" prop="po">
+      <el-table-column align="center" label="首单PO" min-width="100" prop="po">
         <template #default="{ row }">
           {{ row.po }}
         </template>
@@ -59,29 +70,29 @@ ref="tableRef" border class="noneHoveTable" :data="dataList"
         </template>
       </el-table-column>
       <el-table-column align="center" label="有效计数" prop="effectiveCount" width="70"/>
-      <el-table-column align="center" label="OEM" prop="oem" width="70">
+      <el-table-column align="center" label="OEM" min-width="70" prop="oem">
         <template #default="{ row }">
           <el-checkbox
 v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large"
             :true-value="1" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="产品经理" min-width="100" prop="productManager">
+      <el-table-column align="center" label="产品经理" prop="productManager" :width="flexColumnWidth(dataList, '产品', 'productManager')">
         <template #default="{ row }">
           <div v-html="row.productManager"></div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="产品设计" min-width="100" prop="productDesign">
+      <el-table-column align="center" label="产品设计" prop="productDesign" :width="flexColumnWidth(dataList, '产品', 'productDesign')">
         <template #default="{ row }">
           {{ row.productDesign }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="立项日期" prop="projectInitiationDate" width="110">
+      <el-table-column align="center" label="立项日期" min-width="115" prop="projectInitiationDate">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="审批日期" prop="reviewDate" width="110">
+      <el-table-column align="center" label="审批日期" min-width="115" prop="reviewDate">
         <template #default="{ row }">
           <span> {{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : "" }}</span>
         </template>
@@ -91,20 +102,20 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
           {{ row.timeConsuming }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="审批状态" min-width="140" prop="reviewStatus">
+      <el-table-column align="center" label="审批状态" prop="reviewStatus" width="110">
         <template #default="{ row }">
           <span :class="generateStatus(row.reviewStatus).color">
             {{ generateStatus(row.reviewStatus).text }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="审批人" min-width="100" prop="reviewPersonName">
+      <el-table-column align="center" label="审批人" prop="reviewPersonName" :width="flexColumnWidth(dataList, '审批人', 'reviewPersonName')">
         <template #default="{ row }">
           {{ row.reviewPersonName }}
         </template>
       </el-table-column>
 
-      <el-table-column align="center" fixed="right" label="操作" :width="!foldOperation ? 215 : 120">
+      <el-table-column align="center" fixed="right" label="操作" width="120">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="handleOrderProcess(row)">
@@ -190,15 +201,14 @@ import type { TableColumnCtx, TableInstance } from 'element-plus'
 import { getByIdQueryEvaluation } from '/@/api/devlocal/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation } from '/@/type/progress/progressType'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { indexColumns } from '../newProductProgress/indexColumns'
 import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
 import type { IReviewQueryItem, IReviewQueryReq } from '/@/type/review/review'
 import { formatDate } from '/@/utils/dateUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'DefaultTable',
 })
-
 
 interface SpanMethodProps {
   row: IReviewQueryItem
@@ -215,7 +225,6 @@ const queryForm = reactive<IReviewQueryReq>({
   pageNo: 1,
   pageSize: 20,
 })
-const foldOperation = ref<boolean>(false)
 
 const dataList = ref<IReviewQueryItem[]>([])
 // 控制分数明细是否显示
@@ -235,15 +244,6 @@ const formattedProgressLog = (str: string) => {
     .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
     .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
 };
-// table单击修改
-const reviewTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-    updateUploadPriviewVisible()
-    setPreviewList(row.SKUimg)
-  }
-}
 
 // 分数明细
 const handleGetScoreById = async (idNo: number) => {
@@ -329,8 +329,6 @@ const handleOrderReview = (row: IReviewQueryItem) => {
       timestamp: Date.now(),
     },
   })
-
-
 }
 
 const handleOrderProcess = (row: IReviewQueryItem) => {
@@ -360,7 +358,6 @@ const queryData = () => {
   fetchData()
 }
 
-
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
@@ -369,14 +366,11 @@ const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false;
 }
-// 控制图片是否预览
-const updateUploadPriviewVisible = () => {
-  imagePreviewVisible.value = true
-}
 // 修改图片预览列表
-const setPreviewList = (imageUrl: string) => {
+const setPreviewList = (url: string) => {
+  imagePreviewVisible.value = true
   imagePreviewList.value = []
-  imagePreviewList.value.push(imageUrl)
+  imagePreviewList.value.push(url)
 }
 
 // 列表col合并方法
@@ -412,7 +406,12 @@ const objectSpanMethod = ({
     }
   }
 }
-
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): string => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
+}
 
 let previous: any = null; 
 let currentGroupIndex = 0; // 当前组索引
@@ -457,8 +456,6 @@ onBeforeMount(() => {
   border-color: #fff;
 }
 
-
-
 .status-editing {
   color: orange;
 }
@@ -490,6 +487,14 @@ onBeforeMount(() => {
 :deep(.row-striped) {
   // background-color: var(--el-fill-color-lighter);
   background-color: var(--el-fill-color-lighter);
+}
+.noneHoveTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoveTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
 }
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {

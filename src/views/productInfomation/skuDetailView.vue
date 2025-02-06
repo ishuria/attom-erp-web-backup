@@ -226,14 +226,14 @@
                   v-for="item in columns"
                   :key="item.label"
                   :class="{'non-draggable': item.disableCheck}"
-                  style="font-size: var(--el-font-size-base); display: flex; align-items: center;" 
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base);" 
                 >
                   <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
                   <span style="flex: 1">{{ item.label }}</span>
                   <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
                     <el-icon><view /></el-icon>
                   </span>
-                  <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer;" @click="handleChecked(item)">
                     <el-icon v-show="!item.checked"><hide /></el-icon>
                     <el-icon v-show="item.checked"><view /></el-icon>
                   </span>
@@ -1741,9 +1741,9 @@ onMounted(() => {
     margin-right: 10px;
 }
 :deep(.el-card__body) {
-    padding-bottom: 2px;
-    padding-right: 0;
-    padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 2px;
+  padding-left: 0;
 }
 .product-details-card {
     border: 0;
@@ -1757,7 +1757,7 @@ onMounted(() => {
   transform-origin: center;
 }
 .none {
-    display: none;
+  display: none;
 }
 
 .component-upload {
@@ -1771,10 +1771,10 @@ onMounted(() => {
 :deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
   width: 100%;
   height: 100%;
-  transition: none;
   margin: 0;
   border: 0;
   border-radius: 0;
+  transition: none;
 }
 :deep(.component-upload .el-upload--picture-card) {
   width: 100%;
@@ -1784,21 +1784,21 @@ onMounted(() => {
   line-height: inherit;
 }
 .overflow-text {
+  display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
-  display: block;
 }
 
 .transfer-container {
-    display: flex;
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中，如果需要 */
+  display: flex;
+  align-items: center; 
+  justify-content: center;
 }
 /* 上面的图片上传框对齐 */
 .upload-align {
-  margin-top: 30px;
   width: 100%;
   height: 100%;
+  margin-top: 30px;
 }
 :deep(.upload-align .el-upload-list--picture-card) {
   width: 100%;
@@ -1806,11 +1806,11 @@ onMounted(() => {
 }
 
 :deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {
-  transition: none;  
   width: 100%;
   height: 100%;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  transition: none;  
 }
 
 :deep(.upload-align .el-upload--picture-card) {
@@ -1838,9 +1838,9 @@ onMounted(() => {
   -moz-appearance: textfield;
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 .icon-hover {
   padding: 6px;
@@ -1849,8 +1849,8 @@ onMounted(() => {
 }
 
 .icon-hover:hover {
-  background-color: #f2f2f2; /* 浅灰色背景 */
   color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0px;

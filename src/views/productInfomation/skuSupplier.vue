@@ -675,9 +675,9 @@ onBeforeMount(() => {
   max-height: 81.2px;
 }
 .overflow-text {
+  display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
-  display: block;
 }
 :deep(.el-upload-list--picture-card .el-upload-list__item) {
   width: 75px;
@@ -706,8 +706,8 @@ onBeforeMount(() => {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 </style>

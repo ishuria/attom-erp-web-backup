@@ -1,4 +1,4 @@
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
+import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
 
 export interface IgetProductListQuery {
   keyWord: string

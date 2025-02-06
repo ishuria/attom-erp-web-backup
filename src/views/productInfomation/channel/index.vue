@@ -70,7 +70,7 @@
     >
       <el-form ref="modifyFormRef" label-position="top" :model="modifyForm">
         <el-form-item label="类别" prop="typeId">
-          <el-select v-model="modifyForm.typeId" placeholder="请选择类别">
+          <el-select v-model="modifyForm.typeId" placeholder="请选择类别" @change="handleGetTypeChannel">
             <el-option 
               v-for="item in merchandiseTypeList"
               :key="item.id"
@@ -173,7 +173,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { addMerchandise, getFreightForwarderQuery, getMerchandiseList, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
+import { addMerchandise, getFreightForwarderQuery, getMerchandiseList, getMerchandiseTypeChannel, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateMerchandiseTypeBatch, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
 import type { IGetMerchandiseList, IGetMerchandiseListReq, IGetMerchandiseTypeList, IGetSkuShippingChannelList } from '/@/type/productInformation/channelType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -222,6 +222,11 @@ const setUpBatch = ref<boolean>(false)
 const setSelectedSetUpRows = (value: any) => {
   selectedSetUpRows.value = value
 }
+// 根据货物类别id 获取table
+const handleGetTypeChannel = async () => {
+  const { data } = await getMerchandiseTypeChannel({ typeId: modifyForm.typeId })
+  modifyForm.list = data
+}
 // 货物类别的批量修改
 const handleModifyBatchSetUp = async () => {
   if (selectedSetUpRows.value.length === 0) {
@@ -232,6 +237,7 @@ const handleModifyBatchSetUp = async () => {
   setUpBatch.value = true
   const { data } = await getFreightForwarderQuery()
   freightForwarderList.value = data
+  setUpModifyForm.channelId = ''
 }
 // 外面的批量修改
 const handleConfirmModify = async () => {
@@ -292,15 +298,28 @@ const handleModifySetUp = async (row: IGetMerchandiseList) => {
   setUpModifyForm.channelId = item?.id || ''
 }
 const handleUpdateModifySetUp = async () => {
-  const { data } = await updateMerchandise({
-    id: _id.value,
-    channelId: setUpModifyForm.channelId
-  })
-  if (data) {
-    $baseMessage('修改渠道成功! ', 'success')
-    setUpModifyVisible.value = false
-    fetchSetUpData()
+  if (setUpBatch.value) {
+    const ids = selectedSetUpRows.value.map((item) => item.id).join(',')
+    const { data } = await updateMerchandiseTypeBatch({ ids, channelId: setUpModifyForm.channelId })
+    if (data) {
+      $baseMessage('批量修改渠道成功！', 'success')
+      setUpModifyVisible.value = false
+      fetchSetUpData()
+      fetchData()
+    }
+  } else {
+    const { data } = await updateMerchandise({
+      id: _id.value,
+      channelId: setUpModifyForm.channelId
+    })
+    if (data) {
+      $baseMessage('修改渠道成功! ', 'success')
+      setUpModifyVisible.value = false
+      fetchSetUpData()
+      fetchData()
+    }
   }
+  
 }
 const handleShowAdd = async () => {
   addVisible.value = true

@@ -80,3 +80,12 @@ export interface IUpdateBatchSkuShippingChannelMerchandise {
   ids: string
   merchandiseId: number
 }
+// SKU货物类别-货物类别对应的站点渠道列表
+export interface IGetMerchandiseTypeChannelRes {
+  data: { siteName: string, channel: string }[]
+}
+// SKU货物类别-批量修改渠道id
+export interface IUpdateMerchandiseTypeBatchReq {
+  ids: string
+  channelId: number
+}

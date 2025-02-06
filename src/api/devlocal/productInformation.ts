@@ -6,12 +6,14 @@ import type {
   IGetMerchandiseDetail,
   IGetMerchandiseListReq,
   IGetMerchandiseListRes,
+  IGetMerchandiseTypeChannelRes,
   IGetMerchandiseTypeListRes,
   IGetSkuShippingChannelListRes,
   IId,
   ITypeId,
   IUpdateBatchSkuShippingChannelMerchandise,
   IUpdateMerchandiseReq,
+  IUpdateMerchandiseTypeBatchReq,
   IUpdateSkuShippingChannelMerchandise
 } from '/@/type/productInformation/channelType'
 import type {
@@ -724,5 +726,25 @@ export function updateBatchSkuShippingChannelMerchandise(params: IUpdateBatchSku
     url: `${BASE_API}/sku/shipping/channel/merchandise/update/batch`,
     method: 'post',
     params
+  })
+}
+/**
+ * @description SKU货物类别-货物类别对应的站点渠道列表
+ */
+export function getMerchandiseTypeChannel(params: { typeId: number }): Promise<IGetMerchandiseTypeChannelRes> {
+  return request({
+    url: `${BASE_API}/merchandise/type/channel`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * @description SKU货物类别-批量修改渠道id
+ */
+export function updateMerchandiseTypeBatch(data: IUpdateMerchandiseTypeBatchReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/merchandise/type/batch/update`,
+    method: 'post',
+    data
   })
 }
