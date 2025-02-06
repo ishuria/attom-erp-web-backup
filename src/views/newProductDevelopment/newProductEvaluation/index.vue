@@ -320,6 +320,9 @@ const fixed = ref<string>('right')
 
 const handleWidth = (item: any) => {
   switch (item.label) {
+    case '评估人': {
+      return flexColumnWidth(evaluationList.value, '评估人', 'evaluatorName', 10)
+    }
     case '来源': {
       return flexColumnWidth(evaluationList.value, '来源', 'productSource', 10)
     }

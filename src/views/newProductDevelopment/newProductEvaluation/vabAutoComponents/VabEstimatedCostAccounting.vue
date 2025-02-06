@@ -20,7 +20,7 @@
       >
         <el-table-column type="selection" width="38" />
         <el-table-column label="日期" min-width="110" prop="createTime" />
-        <el-table-column label="站点" min-width="160" prop="site">
+        <el-table-column label="站点" min-width="170" prop="site">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%" @change="handlerSiteChange(row)">
               <el-option v-for="dict in props.siteList" :key="dict.id" :label="dict.label" :value="dict.id" />

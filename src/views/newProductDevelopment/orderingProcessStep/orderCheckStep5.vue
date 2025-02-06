@@ -1,69 +1,70 @@
 <template>
   <div>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; ">
       <el-table 
-          ref="tableRef" 
-          border class="table1" 
-          :data="exchangeList" 
-          :header-cell-style="{ 'text-align': 'right' }"
-          :show-header="false"
-          stripe
-          style="width: auto; table-layout: fixed;"
-          @cell-click="tableInputChange"
+        ref="tableRef" 
+        border class="table1" 
+        :data="exchangeList" 
+        :header-cell-style="{ 'text-align': 'right' }"
+        :show-header="false"
+        stripe
+        style="width: auto; table-layout: fixed;"
       >
-          <!-- 第一列固定标签列 -->
-          <el-table-column 
-              align="right" 
-              fixed 
-              :label="labelMap['column0']"
-              :prop="'column0'"
-              width="260"
-          >
-              <template #default="{ row }">
-                  <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
-              </template>
-          </el-table-column>
-          <el-table-column 
-              v-for="(prop, i) in columnsChange" 
-              :key="i" 
-              align="center" 
-              :label="prop" 
-              min-width="240" 
-              :prop="prop"
-          >
-              <template #default = {row}>
-                  
-                  <template v-if="row['column0'] === 'variantImg'">
-                      <el-image data-img="img" fit="fill" :src="row[prop]" style="width: 75px; height: 75px" />
-                  </template>
-                  <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                    <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
-                      <el-option 
-                        v-for="item in photoSampleOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                  </template>
-                  <template v-if="row['column0'] === 'packagingSize'">
-                      {{ row[prop] }} cm
-                  </template>
-                  <template v-if="row['column0'] === 'productSize'">
-                      {{ row[prop] }} inch
-                  </template>
-                  <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'packagingSize'&& row['column0'] !== 'productSize'">
-                    {{ row[prop] }}
-                  </template>
-              </template>
-          </el-table-column>
-          <template #empty>
-              <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+        <!-- 第一列固定标签列 -->
+        <el-table-column 
+          align="right" 
+          fixed 
+          :label="labelMap['column0']"
+          :prop="'column0'"
+          width="260"
+        >
+          <template #default="{ row }">
+            <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
           </template>
+        </el-table-column>
+        <el-table-column 
+          v-for="(prop, i) in columnsChange" 
+          :key="i" 
+          align="center" 
+          :label="prop" 
+          min-width="240" 
+          :prop="prop"
+        >
+          <template #default = {row}>  
+            <template v-if="row['column0'] === 'variantImg'">
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                <el-image fit="fill" :src="row[prop]" style="display: block; width: 75px; height: 75px" @click="setPreviewImage(row[prop])">
+                  <template #error><el-icon /></template>
+                </el-image>
+              </div>
+            </template>
+            <template v-if="row['column0'] === 'sampleRetentionStatus'">
+              <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
+                <el-option 
+                  v-for="item in photoSampleOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </template>
+            <template v-if="row['column0'] === 'packagingSize'">
+              {{ row[prop] }} cm
+            </template>
+            <template v-if="row['column0'] === 'productSize'">
+              {{ row[prop] }} inch
+            </template>
+            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'packagingSize'&& row['column0'] !== 'productSize'">
+              {{ row[prop] }}
+            </template>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+        </template>
       </el-table>
     </div>
 
-      
     <div>
       <el-table 
         border :cell-style="{ 'text-align': 'center' }" 
@@ -98,9 +99,6 @@
             {{ generateDealMethod(row.dealMethod) }}
           </template>
         </el-table-column>
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-        </template>
       </el-table>
     </div>
        
@@ -114,11 +112,10 @@
   
 <script lang="ts" setup>
 import { reviewProductManager, reviewStepNo6CheckGet, reviewStepNo6CheckGetMold } from '/@/api/devlocal/orderProcess'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
-    name: 'OrderCheckStep5',
+  name: 'OrderCheckStep5',
 })
 
 const emit = defineEmits<{ 
@@ -134,17 +131,11 @@ const photoSampleOptions = [
     { label: '已有拍照样品,大货无需留样', value: 0 },
     { label: '大货需要留样拍照', value: 1 }
 ];
-// table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  
-  if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-    emit("update:priviewListValue", ` ${el.src}`)
-    emit("update:imagePreviewVisibale", true)
-  }
-}
 
+const setPreviewImage = (url: string) => {
+  emit("update:priviewListValue", url)
+  emit("update:imagePreviewVisibale", true)
+}
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
 }

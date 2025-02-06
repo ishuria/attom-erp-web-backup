@@ -778,14 +778,14 @@
               placeholder="长"
               style="flex: 1; margin-right: 0"
             />
-            <span style="display: inline-block; text-align: center; font-size: 1.5em;">×</span>
+            <span style="display: inline-block; font-size: 1.5em; text-align: center;">×</span>
             <el-input
               v-model.trim="qualityInspectionForm.packageWidth"
               clearable
               placeholder="宽"
               style="flex: 1; margin-right: 0"
             />
-            <span style="display: inline-block; text-align: center; font-size: 1.5em;">×</span>
+            <span style="display: inline-block;font-size: 1.5em; text-align: center;">×</span>
             <el-input
               v-model.trim="qualityInspectionForm.packageHeight"
               clearable
@@ -795,7 +795,8 @@
           </el-row>
         </el-form-item>
         <el-form-item label="包装重量(g)" prop="packageWeight">
-          <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable style="margin-right: 0"/>
+          <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable style="margin-right: 12px"/>
+          <el-button type="success">更新SKU尺寸重量</el-button>
         </el-form-item>
 
         <el-table
@@ -996,7 +997,7 @@
         <el-table-column label="SKU" min-width="100" prop="sku"/>
         <el-table-column label="图片" width="82">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="width: 100%; height: 100%; display: block">
+            <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%;">
               <template #error>
                 <el-icon/>
               </template>
@@ -1024,7 +1025,7 @@
       width="20%"
       @close="closeModifyDialog"
     >
-      <el-form ref="modifyFormRef" label-position="right" label-width="auto" :model="modifyForm" :rules="modifyRules" style="margin-left: 20px; margin-right: 20px;">
+      <el-form ref="modifyFormRef" label-position="right" label-width="auto" :model="modifyForm" :rules="modifyRules" style="margin-right: 20px; margin-left: 20px;">
         <el-form-item label="站点" prop="site" style="width: 97%">
           <el-select v-model="modifyForm.site" clearable placeholder="请选择站点">
             <el-option 
@@ -1051,7 +1052,7 @@
       width="23%"
       @close="closeModifyTask"
     >
-      <el-form ref="modifyTaskFormRef" label-position="right" label-width="auto" :model="modifyTaskForm" :rules="modifyTaskRules" style="margin-left: 20px; margin-right: 20px;">
+      <el-form ref="modifyTaskFormRef" label-position="right" label-width="auto" :model="modifyTaskForm" :rules="modifyTaskRules" style="margin-right: 20px; margin-left: 20px;">
         <el-form-item label="数量减少的任务" prop="reduceTaskId" style="width: 97.5%">
           <el-select v-model="modifyTaskForm.reduceTaskId" clearable placeholder="请选择数量减少的任务" @change="reduceTaskChange">
             <el-option 
@@ -1089,7 +1090,7 @@
       title="打包总数"
       width="22%"
     >
-      <el-form ref="packingCountFormRef" label-position="left" label-width="auto" :model="packingCountForm" style="margin-left: 20px; margin-right: 0px">
+      <el-form ref="packingCountFormRef" label-position="left" label-width="auto" :model="packingCountForm" style="margin-right: 0px; margin-left: 20px;">
         <el-form-item label="任务数量" prop="packageTaskCount">
           <div style="width: 85%;">
             <el-input v-model="packingCountForm.packageTaskCount" disabled  />
@@ -1099,7 +1100,7 @@
           <div style="width: 85%; margin-right: 10px;">
             <el-input v-model.trim="packingCountForm.goodCount" clearable/>
           </div>
-          <div style="width: 10%; display: flex; align-items: center">
+          <div style=" display: flex; align-items: center; width: 10%;">
             <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><circle-plus /></el-icon>
           </div>
         </el-form-item>
@@ -1149,7 +1150,7 @@
       width="17%"
       @close="handleCloseAdd"
     >
-      <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-left: 20px; margin-right: 20px">
+      <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-right: 20px; margin-left: 20px;">
         <el-form-item label="好" prop="good">
           <el-input v-model.trim="addForm.good" clearable />
         </el-form-item>
@@ -1192,7 +1193,7 @@
       width="20%"
       @close="closeSplitTask"
     >
-      <el-form ref="splitTaskFormRef" label-position="right" label-width="auto" :model="splitTaskForm" :rules="splitRules" style="margin-left: 20px; margin-right: 20px">
+      <el-form ref="splitTaskFormRef" label-position="right" label-width="auto" :model="splitTaskForm" :rules="splitRules" style="margin-right: 20px; margin-left: 20px;">
         <el-form-item label="拆分的数量" prop="splitCount">
           <el-input v-model="splitTaskForm.splitCount" clearable/>
         </el-form-item>
@@ -2249,8 +2250,8 @@ onBeforeMount(() => {
             padding-top: 0;
             padding-bottom: 0;
             .cell {
-              padding-left: 0;
               padding-right: 0;
+              padding-left: 0;
             }
           }
         }
@@ -2285,8 +2286,8 @@ onBeforeMount(() => {
 //   min-height: 60px;
 // }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0px;
   padding-right: 0px;
+  padding-left: 0px;
 }
 .el-table :deep(.clear-padding) {
   padding-top: 0px;
@@ -2326,8 +2327,8 @@ onBeforeMount(() => {
   color: var(--el-color-primary); 
 }
 .overflow-text {
-  max-height: 60px;
   display: block;
+  max-height: 60px;
   overflow-y: auto;
 }
 .barcodeForm {

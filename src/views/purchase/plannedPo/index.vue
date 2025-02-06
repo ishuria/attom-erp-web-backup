@@ -866,8 +866,8 @@ onUnmounted(() => {
   padding-bottom: 0;
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
@@ -883,9 +883,9 @@ onUnmounted(() => {
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>
   

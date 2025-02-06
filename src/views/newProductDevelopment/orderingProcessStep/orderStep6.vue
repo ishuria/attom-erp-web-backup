@@ -1,142 +1,138 @@
 <template>
   <div>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <el-table 
-                ref="tableRef" 
-                border class="table1" 
-                :data="exchangeList" 
-                :header-cell-style="{ 'text-align': 'right' }"
-                :show-header="false"
-                stripe
-                style="width: auto; table-layout: fixed;"
-                @cell-click="tableInputChange"
-            >
-                <!-- 第一列固定标签列 -->
-                <el-table-column 
-                    align="right" 
-                    fixed 
-                    :label="labelMap['column0']"
-                    :prop="'column0'"
-                    width="260"
-                >
-                    <template #default="{ row }">
-                        <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
-                    </template>
-                </el-table-column>
-                <el-table-column 
-                    v-for="(prop, i) in columnsChange" 
-                    :key="i" 
-                    align="center" 
-                    :label="prop" 
-                    min-width="260" 
-                    :prop="prop"
-                >
-                    <template #default = {row}>
-                        
-                        <template v-if="row['column0'] === 'variantImg'">
-                            <el-image data-img="img" fit="fill" :src="row[prop]" style="width: 75px; height: 75px" />
-                        </template>
-                        <template v-if="row['column0'] === 'sampleRetentionStatus'">
-                          <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择拍照留样情况">
-                            <el-option 
-                              v-for="item in photoSampleOptions"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value"
-                            />
-                          </el-select>
-                        </template>
-                        <template v-if="row['column0'] === 'packagingSize'">
-                            {{ row[prop] }} cm
-                        </template>
-                        <template v-if="row['column0'] === 'productSize'">
-                            {{ row[prop] }} inch
-                        </template>
-                        <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'productSize' && row['column0'] !== 'packagingSize' && row['column0'] !== 'sampleRetentionStatus'">
-                          {{ row[prop] }}
-                        </template>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-                </template>
-            </el-table>
-        </div>
-
-      
-          <div>
-            <el-table 
-              border :cell-style="{ 'text-align': 'center' }" 
-              :data="moldCheckList" 
-              :header-cell-style="{ 'text-align': 'center' }"
-              height="100"
-              stripe
-              style="margin-top: 25px;"
-            >
-              <el-table-column label="提交日期" min-width="100" prop="createTime">
-                  <template #default="{ row }">
-                    <span>{{ row.createTime.split(' ')[0] }}</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="零件名" min-width="200" prop="component"/>
-              <el-table-column label="供应商" min-width="127" prop="suppliser"/>
-              <el-table-column align="center" label="状态" min-width="127" prop="status">
-                <template #default="{ row }">
-                    <span :class="generateStatus(row.status).color">
-                        {{ generateStatus(row.status).text }}
-                    </span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="开票类型" min-width="127" prop="invoiceType">
-                <template #default="{ row }">
-                  {{ generateInvoiceType(row.invoiceType) }}
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="付款金额" min-width="127" prop="payPrice"/>
-              <el-table-column align="center" label="开模处理方式" min-width="127" prop="dealMethod">
-                <template #default="{ row }">
-                  {{ generateDealMethod(row.dealMethod) }}
-                </template>
-              </el-table-column>
-              <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
-              </template>
-            </el-table>
-          </div>
-          <vab-dialog 
-            v-model="checkPersonListVisible" 
-            :before-close="handleCheckPersonClose" 
-            title="审批人选择"
-       
-            width="480"
-          >
-            <el-form style="margin: 0">
-              <el-form-item label="审批人员列表">
-                <el-select 
-                  v-model="reviewPersonId" 
-                  clearable  
-                  collapse-tags
-                  collapse-tags-tooltip
-                  placeholder="请选择审批人员"
-                >
-                  <el-option v-for="item in personList" :key="item.userId" :label="item.userName" :value="item.userId" />
-                </el-select>
-              </el-form-item>
-            </el-form>
-            <template #footer>
-              <el-button type="primary" @click="handlePersonSelectConfirm">提交</el-button>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; ">
+      <el-table 
+        ref="tableRef" 
+        border class="table1" 
+        :data="exchangeList" 
+        :header-cell-style="{ 'text-align': 'right' }"
+        :show-header="false"
+        stripe
+        style="width: auto; table-layout: fixed;"
+      >
+        <!-- 第一列固定标签列 -->
+        <el-table-column 
+          align="right" 
+          fixed 
+          :label="labelMap['column0']"
+          :prop="'column0'"
+          width="260"
+        >
+          <template #default="{ row }">
+            <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
+          </template>
+        </el-table-column>
+        <el-table-column 
+          v-for="(prop, i) in columnsChange" 
+          :key="i" 
+          align="center" 
+          :label="prop" 
+          min-width="260" 
+          :prop="prop"
+        >
+          <template #default="{ row }">
+            <template v-if="row['column0'] === 'variantImg'">
+              <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                <el-image fit="fill" :src="row[prop]" style="display: block; width: 75px; height: 75px" @click="setPreviewImage(row[prop])">
+                  <template #error><el-icon /></template>
+                </el-image>
+              </div>
             </template>
-          </vab-dialog>
-        <div class="pay-button-group">
-            <el-button @click="handleGoback">上一步</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>
-        </div>
+            <template v-if="row['column0'] === 'sampleRetentionStatus'">
+              <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择拍照留样情况">
+                <el-option 
+                  v-for="item in photoSampleOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </template>
+            <template v-if="row['column0'] === 'packagingSize'">
+              {{ row[prop] }} cm
+            </template>
+            <template v-if="row['column0'] === 'productSize'">
+              {{ row[prop] }} inch
+            </template>
+            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'productSize' && row['column0'] !== 'packagingSize' && row['column0'] !== 'sampleRetentionStatus'">
+              {{ row[prop] }}
+            </template>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+        </template>
+      </el-table>
+    </div>
+  
+    <div>
+      <el-table 
+        border :cell-style="{ 'text-align': 'center' }" 
+        :data="moldCheckList" 
+        :header-cell-style="{ 'text-align': 'center' }"
+        height="100"
+        stripe
+        style="margin-top: 25px;"
+      >
+        <el-table-column label="提交日期" min-width="100" prop="createTime">
+            <template #default="{ row }">
+              <span>{{ row.createTime.split(' ')[0] }}</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="零件名" min-width="200" prop="component"/>
+        <el-table-column label="供应商" min-width="127" prop="suppliser"/>
+        <el-table-column align="center" label="状态" min-width="127" prop="status">
+          <template #default="{ row }">
+              <span :class="generateStatus(row.status).color">
+                  {{ generateStatus(row.status).text }}
+              </span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="开票类型" min-width="127" prop="invoiceType">
+          <template #default="{ row }">
+            {{ generateInvoiceType(row.invoiceType) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="付款金额" min-width="127" prop="payPrice"/>
+        <el-table-column align="center" label="开模处理方式" min-width="127" prop="dealMethod">
+          <template #default="{ row }">
+            {{ generateDealMethod(row.dealMethod) }}
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <vab-dialog 
+      v-model="checkPersonListVisible" 
+      :before-close="handleCheckPersonClose" 
+      title="审批人选择"
+      width="480"
+    >
+      <el-form style="margin: 0">
+        <el-form-item label="审批人员列表">
+          <el-select 
+            v-model="reviewPersonId" 
+            clearable  
+            collapse-tags
+            collapse-tags-tooltip
+            placeholder="请选择审批人员"
+          >
+            <el-option v-for="item in personList" :key="item.userId" :label="item.userName" :value="item.userId" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="handlePersonSelectConfirm">提交</el-button>
+      </template>
+    </vab-dialog>
+    <div class="pay-button-group">
+      <el-button @click="handleGoback">上一步</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交审核</el-button>
+    </div>
   </div>
 </template>
   
 <script lang="ts" setup>
 import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
@@ -161,14 +157,10 @@ const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
 const props = defineProps<{ step1Data: number }>()
 const route: any = useRoute()
-// table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-      emit("update:priviewListValue", el.src)
-      emit("update:imagePreviewVisibale", true)
-    }
+
+const setPreviewImage = (url: string) => {
+  emit("update:priviewListValue", url)
+  emit("update:imagePreviewVisibale", true)
 }
 const handleCheckPersonClose = () => {
   checkPersonListVisible.value = false

@@ -310,8 +310,8 @@ v-for="dict in invoicingList" :key="dict.value"
         :header-cell-style="{ 'text-align': 'center' }" stripe
         @cell-click="changeInput"
       >
-        <el-table-column align="center" label="变体" min-width="100" prop="variant"/>
-        <el-table-column label="站点" min-width="135" prop="site">
+        <el-table-column align="center" label="变体" prop="variant" :width="flexColumnWidth(variantsList, '变体', 'variant')"/>
+        <el-table-column label="站点" prop="site" width="185">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handlerSiteChange(row)">
               <el-option v-for="dict in siteList" :key="dict.id" :label="dict.label" :value="dict.id"/>
@@ -1224,10 +1224,10 @@ onMounted(()=>{
 }
 
 .container {
-  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  width: 100%;
 }
 
 .table-container {
@@ -1256,9 +1256,9 @@ onMounted(()=>{
   height: 75px;
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>
   

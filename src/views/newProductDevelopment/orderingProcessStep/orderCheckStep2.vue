@@ -3,121 +3,123 @@
     <div class="table-container">
       <el-table 
         ref="tableRef" 
-        border :data="componentList" 
+        border :cell-class-name="clearPadding" 
+        class="noneHoverTable"
+        :data="componentList"
         :header-cell-style="{ 'text-align': 'center' }" 
         stripe
         @cell-click="changeInput"
       >
         <el-table-column align="center" label="属于变体" min-width="140" prop="variant">
-            <template #default="{ row }">
-                <el-select v-model="row.variant" disabled  placeholder="请选择变体" style="min-width: 100%;">
-                    <el-option
-                        v-for="item in variantsSelectList"
-                        :key="item.id"
-                        :label="item.label"
-                        :value="item.id"
-                    />
-                </el-select>
-            </template>
+          <template #default="{ row }">
+            <el-select v-model="row.variant" disabled  placeholder="请选择变体" style="min-width: 100%;">
+              <el-option
+                v-for="item in variantsSelectList"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"
+              />
+            </el-select>
+          </template>
         </el-table-column>
-        <el-table-column align="center" label="零件图片" min-width="100">
-            <template #default="{ row }">
-                <el-image data-img="img" height="75px" :src="row.componentImgUrl" width="75px" />
-            </template>
+        <el-table-column align="center" label="零件图片" width="75">
+          <template #header>
+            零件<br />图片
+          </template>
+          <template #default="{ row }">
+            <el-image data-img="img" :src="row.componentImgUrl" style="display: block; width: 75px; height: 75px">
+              <template #error><el-icon /></template>
+            </el-image>
+          </template>
         </el-table-column>
         <el-table-column align="center" label="零件ID" min-width="70" prop="" width="100"/>   
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')"/>
         <el-table-column align="center"  label="每个SKU需要数量" prop="quantity" width="100">
-            <template #header>
-                每个SKU<br>需要数量
-            </template>
+          <template #header>
+            每个SKU<br>需要数量
+          </template>
         </el-table-column>
         <el-table-column align="center"  label="单位" min-width="70" prop="componentUnit"/>
         <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(componentList, '出厂', 'unitPrice')">
-            <template #header>
-                出厂<br>单价
-            </template>
+          <template #header>
+            出厂<br>单价
+          </template>
         </el-table-column>
 
         <el-table-column align="center" label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')">
-            <template #header>
-                出厂<br>总价
-            </template>
+          <template #header>
+            出厂<br>总价
+          </template>
         </el-table-column>
         <el-table-column align="center" label="每个SKU运费(含税)" min-width="100" prop="freight">
-            <template #header>
-                每个SKU<br>运费(含税)
-            </template>
+          <template #header>
+            每个SKU<br>运费(含税)
+          </template>
         </el-table-column>    
         <el-table-column align="center" label="总未税价" prop="preTaxPrice" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
-            <template #header>
-                总未<br>税价
-            </template>
+          <template #header>
+            总未<br>税价
+          </template>
         </el-table-column>
         <el-table-column align="center" label="总含税价" prop="taxIncludedPrice" :width="flexColumnWidth(componentList, '总含', 'taxIncludedPrice')">
-            <template #header>
-                总含<br>税价
-            </template>
+          <template #header>
+            总含<br>税价
+          </template>
         </el-table-column>    
         <el-table-column label="货币" prop="currency" width="110px">
-            <template #default="{ row }">
-                <el-select v-model="row.currency" disabled placeholder="请选择货币" style="min-width: 100%;">
-                    <el-option
-v-for="dict in currencyList" :key="dict.value"
-                        :label="dict.label" :value="dict.value"/>
-                </el-select>
-            </template>
+          <template #default="{ row }">
+            <el-select v-model="row.currency" disabled placeholder="请选择货币" style="min-width: 100%;">
+              <el-option v-for="dict in currencyList" :key="dict.value" :label="dict.label" :value="dict.value"/>
+            </el-select>
+          </template>
         </el-table-column>
-        <el-table-column align="center" label="起订量" min-width="100" prop="minimumOrderQuantity"/> 
-        <el-table-column align="center" label="整箱数" min-width="100" prop="numberFullCartons"/> 
-        <el-table-column align="center" label="供应商" min-width="140" prop="supplier"/>
+        <el-table-column align="center" label="起订量" min-width="90" prop="minimumOrderQuantity"/> 
+        <el-table-column align="center" label="整箱数" min-width="90" prop="numberFullCartons"/> 
+        <el-table-column align="left" label="供应商" prop="supplier" :width="flexColumnWidth(componentList, '供应商', 'supplier')"/>
         <el-table-column align="center" label="开票" prop="oem" width="140">
-            <template #default = "{ row }">
-                <el-select v-model="row.invoicing" disabled placeholder="请选择开票类型" style="min-width: 100%;">
-                    <el-option
-v-for="dict in invoicingList" :key="dict.value"
-                        :label="dict.label" :value="dict.value"/>
-                </el-select>
-            </template>
+          <template #default = "{ row }">
+            <el-select v-model="row.invoicing" disabled placeholder="请选择开票类型" style="min-width: 100%;">
+              <el-option v-for="dict in invoicingList" :key="dict.value" :label="dict.label" :value="dict.value"/>
+            </el-select>
+          </template>
         </el-table-column>
         <el-table-column  align="center" label="实际税点" min-width="60" prop="actualTaxRate">
-            <template #header>
-                实际<br>税点
-            </template>
+          <template #header>
+            实际<br>税点
+          </template>
         </el-table-column>
-
         <el-table-column  align="center" label="开票税点" min-width="60" prop="invoicingTaxRate">
-            <template #header>
-                开票<br>税点
-            </template>
+          <template #header>
+            开票<br>税点
+          </template>
         </el-table-column>
-
         
-        <el-table-column  label="采购链接" min-width="140" prop="purchaseLink">
-            <template #default="{ row }">
-                <span>
-                    <el-text truncated>
-                        {{ row.purchaseLink }}
-                    </el-text>
-                </span>
-            </template>
+        <el-table-column  label="采购链接" min-width="100" prop="purchaseLink">
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseLink) }}</div>
+              </template>
+              <el-text truncated>{{ row.purchaseLink }}</el-text>
+            </el-tooltip>
+          </template>
         </el-table-column>
-        <el-table-column  label="收货仓库" min-width="100" prop="remarks">
-            <el-select 
-                v-model="list.componentInfo!" 
-                allow-create
-                clearable
-                disabled
-                filterable
-                placeholder="请选择收货仓库"
-                :reserve-keyword = "false"
-                style="min-width: 100%"
-                value-key="id"
-            >
-                <el-option v-for="val in list" :key="val.id!" :label="val.label!" :value="val"/>
-            </el-select>
+        <el-table-column  label="收货仓库" min-width="150" prop="remarks">
+          <el-select 
+            v-model="list.componentInfo!" 
+            allow-create
+            clearable
+            disabled
+            filterable
+            placeholder="请选择收货仓库"
+            :reserve-keyword = "false"
+            style="min-width: 100%"
+            value-key="id"
+          >
+            <el-option v-for="val in list" :key="val.id!" :label="val.label!" :value="val"/>
+          </el-select>
         </el-table-column>
-        <el-table-column label="零件采购注意事项" min-width="200" prop="purchaseMatters">
+        <el-table-column align="left" label="零件采购注意事项" min-width="200" prop="purchaseMatters">
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
@@ -127,7 +129,7 @@ v-for="dict in invoicingList" :key="dict.value"
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column label="合同条款" min-width="200" prop="contractTerms">
+        <el-table-column align="left" label="合同条款" min-width="200" prop="contractTerms">
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
@@ -375,6 +377,12 @@ const fetchVariantsData = async () => {
         console.error(error)
     }
 }
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
+}
 onMounted(async ()=>{
     fetchDataComponent()
     fetchVariantsData()
@@ -382,6 +390,14 @@ onMounted(async ()=>{
 </script>
   
 <style lang="scss" scoped>
+.noneHoverTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoverTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
 .pay-button-group {
     display: block;
     margin: 20px auto;
@@ -389,10 +405,10 @@ onMounted(async ()=>{
 }
 
 .container {
-  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  width: 100%;
 }
 
 .table-container {
@@ -419,9 +435,9 @@ onMounted(async ()=>{
   height: 75px;
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 </style>
   

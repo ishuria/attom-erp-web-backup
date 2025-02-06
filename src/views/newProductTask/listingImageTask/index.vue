@@ -1332,7 +1332,7 @@ onBeforeMount(() => {
             }
           }
           .highlight {
-            color: var(--el-color-primary);
+            color: var(--el-color-danger);
           }
           .username-item {
             display: block;
