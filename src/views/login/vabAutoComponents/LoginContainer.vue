@@ -23,10 +23,10 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
-const show = ref<boolean>(false)
+const show = ref<boolean>(true)
 const bingStore = useBingStore()
 const { backgroundList } = storeToRefs(bingStore)
-const background = ref<string | undefined>('linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))')
+const background = ref<string | undefined>(`url(${backgroundList.value[0]})!important`)
 
 const handleShow = () => {
   if (show.value) background.value = `url(${backgroundList.value[0]})!important`

@@ -3,7 +3,7 @@
  */
 export const themeConfig: ThemeType = {
   //布局支持：分栏布局column、纵向布局vertical、横向布局horizontal、瀑布布局fall
-  layout: 'column',
+  layout: 'fall',
   //主题支持：默认default、简洁plain、科技technology
   themeName: 'default',
   //菜单宽度，仅支持px，建议大小：266px、277px、288px，其余尺寸会影响美观
@@ -19,15 +19,15 @@ export const themeConfig: ThemeType = {
   //是否开启顶部进度条
   showProgressBar: true,
   //是否开启页脚
-  showFooter: true,
+  showFooter: false,
   //是否开启标签页
   showTabs: true,
   //显示标签页时标签页样式：卡片风格card、灵动风格smart、圆滑风格smooth、矩形风格rect
-  tabsBarStyle: 'card',
+  tabsBarStyle: 'smooth',
   //是否显示标签页图标
   showTabsIcon: true,
   //是否开启标签拖拽（影响性能建议关闭）
-  tabDrag: false,
+  tabDrag: true,
   //是否开启语言选择组件
   showLanguage: true,
   //是否开启刷新组件
@@ -47,11 +47,11 @@ export const themeConfig: ThemeType = {
   //否默认收起左侧菜单
   foldSidebar: false,
   //是否开启页面动画  null、el-fade-in-linear、el-fade-in、el-zoom-in-center、el-zoom-in-top、el-zoom-in-bottom。
-  pageTransition: 'el-fade-in-linear',
+  pageTransition: 'null',
   // 圆角（单位px，类型必须为数字）
   radius: 5,
   // 是否开启锁屏
-  showLock: true,
+  showLock: false,
   // 是否开启颜色选择器组件
   showColorPicker: true,
   // 色弱
@@ -59,7 +59,7 @@ export const themeConfig: ThemeType = {
   //是否显示字体大小组件
   showFontSize: true,
   // 默认字体大小
-  fontSize: '14px',
+  fontSize: '15.5px',
   // 顶部右侧图标是否允许拖拽（影响性能建议关闭）
   rightToolsDrag: false,
 }

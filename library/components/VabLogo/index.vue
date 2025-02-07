@@ -11,7 +11,7 @@
         <vab-icon v-if="logo" :icon="logo" is-custom-svg />
       </span>
       <span class="title" :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }">
-        {{ title }}
+        {{ "上海云舟" }}
       </span>
     </router-link>
   </div>
@@ -25,7 +25,7 @@ defineOptions({
 })
 
 const settingsStore = useSettingsStore()
-const { theme, logo, title } = storeToRefs(settingsStore)
+const { theme, logo } = storeToRefs(settingsStore)
 </script>
 
 <style lang="scss" scoped>

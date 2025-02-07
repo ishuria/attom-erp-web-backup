@@ -6,7 +6,7 @@
         <div class="title">hello !</div>
         <div class="title-tips">{{ translate('欢迎来到') }} {{ title }}</div>
         <el-form-item prop="username">
-          <el-input v-model.trim="form.username" v-focus clearable :placeholder="translate('请输入用户名')" type="text">
+          <el-input v-model.trim="form.username" v-focus :placeholder="translate('请输入用户名')" type="text">
             <template #prefix>
               <vab-icon icon="user-line" />
             </template>
@@ -30,29 +30,29 @@
           </el-input>
         </el-form-item>
         <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
-        <el-form-item prop="verificationCode">
+        <!-- <el-form-item prop="verificationCode">
           <el-input v-model.trim="form.verificationCode" :placeholder="translate('验证码') + previewText" type="text">
             <template #prefix>
               <vab-icon icon="barcode-box-line" />
             </template>
           </el-input>
           <img class="code" :src="codeUrl" @click="changeCode" />
-        </el-form-item>
+        </el-form-item> -->
         <el-button v-throttle="handleLogin" class="login-btn" :loading="loading" type="primary">
           {{ translate('登录') }}
         </el-button>
-        <router-link to="/register">
+        <!-- <router-link to="/register">
           <el-button style="margin-top: 20px; margin-left: -10px" type="primary">
             {{ translate('注册') }}
           </el-button>
-        </router-link>
-        <router-link to="/password">
+        </router-link> -->
+        <!-- <router-link to="/password">
           <el-button style="margin-top: 20px" text type="primary">
             {{ translate('忘记密码') }}
           </el-button>
-        </router-link>
+        </router-link> -->
 
-        <div v-throttle="handleLogin" class="login-other hidden-xs-only">
+        <!-- <div v-throttle="handleLogin" class="login-other hidden-xs-only">
           <vab-icon icon="wechat-fill" style="color: #08c25f" />
           <vab-icon icon="alipay-fill" style="color: #226bf3" />
           <vab-icon icon="dingding-fill" style="color: #007ef8" />
@@ -60,7 +60,7 @@
           <vab-icon icon="tiktok-fill" style="color: #000000" />
           <vab-icon icon="weibo-fill" style="color: #df1e33" />
           <vab-icon icon="github-fill" style="color: #151515" />
-        </div>
+        </div> -->
       </el-form>
     </div>
   </login-container>
@@ -94,7 +94,7 @@ const loading = ref<boolean>(false)
 const passwordType = ref<string>('password')
 const redirect = ref<any>(undefined)
 let timer: ReturnType<typeof setInterval>
-const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
+// const codeUrl = ref<string>('https://www.oschina.net/action/user/captcha')
 const previewText = ref<string>('')
 const formRef = ref<FormInstance>()
 const passwordRef = ref<InputInstance>()
@@ -153,9 +153,9 @@ const handleLogin = async () => {
         }
     })
 }
-const changeCode = () => {
-  codeUrl.value = `https://www.oschina.net/action/user/captcha?timestamp=${Date.now()}`
-}
+// const changeCode = () => {
+//   codeUrl.value = `https://www.oschina.net/action/user/captcha?timestamp=${Date.now()}`
+// }
 
 onBeforeMount(() => {
   form.username = ''

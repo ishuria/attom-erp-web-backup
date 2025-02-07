@@ -5,7 +5,7 @@ export const settingConfig: {
   [key: string]: string | boolean | number | Array<string>
 } = {
   // 标题，此项修改后需要重启项目！！！ (包括初次加载雪花屏的标题 页面的标题 浏览器的标题)
-  title: 'Vue Shop Vite',
+  title: '上海云舟ERP系统',
   // 标题分隔符
   titleSeparator: ' - ',
   // 标题是否反转
@@ -34,7 +34,7 @@ export const settingConfig: {
   recordRoute: true,
   // 是否开启logo，不显示时设置false，请填写src/icon路径下的图标名称
   // 如需使用内置RemixIcon图标，请自行去logo组件切换注释代码(内置svg雪碧图较大，对性能有一定影响)
-  logo: 'vite',
+  logo: 'yunzhou',
   // 语言类型zh、en
   i18n: 'zh',
   // 消息框消失时间
