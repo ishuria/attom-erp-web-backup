@@ -30,7 +30,7 @@
       </el-col>
       <el-col :span="8">
         <vab-card class="card2" style="height: 400px;" title="库龄">
-          <div style="text-align: right; margin-bottom: 15px;">
+          <div style="margin-bottom: 15px; text-align: right;">
             <el-radio-group v-model="ageRadio" size="small" @change="handleSwitchBar">
               <el-radio-button label="数量" :value="0" />
               <el-radio-button label="占比" :value="1" />
@@ -66,7 +66,7 @@
         <vab-card class="card3" style="height: 150px;">
           <el-container style="display: flex; gap: 10px; align-items: center;">
             <el-aside style="width: 2.5em">
-              <el-text style="writing-mode: vertical-lr; letter-spacing: 0.3em;">包装信息</el-text>
+              <el-text style="letter-spacing: 0.3em; writing-mode: vertical-lr;">包装信息</el-text>
             </el-aside>
             <!-- 内容 -->
             <el-main style="flex: 1; padding: 0;">
@@ -107,13 +107,13 @@
             </el-main>
             <!-- 右侧图片 -->
             <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
-              <el-image src="https://picsum.photos/200/200" style="border-radius: 10px; display: block;">
+              <el-image src="https://picsum.photos/200/200" style="display: block; border-radius: 10px;">
                 <template #error><el-icon/></template>
               </el-image>
             </el-aside>
           </el-container>
         </vab-card>
-        <vab-card class="card4" style="height: 240px; position: relative;">
+        <vab-card class="card4" style="position: relative; height: 240px;">
           <div ref="chartContainer3" style="width: 100%; height: 240px;"></div>
           <div v-if="!dateRangeSelectVisible" style="position: absolute; top: 5px; right: 5px">
             <el-select v-model="card4Select" placeholder="请选择日期" size="default" style="max-width: 5em;" @change="handleCard4Select">
@@ -149,22 +149,22 @@
             <el-text>产品成本核算</el-text>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">新增</el-button>
+            <el-button type="primary" @click="handleOpenAdd">新增</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-table border :cell-style="cellStyle" :data="fakeData" :header-cell-style="{ textAlign: 'center' }" @cell-click="cellClick">
+    <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" @cell-click="cellClick">
       <el-table-column label="日期" min-width="115" prop="createTime"/>
-      <el-table-column label="站点" min-width="135" prop="">
+      <el-table-column label="站点" min-width="175" prop="site">
         <template #default="{ row }">
-          <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;">
+          <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handleUpdateList(row)">
             <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="外汇币种" min-width="100" prop=""/>
-      <el-table-column label="汇率" min-width="70" prop="foreignExchange"/>
+      <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
+      <el-table-column label="汇率" min-width="90" prop="foreignExchange"/>
       <el-table-column label="产品价格¥" min-width="110" prop="price">
         <template #default="{ row }">
           <div class="none">
@@ -173,7 +173,7 @@
           <span>{{ row.price != null ? '￥' + row.price : ''}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="长(cm)" min-width="80" prop="length">
+      <el-table-column label="长(cm)" min-width="90" prop="length">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -181,7 +181,7 @@
           <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="宽(cm)" min-width="80" prop="width">
+      <el-table-column label="宽(cm)" min-width="90" prop="width">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -189,7 +189,7 @@
           <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="高(cm)" min-width="80" prop="height">
+      <el-table-column label="高(cm)" min-width="90" prop="height">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -197,7 +197,7 @@
           <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="重量(g)" min-width="80" prop="weight">
+      <el-table-column label="重量(g)" min-width="100" prop="weight">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -205,10 +205,14 @@
           <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下一档位" min-width="100" prop=""/>
-      <el-table-column label="尺寸来源" min-width="120" prop="">
-        <template #default="">
-          <el-select style="min-width: 100%;">
+      <el-table-column label="下一档位" min-width="140" prop="nextGear">
+        <template #default="{ row }">
+          <span v-html="row.nextGear"></span>
+        </template>
+      </el-table-column>
+      <el-table-column label="尺寸来源" min-width="120" prop="sizeSource">
+        <template #default="{ row }">
+          <el-select v-model="row.sizeSource" style="min-width: 100%;" @change="handleUpdateList(row)">
             <el-option 
               v-for="item in sizeSourceOption"
               :key="item.value"
@@ -241,7 +245,7 @@
       </el-table-column>
       <el-table-column label="头程渠道" min-width="150" prop="firstMileChannel">
         <template #default="{ row }">
-          <el-select v-model="row.firstMileChannel" placeholder="请选择头程渠道" style="min-width: 100%;">
+          <el-select v-model="row.firstMileChannel" placeholder="请选择头程渠道" style="min-width: 100%;" @change="handleUpdateList(row)">
             <el-option v-for="item in channelList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
@@ -262,7 +266,11 @@
           <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
         </template>
       </el-table-column>
-      <el-table-column label="ROI" min-width="90" prop="roi"/>
+      <el-table-column label="ROI" min-width="90" prop="roi">
+        <template #default="{ row }">
+          {{ row.roi != null ? row.roi + '%' : '' }}
+        </template>
+      </el-table-column>
       <el-table-column label="重量系数" min-width="100" prop="weightCoefficient">
         <template #default="{ row }">
           <div class="none">
@@ -303,10 +311,10 @@
           <span>{{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="120">
-        <template #default="">
+      <el-table-column fixed="right" label="操作" width="110">
+        <template #default="{ row, $index }">
           <el-dropdown>
-            <el-button text type="primary">
+            <el-button text type="primary" @click="handleReverseCalc(row.id)">
               逆算
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -314,13 +322,13 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>
+                <el-dropdown-item @click="handleReverseCalc(row.id)">
                   <el-link type="primary" :underline="false">逆算</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item >
+                <el-dropdown-item @click="handleCopy(row.id)">
                   <el-link type="primary" :underline="false" >复制</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="handleDelete(row.id, $index)">
                   <el-link type="danger" :underline="false" >删除</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -329,6 +337,36 @@
         </template>
       </el-table-column>
     </el-table>
+    <vab-pagination 
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <!-- 新增 -->
+    <vab-dialog
+      v-model="addVisible"
+      title="新增"
+      width="20%"
+    >
+      <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" style="width: 100%">
+        <el-form-item label="站点" prop="site">
+          <el-select v-model="addForm.site" placeholder="请选择站点" >
+            <el-option 
+              v-for="item in siteAddList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseAdd">取消</el-button>
+        <el-button type="primary" @click="handleConfirmAdd">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -340,11 +378,39 @@ import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '.
 import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { getChannelList } from '~/src/api/devlocal/encasement'
-import { getSalesSiteList } from '~/src/api/devlocal/evaluation'
+import { getChannelList } from '/@/api/devlocal/encasement'
+import { getSalesSiteList } from '/@/api/devlocal/evaluation'
+import type { IGetOperationAmazonCostList, IGetOperationAmazonCostListReq } from '/@/type/storeOperation/productAnalysisType'
+import { addOperationAmazonCost, copyOperationAmazonCost, deleteOperationAmazonCost, getOperationAmazonCostList, reverseCalcOperationAmazonCost, updateOperationAmazonCost } from '/@/api/devlocal/productAnalysis'
+import type { FormInstance, FormRules } from 'element-plus';
 
 defineOptions({
   name: 'VabCostAnalysis'
+})
+
+const props = defineProps<{ sku: string }>()
+watch(
+  () => props.sku,
+  () => {
+    fetchData(); 
+  },
+  { immediate: false } 
+)
+// 新增弹窗
+const addVisible = ref<boolean>(false)
+const addForm = reactive<any>({
+  site: ''
+})
+const addFormRef = ref<FormInstance>()
+const addFormRules = reactive<FormRules>({
+  site: [{ required: true, message: '请选择站点', trigger: 'change' }]
+})
+const list = ref<IGetOperationAmazonCostList[]>([])
+const total = ref<number>(0)
+const queryForm = reactive<IGetOperationAmazonCostListReq>({
+  sku: '',
+  pageNo: 1,
+  pageSize: 20
 })
 
 const isOverflow = ref(false)
@@ -395,9 +461,7 @@ const data3 = ref<any[]>([
   { date: '2024-12-24', sku: 105, fba: 87, cost: 79, freight: 68 },
   { date: '2024-12-25', sku: 115, fba: 93, cost: 83, freight: 73 },
 ])
-const fakeData = [
-  { price: 20, createTime: '2024-12-26', roi: 0 }
-]
+
 const ageRadio = ref<number>(0)
 const imageHeight = ref<number>(0)
 const card4Select = ref<number>(0)
@@ -417,6 +481,80 @@ const percentageData = data1.value.map(item => ({
 let percentageAgeData: any[]
 let copyRow: any
 
+// 修改产品核算的站点
+const handleUpdateList = async (row: IGetOperationAmazonCostList) => {
+  const { data } = await updateOperationAmazonCost({
+    ...row,
+    grossMarginRate: Number(row.grossMarginRate) / 100,
+    roi: Number(row.roi) / 100,
+    tariff: Number(row.tariff) / 100
+  })
+  if (data) {
+    fetchData()
+  }
+}
+// 确定新增
+const handleConfirmAdd = async () => {
+  addFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await addOperationAmazonCost({
+        sku: props.sku,
+        site: addForm.site
+      })
+      if (data) {
+        $baseMessage('新增成功！', 'success')
+        handleCloseAdd()
+        fetchData()
+      }
+    }
+  })
+}
+// 关闭新增弹窗
+const handleCloseAdd = () => {
+  addVisible.value = false
+}
+// 打开新增弹窗
+const handleOpenAdd = () => {
+  addVisible.value = true
+  addForm.site = ''
+}
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchData()
+}
+const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = value
+  fetchData()
+}
+// 产品核算的复制
+const handleCopy = async (id: number) => {
+  $baseConfirm('确定要复制吗？', null, async () => {
+    const { data } = await copyOperationAmazonCost({ id })
+    if (data) {
+      $baseMessage('复制成功！', 'success')
+      fetchData()
+    }
+  })
+}
+// 产品核算的删除
+const handleDelete = async (id: number, index: number) => {
+  $baseConfirm('确定要删除吗？', null, async () => {
+    const { data } = await deleteOperationAmazonCost({ id })
+    if (data) {
+      $baseMessage('删除成功！', 'success')
+      list.value.splice(index, 1)
+    }
+  })
+}
+// 产品核算的逆算
+const handleReverseCalc = async (id: number) => {
+  const { data } = await reverseCalcOperationAmazonCost({ id })
+  if (data) {
+    $baseMessage('逆算成功！', 'success')
+    fetchData()
+  }
+}
 const handleCard4Select = () => {
   if (card4Select.value === 4) {
     dateRangeSelectVisible.value = true
@@ -785,7 +923,9 @@ const clickCancel = async (event: Event, value: any) => {
   if (isEqual(copyRow, value)) {
     return
   }
-  if (event.type === 'blur') { /* empty */ }
+  if (event.type === 'blur') { 
+    handleUpdateList(value)
+  }
 }
 const headerCellStyle = (): CSSProperties => {
   return {
@@ -812,11 +952,13 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   ) {
     return {
       fontWeight: 600,
-      textAlign: 'center'
+      textAlign: 'center',
+      cursor: 'not-allowed'
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
+    cursor: 'pointer'
   }
 }
 
@@ -829,6 +971,8 @@ const tooltipIsDisHandler = (event: any) => {
 }
 const channelList = ref<{ id: number, label: string }[]>([])
 const siteList = ref<{ id: number, label: string }[]>([])
+// 新增的站点列表，过滤掉沃尔玛
+const siteAddList = ref<{ id: number, label: string }[]>([])
 const fetchChannelData = async () => {
   const { data } = await getChannelList()
   channelList.value = data
@@ -836,6 +980,14 @@ const fetchChannelData = async () => {
 const fetchSalesSiteList = async () => {
   const { data } = await getSalesSiteList()
   siteList.value = data
+  siteAddList.value = siteList.value.filter((item) => item.label !== '沃尔玛US美国')
+}
+// 获取成本核算数据
+const fetchData = async () => {
+  queryForm.sku = props.sku
+  const { data } = await getOperationAmazonCostList(queryForm)
+  list.value = data.list
+  total.value = data.total
 }
 onBeforeMount(() => {
   fetchChannelData()
@@ -844,6 +996,7 @@ onBeforeMount(() => {
     ...item,
     percentage: ((item.value / totalAgeValue) * 100).toFixed(2)
   }))
+  fetchData()
 })
 
 onMounted(() => {  
@@ -913,22 +1066,22 @@ onMounted(() => {
     padding-left: 13px; 
 
     &::before {
-      content: '';
       position: absolute;
       top: 50%;
       left: -5px;
-      transform: translateY(-50%);
       width: 10px;
       height: 10px;
+      content: '';
+      background-color: var(--dot-color, gray);
       border-radius: 16px;
-      background-color: var(--dot-color, gray); /* 默认颜色 */
+      transform: translateY(-50%);
     }
   }
   .card2 {
     :deep() {
       .el-card__header {
-        border-bottom: 0;
         padding-bottom: 0;
+        border-bottom: 0;
       }
       .el-card__body {
         padding-top: 0;
@@ -939,10 +1092,10 @@ onMounted(() => {
   .card3 {
     :deep() {
       .el-card__body {
-        padding-left: 15px;
         padding-top: 10px;
-        padding-bottom: 0;
         padding-right: 10px;
+        padding-bottom: 0;
+        padding-left: 15px;
       }
     }
     margin-bottom: 10px;
@@ -959,40 +1112,40 @@ onMounted(() => {
     height: 1em;
     margin-left: 2px;
     &:hover {
-      cursor: pointer;
       color: #4e88f3;
+      cursor: pointer;
     }
   }
   .grid-container {
-    justify-content: flex-end;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 两列 */
     grid-template-rows: repeat(2, 1fr); /* 两行 */
+    grid-template-columns: repeat(2, 1fr); /* 两列 */
     gap: 10px; /* 单元格间隙 */
-
+    justify-content: flex-end;
+    
     .grid-item {
+      padding: 10px 5px 5px 10px;
+      overflow: hidden;
+      text-align: left;
       background-color: #f2f5fa;
       border: 0;
       border-radius: 5px;
-      padding: 10px 5px 5px 10px;
-      text-align: left;
-      overflow: hidden;
 
       .grid-title {
-        margin-bottom: 3px;
-        color: #606266;
         padding: 0 0 5px 0;
-        white-space: nowrap; /* 防止文字换行 */
+        margin-bottom: 3px;
         overflow: hidden;
+        color: #606266;
         text-overflow: ellipsis;
+        white-space: nowrap; /* 防止文字换行 */
       }
       .grid-value {
-        color: #4e88f3;
+        overflow: hidden;
         font-size: var(--el-font-size-base);
         font-weight: 550;
-        white-space: nowrap; /* 防止文字换行 */
-        overflow: hidden;
+        color: #4e88f3;
         text-overflow: ellipsis;
+        white-space: nowrap; /* 防止文字换行 */
 
         &-green {
           color: #24ada1;
@@ -1003,8 +1156,5 @@ onMounted(() => {
       }
     }
   }
-
-  
 }
-
 </style>

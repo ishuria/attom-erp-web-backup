@@ -13,7 +13,7 @@
               <vab-ad-pie-tab />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis v-if="activeName === 2" />
+              <vab-cost-analysis v-if="activeName === 2" :sku="sku" />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
               <vab-comment-reviews />
@@ -96,10 +96,10 @@
             </el-form>
             <el-form v-if="activeName === 2" inline>
               <el-form-item v-if="isSingle">
-                <el-text>SKU: {{ skuOptions[0] }}</el-text>
+                <el-text>SKU: {{ queryForm3.sku }}</el-text>
               </el-form-item>
               <el-form-item v-else label="SKU">
-                <el-select v-model="queryForm3.sku" placeholder="请选择SKU">
+                <el-select v-model="queryForm3.sku" placeholder="请选择SKU" @change="handleChangeSku">
                   <el-option 
                     v-for="item in skuOptions"
                     :key="item"
@@ -183,7 +183,7 @@
             <el-container style="display: flex; gap: 10px; align-items: flex-start;">
               <!-- 左侧图片 -->
               <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
-                <el-image src="https://picsum.photos/200/200" style="border-radius: 10px; display: block;">
+                <el-image src="https://picsum.photos/200/200" style="display: block; border-radius: 10px;">
                   <template #error><el-icon/></template>
                 </el-image>
               </el-aside>
@@ -232,7 +232,7 @@
             <el-input placeholder="请输入运营备注" resize="none" :rows="6" style="width: 100%;" type="textarea" />
           </div>
           <!-- 操作日志/事件清单 -->
-          <div style="display: flex; flex-direction: column; flex: 1; height: 100%">
+          <div style="display: flex; flex: 1; flex-direction: column; height: 100%">
             <vab-query-form>
               <vab-query-form-left-panel >
                 <el-form inline>
@@ -323,7 +323,7 @@ import type { TabsPaneContext } from 'element-plus'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { useSkuOptionsStore } from '~/src/store/modules/skuOptions'
+import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 
 defineOptions({
   name: 'ProductAnalysis',
@@ -412,6 +412,11 @@ const skuOptionsStore = useSkuOptionsStore()
 const skuOptions = ref<any[]>([])
 // 判断是单个显示还是多个显示
 const isSingle = ref<boolean>(false)
+// 传递给成本分析组件的sku参数
+const sku = ref<string>('')
+const handleChangeSku = () => {
+  sku.value = queryForm3.sku
+}
 onBeforeMount(() => {
   skuOptions.value = skuOptionsStore.data.sku.split(',')
   // console.log('进入页面的数据：', skuOptions.value);
@@ -419,9 +424,10 @@ onBeforeMount(() => {
   if (length === 1) {
     isSingle.value = true
   } else if (length > 1) {
-    queryForm3.sku = skuOptions.value[0]
     isSingle.value = false
   }
+  queryForm3.sku = skuOptions.value[0]
+  sku.value = queryForm3.sku
 })
 onMounted(() => {
   setImageHeight()
@@ -444,12 +450,12 @@ onMounted(() => {
     }
     
     .customTag {
-      color: #fff; 
-      border-radius: 17px; 
-      padding: 0 30px;
-      border: 0;
       width: 7em;
-
+      padding: 0 30px;
+      color: #fff; 
+      border: 0;
+      border-radius: 17px; 
+      
       &-veryPoor {
         background-color: #e32e00; 
       }
@@ -476,9 +482,9 @@ onMounted(() => {
     }
     .rate-wrapper {
       display: flex; 
-      align-items: center; 
       gap: 8px;
-
+      align-items: center; 
+      
       .rate-value {
         width: 25px; /* 固定宽度，保证分数区域宽度一致 */
         text-align: left; /* 文本右对齐 */
@@ -501,17 +507,17 @@ onMounted(() => {
         }
       }
       .rate-count {
-        color: #36788C;
         margin-left: -11px;
+        color: #36788C;
       }
     }
     .custom-link.is-underline::after {
-      content: "";
       position: absolute;
-      left: 0;
       right: 0;
-      height: 0;
       bottom: 0;
+      left: 0;
+      height: 0;
+      content: "";
       border-bottom: 1px solid var(--el-color-primary);
     }
     .top-card {
@@ -525,9 +531,9 @@ onMounted(() => {
     
       .el-card__body {
         padding-top: 0;
-        padding-left: 10px;
         padding-right: 10px;
         padding-bottom: 10px;
+        padding-left: 10px;
       }
       .el-tag {
         float: right;
@@ -538,8 +544,8 @@ onMounted(() => {
         width: 100%;
         height: 6px;
         margin-bottom: 10px;
-        background: #e9f5fe;
         clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+        background: #e9f5fe;
         /* 梯形形状：
           - 左上角 (0, 0)
           - 右上角 (100%, 0)
