@@ -1,18 +1,18 @@
 <template>
-  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="500px" @close="close" :draggable="false">
+  <vab-dialog v-model="dialogFormVisible" append-to-body :draggable="false" :title="title" width="500px" @close="close">
     <el-form ref="formRef" label-width="100px" :model="form" :rules="rules">
       <el-form-item label="角色代码" prop="roleCode">
-        <el-tooltip class="item" effect="dark" content="角色代码必须是ROLE_XXXX形式，且必须是全大写英文" placement="top-start">
-          <el-input :disabled="disableRoleCode" v-model="form.roleCode" />
+        <el-tooltip class="item" content="角色代码必须是ROLE_XXXX形式，且必须是全大写英文" effect="dark" placement="top-start">
+          <el-input v-model="form.roleCode" :disabled="disableRoleCode" />
         </el-tooltip>
       </el-form-item>
       <el-form-item label="菜单">
         <div class="vab-tree-border">
           <el-tree
             ref="treeRef"
-            highlight-current
             :data="list"
             :default-checked-keys="form.menuCheckedList"
+            highlight-current
             node-key="id"
             show-checkbox
             @check="handleCheckChange"
@@ -30,7 +30,7 @@
         <el-input v-model="form.roleNameEn" clearable />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-switch v-model="form.status" active-color="#13ce66" inactive-color="#ff4949" active-value="0" inactive-value="1"></el-switch>
+        <el-switch v-model="form.status" active-color="#13ce66" active-value="0" inactive-color="#ff4949" inactive-value="1" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { doAdd, doEdit, getAllMenuAndBtnList, getMenuAndBtnListByRoleCode } from '/@/api/devlocal/role'
-import { IRoleAddOrUpdateReq,IRole } from '/@/type/role/roleType'
+import type { IRole, IRoleAddOrUpdateReq } from '/@/type/role/roleType'
 
 defineOptions({
   name: 'RoleEdit',
@@ -53,7 +53,7 @@ const formRef = ref<FormInstance>()
 const treeRef = ref<any>(null)
 const disableRoleCode = ref<boolean>(false)
 const form = reactive<IRoleAddOrUpdateReq>({
-  roleId:'',
+  roleId: '',
   menuCheckedList: [],
   menuIds: '',
   permissionIds: '',
@@ -78,18 +78,16 @@ const showEdit = (row: any) => {
   dialogFormVisible.value = true
 
   nextTick(async () => {
-    
     if (row) {
       const { data } = await getMenuAndBtnListByRoleCode({ roleCode: row.roleCode })
 
       // 处理拿到菜单回显问题
       const arr: any = []
-      
-      data.forEach((item: any) => {        
+
+      data.forEach((item: any) => {
         if (!treeRef.value?.getNode(item).childNodes || !treeRef.value?.getNode(item).childNodes.length) {
           arr.push(item)
         }
-        
       })
       form.menuCheckedList = arr
       treeRef.value?.setCheckedKeys(arr)
@@ -97,7 +95,6 @@ const showEdit = (row: any) => {
       title.value = '编辑'
       disableRoleCode.value = true
       Object.assign(form, row)
-
     } else {
       disableRoleCode.value = false
       form.menuCheckedList.length = 0
@@ -124,10 +121,10 @@ const handleCheckChange = (data1: any, data2: any) => {
   // 选中的子节点
   const checkedKeys = data2.checkedKeys
   childMenuBtnList.value = checkedKeys
-  
+
   // 选中的父节点
   const halfCheckedKeys = data2.halfCheckedKeys
-  
+
   // 数据合并
   checkMenuList.value = [...checkedKeys, ...halfCheckedKeys]
 }
@@ -140,7 +137,7 @@ const fetchData = async () => {
 const save = () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      if (checkMenuList.value.length == 0) {
+      if (checkMenuList.value.length === 0) {
         checkMenuList.value = [...treeRef.value.getCheckedKeys(), ...treeRef.value.getHalfCheckedKeys()]
       }
 
@@ -150,12 +147,12 @@ const save = () => {
 
       // 权限
       const permissionIdsList: [] = treeRef.value.getCheckedNodes(false, true).map((item: any) => {
-        return item.permissionId + ''
+        return `${item.permissionId}`
       })
 
       const permissionIdsStr = permissionIdsList.map(String).join(',')
       form.permissionIds = permissionIdsStr
-      if (form.roleId && form.roleId !="") {
+      if (form.roleId && form.roleId != '') {
         const { msg }: any = await doEdit({
           ...form,
         })
