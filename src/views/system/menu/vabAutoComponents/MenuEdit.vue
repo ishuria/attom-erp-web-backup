@@ -178,6 +178,7 @@ const showEdit = (row: IMenuAddOrUpdteReq) => {
       Object.assign(form, row)
     } else {
       title.value = '添加'
+      form.pid = ''
       form.component = ''
       form.permissionId = ''
       form.name = ''

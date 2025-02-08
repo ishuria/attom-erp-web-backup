@@ -3,7 +3,7 @@
     <vab-card class="auto-height-card">
       <vab-query-form>
         <vab-query-form-top-panel :span="12">
-          <el-button :icon="Plus" type="primary" @click="handleAdd" v-permissions="{ permission: ['system:menu:add']}">添加</el-button>
+          <el-button v-permissions="{ permission: ['system:menu:add']}" :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-table
@@ -28,7 +28,7 @@
 
         <el-table-column align="center" label="排序" min-width="120" prop="sort" show-overflow-tooltip />
 
-        <el-table-column align="center" label="状态" width="120" prop="status" show-overflow-tooltip>
+        <el-table-column align="center" label="状态" prop="status" show-overflow-tooltip width="120">
           <template #default="{ row }">
             <el-tag v-if="row.status == 0" type="success">正常</el-tag>
             <el-tag v-if="row.status == 1" type="danger">禁用</el-tag>
@@ -36,7 +36,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="类型" width="120" prop="type" show-overflow-tooltip>
+        <el-table-column align="center" label="类型" prop="type" show-overflow-tooltip width="120">
           <template #default="{ row }">
             <el-tag v-if="row.type == 0 && row.status == 0">菜单</el-tag>
             <el-tag v-if="row.type == 2 && row.status == 0" type="info">页面</el-tag>
@@ -46,10 +46,10 @@
 
         <el-table-column align="center" label="创建时间" min-width="120" prop="createTime" show-overflow-tooltip />
 
-        <el-table-column align="center" label="操作" width="200" v-permissions="{ permission: ['system:menu:update', 'system:menu:delete'] }">
+        <el-table-column v-permissions="{ permission: ['system:menu:update', 'system:menu:delete'] }" align="center" label="操作" width="200">
           <template #default="{ row }">
-            <el-button text type="primary" @click="handleEdit(row)" v-permissions="{ permission: ['system:menu:update',]}">编辑</el-button>
-            <el-button text type="danger" @click="handleDelete(row)"v-permissions="{ permission: ['system:menu:delete',]}">删除</el-button>
+            <el-button v-permissions="{ permission: ['system:menu:update',]}" text type="primary" @click="handleEdit(row)">编辑</el-button>
+            <el-button v-permissions="{ permission: ['system:menu:delete',]}" text type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -65,8 +65,8 @@
 
 import { Plus } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { getMenuList,  doDelete, } from '/@/api/devlocal/router'
-import { IMenuQueryResp} from '/@/type/menu/menuType'
+import { doDelete,  getMenuList, } from '/@/api/devlocal/router'
+import type { IMenuQueryResp} from '/@/type/menu/menuType'
 
 defineOptions({
   name: 'MenuEdit',

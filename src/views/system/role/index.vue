@@ -2,15 +2,15 @@
   <div class="role-management-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button :icon="Plus" type="primary" @click="handleEdit()" v-permissions="{ permission: ['system:role:add'] }">添加</el-button>
-        <el-button :icon="Delete" type="danger" @click="handleDelete()" v-permissions="{ permission: ['system:role:more:delete'] }">
+        <el-button v-permissions="{ permission: ['system:role:add'] }" :icon="Plus" type="primary" @click="handleEdit()">添加</el-button>
+        <el-button v-permissions="{ permission: ['system:role:more:delete'] }" :icon="Delete" type="danger" @click="handleDelete()">
           批量删除
         </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.role" @keyup.enter.native="queryData" clearable placeholder="请输入角色" />
+            <el-input v-model.trim="queryForm.role" clearable placeholder="请输入角色" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
@@ -21,17 +21,17 @@
 
     <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
       <el-table-column type="selection" width="38" />
-      <el-table-column align="center" label="角色id" width="100" prop="roleId" show-overflow-tooltip />
+      <el-table-column align="center" label="角色id" prop="roleId" show-overflow-tooltip width="100" />
       <el-table-column align="center" label="角色代码" prop="roleCode" show-overflow-tooltip />
       <el-table-column align="center" label="角色名称" prop="roleName" show-overflow-tooltip />
       <el-table-column align="center" label="角色英文" prop="roleNameEn" show-overflow-tooltip />
-      <el-table-column align="center" label="状态" width="120" prop="status" show-overflow-tooltip>
+      <el-table-column align="center" label="状态" prop="status" show-overflow-tooltip width="120">
         <template #default="{ row }">
           <el-tag v-if="row.status == 0" type="success">正常</el-tag>
           <el-tag v-if="row.status == 1" type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="200" v-permissions="{ permission: ['system:role:edit', 'system:role:delete'] }">
+      <el-table-column v-permissions="{ permission: ['system:role:edit', 'system:role:delete'] }" align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button v-permissions="{ permission: ['system:role:edit'] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
           <el-button v-permissions="{ permission: ['system:role:delete'] }" text type="danger" @click="handleDelete(row)">删除</el-button>
@@ -56,7 +56,7 @@
 import { Delete, Plus, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, doDeleteList, getAllList } from '/@/api/devlocal/role'
-import { IRoleQuery,IRole} from '/@/type/role/roleType'
+import type { IRole,IRoleQuery} from '/@/type/role/roleType'
 
 defineOptions({
   name: 'Role',

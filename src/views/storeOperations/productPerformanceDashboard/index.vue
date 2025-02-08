@@ -1497,7 +1497,7 @@ const handleWidth = (item: any) => {
   } else {
     switch (item.label) {
       case 'SKU': {
-        return calculateBrColumnWidth(pAsinList.value, (row: any) => row._sku, 100)
+        return calculateBrColumnWidth(pAsinList.value, (row: any) => row._sku, 100, 30)
       }
       case '父体ASIN': {
         return flexColumnWidth(pAsinList.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
@@ -1922,6 +1922,9 @@ const fetchAsinColumn = async () => {
     }
     if (item.prop === 'monthAdv') {
       item.minWidth = '110'
+    }  
+    if (item.label === '大类排名') {
+      item.minWidth = '120'
     }
     if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
@@ -2139,11 +2142,6 @@ onBeforeMount(() => {
   font-weight: 600;
   color: #67c23a;
   transform: scale(0.9, 1.4);
-}
-.custom-tooltip {
-  white-space: pre-wrap; 
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
 }
 .questionIcon {
   display: flex;
