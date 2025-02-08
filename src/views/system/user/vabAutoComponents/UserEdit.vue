@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="500px" @close="close" :draggable="false">
+  <vab-dialog v-model="dialogFormVisible" append-to-body :draggable="false" :title="title" width="500px" @close="close">
     <el-form ref="formRef" label-width="120px" :model="form" :rules="rules">
       <el-form-item label="用户名" prop="userName">
         <el-input v-model.trim="form.userName" clearable />
@@ -21,8 +21,8 @@
         <el-input v-model.trim="form.nextYearAnnualLeave" clearable />
       </el-form-item>
       <el-form-item label="所属分公司" prop="affiliatedBranchCompany">
-        <el-select v-model="branchValue" filterable clearable placeholder="请选择分公司">
-          <el-option v-for="item in form.companies" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-select v-model="form.affiliatedBranchCompany" clearable filterable placeholder="请选择分公司">
+          <el-option v-for="item in form.companies" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
 
@@ -30,12 +30,12 @@
         <el-input v-model.trim="form.email" clearable />
       </el-form-item>
       <el-form-item label="角色" prop="roleName">
-        <el-select v-model="form.roleCode" filterable clearable placeholder="请选择角色">
-          <el-option v-for="item in form.roles" :key="item.roleCode" :label="item.roleName" :value="item.roleCode"></el-option>
+        <el-select v-model="form.roleCode" clearable filterable placeholder="请选择角色">
+          <el-option v-for="item in form.roles" :key="item.roleCode" :label="item.roleName" :value="item.roleCode"/>
         </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-switch v-model="form.status" active-color="#13ce66" inactive-color="#ff4949" active-value="0" inactive-value="1"></el-switch>
+        <el-switch v-model="form.status" active-color="#13ce66" active-value="0" inactive-color="#ff4949" inactive-value="1"/>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -46,10 +46,9 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
-import { convertString } from '/@/utils/stringUtils'
 import { getList } from '/@/api/devlocal/role'
 import { doAdd, doEdit, getCompany } from '/@/api/devlocal/user'
-import { IAddParams, IEditParams, IUserAddOrUpateReq } from '/@/type/user/userType'
+import type { IAddParams, IEditParams } from '/@/type/user/userType'
 
 defineOptions({
   name: 'UserEdit',
@@ -57,8 +56,7 @@ defineOptions({
 
 const emit = defineEmits(['fetch-data'])
 const formRef = ref<FormInstance>()
-const branchValue = ref<string>("")
-const form = reactive<IUserAddOrUpateReq>({
+const form = reactive<any>({
   userId:'',
   userName: '',
   password: '',
@@ -91,14 +89,16 @@ const rules = reactive<any>({
   affiliatedBranchCompany: [{ required: true, trigger: 'blur', message: '请选择所属分公司' }],
 })
 
-const showEdit = (row: any) => {
+const showEdit = async (row: any) => {
   dialogFormVisible.value = true
-  fetchData()
-  fetchCompanyData()
+  await fetchData()
+  await fetchCompanyData()
   nextTick(() => {
     if (row) {
       title.value = '编辑'
       Object.assign(form, row)
+      const item = form.companies.find((_: any) => _.label === row.affiliatedBranchCompany)
+      form.affiliatedBranchCompany = item?.value
     } else {
       title.value = '添加'
       form.roleCode = '' // 重置因角色prop字段一样导致先点编辑，再点添加页面会出现上次编辑时的角色名
@@ -130,7 +130,7 @@ const save = () => {
           nextYearSickLeave: form.nextYearSickLeave,
           currentYearAnnualLeave: form.currentYearAnnualLeave,
           nextYearAnnualLeave: form.nextYearAnnualLeave,
-          affiliatedBranchCompanyId: branchValue.value
+          affiliatedBranchCompanyId: form.affiliatedBranchCompany
         }
         const { msg }: any = await doEdit(newForm)
         await $baseMessage(msg, 'success', '用户编辑成功！')
@@ -146,7 +146,7 @@ const save = () => {
           nextYearSickLeave: form.nextYearSickLeave,
           currentYearAnnualLeave: form.currentYearAnnualLeave,
           nextYearAnnualLeave: form.nextYearAnnualLeave ,
-          affiliatedBranchCompanyId: branchValue.value
+          affiliatedBranchCompanyId: form.affiliatedBranchCompany
         }
         const { msg }: any = await doAdd(newForm)
         await $baseMessage(msg, 'success', '用户添加成功！')
@@ -163,12 +163,6 @@ const fetchData = async () => {
 }
 const fetchCompanyData = async () => {
   const { data } = await getCompany()
-  data.forEach((item: any) => {
-    item.value = convertString(item.value)
-    if(item.label === form.affiliatedBranchCompany){
-      branchValue.value = item.value
-    }
-  });
   form.companies = data
 }
 </script>

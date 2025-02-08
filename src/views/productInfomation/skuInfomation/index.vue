@@ -2,7 +2,7 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-          <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
+        <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -18,16 +18,18 @@
     <el-table 
       ref="tableRef" 
       v-loading="listLoading" border 
-      :cell-style="cellStyle" 
+      :cell-class-name="clearPadding" 
+      :cell-style="cellStyle"
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ 'text-align': 'center' }"
       stripe
-      @cell-click="changeInput"
     >
-      <el-table-column class="image-wall" label="图片" min-width="100">
+      <el-table-column class="image-wall" label="图片" width="75">
         <template #default="{ row }">
-            <el-image v-if="row.skuImgUrl" data-img="img" fit="fill" :src="row.skuImgUrl" style="width: 75px; height: 75px" />
+          <el-image v-if="row.skuImgUrl" fit="fill" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="setPreviewImage(row.skuImgUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column label="SKU" :min-width="tableColumnWidth" prop="sku">
@@ -46,55 +48,49 @@
       <el-table-column label="产品经理" min-width="90" prop="productManager"/>
       <el-table-column label="停产" prop="productionHaltStatus">
         <template #default="{ row }">
-          <el-switch
-v-model="row.productionHaltStatus" :active-value="1" :inactive-value="0"
-          style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66" @change="handleUpdateStatus(row)"/>
+          <el-switch v-model="row.productionHaltStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
       <el-table-column label="优先打包" min-width="90" prop="priorityPacking">
         <template #default="{ row }">
-          <el-switch
-v-model="row.priorityPacking" :active-value="1" :inactive-value="0"
-          style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
+          <el-switch v-model="row.priorityPacking" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
       <el-table-column label="打包拍照" min-width="90" prop="packagePhotograph">
         <template #default="{ row }">
-          <el-switch
-v-model="row.packagePhotograph" :active-value="1" :inactive-value="0"
-          style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
+          <el-switch v-model="row.packagePhotograph" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
       <el-table-column label="总实际成本" min-width="80" prop="procurementCost" >
-          <template #header>
-              总实际<br>成本
-          </template>
+        <template #header>
+          总实际<br>成本
+        </template>
       </el-table-column>
       <el-table-column label="" min-width="100" prop="dilapidationCost" >
-          <template #header>
-              损耗成本<br>(近10次)
-          </template>
+        <template #header>
+          损耗成本<br>(近10次)
+        </template>
       </el-table-column>
       <el-table-column label="" min-width="100" prop="packingCost" >
-          <template #header>
-              打包成本<br>(近10次)
-          </template>
+        <template #header>
+          打包成本<br>(近10次)
+        </template>
       </el-table-column>
       <el-table-column label="" min-width="100" prop="freightFeeCost" >
-          <template #header>
-              运费<br>(近10次)
-          </template>
+        <template #header>
+          运费<br>(近10次)
+        </template>
       </el-table-column>
       <el-table-column label="货币" prop="currency" width="110px"/>
       <el-table-column label="" min-width="100" prop="avgTime" >
-          <template #header>
-            平均交期<br>(近10次)
-          </template>
+        <template #header>
+          平均交期<br>(近10次)
+        </template>
       </el-table-column>
       <el-table-column label="" min-width="100" prop="avgFluctuation" >
-          <template #header>
-            交期平均<br>波动
-          </template>
+        <template #header>
+          交期平均<br>波动
+        </template>
       </el-table-column>
       <el-table-column label="长(cm)" min-width="90" prop="length"/>
       <el-table-column label="宽(cm)" min-width="90" prop="width"/>
@@ -103,32 +99,32 @@ v-model="row.packagePhotograph" :active-value="1" :inactive-value="0"
       <el-table-column label="重量系数" min-width="100" prop="weightCoefficient"/>
       <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient"/>
       <el-table-column fixed="right" label="操作" width="150">
-          <template #default="{ row }">
-            <el-dropdown>
-              <el-button text type="primary" @click="handleSkuDetail(row)" >
-                SKU详情
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item @click="handleSkuDetail(row)">
-                    <el-link type="primary" :underline="false" >SKU详情</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false">打包工时</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false">交期查看</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-link type="primary" :underline="false">证书</el-link>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
+        <template #default="{ row }">
+          <el-dropdown>
+            <el-button text type="primary" @click="handleSkuDetail(row)" >
+              SKU详情
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleSkuDetail(row)">
+                  <el-link type="primary" :underline="false" >SKU详情</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false">打包工时</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false">交期查看</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" :underline="false">证书</el-link>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
       </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
@@ -152,13 +148,12 @@ import { getProductList, updateProductStatus } from '/@/api/devlocal/productInfo
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { calculateBrColumnWidth } from '/@/utils/tableColum'
+
 defineOptions({
   name: 'Consumable',
 })
-
 
 const listLoading = ref<boolean>(true)
 // 零件列表
@@ -223,21 +218,8 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const queryData = () => {
-  // queryForm.keyWord = queryForm.keyWord.replace(/\r|\n|\r/g, '') // 移除换行符
-  console.log(queryForm.keyWord);
-  
   queryForm.pageNo = 1
   fetchData()
-  // if(!queryForm.keyWord) {
-  //       fetchData()
-  //   } else {
-  //       listLoading.value = true
-  //       const queryList = ref<any>()
-  //       queryList.value = list.value.filter((item: any) => item.sku.includes(queryForm.keyWord, 0))
-  //       list.value = queryList.value
-  //       total.value = list.value.length
-  //       listLoading.value = false
-  //   }
 }
 const tableColumnWidth = ref<number>(90)
 const FNSKUColumnWidth = ref<number>(90)
@@ -250,16 +232,10 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-/**
-* 当点击时切换输入框，修改输入
-*/
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el,'img') && el){
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src)
-  }
+const setPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   if (data.columnIndex !== 1) {
@@ -271,7 +247,12 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'left'
   }
 }
-
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.columnIndex === 0) {
+    return 'clear-padding'
+  }
+  return ''
+}
 
 // 获取拿样零件添加数据
 const fetchData = async () =>{
@@ -320,6 +301,14 @@ onBeforeMount(() => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
+.noneHoveTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoveTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
@@ -330,9 +319,9 @@ onBeforeMount(() => {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 .overflow-text {
+  display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
-  display: block;
 }
 </style>
 
