@@ -56,7 +56,16 @@ html {
     &.color-weakness {
       filter: invert(80%);
     }
-
+    // 修改图片预览初始大小不占据全部屏幕
+    .el-image-viewer__wrapper{
+      .el-image-viewer__canvas{
+        .el-image-viewer__img {
+          position: absolute;
+          top: 8.35%;
+          height: 83.3%;
+        }
+      }
+    }
     #app {
       height: calc(var(--vh, 1vh) * 100);
 

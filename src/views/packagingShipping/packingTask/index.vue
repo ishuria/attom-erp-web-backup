@@ -10,6 +10,7 @@
                 <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
+                <el-button class="button-margin" type="warning" @click="handleOpenTest">测试模拟打卡</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
@@ -1239,6 +1240,21 @@
         <el-button type="primary" @click="confirmGenerateBarcode">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 测试模拟打卡 -->
+    <vab-dialog
+      v-model="testVisible"
+      title="测试模拟打卡"
+      width="15%"
+    >
+      <el-table border :data="testList" :header-cell-style="{ textAlign: 'center' }" stripe @selection-change="setSelectTestRows">
+        <el-table-column label="姓名" prop="userName" />
+        <el-table-column align="center" type="selection" />
+      </el-table>
+      <template #footer>
+        <el-button @click="testVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirmTest">确定</el-button>
+      </template>
+    </vab-dialog>
     <el-image-viewer v-if ="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
@@ -1254,6 +1270,7 @@ import { downloadFile } from '/@/api/devlocal/download'
 import {
   addQualityCheck,
   checkGoOffWork,
+  checkInMork,
   confirmCurrentTaskAddPerson,
   confirmEndTask,
   confirmGoOffWork,
@@ -1264,6 +1281,7 @@ import {
   getEndTaskList,
   getFreeList,
   getGoOffWorkList,
+  getMorkPackageList,
   getPackageComponentList,
   getPackageInspection,
   getPackageSiteList,
@@ -1288,6 +1306,32 @@ import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChild
 defineOptions({
   name: 'PackingTaskTable',
 })
+
+const testVisible = ref<boolean>(false)
+const testList = ref<any[]>([])
+const handleOpenTest = async () => {
+  testVisible.value = true
+  const { data } = await getMorkPackageList()
+  testList.value = data
+}
+const selectTestRows = ref<any>([])
+const setSelectTestRows = (value: any) => {
+  selectTestRows.value = value
+}
+const handleConfirmTest = async () => {
+  if (selectTestRows.value.length === 0) {
+    $baseMessage('您未选择任何行！', 'warning')
+    return
+  }
+  const userIds = selectTestRows.value.map((item: any) => item.userId).join(',')
+  const { data } = await checkInMork({ userIds })
+  if (data) {
+    $baseMessage('测试模拟打卡成功！', 'success')
+    testVisible.value = false
+  } else {
+    $baseMessage('测试模拟打卡失败！', 'error')
+  }
+}
 const _id = ref<number>(0)
 const generateBarcodeVisible = ref<boolean>(false)
 const barcodeForm = reactive<any>({

@@ -520,3 +520,23 @@ export function generatePackageBarcode(data: IGeneratePackageBarcodeReq): Promis
     data
   })
 }
+
+/**
+ * @description 测试模拟打卡-get
+ */
+export function getMorkPackageList(): Promise<{ data: any }> {
+  return request({
+    url: `${BASE_API}/mork/package/list`,
+    method: 'get',
+  })
+}
+/**
+ * @description 测试模拟打卡-确定
+ */
+export function checkInMork(params: { userIds: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/mork/check/in`,
+    method: 'post',
+    params
+  })
+}
