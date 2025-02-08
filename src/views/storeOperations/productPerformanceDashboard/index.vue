@@ -1777,7 +1777,23 @@ const fetchOperateUserList = async () => {
   operateUserList.value = data
   operateUserList.value.unshift({ id: -1, label: '全部' })
 }
-
+/**
+ * @description 处理亚马逊图片变清晰
+ * @param url 
+ */
+ const handleImgUrl = (url: string): string => {
+  if (url.startsWith("https")) {
+    //去掉第一个_后面的到最后一个.前面的
+    const start = url.indexOf('_')
+    const end = url.lastIndexOf('.')
+    if (start !== -1 && end > start) {
+      const before = url.substring(0, start) // 左闭右开
+      const after = url.substring(end + 1)
+      return before + after
+    }
+  }
+  return url
+}
 const fetchData = async () => {
   listLoading.value = true
   const { site, ...filterQueryForm } = queryForm
@@ -1789,6 +1805,7 @@ const fetchData = async () => {
   list.value = data.list
   list.value.forEach((item) => {
     processField(item, 'developName', 2)
+    if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.storageAge = `
       <div class="storage-list">
@@ -1820,6 +1837,7 @@ const fetchAsinData = async () => {
   asinList.value.forEach((item) => {
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
+    if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.storageAge = `
       <div class="storage-list">
@@ -1851,6 +1869,7 @@ const fetchPAsinData = async () => {
   pAsinList.value.forEach((item) => {
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
+    if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
     item.displayRating = computed(() => getAmazonStars(item.rating!))
   })
   listLoading.value = false

@@ -272,7 +272,7 @@ const fetchData = async () =>{
 // 在组件加载时执行
 onBeforeMount(() => {
   fetchData();  // 执行数据获取
-});
+})
 </script>
 
 <style lang="scss" scoped>
