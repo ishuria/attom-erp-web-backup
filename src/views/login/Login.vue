@@ -68,7 +68,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules, InputInstance } from 'element-plus'
-import leftImg from '/@/assets/login_images/left_img_1.png'
+import leftImg from '/@/assets/login_images/left_img_7.png'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
