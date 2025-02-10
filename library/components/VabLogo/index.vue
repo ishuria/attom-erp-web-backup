@@ -9,7 +9,7 @@
       <span class="title">
         <!-- 使用自定义svg示例 -->
         <!-- <vab-icon v-if="logo" :icon="logo" is-custom-svg /> -->
-        <img alt="" :src="yunzhou" style="width: 70%; height: 60%; vertical-align: middle;" />
+        <img alt="" :src="yunzhou" style="width: 50%; height: 60%; vertical-align: middle;" />
       </span>
       <!-- <span class="title" :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }">
         {{ "上海云舟" }}

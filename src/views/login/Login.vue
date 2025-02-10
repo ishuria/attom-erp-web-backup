@@ -6,7 +6,7 @@
         <!-- <div class="title">hello !</div>
         <div class="title-tips">{{ translate('欢迎来到') }} {{ title }}</div> -->
         <el-form-item>
-          <img alt="" :src="topImg" style="width: 100%; height: 100%;" />
+          <img alt="" :src="topImg" style="width: 100%; height: 100%; transform: scale(0.7); " />
         </el-form-item>
         <el-form-item prop="username">
           <el-input v-model.trim="form.username" v-focus :placeholder="translate('请输入用户名')" type="text">
