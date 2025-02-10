@@ -7,7 +7,7 @@
         label-width="170px" 
         :model="form" 
         :rules="rules"
-        style="display: flex; flex-direction: column; justify-content: center; align-items: center;"
+        style="display: flex; flex-direction: column; align-items: center; justify-content: center;"
         @submit.prevent
       >
 
@@ -170,22 +170,24 @@ const handleDelVariants = async (index: number) => {
     form.variantList.splice(index, 1);
   }
 }
-let saveBoolean = false
+
 // 当点击保存的时候
 const handleSubmit = () => {
   formRef.value?.validate((valid: any) => {
     if (valid) {
-      saveBoolean = true
+      const reviewId = parseInt(route.query.reviewId)
       const saveOn = async () => {
         if (route.query.progressId) {
-          const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
+          const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId })
           if (data) {
             localStorage.setItem('orderStep1Form', JSON.stringify(form))
             $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
           }
         } else {
-          const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
-          await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
+          // 根据 reviewId 获得 progressId
+          const { data: _progressId } = await reviewProgressId({ reviewId })
+          // 保存第一步
+          await reviewStepNo1SaveOn({ ...form, progressId: _progressId, reviewId })
 
             $baseMessage(
               "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
@@ -193,10 +195,10 @@ const handleSubmit = () => {
               "hey"
             )
             await delVisitedRoute(handleActivePath(route, true))
-            const {...query} = route.query;
-            router.replace({query: {...query, stepNo: 0}});
-          
-        } }
+            const { ...query } = route.query;
+            router.replace({ query: { ...query, stepNo: 0 } });
+        }
+      }
       saveOn()
     }
   })
@@ -206,51 +208,45 @@ let res: number
 const handleSubmitAndContinue = async () => {
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      if (saveBoolean) {
-        emit('change-step', 1)
-      } else {
-        const saveOn = async () => {
-          try {
-            if (route.query.progressId) {
-              const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: parseInt(route.query.reviewId) })
-      
-              if (data) {
-                res = data
-                localStorage.setItem('orderStep1Form', JSON.stringify(form))
-                $baseMessage(
-                  "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
-                  "success",
-                  "hey"
-                )
-                emit('sendDataToStep2', res)
-                emit('change-step', 1)
-              } else {
-                console.error('API 返回没有 data')
-              }
-            } else {
-              const {data: reprogressId } = await reviewProgressId({ reviewId: route.query.reviewId })
-              await reviewStepNo1SaveOn({ ...form, progressId: reprogressId, reviewId: parseInt(route.query.reviewId) })
-            
-            
-                $baseMessage(
-                  "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
-                  "success",
-                  "hey"
-                )
+      const reviewId =  parseInt(route.query.reviewId)
+      const saveOn = async () => {
+        try {
+          if (route.query.progressId) {
+            const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId })
     
-                emit('change-step', 1)
-                await delVisitedRoute(handleActivePath(route, true))
-                const {...query} = route.query;
-                router.replace({query: {...query, stepNo: 1}});
-              
+            if (data) {
+              res = data
+              localStorage.setItem('orderStep1Form', JSON.stringify(form))
+              $baseMessage(
+                "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
+                "success",
+                "hey"
+              )
+              emit('sendDataToStep2', res)
+              emit('change-step', 1)
+            } else {
+              console.error('API 返回没有 data')
             }
-          } catch (error) {
-            console.error('保存过程出错:', error)
+          } else {
+            const {data: _progressId } = await reviewProgressId({ reviewId: route.query.reviewId })
+            await reviewStepNo1SaveOn({ ...form, progressId: _progressId, reviewId })
+          
+              $baseMessage(
+                "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
+                "success",
+                "hey"
+              )
+  
+              emit('change-step', 1)
+              await delVisitedRoute(handleActivePath(route, true))
+              const {...query} = route.query;
+              router.replace({query: {...query, stepNo: 1}});
           }
+        } catch (error) {
+          console.error('保存过程出错:', error)
         }
-        saveOn()
       }
-   
+      saveOn()
     } else {
       console.log('表单验证失败')
     }
@@ -362,8 +358,8 @@ onMounted(async () => {  //编辑进来的需要获取数据 并且状态不是�
   }
   .el-input__suffix {
     position: absolute;
-    right: 8px;
     top: 50%;
+    right: 8px;
     transform: translateY(-50%);
   }
 }

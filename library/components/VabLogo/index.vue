@@ -6,20 +6,21 @@
     }"
   >
     <router-link to="/">
-      <span class="logo">
+      <span class="title">
         <!-- 使用自定义svg示例 -->
-        <vab-icon v-if="logo" :icon="logo" is-custom-svg />
+        <!-- <vab-icon v-if="logo" :icon="logo" is-custom-svg /> -->
+        <img alt="" :src="yunzhou" style="width: 70%; height: 60%; vertical-align: middle;" />
       </span>
-      <span class="title" :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }">
+      <!-- <span class="title" :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }">
         {{ "上海云舟" }}
-      </span>
+      </span> -->
     </router-link>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useSettingsStore } from '/@/store/modules/settings'
-
+import yunzhou from '/@/assets/yunzhou_sidebar.png'
 defineOptions({
   name: 'VabLogo',
 })
@@ -48,7 +49,7 @@ const { theme, logo } = storeToRefs(settingsStore)
 
 @mixin title {
   display: inline-block;
-  margin-left: 5px;
+  // margin-left: 5px;
   overflow: hidden;
   font-size: var(--el-font-size-extra-large);
   line-height: 55px;

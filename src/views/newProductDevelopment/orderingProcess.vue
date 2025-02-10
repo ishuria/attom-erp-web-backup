@@ -1,83 +1,83 @@
 <template>
-    <div class="step-form-container">
-        <el-page-header  style="margin-bottom: 0px;" @back="goBack">
-          <template #title >
-            退出
-          </template>
+  <div class="step-form-container">
+    <el-page-header  style="margin-bottom: 0px;" @back="goBack">
+      <template #title >
+        退出
+      </template>
 
-            <template #content>
-                <div class="flex items-center">
-                    <span> <strong> 新品订货流程 </strong></span>
-                </div>
-            </template>
-        </el-page-header>
-        
-        <div :class="{ 'none1': isNone1 }">
-          <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
-            <el-step title="产品基础信息录入" />
-            <el-step title="拿样零件添加" />
-            <el-step title="零件信息完善与售价核对" />
-            <el-step title="新供应信息完善" />
-            <el-step title="完善SKU信息" />
-            <el-step title="检查并提交" />
-          </el-steps>
-          <order-step1 
-            v-if="active === 0" 
-            @change-step="handleSetStep" 
-            @send-data-to-step2="setStep2Data"
-          />
-          <order-step2 
-            v-if="active === 1"
-            :step1-data="step2ReceivedData" 
-            @change-step="handleSetStep"
-            @update:image-preview-visibale="updateUploadPriviewVisible"
-            @update:priview-list-value="setPreviewList"
-          />
-          <order-step3 
-            v-if="active === 2" 
-            :step1-data="step2ReceivedData" 
-            @change-step="handleSetStep"
-            @update:image-preview-visibale="updateUploadPriviewVisible"
-            @update:priview-list-value="setPreviewList"
-          />
-          <order-step4 v-if="active === 3" :step1-data="step2ReceivedData" @change-step="handleSetStep" />
-          <order-step5 
-            v-if="active === 4" 
-            :step1-data="step2ReceivedData" 
-            @change-step="handleSetStep"
-            @update:image-preview-visibale="updateUploadPriviewVisible"
-            @update:priview-list-value="setPreviewList"
-          />
-          <order-step6 
-            v-if="active === 5" 
-            :step1-data="step2ReceivedData"             
-            @change-step="handleSetStep"
-            @update:image-preview-visibale="updateUploadPriviewVisible"
-            @update:priview-list-value="setPreviewList"
-          />
+      <template #content>
+        <div class="flex items-center">
+          <span> <strong> 新品订货流程 </strong></span>
         </div>
-        <div :class="{ 'none2': isNone2 }">
-          <el-steps :active="activeCheck" align-center class="steps" :space="200" style="max-width: 1000px;">
-            <el-step title="产品基础信息录入" />
-            <el-step title="零件信息完善与售价核对" />
-            <el-step title="新供应信息完善" />
-            <el-step title="完善SKU信息" />
-            <el-step title="检查并提交" />
-          </el-steps>
-          <order-check-step1 v-if="activeCheck === 0" @change-check-step="handleCheckSetStep" />
-          <order-check-step2
-v-if="activeCheck === 1" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
-          @update:priview-list-value="setPreviewList"/>
-          <order-check-step3 v-if="activeCheck === 2" @change-check-step="handleCheckSetStep" />
-          <order-check-step4
-v-if="activeCheck === 3" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
-          @update:priview-list-value="setPreviewList"/>
-          <order-check-step5
-v-if="activeCheck === 4" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
-          @update:priview-list-value="setPreviewList"/>
-        </div>
-        <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+      </template>
+    </el-page-header>
+      
+    <div :class="{ 'none1': isNone1 }">
+      <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
+        <el-step title="产品基础信息录入" />
+        <el-step title="拿样零件添加" />
+        <el-step title="零件信息完善与售价核对" />
+        <el-step title="新供应信息完善" />
+        <el-step title="完善SKU信息" />
+        <el-step title="检查并提交" />
+      </el-steps>
+      <order-step1 
+        v-if="active === 0" 
+        @change-step="handleSetStep" 
+        @send-data-to-step2="setStep2Data"
+      />
+      <order-step2 
+        v-if="active === 1"
+        :step1-data="step2ReceivedData" 
+        @change-step="handleSetStep"
+        @update:image-preview-visibale="updateUploadPriviewVisible"
+        @update:priview-list-value="setPreviewList"
+      />
+      <order-step3 
+        v-if="active === 2" 
+        :step1-data="step2ReceivedData" 
+        @change-step="handleSetStep"
+        @update:image-preview-visibale="updateUploadPriviewVisible"
+        @update:priview-list-value="setPreviewList"
+      />
+      <order-step4 v-if="active === 3" :step1-data="step2ReceivedData" @change-step="handleSetStep" />
+      <order-step5 
+        v-if="active === 4" 
+        :step1-data="step2ReceivedData" 
+        @change-step="handleSetStep"
+        @update:image-preview-visibale="updateUploadPriviewVisible"
+        @update:priview-list-value="setPreviewList"
+      />
+      <order-step6 
+        v-if="active === 5" 
+        :step1-data="step2ReceivedData"             
+        @change-step="handleSetStep"
+        @update:image-preview-visibale="updateUploadPriviewVisible"
+        @update:priview-list-value="setPreviewList"
+      />
     </div>
+    <div :class="{ 'none2': isNone2 }">
+      <el-steps :active="activeCheck" align-center class="steps" :space="200" style="max-width: 1000px;">
+        <el-step title="产品基础信息录入" />
+        <el-step title="零件信息完善与售价核对" />
+        <el-step title="新供应信息完善" />
+        <el-step title="完善SKU信息" />
+        <el-step title="检查并提交" />
+      </el-steps>
+      <order-check-step1 v-if="activeCheck === 0" @change-check-step="handleCheckSetStep" />
+      <order-check-step2
+v-if="activeCheck === 1" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
+      @update:priview-list-value="setPreviewList"/>
+      <order-check-step3 v-if="activeCheck === 2" @change-check-step="handleCheckSetStep" />
+      <order-check-step4
+v-if="activeCheck === 3" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
+      @update:priview-list-value="setPreviewList"/>
+      <order-check-step5
+v-if="activeCheck === 4" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
+      @update:priview-list-value="setPreviewList"/>
+    </div>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -104,7 +104,7 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
-let active = ref<any>(0)
+const active = ref<any>(0)
 // 查看跳转,从0开始
 const activeCheck = ref<any>(0)
 const isNone1 = ref<boolean>(false)
@@ -147,7 +147,7 @@ const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
-onMounted(() => {
+onBeforeMount(() => {
   // 如果 `reviewStatus` 存在且值为 '0' 或 '2'
   if (!route.query.reviewStatus || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     isNone2.value = true;
@@ -156,18 +156,22 @@ onMounted(() => {
     isNone2.value = false;
     isNone1.value = true;
   }
-  
+  const stepNo = parseInt(route.query.stepNo)
   if (route.query.stepNo) {
-    active.value = parseInt(route.query.stepNo) //编辑进去的
-    activeCheck.value = parseInt(route.query.stepNo) //查看进去的
-    if (parseInt(route.query.stepNo) === 5) { //查看
+    if (isNone2.value) {
+      active.value = stepNo //编辑进去的
+    }
+    if (isNone1.value) {
+      activeCheck.value = stepNo //查看进去的
+    }
+    
+    if (stepNo === 5) { //查看
       activeCheck.value = 0
     }
   } else { //订大货进去的
     active.value = 0
-  
   }
-});
+})
 
 
 </script>

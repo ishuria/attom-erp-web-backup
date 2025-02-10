@@ -81,7 +81,7 @@
       </el-table>
 
       <h2 style="text-align: center;">质检项目清单（打包注意事项和质检报告）</h2>
-      <div style="color: red; text-align: center; font-size: 22px">注意：一个质检项目填一行，一行不能填写多项质检内容</div>
+      <div style="font-size: 22px; color: red; text-align: center;">注意：一个质检项目填一行，一行不能填写多项质检内容</div>
       <vab-query-form>
             <vab-query-form-left-panel>
                 <el-button type="primary" @click="handleAddQualityInspection">新增</el-button>
@@ -347,110 +347,88 @@ const handleDelQualityInspection = async (row: IreviewStepNo4ListQualityInspecti
 
 // 当点击保存的时候
 const handleSave = async () => {
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
+  try {
+    const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
+    if (data === true) {
+      $baseMessage("当前信息已保存。", "success", "hey")
+      await delVisitedRoute(handleActivePath(route, true))
+      const {...query} = route.query;
+      router.replace({query: {...query, stepNo: 3}});
     }
-    try {
-        const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
-        if (data === true) {
-          $baseMessage("当前信息已保存。", "success", "hey")
-          await delVisitedRoute(handleActivePath(route, true))
-          const {...query} = route.query;
-          router.replace({query: {...query, stepNo: 3}});
-        }
-    } catch (error) {
-        console.error(error)
-    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
+  try {
+    const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
+    if (data === true) {
+      $baseMessage("当前信息已保存。","success","hey")
+      emit('change-step', 4)
+      if (route.query.reviewId) {
+        await delVisitedRoute(handleActivePath(route, true))
+        const {...query} = route.query;
+        router.replace({query: {...query, stepNo: 4}});
+      }
     }
-    try {
-        const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
-        if (data === true) {
-            $baseMessage("当前信息已保存。","success","hey")
-            emit('change-step', 4)
-            if (route.query.reviewId) {
-              await delVisitedRoute(handleActivePath(route, true))
-                const {...query} = route.query;
-                router.replace({query: {...query, stepNo: 4}});
-            }
-        }
-    } catch (error) {
-        console.error(error)
-    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 当点击上一步的时候
 const handleGoback = () => {
-    emit('change-step', 2)
+  emit('change-step', 2)
 }
 const fetchQualityInspectionData = async () => {
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
-    }
-    try {
-        const { data } = await reviewStepNo4ListQualityInspection({ reviewId: classReviewId! })
-        qualityInspectionList.value = data
-        // 获取下拉变体列表
-        const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
-        variantsSelectList.value = variantSelectList
-        // 转换为下拉框需要的数据格式
-        // variantsSelectList.value.unshift({ id: -1, label: '所有' })
-        // console.log(variantsSelectList.value);
-        
-        variantsSelectStringList.value = [
-            { label: '所有', value: '0' }, // 添加“所有”选项
-            ...variantSelectList.map((item: any) => ({
-                label: item.label,
-                value: convertString(item.id)
-            }))
-        ];
-    } catch (error) {
-        console.error(error)
-    }
+  try {
+    const { data } = await reviewStepNo4ListQualityInspection({ reviewId: classReviewId! })
+    qualityInspectionList.value = data
+    // 获取下拉变体列表
+    const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
+    variantsSelectList.value = variantSelectList
+    // 转换为下拉框需要的数据格式
+    // variantsSelectList.value.unshift({ id: -1, label: '所有' })
+    // console.log(variantsSelectList.value);
+    
+    variantsSelectStringList.value = [
+      { label: '所有', value: '0' }, // 添加“所有”选项
+      ...variantSelectList.map((item: any) => ({
+          label: item.label,
+          value: convertString(item.id)
+      }))
+    ];
+  } catch (error) {
+    console.error(error)
+  }
 }
 const fetchNewSupplier = async () => {
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
-    }
-    const { data } = await reviewStepNo4SupplierList({  reviewId: classReviewId! })
-    list.value = data
+  const { data } = await reviewStepNo4SupplierList({  reviewId: classReviewId! })
+  list.value = data
 }
-onMounted(async () => {
-    fetchNewSupplier()
-    fetchQualityInspectionData()
+let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId
+
+onMounted(() => {
+  fetchNewSupplier()
+  fetchQualityInspectionData()
 })
 </script>
   
 <style lang="scss" scoped>
 .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
 }
 .none {
-    display: none;
+  display: none;
 }
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   min-height: 35px;
-  line-height: 35px;
   max-height: 35px;
+  line-height: 35px;
 }
 </style>
   

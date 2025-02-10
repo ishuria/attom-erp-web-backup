@@ -983,23 +983,24 @@ const clickVariantsCancel = async (event:any, value:any) => {
     fetchVariantsData()
   }
 }
+
 // 当点击保存的时候
 const handleSave = async () => {
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
+  let classReviewId: number | undefined
+  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
+  } else {
+    classReviewId = route.query.reviewId
+  }
+  const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
+  if (data === true) {
+    $baseMessage("当前信息已保存。", "success", "hey")
+    if (route.query.reviewId) {
+      await delVisitedRoute(handleActivePath(route, true))
+      const { ...query } = route.query;
+      router.replace({ query: { ...query, stepNo: 2 } });
     }
-    const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
-    if (data === true) {
-      $baseMessage("当前信息已保存。", "success", "hey")
-      if (route.query.reviewId) {
-        await delVisitedRoute(handleActivePath(route, true))
-        const { ...query } = route.query;
-        router.replace({ query: { ...query, stepNo: 2 } });
-      }
-    }
+  }
 }
 
 // 当点击保存并继续的时候
@@ -1099,28 +1100,28 @@ const validateSame = () => {
 }
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
-    let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
+  let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
 
-    const allValid = componentList.value.every((item) => validateComponent(item));
-    const allVariantsValid = variantsList.value.every((item) => validateVariants(item))
+  const allValid = componentList.value.every((item) => validateComponent(item));
+  const allVariantsValid = variantsList.value.every((item) => validateVariants(item))
 
-    if (allValid && allVariantsValid) {
-        if(validateSame()) {
-            const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
-            if (data === true) {
-                $baseMessage("当前信息已保存。", "success", "hey");
-                emit('change-step', 3);
-              if (route.query.reviewId) {
-                await delVisitedRoute(handleActivePath(route, true))
-                    const { ...query } = route.query;
-                    router.replace({ query: { ...query, stepNo: 3 } });
-                }
-            }
-        } else {
-            $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
+  if (allValid && allVariantsValid) {
+    if(validateSame()) {
+      const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! });
+      if (data === true) {
+        $baseMessage("当前信息已保存。", "success", "hey");
+        emit('change-step', 3);
+        if (route.query.reviewId) {
+          await delVisitedRoute(handleActivePath(route, true))
+          const { ...query } = route.query;
+          router.replace({ query: { ...query, stepNo: 3 } });
         }
+      }
+    } else {
+      $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')
     }
-};
+  }
+}
 
 // 当点击上一步的时候
 const handleGoback = () => {
@@ -1130,27 +1131,27 @@ const handleGoback = () => {
 // 获取拿样零件添加数据
 const fetchDataComponent = async () =>{
 
-  if(route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
+  if (route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     try {
       // 拿样零件添加列表
       let classReviewId: number | undefined
       if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-          classReviewId = props.step1Data
+        classReviewId = props.step1Data
       } else {
-          classReviewId = route.query.reviewId
+        classReviewId = route.query.reviewId
       }
-      const { data } = await reviewStepNo3ComponentList({reviewId: classReviewId!})
+      const { data } = await reviewStepNo3ComponentList({ reviewId: classReviewId! })
       componentList.value = data
       componentList.value.forEach((item: any) => {
-          item.currency = convertString(item.currency)
-          item.invoicing = convertString(item.invoicing)
-          if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
-              item.hide = true;
-              item.componentImgUrl = [{ url: item.componentImgUrl }];
-          } else {
-              item.hide = false;
-              item.componentImgUrl = []; // 如果没有图片,确保这是空的
-          }
+        item.currency = convertString(item.currency)
+        item.invoicing = convertString(item.invoicing)
+        if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
+          item.hide = true;
+          item.componentImgUrl = [{ url: item.componentImgUrl }];
+        } else {
+          item.hide = false;
+          item.componentImgUrl = []; // 如果没有图片,确保这是空的
+        }
           // item.cropData = ''
           // console.log(item.componentImgUrl);
       })

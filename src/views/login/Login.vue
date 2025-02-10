@@ -3,8 +3,11 @@
     <div class="login-form">
       <img alt="" class="left-img" :src="leftImg" />
       <el-form ref="formRef" label-position="left" :model="form" :rules="rules" @submit.prevent>
-        <div class="title">hello !</div>
-        <div class="title-tips">{{ translate('欢迎来到') }} {{ title }}</div>
+        <!-- <div class="title">hello !</div>
+        <div class="title-tips">{{ translate('欢迎来到') }} {{ title }}</div> -->
+        <el-form-item>
+          <img alt="" :src="topImg" style="width: 100%; height: 100%;" />
+        </el-form-item>
         <el-form-item prop="username">
           <el-input v-model.trim="form.username" v-focus :placeholder="translate('请输入用户名')" type="text">
             <template #prefix>
@@ -69,6 +72,7 @@
 <script lang="ts" setup>
 import type { FormInstance, FormRules, InputInstance } from 'element-plus'
 import leftImg from '/@/assets/login_images/left_img_7.png'
+import topImg from '/@/assets/login_images/top_img.png'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'

@@ -1413,14 +1413,17 @@ const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
     fetchColumn()
     queryData()
+    fetchCurrency()
     activeName.value = 0
   } else if (tab.props.name === 1) {
     fetchAsinColumn()
     queryAsinData()
+    fetchAsinCurrency()
     activeName.value = 1
   } else {
     fetchPAsinColumn()
     queryPAsinData()
+    fetchPAsinCurrency()
     activeName.value = 2
   }
 }
@@ -1746,8 +1749,12 @@ const fetchCurrencyList = async () => {
 const fetchCurrency = async () => {
   const { data: sku } = await getCurrencySKUAmazonOperation()
   currencySKU.value = sku
+}
+const fetchAsinCurrency = async () => {
   const { data: asin } = await getCurrencyASINAmazonOperation()
   currencyAsin.value = asin
+}
+const fetchPAsinCurrency = async () => {
   const { data: pAsin } = await getCurrencyParentASINAmazonOperation()
   currencyPAsin.value = pAsin
 }
